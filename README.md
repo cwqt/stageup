@@ -1,8 +1,6 @@
 # eventi
 
 
---- 
-
 # installation
 
 Install `node`: `brew install node`
