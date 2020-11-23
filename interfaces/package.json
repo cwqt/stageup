@@ -1,0 +1,19 @@
+{
+  "name": "@eventi/interfaces",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/mongoose": "^5.7.36",
+    "ip-address": "^6.3.0",
+    "mongoose": "^5.9.27"
+  },
+  "devDependencies": {
+    "@types/ip-address": "^5.8.2"
+  }
+}
