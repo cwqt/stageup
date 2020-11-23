@@ -1,0 +1,7 @@
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"res.send is not a function\"","level":"error","service":"user-service"}
+{"message":"GET / 500 74 - 15.905 ms\n","level":"http","service":"user-service"}
+{"message":"(404) --> \"No such route exists\"","level":"error","service":"user-service"}
+{"message":"GET /favicon.ico 404 67 - 0.832 ms\n","level":"http","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"GET / 200 14 - 4.286 ms\n","level":"http","service":"user-service"}

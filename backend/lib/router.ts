@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction, IRouterMatcher } from "express";
-// import { NodeType } from "@eventi/interfaces";
 import { HTTP } from "./common/http";
 import { ErrorHandler, handleError } from "./common/errorHandler";
 import logger from "./common/logger";
@@ -39,12 +38,11 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, resCode?:HTTP, lamda?:(res:Re
     path: string,
     controller: (req: Request, next: NextFunction, locals: IResLocals, permissions: Access[]) => Promise<T>,
     access: Access[],
-    validators: any = skip,
-    nodeData?: [NodeType, string]
+    validators: any = skip
   ) => {
     method(
       path,
-      getCheckPermissions(access, nodeData),
+      getCheckPermissions(access),
       validators ?? skip,
       (req: Request, res: Response, next: NextFunction) => {
         res.locals.page = parseInt(req.query.page as string) || 0;
@@ -108,7 +106,7 @@ export class Router {
     validators: any = skip,
     nodeData?:any) =>
       endpointFunc<T>(this.router.get)
-        (path, controller, access, validators, nodeData);
+        (path, controller, access, validators);
 
   put = <T>(
     path:string,
@@ -117,7 +115,7 @@ export class Router {
     validators: any = skip,
     nodeData?:any) =>
       endpointFunc<T>(this.router.put)
-        (path, controller, access, validators, nodeData);
+        (path, controller, access, validators);
 
   post = <T>(
     path:string,
@@ -126,7 +124,7 @@ export class Router {
     validators: any = skip,
     nodeData?:any) =>
       endpointFunc<T>(this.router.post, HTTP.Created)
-        (path, controller, access, validators, nodeData);
+        (path, controller, access, validators);
     
   delete = <T>(
     path:string,
@@ -135,7 +133,7 @@ export class Router {
     validators: any = skip,
     nodeData?:any) =>
       endpointFunc<T>(this.router.delete)
-        (path, controller, access, validators, nodeData);        
+        (path, controller, access, validators);        
 
   redirect = (
     path:string,
@@ -145,10 +143,10 @@ export class Router {
     nodeData?:any) =>
       endpointFunc<string>(this.router.get, HTTP.Moved,
         (res:Response, data:string) => res.status(HTTP.Moved).redirect(data))
-        (path, controller, access, validators, nodeData);        
+        (path, controller, access, validators);        
       }
 
-const getCheckPermissions = (access: Access[], nodeData?: [NodeType, string]) => {
+const getCheckPermissions = (access: Access[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       //No perms / session required

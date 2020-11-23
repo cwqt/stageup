@@ -1,0 +1,2 @@
+{"message":"(500) --> \"res.send is not a function\"","level":"error","service":"user-service"}
+{"message":"(404) --> \"No such route exists\"","level":"error","service":"user-service"}

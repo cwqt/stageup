@@ -3,7 +3,7 @@ import { Router } from './router';
 
 const router = new Router();
 
-router.get<string>("/", (req:Request, res:Response) => res.send("Hello world!"), []);
+router.get<string>("/", async (req:Request, res:Response) => "Hello world!", []);
 
 
 export default router;
