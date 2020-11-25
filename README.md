@@ -35,6 +35,7 @@ Some tools to install;
 * __PostgreSQL & Redis__: https://tableplus.com/
 * __Chronograf__: `brew install chronograf`
 * __JSONView__: https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en
+* __Prettier__: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 
 ## Backend
 Assuming you're in the root directory.
