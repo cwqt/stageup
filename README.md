@@ -29,8 +29,10 @@ brew install influxdb
 ```
 
 Some tools to install;
-* __PostgreSQL__: pgAdmin: https://www.postgresql.org/ftp/pgadmin/pgadmin4/v4.28/macos/
-* __Redis__:
+* __Postman__: https://www.postman.com/downloads/
+* __PostgreSQL & Redis__: https://tableplus.com/
+* __Chronograf__: `brew install chronograf`
+* __JSONView__: https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en
 
 ## Backend
 Assuming you're in the root directory.
