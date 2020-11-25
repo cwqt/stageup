@@ -2,6 +2,8 @@
 
 
 # Installation
+Will work for macOS (& Linux with adjustment) - not sure about Windows :/
+
 ## Homebrew
 Install Homebrew if you haven't already (macOS)
 
