@@ -63,7 +63,7 @@ tsc
 
 * __Redis__: `redis-server /usr/local/etc/redis.conf`
 * __InfluxDB__: `influxd`
-* __PostgreSQL__: `pg_ctl -D /usr/local/var/postgres start`
+* __PostgreSQL__: `brew services start postgresql`
 * __Frontend__: `npm run start`
 * __Backend__: `npm run start`
 
