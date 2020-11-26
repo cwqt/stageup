@@ -1,36 +1,78 @@
 # eventi
 
 
-# installation
+# Installation
+Will work for macOS (& Linux with adjustment) - not sure about Windows :/
 
-Install `node`: `brew install node`
+## Homebrew
+Install Homebrew if you haven't already (macOS)
 
-**backend**
-
+```shell
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
-brew install redis postgresql
 
+Check if it works `brew -v`, should give something like: `Homebrew 2.5.11`.  
+Then run `brew update`
+
+## Node & npm
+
+```shell
+brew install node
+node -v             #v10.15.0
+npm -v              #7.0.10
+```
+
+## PostgreSQL, Redis & InfluxDB
+
+```shell
+brew cask install postgresql
+brew cask install redis
+brew install influxdb
+```
+
+Some tools to install;
+* __Postman__: https://www.postman.com/downloads/
+* __PostgreSQL & Redis__: https://tableplus.com/
+* __Chronograf__: `brew install chronograf`
+* __JSONView__: https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en
+* __Prettier__: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+
+## Backend
+Assuming you're in the root directory.
+
+```shell
 cd backend
 npm install --force
 ```
 
-**frontend**
+## Frontend
 
 ```
 npm install -g angular
+cd frontend
+npm install --force
 ```
 
-**intefaces**
-Provides e2e typing across backend & frontend: `tsc`.
+## Interfaces
+Provides e2e typing across backend & frontend.
 
-# running
-Make sure `redis`, `influx` and `postgres` are running in another terminal
+```shell
+cd interfaces
+npm install --force
+tsc
+```
 
-`redis-server /usr/local/etc/redis.conf`
-`influxd`
-`postgres`?
+# Running
 
-# testing
+* __Redis__: `redis-server /usr/local/etc/redis.conf`
+* __InfluxDB__: `influxd`
+* __PostgreSQL__: `brew services start postgresql`
+* __Frontend__: `npm run start`
+* __Backend__: `npm run start`
 
-# deployment
+---
+
+# Testing
+
+# Deployment
 
