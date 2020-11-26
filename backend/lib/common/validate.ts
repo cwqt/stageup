@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-import { ErrorHandler } from "./errorHandler";
+import { ErrorHandler } from "./errors";
 import { Request, Response, NextFunction } from "express";
 
 export const validate = (validations: Function[]) => {

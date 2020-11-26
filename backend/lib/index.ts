@@ -10,9 +10,10 @@ import "reflect-metadata";
 
 import Routes from './routes';
 import config from "./config";
-import { handleError, ErrorHandler } from "./common/errorHandler";
+import { handleError, ErrorHandler } from "./common/errors";
 
 import { HTTP } from "./common/http";
+import data from './common/data';
 
 let server: http.Server;
 const app = express();

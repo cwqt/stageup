@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, IRouterMatcher } from "express";
 import { HTTP } from "./common/http";
-import { ErrorHandler, handleError } from "./common/errorHandler";
+import { ErrorHandler, handleError } from "./common/errors";
 import logger from "./common/logger";
 import Multer from "multer";
 import { AsyncRouterInstance } from "express-async-router";
