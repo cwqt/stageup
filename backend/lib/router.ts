@@ -112,8 +112,7 @@ export class Router {
     path:string,
     controller:any,
     access:Access[],
-    validators: any = skip,
-    nodeData?:any) =>
+    validators: any = skip) =>
       endpointFunc<T>(this.router.put)
         (path, controller, access, validators);
 
@@ -121,8 +120,7 @@ export class Router {
     path:string,
     controller:any,
     access:Access[],
-    validators: any = skip,
-    nodeData?:any) =>
+    validators: any = skip) =>
       endpointFunc<T>(this.router.post, HTTP.Created)
         (path, controller, access, validators);
     
@@ -130,8 +128,7 @@ export class Router {
     path:string,
     controller:any,
     access:Access[],
-    validators: any = skip,
-    nodeData?:any) =>
+    validators: any = skip) =>
       endpointFunc<T>(this.router.delete)
         (path, controller, access, validators);        
 
@@ -139,8 +136,7 @@ export class Router {
     path:string,
     controller:any,
     access:Access[],
-    validators: any = skip,
-    nodeData?:any) =>
+    validators: any = skip) =>
       endpointFunc<string>(this.router.get, HTTP.Moved,
         (res:Response, data:string) => res.status(HTTP.Moved).redirect(data))
         (path, controller, access, validators);        
