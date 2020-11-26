@@ -5,13 +5,12 @@ export interface IUserStub extends INode {
     avatar?: string;
 }
 export interface IUser extends IUserStub {
-    email: string;
-    verified: boolean;
-    new_user: boolean;
-    admin?: boolean;
-    bio?: string;
+    email_address: string;
     cover_image?: string;
-    location?: string;
+    bio?: string;
+    is_verified: boolean;
+    is_new_user: boolean;
+    is_admin?: boolean;
 }
 export interface IUserPrivate extends IUser {
     salt?: string;
