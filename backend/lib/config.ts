@@ -11,6 +11,27 @@ interface IEnv {
   DEVELOPMENT: boolean;
   TESTING: boolean;
   EXPRESS_PORT: number;
+  PG: {
+    USER:string;
+    HOST:string;
+    DB:string;
+    PASS:string;
+    PORT:number;
+  },
+  REDIS: {
+    HOST:string;
+    PORT:number;
+    TTL:number;  
+  },
+  INFLUX: {
+    HOST:string;
+    DB:string;
+  },
+  AWS: {
+    S3_ACCESS_KEY_ID:string;
+    S3_ACCESS_SECRET_KEY:string;
+    S3_BUCKET_NAME:string;
+  }
 }
 
 const base = {
@@ -20,6 +41,27 @@ const base = {
   PRODUCTION: false,
   DEVELOPMENT: false,
   TESTING: false,
+  PG: {
+    USER: process.env.PG_USER,
+    PASS: process.env.PG_PASS,
+    HOST: process.env.PRODUCTION ? process.env.PG_HOST : "localhost",
+    DB: "postgres",
+    PORT: 5432,
+  },
+  REDIS: {
+    HOST: process.env.PRODUCTION ? process.env.REDIS_HOST : "localhost",
+    PORT: 6379,
+    TTL: 86400,
+  },
+  AWS: {
+    S3_ACCESS_KEY_ID: process.env.AWS_S3_KEY_ID,
+    S3_ACCESS_SECRET_KEY: process.env.AWS_S3_ACCESS_SECRET_KEY,
+    S3_BUCKET_NAME: process.env.AWS_S3_ACCESS_SECRET_KEY
+  },
+  INFLUX: {
+    HOST: process.env.PRODUCTION ? process.env.REDIS_HOST : "localhost",
+    DB: "metrics"
+  }
 } as IEnv;
 
 const prod: IEnv = {

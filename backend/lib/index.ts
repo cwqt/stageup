@@ -13,42 +13,51 @@ import config from "./config";
 import { handleError, ErrorHandler } from "./common/errors";
 
 import { HTTP } from "./common/http";
-import data from './common/data';
+import { DataClient, DataProvider } from "./common/data";
 
 let server: http.Server;
 const app = express();
 app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(cors());
-
-app.use(
-  session({
-    secret: config.PRIVATE_KEY,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: !config.PRODUCTION ? false : true,
-      secure: !config.PRODUCTION ? false : true,
-    },
-    // store: db.redis,
-  })
-);
-
 app.use(morgan("tiny", { stream: log.stream }));
 
 (async () => {
   try {
+    // Connect to all the databases
+    const data = await DataProvider.create();
+
+    // Register Redis session store
+    app.use(
+      session({
+        secret: config.PRIVATE_KEY,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+          httpOnly: !config.PRODUCTION ? false : true,
+          secure: !config.PRODUCTION ? false : true,
+        },
+        store: data.session_store,
+      })
+    );
+  
+    // Register routes
     app.use("/", Routes.router);
 
+    // Catch 404 errors
     app.all("*", (req: any, res: any, next: any) => {
       handleError(req, res, next, new ErrorHandler(HTTP.NotFound, "No such route exists"));
     });
+
+    // Global error handler
     app.use((err: any, req: any, res: any, next: any) => handleError(req, res, next, err));
 
-    process.on("SIGTERM", graceful_exit);
-    process.on("SIGINT", graceful_exit);
+    // Handle closing connections on failure
+    process.on("SIGTERM", graceful_exit(data));
+    process.on("SIGINT", graceful_exit(data));
 
-    server = app.listen(3000, () => {
+    // Start listening for requests
+    server = app.listen(config.EXPRESS_PORT, () => {
       log.info(`Listening on ${config.EXPRESS_PORT}`);
     });
   } catch (err) {
@@ -56,9 +65,12 @@ app.use(morgan("tiny", { stream: log.stream }));
   }
 })();
 
-function graceful_exit() {
-  log.info(`Termination requested, closing all connections`);
-  server.close();
+function graceful_exit(data:DataClient) {
+  return () => {
+    log.info(`Termination requested, closing all connections`);
+    DataProvider.close(data);
+    server.close();
+  }
 }
 
 export default { app, graceful_exit };

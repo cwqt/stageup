@@ -33,7 +33,7 @@ const skip = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-const endpointFunc = <T>(method:IRouterMatcher<T>, resCode?:HTTP, lamda?:(res:Response, data:T) => void) => {
+const endpointFunc = <T>(method:IRouterMatcher<T>, resCode?:HTTP, lambda?:(res:Response, data:T) => void) => {
   return (
     path: string,
     controller: (req: Request, next: NextFunction, locals: IResLocals, permissions: Access[]) => Promise<T>,
@@ -64,7 +64,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, resCode?:HTTP, lamda?:(res:Re
             } as IResLocals,
             access
           );
-          lamda ? lamda(res, returnValue) : res.status(resCode || HTTP.OK).json(returnValue);
+          lambda ? lambda(res, returnValue) : res.status(resCode || HTTP.OK).json(returnValue);
         } catch (err) {
           handleError(req, res, next, err);
         }

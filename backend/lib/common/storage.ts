@@ -1,10 +1,11 @@
-import mongoose from "mongoose";
 import AWS from "aws-sdk";
 import config from "../config";
+import { v4 as uuidv4 } from 'uuid';
+
 
 AWS.config.update({
-  accessKeyId: config.AWS_ACCESS_KEY_ID,
-  secretAccessKey: config.AWS_ACCESS_SECRET_KEY,
+  accessKeyId: config.AWS.S3_ACCESS_KEY_ID,
+  secretAccessKey: config.AWS.S3_ACCESS_SECRET_KEY,
 });
 
 var s3 = new AWS.S3();
@@ -52,9 +53,9 @@ export const uploadImageToS3 = async (
     await check;
     let extension = file.originalname.substr(file.originalname.lastIndexOf(".") + 1);
 
-    let fn = filename || new mongoose.Types.ObjectId();
+    let fn = filename || uuidv4();
     let params = {
-      Bucket: config.AWS_BUCKET_NAME,
+      Bucket: config.AWS.S3_BUCKET_NAME,
       Body: file.buffer,
       Key: `${creator_id}/${fn}.${extension}`,
       ContentDisposition: "inline",

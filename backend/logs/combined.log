@@ -7,3 +7,68 @@
 {"message":"GET / 200 14 - 4.286 ms\n","level":"http","service":"user-service"}
 {"message":"Listening on 3000","level":"info","service":"user-service"}
 {"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"127.0.0.1","port":6379,"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"127.0.0.1","port":6379,"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Termination requested, closing all connections","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}

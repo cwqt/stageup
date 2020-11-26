@@ -1,2 +1,27 @@
 {"message":"(500) --> \"res.send is not a function\"","level":"error","service":"user-service"}
 {"message":"(404) --> \"No such route exists\"","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"127.0.0.1","port":6379,"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via Knex. Ensure a valid connection.","level":"error","service":"user-service"}
+{"length":88,"name":"error","severity":"FATAL","code":"3D000","file":"postinit.c","line":"888","routine":"InitPostgres","level":"error","service":"user-service"}
+{"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"127.0.0.1","port":6379,"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
