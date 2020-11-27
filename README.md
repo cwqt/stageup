@@ -37,6 +37,15 @@ Some tools to install;
 * __JSONView__: https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en
 * __Prettier__: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 
+## Interfaces
+Provides e2e typing across backend & frontend.
+
+```shell
+cd interfaces
+npm install --force
+tsc
+```
+
 ## Backend
 Assuming you're in the root directory.
 
@@ -53,14 +62,6 @@ cd frontend
 npm install --force
 ```
 
-## Interfaces
-Provides e2e typing across backend & frontend.
-
-```shell
-cd interfaces
-npm install --force
-tsc
-```
 
 # Running
 
