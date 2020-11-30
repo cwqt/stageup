@@ -6,6 +6,7 @@ import cors from "cors";
 import session from "express-session";
 import log from "./common/logger";
 import http from "http";
+import helmet from 'helmet';
 import "reflect-metadata";
 
 import Routes from './routes';
@@ -14,13 +15,14 @@ import { handleError, ErrorHandler } from "./common/errors";
 
 import { HTTP } from "./common/http";
 import { DataClient, DataProvider } from "./common/data";
-import dataProvider from "./common/data/dataProvider";
+
 
 let server: http.Server;
 const app = express();
 app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(cors());
+app.use(helmet());
 app.use(morgan("tiny", { stream: log.stream }));
 
 (async () => {
@@ -69,8 +71,13 @@ app.use(morgan("tiny", { stream: log.stream }));
 function graceful_exit(providers:DataClient) {
   return () => {
     log.info(`Termination requested, closing all connections`);
-    DataProvider.close(providers);
-    server.close();
+    DataProvider.close(providers).finally(() => {
+      server.close(err => {
+        console.log(err);
+        process.exitCode = 1;
+        process.exit();  
+      });  
+    });
   }
 }
 

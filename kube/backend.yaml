@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eventi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventi
+  template:
+    metadata:
+      labels:
+        app: eventi
+    spec:
+      containers:
+        - name: app
+          image: learnk8s/knote-js:1.0.0
+          ports:
+            - containerPort: 3000
+          env:
+            - name: POSTGRES_URL
+              value: something
+          imagePullPolicy: Always
+
+# https://learnk8s.io/deploying-nodejs-kubernetes

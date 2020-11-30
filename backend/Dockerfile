@@ -9,9 +9,11 @@ COPY package.json .
 
 RUN npm install --prod
 
-RUN mkdir -p ./build
 RUN mkdir -p ./node_modules
 
 COPY ./build ./build
+
+RUN chown -R node:node /app
+USER node
 
 CMD ["node","build/index.js"]
