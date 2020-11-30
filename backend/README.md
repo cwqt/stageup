@@ -1,6 +1,4 @@
-# api
-
-my.corrhizal.net api documentation, v2 - previously written in python flask.
+# backend
 
 - **body**: meaning a json body
 - **params**: url fields, `/api/:MY_PARAM/something`
@@ -29,16 +27,3 @@ upon error, return will match the following interface, `IError`:
 ```
 
 or instead of an array for `message`, a string.
-
-# influxdb
-
-```
-  measurements: air_temperature, humidity
-  tags: target, creator
-  fields: value, unit
-```
-
-- **target**, measurement aimed at, in form `nodetype-oid1`, e.g. `farm-5f35a2bbc0456a9c366a13bc`
-- **creator**, user or device property, `metric-5f35a2bb...` or `sensor-5f35a2e...`
-- **value**, recorded value, bool, string or number
-- **unit**, e.g. degrees C, percent, seconds

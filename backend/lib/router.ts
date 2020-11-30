@@ -3,14 +3,12 @@ import { HTTP } from "./common/http";
 import { ErrorHandler, handleError } from "./common/errors";
 import logger from "./common/logger";
 import Multer from "multer";
-import { AsyncRouterInstance } from "express-async-router";
+import { DataClient } from "./common/data";
+import { nextTick } from "process";
 const AsyncRouter = require("express-async-router").AsyncRouter;
 
 export enum Access {
   SiteAdmin,
-  OrgAdmin,
-  OrgEditor,
-  OrgMember,
   Ourself,
   Authenticated,
   None,
@@ -20,7 +18,6 @@ export interface IResLocals {
   session?: {
     user?: {
       _id: string;
-      admin: boolean;
     };
   };
   pagination?: {
@@ -29,14 +26,12 @@ export interface IResLocals {
   };
 }
 
-const skip = (req: Request, res: Response, next: NextFunction) => {
-  next();
-};
+const skip = (req: Request, res: Response, next: NextFunction) => next();
 
-const endpointFunc = <T>(method:IRouterMatcher<T>, resCode?:HTTP, lambda?:(res:Response, data:T) => void) => {
+const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode?:HTTP, lambda?:(res:Response, data:T) => void) => {
   return (
     path: string,
-    controller: (req: Request, next: NextFunction, locals: IResLocals, permissions: Access[]) => Promise<T>,
+    controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction,  permissions: Access[]) => Promise<T>,
     access: Access[],
     validators: any = skip
   ) => {
@@ -53,7 +48,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, resCode?:HTTP, lambda?:(res:R
         try {
           const returnValue = await controller(
             req,
-            next,
+            providers,
             {
               file: req.file,
               session: req.session,
@@ -62,6 +57,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, resCode?:HTTP, lambda?:(res:R
                 page: res.locals.page,
               },
             } as IResLocals,
+            next,
             access
           );
           lambda ? lambda(res, returnValue) : res.status(resCode || HTTP.OK).json(returnValue);
@@ -75,6 +71,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, resCode?:HTTP, lambda?:(res:R
 
 export class Router {
   router: any;
+  providers:DataClient;
   fileParser = Multer({
     storage: Multer.memoryStorage(),
     limits: {
@@ -95,58 +92,60 @@ export class Router {
     },
   });
 
-  constructor() {
+  constructor(providers:DataClient) {
     this.router = AsyncRouter();
+    this.providers = providers;
   }
 
   get = <T>(
     path:string,
-    controller:any,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
     access:Access[],
-    validators: any = skip,
-    nodeData?:any) =>
-      endpointFunc<T>(this.router.get)
+    validators: any = skip) =>
+      endpointFunc<T>(this.router.get, this.providers)
         (path, controller, access, validators);
 
   put = <T>(
     path:string,
-    controller:any,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<T>(this.router.put)
+      endpointFunc<T>(this.router.put, this.providers)
         (path, controller, access, validators);
 
   post = <T>(
     path:string,
-    controller:any,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<T>(this.router.post, HTTP.Created)
+      endpointFunc<T>(this.router.post, this.providers, HTTP.Created)
         (path, controller, access, validators);
     
   delete = <T>(
     path:string,
-    controller:any,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<T>(this.router.delete)
+      endpointFunc<T>(this.router.delete, this.providers)
         (path, controller, access, validators);        
 
   redirect = (
     path:string,
-    controller:any,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<string>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<string>(this.router.get, HTTP.Moved,
+      endpointFunc<string>(this.router.get,this.providers,  HTTP.Moved,
         (res:Response, data:string) => res.status(HTTP.Moved).redirect(data))
         (path, controller, access, validators);        
       }
 
 const getCheckPermissions = (access: Access[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    //TODO: sort out authorisation / authentication
     try {
+      return next();
       //No perms / session required
-      if (access.length == 0 || access.includes(Access.None)) return next();
+      // if (access.length == 0 || access.includes(Access.None)) return next();
 
       //All other checks require an active session (logged in)
       // if (!req.session?.user!) throw new Error(`Session required to access requested resource`);

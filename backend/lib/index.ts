@@ -14,6 +14,7 @@ import { handleError, ErrorHandler } from "./common/errors";
 
 import { HTTP } from "./common/http";
 import { DataClient, DataProvider } from "./common/data";
+import dataProvider from "./common/data/dataProvider";
 
 let server: http.Server;
 const app = express();
@@ -25,7 +26,7 @@ app.use(morgan("tiny", { stream: log.stream }));
 (async () => {
   try {
     // Connect to all the databases
-    const data = await DataProvider.create();
+    const providers = await DataProvider.create();
 
     // Register Redis session store
     app.use(
@@ -37,12 +38,12 @@ app.use(morgan("tiny", { stream: log.stream }));
           httpOnly: !config.PRODUCTION ? false : true,
           secure: !config.PRODUCTION ? false : true,
         },
-        store: data.session_store,
+        store: providers.session_store,
       })
     );
   
     // Register routes
-    app.use("/", Routes.router);
+    app.use("/", Routes(providers).router);
 
     // Catch 404 errors
     app.all("*", (req: any, res: any, next: any) => {
@@ -53,8 +54,8 @@ app.use(morgan("tiny", { stream: log.stream }));
     app.use((err: any, req: any, res: any, next: any) => handleError(req, res, next, err));
 
     // Handle closing connections on failure
-    process.on("SIGTERM", graceful_exit(data));
-    process.on("SIGINT", graceful_exit(data));
+    process.on("SIGTERM", graceful_exit(providers));
+    process.on("SIGINT", graceful_exit(providers));
 
     // Start listening for requests
     server = app.listen(config.EXPRESS_PORT, () => {
@@ -65,12 +66,15 @@ app.use(morgan("tiny", { stream: log.stream }));
   }
 })();
 
-function graceful_exit(data:DataClient) {
+function graceful_exit(providers:DataClient) {
   return () => {
     log.info(`Termination requested, closing all connections`);
-    DataProvider.close(data);
+    DataProvider.close(providers);
     server.close();
   }
 }
 
-export default { app, graceful_exit };
+export default {
+  app,
+  graceful_exit
+};

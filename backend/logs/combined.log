@@ -72,3 +72,500 @@
 {"message":"Creating Redis Store...","level":"info","service":"user-service"}
 {"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
 {"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(401) --> \"Cannot read property 'length' of null\"","level":"error","service":"user-service"}
+{"message":"GET / 401 84 - 15.471 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(401) --> \"Cannot read property 'length' of null\"","level":"error","service":"user-service"}
+{"message":"GET / 401 84 - 13.268 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Auth dead end.","level":"error","service":"user-service"}
+{"message":"GET / 200 14 - 9.735 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Auth dead end.","level":"error","service":"user-service"}
+{"message":"GET / 304 - - 22.979 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Auth dead end.","level":"error","service":"user-service"}
+{"message":"GET / 304 - - 13.105 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Auth dead end.","level":"error","service":"user-service"}
+{"message":"GET / 304 - - 5.820 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"GET / 304 - - 6.116 ms\n","level":"http","service":"user-service"}
+{"message":"GET / 304 - - 0.859 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"GET / 304 - - 8.529 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (knex)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 83 - 114.036 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 83 - 106.169 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 83 - 112.425 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 83 - 106.790 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 83 - 102.365 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"created_at\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 133 - 157.839 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"created_at\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 133 - 146.665 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"value \\\"1606739511944\\\" is out of range for type integer\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 104 - 141.011 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"avatar\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 129 - 152.200 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"avatar\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 129 - 147.356 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"avatar\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 129 - 166.227 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"avatar\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 129 - 156.551 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"relation \\\"user\\\" does not exist\"","level":"error","service":"user-service"}
+{"message":"POST /users 500 80 - 154.805 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"POST /users 201 319 - 101.484 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Connecting to Influx...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}

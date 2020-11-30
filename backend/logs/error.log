@@ -25,3 +25,62 @@
 {"errno":"ECONNREFUSED","code":"ECONNREFUSED","syscall":"connect","address":"127.0.0.1","port":6379,"level":"error","service":"user-service"}
 {"level":"error","service":"user-service"}
 {"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"(401) --> \"Cannot read property 'length' of null\"","level":"error","service":"user-service"}
+{"message":"(401) --> \"Cannot read property 'length' of null\"","level":"error","service":"user-service"}
+{"message":"Auth dead end.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Auth dead end.","level":"error","service":"user-service"}
+{"message":"Auth dead end.","level":"error","service":"user-service"}
+{"message":"Auth dead end.","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"User\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"created_at\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"created_at\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"value \\\"1606739511944\\\" is out of range for type integer\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"avatar\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"avatar\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"avatar\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"avatar\\\" of relation \\\"user\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"(500) --> \"relation \\\"user\\\" does not exist\"","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}

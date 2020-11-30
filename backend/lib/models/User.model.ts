@@ -1,80 +1,98 @@
-// import { NodeType, IUser, IUserStub, IUserPrivate, DataModel } from "@eventi/interfaces";
-// import bcrypt from "bcrypt";
-// import Node from "../Node.model";
+import { NodeType, IUser, IUserStub, IUserPrivate, DataModel } from "@eventi/interfaces";
+import { IoTJobsDataPlane } from "aws-sdk";
+import bcrypt from "bcrypt";
 
-// type TUser = IUserPrivate | IUser | IUserStub;
+import {BaseEntity, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn} from "typeorm";
+ 
+@Entity()
+export class User extends BaseEntity implements IUserPrivate {
+  @PrimaryGeneratedColumn()
+  _id: string;
 
-// const create = async (user: IUserStub, password: string): Promise<IUser> => {
-//   let u = user as IUserPrivate;
-//   u.salt = await bcrypt.genSalt(10);
-//   u.pw_hash = await bcrypt.hash(password, u.salt);
+  @Column()
+  type:NodeType=NodeType.User;
 
-//   let data = await Node.create<IUserPrivate>(NodeType.User, u);
-//   return reduce<IUser>(data, DataModel.Full);
-// };
+  @Column()
+  created_at: number;
 
-// const read = async <T extends TUser>(
-//   _id: string,
-//   dataModel: DataModel = DataModel.Stub
-// ): Promise<T> => {
-//   let data;
-//   switch (dataModel) {
-//     case DataModel.Stub:
-//     case DataModel.Full:
-//     case DataModel.Private: {
-//       data = await Node.read<IUserPrivate>(_id, NodeType.User);
-//     }
-//   }
+  @Column({nullable:true})
+  name: string;
   
-//   return reduce<T>(data, dataModel);
-// };
+  @Column()
+  username: string;
+  
+  @Column({nullable:true})
+  avatar?: string;
+  
+  @Column()
+  email_address: string;
+  
+  @Column({nullable:true})
+  cover_image?: string;
+  
+  @Column({nullable:true})
+  bio?: string;
+  
+  @Column()
+  is_verified: boolean;
+  
+  @Column()
+  is_new_user: boolean;
+  
+  @Column()
+  is_admin: boolean;
+  
+  @Column()
+  readonly salt: string;
+  
+  @Column()
+  readonly pw_hash: string;
 
-// //hack the typing to give me what I want, since IUserPrivate has all props
-// // e.g. User.reduce<IUser>(privateUser, DataModel.Full) --> IUser;
-// const reduce = <K extends TUser>(data: TUser, dataModel: DataModel = DataModel.Stub): K => {
-//   switch (dataModel) {
-//     case DataModel.Stub: {
-//       let r: IUserStub = {
-//         ...Node.reduce(data),
-//         name: (<IUserStub>data).name,
-//         username: (<IUserStub>data).username,
-//         avatar: (<IUserStub>data).avatar,
-//       };
-//       return r as K;
-//     }
+  constructor(data:Pick<IUserPrivate, "username" | "email_address">, password:string) {
+    super()
+    this.username = data.username;
+    this.email_address = data.email_address;
+    this.salt = bcrypt.genSaltSync(10);
+    this.pw_hash = bcrypt.hashSync(password, this.salt);
+    this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
+    this.is_admin = false;
+    this.is_new_user = true;
+    this.is_verified = false;
+  }
 
-//     case DataModel.Full: {
-//       let d = <IUser>data;
-//       let r: IUser = {
-//         ...reduce<IUserStub>(data, DataModel.Stub),
-//         email_address: d.email_address,
-//         is_verified: d.is_verified,
-//         is_new_user: d.is_new_user,
-//         is_admin: d.is_admin,
-//         bio: d.bio,
-//         cover_image: d.cover_image,
-//       };
-//       return r as K;
-//     }
+  toStub():IUserStub {
+    let u:IUserStub = {
+      name: this.name,
+      _id: this._id,
+      username: this.username,
+      created_at: this.created_at,
+      type: this.type
+    };
+    return u;
+  }
 
-//     case DataModel.Private: {
-//       let d = <IUserPrivate>data;
-//       let r: IUserPrivate = {
-//         ...reduce<IUser>(data, DataModel.Full),
-//         salt: d.salt,
-//         pw_hash: d.pw_hash,
-//       };
-//       return r as K;
-//     }
-//   }
-// };
+  toFull():IUser {
+    let u:IUser = {
+      ...this.toStub(),
+      email_address: this.email_address,
+      is_new_user: this.is_new_user,
+      is_verified: this.is_verified,
+      is_admin: this.is_admin,
+    }
+    return u;
+  }
 
-// const remove = async (_id: string, txc?: Transaction) => {
-//   return await Node.remove(_id, NodeType.User, txc);
-// };
+  toPrivate():IUserPrivate {
+    let u:IUserPrivate = {
+      ...this.toFull(),
+      pw_hash: this.pw_hash,
+      salt: this.salt
+    }
+    return u;
+  }
 
-// const update = async (_id: string, updates: Partial<Pick<IUser, "name" | "bio">>): Promise<IUser> => {
-//   return {} as IUser;
-// };
+  update(updates:Partial<Pick<IUser, "name">>):IUser {
+    return this;
+  }
+}
 
-// export default { create, read, reduce, remove, update };
