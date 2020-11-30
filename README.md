@@ -80,3 +80,8 @@ npm install --force
 
 # Deployment
 
+# Actions
+
+Use `act` to test GH Actions locally:
+
+`act -j build`
