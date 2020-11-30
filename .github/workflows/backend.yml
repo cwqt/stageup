@@ -12,6 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      working_directory: './backend'
 
     strategy:
       matrix:
