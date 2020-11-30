@@ -25,7 +25,9 @@ npm -v              #7.0.10
 ## PostgreSQL, Redis & InfluxDB
 
 ```shell
-brew cask install postgresql
+# make sure you install postgres version 11 !
+brew cask install postgresql@11 
+
 brew cask install redis
 brew install influxdb
 ```
@@ -67,7 +69,7 @@ npm install --force
 
 * __Redis__: `redis-server /usr/local/etc/redis.conf`
 * __InfluxDB__: `influxd`
-* __PostgreSQL__: `brew services start postgresql`
+* __PostgreSQL__: `brew services start postgresql@11`
 * __Frontend__: `npm run start`
 * __Backend__: `npm run start`
 
