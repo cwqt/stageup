@@ -7,13 +7,15 @@
     "start": "env NODE_ENV=development nodemon",
     "start:test": "env NODE_ENV=testing nodemon",
     "start:dev": "tsc && env NODE_ENV=development nodemon --inspect build/index.js",
-    "test": "tsc && env NODE_ENV=testing mocha --bail -r ts-node/register test/index.test.ts"
+    "test": "tsc && env NODE_ENV=testing mocha --bail -r ts-node/register test/**/*.test.ts",
+    "deploy:build": "tsc && docker build -t eventi/backend .",
+    "deploy:run": "docker run -p 49160:3000 eventi/backend"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@eventi/interfaces": "file:../interfaces",
+    "@eventi/interfaces": "^1.0.0",
     "aws-sdk": "^2.799.0",
     "bcrypt": "^4.0.1",
     "connect-redis": "^4.0.4",

@@ -62,12 +62,12 @@ export class User extends BaseEntity implements IUserPrivate {
     return u;
   }
 
-  async update(updates:Partial<Pick<IUser, "name">>):Promise<User> {
+  async update(updates:Partial<Pick<IUser, "name" | "email_address" | "bio" | "avatar" | "cover_image">>):Promise<User> {
     Object.entries(updates).forEach(([k,v]:[string,any]) => {
       (<any>this)[k] = v ?? (<any>this)[k];
     })  
 
-    return this.save();
+    return await this.save();
   }
 }
 

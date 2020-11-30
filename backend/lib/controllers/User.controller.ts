@@ -10,7 +10,6 @@ import bcrypt from "bcrypt";
 import { User } from "../models/User.model";
 import Email = require("../common/email");
 
-
 export const validators = {
   loginUser: validate([
     body("email_address")

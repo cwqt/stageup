@@ -5,7 +5,6 @@ import { DataClient } from './common/data';
 
 import Users = require("./controllers/User.controller");
 
-
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
  */
