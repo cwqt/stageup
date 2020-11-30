@@ -1,5 +1,6 @@
 # eventi
 
+![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg)
 
 # Installation
 Will work for macOS (& Linux with adjustment) - not sure about Windows :/
