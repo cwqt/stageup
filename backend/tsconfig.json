@@ -13,6 +13,10 @@
     "sourceMap": true,
     "outDir": "./build",
     "rootDirs": ["./lib", "../runner"],
+    "typeRoots": [
+      "@types",
+      "./node_modules/@types",
+    ],
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]

@@ -1,52 +1,23 @@
-import { NodeType, IUser, IUserStub, IUserPrivate, DataModel } from "@eventi/interfaces";
-import { IoTJobsDataPlane } from "aws-sdk";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { NodeType, IUser, IUserStub, IUserPrivate } from "@eventi/interfaces";
 import bcrypt from "bcrypt";
-
-import {BaseEntity, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn} from "typeorm";
  
 @Entity()
 export class User extends BaseEntity implements IUserPrivate {
-  @PrimaryGeneratedColumn()
-  _id: string;
-
-  @Column()
-  type:NodeType=NodeType.User;
-
-  @Column()
-  created_at: number;
-
-  @Column({nullable:true})
-  name: string;
-  
-  @Column()
-  username: string;
-  
-  @Column({nullable:true})
-  avatar?: string;
-  
-  @Column()
-  email_address: string;
-  
-  @Column({nullable:true})
-  cover_image?: string;
-  
-  @Column({nullable:true})
-  bio?: string;
-  
-  @Column()
-  is_verified: boolean;
-  
-  @Column()
-  is_new_user: boolean;
-  
-  @Column()
-  is_admin: boolean;
-  
-  @Column()
-  readonly salt: string;
-  
-  @Column()
-  readonly pw_hash: string;
+  @PrimaryGeneratedColumn() _id: number;
+  @Column()                 type:NodeType=NodeType.User;
+  @Column()                 created_at: number;
+  @Column({nullable:true})  name: string;
+  @Column()                 username: string;
+  @Column({nullable:true})  avatar?: string;
+  @Column()                 email_address: string;
+  @Column({nullable:true})  cover_image?: string;
+  @Column({nullable:true})  bio?: string;
+  @Column()                 is_verified: boolean;
+  @Column()                 is_new_user: boolean;
+  @Column()                 is_admin: boolean;
+  @Column() readonly        salt: string;
+  @Column() readonly        pw_hash: string;
 
   constructor(data:Pick<IUserPrivate, "username" | "email_address">, password:string) {
     super()
@@ -91,8 +62,12 @@ export class User extends BaseEntity implements IUserPrivate {
     return u;
   }
 
-  update(updates:Partial<Pick<IUser, "name">>):IUser {
-    return this;
+  async update(updates:Partial<Pick<IUser, "name">>):Promise<User> {
+    Object.entries(updates).forEach(([k,v]:[string,any]) => {
+      (<any>this)[k] = v ?? (<any>this)[k];
+    })  
+
+    return this.save();
   }
 }
 

@@ -11,6 +11,10 @@ interface IEnv {
   DEVELOPMENT: boolean;
   TESTING: boolean;
   EXPRESS_PORT: number;
+  SENDGRID: {
+    USERNAME:string;
+    API_KEY:string;
+  },
   PG: {
     USER:string;
     HOST:string;

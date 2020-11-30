@@ -13,13 +13,7 @@ export enum Access {
   Authenticated,
   None,
 }
-
 export interface IResLocals {
-  session?: {
-    user?: {
-      _id: string;
-    };
-  };
   pagination?: {
     per_page: number;
     page: number;
@@ -51,7 +45,6 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
             providers,
             {
               file: req.file,
-              session: req.session,
               pagination: {
                 per_page: res.locals.per_page,
                 page: res.locals.page,

@@ -4,7 +4,7 @@ export type Primitive = string | boolean | number;
 export type Idless<T> = Omit<T, "_id">;
 
 export interface INode {
-  _id: string;
+  _id: number;
   created_at: number;
   type: NodeType;
 }

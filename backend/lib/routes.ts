@@ -14,13 +14,13 @@ const router = new Router(providers);
 
 // USERS -----------------------------------------------------------------------------------------------------------------------------------------------------------
 router.post   <IUser> ("/users",             Users.createUser,         [], Users.validators.createUser);
-// router.post   <void>  ("/users/logout",      Users.logoutUser,         [], null);
-// router.post   <IUser> ("/users/login",       Users.loginUser,          [], Users.validators.loginUser);
+router.post   <void>  ("/users/logout",      Users.logoutUser,         [], null);
+router.post   <IUser> ("/users/login",       Users.loginUser,          [], Users.validators.loginUser);
+router.get    <IUser> ("/users/:uid",        Users.readUserById,       [], null);
+router.put    <IUser> ("/users/:uid",        Users.updateUser,         [], null);
+router.delete <void>  ("/users/:uid",        Users.deleteUser,         [], null);
 // router.get    <IUser> ("/u/:username",       Users.readUserByUsername, [], Users.validators.readUserByUsername);
-// router.get    <IUser> ("/users/:uid",        Users.readUserById,       [], null);
-// router.put    <IUser> ("/users/:uid",        Users.updateUser,         [], null);
 // router.put    <IUser> ("/users/:uid/avatar", Users.updateUserAvatar,   [], null);
-// router.delete <void>  ("/users/:uid",        Users.deleteUser,         [], null);
 
 
 return router;
