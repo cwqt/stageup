@@ -22,5 +22,7 @@ router.delete <void>  ("/users/:uid",        Users.deleteUser,         [], null)
 // router.put    <IUser> ("/users/:uid/avatar", Users.updateUserAvatar,   [], null);
 
 
+router.get <string>   ("/ping", async (req:Request) => "Pong!", [], null);
+
 return router;
 };

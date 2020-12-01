@@ -808,3 +808,10 @@
 {"message":"Listening on 3000","level":"info","service":"user-service"}
 {"message":"POST /users/login 201 162 - 113.789 ms\n","level":"http","service":"user-service"}
 {"message":"Termination requested, closing all connections","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"GET /ping 200 7 - 9.774 ms\n","level":"http","service":"user-service"}
+{"message":"Termination requested, closing all connections","level":"info","service":"user-service"}

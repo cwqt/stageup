@@ -9,7 +9,11 @@ export const create = async () => {
 
   if (!config.REDIS.HOST) throw new Error("No Redis url found.");
 
-  const redisClient = redis.createClient();
+  const redisClient = redis.createClient({
+    host: config.REDIS.HOST,
+    port: config.REDIS.PORT
+  });
+
   return new Promise<redis.RedisClient>((resolve, reject) => {
     redisClient.on("connect", () => resolve(redisClient));
     redisClient.on("error", reject);

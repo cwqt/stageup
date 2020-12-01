@@ -26,7 +26,7 @@ export const create = async (): Promise<DataClient> => {
   const dataClient: DataClient = {
     torm: await timeout(PostgresProvider.create, 2000),
     redis: await timeout(RedisProvider.create, 2000),
-    influx: await timeout(InfluxProvider.create, 2000),
+    influx: null, //await timeout(InfluxProvider.create, 2000),
     session_store: null,
   };
 

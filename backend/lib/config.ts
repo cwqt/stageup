@@ -48,12 +48,12 @@ const base = {
   PG: {
     USER: process.env.PG_USER,
     PASS: process.env.PG_PASS,
-    HOST: process.env.PRODUCTION ? process.env.PG_HOST : "localhost",
+    HOST: process.env.PRODUCTION === "true" ? process.env.POSTGRES_SERVICE_HOST : "localhost",
     DB: "postgres",
     PORT: 5432,
   },
   REDIS: {
-    HOST: process.env.PRODUCTION ? process.env.REDIS_HOST : "localhost",
+    HOST: process.env.PRODUCTION === "true" ? process.env.REDIS_SERVICE_HOST : "localhost",
     PORT: 6379,
     TTL: 86400,
   },
@@ -63,7 +63,7 @@ const base = {
     S3_BUCKET_NAME: process.env.AWS_S3_ACCESS_SECRET_KEY
   },
   INFLUX: {
-    HOST: process.env.PRODUCTION ? process.env.REDIS_HOST : "localhost",
+    HOST: process.env.PRODUCTION === "true" ? process.env.INFLUX_HOST : "localhost",
     DB: "metrics"
   }
 } as IEnv;
@@ -71,8 +71,8 @@ const base = {
 const prod: IEnv = {
   ...base,
   SITE_TITLE: "my.eventi.net",
-  API_URL: "https://api.corrhizal.net",
-  FE_URL: "https://my.corrhizal.net",
+  API_URL: "https://api.eventi.com",
+  FE_URL: "https://eventi.com",
   PRODUCTION: true,
 };
 

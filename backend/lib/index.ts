@@ -17,6 +17,9 @@ import { HTTP } from "./common/http";
 import { DataClient, DataProvider } from "./common/data";
 
 
+console.log('-->', process.env)
+console.log(config)
+
 let server: http.Server;
 const app = express();
 app.set("trust proxy", 1);

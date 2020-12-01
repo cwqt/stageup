@@ -78,7 +78,24 @@ npm install --force
 
 # Testing
 
+* __Backend__: `npm run test`
+* __REST__: `npm run test`
+
 # Deployment
+
+```
+docker create network eventi
+```
+
+Create the K8s cluster
+
+```shell
+brew install minikube
+minikube start 
+
+kubectl cluster-info
+kubectl get nodes
+```
 
 # Actions
 
