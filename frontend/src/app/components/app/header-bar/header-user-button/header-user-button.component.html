@@ -1,0 +1,13 @@
+<ui-button *ngIf="currentUser"
+  size="m"
+  [variant]="variant"
+  [transparent]="transparent"
+  id="user-button"
+  (click)="openUserMenu($event)">
+  <img [src]="currentUser.avatar">
+  <div #ref>
+    <b>{{currentUser.name || currentUser.username}}</b>
+    <br />
+    <span>{{currentUser.email}}</span>
+  </div>
+</ui-button>

@@ -1,0 +1,61 @@
+ui-icon {
+  margin-right: 10px;
+}
+
+button {
+  min-height: 40px;
+
+  ::ng-deep .mat-spinner {
+    display: inline-block;
+    margin-right: 10px;
+
+    circle {
+      stroke: white;
+    }
+
+    opacity: 0.7;
+  }
+
+  &.isTransparent {
+    background: transparent !important;
+  }
+
+  &.mat-accent {
+    ::ng-deep .mat-spinner circle {
+      stroke: black !important;
+    }
+
+    &:disabled {
+      ::ng-deep .mat-spinner circle {
+        stroke: rgb(159, 159, 159) !important;
+      }
+    }
+  }
+
+  &.small {
+    padding: 2px 5px 2px 0;
+    border-radius: 4px !important;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 0;
+    min-height: 30px;
+
+    mat-spinner {
+      margin-left: 7px;
+    }
+    ui-icon {
+      transform: scale(0.8);
+      margin-right: 4px;
+      margin-left: 4px;
+    }
+  }
+
+  &.med {
+    padding: 8px 16px;
+  }
+
+  &.large {
+    font-size: 18px;
+    padding: 16px 48px 16px 16px;
+  }
+}

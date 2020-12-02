@@ -1,0 +1,47 @@
+.dialog-container {
+  position: relative;
+}
+
+.prop-assign-dialog-body {
+  padding: 20px;
+  h1 {
+    margin-bottom: 10px;
+  }
+}
+
+.prop-assignment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  ui-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 20px;
+    height: 20px;
+  }
+  p {
+    margin: 0;
+  }
+
+  .properties {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .end {
+    display: flex;
+    align-items: center;
+    button {
+      margin-top: -3px;
+    }
+  }
+}
+
+mat-divider {
+  margin: 20px 0;
+}

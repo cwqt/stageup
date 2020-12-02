@@ -1,0 +1,78 @@
+.device-container {
+  position: relative;
+  z-index: 10;
+}
+
+.user-menu {
+  background-color: white;
+  display: flex;
+  flex-flow: column;
+  transition: opacity 0.2s, height 0s;
+
+  ::ng-deep button.mat-button {
+    width: 100%;
+
+    .mat-button-wrapper {
+      width: 100%;
+      justify-content: flex-start;
+      text-align: left;
+    }
+  }
+}
+
+mat-tab-group {
+  width: 100%;
+  background-color: white;
+  ::ng-deep {
+    .mat-tab-labels {
+      padding: 0 24px;
+    }
+  }
+}
+
+.device-container {
+  display: flex;
+  .vertical-tabs {
+    width: 25%;
+    max-width: 25%;
+  }
+  .tab-body {
+    margin: 10px 10px 10px 0;
+    width: 75%;
+    max-width: 75%;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.06);
+  }
+}
+
+.vertical-tabs {
+  display: flex;
+  flex-flow: column;
+  padding: 10px 0 10px 10px;
+  background-color: #f4f4f4;
+
+  .vertical-tab {
+    margin-left: 10px;
+    padding: 20px;
+    padding-right: 30px;
+    display: flex;
+    flex-flow: row;
+    // z-index: 9;
+    position: relative;
+    clip-path: inset(-10px 0px -10px -10px);
+    h3 {
+      margin: 0;
+    }
+    span {
+      opacity: 0.7;
+    }
+    ui-icon {
+      margin-top: 5px;
+      margin-right: 20px;
+    }
+    &.active {
+      background-color: white;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.06);
+    }
+  }
+}

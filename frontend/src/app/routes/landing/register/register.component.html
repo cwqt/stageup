@@ -1,0 +1,57 @@
+<div *ngIf="!success">
+  <h1 class="mat-display-1">register a new account</h1>
+
+  <form [formGroup]="registerForm" [hidden]="success" (ngSubmit)="submitHandler()">
+      <mat-form-field>
+          <mat-label type="email">username</mat-label>
+          <input
+              matInput
+              type="text"
+              formControlName="username"
+              minLength="4"
+              maxlength="{{field_max_len}}"
+              autocomplete="off" />
+          <mat-hint align="end">{{username.value?.length || 0}}/{{field_max_len}}</mat-hint>
+          <mat-error *ngIf="!errors.username && !username.value">username is required</mat-error>
+          <mat-error *ngIf="!errors.username && registerForm.hasError('usernameForbidden')">username must only contain letters and numbers</mat-error>
+          <mat-error *ngIf="errors.username">{{errors.username}}</mat-error>
+      </mat-form-field>
+
+      <br />
+
+      <mat-form-field>
+          <mat-label type="email">e-mail</mat-label>
+          <input matInput type="text" formControlName="email"  autocomplete="off" />
+          <mat-error *ngIf="!errors.email && email.invalid && email.touched">e-mail is required</mat-error>
+          <mat-error *ngIf="errors.email">{{errors.email}}</mat-error>
+      </mat-form-field>
+
+      <br />
+
+      <mat-form-field>
+          <mat-label type="password">password</mat-label>
+          <input matInput type="password" formControlName="password" maxlength="{{field_max_len}}" minLength="{{pw_min_len}}" (input)="onPasswordInput()"  autocomplete="off" />
+          <mat-hint align="end">{{password.value?.length || 0}}/{{field_max_len}}</mat-hint>
+          <mat-error *ngIf="!errors.password && password.value.length < pw_min_len && password.touched">password must be greater than {{pw_min_len}} characters</mat-error>
+          <mat-error *ngIf="errors.password">{{errors.password}}</mat-error>
+      </mat-form-field>
+
+      <br />
+
+      <mat-form-field>
+          <mat-label type="password">confirm password</mat-label>
+          <input matInput type="password" formControlName="confirmation" (input)="onPasswordInput()"  autocomplete="off" />
+          <mat-error *ngIf="confirmation.touched && password.touched && confirmation.invalid">passwords do not match</mat-error>
+      </mat-form-field>
+
+      <br />
+      <br />
+
+      <!-- <app-load-button [disabled]="registerForm.invalid || loading" [loading]="loading">{{register_button_text}}</app-load-button> -->
+  </form>
+</div>
+
+<div *ngIf="success">
+  <h1 class="mat-display-1">account created!</h1>
+  <p>a verification e-mail has been sent to your email address</p>
+</div>

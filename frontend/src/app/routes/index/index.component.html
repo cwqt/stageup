@@ -1,0 +1,28 @@
+<app-wrapper>
+  <div *ngIf="userOrgs.length == 0" class="no-orgs">
+    <h1>No organisations found</h1>
+    <p>
+      Looks like you're not in any organisations,
+      <a routerLink="/orgs/create">create</a> or <a routerLink="">join</a> one now.
+    </p>
+  </div>
+
+  <ng-container *ngIf="userOrgs.length && currentOrg">
+    <mat-tab-group [animationDuration]="0" mat-align-tabs="start" class="light" (selectedTabChange)="selectedTabChange($event)">
+      <mat-tab *ngFor="let tab of tabs | keyvalue: asIsOrder">
+        <ng-template mat-tab-label>
+          <ui-icon>{{ tab.value.icon }}</ui-icon>
+          {{ tab.key | titlecase }}
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+
+
+    <div class="index-body">
+      <div class="index-body-outlet">
+        <router-outlet></router-outlet>
+      </div>
+      <div class="index-body-underlay"></div>
+    </div>
+  </ng-container>
+</app-wrapper>

@@ -1,0 +1,43 @@
+.chart-wrapper {
+  min-width: 0;
+  overflow: hidden;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assignment-wrapper {
+  position: relative;
+  table {
+    width: 100%;
+  }
+}
+
+ui-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 48px;
+  ::ng-deep button {
+    min-height: 48px !important;
+  }
+}
+
+mat-cell mat-checkbox {
+  margin-left: 24px;
+}
+
+.assigner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  ui-button {
+    min-width: 40%;
+  }
+  p {
+    width: 50%;
+    white-space: nowrap;
+    margin: 0;
+  }
+}

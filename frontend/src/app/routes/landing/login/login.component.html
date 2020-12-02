@@ -1,0 +1,67 @@
+<div class="login-wrapper">
+  <app-side-strip></app-side-strip>
+
+  <div class="content">
+    <div *ngIf="!success">
+      <h1 class="mat-display-1">Sign in</h1>
+
+      <form [formGroup]="loginForm" [hidden]="success" (ngSubmit)="submitHandler()">
+        <mat-form-field appearance="fill">
+          <mat-label type="email">E-mail address</mat-label>
+          <input matInput type="text" formControlName="email" />
+          <mat-error *ngIf="!errors.email && email.invalid && email.touched"
+            >E-mail is required</mat-error
+          >
+          <mat-error *ngIf="errors.email">{{ errors.email }}</mat-error>
+        </mat-form-field>
+
+        <br />
+
+        <mat-form-field appearance="fill">
+          <mat-label type="password">Password</mat-label>
+          <input matInput type="password" formControlName="password" />
+          <mat-error
+            *ngIf="!errors.password && password.invalid && password.touched"
+            >Password is required</mat-error
+          >
+          <mat-error *ngIf="errors.password">{{ errors.password }}</mat-error>
+        </mat-form-field>
+
+        <div class="sign-in-buttons">
+          <ui-button
+          variant="primary"
+          [disabled]="loginForm.invalid || loading"
+          [loading]="loading"
+        >
+          <span>Sign in</span>
+        </ui-button>
+
+          <mat-form-field floatPlaceholder="always" class="app-input-no-underline">
+          <input matInput style="display: none !important;" />
+          <mat-checkbox formControlName="rememberMe">Remember me?</mat-checkbox>
+        </mat-form-field>
+
+          <a class="mat-small help" href="#">Trouble logging in?</a>
+        </div>
+
+        <mat-error class="form" *ngIf="errors.form">{{ errors.form }}</mat-error>
+      </form>
+
+
+      <br/>
+      <br/>
+
+      <div class="alt-sign-in-buttons">
+        <ui-button variant="secondary"><img src="/assets/gitlab.png"/>Gitlab</ui-button>
+        <ui-button variant="secondary"><img src="/assets/github.png"/>GitHub</ui-button>
+        <ui-button variant="secondary"><img src="/assets/google.png"/>Google</ui-button>
+      </div>
+
+    </div>
+
+    <div *ngIf="success">
+      <h1 class="mat-display-1">logged in!</h1>
+    </div>
+
+  </div>
+</div>

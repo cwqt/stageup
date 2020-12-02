@@ -1,0 +1,18 @@
+<ui-overflow-menu class="user-menu">
+  <ui-button [size]="'m'" [style]="'accent'" [icon]="'settings'" (click)="gotoSettings()">
+    Settings & privacy
+  </ui-button>
+
+  <ui-button [size]="'m'" [style]="'accent'" [icon]="'document'">
+    <div class="alt">
+      <p>Documentation</p>
+      <p>Learn how to create things</p>
+    </div>
+  </ui-button>
+
+  <mat-divider></mat-divider>
+
+  <ui-button [size]="'m'" [style]="'secondary'" [icon]="'logout'" (click)="logout()">
+    Log out
+  </ui-button>
+</ui-overflow-menu>

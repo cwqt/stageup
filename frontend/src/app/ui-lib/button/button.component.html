@@ -1,0 +1,15 @@
+<button
+  [matTooltip]="tooltip"
+  [disabled]="disabled"
+  [id]="variant"
+  [color]="variant"
+  [class.large]="size == 'l'"
+  [class.med]="size == 'm'"
+  [class.small]="size == 's'"
+  [class.isTransparent]="transparent"
+  mat-button
+  (click)="onClick($event)">
+    <mat-spinner *ngIf="loading" [diameter]="size == 's' ? 15 : 20"></mat-spinner>
+    <ui-icon *ngIf="icon && !loading">{{icon}}</ui-icon>
+    <ng-content></ng-content>
+</button>

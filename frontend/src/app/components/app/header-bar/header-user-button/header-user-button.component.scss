@@ -1,0 +1,16 @@
+#user-button {
+  display: flex;
+  flex-flow: column;
+  img {
+    max-height: 38px;
+    border-radius: 50%;
+  }
+  div {
+    line-height: 1.3;
+    text-align: left;
+    margin-left: 10px;
+    span {
+      opacity: 0.8;
+    }
+  }
+}

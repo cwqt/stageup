@@ -1,0 +1,48 @@
+.button-menu-container {
+  position: relative;
+  min-width: 150px;
+  font-weight: light;
+
+  .dropdown {
+    position: absolute;
+    top: 40px;
+    display: flex;
+    flex-flow: column;
+    width: 200px;
+    background: #e5e5e5;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+    ::ng-deep {
+      ui-button {
+        z-index: 999;
+        width: 100%;
+
+        .mat-button {
+          opacity: 0.8;
+
+          &:hover {
+            opacity: 1;
+          }
+
+          width: 100%;
+
+          .mat-button-wrapper {
+            span {
+              font-weight: normal;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ui-icon {
+    display: inline;
+    margin-left: 5px;
+    transition: 0.1s transform;
+
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+}

@@ -1,0 +1,72 @@
+<div class="dashboard-header">
+  <ui-icon-button size="m">overflow-menu--vertical</ui-icon-button>
+
+  <div class="dashboard-logo-wrapper">
+    <img src="https://i.imgur.com/ycEGPSf.jpg" alt="">
+  </div>
+  <div class="dashboard-header-body">
+    <div class="dashboard-header-title">
+      <h1>{{ org.name }}</h1>
+      <ui-chip color="cool-grey">PRO</ui-chip>
+    </div>
+    <h3>mcn test dashboard 🌱</h3>
+    <div class="dashboard-member-avatars">
+      <div class="dashboard-member-avatar">
+        <img src="https://vercel.com/api/www/avatar/5675826edf2291b4b22c07ca8e09ea1432ba3bf9?s=60" alt="">
+      </div>
+      <div class="dashboard-member-avatar">
+        <img src="https://i.imgur.com/HRJCrLs.gif" alt="">
+      </div>
+      <span>2 members</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="dashboard-edit-bar">
+  <div class="dashboard-edit-buttons" *ngIf="cache.dashboard.editing">
+    <label>Rows</label>
+    <ui-input type="number" [(ngModel)]="dashboard.rows"></ui-input>
+    <label>Columns</label>
+    <ui-input type="number" [(ngModel)]="dashboard.columns"></ui-input>
+
+    <ui-button variant="primary" (click)="openAddDashItemDialog()"><ui-icon>add</ui-icon>Add item</ui-button>
+  </div>
+
+  <ui-button [variant]="cache.dashboard.editing ? 'warn' : 'primary'" (click)="toggleEditState()">
+    <ui-icon *ngIf="!cache.dashboard.editing">edit</ui-icon>
+    <ui-icon *ngIf="cache.dashboard.editing">close</ui-icon>
+    {{cache.dashboard.editing ? "Stop editing" : "Edit"}}</ui-button>
+  <!-- <ui-button variant="warn" (click)="cancelEdit()" *ngIf="cache.dashboard.editing"><ui-icon>close</ui-icon>Cancel</ui-button> -->
+</div>
+
+<div class="dashboard-body" *ngIf="dashboard" [class.isEditing]="cache.dashboard.editing" [style]="'height:'+dashboard.rows*100+'px'">
+  <ui-overlay-spinner *ngIf="cache.dashboard.loading"></ui-overlay-spinner>
+  <ngx-widget-grid
+    #grid
+    [rows]="dashboard.rows"
+    [columns]="dashboard.columns"
+    [highlightNextPosition]="false"
+    [showGrid]="cache.dashboard.editing"
+    (widgetPositionChange)="onWidgetChange($event)">
+
+    <ngx-widget *ngFor="let item of dashboard.items"
+      [position]="item.position"
+      (positionChange)="handleDashPositionChanged(item, $event)"
+      [movable]="cache.dashboard.editing"
+      [resizable]="cache.dashboard.editing">
+      <ui-icon-button
+        size="m"
+        [popoverTriggerFor]="myPopover"
+        id="edit"
+        (click)="openDashItemEditMenu(item)">overflow-menu--horizontal</ui-icon-button>
+      <app-dashboard-item [item]="item">
+      </app-dashboard-item>
+    </ngx-widget>
+  </ngx-widget-grid>
+</div>
+
+<popover #myPopover>
+  <ui-button (click)="editDashItem()">Edit item</ui-button>
+  <ui-button (click)="deleteDashItem()" variant="warn">Delete</ui-button>
+</popover>

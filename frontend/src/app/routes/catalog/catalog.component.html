@@ -1,0 +1,40 @@
+<app-page title="Catalog">
+  <div position="sidebar">
+    <p>Search for plant species, devices & task routines.</p>
+
+    <b>Select category:</b>
+    <ul>
+      <mat-radio-group [(ngModel)]="activeCategory">
+        <mat-radio-button *ngFor="let category of searchCategories" [value]="category">
+          {{category}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </ul>
+  </div>
+
+  <h1 *ngIf="!activeCategory">No category selected</h1>
+
+  <div *ngIf="activeCategory">
+    <h1>Search for {{activeCategory}}</h1>
+    <mat-form-field appearance="fill">
+      <mat-label type="text">Enter query...</mat-label>
+      <input #searchBox matInput type="text" (input)="search(searchBox.value)" autocomplete="no"/>
+      <mat-error *ngIf="errors.search">{{ errors.search }}</mat-error>
+    </mat-form-field>
+
+    <p *ngIf="loading">Loading...</p>
+
+    <div *ngIf="activeCategory == 'species'" class="results">
+      <div *ngFor="let result of results$ | async">
+        <div class="result-item" matRipple>
+          <b>{{result.name}}</b>
+          <ui-chip [color]="getColor(result.name)">{{result.scientific_name}}</ui-chip>
+          <span>{{result._id}}</span>
+        </div>
+        <hr>
+      </div>
+    </div>
+  </div>
+
+
+</app-page>

@@ -1,0 +1,21 @@
+<div class="wrapper">
+  <h1>Edit dashboard item</h1>
+  <ui-input type="text" [(ngModel)]="data.title" label="Title"></ui-input>
+
+  <mat-divider></mat-divider>
+  <br />
+
+  <h2>Data aggregation</h2>
+  <app-data-aggregator
+    [editing]="true"
+    [aggregationRequest]="data.aggregation_request">
+  </app-data-aggregator>
+</div>
+
+<ui-dialog-buttons
+  leftString="Cancel"
+  rightString="Save"
+  [leftDisabled]="false"
+  (leftClick)="onCancel()"
+  (rightClick)="onSubmit()">
+</ui-dialog-buttons>

@@ -1,0 +1,150 @@
+<div class="container">
+  <h1>Accordion</h1>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          This is the expansion title
+        </mat-panel-title>
+        <mat-panel-description>
+          This is a summary of the content
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      This is the primary content of the panel.    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Self aware panel
+        </mat-panel-title>
+        <mat-panel-description>
+          Currently I am 
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      This is the primary content of the panel.    </mat-expansion-panel>
+    <mat-expansion-panel [disabled]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Self aware panel
+        </mat-panel-title>
+        <mat-panel-description>
+          Currently I am 
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      This is the primary content of the panel.    </mat-expansion-panel>
+  </mat-accordion>
+
+  <br>
+
+
+  <h1>Select</h1>
+  <ui-select [graph]="graph"></ui-select>
+
+  <hr><br />
+
+  <h1>Buttons</h1>
+
+  <div class="row">
+    <ui-button variant="primary">Primary</ui-button>
+    <ui-button variant="secondary">Secondary</ui-button>
+    <ui-button variant="accent">Accent</ui-button>
+    <ui-button variant="warn">Warn</ui-button>
+    <ui-button [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <div class="row">
+    <ui-button [loading]="true" variant="primary">Primary</ui-button>
+    <ui-button icon="settings" variant="secondary">Secondary</ui-button>
+    <ui-button [loading]="true" variant="accent">Accent</ui-button>
+    <ui-button icon="settings" variant="accent">Accent</ui-button>
+    <ui-button icon="settings" variant="warn">Warn</ui-button>
+    <ui-button [loading]="true" [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <div class="row">
+    <ui-button size="s" [loading]="true" variant="primary">Primary</ui-button>
+    <ui-button size="m" icon="settings" variant="secondary">Secondary</ui-button>
+    <ui-button size="l" [loading]="true" variant="accent">Accent</ui-button>
+    <ui-button size="m" icon="settings" variant="accent">Accent</ui-button>
+    <ui-button size="s" icon="settings" variant="warn">Warn</ui-button>
+    <ui-button size="l" [loading]="true" [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <hr>
+
+  <h1>Button menu</h1>
+  <div class="row">
+    <ui-button-menu variant="primary" title="Hello world!">
+      <ui-button variant="primary">Hello world!</ui-button>
+      <ui-button variant="primary">Hello world!</ui-button>
+      <ui-button variant="primary">Hello world!</ui-button>
+      <ui-button variant="primary">Hello world!</ui-button>
+    </ui-button-menu>
+
+    <ui-button-menu variant="secondary" title="Hello world!">
+      <ui-button variant="secondary">Hello world!</ui-button>
+      <ui-button variant="secondary">Hello world!</ui-button>
+      <ui-button variant="secondary">Hello world!</ui-button>
+      <ui-button variant="secondary">Hello world!</ui-button>
+    </ui-button-menu>
+  </div>
+
+  <hr>
+
+  <h1>Inputs</h1>
+
+  <ui-input [(ngModel)]="textString" type="text" size="s" placeholder="Small input"></ui-input>
+
+  <ui-input [(ngModel)]="textString" type="text" label="Name please"></ui-input>
+  <ui-input [(ngModel)]="numberString" type="number" label="Age please"></ui-input>
+
+  <ui-input [(ngModel)]="textString" type="text"></ui-input>
+  <ui-input [(ngModel)]="numberString" type="number"></ui-input>
+
+  <ui-input [(ngModel)]="textString" type="textarea" label="Text please"></ui-input>
+
+  <ui-input [(ngModel)]="boolString" type="checkbox" label="Text please"></ui-input>
+
+  {{textString}}, {{numberString}},  {{boolString}}
+
+  <br/>
+  <br/>
+  <h1>Measurements</h1>
+  <div class="measurements-icon-wrapper row">
+    <p *ngFor="let measurement of measurements | keyvalue">
+      <ui-icon>{{ measurement.value.icon }}</ui-icon>
+      {{ measurement.key }}
+      <span>{{ units[measurement.key] }}</span>
+    </p>
+  </div>
+
+
+  <br />
+  <br />
+  <h1>Admonition</h1>
+  <ui-admonition type="info" title="During early access, getting a server for a world is complicated">
+    Eventually it will be easy. However, there's an advanced guide for
+    self-hosting on Linux which you can find here
+  </ui-admonition>
+  <br />
+  <ui-admonition type="warning" title="During early access, getting a server for a world is complicated">
+    Eventually it will be easy. However, there's an advanced guide for
+    self-hosting on Linux which you can find here
+  </ui-admonition>
+  <br />
+  <ui-admonition type="bug" title="During early access, getting a server for a world is complicated">
+    Eventually it will be easy. However, there's an advanced guide for
+    self-hosting on Linux which you can find here
+  </ui-admonition>
+  <br />
+  <ui-admonition type="success" title="During early access, getting a server for a world is complicated">
+    Eventually it will be easy. However, there's an advanced guide for
+    self-hosting on Linux which you can find here
+  </ui-admonition>
+  <br />
+  <ui-admonition type="example" title="During early access, getting a server for a world is complicated">
+    Eventually it will be easy. However, there's an advanced guide for
+    self-hosting on Linux which you can find here
+  </ui-admonition>
+
+
+</div>

@@ -1,0 +1,10 @@
+<div class="rack-wrapper" *ngIf="rack">
+
+
+
+  <div class="crops-wrapper">
+    <div class="crop" *ngFor="let crop of rack.crops">
+      {{crop.name}}
+    </div>
+  </div>
+</div>

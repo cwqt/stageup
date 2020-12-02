@@ -1,0 +1,42 @@
+<div class="device-container" *ngIf="device">
+  <!-- <ui-icon-button #deviceRef (click)="openDeviceMenu()" size="m">overflow-menu--vertical</ui-icon-button> -->
+
+    <div class="vertical-tabs">
+      <div class="vertical-tab" [class.active]="tab.value.active" (click)="gotoTab(tab.value.url)" *ngFor="let tab of tabs | keyvalue: asIsOrder">
+        <ui-icon>{{tab.value.icon}}</ui-icon>
+        <div>
+          <h3>{{tab.key | titlecase }}</h3>
+          <span *ngIf="tab.value.active">{{tab.value.desc}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-body">
+      <router-outlet></router-outlet>
+    </div>
+
+  <!-- <div class="device-right">
+    <div class="device-stats" *ngIf="cache.device.data">
+      <mat-accordion>
+        <ui-loadable-panel description="Assign device properties to recordables" variant="flat" icon="api"
+          title="Properties" [hasData]="true">
+          <app-prop-assignments (refreshPropAssignments)="getPropAssignmentsGraph(device._id, true, $event)" *ngIf="cache.propAssignments.data" [graph]="cache.propAssignments.data" [device]="cache.device.data"></app-prop-assignments>
+        </ui-loadable-panel>
+
+        <ui-loadable-panel description="View metrics, sensor & state data" variant="flat" icon="chart--bar"
+          title="Measurements" [hasData]="true">
+          <app-property-list [device]="cache.device.data"></app-property-list>
+        </ui-loadable-panel>
+
+        <ui-loadable-panel description="Directly control device outputs" variant="flat" icon="meter" title="Control">
+          <app-device-control [device]="device"></app-device-control>
+        </ui-loadable-panel>
+
+        <ui-loadable-panel description="View planned routines" variant="flat" icon="virtual-machine"
+          title="Task Routines">
+          <app-scheduled-tasks [device]="device"></app-scheduled-tasks>
+        </ui-loadable-panel>
+      </mat-accordion>
+    </div> -->
+
+</div>

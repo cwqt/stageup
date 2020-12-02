@@ -1,0 +1,29 @@
+<div class="header-container">
+  <div class="left">
+    <ui-button variant="secondary" id="icon" (click)="gotoRoot()">
+      <img src="/assets/leaf.png" />
+    </ui-button>
+    <ui-button-menu variant="secondary" [pre]="'mcn ·'" [title]="activeOrg ? activeOrg.name : 'No org'">
+        <ui-button variant="secondary" *ngFor="let org of userOrgs" (click)="setActiveOrg(org)">{{ org.name }}</ui-button>
+    </ui-button-menu>
+
+    <div class="separator"></div>
+
+    <ui-button variant="secondary" (click)="gotoCatalog()">Catalog</ui-button>
+    <ui-button variant="secondary">Docs</ui-button>
+    <ui-button variant="secondary">Support</ui-button>
+  </div>
+
+
+  <div class="right">
+    <ui-button variant="secondary" id="alert-wrapper">
+      <div id="alert">
+        <mat-icon inline>notifications_none</mat-icon>
+      </div>
+    </ui-button>
+
+    <div class="separator"></div>
+
+    <app-header-user-button variant="secondary" id="user-button" [currentUser]="currentUser"></app-header-user-button>
+  </div>
+</div>

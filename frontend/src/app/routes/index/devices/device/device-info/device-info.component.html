@@ -1,0 +1,7 @@
+<ul *ngIf="device">
+  <li><b>Created:</b>{{device.created_at | amTimeAgo}}</li>
+  <li><b>Last message:</b>{{device.last_ping | amTimeAgo}}</li>
+  <li><b>API key:</b> {{device.api_key || 'None'}}</li>
+  <li><b>Network name:</b> {{device.network_name}}</li>
+  <li><b>Hardware models:</b> {{device.hardware_model}}</li>
+</ul>

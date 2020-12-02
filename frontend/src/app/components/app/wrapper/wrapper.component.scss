@@ -1,0 +1,23 @@
+.app-container {
+  max-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-content {
+  height: 100vh;
+  display: flex;
+
+  .left {
+  }
+
+  .right {
+    width: 100%;
+    overflow: scroll;
+    min-height: 100vh;
+
+    .app-body {
+      min-height: calc(100vh - 48px);
+    }
+  }
+}

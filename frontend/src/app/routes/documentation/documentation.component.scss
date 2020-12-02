@@ -1,0 +1,29 @@
+.documentation-header {
+    width: 100%;
+    height: 20vh;
+    background-color: #673ab7;
+    color: white;
+    display: flex;
+    flex-flow: column;
+    padding: 20px 2vw;
+    position: relative;
+    overflow: hidden;
+    h1 {
+        margin-top: auto;
+        font-size: 60px;
+        font-family: 'Poppins';
+        font-weight: bold;
+    }
+    .underlay {
+        opacity: .05;
+        font-size: 220px;
+        position: absolute;
+        font-family: 'Poppins';
+        font-weight: bold;
+        bottom: 100px;
+        left: -30px;
+    }
+    h2 {
+        font-weight: normal;
+    }
+}

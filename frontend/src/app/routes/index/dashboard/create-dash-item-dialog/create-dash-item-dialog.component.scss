@@ -1,0 +1,47 @@
+.dialog-container {
+  position: relative;
+}
+
+.dialog-wrapper {
+  padding: 20px;
+
+  .dimensions-input-wrapper {
+    display: flex;
+    justify-content: space-between;
+    mat-form-field {
+      max-width: 49%;
+    }
+  }
+}
+
+.chart-type-select-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+
+  .chart-type-select {
+    &:hover {
+      cursor: pointer;
+      border: 1px solid #8e8e8e;
+    }
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    ui-icon {
+      margin: 0 5px;
+    }
+    p {
+      margin: 0;
+    }
+  }
+}

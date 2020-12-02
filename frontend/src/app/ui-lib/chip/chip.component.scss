@@ -1,0 +1,47 @@
+.chip {
+  display: inline-block;
+  padding: 4px 8px;
+  margin: 4px;
+  border-radius: 12px;
+}
+
+.chip-red {
+  background-color: #ffd7d9;
+  color: #a2191f;
+}
+.chip-magenta {
+  background-color: #ffd6e8;
+  color: #9f1853;
+}
+.chip-purple {
+  background-color: #e8daff;
+  color: #6929c4;
+}
+.chip-blue {
+  background-color: #d0e2ff;
+  color: #0043ce;
+}
+.chip-cyan {
+  background-color: #bae6ff;
+  color: #00539a;
+}
+.chip-teal {
+  background-color: #9ef0f0;
+  color: #005d5d;
+}
+.chip-green {
+  background-color: #a7f0ba;
+  color: #0e6027;
+}
+.chip-gray {
+  background-color: #e0e0e0;
+  color: #525252;
+}
+.chip-cool-grey {
+  background-color: #dde1e6;
+  color: #4d5358;
+}
+.chip-warm-grey {
+  background-color: #e5e0df;
+  color: #565151;
+}

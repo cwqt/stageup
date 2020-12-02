@@ -1,0 +1,89 @@
+h1 {
+  margin-bottom: 20px !important;
+}
+
+mat-error.form {
+  display: inline-block !important;
+  margin-left: 20px;
+}
+
+.help {
+  color: grey;
+  text-decoration: none;
+  transition: 0.2s;
+  margin-left: auto;
+  white-space: nowrap;
+  margin-top: -4px;
+
+  &:hover {
+    color: darken(grey, 20%);
+  }
+}
+
+.login-wrapper {
+  display: flex;
+  overflow: hidden;
+
+  .image {
+    width: 78px;
+    min-width: 78px;
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+
+    img:not(#logo) {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+      object-position: center;
+    }
+
+    #logo {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      max-height: 38px;
+      max-width: 38px;
+      z-index: 999;
+      filter: invert(1);
+    }
+  }
+
+  ui-button img {
+    max-height: 20px;
+    margin-right: 10px;
+  }
+
+  .content {
+    padding: 20px;
+    margin: 50px 0;
+    width: 30vw;
+    min-width: 600px;
+  }
+}
+
+.sign-in-buttons {
+  display: flex;
+  align-items: center;
+  max-height: 48px;
+  overflow: hidden;
+  mat-checkbox {
+    margin-left: 15px;
+  }
+}
+
+ui-button {
+  margin-right: 10px;
+}
+
+.alt-sign-in-buttons {
+  display: none;
+  background-color: #f4f4f4;
+  position: absolute;
+  padding: 10px;
+  padding-left: 98px;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+}

@@ -1,0 +1,86 @@
+.list-wrapper {
+  padding: 0;
+  display: flex;
+  flex-flow: row;
+  .table-wrapper,
+  .device-info-wrapper {
+    width: 100%;
+    max-height: 100%;
+    overflow: scroll;
+  }
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  margin-left: 0;
+  width: 100% !important;
+  .fill {
+    width: 80%;
+  }
+  ui-button ::ng-deep button {
+    padding-right: 30px !important;
+  }
+  ui-icon {
+    margin-right: 10px;
+    transform: scale(0.7);
+  }
+}
+
+::ng-deep mat-cell.mat-column-select {
+  flex: 0 0 60px;
+}
+::ng-deep mat-header-cell.mat-column-select {
+  flex: 0 0 60px;
+}
+
+mat-paginator {
+  width: 100%;
+}
+
+mat-row,
+mat-header-row {
+  position: relative;
+}
+
+mat-spinner {
+  margin-left: -8px;
+}
+
+.active {
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-left: 4px solid #105ff9;
+  }
+}
+
+.device-row {
+  border-bottom-width: 0;
+  ui-icon {
+    margin-left: -5px;
+  }
+}
+
+mat-row.device-body-row {
+  min-height: 0 !important;
+  overflow: hidden;
+  width: 100%;
+  ::ng-deep mat-cell {
+    padding: 0;
+  }
+}
+
+.device-body {
+  position: relative;
+  display: flex;
+  background: #f4f4f4;
+  width: 100%;
+  ::ng-deep app-device {
+    width: 100%;
+  }
+}

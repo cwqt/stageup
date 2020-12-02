@@ -1,0 +1,38 @@
+<div class="list-wrapper">
+  <div class="farm-container" *ngIf="cache.farm.data">
+    <div class="farm-section-header">
+        <h1>{{farm.name}}</h1>
+        <h3>{{'Created ' + (farm.created_at | amTimeAgo)}}</h3>
+    </div>
+
+    <mat-tab-group [animationDuration]="0" mat-align-tabs="start" class="light" >
+      <mat-tab *ngFor="let tab of cache.tabs | keyvalue: asIsOrder">
+        <ng-template mat-tab-label>
+          <ui-icon>{{ tab.value.icon }}</ui-icon>
+          {{ tab.key | titlecase }}
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+
+
+    <mat-divider></mat-divider>
+    <br />
+
+    <div class="farm-racks-header">
+      <h1>Racks</h1>
+      <ui-button variant="secondary"><ui-icon>add</ui-icon>Add rack</ui-button>
+    </div>
+
+    <mat-accordion class="racks">
+      <mat-expansion-panel *ngFor="let rack of farm.racks" (click)="openRackDetail(rack)">
+        <mat-expansion-panel-header>
+          <mat-panel-title><span>{{rack.name | titlecase}}</span></mat-panel-title>
+          <mat-panel-description>
+            <ui-chip color="green" *ngFor="let species of cache.farm.racks[rack.name]">{{species}}</ui-chip>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <router-outlet></router-outlet>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

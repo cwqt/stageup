@@ -121,3 +121,12 @@
 {"message":"(404) --> \"No such route exists\"","level":"error","service":"user-service"}
 {"message":"(500) --> \"Cannot read property 'map' of undefined\"","level":"error","service":"user-service"}
 {"message":"(500) --> \"Cannot read property 'map' of undefined\"","level":"error","service":"user-service"}
+{"message":"(400) --> \"You're not authorised to create performances.\"","level":"error","service":"user-service"}
+{"message":"(400) --> \"You're not authorised to create performances.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"No metadata for \\\"Performance\\\" was found.\"","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'toStub' of undefined\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'toStub' of undefined\"","level":"error","service":"user-service"}

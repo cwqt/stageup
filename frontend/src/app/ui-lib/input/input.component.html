@@ -1,0 +1,18 @@
+<mat-form-field
+  class="ui-input"
+  appearance="fill"
+  [class.dark]="variant == 'secondary'"
+  [class.small]="!label"
+  [class.checkbox]="type == 'checkbox'">
+  <mat-label *ngIf="label && type !== 'checkbox'">{{label}}</mat-label>
+  <input *ngIf="type == 'number' || type == 'text' || type == 'password'" [disabled]="disabled" matInput [(ngModel)]="value" [type]="type" [placeholder]="placeholder"/>
+  <textarea matInput *ngIf="type == 'textarea'" [(ngModel)]="value"></textarea>
+  <mat-checkbox matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
+  <!-- <div class="ui-input-number-buttons" *ngIf="type == 'number'">
+    <ui-icon-button (click)="increment($event)">caret--up</ui-icon-button>
+    <ui-icon-button (click)="decrement($event)">caret--down</ui-icon-button>
+  </div> -->
+
+  <!-- stop formcontrolname throwing errors -->
+  <input matInput placeholder="Input" style="display: none" >
+</mat-form-field>
