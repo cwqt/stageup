@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@eventi/interfaces": "^1.0.0",
+    "@eventi/interfaces": "file:../interfaces",
     "aws-sdk": "^2.799.0",
     "bcrypt": "^4.0.1",
     "connect-redis": "^4.0.4",

@@ -28,16 +28,12 @@ spec:
               value: "root"
             - name: PG_PASS
               value: "12345"
-            - name: PG_HOST
-              value: "host.docker.internal"
             - name: PRIVATE_KEY
               value: "test"
             - name: EMAIL_ADDRESS
               value: "m@cass.si"
             - name: NODE_ENV
               value: "production"
-            - name: REDIS_HOST
-              value: "host.docker.internal"
 ---
 apiVersion: v1
 kind: Service

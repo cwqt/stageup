@@ -1,4 +1,7 @@
 import { INode } from "../Node.model";
+import { IPerformanceStub } from "../Performance.model";
+import { CurrencyCode } from "../Types/Currency.types";
+import { IHostPermission } from "./Host.model";
 export interface IUserStub extends INode {
     name: string;
     username: string;
@@ -15,4 +18,15 @@ export interface IUser extends IUserStub {
 export interface IUserPrivate extends IUser {
     salt?: string;
     pw_hash?: string;
+}
+export interface IPerformancePurchase {
+    date_purchased: number;
+    price: number;
+    currency: CurrencyCode;
+    performance: IPerformanceStub;
+}
+export interface IUserHostInfo {
+    joined_at: number;
+    is_owner: boolean;
+    permissions: IHostPermission;
 }

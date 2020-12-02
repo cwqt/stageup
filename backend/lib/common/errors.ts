@@ -34,10 +34,10 @@ export const handleError = (
 export class ErrorHandler extends Error {
   ErrorType: HTTP;
 
-  constructor(statusCode: HTTP, message: any) {
+  constructor(statusCode: HTTP, message?: any) {
     super();
     this.ErrorType = statusCode;
-    this.message = message;
+    this.message = message || "An error occured.";
   }
 }
 

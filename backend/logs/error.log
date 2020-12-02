@@ -89,3 +89,35 @@
 {"message":"(404) --> \"No such user exists\"","level":"error","service":"user-service"}
 {"message":"(401) --> [{\"param\":\"form\",\"msg\":\"Your account has not been verified\"}]","level":"error","service":"user-service"}
 {"message":"(401) --> [{\"param\":\"form\",\"msg\":\"Your account has not been verified\"}]","level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot read property '_id' of undefined\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"created_at\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"type\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"bio\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'joinColumns' of undefined\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'joinColumns' of undefined\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"(404) --> \"No such route exists\"","level":"error","service":"user-service"}
+{"message":"(404) --> \"No such route exists\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'map' of undefined\"","level":"error","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'map' of undefined\"","level":"error","service":"user-service"}

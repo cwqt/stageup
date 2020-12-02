@@ -15,4 +15,7 @@ __exportStar(require("./Types/Nodes.types"), exports);
 __exportStar(require("./Types/DataModels.types"), exports);
 __exportStar(require("./Users/User.model"), exports);
 __exportStar(require("./FP"), exports);
+__exportStar(require("./Users/Host.model"), exports);
+__exportStar(require("./Performance.model"), exports);
+__exportStar(require("./Review.model"), exports);
 //# sourceMappingURL=index.js.map

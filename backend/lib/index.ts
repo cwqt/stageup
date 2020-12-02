@@ -17,8 +17,8 @@ import { HTTP } from "./common/http";
 import { DataClient, DataProvider } from "./common/data";
 
 
-console.log('-->', process.env)
-console.log(config)
+// console.log('-->', process.env)
+// console.log(config)
 
 let server: http.Server;
 const app = express();
@@ -59,8 +59,8 @@ app.use(morgan("tiny", { stream: log.stream }));
     app.use((err: any, req: any, res: any, next: any) => handleError(req, res, next, err));
 
     // Handle closing connections on failure
-    process.on("SIGTERM", graceful_exit(providers));
-    process.on("SIGINT", graceful_exit(providers));
+    process.on("SIGTERM", gracefulExit(providers));
+    process.on("SIGINT", gracefulExit(providers));
 
     // Start listening for requests
     server = app.listen(config.EXPRESS_PORT, () => {
@@ -71,7 +71,7 @@ app.use(morgan("tiny", { stream: log.stream }));
   }
 })();
 
-function graceful_exit(providers:DataClient) {
+function gracefulExit(providers:DataClient) {
   return () => {
     log.info(`Termination requested, closing all connections`);
     DataProvider.close(providers).finally(() => {
@@ -86,5 +86,5 @@ function graceful_exit(providers:DataClient) {
 
 export default {
   app,
-  graceful_exit
+  gracefulExit
 };

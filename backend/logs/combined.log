@@ -815,3 +815,326 @@
 {"message":"Listening on 3000","level":"info","service":"user-service"}
 {"message":"GET /ping 200 7 - 9.774 ms\n","level":"http","service":"user-service"}
 {"message":"Termination requested, closing all connections","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Unable to connect to Postgres via TypeORM. Ensure a valid connection.","level":"error","service":"user-service"}
+{"level":"error","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot read property '_id' of undefined\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 87 - 17.613 ms\n","level":"http","service":"user-service"}
+{"message":"POST /users/login 201 162 - 110.168 ms\n","level":"http","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"created_at\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 112 - 86.161 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"type\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 106 - 76.170 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"null value in column \\\"bio\\\" violates not-null constraint\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 105 - 77.791 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 60.310 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 60.084 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"POST /hosts 201 130 - 37.052 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"POST /hosts 201 130 - 25.436 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 103.412 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 102.515 ms\n","level":"http","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 17.542 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 73.925 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 99.107 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'joinColumns' of undefined\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 95 - 46.636 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'joinColumns' of undefined\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 95 - 46.641 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 97.939 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 65.770 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot perform update query because update values are not defined. Call \\\"qb.set(...)\\\" method to specify updated values.\"","level":"error","service":"user-service"}
+{"message":"POST /hosts 500 169 - 98.920 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"POST /hosts 201 449 - 36.506 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"POST /hosts 201 210 - 35.455 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(404) --> \"No such route exists\"","level":"error","service":"user-service"}
+{"message":"GET /hosts/19/members 404 67 - 6.970 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(404) --> \"No such route exists\"","level":"error","service":"user-service"}
+{"message":"GET /hosts/19/members 404 67 - 6.990 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'map' of undefined\"","level":"error","service":"user-service"}
+{"message":"GET /hosts/19/members 500 87 - 24.282 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"(500) --> \"Cannot read property 'map' of undefined\"","level":"error","service":"user-service"}
+{"message":"GET /hosts/19/members 500 87 - 24.756 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"GET /hosts/19/members 200 164 - 21.851 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"GET /hosts/19/members 200 164 - 19.466 ms\n","level":"http","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}
+{"message":"Connecting to PostgreSQL (TypeORM)...","level":"info","service":"user-service"}
+{"message":"Connecting to Redis...","level":"info","service":"user-service"}
+{"message":"Creating Redis Store...","level":"info","service":"user-service"}
+{"message":"--- ALL DATABASES CONNECTED ---","level":"info","service":"user-service"}
+{"message":"Listening on 3000","level":"info","service":"user-service"}

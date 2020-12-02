@@ -1,7 +1,9 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { NodeType, IUser, IUserStub, IUserPrivate } from "@eventi/interfaces";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import { NodeType, IUser, IUserStub, IUserPrivate, IPerformancePurchase } from "@eventi/interfaces";
+// import { Purchase } from './Purchase.model';
 import bcrypt from "bcrypt";
- 
+import { Host } from './Host.model'
+
 @Entity()
 export class User extends BaseEntity implements IUserPrivate {
   @PrimaryGeneratedColumn() _id: number;
@@ -18,6 +20,8 @@ export class User extends BaseEntity implements IUserPrivate {
   @Column()                 is_admin: boolean;
   @Column() readonly        salt: string;
   @Column() readonly        pw_hash: string;
+
+  @ManyToOne(() => Host, host => host.members) host:Host;
 
   constructor(data:Pick<IUserPrivate, "username" | "email_address">, password:string) {
     super()
@@ -49,6 +53,7 @@ export class User extends BaseEntity implements IUserPrivate {
       is_new_user: this.is_new_user,
       is_verified: this.is_verified,
       is_admin: this.is_admin,
+      // purchases: []
     }
     return u;
   }
