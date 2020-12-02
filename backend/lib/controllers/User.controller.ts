@@ -30,7 +30,7 @@ export const validators = {
 };
 
 export const createUser = async (req: Request, dc: DataClient): Promise<IUser> => {
-  let preExistingUser = await User.findOne({ where: [
+  const preExistingUser = await User.findOne({ where: [
     { email_address: req.body.email_address },
     { username: req.body.username }
   ]});

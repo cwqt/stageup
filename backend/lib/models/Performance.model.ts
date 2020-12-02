@@ -1,7 +1,9 @@
-import { IPerformance, IPerformanceStub, IRating, NodeType } from "@eventi/interfaces";
+import { IPerformance, IPerformanceHostInfo, IPerformanceStub, IRating, NodeType, PerformanceState } from "@eventi/interfaces";
 import { Host } from "./Host.model";
 import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User.model";
+import { SigningKey } from "./SigningKey.model";
+import { PerformanceHostInfo as PHostInfo } from "./PerformanceHostInfo.model";
 
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
@@ -14,10 +16,11 @@ export class Performance extends BaseEntity implements IPerformance {
     @Column({nullable:true})  average_rating: number | null;
     @Column()                 views: number=0;
     @Column({nullable:true})  stream_url: string | null;
-    @Column({nullable:true})  VOD_url: string | null;
+    @Column()                 state: PerformanceState;
 
     @OneToOne(() => Host, {eager:true}) @JoinColumn() host: Host;
     @OneToOne(() => User, {eager:true}) @JoinColumn() creator: User;
+    @OneToOne(() => PHostInfo) @JoinColumn()          host_info: PHostInfo;
 
     ratings: IRating[];
 
@@ -48,8 +51,7 @@ export class Performance extends BaseEntity implements IPerformance {
         return {
             ...this.toStub(),
             ratings: this.ratings,
-            stream_url: this.stream_url,
-            VOD_url: this.VOD_url
+            state: this.state
         }
     }
 }
