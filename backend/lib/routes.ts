@@ -1,11 +1,12 @@
 import { Access, IResLocals, Router } from './router';
 import { Request } from 'express';
-import { IHost, IUser, NodeType, IPerformanceStub as IPerfS, IPerformance as IPerf } from "@eventi/interfaces";
+import { IHost, IUser, NodeType, IPerformanceStub as IPerfS, IPerformance as IPerf, IPerformanceHostInfo as IPHInfo } from "@eventi/interfaces";
 import { DataClient } from './common/data';
 
 import Users = require("./controllers/User.controller");
 import Hosts = require("./controllers/Host.controller");
 import Perfs  = require("./controllers/Performance.controller");
+import MUXHooks = require("./controllers/MUXHooks.controller");
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -28,12 +29,16 @@ router.post <IHost>     ("/hosts",              Hosts.createHost,           [], 
 router.get  <IUser[]>   ("/hosts/:hid/members", Hosts.getHostMembers,       [], null);
 
 // PERFORMANCES -----------------------------------------------------------------------------------------------------------------------------------------------------------
-router.post<IPerf>      ("/performances",       Perfs.createPerformance,    [Access.Authenticated], null);
-router.get <IPerfS[]>   ("/performances",       Perfs.getPerformances,      [Access.Authenticated], null);
+router.post<IPerf>      ("/performances",                   Perfs.createPerformance,                [Access.Authenticated], null);
+router.get <IPerfS[]>   ("/performances",                   Perfs.getPerformances,                 [Access.Authenticated], null);
+router.get <IPHInfo>    ("/performances/:pid/host_info",    Perfs.getPerformanceHostInfo, [Access.Authenticated], null);
 
 // PERFORMANCE PURCHASES -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // RATINGS -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// MUX HOOKS ----------------------------------------------
+router.post<void>("/mux/hooks", MUXHooks.handleHook, []);
 
 router.get <string>   ("/ping", async (req:Request) => "Pong!", [], null);
 return router;

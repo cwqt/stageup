@@ -1,4 +1,4 @@
-const winston = require("winston");
+import winston from 'winston';
 import config from "../config";
 
 const logger = winston.createLogger({
@@ -11,7 +11,7 @@ const logger = winston.createLogger({
   ],
 });
 
-logger.stream = {
+logger.stream = <any>{
   write: function (message: any, encoding: any) {
     logger.http(message);
   },
@@ -25,5 +25,6 @@ logger.add(
     ),
   })
 );
+
 
 export default logger;

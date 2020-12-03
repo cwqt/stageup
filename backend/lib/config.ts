@@ -11,9 +11,15 @@ interface IEnv {
   DEVELOPMENT: boolean;
   TESTING: boolean;
   EXPRESS_PORT: number;
+  LOCALTUNNEL_URL: string;
   SENDGRID: {
     USERNAME:string;
     API_KEY:string;
+  },
+  MUX: {
+    ACCESS_TOKEN: string;
+    SECRET_KEY: string;
+    HOOK_SIGNATURE: string;
   },
   PG: {
     USER:string;
@@ -45,6 +51,12 @@ const base = {
   PRODUCTION: false,
   DEVELOPMENT: false,
   TESTING: false,
+  LOCALTUNNEL_URL: process.env.LOCALTUNNEL_URL,
+  MUX: {
+    ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
+    SECRET_KEY: process.env.MUX_SECRET_KEY,
+    HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE
+  },
   PG: {
     USER: process.env.PG_USER,
     PASS: process.env.PG_PASS,

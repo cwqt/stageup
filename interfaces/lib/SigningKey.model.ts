@@ -1,5 +1,6 @@
 import { INode } from "./Node.model";
 
 export interface ISigningKey extends INode {
-    key: string;
+    rsa256_key: string;
+    mux_key_id: string;
 }

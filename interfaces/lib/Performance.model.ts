@@ -3,6 +3,7 @@ import { INode } from "./Node.model";
 import { IRating } from "./Review.model";
 import { IUserStub } from "./Users/User.model";
 import { ISigningKey } from './SigningKey.model';
+import { CurrencyCode } from "./Types/Currency.types";
 
 export interface IPerformanceStub extends INode {
     host: IHostStub; // who created the performance
@@ -16,11 +17,13 @@ export interface IPerformanceStub extends INode {
 export interface IPerformance {
     ratings: IRating[]; // user ratings on performance
     state: PerformanceState; // status of stream
+    price: number; // cost to purchase
+    currency: CurrencyCode; // currency of price
 }
 
 // private to host
 export interface IPerformanceHostInfo {
-    signing_key?: Omit<ISigningKey, "key">
+    signing_key?: Omit<ISigningKey, "rsa256_key">
     rtmp_url: string;
     stream_key: string;
 }

@@ -26,7 +26,7 @@ app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
-app.use(morgan("tiny", { stream: log.stream }));
+app.use(morgan("tiny"));
 
 (async () => {
   try {
@@ -64,7 +64,7 @@ app.use(morgan("tiny", { stream: log.stream }));
 
     // Start listening for requests
     server = app.listen(config.EXPRESS_PORT, () => {
-      log.info(`Listening on ${config.EXPRESS_PORT}`);
+      log.info(`\x1b[1mExpress listening on ${config.EXPRESS_PORT}\x1b[0m`);
     });
   } catch (err) {
     log.error(err);
