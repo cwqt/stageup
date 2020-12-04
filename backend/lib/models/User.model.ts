@@ -41,7 +41,8 @@ export class User extends BaseEntity implements IUserPrivate {
       _id: this._id,
       username: this.username,
       created_at: this.created_at,
-      type: this.type
+      type: this.type,
+      avatar: this.avatar
     };
     return u;
   }

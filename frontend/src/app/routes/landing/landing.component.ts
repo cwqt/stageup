@@ -14,7 +14,6 @@ export class LandingComponent implements OnInit {
   isLoggedIn:boolean = false;
   isProduction:boolean = environment.production;
 
-
   constructor(private userService: UserService, private router:Router) {}
 
   scroll(el:HTMLElement) {

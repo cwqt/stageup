@@ -58,10 +58,6 @@
     <mat-step>
       <ng-template matStepLabel>Continue</ng-template>
       <h3>Welcome <b>{{userNameFormGroup.get('name').value}}</b>, you're ready to start browsing, for your information here are a few links to aid you along:</h3>
-      <ul>
-        <li>Adding plants: <a href="#">https://my.corrhizal.net/docs/adding-plants</a></li>
-        <li>Configuring devices: <a href="#">https://my.corrhizal.net/docs/device-config</a></li>
-      </ul>
       <div>
         <br />
         <ui-button icon="arrow--right" variant="primary" (click)="finishFirstTimeSetup()">Continue</ui-button>

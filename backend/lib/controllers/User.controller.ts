@@ -1,4 +1,4 @@
-import { IUser } from "@eventi/interfaces";
+import { IHost, IUser } from "@eventi/interfaces";
 import { Request } from "express";
 import { body, param } from "express-validator";
 import { ErrorHandler, FormErrorResponse } from "../common/errors";
@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 
 import { User } from "../models/User.model";
 import Email = require("../common/email");
+import { Host } from "../models/Host.model";
 
 export const validators = {
   loginUser: validate([
@@ -26,7 +27,7 @@ export const validators = {
     body("email_address").isEmail().normalizeEmail().withMessage("Not a valid email address"),
     body("password").not().isEmpty().isLength({ min: 6 }).withMessage("Password length must be > 6 characters"),
   ]),
-  readUserByUsername: validate([param("username").not().isEmpty().trim()]),
+  readUserByUsername: validate([param("username").trim().not().isEmpty()]),
 };
 
 export const createUser = async (req: Request, dc: DataClient): Promise<IUser> => {
@@ -83,7 +84,10 @@ export const logoutUser = async (req: Request): Promise<void> => {
 };
 
 export const readUserByUsername = async (req: Request): Promise<IUser> => {
-  return {} as IUser;
+  const u:User = await User.findOne({ username: req.params.username });
+  if(!u) throw new ErrorHandler(HTTP.NotFound, "No such user exists");
+
+  return u.toFull() as IUser;
 };
 
 export const readUserById = async (req: Request): Promise<IUser> => {
@@ -111,3 +115,13 @@ export const deleteUser = async (req: Request): Promise<void> => {
   await u.remove();
   return;
 };
+
+
+export const getUserHost = async (req:Request):Promise<IHost> => {
+  const user = await User
+    .createQueryBuilder("user")
+    .leftJoinAndSelect("user.host", "host")
+    .getOne();
+
+  return await (await Host.findOne({ _id: user.host._id })).toFull();
+}

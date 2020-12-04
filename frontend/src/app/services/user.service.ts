@@ -9,7 +9,7 @@ import { IUser, IUserStub, IHostStub, IHost } from "@eventi/interfaces";
   providedIn: "root",
 })
 export class UserService {
-  userHost: BehaviorSubject<IHostStub> = new BehaviorSubject(null);
+  userHost: BehaviorSubject<IHost> = new BehaviorSubject(null);
   private $currentUser: BehaviorSubject<IUser>;
   public currentUser: Observable<IUser>; //read-only
 
@@ -24,15 +24,15 @@ export class UserService {
     this.currentUser = this.$currentUser.asObservable();
   }
 
-  register(user: IUserStub) {
+  register(user:Pick<IUser, "name" | "username"> & { password: string }) {
     return this.http.post("/api/users", user);
   }
 
-  changeAvatar(formData: FormData): Observable<IUser> {
+  changeAvatar(formData: FormData): Promise<IUser> {
     return this.http.put<IUser>(
       `/api/users/${this.currentUserValue._id}/avatar`,
       formData
-    );
+    ).toPromise();
   }
 
   updateUser(json: any) {

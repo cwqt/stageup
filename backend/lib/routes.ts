@@ -15,29 +15,30 @@ export default (providers:DataClient):Router => {
 const router = new Router(providers);
 
 // USERS -----------------------------------------------------------------------------------------------------------------------------------------------------------
-router.post   <IUser>   ("/users",             Users.createUser,            [Access.None],           Users.validators.createUser);
-router.post   <void>    ("/users/logout",      Users.logoutUser,            [Access.Authenticated],  null);
-router.post   <IUser>   ("/users/login",       Users.loginUser,             [Access.None],           Users.validators.loginUser);
-router.get    <IUser>   ("/users/:uid",        Users.readUserById,          [Access.Authenticated],  null);
-router.put    <IUser>   ("/users/:uid",        Users.updateUser,            [Access.Ourself],        null);
-router.delete <void>    ("/users/:uid",        Users.deleteUser,            [Access.Ourself],        null);
-// router.get    <IUser> ("/u/:username",       Users.readUserByUsername, [], Users.validators.readUserByUsername);
-// router.put    <IUser> ("/users/:uid/avatar", Users.updateUserAvatar,   [], null);
-
+router.post   <IUser>   ("/users",                          Users.createUser,                   [Access.None],           Users.validators.createUser);
+router.post   <void>    ("/users/logout",                   Users.logoutUser,                   [Access.Authenticated],  null);
+router.post   <IUser>   ("/users/login",                    Users.loginUser,                    [Access.None],           Users.validators.loginUser);
+router.get    <IUser>   ("/users/@:username",               Users.readUserByUsername,           [],                      Users.validators.readUserByUsername); // order matters
+router.get    <IUser>   ("/users/:uid",                     Users.readUserById,                 [Access.Authenticated],  null);
+router.put    <IUser>   ("/users/:uid",                     Users.updateUser,                   [Access.Ourself],        null);
+router.delete <void>    ("/users/:uid",                     Users.deleteUser,                   [Access.Ourself],        null);
+router.get    <IHost>   ("/users/:uid/host",                Users.getUserHost,                  [Access.Authenticated]);
+// router.put    <IUser>   ("/users/:uid/avatar",              Users.updateUserAvatar,          [], null);
+ 
 // HOSTS -----------------------------------------------------------------------------------------------------------------------------------------------------------
-router.post <IHost>     ("/hosts",              Hosts.createHost,           [], null);
-router.get  <IUser[]>   ("/hosts/:hid/members", Hosts.getHostMembers,       [], null);
+router.post <IHost>     ("/hosts",                          Hosts.createHost,                   [], null);
+router.get  <IUser[]>   ("/hosts/:hid/members",             Hosts.getHostMembers,               [], null);
 
-// PERFORMANCES -----------------------------------------------------------------------------------------------------------------------------------------------------------
-router.post<IPerf>      ("/performances",                   Perfs.createPerformance,                [Access.Authenticated], null);
-router.get <IPerfS[]>   ("/performances",                   Perfs.getPerformances,                 [Access.Authenticated], null);
-router.get <IPHInfo>    ("/performances/:pid/host_info",    Perfs.getPerformanceHostInfo, [Access.Authenticated], null);
+// PERFORMANCES ----------------------------------------------------------------------------------------------------------------------------------------------------
+router.post<IPerf>      ("/performances",                   Perfs.createPerformance,            [Access.Authenticated], null);
+router.get <IPerfS[]>   ("/performances",                   Perfs.getPerformances,              [Access.Authenticated], null);
+router.get <IPHInfo>    ("/performances/:pid/host_info",    Perfs.getPerformanceHostInfo,       [Access.Authenticated], null);
+// 
+// PERFORMANCE PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------
 
-// PERFORMANCE PURCHASES -----------------------------------------------------------------------------------------------------------------------------------------------------------
+// RATINGS ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// RATINGS -----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// MUX HOOKS ----------------------------------------------
+// MUX HOOKS -------------------------------------------------------------------------------------------------------------------------------------------------------
 router.post<void>("/mux/hooks", MUXHooks.handleHook, []);
 
 router.get <string>   ("/ping", async (req:Request) => "Pong!", [], null);

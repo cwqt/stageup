@@ -36,32 +36,17 @@ export class AppComponent implements OnInit {
     this.loading = true;
     this.titleService.setTitle("Eventi");
 
-    //Upon start up, immediately get the new user & set last active org
+    // Upon start up, immediately get the new user & set last active org
     const isLoggedIn = new LoggedInGuard(this.router, this.userService)
       .canActivate(this.route.snapshot, this.router.routerState.snapshot);
 
-    if (isLoggedIn) await this.updateCurrentLoggedInUser();
-    this.loading = false;
-  }
+    console.log(isLoggedIn)
 
-  async updateCurrentLoggedInUser() {
-    await this.userService.updateCurrentUser();
-
-    try {
-      const orgs = await this.userService.getUserHost();
-      const lastActiveOrgId = localStorage.getItem("lastActiveOrg");
-
-      // // Set current org to last set, or the 1st if none set
-      // if (orgs.length) {
-      //   this.orgService.setActiveOrg(lastActiveOrgId ?
-      //     orgs.find((o) => o._id == lastActiveOrgId) :
-      //     orgs[0]
-      //   )
-      // }
-    } catch (error) {
-      if (error.status == 401) {
-        this.authService.logout();
-      }
+    if (isLoggedIn) {
+      this.userService.updateCurrentUser();
+    } else {
+      this.authService.logout();
     }
+    this.loading = false;
   }
 }

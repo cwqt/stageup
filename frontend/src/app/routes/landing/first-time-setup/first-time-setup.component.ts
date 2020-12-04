@@ -99,7 +99,7 @@ export class FirstTimeSetupComponent implements OnInit {
 
         this.userService
           .changeAvatar(formData)
-          .subscribe(
+          .then(
             (res) => {
               this.success = true;
               this.userService.setUser(res);
@@ -112,7 +112,7 @@ export class FirstTimeSetupComponent implements OnInit {
                 err.error.statusCode + ": " + err.error.message;
             }
           )
-          .add(() => {
+          .finally(() => {
             this.loading = false;
           });
       };

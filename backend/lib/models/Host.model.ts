@@ -38,7 +38,7 @@ export class Host extends BaseEntity implements IHost {
   toFull():IHost {
     return {
       ...this.toStub(),
-      members: this.members.map((u:User) => u.toStub())
+      members: this.members?.map((u:User) => u.toStub()) || []
     };
   } 
 

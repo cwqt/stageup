@@ -6,4 +6,14 @@
         <ui-button><ui-icon>search</ui-icon> Search</ui-button>
         <ui-button><ui-icon>catalog</ui-icon> Your Library</ui-button>    
     </div>
+
+
+    <button class="sidebar-user" matRipple>
+        <img [src]="currentUser.avatar" alt="">
+        <div class="sidebar-user__details">
+            <span><b>{{ currentUser.name }}</b></span>
+            <span>@{{ currentUser.username }}</span>
+        </div>
+        <ui-icon>overflow-menu--horizontal</ui-icon>
+    </button>
 </div>

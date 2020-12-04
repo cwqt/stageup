@@ -16,12 +16,13 @@ import { TestbedComponent } from "./ui-lib/testbed/testbed.component";
 import { LandingComponent } from "./routes/landing/landing.component";
 import { RegisterComponent } from "./routes/landing/register/register.component";
 import { LoginComponent } from "./routes/landing/login/login.component";
+import { FeedComponent } from './routes/feed/feed.component';
 // import { CreateHostComponent } from './routes/organisations/create-host/create-host.component';
 
 const APP_ROUTES: Routes = [
   {
     path: "",
-    component: IndexComponent,
+    component: FeedComponent,
   },
   { path: "ui", component: TestbedComponent },
   {

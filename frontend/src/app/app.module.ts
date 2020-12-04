@@ -39,6 +39,7 @@ import { HeaderUserButtonComponent } from "./components/app/header-bar/header-us
 
 import { CatalogComponent } from "./routes/catalog/catalog.component";
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
+import { FeedComponent } from './routes/feed/feed.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +58,9 @@ import { SidebarComponent } from './components/app/sidebar/sidebar.component';
     PageComponent,
     HeaderUserButtonComponent,
     CatalogComponent,
-    SidebarComponent
+    SidebarComponent,
+    FeedComponent
+
   ],
   imports: [
     AngularMaterialModule,

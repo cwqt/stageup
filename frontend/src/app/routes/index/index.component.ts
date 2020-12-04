@@ -29,11 +29,7 @@ export class IndexComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.userService.userOrgs.subscribe((orgs) => (this.userOrgs = orgs));
-    // this.orgService.currentOrg.subscribe((org) => {
-    //   this.currentOrg = org;
-    //   this.getOrgEnvironment(this.currentOrg._id);
-    // });
+
   }
 
   navigate(route: string) {
