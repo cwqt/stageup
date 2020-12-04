@@ -1,8 +1,10 @@
 .landing-wrapper {
   display: flex;
   flex-flow: column;
-  overflow: scroll;
+  overflow: hidden;
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16' xml:space='preserve'%3E%3Crect width='16' fill='none' height='16'/%3E%3Crect x='0' y='0' fill='white' width='1' height='1'/%3E%3C/svg%3E");
+  height: 100vh;
+  max-height: 100vh;
 
 
   app-header-user-button ::ng-deep span {
@@ -11,49 +13,81 @@
 }
 
 @media only screen and (max-width: 1000px) {
-  .landing-cover {
-    height: 80vh !important;
-  }
-  .header-container {
-    padding: 0 !important;
-  }
-  .intro-section section:last-child {
-    display: none !important;
-  };
-  .product-features {
-    flex-flow: column;
-    .feature {
-      flex: 1;
-      width: 100% !important;
-      margin: 0;  
-    }
-  }
 }
 
 
 .landing-cover {
-  max-height: 40vh;
-  position: relative;
+  position: absolute;
   overflow: hidden;
   width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
   .landing-cover-image {
-    width: 100vw;
-    height: 100%;
+    width: 100%;
+    height: 100vh;
     filter: brightness(0.5);
     object-fit: cover;
   }
-  .landing-cover-body {
-    bottom: 10vh;
-    left: 10vw;
-    color: white;
-    position: absolute;
-    z-index: 999;
-  }
+}
 
+
+.landing-cover-body {
+  display: flex;
+  flex-flow: column;
+  color: white;
+  position: absolute;
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  .landing-body__main {
+    margin-top: auto;
+    padding: 5vh 10vw;
+    padding-bottom: 0;
+    img {
+      height: auto;
+      max-width: 80vw;
+    }
+    h1 {
+      margin-top: 10px;
+    }
+    .landing-body__buttons {
+      ui-button {
+        ::ng-deep button {
+          border-radius: 4px !important;
+        }
+        
+        padding-right: 10px;
+      }
+    }
+  }
+  .landing-body__bottom {
+    width: 100%;
+    // background-color: #030303;
+    padding: 5vh 10vw;
+    padding-top: 1vh;
+    padding-bottom: 15vh;
+    p {
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .icons {
+      display: flex;
+      margin-top: 5vh;
+      margin-left: 10px;
+      ui-icon {
+        transform: scale(1.5);
+        margin-right: 20px;
+      }
+    }
+  
+  }
 }
 
 
 .dots {
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+
   position: fixed;
   z-index: 1;
   width: 100%;
@@ -63,191 +97,6 @@
   opacity: .35;
 }
 
-
-.landing-body {
-  #tagline {
-    margin: 4vh 15vw;
-    font-size: 18px;
-    line-height: 1.8;
-    text-align: center;
-  }
-}
-
-.header-container {
-  width: 100%;
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  z-index: 999;
-  background: #171717;
-  max-height: 48px;
-  color: white;
-  overflow: visible;
-  padding: 0 10vw;
-
-  ::ng-deep .mat-button {
-    line-height: 44px !important;
-  }
-
-  .separator {
-    padding: 10px 5px 10px 0px;
-    margin-left: 5px;
-    border-left: 1px solid #393939;
-  }
-
-  mat-icon {
-    color: white;
-    height: 44px;
-  }
-
-  .left,
-  .right {
-    img {
-      max-height: 100%;
-      max-width: 100%;
-    }
-
-    height: 48px;
-    display: flex;
-    flex-flow: row;
-    align-items: center;
-  }
-
-  .right {
-    padding-right: 10px;
-  }
-  .left {
-    padding: 10px;
-      img {
-        margin-right: 10px;
-      }
-  }
-}
-
-.landing-body {
-  min-height: 100%;
-  .product-features {
-    position: relative;
-    background-color: #171717;
-    width: 100%;
-    padding: 5vh 10vw;
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: -2px;
-    margin-left: -2px;
-    .feature {
-      border: 3px solid transparent;
-      background-color: #262626;
-      color: white;
-      width: calc(50% - 2px);
-      margin-left: 2px;
-      margin-top: 2px;
-      font-size: 18px;
-      padding: 20px;
-      z-index: 999;
-      position: relative;
-      overflow: hidden;
-      line-height: 1.4;
-      transition: 0.2s background-color;
-      &:hover {
-        background-color: lighten($color: #262626, $amount: 5);
-        border-color: white;
-
-      }
-      b {
-        display: block;
-        padding-bottom: 10px;
-      }
-      ui-icon {
-        opacity: .05;
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        transform: scale(5);
-      }
-    }
-  }
-  .intro-section {
-    width: 100%;
-    padding: 5vh 10vw;
-    font-size: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    position: relative;
-    background-color: #f3f3f3;
-    h1 {
-      font-size: 32px;
-      font-weight: bold;
-    }
-    p {
-      line-height: 1.5;
-    }
-    section:last-child {
-      width: 30%;
-      display: inline-flex;
-      align-items: center;
-      margin-left: 50px;
-      img {
-        max-height: 20vh;
-      }
-    }
-  }
-}
-
-.product-future {
-  position: relative;
-  z-index: 999;
-  background-color: #030303;
-  color: white;
-  padding: 5vh 10vw;
-  p {
-    font-size: 18px;
-    line-height: 1.5;
-  }
-  .icons {
-    display: flex;
-    margin-top: 5vh;
-    margin-left: 10px;
-    ui-icon {
-      transform: scale(1.5);
-      margin-right: 20px;
-    }
-  }
-}
-
-.mailing-list {
-  background-color: #030303;
-  color: white;
-  padding: 5vh 10vw;
-  h1 {
-    font-size: 32px;
-    font-weight: bold;
-  }
-  p {
-    font-size: 18px;
-  }
-
-  .iframe-wrapper {
-    overflow: hidden;
-    margin-left: -40px;
-  }
-
-  iframe {
-    position: relative;
-    z-index: 999;
-    margin-top: -175px;
-    height: calc(725px - 85px);
-    overflow: hidden;
-  }
-}
-
-.footer {
-  position: relative;
-  z-index: 999;
-}
 
 .highlight { background-color: #c9daf7; }
 .highlight-dark { background-color: lighten(#4c1521, 10%); }

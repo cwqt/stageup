@@ -1,14 +1,14 @@
 h1 {
-  margin-bottom: 30px !important;
+  margin-bottom: 20px !important;
 }
 
-form {
-  padding-left: 15px;
+mat-error.form {
+  display: inline-block !important;
+  margin-left: 20px;
 }
 
-.loader {
-  .mat-spinner {
-    display: inline-block;
-    margin-right: 5px;
-  }
+.register-wrapper {
+    display: flex;
+    overflow: hidden;
+  
 }

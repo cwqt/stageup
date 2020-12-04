@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { OrganisationService } from "src/app/services/organisation.service";
+// import { OrganisationService } from "src/app/services/host.service";
 import { UserService } from "src/app/services/user.service";
 
-import { IOrgStub } from "@cxss/interfaces";
+// import { IOrgStub } from "@cxss/interfaces";
 import { Router } from "@angular/router";
 
 @Component({
@@ -12,25 +12,25 @@ import { Router } from "@angular/router";
 })
 export class HeaderBarComponent implements OnInit {
   @Input() currentUser: any;
-  userOrgs: IOrgStub[];
-  activeOrg: IOrgStub;
+  // userOrgs: IOrgStub[];
+  // activeOrg: IOrgStub;
 
   constructor(
-    private orgService: OrganisationService,
+    // private orgService: OrganisationService,
     private userService: UserService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.userService.userOrgs.subscribe((orgs) => {
-      this.userOrgs = orgs;
-    });
-    this.orgService.currentOrg.subscribe((org) => (this.activeOrg = org));
+    // this.userService.userOrgs.subscribe((orgs) => {
+    //   this.userOrgs = orgs;
+    // });
+    // this.orgService.currentOrg.subscribe((org) => (this.activeOrg = org));
   }
 
-  setActiveOrg(org: IOrgStub) {
-    this.orgService.setActiveOrg(org);
-  }
+  // setActiveOrg(org: IOrgStub) {
+  //   this.orgService.setActiveOrg(org);
+  // }
 
   gotoCatalog() {
     this.router.navigate(["catalog"]);

@@ -56,15 +56,6 @@ Assuming you're in the root directory.
 cd backend
 npm install --force
 ```
-### LocalTunnel
-
-You'll need to install & set this up to be able to accept webhooks from MUX in development.
-
-```
-npm install -g localtunnel
-lt --port 8000 --subdomain eventi-cass
-# your url is: https://eventi-cass.loca.lt
-```
 
 ## Frontend
 

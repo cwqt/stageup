@@ -12,16 +12,16 @@ import { Observable } from "rxjs";
 export class CatalogService {
   constructor(private http: HttpClient) {}
 
-  search(
-    term: string,
-    nodeType: NodeType
-  ): Observable<Paginated<ISpeciesStub | IDeviceStub>> {
-    console.log("searching!", nodeType, term);
-    switch (nodeType) {
-      case NodeType.Species:
-        return this.http.get<Paginated<ISpeciesStub>>(
-          `/api/species/search?query=${term}`
-        );
-    }
-  }
+  // search(
+  //   term: string,
+  //   nodeType: NodeType
+  // ): Observable<Paginated<ISpeciesStub | IDeviceStub>> {
+  //   console.log("searching!", nodeType, term);
+  //   switch (nodeType) {
+  //     case NodeType.Species:
+  //       return this.http.get<Paginated<ISpeciesStub>>(
+  //         `/api/species/search?query=${term}`
+  //       );
+  //   }
+  // }
 }

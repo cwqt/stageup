@@ -6,11 +6,10 @@ import { ISigningKey } from "@eventi/interfaces/lib/SigningKey.model";
 import { LiveStream, Video } from '@mux/mux-node';
 import { DataClient } from "../common/data";
 
-
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
     @PrimaryGeneratedColumn() _id: number;
-    @Column()                 rsa256_key: string;
+    @Column({select:false})   rsa256_key: string;
     @Column()                 mux_key_id: string;
     @Column()                 created_at: number;
     @Column()                 type: NodeType=NodeType.SigningKey;

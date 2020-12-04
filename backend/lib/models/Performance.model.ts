@@ -20,7 +20,8 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column({nullable:true})  state: PerformanceState;
   @Column()                 price: number;
   @Column()                 currency: CurrencyCode;
-
+  @Column()                 playback_id: string;
+  
   @OneToOne(() => Host, {eager:true}) @JoinColumn() host: Host;
   @OneToOne(() => User, {eager:true}) @JoinColumn() creator: User;
   @OneToOne(() => PHostInfo) @JoinColumn()          host_info: PHostInfo;
@@ -32,6 +33,9 @@ export class Performance extends BaseEntity implements IPerformance {
     super();
     this.name = data.name;
     this.description = data.description;
+    this.price = data.price;
+    this.currency = data.currency
+
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.views = 0;
     this.average_rating = null;
@@ -43,7 +47,10 @@ export class Performance extends BaseEntity implements IPerformance {
   async setup(dc:DataClient):Promise<Performance> {
     // create host info, which includes a signing key, thru atomic trans op
     await dc.torm.transaction(async transEntityManager => {
-      this.host_info = await (new PerformanceHostInfo()).setup(dc, transEntityManager);
+      const [ hostInfo, stream ] = await (new PerformanceHostInfo()).setup(dc, transEntityManager);
+      this.host_info = hostInfo;
+      this.playback_id = stream.playback_ids.find(p => p.policy == 'signed').id;
+
       await transEntityManager.save(this);
     });
 
@@ -58,7 +65,8 @@ export class Performance extends BaseEntity implements IPerformance {
       average_rating: this.average_rating,
       type: this.type,
       views: this.views,
-      created_at: this.created_at
+      created_at: this.created_at,
+      playback_id: this.playback_id
     }
   }
 
@@ -68,7 +76,7 @@ export class Performance extends BaseEntity implements IPerformance {
       ratings: this.ratings,
       state: this.state,
       price: this.price,
-      currency: this.currency
+      currency: this.currency,
     }
   }
 }

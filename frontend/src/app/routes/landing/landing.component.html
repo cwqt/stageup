@@ -1,191 +1,38 @@
 <div class="landing-wrapper" *ngIf="!currentUser">
-  <div class="header-container">
-    <div class="left">
-      <img src="/assets/leaf.png" />
-      <!-- <span>EMDASH</span>   -->
-    </div>
-  
-    <div class="right">
-      <ui-button *ngIf="!currentUser" size="s" transparent="true" variant="primary" icon="login" routerLink="login">Sign in</ui-button>
-      <!-- <div class="separator"></div>
-      <ui-button *ngIf="!currentUser" size="s" transparent="true" variant="primary" icon="user" routerLink="register">Register</ui-button> -->
-
-      <app-header-user-button variant="primary" transparent="true" [currentUser]="currentUser" *ngIf="currentUser"></app-header-user-button>
-      <ui-button id="enter" *ngIf="currentUser" size="m" variant="primary" icon="arrow--right"></ui-button>  
-    </div>
-  </div>
-  
   <div class="dots"></div>
   <div class="landing-cover">
-    <img class="landing-cover-image" src="/assets/cover.jpg">
-    <div class="landing-cover-body">
-      <h1>
-        <b>Next generation Farm Management</b><br/>
-        Industrial IoT powered
-      </h1>
-
-      <div class="landing-body-buttons">
-        <!-- <ui-button variant="secondary" icon="download">Download</ui-button>
-        <ui-button variant="accent" icon="arrow--right">Get started</ui-button> -->
-        <ui-button
-          (click)="scroll(mailinglist)"
-          variant="accent" 
-          icon="email">Join the mailing list</ui-button>
-
-      </div>
-    </div>
+    <img class="landing-cover-image" src="https://images.unsplash.com/photo-1471877325906-aee7c2240b5f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" />
   </div>
 
-  <div class="landing-body">
-    <div class="product-future">
-      <h1>Now is the time for the smart agricultural revolution.</h1>
-      <p>We're building the <span class="highlight-dark">most powerful & open platform</span> for Farm management ever. <br>
-        Leveraging the latest technologies to bring greater efficiency, yields & oversight to your operation.</p>
-      <div class="icons">
-        <ui-icon>industry</ui-icon>
-        <ui-icon>arrow--right</ui-icon>
-        <ui-icon>iot--platform</ui-icon>  
-      </div>
-    </div>
-
-    <div class="product-features">
-      <div class="feature">
-        <b>Command & control</b>
-        Remote monitoring, event routines, supervisory control, alarms & alerts — anywhere, anytime
-        <ui-icon>mac--command</ui-icon>
-      </div>
-      <div class="feature">
-        <b>Data aggregation</b>
-        Collate info and correlate with yield to find in-efficiencies in your process
-        <ui-icon>activity</ui-icon>
-      </div>
-      <div class="feature">
-        <b>Analytics</b>
-        Project earnings, manage stock - as well as Predictive and Prescriptive Information — what's going to happen & what to do next
-        <ui-icon>analytics</ui-icon>
-      </div>
-      <div class="feature">
-        <b>Environment Mapping</b>
-        Build up a 3D view of your farm, with anomalous zones standing out from a glance
-        <ui-icon>z-axis</ui-icon>
-      </div>
-      <div class="feature">
-        <b>Open API</b>
-        A rich interface for developers, allowing you to create custom devices suited to your needs
-        <ui-icon>api</ui-icon>
-      </div>
-      <div class="feature">
-        <b>Multi-facility</b>
-        Built to scale — our platform can orchestrate the smallest hobbyist farm, to the largest
-        industrial operation
-        <ui-icon>building</ui-icon>
-      </div>
-      <div class="feature">
-        <b>SOPs & documentation</b>
-        Simplify onboarding with standard operating procedures & documentation pages
-        <ui-icon>person</ui-icon>
-      </div>
-      <div class="feature">
-        <b>Track & trace</b>
-        Have logs of all crops, providing full accountability from plantation, harvest to delivery
-        <ui-icon>blockchain</ui-icon>
-      </div>
-    </div>
-
-    <div class="intro-section">
-      <section>
-        <h1>Open Architecture</h1>
-        <p>
-          Our gateway device is the bridge
-          between your farm and our platform, <span class="highlight">enabling any device,
-          sensor or output</span> to be monitored or controlled from anywhere 
-          around the world, regardless of protocol or data format.
-          <br/>
-          <br/>
-          The unique shim layers, coupled with our expressive frontend scripter enables cross-device communication with anything
-          from PLCs, RTUs or off-the-shelf Arduinos. <span class="highlight">No code required.</span>
-        </p>
-      </section>
-      
-      <section>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Opensource.svg/724px-Opensource.svg.png" alt="">
-      </section>
-    </div>
-
-    <div class="mailing-list" #mailinglist>
-      <h1>Join the mailing list</h1>
-      <p>Recieve updates and beta access down the line</p>
-
-      <div class="iframe-wrapper">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSchy6iAm3soeQhojBFTnMDPXZU5vsy1tzcBZN38GjT70luDPg/viewform?embedded=true" width="640" height="700" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">Loading…</iframe>
-      </div>
-    </div>
+  <div class="landing-cover-body">
+    <div class="landing-body__main">
+      <img id="eventi" src="/assets/eventi.svg" />
+      <h1>Live streaming & VOD for Performance Arts</h1>
   
-    <div class="footer">
-      <app-footer [small]="true"></app-footer>
-    </div>
-  </div>
-<!-- 
-  <div class="landing-body">
-
-    <h1 id="features">
-      Features
-    </h1>
-
-    <div class="landing-images">
-      <div class="landing-image" style="background-image:url('/assets/landing/code.jpg')">
-        <div class="landing-image__content">
-          <h2>Predict</h2>
-          <p>Utilise advanced heuristics to enhance growth and overall yields.</p>
-        </div>
-      </div>
-
-      <div class="landing-image" style="background-image:url('/assets/landing/n4j.png')">
-        <div class="landing-image__content">
-          <h2>Monitor</h2>
-          <p>Collect data across vertical farming infrastructure with open-source, extensible IoT devices.</p>
-        </div>
-      </div>
-
-      <div class="landing-image" style="background-image:url('/assets/landing/plants.jpg')">
-        <div class="landing-image__content">
-          <h2>Orchestrate</h2>
-          <p>Precisely manage, tune & control crop environment via custom task routines.</p>
-        </div>
-      </div>
-
-      <div class="landing-image" style="background-image:url('/assets/landing/screenshot.png')">
-        <div class="landing-image__content">
-          <h2>Track</h2>
-          <p>View live updates and camera feeds of farm conditions, with alerts sent via e-mail or SMS.</p>
-        </div>
-      </div>
+      <div class="landing-body__buttons">
+        <ui-button variant="accent" icon="email" *ngIf="isProduction">Join the mailing list</ui-button>
+        <ui-button variant="accent" icon="login" (click)="gotoLogin()" *ngIf="!isProduction">Log In</ui-button>
+        <ui-button variant="primary" icon="user" (click)="gotoRegister()" *ngIf="!isProduction">Register</ui-button>
+      </div>  
+      <br>
     </div>
 
-
-    <div class="dual-section">
-      <div class="left">
-        <h1>Try mcn<br/>today</h1>
-        <p>
-          Our full-featured vertical farming management system.<br/>
-          One secure, flexible platform.
-        </p>
-        <ui-button variant="secondary" size="m">Discover&nbsp;&nbsp;&nbsp;&nbsp;<img src="/assets/leaf.png"></ui-button>
+    <div class="landing-body__bottom">
+      <!-- <h1>Now is the time for the smart agricultural revolution.</h1> -->
+      <p>
+        Watch live productions from
+        <span class="highlight-dark"> anywhere in the world </span>, from the comfort of your home.<br />
+        A bespoke service tailored to the next generation of performance arts.
+      </p>
+      <div class="icons">
+        <ui-icon>theater</ui-icon>
+        <ui-icon>arrow--right</ui-icon>
+        <ui-icon>devices</ui-icon>
       </div>
-
-      <div class="right">
-        <h1>Got<br/>questions?</h1>
-        <p>
-          We've got the right answer to them,<br/>
-          just message us!
-        </p>
-        <ui-button variant="secondary" size="m">Ask us&nbsp;&nbsp;&nbsp;&nbsp;<ui-icon>arrow--right</ui-icon></ui-button>
-      </div>
-    </div>
 
   </div>
--->
+
+  </div>
 </div>
-
 
 <app-index *ngIf="currentUser"></app-index>

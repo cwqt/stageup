@@ -9,14 +9,26 @@
   display: flex;
 
   .left {
+    width: 20vw;
   }
 
   .right {
+    position: relative;
     width: 100%;
+    min-height: 100vh;  
+    padding-top: 48px;//for header
     overflow: scroll;
-    min-height: 100vh;
+    overflow-x: hidden;
+
+    app-header-bar {
+      width: 80vw; // 100vw - sidebar
+      position: fixed;
+      top: 0;
+      right: 0;
+    }
 
     .app-body {
+  
       min-height: calc(100vh - 48px);
     }
   }

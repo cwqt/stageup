@@ -8,7 +8,8 @@ import { ErrorHandler } from "../common/errors";
 import { HTTP } from "../common/http";
 import { validate } from "../common/validate";
 import { body } from "express-validator";
-import { PerformanceHostInfo } from '../models/PerformanceHostInfo.model';
+import { PerformanceHostInfo } from "../models/PerformanceHostInfo.model";
+import { String } from "aws-sdk/clients/cloudsearch";
 
 export const validators = {
   createPerformance: validate([body("name").not().isEmpty().withMessage("Performance must have a title!")]),
@@ -22,14 +23,14 @@ export const createPerformance = async (req: Request, dc: DataClient): Promise<I
 
   if (!user.host) throw new ErrorHandler(HTTP.BadRequest, "You're not authorised to create performances.");
 
-  const performance = await(new Performance({
+  const performance = await new Performance({
       name: req.body.name,
       description: req.body.description ?? "",
       price: req.body.price,
-      currency: req.body.currency
+      currency: req.body.currency,
     },
     user
-  )).setup(dc);
+  ).setup(dc);
 
   return performance.toFull();
 };
@@ -39,7 +40,20 @@ export const getPerformances = async (req: Request): Promise<IPerformanceStub[]>
   return performances.map((p: Performance) => p.toStub());
 };
 
+export const getPerformanceHostInfo = async (req: Request, dc:DataClient): Promise<IPerformanceHostInfo> => {  
+    const hostInfoId:string | null = (await dc.torm.createQueryBuilder()
+        .select("performance.host_info")
+        .from(Performance, "performance")
+        .whereInIds(req.params.pid)
+        .execute() || [])[0]?.hostInfo_id;
 
-export const getPerformanceHostInfo = async (req:Request):Promise<IPerformanceHostInfo> => {
-    return {} as IPerformanceHostInfo;
-}
+    if(!hostInfoId) throw new ErrorHandler(HTTP.BadRequest, "No Host Info for this Performance");
+
+    const performanceHostInfo = await PerformanceHostInfo
+        .createQueryBuilder("phi")
+        .whereInIds(parseInt(hostInfoId))
+        .leftJoinAndSelect("phi.signing_key", "sk")
+        .getOne();
+
+    return performanceHostInfo as IPerformanceHostInfo;
+};

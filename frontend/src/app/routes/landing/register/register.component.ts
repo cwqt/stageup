@@ -34,11 +34,12 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   loading: boolean = false;
   success: boolean = false;
-  register_button_text: string = "sign up :)";
+  registerButtonText: string = "Register";
   errors = {
     username: "",
     email: "",
     password: "",
+    form: ""
   };
 
   pw_min_len: number = 6;
@@ -108,7 +109,7 @@ export class RegisterComponent implements OnInit {
 
   submitHandler() {
     this.loading = true;
-    this.register_button_text = "registering...";
+    this.registerButtonText = "Registering...";
     this.userService
       .register(this.registerForm.value)
       .subscribe(
@@ -116,8 +117,9 @@ export class RegisterComponent implements OnInit {
           this.success = true;
         },
         (err) => {
+          this.errors.form = err.message;
           this.success = false;
-          this.register_button_text = "try again?";
+          this.registerButtonText = "Try again?";
           let errors = err.error.message;
           Object.keys(this.errors).forEach((e) => {
             let i = errors.findIndex((x) => x.param == e);

@@ -12,6 +12,7 @@ export interface IPerformanceStub extends INode {
     premiere_date?: number; // when the performance is ready to be streamed
     average_rating: number; // average rating across all ratings
     views: number;  // total user view count
+    playback_id: string; // address to view
 }
 
 export interface IPerformance {
@@ -23,9 +24,8 @@ export interface IPerformance {
 
 // private to host
 export interface IPerformanceHostInfo {
-    signing_key?: Omit<ISigningKey, "rsa256_key">
-    rtmp_url: string;
     stream_key: string;
+    signing_key?: Omit<ISigningKey, "rsa256_key">
 }
 
 export enum PerformanceState {

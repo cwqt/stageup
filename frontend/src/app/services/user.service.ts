@@ -3,13 +3,13 @@ import { of, Observable, BehaviorSubject } from "rxjs";
 import { tap, map } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 
-import { IUser, IUserStub, IDeviceStub, IOrgStub } from "@cxss/interfaces";
+import { IUser, IUserStub, IHostStub, IHost } from "@eventi/interfaces";
 
 @Injectable({
   providedIn: "root",
 })
 export class UserService {
-  userOrgs: BehaviorSubject<IOrgStub[]> = new BehaviorSubject([]);
+  userHost: BehaviorSubject<IHostStub> = new BehaviorSubject(null);
   private $currentUser: BehaviorSubject<IUser>;
   public currentUser: Observable<IUser>; //read-only
 
@@ -50,17 +50,8 @@ export class UserService {
       .pipe(
         map((user) => {
           this.setUser(user);
-          this.getUserOrgs();
+          this.getUserHost();
         })
-      )
-      .toPromise();
-  }
-
-  createDevice(content: any) {
-    return this.http
-      .post<IDeviceStub>(
-        `/api/users/${this.currentUserValue._id}/devices`,
-        content
       )
       .toPromise();
   }
@@ -69,10 +60,10 @@ export class UserService {
     return this.http.get<IUser>(`/api/users/u/${username}`).toPromise();
   }
 
-  getUserOrgs(): Promise<IOrgStub[]> {
+  getUserHost(): Promise<IHost> {
     return this.http
-      .get<IOrgStub[]>(`/api/users/${this.currentUserValue._id}/orgs`)
-      .pipe(tap((orgs) => this.userOrgs.next(orgs)))
+      .get<IHost>(`/api/users/${this.currentUserValue._id}/host`)
+      .pipe(tap(host => this.userHost.next(host)))
       .toPromise();
   }
 }

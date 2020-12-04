@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { UserService } from "src/app/services/user.service";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { IDeviceStub, IUser } from "@cxss/interfaces";
+import { IUser } from "@cxss/interfaces";
 
 import { ProfileService } from "src/app/services/profile.service";
 import { BehaviorSubject } from "rxjs";
@@ -23,7 +23,6 @@ export class ProfileComponent implements OnInit {
   authorUser: IUser | undefined;
   currentUser: IUser; //the current logged in user
 
-  devices: IDeviceStub[] | undefined;
 
   constructor(
     private userService: UserService,

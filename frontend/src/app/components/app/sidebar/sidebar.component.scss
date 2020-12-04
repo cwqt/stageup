@@ -1,0 +1,39 @@
+.sidebar-wrapper {
+  width: 20vw;
+  background-color: black;
+  height: 100vh;
+  padding: 20px;
+  padding-top: 50px;
+  display: flex;
+  flex-flow: column;
+  .logo {
+    max-width: 100%;
+    padding-right: 50%;
+  }
+  .sidebar-main-buttons {
+      margin: 20px 0;
+    display: flex;
+    flex-flow: column;
+    color: white;
+    ui-button {
+        margin-bottom: 10px;
+      ::ng-deep {
+        button {
+            color: white;
+            width: 100%;
+            background-color: #282828;
+            border-radius: 5px !important;
+            font-size: 17px;
+            padding: 5px 20px !important;
+            &.mat-button .mat-button-wrapper {
+                justify-content: left !important;
+                ui-icon {
+                    margin-right: 10px;
+                }
+            }
+
+        }
+      }
+    }
+  }
+}

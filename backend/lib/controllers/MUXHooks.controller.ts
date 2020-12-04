@@ -11,17 +11,15 @@ const streamCreated = async (data:IMUXHookResponse<LiveStream>) => {
     console.log(data)
 }
 
-
 const hookMap: { [index in MUXHook]?: (data:IMUXHookResponse<any>, dc:DataClient) => Promise<void> } = {
     [MUXHook.StreamCreated]: streamCreated,
 };
 
 export const handleHook = async (req: Request, dc: DataClient) => {
-    console.log(config)
   try {
     //https://github.com/muxinc/mux-node-sdk#verifying-webhook-signatures
     const isValidHook = Webhooks.verifyHeader(
-      req.body,
+      JSON.stringify(req.body),
       req.headers["mux-signature"] as string,
       config.MUX.HOOK_SIGNATURE
     );
@@ -30,6 +28,9 @@ export const handleHook = async (req: Request, dc: DataClient) => {
   } catch (error) {
     throw new ErrorHandler(HTTP.BadRequest, error.message);
   }
+
+  // TODO: use redis to track previously recieved hooks so we don't re-handle some
+  // requests - MUX doesn't fire & forget
 
   logger.http(`Received MUX hook: ${req.body.type}`);
   await (hookMap[req.body.type as MUXHook] || unsupportedHookHandler)(req.body, dc);

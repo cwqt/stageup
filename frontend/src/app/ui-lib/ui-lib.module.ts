@@ -18,7 +18,6 @@ import { ChipComponent } from "./chip/chip.component";
 import { DialogButtonsComponent } from "./dialog-buttons/dialog-buttons.component";
 import { OverlaySpinnerComponent } from "./overlay-spinner/overlay-spinner.component";
 import { InputComponent } from "./input/input.component";
-import { SelectComponent } from './select/select.component';
 
 export enum ButtonVariants {
   Primary = "primary",
@@ -44,7 +43,6 @@ const allComponents = [
   DialogButtonsComponent,
   OverlaySpinnerComponent,
   InputComponent,
-  SelectComponent
 ];
 
 @NgModule({

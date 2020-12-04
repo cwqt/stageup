@@ -1,17 +1,18 @@
 <div class="app-container">
-  <app-header-bar [currentUser]="currentUser"></app-header-bar>
   <div class="app-content" *ngIf="currentUser">
     <div class="left">
-      <!-- <app-sidebar [currentUser]="currentUser"></app-sidebar> -->
+      <app-sidebar [currentUser]="currentUser"></app-sidebar>
     </div>
 
     <div class="right">
+      <app-header-bar [currentUser]="currentUser"></app-header-bar>
       <div class="app-body">
-        <app-page title="First time setup" *ngIf="currentUser && currentUser.new_user">
+
+        <app-page title="First time setup" *ngIf="currentUser && currentUser.is_new_user">
           <app-first-time-setup></app-first-time-setup>
         </app-page>
 
-        <ng-content *ngIf="currentUser && !currentUser.new_user"></ng-content>
+        <ng-content *ngIf="currentUser && !currentUser.is_new_user"></ng-content>
       </div>
       <app-footer></app-footer>
     </div>

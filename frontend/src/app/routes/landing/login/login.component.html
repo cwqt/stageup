@@ -1,6 +1,4 @@
-<div class="login-wrapper">
-  <app-side-strip></app-side-strip>
-
+<app-page class="login-wrapper">
   <div class="content">
     <div *ngIf="!success">
       <h1 class="mat-display-1">Sign in</h1>
@@ -8,7 +6,7 @@
       <form [formGroup]="loginForm" [hidden]="success" (ngSubmit)="submitHandler()">
         <mat-form-field appearance="fill">
           <mat-label type="email">E-mail address</mat-label>
-          <input matInput type="text" formControlName="email" />
+          <input matInput type="text" formControlName="email_address" />
           <mat-error *ngIf="!errors.email && email.invalid && email.touched"
             >E-mail is required</mat-error
           >
@@ -31,8 +29,7 @@
           <ui-button
           variant="primary"
           [disabled]="loginForm.invalid || loading"
-          [loading]="loading"
-        >
+          [loading]="loading">
           <span>Sign in</span>
         </ui-button>
 
@@ -64,4 +61,4 @@
     </div>
 
   </div>
-</div>
+</app-page>

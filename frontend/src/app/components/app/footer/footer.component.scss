@@ -6,7 +6,6 @@
   }
 }
 
-.top,
 .bottom {
   padding: 10px;
   padding-left: 100px;
@@ -14,20 +13,18 @@
   color: white;
 }
 
-.top {
-  background-color: #262626;
-  h2 {
-    margin: 0;
-  }
-}
 .bottom {
-  background-color: #000;
-  padding: 20px 100px;
+  display: flex;
+  flex-flow: column;
+  background-color: #282828;
+  padding: 40px 100px;
   height: 300px;
-  #ds {
-    filter: invert(1);
-    width: 80px;
-    margin-top: 40px;
+  font-size: 20px;
+  line-height: 1.2;
+  img {
+    height: auto;
+    width: 10vw;
+    padding-bottom: 20px;
   }
   .bottom-content {
     display: flex;
@@ -42,6 +39,9 @@
         color: white;
         line-height: 1.5;
         text-decoration: none;
+        &:hover{
+          opacity: .8;
+        }
       }
     }
   }

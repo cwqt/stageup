@@ -37,7 +37,7 @@
 
 
   <h1>Select</h1>
-  <ui-select [graph]="graph"></ui-select>
+  <!-- <ui-select [graph]="graph"></ui-select> -->
 
   <hr><br />
 
@@ -108,14 +108,7 @@
 
   <br/>
   <br/>
-  <h1>Measurements</h1>
-  <div class="measurements-icon-wrapper row">
-    <p *ngFor="let measurement of measurements | keyvalue">
-      <ui-icon>{{ measurement.value.icon }}</ui-icon>
-      {{ measurement.key }}
-      <span>{{ units[measurement.key] }}</span>
-    </p>
-  </div>
+
 
 
   <br />
