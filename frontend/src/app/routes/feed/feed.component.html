@@ -3,18 +3,19 @@
 <h3 *ngIf="performances.loading">Loading...</h3>
 
 <div class="performances" *ngIf="!performances.loading && performances.data">
-    <div class="performance-thumb" *ngFor="let performance of performances.data; let i = index;">
-        <ui-icon class="performance-thumb__expand">overflow-menu--horizontal</ui-icon>
-        <span class="performance-content__live">● LIVE</span>
-        
+    <div class="performance-thumb" *ngFor="let performance of performances.data; let i = index;">        
         <div class="performance-thumb__content">
             <h1>{{ performance.name }}</h1>
+            <p>{{ performance.description }}</p>
             <div class="content-footer">
                 <span>@{{ performance.host?.name || 'cass' }}</span>
                 <span>{{ performance.views }} viewers</span>    
             </div>
         </div>
+        <img class="performance-thumb__icon" [src]="images[i]" alt="">
         <div class="performance-thumb__gradient"></div>
-        <img [src]="images[i]" alt="">
+        <ui-icon class="performance-thumb__expand">overflow-menu--horizontal</ui-icon>
+        <span class="performance-thumb__live">● LIVE</span>
+
     </div>
 </div>

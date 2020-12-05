@@ -11,12 +11,6 @@ const logger = winston.createLogger({
   ],
 });
 
-logger.stream = <any>{
-  write: function (message: any, encoding: any) {
-    logger.http(message);
-  },
-};
-
 logger.add(
   new winston.transports.Console({
     format: winston.format.combine(
@@ -26,5 +20,10 @@ logger.add(
   })
 );
 
+export const stream = {
+  write: (message:string) => {
+    logger.info(message);
+  },
+};
 
 export default logger;

@@ -4,21 +4,16 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import cors from "cors";
 import session from "express-session";
-import log from "./common/logger";
+import log, { stream } from "./common/logger";
 import http from "http";
 import helmet from 'helmet';
 import "reflect-metadata";
 
 import Routes from './routes';
 import config from "./config";
-import { handleError, ErrorHandler } from "./common/errors";
-
 import { HTTP } from "./common/http";
+import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
-
-
-// console.log('-->', process.env)
-// console.log(config)
 
 let server: http.Server;
 const app = express();
@@ -26,7 +21,7 @@ app.set("trust proxy", 1);
 app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
-app.use(morgan("tiny"));
+app.use(morgan("tiny", { stream }));
 
 (async () => {
   try {

@@ -1,11 +1,11 @@
-import { IPerformance, IPerformanceHostInfo, IPerformanceStub, IRating, NodeType, PerformanceState } from "@eventi/interfaces";
+import { IPerformance, IPerformanceStub, IRating, NodeType, PerformanceState } from "@eventi/interfaces";
 import { Host } from "./Host.model";
 import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User.model";
-import { SigningKey } from "./SigningKey.model";
 import { PerformanceHostInfo, PerformanceHostInfo as PHostInfo } from "./PerformanceHostInfo.model";
 import { DataClient } from "../common/data";
 import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
+
 
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
@@ -57,7 +57,7 @@ export class Performance extends BaseEntity implements IPerformance {
     return this;
   }
 
-  toStub():IPerformanceStub {
+  toStub():Required<IPerformanceStub> {
     return {
       _id: this._id,
       host: this.host?.toStub(),
@@ -66,11 +66,13 @@ export class Performance extends BaseEntity implements IPerformance {
       type: this.type,
       views: this.views,
       created_at: this.created_at,
-      playback_id: this.playback_id
+      playback_id: this.playback_id,
+      description: this.description,
+      premiere_date: this.premiere_date
     }
   }
 
-  toFull():IPerformance {
+  toFull():Required<IPerformance> {
     return {
       ...this.toStub(),
       ratings: this.ratings,

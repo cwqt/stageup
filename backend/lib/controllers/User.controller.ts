@@ -49,7 +49,8 @@ export const createUser = async (req: Request, dc: DataClient): Promise<IUser> =
   const u = new User({
       username: req.body.username,
       email_address: req.body.email_address,
-    }, req.body.password
+      password: req.body.password
+    }
   );
 
   return (await dc.torm.manager.save(u)).toFull();

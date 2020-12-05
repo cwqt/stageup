@@ -40,6 +40,9 @@ import { HeaderUserButtonComponent } from "./components/app/header-bar/header-us
 import { CatalogComponent } from "./routes/catalog/catalog.component";
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
 import { FeedComponent } from './routes/feed/feed.component';
+import { PerformanceComponent } from './routes/performance/performance.component';
+import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,8 +62,9 @@ import { FeedComponent } from './routes/feed/feed.component';
     HeaderUserButtonComponent,
     CatalogComponent,
     SidebarComponent,
-    FeedComponent
-
+    FeedComponent,
+    PerformanceComponent,
+    PerformanceWatchComponent
   ],
   imports: [
     AngularMaterialModule,
