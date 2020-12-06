@@ -1,8 +1,6 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { IAsset, IAssetMeta, IGIFMeta, AssetType, IThumbnailMeta, IStaticMeta, Primitive } from '@eventi/interfaces';
 import config from '../config';
-import { Endpoint } from 'aws-sdk';
-import { param } from 'express-validator';
 
 @Entity()
 export class Asset<T> extends BaseEntity implements IAsset<T> {

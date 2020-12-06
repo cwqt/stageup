@@ -1,9 +1,10 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, OneToOne, JoinColumn, ManyToMany } from "typeorm";
 import { NodeType, IUser, IUserStub, IUserPrivate, IPerformancePurchase } from "@eventi/interfaces";
 // import { Purchase } from './Purchase.model';
 import bcrypt from "bcrypt";
 import { Host } from './Host.model'
 import { Purchase } from "./Purchase.model";
+import { Performance } from "./Performance.model";
 
 @Entity()
 export class User extends BaseEntity implements IUserPrivate {
@@ -22,8 +23,9 @@ export class User extends BaseEntity implements IUserPrivate {
   @Column() readonly        salt: string;
   @Column() readonly        pw_hash: string;
 
-  @ManyToOne(() => Host, host => host.members) host:Host;
-  @OneToMany(() => Purchase, purchase => purchase.user) purchases:Purchase[];
+  @ManyToOne(() => Host, host => host.members)                      host:Host; //in one host only
+  @OneToMany(() => Purchase, purchase => purchase.user)             purchases:Purchase[];//many purchases
+  @OneToMany(() => Performance, performance => performance.creator) performances: Performance[];
 
   constructor(data:Pick<IUserPrivate, "username" | "email_address"> & { password: string }) {
     super()

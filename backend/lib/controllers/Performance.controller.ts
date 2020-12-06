@@ -10,6 +10,7 @@ import { validate } from "../common/validate";
 import { body } from "express-validator";
 import { PerformanceHostInfo } from "../models/PerformanceHostInfo.model";
 import { Purchase } from '../models/Purchase.model';
+import { SigningKey } from "../models/SigningKey.model";
 
 export const validators = {
   createPerformance: validate([body("name").not().isEmpty().withMessage("Performance must have a title!")]),
@@ -41,28 +42,40 @@ export const getPerformances = async (req: Request): Promise<IPerformanceStub[]>
 };
 
 export const getPerformance = async (req:Request, dc:DataClient):Promise<IPerformance> => {
-  const performance = (await Performance.findOne({ _id: parseInt(req.params.pid)}, { relations:["host"] })).toFull();
+  const performance = await Performance.findOne({ _id: parseInt(req.params.pid)}, { relations:["host"] });
 
   // see if current user has access/bought the performance
   if(req.session?.user._id) {
     let hasAccess:boolean = false;
-
+    let previousPurchase:Purchase | null;
     const user = await User.findOne({ _id: req.session.user._id }, { relations: ["host"] });
+
     // check if user is part of host that created performance
-    // if(user.host._id == performance.host._id) hasAccess = true;
+    if(user.host._id == performance.host._id) hasAccess = true;
 
     // check if user has purchased the performance
     if(!hasAccess) {
-      const purchase = await Purchase.findOne({ user: user });
-      console.log(purchase)
+      previousPurchase = await Purchase.findOne({
+        relations: ['user', 'performance'],
+        where: {
+          user: { _id: user._id },
+          performance: { _id: performance._id}
+        }
+      });
+
+      if(previousPurchase) hasAccess = true;
     }
 
+    if(!hasAccess) throw new ErrorHandler(HTTP.Unauthorised, "You don't have access to watch this performance");
 
-    // const userAccess:IPerformanceUserInfo = {
-    //     signed_token: "",
-    //     purchase_id: ""
-    // }
-
+    return {
+      ...performance.toFull(),
+      __user_access: {
+        signed_token: previousPurchase.token,
+        purchase_id: previousPurchase?._id,
+        expires: false
+      }
+    }
   }
 
   return performance;
@@ -92,9 +105,16 @@ export const purchase = async (req:Request, dc:DataClient):Promise<void> => {
   const perf = await Performance.findOne({ _id: parseInt(req.params.pid )});
 
   //check user hasn't already purchased performance
-  const hasPreviouslyPurchased = await Purchase.find({ user:user, performance: perf });
-  if(hasPreviouslyPurchased) throw new ErrorHandler(HTTP.BadRequest, "Already purchased this performance");
+  const previousPurchase = await Purchase.findOne({
+    relations: ['user', 'performance'],
+    where: {
+      user: { _id: user._id },
+      performance: { _id: perf._id}
+    }
+  });
 
-  const purchase = new Purchase(user, perf);
+  if(previousPurchase) throw new ErrorHandler(HTTP.BadRequest, "Already purchased this performance");
+
+  const purchase = await (new Purchase(user, perf)).setup();
   await dc.torm.manager.save(purchase);
 }

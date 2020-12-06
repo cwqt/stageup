@@ -1,11 +1,12 @@
 import { IPerformance, IPerformanceStub, IRating, NodeType, PerformanceState } from "@eventi/interfaces";
 import { Host } from "./Host.model";
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User.model";
 import { PerformanceHostInfo, PerformanceHostInfo as PHostInfo } from "./PerformanceHostInfo.model";
 import { DataClient } from "../common/data";
 import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
 import { Purchase } from "./Purchase.model";
+import { SigningKey } from "./SigningKey.model";
 
 
 @Entity()
@@ -23,10 +24,10 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column()                 currency: CurrencyCode;
   @Column()                 playback_id: string;
   
-  @OneToOne(() => PHostInfo)  @JoinColumn() host_info: PHostInfo;
-  @ManyToOne(() => Host)      @JoinColumn() host: Host;
-  @ManyToOne(() => User)      @JoinColumn() creator: User;
-  @ManyToOne(() => Purchase)  @JoinColumn() purchases:Purchase[];
+  @OneToOne(() => PHostInfo) @JoinColumn()                      host_info: PHostInfo;
+  @ManyToOne(() => Host, host => host.performances)             host: Host;
+  @ManyToOne(() => User, user => user.performances)             creator: User;
+  @OneToMany(() => Purchase, purchase => purchase.performance)  purchases:Purchase[];
 
   ratings: IRating[];
 

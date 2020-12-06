@@ -5,4 +5,5 @@ export interface IPerformancePurchase extends INode {
     playback_id: string; // MUX video playback ID
     expiry: number; //UNIX epoch
     key_id: string; // Signing Key ID
+    token: string; //the token itself to watch said video
 }

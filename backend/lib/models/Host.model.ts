@@ -1,6 +1,7 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { NodeType, IHost, IHostStub } from "@eventi/interfaces";
 import { User } from './User.model';
+import { Performance } from "./Performance.model";
  
 @Entity()
 export class Host extends BaseEntity implements IHost {
@@ -12,8 +13,8 @@ export class Host extends BaseEntity implements IHost {
   @Column({ nullable: true})    bio?: string;
   @Column({ nullable: true})    avatar: string;
 
-  @OneToMany(() => User, user => user.host, { cascade: true, eager: true })
-  members:User[];
+  @OneToMany(() => User, user => user.host, { cascade: true, eager: true }) members:User[];
+  @OneToMany(() => Performance, performance => performance.host)            performances: Performance[];
 
   constructor(data:Pick<IHost, "name" | "username">, creator:User) {
     super();

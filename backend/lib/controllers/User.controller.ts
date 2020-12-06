@@ -124,5 +124,7 @@ export const getUserHost = async (req:Request):Promise<IHost> => {
     .leftJoinAndSelect("user.host", "host")
     .getOne();
 
+  if(!user.host) throw new ErrorHandler(HTTP.NotFound, "User is not part of any host");
+
   return await (await Host.findOne({ _id: user.host._id })).toFull();
 }
