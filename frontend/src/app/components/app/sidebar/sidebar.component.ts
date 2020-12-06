@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IUser } from '@cxss/interfaces';
+import { IUser } from '@eventi/interfaces';
 import { BaseAppService } from 'src/app/services/app.service';
 
 @Component({

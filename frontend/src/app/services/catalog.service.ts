@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import {
   NodeType,
   Paginated,
-} from "@cxss/interfaces";
+} from "@eventi/interfaces";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 

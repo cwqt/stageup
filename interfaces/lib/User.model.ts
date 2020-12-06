@@ -1,6 +1,6 @@
-import { INode } from "../Node.model";
-import { IPerformanceStub } from "../Performance.model";
-import { CurrencyCode } from "../Types/Currency.types";
+import { INode } from "./Node.model";
+import { IPerformanceStub } from "./Performance.model";
+import { CurrencyCode } from "./Currency.types";
 import { IHostPermission } from "./Host.model";
 
 export interface IUserStub extends INode {

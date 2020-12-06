@@ -19,7 +19,6 @@
     "@angular/router": "~9.0.1",
     "@crystalui/angular-lightbox": "^1.1.8",
     "@ctrl/ngx-emoji-mart": "^3.1.0",
-    "@cxss/interfaces": "file:../interfaces",
     "@eventi/interfaces": "file:../interfaces",
     "@ivylab/overlay-angular": "0.0.6",
     "angular-responsive-carousel": "^1.2.9",

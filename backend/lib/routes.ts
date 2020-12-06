@@ -37,9 +37,10 @@ router.get  <IUser[]>   ("/hosts/:hid/members",             Hosts.getHostMembers
 // PERFORMANCES ----------------------------------------------------------------------------------------------------------------------------------------------------
 router.post<IPerf>      ("/performances",                   Perfs.createPerformance,            [Access.Authenticated], null);
 router.get <IPerfS[]>   ("/performances",                   Perfs.getPerformances,              [Access.Authenticated], null);
-router.get <IPerf>      ("/performances/:pid",              Perfs.getPerformance,              [Access.Authenticated], null);
+router.get <IPerf>      ("/performances/:pid",              Perfs.getPerformance,               [Access.Authenticated], null);
 router.get <IPHInfo>    ("/performances/:pid/host_info",    Perfs.getPerformanceHostInfo,       [Access.Authenticated], null);
-// 
+router.post <void>      ("/performances/:pid/purchase",     Perfs.purchase,                     [Access.Authenticated], null);
+
 // PERFORMANCE PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------
 
 // RATINGS ---------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
-import { INode } from "../Node.model";
+import { INode } from "./Node.model";
 import { IUserStub } from "./User.model";
-import { IPerformanceStub } from '../Performance.model';
+import { IPerformanceStub } from './Performance.model';
 
 export interface IHostStub extends INode {
     name: string;

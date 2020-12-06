@@ -1,9 +1,8 @@
-import { IHostStub } from "./Users/Host.model";
+import { IHostStub } from "./Host.model";
 import { INode } from "./Node.model";
 import { IRating } from "./Review.model";
-import { IUserStub } from "./Users/User.model";
 import { ISigningKey } from './SigningKey.model';
-import { CurrencyCode } from "./Types/Currency.types";
+import { CurrencyCode } from "./Currency.types";
 
 export interface IPerformanceStub extends INode {
     host: IHostStub; // who created the performance
@@ -15,17 +14,25 @@ export interface IPerformanceStub extends INode {
     playback_id: string; // address to view
 }
 
-export interface IPerformance {
+export interface IPerformance extends IPerformanceStub {
     ratings: IRating[]; // user ratings on performance
     state: PerformanceState; // status of stream
     price: number; // cost to purchase
     currency: CurrencyCode; // currency of price
+
+    __user_access?: IPerformanceUserInfo; // data for the client
 }
 
 // private to host
 export interface IPerformanceHostInfo {
     stream_key: string;
     signing_key?: Omit<ISigningKey, "rsa256_key">
+}
+
+export interface IPerformanceUserInfo {
+    signed_token:string;
+    expires:boolean;
+    purchase_id:number;
 }
 
 export enum PerformanceState {

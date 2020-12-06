@@ -1,6 +1,5 @@
-import { Host, NgModule, Type } from "@angular/core";
-import { RouterModule, Routes, Route } from "@angular/router";
-// import AppRouter from './app.router';
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
 import { LoggedInGuard } from "./_helpers";
 
@@ -16,31 +15,31 @@ import { LoginComponent } from "./routes/landing/login/login.component";
 import { FeedComponent } from "./routes/feed/feed.component";
 import { PerformanceComponent } from "./routes/performance/performance.component";
 import { RouteParam as RP } from "./services/app.service";
-import { environment as Env } from "src/environments/environment";
 import { PerformanceWatchComponent } from "./routes/performance-watch/performance-watch.component";
 import { HostComponent } from "./routes/host/host.component";
-import { CatalogComponent } from "./routes/catalog/catalog.component";
 import { HostPerformancesComponent } from "./routes/host/host-performances/host-performances.component";
 import { HostSettingsComponent } from "./routes/host/host-settings/host-settings.component";
-import AppRouter from './app.router';
+import { SearchComponent } from '@ctrl/ngx-emoji-mart';
 
-const APP_ROUTES:Routes = new AppRouter()
-  .register(``,                                         FeedComponent,              LoggedInGuard)
-  .register(`search`,                                   CatalogComponent,           LoggedInGuard)
-  .register(``,                                         FeedComponent,              LoggedInGuard)
-  .register(`search`,                                   CatalogComponent,           LoggedInGuard)
-  .register(`performance/:${RP.PerformanceId}`,         PerformanceComponent,       LoggedInGuard)
-  .register(`watch`,                                    PerformanceWatchComponent,  LoggedInGuard)
-  .register(`user/:${RP.UserId}`,                       ProfileComponent,           LoggedInGuard)
-  .register(`verified`,                                 VerifiedComponent)
-  .pushRouter(r => r.register(`host/:${RP.HostId}`,     HostComponent,              LoggedInGuard))
-    .register(`settings`,                               HostSettingsComponent,      null)
-    .register(`performances`,                           HostPerformancesComponent,  null)
-  .popRouter()
-  .register(`ui`,                                       TestbedComponent,            null, !Env.production)
-  .apply();
 
-console.log(APP_ROUTES)
+const APP_ROUTES:Routes = [
+  { path: '', component: FeedComponent, canActivate:[LoggedInGuard]},
+  { path: 'search', component: SearchComponent, canActivate:[LoggedInGuard]},
+  { path: `performance/:${RP.PerformanceId}`, component: PerformanceComponent, canActivate:[LoggedInGuard],
+    children: [
+      { path: 'watch', component: PerformanceWatchComponent }
+    ]
+  },
+  { path: `user/:${RP.UserId}`, component: ProfileComponent },
+  { path: `verified`, component: VerifiedComponent },
+  { path: `host/:${RP.HostId}`, component: HostComponent,
+    children: [
+      { path: 'settings', component: HostSettingsComponent },
+      { path: 'performance', component: HostPerformancesComponent },
+    ]
+  },
+  { path: `ui`, component: TestbedComponent },
+]
 
 @NgModule({
   imports: [
@@ -58,7 +57,7 @@ console.log(APP_ROUTES)
         { path: "**", component: NotFoundComponent },
       ],
       {
-        // onSameUrlNavigation: "ignore",
+        onSameUrlNavigation: "ignore",
         paramsInheritanceStrategy: "always",
       }
     ),

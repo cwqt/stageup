@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from "@angular/core";
-import { IUser } from "@cxss/interfaces";
+import { IUser } from "@eventi/interfaces";
 import { ButtonVariants } from "src/app/ui-lib/ui-lib.module";
 import { Popover, PopoverProperties } from "src/assets/popover";
 import { HeaderBarUserMenuComponent } from "../header-bar-user-menu/header-bar-user-menu.component";

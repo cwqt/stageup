@@ -1,4 +1,4 @@
-import { IHost, IPerformance, IPerformanceHostInfo, IPerformanceStub, IUser } from "@eventi/interfaces";
+import { IHost, IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformanceUserInfo, IUser } from "@eventi/interfaces";
 import { Request } from "express";
 import { User } from "../models/User.model";
 import { DataClient } from "../common/data";
@@ -9,7 +9,7 @@ import { HTTP } from "../common/http";
 import { validate } from "../common/validate";
 import { body } from "express-validator";
 import { PerformanceHostInfo } from "../models/PerformanceHostInfo.model";
-import { String } from "aws-sdk/clients/cloudsearch";
+import { Purchase } from '../models/Purchase.model';
 
 export const validators = {
   createPerformance: validate([body("name").not().isEmpty().withMessage("Performance must have a title!")]),
@@ -36,12 +36,35 @@ export const createPerformance = async (req: Request, dc: DataClient): Promise<I
 };
 
 export const getPerformances = async (req: Request): Promise<IPerformanceStub[]> => {
-  const performances = await Performance.find({ take: 10 });
+  const performances = await Performance.find({ take: 10, relations: ["host"] });
   return performances.map((p: Performance) => p.toStub());
 };
 
 export const getPerformance = async (req:Request, dc:DataClient):Promise<IPerformance> => {
-  const performance = await Performance.findOne({ _id: parseInt(req.params.pid)});
+  const performance = (await Performance.findOne({ _id: parseInt(req.params.pid)}, { relations:["host"] })).toFull();
+
+  // see if current user has access/bought the performance
+  if(req.session?.user._id) {
+    let hasAccess:boolean = false;
+
+    const user = await User.findOne({ _id: req.session.user._id }, { relations: ["host"] });
+    // check if user is part of host that created performance
+    // if(user.host._id == performance.host._id) hasAccess = true;
+
+    // check if user has purchased the performance
+    if(!hasAccess) {
+      const purchase = await Purchase.findOne({ user: user });
+      console.log(purchase)
+    }
+
+
+    // const userAccess:IPerformanceUserInfo = {
+    //     signed_token: "",
+    //     purchase_id: ""
+    // }
+
+  }
+
   return performance;
 }
 
@@ -62,3 +85,16 @@ export const getPerformanceHostInfo = async (req: Request, dc:DataClient): Promi
 
   return performanceHostInfo as IPerformanceHostInfo;
 };
+
+
+export const purchase = async (req:Request, dc:DataClient):Promise<void> => {
+  const user = await User.findOne({ _id: req.session.user._id });
+  const perf = await Performance.findOne({ _id: parseInt(req.params.pid )});
+
+  //check user hasn't already purchased performance
+  const hasPreviouslyPurchased = await Purchase.find({ user:user, performance: perf });
+  if(hasPreviouslyPurchased) throw new ErrorHandler(HTTP.BadRequest, "Already purchased this performance");
+
+  const purchase = new Purchase(user, perf);
+  await dc.torm.manager.save(purchase);
+}

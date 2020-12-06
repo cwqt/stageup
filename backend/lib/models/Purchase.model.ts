@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn, ManyToOne, ManyToMany } from "typeorm";
 import { NodeType, IUser, IUserStub, IUserPrivate, IPerformancePurchase } from "@eventi/interfaces";
 import bcrypt from "bcrypt";
 import { User } from "./User.model";
@@ -12,11 +12,15 @@ export class Purchase extends BaseEntity implements IPerformancePurchase {
     @Column()                 price: number;
     @Column()                 currency: CurrencyCode;
     
-    @OneToOne(() => User) @JoinColumn() user: User;
-    @OneToOne(() => Performance) @JoinColumn() performance: Performance;
+    @ManyToOne(() => User, user => user.purchases)  @JoinColumn() user: User;
+    @ManyToOne(() => Performance)                   @JoinColumn() performance: Performance;
 
-    constructor(data:Pick<IUserPrivate, "username" | "email_address">, password:string) {
+    constructor(user:User, performance:Performance) { 
         super()
+        this.user = user;
+        this.performance = performance;
+        this.price = performance.price;
+        this.currency = performance.currency;
+        this.date_purchased = Math.floor(Date.now() / 1000);//timestamp in seconds
     }    
-
 }

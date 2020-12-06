@@ -139,7 +139,7 @@ const getCheckPermissions = (access: Access[]) => {
       //No perms / session required
       // if (access.length == 0 || access.includes(Access.None)) return next();
 
-      //All other checks require an active session (logged in)
+      // All other checks require an active session (logged in)
       // if (!req.session?.user!) throw new Error(`Session required to access requested resource`);
 
       //Site admin can do anything

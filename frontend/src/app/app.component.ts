@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { environment } from "../environments/environment";
-import { IUser } from "@cxss/interfaces";
+import { IUser } from "@eventi/interfaces";
 
 import { UserService } from "./services/user.service";
 import { HostService } from "./services/host.service";

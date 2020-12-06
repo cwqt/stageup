@@ -1,5 +1,5 @@
 import { INode } from "./Node.model";
-import { IUserStub } from "./Users/User.model";
+import { IUserStub } from "./User.model";
 
 export interface IRating extends INode {
     rating: 1 | 2 | 3 | 4 | 5; // 1-5 star rating system

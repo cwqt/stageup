@@ -4,7 +4,7 @@ import { NgModule } from "@angular/core";
 
 import { UiLibModule } from "./ui-lib/ui-lib.module";
 import { AngularMaterialModule } from "./angular-material.module";
-import { AppRoutingModule } from "./app.routing";
+import { AppRoutingModule } from "./app.routes";
 import { HighchartsChartModule } from "highcharts-angular";
 import { HttpClientModule } from "@angular/common/http";
 import { MomentModule } from "ngx-moment";
@@ -46,6 +46,7 @@ import { HostSettingsComponent } from './routes/host/host-settings/host-settings
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
 import { HostComponent } from './routes/host/host.component';
 import { CreatePerformanceComponent } from './routes/host/create-performance/create-performance.component';
+import { PlayerComponent } from './components/player/player.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { CreatePerformanceComponent } from './routes/host/create-performance/cre
     HostComponent,
     HostSettingsComponent,
     HostPerformancesComponent,
-    CreatePerformanceComponent
+    CreatePerformanceComponent,
+    PlayerComponent
   ],
   imports: [
     AngularMaterialModule,

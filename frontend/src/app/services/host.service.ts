@@ -4,7 +4,7 @@ import { BehaviorSubject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { UserService } from "./user.service";
-import { IHost, IHostStub } from "@cxss/interfaces";
+import { IHost, IHostStub } from "@eventi/interfaces";
 
 @Injectable({
   providedIn: "root",

@@ -1,4 +1,4 @@
-import { NodeType } from "./Types/Nodes.types";
+import { NodeType } from "./Nodes.types";
 
 // Y-combinator
 type M<A extends any[], R> = (f: M<A, R>) => (...a: A) => R

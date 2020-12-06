@@ -3,6 +3,7 @@ import { NodeType, IUser, IUserStub, IUserPrivate, IPerformancePurchase } from "
 // import { Purchase } from './Purchase.model';
 import bcrypt from "bcrypt";
 import { Host } from './Host.model'
+import { Purchase } from "./Purchase.model";
 
 @Entity()
 export class User extends BaseEntity implements IUserPrivate {
@@ -22,6 +23,7 @@ export class User extends BaseEntity implements IUserPrivate {
   @Column() readonly        pw_hash: string;
 
   @ManyToOne(() => Host, host => host.members) host:Host;
+  @OneToMany(() => Purchase, purchase => purchase.user) purchases:Purchase[];
 
   constructor(data:Pick<IUserPrivate, "username" | "email_address"> & { password: string }) {
     super()

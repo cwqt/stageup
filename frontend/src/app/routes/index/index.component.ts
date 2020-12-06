@@ -1,9 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { IHost, IHostStub } from "@cxss/interfaces";
+import { IHost } from "@eventi/interfaces";
 import { UserService } from "src/app/services/user.service";
 import { Router, ActivatedRoute } from "@angular/router";
-import { HostService } from "src/app/services/host.service";
-import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
   selector: "app-index",

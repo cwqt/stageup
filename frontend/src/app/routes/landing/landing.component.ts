@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from '@angular/router';
-import { IUser } from "@cxss/interfaces";
+import { IUser } from "@eventi/interfaces";
 import { UserService } from "src/app/services/user.service";
 import { environment } from '../../../environments/environment';
 
