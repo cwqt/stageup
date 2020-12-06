@@ -5,11 +5,13 @@ import { User } from "./User.model";
 import { ISigningKey } from "@eventi/interfaces/lib/SigningKey.model";
 import { LiveStream, Video } from '@mux/mux-node';
 import { DataClient } from "../common/data";
+import { JWT } from '@mux/mux-node';
+import { Performance } from "./Performance.model";
 
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
     @PrimaryGeneratedColumn() _id: number;
-    @Column({select:false})   rsa256_key: string;
+    @Column()                 rsa256_key: string;
     @Column()                 mux_key_id: string;
     @Column()                 created_at: number;
     @Column()                 type: NodeType=NodeType.SigningKey;
@@ -29,5 +31,15 @@ export class SigningKey extends BaseEntity implements ISigningKey {
 
         await transEntityManager.save(this);
         return this;
+    }
+
+    signToken(performance:Performance | IPerformance):string {
+        return JWT.sign(performance.playback_id, {
+            type: 'video',
+            keyId: this.mux_key_id,
+            keySecret: this.rsa256_key,
+            // expiration: string,
+            // params: any
+        });
     }
 }

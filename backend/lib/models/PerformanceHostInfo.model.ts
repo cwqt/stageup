@@ -12,7 +12,7 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
     @Column()                 created_at: number;
     @Column()                 type: NodeType=NodeType.PerformanceHostInfo;
 
-    @OneToOne(() => SigningKey) @JoinColumn()            signing_key: SigningKey;
+    @OneToOne(() => SigningKey, { eager: true }) @JoinColumn()         signing_key: SigningKey;
     @OneToOne(() => Performance, perf => perf.host_info) @JoinColumn() performance:Performance;
 
     constructor() {

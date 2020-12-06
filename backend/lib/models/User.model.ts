@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { Host } from './Host.model'
 import { Purchase } from "./Purchase.model";
 import { Performance } from "./Performance.model";
+import config from '../config';
 
 @Entity()
 export class User extends BaseEntity implements IUserPrivate {
@@ -36,7 +37,7 @@ export class User extends BaseEntity implements IUserPrivate {
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.is_admin = false;
     this.is_new_user = true;
-    this.is_verified = false;
+    this.is_verified = config.PRODUCTION ? false : true;//auto-verify when not in prod
   }
 
   toStub():Required<IUserStub> {
