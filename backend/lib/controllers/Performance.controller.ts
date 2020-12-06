@@ -40,20 +40,25 @@ export const getPerformances = async (req: Request): Promise<IPerformanceStub[]>
   return performances.map((p: Performance) => p.toStub());
 };
 
+export const getPerformance = async (req:Request, dc:DataClient):Promise<IPerformance> => {
+  const performance = await Performance.findOne({ _id: parseInt(req.params.pid)});
+  return performance;
+}
+
 export const getPerformanceHostInfo = async (req: Request, dc:DataClient): Promise<IPerformanceHostInfo> => {  
-    const hostInfoId:string | null = (await dc.torm.createQueryBuilder()
-        .select("performance.host_info")
-        .from(Performance, "performance")
-        .whereInIds(req.params.pid)
-        .execute() || [])[0]?.hostInfo_id;
+  const hostInfoId:string | null = (await dc.torm.createQueryBuilder()
+      .select("performance.host_info")
+      .from(Performance, "performance")
+      .whereInIds(req.params.pid)
+      .execute() || [])[0]?.hostInfo_id;
 
-    if(!hostInfoId) throw new ErrorHandler(HTTP.BadRequest, "No Host Info for this Performance");
+  if(!hostInfoId) throw new ErrorHandler(HTTP.BadRequest, "No Host Info for this Performance");
 
-    const performanceHostInfo = await PerformanceHostInfo
-        .createQueryBuilder("phi")
-        .whereInIds(parseInt(hostInfoId))
-        .leftJoinAndSelect("phi.signing_key", "sk")
-        .getOne();
+  const performanceHostInfo = await PerformanceHostInfo
+      .createQueryBuilder("phi")
+      .whereInIds(parseInt(hostInfoId))
+      .leftJoinAndSelect("phi.signing_key", "sk")
+      .getOne();
 
-    return performanceHostInfo as IPerformanceHostInfo;
+  return performanceHostInfo as IPerformanceHostInfo;
 };

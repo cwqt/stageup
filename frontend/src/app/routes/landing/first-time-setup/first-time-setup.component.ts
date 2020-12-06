@@ -147,7 +147,7 @@ export class FirstTimeSetupComponent implements OnInit {
   }
 
   finishFirstTimeSetup() {
-    this.userService.updateCurrentUser();
+    this.userService.updateCachedUser();
     this.router.navigate(["/home"]);
   }
 }

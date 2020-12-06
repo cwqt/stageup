@@ -44,7 +44,7 @@ export class UserService {
     this.$currentUser.next(user);
   }
 
-  updateCurrentUser() {
+  updateCachedUser() {
     return this.http
       .get<IUser>(`/api/users/${this.currentUserValue._id}`)
       .pipe(

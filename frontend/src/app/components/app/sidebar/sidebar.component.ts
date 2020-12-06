@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IUser } from '@cxss/interfaces';
+import { BaseAppService } from 'src/app/services/app.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,9 +10,12 @@ import { IUser } from '@cxss/interfaces';
 export class SidebarComponent implements OnInit {
   @Input() currentUser:IUser;
 
-  constructor() { }
+  constructor(private appService:BaseAppService) { }
 
   ngOnInit(): void {
   }
 
+  gotoRoot() {
+    this.appService.navigateTo('/');
+  }
 }

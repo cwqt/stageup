@@ -22,9 +22,9 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column()                 currency: CurrencyCode;
   @Column()                 playback_id: string;
   
-  @OneToOne(() => Host, {eager:true}) @JoinColumn() host: Host;
-  @OneToOne(() => User, {eager:true}) @JoinColumn() creator: User;
-  @OneToOne(() => PHostInfo) @JoinColumn()          host_info: PHostInfo;
+  @OneToOne(() => Host)      @JoinColumn() host: Host;
+  @OneToOne(() => User)      @JoinColumn() creator: User;
+  @OneToOne(() => PHostInfo) @JoinColumn() host_info: PHostInfo;
 
   ratings: IRating[];
 

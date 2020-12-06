@@ -1,7 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { NodeType, IUser, IUserStub, IUserPrivate, IPerformancePurchase, IHost, IHostStub } from "@eventi/interfaces";
-// import { Purchase } from './Purchase.model';
-import bcrypt from "bcrypt";
+import { NodeType, IHost, IHostStub } from "@eventi/interfaces";
 import { User } from './User.model';
  
 @Entity()

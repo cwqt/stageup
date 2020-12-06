@@ -3,5 +3,7 @@
 </div>
 
 <!-- landing, login, register -->
-<router-outlet *ngIf="!loading"></router-outlet>  
+<ng-container *ngIf="!loading">
+  <router-outlet></router-outlet>  
+</ng-container>
 

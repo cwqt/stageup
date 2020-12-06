@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IPerformanceStub } from '@eventi/interfaces';
 import { ICacheable } from 'src/app/app.interfaces';
+import { BaseAppService } from 'src/app/services/app.service';
 import { FeedService } from 'src/app/services/feed.service';
 
 @Component({
@@ -20,7 +21,7 @@ export class FeedComponent implements OnInit {
     "https://images1.purplesneakers.com.au/2020/04/95fdd4b7383dba06b5be1b781e8e0e09.png"
   ]
 
-  constructor(private feedService:FeedService) { }
+  constructor(private feedService:FeedService, private appService:BaseAppService) { }
 
   ngOnInit(): void {
     this.getFeed();
@@ -32,5 +33,12 @@ export class FeedComponent implements OnInit {
       .then(p => this.performances.data = p)
       .catch(e => this.performances.error = e)
       .finally(() => this.performances.loading = false);
+  }
+
+  gotoPerformance(performanceIdx:number) {
+    const performance = this.performances.data[performanceIdx];
+    this.appService.navigateTo(`performance/${performance._id}`, {
+      state: { performance }
+    })
   }
 }

@@ -4,7 +4,7 @@ import { NgModule } from "@angular/core";
 
 import { UiLibModule } from "./ui-lib/ui-lib.module";
 import { AngularMaterialModule } from "./angular-material.module";
-import { AppRoutingModule } from "./app-routing.module";
+import { AppRoutingModule } from "./app.routing";
 import { HighchartsChartModule } from "highcharts-angular";
 import { HttpClientModule } from "@angular/common/http";
 import { MomentModule } from "ngx-moment";
@@ -42,6 +42,10 @@ import { SidebarComponent } from './components/app/sidebar/sidebar.component';
 import { FeedComponent } from './routes/feed/feed.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
 import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
+import { HostSettingsComponent } from './routes/host/host-settings/host-settings.component';
+import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
+import { HostComponent } from './routes/host/host.component';
+import { CreatePerformanceComponent } from './routes/host/create-performance/create-performance.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +68,11 @@ import { PerformanceWatchComponent } from './routes/performance-watch/performanc
     SidebarComponent,
     FeedComponent,
     PerformanceComponent,
-    PerformanceWatchComponent
+    PerformanceWatchComponent,
+    HostComponent,
+    HostSettingsComponent,
+    HostPerformancesComponent,
+    CreatePerformanceComponent
   ],
   imports: [
     AngularMaterialModule,

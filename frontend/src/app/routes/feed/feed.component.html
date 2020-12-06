@@ -3,7 +3,10 @@
 <h3 *ngIf="performances.loading">Loading...</h3>
 
 <div class="performances" *ngIf="!performances.loading && performances.data">
-    <div class="performance-thumb" *ngFor="let performance of performances.data; let i = index;">        
+    <div
+        *ngFor="let performance of performances.data; let i = index;"
+        (click)="gotoPerformance(i)"
+        class="performance-thumb">        
         <div class="performance-thumb__content">
             <h1>{{ performance.name }}</h1>
             <p>{{ performance.description }}</p>

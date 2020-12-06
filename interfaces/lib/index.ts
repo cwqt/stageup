@@ -9,3 +9,4 @@ export * from './Users/Host.model';
 export * from './Performance.model';
 export * from './Review.model';
 export * from './MUXHooks.model';
+export * from './Asset.model';

@@ -20,6 +20,7 @@ interface IEnv {
     ACCESS_TOKEN: string;
     SECRET_KEY: string;
     HOOK_SIGNATURE: string;
+    IMAGE_API_ENDPOINT: string;
   },
   PG: {
     USER:string;
@@ -55,7 +56,8 @@ const base = {
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
-    HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE
+    HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE,
+    IMAGE_API_ENDPOINT: "https://image.mux.com"
   },
   PG: {
     USER: process.env.PG_USER,

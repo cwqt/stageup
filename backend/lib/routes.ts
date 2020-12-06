@@ -1,7 +1,12 @@
-import { Access, IResLocals, Router } from './router';
+import { Access, Router } from './router';
 import { Request } from 'express';
-import { IHost, IUser, NodeType, IPerformanceStub as IPerfS, IPerformance as IPerf, IPerformanceHostInfo as IPHInfo } from "@eventi/interfaces";
 import { DataClient } from './common/data';
+import {
+    IHost,
+    IUser,
+    IPerformanceStub as IPerfS,
+    IPerformance as IPerf,
+    IPerformanceHostInfo as IPHInfo } from "@eventi/interfaces";
 
 import Users = require("./controllers/User.controller");
 import Hosts = require("./controllers/Host.controller");
@@ -32,6 +37,7 @@ router.get  <IUser[]>   ("/hosts/:hid/members",             Hosts.getHostMembers
 // PERFORMANCES ----------------------------------------------------------------------------------------------------------------------------------------------------
 router.post<IPerf>      ("/performances",                   Perfs.createPerformance,            [Access.Authenticated], null);
 router.get <IPerfS[]>   ("/performances",                   Perfs.getPerformances,              [Access.Authenticated], null);
+router.get <IPerf>      ("/performances/:pid",              Perfs.getPerformance,              [Access.Authenticated], null);
 router.get <IPHInfo>    ("/performances/:pid/host_info",    Perfs.getPerformanceHostInfo,       [Access.Authenticated], null);
 // 
 // PERFORMANCE PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------

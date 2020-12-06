@@ -14,6 +14,7 @@
         background-color: black;
 
         &:hover {
+            cursor: pointer;
             position: relative;
             transform: scale(1.02);
             z-index: 222;

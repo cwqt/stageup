@@ -45,6 +45,7 @@ export interface IFormErrorField {
   param: string;
   msg: string;
   value: any;
+  location?: "body" | "param" | "query"
 }
 
 export class FormErrorResponse {
@@ -52,7 +53,7 @@ export class FormErrorResponse {
   constructor() {
     this.errors = [];
   }
-  push(param: string, message: string, value: any) {
+  push(param: string, message: string, value: any, location?: "body" | "param" | "query" ) {
     this.errors.push({ param: param, msg: message, value: value });
   }
   get value() {

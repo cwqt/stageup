@@ -21,10 +21,7 @@ export class AppComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private userService: UserService,
-    private hostService: HostService,
     private titleService: Title,
-    private router: Router,
-    private route: ActivatedRoute,
     private authService: AuthenticationService
   ) {
     console.log(
@@ -37,13 +34,8 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle("Eventi");
 
     // Upon start up, immediately get the new user & set last active org
-    const isLoggedIn = new LoggedInGuard(this.router, this.userService)
-      .canActivate(this.route.snapshot, this.router.routerState.snapshot);
-
-    console.log(isLoggedIn)
-
-    if (isLoggedIn) {
-      this.userService.updateCurrentUser();
+    if (this.authService.checkLoggedIn()) {
+      this.userService.updateCachedUser();
     } else {
       this.authService.logout();
     }
