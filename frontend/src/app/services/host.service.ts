@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Paginated } from "@eventi/interfaces";
+import { IUser, Paginated } from "@eventi/interfaces";
 import { BehaviorSubject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
@@ -17,9 +17,13 @@ export class HostService {
     return this.currentHost.value._id;
   }
 
+  getUserPermissions(host_id:number, user_id:number) {
+    return this.http.get(`/api/hosts/${host_id}/permissions?user=${user_id}`)
+  }
+
   createHost(data: Pick<IHost, "name" | "username">): Promise<IHost> {
     return this.http
-      .post<IHost>("/api/orgs", data)
+      .post<IHost>("/api/hosts", data)
       .pipe(tap((d) => this.userService.userHost.next(d)))
       .toPromise();
   }

@@ -1,7 +1,9 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { NodeType, IHost, IHostStub } from "@eventi/interfaces";
+import { NodeType, IHost, IHostStub, HostPermission } from "@eventi/interfaces";
 import { User } from './User.model';
 import { Performance } from "./Performance.model";
+import { UserHostInfo } from "./UserHostInfo.model";
+import { DataClient } from "../common/data";
  
 @Entity()
 export class Host extends BaseEntity implements IHost {
@@ -13,15 +15,28 @@ export class Host extends BaseEntity implements IHost {
   @Column({ nullable: true})    bio?: string;
   @Column({ nullable: true})    avatar: string;
 
-  @OneToMany(() => User, user => user.host, { cascade: true, eager: true }) members:User[];
-  @OneToMany(() => Performance, performance => performance.host)            performances: Performance[];
+  @OneToMany(() => User, user => user.host, { eager: true })     members:User[];
+  @OneToMany(() => UserHostInfo, uhi => uhi.host)                members_info:UserHostInfo[];
+  @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
 
-  constructor(data:Pick<IHost, "name" | "username">, creator:User) {
+  constructor(data:Pick<IHost, "name" | "username">) {
     super();
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.username = data.username;
     this.name = data.name;
-    this.members = [creator];
+    this.members = [];
+  }
+
+  async addMember(user:User, permissionLevel:HostPermission, dc:DataClient) {
+    dc.torm.manager.transaction(async transEntityManager => {
+      // Create permissions link
+      const userHostInfo = new UserHostInfo(user, permissionLevel);
+      await transEntityManager.save(userHostInfo);
+  
+      // Add user to host group
+      this.members.push(user);
+      transEntityManager.save(this);
+    })
   }
 
   toStub():IHostStub {
@@ -37,7 +52,9 @@ export class Host extends BaseEntity implements IHost {
   toFull():IHost {
     return {
       ...this.toStub(),
-      members: this.members?.map((u:User) => u.toStub()) || []
+      members: this.members?.map((u:User) => u.toStub()) || [],
+      members_info: this.members_info?.map((uhi:UserHostInfo) => uhi.toFull()) || [],
+      performances: this.performances?.map((p:Performance) => p.toStub()) || []
     };
   } 
 

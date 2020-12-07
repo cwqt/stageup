@@ -1,7 +1,7 @@
 import { INode } from "./Node.model";
 import { IPerformanceStub } from "./Performance.model";
 import { CurrencyCode } from "./Currency.types";
-import { IHostPermission } from "./Host.model";
+import { HostPermission } from "./Host.model";
 
 export interface IUserStub extends INode {
   name: string;
@@ -33,6 +33,5 @@ export interface IPerformancePurchase {
 
 export interface IUserHostInfo {
   joined_at: number;  // when the user joined host
-  is_owner: boolean;  // if the user can delete / make all changes to host
-  permissions: IHostPermission; // host permission level
+  permissions: HostPermission; // host permission level
 }

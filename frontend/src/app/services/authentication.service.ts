@@ -47,7 +47,8 @@ export class AuthenticationService {
     this.cookieService.set("connect.sid", null);
     this.userService.setUser(null);
     localStorage.removeItem("currentUser");
+    this.http.post<any>("/api/users/logout", {});
     this.router.navigate(["/"]);
-    return this.http.post<any>("/api/users/logout", {});
+
   }
 }

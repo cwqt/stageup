@@ -23,9 +23,9 @@ import { SearchComponent } from '@ctrl/ngx-emoji-mart';
 
 
 const APP_ROUTES:Routes = [
-  { path: '', component: FeedComponent, canActivate:[LoggedInGuard]},
-  { path: 'search', component: SearchComponent, canActivate:[LoggedInGuard]},
-  { path: `performance/:${RP.PerformanceId}`, component: PerformanceComponent, canActivate:[LoggedInGuard],
+  { path: '', component: FeedComponent},
+  { path: 'search', component: SearchComponent},
+  { path: `performance/:${RP.PerformanceId}`, component: PerformanceComponent,
     children: [
       { path: 'watch', component: PerformanceWatchComponent }
     ]
@@ -52,7 +52,8 @@ const APP_ROUTES:Routes = [
         {
           path: "",
           component: LandingComponent,
-          children:  APP_ROUTES
+          children:  APP_ROUTES,
+          // canActivateChild: [LoggedInGuard]
         },
         { path: "**", component: NotFoundComponent },
       ],

@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
     if (this.authService.checkLoggedIn()) {
       this.userService.updateCachedUser();
     } else {
+      console.log('logout')
       this.authService.logout();
     }
     this.loading = false;

@@ -1,5 +1,5 @@
 import { INode } from "./Node.model";
-import { IUserStub } from "./User.model";
+import { IUserHostInfo, IUserStub } from "./User.model";
 import { IPerformanceStub } from './Performance.model';
 
 export interface IHostStub extends INode {
@@ -11,11 +11,13 @@ export interface IHostStub extends INode {
 
 export interface IHost extends IHostStub {
     members: IUserStub[];
-    // performances: IPerformanceStub[];
+    members_info: IUserHostInfo[];
+    performances: IPerformanceStub[];
 }
 
-export enum IHostPermission {
+export enum HostPermission {
+    Owner, // can delete host
     Admin, // can create / delete performances
     Editor, // can edit performance information
     Member // can view host
-  }
+}

@@ -9,7 +9,7 @@ import { Performance } from './Performance.model';
 export class Purchase extends BaseEntity implements IPerformancePurchase {
     @PrimaryGeneratedColumn() _id: number;
     @Column()                 date_purchased: number;
-    @Column()                 price: number;
+    @Column({type:"bigint", nullable:true})  price: number; // stored as micro-pence
     @Column()                 currency: CurrencyCode;
     @Column()                 token: string;
     
