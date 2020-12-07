@@ -1,4 +1,4 @@
-import { HostPermission, IEnvelopedData, IHost, IUser, IUserHostInfo } from "@eventi/interfaces";
+import { HostPermission, IEnvelopedData, IHost, IHostStub, IUser, IUserHostInfo, IMyself } from "@eventi/interfaces";
 import { Request } from "express";
 import { body, param } from "express-validator";
 import { ErrorHandler, FormErrorResponse } from "../common/errors";
@@ -10,6 +10,7 @@ import bcrypt from "bcrypt";
 import { User } from "../models/User.model";
 import Email = require("../common/email");
 import { Host } from "../models/Host.model";
+import { UserHostInfo } from "../models/UserHostInfo.model";
 
 export const validators = {
   loginUser: validate([
@@ -29,6 +30,26 @@ export const validators = {
   ]),
   readUserByUsername: validate([param("username").trim().not().isEmpty()]),
 };
+
+export const getMyself = async (req:Request):Promise<IMyself> => {
+  const user = await User.findOne({ _id: req.session.user._id }, { relations: ["host"] });
+  const host_info = await UserHostInfo.findOne({ relations: ["user", "host"],
+    where: {
+      user: {
+        _id: user._id,
+      },
+      host: {
+        _id: user.host._id
+      }
+    }
+  });
+
+  return {
+    user: user.toFull(),
+    host: user.host.toStub(),
+    host_info: host_info
+  };
+}
 
 export const createUser = async (req: Request, dc: DataClient): Promise<IUser> => {
   const preExistingUser = await User.findOne({ where: [

@@ -12,7 +12,8 @@ import {
     IEnvelopedData as IE,
     IUserHostInfo,
     IEnvelopedData,
-    IPerformanceUserInfo as IPUInfo
+    IPerformanceUserInfo as IPUInfo,
+    IMyself
 } from "@eventi/interfaces";
 
 import Users = require("./controllers/User.controller");
@@ -27,6 +28,7 @@ export default (providers:DataClient):Router => {
 const router = new Router(providers);
 
 // USERS -----------------------------------------------------------------------------------------------------------------------------------------------------------
+router.get    <IMyself>             ("/me",                                   Users.getMyself,                        [Access.Authenticated])
 router.post   <IUser>               ("/users",                                Users.createUser,                   [Access.None],           Users.validators.createUser);
 router.post   <void>                ("/users/logout",                         Users.logoutUser,                   [Access.Authenticated],  null);
 router.post   <IUser>               ("/users/login",                          Users.loginUser,                    [Access.None],           Users.validators.loginUser);
@@ -43,17 +45,18 @@ router.put    <IUser>               ("/users/:uid/avatar",                    Us
 router.post   <IHost>               ("/hosts",                                Hosts.createHost,                   [], null);
 router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.getHostMembers,               [], null);
 // router.put    <IHost>               ("/hosts/:hid",                           Hosts.updateHost,                   [], null);
-// router.delete <void>                ("/hosts/:hid",                           Hosts.deleteHost,                   [], null);
+router.delete <void>                ("/hosts/:hid",                           Hosts.deleteHost,                   [], null);
 // router.post   <IHost>               ("/hosts/:hid/members",                   Hosts.addUser,                      [], null);
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser,                   [], null);
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions,       [], null);
 
 // PERFORMANCES ----------------------------------------------------------------------------------------------------------------------------------------------------
-router.post<IPerf>                  ("/performances",                           Perfs.createPerformance,            [Access.Authenticated], null);
-router.get <IE<IPerfS[], null>>     ("/performances",                           Perfs.getPerformances,              [Access.Authenticated], null);
-router.get <IE<IPerf, IPUInfo>>     ("/performances/:pid",                      Perfs.getPerformance,               [Access.Authenticated], null);
-router.get <IPHInfo>                ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,       [Access.Authenticated], null);
-router.post <void>                  ("/performances/:pid/purchase",             Perfs.purchase,                     [Access.Authenticated], null);
+router.post   <IPerf>               ("/performances",                           Perfs.createPerformance,            [Access.Authenticated], null);
+router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.getPerformances,              [Access.Authenticated], null);
+router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      Perfs.getPerformance,               [Access.Authenticated], null);
+router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,       [Access.Authenticated], null);
+router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase,                     [Access.Authenticated], null);
+// router.delete <void>                ("/performance/:pid",                       Perfs.deletePerformance,            [Access.Authenticated])
 
 // PERFORMANCE PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------
 

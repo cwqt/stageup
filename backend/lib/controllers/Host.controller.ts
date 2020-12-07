@@ -48,3 +48,21 @@ export const getUserHostInfo = async (req:Request):Promise<IUserHostInfo> => {
 
   return uhi;
 }
+
+export const deleteHost = async (req:Request):Promise<void> => {
+  const user = await User.findOne({ _id: req.session.user._id }, { relations: ["host"] });
+  if(!user.host)
+    throw new ErrorHandler(HTTP.NotFound, "User is not part of any host");
+
+  const userHostInfo = await UserHostInfo.findOne({ relations: ["user", "host"],
+    where: {
+      user: { _id: user._id },
+      host: { _id: user.host._id }
+    }
+  });
+
+  if(userHostInfo.permissions != HostPermission.Owner)
+    throw new ErrorHandler(HTTP.Unauthorised, "Only host owner can delete host");
+
+  await user.host.remove();
+}
