@@ -8,7 +8,11 @@ import {
     IPerformance as IPerf,
     IPerformanceHostInfo as IPHInfo, 
     IUserHostInfo as IUHInfo,
-    IPerformancePurchase as IPurchase
+    IPerformancePurchase as IPurchase,
+    IEnvelopedData as IE,
+    IUserHostInfo,
+    IEnvelopedData,
+    IPerformanceUserInfo as IPUInfo
 } from "@eventi/interfaces";
 
 import Users = require("./controllers/User.controller");
@@ -23,33 +27,33 @@ export default (providers:DataClient):Router => {
 const router = new Router(providers);
 
 // USERS -----------------------------------------------------------------------------------------------------------------------------------------------------------
-router.post   <IUser>          ("/users",                                Users.createUser,                   [Access.None],           Users.validators.createUser);
-router.post   <void>           ("/users/logout",                         Users.logoutUser,                   [Access.Authenticated],  null);
-router.post   <IUser>          ("/users/login",                          Users.loginUser,                    [Access.None],           Users.validators.loginUser);
-router.get    <IUser>          ("/users/@:username",                     Users.readUserByUsername,           [],                      Users.validators.readUserByUsername); // order matters
-router.get    <IUser>          ("/users/:uid",                           Users.readUserById,                 [Access.Authenticated],  null);
-router.put    <IUser>          ("/users/:uid",                           Users.updateUser,                   [Access.Ourself],        null);
-router.delete <void>           ("/users/:uid",                           Users.deleteUser,                   [Access.Ourself],        null);
-router.get    <IHost, IUHInfo> ("/users/:uid/host",                      Users.getUserHost,                  [Access.Authenticated]);
-// router.get    <IPurchase[]>   ("/users/:uid/purchases",                 Users.getPurchases,                 [], null);
-router.put    <IUser>          ("/users/:uid/avatar",                    Users.updateUserAvatar,             [], null);
-// router.get    <IUserHostInfo> ("/hosts/:hid/permissions",               Users.getUserHostPermissions,       [], null);
+router.post   <IUser>               ("/users",                                Users.createUser,                   [Access.None],           Users.validators.createUser);
+router.post   <void>                ("/users/logout",                         Users.logoutUser,                   [Access.Authenticated],  null);
+router.post   <IUser>               ("/users/login",                          Users.loginUser,                    [Access.None],           Users.validators.loginUser);
+router.get    <IUser>               ("/users/@:username",                     Users.readUserByUsername,           [],                      Users.validators.readUserByUsername); // order matters
+router.get    <IUser>               ("/users/:uid",                           Users.readUserById,                 [Access.Authenticated],  null);
+router.put    <IUser>               ("/users/:uid",                           Users.updateUser,                   [Access.Ourself],        null);
+router.delete <void>                ("/users/:uid",                           Users.deleteUser,                   [Access.Ourself],        null);
+router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.getUserHost,                  [Access.Authenticated]);
+router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar,             [], null);
+// router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases,                 [], null);
+// router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions,       [], null);
 
 // HOSTS -----------------------------------------------------------------------------------------------------------------------------------------------------------
-router.post   <IHost>         ("/hosts",                                Hosts.createHost,                   [], null);
-router.get    <IUser[]>       ("/hosts/:hid/members",                   Hosts.getHostMembers,               [], null);
-// router.put    <IHost>         ("/hosts/:hid",                           Hosts.updateHost,                   [], null);
-// router.delete <void>          ("/hosts/:hid",                           Hosts.deleteHost,                   [], null);
-// router.post   <IHost>         ("/hosts/:hid/members",                   Hosts.addUser,                      [], null);
-// router.delete <IHost>         ("/hosts/:hid/members",                   Hosts.removeUser,                   [], null);
-// router.delete <IHost>         ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions,       [], null);
+router.post   <IHost>               ("/hosts",                                Hosts.createHost,                   [], null);
+router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.getHostMembers,               [], null);
+// router.put    <IHost>               ("/hosts/:hid",                           Hosts.updateHost,                   [], null);
+// router.delete <void>                ("/hosts/:hid",                           Hosts.deleteHost,                   [], null);
+// router.post   <IHost>               ("/hosts/:hid/members",                   Hosts.addUser,                      [], null);
+// router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser,                   [], null);
+// router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions,       [], null);
 
 // PERFORMANCES ----------------------------------------------------------------------------------------------------------------------------------------------------
-router.post<IPerf>          ("/performances",                           Perfs.createPerformance,            [Access.Authenticated], null);
-router.get <IPerfS[]>       ("/performances",                           Perfs.getPerformances,              [Access.Authenticated], null);
-router.get <IPerf>          ("/performances/:pid",                      Perfs.getPerformance,               [Access.Authenticated], null);
-router.get <IPHInfo>        ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,       [Access.Authenticated], null);
-router.post <void>          ("/performances/:pid/purchase",             Perfs.purchase,                     [Access.Authenticated], null);
+router.post<IPerf>                  ("/performances",                           Perfs.createPerformance,            [Access.Authenticated], null);
+router.get <IE<IPerfS[], null>>     ("/performances",                           Perfs.getPerformances,              [Access.Authenticated], null);
+router.get <IE<IPerf, IPUInfo>>     ("/performances/:pid",                      Perfs.getPerformance,               [Access.Authenticated], null);
+router.get <IPHInfo>                ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,       [Access.Authenticated], null);
+router.post <void>                  ("/performances/:pid/purchase",             Perfs.purchase,                     [Access.Authenticated], null);
 
 // PERFORMANCE PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------
 

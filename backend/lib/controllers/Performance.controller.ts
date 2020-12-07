@@ -1,7 +1,10 @@
 import {
+  IEnvelopedData,
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
+  IPerformanceUserInfo,
+  IUserHostInfo,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/User.model';
@@ -12,6 +15,8 @@ import { HTTP } from '../common/http';
 import { validate } from '../common/validate';
 import { body } from 'express-validator';
 import { Purchase } from '../models/Purchase.model';
+import { createPagingData } from '../common/paginator';
+import { IResLocals } from '../router';
 
 export const validators = {
   createPerformance: validate([body('name').not().isEmpty().withMessage('Performance must have a title!')]),
@@ -37,23 +42,30 @@ export const createPerformance = async (req: Request, dc: DataClient): Promise<I
   return performance.toFull();
 };
 
-export const getPerformances = async (req: Request): Promise<IPerformanceStub[]> => {
-  const performances = await Performance.find({ take: 10, relations: ['host'] });
-  return performances.map((p: Performance) => p.toStub());
+export const getPerformances = async (req: Request, dc:DataClient, locals:IResLocals): Promise<IEnvelopedData<IPerformanceStub[], null>> => {
+  const performances = await Performance.find({
+    take: locals.pagination.per_page,
+    skip: locals.pagination.page*locals.pagination.per_page,
+    relations: ['host']
+  });
+
+  return {
+    data: performances.map((p: Performance) => p.toStub()),
+    __paging_data: createPagingData(req.path, 100, locals.pagination.per_page)
+  }
 };
 
-export const getPerformance = async (req: Request, dc: DataClient): Promise<IPerformance> => {
+export const getPerformance = async (req: Request, dc: DataClient): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
   const performance = await Performance.findOne(
     { _id: parseInt(req.params.pid) },
     { relations: ['host', 'host_info'] }
   );
 
   // see if current user has access/bought the performance
+  let token: string;
+  let memberOfHost: boolean = false;
+  let previousPurchase: Purchase | null;
   if (req.session?.user._id) {
-    let memberOfHost: boolean = false;
-    let token: string;
-    let previousPurchase: Purchase | null;
-
     // check if user is part of host that created performance
     const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
     if (user.host._id == performance.host._id) memberOfHost = true;
@@ -77,21 +89,21 @@ export const getPerformance = async (req: Request, dc: DataClient): Promise<IPer
 
     // sign on the fly for a member of the host
     if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
-
-    return {
-      ...performance.toFull(),
-      __user_access: {
-        signed_token: token,
-        purchase_id: previousPurchase?._id,
-        expires: false,
-      },
-    };
   }
 
-  return performance;
+  return {
+    data: performance.toFull(),
+    __client_data: {
+      signed_token: token,
+      purchase_id: previousPurchase?._id,
+      // TODO: token expiry
+      expires: false,      
+    }
+  }
 };
 
-export const getPerformanceHostInfo = async (req: Request, dc: DataClient): Promise<IPerformanceHostInfo> => {
+
+export const getPerformanceHostInfo = async (req: Request): Promise<IPerformanceHostInfo> => {
   const performance = await Performance.findOne({ _id: parseInt(req.params.pid )}, { relations: ["host_info"] })
   const performanceHostInfo = performance.host_info;
 

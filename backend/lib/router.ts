@@ -19,46 +19,12 @@ export interface IResLocals {
   };
 }
 
-// if user has a session, this will be returned alongside the reponse
-export interface IClientData<T> {
-  __client_data:T;
-}
-
-const destruct = async (f:Function, ...args:any[]):Promise<[any, any?]> => {
-  let res = await f(...args);
-  res = Array.isArray(res) ? res : [res, null];  
-  return res;
-}
-
-const clientDataHandler = async <T,K={}>(controller:any, ...args:any[]):Promise<(T & IClientData<K>)> => {
-  const [res, client_data]:[any,any?] = await destruct(controller, args);
-  return {
-    ...(<T><unknown>res),
-    ...(<IClientData<K>><unknown>{__client_data: client_data})};
-}
-
-// clientDataHandler<IHostStub, IUserHostInfo>();
-// type x = IHostStub & IClientData<IUserHostInfo>;
-// let y = {} as x;
-// y.__client_data.permissions
-
 const skip = (req: Request, res: Response, next: NextFunction) => next();
 
-const endpointFunc = <T,K>(
-  method: IRouterMatcher<T>,
-  providers: DataClient,
-  resCode?: HTTP,
-  lambda?: (res: Response, data: T) => void
-) => {
+const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode?:HTTP, lambda?:(res:Response, data:T) => void) => {
   return (
     path: string,
-    controller: (
-      req: Request,
-      dc: DataClient,
-      locals: IResLocals,
-      next: NextFunction,
-      permissions: Access[]
-    ) => Promise<T | [T, K]>,
+    controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction,  permissions: Access[]) => Promise<T>,
     access: Access[],
     validators: any = skip
   ) => {
@@ -73,7 +39,7 @@ const endpointFunc = <T,K>(
       },
       async (req: Request, res: Response, next: NextFunction) => {
         try {
-          const returnValue = await (clientDataHandler<T,K>(controller,
+          const returnValue = await controller(
             req,
             providers,
             {
@@ -85,7 +51,7 @@ const endpointFunc = <T,K>(
             } as IResLocals,
             next,
             access
-          ));
+          );
           lambda ? lambda(res, returnValue) : res.status(resCode || HTTP.OK).json(returnValue);
         } catch (err) {
           handleError(req, res, next, err);
@@ -93,7 +59,7 @@ const endpointFunc = <T,K>(
       }
     );
   };
-};
+}
 
 
 export class Router {
@@ -124,36 +90,36 @@ export class Router {
     this.providers = providers;
   }
 
-  get = <T, K={}>(
+  get = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T | [T,K]>,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<T,K>(this.router.get, this.providers)
+      endpointFunc<T>(this.router.get, this.providers)
         (path, controller, access, validators);
 
-  put = <T, K={}>(
+  put = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T |[T,K]>,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<T,K>(this.router.put, this.providers)
+      endpointFunc<T>(this.router.put, this.providers)
         (path, controller, access, validators);
 
-  post = <T,K={}>(
+  post = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T |[T,K]>,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<T,K>(this.router.post, this.providers, HTTP.Created)
+      endpointFunc<T>(this.router.post, this.providers, HTTP.Created)
         (path, controller, access, validators);
     
-  delete = <T,K={}>(
+  delete = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T |[T,K]>,
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<T,K>(this.router.delete, this.providers)
+      endpointFunc<T>(this.router.delete, this.providers)
         (path, controller, access, validators);        
 
   redirect = (
@@ -161,7 +127,7 @@ export class Router {
     controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<string>,
     access:Access[],
     validators: any = skip) =>
-      endpointFunc<string, void>(this.router.get,this.providers,  HTTP.Moved,
+      endpointFunc<string>(this.router.get,this.providers,  HTTP.Moved,
         (res:Response, data:string) => res.status(HTTP.Moved).redirect(data))
         (path, controller, access, validators);        
       }

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IUser, Paginated } from "@eventi/interfaces";
+import { IUser } from "@eventi/interfaces";
 import { BehaviorSubject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
