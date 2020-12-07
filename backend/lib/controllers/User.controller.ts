@@ -1,4 +1,4 @@
-import { IHost, IUser } from "@eventi/interfaces";
+import { HostPermission, IHost, IUser, IUserHostInfo } from "@eventi/interfaces";
 import { Request } from "express";
 import { body, param } from "express-validator";
 import { ErrorHandler, FormErrorResponse } from "../common/errors";
@@ -118,7 +118,7 @@ export const deleteUser = async (req: Request): Promise<void> => {
 };
 
 
-export const getUserHost = async (req:Request):Promise<IHost> => {
+export const getUserHost = async (req:Request):Promise<[IHost, IUserHostInfo]> => {
   const user = await User
     .createQueryBuilder("user")
     .leftJoinAndSelect("user.host", "host")
@@ -126,5 +126,6 @@ export const getUserHost = async (req:Request):Promise<IHost> => {
 
   if(!user.host) throw new ErrorHandler(HTTP.NotFound, "User is not part of any host");
 
-  return await (await Host.findOne({ _id: user.host._id })).toFull();
+  const host = await Host.findOne({ _id: user.host._id });
+  return [host.toFull(), { permissions: HostPermission.Admin, joined_at: 0 }]
 }
