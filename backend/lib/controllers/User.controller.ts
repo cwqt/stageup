@@ -32,21 +32,26 @@ export const validators = {
 };
 
 export const getMyself = async (req:Request):Promise<IMyself> => {
-  const user = await User.findOne({ _id: req.session.user._id }, { relations: ["host"] });
-  const host_info = await UserHostInfo.findOne({ relations: ["user", "host"],
-    where: {
-      user: {
-        _id: user._id,
-      },
-      host: {
-        _id: user.host._id
+  const u = await User.findOne({ _id: req.session.user._id }, { relations: ["host"] });
+  if (!u) throw new ErrorHandler(HTTP.NotFound, "No such user exists");
+
+  let host_info:IUserHostInfo;
+  if(u.host) {
+    host_info = await UserHostInfo.findOne({ relations: ["user", "host"],
+      where: {
+        user: {
+          _id: u._id,
+        },
+        host: {
+          _id: u.host._id
+        }
       }
-    }
-  });
+    });
+  }
 
   return {
-    user: user.toFull(),
-    host: user.host.toStub(),
+    user: u.toFull(),
+    host: u.host?.toStub(),
     host_info: host_info
   };
 }

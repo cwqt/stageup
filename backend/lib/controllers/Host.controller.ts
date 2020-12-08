@@ -24,8 +24,13 @@ export const createHost = async (req: Request, dc: DataClient): Promise<IHost> =
     }
   );
 
+  // Create host & add current user (creator) to it through transaction
+  await dc.torm.transaction(async transEntityManager => {
+    await transEntityManager.save(host);
+    await host.addMember(user, HostPermission.Owner, transEntityManager);
+  })
+
   // addMember saves to db
-  await host.addMember(user, HostPermission.Owner, dc);
   return host.toFull();
 };
 
@@ -64,5 +69,6 @@ export const deleteHost = async (req:Request):Promise<void> => {
   if(userHostInfo.permissions != HostPermission.Owner)
     throw new ErrorHandler(HTTP.Unauthorised, "Only host owner can delete host");
 
+  // TODO: transactionally remove performances, signing keys, host infos etc etc.
   await user.host.remove();
 }

@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, EntityManager } from "typeorm";
 import { NodeType, IHost, IHostStub, HostPermission } from "@eventi/interfaces";
 import { User } from './User.model';
 import { Performance } from "./Performance.model";
@@ -27,16 +27,14 @@ export class Host extends BaseEntity implements IHost {
     this.members = [];
   }
 
-  async addMember(user:User, permissionLevel:HostPermission, dc:DataClient) {
-    dc.torm.manager.transaction(async transEntityManager => {
-      // Create permissions link
-      const userHostInfo = new UserHostInfo(user, permissionLevel);
-      await transEntityManager.save(userHostInfo);
-  
-      // Add user to host group
-      this.members.push(user);
-      transEntityManager.save(this);
-    })
+  async addMember(user:User, permissionLevel:HostPermission, txc:EntityManager) {
+    // Create permissions link
+    const userHostInfo = new UserHostInfo(user, permissionLevel);
+    await txc.save(userHostInfo);
+
+    // Add user to host group
+    this.members.push(user);
+    txc.save(this);
   }
 
   toStub():IHostStub {
