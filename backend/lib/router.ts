@@ -6,6 +6,8 @@ import Multer from "multer";
 import { DataClient } from "./common/data";
 const AsyncRouter = require("express-async-router").AsyncRouter;
 
+import { AuthStrategy } from './authorisation';
+
 export enum Access {
   SiteAdmin,
   Ourself,
@@ -24,13 +26,13 @@ const skip = (req: Request, res: Response, next: NextFunction) => next();
 const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode?:HTTP, lambda?:(res:Response, data:T) => void) => {
   return (
     path: string,
-    controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction,  permissions: Access[]) => Promise<T>,
-    access: Access[],
+    controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
+    authStrats: AuthStrategy[],
     validators: any = skip
   ) => {
     method(
       path,
-      getCheckPermissions(access),
+      executeAuthenticationStrategies(authStrats, providers),
       validators ?? skip,
       (req: Request, res: Response, next: NextFunction) => {
         res.locals.page = parseInt(req.query.page as string) || 0;
@@ -49,8 +51,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
                 page: res.locals.page,
               },
             } as IResLocals,
-            next,
-            access
+            next
           );
           lambda ? lambda(res, returnValue) : res.status(resCode || HTTP.OK).json(returnValue);
         } catch (err) {
@@ -92,62 +93,59 @@ export class Router {
 
   get = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
-    access:Access[],
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
+    authStrats:AuthStrategy[],
     validators: any = skip) =>
       endpointFunc<T>(this.router.get, this.providers)
-        (path, controller, access, validators);
+        (path, controller, authStrats, validators);
 
   put = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
-    access:Access[],
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
+    authStrats:AuthStrategy[],
     validators: any = skip) =>
       endpointFunc<T>(this.router.put, this.providers)
-        (path, controller, access, validators);
+        (path, controller, authStrats, validators);
 
   post = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
-    access:Access[],
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
+    authStrats:AuthStrategy[],
     validators: any = skip) =>
       endpointFunc<T>(this.router.post, this.providers, HTTP.Created)
-        (path, controller, access, validators);
+        (path, controller, authStrats, validators);
     
   delete = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<T>,
-    access:Access[],
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
+    authStrats:AuthStrategy[],
     validators: any = skip) =>
       endpointFunc<T>(this.router.delete, this.providers)
-        (path, controller, access, validators);        
+        (path, controller, authStrats, validators);        
 
   redirect = (
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction, permissions: Access[]) => Promise<string>,
-    access:Access[],
+    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<string>,
+    authStrats:AuthStrategy[],
     validators: any = skip) =>
       endpointFunc<string>(this.router.get,this.providers,  HTTP.Moved,
         (res:Response, data:string) => res.status(HTTP.Moved).redirect(data))
-        (path, controller, access, validators);        
+        (path, controller, authStrats, validators);        
       }
 
-const getCheckPermissions = (access: Access[]) => {
+const executeAuthenticationStrategies = (authStrats: AuthStrategy[], dc:DataClient) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    //TODO: sort out authorisation / authentication
     try {
+      // Site admin can do anything
+      if (req.session.user?.is_admin) return next();
+
+      // Run all auth strategies
+      for(let i=0; i<authStrats.length; i++) {
+        let [isAuthorised, _, reason] = await authStrats[i](req, dc);
+        if(reason) throw new ErrorHandler(HTTP.Unauthorised, reason);
+      }
+
       return next();
-      //No perms / session required
-      // if (access.length == 0 || access.includes(Access.None)) return next();
-
-      // All other checks require an active session (logged in)
-      // if (!req.session?.user!) throw new Error(`Session required to access requested resource`);
-
-      //Site admin can do anything
-      // if (req.session.user!.admin) return next();
-
-      logger.error("Auth dead end.");
-      throw new ErrorHandler(HTTP.BadRequest, "Invalid auth")
     } catch (error) {
       return next(new ErrorHandler(HTTP.Unauthorised, error.message));
     }

@@ -12,9 +12,10 @@ export class UserHostInfo extends BaseEntity implements IUserHostInfo  {
     @OneToOne(() => User) @JoinColumn()                user:User;
     @ManyToOne(() => Host, host => host.members_info)  host:Host;
 
-    constructor(user:User, permissions:HostPermission) {
+    constructor(user:User, host:Host, permissions:HostPermission) {
         super();
         this.user = user;
+        this.host = host;
         this.joined_at = Math.floor(Date.now() / 1000);//timestamp in seconds
         this.permissions = permissions;
     }

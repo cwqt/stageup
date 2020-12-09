@@ -25,16 +25,18 @@ export class Host extends BaseEntity implements IHost {
     this.username = data.username;
     this.name = data.name;
     this.members = [];
+    this.members_info = [];
   }
 
   async addMember(user:User, permissionLevel:HostPermission, txc:EntityManager) {
     // Create permissions link
-    const userHostInfo = new UserHostInfo(user, permissionLevel);
+    const userHostInfo = new UserHostInfo(user, this, permissionLevel);
     await txc.save(userHostInfo);
 
     // Add user to host group
+    this.members_info.push(userHostInfo);
     this.members.push(user);
-    txc.save(this);
+    await txc.save(this);
   }
 
   toStub():IHostStub {

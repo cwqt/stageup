@@ -16,6 +16,8 @@ import {
     IMyself
 } from "@eventi/interfaces";
 
+import AuthStrat from './authorisation';
+
 import Users = require("./controllers/User.controller");
 import Hosts = require("./controllers/Host.controller");
 import Perfs  = require("./controllers/Performance.controller");
@@ -28,18 +30,18 @@ export default (providers:DataClient):Router => {
 const router = new Router(providers);
 
 // USERS -----------------------------------------------------------------------------------------------------------------------------------------------------------
-router.get    <IMyself>             ("/me",                                   Users.getMyself,                        [Access.Authenticated])
-router.post   <IUser>               ("/users",                                Users.createUser,                   [Access.None],           Users.validators.createUser);
-router.post   <void>                ("/users/logout",                         Users.logoutUser,                   [Access.Authenticated],  null);
-router.post   <IUser>               ("/users/login",                          Users.loginUser,                    [Access.None],           Users.validators.loginUser);
-router.get    <IUser>               ("/users/@:username",                     Users.readUserByUsername,           [],                      Users.validators.readUserByUsername); // order matters
-router.get    <IUser>               ("/users/:uid",                           Users.readUserById,                 [Access.Authenticated],  null);
-router.put    <IUser>               ("/users/:uid",                           Users.updateUser,                   [Access.Ourself],        null);
-router.delete <void>                ("/users/:uid",                           Users.deleteUser,                   [Access.Ourself],        null);
-router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.getUserHost,                  [Access.Authenticated]);
-router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar,             [], null);
-// router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases,                 [], null);
-// router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions,       [], null);
+router.get    <IMyself>             ("/me",                                   Users.getMyself,                    [AuthStrat.isLoggedIn],       null);
+router.post   <IUser>               ("/users",                                Users.createUser,                   [AuthStrat.none],             Users.validators.createUser);
+router.post   <void>                ("/users/logout",                         Users.logoutUser,                   [AuthStrat.isLoggedIn],       null);
+router.post   <IUser>               ("/users/login",                          Users.loginUser,                    [AuthStrat.none],             Users.validators.loginUser);
+router.get    <IUser>               ("/users/@:username",                     Users.readUserByUsername,           [AuthStrat.none],             Users.validators.readUserByUsername); // order matters
+router.get    <IUser>               ("/users/:uid",                           Users.readUserById,                 [AuthStrat.isLoggedIn],       null);
+router.put    <IUser>               ("/users/:uid",                           Users.updateUser,                   [AuthStrat.isOurself],        null);
+router.delete <void>                ("/users/:uid",                           Users.deleteUser,                   [AuthStrat.isOurself],        null);
+router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.getUserHost,                  [AuthStrat.isLoggedIn],       null);
+router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar,             [AuthStrat.isLoggedIn],       null);
+// router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases,                 [AuthStrat.isLoggedIn],       null);
+// router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions,       [AuthStrat.isLoggedIn],       null);
 
 // HOSTS -----------------------------------------------------------------------------------------------------------------------------------------------------------
 router.post   <IHost>               ("/hosts",                                Hosts.createHost,                   [], null);
@@ -51,11 +53,11 @@ router.delete <void>                ("/hosts/:hid",                           Ho
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions,       [], null);
 
 // PERFORMANCES ----------------------------------------------------------------------------------------------------------------------------------------------------
-router.post   <IPerf>               ("/performances",                           Perfs.createPerformance,            [Access.Authenticated], null);
-router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.getPerformances,              [Access.Authenticated], null);
-router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      Perfs.getPerformance,               [Access.Authenticated], null);
-router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,       [Access.Authenticated], null);
-router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase,                     [Access.Authenticated], null);
+router.post   <IPerf>               ("/performances",                           Perfs.createPerformance,            [AuthStrat.isLoggedIn], null);
+router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.getPerformances,              [AuthStrat.isLoggedIn], null);
+router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      Perfs.getPerformance,               [AuthStrat.isLoggedIn], null);
+router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,       [AuthStrat.isLoggedIn], null);
+router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase,                     [AuthStrat.isLoggedIn], null);
 // router.delete <void>                ("/performance/:pid",                       Perfs.deletePerformance,            [Access.Authenticated])
 
 // PERFORMANCE PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------
