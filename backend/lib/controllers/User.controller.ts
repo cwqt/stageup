@@ -74,7 +74,7 @@ export const createUser = async (req: Request, dc: DataClient): Promise<IUser> =
     const errors = new FormErrorResponse();
     if(preExistingUser.username == req.body.username) errors.push("username", "Username is already taken", req.body.username);
     if(preExistingUser.email_address == req.body.email_address) errors.push("email_address", "Email is already in use", req.body.email_address);
-    throw new ErrorHandler(HTTP.Conflict, errors.value);
+    throw new ErrorHandler(HTTP.Conflict, "Duplicate data in user form", errors.value);
   }
 
   const emailSent = await Email.sendVerificationEmail(req.body.email_address);
@@ -95,13 +95,13 @@ export const loginUser = async (req: Request): Promise<IUser> => {
   const password = req.body.password;
 
   const u: User = await User.findOne({ email_address: emailAddress });
-  if (!u) throw new ErrorHandler(HTTP.NotFound, "No such user exists");
+  if (!u) throw new ErrorHandler(HTTP.NotFound, "Incorrect e-mail or password");
 
   if (!u.is_verified)
-    throw new ErrorHandler(HTTP.Unauthorised, [{ param: "form", msg: "Your account has not been verified" }]);
+    throw new ErrorHandler(HTTP.Unauthorised, "Your account has not been verified, please check your email address for verification e-mail");
 
   const match = await bcrypt.compare(password, u.pw_hash);
-  if (!match) throw new ErrorHandler(HTTP.Unauthorised, [{ param: "password", msg: "Incorrect password" }]);
+  if (!match) throw new ErrorHandler(HTTP.Unauthorised, "Incorrect e-mail or password");
 
   req.session.user = {
     _id: u._id,
