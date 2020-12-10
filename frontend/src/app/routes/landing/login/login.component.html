@@ -6,8 +6,8 @@
       <mat-form-field appearance="fill">
         <mat-label type="email">E-mail address</mat-label>
         <input matInput type="text" formControlName="email_address" />
-        <mat-error *ngIf="!user.form_errors.email && email.invalid && email.touched">E-mail is required</mat-error>
-        <mat-error *ngIf="user.form_errors.email">{{ user.form_errors.email }}</mat-error>
+        <mat-error *ngIf="!user.form_errors.email_address && email.invalid && email.touched">E-mail is required</mat-error>
+        <mat-error *ngIf="user.form_errors.email_address">{{ user.form_errors.email_address }} xxx</mat-error>
       </mat-form-field>
 
       <br />
@@ -19,20 +19,20 @@
         <mat-error *ngIf="user.form_errors.password">{{ user.form_errors.password }}</mat-error>
       </mat-form-field>
 
+      <mat-error class="form" *ngIf="user.error">{{ user.error }}</mat-error>
+
       <div class="sign-in-buttons">
         <ui-button variant="primary" [disabled]="loginForm.invalid || user.loading" [loading]="user.loading">
           <span>Sign in</span>
         </ui-button>
 
-        <mat-form-field floatPlaceholder="always" class="app-input-no-underline">
+        <!-- <mat-form-field floatPlaceholder="always" class="app-input-no-underline">
           <input matInput style="display: none !important;" />
           <mat-checkbox formControlName="rememberMe">Remember me?</mat-checkbox>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <a class="mat-small help" href="#">Trouble logging in?</a>
       </div>
-
-      <mat-error class="form" *ngIf="user.error">{{ user.error }}</mat-error>
     </form>
 
     <br />
