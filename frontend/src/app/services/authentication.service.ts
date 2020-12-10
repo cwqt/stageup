@@ -6,6 +6,8 @@ import { CookieService } from "ngx-cookie-service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "./user.service";
 import { LoggedInGuard } from "../_helpers";
+import { MyselfService } from './myself.service';
+import { IUser } from '@eventi/interfaces';
 
 @Injectable({
   providedIn: "root",
@@ -15,7 +17,7 @@ export class AuthenticationService {
 
   constructor(
     private http: HttpClient,
-    private userService: UserService,
+    private myselfService:MyselfService,
     private cookieService: CookieService,
     private route: ActivatedRoute,
     private router: Router
@@ -23,7 +25,7 @@ export class AuthenticationService {
 
   checkLoggedIn() {
     this.$loggedIn.next(
-      new LoggedInGuard(this.router, this.userService).canActivate(
+      new LoggedInGuard(this.router, this.myselfService).canActivate(
         this.route.snapshot,
         this.router.routerState.snapshot
       )
@@ -31,24 +33,23 @@ export class AuthenticationService {
     return this.$loggedIn.getValue();
   }
 
-  login(formData) {
+  login(formData:{ email_address:string, password:string }):Promise<IUser> {
     return this.http
-      .post<any>("/api/users/login", formData, { withCredentials: true })
+      .post<IUser>("/api/users/login", formData, { withCredentials: true })
       .pipe(
         map((user) => {
-          this.userService.setUser(user);
+          // Remove last logged in user stored
+          this.myselfService.store(null);
           this.router.navigate(["/"]);
           return user;
         })
-      );
+      ).toPromise();
   }
 
   logout() {
     this.cookieService.set("connect.sid", null);
-    this.userService.setUser(null);
-    localStorage.removeItem("currentUser");
-    this.http.post<any>("/api/users/logout", {});
+    this.myselfService.store(null);
+    this.http.post("/api/users/logout", {});
     this.router.navigate(["/"]);
-
   }
 }

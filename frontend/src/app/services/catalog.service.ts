@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import {
   NodeType,
-  Paginated,
 } from "@eventi/interfaces";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";

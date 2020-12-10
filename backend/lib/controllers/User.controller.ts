@@ -1,8 +1,8 @@
-import { HostPermission, IEnvelopedData, IHost, IHostStub, IUser, IUserHostInfo, IMyself } from "@eventi/interfaces";
+import { HostPermission, IEnvelopedData, IHost, IUser, IUserHostInfo, IMyself } from "@eventi/interfaces";
 import { Request } from "express";
 import { body, param } from "express-validator";
 import { ErrorHandler, FormErrorResponse } from "../common/errors";
-import { HTTP } from "../common/http";
+import { HTTP } from "@eventi/interfaces";
 import { DataClient } from "../common/data";
 import { validate } from "../common/validate";
 import bcrypt from "bcrypt";
@@ -32,26 +32,34 @@ export const validators = {
 };
 
 export const getMyself = async (req:Request):Promise<IMyself> => {
-  const u = await User.findOne({ _id: req.session.user._id }, { relations: ["host"] });
-  if (!u) throw new ErrorHandler(HTTP.NotFound, "No such user exists");
+  const user:User = await User.findOne({ _id: req.session.user._id });
+  if (!user) throw new ErrorHandler(HTTP.NotFound, "No such user exists");
+
+  const host:Host = await Host.findOne({
+    where: {
+      members: {
+        _id: user._id
+      }
+    }
+  });
 
   let host_info:IUserHostInfo;
-  if(u.host) {
-    host_info = await UserHostInfo.findOne({ relations: ["user", "host"],
+  if(host) {
+    host_info = await UserHostInfo.findOne({
       where: {
         user: {
-          _id: u._id,
+          _id: user._id,
         },
         host: {
-          _id: u.host._id
+          _id: host._id
         }
       }
     });
   }
 
   return {
-    user: u.toFull(),
-    host: u.host?.toStub(),
+    user: user.toFull(),
+    host: host?.toStub(),
     host_info: host_info
   };
 }

@@ -4,7 +4,7 @@ import { User } from "../models/User.model";
 import { DataClient } from "../common/data";
 import { Host } from "../models/Host.model";
 import { ErrorHandler } from "../common/errors";
-import { HTTP } from "../common/http";
+import { HTTP } from "@eventi/interfaces";
 import { UserHostInfo } from '../models/UserHostInfo.model';
 import { validate } from "../common/validate";
 import { query } from 'express-validator';
@@ -35,7 +35,7 @@ export const createHost = async (req: Request, dc: DataClient): Promise<IHost> =
 };
 
 export const getHostMembers = async (req:Request):Promise<IUser[]> => {
-    const host = await Host.findOne({ _id: parseInt(req.params.hid) });
+    const host = await Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ["members"] });
     return host.members.map((u:User) => u.toFull());
 }
 

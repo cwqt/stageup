@@ -11,7 +11,7 @@ import "reflect-metadata";
 
 import Routes from './routes';
 import config from "./config";
-import { HTTP } from "./common/http";
+import { HTTP } from "@eventi/interfaces";
 import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
 

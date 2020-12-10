@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { of, Observable, BehaviorSubject } from "rxjs";
+import { Observable, BehaviorSubject } from "rxjs";
 import { tap, map } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 
-import { IUser, IUserStub, IHostStub, IHost } from "@eventi/interfaces";
+import { IUser, IHost } from "@eventi/interfaces";
 
 @Injectable({
   providedIn: "root",
@@ -19,28 +19,26 @@ export class UserService {
 
   constructor(private http: HttpClient) {
     this.$currentUser = new BehaviorSubject(
-      JSON.parse(localStorage.getItem("currentUser"))
+      JSON.parse(localStorage.getItem("lastMyself"))?.user
     );
     this.currentUser = this.$currentUser.asObservable();
   }
 
-  register(user:Pick<IUser, "name" | "username"> & { password: string }) {
+  register(user: Pick<IUser, "name" | "username"> & { password: string }) {
     return this.http.post("/api/users", user);
   }
 
   changeAvatar(formData: FormData): Promise<IUser> {
-    return this.http.put<IUser>(
-      `/api/users/${this.currentUserValue._id}/avatar`,
-      formData
-    ).toPromise();
+    return this.http
+      .put<IUser>(`/api/users/${this.currentUserValue._id}/avatar`, formData)
+      .toPromise();
   }
 
   updateUser(json: any) {
     return this.http.put(`/api/users/${this.currentUserValue._id}`, json);
   }
 
-  setUser(user: IUser) {
-    localStorage.setItem("currentUser", JSON.stringify(user));
+  setActiveUser(user: IUser) {
     this.$currentUser.next(user);
   }
 
@@ -49,7 +47,7 @@ export class UserService {
       .get<IUser>(`/api/users/${this.currentUserValue._id}`)
       .pipe(
         map((user) => {
-          this.setUser(user);
+          this.setActiveUser(user);
           this.getUserHost();
         })
       )
@@ -63,7 +61,7 @@ export class UserService {
   getUserHost(): Promise<IHost> {
     return this.http
       .get<IHost>(`/api/users/${this.currentUserValue._id}/host`)
-      .pipe(tap(host => this.userHost.next(host)))
+      .pipe(tap((host) => this.userHost.next(host)))
       .toPromise();
   }
 }

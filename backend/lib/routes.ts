@@ -30,7 +30,7 @@ export default (providers:DataClient):Router => {
 const router = new Router(providers);
 
 // USERS -----------------------------------------------------------------------------------------------------------------------------------------------------------
-router.get    <IMyself>             ("/me",                                   Users.getMyself,                    [AuthStrat.isLoggedIn],       null);
+router.get    <IMyself>             ("/myself",                               Users.getMyself,                    [AuthStrat.isLoggedIn],       null);
 router.post   <IUser>               ("/users",                                Users.createUser,                   [AuthStrat.none],             Users.validators.createUser);
 router.post   <void>                ("/users/logout",                         Users.logoutUser,                   [AuthStrat.isLoggedIn],       null);
 router.post   <IUser>               ("/users/login",                          Users.loginUser,                    [AuthStrat.none],             Users.validators.loginUser);

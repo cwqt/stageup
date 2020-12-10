@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import {
   NodeType,
-  Paginated,
 } from "@eventi/interfaces";
 import { Observable, Subject } from "rxjs";
 import { CatalogService } from "../../services/catalog.service";

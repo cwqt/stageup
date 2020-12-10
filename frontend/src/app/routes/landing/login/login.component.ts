@@ -1,10 +1,18 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Router, ActivatedRoute } from "@angular/router";
-import { first } from "rxjs/operators";
+import { ActivatedRoute, Router } from "@angular/router";
 
 import { AuthenticationService } from "../../../services/authentication.service";
-import { MatDialog } from "@angular/material/dialog";
+import { ICacheable } from 'src/app/app.interfaces';
+import { IUser } from '@eventi/interfaces';
+import { MyselfService } from 'src/app/services/myself.service';
+import { BaseAppService } from 'src/app/services/app.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { handleFormErrors } from 'src/app/_helpers/formErrorHandler';
+
+
+// const formErrorResponseHandler(formErrors:IFormErrorR)
+
 
 @Component({
   selector: "app-login",
@@ -12,20 +20,23 @@ import { MatDialog } from "@angular/material/dialog";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
+  user:ICacheable<IUser> = {
+    data: null,
+    error: "",
+    loading: false,
+    form_errors: {
+      email: "",
+      password: "",  
+    }
+  }
+
   returnUrl: string;
   loginForm: FormGroup;
-  loading: boolean = false;
-  success: boolean = false;
-  errors = {
-    email: "",
-    password: "",
-    form: "",
-  };
 
   constructor(
-    private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router,
+    private baseAppService:BaseAppService,
+    private myselfService: MyselfService,
     private authService: AuthenticationService,
     private fb: FormBuilder
   ) {}
@@ -40,41 +51,17 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
   }
 
-  get email() {
-    return this.loginForm.get("email_address");
-  }
-  get password() {
-    return this.loginForm.get("password");
-  }
+  get email() { return this.loginForm.get("email_address") }
+  get password() { return this.loginForm.get("password") }
 
   submitHandler() {
-    this.loading = true;
-    setTimeout(() => {
-      this.authService
-        .login(this.loginForm.value)
-        .pipe(first())
-        .subscribe(
-          (user) => {
-            this.dialog.closeAll();
-            this.success = true;
-            if (!user.new_user) this.router.navigate(["/"]);
-          },
-          (err) => {
-            this.success = false;
-            let errors = err.error.message;
-            Object.keys(this.errors).forEach((e) => {
-              let i = errors.findIndex((x) => x.param == e);
-              if (errors[i]) {
-                this.errors[e] = errors[i].msg;
-                if (errors[i].param != "form")
-                  this.loginForm.controls[e].setErrors({ incorrect: true });
-              }
-            });
-          }
-        )
-        .add(() => {
-          this.loading = false;
-        });
-    }, 1000);
+    this.user.loading = true;
+    this.authService.login(this.loginForm.value)
+      .then(u => {
+        this.myselfService.setUser(u);
+        this.baseAppService.navigateTo('/');
+      })
+      .catch((e:HttpErrorResponse) => this.user = handleFormErrors(this.user, e.error))
+      .finally(() => this.user.loading = false);
   }
 }

@@ -15,7 +15,7 @@ export class Host extends BaseEntity implements IHost {
   @Column({ nullable: true})    bio?: string;
   @Column({ nullable: true})    avatar: string;
 
-  @OneToMany(() => User, user => user.host, { eager: true })     members:User[];
+  @OneToMany(() => User, user => user.host)                      members:User[];
   @OneToMany(() => UserHostInfo, uhi => uhi.host)                members_info:UserHostInfo[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
 

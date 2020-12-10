@@ -5,13 +5,13 @@ import {
   IPerformanceStub,
   IPerformanceUserInfo,
   IUserHostInfo,
+  HTTP
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/User.model';
 import { DataClient } from '../common/data';
 import { Performance } from '../models/Performance.model';
 import { ErrorHandler } from '../common/errors';
-import { HTTP } from '../common/http';
 import { validate } from '../common/validate';
 import { body } from 'express-validator';
 import { Purchase } from '../models/Purchase.model';

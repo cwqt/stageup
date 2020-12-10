@@ -5,15 +5,16 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from "@angular/router";
+import { MyselfService } from '../services/myself.service';
 
 import { UserService } from "../services/user.service";
 
 @Injectable({ providedIn: "root" })
 export class LoggedInGuard implements CanActivate {
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(private router: Router, private myselfService: MyselfService) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const currentUser = this.userService.currentUserValue;
+    const currentUser = this.myselfService.$myself?.value?.user;
 
     if (currentUser && !currentUser.is_new_user) {
       // authorised so return true

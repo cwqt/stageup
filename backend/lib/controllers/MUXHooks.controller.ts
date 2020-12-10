@@ -5,7 +5,7 @@ import logger from "../common/logger";
 import { Webhooks, LiveStream } from "@mux/mux-node";
 import config from "../config";
 import { ErrorHandler } from "../common/errors";
-import { HTTP } from "../common/http";
+import { HTTP } from "@eventi/interfaces";
 
 const streamCreated = async (data:IMUXHookResponse<LiveStream>) => {
     console.log(data)

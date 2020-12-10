@@ -1,64 +1,49 @@
 <app-page class="login-wrapper">
   <div class="content">
-    <div *ngIf="!success">
-      <h1 class="mat-display-1">Sign in</h1>
+    <h1 class="mat-display-1">Sign in</h1>
 
-      <form [formGroup]="loginForm" [hidden]="success" (ngSubmit)="submitHandler()">
-        <mat-form-field appearance="fill">
-          <mat-label type="email">E-mail address</mat-label>
-          <input matInput type="text" formControlName="email_address" />
-          <mat-error *ngIf="!errors.email && email.invalid && email.touched"
-            >E-mail is required</mat-error
-          >
-          <mat-error *ngIf="errors.email">{{ errors.email }}</mat-error>
-        </mat-form-field>
+    <form [formGroup]="loginForm" (ngSubmit)="submitHandler()">
+      <mat-form-field appearance="fill">
+        <mat-label type="email">E-mail address</mat-label>
+        <input matInput type="text" formControlName="email_address" />
+        <mat-error *ngIf="!user.form_errors.email && email.invalid && email.touched">E-mail is required</mat-error>
+        <mat-error *ngIf="user.form_errors.email">{{ user.form_errors.email }}</mat-error>
+      </mat-form-field>
 
-        <br />
+      <br />
 
-        <mat-form-field appearance="fill">
-          <mat-label type="password">Password</mat-label>
-          <input matInput type="password" formControlName="password" />
-          <mat-error
-            *ngIf="!errors.password && password.invalid && password.touched"
-            >Password is required</mat-error
-          >
-          <mat-error *ngIf="errors.password">{{ errors.password }}</mat-error>
-        </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label type="password">Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="!user.form_errors.password && password.invalid && password.touched">Password is required</mat-error>
+        <mat-error *ngIf="user.form_errors.password">{{ user.form_errors.password }}</mat-error>
+      </mat-form-field>
 
-        <div class="sign-in-buttons">
-          <ui-button
-          variant="primary"
-          [disabled]="loginForm.invalid || loading"
-          [loading]="loading">
+      <div class="sign-in-buttons">
+        <ui-button variant="primary" [disabled]="loginForm.invalid || user.loading" [loading]="user.loading">
           <span>Sign in</span>
         </ui-button>
 
-          <mat-form-field floatPlaceholder="always" class="app-input-no-underline">
+        <mat-form-field floatPlaceholder="always" class="app-input-no-underline">
           <input matInput style="display: none !important;" />
           <mat-checkbox formControlName="rememberMe">Remember me?</mat-checkbox>
         </mat-form-field>
 
-          <a class="mat-small help" href="#">Trouble logging in?</a>
-        </div>
+        <a class="mat-small help" href="#">Trouble logging in?</a>
+      </div>
 
-        <mat-error class="form" *ngIf="errors.form">{{ errors.form }}</mat-error>
-      </form>
+      <mat-error class="form" *ngIf="user.error">{{ user.error }}</mat-error>
+    </form>
 
+    <br />
+    <br />
 
-      <br/>
-      <br/>
-
-      <div class="alt-sign-in-buttons">
+    <!-- TODO: SSO with passport -->
+    <!-- <div class="alt-sign-in-buttons">
         <ui-button variant="secondary"><img src="/assets/gitlab.png"/>Gitlab</ui-button>
         <ui-button variant="secondary"><img src="/assets/github.png"/>GitHub</ui-button>
         <ui-button variant="secondary"><img src="/assets/google.png"/>Google</ui-button>
-      </div>
-
-    </div>
-
-    <div *ngIf="success">
-      <h1 class="mat-display-1">logged in!</h1>
-    </div>
+      </div> -->
 
   </div>
 </app-page>

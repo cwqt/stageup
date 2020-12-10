@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IUser } from "@eventi/interfaces";
+import { IUser, IUserHostInfo } from "@eventi/interfaces";
 import { BehaviorSubject } from "rxjs";
 import { tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
@@ -10,12 +10,12 @@ import { IHost, IHostStub } from "@eventi/interfaces";
   providedIn: "root",
 })
 export class HostService {
-  currentHost: BehaviorSubject<IHost | null> = new BehaviorSubject(null);
+  currentHost: BehaviorSubject<IHostStub | null> = new BehaviorSubject(null);
+  currentUserHostInfo:BehaviorSubject<IUserHostInfo | null> = new BehaviorSubject(null);
 
   constructor(private userService: UserService, private http: HttpClient) {}
-  get hostId() {
-    return this.currentHost.value._id;
-  }
+
+  get hostId() { return this.currentHost.value._id }
 
   getUserPermissions(host_id:number, user_id:number) {
     return this.http.get(`/api/hosts/${host_id}/permissions?user=${user_id}`)
@@ -32,8 +32,8 @@ export class HostService {
     return this.http.get<IHost>(`/api/hosts/${hostId}`).toPromise();
   }
 
-  setActiveHost(host: IHost) {
-    localStorage.setItem("lastActiveOrg", host._id.toString());
+  setActiveHost(host: IHostStub, userHostInfo:IUserHostInfo) {
     this.currentHost.next(host);
+    this.currentUserHostInfo.next(userHostInfo)
   }
 }

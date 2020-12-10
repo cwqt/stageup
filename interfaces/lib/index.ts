@@ -1,6 +1,8 @@
 export * from './Envelope';
 export * from './Nodes.types';
 export * from './DataModels.types';
+export * from './Errors.model';
+export * from './Http';
 
 export * from "./Node.model";
 export * from './Host.model';

@@ -4,10 +4,10 @@ import { validate } from "../common/validate";
 
 import config from "../config";
 import { ErrorHandler } from "../common/errors";
-import { HTTP } from "../common/http";
 const { generateVerificationHash, verifyHash } = require("dbless-email-verification");
 import nodemailer from "nodemailer";
 import { User } from "../models/User.model";
+import { HTTP } from "@eventi/interfaces";
 
 export const validators = {
   verify: validate([

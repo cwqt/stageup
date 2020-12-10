@@ -4,6 +4,7 @@ import { UserService } from "../../../services/user.service";
 import { AuthenticationService } from "src/app/services/authentication.service";
 import { MatStepper } from "@angular/material/stepper";
 import { Router } from "@angular/router";
+import { MyselfService } from 'src/app/services/myself.service';
 
 @Component({
   selector: "app-first-time-setup",
@@ -34,8 +35,8 @@ export class FirstTimeSetupComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private authService: AuthenticationService
-  ) {}
+    private myselfService: MyselfService
+    ) {}
 
   ngOnInit() {
     this.currentUser = this.userService.currentUserValue;
@@ -102,7 +103,7 @@ export class FirstTimeSetupComponent implements OnInit {
           .then(
             (res) => {
               this.success = true;
-              this.userService.setUser(res);
+              this.myselfService.setUser(res);
               //advance stepper
               this.stepper.next();
             },

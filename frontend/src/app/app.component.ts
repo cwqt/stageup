@@ -1,14 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
 import { environment } from "../environments/environment";
-import { IUser } from "@eventi/interfaces";
-
-import { UserService } from "./services/user.service";
-import { HostService } from "./services/host.service";
-import { MatDialog } from "@angular/material/dialog";
 import { Title } from "@angular/platform-browser";
 import { AuthenticationService } from "./services/authentication.service";
-import { LoggedInGuard, NegateLoggedInGuard } from './_helpers';
+import { MyselfService } from './services/myself.service';
 
 @Component({
   selector: "app-root",
@@ -19,8 +13,7 @@ export class AppComponent implements OnInit {
   loading: boolean = true;
 
   constructor(
-    public dialog: MatDialog,
-    private userService: UserService,
+    private myselfService:MyselfService,
     private titleService: Title,
     private authService: AuthenticationService
   ) {
@@ -33,13 +26,15 @@ export class AppComponent implements OnInit {
     this.loading = true;
     this.titleService.setTitle("Eventi");
 
-    // Upon start up, immediately get the new user & set last active org
+    // Upon start up, check if logged in by re-hydrating stored data (if any exists)
+    // and then re-fetch the user incase of any changes
     if (this.authService.checkLoggedIn()) {
-      this.userService.updateCachedUser();
+      this.myselfService.getMyself();
     } else {
-      console.log('logout')
+      console.log('Not logged in, Logging out...')
       this.authService.logout();
     }
+
     this.loading = false;
   }
 }

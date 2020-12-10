@@ -24,7 +24,7 @@ export class FeedComponent implements OnInit {
   constructor(private feedService:FeedService, private appService:BaseAppService) { }
 
   ngOnInit(): void {
-    this.getFeed();
+    // this.getFeed();
   }
 
   getFeed() {

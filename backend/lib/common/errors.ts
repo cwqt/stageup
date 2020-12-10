@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import log from "./logger";
-import { HTTP } from "./http";
+import { IFormErrorField, HTTP, IErrorResponse } from '@eventi/interfaces';
 
 export const handleError = (
   req: Request,
@@ -8,44 +8,32 @@ export const handleError = (
   next: NextFunction,
   err: ErrorHandler | Error
 ) => {
-  let ErrorType: HTTP;
-  let message: string = err.message;
+  const errorType: HTTP  = err instanceof ErrorHandler ? err.errorType : HTTP.ServerError;
+  const message: string = err.message;
 
-  if (err instanceof ErrorHandler) {
-    ErrorType = err.ErrorType;
-  } else {
-    ErrorType = HTTP.ServerError;
-  }
-
-  let response = {
-    status: `${ErrorType}`.startsWith("4") ? "fail" : "error",
-    statusCode: ErrorType || 520,
+  const response:IErrorResponse = {
+    status: `${errorType}`.startsWith("4") ? "fail" : "error",
+    statusCode: errorType || 520,
     message: message,
+    errors: err instanceof ErrorHandler ? err.errors : []
   };
 
-  log.error(`(${ErrorType}) --> ${JSON.stringify(err.message)}`);
-  if (ErrorType !== HTTP.NotFound) {
-    console.log(err.stack);
-  }
+  log.error(`(${errorType}) --> ${JSON.stringify(err.message)}`);
+  if (errorType !== HTTP.NotFound) console.log(err.stack);
 
   res.status(response.statusCode).json(response);
 };
 
 export class ErrorHandler extends Error {
-  ErrorType: HTTP;
+  errorType: HTTP;
+  errors:IFormErrorField[]
 
-  constructor(statusCode: HTTP, message?: any) {
+  constructor(statusCode: HTTP, message?: any, errors?:IFormErrorField[]) {
     super();
-    this.ErrorType = statusCode;
+    this.errorType = statusCode;
     this.message = message || "An error occured.";
+    this.errors = errors || [];
   }
-}
-
-export interface IFormErrorField {
-  param: string;
-  msg: string;
-  value: any;
-  location?: "body" | "param" | "query"
 }
 
 export class FormErrorResponse {
@@ -53,9 +41,11 @@ export class FormErrorResponse {
   constructor() {
     this.errors = [];
   }
+
   push(param: string, message: string, value: any, location?: "body" | "param" | "query" ) {
-    this.errors.push({ param: param, msg: message, value: value });
+    this.errors.push({ param: param, msg: message, value: value, location: location });
   }
+  
   get value() {
     return this.errors;
   }
