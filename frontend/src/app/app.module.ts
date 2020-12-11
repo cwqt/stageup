@@ -94,7 +94,7 @@ import { PlayerComponent } from './components/player/player.component';
     PopoverModule,
     NgxWidgetGridModule,
     HighchartsChartModule,
-    IvyCarouselModule,
+    IvyCarouselModule
   ],
   providers: [CookieService],
   entryComponents: [HeaderBarUserMenuComponent],

@@ -1,58 +1,64 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { IHostStub, IMyself, IUser } from '@eventi/interfaces';
-import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { HostService } from './host.service';
-import { UserService } from './user.service';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { IHostStub, IMyself, IUser, IUserHostInfo } from "@eventi/interfaces";
+import { BehaviorSubject } from "rxjs";
+import { tap } from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class MyselfService {
-  $myself:BehaviorSubject<IMyself | null>;
+  $myself: BehaviorSubject<IMyself | null>;
 
-  constructor(private http:HttpClient, private hostService:HostService, private userService:UserService) {
+  constructor(
+    private http: HttpClient,
+  ) {
     this.$myself = new BehaviorSubject(this.hydrate());
   }
 
-  store(myself:IMyself | null) {
-    if(myself == null) {
+  store(myself: IMyself | null, reHydrate?: boolean) {
+    if (myself == null) {
       localStorage.removeItem("lastMyself");
     } else {
       localStorage.setItem("lastMyself", JSON.stringify(myself));
     }
+
+    if (reHydrate) this.hydrate(myself, myself == null);
   }
 
   /**
    * @description re-hydrate services with a stored myself or new myself
    * @param myself current user ( and host / host info if part of one)
+   * @param clear remove the current user (e.g. when logging out)
    */
-  hydrate(myself?:IMyself):IMyself | null {
-    const me:IMyself | null = myself || JSON.parse(localStorage.getItem("lastMyself"));
+  hydrate(myself?: IMyself, clear?:boolean): IMyself | null {
+    const me: IMyself | null =
+      myself || JSON.parse(localStorage.getItem("lastMyself"));
 
-    if(me) {
-      this.hostService.setActiveHost(me.host, me.host_info);
-      this.userService.setActiveUser(me.user);
-      this.store(me);  
-    }
+    // if this is being called from the constructor $myself doesn't exist yet
+    // re-fan myself to subscribers every hydration
+    this.$myself?.next(me);
 
     return me;
-  } 
-
-  getMyself():Promise<IMyself> {
-    return this.http.get<IMyself>(`/api/myself`).pipe(
-      tap(myself => this.hydrate(myself))
-    ).toPromise();
   }
 
-  setUser(user:IUser) {
-    const myself = this.$myself.value;
-    this.store({...myself, user: user});
+  getMyself(): Promise<IMyself> {
+    return this.http
+      .get<IMyself>(`/api/myself`)
+      .pipe(tap((myself) => this.hydrate(myself)))
+      .toPromise();
   }
 
-  setHost(host:IHostStub) {
-    const myself = this.$myself.value;
-    this.store({...myself, host: host});
+  setUser(user: IUser) {
+    console.log(this.$myself.value, { ...this.$myself.value, user: user })
+    this.store({ ...this.$myself.value, user: user }, true);
+  }
+
+  setHost(host: IHostStub) {
+    this.store({ ...this.$myself.value, host: host }, true);
+  }
+
+  setUserHostInfo(userHostInfo:IUserHostInfo) {
+    this.store({ ...this.$myself.value, host_info: userHostInfo });
   }
 }

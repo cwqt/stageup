@@ -38,7 +38,7 @@ export class ProfileComponent implements OnInit {
     this.route.params.subscribe((params) => {
       console.log(params);
 
-      this.profileService
+      this.userService
         .getUserByUsername(params.username)
         .then((user) => (this.authorUser = user))
         .then(() => (this.loading = false))
@@ -48,8 +48,7 @@ export class ProfileComponent implements OnInit {
         });
     });
 
-    this.userService.currentUser.subscribe((user) => (this.currentUser = user));
-    console.log();
+    // this.userService.currentUser.subscribe((user) => (this.currentUser = user));
   }
 
   setCanLoadTabContent() {

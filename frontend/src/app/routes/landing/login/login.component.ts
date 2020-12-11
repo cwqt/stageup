@@ -13,7 +13,10 @@ import { IUser } from "@eventi/interfaces";
 import { MyselfService } from "src/app/services/myself.service";
 import { BaseAppService } from "src/app/services/app.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { handleFormErrors, validateAllFormFields } from "src/app/_helpers/formErrorHandler";
+import {
+  handleFormErrors,
+  displayValidationErrors,
+} from "src/app/_helpers/formErrorHandler";
 
 @Component({
   selector: "app-login",
@@ -21,6 +24,7 @@ import { handleFormErrors, validateAllFormFields } from "src/app/_helpers/formEr
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
+  loginForm: FormGroup;
   user: ICacheable<IUser> = {
     data: null,
     error: "",
@@ -31,11 +35,7 @@ export class LoginComponent implements OnInit {
     },
   };
 
-  returnUrl: string;
-  loginForm: FormGroup;
-
   constructor(
-    private route: ActivatedRoute,
     private baseAppService: BaseAppService,
     private myselfService: MyselfService,
     private authService: AuthenticationService,
@@ -43,38 +43,33 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loginForm = this.fb.group(
-      {
-        email_address: ["", [Validators.required]],
-        password: ["", [Validators.required, Validators.minLength(6)]],
-        // rememberMe: [false],
-      }
-    );
+    // Can't login if already logged in
+    if(this.myselfService.$myself.value) this.baseAppService.navigateTo('/');
 
-    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
+    this.loginForm = this.fb.group({
+      email_address: ["", [Validators.required]],
+      password: ["", [Validators.required, Validators.minLength(6)]],
+      // rememberMe: [false],
+    });
   }
 
-  get email() {
-    return this.loginForm.get("email_address");
-  }
-  get password() {
-    return this.loginForm.get("password");
-  }
+  get email() { return this.loginForm.get("email_address") }
+  get password() { return this.loginForm.get("password") }
 
   submitHandler() {
     this.user.loading = true;
     this.authService
       .login(this.loginForm.value)
-      .then((u) => {
-        this.myselfService.setUser(u);
-        this.baseAppService.navigateTo("/");
+      .then(u => {
+        // get user, host & host info on login
+        this.myselfService.getMyself().then(() => {
+          this.baseAppService.navigateTo("/");
+        })
       })
-      .catch(
-        (e: HttpErrorResponse) => {
-          this.user = handleFormErrors(this.user, e.error)
-          validateAllFormFields(this.loginForm, this.user) 
-        }
-      )
-      .finally(() => this.user.loading = false);
+      .catch((e: HttpErrorResponse) => {
+        this.user = handleFormErrors(this.user, e.error);
+        displayValidationErrors(this.loginForm, this.user);
+      })
+      .finally(() => (this.user.loading = false));
   }
 }

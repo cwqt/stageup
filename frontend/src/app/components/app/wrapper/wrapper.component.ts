@@ -1,4 +1,6 @@
 import { Component, OnInit, HostListener, Inject, ViewChild, AfterViewInit, ElementRef } from '@angular/core';  
+import { IMyself } from '@eventi/interfaces';
+import { MyselfService } from 'src/app/services/myself.service';
 import { UserService } from 'src/app/services/user.service';
 import { HeaderBarComponent } from '../header-bar/header-bar.component';
 
@@ -8,12 +10,16 @@ import { HeaderBarComponent } from '../header-bar/header-bar.component';
   styleUrls: ['./wrapper.component.scss'],
 })
 export class WrapperComponent implements OnInit {
-  currentUser:any;
+  myself:IMyself;
 
-  constructor(private userService:UserService) {
-    this.userService.currentUser.subscribe(user => this.currentUser = user );
+  constructor(private myselfService:MyselfService) {
   }
 
   ngOnInit(): void {
+    this.myselfService.$myself.subscribe(m => {
+      console.log('===>', m)
+      this.myself = m;
+    });
   }
+
 }

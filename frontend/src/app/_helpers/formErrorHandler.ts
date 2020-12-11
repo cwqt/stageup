@@ -26,7 +26,7 @@ export const handleFormErrors = (obj: ICacheable<any>, error: IErrorResponse): I
   return o;
 };
 
-export const validateAllFormFields = (formGroup: FormGroup, cacheable: ICacheable<any>) => {
+export const displayValidationErrors = (formGroup: FormGroup, cacheable: ICacheable<any>) => {
   Object.keys(formGroup.controls).forEach((field) => {
     const control = formGroup.get(field);
     if (cacheable.form_errors[field]) {
@@ -34,3 +34,9 @@ export const validateAllFormFields = (formGroup: FormGroup, cacheable: ICacheabl
     }
   });
 };
+
+export const formHasValidationErrors = (formGroup:FormGroup):boolean => {
+  return Object.keys(formGroup.contains).some(field => {
+    return formGroup.get(field).invalid;
+  })
+}

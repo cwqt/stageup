@@ -58,7 +58,7 @@ const APP_ROUTES:Routes = [
         { path: "**", component: NotFoundComponent },
       ],
       {
-        onSameUrlNavigation: "ignore",
+        // onSameUrlNavigation: "ignore",
         paramsInheritanceStrategy: "always",
       }
     ),

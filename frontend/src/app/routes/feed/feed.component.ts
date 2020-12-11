@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IPerformanceStub } from '@eventi/interfaces';
+import { IEnvelopedData as IEnv, IPerformanceStub } from '@eventi/interfaces';
 import { ICacheable } from 'src/app/app.interfaces';
 import { BaseAppService } from 'src/app/services/app.service';
 import { FeedService } from 'src/app/services/feed.service';
@@ -10,21 +10,16 @@ import { FeedService } from 'src/app/services/feed.service';
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit {
-  performances:ICacheable<IPerformanceStub[]> = {
-    data: [],
+  performances:ICacheable<IEnv<IPerformanceStub[], void>> = {
+    data: null,
     error: "",
     loading: false
   }
 
-  images = [
-    "https://i.ytimg.com/vi/ebH57w1REgY/maxresdefault.jpg",
-    "https://images1.purplesneakers.com.au/2020/04/95fdd4b7383dba06b5be1b781e8e0e09.png"
-  ]
-
   constructor(private feedService:FeedService, private appService:BaseAppService) { }
 
   ngOnInit(): void {
-    // this.getFeed();
+    this.getFeed();
   }
 
   getFeed() {
@@ -36,7 +31,7 @@ export class FeedComponent implements OnInit {
   }
 
   gotoPerformance(performanceIdx:number) {
-    const performance = this.performances.data[performanceIdx];
+    const performance = this.performances.data.data[performanceIdx];
     this.appService.navigateTo(`performance/${performance._id}`, {
       state: { performance }
     })

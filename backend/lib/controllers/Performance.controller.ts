@@ -55,11 +55,13 @@ export const getPerformances = async (req: Request, dc:DataClient, locals:IResLo
   }
 };
 
-export const getPerformance = async (req: Request, dc: DataClient): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
+export const getPerformance = async (req: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
   const performance = await Performance.findOne(
     { _id: parseInt(req.params.pid) },
     { relations: ['host', 'host_info'] }
   );
+
+  if(!performance) throw new ErrorHandler(HTTP.NotFound, "Performance does not exist");
 
   // see if current user has access/bought the performance
   let token: string;

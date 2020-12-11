@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IPerformanceStub } from '@eventi/interfaces';
+import { IEnvelopedData, IPerformanceStub } from '@eventi/interfaces';
 import { UserService } from './user.service';
 
 @Injectable({
@@ -10,8 +10,9 @@ export class FeedService {
 
   constructor(private userService: UserService, private http: HttpClient) {}
 
-  // this will eventually evolve into its own interface as we develop 
-  getFeed():Promise<IPerformanceStub[]> {
-    return this.http.get<IPerformanceStub[]>(`/api/performances`).toPromise();
+  // this will eventually evolve into its own interface as we develop, but for now just return
+  // a list of performances 
+  getFeed():Promise<IEnvelopedData<IPerformanceStub[], void>> {
+    return this.http.get<IEnvelopedData<IPerformanceStub[], void>>(`/api/performances`).toPromise();
   }
 }

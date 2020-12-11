@@ -37,18 +37,17 @@ export class AuthenticationService {
     return this.http
       .post<IUser>("/api/users/login", formData, { withCredentials: true })
       .pipe(
-        map((user) => {
+        tap((user) => {
           // Remove last logged in user stored
           this.myselfService.store(null);
           this.router.navigate(["/"]);
-          return user;
         })
       ).toPromise();
   }
 
   logout() {
     this.cookieService.set("connect.sid", null);
-    this.myselfService.store(null);
+    this.myselfService.store(null, true);
     this.http.post("/api/users/logout", {});
     this.router.navigate(["/"]);
   }

@@ -2,18 +2,40 @@
     <img src="/assets/eventi.svg" alt="" class="logo">
 
     <div class="sidebar-main-buttons">
-        <ui-button (click)="gotoRoot()"><ui-icon>home</ui-icon> Home</ui-button>
-        <ui-button><ui-icon>search</ui-icon> Search</ui-button>
-        <ui-button><ui-icon>catalog</ui-icon> Your Library</ui-button>    
+        <ui-button (click)="gotoRoot()">
+            <ui-icon>home</ui-icon> Home
+        </ui-button>
+        <ui-button>
+            <ui-icon>search</ui-icon> Search
+        </ui-button>
+        <ui-button>
+            <ui-icon>catalog</ui-icon> Your Library
+        </ui-button>
+
+        <ng-container *ngIf="host">
+            <mat-divider></mat-divider>
+            
+            <ui-button>
+                <ui-icon>events</ui-icon> {{ host.name }}
+            </ui-button>
+        </ng-container>
     </div>
 
+    <div class="sidebar-user">
+        <div class="sidebar-popup" *ngIf="userPopupOpen" (clickOutside)="toggleUserPopup(false)" [exclude]="'.sidebar-user__container'">
+            <div class="sidebar-popup__buttons">
+                <ui-button (click)="logout()"><ui-icon>logout</ui-icon>Log out</ui-button>
+                <ui-button><ui-icon>settings</ui-icon>Settings</ui-button>    
+            </div>
+        </div>    
 
-    <button class="sidebar-user" matRipple>
-        <img [src]="currentUser.avatar" alt="">
-        <div class="sidebar-user__details">
-            <span><b>{{ currentUser.name }}</b></span>
-            <span>@{{ currentUser.username }}</span>
-        </div>
-        <ui-icon>overflow-menu--horizontal</ui-icon>
-    </button>
+        <button class="sidebar-user__container" matRipple (click)="toggleUserPopup(true)">    
+            <img [src]="user.avatar" alt="">
+            <div class="sidebar-user__details">
+                <span><strong>{{ user.name }}</strong></span>
+                <span>@{{ user.username }}</span>
+            </div>
+            <ui-icon>overflow-menu--horizontal</ui-icon>
+        </button>    
+    </div>
 </div>

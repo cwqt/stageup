@@ -4,6 +4,7 @@ import { UserService } from "src/app/services/user.service";
 
 // import { IOrgStub } from "@cxss/interfaces";
 import { Router } from "@angular/router";
+import { IMyself } from '@eventi/interfaces';
 
 @Component({
   selector: "app-header-bar",
@@ -11,7 +12,7 @@ import { Router } from "@angular/router";
   styleUrls: ["./header-bar.component.scss"],
 })
 export class HeaderBarComponent implements OnInit {
-  @Input() currentUser: any;
+  @Input() myself: IMyself;
   // userOrgs: IOrgStub[];
   // activeOrg: IOrgStub;
 

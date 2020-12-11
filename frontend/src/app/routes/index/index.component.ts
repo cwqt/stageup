@@ -1,7 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { IHost } from "@eventi/interfaces";
-import { UserService } from "src/app/services/user.service";
-import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-index",
@@ -9,36 +6,10 @@ import { Router, ActivatedRoute } from "@angular/router";
   styleUrls: ["./index.component.scss"],
 })
 export class IndexComponent implements OnInit {
-  userHost: IHost;
-  activeUrl: string = "devices";
-
-  cache = {
-    env: {
-      data: null,
-      loading: false,
-      error: "",
-    },
-  };
-
   constructor(
-    private userService: UserService,
-    private router: Router,
-    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
 
-  }
-
-  navigate(route: string) {
-    this.router.navigate([route.toLowerCase()]);
-  }
-
-  random() {
-    return Math.floor(Math.random() * 100);
-  }
-
-  asIsOrder(a, b) {
-    return 1;
   }
 }

@@ -72,18 +72,10 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  get username() {
-    return this.registerForm.get("username");
-  }
-  get email() {
-    return this.registerForm.get("email");
-  }
-  get password() {
-    return this.registerForm.get("password");
-  }
-  get confirmation() {
-    return this.registerForm.get("confirmation");
-  }
+  get username() { return this.registerForm.get("username") }
+  get email() { return this.registerForm.get("email") }
+  get password() { return this.registerForm.get("password") }
+  get confirmation() { return this.registerForm.get("confirmation") }
 
   /* Called on each input in either password field */
   onPasswordInput() {
@@ -110,28 +102,29 @@ export class RegisterComponent implements OnInit {
   submitHandler() {
     this.loading = true;
     this.registerButtonText = "Registering...";
-    this.userService
-      .register(this.registerForm.value)
-      .subscribe(
-        (res) => {
-          this.success = true;
-        },
-        (err) => {
-          this.errors.form = err.message;
-          this.success = false;
-          this.registerButtonText = "Try again?";
-          let errors = err.error.message;
-          Object.keys(this.errors).forEach((e) => {
-            let i = errors.findIndex((x) => x.param == e);
-            if (errors[i]) {
-              this.errors[e] = errors[i].msg;
-              this.registerForm.controls[e].setErrors({ incorrect: true });
-            }
-          });
-        }
-      )
-      .add(() => {
-        this.loading = false;
-      });
+    this.userService.register(this.registerForm.value)
+    // this.userService
+    //   .register(this.registerForm.value)
+    //   .subscribe(
+    //     (res) => {
+    //       this.success = true;
+    //     },
+    //     (err) => {
+    //       this.errors.form = err.message;
+    //       this.success = false;
+    //       this.registerButtonText = "Try again?";
+    //       let errors = err.error.message;
+    //       Object.keys(this.errors).forEach((e) => {
+    //         let i = errors.findIndex((x) => x.param == e);
+    //         if (errors[i]) {
+    //           this.errors[e] = errors[i].msg;
+    //           this.registerForm.controls[e].setErrors({ incorrect: true });
+    //         }
+    //       });
+    //     }
+    //   )
+    //   .add(() => {
+    //     this.loading = false;
+    //   });
   }
 }

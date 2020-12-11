@@ -12,5 +12,4 @@ export class PerformanceService {
   getPerformance(pid:number | string):Promise<IPerformance> {
     return this.http.get<IPerformance>(`/api/performances/${pid}`).toPromise();
   }
-
 }

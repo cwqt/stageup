@@ -98,24 +98,24 @@ export class FirstTimeSetupComponent implements OnInit {
           inputNode.files[0].name
         );
 
-        this.userService
-          .changeAvatar(formData)
-          .then(
-            (res) => {
-              this.success = true;
-              this.myselfService.setUser(res);
-              //advance stepper
-              this.stepper.next();
-            },
-            (err) => {
-              this.success = false;
-              this.errorMessage =
-                err.error.statusCode + ": " + err.error.message;
-            }
-          )
-          .finally(() => {
-            this.loading = false;
-          });
+        // this.userService
+        //   .changeAvatar(formData)
+        //   .then(
+        //     (res) => {
+        //       this.success = true;
+        //       this.myselfService.setUser(res);
+        //       //advance stepper
+        //       this.stepper.next();
+        //     },
+        //     (err) => {
+        //       this.success = false;
+        //       this.errorMessage =
+        //         err.error.statusCode + ": " + err.error.message;
+        //     }
+        //   )
+        //   .finally(() => {
+        //     this.loading = false;
+        //   });
       };
 
       reader.readAsArrayBuffer(inputNode.files[0]);
@@ -130,25 +130,25 @@ export class FirstTimeSetupComponent implements OnInit {
       new_user: false,
     };
 
-    this.userService
-      .updateUser(update)
-      .subscribe(
-        (res) => {
-          this.success = true;
-          this.stepper.next();
-        },
-        (err) => {
-          this.errorMessage = err;
-          this.success = false;
-        }
-      )
-      .add(() => {
-        this.loading = false;
-      });
+    // this.userService
+    //   .updateUser(update)
+    //   .subscribe(
+    //     (res) => {
+    //       this.success = true;
+    //       this.stepper.next();
+    //     },
+    //     (err) => {
+    //       this.errorMessage = err;
+    //       this.success = false;
+    //     }
+    //   )
+    //   .add(() => {
+    //     this.loading = false;
+    //   });
   }
 
   finishFirstTimeSetup() {
-    this.userService.updateCachedUser();
+    // this.userService.updateCachedUser();
     this.router.navigate(["/home"]);
   }
 }
