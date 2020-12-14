@@ -33,4 +33,7 @@ export const store = (client: redis.RedisClient):connectRedis.RedisStore => {
   });
 };
 
+export const hookStore = (client:redis.RedisClient) => 
+{}
+
 export default { create, store };

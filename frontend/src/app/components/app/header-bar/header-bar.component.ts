@@ -1,10 +1,6 @@
 import { Component, OnInit, Input } from "@angular/core";
-// import { OrganisationService } from "src/app/services/host.service";
-import { UserService } from "src/app/services/user.service";
-
-// import { IOrgStub } from "@cxss/interfaces";
-import { Router } from "@angular/router";
 import { IMyself } from '@eventi/interfaces';
+import { BaseAppService } from 'src/app/services/app.service';
 
 @Component({
   selector: "app-header-bar",
@@ -13,31 +9,19 @@ import { IMyself } from '@eventi/interfaces';
 })
 export class HeaderBarComponent implements OnInit {
   @Input() myself: IMyself;
-  // userOrgs: IOrgStub[];
-  // activeOrg: IOrgStub;
 
   constructor(
-    // private orgService: OrganisationService,
-    private userService: UserService,
-    private router: Router
+    private appService:BaseAppService
   ) {}
 
   ngOnInit(): void {
-    // this.userService.userOrgs.subscribe((orgs) => {
-    //   this.userOrgs = orgs;
-    // });
-    // this.orgService.currentOrg.subscribe((org) => (this.activeOrg = org));
   }
 
-  // setActiveOrg(org: IOrgStub) {
-  //   this.orgService.setActiveOrg(org);
-  // }
-
   gotoCatalog() {
-    this.router.navigate(["catalog"]);
+    this.appService.navigateTo("/catalog");
   }
 
   gotoRoot() {
-    this.router.navigate(["/"]);
+    this.appService.navigateTo("/");
   }
 }

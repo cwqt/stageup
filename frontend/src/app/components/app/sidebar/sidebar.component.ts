@@ -19,7 +19,6 @@ export class SidebarComponent implements OnInit {
   get host() { return this.myself.host }
 
   ngOnInit(): void {
-    console.log('--->', this.myself)
   }
 
   gotoRoot() {

@@ -1,4 +1,5 @@
 import { NumberFormatStyle } from "@angular/common";
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { IPerformance, IPerformancePurchase, IPerformanceUserInfo } from "@eventi/interfaces";
@@ -42,13 +43,11 @@ export class PerformanceComponent implements OnInit {
   async ngOnInit() {
     await this.appService.componentInitialising(this.route);
     await this.getPerformance();
-
     
     this.currencyPrice = new Intl.NumberFormat("en-GB", {
       currency: this.perf.currency,
       style: "currency",
     }).format(this.perf.price);
-
 
     this.appService.$routeAltered.subscribe(o => console.log(o))
   }
@@ -68,8 +67,8 @@ export class PerformanceComponent implements OnInit {
       .getPerformance(
         parseInt(this.appService.getParam(RouteParam.PerformanceId))
       )
-      .then((p) => (this.performance.data = p))
-      .catch((e) => (this.performance.error = e))
+      .then((p:IPerformance) => (this.performance.data = p))
+      .catch((e:HttpErrorResponse) => (this.performance.error = e.message))
       .finally(() => (this.performance.loading = false));
   }
 

@@ -42,7 +42,7 @@ export const createPerformance = async (req: Request, dc: DataClient): Promise<I
   return performance.toFull();
 };
 
-export const getPerformances = async (req: Request, dc:DataClient, locals:IResLocals): Promise<IEnvelopedData<IPerformanceStub[], null>> => {
+export const readPerformances = async (req: Request, dc:DataClient, locals:IResLocals): Promise<IEnvelopedData<IPerformanceStub[], null>> => {
   const performances = await Performance.find({
     take: locals.pagination.per_page,
     skip: locals.pagination.page*locals.pagination.per_page,
@@ -55,7 +55,7 @@ export const getPerformances = async (req: Request, dc:DataClient, locals:IResLo
   }
 };
 
-export const getPerformance = async (req: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
+export const readPerformance = async (req: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
   const performance = await Performance.findOne(
     { _id: parseInt(req.params.pid) },
     { relations: ['host', 'host_info'] }
@@ -105,7 +105,7 @@ export const getPerformance = async (req: Request): Promise<IEnvelopedData<IPerf
 };
 
 
-export const getPerformanceHostInfo = async (req: Request): Promise<IPerformanceHostInfo> => {
+export const readPerformanceHostInfo = async (req: Request): Promise<IPerformanceHostInfo> => {
   const performance = await Performance.findOne({ _id: parseInt(req.params.pid )}, { relations: ["host_info"] })
   const performanceHostInfo = performance.host_info;
 

@@ -23,17 +23,15 @@ export class MyselfService {
       localStorage.setItem("lastMyself", JSON.stringify(myself));
     }
 
-    if (reHydrate) this.hydrate(myself, myself == null);
+    if (reHydrate) this.hydrate(myself);
   }
 
   /**
    * @description re-hydrate services with a stored myself or new myself
    * @param myself current user ( and host / host info if part of one)
-   * @param clear remove the current user (e.g. when logging out)
    */
-  hydrate(myself?: IMyself, clear?:boolean): IMyself | null {
-    const me: IMyself | null =
-      myself || JSON.parse(localStorage.getItem("lastMyself"));
+  hydrate(myself?: IMyself): IMyself | null {
+    const me: IMyself | null = myself || JSON.parse(localStorage.getItem("lastMyself"));
 
     // if this is being called from the constructor $myself doesn't exist yet
     // re-fan myself to subscribers every hydration
@@ -45,12 +43,11 @@ export class MyselfService {
   getMyself(): Promise<IMyself> {
     return this.http
       .get<IMyself>(`/api/myself`)
-      .pipe(tap((myself) => this.hydrate(myself)))
+      .pipe(tap((myself) => this.store(myself, true)))
       .toPromise();
   }
 
   setUser(user: IUser) {
-    console.log(this.$myself.value, { ...this.$myself.value, user: user })
     this.store({ ...this.$myself.value, user: user }, true);
   }
 

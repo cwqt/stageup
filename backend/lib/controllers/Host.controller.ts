@@ -9,7 +9,6 @@ import { UserHostInfo } from '../models/UserHostInfo.model';
 import { validate } from "../common/validate";
 import { query } from 'express-validator';
 
-
 export const validators = {
   getUserHostInfo: validate([query("user").trim().not().isEmpty().toInt()]),
 };
@@ -34,12 +33,12 @@ export const createHost = async (req: Request, dc: DataClient): Promise<IHost> =
   return host.toFull();
 };
 
-export const getHostMembers = async (req:Request):Promise<IUser[]> => {
+export const readHostMembers = async (req:Request):Promise<IUser[]> => {
     const host = await Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ["members"] });
     return host.members.map((u:User) => u.toFull());
 }
 
-export const getUserHostInfo = async (req:Request):Promise<IUserHostInfo> => {
+export const readUserHostInfo = async (req:Request):Promise<IUserHostInfo> => {
   const uhi = await UserHostInfo.findOne({ relations: ["host", "user"],
     where: {
       user: {

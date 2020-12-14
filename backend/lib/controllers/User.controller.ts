@@ -31,7 +31,7 @@ export const validators = {
   readUserByUsername: validate([param("username").trim().not().isEmpty()]),
 };
 
-export const getMyself = async (req:Request):Promise<IMyself> => {
+export const readMyself = async (req:Request):Promise<IMyself> => {
   const user:User = await User.findOne({ _id: req.session.user._id });
   if (!user) throw new ErrorHandler(HTTP.NotFound, "No such user exists");
 
@@ -95,7 +95,7 @@ export const loginUser = async (req: Request): Promise<IUser> => {
   const password = req.body.password;
 
   const u: User = await User.findOne({ email_address: emailAddress });
-  if (!u) throw new ErrorHandler(HTTP.NotFound, "Incorrect e-mail or password");
+  if (!u) throw new ErrorHandler(HTTP.NotFound, "No such user with this e-mail exists");
 
   if (!u.is_verified)
     throw new ErrorHandler(HTTP.Unauthorised, "Your account has not been verified, please check your email address for verification e-mail");
@@ -152,7 +152,7 @@ export const deleteUser = async (req: Request): Promise<void> => {
 };
 
 
-export const getUserHost = async (req:Request):Promise<IEnvelopedData<IHost, IUserHostInfo>> => {
+export const readUserHost = async (req:Request):Promise<IEnvelopedData<IHost, IUserHostInfo>> => {
   const user = await User
     .createQueryBuilder("user")
     .leftJoinAndSelect("user.host", "host")

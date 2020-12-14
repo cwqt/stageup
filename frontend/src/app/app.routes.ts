@@ -32,7 +32,7 @@ const APP_ROUTES:Routes = [
   },
   { path: `user/:${RP.UserId}`, component: ProfileComponent },
   { path: `verified`, component: VerifiedComponent },
-  { path: `host/:${RP.HostId}`, component: HostComponent,
+  { path: `host`, component: HostComponent,
     children: [
       { path: 'settings', component: HostSettingsComponent },
       { path: 'performance', component: HostPerformancesComponent },
