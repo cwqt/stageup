@@ -22,6 +22,7 @@ import Users = require("./controllers/User.controller");
 import Hosts = require("./controllers/Host.controller");
 import Perfs  = require("./controllers/Performance.controller");
 import MUXHooks = require("./controllers/MUXHooks.controller");
+import Auth = require("./controllers/Auth.controller");
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -40,6 +41,7 @@ router.put    <IUser>               ("/users/:uid",                           Us
 router.delete <void>                ("/users/:uid",                           Users.deleteUser,                   [AuthStrat.isOurself],        null);
 router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.getUserHost,                  [AuthStrat.isLoggedIn],       null);
 router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar,             [AuthStrat.isLoggedIn],       null);
+router.put    <void>                ("/users/:uid/password",                  Users.resetPassword,                [AuthStrat.isOurself],        Users.validators.resetPassword);
 // router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases,                 [AuthStrat.isLoggedIn],       null);
 // router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions,       [AuthStrat.isLoggedIn],       null);
 
@@ -68,6 +70,11 @@ router.post   <void>                ("/performances/:pid/purchase",             
 
 // MUX HOOKS -------------------------------------------------------------------------------------------------------------------------------------------------------
 router.post<void>("/mux/hooks", MUXHooks.handleHook, []);
+
+// AUTHORISATION ----------------------------------------------------------------------------------------------------------------------------------------------------
+router.redirect                   ("/auth/verify",                         Auth.verifyUserEmail,                     [AuthStrat.none],   Auth.validators.verify);
+
+
 
 router.get <string>   ("/ping", async (req:Request) => "Pong!", [], null);
 return router;

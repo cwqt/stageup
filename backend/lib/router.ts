@@ -127,7 +127,7 @@ export class Router {
     controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<string>,
     authStrats:AuthStrategy[],
     validators: any = skip) =>
-      endpointFunc<string>(this.router.get,this.providers,  HTTP.Moved,
+      endpointFunc<string>(this.router.get, this.providers, HTTP.Moved,
         (res:Response, data:string) => res.status(HTTP.Moved).redirect(data))
         (path, controller, authStrats, validators);        
       }

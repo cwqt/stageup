@@ -4,4 +4,4 @@ logs
 build
 dist
 .env
-.env.prod
+.env_prod
