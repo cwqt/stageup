@@ -1,4 +1,4 @@
-import { Access, Router } from './router';
+import { Router } from './router';
 import { Request } from 'express';
 import { DataClient } from './common/data';
 import Middlewares, { cacheOnFail, cacheOnOk } from './common/middleware';
@@ -15,15 +15,13 @@ import {
     IEnvelopedData as IE,
     IPerformanceUserInfo as IPUInfo,
     IMyself,
-    HTTP,
-    IUserHostInfo
 } from "@eventi/interfaces";
 
-import Users = require("./controllers/User.controller");
-import Hosts = require("./controllers/Host.controller");
-import Perfs  = require("./controllers/Performance.controller");
-import MUXHooks = require("./controllers/MUXHooks.controller");
-import Auth = require("./controllers/Auth.controller");
+import Users     = require("./controllers/User.controller");
+import Hosts     = require("./controllers/Host.controller");
+import Perfs     = require("./controllers/Performance.controller");
+import MUXHooks  = require("./controllers/MUXHooks.controller");
+import Auth      = require("./controllers/Auth.controller");
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -42,7 +40,7 @@ router.get    <IUser>               ("/users/:uid",                           Us
 router.put    <IUser>               ("/users/:uid",                           Users.updateUser,                   [AuthStrat.isOurself],        null);
 router.delete <void>                ("/users/:uid",                           Users.deleteUser,                   [AuthStrat.isOurself],        null);
 router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.getUserHost,                  [AuthStrat.isLoggedIn],       null);
-router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar,             [AuthStrat.isLoggedIn],       null);
+router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar,             [AuthStrat.isLoggedIn],       null, [mws.file(1024, ['image/jpg'])]);
 router.put    <void>                ("/users/:uid/password",                  Users.resetPassword,                [AuthStrat.isOurself],        Users.validators.resetPassword);
 // router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases,                 [AuthStrat.isLoggedIn],       null);
 // router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions,       [AuthStrat.isLoggedIn],       null);
@@ -53,7 +51,7 @@ router.post   <IHost>               ("/hosts",                                Ho
 router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.getHostMembers,               [], null);
 // router.put    <IHost>               ("/hosts/:hid",                           Hosts.updateHost,                   [], null);
 router.delete <void>                ("/hosts/:hid",                           Hosts.deleteHost,                   [], null);
-// router.post   <IHost>               ("/hosts/:hid/members",                   Hosts.addUser,                      [], null);
+// router.post   <IHost>               ("/hosts/:hid/membe",                     Hosts.addUser,                      [], null);
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser,                   [], null);
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions,       [], null);
 
@@ -64,12 +62,6 @@ router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      
 router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,     [AuthStrat.isLoggedIn],       null);
 router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase,                   [AuthStrat.isLoggedIn],       null);
 // router.delete <void>                ("/performance/:pid",                       Perfs.deletePerformance,            [Access.Authenticated])
-
-// PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// RATINGS ---------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// ASSETS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // MUX HOOKS -------------------------------------------------------------------------------------------------------------------------------------------------------
 router.post   <void>               ("/mux/hooks",                               MUXHooks.handleHook,              [AuthStrat.none]);

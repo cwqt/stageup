@@ -1,4 +1,3 @@
-import Multer from "multer";
 import { Request, Response, NextFunction, IRouterMatcher } from "express";
 import { ErrorHandler, handleError } from "./common/errors";
 import { DataClient } from "./common/data";
@@ -7,12 +6,6 @@ import { HTTP } from "@eventi/interfaces";
 
 const AsyncRouter = require("express-async-router").AsyncRouter;
 
-export enum Access {
-  SiteAdmin,
-  Ourself,
-  Authenticated,
-  None,
-}
 export interface IResLocals {
   pagination?: {
     per_page: number;
@@ -69,25 +62,6 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
 export class Router {
   router: any;
   providers:DataClient;
-  fileParser = Multer({
-    storage: Multer.memoryStorage(),
-    limits: {
-      fileSize: 2 * 1024 * 1024, //no files larger than 2mb
-    },
-    fileFilter: (req: Request, file: Express.Multer.File, cb: Multer.FileFilterCallback) => {
-      // FIXME: file.buffer is undefined
-      // FileType.fromBuffer(file.buffer).then((ft) => {
-      //   if (ft.mime != file.mimetype)
-      //     return cb(new Error(`File mime-type mismatch: ${ft.mime} != ${file.mimetype}`));
-      //   if (!["image/png", "image/jpg", "image/jpeg"].includes(ft.mime))
-      //     return cb(new Error(`File type not allowed`));
-      //   cb(null, true);
-      // });
-      if (!["image/png", "image/jpg", "image/jpeg"].includes(file.mimetype))
-        return cb(new Error(`File type not allowed`));
-      cb(null, true);
-    },
-  });
 
   constructor(providers:DataClient) {
     this.router = AsyncRouter();
