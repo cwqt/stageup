@@ -199,3 +199,6 @@ export const resetPassword = async (req: Request):Promise<void> => {
       </p>`,
   })
 };
+
+
+export const readUserFeed = async ():Promise<void> => {}

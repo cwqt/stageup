@@ -1,6 +1,9 @@
 import { Access, Router } from './router';
 import { Request } from 'express';
 import { DataClient } from './common/data';
+import Middlewares, { cacheOnFail, cacheOnOk } from './common/middleware';
+import AuthStrat from './authorisation';
+
 import {
     IHost,
     IUser,
@@ -10,13 +13,11 @@ import {
     IUserHostInfo as IUHInfo,
     IPerformancePurchase as IPurchase,
     IEnvelopedData as IE,
-    IUserHostInfo,
-    IEnvelopedData,
     IPerformanceUserInfo as IPUInfo,
-    IMyself
+    IMyself,
+    HTTP,
+    IUserHostInfo
 } from "@eventi/interfaces";
-
-import AuthStrat from './authorisation';
 
 import Users = require("./controllers/User.controller");
 import Hosts = require("./controllers/Host.controller");
@@ -29,6 +30,7 @@ import Auth = require("./controllers/Auth.controller");
  */
 export default (providers:DataClient):Router => {
 const router = new Router(providers);
+const mws = new Middlewares(providers);
 
 // USERS -----------------------------------------------------------------------------------------------------------------------------------------------------------
 router.get    <IMyself>             ("/myself",                               Users.getMyself,                    [AuthStrat.isLoggedIn],       null);
@@ -44,6 +46,7 @@ router.put    <IUser>               ("/users/:uid/avatar",                    Us
 router.put    <void>                ("/users/:uid/password",                  Users.resetPassword,                [AuthStrat.isOurself],        Users.validators.resetPassword);
 // router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases,                 [AuthStrat.isLoggedIn],       null);
 // router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions,       [AuthStrat.isLoggedIn],       null);
+router.get    <void>                ("/feed",                                 Users.readUserFeed,                 [AuthStrat.isLoggedIn],       null, [mws.cacher('5 minutes', cacheOnOk)])
 
 // HOSTS -----------------------------------------------------------------------------------------------------------------------------------------------------------
 router.post   <IHost>               ("/hosts",                                Hosts.createHost,                   [], null);
@@ -55,27 +58,25 @@ router.delete <void>                ("/hosts/:hid",                           Ho
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions,       [], null);
 
 // PERFORMANCES ----------------------------------------------------------------------------------------------------------------------------------------------------
-router.post   <IPerf>               ("/performances",                           Perfs.createPerformance,            [AuthStrat.isLoggedIn], null);
-router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.getPerformances,              [AuthStrat.isLoggedIn], null);
-router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      Perfs.getPerformance,               [AuthStrat.isLoggedIn], null);
-router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,       [AuthStrat.isLoggedIn], null);
-router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase,                     [AuthStrat.isLoggedIn], null);
+router.post   <IPerf>               ("/performances",                           Perfs.createPerformance,          [AuthStrat.isLoggedIn],       null);
+router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.getPerformances,            [AuthStrat.isLoggedIn],       null);
+router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      Perfs.getPerformance,             [AuthStrat.isLoggedIn],       null);
+router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo,     [AuthStrat.isLoggedIn],       null);
+router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase,                   [AuthStrat.isLoggedIn],       null);
 // router.delete <void>                ("/performance/:pid",                       Perfs.deletePerformance,            [Access.Authenticated])
 
-// PERFORMANCE PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------
+// PURCHASES -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // RATINGS ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// ASSETS ---------------------------------------------------------------------------------------------------------------------------------------------------------
+// ASSETS ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // MUX HOOKS -------------------------------------------------------------------------------------------------------------------------------------------------------
-router.post<void>("/mux/hooks", MUXHooks.handleHook, []);
+router.post   <void>               ("/mux/hooks",                               MUXHooks.handleHook,              [AuthStrat.none]);
 
-// AUTHORISATION ----------------------------------------------------------------------------------------------------------------------------------------------------
-router.redirect                   ("/auth/verify",                         Auth.verifyUserEmail,                     [AuthStrat.none],   Auth.validators.verify);
+// MISC ------------------------------------------------------------------------------------------------------------------------------------------------------------
+router.redirect                    ("/auth/verify",                             Auth.verifyUserEmail,             [AuthStrat.none],             Auth.validators.verify, [mws.limiter(100, 10)]);
+router.get    <string>             ("/ping",                                    async (req:Request) => "Pong!",   [],                           null);
 
-
-
-router.get <string>   ("/ping", async (req:Request) => "Pong!", [], null);
 return router;
 };

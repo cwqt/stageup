@@ -27,12 +27,15 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
     path: string,
     controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
     authStrats: AuthStrategy[],
-    validators: any = skip
+    validators: any = skip,
+    preMiddleware?:any[],
+    postMiddleware?:any[]
   ) => {
     method(
       path,
       executeAuthenticationStrategies(authStrats, providers),
       validators ?? skip,
+      ...(preMiddleware || []),
       (req: Request, res: Response, next: NextFunction) => {
         res.locals.page = parseInt(req.query.page as string) || 0;
         res.locals.per_page = parseInt(req.query.per_page as string) || 10;
@@ -56,7 +59,8 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
         } catch (err) {
           handleError(req, res, next, err);
         }
-      }
+      },
+      ...(postMiddleware || []),
     );
   };
 }
@@ -94,42 +98,52 @@ export class Router {
     path:string,
     controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
     authStrats:AuthStrategy[],
-    validators: any = skip) =>
+    validators: any = skip,
+    preMiddlware?:any[],
+    postMiddleware?:any[]) =>
       endpointFunc<T>(this.router.get, this.providers)
-        (path, controller, authStrats, validators);
+        (path, controller, authStrats, validators, preMiddlware, postMiddleware);
 
   put = <T>(
     path:string,
     controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
     authStrats:AuthStrategy[],
-    validators: any = skip) =>
+    validators: any = skip,
+    preMiddlware?:any[],
+    postMiddleware?:any[]) =>
       endpointFunc<T>(this.router.put, this.providers)
-        (path, controller, authStrats, validators);
+      (path, controller, authStrats, validators, preMiddlware, postMiddleware);
 
   post = <T>(
     path:string,
     controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
     authStrats:AuthStrategy[],
-    validators: any = skip) =>
+    validators: any = skip,
+    preMiddlware?:any[],
+    postMiddleware?:any[]) =>
       endpointFunc<T>(this.router.post, this.providers, HTTP.Created)
-        (path, controller, authStrats, validators);
+      (path, controller, authStrats, validators, preMiddlware, postMiddleware);
     
   delete = <T>(
     path:string,
     controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
     authStrats:AuthStrategy[],
-    validators: any = skip) =>
+    validators: any = skip,
+    preMiddlware?:any[],
+    postMiddleware?:any[]) =>
       endpointFunc<T>(this.router.delete, this.providers)
-        (path, controller, authStrats, validators);        
+      (path, controller, authStrats, validators, preMiddlware, postMiddleware);
 
   redirect = (
     path:string,
     controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<string>,
     authStrats:AuthStrategy[],
-    validators: any = skip) =>
+    validators: any = skip,
+    preMiddlware?:any[],
+    postMiddleware?:any[]) =>
       endpointFunc<string>(this.router.get, this.providers, HTTP.Moved,
         (res:Response, data:string) => res.status(HTTP.Moved).redirect(data))
-        (path, controller, authStrats, validators);        
+        (path, controller, authStrats, validators, preMiddlware, postMiddleware);
       }
 
 const executeAuthenticationStrategies = (authStrats: AuthStrategy[], dc:DataClient) => {
