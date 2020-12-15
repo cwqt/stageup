@@ -4,40 +4,58 @@ import { MUXHook, IMUXHookResponse } from "@eventi/interfaces";
 import logger from "../common/logger";
 import { Webhooks, LiveStream } from "@mux/mux-node";
 import config from "../config";
-import { ErrorHandler } from "../common/errors";
-import { HTTP } from "@eventi/interfaces";
+import { BaseArgs, BaseController, IControllerEndpoint } from "../common/controller";
+import { AuthStrategy } from '../authorisation';
 
-const streamCreated = async (data:IMUXHookResponse<LiveStream>) => {
-    console.log(data)
-}
+export default class MUXHooksController extends BaseController {
+  hookMap: { [index in MUXHook]?: (data:IMUXHookResponse<any>, dc:DataClient) => Promise<void> }
 
-const hookMap: { [index in MUXHook]?: (data:IMUXHookResponse<any>, dc:DataClient) => Promise<void> } = {
-    [MUXHook.StreamCreated]: streamCreated,
-};
-
-export const handleHook = async (req: Request, dc: DataClient) => {
-  try {
-    //https://github.com/muxinc/mux-node-sdk#verifying-webhook-signatures
-    const isValidHook = Webhooks.verifyHeader(
-      JSON.stringify(req.body),
-      req.headers["mux-signature"] as string,
-      config.MUX.HOOK_SIGNATURE
-    );
-
-    if (!isValidHook) throw new ErrorHandler(HTTP.BadRequest, "Invalid MUX hook");
-  } catch (error) {
-    throw new ErrorHandler(HTTP.BadRequest, error.message);
+  constructor(...args: BaseArgs) {
+    super(...args);
+    this.hookMap = {
+      [MUXHook.StreamCreated]: this.streamCreated,
+    };
   }
 
-  // TODO: use redis to track previously recieved hooks so we don't re-handle some
-  // requests - MUX doesn't fire & forget
+  async streamCreated(data:IMUXHookResponse<LiveStream>) {
+    console.log(data)
+  }
 
-  logger.http(`Received MUX hook: ${req.body.type}`);
-  await (hookMap[req.body.type as MUXHook] || unsupportedHookHandler)(req.body, dc);
-};
+  validHookStrat():AuthStrategy {
+    return async (req:Request):Promise<[boolean, {}, string?]> => {
+      try {
+        //https://github.com/muxinc/mux-node-sdk#verifying-webhook-signatures
+        const isValidHook = Webhooks.verifyHeader(
+          JSON.stringify(req.body),
+          req.headers["mux-signature"] as string,
+          config.MUX.HOOK_SIGNATURE
+        );
+    
+        if(!isValidHook) return [false, {}, "Invalid MUX hook signature"];
+      } catch (error) {
+        return [false, {}, error.message];
+      }
+    
+      return [true, {}];
+    }
+  }
 
-export const unsupportedHookHandler = async (data:IMUXHookResponse<any>, dc:DataClient) => {
-  logger.http(`Un-supported MUX hook: ${data.type}`);
-};
+  handleHook():IControllerEndpoint<void> {
+    return {
+      authStrategies: [this.validHookStrat()],
+      controller: async (req:Request) => {
+        // TODO: use redis to track previously recieved hooks so we don't re-handle some
+        // requests - MUX doesn't fire & forget
+
+        logger.http(`Received MUX hook: ${req.body.type}`);
+        await (this.hookMap[req.body.type as MUXHook] || this.unsupportedHookHandler)(req.body, this.dc);
+      }
+    }
+  }
+
+  async unsupportedHookHandler(data:IMUXHookResponse<any>) {
+    logger.http(`Un-supported MUX hook: ${data.type}`);
+  }
+}
 
 

@@ -5,10 +5,10 @@ import { DataClient } from './data';
 import Middlewares from './middleware';
 
 export interface IControllerEndpoint<T> {
-  validator: any;
+  validator?: any;
   controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>;
-  preMiddlewares: RequestHandler[];
-  postMiddlewares: RequestHandler[];
+  preMiddlewares?: RequestHandler[];
+  postMiddlewares?: RequestHandler[];
   authStrategies: AuthStrategy[];
 }
 
