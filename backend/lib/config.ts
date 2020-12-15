@@ -45,14 +45,18 @@ interface IEnv {
   }
 }
 
-const base = {
+const base:Omit<IEnv, "API_URL" | "FE_URL" | "SITE_TITLE"> = {
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
   EXPRESS_PORT: 3000,
-  PRODUCTION: false,
-  DEVELOPMENT: false,
-  TESTING: false,
+  PRODUCTION: false, //set later
+  DEVELOPMENT: false,//set later
+  TESTING: false,    //set later
   LOCALTUNNEL_URL: process.env.LOCALTUNNEL_URL,
+  SENDGRID: {
+    USERNAME: process.env.SENDGRID_USERNAME,
+    API_KEY: process.env.SENDGRID_API_KEY
+  },
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
@@ -80,7 +84,7 @@ const base = {
     HOST: process.env.PRODUCTION === "true" ? process.env.INFLUX_HOST : "localhost",
     DB: "metrics"
   }
-} as IEnv;
+};
 
 const prod: IEnv = {
   ...base,

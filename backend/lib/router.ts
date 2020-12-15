@@ -1,18 +1,12 @@
-import Multer from "multer";
 import { Request, Response, NextFunction, IRouterMatcher } from "express";
 import { ErrorHandler, handleError } from "./common/errors";
 import { DataClient } from "./common/data";
 import { AuthStrategy } from './authorisation';
 import { HTTP } from "@eventi/interfaces";
+import { IControllerEndpoint } from "./common/controller";
 
 const AsyncRouter = require("express-async-router").AsyncRouter;
 
-export enum Access {
-  SiteAdmin,
-  Ourself,
-  Authenticated,
-  None,
-}
 export interface IResLocals {
   pagination?: {
     per_page: number;
@@ -25,14 +19,13 @@ const skip = (req: Request, res: Response, next: NextFunction) => next();
 const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode?:HTTP, lambda?:(res:Response, data:T) => void) => {
   return (
     path: string,
-    controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
-    authStrats: AuthStrategy[],
-    validators: any = skip
+    endpoint:IControllerEndpoint<T>
   ) => {
     method(
       path,
-      executeAuthenticationStrategies(authStrats, providers),
-      validators ?? skip,
+      executeAuthenticationStrategies(endpoint.authStrategies, providers),
+      endpoint.validator ?? skip,
+      ...(endpoint.preMiddlewares || []),
       (req: Request, res: Response, next: NextFunction) => {
         res.locals.page = parseInt(req.query.page as string) || 0;
         res.locals.per_page = parseInt(req.query.per_page as string) || 10;
@@ -40,7 +33,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
       },
       async (req: Request, res: Response, next: NextFunction) => {
         try {
-          const returnValue = await controller(
+          const returnValue = await endpoint.controller(
             req,
             providers,
             {
@@ -56,7 +49,8 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
         } catch (err) {
           handleError(req, res, next, err);
         }
-      }
+      },
+      ...(endpoint.postMiddlewares || []),
     );
   };
 }
@@ -65,25 +59,6 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
 export class Router {
   router: any;
   providers:DataClient;
-  fileParser = Multer({
-    storage: Multer.memoryStorage(),
-    limits: {
-      fileSize: 2 * 1024 * 1024, //no files larger than 2mb
-    },
-    fileFilter: (req: Request, file: Express.Multer.File, cb: Multer.FileFilterCallback) => {
-      // FIXME: file.buffer is undefined
-      // FileType.fromBuffer(file.buffer).then((ft) => {
-      //   if (ft.mime != file.mimetype)
-      //     return cb(new Error(`File mime-type mismatch: ${ft.mime} != ${file.mimetype}`));
-      //   if (!["image/png", "image/jpg", "image/jpeg"].includes(ft.mime))
-      //     return cb(new Error(`File type not allowed`));
-      //   cb(null, true);
-      // });
-      if (!["image/png", "image/jpg", "image/jpeg"].includes(file.mimetype))
-        return cb(new Error(`File type not allowed`));
-      cb(null, true);
-    },
-  });
 
   constructor(providers:DataClient) {
     this.router = AsyncRouter();
@@ -92,44 +67,32 @@ export class Router {
 
   get = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
-    authStrats:AuthStrategy[],
-    validators: any = skip) =>
-      endpointFunc<T>(this.router.get, this.providers)
-        (path, controller, authStrats, validators);
+    endpoint:IControllerEndpoint<T>) =>
+      endpointFunc<T>(this.router.get, this.providers)(path, endpoint);
 
   put = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
-    authStrats:AuthStrategy[],
-    validators: any = skip) =>
-      endpointFunc<T>(this.router.put, this.providers)
-        (path, controller, authStrats, validators);
+    endpoint:IControllerEndpoint<T>) =>
+      endpointFunc<T>(this.router.put, this.providers)(path, endpoint);
+
 
   post = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
-    authStrats:AuthStrategy[],
-    validators: any = skip) =>
-      endpointFunc<T>(this.router.post, this.providers, HTTP.Created)
-        (path, controller, authStrats, validators);
-    
+    endpoint:IControllerEndpoint<T>) =>
+      endpointFunc<T>(this.router.post, this.providers)(path, endpoint);
+
   delete = <T>(
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>,
-    authStrats:AuthStrategy[],
-    validators: any = skip) =>
-      endpointFunc<T>(this.router.delete, this.providers)
-        (path, controller, authStrats, validators);        
+    endpoint:IControllerEndpoint<T>) =>
+      endpointFunc<T>(this.router.delete, this.providers)(path, endpoint);
+
 
   redirect = (
     path:string,
-    controller:(req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<string>,
-    authStrats:AuthStrategy[],
-    validators: any = skip) =>
-      endpointFunc<string>(this.router.get,this.providers,  HTTP.Moved,
+    endpoint:IControllerEndpoint<string>) =>
+      endpointFunc<string>(this.router.get, this.providers, HTTP.Moved,
         (res:Response, data:string) => res.status(HTTP.Moved).redirect(data))
-        (path, controller, authStrats, validators);        
+        (path, endpoint);
       }
 
 const executeAuthenticationStrategies = (authStrats: AuthStrategy[], dc:DataClient) => {

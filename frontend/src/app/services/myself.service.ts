@@ -45,7 +45,7 @@ export class MyselfService {
   getMyself(): Promise<IMyself> {
     return this.http
       .get<IMyself>(`/api/myself`)
-      .pipe(tap((myself) => this.hydrate(myself)))
+      .pipe(tap((myself) => this.store(this.hydrate(myself))))
       .toPromise();
   }
 

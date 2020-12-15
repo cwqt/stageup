@@ -12,7 +12,7 @@ export const none:AuthStrategy = async (req:Request, dc):Promise<[boolean, {}, s
 }
 
 export const isLoggedIn: AuthStrategy = async (req: Request, dc: DataClient): Promise<[boolean, {}, string?]> => {
-  if (!req.session.user) return [false, {}, "User is not logged in"];
+  if (!req.session.user) return [false, {}, "You must be logged in to perform this action"];
   return [true, {}];
 };
 
