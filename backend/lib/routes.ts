@@ -30,7 +30,7 @@ export default (providers:DataClient):Router => {
 const router = new Router(providers);
 const mws = new Middlewares(providers);
 
-// USERS -----------------------------------------------------------------------------------------------------------------------------------------------------------
+// USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providers, mws);
 router.get    <IMyself>             ("/myself",                               Users.readMyself());
 router.post   <IUser>               ("/users",                                Users.createUser());
@@ -47,7 +47,7 @@ router.put    <void>                ("/users/:uid/password",                  Us
 // router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions);
 router.get    <void>                ("/feed",                                 Users.readUserFeed())
 
-// HOSTS -----------------------------------------------------------------------------------------------------------------------------------------------------------
+// HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, mws);   
 router.post   <IHost>               ("/hosts",                                Hosts.createHost());
 router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.getHostMembers());
@@ -57,7 +57,7 @@ router.delete <void>                ("/hosts/:hid",                           Ho
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser());
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions());
 
-// PERFORMANCES ----------------------------------------------------------------------------------------------------------------------------------------------------
+// PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
 router.post   <IPerf>               ("/performances",                           Perfs.createPerformance());
 router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.getPerformances());
@@ -66,11 +66,11 @@ router.get    <IPHInfo>             ("/performances/:pid/host_info",            
 router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase());
 router.delete <void>                ("/performance/:pid",                       Perfs.deletePerformance());
 
-// MUX HOOKS -------------------------------------------------------------------------------------------------------------------------------------------------------
+// MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);
 router.post   <void>               ("/mux/hooks",                               MUXHooks.handleHook());
 
-// MISC ------------------------------------------------------------------------------------------------------------------------------------------------------------
+// MISC ---------------------------------------------------------------------------------------------------------------
 const Auth =  new AuthController(providers, mws);
 router.redirect                    ("/auth/verify",                             Auth.verifyUserEmail());
 router.get    <string>             ("/ping",                                    { authStrategies: [authorisation.none], controller: async (req:Request) => "Pong!" });

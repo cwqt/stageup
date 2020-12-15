@@ -31,8 +31,7 @@ export default class UserController extends BaseController {
         body('password').not().isEmpty().isLength({ min: 6 }).withMessage('Password length must be > 6 characters'),
       ]),
       preMiddlewares: [this.mws.limiter(3600, 10)],
-      postMiddlewares: [],
-      authStrategies: [AuthStrat.isLoggedIn],
+      authStrategies: [AuthStrat.none],
       controller: async (req: Request): Promise<IUser> => {
         const emailAddress = req.body.email_address;
         const password = req.body.password;
