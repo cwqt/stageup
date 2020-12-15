@@ -1,29 +1,17 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
-  Validators,
-  FormControl,
-  FormGroupDirective,
-  NgForm,
+  Validators
 } from "@angular/forms";
-import { ErrorStateMatcher } from "@angular/material/core";
+import { ICacheable } from "src/app/app.interfaces";
+import {
+  displayValidationErrors,
+  handleFormErrors,
+} from "src/app/_helpers/formErrorHandler";
 
 import { UserService } from "../../../services/user.service";
-
-class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
 
 @Component({
   selector: "app-register",
@@ -32,18 +20,21 @@ class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
-  loading: boolean = false;
-  success: boolean = false;
   registerButtonText: string = "Register";
-  errors = {
-    username: "",
-    email: "",
-    password: "",
-    form: ""
+
+  register: ICacheable<string> = {
+    data: null,
+    error: "",
+    loading: false,
+    form_errors: {
+      username: "",
+      email_address: "",
+      password: "",
+    },
   };
 
-  pw_min_len: number = 6;
-  field_max_len: number = 16;
+  fieldMinLength: number = 6;
+  fieldMaxLength: number = 16;
 
   constructor(private userService: UserService, private fb: FormBuilder) {}
 
@@ -52,30 +43,44 @@ export class RegisterComponent implements OnInit {
       {
         username: [
           "",
-          { validators: [this.usernameValidator], updateOn: "change" },
+          [
+            Validators.required,
+            Validators.minLength(this.fieldMinLength),
+            Validators.maxLength(this.fieldMaxLength),
+          ],
         ],
-        email: ["", [Validators.required]],
+        email_address: ["", [Validators.required, Validators.email]],
         password: [
           "",
           [
             Validators.required,
-            Validators.minLength(this.pw_min_len),
-            Validators.maxLength(this.field_max_len),
+            Validators.minLength(this.fieldMinLength),
+            Validators.maxLength(this.fieldMaxLength),
           ],
         ],
         confirmation: ["", [Validators.required]],
       },
       {
         validator: this.passwordMatchValidator.bind(this),
-        matcher: new MyErrorStateMatcher(),
       }
     );
   }
 
-  get username() { return this.registerForm.get("username") }
-  get email() { return this.registerForm.get("email") }
-  get password() { return this.registerForm.get("password") }
-  get confirmation() { return this.registerForm.get("confirmation") }
+  get errors() {
+    return this.register.form_errors;
+  }
+  get username() {
+    return this.registerForm.get("username");
+  }
+  get email() {
+    return this.registerForm.get("email_address");
+  }
+  get password() {
+    return this.registerForm.get("password");
+  }
+  get confirmation() {
+    return this.registerForm.get("confirmation");
+  }
 
   /* Called on each input in either password field */
   onPasswordInput() {
@@ -91,40 +96,16 @@ export class RegisterComponent implements OnInit {
     return null;
   }
 
-  private usernameValidator(control): { [key: string]: boolean } | null {
-    let username_regex = new RegExp(/^[a-zA-Z0-9]+$/);
-    if (control.value !== null && username_regex.test(control.value) == false) {
-      return { usernameForbidden: true };
-    }
-    return null;
-  }
-
   submitHandler() {
-    this.loading = true;
+    this.register.loading = true;
     this.registerButtonText = "Registering...";
-    this.userService.register(this.registerForm.value)
-    // this.userService
-    //   .register(this.registerForm.value)
-    //   .subscribe(
-    //     (res) => {
-    //       this.success = true;
-    //     },
-    //     (err) => {
-    //       this.errors.form = err.message;
-    //       this.success = false;
-    //       this.registerButtonText = "Try again?";
-    //       let errors = err.error.message;
-    //       Object.keys(this.errors).forEach((e) => {
-    //         let i = errors.findIndex((x) => x.param == e);
-    //         if (errors[i]) {
-    //           this.errors[e] = errors[i].msg;
-    //           this.registerForm.controls[e].setErrors({ incorrect: true });
-    //         }
-    //       });
-    //     }
-    //   )
-    //   .add(() => {
-    //     this.loading = false;
-    //   });
+    this.userService
+      .register(this.registerForm.value)
+      .then((u) => {})
+      .catch((e: HttpErrorResponse) => {
+        this.register = handleFormErrors(this.register, e.error);
+        displayValidationErrors(this.registerForm, this.register);
+      })
+      .finally(() => (this.register.loading = false));
   }
 }

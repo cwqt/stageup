@@ -17,7 +17,7 @@ export class UserService {
 
   constructor(private http: HttpClient, private myselfService:MyselfService) {
     this.myselfService.$myself.subscribe(m => {
-      this.$currentUser.next(m.user);
+      this.$currentUser.next(m?.user);
     })
   }
 

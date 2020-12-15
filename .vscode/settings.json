@@ -9,6 +9,7 @@
     "prettier.useTabs": false,
     "prettier.tabWidth": 2,
     "prettier.semi": true,
-    "prettier.bracketSpacing": true
+    "prettier.bracketSpacing": true,
+    "editor.folding": false
 }
   

@@ -4,6 +4,9 @@ ui-icon {
 
 button {
   min-height: 40px;
+  width: 100%;
+  border-radius: 5px !important;
+  overflow: hidden;
 
   ::ng-deep .mat-spinner {
     display: inline-block;

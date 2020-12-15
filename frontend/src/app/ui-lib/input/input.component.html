@@ -6,6 +6,7 @@
   [class.checkbox]="type == 'checkbox'">
   <mat-label *ngIf="label && type !== 'checkbox'">{{label}}</mat-label>
   <input *ngIf="type == 'number' || type == 'text' || type == 'password'" [disabled]="disabled" matInput [(ngModel)]="value" [type]="type" [placeholder]="placeholder"/>
+  <mat-hint [id]="null">{{ hint }}</mat-hint>
   <textarea matInput *ngIf="type == 'textarea'" [(ngModel)]="value"></textarea>
   <mat-checkbox matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
   <!-- <div class="ui-input-number-buttons" *ngIf="type == 'number'">

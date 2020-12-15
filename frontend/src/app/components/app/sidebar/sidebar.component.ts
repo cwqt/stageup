@@ -19,12 +19,11 @@ export class SidebarComponent implements OnInit {
   get host() { return this.myself.host }
 
   ngOnInit(): void {
-    console.log('--->', this.myself)
   }
 
-  gotoRoot() {
-    this.appService.navigateTo('/');
-  }
+  gotoRoot() { this.appService.navigateTo('/') }
+  gotoSettings() { this.appService.navigateTo('settings') }
+  gotoHost() { this.appService.navigateTo('host') }
 
   toggleUserPopup(state:boolean) {
     this.userPopupOpen = state;
