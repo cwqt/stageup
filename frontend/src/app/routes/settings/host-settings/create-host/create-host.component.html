@@ -8,25 +8,15 @@
         You will have to go through a further onboarding step to be able to upload content.
     </p>
 
-    <form [formGroup]="hostForm" (ngSubmit)="submitHandler()">
+    <ui-form
+        (onSuccess)="handleFormSuccess($event)"
+        (onFailure)="handleFormFailure($event)"
+        [cacheable]="hostData"
+        [form]="hostForm">
+    </ui-form>
 
-        <ui-input
-            label="Host Username"
-            formControlName="host_username"
-            type="text"
-            hint="This will be the name of your host account on Eventi. Your URL will be: https://eventi.com/username">
-        </ui-input>
-        <br><br>
-        <ui-input label="Host Name" formControlName="host_name" type="text"></ui-input>
-        <ui-input type="text" formControlName="email_address" label="Contact E-mail"></ui-input>
-        <ui-button [disabled]="true" size="l" variant="primary">Create Host</ui-button>
-
-        <br><br>
-
-        <p>
-            By creating an account, you agree to the Terms of Service. For more information about Eventi's privacy
-            practices, see the Eventi Privacy Statement. We'll occasionally send you account-related emails.
-        </p>
-
-    </form>
+    <p>
+        By creating an account, you agree to the Terms of Service. For more information about Eventi's privacy
+        practices, see the Eventi Privacy Statement. We'll occasionally send you account-related emails.
+    </p>
 </div>

@@ -20,6 +20,7 @@ export class ButtonComponent implements OnInit {
     | "basic" = "accent";
   @Input() icon?: string;
   @Input() size?: "l" | "m" | "s";
+  @Input() type?: "submit";
 
   constructor() {}
 

@@ -1,0 +1,27 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <ui-input
+        *ngFor="let field of form.fields"
+        [type]="field.type"
+        [label]="field.label"
+        [hint]="field.hint"
+        [variant]="field.variant"
+        [placeholder]="field.default"
+        [validatorFunctions]="field.validators"
+        [formControlName]="field.field_name">
+        {{field.field_name}}
+    </ui-input>      
+
+    <ui-button type="submit"
+        [size]="form.submit.size"
+        [variant]="form.submit.variant"
+        (onClick)="onSubmit()">
+        {{ form.submit.text }}
+    </ui-button>
+</form>
+
+<ng-container *ngIf="cacheable.error">
+    <ui-admonition type="failure" title="Error when sending form">
+        {{ cacheable.error }}
+    </ui-admonition>
+    <br/>    
+</ng-container>
