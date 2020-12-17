@@ -19,6 +19,8 @@ import { DialogButtonsComponent } from "./dialog-buttons/dialog-buttons.componen
 import { OverlaySpinnerComponent } from "./overlay-spinner/overlay-spinner.component";
 import { InputComponent } from "./input/input.component";
 import { FormComponent } from './form/form.component';
+import { HttpClientModule } from "@angular/common/http";
+import { HostService } from "../services/host.service";
 
 export enum ButtonVariants {
   Primary = "primary",
@@ -55,9 +57,10 @@ const allComponents = [
     ClickOutsideModule,
     ReactiveFormsModule,
     FormsModule,
+    HttpClientModule
   ],
-  exports: [allComponents],
-  providers: [NgForm],
+  exports: allComponents,
+  providers: [],
   entryComponents: [],
   bootstrap: [],
 })

@@ -8,9 +8,9 @@ import log from '../logger';
 
 import PostgresProvider from "./postgres.provider";
 import RedisProvider from "./redis.provider";
-// import InfluxProvider from "./influx.provider";
 import MUXProvider from './mux.provider';
-import ltProvider from './localtunnel.provider';
+import tunnelProvider from './localtunnel.provider';
+// import InfluxProvider from "./influx.provider";
 // import s3Provider from './awsS3.provider';
 
 export interface DataClient {
@@ -37,7 +37,7 @@ const timeout = async <T>(f:() => Promise<T>, maxExecutionTime:number):Promise<T
 
 export const create = async (): Promise<DataClient> => {
   const dataClient: DataClient = {
-    tunnel: await timeout(ltProvider.create, 5000),
+    tunnel: await timeout(tunnelProvider.create, 5000),
     torm: await timeout(PostgresProvider.create, 5000),
     redis: await timeout(RedisProvider.create, 5000),
     mux: await timeout(MUXProvider.create, 5000),
@@ -46,15 +46,14 @@ export const create = async (): Promise<DataClient> => {
   };
 
   // Once redis is connected, set up the session store
-  dataClient.session_store = await RedisProvider.store(dataClient.redis);
-  
+  dataClient.session_store = await timeout(RedisProvider.store(dataClient.redis), 2000);
   return dataClient;
 };
 
 export const close = async (client: DataClient) => {
   await Promise.all([
     //Influx has no close command
-    ltProvider.close(client.tunnel),
+    tunnelProvider.close(client.tunnel),
     client.redis.quit(),
     client.torm.close(),
   ]);

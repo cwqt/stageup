@@ -25,6 +25,7 @@ import { BillingSettingsComponent } from "./routes/settings/billing-settings/bil
 import { AccountSettingsComponent } from "./routes/settings/account-settings/account-settings.component";
 import { HostSettingsComponent } from "./routes/settings/host-settings/host-settings.component";
 import { BillingPaymentComponent } from "./routes/settings/billing-settings/billing-payment/billing-payment.component";
+import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
 
 const APP_ROUTES:Routes = [
   { path: '', component: FeedComponent},
@@ -48,10 +49,11 @@ const APP_ROUTES:Routes = [
       { path: "account", component: AccountSettingsComponent },
     ]
   },
-  { path: `host/:${RP.HostId}`, component: HostComponent,
+  { path: `host`, component: HostComponent,
     children: [
       { path: 'settings', component: HostSettingsComponent },
       { path: 'performance', component: HostPerformancesComponent },
+      // { path: `:${RP.HostId}`, component: }
     ]
   },
   { path: `ui`, component: TestbedComponent },

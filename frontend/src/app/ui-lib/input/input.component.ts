@@ -26,12 +26,13 @@ import { IUiFormFieldValidator } from "../form/form.component";
 })
 export class InputComponent implements ControlValueAccessor {
   @Input() type: "number" | "text" | "password" | "textarea" | "checkbox";
-  @Input() formControlName?: string;
   @Input() label?: string;
-  @Input() disabled: boolean = false;
   @Input() placeholder?:string;
   @Input() variant?: "primary" | "secondary";
   @Input() hint?:string;
+  @Input() disabled: boolean = false;
+
+  @Input() formControlName?: string;
   @Input() validatorFunctions: IUiFormFieldValidator[];
 
   _state:string = "hide";

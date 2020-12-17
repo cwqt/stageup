@@ -21,6 +21,7 @@ export class ButtonComponent implements OnInit {
   @Input() icon?: string;
   @Input() size?: "l" | "m" | "s";
   @Input() type?: "submit";
+  @Input() fullWidth?:boolean=false;
 
   constructor() {}
 

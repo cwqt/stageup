@@ -8,12 +8,19 @@
         You will have to go through a further onboarding step to be able to upload content.
     </p>
 
-    <ui-form
+    <ui-form *ngIf="showForm"
         (onSuccess)="handleFormSuccess($event)"
         (onFailure)="handleFormFailure($event)"
         [cacheable]="hostData"
         [form]="hostForm">
     </ui-form>
+
+    <ui-admonition
+        *ngIf="!showForm && hostData.error"
+        type="failure"
+        title="Error when sending form">
+        {{ hostData.error }}
+    </ui-admonition>
 
     <p>
         By creating an account, you agree to the Terms of Service. For more information about Eventi's privacy

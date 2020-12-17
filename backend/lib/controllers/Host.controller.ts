@@ -7,7 +7,7 @@ import { ErrorHandler } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
 import { UserHostInfo } from '../models/UserHostInfo.model';
 import { validate } from '../common/validate';
-import { query } from 'express-validator';
+import { body, query } from 'express-validator';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
 
@@ -18,15 +18,45 @@ export default class HostController extends BaseController {
 
   createHost(): IControllerEndpoint<IHost> {
     return {
-      validator: validate([]),
+      validator: validate([
+        body('username')
+          .not()
+          .isEmpty()
+          .withMessage('Must provide a username')
+          .isLength({ min: 6 })
+          .withMessage('Username length must be >6 characters')
+          .isLength({ max: 32 })
+          .withMessage('Username length must be <32 characters')
+          .matches(/^[a-zA-Z0-9]*$/)
+          .withMessage('Must be alpha-numeric with no spaces'),
+        body('name')
+          .not()
+          .isEmpty()
+          .withMessage('Must provide a username')
+          .isLength({ min: 6 })
+          .withMessage('Username length must be >6 characters')
+          .isLength({ max: 32 })
+          .withMessage('Username length must be <32 characters'),
+        body('email_address')
+          .not()
+          .isEmpty()
+          .withMessage('Must provide an e-mail address')
+          .isEmail()
+          .normalizeEmail()
+          .withMessage('Not a valid e-mail address'),
+      ]),
       authStrategies: [AuthStrat.none],
       controller: async (req: Request): Promise<IHost> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, 'Cannot create host if already part of another');
 
+        const h = await Host.findOne({ username: req.body.username });
+        if(h) throw new ErrorHandler(HTTP.Conflict, `Username '${h.username}' is already taken`);
+
         const host = new Host({
           username: req.body.username,
           name: req.body.name,
+          email_address: req.body.email_address,
         });
 
         // Create host & add current user (creator) to it through transaction
@@ -107,6 +137,16 @@ export default class HostController extends BaseController {
       authStrategies: [AuthStrat.none],
       controller: async (req: Request): Promise<void> => {},
     };
+  }
+
+  updateOnboarding():IControllerEndpoint<void> {
+    return {
+      validator: validate([]),
+      authStrategies: [AuthStrat.hasHostPermission(HostPermission.Owner)],
+      controller: async (req:Request):Promise<void> => {
+        
+      }
+    }
   }
 
   getUserHostInfo(): IControllerEndpoint<IUserHostInfo> {

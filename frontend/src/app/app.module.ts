@@ -52,6 +52,7 @@ import { BillingSettingsComponent } from "./routes/settings/billing-settings/bil
 import { AccountSettingsComponent } from "./routes/settings/account-settings/account-settings.component";
 import { HostSettingsComponent } from "./routes/settings/host-settings/host-settings.component";
 import { CreateHostComponent } from "./routes/settings/host-settings/create-host/create-host.component";
+import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { CreateHostComponent } from "./routes/settings/host-settings/create-host
     BillingSettingsComponent,
     AccountSettingsComponent,
     HostSettingsComponent,
-    CreateHostComponent
+    CreateHostComponent,
+    HostOnboardingComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -107,7 +109,7 @@ import { CreateHostComponent } from "./routes/settings/host-settings/create-host
     IvyCarouselModule
   ],
   providers: [CookieService],
-  entryComponents: [HeaderBarUserMenuComponent],
+  entryComponents: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

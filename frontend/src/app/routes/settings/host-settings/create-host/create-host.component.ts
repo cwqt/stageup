@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { IHost, IHostStub, IUser } from '@eventi/interfaces';
 import { ICacheable } from 'src/app/app.interfaces';
+import { BaseAppService } from 'src/app/services/app.service';
 import { HostService } from 'src/app/services/host.service';
 import { IUiForm } from 'src/app/ui-lib/form/form.component';
-import { displayValidationErrors, handleFormErrors } from 'src/app/_helpers/formErrorHandler';
 
 @Component({
   selector: 'app-create-host',
@@ -15,7 +15,7 @@ import { displayValidationErrors, handleFormErrors } from 'src/app/_helpers/form
 export class CreateHostComponent implements OnInit {
   @Input() host:IHostStub;
   @Input() user:IUser;
-  hostForm:IUiForm<string>;
+  hostForm:IUiForm<IHost>;
   hostData:ICacheable<IHostStub>  = {
     data: null,
     loading: false,
@@ -27,31 +27,33 @@ export class CreateHostComponent implements OnInit {
     }
   }
 
-  constructor(private hostService:HostService) { }
+  showForm:boolean = true;
+
+  constructor(private hostService:HostService, private appService:BaseAppService) { }
 
   ngOnInit(): void {
     this.hostForm = {
       fields: [
         {
           type: "text",
-          field_name: "host_name",
-          label: "Host Username",
+          field_name: "username",
           hint: "This will be the name of your host account on Eventi. Your URL will be: https://eventi.com/username",
-          validators: [
-            { type: "required" },
-            { type: "minlength", value: 6 },
-            { type: "maxlength", value: 32 }
-          ]
-        },
-        {
-          type: "text",
-          field_name: "host_username",
-          label: "Host Name",
+          label: "Host Username",
           validators: [
             { type: "required" },
             { type: "minlength", value: 6 },
             { type: "maxlength", value: 32 },
             { type: "pattern", value: /^[a-zA-Z0-9]*$/, message: e => "Must be alphanumeric with no spaces" }
+          ]
+        },
+        {
+          type: "text",
+          field_name: "name",
+          label: "Host Name",
+          validators: [
+            { type: "required" },
+            { type: "minlength", value: 6 },
+            { type: "maxlength", value: 32 }
           ]
         },
         {
@@ -70,37 +72,17 @@ export class CreateHostComponent implements OnInit {
         variant: "primary",
         text: "Create Host",
         size: "l",
-        handler: this.submitHandler
+        fullWidth: true,
+        handler: async d => this.hostService.createHost(d)
       }
     }
   }
 
-  handleFormSuccess(event) {
-    console.log('form success!')
+  handleFormSuccess(host:IHost) {
+    this.appService.navigateTo('/host');
   }
 
-  handleFormFailure(event) {
-    console.log('form failed!')
+  handleFormFailure(e:HttpErrorResponse) {
+    this.showForm = false;
   }
-
-  submitHandler():Promise<string> {
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        res('wow!')
-      }, 500);
-    })
-  }
-
-  // submitHandler() {
-  //   this.hostData.loading = true;
-  //   this.hostService.createHost(this.hostForm.value)
-  //     .then(h => {
-  //       this.hostData.data = h;
-  //     })
-  //     .catch((e:HttpErrorResponse) => {
-  //       this.hostData = handleFormErrors(this.hostData, e.error);
-  //       displayValidationErrors(this.hostForm, this.hostData);
-  //     })
-  //     .finally(() => this.hostData.loading = false);
-  // }
 }

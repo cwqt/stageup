@@ -11,6 +11,7 @@ import {
   AfterContentInit,
 } from "@angular/core";
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   NgControl,
@@ -48,7 +49,8 @@ export interface IUiFormSubmit<T> {
   size?: "s" | "m" | "l";
   text: string;
   loadingText?: string;
-  handler: () => Promise<T>;
+  fullWidth?:boolean;
+  handler: (formData:AbstractControl["value"]) => Promise<T>;
 }
 export interface IUiForm<T> {
   fields: IUiFormField[];
@@ -72,6 +74,7 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
 
   formGroup: FormGroup;
   submissionButton: ButtonComponent;
+  submissionButtonVisible:boolean = true;
   formVisible: boolean = false;
 
   constructor(private fb: FormBuilder) {}
@@ -128,9 +131,10 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
     this.inputs.forEach((i) => i.setDisabledState(true));
     this.submissionButton.loading = true;
     this.form.submit
-      .handler()
+      .handler(this.formGroup.value)
       .then((v) => this.onSuccess.emit(v))
       .catch((e: HttpErrorResponse) => {
+        this.submissionButtonVisible = false;
         this.cacheable = handleFormErrors(this.cacheable, e.error);
         displayValidationErrors(this.formGroup, this.cacheable);
         this.onFailure.emit(e);

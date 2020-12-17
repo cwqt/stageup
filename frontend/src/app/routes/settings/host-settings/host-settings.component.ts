@@ -19,5 +19,4 @@ export class HostSettingsComponent implements OnInit {
     this.user = myself.user;
     this.host = myself.host;
   }
-
 }

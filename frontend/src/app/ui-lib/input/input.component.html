@@ -9,15 +9,16 @@
   <mat-label *ngIf="label && type !== 'checkbox'">{{ label }}</mat-label>
   
   <input
-    autocomplete="off"
+    *ngIf="type == 'number' || type == 'text' || type == 'password'"
+    [(ngModel)]="value"
     (blur)="onTouched()"
     (focus)="onFocus()"
-    *ngIf="type == 'number' || type == 'text' || type == 'password'"
     [disabled]="disabled"
-    matInput
-    [(ngModel)]="value"
     [type]="type"
-    [placeholder]="placeholder"/>
+    [placeholder]="placeholder"
+    tabindex="0"
+    autocomplete="off"
+    matInput/>
 
   <mat-hint *ngIf="!showError" [id]="null">{{ showError ? "" : hint }}</mat-hint>
   

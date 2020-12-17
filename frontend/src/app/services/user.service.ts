@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Observable, BehaviorSubject, Subject } from "rxjs";
+import { Observable, BehaviorSubject } from "rxjs";
 import { tap, map } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 
-import { IUser, IHost, IUserStub, Primitive } from "@eventi/interfaces";
+import { IUser, IHost, Primitive } from "@eventi/interfaces";
 import { MyselfService } from './myself.service';
 
 @Injectable({
