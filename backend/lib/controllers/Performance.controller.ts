@@ -20,85 +20,9 @@ import { IResLocals } from '../router';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
 
-<<<<<<< HEAD
-export const validators = {
-  createPerformance: validate([body('name').not().isEmpty().withMessage('Performance must have a title!')]),
-};
-
-export const createPerformance = async (req: Request, dc: DataClient): Promise<IPerformance> => {
-  const user = await User
-    .createQueryBuilder('user')
-    .leftJoinAndSelect('user.host', 'host')
-    .getOne();
-
-  if (!user.host) throw new ErrorHandler(HTTP.BadRequest, "You're not authorised to create performances.");
-
-  const performance = await new Performance({
-      name: req.body.name,
-      description: req.body.description ?? '',
-      price: req.body.price,
-      currency: req.body.currency,
-    },
-    user
-  ).setup(dc);
-
-  return performance.toFull();
-};
-
-export const readPerformances = async (req: Request, dc:DataClient, locals:IResLocals): Promise<IEnvelopedData<IPerformanceStub[], null>> => {
-  const performances = await Performance.find({
-    take: locals.pagination.per_page,
-    skip: locals.pagination.page*locals.pagination.per_page,
-    relations: ['host']
-  });
-
-  return {
-    data: performances.map((p: Performance) => p.toStub()),
-    __paging_data: createPagingData(req.path, 100, locals.pagination.per_page)
-  }
-};
-
-export const readPerformance = async (req: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
-  const performance = await Performance.findOne(
-    { _id: parseInt(req.params.pid) },
-    { relations: ['host', 'host_info'] }
-  );
-
-  if(!performance) throw new ErrorHandler(HTTP.NotFound, "Performance does not exist");
-
-  // see if current user has access/bought the performance
-  let token: string;
-  let memberOfHost: boolean = false;
-  let previousPurchase: Purchase | null;
-  if (req.session?.user._id) {
-    // check if user is part of host that created performance
-    const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-    if (user.host._id == performance.host._id) memberOfHost = true;
-
-    // check if user has purchased the performance
-    if (!memberOfHost) {
-      previousPurchase = await Purchase.findOne({
-        relations: ['user', 'performance'],
-        where: {
-          user: { _id: user._id },
-          performance: { _id: performance._id },
-        },
-      });
-
-      token = previousPurchase.token;
-    }
-
-    // neither member of host, nor has a purchased token
-    if (!(memberOfHost || token))
-      throw new ErrorHandler(HTTP.Unauthorised, "You don't have access to watch this performance");
-
-    // sign on the fly for a member of the host
-    if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
-=======
 export default class PerformanceController extends BaseController {
   constructor(...args: BaseArgs) {
     super(...args);
->>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
   }
 
   createPerformance(): IControllerEndpoint<IPerformance> {
@@ -124,26 +48,6 @@ export default class PerformanceController extends BaseController {
       },
     };
   }
-<<<<<<< HEAD
-};
-
-
-export const readPerformanceHostInfo = async (req: Request): Promise<IPerformanceHostInfo> => {
-  const performance = await Performance.findOne({ _id: parseInt(req.params.pid )}, { relations: ["host_info"] })
-  const performanceHostInfo = performance.host_info;
-
-  // host_info eager loads signing_key, which is very convenient usually
-  // but we do not wanna send keys and such over the wire
-  delete performanceHostInfo.signing_key;
-
-  return performanceHostInfo as IPerformanceHostInfo;
-};
-
-export const purchase = async (req: Request, dc: DataClient): Promise<void> => {
-  const user = await User.findOne({ _id: req.session.user._id });
-  const perf = await Performance.findOne({ _id: parseInt(req.params.pid) }, { relations: ['host_info'] });
-=======
->>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
 
   getPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
     return {
@@ -262,7 +166,7 @@ export const purchase = async (req: Request, dc: DataClient): Promise<void> => {
       },
     };
   }
-  
+
   deletePerformance(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
