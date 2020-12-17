@@ -10,9 +10,7 @@ import { tap } from "rxjs/operators";
 export class MyselfService {
   $myself: BehaviorSubject<IMyself | null>;
 
-  constructor(
-    private http: HttpClient,
-  ) {
+  constructor(private http: HttpClient) {
     this.$myself = new BehaviorSubject(this.hydrate());
   }
 
@@ -31,7 +29,8 @@ export class MyselfService {
    * @param myself current user ( and host / host info if part of one)
    */
   hydrate(myself?: IMyself): IMyself | null {
-    const me: IMyself | null = myself || JSON.parse(localStorage.getItem("lastMyself"));
+    const me: IMyself | null =
+      myself || JSON.parse(localStorage.getItem("lastMyself"));
 
     // if this is being called from the constructor $myself doesn't exist yet
     // re-fan myself to subscribers every hydration
@@ -43,11 +42,7 @@ export class MyselfService {
   getMyself(): Promise<IMyself> {
     return this.http
       .get<IMyself>(`/api/myself`)
-<<<<<<< HEAD
-      .pipe(tap((myself) => this.store(myself, true)))
-=======
       .pipe(tap((myself) => this.store(this.hydrate(myself))))
->>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
       .toPromise();
   }
 
@@ -59,7 +54,7 @@ export class MyselfService {
     this.store({ ...this.$myself.value, host: host }, true);
   }
 
-  setUserHostInfo(userHostInfo:IUserHostInfo) {
+  setUserHostInfo(userHostInfo: IUserHostInfo) {
     this.store({ ...this.$myself.value, host_info: userHostInfo });
   }
 }

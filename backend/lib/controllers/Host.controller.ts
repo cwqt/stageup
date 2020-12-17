@@ -11,11 +11,6 @@ import { body, query } from 'express-validator';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
 
-<<<<<<< HEAD
-export const validators = {
-  getUserHostInfo: validate([query("user").trim().not().isEmpty().toInt()]),
-};
-=======
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
     super(...args);
@@ -54,10 +49,9 @@ export default class HostController extends BaseController {
       controller: async (req: Request): Promise<IHost> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, 'Cannot create host if already part of another');
->>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
 
         const h = await Host.findOne({ username: req.body.username });
-        if(h) throw new ErrorHandler(HTTP.Conflict, `Username '${h.username}' is already taken`);
+        if (h) throw new ErrorHandler(HTTP.Conflict, `Username '${h.username}' is already taken`);
 
         const host = new Host({
           username: req.body.username,
@@ -77,18 +71,6 @@ export default class HostController extends BaseController {
     };
   }
 
-<<<<<<< HEAD
-export const readHostMembers = async (req:Request):Promise<IUser[]> => {
-    const host = await Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ["members"] });
-    return host.members.map((u:User) => u.toFull());
-}
-
-export const readUserHostInfo = async (req:Request):Promise<IUserHostInfo> => {
-  const uhi = await UserHostInfo.findOne({ relations: ["host", "user"],
-    where: {
-      user: {
-        _id: parseInt(req.query.user as string)
-=======
   getHostMembers(): IControllerEndpoint<IUser[]> {
     return {
       validator: validate([]),
@@ -129,7 +111,6 @@ export const readUserHostInfo = async (req:Request):Promise<IUserHostInfo> => {
 
         // TODO: transactionally remove performances, signing keys, host infos etc etc.
         await user.host.remove();
->>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
       },
     };
   }
@@ -158,14 +139,12 @@ export const readUserHostInfo = async (req:Request):Promise<IUserHostInfo> => {
     };
   }
 
-  updateOnboarding():IControllerEndpoint<void> {
+  updateOnboarding(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
       authStrategies: [AuthStrat.hasHostPermission(HostPermission.Owner)],
-      controller: async (req:Request):Promise<void> => {
-        
-      }
-    }
+      controller: async (req: Request): Promise<void> => {},
+    };
   }
 
   getUserHostInfo(): IControllerEndpoint<IUserHostInfo> {
