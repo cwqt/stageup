@@ -11,7 +11,7 @@
         {{field.field_name}}
     </ui-input>      
 
-    <ui-button type="submit" *ngIf="submissionButtonVisible"
+    <ui-button type="submit"
         [disabled]="cacheable.loading"
         [fullWidth]="form.submit.fullWidth"
         [size]="form.submit.size"
@@ -19,4 +19,6 @@
         (onClick)="onSubmit()">
         {{ form.submit.text }}
     </ui-button>
+
+    <span *ngIf="cacheable.error">{{ cacheable.error }}</span>
 </form>

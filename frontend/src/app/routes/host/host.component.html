@@ -1,2 +1,7 @@
-<p>host works!</p>
-<router-outlet></router-outlet>  
+<div class="host-wrapper" *ngIf="host">
+  <app-host-onboarding [host]="host" *ngIf="!host.is_onboarded"></app-host-onboarding>
+
+  <ng-container *ngIf="host.is_onboarded">
+    <router-outlet></router-outlet>  
+  </ng-container>  
+</div>

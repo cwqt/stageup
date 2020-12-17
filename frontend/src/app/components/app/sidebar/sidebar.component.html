@@ -1,21 +1,21 @@
 <div class="sidebar-wrapper">
-    <img src="/assets/eventi.svg" alt="" class="logo">
+  <img src="/assets/eventi.svg" alt="" class="logo">
 
     <div class="sidebar-main-buttons">
-        <ui-button (click)="gotoRoot()">
+        <ui-button (click)="gotoRoot()" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <ui-icon>home</ui-icon> Home
         </ui-button>
-        <ui-button>
+        <ui-button routerLink="/search" routerLinkActive="active">
             <ui-icon>search</ui-icon> Search
         </ui-button>
-        <ui-button>
+        <ui-button routerLink="/library" routerLinkActive="active">
             <ui-icon>catalog</ui-icon> Your Library
         </ui-button>
 
         <ng-container *ngIf="host">
             <mat-divider></mat-divider>
             
-            <ui-button (click)="gotoHost()">
+            <ui-button (click)="gotoHost()" routerLink="/host" routerLinkActive="active">
                 <ui-icon>events</ui-icon> {{ host.name }}
             </ui-button>
         </ng-container>

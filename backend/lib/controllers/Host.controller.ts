@@ -71,7 +71,18 @@ export default class HostController extends BaseController {
     };
   }
 
-  getHostMembers(): IControllerEndpoint<IUser[]> {
+  readHost():IControllerEndpoint<IHost> {
+    return {
+      validator: validate([]),
+      authStrategies: [AuthStrat.isLoggedIn],
+      controller: async (req:Request):Promise<IHost> => {
+        const host =  await Host.findOne({ _id: parseInt(req.params.hid) })
+        return host.toFull();
+      }
+    }
+  }
+
+  readHostMembers(): IControllerEndpoint<IUser[]> {
     return {
       validator: validate([]),
       authStrategies: [AuthStrat.none],
@@ -147,7 +158,7 @@ export default class HostController extends BaseController {
     };
   }
 
-  getUserHostInfo(): IControllerEndpoint<IUserHostInfo> {
+  readUserHostInfo(): IControllerEndpoint<IUserHostInfo> {
     return {
       validator: validate([query('user').trim().not().isEmpty().toInt()]),
       controller: async (req: Request): Promise<IUserHostInfo> => {

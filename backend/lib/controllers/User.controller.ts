@@ -197,7 +197,7 @@ export default class UserController extends BaseController {
     };
   }
 
-  getUserHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserHostInfo>> {
+  readUserHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserHostInfo>> {
     return {
       authStrategies: [AuthStrat.none],
       controller: async (req: Request): Promise<IEnvelopedData<IHost, IUserHostInfo>> => {

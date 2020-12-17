@@ -6,8 +6,8 @@ import { CookieService } from "ngx-cookie-service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "./user.service";
 import { LoggedInGuard } from "../_helpers";
-import { MyselfService } from './myself.service';
-import { IUser } from '@eventi/interfaces';
+import { MyselfService } from "./myself.service";
+import { IUser } from "@eventi/interfaces";
 
 @Injectable({
   providedIn: "root",
@@ -17,7 +17,7 @@ export class AuthenticationService {
 
   constructor(
     private http: HttpClient,
-    private myselfService:MyselfService,
+    private myselfService: MyselfService,
     private cookieService: CookieService,
     private route: ActivatedRoute,
     private router: Router
@@ -33,16 +33,16 @@ export class AuthenticationService {
     return this.$loggedIn.getValue();
   }
 
-  login(formData:{ email_address:string, password:string }):Promise<IUser> {
+  login(formData: { email_address: string; password: string }): Promise<IUser> {
     return this.http
       .post<IUser>("/api/users/login", formData, { withCredentials: true })
       .pipe(
         tap((user) => {
           // Remove last logged in user stored
           this.myselfService.store(null);
-          this.router.navigate(["/"]);
         })
-      ).toPromise();
+      )
+      .toPromise();
   }
 
   logout() {

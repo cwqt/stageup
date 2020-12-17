@@ -2,41 +2,11 @@
   <div class="content">
     <h1 class="mat-display-1">Sign in</h1>
 
-    <form [formGroup]="loginForm" (ngSubmit)="submitHandler()">
-      <mat-form-field appearance="fill">
-        <mat-label type="email">E-mail address</mat-label>
-        <input matInput type="text" formControlName="email_address" />
-        <mat-error *ngIf="!user.form_errors.email_address && email.invalid && email.touched">E-mail is required</mat-error>
-        <mat-error *ngIf="user.form_errors.email_address">{{ user.form_errors.email_address }} xxx</mat-error>
-      </mat-form-field>
-
-      <br />
-
-      <mat-form-field appearance="fill">
-        <mat-label type="password">Password</mat-label>
-        <input matInput type="password" formControlName="password" />
-        <mat-error *ngIf="!user.form_errors.password && password.invalid && password.touched">Password is required</mat-error>
-        <mat-error *ngIf="user.form_errors.password">{{ user.form_errors.password }}</mat-error>
-      </mat-form-field>
-
-      <mat-error class="form" *ngIf="user.error">{{ user.error }}</mat-error>
-
-      <div class="sign-in-buttons">
-        <ui-button variant="primary" [disabled]="loginForm.invalid || user.loading" [loading]="user.loading">
-          <span>Sign in</span>
-        </ui-button>
-
-        <!-- <mat-form-field floatPlaceholder="always" class="app-input-no-underline">
-          <input matInput style="display: none !important;" />
-          <mat-checkbox formControlName="rememberMe">Remember me?</mat-checkbox>
-        </mat-form-field> -->
-
-        <a class="mat-small help" href="#">Trouble logging in?</a>
-      </div>
-    </form>
-
-    <br />
-    <br />
+    <ui-form #form
+      (onSuccess)="onLoginSuccess($event)"
+      [cacheable]="user"
+      [form]="loginForm">
+    </ui-form>
 
     <!-- TODO: SSO with passport -->
     <!-- <div class="alt-sign-in-buttons">

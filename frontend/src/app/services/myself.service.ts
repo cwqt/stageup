@@ -1,8 +1,12 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { IHostStub, IMyself, IUser, IUserHostInfo } from "@eventi/interfaces";
 import { BehaviorSubject } from "rxjs";
 import { tap } from "rxjs/operators";
+import { HTTP } from '@eventi/interfaces';
+import { AuthenticationService } from "./authentication.service";
+import { BaseAppService } from "./app.service";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root",
@@ -10,7 +14,7 @@ import { tap } from "rxjs/operators";
 export class MyselfService {
   $myself: BehaviorSubject<IMyself | null>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router:Router) {
     this.$myself = new BehaviorSubject(this.hydrate());
   }
 
@@ -42,7 +46,21 @@ export class MyselfService {
   getMyself(): Promise<IMyself> {
     return this.http
       .get<IMyself>(`/api/myself`)
-      .pipe(tap((myself) => this.store(this.hydrate(myself))))
+      .pipe(
+        tap(
+          (myself:IMyself) => {
+            myself.user.avatar = myself.user.avatar || "assets/avatar_placeholder.png"
+            this.store(this.hydrate(myself));
+          },
+          (e:HttpErrorResponse) => {
+            if(e.status == HTTP.NotFound) {
+              // don't use authService because of circular DI
+              this.store(null);
+              this.router.navigate(['/']);
+            }
+          }
+        )
+      )
       .toPromise();
   }
 

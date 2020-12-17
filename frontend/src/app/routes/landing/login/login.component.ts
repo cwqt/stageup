@@ -17,6 +17,7 @@ import {
   handleFormErrors,
   displayValidationErrors,
 } from "src/app/_helpers/formErrorHandler";
+import { IUiForm } from "src/app/ui-lib/form/form.component";
 
 @Component({
   selector: "app-login",
@@ -24,7 +25,7 @@ import {
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
+  loginForm: IUiForm<IUser>;
   user: ICacheable<IUser> = {
     data: null,
     error: "",
@@ -44,32 +45,35 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // Can't login if already logged in
-    if(this.myselfService.$myself.value) this.baseAppService.navigateTo('/');
+    if (this.myselfService.$myself.value) this.baseAppService.navigateTo("/");
 
-    this.loginForm = this.fb.group({
-      email_address: ["", [Validators.required, Validators.email]],
-      password: ["", [Validators.required, Validators.minLength(6)]],
-      // rememberMe: [false],
-    });
+    this.loginForm = {
+      fields: [
+        {
+          type: "text",
+          field_name: "email_address",
+          label: "E-mail address",
+          validators: [{ type: "required" }, { type: "email" }],
+        },
+        {
+          type: "password",
+          field_name: "password",
+          label: "Password",
+          validators: [{ type: "required" }],
+        },
+      ],
+      submit: {
+        text: "Sign in",
+        variant: "primary",
+        handler: async (d) => this.authService.login(d),
+      },
+    };
   }
 
-  get email() { return this.loginForm.get("email_address") }
-  get password() { return this.loginForm.get("password") }
-
-  submitHandler():Promise<void> {
-    this.user.loading = true;
-    return this.authService
-      .login(this.loginForm.value)
-      .then(u => {
-        // get user, host & host info on login
-        this.myselfService.getMyself().then(() => {
-          this.baseAppService.navigateTo("/");
-        });
-      })
-      .catch((e: HttpErrorResponse) => {
-        this.user = handleFormErrors(this.user, e.error);
-        displayValidationErrors(this.loginForm, this.user);
-      })
-      .finally(() => (this.user.loading = false));
+  onLoginSuccess(user: IUser) {
+    // get user, host & host info on login
+    this.myselfService.getMyself().then(() => {
+      this.baseAppService.navigateTo("/");
+    });
   }
 }

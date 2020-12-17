@@ -10,6 +10,7 @@
     "prettier.tabWidth": 2,
     "prettier.semi": true,
     "prettier.bracketSpacing": true,
-    "editor.folding": false
+    "editor.folding": false,
+    "editor.wordWrapColumn": 120
 }
   

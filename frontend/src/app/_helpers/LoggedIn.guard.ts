@@ -18,7 +18,7 @@ export class LoggedInGuard implements CanActivate {
 
     console.log(this.myselfService.$myself.value)
 
-    if (currentUser && !currentUser.is_new_user) {
+    if (currentUser) {
       // authorised so return true
       return true;
     }

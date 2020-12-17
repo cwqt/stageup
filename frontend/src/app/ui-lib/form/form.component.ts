@@ -13,8 +13,10 @@ import {
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   NgControl,
+  ValidatorFn,
   Validators,
 } from "@angular/forms";
 import { ICacheable } from "src/app/app.interfaces";
@@ -32,7 +34,7 @@ export interface IUiFormField {
   label?: string;
   default?: string | boolean;
   validators?: IUiFormFieldValidator[];
-  hint?:string;
+  hint?: string;
 
   // internal
   disabled?: boolean;
@@ -40,17 +42,23 @@ export interface IUiFormField {
 }
 
 export interface IUiFormFieldValidator {
-  type: "required" | "pattern" | "minlength" | "maxlength" | "email";
-  value?: number | string | RegExp;
-  message?: (e: NgControl) => string;
+  type: "required" | "pattern" | "minlength" | "maxlength" | "email" | "custom";
+  value?: number | string | RegExp | CustomUiFieldValidator;
+  message?: (e: NgControl | AbstractControl) => string;
 }
+
+type CustomUiFieldValidator = (
+  thisControl: AbstractControl,
+  formControls: { [index: string]: AbstractControl }
+) => boolean;
+
 export interface IUiFormSubmit<T> {
   variant: "primary" | "secondary";
   size?: "s" | "m" | "l";
   text: string;
   loadingText?: string;
-  fullWidth?:boolean;
-  handler: (formData:AbstractControl["value"]) => Promise<T>;
+  fullWidth?: boolean;
+  handler: (formData: AbstractControl["value"]) => Promise<T>;
 }
 export interface IUiForm<T> {
   fields: IUiFormField[];
@@ -74,8 +82,6 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
 
   formGroup: FormGroup;
   submissionButton: ButtonComponent;
-  submissionButtonVisible:boolean = true;
-  formVisible: boolean = false;
 
   constructor(private fb: FormBuilder) {}
 
@@ -83,7 +89,7 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
     this.formGroup = this.fb.group(
       this.form.fields.reduce((acc, curr) => {
         acc[curr.field_name] = [
-          { value: curr.default ?? "", disabled: curr.disabled || false},
+          { value: curr.default ?? "", disabled: curr.disabled || false },
           curr.validators.map((v) => {
             switch (v.type) {
               case "required":
@@ -96,6 +102,8 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
                 return Validators.maxLength(v.value as number);
               case "pattern":
                 return Validators.pattern(v.value as RegExp);
+              case "custom":
+                return this.parseCustomValidator.bind(this)(v);
             }
           }),
         ];
@@ -113,6 +121,7 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
     // this.inputs.forEach((i) => (i.form = this.formGroup));
     this.formGroup.statusChanges.subscribe((v) => {
       if (v == "VALID") {
+        this.cacheable.error = ""; // form errors gone
         this.submissionButton.disabled = false;
       } else {
         this.submissionButton.disabled = true;
@@ -134,7 +143,6 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
       .handler(this.formGroup.value)
       .then((v) => this.onSuccess.emit(v))
       .catch((e: HttpErrorResponse) => {
-        this.submissionButtonVisible = false;
         this.cacheable = handleFormErrors(this.cacheable, e.error);
         displayValidationErrors(this.formGroup, this.cacheable);
         this.onFailure.emit(e);
@@ -144,5 +152,20 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
         this.cacheable.loading = false;
         this.submissionButton.loading = false;
       });
+  }
+
+  parseCustomValidator(field: IUiFormFieldValidator): ValidatorFn {
+    return (control: AbstractControl): { [index: string]: any } | null => {
+      if (!control.parent?.controls) return null;
+
+      const valid = (field.value as CustomUiFieldValidator)(
+        control,
+        control.parent.controls as { [index: string]: AbstractControl }
+      );
+
+      return valid
+        ? { [field.type]: field.message(control) || "Invalid message" }
+        : null;
+    };
   }
 }

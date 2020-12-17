@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { Component, Input, forwardRef, Self, Optional } from "@angular/core";
-import { ControlValueAccessor, NgControl, FormGroup } from "@angular/forms";
+import { ControlValueAccessor, NgControl, FormGroup, AbstractControl } from "@angular/forms";
 import { IUiFormFieldValidator } from "../form/form.component";
 
 @Component({
@@ -59,12 +59,13 @@ export class InputComponent implements ControlValueAccessor {
     const { errors } = this.control;
 
     // Fallback messages if none provided
-    const errorMap = {
+    const errorMap:{[index:string]: (e:any) => string} = {
       ["minlength"]: e => `${this.label} must be at-least ${errors[e].requiredLength} characters`,
       ["maxlength"]: e => `${this.label} must be less than ${errors[e].requiredLength} characters`,
       ["required"]: e => `${this.label} is required`,
       ["email"]: e => `Must be a valid e-mail address`,
       ["pattern"]: e => `Must fufill ReGex`,
+      ["backendIssue"]: e => this.control.getError("backendIssue")
     }
     
     return Object.keys(errors || {}).map(e => {

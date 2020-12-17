@@ -49,7 +49,7 @@ export default class PerformanceController extends BaseController {
     };
   }
 
-  getPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
+  readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
     return {
       validator: validate([]),
       authStrategies: [AuthStrat.none],
@@ -68,7 +68,7 @@ export default class PerformanceController extends BaseController {
     };
   }
 
-  getPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
+  readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
     return {
       validator: validate([]),
       authStrategies: [AuthStrat.none],
@@ -123,7 +123,7 @@ export default class PerformanceController extends BaseController {
     };
   }
 
-  getPerformanceHostInfo(): IControllerEndpoint<IPerformanceHostInfo> {
+  readPerformanceHostInfo(): IControllerEndpoint<IPerformanceHostInfo> {
     return {
       validator: validate([]),
       authStrategies: [AuthStrat.none],
