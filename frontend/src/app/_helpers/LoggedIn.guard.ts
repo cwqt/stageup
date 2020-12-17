@@ -16,6 +16,8 @@ export class LoggedInGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const currentUser = this.myselfService.$myself?.value?.user;
 
+    console.log(this.myselfService.$myself.value)
+
     if (currentUser && !currentUser.is_new_user) {
       // authorised so return true
       return true;

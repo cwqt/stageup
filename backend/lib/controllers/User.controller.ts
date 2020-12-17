@@ -1,3 +1,62 @@
+<<<<<<< HEAD
+import { HostPermission, IEnvelopedData, IHost, IUser, IUserHostInfo, IMyself } from "@eventi/interfaces";
+import { Request } from "express";
+import { body, param } from "express-validator";
+import { ErrorHandler, FormErrorResponse } from "../common/errors";
+import { HTTP } from "@eventi/interfaces";
+import { DataClient } from "../common/data";
+import { validate } from "../common/validate";
+import bcrypt from "bcrypt";
+
+import { User } from "../models/User.model";
+import Email = require("../common/email");
+import { Host } from "../models/Host.model";
+import { UserHostInfo } from "../models/UserHostInfo.model";
+
+export const validators = {
+  loginUser: validate([
+    body("email_address")
+      .not()
+      .isEmpty()
+      .withMessage("Must provide an e-mail address")
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("Not a valid e-mail address"),
+    body("password").not().isEmpty().isLength({ min: 6 }).withMessage("Password length must be > 6 characters"),
+  ]),
+  createUser: validate([
+    body("username").not().isEmpty().trim().withMessage("Username cannot be empty"),
+    body("email_address").isEmail().normalizeEmail().withMessage("Not a valid email address"),
+    body("password").not().isEmpty().isLength({ min: 6 }).withMessage("Password length must be > 6 characters"),
+  ]),
+  readUserByUsername: validate([param("username").trim().not().isEmpty()]),
+};
+
+export const readMyself = async (req:Request):Promise<IMyself> => {
+  const user:User = await User.findOne({ _id: req.session.user._id });
+  if (!user) throw new ErrorHandler(HTTP.NotFound, "No such user exists");
+
+  const host:Host = await Host.findOne({
+    where: {
+      members: {
+        _id: user._id
+      }
+    }
+  });
+
+  let host_info:IUserHostInfo;
+  if(host) {
+    host_info = await UserHostInfo.findOne({
+      where: {
+        user: {
+          _id: user._id,
+        },
+        host: {
+          _id: host._id
+        }
+      }
+    });
+=======
 import { HostPermission, IEnvelopedData, IHost, IUser, IUserHostInfo, IMyself } from '@eventi/interfaces';
 import { IControllerEndpoint, BaseArgs, BaseController } from '../common/controller';
 import { Request } from 'express';
@@ -16,6 +75,7 @@ import Email = require('../common/email');
 export default class UserController extends BaseController {
   constructor(...args: BaseArgs) {
     super(...args);
+>>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
   }
 
   loginUser(): IControllerEndpoint<IUser> {
@@ -99,6 +159,10 @@ export default class UserController extends BaseController {
     };
   }
 
+<<<<<<< HEAD
+  const u: User = await User.findOne({ email_address: emailAddress });
+  if (!u) throw new ErrorHandler(HTTP.NotFound, "No such user with this e-mail exists");
+=======
   createUser(): IControllerEndpoint<IUser> {
     return {
       validator: validate([
@@ -111,6 +175,7 @@ export default class UserController extends BaseController {
         const preExistingUser = await User.findOne({
           where: [{ email_address: req.body.email_address }, { username: req.body.username }],
         });
+>>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
 
         if (preExistingUser) {
           const errors = new FormErrorResponse();
@@ -228,6 +293,13 @@ export default class UserController extends BaseController {
     };
   }
 
+<<<<<<< HEAD
+export const readUserHost = async (req:Request):Promise<IEnvelopedData<IHost, IUserHostInfo>> => {
+  const user = await User
+    .createQueryBuilder("user")
+    .leftJoinAndSelect("user.host", "host")
+    .getOne();
+=======
   resetPassword(): IControllerEndpoint<void> {
     return {
       validator: validate([
@@ -246,6 +318,7 @@ export default class UserController extends BaseController {
       controller: async (req: Request): Promise<void> => {
         const oldPassword = req.body.old_password;
         const newPassword = req.body.new_password;
+>>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
 
         const u = await User.findOne({ _id: parseInt(req.params.uid) });
         if (!u) throw new ErrorHandler(HTTP.NotFound, 'No such user exists');

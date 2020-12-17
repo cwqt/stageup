@@ -37,6 +37,8 @@ const APP_ROUTES:Routes = [
   },
   { path: `user/:${RP.UserId}`, component: ProfileComponent },
   { path: `verified`, component: VerifiedComponent },
+<<<<<<< HEAD
+=======
   { path: `settings`, component: SettingsComponent,
     children: [
       { path: "profile", component: ProfileSettingsComponent },
@@ -49,6 +51,7 @@ const APP_ROUTES:Routes = [
       { path: "account", component: AccountSettingsComponent },
     ]
   },
+>>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
   { path: `host`, component: HostComponent,
     children: [
       { path: 'settings', component: HostSettingsComponent },

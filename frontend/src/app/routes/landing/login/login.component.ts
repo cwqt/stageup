@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { AuthenticationService } from "../../../services/authentication.service";
 import { ICacheable } from "src/app/app.interfaces";
-import { IUser } from "@eventi/interfaces";
+import { IMyself, IUser } from "@eventi/interfaces";
 import { MyselfService } from "src/app/services/myself.service";
 import { BaseAppService } from "src/app/services/app.service";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -56,15 +56,15 @@ export class LoginComponent implements OnInit {
   get email() { return this.loginForm.get("email_address") }
   get password() { return this.loginForm.get("password") }
 
-  submitHandler() {
+  submitHandler():Promise<void> {
     this.user.loading = true;
-    this.authService
+    return this.authService
       .login(this.loginForm.value)
       .then(u => {
         // get user, host & host info on login
         this.myselfService.getMyself().then(() => {
           this.baseAppService.navigateTo("/");
-        })
+        });
       })
       .catch((e: HttpErrorResponse) => {
         this.user = handleFormErrors(this.user, e.error);

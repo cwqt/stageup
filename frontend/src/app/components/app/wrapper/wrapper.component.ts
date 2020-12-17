@@ -16,10 +16,6 @@ export class WrapperComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.myselfService.$myself.subscribe(m => {
-      console.log('===>', m)
-      this.myself = m;
-    });
+    this.myselfService.$myself.subscribe(m => { this.myself = m });
   }
-
 }
