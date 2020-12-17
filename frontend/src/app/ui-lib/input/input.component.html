@@ -1,11 +1,27 @@
 <mat-form-field
   class="ui-input"
   appearance="fill"
+  [class.errored]="showError"
+  [class.hasHint]="hint"
   [class.dark]="variant == 'secondary'"
   [class.small]="!label"
   [class.checkbox]="type == 'checkbox'">
-  <mat-label *ngIf="label && type !== 'checkbox'">{{label}}</mat-label>
-  <input *ngIf="type == 'number' || type == 'text' || type == 'password'" [disabled]="disabled" matInput [(ngModel)]="value" [type]="type" [placeholder]="placeholder"/>
+  <mat-label *ngIf="label && type !== 'checkbox'">{{ label }}</mat-label>
+  
+  <input
+    *ngIf="type == 'number' || type == 'text' || type == 'password'"
+    [(ngModel)]="value"
+    (blur)="onTouched()"
+    (focus)="onFocus()"
+    [disabled]="disabled"
+    [type]="type"
+    [placeholder]="placeholder"
+    tabindex="0"
+    autocomplete="off"
+    matInput/>
+
+  <mat-hint *ngIf="!showError" [id]="null">{{ showError ? "" : hint }}</mat-hint>
+  
   <textarea matInput *ngIf="type == 'textarea'" [(ngModel)]="value"></textarea>
   <mat-checkbox matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
   <!-- <div class="ui-input-number-buttons" *ngIf="type == 'number'">
@@ -16,3 +32,6 @@
   <!-- stop formcontrolname throwing errors -->
   <input matInput placeholder="Input" style="display: none" >
 </mat-form-field>
+<div *ngIf="showError" class="form-errors" [class.shiftMore]="hint">
+  <span *ngFor="let error of errors">{{ error }}</span>
+</div>

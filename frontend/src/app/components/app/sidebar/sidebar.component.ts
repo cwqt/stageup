@@ -21,9 +21,9 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  gotoRoot() {
-    this.appService.navigateTo('/');
-  }
+  gotoRoot() { this.appService.navigateTo('/') }
+  gotoSettings() { this.appService.navigateTo('settings') }
+  gotoHost() { this.appService.navigateTo('host') }
 
   toggleUserPopup(state:boolean) {
     this.userPopupOpen = state;

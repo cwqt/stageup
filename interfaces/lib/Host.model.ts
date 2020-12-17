@@ -1,8 +1,8 @@
-import { INode } from "./Node.model";
 import { IUserHostInfo, IUserStub } from "./User.model";
 import { IPerformanceStub } from './Performance.model';
 
-export interface IHostStub extends INode {
+export interface IHostStub {
+    _id: number;
     name: string;
     username: string;
     bio?:string;
@@ -13,6 +13,9 @@ export interface IHost extends IHostStub {
     members: IUserStub[];
     members_info: IUserHostInfo[];
     performances: IPerformanceStub[];
+    email_address:string;
+    created_at: number;
+    is_onboarded:boolean;
 }
 
 export enum HostPermission {

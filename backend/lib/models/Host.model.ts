@@ -9,7 +9,7 @@ import { DataClient } from "../common/data";
 export class Host extends BaseEntity implements IHost {
   @PrimaryGeneratedColumn()     _id: number;
   @Column()                     created_at: number;
-  @Column()                     type: NodeType=NodeType.Host;
+  @Column()                     email_address: string;
   @Column()                     name: string;
   @Column()                     username: string;
   @Column({ nullable: true})    bio?: string;
@@ -19,11 +19,13 @@ export class Host extends BaseEntity implements IHost {
   @OneToMany(() => UserHostInfo, uhi => uhi.host)                members_info:UserHostInfo[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
 
-  constructor(data:Pick<IHost, "name" | "username">) {
+  constructor(data:Pick<IHost, "name" | "username" | "email_address">) {
     super();
-    this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.username = data.username;
     this.name = data.name;
+    this.email_address = data.email_address;
+
+    this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.members = [];
     this.members_info = [];
   }
@@ -39,19 +41,29 @@ export class Host extends BaseEntity implements IHost {
     await txc.save(this);
   }
 
+  async removeMember(user:User, txc:EntityManager) {
+    const uhi = await txc.findOne(UserHostInfo, { user: user, host: this});
+    this.members = this.members.splice(this.members.findIndex(m => m._id == user._id), 1);
+    user.host = null;
+
+    await Promise.all([
+      txc.remove(uhi), txc.save(this), txc.save(user)
+    ])
+  }
+
   toStub():IHostStub {
     return {
       _id: this._id,
       name: this.name,
       username: this.username,
-      type: this.type,
-      created_at: this.created_at
     };
   }
 
   toFull():IHost {
     return {
       ...this.toStub(),
+      created_at: this.created_at,
+      email_address: this.email_address,
       members: this.members?.map((u:User) => u.toStub()) || [],
       members_info: this.members_info?.map((uhi:UserHostInfo) => uhi.toFull()) || [],
       performances: this.performances?.map((p:Performance) => p.toStub()) || []

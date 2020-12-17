@@ -21,8 +21,8 @@ export class HostService {
 
   constructor(private http: HttpClient, private myselfService:MyselfService) {
     this.myselfService.$myself.subscribe(m => {
-      this.$currentHost.next(m.host);
-      this.$currentUserHostInfo.next(m.host_info);
+      this.$currentHost.next(m?.host);
+      this.$currentUserHostInfo.next(m?.host_info);
     })
   }
 

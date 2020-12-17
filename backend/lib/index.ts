@@ -41,7 +41,7 @@ app.use(morgan("tiny", { stream }));
         store: providers.session_store,
       })
     );
-  
+
     // Register routes
     app.use("/", Routes(providers).router);
 
@@ -56,6 +56,7 @@ app.use(morgan("tiny", { stream }));
     // Handle closing connections on failure
     process.on("SIGTERM", gracefulExit(providers));
     process.on("SIGINT", gracefulExit(providers));
+
 
     // Start listening for requests
     server = app.listen(config.EXPRESS_PORT, () => {

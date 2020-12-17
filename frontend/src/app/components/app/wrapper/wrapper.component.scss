@@ -10,6 +10,10 @@
 
   .left {
     width: 20vw;
+    min-width: 300px;
+    app-sidebar {
+      width: 100%;
+    }
   }
 
   .right {
@@ -28,6 +32,7 @@
     }
 
     .app-body {
+      height: 100%;
       min-height: calc(100vh - 48px);
       padding: 10px 20px;
     }

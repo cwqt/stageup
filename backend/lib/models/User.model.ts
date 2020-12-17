@@ -8,9 +8,8 @@ import { Performance } from "./Performance.model";
 import config from '../config';
 
 @Entity()
-export class User extends BaseEntity implements IUserPrivate {
+export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_hash"> {
   @PrimaryGeneratedColumn() _id: number;
-  @Column()                 type:NodeType=NodeType.User;
   @Column()                 created_at: number;
   @Column({nullable:true})  name: string;
   @Column()                 username: string;
@@ -21,8 +20,8 @@ export class User extends BaseEntity implements IUserPrivate {
   @Column()                 is_verified: boolean;
   @Column()                 is_new_user: boolean;
   @Column()                 is_admin: boolean;
-  @Column() readonly        salt: string;
-  @Column() readonly        pw_hash: string;
+  @Column() private         salt: string;
+  @Column() private         pw_hash: string;
 
   @ManyToOne(() => Host, host => host.members)                      host:Host; //in one host only
   @OneToMany(() => Purchase, purchase => purchase.user)             purchases:Purchase[];//many purchases
@@ -32,21 +31,18 @@ export class User extends BaseEntity implements IUserPrivate {
     super()
     this.username = data.username;
     this.email_address = data.email_address;
-    this.salt = bcrypt.genSaltSync(10);
-    this.pw_hash = bcrypt.hashSync(data.password, this.salt);
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.is_admin = false;
     this.is_new_user = true;
     this.is_verified = config.PRODUCTION ? false : true;//auto-verify when not in prod
+    this.setPassword(data.password);
   }
 
   toStub():Required<IUserStub> {
     return {
-      name: this.name,
       _id: this._id,
+      name: this.name,
       username: this.username,
-      created_at: this.created_at,
-      type: this.type,
       avatar: this.avatar
     };
   }
@@ -54,6 +50,7 @@ export class User extends BaseEntity implements IUserPrivate {
   toFull():Required<IUser> {
     return {
       ...this.toStub(),
+      created_at: this.created_at,
       email_address: this.email_address,
       is_new_user: this.is_new_user,
       is_verified: this.is_verified,
@@ -70,6 +67,15 @@ export class User extends BaseEntity implements IUserPrivate {
       pw_hash: this.pw_hash,
       salt: this.salt
     }
+  }
+
+  async verifyPassword(password:string):Promise<boolean> {
+    return await bcrypt.compare(password, this.pw_hash);
+  }
+
+  setPassword(password:string, saltRounds:number=10) {
+    this.salt = bcrypt.genSaltSync(saltRounds);
+    this.pw_hash = bcrypt.hashSync(password, this.salt);
   }
 
   async update(updates:Partial<Pick<IUser, "name" | "email_address" | "bio" | "avatar" | "cover_image">>):Promise<User> {

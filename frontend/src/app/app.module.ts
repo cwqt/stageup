@@ -42,11 +42,17 @@ import { SidebarComponent } from './components/app/sidebar/sidebar.component';
 import { FeedComponent } from './routes/feed/feed.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
 import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
-import { HostSettingsComponent } from './routes/host/host-settings/host-settings.component';
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
 import { HostComponent } from './routes/host/host.component';
 import { CreatePerformanceComponent } from './routes/host/create-performance/create-performance.component';
 import { PlayerComponent } from './components/player/player.component';
+import { SettingsComponent } from "./routes/settings/settings.component";
+import { ProfileSettingsComponent } from "./routes/settings/profile-settings/profile-settings.component";
+import { BillingSettingsComponent } from "./routes/settings/billing-settings/billing-settings.component";
+import { AccountSettingsComponent } from "./routes/settings/account-settings/account-settings.component";
+import { HostSettingsComponent } from "./routes/settings/host-settings/host-settings.component";
+import { CreateHostComponent } from "./routes/settings/host-settings/create-host/create-host.component";
+import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
 
 @NgModule({
   declarations: [
@@ -71,10 +77,16 @@ import { PlayerComponent } from './components/player/player.component';
     PerformanceComponent,
     PerformanceWatchComponent,
     HostComponent,
-    HostSettingsComponent,
     HostPerformancesComponent,
     CreatePerformanceComponent,
-    PlayerComponent
+    PlayerComponent,
+    SettingsComponent,
+    ProfileSettingsComponent,
+    BillingSettingsComponent,
+    AccountSettingsComponent,
+    HostSettingsComponent,
+    CreateHostComponent,
+    HostOnboardingComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -97,7 +109,7 @@ import { PlayerComponent } from './components/player/player.component';
     IvyCarouselModule
   ],
   providers: [CookieService],
-  entryComponents: [HeaderBarUserMenuComponent],
+  entryComponents: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

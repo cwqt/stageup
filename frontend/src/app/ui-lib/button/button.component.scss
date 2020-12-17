@@ -3,11 +3,19 @@ ui-icon {
 }
 
 button {
+  &.fullWidth {
+    width: 100%;
+    ::ng-deep .mat-button-wrapper {
+      justify-content: flex-start !important;
+    }
+  }
   min-height: 40px;
+  border-radius: 5px !important;
+  overflow: hidden;
 
   ::ng-deep .mat-spinner {
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 15px;
 
     circle {
       stroke: white;

@@ -43,7 +43,11 @@ export class MyselfService {
   getMyself(): Promise<IMyself> {
     return this.http
       .get<IMyself>(`/api/myself`)
+<<<<<<< HEAD
       .pipe(tap((myself) => this.store(myself, true)))
+=======
+      .pipe(tap((myself) => this.store(this.hydrate(myself))))
+>>>>>>> 18e18a39d8ae23ea5db33758a52c865eb91f6a21
       .toPromise();
   }
 
