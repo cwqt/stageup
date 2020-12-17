@@ -56,6 +56,8 @@ router.delete <void>                ("/hosts/:hid",                           Ho
 // router.post   <IHost>               ("/hosts/:hid/membe",                     Hosts.addUser());
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser());
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions());
+router.put<void>                    ("/hosts/:hid/onboarding",                Hosts.updateOnboarding());
+
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);

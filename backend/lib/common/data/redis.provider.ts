@@ -20,17 +20,19 @@ export const create = async () => {
   });
 };
 
-export const store = (client: redis.RedisClient):connectRedis.RedisStore => {
-  log.info(`Creating Redis Store...`);
+export const store = (client: redis.RedisClient) => {
+  return async ():Promise<connectRedis.RedisStore> => {
+    log.info(`Creating Redis Store...`);
 
-  const redisStore = connectRedis(session);
-
-  return new redisStore({
-    client: client,
-    host: config.REDIS.HOST,
-    port: config.REDIS.PORT,
-    ttl: config.REDIS.TTL,
-  });
+    const redisStore = connectRedis(session);
+  
+    return new redisStore({
+      client: client,
+      host: config.REDIS.HOST,
+      port: config.REDIS.PORT,
+      ttl: config.REDIS.TTL,
+    });  
+  }
 };
 
 export default { create, store };

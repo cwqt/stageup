@@ -1,15 +1,16 @@
-import { INode } from "./Node.model";
 import { IPerformanceStub } from "./Performance.model";
 import { CurrencyCode } from "./Currency.types";
 import { HostPermission, IHost, IHostStub } from "./Host.model";
 
-export interface IUserStub extends INode {
+export interface IUserStub {
+  _id: number;
   name: string;
   username: string;
   avatar?: string;  //s3 bucket url
 }
 
 export interface IUser extends IUserStub {
+  created_at:number;
   email_address: string;
   cover_image?: string; //s3 bucket url
   bio?: string;

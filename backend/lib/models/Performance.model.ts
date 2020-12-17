@@ -6,13 +6,10 @@ import { PerformanceHostInfo, PerformanceHostInfo as PHostInfo } from "./Perform
 import { DataClient } from "../common/data";
 import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
 import { Purchase } from "./Purchase.model";
-import { SigningKey } from "./SigningKey.model";
-
 
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
   @PrimaryGeneratedColumn() _id: number;
-  @Column()                 type:NodeType=NodeType.Performance;
   @Column()                 created_at: number;  
   @Column()                 name: string;
   @Column()                 description?: string;
@@ -66,18 +63,17 @@ export class Performance extends BaseEntity implements IPerformance {
       host: this.host?.toStub(),
       name: this.name,
       average_rating: this.average_rating,
-      type: this.type,
       views: this.views,
-      created_at: this.created_at,
-      playback_id: this.playback_id,
       description: this.description,
-      premiere_date: this.premiere_date
+      playback_id: this.playback_id
     }
   }
 
   toFull():Required<Omit<IPerformance, "__user_access">> {
     return {
       ...this.toStub(),
+      created_at: this.created_at,
+      premiere_date: this.premiere_date,
       ratings: this.ratings,
       state: this.state,
       price: this.price,

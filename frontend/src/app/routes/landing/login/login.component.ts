@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     if(this.myselfService.$myself.value) this.baseAppService.navigateTo('/');
 
     this.loginForm = this.fb.group({
-      email_address: ["", [Validators.required]],
+      email_address: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.minLength(6)]],
       // rememberMe: [false],
     });

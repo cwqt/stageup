@@ -1,26 +1,25 @@
 import { IHostStub } from "./Host.model";
-import { INode } from "./Node.model";
 import { IRating } from "./Review.model";
 import { ISigningKey } from './SigningKey.model';
 import { CurrencyCode } from "./Currency.types";
 
-export interface IPerformanceStub extends INode {
+export interface IPerformanceStub {
+    _id: number;
     host: IHostStub; // who created the performance
     name: string; // title of performance
     description?:string; // description of performance
-    premiere_date?: number; // when the performance is ready to be streamed
     average_rating: number; // average rating across all ratings
     views: number;  // total user view count
     playback_id: string; // address to view
 }
 
 export interface IPerformance extends IPerformanceStub {
+    premiere_date?: number; // when the performance is ready to be streamed
     ratings: IRating[]; // user ratings on performance
     state: PerformanceState; // status of stream
     price: number; // cost to purchase
     currency: CurrencyCode; // currency of price
-
-    __user_access?: IPerformanceUserInfo; // data for the client
+    created_at:number;
 }
 
 // private to host

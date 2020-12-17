@@ -10,7 +10,6 @@ import config from '../config';
 @Entity()
 export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_hash"> {
   @PrimaryGeneratedColumn() _id: number;
-  @Column()                 type:NodeType=NodeType.User;
   @Column()                 created_at: number;
   @Column({nullable:true})  name: string;
   @Column()                 username: string;
@@ -41,11 +40,9 @@ export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_
 
   toStub():Required<IUserStub> {
     return {
-      name: this.name,
       _id: this._id,
+      name: this.name,
       username: this.username,
-      created_at: this.created_at,
-      type: this.type,
       avatar: this.avatar
     };
   }
@@ -53,6 +50,7 @@ export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_
   toFull():Required<IUser> {
     return {
       ...this.toStub(),
+      created_at: this.created_at,
       email_address: this.email_address,
       is_new_user: this.is_new_user,
       is_verified: this.is_verified,

@@ -1,8 +1,10 @@
 <button
+  tabindex="0"
   [matTooltip]="tooltip"
   [disabled]="disabled"
   [id]="variant"
   [color]="variant"
+  [class.fullWidth]="fullWidth"
   [class.large]="size == 'l'"
   [class.med]="size == 'm'"
   [class.small]="size == 's'"
