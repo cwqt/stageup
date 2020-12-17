@@ -34,7 +34,6 @@ export class HostService {
   }
 
   createHost(data: Pick<IHost, "name" | "username">): Promise<IHost> {
-    console.log('-->', this.http)
     return this.http
       .post<IHost>("/api/hosts", data)
       .pipe(tap(d => this.myselfService.setHost(d)))
