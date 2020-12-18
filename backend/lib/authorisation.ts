@@ -1,7 +1,7 @@
 import { HostPermission } from '@eventi/interfaces';
 import { Request } from 'express';
 import { DataClient } from './common/data';
-import { User } from './models/User.model';
+import { User } from './models/Users/User.model';
 import { Host } from'./models/Hosts/Host.model';
 import { UserHostInfo } from './models/Hosts/UserHostInfo.model';
 

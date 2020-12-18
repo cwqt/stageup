@@ -1,7 +1,7 @@
 import { HostPermission, IUserHostInfo } from "@eventi/interfaces";
 import { Host } from "./Host.model";
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../User.model";
+import { User } from "../Users/User.model";
 
 @Entity()
 export class UserHostInfo extends BaseEntity implements IUserHostInfo  {

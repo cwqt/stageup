@@ -1,6 +1,6 @@
 import { HostPermission, IHost, IUser, IUserHostInfo } from '@eventi/interfaces';
 import { Request } from 'express';
-import { User } from '../models/User.model';
+import { User } from '../models/Users/User.model';
 import { DataClient } from '../common/data';
 import { Host } from '../models/Hosts/Host.model';
 import { ErrorHandler } from '../common/errors';

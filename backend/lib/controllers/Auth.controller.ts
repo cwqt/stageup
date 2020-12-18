@@ -4,7 +4,7 @@ import { validate } from '../common/validate';
 
 import config from '../config';
 import { ErrorHandler } from '../common/errors';
-import { User } from '../models/User.model';
+import { User } from '../models/Users/User.model';
 import { HTTP } from '@eventi/interfaces';
 import { verifyEmail } from '../common/email';
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';

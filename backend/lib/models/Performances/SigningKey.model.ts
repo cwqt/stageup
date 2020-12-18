@@ -1,7 +1,7 @@
 import { IPerformance, IPerformanceStub, IRating, NodeType } from "@eventi/interfaces";
 import { Host } from "../Hosts/Host.model";
 import { BaseEntity, Column, Entity, EntityManager, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../User.model";
+import { User } from "../Users/User.model";
 import { ISigningKey } from "@eventi/interfaces/lib/SigningKey.model";
 import { LiveStream, Video } from '@mux/mux-node';
 import { DataClient } from "../../common/data";

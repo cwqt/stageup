@@ -1,6 +1,6 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, EntityManager } from "typeorm";
 import { NodeType, IHost, IHostStub, HostPermission } from "@eventi/interfaces";
-import { User } from '../User.model';
+import { User } from '../Users/User.model';
 import { Performance } from "../Performances/Performance.model";
 import { UserHostInfo } from "./UserHostInfo.model";
 import { DataClient } from "../../common/data";

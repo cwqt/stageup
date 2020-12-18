@@ -1,7 +1,7 @@
 import { IPerformance, IPerformanceStub, IRating, NodeType, PerformanceState } from "@eventi/interfaces";
 import { Host } from "../Hosts/Host.model";
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../User.model";
+import { User } from "../Users/User.model";
 import { PerformanceHostInfo, PerformanceHostInfo as PHostInfo } from "./PerformanceHostInfo.model";
 import { DataClient } from "../../common/data";
 import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";

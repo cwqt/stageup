@@ -1,7 +1,7 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn, ManyToOne, ManyToMany } from "typeorm";
 import { NodeType, IUser, IUserStub, IUserPrivate, IPerformancePurchase } from "@eventi/interfaces";
 import bcrypt from "bcrypt";
-import { User } from "./User.model";
+import { User } from "./Users/User.model";
 import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
 import { Performance } from './Performances/Performance.model';
  

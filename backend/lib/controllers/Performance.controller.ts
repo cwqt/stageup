@@ -8,7 +8,7 @@ import {
   HTTP,
 } from '@eventi/interfaces';
 import { Request } from 'express';
-import { User } from '../models/User.model';
+import { User } from '../models/Users/User.model';
 import { DataClient } from '../common/data';
 import { Performance } from '../models/Performances/Performance.model';
 import { ErrorHandler } from '../common/errors';
