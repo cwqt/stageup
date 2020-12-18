@@ -9,8 +9,8 @@ import config from '../config';
 import AuthStrat from '../authorisation';
 
 import { User } from '../models/User.model';
-import { Host } from '../models/Host.model';
-import { UserHostInfo } from '../models/UserHostInfo.model';
+import { Host } from '../models/Hosts/Host.model';
+import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import Email = require('../common/email');
 
 export default class UserController extends BaseController {

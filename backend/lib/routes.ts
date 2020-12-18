@@ -22,6 +22,7 @@ import PerfController from './controllers/Performance.controller';
 import MUXHooksController from './controllers/MUXHooks.controller';
 import AuthController from './controllers/Auth.controller';
 import authorisation from './authorisation';
+import { IHostOnboardingProcess } from '@eventi/interfaces/lib/Host.model';
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -57,7 +58,8 @@ router.delete <void>                ("/hosts/:hid",                           Ho
 // router.post   <IHost>               ("/hosts/:hid/membe",                     Hosts.addUser());
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser());
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions());
-router.put<void>                    ("/hosts/:hid/onboarding",                Hosts.updateOnboarding());
+router.get<IHostOnboardingProcess>  ("/hosts/:hid/onboarding",                Hosts.readOnboardingProcess());
+// router.put<IHostOnboardingProcess>  ("/hosts/:hid/onboarding",                Hosts.updateOnboardingProcess());
 
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------

@@ -53,6 +53,8 @@ import { AccountSettingsComponent } from "./routes/settings/account-settings/acc
 import { HostSettingsComponent } from "./routes/settings/host-settings/host-settings.component";
 import { CreateHostComponent } from "./routes/settings/host-settings/create-host/create-host.component";
 import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
+import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
+import { SearchComponent } from './routes/search/search.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +88,9 @@ import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onbo
     AccountSettingsComponent,
     HostSettingsComponent,
     CreateHostComponent,
-    HostOnboardingComponent
+    HostOnboardingComponent,
+    AdminPanelComponent,
+    SearchComponent
   ],
   imports: [
     AngularMaterialModule,

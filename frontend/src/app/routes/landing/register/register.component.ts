@@ -1,16 +1,10 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit, ViewChild, ViewChildren } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { IUser } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
 import { BaseAppService } from "src/app/services/app.service";
 import { AuthenticationService } from "src/app/services/authentication.service";
 import { MyselfService } from "src/app/services/myself.service";
 import { FormComponent, IUiForm } from "src/app/ui-lib/form/form.component";
-import {
-  displayValidationErrors,
-  handleFormErrors,
-} from "src/app/_helpers/formErrorHandler";
 
 import { UserService } from "../../../services/user.service";
 
@@ -31,9 +25,6 @@ export class RegisterComponent implements OnInit {
       password: "",
     },
   };
-
-  fieldMinLength: number = 6;
-  fieldMaxLength: number = 16;
 
   @ViewChild('form') form:FormComponent;
 

@@ -1,4 +1,4 @@
-import { IUserStub } from "./User.model";
+import { IUserStub } from "../Users/User.model";
 export interface IRating {
     _id: number;
     created_at:number;

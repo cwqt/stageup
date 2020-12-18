@@ -1,8 +1,8 @@
 import { IPerformanceHostInfo, IPerformanceStub, IRating, NodeType } from "@eventi/interfaces";
 import { BaseEntity, Column, Entity, EntityManager, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { SigningKey } from "./SigningKey.model";
-import { DataClient } from "../common/data";
-import config from '../config';
+import { DataClient } from "../../common/data";
+import config from '../../config';
 import { LiveStream } from "@mux/mux-node";
 import { Performance } from "./Performance.model";
 @Entity()
@@ -10,7 +10,6 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
     @PrimaryGeneratedColumn() _id: number;
     @Column({nullable:true})  stream_key: string;
     @Column()                 created_at: number;
-    @Column()                 type: NodeType=NodeType.PerformanceHostInfo;
 
     @OneToOne(() => SigningKey, { eager: true }) @JoinColumn()         signing_key: SigningKey;
     @OneToOne(() => Performance, perf => perf.host_info) @JoinColumn() performance:Performance;

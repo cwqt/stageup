@@ -2,9 +2,9 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOn
 import { NodeType, IUser, IUserStub, IUserPrivate, IPerformancePurchase } from "@eventi/interfaces";
 // import { Purchase } from './Purchase.model';
 import bcrypt from "bcrypt";
-import { Host } from './Host.model'
+import { Host } from './Hosts/Host.model'
 import { Purchase } from "./Purchase.model";
-import { Performance } from "./Performance.model";
+import { Performance } from "./Performances/Performance.model";
 import config from '../config';
 
 @Entity()

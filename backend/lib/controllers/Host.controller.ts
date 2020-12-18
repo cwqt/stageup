@@ -2,14 +2,15 @@ import { HostPermission, IHost, IUser, IUserHostInfo } from '@eventi/interfaces'
 import { Request } from 'express';
 import { User } from '../models/User.model';
 import { DataClient } from '../common/data';
-import { Host } from '../models/Host.model';
+import { Host } from '../models/Hosts/Host.model';
 import { ErrorHandler } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
-import { UserHostInfo } from '../models/UserHostInfo.model';
+import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import { validate } from '../common/validate';
 import { body, query } from 'express-validator';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
+import { IHostOnboardingProcess } from '@eventi/interfaces/lib/Host.model';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -178,5 +179,14 @@ export default class HostController extends BaseController {
       },
       authStrategies: [AuthStrat.none],
     };
+  }
+
+  readOnboardingProcess():IControllerEndpoint<IHostOnboardingProcess> {
+    return {
+      authStrategies: [AuthStrat.isMemberOfHost],
+      controller: async (req:Request):Promise<IHostOnboardingProcess> => {
+        return {} as IHostOnboardingProcess
+      } 
+    }
   }
 }

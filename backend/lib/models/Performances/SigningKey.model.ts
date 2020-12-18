@@ -1,10 +1,10 @@
 import { IPerformance, IPerformanceStub, IRating, NodeType } from "@eventi/interfaces";
-import { Host } from "./Host.model";
+import { Host } from "../Hosts/Host.model";
 import { BaseEntity, Column, Entity, EntityManager, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./User.model";
+import { User } from "../User.model";
 import { ISigningKey } from "@eventi/interfaces/lib/SigningKey.model";
 import { LiveStream, Video } from '@mux/mux-node';
-import { DataClient } from "../common/data";
+import { DataClient } from "../../common/data";
 import { JWT } from '@mux/mux-node';
 import { Performance } from "./Performance.model";
 
@@ -14,7 +14,6 @@ export class SigningKey extends BaseEntity implements ISigningKey {
     @Column()                 rsa256_key: string;
     @Column()                 mux_key_id: string;
     @Column()                 created_at: number;
-    @Column()                 type: NodeType=NodeType.SigningKey;
 
     constructor() {
         super();

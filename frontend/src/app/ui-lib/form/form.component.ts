@@ -49,7 +49,7 @@ export interface IUiFormFieldValidator {
 
 type CustomUiFieldValidator = (
   thisControl: AbstractControl,
-  formControls: { [index: string]: AbstractControl }
+  formControls?: { [index: string]: AbstractControl }
 ) => boolean;
 
 export interface IUiFormSubmit<T> {

@@ -24,6 +24,7 @@ export class SidebarComponent implements OnInit {
   gotoRoot() { this.appService.navigateTo('/') }
   gotoSettings() { this.appService.navigateTo('settings') }
   gotoHost() { this.appService.navigateTo('host') }
+  gotoAdminPanel() { this.appService.navigateTo('admin') }
 
   toggleUserPopup(state:boolean) {
     this.userPopupOpen = state;
