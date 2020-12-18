@@ -1,9 +1,9 @@
 import { HostPermission } from '@eventi/interfaces';
 import { Request } from 'express';
 import { DataClient } from './common/data';
-import { User } from './models/User.model';
-import { Host } from'./models/Host.model';
-import { UserHostInfo } from './models/UserHostInfo.model';
+import { User } from './models/Users/User.model';
+import { Host } from'./models/Hosts/Host.model';
+import { UserHostInfo } from './models/Hosts/UserHostInfo.model';
 
 export type AuthStrategy = (req: Request, dc: DataClient) => Promise<[boolean, { [index: string]: any }?, string?]>;
 

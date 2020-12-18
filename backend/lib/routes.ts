@@ -22,6 +22,7 @@ import PerfController from './controllers/Performance.controller';
 import MUXHooksController from './controllers/MUXHooks.controller';
 import AuthController from './controllers/Auth.controller';
 import authorisation from './authorisation';
+import { IHostOnboardingProcess } from '@eventi/interfaces/lib/Host.model';
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -40,7 +41,7 @@ router.get    <IUser>               ("/users/@:username",                     Us
 router.get    <IUser>               ("/users/:uid",                           Users.readUserById());
 router.put    <IUser>               ("/users/:uid",                           Users.updateUser());
 router.delete <void>                ("/users/:uid",                           Users.deleteUser());
-router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.getUserHost());
+router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.readUserHost());
 router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar());
 router.put    <void>                ("/users/:uid/password",                  Users.resetPassword());
 // router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases);
@@ -50,21 +51,23 @@ router.get    <void>                ("/feed",                                 Us
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, mws);   
 router.post   <IHost>               ("/hosts",                                Hosts.createHost());
-router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.getHostMembers());
+router.get    <IHost>               ("/hosts/:hid",                           Hosts.readHost())
+router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.readHostMembers());
 // router.put    <IHost>               ("/hosts/:hid",                           Hosts.updateHost());
 router.delete <void>                ("/hosts/:hid",                           Hosts.deleteHost());
 // router.post   <IHost>               ("/hosts/:hid/membe",                     Hosts.addUser());
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser());
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions());
-router.put<void>                    ("/hosts/:hid/onboarding",                Hosts.updateOnboarding());
+router.get<IHostOnboardingProcess>  ("/hosts/:hid/onboarding",                Hosts.readOnboardingProcess());
+// router.put<IHostOnboardingProcess>  ("/hosts/:hid/onboarding",                Hosts.updateOnboardingProcess());
 
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
 router.post   <IPerf>               ("/performances",                           Perfs.createPerformance());
-router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.getPerformances());
-router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      Perfs.getPerformance());
-router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.getPerformanceHostInfo());
+router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.readPerformances());
+router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      Perfs.readPerformance());
+router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.readPerformanceHostInfo());
 router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase());
 router.delete <void>                ("/performance/:pid",                       Perfs.deletePerformance());
 

@@ -8,9 +8,9 @@ import { validate } from '../common/validate';
 import config from '../config';
 import AuthStrat from '../authorisation';
 
-import { User } from '../models/User.model';
-import { Host } from '../models/Host.model';
-import { UserHostInfo } from '../models/UserHostInfo.model';
+import { User } from '../models/Users/User.model';
+import { Host } from '../models/Hosts/Host.model';
+import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import Email = require('../common/email');
 
 export default class UserController extends BaseController {
@@ -197,7 +197,7 @@ export default class UserController extends BaseController {
     };
   }
 
-  getUserHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserHostInfo>> {
+  readUserHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserHostInfo>> {
     return {
       authStrategies: [AuthStrat.none],
       controller: async (req: Request): Promise<IEnvelopedData<IHost, IUserHostInfo>> => {

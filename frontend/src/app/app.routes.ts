@@ -18,14 +18,14 @@ import { RouteParam as RP } from "./services/app.service";
 import { PerformanceWatchComponent } from "./routes/performance-watch/performance-watch.component";
 import { HostComponent } from "./routes/host/host.component";
 import { HostPerformancesComponent } from "./routes/host/host-performances/host-performances.component";
-import { SearchComponent } from "@ctrl/ngx-emoji-mart";
 import { SettingsComponent } from "./routes/settings/settings.component";
 import { ProfileSettingsComponent } from "./routes/settings/profile-settings/profile-settings.component";
 import { BillingSettingsComponent } from "./routes/settings/billing-settings/billing-settings.component";
 import { AccountSettingsComponent } from "./routes/settings/account-settings/account-settings.component";
 import { HostSettingsComponent } from "./routes/settings/host-settings/host-settings.component";
 import { BillingPaymentComponent } from "./routes/settings/billing-settings/billing-payment/billing-payment.component";
-import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
+import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
+import { SearchComponent } from "./routes/search/search.component";
 
 const APP_ROUTES: Routes = [
   { path: "", component: FeedComponent },
@@ -60,7 +60,9 @@ const APP_ROUTES: Routes = [
       // { path: `:${RP.HostId}`, component: }
     ],
   },
+  { path: `admin`, component: AdminPanelComponent },
   { path: `ui`, component: TestbedComponent },
+  { path: "**", component: NotFoundComponent },
 ];
 
 @NgModule({

@@ -5,9 +5,9 @@ import config from '../config';
 @Entity()
 export class Asset<T> extends BaseEntity implements IAsset<T> {
   @PrimaryGeneratedColumn() _id: number;
-  @Column() created_at: number;
-  @Column() asset_type: AssetType;
-  @Column('jsonb') asset_meta: IAssetMeta<T>;
+  @Column()                 created_at: number;
+  @Column()                 asset_type: AssetType;
+  @Column('jsonb')          asset_meta: IAssetMeta<T>;
 
   constructor(assetType: AssetType, assetMeta: IAssetMeta<T>) {
     super();

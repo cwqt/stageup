@@ -30,7 +30,7 @@ export const displayValidationErrors = (formGroup: FormGroup, cacheable: ICachea
   Object.keys(formGroup.controls).forEach((field) => {
     const control = formGroup.get(field);
     if (cacheable.form_errors[field]) {
-      control.setErrors({ incorrect: true });
+      control.setErrors({ backendIssue: cacheable.form_errors[field] });
     }
   });
 };

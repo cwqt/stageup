@@ -1,16 +1,16 @@
-export * from './Envelope';
-export * from './Nodes.types';
-export * from './DataModels.types';
-export * from './Errors.model';
-export * from './Http';
+export * from './Common/Envelope';
+export * from './Common/Nodes.types';
+export * from './Common/DataModels.types';
+export * from './Common/Errors.model';
+export * from './Common/Http';
 
-export * from "./Node.model";
-export * from './Host.model';
-export * from './Performance.model';
-export * from './Review.model';
-export * from './MUXHooks.model';
-export * from './Asset.model';
-export * from "./User.model";
+export * from "./Common/Node.model";
+export * from './Hosts/Host.model';
+export * from './Performances/Performance.model';
+export * from './Performances/Review.model';
+export * from './Hooks/MUXHooks.model';
+export * from './Common/Asset.model';
+export * from "./Users/User.model";
 
 
-export * from "./FP";
+export * from "./Common/FP";

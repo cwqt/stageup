@@ -17,7 +17,7 @@ export interface DataClient {
   redis: null | RedisClient;
   influx: null | Influx.InfluxDB;
   torm: null | TORM.Connection;
-  tunnel : null | localtunnel.Tunnel;
+  // tunnel : null | localtunnel.Tunnel;
   session_store: null | connectRedis.RedisStore;
   mux: Mux;
 }
@@ -37,7 +37,7 @@ const timeout = async <T>(f:() => Promise<T>, maxExecutionTime:number):Promise<T
 
 export const create = async (): Promise<DataClient> => {
   const dataClient: DataClient = {
-    tunnel: await timeout(tunnelProvider.create, 5000),
+    // tunnel: await timeout(tunnelProvider.create, 5000),
     torm: await timeout(PostgresProvider.create, 5000),
     redis: await timeout(RedisProvider.create, 5000),
     mux: await timeout(MUXProvider.create, 5000),
@@ -53,7 +53,7 @@ export const create = async (): Promise<DataClient> => {
 export const close = async (client: DataClient) => {
   await Promise.all([
     //Influx has no close command
-    tunnelProvider.close(client.tunnel),
+    // tunnelProvider.close(client.tunnel),
     client.redis.quit(),
     client.torm.close(),
   ]);

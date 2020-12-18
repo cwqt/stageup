@@ -1,15 +1,10 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from "@angular/forms";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { IUser } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
-import {
-  displayValidationErrors,
-  handleFormErrors,
-} from "src/app/_helpers/formErrorHandler";
+import { BaseAppService } from "src/app/services/app.service";
+import { AuthenticationService } from "src/app/services/authentication.service";
+import { MyselfService } from "src/app/services/myself.service";
+import { FormComponent, IUiForm } from "src/app/ui-lib/form/form.component";
 
 import { UserService } from "../../../services/user.service";
 
@@ -19,10 +14,8 @@ import { UserService } from "../../../services/user.service";
   styleUrls: ["./register.component.scss"],
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup;
-  registerButtonText: string = "Register";
-
-  register: ICacheable<string> = {
+  registerForm: IUiForm<IUser>;
+  registerData: ICacheable<string> = {
     data: null,
     error: "",
     loading: false,
@@ -33,79 +26,84 @@ export class RegisterComponent implements OnInit {
     },
   };
 
-  fieldMinLength: number = 6;
-  fieldMaxLength: number = 16;
+  @ViewChild('form') form:FormComponent;
 
-  constructor(private userService: UserService, private fb: FormBuilder) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthenticationService,
+    private myselfService: MyselfService,
+    private appService: BaseAppService
+  ) {}
 
   ngOnInit(): void {
-    this.registerForm = this.fb.group(
-      {
-        username: [
-          "",
-          [
-            Validators.required,
-            Validators.minLength(this.fieldMinLength),
-            Validators.maxLength(this.fieldMaxLength),
+    this.registerForm = {
+      fields: [
+        {
+          type: "text",
+          field_name: "username",
+          label: "Username",
+          validators: [
+            { type: "required" },
+            { type: "minlength", value: 4 },
+            { type: "maxlength", value: 16 },
+            {
+              type: "pattern",
+              value: /^[a-zA-Z0-9]*$/,
+              message: (e) => "Must be alphanumeric with no spaces",
+            },
           ],
-        ],
-        email_address: ["", [Validators.required, Validators.email]],
-        password: [
-          "",
-          [
-            Validators.required,
-            Validators.minLength(this.fieldMinLength),
-            Validators.maxLength(this.fieldMaxLength),
+        },
+        {
+          type: "text",
+          field_name: "email_address",
+          label: "E-mail address",
+          validators: [
+            { type: "required" },
+            { type: "email" },
+            { type: "maxlength", value: 32 },
           ],
-        ],
-        confirmation: ["", [Validators.required]],
+        },
+        {
+          type: "password",
+          field_name: "password",
+          label: "Password",
+          validators: [
+            { type: "required" },
+            { type: "minlength", value: 8 },
+            { type: "maxlength", value: 16 },
+          ],
+        },
+        {
+          type: "password",
+          field_name: "password_match",
+          label: "Repeat password",
+          validators: [
+            { type: "required" },
+            { type: "minlength", value: 8 },
+            { type: "maxlength", value: 16 },
+            {
+              type: "custom",
+              message: (e) => "Passwords do not match",
+              value: (t, c) => c["password"].value !== t.value,
+            },
+          ],
+        },
+      ],
+      submit: {
+        text: "Register",
+        variant: "primary",
+        handler: (d) => this.userService.register(d),
       },
-      {
-        validator: this.passwordMatchValidator.bind(this),
-      }
-    );
+    };
   }
 
-  get errors() {
-    return this.register.form_errors;
-  }
-  get username() {
-    return this.registerForm.get("username");
-  }
-  get email() {
-    return this.registerForm.get("email_address");
-  }
-  get password() {
-    return this.registerForm.get("password");
-  }
-  get confirmation() {
-    return this.registerForm.get("confirmation");
-  }
-
-  /* Called on each input in either password field */
-  onPasswordInput() {
-    if (this.registerForm.hasError("passwordMismatch"))
-      this.confirmation.setErrors([{ passwordMismatch: true }]);
-    else this.confirmation.setErrors(null);
-  }
-
-  private passwordMatchValidator(formGroup: FormGroup) {
-    if (!formGroup.get("password").dirty) return;
-    if (formGroup.get("password").value !== formGroup.get("confirmation").value)
-      return { passwordMismatch: true };
-    return null;
-  }
-
-  submitHandler() {
-    this.register.loading = true;
-    this.registerButtonText = "Registering...";
-    this.userService
-      .register(this.registerForm.value)
-      .then((u) => {})
-      .catch((e: HttpErrorResponse) => {
-        this.register = handleFormErrors(this.register, e.error);
-        displayValidationErrors(this.registerForm, this.register);
-      })
-      .finally(() => (this.register.loading = false));
+  handleRegisterSuccess(user: IUser) {
+    const { email_address, password } = this.form.formGroup.value; 
+    // get user, host & host info on login
+    this.authService.login({ email_address, password }).then(() => {
+      this.myselfService.getMyself().then(() => {
+        this.appService.navigateTo("/");
+      });
+    });
   }
 }

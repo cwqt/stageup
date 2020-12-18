@@ -1,9 +1,9 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, EntityManager } from "typeorm";
 import { NodeType, IHost, IHostStub, HostPermission } from "@eventi/interfaces";
-import { User } from './User.model';
-import { Performance } from "./Performance.model";
+import { User } from '../Users/User.model';
+import { Performance } from "../Performances/Performance.model";
 import { UserHostInfo } from "./UserHostInfo.model";
-import { DataClient } from "../common/data";
+import { DataClient } from "../../common/data";
  
 @Entity()
 export class Host extends BaseEntity implements IHost {
@@ -14,6 +14,8 @@ export class Host extends BaseEntity implements IHost {
   @Column()                     username: string;
   @Column({ nullable: true})    bio?: string;
   @Column({ nullable: true})    avatar: string;
+  @Column()                     is_onboarded: boolean;
+
 
   @OneToMany(() => User, user => user.host)                      members:User[];
   @OneToMany(() => UserHostInfo, uhi => uhi.host)                members_info:UserHostInfo[];
@@ -25,6 +27,7 @@ export class Host extends BaseEntity implements IHost {
     this.name = data.name;
     this.email_address = data.email_address;
 
+    this.is_onboarded = false;
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.members = [];
     this.members_info = [];
@@ -66,7 +69,8 @@ export class Host extends BaseEntity implements IHost {
       email_address: this.email_address,
       members: this.members?.map((u:User) => u.toStub()) || [],
       members_info: this.members_info?.map((uhi:UserHostInfo) => uhi.toFull()) || [],
-      performances: this.performances?.map((p:Performance) => p.toStub()) || []
+      performances: this.performances?.map((p:Performance) => p.toStub()) || [],
+      is_onboarded: this.is_onboarded
     };
   } 
 

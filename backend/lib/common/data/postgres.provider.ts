@@ -3,7 +3,7 @@ import log from "../logger";
 import "reflect-metadata";
 import * as TORM from "typeorm";
 
-import { User } from '../../models/User.model';
+import { User } from '../../models/Users/User.model';
 
 export const create = async (): Promise<TORM.Connection> => {
   log.info(`Connecting to PostgreSQL (TypeORM)...`);
