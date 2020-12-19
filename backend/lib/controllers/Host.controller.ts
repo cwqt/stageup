@@ -1,4 +1,4 @@
-import { HostPermission, IHost, IUser, IUserHostInfo } from '@eventi/interfaces';
+import { HostPermission, IHost, IHostOnboardingStep, IUser, IUserHostInfo } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { DataClient } from '../common/data';
@@ -10,7 +10,7 @@ import { validate } from '../common/validate';
 import { body, query } from 'express-validator';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
-import { IHostOnboardingProcess } from '@eventi/interfaces/lib/Host.model';
+import { IHostOnboardingProcess } from '@eventi/interfaces';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -61,9 +61,12 @@ export default class HostController extends BaseController {
         });
 
         // Create host & add current user (creator) to it through transaction
+        // & begin the onboarding process
         await this.dc.torm.transaction(async (transEntityManager) => {
-          await transEntityManager.save(host);
           await host.addMember(user, HostPermission.Owner, transEntityManager);
+          const onboardingProcess = new Onboarding
+
+          await transEntityManager.save(host);
         });
 
         // addMember saves to db
@@ -181,12 +184,61 @@ export default class HostController extends BaseController {
     };
   }
 
-  readOnboardingProcess():IControllerEndpoint<IHostOnboardingProcess> {
+  readOnboardingProcessStatus():IControllerEndpoint<IHostOnboardingProcess> {
     return {
-      authStrategies: [AuthStrat.isMemberOfHost],
+      authStrategies: [],
       controller: async (req:Request):Promise<IHostOnboardingProcess> => {
-        return {} as IHostOnboardingProcess
+        return {} as IHostOnboardingProcess;
       } 
+    }
+  }
+
+  readOnboardingProcessStep():IControllerEndpoint<IHostOnboardingStep<any>> {
+    return {
+      authStrategies: [],
+      controller: async (req:Request):Promise<IHostOnboardingStep<any>> => {
+        return {} as IHostOnboardingStep<any>
+      } 
+    }
+  }
+
+  /**
+   * @description Update Process or Steps
+   */
+  updateOnboardingProcess():IControllerEndpoint<void> {
+    return {
+      authStrategies: [],
+      controller: async (req:Request):Promise<void> => {
+
+        return;
+      }
+    }
+  }
+
+  submitOnboardingProcess():IControllerEndpoint<void> {
+    return {
+      authStrategies: [],
+      controller: async (req:Request):Promise<void> => {
+
+      }
+    }
+  }
+
+  verifyOnboardingProcess():IControllerEndpoint<void> {
+    return {
+      authStrategies: [],
+      controller: async (req:Request):Promise<void> => {
+
+      }
+    }
+  }
+
+  enactOnboardingProcess():IControllerEndpoint<void> {
+    return {
+      authStrategies: [],
+      controller: async (req:Request):Promise<void> => {
+
+      }
     }
   }
 }

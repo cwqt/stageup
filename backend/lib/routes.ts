@@ -14,6 +14,8 @@ import {
     IEnvelopedData as IE,
     IPerformanceUserInfo as IPUInfo,
     IMyself,
+    IHostOnboardingProcess,
+    IOnboardingStep
 } from "@eventi/interfaces";
 
 import UserController from './controllers/User.controller';
@@ -21,8 +23,6 @@ import HostController from './controllers/Host.controller';
 import PerfController from './controllers/Performance.controller';
 import MUXHooksController from './controllers/MUXHooks.controller';
 import AuthController from './controllers/Auth.controller';
-import authorisation from './authorisation';
-import { IHostOnboardingProcess } from '@eventi/interfaces/lib/Host.model';
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -44,22 +44,29 @@ router.delete <void>                ("/users/:uid",                           Us
 router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.readUserHost());
 router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar());
 router.put    <void>                ("/users/:uid/password",                  Users.resetPassword());
+// router.get    <IAddress[]>          ("/users/:uid/addresses",                 Users.readAddresses());
+// router.put    <IAddress>            ("/users/:uid/addresses/:aid",            Users.updateAddress());
+// router.put    <void>            ("/users/:uid/addresses/:aid",                Users.deleteAddress());
 // router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases);
 // router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions);
-router.get    <void>                ("/feed",                                 Users.readUserFeed())
+router.get    <void>                ("/feed",                                 Users.readUserFeed());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, mws);   
 router.post   <IHost>               ("/hosts",                                Hosts.createHost());
 router.get    <IHost>               ("/hosts/:hid",                           Hosts.readHost())
-router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.readHostMembers());
-// router.put    <IHost>               ("/hosts/:hid",                           Hosts.updateHost());
 router.delete <void>                ("/hosts/:hid",                           Hosts.deleteHost());
-// router.post   <IHost>               ("/hosts/:hid/membe",                     Hosts.addUser());
+// router.put    <IHost>               ("/hosts/:hid",                           Hosts.updateHost());
+// router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.readHostMembers());
+// router.post   <IHost>               ("/hosts/:hid/members",                   Hosts.addUser());
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser());
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions());
-router.get<IHostOnboardingProcess>  ("/hosts/:hid/onboarding",                Hosts.readOnboardingProcess());
-// router.put<IHostOnboardingProcess>  ("/hosts/:hid/onboarding",                Hosts.updateOnboardingProcess());
+router.get<IHostOnboardingProcess>  ("/hosts/:hid/onboarding/status",         Hosts.readOnboardingProcessStatus());
+router.get<IOnboardingStep<any>>    ("/hosts/:hid/onboarding/:step",          Hosts.readOnboardingProcessStep());
+router.put <void>                   ("/hosts/:hid/onboarding",                Hosts.updateOnboardingProcess());
+router.post<void>                   ("/hosts/:hid/onboarding/submit",         Hosts.submitOnboardingProcess());
+router.post<void>                   ("/hosts/:hid/onboarding/verify",         Hosts.verifyOnboardingProcess());
+router.post<void>                   ("/hosts/:hid/onboarding/enact",          Hosts.enactOnboardingProcess());
 
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
@@ -78,7 +85,7 @@ router.post   <void>               ("/mux/hooks",                               
 // MISC ---------------------------------------------------------------------------------------------------------------
 const Auth =  new AuthController(providers, mws);
 router.redirect                    ("/auth/verify",                             Auth.verifyUserEmail());
-router.get    <string>             ("/ping",                                    { authStrategies: [authorisation.none], controller: async (req:Request) => "Pong!" });
+router.get    <string>             ("/ping",                                    { authStrategies: [], controller: async (req:Request) => "Pong!" });
 
 return router;
 };

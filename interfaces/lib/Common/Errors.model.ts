@@ -1,7 +1,7 @@
-import { HTTP } from "./Http";
+import { HTTP } from './Http';
 
 export interface IErrorResponse {
-  status: "fail" | "error";
+  status: 'fail' | 'error';
   statusCode: HTTP;
   message: string;
   errors: IFormErrorField[];
