@@ -1,4 +1,4 @@
-import { IPerformance, IPerformanceStub, IRating, NodeType, PerformanceState } from "@eventi/interfaces";
+import { IPerformance, IPerformanceStub, IRating, PerformanceState } from "@eventi/interfaces";
 import { Host } from "../Hosts/Host.model";
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../Users/User.model";
@@ -69,7 +69,7 @@ export class Performance extends BaseEntity implements IPerformance {
     }
   }
 
-  toFull():Required<Omit<IPerformance, "__user_access">> {
+  toFull():Required<IPerformance> {
     return {
       ...this.toStub(),
       created_at: this.created_at,

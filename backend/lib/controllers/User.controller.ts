@@ -77,24 +77,25 @@ export default class UserController extends BaseController {
         });
 
         let host_info: IUserHostInfo;
-        if (host) {
-          host_info = await UserHostInfo.findOne({
-            where: {
-              user: {
-                _id: user._id,
-              },
-              host: {
-                _id: host._id,
-              },
-            },
-          });
-        }
+        return {} as IMyself;
+        // if (host) {
+        //   host_info = await UserHostInfo.findOne({
+        //     where: {
+        //       user: {
+        //         _id: user._id,
+        //       },
+        //       host: {
+        //         _id: host._id,
+        //       },
+        //     },
+        //   });
+        // }
 
-        return {
-          user: user.toFull(),
-          host: host?.toStub(),
-          host_info: host_info,
-        };
+        // return {
+        //   user: user.toFull(),
+        //   host: host?.toStub(),
+        //   host_info: host_info,
+        // };
       },
     };
   }

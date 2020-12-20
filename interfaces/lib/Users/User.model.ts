@@ -1,5 +1,3 @@
-import { IPerformanceStub } from "../Performances/Performance.model";
-import { CurrencyCode } from "../Common/Currency.types";
 import { HostPermission, IHostStub } from "../Hosts/Host.model";
 import { IPersonInfo } from "./Person.model";
 
@@ -21,6 +19,7 @@ export interface IUser extends IUserStub {
 }
 
 export interface IUserPrivate extends IUser {
+  email_address: string;
   salt?: string;    //salt
   pw_hash?: string; //password hash
   personal_details: IPersonInfo;

@@ -1,24 +1,14 @@
+export type IPerson = IPersonInfo & IContactInfo;
 export interface IPersonInfo {
+  title: PersonTitle;
   first_name: string;
   last_name: string;
-  title: PersonTitle;
-  contact_info: IContactInfo;
-  // billing_info?: IBillingInfo;
 }
-
 export interface IContactInfo {
   mobile_number: number;
   landline_number: number;
   addresses: IAddress[];
 }
-
-// export interface IBillingInfo {
-//   first_name: string;
-//   last_name: string;
-//   address: IAddress;
-//   stripe_id: string;
-// }
-
 export interface IAddress {
   city: string;
   iso_country_code: string;
@@ -30,11 +20,11 @@ export interface IAddress {
 }
 
 export enum PersonTitle {
-  Mr = "mr",
-  Mrs = "mrs",
-  Ms = "ms",
-  Miss = "miss",
-  Master = "master",
-  Dr = "dr",
-  Professor = "professor"
+  Mr = 'mr',
+  Mrs = 'mrs',
+  Ms = 'ms',
+  Miss = 'miss',
+  Master = 'master',
+  Dr = 'dr',
+  Professor = 'professor',
 }

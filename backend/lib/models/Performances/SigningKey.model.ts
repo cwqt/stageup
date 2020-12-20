@@ -1,4 +1,4 @@
-import { IPerformance, IPerformanceStub, IRating, NodeType } from "@eventi/interfaces";
+import { IPerformance, IPerformanceStub, IRating } from "@eventi/interfaces";
 import { Host } from "../Hosts/Host.model";
 import { BaseEntity, Column, Entity, EntityManager, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../Users/User.model";
@@ -20,7 +20,7 @@ export class SigningKey extends BaseEntity implements ISigningKey {
         this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     }
     
-    async setup(dc:DataClient, transEntityManager:EntityManager):Promise<SigningKey> {
+    async setup(dc:DataClient, txc:EntityManager):Promise<SigningKey> {
         //https://docs.mux.com/reference#url-signing-keys
         const signingKey = await (<any>dc).mux.Video.SigningKeys.create();
 
@@ -28,7 +28,7 @@ export class SigningKey extends BaseEntity implements ISigningKey {
         this.mux_key_id = signingKey.id;
         this.rsa256_key = signingKey.private_key;
 
-        await transEntityManager.save(this);
+        await txc.save(this);
         return this;
     }
 

@@ -1,4 +1,4 @@
-import { HostPermission, IHost, IHostOnboardingStep, IUser, IUserHostInfo } from '@eventi/interfaces';
+import { HostPermission, IHost, IOnboardingStep, IUser, IUserHostInfo } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { DataClient } from '../common/data';
@@ -64,7 +64,7 @@ export default class HostController extends BaseController {
         // & begin the onboarding process
         await this.dc.torm.transaction(async (transEntityManager) => {
           await host.addMember(user, HostPermission.Owner, transEntityManager);
-          const onboardingProcess = new Onboarding
+          // const onboardingProcess = new Onboarding
 
           await transEntityManager.save(host);
         });
@@ -113,13 +113,14 @@ export default class HostController extends BaseController {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (!user.host) throw new ErrorHandler(HTTP.NotFound, 'User is not part of any host');
 
-        const userHostInfo = await UserHostInfo.findOne({
-          relations: ['user', 'host'],
-          where: {
-            user: { _id: user._id },
-            host: { _id: user.host._id },
-          },
-        });
+        // const userHostInfo = await UserHostInfo.findOne({
+        //   relations: ['user', 'host'],
+        //   where: {
+        //     user: { _id: user._id },
+        //     host: { _id: user.host._id },
+        //   },
+        // });
+        const userHostInfo = {} as UserHostInfo;
 
         if (userHostInfo.permissions != HostPermission.Owner)
           throw new ErrorHandler(HTTP.Unauthorised, 'Only host owner can delete host');
@@ -166,19 +167,20 @@ export default class HostController extends BaseController {
     return {
       validator: validate([query('user').trim().not().isEmpty().toInt()]),
       controller: async (req: Request): Promise<IUserHostInfo> => {
-        const uhi = await UserHostInfo.findOne({
-          relations: ['host', 'user'],
-          where: {
-            user: {
-              _id: parseInt(req.query.user as string),
-            },
-            host: {
-              _id: parseInt(req.params.hid),
-            },
-          },
-        });
+        // const uhi = await UserHostInfo.findOne({
+        //   relations: ['host', 'user'],
+        //   where: {
+        //     user: {
+        //       _id: parseInt(req.query.user as string),
+        //     },
+        //     host: {
+        //       _id: parseInt(req.params.hid),
+        //     },
+        //   },
+        // });
 
-        return uhi;
+        // return uhi;
+        return {} as IUserHostInfo;
       },
       authStrategies: [AuthStrat.none],
     };
@@ -193,11 +195,11 @@ export default class HostController extends BaseController {
     }
   }
 
-  readOnboardingProcessStep():IControllerEndpoint<IHostOnboardingStep<any>> {
+  readOnboardingProcessStep():IControllerEndpoint<IOnboardingStep<any>> {
     return {
       authStrategies: [],
-      controller: async (req:Request):Promise<IHostOnboardingStep<any>> => {
-        return {} as IHostOnboardingStep<any>
+      controller: async (req:Request):Promise<IOnboardingStep<any>> => {
+        return {} as IOnboardingStep<any>
       } 
     }
   }

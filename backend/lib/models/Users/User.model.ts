@@ -21,6 +21,7 @@ export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_
   @Column()                 is_verified: boolean;
   @Column()                 is_new_user: boolean;
   @Column()                 is_admin: boolean;
+  @Column()                 email_address: string;
   @Column() private         salt: string;
   @Column() private         pw_hash: string;
 
@@ -32,6 +33,7 @@ export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_
   constructor(data:{ email_address:string, username:string, password: string }) {
     super()
     this.username = data.username;
+    this.email_address = data.email_address;
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.is_admin = false;
     this.is_new_user = true;
@@ -41,9 +43,9 @@ export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_
 
   async setup(txc:EntityManager):Promise<User> {
     this.personal_details = new Person({
-        first_name: null,
-        last_name: null,
-        title: null,
+      first_name: null,
+      last_name: null,
+      title: null,
     });
 
     await this.personal_details.addContactInfo(new ContactInfo({
@@ -83,6 +85,7 @@ export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_
       ...this.toFull(),
       pw_hash: this.pw_hash,
       salt: this.salt,
+      email_address: this.email_address,
       personal_details: this.personal_details
     }
   }
