@@ -46,7 +46,7 @@ export default class HostController extends BaseController {
           .normalizeEmail()
           .withMessage('Not a valid e-mail address'),
       ]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IHost> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, 'Cannot create host if already part of another');
@@ -78,7 +78,7 @@ export default class HostController extends BaseController {
   readHost():IControllerEndpoint<IHost> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.isLoggedIn],
+      authStrategy: AuthStrat.isLoggedIn,
       controller: async (req:Request):Promise<IHost> => {
         const host =  await Host.findOne({ _id: parseInt(req.params.hid) })
         return host.toFull();
@@ -89,7 +89,7 @@ export default class HostController extends BaseController {
   readHostMembers(): IControllerEndpoint<IUser[]> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser[]> => {
         const host = await Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ['members'] });
         return host.members.map((u: User) => u.toFull());
@@ -100,7 +100,7 @@ export default class HostController extends BaseController {
   updateHost(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -108,7 +108,7 @@ export default class HostController extends BaseController {
   deleteHost(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (!user.host) throw new ErrorHandler(HTTP.NotFound, 'User is not part of any host');
@@ -134,7 +134,7 @@ export default class HostController extends BaseController {
   addUser(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -142,7 +142,7 @@ export default class HostController extends BaseController {
   removeUser(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -150,7 +150,7 @@ export default class HostController extends BaseController {
   alterMemberPermissions(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -158,7 +158,7 @@ export default class HostController extends BaseController {
   updateOnboarding(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.hasHostPermission(HostPermission.Owner)],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -182,13 +182,13 @@ export default class HostController extends BaseController {
         // return uhi;
         return {} as IUserHostInfo;
       },
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
     };
   }
 
   readOnboardingProcessStatus():IControllerEndpoint<IHostOnboardingProcess> {
     return {
-      authStrategies: [],
+      authStrategy: AuthStrat.none,
       controller: async (req:Request):Promise<IHostOnboardingProcess> => {
         return {} as IHostOnboardingProcess;
       } 
@@ -197,7 +197,7 @@ export default class HostController extends BaseController {
 
   readOnboardingProcessStep():IControllerEndpoint<IOnboardingStep<any>> {
     return {
-      authStrategies: [],
+      authStrategy: AuthStrat.none,
       controller: async (req:Request):Promise<IOnboardingStep<any>> => {
         return {} as IOnboardingStep<any>
       } 
@@ -209,7 +209,7 @@ export default class HostController extends BaseController {
    */
   updateOnboardingProcess():IControllerEndpoint<void> {
     return {
-      authStrategies: [],
+      authStrategy: AuthStrat.none,
       controller: async (req:Request):Promise<void> => {
 
         return;
@@ -219,7 +219,7 @@ export default class HostController extends BaseController {
 
   submitOnboardingProcess():IControllerEndpoint<void> {
     return {
-      authStrategies: [],
+      authStrategy: AuthStrat.none,
       controller: async (req:Request):Promise<void> => {
 
       }
@@ -228,7 +228,7 @@ export default class HostController extends BaseController {
 
   verifyOnboardingProcess():IControllerEndpoint<void> {
     return {
-      authStrategies: [],
+      authStrategy: AuthStrat.none,
       controller: async (req:Request):Promise<void> => {
 
       }
@@ -237,7 +237,7 @@ export default class HostController extends BaseController {
 
   enactOnboardingProcess():IControllerEndpoint<void> {
     return {
-      authStrategies: [],
+      authStrategy: AuthStrat.none,
       controller: async (req:Request):Promise<void> => {
 
       }

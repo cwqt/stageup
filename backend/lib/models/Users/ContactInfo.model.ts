@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, EntityManager, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IContactInfo, IPersonInfo, PersonTitle } from '@eventi/interfaces';
 import { Address } from './Address.model';
 
@@ -15,5 +15,11 @@ export class ContactInfo extends BaseEntity implements IContactInfo {
 
   constructor(data: Required<IContactInfo>) {
     super();
+  }
+
+  async addAddress(address:Address, txc:EntityManager) {
+    this.addresses.push(address);
+    await txc.save(address);
+    await txc.save(this);
   }
 }

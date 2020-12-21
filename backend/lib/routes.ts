@@ -15,7 +15,8 @@ import {
     IPerformanceUserInfo as IPUInfo,
     IMyself,
     IHostOnboardingProcess,
-    IOnboardingStep
+    IOnboardingStep,
+    IAddress
 } from "@eventi/interfaces";
 
 import UserController from './controllers/User.controller';
@@ -23,6 +24,7 @@ import HostController from './controllers/Host.controller';
 import PerfController from './controllers/Performance.controller';
 import MUXHooksController from './controllers/MUXHooks.controller';
 import AuthController from './controllers/Auth.controller';
+import MiscController from './controllers/Misc.controller';
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -44,9 +46,10 @@ router.delete <void>                ("/users/:uid",                           Us
 router.get    <IE<IHost, IUHInfo>>  ("/users/:uid/host",                      Users.readUserHost());
 router.put    <IUser>               ("/users/:uid/avatar",                    Users.updateUserAvatar());
 router.put    <void>                ("/users/:uid/password",                  Users.resetPassword());
-// router.get    <IAddress[]>          ("/users/:uid/addresses",                 Users.readAddresses());
-// router.put    <IAddress>            ("/users/:uid/addresses/:aid",            Users.updateAddress());
-// router.put    <void>            ("/users/:uid/addresses/:aid",                Users.deleteAddress());
+router.get    <IAddress[]>          ("/users/:uid/addresses",                 Users.readAddresses());
+router.post   <IAddress>            ("/users/:uid/addresses",                 Users.createAddress());
+router.put    <IAddress>            ("/users/:uid/addresses/:aid",            Users.updateAddress());
+router.delete <void>                ("/users/:uid/addresses/:aid",            Users.deleteAddress());
 // router.get    <IPurchase[]>         ("/users/:uid/purchases",                 Users.getPurchases);
 // router.get    <IUserHostInfo>       ("/hosts/:hid/permissions",               Users.getUserHostPermissions);
 router.get    <void>                ("/feed",                                 Users.readUserFeed());
@@ -68,7 +71,6 @@ router.post<void>                   ("/hosts/:hid/onboarding/submit",         Ho
 router.post<void>                   ("/hosts/:hid/onboarding/verify",         Hosts.verifyOnboardingProcess());
 router.post<void>                   ("/hosts/:hid/onboarding/enact",          Hosts.enactOnboardingProcess());
 
-
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
 router.post   <IPerf>               ("/performances",                           Perfs.createPerformance());
@@ -82,10 +84,14 @@ router.delete <void>                ("/performance/:pid",                       
 const MUXHooks = new MUXHooksController(providers, mws);
 router.post   <void>               ("/mux/hooks",                               MUXHooks.handleHook());
 
-// MISC ---------------------------------------------------------------------------------------------------------------
+// AUTH ---------------------------------------------------------------------------------------------------------------
 const Auth =  new AuthController(providers, mws);
 router.redirect                    ("/auth/verify",                             Auth.verifyUserEmail());
-router.get    <string>             ("/ping",                                    { authStrategies: [], controller: async (req:Request) => "Pong!" });
+
+// MISC ---------------------------------------------------------------------------------------------------------------
+const Misc = new MiscController(providers, mws);
+router.get    <string>             ("/ping",                                    Misc.ping());
+router.post   <void>               ("/drop",                                    Misc.dropAllData());
 
 return router;
 };

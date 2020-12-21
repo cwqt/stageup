@@ -45,7 +45,7 @@ export default class MUXHooksController extends BaseController {
 
   handleHook(): IControllerEndpoint<void> {
     return {
-      authStrategies: [this.validHookStrat()],
+      authStrategy: this.validHookStrat(),
       controller: async (req: Request) => {
         // Is a valid hook & we should handle it
         const data: IMUXHookResponse<any> = req.body;

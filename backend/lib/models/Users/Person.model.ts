@@ -8,9 +8,9 @@ import { ContactInfo } from './ContactInfo.model';
 @Entity()
 export class Person extends BaseEntity implements IPersonInfo {
   @PrimaryGeneratedColumn() _id: number;
-  @Column()                 first_name: string;
-  @Column()                 last_name: string;
-  @Column()                 title: PersonTitle;
+  @Column({nullable:true})  first_name: string;
+  @Column({nullable:true})  last_name: string;
+  @Column({nullable:true})  title: PersonTitle;
 
   @OneToOne(() => ContactInfo, { cascade: ["remove"], eager: true })
   @JoinColumn() contact_info:ContactInfo;
@@ -27,5 +27,4 @@ export class Person extends BaseEntity implements IPersonInfo {
     await txc.save(ContactInfo, this.contact_info);
     return this;
   }
-
 }

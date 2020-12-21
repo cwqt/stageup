@@ -22,7 +22,7 @@ export default class AuthController extends BaseController {
         query('hash').not().isEmpty().trim().withMessage('must have a verification hash'),
       ]),
       preMiddlewares: [this.mws.limiter(3600, 10)],
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<string> => {
         const hash = req.query.hash as string;
         const email = req.query.email as string;

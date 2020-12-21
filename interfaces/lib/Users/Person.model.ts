@@ -10,13 +10,12 @@ export interface IContactInfo {
   addresses: IAddress[];
 }
 export interface IAddress {
+  _id: number;
   city: string;
-  iso_country_code: string;
-  postcode: string;
+  iso_country_code: string; //iso31661Alpha3
+  postcode: string; // locale GB
   street_name: string;
-  street_number: string;
-  state?: string; //US-based
-  zip_code?: string; //US-based
+  street_number: number;
 }
 
 export enum PersonTitle {
