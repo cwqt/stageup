@@ -68,8 +68,8 @@ router.get<IHostOnboardingProcess>  ("/hosts/:hid/onboarding/status",         Ho
 router.get<IOnboardingStep<any>>    ("/hosts/:hid/onboarding/:step",          Hosts.readOnboardingProcessStep());
 router.put <void>                   ("/hosts/:hid/onboarding",                Hosts.updateOnboardingProcess());
 router.post<void>                   ("/hosts/:hid/onboarding/submit",         Hosts.submitOnboardingProcess());
-router.post<void>                   ("/hosts/:hid/onboarding/verify",         Hosts.verifyOnboardingProcess());
-router.post<void>                   ("/hosts/:hid/onboarding/enact",          Hosts.enactOnboardingProcess());
+// router.post<void>                   ("/hosts/:hid/onboarding/verify",         Hosts.verifyOnboardingProcess());
+// router.post<void>                   ("/hosts/:hid/onboarding/enact",          Hosts.enactOnboardingProcess());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);

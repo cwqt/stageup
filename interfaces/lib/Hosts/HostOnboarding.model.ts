@@ -28,6 +28,7 @@ export enum HostOnboardingStep {
 }
 
 export enum IHostOnboardingState {
+  AwaitingChanges,
   Pending,
   Verified,
   Error,
@@ -38,6 +39,8 @@ export interface IHostOnboardingProcess {
   status: IHostOnboardingState; // when all steps verified, process is complete
   started_at: number;
   completed_at: number | null;
+  last_modified: number;
+  last_modified_by: IUserStub;
   steps: {
     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
@@ -49,8 +52,6 @@ export interface IHostOnboardingProcess {
 
 export interface IOnboardingStep<T> {
   status: IHostOnboardingState;
-  last_modified: number;
-  last_modified_by: IUserStub;
   issues: IOnboardingIssue[];
   data: T;
 }

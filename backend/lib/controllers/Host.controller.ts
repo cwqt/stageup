@@ -10,6 +10,7 @@ import { validate } from '../common/validate';
 import { body, query } from 'express-validator';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
+import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { IHostOnboardingProcess } from '@eventi/interfaces';
 
 export default class HostController extends BaseController {
@@ -49,41 +50,38 @@ export default class HostController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IHost> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (user.host) throw new ErrorHandler(HTTP.Conflict, 'Cannot create host if already part of another');
+        if (user.host) throw new ErrorHandler(HTTP.Conflict, 'Cannot create host if you are already part of another');
 
         const h = await Host.findOne({ username: req.body.username });
-        if (h) throw new ErrorHandler(HTTP.Conflict, `Username '${h.username}' is already taken`);
-
-        const host = new Host({
-          username: req.body.username,
-          name: req.body.name,
-          email_address: req.body.email_address,
-        });
+        if (h) throw new ErrorHandler(HTTP.Conflict, `Host username '${h.username}' is already taken`);
 
         // Create host & add current user (creator) to it through transaction
-        // & begin the onboarding process
-        await this.dc.torm.transaction(async (transEntityManager) => {
-          await host.addMember(user, HostPermission.Owner, transEntityManager);
-          // const onboardingProcess = new Onboarding
+        // & begin the onboarding process by running setup
+        return await this.dc.torm.transaction(async txc => {
+          const host = await txc.save(new Host({
+            username: req.body.username,
+            name: req.body.name,
+            email_address: req.body.email_address,
+          }))
 
-          await transEntityManager.save(host);
+          // save before setup because onboarding process depends on PK existing
+          await host.setup(user, txc);
+          await host.addMember(user, HostPermission.Owner, txc);
+          return (await txc.save(host)).toFull();
         });
-
-        // addMember saves to db
-        return host.toFull();
       },
     };
   }
 
-  readHost():IControllerEndpoint<IHost> {
+  readHost(): IControllerEndpoint<IHost> {
     return {
       validator: validate([]),
       authStrategy: AuthStrat.isLoggedIn,
-      controller: async (req:Request):Promise<IHost> => {
-        const host =  await Host.findOne({ _id: parseInt(req.params.hid) })
+      controller: async (req: Request): Promise<IHost> => {
+        const host = await Host.findOne({ _id: parseInt(req.params.hid) });
         return host.toFull();
-      }
-    }
+      },
+    };
   }
 
   readHostMembers(): IControllerEndpoint<IUser[]> {
@@ -186,61 +184,63 @@ export default class HostController extends BaseController {
     };
   }
 
-  readOnboardingProcessStatus():IControllerEndpoint<IHostOnboardingProcess> {
+  readOnboardingProcessStatus(): IControllerEndpoint<IHostOnboardingProcess> {
     return {
-      authStrategy: AuthStrat.none,
-      controller: async (req:Request):Promise<IHostOnboardingProcess> => {
-        return {} as IHostOnboardingProcess;
-      } 
-    }
+      authStrategy: AuthStrat.none, //AuthStrat.hasHostPermission(HostPermission.Owner),
+      controller: async (req: Request): Promise<IHostOnboardingProcess> => {
+        const onboarding = await HostOnboardingProcess.findOne({
+          where: {
+            host: {
+              _id: parseInt(req.params.hid),
+            },
+          },
+        });
+
+        if(!onboarding) throw new ErrorHandler(HTTP.NotFound);
+        return onboarding.toFull();
+      },
+    };
   }
 
-  readOnboardingProcessStep():IControllerEndpoint<IOnboardingStep<any>> {
+  readOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req:Request):Promise<IOnboardingStep<any>> => {
-        return {} as IOnboardingStep<any>
-      } 
-    }
+      controller: async (req: Request): Promise<IOnboardingStep<any>> => {
+        return {} as IOnboardingStep<any>;
+      },
+    };
   }
 
   /**
    * @description Update Process or Steps
    */
-  updateOnboardingProcess():IControllerEndpoint<void> {
+  updateOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req:Request):Promise<void> => {
-
+      controller: async (req: Request): Promise<void> => {
         return;
-      }
-    }
+      },
+    };
   }
 
-  submitOnboardingProcess():IControllerEndpoint<void> {
+  submitOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req:Request):Promise<void> => {
-
-      }
-    }
+      controller: async (req: Request): Promise<void> => {},
+    };
   }
 
-  verifyOnboardingProcess():IControllerEndpoint<void> {
+  verifyOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req:Request):Promise<void> => {
-
-      }
-    }
+      controller: async (req: Request): Promise<void> => {},
+    };
   }
 
-  enactOnboardingProcess():IControllerEndpoint<void> {
+  enactOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req:Request):Promise<void> => {
-
-      }
-    }
+      controller: async (req: Request): Promise<void> => {},
+    };
   }
 }

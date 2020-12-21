@@ -1,10 +1,11 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, EntityManager } from "typeorm";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, EntityManager, OneToOne } from "typeorm";
 import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IAddress } from "@eventi/interfaces";
 import { User } from '../Users/User.model';
 import { Performance } from "../Performances/Performance.model";
 import { UserHostInfo } from "./UserHostInfo.model";
 import { DataClient } from "../../common/data";
 import { Address } from "../Users/Address.model";
+import { HostOnboardingProcess } from "./Onboarding.model";
  
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -17,13 +18,14 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column()                     is_onboarded: boolean;
   @Column("jsonb")              social_info: ISocialInfo;
 
-  @Column()                     mobile_number: number;
-  @Column()                     landline_number: number;
+  @Column({nullable:true})      mobile_number: number;
+  @Column({nullable:true})      landline_number: number;
   @Column()                     email_address: string;
 
   addresses:IAddress[];
   // @OneToMany(() => Address, address => address.owner)
 
+  @OneToOne(() => HostOnboardingProcess, hop => hop.host)        onboarding_process:HostOnboardingProcess;
   @OneToMany(() => User, user => user.host)                      members:User[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
 
@@ -36,18 +38,29 @@ export class Host extends BaseEntity implements IHostPrivate {
     this.is_onboarded = false;
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.members = [];
+    this.social_info = {
+      linkedin_url: null,
+      facebook_url: null,
+      instagram_url: null
+    }
+  }
+
+  /**
+   * @description Creates onboarding process
+   */
+  async setup(creator:User, txc:EntityManager) {
+    const onboarding = await txc.save(new HostOnboardingProcess(this, creator));
+    this.onboarding_process = onboarding;
+    return this;
   }
 
   async addMember(user:User, permissionLevel:HostPermission, txc:EntityManager) {
     // Create permissions link
-    const userHostInfo = new UserHostInfo(user, this, permissionLevel);
+    // const userHostInfo = new UserHostInfo(user, this, permissionLevel);
 
     // Add user to host group
     // this.members_info.push(userHostInfo);
     this.members.push(user);
-
-    await txc.save(userHostInfo);
-    await txc.save(this);
   }
 
   async removeMember(user:User, txc:EntityManager) {
