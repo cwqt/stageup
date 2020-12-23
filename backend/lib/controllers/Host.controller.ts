@@ -1,4 +1,20 @@
-import { HostPermission, IHost, IOnboardingStep, IUser, IUserHostInfo } from '@eventi/interfaces';
+import {
+  HostOnboardingStep,
+  HostPermission,
+  IFormErrorField,
+  IHost,
+  IHostOnboardingState,
+  IOnboardingAddMembers,
+  IOnboardingIssue,
+  IOnboardingOwnerDetails,
+  IOnboardingProofOfBusiness,
+  IOnboardingSocialPresence,
+  IOnboardingStep,
+  IOnboardingSubscriptionConfiguration,
+  IUser,
+  IUserHostInfo,
+  pick,
+} from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { DataClient } from '../common/data';
@@ -7,11 +23,12 @@ import { ErrorHandler } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
 import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import { validate } from '../common/validate';
-import { body, query } from 'express-validator';
+import { body, param, query } from 'express-validator';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { IHostOnboardingProcess } from '@eventi/interfaces';
+import { parse } from 'influx/lib/src/results';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -57,12 +74,14 @@ export default class HostController extends BaseController {
 
         // Create host & add current user (creator) to it through transaction
         // & begin the onboarding process by running setup
-        return await this.dc.torm.transaction(async txc => {
-          const host = await txc.save(new Host({
-            username: req.body.username,
-            name: req.body.name,
-            email_address: req.body.email_address,
-          }))
+        return await this.dc.torm.transaction(async (txc) => {
+          const host = await txc.save(
+            new Host({
+              username: req.body.username,
+              name: req.body.name,
+              email_address: req.body.email_address,
+            })
+          );
 
           // save before setup because onboarding process depends on PK existing
           await host.setup(user, txc);
@@ -95,11 +114,13 @@ export default class HostController extends BaseController {
     };
   }
 
-  updateHost(): IControllerEndpoint<void> {
+  updateHost(): IControllerEndpoint<IHost> {
     return {
       validator: validate([]),
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async (req: Request): Promise<IHost> => {
+        return {} as IHost;
+      },
     };
   }
 
@@ -196,7 +217,7 @@ export default class HostController extends BaseController {
           },
         });
 
-        if(!onboarding) throw new ErrorHandler(HTTP.NotFound);
+        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
         return onboarding.toFull();
       },
     };
@@ -204,43 +225,114 @@ export default class HostController extends BaseController {
 
   readOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {
+      validator: validate([param('step').toInt().isIn(Object.values(HostOnboardingStep))]),
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IOnboardingStep<any>> => {
-        return {} as IOnboardingStep<any>;
+        const onboarding = await HostOnboardingProcess.findOne({
+          where: {
+            host: {
+              _id: parseInt(req.params.hid),
+            },
+          },
+        });
+
+        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+        // TODO: fix typing on onboarding to use string enum
+        return (<any>onboarding).steps[req.params.step] as IOnboardingStep<any>;
       },
     };
   }
 
   /**
-   * @description Update Process or Steps
+   * @description Update Process as a Host Owner/Admin
    */
-  updateOnboardingProcess(): IControllerEndpoint<void> {
+  updateOnboardingProcess(): IControllerEndpoint<IHostOnboardingProcess> {
     return {
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {
-        return;
+      authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
+      controller: async (req: Request): Promise<IHostOnboardingProcess> => {
+        const onboarding = await HostOnboardingProcess.findOne({
+          where: {
+            host: {
+              _id: parseInt(req.params.hid),
+            },
+          },
+        });
+        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+
+        const user = await User.findOne({ _id: req.session.user._id });
+        if (!user) throw new ErrorHandler(HTTP.NotFound);
+
+        onboarding.last_modified_by = user;
+        onboarding.last_modified = Math.floor(Date.now() / 1000);
+        return (await onboarding.save()).toFull();
+      },
+    };
+  }
+
+  updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
+    return {
+      validator: validate([param('step').toInt().isIn(Object.values(HostOnboardingStep))]),
+      authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
+      controller: async (req: Request): Promise<IOnboardingStep<any>> => {
+        const onboarding = await HostOnboardingProcess.findOne({
+          where: {
+            host: {
+              _id: parseInt(req.params.hid),
+            },
+          },
+        });
+        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+
+        const user = await User.findOne({ _id: req.session.user._id });
+        if (!user) throw new ErrorHandler(HTTP.NotFound);
+
+        // pick updateable fields from interface type
+        const u: { [index in HostOnboardingStep]: Function } = {
+          [HostOnboardingStep.ProofOfBusiness]: (d: IOnboardingProofOfBusiness) =>
+            pick(d, ['business_address', 'business_contact_number', 'hmrc_company_number']),
+          [HostOnboardingStep.OwnerDetails]: (d: IOnboardingOwnerDetails) => pick(d, ['owner_info']),
+          [HostOnboardingStep.SocialPresence]: (d: IOnboardingSocialPresence) => pick(d, ['social_info']),
+          [HostOnboardingStep.AddMembers]: (d: IOnboardingAddMembers) => pick(d, ['members_to_add']),
+          [HostOnboardingStep.SubscriptionConfiguration]: (d: IOnboardingSubscriptionConfiguration) =>
+            pick(d, ['tier']),
+        };
+
+        const step: HostOnboardingStep = parseInt(req.params.step);
+
+        try {
+          await onboarding.updateStep(step, u[step](req.body));
+        } catch (error) {
+          throw new ErrorHandler(HTTP.BadRequest, null, error)
+        }
+        
+        await onboarding.setLastUpdated(user);          
+        await onboarding.save();
+        return onboarding.steps[step];
       },
     };
   }
 
   submitOnboardingProcess(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
-    };
-  }
+      authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
+      controller: async (req: Request): Promise<void> => {
+        const onboarding = await HostOnboardingProcess.findOne({
+          where: {
+            host: {
+              _id: parseInt(req.params.hid),
+            },
+          },
+        });
+        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+        if (onboarding.status != IHostOnboardingState.AwaitingChanges)
+          throw new ErrorHandler(HTTP.BadRequest, 'Cannot re-submit');
 
-  verifyOnboardingProcess(): IControllerEndpoint<void> {
-    return {
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
-    };
-  }
-
-  enactOnboardingProcess(): IControllerEndpoint<void> {
-    return {
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+        // TODO: verify all steps filled out
+        onboarding.status = IHostOnboardingState.Pending;
+        onboarding.version++;
+        await onboarding.save();
+      },
     };
   }
 }
+

@@ -20,7 +20,8 @@ export interface IHost extends IHostStub {
 
 export type IHostPrivate = {
   email_address: string;
-} & IContactInfo & IHost;
+  contact_info: IContactInfo;
+} & IHost;
 
 export interface ISocialInfo {
   linkedin_url: string;

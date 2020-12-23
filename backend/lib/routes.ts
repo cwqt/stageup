@@ -14,7 +14,7 @@ import {
     IEnvelopedData as IE,
     IPerformanceUserInfo as IPUInfo,
     IMyself,
-    IHostOnboardingProcess,
+    IHostOnboardingProcess as IHOProcess,
     IOnboardingStep,
     IAddress
 } from "@eventi/interfaces";
@@ -25,6 +25,7 @@ import PerfController from './controllers/Performance.controller';
 import MUXHooksController from './controllers/MUXHooks.controller';
 import AuthController from './controllers/Auth.controller';
 import MiscController from './controllers/Misc.controller';
+import AdminController from './controllers/Admin.controller';
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -60,25 +61,31 @@ router.post   <IHost>               ("/hosts",                                Ho
 router.get    <IHost>               ("/hosts/:hid",                           Hosts.readHost())
 router.delete <void>                ("/hosts/:hid",                           Hosts.deleteHost());
 // router.put    <IHost>               ("/hosts/:hid",                           Hosts.updateHost());
-// router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.readHostMembers());
+router.get    <IUser[]>             ("/hosts/:hid/members",                   Hosts.readHostMembers());
 // router.post   <IHost>               ("/hosts/:hid/members",                   Hosts.addUser());
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser());
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions());
-router.get<IHostOnboardingProcess>  ("/hosts/:hid/onboarding/status",         Hosts.readOnboardingProcessStatus());
-router.get<IOnboardingStep<any>>    ("/hosts/:hid/onboarding/:step",          Hosts.readOnboardingProcessStep());
-router.put <void>                   ("/hosts/:hid/onboarding",                Hosts.updateOnboardingProcess());
+router.get <IHOProcess>             ("/hosts/:hid/onboarding/status",         Hosts.readOnboardingProcessStatus());
+router.put <IHOProcess>             ("/hosts/:hid/onboarding",                Hosts.updateOnboardingProcess());
+router.get <IOnboardingStep<any>>   ("/hosts/:hid/onboarding/:step",          Hosts.readOnboardingProcessStep());
+router.put <IOnboardingStep<any>>   ("/hosts/:hid/onboarding/:step",          Hosts.updateOnboardingProcessStep());
 router.post<void>                   ("/hosts/:hid/onboarding/submit",         Hosts.submitOnboardingProcess());
-// router.post<void>                   ("/hosts/:hid/onboarding/verify",         Hosts.verifyOnboardingProcess());
-// router.post<void>                   ("/hosts/:hid/onboarding/enact",          Hosts.enactOnboardingProcess());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
-router.post   <IPerf>               ("/performances",                           Perfs.createPerformance());
-router.get    <IE<IPerfS[], null>>  ("/performances",                           Perfs.readPerformances());
-router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                      Perfs.readPerformance());
-router.get    <IPHInfo>             ("/performances/:pid/host_info",            Perfs.readPerformanceHostInfo());
-router.post   <void>                ("/performances/:pid/purchase",             Perfs.purchase());
-router.delete <void>                ("/performance/:pid",                       Perfs.deletePerformance());
+router.post   <IPerf>               ("/performances",                         Perfs.createPerformance());
+router.get    <IE<IPerfS[], null>>  ("/performances",                         Perfs.readPerformances());
+router.get    <IE<IPerf, IPUInfo>>  ("/performances/:pid",                    Perfs.readPerformance());
+router.get    <IPHInfo>             ("/performances/:pid/host_info",          Perfs.readPerformanceHostInfo());
+router.post   <void>                ("/performances/:pid/purchase",           Perfs.purchase());
+router.delete <void>                ("/performance/:pid",                     Perfs.deletePerformance());
+
+// ADMIN PANEL --------------------------------------------------------------------------------------------------------
+const Admin = new AdminController(providers, mws);
+router.get  <IE<IHOProcess[], void>>("/admin/onboarding",                    Admin.readOnboardingProcesses())
+router.post <void>                  ("/admin/onboarding/:oid/verify",        Admin.verifyOnboardingProcess());
+router.post <void>                  ("/admin/onboarding/:oid/enact",         Admin.enactOnboardingProcess());
+router.put  <void>                  ("/admin/onboarding/:oid/:step/issues",  Admin.createOnboardingStepIssues());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);

@@ -41,6 +41,7 @@ export interface IHostOnboardingProcess {
   completed_at: number | null;
   last_modified: number;
   last_modified_by: IUserStub;
+  version: number; // back and forth validation / issue handling
   steps: {
     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
@@ -59,6 +60,7 @@ export interface IOnboardingStep<T> {
 export interface IOnboardingIssue {
   param: string;
   message: string;
+  version?:number;
 }
 
 export interface IOnboardingProofOfBusiness {

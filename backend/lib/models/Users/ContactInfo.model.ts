@@ -22,4 +22,12 @@ export class ContactInfo extends BaseEntity implements IContactInfo {
     await txc.save(address);
     await txc.save(this);
   }
+
+  toFull():IContactInfo {
+    return {
+      mobile_number: this.mobile_number,
+      landline_number: this.landline_number,
+      addresses: this.addresses.map(a => a.toFull())
+    }
+  }
 }

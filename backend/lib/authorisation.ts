@@ -58,6 +58,14 @@ export const hasHostPermission = (permission: HostPermission): AuthStrategy => {
   };
 };
 
+export const isSiteAdmin: AuthStrategy = async (req: Request, dc: DataClient): Promise<AuthStratReturn> => {
+  const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
+  if (!isAuthorised) return [isAuthorised, _, reason];
+
+  if (!req.session.user.is_admin) return [false, {}, 'Must be site administrator to perform this action'];
+  return [true, {}];
+};
+
 /**
  * @description Combine AuthStratgies into an AND operator
  * @param args authStrategy
@@ -100,4 +108,5 @@ export default {
   isLoggedIn,
   isMemberOfHost,
   hasHostPermission,
+  isSiteAdmin,
 };

@@ -12,4 +12,5 @@ export interface IFormErrorField {
   msg: string;
   value: any;
   location?: 'body' | 'param' | 'query';
+  nestedErrors?:IFormErrorField[];
 }
