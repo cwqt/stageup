@@ -15,6 +15,8 @@ import { HTTP } from "@eventi/interfaces";
 import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
 
+import validator from 'express-validator';
+
 let server: http.Server;
 const app = express();
 app.set("trust proxy", 1);

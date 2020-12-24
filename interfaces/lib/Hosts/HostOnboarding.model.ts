@@ -54,6 +54,7 @@ export interface IHostOnboardingProcess {
 export interface IOnboardingStep<T> {
   status: IHostOnboardingState;
   issues: IOnboardingIssue[];
+  valid: boolean;//just if all the data is filled out & correct
   data: T;
 }
 

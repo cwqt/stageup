@@ -61,7 +61,7 @@ export default class UserController extends BaseController {
 
   readMyself(): IControllerEndpoint<IMyself> {
     return {
-      validator: validate([]),
+      validators: [],
       preMiddlewares: [],
       postMiddlewares: [],
       authStrategy: AuthStrat.none,

@@ -1,11 +1,9 @@
 import {
   HostOnboardingStep,
   HostPermission,
-  IFormErrorField,
   IHost,
   IHostOnboardingState,
   IOnboardingAddMembers,
-  IOnboardingIssue,
   IOnboardingOwnerDetails,
   IOnboardingProofOfBusiness,
   IOnboardingSocialPresence,
@@ -17,18 +15,16 @@ import {
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
-import { DataClient } from '../common/data';
 import { Host } from '../models/Hosts/Host.model';
 import { ErrorHandler } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
 import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import { validate } from '../common/validate';
-import { body, param, query } from 'express-validator';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
-import AuthStrat from '../authorisation';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { IHostOnboardingProcess } from '@eventi/interfaces';
-import { parse } from 'influx/lib/src/results';
+import AuthStrat from '../authorisation';
+import { body, query } from '../common/test';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -37,33 +33,42 @@ export default class HostController extends BaseController {
 
   createHost(): IControllerEndpoint<IHost> {
     return {
-      validator: validate([
-        body('username')
-          .not()
-          .isEmpty()
-          .withMessage('Must provide a host username')
-          .isLength({ min: 6 })
-          .withMessage('Host username length must be >6 characters')
-          .isLength({ max: 32 })
-          .withMessage('Host username length must be <32 characters')
-          .matches(/^[a-zA-Z0-9]*$/)
-          .withMessage('Must be alpha-numeric with no spaces'),
-        body('name')
-          .not()
-          .isEmpty()
-          .withMessage('Must provide a host name')
-          .isLength({ min: 6 })
-          .withMessage('Host name length must be >6 characters')
-          .isLength({ max: 32 })
-          .withMessage('Host name length must be <32 characters'),
-        body('email_address')
-          .not()
-          .isEmpty()
-          .withMessage('Must provide an e-mail address')
-          .isEmail()
-          .normalizeEmail()
-          .withMessage('Not a valid e-mail address'),
-      ]),
+      validators: [
+        body<{
+          username: IHost['username'];
+          name: IHost['username'];
+          email_address: IHost['username'];
+        }>({
+          username: (v) =>
+            v
+              .not()
+              .isEmpty()
+              .withMessage('Must provide a host username')
+              .isLength({ min: 6 })
+              .withMessage('Host username length must be >6 characters')
+              .isLength({ max: 32 })
+              .withMessage('Host username length must be <32 characters')
+              .matches(/^[a-zA-Z0-9]*$/)
+              .withMessage('Must be alpha-numeric with no spaces'),
+          name: (v) =>
+            v
+              .not()
+              .isEmpty()
+              .withMessage('Must provide a host name')
+              .isLength({ min: 6 })
+              .withMessage('Host name length must be >6 characters')
+              .isLength({ max: 32 })
+              .withMessage('Host name length must be <32 characters'),
+          email_address: (v) =>
+            v
+              .not()
+              .isEmpty()
+              .withMessage('Must provide an e-mail address')
+              .isEmail()
+              .normalizeEmail()
+              .withMessage('Not a valid e-mail address'),
+        }),
+      ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IHost> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
@@ -94,7 +99,7 @@ export default class HostController extends BaseController {
 
   readHost(): IControllerEndpoint<IHost> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.isLoggedIn,
       controller: async (req: Request): Promise<IHost> => {
         const host = await Host.findOne({ _id: parseInt(req.params.hid) });
@@ -105,7 +110,7 @@ export default class HostController extends BaseController {
 
   readHostMembers(): IControllerEndpoint<IUser[]> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser[]> => {
         const host = await Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ['members'] });
@@ -116,7 +121,7 @@ export default class HostController extends BaseController {
 
   updateHost(): IControllerEndpoint<IHost> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IHost> => {
         return {} as IHost;
@@ -126,7 +131,7 @@ export default class HostController extends BaseController {
 
   deleteHost(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
@@ -152,7 +157,7 @@ export default class HostController extends BaseController {
 
   addUser(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
@@ -160,7 +165,7 @@ export default class HostController extends BaseController {
 
   removeUser(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
@@ -168,7 +173,7 @@ export default class HostController extends BaseController {
 
   alterMemberPermissions(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
@@ -176,7 +181,7 @@ export default class HostController extends BaseController {
 
   updateOnboarding(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async (req: Request): Promise<void> => {},
     };
@@ -184,7 +189,11 @@ export default class HostController extends BaseController {
 
   readUserHostInfo(): IControllerEndpoint<IUserHostInfo> {
     return {
-      validator: validate([query('user').trim().not().isEmpty().toInt()]),
+      validators: [
+        query<{ user: string }>({
+          user: (v) => v.trim().not().isEmpty().toInt(),
+        }),
+      ],
       controller: async (req: Request): Promise<IUserHostInfo> => {
         // const uhi = await UserHostInfo.findOne({
         //   relations: ['host', 'user'],
@@ -302,10 +311,10 @@ export default class HostController extends BaseController {
         try {
           await onboarding.updateStep(step, u[step](req.body));
         } catch (error) {
-          throw new ErrorHandler(HTTP.BadRequest, null, error)
+          throw new ErrorHandler(HTTP.BadRequest, null, error);
         }
-        
-        await onboarding.setLastUpdated(user);          
+
+        await onboarding.setLastUpdated(user);
         await onboarding.save();
         return onboarding.steps[step];
       },
@@ -335,4 +344,3 @@ export default class HostController extends BaseController {
     };
   }
 }
-

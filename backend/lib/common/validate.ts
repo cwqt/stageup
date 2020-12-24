@@ -44,11 +44,16 @@ export const validateAsync = async <T extends object, U extends keyof T>(
 
 export const validateObject = async <T extends object, U extends keyof T>(
   data: T,
-  validators: { [index in U]: VFunctor }
+  validators: { [index in U]: VFunctor },
+  isPartial:boolean=false
 ): Promise<IFormErrorField[]> => {
   return (
     await Promise.all(
       Object.keys(validators).reduce<Promise<IFormErrorField[]>[]>((acc, curr) => {
+        if(isPartial && !data[curr as U]) {
+          return acc;
+        }
+
         return [...acc, validateAsync(data, curr as U, validators[curr as U])];
       }, [])
     )
@@ -69,43 +74,43 @@ export const validateObject = async <T extends object, U extends keyof T>(
 };
 
 // really disgusting im sorry
-export const runMany = async (i: any[], f: Function) => {
-  let x = (await Promise.all(i.map((x) => f(x)))).map((x) => ({ ...x }));
+export const runMany = async (i: any[], f: Function, isPartial:boolean=false) => {
+  let x = (await Promise.all(i.map((x) => f(x, isPartial)))).map((x) => ({ ...x }));
   if (Object.values(x).every((y) => Object.keys(y).length === 0)) return;
   throw x;
 };
 
 export const validators: { [index: string]: any } = {
-  IHostMemberChangeRequestValidator: (memberChangeReq: IHostMemberChangeRequest) =>
+  IHostMemberChangeRequestValidator: (memberChangeReq: IHostMemberChangeRequest, isPartial:boolean=false) =>
     validateObject(memberChangeReq, {
       change: (v) => v.isIn(['add', 'update', 'del']),
       user_id: (v) => v.isInt(),
       value: (v) => v.optional().notEmpty(),
-    }),
+    }, isPartial),
 
-  IAddressValidator: (address: IAddress) =>
+  IAddressValidator: (address: IAddress, isPartial:boolean=false) =>
     validateObject(address, {
       city: (v) => v.notEmpty().isString(),
       iso_country_code: (v) => v.notEmpty().isISO31661Alpha3(),
       postcode: (v) => v.notEmpty().isPostalCode('GB'),
       street_name: (v) => v.notEmpty().isString(),
       street_number: (v) => v.notEmpty().isInt(),
-    }),
+    }, isPartial),
 
-  IContactInfoValidator: (contactInfo: IContactInfo) =>
+  IContactInfoValidator: (contactInfo: IContactInfo, isPartial:boolean=false) =>
     validateObject(contactInfo, {
       landline_number: (v) => v.isInt(),
       mobile_number: (v) => v.isInt(),
       addresses: (v) =>
         v.custom(async (i) => {
-          await runMany(i, validators.IAddressValidator);
+          await runMany(i, validators.IAddressValidator, isPartial);
         }),
-    }),
+    }, isPartial),
 
-  IPersonInfoValidator: (person: IPersonInfo) =>
+  IPersonInfoValidator: (person: IPersonInfo, isPartial:boolean=false) =>
     validateObject(person, {
       first_name: (v) => v.notEmpty(),
       last_name: (v) => v.notEmpty(),
       title: (v) => v.isIn(Object.values(PersonTitle)),
-    }),
+    }, isPartial),
 };

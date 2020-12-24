@@ -21,7 +21,7 @@ import {
 } from '@eventi/interfaces';
 import { Host } from '../Hosts/Host.model';
 import { User } from '../Users/User.model';
-import { runMany, validateAsync, validateObject, validators } from '../../common/validate';
+import { runMany, validate, validateAsync, validateObject, validators } from '../../common/validate';
 
 @Entity()
 export class HostOnboardingProcess extends BaseEntity implements IHostOnboardingProcess {
@@ -112,36 +112,47 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
 
   async updateStep<T extends object>(stepIdx: HostOnboardingStep, updates: Partial<T>): Promise<IOnboardingStep<any>> {
     const validationResult = await stepValidators[stepIdx](updates);
-    if(validationResult.length) throw validationResult;
-    
-    this.steps[stepIdx].data = { ...this.steps[stepIdx].data, ...updates };
+    if (validationResult.length) throw validationResult;
+
+    Object.entries(updates).forEach(([k, v]: [string, any]) => {
+      (<any>this.steps[stepIdx].data)[k] = v ?? (<any>this.steps[stepIdx].data)[k];
+    });
+
     return this.steps[stepIdx];
   }
 }
 
-const stepValidators: { [index in HostOnboardingStep]: (d:any) => Promise<IFormErrorField[]> } = {
+const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IFormErrorField[]> } = {
   [HostOnboardingStep.ProofOfBusiness]: async (d: IOnboardingProofOfBusiness) => {
-    return await validateObject(d, {
-      business_address: (v) =>
-        v.custom(async (i) => {
-          throw await validators.IAddressValidator(i);
-        }),
-      business_contact_number: (v) => v.isMobilePhone('en-GB'),
-      hmrc_company_number: (v) => v.isLength({ min: 8, max: 8 }),
-    });
+    return await validateObject(
+      d,
+      {
+        business_address: (v) =>
+          v.custom(async (i) => {
+            throw await validators.IAddressValidator(i, true);
+          }),
+        business_contact_number: (v) => v.isMobilePhone('en-GB'),
+        hmrc_company_number: (v) => v.isLength({ min: 8, max: 8 }),
+      },
+      true
+    );
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
-    return await validators.IPersonInfoValidator(d.owner_info);
+    return await validators.IPersonInfoValidator(d.owner_info, true);
   },
   [HostOnboardingStep.AddMembers]: async (d: IOnboardingAddMembers) => {
     return (await Promise.all([d.members_to_add.map((m) => validators.IHostMemberChangeRequestValidator(m))])).flat();
   },
   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
-    return await validateObject(d.social_info, {
-      linkedin_url: (v) => v.optional().isString(),
-      facebook_url: (v) => v.optional().isString(),
-      instagram_url: (v) => v.optional().isString(),
-    });
+    return await validateObject(
+      d.social_info,
+      {
+        linkedin_url: (v) => v.optional().isString(),
+        facebook_url: (v) => v.optional().isString(),
+        instagram_url: (v) => v.optional().isString(),
+      },
+      true
+    );
   },
   [HostOnboardingStep.SubscriptionConfiguration]: async (d: IOnboardingSubscriptionConfiguration) => {
     return await validateObject(d, {

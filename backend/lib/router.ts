@@ -4,6 +4,7 @@ import { DataClient } from "./common/data";
 import { AuthStrategy } from './authorisation';
 import { HTTP } from "@eventi/interfaces";
 import { IControllerEndpoint } from "./common/controller";
+import { validate, validatorMiddleware } from "./common/test";
 
 const AsyncRouter = require("express-async-router").AsyncRouter;
 
@@ -24,7 +25,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
     method(
       path,
       executeAuthenticationStrategy(endpoint.authStrategy, providers),
-      endpoint.validator ?? skip,
+      endpoint.validators ? validatorMiddleware(endpoint.validators) : skip,
       ...(endpoint.preMiddlewares || []),
       (req: Request, res: Response, next: NextFunction) => {
         res.locals.page = parseInt(req.query.page as string) || 0;

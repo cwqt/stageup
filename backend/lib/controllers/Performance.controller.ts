@@ -49,7 +49,7 @@ export default class PerformanceController extends BaseController {
 
   readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request, _, locals: IResLocals): Promise<IEnvelopedData<IPerformanceStub[], null>> => {
         const performances = await Performance.find({
@@ -68,7 +68,7 @@ export default class PerformanceController extends BaseController {
 
   readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
         const performance = await Performance.findOne(
@@ -123,7 +123,7 @@ export default class PerformanceController extends BaseController {
 
   readPerformanceHostInfo(): IControllerEndpoint<IPerformanceHostInfo> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IPerformanceHostInfo> => {
         const performance = await Performance.findOne({ _id: parseInt(req.params.pid) }, { relations: ['host_info'] });
@@ -140,7 +140,7 @@ export default class PerformanceController extends BaseController {
 
   purchase(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const user = await User.findOne({ _id: req.session.user._id });
@@ -167,7 +167,7 @@ export default class PerformanceController extends BaseController {
 
   deletePerformance(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };

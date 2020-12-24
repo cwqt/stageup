@@ -65,11 +65,11 @@ router.get    <IUser[]>             ("/hosts/:hid/members",                   Ho
 // router.post   <IHost>               ("/hosts/:hid/members",                   Hosts.addUser());
 // router.delete <IHost>               ("/hosts/:hid/members",                   Hosts.removeUser());
 // router.delete <IHost>               ("/hosts/:hid/members/:mid/permissions",  Hosts.alterMemberPermissions());
-router.get <IHOProcess>             ("/hosts/:hid/onboarding/status",         Hosts.readOnboardingProcessStatus());
 router.put <IHOProcess>             ("/hosts/:hid/onboarding",                Hosts.updateOnboardingProcess());
+router.get <IHOProcess>             ("/hosts/:hid/onboarding/status",         Hosts.readOnboardingProcessStatus());
+router.post<void>                   ("/hosts/:hid/onboarding/submit",         Hosts.submitOnboardingProcess());
 router.get <IOnboardingStep<any>>   ("/hosts/:hid/onboarding/:step",          Hosts.readOnboardingProcessStep());
 router.put <IOnboardingStep<any>>   ("/hosts/:hid/onboarding/:step",          Hosts.updateOnboardingProcessStep());
-router.post<void>                   ("/hosts/:hid/onboarding/submit",         Hosts.submitOnboardingProcess());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
@@ -99,6 +99,7 @@ router.redirect                    ("/auth/verify",                             
 const Misc = new MiscController(providers, mws);
 router.get    <string>             ("/ping",                                    Misc.ping());
 router.post   <void>               ("/drop",                                    Misc.dropAllData());
+router.get    <void>               ("/test",                                    Misc.test());
 
 return router;
 };

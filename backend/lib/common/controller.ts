@@ -3,9 +3,10 @@ import { IResLocals } from '../router';
 import { AuthStrategy } from '../authorisation';
 import { DataClient } from './data';
 import Middlewares from './middleware';
+import { VFF } from './test';
 
 export interface IControllerEndpoint<T> {
-  validator?: any;
+  validators?: VFF[];
   controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>;
   preMiddlewares?: RequestHandler[];
   postMiddlewares?: RequestHandler[];
