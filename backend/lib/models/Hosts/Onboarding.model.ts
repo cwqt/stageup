@@ -21,7 +21,8 @@ import {
 } from '@eventi/interfaces';
 import { Host } from '../Hosts/Host.model';
 import { User } from '../Users/User.model';
-import { runMany, validate, validateAsync, validateObject, validators } from '../../common/validate';
+import { object, single, array } from '../../common/validate';
+import Validators from '../../common/validators';
 
 @Entity()
 export class HostOnboardingProcess extends BaseEntity implements IHostOnboardingProcess {
@@ -39,7 +40,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
   };
 
-  @OneToOne(() => Host, (host) => host.onboarding_process) @JoinColumn() host: Host;
+  @OneToOne(() => Host, host => host.onboarding_process) @JoinColumn() host: Host;
   @OneToOne(() => User, { eager: true }) @JoinColumn() last_modified_by: User;
 
   constructor(host: Host, creator: User) {
@@ -124,39 +125,37 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
 
 const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IFormErrorField[]> } = {
   [HostOnboardingStep.ProofOfBusiness]: async (d: IOnboardingProofOfBusiness) => {
-    return await validateObject(
-      d,
-      {
-        business_address: (v) =>
-          v.custom(async (i) => {
-            throw await validators.IAddressValidator(i, true);
-          }),
-        business_contact_number: (v) => v.isMobilePhone('en-GB'),
-        hmrc_company_number: (v) => v.isLength({ min: 8, max: 8 }),
-      },
-      true
-    );
+    return await object(d, {
+      hmrc_company_number: v => v.isInt().isLength({ min: 8, max: 8 }),
+      business_contact_number: v => v.isMobilePhone('en-GB'),
+      business_address: v => v.custom(single(Validators.Objects.IAddress())),
+    })();
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
-    return await validators.IPersonInfoValidator(d.owner_info, true);
+    return await object(d, {
+      owner_info: v => v.custom(single(Validators.Objects.IPerson())),
+    })();
   },
   [HostOnboardingStep.AddMembers]: async (d: IOnboardingAddMembers) => {
-    return (await Promise.all([d.members_to_add.map((m) => validators.IHostMemberChangeRequestValidator(m))])).flat();
+    return await object(d, {
+      members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest())),
+    })();
   },
   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
-    return await validateObject(
-      d.social_info,
-      {
-        linkedin_url: (v) => v.optional().isString(),
-        facebook_url: (v) => v.optional().isString(),
-        instagram_url: (v) => v.optional().isString(),
-      },
-      true
-    );
+    return await object(d, {
+      social_info: v =>
+        v.custom(
+          single<typeof d.social_info>({
+            linkedin_url: v => Validators.Fields.isString(v),
+            facebook_url: v => Validators.Fields.isString(v),
+            instagram_url: v => Validators.Fields.isString(v),
+          })
+        ),
+    })();
   },
   [HostOnboardingStep.SubscriptionConfiguration]: async (d: IOnboardingSubscriptionConfiguration) => {
-    return await validateObject(d, {
-      tier: (v) => v.isIn(Object.values(HostSubscriptionLevel)),
-    });
+    return await object(d, {
+      tier: v => Validators.Fields.isInt(v).isIn(Object.values(HostSubscriptionLevel)),
+    })();
   },
 };

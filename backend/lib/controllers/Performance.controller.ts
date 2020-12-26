@@ -10,13 +10,13 @@ import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Performance } from '../models/Performances/Performance.model';
 import { ErrorHandler } from '../common/errors';
-import { validate } from '../common/validate';
-import { body } from 'express-validator';
-import { Purchase } from '../models/Purchase.model';
 import { createPagingData } from '../common/paginator';
 import { IResLocals } from '../router';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
+import { body } from '../common/validate';
+import Validators from '../common/validators';
+import { Purchase } from '../models/Purchase.model';
 
 export default class PerformanceController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -25,7 +25,11 @@ export default class PerformanceController extends BaseController {
 
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
-      validator: validate([body('name').not().isEmpty().withMessage('Performance must have a title!')]),
+      validators: [
+        body<Pick<IPerformanceStub, "name">>({
+          name: v => Validators.Fields.IsString(v, "Must provide performance name")
+        })
+      ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IPerformance> => {
         const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();

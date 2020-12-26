@@ -4,7 +4,7 @@ import { DataClient } from "./common/data";
 import { AuthStrategy } from './authorisation';
 import { HTTP } from "@eventi/interfaces";
 import { IControllerEndpoint } from "./common/controller";
-import { validate, validatorMiddleware } from "./common/test";
+import { validatorMiddleware } from "./common/validate";
 
 const AsyncRouter = require("express-async-router").AsyncRouter;
 

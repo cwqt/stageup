@@ -1,116 +1,140 @@
-const { validationResult } = require('express-validator');
+import { HTTP, IFormErrorField } from '@eventi/interfaces';
+import { Request } from 'express';
+import { NextFunction, Response } from 'express-async-router';
+import { CustomValidator, Meta, ValidationChain, Location } from 'express-validator';
+import { body as bodyRunner, param as paramRunner, query as queryRunner } from 'express-validator';
 import { ErrorHandler } from './errors';
-import { Request, Response, NextFunction } from 'express';
-import {
-  HTTP,
-  IAddress,
-  IContactInfo,
-  IFormErrorField,
-  IHostMemberChangeRequest,
-  IPersonInfo,
-  PersonTitle,
-} from '@eventi/interfaces';
-import { body } from 'express-validator';
-import { ValidationChain } from 'express-validator';
-import { version } from 'winston';
 
-export type Validator = Array<(req: Request, res: Response | null, next: NextFunction) => void>;
-export const validate = (validations: Function[]) => {
-  return (req: Request, res: Response | null, next: NextFunction) => {
-    Promise.all(validations.map((validation: any) => validation.run(req))).then(() => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return next(new ErrorHandler(HTTP.BadRequest, 'Invalid form data', errors.array()));
-      }
+type VData<T> = T & { __this?: T } & { [index: string]: any };
+type VChainer = (v: ValidationChain) => ValidationChain;
+type VFieldChainerMap<T> = { [index in keyof VData<T>]: VChainer };
 
-      next();
-    });
-  };
+type VFunctor = <T extends object>(
+  data: T,
+  validators: VFieldChainerMap<T>,
+  runner?: any
+) => VFunctorReturn;
+
+type VFunctorReturn = (opt?:any) => Promise<IFormErrorField[]>;
+export type VFunctorReqHandler = (req:Request) => VFunctorReturn;
+type VFunctorFactory = <T extends object>(validators: VFieldChainerMap<T>) => VFunctorReqHandler;
+
+
+// VFunctor  T       VData<T>
+//   v       v          v
+// object<IAddress>(address, {
+//  street_name: v => v.isInt()
+//     ^            ^
+//   keyof T     VChainer
+//
+// });
+
+/**
+ * @description Validating body, query & parameters
+ * @param fields key-value pair of field-vchainer
+ * @example body({ name: v => v.notEmpty() })
+ */
+export const body: VFunctorFactory = (validators) => (req: Request) => object<VData<any>>(req.body, validators, bodyRunner);
+export const query: VFunctorFactory = (validators) => (req: Request) => object<VData<any>>(req.query, validators, queryRunner);
+export const params: VFunctorFactory = (validators) => (req: Request) => object<VData<any>>(req.params, validators, paramRunner);
+
+const validatorRunnerMap: { [index in Location]?: typeof bodyRunner } = {
+  body: bodyRunner,
+  query: queryRunner,
+  params: paramRunner,
 };
 
-// TODO: re-write this around validator.js and not bending express-validator to my will
-// so that nested validations actually work without stupid hacks
-type VFunctorWrapper = any;
-type VFunctor = (v: ValidationChain, k?: VFunctorWrapper) => ValidationChain;
+const validatorFunctorMap: { [index in Location]?: VFunctorFactory } = {
+  body: body,
+  query: query,
+  params: params,
+};
 
-export const validateAsync = async <T extends object, U extends keyof T>(
+/**
+ * @description Run the validator against data on field (using the location runner)
+ * @param data Object to be validated
+ * @param field Field mapping to object value
+ * @param f ValidationChain
+ * @param runner express-validator runner (when used as middleware)
+ */
+export const runValidator = async <T extends object, U extends keyof T>(
   data: T,
   field: U,
-  f: VFunctor
+  f: VChainer,
+  location: Location = 'body'
 ): Promise<IFormErrorField[]> => {
-  const res = await f(body(field as string)).run({ body: data });
+  // Now add in the __this self reference for self array checks
+  // e.g. body().isArray() in express-validator
+  const wrappedData: VData<T> = {
+    ...data,
+    __this: data,
+  };
+
+  // Pick the express-validator runner to ensure 'location' is correct
+  const runner = f(validatorRunnerMap[location]((field == '__this' ? '' : field) as string));
+  const res = await runner.run({
+    body: wrappedData,
+    query: wrappedData,
+    params: wrappedData,
+  });
+
   return (<any>res)?.errors || [];
 };
 
-export const validateObject = async <T extends object, U extends keyof T>(
-  data: T,
-  validators: { [index in U]: VFunctor },
-  isPartial:boolean=false
-): Promise<IFormErrorField[]> => {
-  return (
-    await Promise.all(
-      Object.keys(validators).reduce<Promise<IFormErrorField[]>[]>((acc, curr) => {
-        if(isPartial && !data[curr as U]) {
-          return acc;
-        }
-
-        return [...acc, validateAsync(data, curr as U, validators[curr as U])];
-      }, [])
-    )
-  )
-    .flat()
-    //so many hacks
-    .map((v) => {
-      if (Array.isArray(v.msg)) {
-        v.nestedErrors = [...v.msg];
-        v.msg = 'Invalid fields';
-      }
-      return v;
-    })
-    .filter((v) => {
-      if (v.nestedErrors && v.nestedErrors.length == 0) return false;
-      return true;
-    });
+/**
+ * @description Validate an object using express-validator
+ * @param data Object body
+ * @param validators key-value pair of field-vchainer
+ */
+export const object: VFunctor = (data, validators, runner = bodyRunner) => {
+  return async (opt: any): Promise<IFormErrorField[]> => {
+    return (
+      await Promise.all(
+        Object.keys(validators).map((i: any) => runValidator(opt || data, i, (<any>validators)[i], runner))
+      )
+    ).flat();
+  };
 };
 
-// really disgusting im sorry
-export const runMany = async (i: any[], f: Function, isPartial:boolean=false) => {
-  let x = (await Promise.all(i.map((x) => f(x, isPartial)))).map((x) => ({ ...x }));
-  if (Object.values(x).every((y) => Object.keys(y).length === 0)) return;
-  throw x;
+/**
+ * @description Middleware for validating requests
+ * @param f VFunctorFactory array
+ */
+export const validatorMiddleware = (validators: VFunctorReqHandler[]) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const errors:IFormErrorField[] = (await Promise.all(validators.map((v) => v(req)()))).flat();
+    if(errors.length) throw new ErrorHandler(HTTP.BadRequest, "Invalid data", errors);
+
+    next();
+  };
 };
 
-export const validators: { [index: string]: any } = {
-  IHostMemberChangeRequestValidator: (memberChangeReq: IHostMemberChangeRequest, isPartial:boolean=false) =>
-    validateObject(memberChangeReq, {
-      change: (v) => v.isIn(['add', 'update', 'del']),
-      user_id: (v) => v.isInt(),
-      value: (v) => v.optional().notEmpty(),
-    }, isPartial),
+/**
+ * @description Validate an nested array of objects
+ */
+export const array = <T extends object>(validators: VFieldChainerMap<T>): CustomValidator => {
+  return async (d: T[], meta: Meta) => {
+    if (!d) throw 'Array does not exist';
 
-  IAddressValidator: (address: IAddress, isPartial:boolean=false) =>
-    validateObject(address, {
-      city: (v) => v.notEmpty().isString(),
-      iso_country_code: (v) => v.notEmpty().isISO31661Alpha3(),
-      postcode: (v) => v.notEmpty().isPostalCode('GB'),
-      street_name: (v) => v.notEmpty().isString(),
-      street_number: (v) => v.notEmpty().isInt(),
-    }, isPartial),
+    const e = (
+      await Promise.all(d.map((i) => validatorFunctorMap[meta.location](validators)(meta.req as Request)(i)))
+    ).flatMap((e, idx) => ({ ...e, idx: idx }));
 
-  IContactInfoValidator: (contactInfo: IContactInfo, isPartial:boolean=false) =>
-    validateObject(contactInfo, {
-      landline_number: (v) => v.isInt(),
-      mobile_number: (v) => v.isInt(),
-      addresses: (v) =>
-        v.custom(async (i) => {
-          await runMany(i, validators.IAddressValidator, isPartial);
-        }),
-    }, isPartial),
+    // TODO: recurse through children and check to throw
+    if (e.length) throw e;
+    return;
+  };
+};
 
-  IPersonInfoValidator: (person: IPersonInfo, isPartial:boolean=false) =>
-    validateObject(person, {
-      first_name: (v) => v.notEmpty(),
-      last_name: (v) => v.notEmpty(),
-      title: (v) => v.isIn(Object.values(PersonTitle)),
-    }, isPartial),
+/**
+ * @description Validate a single nested object
+ */
+export const single = <T extends object>(validators: VFieldChainerMap<T>): CustomValidator => {
+  return async (data: T, meta: Meta) => {
+    if (!data) throw 'Object does not exist';
+
+    const e = await validatorFunctorMap[meta.location](validators)(meta.req as Request)(data);
+    if (e.length) throw e;
+    return;
+  };
 };

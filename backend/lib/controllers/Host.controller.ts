@@ -19,12 +19,12 @@ import { Host } from '../models/Hosts/Host.model';
 import { ErrorHandler } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
 import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
-import { validate } from '../common/validate';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { IHostOnboardingProcess } from '@eventi/interfaces';
 import AuthStrat from '../authorisation';
-import { body, query } from '../common/test';
+import { body, params, query } from '../common/validate';
+import Validators from '../common/validators';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -191,7 +191,7 @@ export default class HostController extends BaseController {
     return {
       validators: [
         query<{ user: string }>({
-          user: (v) => v.trim().not().isEmpty().toInt(),
+          user: (v) => v.exists().toInt(),
         }),
       ],
       controller: async (req: Request): Promise<IUserHostInfo> => {
@@ -234,7 +234,11 @@ export default class HostController extends BaseController {
 
   readOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {
-      validator: validate([param('step').toInt().isIn(Object.values(HostOnboardingStep))]),
+      validators: [
+        params<{ step: number }>({
+          step: (v) => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
+        }),
+      ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IOnboardingStep<any>> => {
         const onboarding = await HostOnboardingProcess.findOne({
@@ -280,7 +284,11 @@ export default class HostController extends BaseController {
 
   updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {
-      validator: validate([param('step').toInt().isIn(Object.values(HostOnboardingStep))]),
+      validators: [
+        params<{ step: number }>({
+          step: (v) => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
+        }),
+      ],
       authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async (req: Request): Promise<IOnboardingStep<any>> => {
         const onboarding = await HostOnboardingProcess.findOne({

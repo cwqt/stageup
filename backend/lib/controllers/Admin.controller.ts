@@ -1,14 +1,14 @@
 import { Request } from 'express';
-import { validate } from '../common/validate';
 
 import config from '../config';
 import { ErrorHandler } from '../common/errors';
 import { HostOnboardingStep, HTTP, IEnvelopedData, IHostOnboardingProcess, IOnboardingIssue } from '@eventi/interfaces';
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
-import { body, param } from 'express-validator';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { createPagingData } from '../common/paginator';
+import { params, body, array } from '../common/validate';
+import Validators from '../common/validators';
 
 export default class AdminController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -33,14 +33,19 @@ export default class AdminController extends BaseController {
 
   createOnboardingStepIssues():IControllerEndpoint<void> {
     return {
-      validator: validate([
-        param('step').toInt().isIn(Object.values(HostOnboardingStep)),
-        body().isArray(), // validate IOnboardingIssue[]
-        body("*.param").notEmpty().isString(),
-        body("*.message").notEmpty().isString(),
-      ]),
+      validators: [
+        params({
+          step: (v) => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
+        }),
+        body({
+          __this: v => v.isArray().custom(array({
+            param: v => Validators.Fields.IsString(v),
+            message: v => Validators.Fields.IsString(v),
+          }))
+        })
+      ],
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async (req:Request) => {
+      controller: async req => {
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
             host: {

@@ -1,10 +1,19 @@
-import { HostPermission, IEnvelopedData, IHost, IUser, IUserHostInfo, IMyself, IAddress } from '@eventi/interfaces';
+import {
+  HostPermission,
+  IEnvelopedData,
+  IHost,
+  IUser,
+  IUserHostInfo,
+  IMyself,
+  IAddress,
+  IUserPrivate,
+  Idless,
+} from '@eventi/interfaces';
 import { IControllerEndpoint, BaseArgs, BaseController } from '../common/controller';
 import { Request } from 'express';
-import { body, param } from 'express-validator';
+import { body, params } from '../common/validate';
 import { ErrorHandler, FormErrorResponse } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
-import { validate } from '../common/validate';
 import Email = require('../common/email');
 import config from '../config';
 import AuthStrat from '../authorisation';
@@ -13,6 +22,8 @@ import { User } from '../models/Users/User.model';
 import { Host } from '../models/Hosts/Host.model';
 import { Address } from '../models/Users/Address.model';
 import { EntityManager } from 'typeorm';
+import Validators from '../common/validators';
+
 
 export default class UserController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -21,16 +32,12 @@ export default class UserController extends BaseController {
 
   loginUser(): IControllerEndpoint<IUser> {
     return {
-      validator: validate([
-        body('email_address')
-          .not()
-          .isEmpty()
-          .withMessage('Must provide an e-mail address')
-          .isEmail()
-          .normalizeEmail()
-          .withMessage('Not a valid e-mail address'),
-        body('password').not().isEmpty().isLength({ min: 6 }).withMessage('Password length must be > 6 characters'),
-      ]),
+      validators: [
+        body<Pick<IUserPrivate, 'email_address'> & { password: string }>({
+          email_address: (v) => Validators.Fields.email(v),
+          password: (v) => Validators.Fields.password(v),
+        }),
+      ],
       preMiddlewares: [this.mws.limiter(3600, 10)],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
@@ -103,11 +110,13 @@ export default class UserController extends BaseController {
 
   createUser(): IControllerEndpoint<IUser> {
     return {
-      validator: validate([
-        body('username').not().isEmpty().trim().withMessage('Username cannot be empty'),
-        body('email_address').isEmail().normalizeEmail().withMessage('Not a valid email address'),
-        body('password').not().isEmpty().isLength({ min: 6 }).withMessage('Password length must be >6 characters'),
-      ]),
+      validators: [
+        body<Pick<IUserPrivate, 'username' | 'email_address'> & { password: string }>({
+          username: (v) => v.trim().notEmpty().withMessage('Username cannot be empty'),
+          email_address: (v) => Validators.Fields.email(v),
+          password: (v) => Validators.Fields.email(v),
+        }),
+      ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         const preExistingUser = await User.findOne({
@@ -127,11 +136,11 @@ export default class UserController extends BaseController {
         if (!emailSent) throw new ErrorHandler(HTTP.ServerError, 'Verification email could not be sent');
 
         const user = await this.dc.torm.transaction(async (txc: EntityManager) => {
-          const u = await(new User({
+          const u = await new User({
             username: req.body.username,
             email_address: req.body.email_address,
             password: req.body.password,
-          })).setup(txc);
+          }).setup(txc);
 
           await txc.save(u);
           return u;
@@ -156,7 +165,11 @@ export default class UserController extends BaseController {
 
   readUserByUsername(): IControllerEndpoint<IUser> {
     return {
-      validator: validate([param('username').trim().not().isEmpty()]),
+      validators: [
+        params<Pick<IUserPrivate, 'username'>>({
+          username: (v) => v.trim().notEmpty(),
+        }),
+      ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         const u: User = await User.findOne({ username: req.params.username });
@@ -237,18 +250,12 @@ export default class UserController extends BaseController {
 
   resetPassword(): IControllerEndpoint<void> {
     return {
-      validator: validate([
-        body('new_password')
-          .not()
-          .isEmpty()
-          .isLength({ min: 6 })
-          .withMessage('New password length must be >6 characters'),
-        body('old_password')
-          .not()
-          .isEmpty()
-          .isLength({ min: 6 })
-          .withMessage('Old password length must be >6 characters'),
-      ]),
+      validators: [
+        body<{ new_password: string; old_password: string }>({
+          new_password: (v) => Validators.Fields.password(v).withMessage('New password length must be >6 characters'),
+          old_password: (v) => Validators.Fields.password(v).withMessage('Old password length must be >6 characters'),
+        }),
+      ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const oldPassword = req.body.old_password;
@@ -295,43 +302,22 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.isOurself,
       controller: async (req: Request) => {
-        const u = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ["personal_details"] });
-        return (u.personal_details.contact_info.addresses || []).map(a => a.toFull());
+        const u = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ['personal_details'] });
+        return (u.personal_details.contact_info.addresses || []).map((a) => a.toFull());
       },
     };
   }
 
   createAddress(): IControllerEndpoint<IAddress> {
     return {
-      validator: validate([
-        body('city').trim().notEmpty().withMessage('Must provide a city'),
-        body('iso_country_code')
-          .trim()
-          .notEmpty()
-          .withMessage('Must provide ISO country code')
-          .isString()
-          .isISO31661Alpha3()
-          .withMessage('Not a valid ISO country code'),
-        body('postcode')
-          .trim()
-          .notEmpty()
-          .withMessage('Must provide postcode')
-          .isString()
-          .isPostalCode('GB') //TODO: make open to all counties
-          .withMessage('Not a valid postcode'),
-        body('street_name').trim().notEmpty().isString().withMessage('Must provide street name'),
-        body('street_number')
-          .trim()
-          .notEmpty()
-          .withMessage('Must provide street name')
-          .isInt()
-          .withMessage('Street number must be a number'),
-      ]),
+      validators: [
+        body<Idless<IAddress>>(Validators.Objects.IAddress())
+      ],
       authStrategy: AuthStrat.isOurself,
       controller: async (req: Request) => {
-        const user = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ["personal_details"] });
+        const user = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ['personal_details'] });
         if (!user) throw new ErrorHandler(HTTP.NotFound, 'No such user exists');
-        
+
         return await this.dc.torm.transaction(async (txc: EntityManager) => {
           const address = new Address(req.body);
           await user.personal_details.contact_info.addAddress(address, txc);
@@ -346,7 +332,7 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.isOurself,
       controller: async (req: Request) => {
-        const address = await Address.findOne({ _id: parseInt(req.params.aid )});
+        const address = await Address.findOne({ _id: parseInt(req.params.aid) });
         // TODO: update method in address model
 
         return address.toFull();
