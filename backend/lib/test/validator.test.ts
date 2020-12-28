@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { body, query, object, single, array, params } from '../common/validate';
+import Errors from '../common/errors';
 
 console.log("jello")
 
@@ -59,9 +60,8 @@ describe('Custom validation', () => {
     // })
 
     it("Should return correct results for arrays of objects in an object", async () => {
-      console.log('\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
-
       const data = {
+        name: "Cass",
         addresses: [
           { street_number: "2001" },
           { street_number: "2000" },
@@ -70,15 +70,16 @@ describe('Custom validation', () => {
       }
 
       const errors = await object(data, {
+        name: v => v.isString().equals("Not Cass"),
         addresses: v => v.custom(array({
           street_number: v => v.equals("2000")
-        })).withMessage("Addresses are incorrect")
+        }))
       })
 
       console.log(JSON.stringify(errors, null, 2))
 
-      expect(errors).to.be.lengthOf(1);
-      // expect(errors[0].msg).to.be.eq("Addresses are incorrect")
+      expect(errors).to.be.lengthOf(2);
+      expect(errors[0].msg).to.be.eq(Errors.INCORRECT);
 
       // console.log("\n\n\n\n\n")
 

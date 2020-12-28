@@ -1,3 +1,12 @@
+export default {
+  EMAIL_IN_USE: "EMAIL_IN_USE",
+  FORBIDDEN: "FORBIDDEN", // cannot be used
+  INCORRECT: "INCORRECT", // doesn't fit expected values
+  INVALID: "INVALID", // doesn't fit regexes / validators
+  TOO_SHORT: "TOO_SHORT",
+  TOO_LONG: "TOO_LONG"
+}
+
 import { Request, Response, NextFunction } from 'express';
 import log from './logger';
 import { IFormErrorField, HTTP, IErrorResponse } from '@eventi/interfaces';
