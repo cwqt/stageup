@@ -1,12 +1,13 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "chrome",
-        "request": "launch",
-        "name": "Launch Chrome against localhost",
-        "url": "http://localhost:4200",
-        "webRoot": "${workspaceFolder}/frontend"
-      }
-    ]
-  }
+  "version": "0.2.0",
+  "configurations": [
+    
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Frontend",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/frontend"
+    }
+  ]
+}

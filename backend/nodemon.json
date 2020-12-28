@@ -1,5 +1,10 @@
 {
-    "watch": ["lib/**/*.ts"],
-    "ext": "ts",
-    "exec": "ts-node ./lib/index.ts"
+  "restartable": "rs",
+  "ignore": [".git", "node_modules/**/node_modules"],
+  "verbose": true,
+  "execMap": {
+    "ts": "node --require ts-node/register"
+  },
+  "watch": ["lib/"],
+  "ext": "js,json,ts"
 }

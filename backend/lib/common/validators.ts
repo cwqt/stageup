@@ -70,11 +70,11 @@ const ObjectValidators = {
       addresses: v => v.custom(array(ObjectValidators.IAddress()))
     }
   },
-  IHostMemberChangeRequest: (optionalValue:boolean=false):ObjectValidator<IHostMemberChangeRequest> => {
+  IHostMemberChangeRequest: (value:IHostMemberChangeRequest["value"]=null):ObjectValidator<IHostMemberChangeRequest> => {
     return {
       user_id: v => FieldValidators.isInt(v),
       change: v => FieldValidators.isString(v).isIn(['add', 'update', 'del']),
-      value: v => v.optional(optionalValue)
+      value: v => v.optional(value == null ? true : false).equals(value.toString())
     }
   }
 }

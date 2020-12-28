@@ -1,13 +1,8 @@
 import { BaseEntity, Column, Entity, EntityManager, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import {
   HostOnboardingStep,
-  HostPermission,
   HostSubscriptionLevel,
-  IAddress,
-  IContactInfo,
-  IErrorResponse,
   IFormErrorField,
-  IHostMemberChangeRequest,
   IHostOnboardingProcess,
   IHostOnboardingState,
   IOnboardingAddMembers,
@@ -16,8 +11,6 @@ import {
   IOnboardingSocialPresence,
   IOnboardingStep,
   IOnboardingSubscriptionConfiguration,
-  IPersonInfo,
-  PersonTitle,
 } from '@eventi/interfaces';
 import { Host } from '../Hosts/Host.model';
 import { User } from '../Users/User.model';
@@ -129,17 +122,17 @@ const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IForm
       hmrc_company_number: v => v.isInt().isLength({ min: 8, max: 8 }),
       business_contact_number: v => v.isMobilePhone('en-GB'),
       business_address: v => v.custom(single(Validators.Objects.IAddress())),
-    })();
+    });
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
     return await object(d, {
       owner_info: v => v.custom(single(Validators.Objects.IPerson())),
-    })();
+    });
   },
   [HostOnboardingStep.AddMembers]: async (d: IOnboardingAddMembers) => {
     return await object(d, {
       members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest())),
-    })();
+    });
   },
   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
     return await object(d, {
@@ -151,11 +144,11 @@ const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IForm
             instagram_url: v => Validators.Fields.isString(v),
           })
         ),
-    })();
+    });
   },
   [HostOnboardingStep.SubscriptionConfiguration]: async (d: IOnboardingSubscriptionConfiguration) => {
     return await object(d, {
       tier: v => Validators.Fields.isInt(v).isIn(Object.values(HostSubscriptionLevel)),
-    })();
+    });
   },
 };

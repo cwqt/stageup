@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "env NODE_ENV=development nodemon",
-    "start:test": "env NODE_ENV=testing nodemon",
-    "start:dev": "tsc && env NODE_ENV=development nodemon --inspect build/index.js",
-    "test": "tsc && env NODE_ENV=testing mocha --bail -r ts-node/register test/**/*.test.ts",
+    "start": "env NODE_ENV=development nodemon lib/index.ts",
+    "start:test": "env NODE_ENV=testing nodemon lib/index.ts",
+    "start:dev": "env NODE_ENV=development nodemon --inspect lib/index.ts",
+    "test": "env NODE_ENV=testing mocha --bail -r ts-node/register lib/test/**/*.test.ts",
+    "test:dev": "env NODE_ENV=testing mocha -r ts-node/register lib/test/*.test.ts --bail --colors --timeout 9999 --inspect",
     "deploy:build": "tsc && docker build -t eventi/backend .",
-    "deploy:run": "docker run -p 49160:3000 --env-file ./.env_prod eventi/backend",
-    "db:diagram": "typeorm-uml torm.config.json"
+    "deploy:run": "docker run -p 49160:3000 --env-file ./.env_prod eventi/backend"
   },
   "keywords": [],
   "author": "",
@@ -80,7 +80,7 @@
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.2",
     "supertest": "^4.0.2",
-    "ts-node": "^8.6.2",
+    "ts-node": "^8.10.2",
     "tsc-watch": "^4.2.3",
     "tslint": "^6.0.0",
     "typeorm-uml": "^1.6.1",

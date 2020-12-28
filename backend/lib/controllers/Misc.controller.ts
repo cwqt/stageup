@@ -26,45 +26,26 @@ export default class MiscController extends BaseController {
       controller: async (req: Request) => {
         // Clear Influx, Redis, Postgres & session store
         await this.dc.influx?.query(`DROP SERIES FROM /.*/`);
-        await new Promise((res) => this.dc.redis.flushdb(res));
+        await new Promise(res => this.dc.redis.flushdb(res));
         await this.dc.torm.synchronize(true); //https://github.com/nestjs/nest/issues/409
-        await new Promise((res) => this.dc.session_store.clear(res));
+        await new Promise(res => this.dc.session_store.clear(res));
       },
     };
   }
 
   test(): IControllerEndpoint<any> {
     return {
+      validators: [
+        body({
+          name: v => v.isString(),
+          addresses: v => v.custom(array({
+            v: v => v.isInt()
+          }))
+        })
+      ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request) => {
-        interface Test extends IPersonInfo {
-          contact_info: IContactInfo;
-        }
-
-        let results = await validate([
-          body<Test>({
-            first_name: (v) => v.isString(),
-            last_name: (v) => v.isString(),
-            title: (v) => v.isString(),
-            contact_info: (v) =>
-              v.notEmpty().custom(
-                single<IContactInfo>({
-                  mobile_number: (v) => v.isInt(),
-                  landline_number: (v) => v.isInt(),
-                  addresses: (v) =>
-                    v.custom(
-                      array<Partial<IAddress>>({
-                        street_name: (v) => v.isString(),
-                        street_number: (v) => v.isInt(),
-                      })
-                    ),
-                })
-              ),
-          }),
-        ])(req);
-
-        console.log(results);
-        throw new ErrorHandler(HTTP.BadRequest, 'Bad input', results);
+        return true;
       },
     };
   }
