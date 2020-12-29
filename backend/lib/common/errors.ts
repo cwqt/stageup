@@ -1,15 +1,6 @@
-export default {
-  EMAIL_IN_USE: "EMAIL_IN_USE",
-  FORBIDDEN: "FORBIDDEN", // cannot be used
-  INCORRECT: "INCORRECT", // doesn't fit expected values
-  INVALID: "INVALID", // doesn't fit regexes / validators
-  TOO_SHORT: "TOO_SHORT",
-  TOO_LONG: "TOO_LONG"
-}
-
 import { Request, Response, NextFunction } from 'express';
 import log from './logger';
-import { IFormErrorField, HTTP, IErrorResponse } from '@eventi/interfaces';
+import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@eventi/interfaces';
 
 export const handleError = (req: Request, res: Response, next: NextFunction, err: ErrorHandler | Error) => {
   const errorType: HTTP = err instanceof ErrorHandler ? err.errorType : HTTP.ServerError;
@@ -46,8 +37,8 @@ export class FormErrorResponse {
     this.errors = [];
   }
 
-  push(param: string, message: string, value: string, location?: 'body' | 'param' | 'query') {
-    this.errors.push({ param: param, msg: message, value: value, location: location });
+  push(param: string, message: ErrCode, value: IFormErrorField['value'], location?: IFormErrorField['location']) {
+    this.errors.push({ param: param, code: message, value: value, location: location });
   }
 
   get value() {

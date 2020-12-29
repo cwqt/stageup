@@ -1,107 +1,146 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { body, query, object, single, array, params } from '../common/validate';
-import Errors from '../common/errors';
-
-console.log("jello")
+import { ErrCode } from '@eventi/interfaces';
 
 describe('Custom validation', () => {
-    // it('Should return correct results for simple, unnested objects', async () => {
-    //   const data = {
-    //     name: "cass",
-    //     age: 21,
-    //     location: "cardiff"
-    //   }
+  it('Should return correct results for simple, unnested objects', async () => {
+    const data = {
+      name: 'cass',
+      age: 21,
+      location: 'cardiff',
+    };
 
-    //   // Should return 2 errors for name & age
-    //   const errors = await object(data, {
-    //     name: v => v.isInt(),
-    //     age: v => v.isString().withMessage("Must provide an age"),
-    //     location: v => v.isString()
-    //   });
+    // Should return 2 errors for name & age
+    const errors = await object(data, {
+      name: v => v.isInt(),
+      age: v => v.isString(),
+      location: v => v.isString(),
+    });
 
-    //   expect(errors).to.be.lengthOf(2);
+    expect(errors).to.be.lengthOf(2);
 
-    //   expect(errors[0].location).to.eq(undefined);
-    //   expect(errors[0].msg).to.eq("Invalid value");
-    //   expect(errors[0].param).to.eq("name");
-    //   expect(errors[0].value).to.eq(data.name);
+    expect(errors[0].location).to.eq(undefined);
+    expect(errors[0].code).to.eq(ErrCode.INVALID);
+    expect(errors[0].param).to.eq('name');
+    expect(errors[0].value).to.eq(data.name);
 
-    //   expect(errors[1].location).to.eq(undefined);
-    //   expect(errors[1].msg).to.eq("Must provide an age");
-    //   expect(errors[1].param).to.eq("age");
-    //   expect(errors[1].value).to.eq(data.age);
-    // });
+    expect(errors[1].location).to.eq(undefined);
+    expect(errors[1].code).to.eq(ErrCode.INVALID);
+    expect(errors[1].param).to.eq('age');
+    expect(errors[1].value).to.eq(data.age);
+  });
 
-    // it("Should return correct results for nested objects", async () => {
-    //   const data = {
-    //     name:"cass",
-    //     address: {
-    //       street_name: "ham street",
-    //       street_number: 12
-    //     }
-    //   }
+  it('Should return correct results for nested objects', async () => {
+    const data = {
+      name: 'cass',
+      address: {
+        street_name: 'ham street',
+        street_number: 12,
+      },
+    };
 
-    //   const errors = await object(data, {
-    //     name: v => v.equals("not cass"),
-    //     address: v => v.custom(single<typeof data.address>({
-    //       street_number: v => v.isString(),
-    //       street_name: v => v.isString() 
-    //     }))
-    //   });
+    const errors = await object(data, {
+      name: v => v.equals('not cass'),
+      address: v =>
+        v.custom(
+          single<typeof data.address>(
+            {
+              street_number: v => v.isString(),
+              street_name: v => v.isString(),
+            },
+            ErrCode.TOO_LONG
+          )
+        ),
+    });
 
-    //   expect(errors).to.be.lengthOf(2);
-    //   expect(errors[0].param).to.be.eq("name");
+    expect(errors).to.be.lengthOf(2);
+    expect(errors[0].param).to.be.eq('name');
 
-    //   expect(errors[1].param).to.be.eq("address");
-    //   expect(errors[1].msg).to.be.an("array");
-    //   expect(errors[1].msg).to.be.lengthOf(1);
-    //   expect(errors[1].msg[0]);
-    // })
+    expect(errors[1].param).to.be.eq('address');
+    expect(errors[1].value).to.include(data.address);
 
-    it("Should return correct results for arrays of objects in an object", async () => {
-      const data = {
-        name: "Cass",
-        addresses: [
-          { street_number: "2001" },
-          { street_number: "2000" },
-          { street_number: "2002" },
-        ]
-      }
+    expect(errors[1].nestedErrors).to.be.an('array');
+    expect(errors[1].nestedErrors).to.be.lengthOf(1);
+    expect(errors[1].nestedErrors[0].param).to.eq('street_number');
+  });
 
-      const errors = await object(data, {
-        name: v => v.isString().equals("Not Cass"),
-        addresses: v => v.custom(array({
-          street_number: v => v.equals("2000")
+  it('Should return correct results for arrays of objects in an object', async () => {
+    const data = {
+      name: 'Cass',
+      addresses: [{ street_number: '2001' }, { street_number: '2000' }, { street_number: '2002' }],
+    };
+
+    const errors = await object(data, {
+      name: v => v.equals('Not Cass').withMessage(ErrCode.IN_USE),
+      addresses: v =>
+        v.custom(
+          array({
+            street_number: v => v.equals('2000'),
+          })
+        ),
+    });
+
+    expect(errors).to.be.lengthOf(2);
+    expect(errors[0].code).to.be.eq(ErrCode.IN_USE);
+
+    expect(errors[1].code).to.eq(ErrCode.INVALID);
+    expect(errors[1].value).to.eq(undefined); //don't return array value in error return
+    expect(errors[1].nestedErrors).to.be.lengthOf(2);
+
+    // 1st address
+    expect(errors[1].nestedErrors[0].idx).to.eq(0);
+    expect(errors[1].nestedErrors[0].param).to.eq('street_number');
+    expect(errors[1].nestedErrors[0].value).to.eq('2001');
+
+    // 3rd address
+    expect(errors[1].nestedErrors[1].idx).to.eq(2);
+    expect(errors[1].nestedErrors[1].param).to.eq('street_number');
+    expect(errors[1].nestedErrors[1].value).to.eq('2002');
+  });
+
+  it("Should return errors for complex nested arrays of object", async () => {
+    const data = {
+      fields: [
+        {
+          name: "Not Cass", // this should error
+          address: {
+            street_number: "2001"
+          }
+        },
+        {
+          name: "Cass",
+          address: {
+            street_number: "2000" // this should error
+          }
+        }
+      ]
+    }
+
+    const errors = await object(data, {
+      fields: v => v.custom(array({
+        name: v => v.equals("Cass"),
+        address: v => v.custom(single({
+          street_number: v => v.equals("2001")
         }))
-      })
+      }))
+    });
 
-      console.log(JSON.stringify(errors, null, 2))
+    console.log(JSON.stringify(errors, null, 2));
+  });
 
-      expect(errors).to.be.lengthOf(2);
-      expect(errors[0].msg).to.be.eq(Errors.INCORRECT);
+  // Arrays of primitives don't work
+  // it("Should return errors for objects with fields that are arrays of primitives", async () => {
+  //   const data = {
+  //     data: [1,2,3,4,5]
+  //   }
 
-      // console.log("\n\n\n\n\n")
+  //   const errors = await object(data, {
+  //     data: v => v.custom(array({
+  //       __this: v => v.isInt()
+  //     }))
+  //   })
 
-
-      // console.log(errors);
-      // console.log(errors[0].msg);
-
-      // const data = [
-      //   { name: "cass" },
-      //   { name: "not cass" },
-      // ]
-
-      // const errors = await object(data, {
-      //   __this: v => v.custom(array({
-      //     name: v => v.equals("cass")
-      //   }))
-      // })
-
-      // const errors = await Promise.all(data.map(i => object(i, {
-      //   name: v => v.equals("cass")
-      // })))
-
-    
-    })
-})
+  //   console.log(JSON.stringify(errors, null, 2));
+  // })
+});

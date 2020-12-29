@@ -9,9 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/mongoose": "^5.7.36",
-    "ip-address": "^6.3.0",
-    "mongoose": "^5.9.27"
+    "ip-address": "^6.3.0"
   },
   "devDependencies": {
     "@types/ip-address": "^5.8.2",

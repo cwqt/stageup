@@ -1,10 +1,10 @@
-import { HTTP, IFormErrorField, Y } from '@eventi/interfaces';
+import { HTTP, IFormErrorField, Y, ErrCode } from '@eventi/interfaces';
 import { Request } from 'express';
 import { NextFunction, Response } from 'express-async-router';
 import { CustomValidator, Meta, ValidationChain, Location, ValidationError } from 'express-validator';
 import { body as bodyRunner, param as paramRunner, query as queryRunner } from 'express-validator';
 import { wrap } from 'module';
-import Errors, { ErrorHandler } from './errors';
+import { ErrorHandler } from './errors';
 
 type VData<T> = T & {
   __this?: T; // self-reference
@@ -20,14 +20,14 @@ type VFunctor = <T extends object>(
   validators: VFieldChainerMap<T>,
   location?: Location,
   idx?: number
-) => Promise<ValidationError[]>;
+) => Promise<IFormErrorField[]>;
 
-type VReqHandlerFunctor = (req: Request) => Promise<ValidationError[]>;
+type VReqHandlerFunctor = (req: Request) => Promise<IFormErrorField[]>;
 
 // Takes either req[location] as starting point or data in the case of nested objects/arrays
 type VReqHandler = <T extends object>(validators: VFieldChainerMap<T>, data?: T) => VReqHandlerFunctor;
 
-type VArrayReturn = { errors: ValidationError[]; message: string };
+type VArrayReturn = { errors: IFormErrorField[]; message: string };
 
 // VFunctor  T       VData<T>
 //   v       v          v
@@ -58,7 +58,7 @@ export const runValidator = async <T extends object, U extends keyof T>(
   field: U,
   f: VChainer,
   location: Location | null
-): Promise<ValidationError[]> => {
+): Promise<IFormErrorField[]> => {
   // Now add in the __this self reference for self array checks
   // e.g. body().isArray() in express-validator
   const wrappedData: VData<T> = {
@@ -71,41 +71,48 @@ export const runValidator = async <T extends object, U extends keyof T>(
   const runner = f(
     validatorRunnerMap[location ? location : 'body']((field == '__this' ? `__this.${field}` : field) as string)
   );
-  const res = await runner.run({
-    [location ? location : 'body']: Array.isArray(data) ? wrappedData.__this : wrappedData,
-  });
 
-  // No location passed (in the case of used directly via object())
-  // remove the object since wasn't called from a VReqHandlerFunctor
-  return location !== null
-    ? (<any>res)?.errors || []
-    : ((<any>res)?.errors || []).map((e: IFormErrorField) => {
-        delete e.location;
-        e.msg = e.msg == 'Invalid value' ? Errors.INVALID : e.msg;
-        return e;
-      });
+  const errors: ValidationError[] = (
+    await runner.run({
+      [location ? location : 'body']: Array.isArray(data) ? wrappedData.__this : wrappedData,
+    })
+  ).array();
+
+  return (errors || []).map(e => {
+    const res = {
+      value: e.value,
+      code: e.msg == 'Invalid value' ? ErrCode.INVALID : e.msg,
+      param: e.param,
+    };
+
+    // No location passed (in the case of used directly via object())
+    // remove the object since wasn't called from a VReqHandlerFunctor
+    return (location ? { ...res, location: e.location } : res) as IFormErrorField;
+  });
 };
 
 /**
  * @description Validate an object using express-validator
- * @param data Object body
+ * @param data Object body - cannot take arrays
  * @param validators key-value pair of field-vchainer
  * @param location used by VReqHandlerFunctors to specify location of field
  */
-export const object: VFunctor = async (data, validators, location = null, idx = null): Promise<ValidationError[]> => {
-  const errors: ValidationError[] = (
+export const object: VFunctor = async (data, validators, location = null, idx = null): Promise<IFormErrorField[]> => {
+  const errors: IFormErrorField[] = (
     await Promise.all(Object.keys(validators).map((i: any) => runValidator(data, i, (<any>validators)[i], location)))
   ).flat();
 
-  // catch .array returns & transform to something better
-  errors.forEach(e => {
-    // TODO: recurse down if nested using .single in .array
-    // Y(r => f => {})
+  // TODO: recurse down nestedErrors doing this action
+  // Y(r => f => {})
+  errors.forEach((e: any) => {
+    // handle .arrays & .single
+    if (e.code.errors) {
+      // don't need to take up bandwidth when we've indexed the errors
+      // in an .array
+      if (Array.isArray(e.value)) delete e.value;
 
-    if (e.msg.errors) {
-      delete e.value; // don't need to take up bandwidth when we've indexed the errors
-      e.nestedErrors = (<any>e).msg.errors;
-      e.msg = (<any>e).msg.message;
+      e.nestedErrors = (<any>e).code.errors;
+      e.code = (<any>e).code.message;
     }
   });
 
@@ -115,41 +122,49 @@ export const object: VFunctor = async (data, validators, location = null, idx = 
 /**
  * @description Validate an nested array of objects
  */
-export const array = <T extends object>(validators: VFieldChainerMap<T>, message?: string): CustomValidator => {
-  return async (data: T[] | VData<T[]>, meta: Meta): Promise<VArrayReturn> => {
-    if (!data) throw 'Array does not exist';
+export const array = <T extends object>(validators: VFieldChainerMap<T>, code?: ErrCode): CustomValidator => {
+  return async (data: T[] | VData<T[]>, meta: Meta) => {
+    if (!data) throw { message: ErrCode.NOT_FOUND };
 
-    throw {
-      // throw custom object to include the message since .withMessage chainer doesn't work with .custom
-      message: message ?? Errors.INVALID,
-      // use all settled as all singles will throw error & be rejected
-      errors: (await Promise.allSettled(data.map(i => single(validators)(i, meta))))
-        // have a IFormErrorField[] for each field according to each validation in the chain
-        .map((e, idx) => {
-          // append indexes into field errors
-          return (<any>e).reason.map((i: IFormErrorField) => ({ ...i, idx: idx }));
-        }) // filter out fields with no errors
-        .filter(e => e.length != 0)
-        .flat(),
-    };
+    const errors = (await Promise.allSettled(data.map(i => single(validators)(i, meta))))
+      // have a IFormErrorField[] for each field according to each validation in the chain
+      .map((e, idx) => {
+        // append indexes into field errors
+        return (<any>e).reason.errors.map((i: IFormErrorField) => ({ ...i, idx: idx }));
+      }) // filter out fields with no errors
+      .filter(e => e.length != 0)
+      .flat()
+      .filter(e => e.nestedErrors != 0);
+
+    if (errors.length) {
+      throw {
+        // throw custom object to include the message since .withMessage chainer doesn't work with .custom
+        message: code ?? ErrCode.INVALID,
+        // use all settled as all singles will throw error & be rejected
+        errors: errors,
+      };
+    }
   };
 };
 
 /**
  * @description Validate a single nested object
  */
-export const single = <T extends object>(validators: VFieldChainerMap<T>): CustomValidator => {
+export const single = <T extends object>(validators: VFieldChainerMap<T>, code?: ErrCode): CustomValidator => {
   return async (data: VData<T> | T, meta: Meta, idx: number = null) => {
     if (!data) throw 'Object does not exist';
 
-    let e: ValidationError[];
+    let e: IFormErrorField[];
     if (meta.req[meta.location].__callee == null) {
       e = await object(data, validators, null, idx);
     } else {
       e = await reqHandlerFunctorMap[meta.location](validators, data)(meta.req as Request);
     }
 
-    throw e;
+    throw {
+      message: code ?? ErrCode.INVALID,
+      errors: e,
+    };
   };
 };
 
@@ -161,7 +176,7 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>): Custo
  */
 export const validatorMiddleware = (validators: VReqHandlerFunctor[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const errors: PromiseSettledResult<ValidationError[]>[] = (
+    const errors: PromiseSettledResult<IFormErrorField[]>[] = (
       await Promise.allSettled(validators.map(v => v(req)))
     ).flat();
 

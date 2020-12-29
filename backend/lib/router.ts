@@ -100,7 +100,7 @@ const executeAuthenticationStrategy = (authStrategy: AuthStrategy, dc:DataClient
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Site admin can do anything
-      if (req.session.user?.is_admin) return next();
+      if (req.session?.user?.is_admin) return next();
 
       const [isAuthorised, _, reason] = await authStrategy(req, dc);
       if(!isAuthorised) throw new ErrorHandler(HTTP.Unauthorised, reason);
