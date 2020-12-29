@@ -1,17 +1,18 @@
-import { HostPermission, IEnvelopedData, IHost, IUser, IUserHostInfo, IMyself } from '@eventi/interfaces';
+import { HostPermission, IEnvelopedData, IHost, IUser, IUserHostInfo, IMyself, IAddress } from '@eventi/interfaces';
 import { IControllerEndpoint, BaseArgs, BaseController } from '../common/controller';
 import { Request } from 'express';
 import { body, param } from 'express-validator';
 import { ErrorHandler, FormErrorResponse } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
 import { validate } from '../common/validate';
+import Email = require('../common/email');
 import config from '../config';
 import AuthStrat from '../authorisation';
 
 import { User } from '../models/Users/User.model';
 import { Host } from '../models/Hosts/Host.model';
-import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
-import Email = require('../common/email');
+import { Address } from '../models/Users/Address.model';
+import { EntityManager } from 'typeorm';
 
 export default class UserController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -31,7 +32,7 @@ export default class UserController extends BaseController {
         body('password').not().isEmpty().isLength({ min: 6 }).withMessage('Password length must be > 6 characters'),
       ]),
       preMiddlewares: [this.mws.limiter(3600, 10)],
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         const emailAddress = req.body.email_address;
         const password = req.body.password;
@@ -63,7 +64,7 @@ export default class UserController extends BaseController {
       validator: validate([]),
       preMiddlewares: [],
       postMiddlewares: [],
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IMyself> => {
         const user: User = await User.findOne({ _id: req.session.user._id });
         if (!user) throw new ErrorHandler(HTTP.NotFound, 'No such user exists');
@@ -77,24 +78,25 @@ export default class UserController extends BaseController {
         });
 
         let host_info: IUserHostInfo;
-        if (host) {
-          host_info = await UserHostInfo.findOne({
-            where: {
-              user: {
-                _id: user._id,
-              },
-              host: {
-                _id: host._id,
-              },
-            },
-          });
-        }
+        return {} as IMyself;
+        // if (host) {
+        //   host_info = await UserHostInfo.findOne({
+        //     where: {
+        //       user: {
+        //         _id: user._id,
+        //       },
+        //       host: {
+        //         _id: host._id,
+        //       },
+        //     },
+        //   });
+        // }
 
-        return {
-          user: user.toFull(),
-          host: host?.toStub(),
-          host_info: host_info,
-        };
+        // return {
+        //   user: user.toFull(),
+        //   host: host?.toStub(),
+        //   host_info: host_info,
+        // };
       },
     };
   }
@@ -106,7 +108,7 @@ export default class UserController extends BaseController {
         body('email_address').isEmail().normalizeEmail().withMessage('Not a valid email address'),
         body('password').not().isEmpty().isLength({ min: 6 }).withMessage('Password length must be >6 characters'),
       ]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         const preExistingUser = await User.findOne({
           where: [{ email_address: req.body.email_address }, { username: req.body.username }],
@@ -124,20 +126,25 @@ export default class UserController extends BaseController {
         const emailSent = await Email.sendVerificationEmail(req.body.email_address);
         if (!emailSent) throw new ErrorHandler(HTTP.ServerError, 'Verification email could not be sent');
 
-        const u = new User({
-          username: req.body.username,
-          email_address: req.body.email_address,
-          password: req.body.password,
+        const user = await this.dc.torm.transaction(async (txc: EntityManager) => {
+          const u = await(new User({
+            username: req.body.username,
+            email_address: req.body.email_address,
+            password: req.body.password,
+          })).setup(txc);
+
+          await txc.save(u);
+          return u;
         });
 
-        return (await this.dc.torm.manager.save(u))?.toFull();
+        return user.toFull();
       },
     };
   }
 
   logoutUser(): IControllerEndpoint<void> {
     return {
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         req.session.destroy((err) => {
           if (err) throw new ErrorHandler(HTTP.ServerError, 'Logging out failed');
@@ -150,7 +157,7 @@ export default class UserController extends BaseController {
   readUserByUsername(): IControllerEndpoint<IUser> {
     return {
       validator: validate([param('username').trim().not().isEmpty()]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         const u: User = await User.findOne({ username: req.params.username });
         if (!u) throw new ErrorHandler(HTTP.NotFound, 'No such user exists');
@@ -162,7 +169,7 @@ export default class UserController extends BaseController {
 
   readUserById(): IControllerEndpoint<IUser> {
     return {
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         let u: User = (await User.find({ _id: parseInt(req.params.uid) }))[0];
         if (!u) throw new ErrorHandler(HTTP.NotFound, 'No such user exists');
@@ -174,7 +181,7 @@ export default class UserController extends BaseController {
 
   updateUser(): IControllerEndpoint<IUser> {
     return {
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         let u: User = (await User.find({ _id: parseInt(req.params.uid) }))[0];
         if (!u) throw new ErrorHandler(HTTP.NotFound, 'No such user exists');
@@ -187,7 +194,7 @@ export default class UserController extends BaseController {
 
   deleteUser(): IControllerEndpoint<void> {
     return {
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         let u: User = (await User.find({ _id: parseInt(req.params.uid) }))[0];
         if (!u) throw new ErrorHandler(HTTP.NotFound, 'No such user exists');
@@ -199,7 +206,7 @@ export default class UserController extends BaseController {
 
   readUserHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserHostInfo>> {
     return {
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IEnvelopedData<IHost, IUserHostInfo>> => {
         const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
         if (!user.host) throw new ErrorHandler(HTTP.NotFound, 'User is not part of any host');
@@ -220,7 +227,7 @@ export default class UserController extends BaseController {
 
   updateUserAvatar(): IControllerEndpoint<IUser> {
     return {
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         // TODO: assets with s3
         return {} as IUser;
@@ -242,7 +249,7 @@ export default class UserController extends BaseController {
           .isLength({ min: 6 })
           .withMessage('Old password length must be >6 characters'),
       ]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const oldPassword = req.body.old_password;
         const newPassword = req.body.new_password;
@@ -272,15 +279,87 @@ export default class UserController extends BaseController {
 
   readUserHostPermissions(): IControllerEndpoint<void> {
     return {
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
 
   readUserFeed(): IControllerEndpoint<void> {
     return {
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
+    };
+  }
+
+  readAddresses(): IControllerEndpoint<IAddress[]> {
+    return {
+      authStrategy: AuthStrat.isOurself,
+      controller: async (req: Request) => {
+        const u = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ["personal_details"] });
+        return (u.personal_details.contact_info.addresses || []).map(a => a.toFull());
+      },
+    };
+  }
+
+  createAddress(): IControllerEndpoint<IAddress> {
+    return {
+      validator: validate([
+        body('city').trim().notEmpty().withMessage('Must provide a city'),
+        body('iso_country_code')
+          .trim()
+          .notEmpty()
+          .withMessage('Must provide ISO country code')
+          .isString()
+          .isISO31661Alpha3()
+          .withMessage('Not a valid ISO country code'),
+        body('postcode')
+          .trim()
+          .notEmpty()
+          .withMessage('Must provide postcode')
+          .isString()
+          .isPostalCode('GB') //TODO: make open to all counties
+          .withMessage('Not a valid postcode'),
+        body('street_name').trim().notEmpty().isString().withMessage('Must provide street name'),
+        body('street_number')
+          .trim()
+          .notEmpty()
+          .withMessage('Must provide street name')
+          .isInt()
+          .withMessage('Street number must be a number'),
+      ]),
+      authStrategy: AuthStrat.isOurself,
+      controller: async (req: Request) => {
+        const user = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ["personal_details"] });
+        if (!user) throw new ErrorHandler(HTTP.NotFound, 'No such user exists');
+        
+        return await this.dc.torm.transaction(async (txc: EntityManager) => {
+          const address = new Address(req.body);
+          await user.personal_details.contact_info.addAddress(address, txc);
+          await txc.save(user);
+          return address.toFull();
+        });
+      },
+    };
+  }
+
+  updateAddress(): IControllerEndpoint<IAddress> {
+    return {
+      authStrategy: AuthStrat.isOurself,
+      controller: async (req: Request) => {
+        const address = await Address.findOne({ _id: parseInt(req.params.aid )});
+        // TODO: update method in address model
+
+        return address.toFull();
+      },
+    };
+  }
+
+  deleteAddress(): IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.isOurself,
+      controller: async (req: Request) => {
+        await Address.delete({ _id: parseInt(req.params.aid) });
+      },
     };
   }
 }

@@ -1,4 +1,4 @@
-import { IPerformanceHostInfo, IPerformanceStub, IRating, NodeType } from "@eventi/interfaces";
+import { IPerformanceHostInfo, IPerformanceStub, IRating } from "@eventi/interfaces";
 import { BaseEntity, Column, Entity, EntityManager, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { SigningKey } from "./SigningKey.model";
 import { DataClient } from "../../common/data";

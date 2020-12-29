@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "tsc && set TS_NODE_COMPILER_OPTIONS={\"strict\":false} && set NODE_ENV=testing&& mocha --timeout 1800000 -r ts-node/register lib/stories/**/*.story.ts",
+    "test": "tsc && set TS_NODE_COMPILER_OPTIONS={\"strict\":false} && set NODE_ENV=testing&& mocha --timeout 1800000 -r ts-node/register lib/stories/hosts/onboarding.story.ts",
     "test-dev": "tsc && set TS_NODE_COMPILER_OPTIONS={\"strict\":false} && set NODE_ENV=testing&& mocha --inspect-brk -r ts-node/register lib/stories/**/*.story.ts"
   },
   "author": "",

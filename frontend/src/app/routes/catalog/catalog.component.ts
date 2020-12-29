@@ -1,7 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import {
-  NodeType,
-} from "@eventi/interfaces";
 import { Observable, Subject } from "rxjs";
 import { CatalogService } from "../../services/catalog.service";
 

@@ -23,7 +23,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
   ) => {
     method(
       path,
-      executeAuthenticationStrategies(endpoint.authStrategies, providers),
+      executeAuthenticationStrategy(endpoint.authStrategy, providers),
       endpoint.validator ?? skip,
       ...(endpoint.preMiddlewares || []),
       (req: Request, res: Response, next: NextFunction) => {
@@ -95,18 +95,15 @@ export class Router {
         (path, endpoint);
       }
 
-const executeAuthenticationStrategies = (authStrats: AuthStrategy[], dc:DataClient) => {
+const executeAuthenticationStrategy = (authStrategy: AuthStrategy, dc:DataClient) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Site admin can do anything
       if (req.session.user?.is_admin) return next();
 
-      // Run all auth strategies
-      for(let i=0; i<authStrats.length; i++) {
-        let [isAuthorised, _, reason] = await authStrats[i](req, dc);
-        if(reason) throw new ErrorHandler(HTTP.Unauthorised, reason);
-      }
-
+      const [isAuthorised, _, reason] = await authStrategy(req, dc);
+      if(!isAuthorised) throw new ErrorHandler(HTTP.Unauthorised, reason);
+      
       return next();
     } catch (error) {
       return next(new ErrorHandler(HTTP.Unauthorised, error.message));

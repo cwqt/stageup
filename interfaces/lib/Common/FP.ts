@@ -1,6 +1,4 @@
-import { NodeType } from './Nodes.types';
-
-export const capitalize = (str: NodeType | string): string => str.charAt(0).toUpperCase() + str.slice(1);
+export const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
 type M<A extends any[], R> = (f: M<A, R>) => (...a: A) => R;
 
@@ -21,4 +19,3 @@ export const sortObjects = <T, K extends keyof T>(values: T[], orderType: K) => 
     return 0;
   });
 };
-

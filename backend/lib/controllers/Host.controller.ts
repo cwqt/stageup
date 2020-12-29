@@ -1,4 +1,4 @@
-import { HostPermission, IHost, IUser, IUserHostInfo } from '@eventi/interfaces';
+import { HostPermission, IHost, IOnboardingStep, IUser, IUserHostInfo } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { DataClient } from '../common/data';
@@ -10,7 +10,7 @@ import { validate } from '../common/validate';
 import { body, query } from 'express-validator';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
-import { IHostOnboardingProcess } from '@eventi/interfaces/lib/Host.model';
+import { IHostOnboardingProcess } from '@eventi/interfaces';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -46,7 +46,7 @@ export default class HostController extends BaseController {
           .normalizeEmail()
           .withMessage('Not a valid e-mail address'),
       ]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IHost> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, 'Cannot create host if already part of another');
@@ -61,9 +61,12 @@ export default class HostController extends BaseController {
         });
 
         // Create host & add current user (creator) to it through transaction
+        // & begin the onboarding process
         await this.dc.torm.transaction(async (transEntityManager) => {
-          await transEntityManager.save(host);
           await host.addMember(user, HostPermission.Owner, transEntityManager);
+          // const onboardingProcess = new Onboarding
+
+          await transEntityManager.save(host);
         });
 
         // addMember saves to db
@@ -75,7 +78,7 @@ export default class HostController extends BaseController {
   readHost():IControllerEndpoint<IHost> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.isLoggedIn],
+      authStrategy: AuthStrat.isLoggedIn,
       controller: async (req:Request):Promise<IHost> => {
         const host =  await Host.findOne({ _id: parseInt(req.params.hid) })
         return host.toFull();
@@ -86,7 +89,7 @@ export default class HostController extends BaseController {
   readHostMembers(): IControllerEndpoint<IUser[]> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser[]> => {
         const host = await Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ['members'] });
         return host.members.map((u: User) => u.toFull());
@@ -97,7 +100,7 @@ export default class HostController extends BaseController {
   updateHost(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -105,18 +108,19 @@ export default class HostController extends BaseController {
   deleteHost(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (!user.host) throw new ErrorHandler(HTTP.NotFound, 'User is not part of any host');
 
-        const userHostInfo = await UserHostInfo.findOne({
-          relations: ['user', 'host'],
-          where: {
-            user: { _id: user._id },
-            host: { _id: user.host._id },
-          },
-        });
+        // const userHostInfo = await UserHostInfo.findOne({
+        //   relations: ['user', 'host'],
+        //   where: {
+        //     user: { _id: user._id },
+        //     host: { _id: user.host._id },
+        //   },
+        // });
+        const userHostInfo = {} as UserHostInfo;
 
         if (userHostInfo.permissions != HostPermission.Owner)
           throw new ErrorHandler(HTTP.Unauthorised, 'Only host owner can delete host');
@@ -130,7 +134,7 @@ export default class HostController extends BaseController {
   addUser(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -138,7 +142,7 @@ export default class HostController extends BaseController {
   removeUser(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -146,7 +150,7 @@ export default class HostController extends BaseController {
   alterMemberPermissions(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -154,7 +158,7 @@ export default class HostController extends BaseController {
   updateOnboarding(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.hasHostPermission(HostPermission.Owner)],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async (req: Request): Promise<void> => {},
     };
   }
@@ -163,30 +167,80 @@ export default class HostController extends BaseController {
     return {
       validator: validate([query('user').trim().not().isEmpty().toInt()]),
       controller: async (req: Request): Promise<IUserHostInfo> => {
-        const uhi = await UserHostInfo.findOne({
-          relations: ['host', 'user'],
-          where: {
-            user: {
-              _id: parseInt(req.query.user as string),
-            },
-            host: {
-              _id: parseInt(req.params.hid),
-            },
-          },
-        });
+        // const uhi = await UserHostInfo.findOne({
+        //   relations: ['host', 'user'],
+        //   where: {
+        //     user: {
+        //       _id: parseInt(req.query.user as string),
+        //     },
+        //     host: {
+        //       _id: parseInt(req.params.hid),
+        //     },
+        //   },
+        // });
 
-        return uhi;
+        // return uhi;
+        return {} as IUserHostInfo;
       },
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
     };
   }
 
-  readOnboardingProcess():IControllerEndpoint<IHostOnboardingProcess> {
+  readOnboardingProcessStatus():IControllerEndpoint<IHostOnboardingProcess> {
     return {
-      authStrategies: [AuthStrat.isMemberOfHost],
+      authStrategy: AuthStrat.none,
       controller: async (req:Request):Promise<IHostOnboardingProcess> => {
-        return {} as IHostOnboardingProcess
+        return {} as IHostOnboardingProcess;
       } 
+    }
+  }
+
+  readOnboardingProcessStep():IControllerEndpoint<IOnboardingStep<any>> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async (req:Request):Promise<IOnboardingStep<any>> => {
+        return {} as IOnboardingStep<any>
+      } 
+    }
+  }
+
+  /**
+   * @description Update Process or Steps
+   */
+  updateOnboardingProcess():IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async (req:Request):Promise<void> => {
+
+        return;
+      }
+    }
+  }
+
+  submitOnboardingProcess():IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async (req:Request):Promise<void> => {
+
+      }
+    }
+  }
+
+  verifyOnboardingProcess():IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async (req:Request):Promise<void> => {
+
+      }
+    }
+  }
+
+  enactOnboardingProcess():IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async (req:Request):Promise<void> => {
+
+      }
     }
   }
 }

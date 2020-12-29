@@ -4,12 +4,10 @@ import {
   IPerformanceHostInfo,
   IPerformanceStub,
   IPerformanceUserInfo,
-  IUserHostInfo,
   HTTP,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
-import { DataClient } from '../common/data';
 import { Performance } from '../models/Performances/Performance.model';
 import { ErrorHandler } from '../common/errors';
 import { validate } from '../common/validate';
@@ -28,7 +26,7 @@ export default class PerformanceController extends BaseController {
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
       validator: validate([body('name').not().isEmpty().withMessage('Performance must have a title!')]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IPerformance> => {
         const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
 
@@ -52,7 +50,7 @@ export default class PerformanceController extends BaseController {
   readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request, _, locals: IResLocals): Promise<IEnvelopedData<IPerformanceStub[], null>> => {
         const performances = await Performance.find({
           take: locals.pagination.per_page,
@@ -71,7 +69,7 @@ export default class PerformanceController extends BaseController {
   readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
         const performance = await Performance.findOne(
           { _id: parseInt(req.params.pid) },
@@ -126,7 +124,7 @@ export default class PerformanceController extends BaseController {
   readPerformanceHostInfo(): IControllerEndpoint<IPerformanceHostInfo> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IPerformanceHostInfo> => {
         const performance = await Performance.findOne({ _id: parseInt(req.params.pid) }, { relations: ['host_info'] });
         const performanceHostInfo = performance.host_info;
@@ -143,7 +141,7 @@ export default class PerformanceController extends BaseController {
   purchase(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const user = await User.findOne({ _id: req.session.user._id });
         const perf = await Performance.findOne({ _id: parseInt(req.params.pid) }, { relations: ['host_info'] });
@@ -170,7 +168,7 @@ export default class PerformanceController extends BaseController {
   deletePerformance(): IControllerEndpoint<void> {
     return {
       validator: validate([]),
-      authStrategies: [AuthStrat.none],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };
   }
