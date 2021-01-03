@@ -248,6 +248,15 @@ export default class UserController extends BaseController {
     };
   }
 
+  forgotPassword():IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+
+      }
+    }
+  }
+
   resetPassword(): IControllerEndpoint<void> {
     return {
       validators: [

@@ -129,7 +129,7 @@ describe('Custom validation', () => {
     console.log(JSON.stringify(errors, null, 2));
   });
 
-  // Arrays of primitives don't work
+  // FIXME: Arrays of primitives don't work
   // it("Should return errors for objects with fields that are arrays of primitives", async () => {
   //   const data = {
   //     data: [1,2,3,4,5]

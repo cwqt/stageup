@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import { Router } from './router';
 import { DataClient } from './common/data';
 import Middlewares from './common/middleware';
@@ -40,6 +39,7 @@ router.get    <IMyself>             ("/myself",                               Us
 router.post   <IUser>               ("/users",                                Users.createUser());
 router.post   <void>                ("/users/logout",                         Users.logoutUser());
 router.post   <IUser>               ("/users/login",                          Users.loginUser());
+router.put    <void>                ("/users/forgotpassword",                 Users.forgotPassword());
 router.get    <IUser>               ("/users/@:username",                     Users.readUserByUsername()); // order matters
 router.get    <IUser>               ("/users/:uid",                           Users.readUserById());
 router.put    <IUser>               ("/users/:uid",                           Users.updateUser());
