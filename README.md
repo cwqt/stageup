@@ -125,6 +125,7 @@ npm install --force
 
 * __Backend__: `npm run test`
 * __REST__: `npm run test`
+  * Add `BASE_URL="http://localhost:3000"` to `.env`
 
 # Deployment
 
