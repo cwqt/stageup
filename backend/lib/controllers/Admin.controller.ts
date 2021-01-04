@@ -39,8 +39,8 @@ export default class AdminController extends BaseController {
         }),
         body({
           __this: v => v.isArray().custom(array({
-            param: v => Validators.Fields.IsString(v),
-            message: v => Validators.Fields.IsString(v),
+            param: v => Validators.Fields.isString(v),
+            message: v => Validators.Fields.isString(v),
           }))
         })
       ],
@@ -64,6 +64,9 @@ export default class AdminController extends BaseController {
     }
   }
 
+  /**
+   * @description Admin update step - verify / raise issue
+   */
   verifyOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
@@ -71,6 +74,9 @@ export default class AdminController extends BaseController {
     };
   }
 
+  /**
+   * @description Merge the Hosts Onboarding Process with the host
+   */
   enactOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,

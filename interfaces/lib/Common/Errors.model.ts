@@ -1,13 +1,25 @@
 import { HTTP } from './Http';
 
 export enum ErrCode {
-  IN_USE = "IN_USE",
-  NOT_FOUND = "NOT_FOUND",
-  FORBIDDEN = "FORBIDDEN", // cannot be used
-  INCORRECT = "INCORRECT", // doesn't fit expected values
-  INVALID = "INVALID", // doesn't fit regexes / validators
-  TOO_SHORT = "TOO_SHORT",
-  TOO_LONG = "TOO_LONG",
+  MISSING_FIELD = "MISSING_FIELD", // wasn't even present in data
+  INVALID_EMAIL = "INVALID_EMAIL", // more specific invalid
+  REGEX_MATCH   = "REGEX_MATCH",   // didn't match expected pattern
+  IN_USE        = "IN_USE",        // email/username in use by someone else
+  DUPLICATE     = "DUPLICATE",
+  NOT_FOUND     = "NOT_FOUND",     // no such x exists
+  FORBIDDEN     = "FORBIDDEN",     // cannot be used
+  INCORRECT     = "INCORRECT",     // expected one value, but got another
+  INVALID       = "INVALID",       // general invalid error
+  TOO_SHORT     = "TOO_SHORT",     // < x chars
+  TOO_LONG      = "TOO_LONG",      // > x charts
+  NO_SESSION    = "NO_SESSION",    // not logged in
+  MISSING_PERMS = "MISSING_PERMS", // auth level too low
+  NOT_MEMBER    = "NOT_MEMBER",    // not a member of host
+  NOT_ADMIN     = "NOT_ADMIN",      // must be a site admin
+  EMAIL_SEND    = "EMAIL_SEND",
+  NOT_VERIFIED  = "NOT_VERIFIED",
+  LOCKED        = "LOCKED",
+  UNKNOWN       = "UNKNOWN"
 }
 
 export interface IErrorResponse {

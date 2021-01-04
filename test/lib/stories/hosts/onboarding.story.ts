@@ -39,6 +39,7 @@ describe('As a user, I want to be able to CRUD', async () => {
 
   it('Should get the created onboarding process', async () => {
     let onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
+    console.log(onboarding)
   })
 
   it('Host should fill out every section of the onboarding process', async () => {

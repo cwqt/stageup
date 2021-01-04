@@ -1,19 +1,19 @@
-import { HostPermission } from '@eventi/interfaces';
+import { ErrCode, HostPermission } from '@eventi/interfaces';
 import { Request } from 'express';
 import { DataClient } from './common/data';
 import { User } from './models/Users/User.model';
 import { Host } from './models/Hosts/Host.model';
 import { UserHostInfo } from './models/Hosts/UserHostInfo.model';
 
-export type AuthStrategy = (req: Request, dc: DataClient) => Promise<[boolean, { [index: string]: any }?, string?]>;
-export type AuthStratReturn = [boolean, {}, string?];
+export type AuthStratReturn = [boolean, {[index:string]:any}, ErrCode?];
+export type AuthStrategy = (req: Request, dc: DataClient) => Promise<AuthStratReturn>;
 
 export const none: AuthStrategy = async (req: Request, dc): Promise<AuthStratReturn> => {
   return [true, {}];
 };
 
 export const isLoggedIn: AuthStrategy = async (req: Request, dc: DataClient): Promise<AuthStratReturn> => {
-  if (!req.session.user) return [false, {}, 'You must be logged in to perform this action'];
+  if (!req.session.user) return [false, {}, ErrCode.NO_SESSION];
   return [true, {}];
 };
 
@@ -23,7 +23,7 @@ export const isOurself: AuthStrategy = async (req: Request, dc: DataClient): Pro
 
   const user = await User.findOne({ _id: parseInt(req.params.uid) });
   if (user._id !== req.session.user._id)
-    return [false, {}, 'You must be logged in as this user to perform actions on them'];
+    return [false, {}, ErrCode.NO_SESSION];
 
   return [true, { user: user }];
 };
@@ -33,10 +33,10 @@ export const isMemberOfHost: AuthStrategy = async (req: Request, dc: DataClient)
   if (!isAuthorised) return [isAuthorised, _, reason];
 
   const user = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ['host'] });
-  if (!user.host) return [false, {}, 'User is not part of any host'];
+  if (!user.host) return [false, {}, ErrCode.NOT_MEMBER];
 
   const host = await Host.findOne({ _id: parseInt(req.params.hid) });
-  if (user.host._id !== host._id) return [false, {}, 'User is not part of this host'];
+  if (user.host._id !== host._id) return [false, {}, ErrCode.NOT_MEMBER];
 
   return [true, { user: user }];
 };
@@ -51,7 +51,7 @@ export const hasHostPermission = (permission: HostPermission): AuthStrategy => {
       return [
         false,
         {},
-        `User does not have neccessary permissions, needs ${permission} got ${userHostInfo.permissions}`,
+        ErrCode.MISSING_PERMS,
       ];
 
     return [true, { user: passthru.user }];
@@ -62,7 +62,7 @@ export const isSiteAdmin: AuthStrategy = async (req: Request, dc: DataClient): P
   const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
   if (!isAuthorised) return [isAuthorised, _, reason];
 
-  if (!req.session.user.is_admin) return [false, {}, 'Must be site administrator to perform this action'];
+  if (!req.session.user.is_admin) return [false, {}, ErrCode.NOT_ADMIN];
   return [true, {}];
 };
 
@@ -95,7 +95,7 @@ export const or = (...args: AuthStrategy[]): AuthStrategy => {
 export const custom = (f: (req?: Request, dc?: DataClient) => boolean): AuthStrategy => {
   return async (req: Request, dc): Promise<AuthStratReturn> => {
     const res = f(req, dc);
-    return [res, {}, `${res ? 'Passed' : 'Failed'} custom auth strategy`];
+    return [res, {}, res ? ErrCode.INVALID : null];
   };
 };
 

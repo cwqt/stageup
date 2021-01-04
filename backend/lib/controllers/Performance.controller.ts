@@ -5,6 +5,7 @@ import {
   IPerformanceStub,
   IPerformanceUserInfo,
   HTTP,
+  ErrCode,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
@@ -27,14 +28,14 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [
         body<Pick<IPerformanceStub, "name">>({
-          name: v => Validators.Fields.IsString(v, "Must provide performance name")
+          name: v => Validators.Fields.isString(v)
         })
       ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IPerformance> => {
         const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
 
-        if (!user.host) throw new ErrorHandler(HTTP.BadRequest, "You're not authorised to create performances.");
+        if (!user.host) throw new ErrorHandler(HTTP.BadRequest, ErrCode.MISSING_PERMS);
 
         const performance = await new Performance(
           {
@@ -80,7 +81,7 @@ export default class PerformanceController extends BaseController {
           { relations: ['host', 'host_info'] }
         );
 
-        if (!performance) throw new ErrorHandler(HTTP.NotFound, 'Performance does not exist');
+        if (!performance) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
 
         // see if current user has access/bought the performance
         let token: string;
@@ -106,7 +107,7 @@ export default class PerformanceController extends BaseController {
 
           // neither member of host, nor has a purchased token
           if (!(memberOfHost || token))
-            throw new ErrorHandler(HTTP.Unauthorised, "You don't have access to watch this performance");
+            throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
 
           // sign on the fly for a member of the host
           if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
@@ -159,7 +160,7 @@ export default class PerformanceController extends BaseController {
           },
         });
 
-        if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, 'Already purchased this performance');
+        if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
 
         const purchase = new Purchase(user, perf);
         purchase.token = perf.host_info.signing_key.signToken(perf);

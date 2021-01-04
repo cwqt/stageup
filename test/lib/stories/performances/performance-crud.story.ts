@@ -18,7 +18,8 @@ describe('As a user, I want to be able to CRUD', async () => {
 
     expect(user).to.not.be.null;
     expect(user.name).to.be.eq('cass');
-    expect(user.email_address).to.be.eq('m@cass.si');
+    console.log(user)
+
   });
 
   it('Should get the newly created user', async () => {});

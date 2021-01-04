@@ -99,7 +99,7 @@ export const runValidator = async <T extends object, U extends keyof T>(
  */
 export const object: VFunctor = async (data, validators, location = null, idx = null): Promise<IFormErrorField[]> => {
   const errors: IFormErrorField[] = (
-    await Promise.all(Object.keys(validators).map((i: any) => runValidator(data, i, (<any>validators)[i], location)))
+    await Promise.all(Object.keys(validators).map((i: any) => runValidator(data, i, validators[i], location)))
   ).flat();
 
   // TODO: recurse down nestedErrors doing this action
@@ -111,8 +111,8 @@ export const object: VFunctor = async (data, validators, location = null, idx = 
       // in an .array
       if (Array.isArray(e.value)) delete e.value;
 
-      e.nestedErrors = (<any>e).code.errors;
-      e.code = (<any>e).code.message;
+      e.nestedErrors = e.code.errors;
+      e.code = e.code.message;
     }
   });
 
@@ -130,7 +130,7 @@ export const array = <T extends object>(validators: VFieldChainerMap<T>, code?: 
       // have a IFormErrorField[] for each field according to each validation in the chain
       .map((e, idx) => {
         // append indexes into field errors
-        return (<any>e).reason.errors.map((i: IFormErrorField) => ({ ...i, idx: idx }));
+        return (e as PromiseRejectedResult).reason.errors.map((i: IFormErrorField) => ({ ...i, idx: idx }));
       }) // filter out fields with no errors
       .filter(e => e.length != 0)
       .flat()
@@ -176,11 +176,14 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>, code?:
  */
 export const validatorMiddleware = (validators: VReqHandlerFunctor[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const errors: PromiseSettledResult<IFormErrorField[]>[] = (
-      await Promise.allSettled(validators.map(v => v(req)))
-    ).flat();
+    const errors: PromiseSettledResult<IFormErrorField[]>[] = (await Promise.allSettled(validators.map(v => v(req))))
+      .flat()
+      .filter(e => e.status == 'fulfilled')
+      .flatMap(e => (<any>e).value);
 
-    if (errors.length) throw new ErrorHandler(HTTP.BadRequest, 'Invalid data');
+    console.log(errors)
+
+    if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID);
     next();
   };
 };

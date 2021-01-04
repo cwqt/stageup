@@ -1,8 +1,10 @@
 import {
+  ErrCode,
   HostOnboardingStep,
   HostPermission,
   IHost,
   IHostOnboardingState,
+  IHostPrivate,
   IOnboardingAddMembers,
   IOnboardingOwnerDetails,
   IOnboardingProofOfBusiness,
@@ -36,46 +38,42 @@ export default class HostController extends BaseController {
       validators: [
         body<{
           username: IHost['username'];
-          name: IHost['username'];
-          email_address: IHost['username'];
+          name: IHost['name'];
+          email_address: IHostPrivate['email_address'];
         }>({
           username: (v) =>
             v
-              .not()
-              .isEmpty()
-              .withMessage('Must provide a host username')
+              .custom(v => Validators.Fields.isString(v))
               .isLength({ min: 6 })
-              .withMessage('Host username length must be >6 characters')
+              .withMessage(ErrCode.TOO_SHORT)
               .isLength({ max: 32 })
-              .withMessage('Host username length must be <32 characters')
+              .withMessage(ErrCode.TOO_LONG)
               .matches(/^[a-zA-Z0-9]*$/)
-              .withMessage('Must be alpha-numeric with no spaces'),
+              .withMessage(ErrCode.INVALID)
+              .not().isIn([])
+              .withMessage(ErrCode.FORBIDDEN),
           name: (v) =>
             v
-              .not()
-              .isEmpty()
-              .withMessage('Must provide a host name')
+              .custom(v => Validators.Fields.isString(v))
               .isLength({ min: 6 })
-              .withMessage('Host name length must be >6 characters')
+              .withMessage(ErrCode.TOO_SHORT)
               .isLength({ max: 32 })
-              .withMessage('Host name length must be <32 characters'),
+              .withMessage(ErrCode.TOO_LONG),
           email_address: (v) =>
             v
-              .not()
-              .isEmpty()
-              .withMessage('Must provide an e-mail address')
+              .custom(v => Validators.Fields.isString(v))
               .isEmail()
+              .withMessage(ErrCode.INVALID)
               .normalizeEmail()
-              .withMessage('Not a valid e-mail address'),
         }),
       ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IHost> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (user.host) throw new ErrorHandler(HTTP.Conflict, 'Cannot create host if you are already part of another');
+        if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
         const h = await Host.findOne({ username: req.body.username });
-        if (h) throw new ErrorHandler(HTTP.Conflict, `Host username '${h.username}' is already taken`);
+        if (h) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
 
         // Create host & add current user (creator) to it through transaction
         // & begin the onboarding process by running setup
@@ -135,7 +133,7 @@ export default class HostController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (!user.host) throw new ErrorHandler(HTTP.NotFound, 'User is not part of any host');
+        if (!user.host) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
 
         // const userHostInfo = await UserHostInfo.findOne({
         //   relations: ['user', 'host'],
@@ -147,7 +145,7 @@ export default class HostController extends BaseController {
         const userHostInfo = {} as UserHostInfo;
 
         if (userHostInfo.permissions != HostPermission.Owner)
-          throw new ErrorHandler(HTTP.Unauthorised, 'Only host owner can delete host');
+          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
 
         // TODO: transactionally remove performances, signing keys, host infos etc etc.
         await user.host.remove();
@@ -251,7 +249,7 @@ export default class HostController extends BaseController {
 
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
         // TODO: fix typing on onboarding to use string enum
-        return (<any>onboarding).steps[req.params.step] as IOnboardingStep<any>;
+        return onboarding.steps[(req.params.step as unknown as HostOnboardingStep)] as IOnboardingStep<any>;
       },
     };
   }
@@ -342,7 +340,7 @@ export default class HostController extends BaseController {
         });
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
         if (onboarding.status != IHostOnboardingState.AwaitingChanges)
-          throw new ErrorHandler(HTTP.BadRequest, 'Cannot re-submit');
+          throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out
         onboarding.status = IHostOnboardingState.Pending;

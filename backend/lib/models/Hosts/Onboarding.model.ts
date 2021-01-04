@@ -47,6 +47,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
 
     this.steps = {
       [HostOnboardingStep.ProofOfBusiness]: {
+        valid: false,
         status: IHostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
@@ -56,6 +57,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         },
       },
       [HostOnboardingStep.OwnerDetails]: {
+        valid: false,
         status: IHostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
@@ -63,6 +65,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         },
       },
       [HostOnboardingStep.SocialPresence]: {
+        valid: false,
         status: IHostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
@@ -70,6 +73,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         },
       },
       [HostOnboardingStep.AddMembers]: {
+        valid: false,
         status: IHostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
@@ -77,6 +81,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         },
       },
       [HostOnboardingStep.SubscriptionConfiguration]: {
+        valid: false,
         status: IHostOnboardingState.AwaitingChanges,
         issues: [],
         data: {

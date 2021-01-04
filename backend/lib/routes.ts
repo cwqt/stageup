@@ -83,9 +83,9 @@ router.delete <void>                ("/performance/:pid",                     Pe
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, mws);
 router.get  <IE<IHOProcess[], void>>("/admin/onboarding",                    Admin.readOnboardingProcesses())
+router.put  <void>                  ("/admin/onboarding/:oid/:step/issues",  Admin.createOnboardingStepIssues());
 router.post <void>                  ("/admin/onboarding/:oid/verify",        Admin.verifyOnboardingProcess());
 router.post <void>                  ("/admin/onboarding/:oid/enact",         Admin.enactOnboardingProcess());
-router.put  <void>                  ("/admin/onboarding/:oid/:step/issues",  Admin.createOnboardingStepIssues());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);
