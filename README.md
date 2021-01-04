@@ -49,8 +49,52 @@ npm install --force
 tsc
 ```
 
+
 ## Backend
-Assuming you're in the root directory.
+Create a `.env` file in the root of `backend/`, this will store our secret variables - please never share these with anyone - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
+
+```
+PRIVATE_KEY="SOME_PASSWORD"
+EMAIL_ADDRESS="SOME_EMAIL"
+PG_USER="POSTGRES_USER"
+PG_PASS=""
+NODE_ENV="development"
+```
+
+* `PRIVATE_KEY`: Used for hashing/salting of passwords
+* `EMAIL_ADDRESS`: Used for the sender when sending e-mails via SendGrid
+* `PG_USER`: Your postgres user account
+* `NODE_ENV`: Used to define the environment in which the backend is running; can be `production`, `testing` or `development`
+
+We'll also need some private data from MUX, so now you'll need to sign up on there: <https://dashboard.mux.com/signup?type=video>  
+Once you're signed up go to <https://dashboard.mux.com/settings/access-tokens>
+
+Click 'Generate new token' on the right.  
+Click 'Full access' on MUX Video for permissions & then click 'Generate token'.
+
+Add the following to your `.env` file by copy & pasting the values:
+
+```
+MUX_ACCESS_TOKEN="Access Token ID"
+MUX_SECRET_KEY="Secret Key"
+LOCALTUNNEL_URL="eventi-YOUR_NAME"
+```
+
+* `LOCALTUNNEL_URL`: When testing locally we want to be able to recieve webhooks from MUX, instead of port forwarding our router we'll use HTTP tunneling via [localtunnel](https://localtunnel.me/) to recieve them.
+
+We'll also need to add a new webhook, go to: <https://dashboard.mux.com/settings/webhooks>
+
+Click 'Create new webhook'.  
+For the 'URL to notify' add `https://eventi-YOUR_NAME.loca.lt/mux/hooks`.  
+And then click 'Create webhook.
+
+There should be a row with your webhook, click 'Show Signing Secret' & paste it into your `.env`.
+
+```
+MUX_HOOK_SIGNATURE="MY_SIGNING_SECRET"
+```
+
+Once that's all done, to run the backend - assuming you're in the backend root.
 
 ```shell
 cd backend
