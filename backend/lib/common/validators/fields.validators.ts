@@ -1,6 +1,8 @@
 import { ErrCode } from '@eventi/interfaces';
 import { ValidationChain } from 'express-validator';
 
+const FORBIDDEN_USERNAMES: string[] = [];
+
 export namespace FieldValidators {
   type CustomValidator = (v: ValidationChain, message?: ErrCode) => ValidationChain;
 
@@ -18,6 +20,27 @@ export namespace FieldValidators {
 
   export const email: CustomValidator = v => {
     return isString(v).isEmail().withMessage(ErrCode.INVALID_EMAIL).normalizeEmail();
+  };
+
+  export const name: CustomValidator = v => {
+    return isString(v)
+      .isLength({ min: 6 })
+      .withMessage(ErrCode.TOO_SHORT)
+      .isLength({ max: 32 })
+      .withMessage(ErrCode.TOO_LONG);
+  };
+
+  export const username: CustomValidator = v => {
+    return isString(v)
+      .isLength({ min: 6 })
+      .withMessage(ErrCode.TOO_SHORT)
+      .isLength({ max: 32 })
+      .withMessage(ErrCode.TOO_LONG)
+      .matches(/^[a-zA-Z0-9]*$/)
+      .withMessage(ErrCode.INVALID)
+      .not()
+      .isIn(FORBIDDEN_USERNAMES)
+      .withMessage(ErrCode.FORBIDDEN);
   };
 
   export const postcode: CustomValidator = v => {

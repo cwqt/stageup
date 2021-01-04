@@ -106,7 +106,7 @@ export default class UserController extends BaseController {
         body<Pick<IUserPrivate, 'username' | 'email_address'> & { password: string }>({
           username: v => Validators.Fields.isString(v),
           email_address: v => Validators.Fields.email(v),
-          password: v => Validators.Fields.email(v),
+          password: v => Validators.Fields.password(v),
         }),
       ],
       authStrategy: AuthStrat.none,

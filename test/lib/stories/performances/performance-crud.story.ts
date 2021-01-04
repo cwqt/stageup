@@ -3,6 +3,7 @@ import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { IHost, IPerformance, IUser } from '@eventi/interfaces';
 import { Stories } from '../../stories';
+import { environment, UserType } from '../../environment';
 
 describe('As a user, I want to be able to CRUD', async () => {
   let user: IUser;
@@ -10,16 +11,10 @@ describe('As a user, I want to be able to CRUD', async () => {
   let perf: IPerformance;
 
   it('Should create a user', async () => {
-    user = await Stories.actions.users.createUser({
-      username: 'cass',
-      email_address: 'm@cass.si',
-      password: 'helloworld',
-    });
+    user = await Stories.actions.users.createUser(UserType.Client);
 
     expect(user).to.not.be.null;
-    expect(user.name).to.be.eq('cass');
-    console.log(user)
-
+    expect(user.username).to.be.eq(environment.userCreationData[UserType.Client].username);
   });
 
   it('Should get the newly created user', async () => {});
@@ -27,16 +22,4 @@ describe('As a user, I want to be able to CRUD', async () => {
   it('Should update a user & ensure only certain fields can be modified', async () => {});
 
   it('Should delete a user', async () => {});
-});
-
-describe('Error checking for user CRUD', async () => {
-  let user: IUser;
-
-  it('Should not allow me to create an account with a pre-existing username/email-address', async () => {
-    user = await Stories.actions.users.createUser({
-      username: 'cass',
-      email_address: 'm@cass.si',
-      password: 'helloworld',
-    });
-  });
 });

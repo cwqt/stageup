@@ -37,37 +37,16 @@ export default class HostController extends BaseController {
     return {
       validators: [
         body<{
+          email_address: IHostPrivate['email_address'];
           username: IHost['username'];
           name: IHost['name'];
-          email_address: IHostPrivate['email_address'];
         }>({
-          username: (v) =>
-            v
-              .custom(v => Validators.Fields.isString(v))
-              .isLength({ min: 6 })
-              .withMessage(ErrCode.TOO_SHORT)
-              .isLength({ max: 32 })
-              .withMessage(ErrCode.TOO_LONG)
-              .matches(/^[a-zA-Z0-9]*$/)
-              .withMessage(ErrCode.INVALID)
-              .not().isIn([])
-              .withMessage(ErrCode.FORBIDDEN),
-          name: (v) =>
-            v
-              .custom(v => Validators.Fields.isString(v))
-              .isLength({ min: 6 })
-              .withMessage(ErrCode.TOO_SHORT)
-              .isLength({ max: 32 })
-              .withMessage(ErrCode.TOO_LONG),
-          email_address: (v) =>
-            v
-              .custom(v => Validators.Fields.isString(v))
-              .isEmail()
-              .withMessage(ErrCode.INVALID)
-              .normalizeEmail()
+          email_address: (v) => Validators.Fields.email(v),
+          username: (v) => Validators.Fields.username(v),
+          name: (v) => Validators.Fields.name(v)
         }),
       ],
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.isLoggedIn,
       controller: async (req: Request): Promise<IHost> => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
@@ -317,6 +296,7 @@ export default class HostController extends BaseController {
         try {
           await onboarding.updateStep(step, u[step](req.body));
         } catch (error) {
+          console.log(error)
           throw new ErrorHandler(HTTP.BadRequest, null, error);
         }
 
