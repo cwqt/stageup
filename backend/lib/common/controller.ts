@@ -3,9 +3,10 @@ import { IResLocals } from '../router';
 import { AuthStrategy } from '../authorisation';
 import { DataClient } from './data';
 import Middlewares from './middleware';
+import { IFormErrorField } from '@eventi/interfaces';
 
 export interface IControllerEndpoint<T> {
-  validator?: any;
+  validators?: Array<(req: Request) => Promise<IFormErrorField[]>>;
   controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>;
   preMiddlewares?: RequestHandler[];
   postMiddlewares?: RequestHandler[];

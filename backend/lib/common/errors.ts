@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import log from './logger';
-import { IFormErrorField, HTTP, IErrorResponse } from '@eventi/interfaces';
+import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@eventi/interfaces';
+
+export const getCheck = async <T>(f:Promise<T>):Promise<T> => {
+  const v = await f;
+  if(v == null || v == undefined) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
+  return v;
+}
 
 export const handleError = (req: Request, res: Response, next: NextFunction, err: ErrorHandler | Error) => {
   const errorType: HTTP = err instanceof ErrorHandler ? err.errorType : HTTP.ServerError;
@@ -23,10 +29,10 @@ export class ErrorHandler extends Error {
   errorType: HTTP;
   errors: IFormErrorField[];
 
-  constructor(statusCode: HTTP, message?: string, errors?: IFormErrorField[]) {
+  constructor(statusCode: HTTP, message?: ErrCode, errors?: IFormErrorField[]) {
     super();
     this.errorType = statusCode;
-    this.message = message || 'An error occured.';
+    this.message = message || ErrCode.INVALID;
     this.errors = errors || [];
   }
 }
@@ -37,8 +43,8 @@ export class FormErrorResponse {
     this.errors = [];
   }
 
-  push(param: string, message: string, value: string, location?: 'body' | 'param' | 'query') {
-    this.errors.push({ param: param, msg: message, value: value, location: location });
+  push(param: string, message: ErrCode, value: IFormErrorField['value'], location?: IFormErrorField['location']) {
+    this.errors.push({ param: param, code: message, value: value, location: location });
   }
 
   get value() {

@@ -1,8 +1,7 @@
-import { Stories, CachedUser } from '../stories';
 import Axios from 'axios';
-import { environment as env } from '../environment';
-import { expect } from 'chai';
-import { IMyself, IUser, IUserStub } from '@eventi/interfaces';
+import { Stories, CachedUser } from '../stories';
+import { environment as env, UserType } from '../environment';
+import { IMyself, IUser } from '@eventi/interfaces';
 
 export default {
   getMyself: async (): Promise<IMyself> => {
@@ -10,21 +9,30 @@ export default {
     return res.data;
   },
 
-  createUser: async (data: { email_address: string; password: string; username: string }): Promise<IUser> => {
-    const res = await Axios.post<IUser>(`${env.baseUrl}/users`, data, env.getOptions());
-    return res.data;
+  createUser: async (user: UserType): Promise<IUser> => {
+    if (!Stories.cachedUsers[user]) {
+      const res = await Axios.post<IUser>(`${env.baseUrl}/users`, env.userCreationData[user], env.getOptions());
+      Stories.cachedUsers[user] = new CachedUser(res.data);
+      return res.data;
+    } else {
+      return Stories.cachedUsers[user]?.user!;
+    }
   },
 
-  login: async (data: { email_address: string; password: string }): Promise<CachedUser> => {
-    const res = await Axios.post<IUser>(`${env.baseUrl}/users/login`, data);
-    const user = new CachedUser(res.data);
-    user.session = res.headers['session.sid'];
-    return user;
+  login: async (user:UserType): Promise<CachedUser> => {
+    if(!Stories.cachedUsers[user]) throw Error("User has not been created");
+
+    const res = await Axios.post<IUser>(`${env.baseUrl}/users/login`, {
+      email_address: env.userCreationData[user].email_address,
+      password: env.userCreationData[user].password,
+    }, env.getOptions());
+
+    Stories.cachedUsers[user]!.session = res.headers['set-cookie'][0].split(";")[0];
+    return Stories.cachedUsers[user]!;
   },
 
-  logout: async ():Promise<void> => {
-    const res = await Axios.post(`${env.baseUrl}/users/logout`, null, env.getOptions());
-    return;
+  logout: async (): Promise<void> => {
+    await Axios.post(`${env.baseUrl}/users/logout`, null, env.getOptions());
   },
 
   updateUser: async (user: IUser, props: any) => {},

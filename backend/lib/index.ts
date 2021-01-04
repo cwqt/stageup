@@ -11,9 +11,11 @@ import "reflect-metadata";
 
 import Routes from './routes';
 import config from "./config";
-import { HTTP } from "@eventi/interfaces";
+import { ErrCode, HTTP } from "@eventi/interfaces";
 import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
+
+import validator from 'express-validator';
 
 let server: http.Server;
 const app = express();
@@ -47,7 +49,7 @@ app.use(morgan("tiny", { stream }));
 
     // Catch 404 errors
     app.all("*", (req: any, res: any, next: any) => {
-      handleError(req, res, next, new ErrorHandler(HTTP.NotFound, "No such route exists"));
+      handleError(req, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND));
     });
 
     // Global error handler

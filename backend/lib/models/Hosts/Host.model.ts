@@ -1,10 +1,10 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, EntityManager } from "typeorm";
-import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IAddress } from "@eventi/interfaces";
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, EntityManager, OneToOne, JoinColumn } from "typeorm";
+import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo } from "@eventi/interfaces";
 import { User } from '../Users/User.model';
 import { Performance } from "../Performances/Performance.model";
 import { UserHostInfo } from "./UserHostInfo.model";
-import { DataClient } from "../../common/data";
-import { Address } from "../Users/Address.model";
+import { HostOnboardingProcess } from "./Onboarding.model";
+import { ContactInfo } from "../Users/ContactInfo.model";
  
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -16,16 +16,12 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column({ nullable: true})    avatar: string;
   @Column()                     is_onboarded: boolean;
   @Column("jsonb")              social_info: ISocialInfo;
-
-  @Column()                     mobile_number: number;
-  @Column()                     landline_number: number;
   @Column()                     email_address: string;
 
-  addresses:IAddress[];
-  // @OneToMany(() => Address, address => address.owner)
-
-  @OneToMany(() => User, user => user.host)                      members:User[];
-  @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
+  @OneToOne(() => ContactInfo, { cascade: ["remove"]}) @JoinColumn() contact_info:ContactInfo;
+  @OneToMany(() => User, user => user.host)                          members:User[];
+  @OneToMany(() => Performance, performance => performance.host)     performances: Performance[];
+  @OneToOne(() => HostOnboardingProcess, hop => hop.host)            onboarding_process:HostOnboardingProcess;
 
   constructor(data:Pick<IHostPrivate, "name" | "username" | "email_address">) {
     super();
@@ -36,18 +32,34 @@ export class Host extends BaseEntity implements IHostPrivate {
     this.is_onboarded = false;
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.members = [];
+    this.social_info = {
+      linkedin_url: null,
+      facebook_url: null,
+      instagram_url: null
+    }
+  }
+
+  /**
+   * @description Creates onboarding process
+   */
+  async setup(creator:User, txc:EntityManager) {
+    this.onboarding_process = await txc.save(new HostOnboardingProcess(this, creator));
+    this.contact_info = await txc.save(ContactInfo, new ContactInfo({
+      mobile_number: null,
+      landline_number: null,
+      addresses: []
+    }));
+
+    return this;
   }
 
   async addMember(user:User, permissionLevel:HostPermission, txc:EntityManager) {
     // Create permissions link
-    const userHostInfo = new UserHostInfo(user, this, permissionLevel);
+    // const userHostInfo = new UserHostInfo(user, this, permissionLevel);
 
     // Add user to host group
     // this.members_info.push(userHostInfo);
     this.members.push(user);
-
-    await txc.save(userHostInfo);
-    await txc.save(this);
   }
 
   async removeMember(user:User, txc:EntityManager) {
@@ -83,9 +95,7 @@ export class Host extends BaseEntity implements IHostPrivate {
     return {
       ...this.toFull(),
       email_address: this.email_address,
-      mobile_number: this.mobile_number,
-      landline_number: this.landline_number,
-      addresses: this.addresses
+      contact_info: this.contact_info.toFull(),
     }
   }
 }

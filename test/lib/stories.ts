@@ -1,5 +1,5 @@
-import { environment } from './environment';
-import { IUser } from '@eventi/interfaces';
+import { environment, UserType } from './environment';
+import { HostPermission, IUser } from '@eventi/interfaces';
 
 export class CachedUser {
   user: IUser;
@@ -18,6 +18,7 @@ import hostsActions from './actions/hosts.actions';
 export const Stories = {
   log: true,
   activeUser: null as any,
+  cachedUsers: {} as {[index in UserType]?:CachedUser},
   actions: {
     common: commonActions,
     users: usersActions,

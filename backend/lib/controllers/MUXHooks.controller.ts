@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { DataClient } from '../common/data';
-import { MUXHook, IMUXHookResponse } from '@eventi/interfaces';
+import { MUXHook, IMUXHookResponse, ErrCode } from '@eventi/interfaces';
 import logger from '../common/logger';
 import { Webhooks, LiveStream } from '@mux/mux-node';
 import config from '../config';
@@ -10,6 +10,7 @@ import { RedisClient } from 'redis';
 import { MD5 } from 'object-hash';
 import { AuthStrategy } from '../authorisation';
 import { BaseArgs, IControllerEndpoint, BaseController } from '../common/controller';
+import { EROFS } from 'constants';
 export default class MUXHooksController extends BaseController {
   hookMap: { [index in MUXHook]?: (data: IMUXHookResponse<any>, dc: DataClient) => Promise<void> };
 
@@ -25,7 +26,7 @@ export default class MUXHooksController extends BaseController {
   }
 
   validHookStrat(): AuthStrategy {
-    return async (req: Request): Promise<[boolean, {}, string?]> => {
+    return async req => {
       try {
         //https://github.com/muxinc/mux-node-sdk#verifying-webhook-signatures
         const isValidHook = Webhooks.verifyHeader(
@@ -34,9 +35,10 @@ export default class MUXHooksController extends BaseController {
           config.MUX.HOOK_SIGNATURE
         );
 
-        if (!isValidHook) return [false, {}, 'Invalid MUX hook signature'];
+        if (!isValidHook) return [false, {}, ErrCode.INVALID];
       } catch (error) {
-        return [false, {}, error.message];
+        logger.error(error.message)
+        return [false, {}, ErrCode.UNKNOWN];
       }
 
       return [true, {}];
