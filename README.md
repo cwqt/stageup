@@ -27,7 +27,7 @@ npm -v              #7.0.10
 
 ```shell
 # make sure you install postgres version 11 !
-brew cask install postgresql@11 
+brew install postgresql@11 
 
 brew cask install redis
 brew install influxdb
