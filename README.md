@@ -133,7 +133,7 @@ npm install --force
 docker create network eventi
 ```
 
-Create the K8s cluster
+Create the K8s cluster:
 
 ```shell
 brew install minikube
