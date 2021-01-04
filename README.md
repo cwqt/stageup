@@ -94,10 +94,9 @@ There should be a row with your webhook, click 'Show Signing Secret' & paste it 
 MUX_HOOK_SIGNATURE="MY_SIGNING_SECRET"
 ```
 
-Once that's all done, to run the backend - assuming you're in the backend root.
+Once that's all done, to install libraries for the backend - assuming you're in the backend root.
 
 ```shell
-cd backend
 npm install --force
 ```
 
