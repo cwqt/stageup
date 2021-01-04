@@ -66,6 +66,8 @@ NODE_ENV="development"
 * `PG_USER`: Your postgres user account
 * `NODE_ENV`: Used to define the environment in which the backend is running; can be `production`, `testing` or `development`
 
+### MUX
+
 We'll also need some private data from MUX, so now you'll need to sign up on there: <https://dashboard.mux.com/signup?type=video>  
 Once you're signed up go to <https://dashboard.mux.com/settings/access-tokens>
 
@@ -93,6 +95,11 @@ There should be a row with your webhook, click 'Show Signing Secret' & paste it 
 ```
 MUX_HOOK_SIGNATURE="MY_SIGNING_SECRET"
 ```
+
+### SendGrid
+### AWS S3
+
+SendGrid & AWS not needed for now so can just leave these
 
 Once that's all done, to install libraries for the backend - assuming you're in the backend root.
 
