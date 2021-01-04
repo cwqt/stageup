@@ -96,11 +96,6 @@ There should be a row with your webhook, click 'Show Signing Secret' & paste it 
 MUX_HOOK_SIGNATURE="MY_SIGNING_SECRET"
 ```
 
-### SendGrid
-### AWS S3
-
-SendGrid & AWS not needed for now so can just leave these
-
 Once that's all done, to install libraries for the backend - assuming you're in the backend root.
 
 ```shell
