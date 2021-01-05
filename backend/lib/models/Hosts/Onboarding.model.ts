@@ -122,6 +122,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       started_at: this.started_at,
       completed_at: this.completed_at,
       version: this.version,
+      host:this.host.toStub()
     };
   }
 
