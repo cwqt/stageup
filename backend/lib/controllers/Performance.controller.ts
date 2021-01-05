@@ -11,11 +11,9 @@ import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Performance } from '../models/Performances/Performance.model';
 import { ErrorHandler } from '../common/errors';
-import { IResLocals } from '../router';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
-import AuthStrat from '../authorisation';
-import { body } from '../common/validate';
-import Validators from '../common/validators';
+import AuthStrat from '../common/authorisation';
+import Validators, { body } from '../common/validate';
 import { Purchase } from '../models/Purchase.model';
 
 export default class PerformanceController extends BaseController {

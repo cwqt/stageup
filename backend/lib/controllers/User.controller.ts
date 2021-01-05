@@ -17,13 +17,13 @@ import { ErrorHandler, FormErrorResponse, getCheck } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
 import Email = require('../common/email');
 import config from '../config';
-import AuthStrat from '../authorisation';
+import AuthStrat from '../common/authorisation';
 
 import { User } from '../models/Users/User.model';
 import { Host } from '../models/Hosts/Host.model';
 import { Address } from '../models/Users/Address.model';
 import { EntityManager } from 'typeorm';
-import Validators from '../common/validators';
+import Validators from '../common/validate';
 
 export default class UserController extends BaseController {
   constructor(...args: BaseArgs) {

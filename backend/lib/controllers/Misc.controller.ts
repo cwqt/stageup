@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
 import config from '../config';
-import AuthStrat from '../authorisation';
+import AuthStrat from '../common/authorisation';
 import { body, params, query, object, array, single } from '../common/validate';
 import { HTTP, IAddress, IContactInfo, IPerson, IPersonInfo } from '@eventi/interfaces';
 import { ErrorHandler } from '../common/errors';

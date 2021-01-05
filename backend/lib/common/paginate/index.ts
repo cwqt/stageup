@@ -19,8 +19,11 @@ declare module 'typeorm' {
 export const pagination = (req: Request, res: Response, next: NextFunction) => {
   // use function instead of => to have this reference in queryBuilder chain
   SelectQueryBuilder.prototype.paginate = async function<T>(per_page?: number | null): Promise<IEnvelopedData<T[], null>> {
-    let current_page = res.locals.pagination.page;
-    per_page = per_page || res.locals.pagination.per_page;
+
+    //FIXME: not sure why this returns [Object: null prototype], but coercing it back and forth gives us an object
+    const locals = JSON.parse(JSON.stringify(res.locals));
+    let current_page = locals.page == 0 ? 1 : locals.page;
+    per_page = per_page || locals.per_page;
 
     return await paginate(this, current_page, per_page);
   };

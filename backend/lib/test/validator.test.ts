@@ -2,7 +2,7 @@ import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { body, query, object, single, array, params } from '../common/validate';
 import { ErrCode, IAddress, Idless } from '@eventi/interfaces';
-import Validators from '../common/validators';
+import Validators from '../common/validate';
 
 describe('Custom validation', () => {
   it('Should return correct results for simple, unnested objects', async () => {

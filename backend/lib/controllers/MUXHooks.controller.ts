@@ -8,7 +8,7 @@ import { ErrorHandler } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
 import { RedisClient } from 'redis';
 import { MD5 } from 'object-hash';
-import { AuthStrategy } from '../authorisation';
+import { AuthStrategy } from '../common/authorisation';
 import { BaseArgs, IControllerEndpoint, BaseController } from '../common/controller';
 import { EROFS } from 'constants';
 export default class MUXHooksController extends BaseController {

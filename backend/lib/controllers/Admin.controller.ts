@@ -1,20 +1,17 @@
-import { Request } from 'express';
-
-import config from '../config';
 import { ErrorHandler } from '../common/errors';
-import { HostOnboardingStep, HTTP, IEnvelopedData, IHostOnboardingProcess, IOnboardingIssue } from '@eventi/interfaces';
+import { HostOnboardingStep, HTTP, IEnvelopedData, IHostOnboarding, IHostOnboardingProcess, IOnboardingIssue } from '@eventi/interfaces';
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
-import AuthStrat from '../authorisation';
+import AuthStrat from '../common/authorisation';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { params, body, array } from '../common/validate';
-import Validators from '../common/validators';
+import Validators from '../common/validate';
 
 export default class AdminController extends BaseController {
   constructor(...args: BaseArgs) {
     super(...args);
   }
 
-  readOnboardingProcesses():IControllerEndpoint<IEnvelopedData<IHostOnboardingProcess[], null>> {
+  readOnboardingProcesses():IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
@@ -67,7 +64,7 @@ export default class AdminController extends BaseController {
   verifyOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async req => {},
     };
   }
 
@@ -76,7 +73,7 @@ export default class AdminController extends BaseController {
    */
   enactOnboardingProcess(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {},
     };
   }

@@ -3,7 +3,8 @@ import {
   HostOnboardingStep,
   HostPermission,
   IHost,
-  IHostOnboardingState,
+  IHostOnboarding,
+  HostOnboardingState,
   IHostPrivate,
   IOnboardingAddMembers,
   IOnboardingOwnerDetails,
@@ -24,9 +25,9 @@ import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { IHostOnboardingProcess } from '@eventi/interfaces';
-import AuthStrat from '../authorisation';
+import AuthStrat from '../common/authorisation';
 import { body, params, query } from '../common/validate';
-import Validators from '../common/validators';
+import Validators from '../common/validate';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -191,10 +192,10 @@ export default class HostController extends BaseController {
     };
   }
 
-  readOnboardingProcessStatus(): IControllerEndpoint<IHostOnboardingProcess> {
+  readOnboardingProcessStatus(): IControllerEndpoint<IHostOnboarding> {
     return {
       authStrategy: AuthStrat.none, //AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<IHostOnboardingProcess> => {
+      controller: async req => {
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
             host: {
@@ -236,10 +237,10 @@ export default class HostController extends BaseController {
   /**
    * @description Update Process as a Host Owner/Admin
    */
-  updateOnboardingProcess(): IControllerEndpoint<IHostOnboardingProcess> {
+  updateOnboardingProcess(): IControllerEndpoint<IHostOnboarding> {
     return {
       authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<IHostOnboardingProcess> => {
+      controller: async (req: Request): Promise<IHostOnboarding> => {
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
             host: {
@@ -319,11 +320,11 @@ export default class HostController extends BaseController {
           },
         });
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-        if (onboarding.status != IHostOnboardingState.AwaitingChanges)
+        if (onboarding.status != HostOnboardingState.AwaitingChanges)
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out
-        onboarding.status = IHostOnboardingState.Pending;
+        onboarding.status = HostOnboardingState.PendingVerification;
         onboarding.version++;
         await onboarding.save();
       },

@@ -1,10 +1,9 @@
-import { HTTP, IFormErrorField, Y, ErrCode } from '@eventi/interfaces';
+import { HTTP, IFormErrorField, ErrCode } from '@eventi/interfaces';
 import { Request } from 'express';
 import { NextFunction, Response } from 'express-async-router';
 import { CustomValidator, Meta, ValidationChain, Location, ValidationError } from 'express-validator';
 import { body as bodyRunner, param as paramRunner, query as queryRunner } from 'express-validator';
-import { wrap } from 'module';
-import { ErrorHandler } from './errors';
+import { ErrorHandler } from '../errors';
 
 type VData<T> = T & {
   __this?: T; // self-reference
@@ -180,12 +179,12 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>, code?:
  */
 export const validatorMiddleware = (validators: VReqHandlerFunctor[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const errors: PromiseSettledResult<IFormErrorField[]>[] = (await Promise.allSettled(validators.map(v => v(req))))
+    const errors: IFormErrorField[] = (await Promise.allSettled(validators.map(v => v(req))))
       .flat()
       .filter(e => e.status == 'fulfilled')
       .flatMap(e => (<any>e).value);
 
-    if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID);
+    if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
     next();
   };
 };

@@ -3,8 +3,10 @@ import {
   HostOnboardingStep,
   HostSubscriptionLevel,
   IFormErrorField,
+  IHostOnboarding,
   IHostOnboardingProcess,
-  IHostOnboardingState,
+  IOnboardingStepMap,
+  HostOnboardingState,
   IOnboardingAddMembers,
   IOnboardingOwnerDetails,
   IOnboardingProofOfBusiness,
@@ -15,15 +17,16 @@ import {
 import { Host } from '../Hosts/Host.model';
 import { User } from '../Users/User.model';
 import { object, single, array } from '../../common/validate';
-import Validators from '../../common/validators';
+import Validators from '../../common/validate';
 
 @Entity()
 export class HostOnboardingProcess extends BaseEntity implements IHostOnboardingProcess {
   @PrimaryGeneratedColumn() _id: number;
-  @Column() status: IHostOnboardingState;
+  @Column() status: HostOnboardingState;
   @Column() started_at: number;
   @Column({ nullable: true }) completed_at: number;
   @Column({ nullable: true }) last_modified: number;
+  @Column({ nullable: true }) last_submitted: number;
   @Column() version: number;
   @Column('jsonb', { nullable: true }) steps: {
     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
@@ -38,7 +41,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
 
   constructor(host: Host, creator: User) {
     super();
-    this.status = IHostOnboardingState.AwaitingChanges;
+    this.status = HostOnboardingState.AwaitingChanges;
     this.started_at = Math.floor(Date.now() / 1000); //timestamp in seconds
     this.last_modified = this.started_at;
     this.last_modified_by = creator;
@@ -48,7 +51,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     this.steps = {
       [HostOnboardingStep.ProofOfBusiness]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
           hmrc_company_number: null,
@@ -58,7 +61,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       },
       [HostOnboardingStep.OwnerDetails]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
           owner_info: {
@@ -70,7 +73,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       },
       [HostOnboardingStep.SocialPresence]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
           social_info: {
@@ -82,7 +85,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       },
       [HostOnboardingStep.AddMembers]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
           members_to_add: []
@@ -90,7 +93,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       },
       [HostOnboardingStep.SubscriptionConfiguration]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
           tier: null,
@@ -99,15 +102,25 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     };
   }
 
-  toFull(): IHostOnboardingProcess {
+  // toSteps(): IOnboardingStepMap {
+  //   return  {
+  //     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
+  //     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
+  //     [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
+  //     [HostOnboardingStep.AddMembers]: IOnboardingStep<IOnboardingAddMembers>;
+  //     [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;  
+  //   }
+  // }
+
+  toFull(): Required<IHostOnboarding> {
     return {
       _id: this._id,
       status: this.status,
       last_modified: this.last_modified,
       last_modified_by: this.last_modified_by.toStub(),
+      last_submitted: this.last_submitted,
       started_at: this.started_at,
       completed_at: this.completed_at,
-      steps: this.steps,
       version: this.version,
     };
   }

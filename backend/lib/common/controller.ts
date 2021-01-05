@@ -1,6 +1,6 @@
 import { Request, NextFunction, RequestHandler } from 'express-async-router';
 import { IResLocals } from '../router';
-import { AuthStrategy } from '../authorisation';
+import { AuthStrategy } from './authorisation';
 import { DataClient } from './data';
 import Middlewares from './middleware';
 import { IFormErrorField } from '@eventi/interfaces';
