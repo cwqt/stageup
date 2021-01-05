@@ -126,7 +126,7 @@ export default class UserController extends BaseController {
         if (!emailSent) throw new ErrorHandler(HTTP.ServerError, ErrCode.EMAIL_SEND);
 
         // Save the user through a transaction (creates ContactInfo & Person)
-        const user = await this.dc.torm.transaction(async (txc: EntityManager) => {
+        const user = await this.ORM.transaction(async (txc: EntityManager) => {
           const u = await new User({
             username: req.body.username,
             email_address: req.body.email_address,
@@ -306,7 +306,7 @@ export default class UserController extends BaseController {
           User.findOne({ _id: parseInt(req.params.uid) }, { relations: ['personal_details'] })
         );
 
-        return await this.dc.torm.transaction(async (txc: EntityManager) => {
+        return await this.ORM.transaction(async (txc: EntityManager) => {
           const address = new Address(req.body);
           await user.personal_details.contact_info.addAddress(address, txc);
           await txc.save(user);

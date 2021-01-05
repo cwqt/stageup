@@ -57,7 +57,7 @@ export default class HostController extends BaseController {
 
         // Create host & add current user (creator) to it through transaction
         // & begin the onboarding process by running setup
-        return await this.dc.torm.transaction(async (txc) => {
+        return await this.ORM.transaction(async (txc) => {
           const host = await txc.save(
             new Host({
               username: req.body.username,

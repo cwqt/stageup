@@ -27,5 +27,5 @@ export class BaseController {
     this.endpoint = endpoint ?? "";
   }
 
-  get ORM() { return this.dc.torm }
+  get ORM():DataClient["torm"] { return this.ORM }
 }

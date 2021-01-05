@@ -15,7 +15,7 @@ export default class AdminController extends BaseController {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
-        const onboardingEnvelope = await this.dc.torm.createQueryBuilder(HostOnboardingProcess, 'hop').paginate();
+        const onboardingEnvelope = await this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop').paginate();
 
         return {
           data: onboardingEnvelope.data.map(o => o.toFull()),

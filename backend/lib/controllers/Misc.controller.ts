@@ -27,7 +27,7 @@ export default class MiscController extends BaseController {
         // Clear Influx, Redis, Postgres & session store
         await this.dc.influx?.query(`DROP SERIES FROM /.*/`);
         await new Promise(res => this.dc.redis.flushdb(res));
-        await this.dc.torm.synchronize(true); //https://github.com/nestjs/nest/issues/409
+        await this.ORM.synchronize(true); //https://github.com/nestjs/nest/issues/409
         await new Promise(res => this.dc.session_store.clear(res));
       },
     };

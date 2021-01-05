@@ -157,7 +157,7 @@ export default class PerformanceController extends BaseController {
         const purchase = new Purchase(user, perf);
         purchase.token = perf.host_info.signing_key.signToken(perf);
 
-        await this.dc.torm.manager.save(purchase);
+        await this.ORM.manager.save(purchase);
       },
     };
   }

@@ -89,17 +89,17 @@ router.post <void>                    ("/admin/onboarding/:oid/enact",         A
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);
-router.post   <void>                  ("/mux/hooks",                               MUXHooks.handleHook());
+router.post   <void>                  ("/mux/hooks",                           MUXHooks.handleHook());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
 const Auth =  new AuthController(providers, mws);
-router.redirect                       ("/auth/verify",                             Auth.verifyUserEmail());
+router.redirect                       ("/auth/verify",                         Auth.verifyUserEmail());
 
 // MISC ---------------------------------------------------------------------------------------------------------------
 const Misc = new MiscController(providers, mws);
-router.get    <string>                ("/ping",                                    Misc.ping());
-router.post   <void>                  ("/drop",                                    Misc.dropAllData());
-router.get    <void>                  ("/test",                                    Misc.test());
+router.get    <string>                ("/ping",                                Misc.ping());
+router.post   <void>                  ("/drop",                                Misc.dropAllData());
+router.get    <void>                  ("/test",                                Misc.test());
 
 return router;
 };
