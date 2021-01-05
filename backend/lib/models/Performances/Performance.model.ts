@@ -4,9 +4,8 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne,
 import { User } from "../Users/User.model";
 import { PerformanceHostInfo, PerformanceHostInfo as PHostInfo } from "./PerformanceHostInfo.model";
 import { DataClient } from "../../common/data";
-import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
+import { CurrencyCode } from "@eventi/interfaces";
 import { Purchase } from "../Purchase.model";
-
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
   @PrimaryGeneratedColumn() _id: number;

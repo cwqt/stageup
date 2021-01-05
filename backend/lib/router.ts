@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, IRouterMatcher } from "express";
 import { ErrorHandler, handleError } from "./common/errors";
 import { DataClient } from "./common/data";
-import { AuthStrategy } from './authorisation';
+import { AuthStrategy } from './common/authorisation';
 import { HTTP } from "@eventi/interfaces";
 import { IControllerEndpoint } from "./common/controller";
 import { validatorMiddleware } from "./common/validate";

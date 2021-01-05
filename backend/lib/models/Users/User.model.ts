@@ -36,7 +36,7 @@ export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_
     this.email_address = data.email_address;
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.is_admin = false;
-    this.is_new_user = true;
+    this.is_new_user = false;//TODO: change to true
     this.is_verified = config.PRODUCTION ? false : true;//auto-verify when not in prod
     this.setPassword(data.password);
   }

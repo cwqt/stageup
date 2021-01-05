@@ -14,8 +14,7 @@ import config from "./config";
 import { ErrCode, HTTP } from "@eventi/interfaces";
 import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
-
-import validator from 'express-validator';
+import { pagination } from './common/paginate'
 
 let server: http.Server;
 const app = express();
@@ -45,6 +44,7 @@ app.use(morgan("tiny", { stream }));
     );
 
     // Register routes
+    app.use(pagination);
     app.use("/", Routes(providers).router);
 
     // Catch 404 errors
@@ -58,7 +58,6 @@ app.use(morgan("tiny", { stream }));
     // Handle closing connections on failure
     process.on("SIGTERM", gracefulExit(providers));
     process.on("SIGINT", gracefulExit(providers));
-
 
     // Start listening for requests
     server = app.listen(config.EXPRESS_PORT, () => {

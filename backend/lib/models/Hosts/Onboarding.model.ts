@@ -3,8 +3,10 @@ import {
   HostOnboardingStep,
   HostSubscriptionLevel,
   IFormErrorField,
+  IHostOnboarding,
   IHostOnboardingProcess,
-  IHostOnboardingState,
+  IOnboardingStepMap,
+  HostOnboardingState,
   IOnboardingAddMembers,
   IOnboardingOwnerDetails,
   IOnboardingProofOfBusiness,
@@ -15,15 +17,16 @@ import {
 import { Host } from '../Hosts/Host.model';
 import { User } from '../Users/User.model';
 import { object, single, array } from '../../common/validate';
-import Validators from '../../common/validators';
+import Validators from '../../common/validate';
 
 @Entity()
 export class HostOnboardingProcess extends BaseEntity implements IHostOnboardingProcess {
   @PrimaryGeneratedColumn() _id: number;
-  @Column() status: IHostOnboardingState;
+  @Column() status: HostOnboardingState;
   @Column() started_at: number;
   @Column({ nullable: true }) completed_at: number;
   @Column({ nullable: true }) last_modified: number;
+  @Column({ nullable: true }) last_submitted: number;
   @Column() version: number;
   @Column('jsonb', { nullable: true }) steps: {
     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
@@ -38,7 +41,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
 
   constructor(host: Host, creator: User) {
     super();
-    this.status = IHostOnboardingState.AwaitingChanges;
+    this.status = HostOnboardingState.AwaitingChanges;
     this.started_at = Math.floor(Date.now() / 1000); //timestamp in seconds
     this.last_modified = this.started_at;
     this.last_modified_by = creator;
@@ -48,7 +51,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     this.steps = {
       [HostOnboardingStep.ProofOfBusiness]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
           hmrc_company_number: null,
@@ -58,31 +61,39 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       },
       [HostOnboardingStep.OwnerDetails]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
-          owner_info: null,
+          owner_info: {
+            title: null,
+            first_name: null,
+            last_name: null,
+          },
         },
       },
       [HostOnboardingStep.SocialPresence]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
-          social_info: null,
+          social_info: {
+            facebook_url: null,
+            linkedin_url: null,
+            instagram_url: null
+          },
         },
       },
       [HostOnboardingStep.AddMembers]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
-          members_to_add: null,
+          members_to_add: []
         },
       },
       [HostOnboardingStep.SubscriptionConfiguration]: {
         valid: false,
-        status: IHostOnboardingState.AwaitingChanges,
+        status: HostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
           tier: null,
@@ -91,15 +102,25 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     };
   }
 
-  toFull(): IHostOnboardingProcess {
+  // toSteps(): IOnboardingStepMap {
+  //   return  {
+  //     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
+  //     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
+  //     [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
+  //     [HostOnboardingStep.AddMembers]: IOnboardingStep<IOnboardingAddMembers>;
+  //     [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;  
+  //   }
+  // }
+
+  toFull(): Required<IHostOnboarding> {
     return {
       _id: this._id,
       status: this.status,
       last_modified: this.last_modified,
       last_modified_by: this.last_modified_by.toStub(),
+      last_submitted: this.last_submitted,
       started_at: this.started_at,
       completed_at: this.completed_at,
-      steps: this.steps,
       version: this.version,
     };
   }
@@ -111,7 +132,14 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
 
   async updateStep<T extends object>(stepIdx: HostOnboardingStep, updates: Partial<T>): Promise<IOnboardingStep<any>> {
     const validationResult = await stepValidators[stepIdx](updates);
-    if (validationResult.length) throw validationResult;
+    if (validationResult.length) {
+      this.steps[stepIdx].valid = false;
+      throw validationResult;
+    } else {
+      // data fully valid, so is the step - as a consequence we can't partially update fields
+      // but i doubt we'll need that since each step is quite small
+      this.steps[stepIdx].valid = true;
+    }
 
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (<any>this.steps[stepIdx].data)[k] = v ?? (<any>this.steps[stepIdx].data)[k];
@@ -131,7 +159,7 @@ const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IForm
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
     return await object(d, {
-      owner_info: v => v.custom(single(Validators.Objects.IPerson())),
+      owner_info: v => v.custom(single(Validators.Objects.IPersonInfo())),
     });
   },
   [HostOnboardingStep.AddMembers]: async (d: IOnboardingAddMembers) => {

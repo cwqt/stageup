@@ -27,41 +27,48 @@ export enum HostOnboardingStep {
   SubscriptionConfiguration,
 }
 
-export enum IHostOnboardingState {
-  AwaitingChanges,
-  Pending,
-  Verified,
-  Error,
+export enum HostOnboardingState {
+  AwaitingChanges, // not submitted
+  PendingVerification, // submit & awaiting verification from admin
+  HasIssues, // verified has having problems
+  Verified, // verified as valud
+  Enacted, // all stages verified & submitted as complete
 }
 
-export interface IHostOnboardingProcess {
+export type IHostOnboardingProcess = IHostOnboarding & { steps: IOnboardingStepMap };
+
+export interface IHostOnboarding {
   _id: number;
-  status: IHostOnboardingState; // when all steps verified, process is complete
+  status: HostOnboardingState; // when all steps verified, process is complete
   started_at: number;
   completed_at: number | null;
+  last_submitted: number | null;
   last_modified: number;
   last_modified_by: IUserStub;
   version: number; // back and forth validation / issue handling
-  steps: {
-    [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
-    [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
-    [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
-    [HostOnboardingStep.AddMembers]: IOnboardingStep<IOnboardingAddMembers>;
-    [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
-  };
+  // we won't store actual snapshots of onboardings, just as a link to
+  // a version which an issue was in
+}
+
+export interface IOnboardingStepMap {
+  [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
+  [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
+  [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
+  [HostOnboardingStep.AddMembers]: IOnboardingStep<IOnboardingAddMembers>;
+  [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
 }
 
 export interface IOnboardingStep<T> {
-  status: IHostOnboardingState;
+  status: HostOnboardingState.AwaitingChanges | HostOnboardingState.HasIssues | HostOnboardingState.Verified;
   issues: IOnboardingIssue[];
-  valid: boolean;//just if all the data is filled out & correct
+  valid: boolean; //just if all the data is filled out & correct
   data: T;
 }
 
 export interface IOnboardingIssue {
   param: string;
   message: string;
-  version?:number;
+  version?: number; //which onboarding version this issue relates to
 }
 
 export interface IOnboardingProofOfBusiness {
@@ -81,7 +88,7 @@ export interface IOnboardingSocialPresence {
 export interface IHostMemberChangeRequest {
   user_id: number;
   change: 'add' | 'update' | 'del';
-  value: HostPermission;
+  value?: HostPermission;
 }
 
 export interface IOnboardingAddMembers {

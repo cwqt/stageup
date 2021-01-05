@@ -5,7 +5,7 @@ export enum ErrCode {
   INVALID_EMAIL = "INVALID_EMAIL", // more specific invalid
   REGEX_MATCH   = "REGEX_MATCH",   // didn't match expected pattern
   IN_USE        = "IN_USE",        // email/username in use by someone else
-  DUPLICATE     = "DUPLICATE",
+  DUPLICATE     = "DUPLICATE",     // object already exists
   NOT_FOUND     = "NOT_FOUND",     // no such x exists
   FORBIDDEN     = "FORBIDDEN",     // cannot be used
   INCORRECT     = "INCORRECT",     // expected one value, but got another
@@ -15,11 +15,12 @@ export enum ErrCode {
   NO_SESSION    = "NO_SESSION",    // not logged in
   MISSING_PERMS = "MISSING_PERMS", // auth level too low
   NOT_MEMBER    = "NOT_MEMBER",    // not a member of host
-  NOT_ADMIN     = "NOT_ADMIN",      // must be a site admin
-  EMAIL_SEND    = "EMAIL_SEND",
-  NOT_VERIFIED  = "NOT_VERIFIED",
-  LOCKED        = "LOCKED",
-  UNKNOWN       = "UNKNOWN"
+  NOT_ADMIN     = "NOT_ADMIN",     // must be a site admin
+  EMAIL_SEND    = "EMAIL_SEND",    // failed sending email
+  NOT_VERIFIED  = "NOT_VERIFIED",  // user/host not verified
+  LOCKED        = "LOCKED",        // object is locked
+  UNKNOWN       = "UNKNOWN",       // unknown error
+  NOT_URL       = "NOT_URL"        // not a valid url
 }
 
 export interface IErrorResponse {

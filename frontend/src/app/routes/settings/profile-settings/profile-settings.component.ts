@@ -8,12 +8,12 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./profile-settings.component.scss']
 })
 export class ProfileSettingsComponent implements OnInit {
-  @Input() user:IUser;
+  @Input() user:IUser & { email_address: string };
 
   constructor(private userService:UserService) { }
 
   ngOnInit(): void {
-    this.user = this.userService.currentUserValue;
+    this.user = this.userService.currentUserValue as any;
   }
 
 }

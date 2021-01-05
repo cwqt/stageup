@@ -1,31 +1,25 @@
-import { Request } from 'express';
-
-import config from '../config';
 import { ErrorHandler } from '../common/errors';
-import { HostOnboardingStep, HTTP, IEnvelopedData, IHostOnboardingProcess, IOnboardingIssue } from '@eventi/interfaces';
+import { HostOnboardingStep, HTTP, IEnvelopedData, IHostOnboarding, IHostOnboardingProcess, IOnboardingIssue } from '@eventi/interfaces';
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
-import AuthStrat from '../authorisation';
+import AuthStrat from '../common/authorisation';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
-import { createPagingData } from '../common/paginator';
 import { params, body, array } from '../common/validate';
-import Validators from '../common/validators';
+import Validators from '../common/validate';
 
 export default class AdminController extends BaseController {
   constructor(...args: BaseArgs) {
     super(...args);
   }
 
-  readOnboardingProcesses():IControllerEndpoint<IEnvelopedData<IHostOnboardingProcess[], void>> {
+  readOnboardingProcesses():IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async (req:Request):Promise<IEnvelopedData<IHostOnboardingProcess[], void>> => {
-        // const onboarding
-
-
+      controller: async req => {
+        const onboardingEnvelope = await this.dc.torm.createQueryBuilder(HostOnboardingProcess, 'hop').paginate();
 
         return {
-          data: [],
-          __paging_data: createPagingData(req.path, 0, 0)
+          data: onboardingEnvelope.data.map(o => o.toFull()),
+          __paging_data: onboardingEnvelope.__paging_data
         }
       }
     }
@@ -70,7 +64,7 @@ export default class AdminController extends BaseController {
   verifyOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async req => {},
     };
   }
 
@@ -79,8 +73,8 @@ export default class AdminController extends BaseController {
    */
   enactOnboardingProcess(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      authStrategy: AuthStrat.isSiteAdmin,
+      controller: async req => {},
     };
   }
 }

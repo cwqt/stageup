@@ -1,7 +1,8 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { body, query, object, single, array, params } from '../common/validate';
-import { ErrCode } from '@eventi/interfaces';
+import { ErrCode, IAddress, Idless } from '@eventi/interfaces';
+import Validators from '../common/validate';
 
 describe('Custom validation', () => {
   it('Should return correct results for simple, unnested objects', async () => {
@@ -126,8 +127,27 @@ describe('Custom validation', () => {
       }))
     });
 
-    console.log(JSON.stringify(errors, null, 2));
+    //TODO: validate the whole response
+    expect(errors).to.be.lengthOf(1)
   });
+
+  it("Should not return errors for valid data", async () => {
+    const data:{address:Idless<IAddress>} = {
+      address: {
+        city: "Scunny",
+        iso_country_code: "GBR",
+        postcode: "CF10 5NT",
+        street_name: "My Street",
+        street_number: 12
+      }
+    }
+
+    const errors = await object(data, {
+      address: v => v.custom(single(Validators.Objects.IAddress()))
+    });
+
+    expect(errors).to.be.lengthOf(0)
+  })
 
   // FIXME: Arrays of primitives don't work
   // it("Should return errors for objects with fields that are arrays of primitives", async () => {

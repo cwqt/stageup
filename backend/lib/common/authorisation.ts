@@ -1,9 +1,9 @@
 import { ErrCode, HostPermission } from '@eventi/interfaces';
 import { Request } from 'express';
-import { DataClient } from './common/data';
-import { User } from './models/Users/User.model';
-import { Host } from './models/Hosts/Host.model';
-import { UserHostInfo } from './models/Hosts/UserHostInfo.model';
+import { DataClient } from './data';
+import { User } from '../models/Users/User.model';
+import { Host } from '../models/Hosts/Host.model';
+import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 
 export type AuthStratReturn = [boolean, {[index:string]:any}, ErrCode?];
 export type AuthStrategy = (req: Request, dc: DataClient) => Promise<AuthStratReturn>;
@@ -61,6 +61,8 @@ export const hasHostPermission = (permission: HostPermission): AuthStrategy => {
 export const isSiteAdmin: AuthStrategy = async (req: Request, dc: DataClient): Promise<AuthStratReturn> => {
   const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
   if (!isAuthorised) return [isAuthorised, _, reason];
+
+  console.log(req.session)
 
   if (!req.session.user.is_admin) return [false, {}, ErrCode.NOT_ADMIN];
   return [true, {}];

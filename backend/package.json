@@ -42,6 +42,7 @@
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.0-alpha.24",
+    "typeorm-pagination": "^2.0.1",
     "uuid": "^3.3.2",
     "validator": "^13.5.2",
     "winston": "^3.3.3"

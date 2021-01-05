@@ -5,8 +5,13 @@ export interface IEnvelopedData<T, K> {
 }
 
 export interface PagingData {
-  next: string;
-  prev: string;
-  total: number;
-  pages: number;
+  from: any;
+  to: any;
+  per_page: any;
+  total: number | any;
+  current_page: number;
+  prev_page?: number | null;
+  next_page?: number | null;
 }
+
+

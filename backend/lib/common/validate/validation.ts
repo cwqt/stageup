@@ -1,10 +1,9 @@
-import { HTTP, IFormErrorField, Y, ErrCode } from '@eventi/interfaces';
+import { HTTP, IFormErrorField, ErrCode } from '@eventi/interfaces';
 import { Request } from 'express';
 import { NextFunction, Response } from 'express-async-router';
 import { CustomValidator, Meta, ValidationChain, Location, ValidationError } from 'express-validator';
 import { body as bodyRunner, param as paramRunner, query as queryRunner } from 'express-validator';
-import { wrap } from 'module';
-import { ErrorHandler } from './errors';
+import { ErrorHandler } from '../errors';
 
 type VData<T> = T & {
   __this?: T; // self-reference
@@ -102,8 +101,6 @@ export const object: VFunctor = async (data, validators, location = null, idx = 
     await Promise.all(Object.keys(validators).map((i: any) => runValidator(data, i, validators[i], location)))
   ).flat();
 
-  // TODO: recurse down nestedErrors doing this action
-  // Y(r => f => {})
   errors.forEach((e: any) => {
     // handle .arrays & .single
     if (e.code.errors) {
@@ -116,7 +113,11 @@ export const object: VFunctor = async (data, validators, location = null, idx = 
     }
   });
 
-  return errors;
+  // Filter .singles that threw but had no actual errors
+  return errors.filter(e => {
+    if (Array.isArray(e.nestedErrors) && e.nestedErrors.length == 0) return false;
+    return true;
+  });
 };
 
 /**
@@ -136,6 +137,7 @@ export const array = <T extends object>(validators: VFieldChainerMap<T>, code?: 
       .flat()
       .filter(e => e.nestedErrors != 0);
 
+    // Array should only sometimes throw
     if (errors.length) {
       throw {
         // throw custom object to include the message since .withMessage chainer doesn't work with .custom
@@ -161,6 +163,7 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>, code?:
       e = await reqHandlerFunctorMap[meta.location](validators, data)(meta.req as Request);
     }
 
+    // Single should always throw
     throw {
       message: code ?? ErrCode.INVALID,
       errors: e,
@@ -176,14 +179,12 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>, code?:
  */
 export const validatorMiddleware = (validators: VReqHandlerFunctor[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const errors: PromiseSettledResult<IFormErrorField[]>[] = (await Promise.allSettled(validators.map(v => v(req))))
+    const errors: IFormErrorField[] = (await Promise.allSettled(validators.map(v => v(req))))
       .flat()
       .filter(e => e.status == 'fulfilled')
       .flatMap(e => (<any>e).value);
 
-    console.log(errors)
-
-    if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID);
+    if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
     next();
   };
 };
