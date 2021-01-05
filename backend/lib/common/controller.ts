@@ -22,6 +22,10 @@ export class BaseController {
   constructor(providers: DataClient, middlewares: Middlewares, endpoint?:string) {
     this.dc = providers;
     this.mws = middlewares;
+
+    // Unused so far
     this.endpoint = endpoint ?? "";
   }
+
+  get ORM() { return this.dc.torm }
 }

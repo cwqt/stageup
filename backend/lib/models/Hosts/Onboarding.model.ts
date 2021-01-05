@@ -61,7 +61,11 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         status: IHostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
-          owner_info: null,
+          owner_info: {
+            title: null,
+            first_name: null,
+            last_name: null,
+          },
         },
       },
       [HostOnboardingStep.SocialPresence]: {
@@ -69,7 +73,11 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         status: IHostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
-          social_info: null,
+          social_info: {
+            facebook_url: null,
+            linkedin_url: null,
+            instagram_url: null
+          },
         },
       },
       [HostOnboardingStep.AddMembers]: {
@@ -77,7 +85,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         status: IHostOnboardingState.AwaitingChanges,
         issues: [],
         data: {
-          members_to_add: null,
+          members_to_add: []
         },
       },
       [HostOnboardingStep.SubscriptionConfiguration]: {
@@ -111,7 +119,14 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
 
   async updateStep<T extends object>(stepIdx: HostOnboardingStep, updates: Partial<T>): Promise<IOnboardingStep<any>> {
     const validationResult = await stepValidators[stepIdx](updates);
-    if (validationResult.length) throw validationResult;
+    if (validationResult.length) {
+      this.steps[stepIdx].valid = false;
+      throw validationResult;
+    } else {
+      // data fully valid, so is the step - as a consequence we can't partially update fields
+      // but i doubt we'll need that since each step is quite small
+      this.steps[stepIdx].valid = true;
+    }
 
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (<any>this.steps[stepIdx].data)[k] = v ?? (<any>this.steps[stepIdx].data)[k];
@@ -131,7 +146,7 @@ const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IForm
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
     return await object(d, {
-      owner_info: v => v.custom(single(Validators.Objects.IPerson())),
+      owner_info: v => v.custom(single(Validators.Objects.IPersonInfo())),
     });
   },
   [HostOnboardingStep.AddMembers]: async (d: IOnboardingAddMembers) => {

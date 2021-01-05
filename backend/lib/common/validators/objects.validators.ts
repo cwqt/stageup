@@ -1,6 +1,15 @@
 import { array } from '../validate';
 import { ValidationChain } from 'express-validator';
-import { ErrCode, IAddress, Idless, PersonTitle, IHostMemberChangeRequest, IPerson } from '@eventi/interfaces';
+import {
+  ErrCode,
+  IAddress,
+  Idless,
+  PersonTitle,
+  IHostMemberChangeRequest,
+  IPerson,
+  IPersonInfo,
+  ISocialInfo,
+} from '@eventi/interfaces';
 import { FieldValidators as FV } from './fields.validators';
 
 export namespace ObjectValidators {
@@ -16,14 +25,37 @@ export namespace ObjectValidators {
     };
   };
 
-  export const IPerson = (): ObjectValidator<Idless<IPerson>> => {
+  export const IPersonInfo = (): ObjectValidator<IPersonInfo> => {
     return {
       title: v => FV.isString(v).isIn(Object.values(PersonTitle)),
       first_name: v => FV.isString(v),
       last_name: v => FV.isString(v),
+    };
+  };
+
+  export const IPerson = (): ObjectValidator<Idless<IPerson>> => {
+    return {
+      ...IPersonInfo(),
       mobile_number: v => v.isMobilePhone('en-GB'),
       landline_number: v => v.isMobilePhone('en-GB'),
       addresses: v => v.custom(array(IAddress())),
+    };
+  };
+
+  export const ISocialInfo = (): ObjectValidator<ISocialInfo> => {
+    return {
+      linkedin_url: v =>
+        FV.isString(v)
+          .isURL({ host_whitelist: ['linkedin.com'] })
+          .withMessage(ErrCode.NOT_URL),
+      facebook_url: v =>
+        FV.isString(v)
+          .isURL({ host_whitelist: ['facebook.com'] })
+          .withMessage(ErrCode.NOT_URL),
+      instagram_url: v =>
+        FV.isString(v)
+          .isURL({ host_whitelist: ['instagram.com'] })
+          .withMessage(ErrCode.NOT_URL),
     };
   };
 

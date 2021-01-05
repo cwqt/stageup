@@ -77,7 +77,6 @@ export default class UserController extends BaseController {
         });
 
         let host_info: IUserHostInfo;
-        return {} as IMyself;
         // if (host) {
         //   host_info = await UserHostInfo.findOne({
         //     where: {
@@ -88,14 +87,14 @@ export default class UserController extends BaseController {
         //         _id: host._id,
         //       },
         //     },
-        //   });
+        //  });
         // }
 
-        // return {
-        //   user: user.toFull(),
-        //   host: host?.toStub(),
-        //   host_info: host_info,
-        // };
+        return {
+          user: user.toFull(),
+          host: host?.toStub(),
+          host_info: host_info,
+        };
       },
     };
   }
@@ -104,7 +103,7 @@ export default class UserController extends BaseController {
     return {
       validators: [
         body<Pick<IUserPrivate, 'username' | 'email_address'> & { password: string }>({
-          username: v => Validators.Fields.isString(v),
+          username: v => Validators.Fields.username(v),
           email_address: v => Validators.Fields.email(v),
           password: v => Validators.Fields.password(v),
         }),
@@ -115,17 +114,18 @@ export default class UserController extends BaseController {
           where: [{ email_address: req.body.email_address }, { username: req.body.username }],
         });
 
-        if (preExistingUser) {
-          const errors = new FormErrorResponse();
-          if (preExistingUser.username == req.body.username) errors.push('username', ErrCode.IN_USE, req.body.username);
-          if (preExistingUser.email_address == req.body.email_address)
-            errors.push('email_address', ErrCode.IN_USE, req.body.email_address);
-          throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE, errors.value);
-        }
+        // Check if a some fields are already in use by someone else
+        const errors = new FormErrorResponse();
+        if (preExistingUser?.username == req.body.username) errors.push('username', ErrCode.IN_USE, req.body.username);
+        if (preExistingUser?.email_address == req.body.email_address)
+          errors.push('email_address', ErrCode.IN_USE, req.body.email_address);
+        if (errors.errors.length > 0) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE, errors.value);
 
+        // Fire off a verification email
         const emailSent = await Email.sendVerificationEmail(req.body.email_address);
         if (!emailSent) throw new ErrorHandler(HTTP.ServerError, ErrCode.EMAIL_SEND);
 
+        // Save the user through a transaction (creates ContactInfo & Person)
         const user = await this.dc.torm.transaction(async (txc: EntityManager) => {
           const u = await new User({
             username: req.body.username,
@@ -138,7 +138,7 @@ export default class UserController extends BaseController {
         });
 
         return user.toFull();
-      },
+      }
     };
   }
 

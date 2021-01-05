@@ -38,7 +38,7 @@ export class Host extends BaseEntity implements IHostPrivate {
       instagram_url: null
     }
   }
-
+  
   /**
    * @description Creates onboarding process
    */

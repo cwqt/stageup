@@ -81,7 +81,7 @@ export interface IOnboardingSocialPresence {
 export interface IHostMemberChangeRequest {
   user_id: number;
   change: 'add' | 'update' | 'del';
-  value: HostPermission;
+  value?: HostPermission;
 }
 
 export interface IOnboardingAddMembers {

@@ -18,9 +18,9 @@ export const handleFormErrors = (obj: ICacheable<any>, error: IErrorResponse): I
 
   // Map error to each field from response to cacheable form error field
   Object.values(error.errors).forEach((error: IFormErrorField) => {
-    if (o.form_errors.hasOwnProperty(error.param)) {
-      o.form_errors[error.param] = error.msg;
-    }
+    // if (o.form_errors.hasOwnProperty(error.param)) {
+    //   o.form_errors[error.param] = error.msg;
+    // }
   });
 
   return o;

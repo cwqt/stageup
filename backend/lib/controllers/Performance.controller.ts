@@ -11,7 +11,6 @@ import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Performance } from '../models/Performances/Performance.model';
 import { ErrorHandler } from '../common/errors';
-import { createPagingData } from '../common/paginator';
 import { IResLocals } from '../router';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
@@ -27,9 +26,9 @@ export default class PerformanceController extends BaseController {
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
       validators: [
-        body<Pick<IPerformanceStub, "name">>({
-          name: v => Validators.Fields.isString(v)
-        })
+        body<Pick<IPerformanceStub, 'name'>>({
+          name: v => Validators.Fields.isString(v),
+        }),
       ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IPerformance> => {
@@ -56,16 +55,12 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request, _, locals: IResLocals): Promise<IEnvelopedData<IPerformanceStub[], null>> => {
-        const performances = await Performance.find({
-          take: locals.pagination.per_page,
-          skip: locals.pagination.page * locals.pagination.per_page,
-          relations: ['host'],
-        });
+      controller: async req => {
+        const envelopedPerformances = await this.ORM.createQueryBuilder(Performance, 'p').paginate();
 
         return {
-          data: performances.map((p: Performance) => p.toStub()),
-          __paging_data: createPagingData(req.path, 100, locals.pagination.per_page),
+          data: envelopedPerformances.data.map(p => p.toStub()),
+          __paging_data: envelopedPerformances.__paging_data,
         };
       },
     };
@@ -106,8 +101,7 @@ export default class PerformanceController extends BaseController {
           }
 
           // neither member of host, nor has a purchased token
-          if (!(memberOfHost || token))
-            throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+          if (!(memberOfHost || token)) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
 
           // sign on the fly for a member of the host
           if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);

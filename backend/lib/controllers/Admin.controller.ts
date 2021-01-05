@@ -6,7 +6,6 @@ import { HostOnboardingStep, HTTP, IEnvelopedData, IHostOnboardingProcess, IOnbo
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../authorisation';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
-import { createPagingData } from '../common/paginator';
 import { params, body, array } from '../common/validate';
 import Validators from '../common/validators';
 
@@ -15,17 +14,15 @@ export default class AdminController extends BaseController {
     super(...args);
   }
 
-  readOnboardingProcesses():IControllerEndpoint<IEnvelopedData<IHostOnboardingProcess[], void>> {
+  readOnboardingProcesses():IControllerEndpoint<IEnvelopedData<IHostOnboardingProcess[], null>> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async (req:Request):Promise<IEnvelopedData<IHostOnboardingProcess[], void>> => {
-        // const onboarding
-
-
+      controller: async req => {
+        const onboardingEnvelope = await this.dc.torm.createQueryBuilder(HostOnboardingProcess, 'hop').paginate();
 
         return {
-          data: [],
-          __paging_data: createPagingData(req.path, 0, 0)
+          data: onboardingEnvelope.data.map(o => o.toFull()),
+          __paging_data: onboardingEnvelope.__paging_data
         }
       }
     }
@@ -80,7 +77,7 @@ export default class AdminController extends BaseController {
   enactOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async req => {},
     };
   }
 }
