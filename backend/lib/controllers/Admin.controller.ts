@@ -36,43 +36,7 @@ export default class AdminController extends BaseController {
       },
     };
   }
-
-  // createOnboardingStepIssues(): IControllerEndpoint<void> {
-  //   return {
-  //     validators: [
-  //       params({
-  //         step: v => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
-  //       }),
-  //       body({
-  //         __this: v =>
-  //           v.isArray().custom(
-  //             array({
-  //               param: v => Validators.Fields.isString(v),
-  //               message: v => Validators.Fields.isString(v),
-  //             })
-  //           ),
-  //       }),
-  //     ],
-  //     authStrategy: AuthStrat.isSiteAdmin,
-  //     controller: async req => {
-  //       const onboarding = await HostOnboardingProcess.findOne({
-  //         where: {
-  //           host: {
-  //             _id: parseInt(req.params.hid),
-  //           },
-  //         },
-  //       });
-  //       if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-
-  //       const issues: IOnboardingIssue[] = req.body;
-  //       issues.forEach(i => (i = { ...i, version: onboarding.version }));
-  //       onboarding.steps[parseInt(req.params.step) as HostOnboardingStep].issues = issues;
-
-  //       await onboarding.save();
-  //     },
-  //   };
-  // }
-
+  
   reviewStep(): IControllerEndpoint<void> {
     return {
       validators: [
