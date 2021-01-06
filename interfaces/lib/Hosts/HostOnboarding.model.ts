@@ -47,7 +47,7 @@ export interface IHostOnboarding {
   last_modified_by: IUserStub;
   version: number; // back and forth validation / issue handling
   // we won't store actual snapshots of onboardings, just as a link to
-  // a version which an issue was in
+  // a version which an isssue was in
   host: IHostStub;
 }
 
