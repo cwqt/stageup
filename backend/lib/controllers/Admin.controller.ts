@@ -11,19 +11,33 @@ export default class AdminController extends BaseController {
     super(...args);
   }
 
-  readOnboardingProcesses():IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
+  // ------------------------------------------------------------------------------------------------
+
+  readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
         const onboardingEnvelope = await this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop').paginate();
 
+        const state = await this.ORM.createQueryBuilder("state").where('HostOnboardingState = :status', { status: '1' }).getMany();
+        if (!state) throw new ErrorHandler(HTTP.NotFound);
+
+        const submission_date_sort = await this.ORM.createQueryBuilder("submission_date_sort").orderBy('user.submission', 'DESC');
+
+        const host_name = req.query.host_name;
+        if (!host_name) throw new ErrorHandler(HTTP.NotFound);
+        cdcd angular
+
         return {
           data: onboardingEnvelope.data.map(o => o.toFull()),
-          __paging_data: onboardingEnvelope.__paging_data
+          __paging_data: onboardingEnvelope.__paging_data,
+
         }
       }
     }
   }
+
+  // ------------------------------------------------------------------------------------------------
 
   createOnboardingStepIssues():IControllerEndpoint<void> {
     return {
