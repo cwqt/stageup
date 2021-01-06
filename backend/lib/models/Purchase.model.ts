@@ -2,15 +2,15 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne
 import { IUser, IUserStub, IUserPrivate, IPerformancePurchase } from "@eventi/interfaces";
 import bcrypt from "bcrypt";
 import { User } from "./Users/User.model";
-import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
+// import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
 import { Performance } from './Performances/Performance.model';
  
 @Entity()
-export class Purchase extends BaseEntity implements IPerformancePurchase {
+export class Purchase extends BaseEntity {
     @PrimaryGeneratedColumn()                _id: number;
     @Column()                                date_purchased: number;
     @Column({type:"bigint", nullable:true})  price: number; // stored as micro-pence
-    @Column()                                currency: CurrencyCode;
+    // @Column()                                currency: CurrencyCode;
     @Column()                                token: string;
     @Column()                                payment_id: number;
     @Column()                                expiry: number;
@@ -25,7 +25,7 @@ export class Purchase extends BaseEntity implements IPerformancePurchase {
         this.user = user;
         this.performance = performance;
         this.price = performance.price;
-        this.currency = performance.currency;
+        // this.currency = performance.currency;
         this.date_purchased = Math.floor(Date.now() / 1000);//timestamp in seconds
     }
 }

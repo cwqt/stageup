@@ -37,7 +37,7 @@ export default class PerformanceController extends BaseController {
             name: req.body.name,
             description: req.body.description ?? '',
             price: req.body.price,
-            currency: req.body.currency,
+            // currency: req.body.currency,
           },
           user
         ).setup(this.dc);

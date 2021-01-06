@@ -4,11 +4,11 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne,
 import { User } from "../Users/User.model";
 import { PerformanceHostInfo, PerformanceHostInfo as PHostInfo } from "./PerformanceHostInfo.model";
 import { DataClient } from "../../common/data";
-import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
+// import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
 import { Purchase } from "../Purchase.model";
 
 @Entity()
-export class Performance extends BaseEntity implements IPerformance {
+export class Performance extends BaseEntity {
   @PrimaryGeneratedColumn() _id: number;
   @Column()                 created_at: number;  
   @Column()                 name: string;
@@ -18,7 +18,7 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column()                 views: number=0;
   @Column({nullable:true})  state: PerformanceState;
   @Column()                 price: number;
-  @Column()                 currency: CurrencyCode;
+  // @Column()                 currency: CurrencyCode;
   @Column()                 playback_id: string;
   
   @OneToOne(() => PHostInfo) @JoinColumn()                      host_info: PHostInfo;
@@ -29,12 +29,12 @@ export class Performance extends BaseEntity implements IPerformance {
   ratings: IRating[];
 
   constructor(data:Pick<IPerformanceStub, "name" | "description"> &
-    Pick<IPerformance, "price" | "currency">, creator:User) {
+    Pick<IPerformance, "price">, creator:User) {
     super();
     this.name = data.name;
     this.description = data.description;
     this.price = data.price;
-    this.currency = data.currency
+    // this.currency = data.currency
 
     this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
     this.views = 0;
@@ -69,7 +69,7 @@ export class Performance extends BaseEntity implements IPerformance {
     }
   }
 
-  toFull():Required<IPerformance> {
+  toFull(): any {
     return {
       ...this.toStub(),
       created_at: this.created_at,
@@ -77,7 +77,7 @@ export class Performance extends BaseEntity implements IPerformance {
       ratings: this.ratings,
       state: this.state,
       price: this.price,
-      currency: this.currency,
+      // currency: this.currency,
     }
   }
 }

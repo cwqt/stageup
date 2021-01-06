@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IUser, IUserHostInfo } from "@eventi/interfaces";
+import { HostPermission, IUser, IUserHostInfo } from "@eventi/interfaces";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
@@ -15,7 +15,7 @@ export class HostService {
   private $currentUserHostInfo:BehaviorSubject<IUserHostInfo> = new BehaviorSubject(null);;
 
   public get hostId() { return this.$currentHost.value._id }
-  public get userHostPermission() { return this.$currentUserHostInfo.value.permissions }
+  public get userHostPermission():HostPermission { return this.$currentUserHostInfo.value.permissions }
   public get currentHostValue() { return this.$currentHost.value }
   public get currentUserHostInfoValue() { return this.$currentUserHostInfo.value }
 
