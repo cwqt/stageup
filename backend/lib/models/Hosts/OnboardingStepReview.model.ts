@@ -56,7 +56,7 @@ export class OnboardingStepReview extends BaseEntity implements IOnboardingStepR
       onboarding_version: this.onboarding_version,
       issues: this.issues,
       reviewed_at: this.reviewed_at,
-      reviewed_by: this.reviewed_by.toStub(),
+      reviewed_by: this.reviewed_by?.toStub(),
       review_message: this.review_message,
     };
   }

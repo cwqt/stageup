@@ -185,7 +185,7 @@ export const validatorMiddleware = (validators: VReqHandlerFunctor[]) => {
       .filter(e => e.status == 'fulfilled')
       .flatMap(e => (<any>e).value);
 
-    console.log(JSON.stringify(errors, null, 2));
+    if(errors.length) console.log(JSON.stringify(errors, null, 2));
     if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
     next();
   };

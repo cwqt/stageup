@@ -26,6 +26,7 @@ import {
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { expect } from 'chai';
+import { on } from 'process';
 
 describe('As Client, I want to register a Host & be onboarded', async () => {
   let client: IUser;
@@ -215,10 +216,46 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     });
   });
 
-  // describe('As a Client, I want to resolve issues with my onboarding process & then re-submit for verification', async () => {
-  //   await Stories.actions.common.switchActor(UserType.Client);
-    
-  // });
+  describe('As a Client, I want to resolve issues with my onboarding process & then re-submit for verification', async () => {
+    it('Should get the step that had issues attached to it by the Site Admin', async () => {
+      await Stories.actions.common.switchActor(UserType.Client);
+      const step = await Stories.actions.hosts.readOnboardingProcessStep(host, HostOnboardingStep.ProofOfBusiness);
 
-  // describe('As a Site Admin, I want to verify all steps and enact the onboarding process', async () => {});
+      expect(step.state).to.eq(HostOnboardingState.HasIssues);
+      expect(step.review?.issues).to.be.lengthOf(2);
+      expect(step.review?.reviewed_by.username).to.eq(Stories.cachedUsers[UserType.SiteAdmin]?.user.username);
+    });
+
+    it("Should update the the step with issues & re-submit for verification", async () => {
+      await Stories.actions.hosts.updateOnboardingProcessStep(
+        host,
+        HostOnboardingStep.ProofOfBusiness,
+        {
+          business_address: {
+            city: 'Cardiff',
+            iso_country_code: 'GBR',
+            postcode: 'NE62 5DE',
+            street_name: 'Marquee Court',
+            street_number: 32,
+          },
+          business_contact_number: '+447625143141',
+          hmrc_company_number: 11940213,
+        }
+      );
+
+      await Stories.actions.hosts.submitOnboardingProcess(host);
+    })
+  });
+
+  describe('As a Site Admin, I want to verify the last step, and then enact the onboarding', async () => {
+    it("Should review the step, and then submit the onboarding request review", async () => {
+      await Stories.actions.common.switchActor(UserType.SiteAdmin);
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.ProofOfBusiness, {
+        step_state: HostOnboardingState.Verified,
+        issues: []
+      });
+  
+      await Stories.actions.admin.submitOnboardingProcess(onboarding);        
+    })
+  });
 });

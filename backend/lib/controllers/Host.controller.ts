@@ -28,6 +28,7 @@ import AuthStrat from '../common/authorisation';
 import { body, params, query } from '../common/validate';
 import Validators from '../common/validate';
 import { unixTimestamp } from '../common/helpers';
+import { OnboardingStepReview } from '../models/Hosts/OnboardingStepReview.model';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -42,9 +43,9 @@ export default class HostController extends BaseController {
           username: IHost['username'];
           name: IHost['name'];
         }>({
-          email_address: (v) => Validators.Fields.email(v),
-          username: (v) => Validators.Fields.username(v),
-          name: (v) => Validators.Fields.name(v)
+          email_address: v => Validators.Fields.email(v),
+          username: v => Validators.Fields.username(v),
+          name: v => Validators.Fields.name(v),
         }),
       ],
       authStrategy: AuthStrat.isLoggedIn,
@@ -57,7 +58,7 @@ export default class HostController extends BaseController {
 
         // Create host & add current user (creator) to it through transaction
         // & begin the onboarding process by running setup
-        return await this.ORM.transaction(async (txc) => {
+        return await this.ORM.transaction(async txc => {
           const host = await txc.save(
             new Host({
               username: req.body.username,
@@ -169,7 +170,7 @@ export default class HostController extends BaseController {
     return {
       validators: [
         query<{ user: string }>({
-          user: (v) => v.exists().toInt(),
+          user: v => v.exists().toInt(),
         }),
       ],
       controller: async (req: Request): Promise<IUserHostInfo> => {
@@ -214,7 +215,7 @@ export default class HostController extends BaseController {
     return {
       validators: [
         params<{ step: number }>({
-          step: (v) => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
+          step: v => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
         }),
       ],
       authStrategy: AuthStrat.none,
@@ -228,8 +229,17 @@ export default class HostController extends BaseController {
         });
 
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-        // TODO: fix typing on onboarding to use string enum
-        return onboarding.steps[(req.params.step as unknown as HostOnboardingStep)] as IOnboardingStep<any>;
+
+        const step = (req.params.step as unknown) as HostOnboardingStep;
+        const stepReview = await OnboardingStepReview.findOne({
+          where: {
+            onboarding_step: step,
+            onboarding_version: onboarding.version,
+          },
+          relations: ["reviewed_by"]
+        });
+
+        return { ...onboarding.steps[step], review: stepReview?.toFull() || null };
       },
     };
   }
@@ -264,12 +274,12 @@ export default class HostController extends BaseController {
     return {
       validators: [
         params<{ step: number }>({
-          step: (v) => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
+          step: v => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
         }),
       ],
       authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async (req: Request): Promise<IOnboardingStep<any>> => {
-        if(!req.body) throw new ErrorHandler(HTTP.DataInvalid, ErrCode.NO_DATA);
+        if (!req.body) throw new ErrorHandler(HTTP.DataInvalid, ErrCode.NO_DATA);
 
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
@@ -299,7 +309,7 @@ export default class HostController extends BaseController {
         try {
           await onboarding.updateStep(step, u[step](req.body));
         } catch (error) {
-          console.log(error)
+          console.log(error);
           throw new ErrorHandler(HTTP.DataInvalid, null, error);
         }
 
@@ -326,6 +336,7 @@ export default class HostController extends BaseController {
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out
+        // TODO: delete all previous version step reviews
         onboarding.last_submitted = unixTimestamp();
         onboarding.state = HostOnboardingState.PendingVerification;
         onboarding.version++;

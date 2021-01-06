@@ -61,9 +61,7 @@ export const hasHostPermission = (permission: HostPermission): AuthStrategy => {
 export const isSiteAdmin: AuthStrategy = async (req: Request, dc: DataClient): Promise<AuthStratReturn> => {
   const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
   if (!isAuthorised) return [isAuthorised, _, reason];
-
-  console.log(req.session)
-
+  
   if (!req.session.user.is_admin) return [false, {}, ErrCode.NOT_ADMIN];
   return [true, {}];
 };

@@ -16,6 +16,7 @@ import { body, array } from '../common/validate';
 import Validators from '../common/validate';
 import { OnboardingStepReview } from '../models/Hosts/OnboardingStepReview.model';
 import { User } from '../models/Users/User.model';
+import logger from '../common/logger';
 
 export default class AdminController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -92,8 +93,8 @@ export default class AdminController extends BaseController {
 
         await this.ORM.transaction(async txc => {
           await txc.save(review);
+          
           onboarding.steps[step].state = review.step_state;
-
           if (Object.values(onboarding.steps).every(o => o.state == HostOnboardingState.Verified)) {
             onboarding.state = HostOnboardingState.Verified;
           } else {
@@ -101,7 +102,6 @@ export default class AdminController extends BaseController {
           }
 
           await txc.save(onboarding);
-          console.log(review)
         });
       },
     };
@@ -115,9 +115,12 @@ export default class AdminController extends BaseController {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
         const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: parseInt(req.params.oid) }));
+
         if (Object.values(onboarding.steps).every(o => o.state == HostOnboardingState.Verified)) {
           // enact the onboarding
+          logger.info("All steps valid & signed off!")
         } else {
+          logger.info("Not all steps are signed off as valid")
         }
       },
     };
