@@ -6,6 +6,7 @@ import { PerformanceHostInfo, PerformanceHostInfo as PHostInfo } from "./Perform
 import { DataClient } from "../../common/data";
 import { CurrencyCode } from "@eventi/interfaces";
 import { Purchase } from "../Purchase.model";
+import { unixTimestamp } from "../../common/helpers";
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
   @PrimaryGeneratedColumn() _id: number;
@@ -35,7 +36,7 @@ export class Performance extends BaseEntity implements IPerformance {
     this.price = data.price;
     this.currency = data.currency
 
-    this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
+    this.created_at = unixTimestamp(new Date());
     this.views = 0;
     this.average_rating = null;
     this.creator = creator;

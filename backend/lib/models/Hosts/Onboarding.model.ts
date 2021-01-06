@@ -18,16 +18,17 @@ import { Host } from '../Hosts/Host.model';
 import { User } from '../Users/User.model';
 import { object, single, array } from '../../common/validate';
 import Validators from '../../common/validate';
+import { unixTimestamp } from '../../common/helpers';
 
 @Entity()
 export class HostOnboardingProcess extends BaseEntity implements IHostOnboardingProcess {
-  @PrimaryGeneratedColumn() _id: number;
-  @Column() status: HostOnboardingState;
-  @Column() started_at: number;
+  @PrimaryGeneratedColumn()   _id: number;
+  @Column()                   status: HostOnboardingState;
+  @Column()                   created_at: number;
   @Column({ nullable: true }) completed_at: number;
   @Column({ nullable: true }) last_modified: number;
   @Column({ nullable: true }) last_submitted: number;
-  @Column() version: number;
+  @Column()                   version: number;
   @Column('jsonb', { nullable: true }) steps: {
     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
@@ -42,8 +43,8 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
   constructor(host: Host, creator: User) {
     super();
     this.status = HostOnboardingState.AwaitingChanges;
-    this.started_at = Math.floor(Date.now() / 1000); //timestamp in seconds
-    this.last_modified = this.started_at;
+    this.created_at = unixTimestamp(new Date());
+    this.last_modified = this.created_at;
     this.last_modified_by = creator;
     this.host = host;
     this.version = 0;
@@ -119,7 +120,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       last_modified: this.last_modified,
       last_modified_by: this.last_modified_by.toStub(),
       last_submitted: this.last_submitted,
-      started_at: this.started_at,
+      created_at: this.created_at,
       completed_at: this.completed_at,
       version: this.version,
     };

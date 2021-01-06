@@ -24,10 +24,10 @@ import { HTTP } from '@eventi/interfaces';
 import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
-import { IHostOnboardingProcess } from '@eventi/interfaces';
 import AuthStrat from '../common/authorisation';
 import { body, params, query } from '../common/validate';
 import Validators from '../common/validate';
+import { unixTimestamp } from '../common/helpers';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -269,6 +269,8 @@ export default class HostController extends BaseController {
       ],
       authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async (req: Request): Promise<IOnboardingStep<any>> => {
+        if(!req.body) throw new ErrorHandler(HTTP.DataInvalid, ErrCode.NO_DATA);
+
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
             host: {
@@ -298,7 +300,7 @@ export default class HostController extends BaseController {
           await onboarding.updateStep(step, u[step](req.body));
         } catch (error) {
           console.log(error)
-          throw new ErrorHandler(HTTP.BadRequest, null, error);
+          throw new ErrorHandler(HTTP.DataInvalid, null, error);
         }
 
         await onboarding.setLastUpdated(user);
@@ -324,6 +326,7 @@ export default class HostController extends BaseController {
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out
+        onboarding.last_submitted = unixTimestamp();
         onboarding.status = HostOnboardingState.PendingVerification;
         onboarding.version++;
         await onboarding.save();

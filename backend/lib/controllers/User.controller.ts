@@ -65,7 +65,7 @@ export default class UserController extends BaseController {
       validators: [],
       preMiddlewares: [],
       postMiddlewares: [],
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.isLoggedIn,
       controller: async (req: Request): Promise<IMyself> => {
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const host: Host = await Host.findOne({
@@ -132,6 +132,9 @@ export default class UserController extends BaseController {
             email_address: req.body.email_address,
             password: req.body.password,
           }).setup(txc);
+
+          // First user to be created will be an admin
+          u.is_admin = await txc.createQueryBuilder(User, 'u').getCount() == 0;
 
           await txc.save(u);
           return u;

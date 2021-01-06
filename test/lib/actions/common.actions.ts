@@ -20,12 +20,8 @@ export default {
      */
     switchActor: async (user:UserType) => {
       if(!Stories.cachedUsers[user]) throw new Error(`User ${user} has not been created`);
-      if(!Stories.cachedUsers[user]?.session) {
-        // login as the user
-        await Stories.actions.users.login(user);
-      }
-      
-      Stories.activeUser = Stories.cachedUsers[user];
+      if(Stories.activeUser?.session) await Stories.actions.users.logout();
+      await Stories.actions.users.login(user);
     },
 
     /**

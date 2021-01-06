@@ -10,5 +10,5 @@ export interface IPerformancePurchase {
   price: number;
   currency: CurrencyCode;
   performance: IPerformanceStub;
-  date_purchased: number;
+  purchased_at: number;
 }

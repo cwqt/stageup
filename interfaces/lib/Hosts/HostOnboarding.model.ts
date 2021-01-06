@@ -40,7 +40,7 @@ export type IHostOnboardingProcess = IHostOnboarding & { steps: IOnboardingStepM
 export interface IHostOnboarding {
   _id: number;
   status: HostOnboardingState; // when all steps verified, process is complete
-  started_at: number;
+  created_at: number;
   completed_at: number | null;
   last_submitted: number | null;
   last_modified: number;

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "env NODE_ENV=development nodemon lib/index.ts",
+    "kill": "kill $(lsof -t -i:3000) | exit 0",
+    "start": "npm run kill & env NODE_ENV=development nodemon lib/index.ts",
     "start:test": "env NODE_ENV=testing nodemon lib/index.ts",
     "start:dev": "env NODE_ENV=development nodemon --inspect lib/index.ts",
     "test": "env NODE_ENV=testing mocha --bail -r ts-node/register lib/test/**/*.test.ts",

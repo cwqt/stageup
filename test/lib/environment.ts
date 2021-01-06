@@ -12,10 +12,21 @@ export enum UserType {
   None = 6, // no session
 }
 
+const actorMap:{[index in UserType]:string} = {
+  [UserType.SiteAdmin]: 'Site Admin',
+  [UserType.Owner]: 'Host Owner',
+  [UserType.Admin]: 'Host Admin',
+  [UserType.Editor]: 'Host Editor',
+  [UserType.Member]: 'Host Member',
+  [UserType.Client]: 'Host Client',
+  [UserType.None]: 'No Account'
+}
+
 export interface IEnvironment {
   baseUrl: string;
   getHeaders: Function;
   getOptions: Function;
+  userActorMap: typeof actorMap;
   userCreationData: { [index in UserType]: Pick<IUserPrivate, 'email_address' | 'username'> & { password: string } };
 }
 
@@ -27,6 +38,7 @@ const makeUserData = (email: string, username: string, pass: string) => ({
 
 export const environment: IEnvironment = {
   baseUrl: process.env['BASE_URL'] as string,
+  userActorMap: actorMap,
   getOptions: () => ({ headers: environment.getHeaders(), withCredentials: true }),
   getHeaders: () => {
     return {

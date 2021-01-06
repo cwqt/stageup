@@ -11,9 +11,12 @@ import {
   HostOnboardingStep,
   HostSubscriptionLevel,
   IHost,
+  IHostOnboarding,
   IOnboardingAddMembers,
   IOnboardingOwnerDetails,
+  IOnboardingProofOfBusiness,
   IOnboardingSocialPresence,
+  IOnboardingStepMap,
   IOnboardingSubscriptionConfiguration,
   IPerson,
   IUser,
@@ -23,15 +26,18 @@ import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { expect } from 'chai';
 
-describe('As a user, I want to be able to CRUD', async () => {
+describe('As Client, I want to register a Host & be onboarded', async () => {
   let client: IUser;
   let admin: IUser;
   let host: IHost;
+  let onboarding: IHostOnboarding;
+  let steps: IOnboardingStepMap;
 
   it('Should create an admin user & a client user', async () => {
     await Stories.actions.common.setup();
     admin = Stories.cachedUsers[UserType.SiteAdmin]!.user;
     client = await Stories.actions.users.createUser(UserType.Client);
+    await Stories.actions.common.switchActor(UserType.Client);
   });
 
   it('Client user should register a host', async () => {
@@ -44,8 +50,7 @@ describe('As a user, I want to be able to CRUD', async () => {
 
   it('Should get the created onboarding process', async () => {
     let onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
-    expect(Object.keys(onboarding.steps)).to.be.lengthOf(5);
-    expect(onboarding.last_modified_by._id).to.eq(admin._id);
+    expect(onboarding.last_modified_by._id).to.eq(client._id);
   });
 
   it('Should update the Proof Of Business section', async () => {
@@ -119,7 +124,65 @@ describe('As a user, I want to be able to CRUD', async () => {
     );
   });
 
-  it('Host should fill out every section of the onboarding process', async () => {});
+  it('Should get the created onboarding processes steps', async () => {
+    let step0 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingProofOfBusiness>(
+      host,
+      HostOnboardingStep.ProofOfBusiness
+    );
+    let step1 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingOwnerDetails>(
+      host,
+      HostOnboardingStep.OwnerDetails
+    );
+    let step2 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSocialPresence>(
+      host,
+      HostOnboardingStep.SocialPresence
+    );
+    let step3 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingAddMembers>(
+      host,
+      HostOnboardingStep.AddMembers
+    );
+    let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
+      host,
+      HostOnboardingStep.SubscriptionConfiguration
+    );
 
-  it('Should delete a user', async () => {});
+    // Make a
+    steps = {
+      [HostOnboardingStep.ProofOfBusiness]: step0,
+      [HostOnboardingStep.OwnerDetails]: step1,
+      [HostOnboardingStep.SocialPresence]: step2,
+      [HostOnboardingStep.AddMembers]: step3,
+      [HostOnboardingStep.SubscriptionConfiguration]: step4,
+    };
+  });
+
+  it('Should submit the onboarding process for verification', async () => {
+    await Stories.actions.hosts.submitOnboardingProcess(host);
+  });
+
+  describe('As a Site Admin, I want to verify some steps & submit issues with others', async () => {
+    it('Should get the pending onboarding request in the admin panel', async () => {
+      await Stories.actions.common.switchActor(UserType.SiteAdmin);
+      let localOnboarding = await Stories.actions.admin.readOnboardingProcesses();
+      expect(localOnboarding.data).to.be.lengthOf(1);
+      expect(localOnboarding.data[0].last_modified_by._id).to.eq(client._id);
+      expect(localOnboarding.data[0].last_submitted).to.not.eq(null);
+
+      // Set global for other tests to access
+      onboarding = localOnboarding.data[0];
+    });
+
+    it('Should allow the Site Admin to verify some steps as valid', async () => {
+      await Stories.actions.admin.verifyOnboardingProcess()
+
+    });
+
+    it('Should allow the Site Admin to create issues on an onboarding process', async () => {
+
+    });
+  });
+
+  describe('As a Client, I want to resolve issues with my onboarding process & then re-submit for verification', async () => {});
+
+  describe('As a Site Admin, I want to verify all steps and enact the onboarding process', async () => {});
 });

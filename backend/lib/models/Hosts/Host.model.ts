@@ -5,6 +5,7 @@ import { Performance } from "../Performances/Performance.model";
 import { UserHostInfo } from "./UserHostInfo.model";
 import { HostOnboardingProcess } from "./Onboarding.model";
 import { ContactInfo } from "../Users/ContactInfo.model";
+import { unixTimestamp } from "../../common/helpers";
  
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -30,7 +31,7 @@ export class Host extends BaseEntity implements IHostPrivate {
     this.email_address = data.email_address;
 
     this.is_onboarded = false;
-    this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
+    this.created_at = unixTimestamp(new Date());
     this.members = [];
     this.social_info = {
       linkedin_url: null,

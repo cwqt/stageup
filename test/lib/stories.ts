@@ -14,6 +14,7 @@ export class CachedUser {
 import commonActions from './actions/common.actions';
 import usersActions from './actions/users.actions';
 import hostsActions from './actions/hosts.actions';
+import adminActions from './actions/admin.actions';
 
 export const Stories = {
   log: true,
@@ -22,7 +23,8 @@ export const Stories = {
   actions: {
     common: commonActions,
     users: usersActions,
-    hosts: hostsActions
+    hosts: hostsActions,
+    admin: adminActions
   },
 
   setActiveUser: async (user: CachedUser) => {
