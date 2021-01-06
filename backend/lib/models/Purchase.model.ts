@@ -2,7 +2,11 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne
 import { IUser, IUserStub, IUserPrivate, IPerformancePurchase } from "@eventi/interfaces";
 import bcrypt from "bcrypt";
 import { User } from "./Users/User.model";
+<<<<<<< HEAD
 // import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
+=======
+import { CurrencyCode } from "@eventi/interfaces";
+>>>>>>> c13efda6a5befba46a3d18c15116a16aec61e72b
 import { Performance } from './Performances/Performance.model';
  
 @Entity()

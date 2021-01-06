@@ -11,9 +11,10 @@ import "reflect-metadata";
 
 import Routes from './routes';
 import config from "./config";
-import { HTTP } from "@eventi/interfaces";
+import { ErrCode, HTTP } from "@eventi/interfaces";
 import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
+import { pagination } from './common/paginate'
 
 let server: http.Server;
 const app = express();
@@ -43,11 +44,12 @@ app.use(morgan("tiny", { stream }));
     );
 
     // Register routes
+    app.use(pagination);
     app.use("/", Routes(providers).router);
 
     // Catch 404 errors
     app.all("*", (req: any, res: any, next: any) => {
-      handleError(req, res, next, new ErrorHandler(HTTP.NotFound, "No such route exists"));
+      handleError(req, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND));
     });
 
     // Global error handler
@@ -56,7 +58,6 @@ app.use(morgan("tiny", { stream }));
     // Handle closing connections on failure
     process.on("SIGTERM", gracefulExit(providers));
     process.on("SIGINT", gracefulExit(providers));
-
 
     // Start listening for requests
     server = app.listen(config.EXPRESS_PORT, () => {

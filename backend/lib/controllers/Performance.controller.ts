@@ -5,18 +5,16 @@ import {
   IPerformanceStub,
   IPerformanceUserInfo,
   HTTP,
+  ErrCode,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Performance } from '../models/Performances/Performance.model';
 import { ErrorHandler } from '../common/errors';
-import { validate } from '../common/validate';
-import { body } from 'express-validator';
-import { Purchase } from '../models/Purchase.model';
-import { createPagingData } from '../common/paginator';
-import { IResLocals } from '../router';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
-import AuthStrat from '../authorisation';
+import AuthStrat from '../common/authorisation';
+import Validators, { body } from '../common/validate';
+import { Purchase } from '../models/Purchase.model';
 
 export default class PerformanceController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -25,12 +23,16 @@ export default class PerformanceController extends BaseController {
 
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
-      validator: validate([body('name').not().isEmpty().withMessage('Performance must have a title!')]),
+      validators: [
+        body<Pick<IPerformanceStub, 'name'>>({
+          name: v => Validators.Fields.isString(v),
+        }),
+      ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IPerformance> => {
         const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
 
-        if (!user.host) throw new ErrorHandler(HTTP.BadRequest, "You're not authorised to create performances.");
+        if (!user.host) throw new ErrorHandler(HTTP.BadRequest, ErrCode.MISSING_PERMS);
 
         const performance = await new Performance(
           {
@@ -49,18 +51,14 @@ export default class PerformanceController extends BaseController {
 
   readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request, _, locals: IResLocals): Promise<IEnvelopedData<IPerformanceStub[], null>> => {
-        const performances = await Performance.find({
-          take: locals.pagination.per_page,
-          skip: locals.pagination.page * locals.pagination.per_page,
-          relations: ['host'],
-        });
+      controller: async req => {
+        const envelopedPerformances = await this.ORM.createQueryBuilder(Performance, 'p').paginate();
 
         return {
-          data: performances.map((p: Performance) => p.toStub()),
-          __paging_data: createPagingData(req.path, 100, locals.pagination.per_page),
+          data: envelopedPerformances.data.map(p => p.toStub()),
+          __paging_data: envelopedPerformances.__paging_data,
         };
       },
     };
@@ -68,7 +66,7 @@ export default class PerformanceController extends BaseController {
 
   readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
         const performance = await Performance.findOne(
@@ -76,7 +74,7 @@ export default class PerformanceController extends BaseController {
           { relations: ['host', 'host_info'] }
         );
 
-        if (!performance) throw new ErrorHandler(HTTP.NotFound, 'Performance does not exist');
+        if (!performance) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
 
         // see if current user has access/bought the performance
         let token: string;
@@ -101,8 +99,7 @@ export default class PerformanceController extends BaseController {
           }
 
           // neither member of host, nor has a purchased token
-          if (!(memberOfHost || token))
-            throw new ErrorHandler(HTTP.Unauthorised, "You don't have access to watch this performance");
+          if (!(memberOfHost || token)) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
 
           // sign on the fly for a member of the host
           if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
@@ -123,7 +120,7 @@ export default class PerformanceController extends BaseController {
 
   readPerformanceHostInfo(): IControllerEndpoint<IPerformanceHostInfo> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IPerformanceHostInfo> => {
         const performance = await Performance.findOne({ _id: parseInt(req.params.pid) }, { relations: ['host_info'] });
@@ -140,7 +137,7 @@ export default class PerformanceController extends BaseController {
 
   purchase(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
         const user = await User.findOne({ _id: req.session.user._id });
@@ -155,19 +152,19 @@ export default class PerformanceController extends BaseController {
           },
         });
 
-        if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, 'Already purchased this performance');
+        if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
 
         const purchase = new Purchase(user, perf);
         purchase.token = perf.host_info.signing_key.signToken(perf);
 
-        await this.dc.torm.manager.save(purchase);
+        await this.ORM.manager.save(purchase);
       },
     };
   }
 
   deletePerformance(): IControllerEndpoint<void> {
     return {
-      validator: validate([]),
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {},
     };

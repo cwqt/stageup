@@ -19,15 +19,15 @@ Then run `brew update`
 
 ```shell
 brew install node
-node -v             #v10.15.0
-npm -v              #7.0.10
+node -v             #v15.5.0
+npm -v              #7.3.0
 ```
 
 ## PostgreSQL, Redis & InfluxDB
 
 ```shell
 # make sure you install postgres version 11 !
-brew cask install postgresql@11 
+brew install postgresql@11 
 
 brew cask install redis
 brew install influxdb
@@ -118,12 +118,14 @@ npm install --force
 * __PostgreSQL__: `brew services start postgresql@11`
 * __Frontend__: `npm run start`
 * __Backend__: `npm run start`
+  - To enable debug mode use `npm run start:dev`
 
 ---
 
 # Testing
 
 * __Backend__: `npm run test`
+  - To enable debug mode use `npm run test:dev`
 * __REST__: `npm run test`
   * Add `BASE_URL="http://localhost:3000"` to `.env`
 
@@ -133,7 +135,7 @@ npm install --force
 docker create network eventi
 ```
 
-Create the K8s cluster
+Create the K8s cluster:
 
 ```shell
 brew install minikube

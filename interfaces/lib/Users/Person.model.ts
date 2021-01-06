@@ -5,6 +5,7 @@ export interface IPersonInfo {
   last_name: string;
 }
 export interface IContactInfo {
+  // https://www.itu.int/rec/T-REC-E.123/en for numbers
   mobile_number: number;
   landline_number: number;
   addresses: IAddress[];

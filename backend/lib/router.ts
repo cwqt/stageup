@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction, IRouterMatcher } from "express";
 import { ErrorHandler, handleError } from "./common/errors";
 import { DataClient } from "./common/data";
-import { AuthStrategy } from './authorisation';
+import { AuthStrategy } from './common/authorisation';
 import { HTTP } from "@eventi/interfaces";
 import { IControllerEndpoint } from "./common/controller";
+import { validatorMiddleware } from "./common/validate";
 
 const AsyncRouter = require("express-async-router").AsyncRouter;
 
@@ -24,7 +25,7 @@ const endpointFunc = <T>(method:IRouterMatcher<T>, providers:DataClient, resCode
     method(
       path,
       executeAuthenticationStrategy(endpoint.authStrategy, providers),
-      endpoint.validator ?? skip,
+      endpoint.validators ? validatorMiddleware(endpoint.validators) : skip,
       ...(endpoint.preMiddlewares || []),
       (req: Request, res: Response, next: NextFunction) => {
         res.locals.page = parseInt(req.query.page as string) || 0;
@@ -99,7 +100,7 @@ const executeAuthenticationStrategy = (authStrategy: AuthStrategy, dc:DataClient
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Site admin can do anything
-      if (req.session.user?.is_admin) return next();
+      if (req.session?.user?.is_admin) return next();
 
       const [isAuthorised, _, reason] = await authStrategy(req, dc);
       if(!isAuthorised) throw new ErrorHandler(HTTP.Unauthorised, reason);
