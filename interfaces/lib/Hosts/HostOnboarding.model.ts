@@ -71,7 +71,9 @@ export interface IOnboardingIssue {
 }
 
 export interface IOnboardingStepReview {
-  omboarding_version?: number; //which onboarding version this issue relates to
+  onboarding_version?: number; //which onboarding version this issue relates to
+  reviewed_by: IUserStub;
+  reviewed_at: number; // unix timestamp
   issues: IOnboardingIssue[];
 }
 
