@@ -36,7 +36,8 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
   };
 
-  @OneToOne(() => Host, host => host.onboarding_process) @JoinColumn() host: Host;
+  @OneToOne(() => Host, host => host.onboarding_process, {eager: true}) @JoinColumn() host: Host;
+  
   @OneToOne(() => User, { eager: true }) @JoinColumn() last_modified_by: User;
 
   constructor(host: Host, creator: User) {
@@ -122,6 +123,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       started_at: this.started_at,
       completed_at: this.completed_at,
       version: this.version,
+      host:this.host.toStub()
     };
   }
 
