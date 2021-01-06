@@ -72,6 +72,7 @@ export interface IOnboardingIssue {
 
 export interface IOnboardingStepReview {
   omboarding_version?: number; //which onboarding version this issue relates to
+  created_at: number;
   issues: IOnboardingIssue[];
 }
 
