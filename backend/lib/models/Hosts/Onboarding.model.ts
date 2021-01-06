@@ -39,7 +39,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
   };
 
   @OneToMany(() => OnboardingStepReview, osr => osr.onboarding) reviews: OnboardingStepReview[];
-  @OneToOne(() => Host, host => host.onboarding_process) @JoinColumn() host: Host;
+  @OneToOne(() => Host, host => host.onboarding_process, {eager: true}) @JoinColumn() host: Host;
   @OneToOne(() => User, { eager: true }) @JoinColumn() last_modified_by: User;
 
   constructor(host: Host, creator: User) {
@@ -121,6 +121,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       created_at: this.created_at,
       completed_at: this.completed_at,
       version: this.version,
+      host:this.host.toStub()
     };
   }
 
