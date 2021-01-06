@@ -322,12 +322,12 @@ export default class HostController extends BaseController {
           },
         });
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-        if (onboarding.status != HostOnboardingState.AwaitingChanges)
+        if (onboarding.state != HostOnboardingState.AwaitingChanges)
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out
         onboarding.last_submitted = unixTimestamp();
-        onboarding.status = HostOnboardingState.PendingVerification;
+        onboarding.state = HostOnboardingState.PendingVerification;
         onboarding.version++;
         await onboarding.save();
       },

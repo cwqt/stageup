@@ -18,6 +18,7 @@ import { HostSubscriptionLevel } from '../Common/Subscription.model';
 import { IAddress, IPersonInfo } from '../Users/Person.model';
 import { IUserStub } from '../Users/User.model';
 import { HostPermission, ISocialInfo } from './Host.model';
+import { IOnboardingStepReview } from './OnboardingStepReview.model';
 
 export enum HostOnboardingStep {
   ProofOfBusiness,
@@ -39,7 +40,7 @@ export type IHostOnboardingProcess = IHostOnboarding & { steps: IOnboardingStepM
 
 export interface IHostOnboarding {
   _id: number;
-  status: HostOnboardingState; // when all steps verified, process is complete
+  state: HostOnboardingState; // when all steps verified, process is complete
   created_at: number;
   completed_at: number | null;
   last_submitted: number | null;
@@ -59,23 +60,11 @@ export interface IOnboardingStepMap {
 }
 
 export interface IOnboardingStep<T> {
-  status: HostOnboardingState.AwaitingChanges | HostOnboardingState.HasIssues | HostOnboardingState.Verified;
-  issues: IOnboardingIssue[];
+  state: HostOnboardingState.AwaitingChanges | HostOnboardingState.HasIssues | HostOnboardingState.Verified;
+  review?: IOnboardingStepReview;
   valid: boolean; //just if all the data is filled out & correct
   data: T;
 }
-
-export interface IOnboardingIssue {
-  param: string;
-  message: string;
-}
-
-export interface IOnboardingStepReview {
-  omboarding_version?: number; //which onboarding version this issue relates to
-  created_at: number;
-  issues: IOnboardingIssue[];
-}
-
 export interface IOnboardingProofOfBusiness {
   hmrc_company_number: number;
   business_contact_number: number;

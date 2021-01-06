@@ -8,6 +8,7 @@
 
 import { describe, it } from 'mocha';
 import {
+  HostOnboardingState,
   HostOnboardingStep,
   HostSubscriptionLevel,
   IHost,
@@ -173,19 +174,51 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     });
 
     it('Should allow the Site Admin to verify some steps as valid', async () => {
-      // All but the 
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.AddMembers, { });
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, { });
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SocialPresence, { });
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, { });
+      // All but the Proof Of Business to be verified
+      await Promise.all([
+        Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.AddMembers, {
+          step_state: HostOnboardingState.Verified,
+          issues: [],
+        }),
+        Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, {
+          step_state: HostOnboardingState.Verified,
+          issues: [],
+        }),
+        Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SocialPresence, {
+          step_state: HostOnboardingState.Verified,
+          issues: [],
+        }),
+        Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, {
+          step_state: HostOnboardingState.Verified,
+          issues: [],
+        }),
+      ]);
     });
 
-    it('Should allow the Site Admin to create issues on an onboarding process', async () => {
+    it('Should allow the Site Admin to create issues on an onboarding process & then submit', async () => {
+      await Stories.actions.admin.reviewStep<IOnboardingProofOfBusiness>(onboarding, HostOnboardingStep.ProofOfBusiness, {
+        step_state: HostOnboardingState.HasIssues,
+        issues: [
+          {
+            param: "hmrc_company_number",
+            message: "Couldn't find this company number in the registry"
+          },
+          {
+            param: "business_address",
+            //TODO: make this better with nested issues
+            message: "The street address & street number is invalid"
+          }
+        ]
+      });
 
+      await Stories.actions.admin.submitOnboardingProcess(onboarding)
     });
   });
 
-  describe('As a Client, I want to resolve issues with my onboarding process & then re-submit for verification', async () => {});
+  // describe('As a Client, I want to resolve issues with my onboarding process & then re-submit for verification', async () => {
+  //   await Stories.actions.common.switchActor(UserType.Client);
+    
+  // });
 
-  describe('As a Site Admin, I want to verify all steps and enact the onboarding process', async () => {});
+  // describe('As a Site Admin, I want to verify all steps and enact the onboarding process', async () => {});
 });

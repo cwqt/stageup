@@ -9,6 +9,7 @@ export * from "./Common/Subscription.model";
 
 export * from './Hosts/Host.model';
 export * from './Hosts/HostOnboarding.model';
+export * from './Hosts/OnboardingStepReview.model';
 
 export * from './Performances/Performance.model';
 export * from './Performances/Review.model';
