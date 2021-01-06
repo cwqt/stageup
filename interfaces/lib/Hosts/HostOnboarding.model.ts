@@ -17,7 +17,7 @@
 import { HostSubscriptionLevel } from '../Common/Subscription.model';
 import { IAddress, IPersonInfo } from '../Users/Person.model';
 import { IUserStub } from '../Users/User.model';
-import { HostPermission, ISocialInfo } from './Host.model';
+import { HostPermission, ISocialInfo, IHostStub } from './Host.model';
 
 export enum HostOnboardingStep {
   ProofOfBusiness,
@@ -47,7 +47,8 @@ export interface IHostOnboarding {
   last_modified_by: IUserStub;
   version: number; // back and forth validation / issue handling
   // we won't store actual snapshots of onboardings, just as a link to
-  // a version which an issue was in
+  // a version which an isssue was in
+  host: IHostStub;
 }
 
 export interface IOnboardingStepMap {
