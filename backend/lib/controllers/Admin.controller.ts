@@ -26,8 +26,7 @@ export default class AdminController extends BaseController {
 
         const host_name = req.query.host_name;
         if (!host_name) throw new ErrorHandler(HTTP.NotFound);
-        cdcd angular
-
+        
         return {
           data: onboardingEnvelope.data.map(o => o.toFull()),
           __paging_data: onboardingEnvelope.__paging_data,
