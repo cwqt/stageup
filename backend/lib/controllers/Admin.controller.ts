@@ -1,5 +1,13 @@
-import { ErrorHandler } from '../common/errors';
-import { HostOnboardingStep, HTTP, IEnvelopedData, IHostOnboarding, IHostOnboardingProcess, IOnboardingIssue } from '@eventi/interfaces';
+import { ErrorHandler, getCheck } from '../common/errors';
+import {
+  HostOnboardingState,
+  HostOnboardingStep,
+  HTTP,
+  IEnvelopedData,
+  IHostOnboarding,
+  IHostOnboardingProcess,
+  IOnboardingIssue,
+} from '@eventi/interfaces';
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
@@ -11,7 +19,7 @@ export default class AdminController extends BaseController {
     super(...args);
   }
 
-  readOnboardingProcesses():IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
+  readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
@@ -19,24 +27,27 @@ export default class AdminController extends BaseController {
 
         return {
           data: onboardingEnvelope.data.map(o => o.toFull()),
-          __paging_data: onboardingEnvelope.__paging_data
-        }
-      }
-    }
+          __paging_data: onboardingEnvelope.__paging_data,
+        };
+      },
+    };
   }
 
-  createOnboardingStepIssues():IControllerEndpoint<void> {
+  createOnboardingStepIssues(): IControllerEndpoint<void> {
     return {
       validators: [
         params({
-          step: (v) => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
+          step: v => v.exists().toInt().isIn(Object.values(HostOnboardingStep)),
         }),
         body({
-          __this: v => v.isArray().custom(array({
-            param: v => Validators.Fields.isString(v),
-            message: v => Validators.Fields.isString(v),
-          }))
-        })
+          __this: v =>
+            v.isArray().custom(
+              array({
+                param: v => Validators.Fields.isString(v),
+                message: v => Validators.Fields.isString(v),
+              })
+            ),
+        }),
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
@@ -49,32 +60,41 @@ export default class AdminController extends BaseController {
         });
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
 
-        const issues:IOnboardingIssue[] = req.body;
-        issues.forEach(i => i = {...i, version: onboarding.version });
+        const issues: IOnboardingIssue[] = req.body;
+        issues.forEach(i => (i = { ...i, version: onboarding.version }));
         onboarding.steps[parseInt(req.params.step) as HostOnboardingStep].issues = issues;
-        
+
         await onboarding.save();
-      }
-    }
+      },
+    };
   }
 
-  /**
-   * @description Admin update step - verify / raise issue
-   */
-  verifyOnboardingProcess(): IControllerEndpoint<void> {
+  reviewStep():IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async req => {},
-    };
+      controller: async req => {}
+    }
   }
 
   /**
    * @description Merge the Hosts Onboarding Process with the host
    */
-  enactOnboardingProcess(): IControllerEndpoint<void> {
+  submitOnboardingProcess(): IControllerEndpoint<void> {
     return {
+      validators: [
+        body<{status: HostOnboardingState}>({
+          status: v => v.isIn(Object.values(HostOnboardingState))
+        })
+      ],
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async req => {},
+      controller: async req => {
+        const onboarding = await getCheck(HostOnboardingProcess.findOne({_id: parseInt(req.params.oid) }));
+        if(req.body.status == HostOnboardingState.Enacted) await onboarding.enact();
+        
+        if(req.body.status == HostOnboardingState.HasIssues) {
+
+        }
+      },
     };
   }
 }

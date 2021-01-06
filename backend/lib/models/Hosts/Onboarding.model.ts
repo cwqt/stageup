@@ -126,6 +126,8 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     };
   }
 
+  async enact() {}
+
   async setLastUpdated(updater: User) {
     this.last_modified_by = updater;
     this.last_modified = Math.floor(Date.now() / 1000);

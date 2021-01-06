@@ -173,8 +173,11 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     });
 
     it('Should allow the Site Admin to verify some steps as valid', async () => {
-      await Stories.actions.admin.verifyOnboardingProcess()
-
+      // All but the 
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.AddMembers, { });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, { });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SocialPresence, { });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, { });
     });
 
     it('Should allow the Site Admin to create issues on an onboarding process', async () => {

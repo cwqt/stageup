@@ -68,7 +68,11 @@ export interface IOnboardingStep<T> {
 export interface IOnboardingIssue {
   param: string;
   message: string;
-  version?: number; //which onboarding version this issue relates to
+}
+
+export interface IOnboardingStepReview {
+  omboarding_version?: number; //which onboarding version this issue relates to
+  issues: IOnboardingIssue[];
 }
 
 export interface IOnboardingProofOfBusiness {
