@@ -10,6 +10,7 @@ import { DataClient } from "../../common/data";
 import { CurrencyCode } from "@eventi/interfaces";
 >>>>>>> c13efda6a5befba46a3d18c15116a16aec61e72b
 import { Purchase } from "../Purchase.model";
+import { unixTimestamp } from "../../common/helpers";
 @Entity()
 export class Performance extends BaseEntity {
   @PrimaryGeneratedColumn() _id: number;
@@ -39,7 +40,7 @@ export class Performance extends BaseEntity {
     this.price = data.price;
     // this.currency = data.currency
 
-    this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
+    this.created_at = unixTimestamp(new Date());
     this.views = 0;
     this.average_rating = null;
     this.creator = creator;

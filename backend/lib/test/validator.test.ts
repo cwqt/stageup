@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { body, query, object, single, array, params } from '../common/validate';
-import { ErrCode, IAddress, Idless } from '@eventi/interfaces';
+import { ErrCode, IAddress, Idless, IOnboardingAddMembers } from '@eventi/interfaces';
 import Validators from '../common/validate';
 
 describe('Custom validation', () => {
@@ -144,6 +144,18 @@ describe('Custom validation', () => {
 
     const errors = await object(data, {
       address: v => v.custom(single(Validators.Objects.IAddress()))
+    });
+
+    expect(errors).to.be.lengthOf(0)
+  })
+
+  it("Should not return errors for IHostMemberChangeRequest Object Validator", async () => {
+    const data:IOnboardingAddMembers = {
+      members_to_add: [ { user_id: 1, change: 'add' }]
+    }
+
+    const errors = await object(data, {
+      members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest()))
     });
 
     expect(errors).to.be.lengthOf(0)
