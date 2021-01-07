@@ -69,31 +69,24 @@ export default class UserController extends BaseController {
       controller: async (req: Request): Promise<IMyself> => {
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const host: Host = await Host.findOne({
+          relations: {
+            members_info: {
+              user: true,
+            },
+          },
           where: {
-            members: {
-              _id: user._id,
+            members_info: {
+              user: {
+                _id: user._id,
+              },
             },
           },
         });
 
-        let host_info: IUserHostInfo;
-        // if (host) {
-        //   host_info = await UserHostInfo.findOne({
-        //     where: {
-        //       user: {
-        //         _id: user._id,
-        //       },
-        //       host: {
-        //         _id: host._id,
-        //       },
-        //     },
-        //  });
-        // }
-
         return {
           user: user.toFull(),
           host: host?.toStub(),
-          host_info: host_info,
+          host_info: host ? host.members_info.find(uhi => uhi.user._id == user._id) : null,
         };
       },
     };
@@ -134,14 +127,14 @@ export default class UserController extends BaseController {
           }).setup(txc);
 
           // First user to be created will be an admin
-          u.is_admin = await txc.createQueryBuilder(User, 'u').getCount() == 0;
+          u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) == 0;
 
           await txc.save(u);
           return u;
         });
 
         return user.toFull();
-      }
+      },
     };
   }
 

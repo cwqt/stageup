@@ -176,43 +176,45 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
 
     it('Should allow the Site Admin to verify some steps as valid', async () => {
       // All but the Proof Of Business to be verified
-      await Promise.all([
-        Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.AddMembers, {
-          step_state: HostOnboardingState.Verified,
-          issues: [],
-        }),
-        Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, {
-          step_state: HostOnboardingState.Verified,
-          issues: [],
-        }),
-        Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SocialPresence, {
-          step_state: HostOnboardingState.Verified,
-          issues: [],
-        }),
-        Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, {
-          step_state: HostOnboardingState.Verified,
-          issues: [],
-        }),
-      ]);
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.AddMembers, {
+        step_state: HostOnboardingState.Verified,
+        issues: [],
+      });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, {
+        step_state: HostOnboardingState.Verified,
+        issues: [],
+      });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SocialPresence, {
+        step_state: HostOnboardingState.Verified,
+        issues: [],
+      });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, {
+        step_state: HostOnboardingState.Verified,
+        issues: [],
+      });
     });
 
     it('Should allow the Site Admin to create issues on an onboarding process & then submit', async () => {
-      await Stories.actions.admin.reviewStep<IOnboardingProofOfBusiness>(onboarding, HostOnboardingStep.ProofOfBusiness, {
-        step_state: HostOnboardingState.HasIssues,
-        issues: [
-          {
-            param: "hmrc_company_number",
-            message: "Couldn't find this company number in the registry"
-          },
-          {
-            param: "business_address",
-            //TODO: make this better with nested issues
-            message: "The street address & street number is invalid"
-          }
-        ]
-      });
+      await Stories.actions.admin.reviewStep<IOnboardingProofOfBusiness>(
+        onboarding,
+        HostOnboardingStep.ProofOfBusiness,
+        {
+          step_state: HostOnboardingState.HasIssues,
+          issues: [
+            {
+              param: 'hmrc_company_number',
+              message: "Couldn't find this company number in the registry",
+            },
+            {
+              param: 'business_address',
+              //TODO: make this better with nested issues
+              message: 'The street address & street number is invalid',
+            },
+          ],
+        }
+      );
 
-      await Stories.actions.admin.submitOnboardingProcess(onboarding)
+      await Stories.actions.admin.submitOnboardingProcess(onboarding);
     });
   });
 
@@ -226,36 +228,32 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       expect(step.review?.reviewed_by.username).to.eq(Stories.cachedUsers[UserType.SiteAdmin]?.user.username);
     });
 
-    it("Should update the the step with issues & re-submit for verification", async () => {
-      await Stories.actions.hosts.updateOnboardingProcessStep(
-        host,
-        HostOnboardingStep.ProofOfBusiness,
-        {
-          business_address: {
-            city: 'Cardiff',
-            iso_country_code: 'GBR',
-            postcode: 'NE62 5DE',
-            street_name: 'Marquee Court',
-            street_number: 32,
-          },
-          business_contact_number: '+447625143141',
-          hmrc_company_number: 11940213,
-        }
-      );
+    it('Should update the the step with issues & re-submit for verification', async () => {
+      await Stories.actions.hosts.updateOnboardingProcessStep(host, HostOnboardingStep.ProofOfBusiness, {
+        business_address: {
+          city: 'Cardiff',
+          iso_country_code: 'GBR',
+          postcode: 'NE62 5DE',
+          street_name: 'Marquee Court',
+          street_number: 32,
+        },
+        business_contact_number: '+447625143141',
+        hmrc_company_number: 11940213,
+      });
 
       await Stories.actions.hosts.submitOnboardingProcess(host);
-    })
+    });
   });
 
   describe('As a Site Admin, I want to verify the last step, and then enact the onboarding', async () => {
-    it("Should review the step, and then submit the onboarding request review", async () => {
+    it('Should review the step, and then submit the onboarding request review', async () => {
       await Stories.actions.common.switchActor(UserType.SiteAdmin);
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.ProofOfBusiness, {
         step_state: HostOnboardingState.Verified,
-        issues: []
+        issues: [],
       });
-  
-      await Stories.actions.admin.submitOnboardingProcess(onboarding);        
-    })
+
+      await Stories.actions.admin.submitOnboardingProcess(onboarding);
+    });
   });
 });

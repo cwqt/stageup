@@ -32,13 +32,23 @@ export const isMemberOfHost: AuthStrategy = async (req: Request, dc: DataClient)
   const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
   if (!isAuthorised) return [isAuthorised, _, reason];
 
-  const user = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ['host'] });
-  if (!user.host) return [false, {}, ErrCode.NOT_MEMBER];
+  const uhi = await UserHostInfo.findOne({
+    relations: {
+      user: true,
+      host: true,
+    },
+    where: {
+      user: {
+        _id: req.session.user._id
+      },
+      host: {
+        _id: parseInt(req.params.hid)
+      }
+    }
+  });
 
-  const host = await Host.findOne({ _id: parseInt(req.params.hid) });
-  if (user.host._id !== host._id) return [false, {}, ErrCode.NOT_MEMBER];
-
-  return [true, { user: user }];
+  if(!uhi) return [false, {}, ErrCode.NOT_MEMBER];
+  return [true, { uhi: uhi }];
 };
 
 export const hasHostPermission = (permission: HostPermission): AuthStrategy => {

@@ -17,7 +17,7 @@
 import { HostSubscriptionLevel } from '../Common/Subscription.model';
 import { IAddress, IPersonInfo } from '../Users/Person.model';
 import { IUserStub } from '../Users/User.model';
-import { HostPermission, ISocialInfo, IHostStub } from './Host.model';
+import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './Host.model';
 import { IOnboardingStepReview } from './OnboardingStepReview.model';
 
 export enum HostOnboardingStep {
@@ -36,7 +36,7 @@ export enum HostOnboardingState {
   Enacted, // all stages verified & submitted as complete
 }
 
-export type IHostOnboardingProcess = IHostOnboarding & { steps: IOnboardingStepMap };
+export type IHostOnboardingProcess = Omit<IHostOnboarding, 'steps'> & { steps: IOnboardingStepMap };
 
 export interface IHostOnboarding {
   _id: number;
@@ -50,6 +50,7 @@ export interface IHostOnboarding {
   // we won't store actual snapshots of onboardings, just as a link to
   // a version which an isssue was in
   host: IHostStub;
+  steps: { [index in HostOnboardingStep]: HostOnboardingState };
 }
 
 export interface IOnboardingStepMap {
@@ -66,11 +67,7 @@ export interface IOnboardingStep<T> {
   valid: boolean; //just if all the data is filled out & correct
   data: T;
 }
-export interface IOnboardingProofOfBusiness {
-  hmrc_company_number: number;
-  business_contact_number: number;
-  business_address: IAddress;
-}
+export type IOnboardingProofOfBusiness = IHostBusinessDetails;
 
 export interface IOnboardingOwnerDetails {
   owner_info: IPersonInfo;

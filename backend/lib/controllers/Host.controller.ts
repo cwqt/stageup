@@ -15,11 +15,12 @@ import {
   IUser,
   IUserHostInfo,
   pick,
+  IUserStub,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Host } from '../models/Hosts/Host.model';
-import { ErrorHandler } from '../common/errors';
+import { ErrorHandler, getCheck } from '../common/errors';
 import { HTTP } from '@eventi/interfaces';
 import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
@@ -87,13 +88,22 @@ export default class HostController extends BaseController {
     };
   }
 
-  readHostMembers(): IControllerEndpoint<IUser[]> {
+  readHostMembers(): IControllerEndpoint<IUserStub[]> {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<IUser[]> => {
-        const host = await Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ['members'] });
-        return host.members.map((u: User) => u.toFull());
+      controller: async req => {
+        const host = await Host.findOne(
+          { _id: parseInt(req.params.hid) },
+          {
+            relations: {
+              members_info: {
+                user: true,
+              },
+            },
+          }
+        );
+        return host.members_info.map(uhi => uhi.user.toStub());
       },
     };
   }
@@ -116,14 +126,13 @@ export default class HostController extends BaseController {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (!user.host) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
 
-        // const userHostInfo = await UserHostInfo.findOne({
-        //   relations: ['user', 'host'],
-        //   where: {
-        //     user: { _id: user._id },
-        //     host: { _id: user.host._id },
-        //   },
-        // });
-        const userHostInfo = {} as UserHostInfo;
+        const userHostInfo = await UserHostInfo.findOne({
+          relations: ['user', 'host'],
+          where: {
+            user: { _id: user._id },
+            host: { _id: user.host._id },
+          },
+        });
 
         if (userHostInfo.permissions != HostPermission.Owner)
           throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
@@ -174,20 +183,19 @@ export default class HostController extends BaseController {
         }),
       ],
       controller: async (req: Request): Promise<IUserHostInfo> => {
-        // const uhi = await UserHostInfo.findOne({
-        //   relations: ['host', 'user'],
-        //   where: {
-        //     user: {
-        //       _id: parseInt(req.query.user as string),
-        //     },
-        //     host: {
-        //       _id: parseInt(req.params.hid),
-        //     },
-        //   },
-        // });
+        const uhi = await UserHostInfo.findOne({
+          relations: ['host', 'user'],
+          where: {
+            user: {
+              _id: parseInt(req.query.user as string),
+            },
+            host: {
+              _id: parseInt(req.params.hid),
+            },
+          },
+        });
 
-        // return uhi;
-        return {} as IUserHostInfo;
+        return uhi;
       },
       authStrategy: AuthStrat.none,
     };
@@ -195,7 +203,7 @@ export default class HostController extends BaseController {
 
   readOnboardingProcessStatus(): IControllerEndpoint<IHostOnboarding> {
     return {
-      authStrategy: AuthStrat.none, //AuthStrat.hasHostPermission(HostPermission.Owner),
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
@@ -203,6 +211,7 @@ export default class HostController extends BaseController {
               _id: parseInt(req.params.hid),
             },
           },
+          relations: ['host'],
         });
 
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
@@ -236,36 +245,10 @@ export default class HostController extends BaseController {
             onboarding_step: step,
             onboarding_version: onboarding.version,
           },
-          relations: ["reviewed_by"]
+          relations: ['reviewed_by'],
         });
 
         return { ...onboarding.steps[step], review: stepReview?.toFull() || null };
-      },
-    };
-  }
-
-  /**
-   * @description Update Process as a Host Owner/Admin
-   */
-  updateOnboardingProcess(): IControllerEndpoint<IHostOnboarding> {
-    return {
-      authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<IHostOnboarding> => {
-        const onboarding = await HostOnboardingProcess.findOne({
-          where: {
-            host: {
-              _id: parseInt(req.params.hid),
-            },
-          },
-        });
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-
-        const user = await User.findOne({ _id: req.session.user._id });
-        if (!user) throw new ErrorHandler(HTTP.NotFound);
-
-        onboarding.last_modified_by = user;
-        onboarding.last_modified = Math.floor(Date.now() / 1000);
-        return (await onboarding.save()).toFull();
       },
     };
   }
@@ -339,7 +322,7 @@ export default class HostController extends BaseController {
         // TODO: delete all previous version step reviews
         onboarding.last_submitted = unixTimestamp();
         onboarding.state = HostOnboardingState.PendingVerification;
-        onboarding.version++;
+        onboarding.version += 1;
         await onboarding.save();
       },
     };
