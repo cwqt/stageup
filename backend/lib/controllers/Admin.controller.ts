@@ -152,7 +152,10 @@ export default class AdminController extends BaseController {
             }
             
             // TODO: Subscription level 
-            
+
+            // TODO: Once the onboarding process is complete, we no longer need it & it + it's onboarding issues
+            // can be deleted
+            await txc.save(host);
             logger.info('All steps valid & signed off!');
           } else {
             logger.info('Not all steps are signed off as valid');
