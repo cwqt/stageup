@@ -7,6 +7,7 @@ import { LiveStream, Video } from '@mux/mux-node';
 import { DataClient } from "../../common/data";
 import { JWT } from '@mux/mux-node';
 import { Performance } from "./Performance.model";
+import { unixTimestamp } from "../../common/helpers";
 
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
@@ -17,7 +18,8 @@ export class SigningKey extends BaseEntity implements ISigningKey {
 
     constructor() {
         super();
-        this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
+        this.created_at = unixTimestamp(new Date());
+
     }
     
     async setup(dc:DataClient, txc:EntityManager):Promise<SigningKey> {

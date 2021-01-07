@@ -9,6 +9,7 @@ import {
   IPerson,
   IPersonInfo,
   ISocialInfo,
+  IOnboardingIssue,
 } from '@eventi/interfaces';
 import { FieldValidators as FV } from './fields.validators';
 
@@ -59,13 +60,20 @@ export namespace ObjectValidators {
     };
   };
 
+  export const IOnboardingIssue = ():ObjectValidator<IOnboardingIssue<any>> => {
+    return {
+      param: v => FV.isString(v),
+      message: v => FV.isString(v),
+    }
+  }
+
   export const IHostMemberChangeRequest = (
     value: IHostMemberChangeRequest['value'] = null
   ): ObjectValidator<IHostMemberChangeRequest> => {
     return {
       user_id: v => FV.isInt(v),
       change: v => FV.isString(v).isIn(['add', 'update', 'del']),
-      value: v => v.optional(value == null ? true : false).equals(value.toString()),
+      value: v => v.optional(value == null ? true : false).equals(value?.toString()),
     };
   };
 }

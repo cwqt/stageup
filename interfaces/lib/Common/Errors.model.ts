@@ -20,7 +20,8 @@ export enum ErrCode {
   NOT_VERIFIED  = "NOT_VERIFIED",  // user/host not verified
   LOCKED        = "LOCKED",        // object is locked
   UNKNOWN       = "UNKNOWN",       // unknown error
-  NOT_URL       = "NOT_URL"        // not a valid url
+  NOT_URL       = "NOT_URL",       // not a valid url
+  NO_DATA       = "NO_DATA",       // expected input but none given
 }
 
 export interface IErrorResponse {

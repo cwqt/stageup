@@ -27,12 +27,18 @@ export default {
       password: env.userCreationData[user].password,
     }, env.getOptions());
 
+    console.log(`SWITCHED ACTOR: ${env.userActorMap[user]} -----------------------------------`);   
     Stories.cachedUsers[user]!.session = res.headers['set-cookie'][0].split(";")[0];
+    Stories.activeUser = Stories.cachedUsers[user];
     return Stories.cachedUsers[user]!;
   },
 
   logout: async (): Promise<void> => {
     await Axios.post(`${env.baseUrl}/users/logout`, null, env.getOptions());
+
+    const cachedUser = Object.values(Stories.cachedUsers).find(u => u?.user._id == Stories.activeUser?.user._id);
+    if(cachedUser) cachedUser.session = "";
+    Stories.activeUser = null;
   },
 
   updateUser: async (user: IUser, props: any) => {},

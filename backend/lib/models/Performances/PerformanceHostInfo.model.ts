@@ -5,6 +5,7 @@ import { DataClient } from "../../common/data";
 import config from '../../config';
 import { LiveStream } from "@mux/mux-node";
 import { Performance } from "./Performance.model";
+import { unixTimestamp } from "../../common/helpers";
 @Entity()
 export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostInfo {
     @PrimaryGeneratedColumn() _id: number;
@@ -16,8 +17,8 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
 
     constructor() {
         super();
-        this.created_at = Math.floor(Date.now() / 1000);//timestamp in seconds
-    }
+        this.created_at = unixTimestamp(new Date());
+      }
 
     async setup(dc:DataClient, transEntityManager:EntityManager):Promise<[PerformanceHostInfo, LiveStream]> {
         //https://docs.mux.com/reference#create-a-live-stream

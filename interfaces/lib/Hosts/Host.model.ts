@@ -1,6 +1,6 @@
-import { IUserStub } from '../Users/User.model';
+import { IUserHostInfo, IUserStub } from '../Users/User.model';
 import { IPerformanceStub } from '../Performances/Performance.model';
-import { IContactInfo } from '../Users/Person.model';
+import { IAddress, IContactInfo } from '../Users/Person.model';
 
 export interface IHostStub {
   _id: number;
@@ -11,7 +11,7 @@ export interface IHostStub {
 }
 
 export interface IHost extends IHostStub {
-  members: IUserStub[];
+  members_info: IUserHostInfo[];
   social_info: ISocialInfo;
   performances: IPerformanceStub[];
   created_at: number;
@@ -21,7 +21,14 @@ export interface IHost extends IHostStub {
 export type IHostPrivate = {
   email_address: string;
   contact_info: IContactInfo;
+  business_details: IHostBusinessDetails;
 } & IHost;
+
+export interface IHostBusinessDetails {
+  hmrc_company_number: number;
+  business_contact_number: number;
+  business_address: IAddress;
+}
 
 export interface ISocialInfo {
   linkedin_url: string;
@@ -33,5 +40,6 @@ export enum HostPermission {
   Owner, // can delete host
   Admin, // can create / delete performances
   Editor, // can edit performance information
-  Member, // can view host
+  Member, // has accepted & can view host
+  Pending // hasn't accepted invite
 }
