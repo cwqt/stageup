@@ -1,6 +1,7 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { IAsset, IAssetMeta, IGIFMeta, AssetType, IThumbnailMeta, IStaticMeta, Primitive } from '@eventi/interfaces';
 import config from '../config';
+import { unixTimestamp } from '../common/helpers';
 
 @Entity()
 export class Asset<T> extends BaseEntity implements IAsset<T> {
@@ -11,7 +12,7 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
 
   constructor(assetType: AssetType, assetMeta: IAssetMeta<T>) {
     super();
-    this.created_at = Math.floor(Date.now() / 1000); //timestamp in seconds
+    this.created_at = unixTimestamp(new Date());
     this.asset_type = assetType;
     this.asset_meta = assetMeta;
   }

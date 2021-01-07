@@ -25,10 +25,10 @@ export class User extends BaseEntity implements Omit<IUserPrivate, "salt" | "pw_
   @Column() private         salt: string;
   @Column() private         pw_hash: string;
 
-  @ManyToOne(() => Host, host => host.members)                      host:Host; //in one host only
+  @ManyToOne(() => Host, host => host.members_info)                 host:Host; //in one host only
   @OneToMany(() => Purchase, purchase => purchase.user)             purchases:Purchase[];//many purchases
   @OneToMany(() => Performance, performance => performance.creator) performances: Performance[];
-  @OneToOne(() =>  Person, { cascade: ["remove"]}) @JoinColumn()    personal_details:Person;
+  @OneToOne(() =>  Person, { cascade: ["remove"]}) @JoinColumn()    personal_details:Person;//lazy
 
   constructor(data:{ email_address:string, username:string, password: string }) {
     super()

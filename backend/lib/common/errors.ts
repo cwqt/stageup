@@ -2,6 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import log from './logger';
 import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@eventi/interfaces';
 
+/**
+ * @description Used for checking if something exists, else throw a not found
+ * @param f 
+ */
 export const getCheck = async <T>(f:Promise<T>):Promise<T> => {
   const v = await f;
   if(v == null || v == undefined) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);

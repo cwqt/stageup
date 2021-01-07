@@ -9,12 +9,13 @@ import http from "http";
 import helmet from 'helmet';
 import "reflect-metadata";
 
-import Routes from './routes';
-import config from "./config";
 import { ErrCode, HTTP } from "@eventi/interfaces";
 import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
 import { pagination } from './common/paginate'
+import logger from "./common/logger";
+import Routes from './routes';
+import config from "./config";
 
 let server: http.Server;
 const app = express();
@@ -58,6 +59,7 @@ app.use(morgan("tiny", { stream }));
     // Handle closing connections on failure
     process.on("SIGTERM", gracefulExit(providers));
     process.on("SIGINT", gracefulExit(providers));
+    process.on('uncaughtException', gracefulExit(providers));
 
     // Start listening for requests
     server = app.listen(config.EXPRESS_PORT, () => {
@@ -69,15 +71,12 @@ app.use(morgan("tiny", { stream }));
 })();
 
 function gracefulExit(providers:DataClient) {
-  return () => {
+  return (err:any) => {
     log.info(`Termination requested, closing all connections`);
-    DataProvider.close(providers).finally(() => {
-      server.close(err => {
-        console.log(err);
-        process.exitCode = 1;
-        process.exit();  
-      });  
-    });
+    logger.error(err);
+    server.close();
+    DataProvider.close(providers);
+    process.exit(1);
   }
 }
 
