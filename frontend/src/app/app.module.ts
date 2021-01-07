@@ -55,6 +55,7 @@ import { CreateHostComponent } from "./routes/settings/host-settings/create-host
 import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
 import { SearchComponent } from './routes/search/search.component';
+import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { SearchComponent } from './routes/search/search.component';
     CreateHostComponent,
     HostOnboardingComponent,
     AdminPanelComponent,
-    SearchComponent
+    SearchComponent,
+    AdminOnboardingListComponent
   ],
   imports: [
     AngularMaterialModule,
