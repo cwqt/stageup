@@ -5,7 +5,7 @@ import { User } from '../models/Users/User.model';
 import { Host } from '../models/Hosts/Host.model';
 import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 
-export type AuthStratReturn = [boolean, {[index:string]:any}, ErrCode?];
+export type AuthStratReturn = [boolean, { [index: string]: any }, ErrCode?];
 export type AuthStrategy = (req: Request, dc: DataClient) => Promise<AuthStratReturn>;
 
 export const none: AuthStrategy = async (req: Request, dc): Promise<AuthStratReturn> => {
@@ -22,8 +22,7 @@ export const isOurself: AuthStrategy = async (req: Request, dc: DataClient): Pro
   if (!isAuthorised) return [isAuthorised, _, reason];
 
   const user = await User.findOne({ _id: parseInt(req.params.uid) });
-  if (user._id !== req.session.user._id)
-    return [false, {}, ErrCode.NO_SESSION];
+  if (user._id !== req.session.user._id) return [false, {}, ErrCode.NO_SESSION];
 
   return [true, { user: user }];
 };
@@ -39,15 +38,15 @@ export const isMemberOfHost: AuthStrategy = async (req: Request, dc: DataClient)
     },
     where: {
       user: {
-        _id: req.session.user._id
+        _id: req.session.user._id,
       },
       host: {
-        _id: parseInt(req.params.hid)
-      }
-    }
+        _id: parseInt(req.params.hid),
+      },
+    },
   });
 
-  if(!uhi) return [false, {}, ErrCode.NOT_MEMBER];
+  if (!uhi) return [false, {}, ErrCode.NOT_MEMBER];
   return [true, { uhi: uhi }];
 };
 
@@ -56,14 +55,7 @@ export const hasHostPermission = (permission: HostPermission): AuthStrategy => {
     const [isMember, passthru, reason] = await isMemberOfHost(req, dc);
     if (!isMember) return [false, {}, reason];
 
-    const userHostInfo = await UserHostInfo.findOne({ user: passthru.user });
-    if (userHostInfo.permissions !== permission)
-      return [
-        false,
-        {},
-        ErrCode.MISSING_PERMS,
-      ];
-
+    if (passthru.uhi.permissions < permission) return [false, {}, ErrCode.MISSING_PERMS];
     return [true, { user: passthru.user }];
   };
 };
@@ -71,7 +63,7 @@ export const hasHostPermission = (permission: HostPermission): AuthStrategy => {
 export const isSiteAdmin: AuthStrategy = async (req: Request, dc: DataClient): Promise<AuthStratReturn> => {
   const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
   if (!isAuthorised) return [isAuthorised, _, reason];
-  
+
   if (!req.session.user.is_admin) return [false, {}, ErrCode.NOT_ADMIN];
   return [true, {}];
 };
@@ -82,7 +74,7 @@ export const isSiteAdmin: AuthStrategy = async (req: Request, dc: DataClient): P
  */
 export const and = (...args: AuthStrategy[]): AuthStrategy => {
   return async (req: Request, dc): Promise<AuthStratReturn> => {
-    const isValid = (await Promise.all(args.map((as) => as(req, dc)))).every((r) => r[0] == true);
+    const isValid = (await Promise.all(args.map(as => as(req, dc)))).every(r => r[0] == true);
     return [isValid, {}];
   };
 };
@@ -93,7 +85,7 @@ export const and = (...args: AuthStrategy[]): AuthStrategy => {
  */
 export const or = (...args: AuthStrategy[]): AuthStrategy => {
   return async (req: Request, dc): Promise<AuthStratReturn> => {
-    const isValid = (await Promise.all(args.map((as) => as(req, dc)))).some((r) => r[0] == true);
+    const isValid = (await Promise.all(args.map(as => as(req, dc)))).some(r => r[0] == true);
     return [isValid, {}];
   };
 };
