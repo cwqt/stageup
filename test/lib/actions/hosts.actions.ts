@@ -4,8 +4,10 @@ import { HostOnboardingStep, IHost, IHostOnboardingProcess, IHostStub, IMyself, 
 
 export default {
   createHost: async (data:{username:string, name:string, email_address:string}):Promise<IHost> => {
+    console.log(env)
     const res = await Axios.post<IHost>(`${env.baseUrl}/hosts`, data, env.getOptions());
     return res.data;
+    
   },
 
   // router.get <IOnboardingStep<any>>   ("/hosts/:hid/onboarding/:step",          Hosts.readOnboardingProcessStep());

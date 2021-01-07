@@ -31,7 +31,7 @@ export enum HostOnboardingState {
   AwaitingChanges, // not submitted
   PendingVerification, // submit & awaiting verification from admin
   HasIssues, // verified has having problems
-  Verified, // verified as valud
+  Verified, // verified as valid
   Enacted, // all stages verified & submitted as complete
 }
 
