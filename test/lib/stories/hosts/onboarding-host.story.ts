@@ -13,6 +13,8 @@ describe("verify the Onboarding process pulls in the host relationship", async (
     let client: IUser;
     
     it('Onboarding process has a "host" field inside of it', async () => {
+        client = await Stories.actions.users.createUser(UserType.Client);
+        await Stories.actions.common.switchActor(UserType.Client)
         await Stories.actions.common.setup();
         host = await Stories.actions.hosts.createHost({
             username: 'somecoolhost',
@@ -23,7 +25,15 @@ describe("verify the Onboarding process pulls in the host relationship", async (
         expect(onboarding.host).to.exist;
         expect(onboarding.created_at).to.exist;
         expect(onboarding.last_modified).to.exist;
-        expect(onboarding.last_modified_by._id).to.exist;
+        // expect(onboarding.last_modified_by._id).to.eq(client._id);
+        // expect(onboarding.last_modified_by.name).to.eq('Some Cool Host');
+        // expect(onboarding.last_modified_by.username).to.eq('somecoolhost');
+        
+        
+
+
+            
+    
         
     }); 
     
