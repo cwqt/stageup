@@ -53,8 +53,8 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
   it('Should get the created onboarding process', async () => {
     let onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
     expect(onboarding.state).to.equal(0);
-    // expect(onboarding.last_modified_by.username).to.equal('hostclient');
-    // expect(onboarding.last_modified_by.name).to.equal(null);
+    expect(onboarding.last_modified_by.username).to.equal('hostclient');
+    expect(onboarding.last_modified_by.name).to.equal(null);
     expect(onboarding.host.name).to.equal("Some Cool Host");
     expect(onboarding.host.username).to.equal("somecoolhost");
     
@@ -77,7 +77,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       }
       
     );
-    expect(proofOfBusiness).to.exist;
+
   });
 
   it('Should update the Owner Details step', async () => {
@@ -138,22 +138,48 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       host,
       HostOnboardingStep.ProofOfBusiness
     );
+      expect(step0.state).to.equal(0);
+      expect(step0.data.hmrc_company_number).to.equal(11940210);
+      expect(step0.data.business_address.city).to.equal('Cardiff');
+      expect(step0.data.business_address.iso_country_code).to.equal('GBR');
+      expect(step0.data.business_address.postcode).to.equal('NE62 5DE');
+      expect(step0.data.business_address.street_name).to.equal('Marquee Court');
+      expect(step0.data.business_address.street_number).to.equal(32);
+      expect(step0.data.business_contact_number).to.equal('+447625143141');
+
     let step1 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingOwnerDetails>(
       host,
       HostOnboardingStep.OwnerDetails
     );
+    expect(step1.state).to.equal(0);
+    expect(step1.data.owner_info.first_name).to.equal("Drake");
+    expect(step1.data.owner_info.last_name).to.equal("Drakeford");
+    expect(step1.data.owner_info.title).to.equal("mr");
+
     let step2 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSocialPresence>(
       host,
       HostOnboardingStep.SocialPresence
     );
+    expect(step2.state).to.equal(0);
+    expect(step2.data.social_info.facebook_url).to.equal("https://facebook.com/eventi");
+    expect(step2.data.social_info.instagram_url).to.equal("https://instagram.com/eventi");
+    expect(step2.data.social_info.linkedin_url).to.equal("https://linkedin.com/eventi");
+
     let step3 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingAddMembers>(
       host,
       HostOnboardingStep.AddMembers
     );
+    expect(step3.state).to.equal(0);
+    
+    
+
+
     let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
       host,
       HostOnboardingStep.SubscriptionConfiguration
     );
+    expect(step4.state).to.equal(0);
+    expect(step4.data.tier).to.equal(3);
 
     // Make a
     steps = {
@@ -167,6 +193,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
 
   it('Should submit the onboarding process for verification', async () => {
     await Stories.actions.hosts.submitOnboardingProcess(host);
+    
   });
 
   describe('As a Site Admin, I want to verify some steps & submit issues with others', async () => {
