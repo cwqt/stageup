@@ -53,10 +53,10 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
   it('Should get the created onboarding process', async () => {
     let onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
     expect(onboarding.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(onboarding.last_modified_by.username).to.equal('hostclient');
+    expect(onboarding.last_modified_by.username).to.equal(client.username);
   
-    expect(onboarding.host.name).to.equal(client.name);
-    expect(onboarding.host.username).to.equal(client.username);
+    expect(onboarding.host.name).to.equal(host.name);
+    expect(onboarding.host.username).to.equal(host.username);
     
   });
 
@@ -286,7 +286,8 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
         issues: [],
       });
 
-      await Stories.actions.admin.submitOnboardingProcess(onboarding);
+      const submit = await Stories.actions.admin.submitOnboardingProcess(onboarding);
+      
     });
   });
 });
