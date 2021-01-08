@@ -9,7 +9,7 @@
   // white: #FAFAFA,
   // off white: #F7F7F7,
   // light pink: #F2C3DB
-  
+
 lt: light
 ltr: lighter
 
@@ -30,14 +30,14 @@ drk: darker
   $clr-ntrl-max: #000;
 
   // primary colour
-  --clr-primary:     #D22E83;
-  --clr-primary-lt:  lighten($clr-primary, 5%);
-  --clr-primary-ltr: lighten($clr-primary, 10%);
-  --clr-primary-dk:  darken($clr-primary, 5%);
-  --clr-primary-dkr: darken($clr-primary, 10%);
+  --clr-primary:     #D74192;
+  --clr-primary-lt:  #F2C3DB;
+  --clr-primary-ltr: lighten($clr-primary-ltr, 10%);
+  --clr-primary-dk:  #D22E83;
+  --clr-primary-dkr: darken($clr-primary-dk, 10%);
 
   // secondary colour
-  --clr-secondary:     #D74192;
+  --clr-secondary:     #282828;
   --clr-secondary-lt:  lighten($clr-secondary, 5%);
   --clr-secondary-ltr: lighten($clr-secondary, 10%);
   --clr-secondary-dk:  darken($clr-secondary, 5%);
@@ -71,6 +71,25 @@ drk: darker
   
   --clr-warm-grey: #e5e0df;
   --clr-warm-grey-drk: #565151;
+
+  --clr-info: #00b8d4;
+  --clr-info-drk: rgba(0, 184, 212, 0.1);
+  
+  --clr-warning: #ff9100;
+  --clr-warning-drk: rgba(255, 145, 0, 0.1);
+  
+  --clr-success: #00c853;
+  --clr-success-drk: rgba(0, 200, 83, 0.1);
+  
+  --clr-bug: #f50057;
+  --clr-bug-drk: rgba(245, 0, 87, 0.1);
+  
+  --clr-example: #651fff;
+  --clr-example-drk: rgba(101, 31, 255, 0.1);
+  
+  --clr-failure: #ff5252;
+  --clr-failure-drk: rgba(255, 82, 82, 0.1);
+
 
   /* box shadows */
   --box-shadow-sm: box-shadow();
