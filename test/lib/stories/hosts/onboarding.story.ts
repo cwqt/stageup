@@ -286,7 +286,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
         issues: [],
       });
 
-      let submit = await Stories.actions.admin.submitOnboardingProcess(onboarding);
+      await Stories.actions.admin.submitOnboardingProcess(onboarding);
       
       
     });
