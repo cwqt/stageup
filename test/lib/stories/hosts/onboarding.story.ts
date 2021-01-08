@@ -138,7 +138,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       host,
       HostOnboardingStep.ProofOfBusiness
     );
-      expect(step0.state).to.equal(0);
+      expect(step0.state).to.equal(HostOnboardingState.AwaitingChanges);
       expect(step0.data.hmrc_company_number).to.equal(11940210);
       expect(step0.data.business_address.city).to.equal('Cardiff');
       expect(step0.data.business_address.iso_country_code).to.equal('GBR');
@@ -151,7 +151,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       host,
       HostOnboardingStep.OwnerDetails
     );
-    expect(step1.state).to.equal(0);
+    expect(step1.state).to.equal(HostOnboardingState.AwaitingChanges);
     expect(step1.data.owner_info.first_name).to.equal("Drake");
     expect(step1.data.owner_info.last_name).to.equal("Drakeford");
     expect(step1.data.owner_info.title).to.equal("mr");
@@ -160,7 +160,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       host,
       HostOnboardingStep.SocialPresence
     );
-    expect(step2.state).to.equal(0);
+    expect(step2.state).to.equal(HostOnboardingState.AwaitingChanges);
     expect(step2.data.social_info.facebook_url).to.equal("https://facebook.com/eventi");
     expect(step2.data.social_info.instagram_url).to.equal("https://instagram.com/eventi");
     expect(step2.data.social_info.linkedin_url).to.equal("https://linkedin.com/eventi");
@@ -169,16 +169,16 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       host,
       HostOnboardingStep.AddMembers
     );
-    expect(step3.state).to.equal(0);
-    expect(step3.data.members_to_add[0]['change']).to.equal("add");
-    expect(step3.data.members_to_add[0]['user_id']).to.equal(client._id);   
+    expect(step3.state).to.equal(HostOnboardingState.AwaitingChanges);
+    expect(step3.data.members_to_add[0].change).to.equal("add");
+    expect(step3.data.members_to_add[0].user_id).to.equal(client._id);   
 
     let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
       host,
       HostOnboardingStep.SubscriptionConfiguration
     );
-    expect(step4.state).to.equal(0);
-    expect(step4.data.tier).to.equal(3);
+    expect(step4.state).to.equal(HostOnboardingState.AwaitingChanges);
+    expect(step4.data.tier).to.equal(HostSubscriptionLevel.Enterprise);
 
     // Make a
     steps = {
