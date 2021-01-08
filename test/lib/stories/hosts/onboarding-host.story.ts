@@ -26,8 +26,8 @@ describe("Verify the Onboarding process pulls in the host relationship", async (
         expect(onboarding.created_at).to.exist;
         expect(onboarding.last_modified).to.exist;
         expect(onboarding.last_modified_by._id).to.eq(client._id);
-        expect(onboarding.last_modified_by.name).to.eq('Some Cool Host');
-        expect(onboarding.last_modified_by.username).to.eq('somecoolhost');
+        expect(onboarding.last_modified_by.name).to.eq(client.name);
+        expect(onboarding.last_modified_by.username).to.eq(client.username);
         
            
     }); 
