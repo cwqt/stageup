@@ -6,6 +6,8 @@ import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { params, body, array } from '../common/validate';
 import Validators from '../common/validate';
 
+import { HostOnboardingState } from '@eventi/interfaces';
+
 export default class AdminController extends BaseController {
   constructor(...args: BaseArgs) {
     super(...args);
@@ -17,15 +19,18 @@ export default class AdminController extends BaseController {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
-        const onboardingEnvelope = await this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop').paginate();
 
-        const state = await this.ORM.createQueryBuilder("state").where('HostOnboardingState = :status', { status: '1' }).getMany();
-        if (!state) throw new ErrorHandler(HTTP.NotFound);
-
-        const submission_date_sort = await this.ORM.createQueryBuilder("submission_date_sort").orderBy('user.submission', 'DESC');
-
-        const host_name = req.query.host_name;
-        if (!host_name) throw new ErrorHandler(HTTP.NotFound);
+        const state =  HostOnboardingState;
+        //const host_name =  req.query.host_name;
+        //const submission_date_sort = req.params.submission_date_sort;
+        
+       // Chaining functions using the example provided:
+        const onboardingEnvelope = await this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop')
+          .innerJoinAndSelect('hop.host', 'host') // Joining tables
+          .where('hop.state = :state', { state: req.params.state ?? '%'}) // Filter by state
+          .andWhere('host.name like :hostName', { hostName: req.query.host_name }) // One host_name? or many?
+          .orderBy('hop.last_submitted', ( req.params.submission_date_sort ?? 'DESC')) // Descending order
+          .paginate();
         
         return {
           data: onboardingEnvelope.data.map(o => o.toFull()),
