@@ -170,9 +170,8 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       HostOnboardingStep.AddMembers
     );
     expect(step3.state).to.equal(0);
-    
-    
-
+    expect(step3.data.members_to_add[0]['change']).to.equal("add");
+    expect(step3.data.members_to_add[0]['user_id']).to.equal(client._id);   
 
     let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
       host,
