@@ -1,0 +1,119 @@
+/*
+  // Dark grey: #959595,
+  // blue grey: #ADADB8,
+  // black text: #000000,
+  // grey text: #A1A1A1,
+  // pink: #D22E83,
+  // pink 2 (for gradient on logo): D74192,
+  // box shadow: #E6E6E6,
+  // white: #FAFAFA,
+  // off white: #F7F7F7,
+  // light pink: #F2C3DB
+  
+lt: light
+ltr: lighter
+
+dk: dark
+drk: darker
+
+*/
+
+:root {
+  /* colour palette */
+  // base
+  --clr-base:    #FAFAFA;
+  --clr-base-lt: #f7f7f7;
+  --clr-base-dk: #959595;
+
+  // neutrals
+  $clr-ntrl-min: #fff;
+  $clr-ntrl-max: #000;
+
+  // primary colour
+  --clr-primary:     #D22E83;
+  --clr-primary-lt:  lighten($clr-primary, 5%);
+  --clr-primary-ltr: lighten($clr-primary, 10%);
+  --clr-primary-dk:  darken($clr-primary, 5%);
+  --clr-primary-dkr: darken($clr-primary, 10%);
+
+  // secondary colour
+  --clr-secondary:     #D74192;
+  --clr-secondary-lt:  lighten($clr-secondary, 5%);
+  --clr-secondary-ltr: lighten($clr-secondary, 10%);
+  --clr-secondary-dk:  darken($clr-secondary, 5%);
+  --clr-secondary-dkr: darken($clr-secondary, 10%);
+
+  --clr-red: #ffd7d9;
+  --clr-red-drk: #a2191f;
+  
+  --clr-magenta: #ffd6e8;
+  --clr-magenta-drk: #9f1853;
+  
+  --clr-purple: #e8daff;
+  --clr-purple-drk: #6929c4;
+  
+  --clr-blue: #d0e2ff;
+  --clr-blue-drk: #0043ce;
+  
+  --clr-cyan: #bae6ff;
+  --clr-cyan-drk: #00539a;
+  
+  --clr-teal: #9ef0f0;
+  --clr-teal-drk: #005d5d;
+  
+  --clr-green: #a7f0ba;
+  --clr-green-drk: #0e6027;
+  --clr-gray: #e0e0e0;
+  --clr-gray-drk: #525252;
+  
+  --clr-cool-grey: #dde1e6;
+  --clr-cool-grey-drk: #4d5358;
+  
+  --clr-warm-grey: #e5e0df;
+  --clr-warm-grey-drk: #565151;
+
+  /* box shadows */
+  --box-shadow-sm: box-shadow();
+  --box-shadow: box-shadow();
+  --box-shadow-lg: box-shadow();
+
+
+  /* spacing units */
+  --space-sm: 5px;
+  --space: 10px;
+  --space-lg: 20px;
+
+
+  /* font sizes */
+  // base font size - applied at body / html level
+  --fs-base: 16px;
+
+  // larger than heading font sizes
+  --fs-giga: 80px;
+  --fs-mega: 70px;
+  --fs-kilo: 60px;
+
+  // heading font sizes
+  --fs-h1: 36px;
+  --fs-h2: 32px;
+  --fs-h3: 28px;
+  --fs-h4: 24px;
+  --fs-h5: 20px;
+  --fs-h6: 18px;
+
+  // smaller than heading font sizes
+  --fs-milli: 14px;
+  --fs-micro: 10px;
+  --fs-nano:  8px;
+
+
+  /* font families */
+  --ff-base:      'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --ff-mono:      'Inconsolata', sans-serif;
+  --ff-alt-alpha: 'Open Sans', sans-serif;
+  --ff-alt-beta:  'Roboto', sans-serif;
+  // --ff-icon:      'My Icon Font';
+
+  /* border-radius */
+  --radius: var(--space);
+}

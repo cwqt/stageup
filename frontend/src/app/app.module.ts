@@ -32,10 +32,8 @@ import { HeaderBarComponent } from "./components/app/header-bar/header-bar.compo
 import { ProfileComponent } from "./routes/profile/profile.component";
 import { IndexComponent } from "./routes/index/index.component";
 
-import { HeaderBarUserMenuComponent } from "./components/app/header-bar/header-bar-user-menu/header-bar-user-menu.component";
 import { FooterComponent } from "./components/app/footer/footer.component";
 import { PageComponent } from "./components/app/page/page.component";
-import { HeaderUserButtonComponent } from "./components/app/header-bar/header-user-button/header-user-button.component";
 
 import { CatalogComponent } from "./routes/catalog/catalog.component";
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
@@ -68,11 +66,9 @@ import { SearchComponent } from './routes/search/search.component';
     HeaderBarComponent,
     WrapperComponent,
     NotFoundComponent,
-    HeaderBarUserMenuComponent,
     FooterComponent,
     IndexComponent,
     PageComponent,
-    HeaderUserButtonComponent,
     CatalogComponent,
     SidebarComponent,
     FeedComponent,

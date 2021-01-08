@@ -1,8 +1,33 @@
 <div class="sidebar-wrapper">
-  <img src="/assets/eventi.svg" alt="" class="logo">
+  <img src="https://i.ibb.co/sv4pqcN/pixomatic-1610055330936.png" alt="" class="logo">
 
   <div class="sidebar-main-buttons">
-    <ui-button (click)="gotoRoot()" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    <ui-button (click)="gotoRoot()" variant="accent" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <ui-icon>template</ui-icon>
+    </ui-button>
+
+    <!-- <ui-button variant="accent" routerLinkActive="active">
+      <ui-icon>play--filled</ui-icon>
+    </ui-button> -->
+
+    <!-- <ui-button variant="accent" routerLinkActive="active">
+      <ui-icon>analytics</ui-icon>
+    </ui-button> -->
+
+    <ui-button *ngIf="myself.host" (click)="gotoHost()" variant="accent" routerLink="/host" routerLinkActive="active">
+      <ui-icon>events</ui-icon>
+    </ui-button>
+
+    <ui-button *ngIf="myself.user.is_admin" (click)="gotoAdmin()" routerLink="/admin" variant="accent"
+      routerLinkActive="active">
+      <ui-icon>user--admin</ui-icon>
+    </ui-button>
+
+    <ui-button (click)="gotoSettings()" variant="accent" routerLink="/settings" routerLinkActive="active">
+      <ui-icon>settings</ui-icon>
+    </ui-button>
+
+    <!-- <ui-button (click)="gotoRoot()" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <ui-icon>home</ui-icon> Home
     </ui-button>
     <ui-button routerLink="/search" routerLinkActive="active">
@@ -24,29 +49,6 @@
       <ui-button (click)="gotoAdminPanel()" routerLink="/admin" routerLinkActive="active">
         <ui-icon>dashboard</ui-icon> Admin Panel
       </ui-button>
-    </ng-container>
-  </div>
-
-  <div class="sidebar-user">
-    <div class="sidebar-popup" *ngIf="userPopupOpen" (clickOutside)="toggleUserPopup(false)"
-      [exclude]="'.sidebar-user__container'">
-      <div class="sidebar-popup__buttons">
-        <ui-button (click)="logout()">
-          <ui-icon>logout</ui-icon>Log out
-        </ui-button>
-        <ui-button (click)="gotoSettings()">
-          <ui-icon>settings</ui-icon>Settings
-        </ui-button>
-      </div>
-    </div>
-
-    <button class="sidebar-user__container" matRipple (click)="toggleUserPopup(true)">
-      <img [src]="user.avatar" alt="">
-      <div class="sidebar-user__details">
-        <span><strong>{{ user.name }}</strong></span>
-        <span>@{{ user.username }}</span>
-      </div>
-      <ui-icon>overflow-menu--horizontal</ui-icon>
-    </button>
+    </ng-container> -->
   </div>
 </div>

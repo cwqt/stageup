@@ -3,6 +3,43 @@
   </div>
 
   <div class="right">
-    <mat-icon inline>notifications_none</mat-icon>
-  </div>
+    <ui-button class="header-upload" variant="primary">Upload</ui-button>
+
+    <div class="header-search">
+      <!-- <ui-icon>search</ui-icon> -->
+      <ui-input type="text" placeholder="Search for performances..."></ui-input>
+    </div>
+
+    <ui-icon class="header-notification">notification--new</ui-icon>
+
+    <div class="header-user">
+      <img [src]="myself.user.avatar" alt="">
+      <span>{{ myself.user.name || myself.user.username }}</span>
+      <ui-icon *ngIf="!userPopupOpen" (click)="toggleUserPopup(true)">caret--down</ui-icon>
+      <ui-icon *ngIf="userPopupOpen" (click)="toggleUserPopup(false)">caret--up</ui-icon>
+    </div>
+
+
+    <!-- <div class="header-user">
+      <div class="header-popup" *ngIf="userPopupOpen" (clickOutside)="toggleUserPopup(false)"
+        [exclude]="'.header-user__container'">
+        <div class="header-popup__buttons">
+          <ui-button (click)="logout()">
+            <ui-icon>logout</ui-icon>Log out
+          </ui-button>
+          <ui-button (click)="gotoSettings()">
+            <ui-icon>settings</ui-icon>Settings
+          </ui-button>
+        </div>
+      </div>
+  
+      <button class="header-user__container" matRipple (click)="toggleUserPopup(true)">
+        <img [src]="myself.user.avatar" alt="">
+        <div class="header-user__details">
+          <span><strong>{{ myself.user.name }}</strong></span>
+          <span>@{{ myself.user.username }}</span>
+        </div>
+        <ui-icon>overflow-menu--horizontal</ui-icon>
+      </button>
+    </div> -->
 </div>

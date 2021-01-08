@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { IMyself } from '@eventi/interfaces';
 import { BaseAppService } from 'src/app/services/app.service';
+import { AuthenticationService } from "src/app/services/authentication.service";
 
 @Component({
   selector: "app-header-bar",
@@ -10,8 +11,11 @@ import { BaseAppService } from 'src/app/services/app.service';
 export class HeaderBarComponent implements OnInit {
   @Input() myself: IMyself;
 
+  userPopupOpen:boolean = false;
+
   constructor(
-    private appService:BaseAppService
+    private appService:BaseAppService,
+    private authService:AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -23,5 +27,14 @@ export class HeaderBarComponent implements OnInit {
 
   gotoRoot() {
     this.appService.navigateTo("/");
+  }
+
+  toggleUserPopup(state:boolean) {
+    this.userPopupOpen = state;
+  }
+
+  gotoSettings() { this.appService.navigateTo('settings') }
+  logout() {
+    this.authService.logout();
   }
 }

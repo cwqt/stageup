@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IHost } from '@eventi/interfaces';
+import { IHost, IHostOnboarding } from '@eventi/interfaces';
+import { ICacheable } from 'src/app/app.interfaces';
+import { HostService } from 'src/app/services/host.service';
 
 @Component({
   selector: 'app-host-onboarding',
@@ -9,9 +11,22 @@ import { IHost } from '@eventi/interfaces';
 export class HostOnboardingComponent implements OnInit {
   @Input() host:IHost
 
-  constructor() { }
+  onboarding:ICacheable<IHostOnboarding> = {
+    data: null,
+    loading: false,
+    error: "",
+  }
+
+  constructor(private hostService:HostService) { }
 
   ngOnInit(): void {
   }
 
+  async getOnboarding() {
+    this.onboarding.loading = true;
+    return this.hostService.readOnboardingProcessStatus(this.host._id)
+      .then(o => this.onboarding.data = o)
+      .catch(e => this.onboarding.error = e.message)
+      .finally(() => this.onboarding.loading = false);
+  }
 }

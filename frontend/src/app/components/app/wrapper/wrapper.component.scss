@@ -7,10 +7,11 @@
 .app-content {
   height: 100vh;
   display: flex;
+  background-color: #f7f7f7;
 
   .left {
-    width: 18vw;
-    min-width: 250px;
+    width: 80px;
+    // min-width: 250px;
     app-sidebar {
       width: 100%;
     }
@@ -20,15 +21,14 @@
     position: relative;
     width: 100%;
     min-height: 100vh;  
-    padding-top: 48px;//for header
     overflow: scroll;
     overflow-x: hidden;
 
     app-header-bar {
-      width: 80vw; // 100vw - sidebar
-      position: fixed;
-      top: 0;
-      right: 0;
+      display: block;
+      height: auto;
+      width: 100%;
+      padding: 20px;
     }
 
     .app-body {
