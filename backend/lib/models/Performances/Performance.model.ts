@@ -4,11 +4,7 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne,
 import { User } from "../Users/User.model";
 import { PerformanceHostInfo, PerformanceHostInfo as PHostInfo } from "./PerformanceHostInfo.model";
 import { DataClient } from "../../common/data";
-<<<<<<< HEAD
-// import { CurrencyCode } from "@eventi/interfaces/dist/Types/Currency.types";
-=======
 import { CurrencyCode } from "@eventi/interfaces";
->>>>>>> c13efda6a5befba46a3d18c15116a16aec61e72b
 import { Purchase } from "../Purchase.model";
 import { unixTimestamp } from "../../common/helpers";
 @Entity()
@@ -22,7 +18,7 @@ export class Performance extends BaseEntity {
   @Column()                 views: number=0;
   @Column({nullable:true})  state: PerformanceState;
   @Column()                 price: number;
-  // @Column()                 currency: CurrencyCode;
+  @Column()                 currency: CurrencyCode;
   @Column()                 playback_id: string;
   
   @OneToOne(() => PHostInfo) @JoinColumn()                      host_info: PHostInfo;

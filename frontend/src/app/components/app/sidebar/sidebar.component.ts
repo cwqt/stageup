@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IMyself, IUser } from '@eventi/interfaces';
+import { IHostStub, IMyself, IUser } from '@eventi/interfaces';
 import { BaseAppService } from 'src/app/services/app.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
@@ -16,7 +16,7 @@ export class SidebarComponent implements OnInit {
   constructor(private appService:BaseAppService, private authService:AuthenticationService) { }
 
   get user() { return this.myself.user }
-  get host() { return this.myself.host }
+  get host(): IHostStub { return this.myself.host }
 
   ngOnInit(): void {
   }
