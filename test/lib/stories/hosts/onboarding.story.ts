@@ -54,7 +54,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     let onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
     expect(onboarding.state).to.equal(HostOnboardingState.AwaitingChanges);
     expect(onboarding.last_modified_by.username).to.equal(client.username);
-  
+    expect(onboarding.last_modified_by.name).to.equal(client.name);
     expect(onboarding.host.name).to.equal(host.name);
     expect(onboarding.host.username).to.equal(host.username);
     
