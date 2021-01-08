@@ -55,8 +55,8 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     expect(onboarding.state).to.equal(0);
     expect(onboarding.last_modified_by.username).to.equal('hostclient');
     expect(onboarding.last_modified_by.name).to.equal(null);
-    expect(onboarding.host.name).to.equal("Some Cool Host");
-    expect(onboarding.host.username).to.equal("somecoolhost");
+    expect(onboarding.host.name).to.equal(client.name);
+    expect(onboarding.host.username).to.equal(client.username);
     
   });
 
