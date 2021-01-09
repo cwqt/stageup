@@ -20,7 +20,6 @@
     "@angular/router": "~9.0.1",
     "@ctrl/ngx-emoji-mart": "^3.1.0",
     "@eventi/interfaces": "file:../interfaces",
-    "@ivylab/overlay-angular": "0.0.6",
     "moment": "^2.24.0",
     "ng-click-outside": "^6.0.0",
     "ng-dynamic-component": "^6.1.0",
