@@ -3,28 +3,28 @@
 
   <div class="sidebar-main-buttons">
     <ui-button (click)="gotoRoot()" variant="accent" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <ui-icon>template</ui-icon>
+      <ui-icon size="l">template</ui-icon>
     </ui-button>
 
     <!-- <ui-button variant="accent" routerLinkActive="active">
-      <ui-icon>play--filled</ui-icon>
+      <ui-icon size="l">play--filled</ui-icon>
     </ui-button> -->
 
     <!-- <ui-button variant="accent" routerLinkActive="active">
-      <ui-icon>analytics</ui-icon>
+      <ui-icon size="l">analytics</ui-icon>
     </ui-button> -->
 
     <ui-button *ngIf="myself.host" (click)="gotoHost()" variant="accent" routerLink="/host" routerLinkActive="active">
-      <ui-icon>events</ui-icon>
+      <ui-icon size="l">events</ui-icon>
     </ui-button>
 
     <ui-button *ngIf="myself.user.is_admin" (click)="gotoAdmin()" routerLink="/admin" variant="accent"
       routerLinkActive="active">
-      <ui-icon>user--admin</ui-icon>
+      <ui-icon size="l">user--admin</ui-icon>
     </ui-button>
 
     <ui-button (click)="gotoSettings()" variant="accent" routerLink="/settings" routerLinkActive="active">
-      <ui-icon>settings</ui-icon>
+      <ui-icon size="l">settings</ui-icon>
     </ui-button>
 
     <!-- <ui-button (click)="gotoRoot()" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">

@@ -18,9 +18,10 @@ import { ChipComponent } from "./chip/chip.component";
 import { DialogButtonsComponent } from "./dialog-buttons/dialog-buttons.component";
 import { OverlaySpinnerComponent } from "./overlay-spinner/overlay-spinner.component";
 import { InputComponent } from "./input/input.component";
-import { FormComponent } from './form/form.component';
+import { FormComponent } from "./form/form.component";
 import { HttpClientModule } from "@angular/common/http";
 import { HostService } from "../services/host.service";
+import { FormBodyComponent } from "./form/form-body/form-body.component";
 
 export enum ButtonVariants {
   Primary = "primary",
@@ -46,18 +47,21 @@ const allComponents = [
   DialogButtonsComponent,
   OverlaySpinnerComponent,
   InputComponent,
-  FormComponent
+  FormComponent,
 ];
 
 @NgModule({
-  declarations: allComponents,
+  declarations: [
+    ...allComponents,
+    FormBodyComponent,
+  ],
   imports: [
     CommonModule,
     AngularMaterialModule,
     ClickOutsideModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   exports: allComponents,
   providers: [],

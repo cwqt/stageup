@@ -1,3 +1,5 @@
+@import "~src/styles/variables";
+
 .sidebar-wrapper {
   width: 100%; //set from parent
   background-color: white;
@@ -6,11 +8,11 @@
   display: flex;
   flex-flow: column;
   align-items: center;
-  box-shadow: 0 8px 16px rgba(0,0,0,.1);
+  box-shadow: $box-shadow;
 
   .logo {
     width: 80%;
-    margin-bottom: 10px;
+    margin-bottom: $space-lg;
   }
 }
 
@@ -23,7 +25,7 @@
   width: 100%;
   ui-button {
     width: 100%;
-    margin: 20px 0;
+    margin: $space-lg 0;
     height: 75px !important;
     ::ng-deep button {
       background: transparent;
@@ -41,12 +43,12 @@
     border-left: 2px solid transparent !important;
     border-right: 2px solid transparent !important;
     &.active {
-      border-right: 2px solid var(--primary-color) !important;
+      border-right: 2px solid $clr-primary !important;
       ::ng-deep button {
         span {
           opacity: 1;
           ui-icon {
-            color:  var(--primary-color);
+            color:  $clr-primary;
           }
         }
       }

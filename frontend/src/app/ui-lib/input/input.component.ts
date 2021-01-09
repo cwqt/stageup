@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from "@angular/animations";
 import { Component, Input, forwardRef, Self, Optional } from "@angular/core";
 import { ControlValueAccessor, NgControl, FormGroup, AbstractControl } from "@angular/forms";
-import { IUiFormFieldValidator } from "../form/form.component";
+import { IUiFormFieldValidator } from "../form/form.interfaces";
 
 @Component({
   selector: "ui-input",

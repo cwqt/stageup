@@ -17,7 +17,7 @@ import {
   handleFormErrors,
   displayValidationErrors,
 } from "src/app/_helpers/formErrorHandler";
-import { IUiForm } from "src/app/ui-lib/form/form.component";
+import { IUiForm } from "src/app/ui-lib/form/form.interfaces";
 
 @Component({
   selector: "app-login",

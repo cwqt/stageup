@@ -1,3 +1,5 @@
+@import "~src/styles/variables";
+
 .app-container {
   max-height: 100vh;
   height: 100vh;
@@ -10,8 +12,7 @@
   background-color: #f7f7f7;
 
   .left {
-    width: 80px;
-    // min-width: 250px;
+    width: $space-lg * 4;
     app-sidebar {
       width: 100%;
     }
@@ -28,13 +29,13 @@
       display: block;
       height: auto;
       width: 100%;
-      padding: 20px;
+      padding: $space-lg;
     }
 
     .app-body {
       height: 100%;
-      min-height: calc(100vh - 48px);
-      padding: 10px 20px;
+      min-height: 100vh;
+      padding: $space $space-lg;
     }
   }
 }

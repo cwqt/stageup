@@ -2,19 +2,15 @@
 <mat-divider></mat-divider>
 <br>
 
-<mat-horizontal-stepper #stepper>
-  <mat-step>
+<mat-vertical-stepper #stepper *ngIf="onboarding.data">
+  <mat-step *ngFor="let step of stepUiMap | keyvalue" [label]="step.value.label">
+    <ui-form [form]="step.value.form" [cacheable]="stepData[step.key]"></ui-form>
   </mat-step>
 
-  <mat-step label="Fill out your address">
-  </mat-step>
-
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    <p>You are now done.</p>
+  <mat-step label="Submit for Verification">
     <div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button (click)="stepper.reset()">Reset</button>
     </div>
   </mat-step>
-</mat-horizontal-stepper>
+</mat-vertical-stepper>

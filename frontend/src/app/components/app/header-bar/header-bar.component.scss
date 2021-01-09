@@ -1,3 +1,5 @@
+@import "~src/styles/variables";
+
 .header-container {
   width: 100%;
   display: flex;
@@ -15,17 +17,21 @@
 }
 
 .header-upload {
-  border-radius: var(--space-lg);
   overflow: hidden;
-  margin-right: var(--space-lg);
+  margin-right: $space-lg;
+  ::ng-deep {
+    button {
+      border-radius: $space-lg !important;
+    }
+  }
 }
 
 .header-search {
   display: flex;
   align-items: center;
-  margin-right: var(--space-lg);
+  margin-right: $space-lg;
   ui-icon {
-    margin-right: var(--space);
+    margin-right: $space;
   }
   ui-input {
     ::ng-deep mat-form-field {
@@ -35,7 +41,7 @@
 }
 
 .header-notification {
-  margin-right: var(--space-lg);
+  margin-right: $space-lg;
 }
 
 .header-user {
@@ -43,11 +49,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-sm);
+  padding: $space-sm;
   border-radius: 44px;
   &:hover {
     cursor: pointer;
-    background-color: var(--clr-base);
+    background-color: $clr-base;
   }
   img {
     width: 44px;
@@ -59,10 +65,10 @@
     object-position: center;
   }
   span {
-    margin: 0 var(--space-sm) 0 var(--space);
+    margin: 0 $space-sm 0 $space;
   }
   ui-icon {
     opacity: 0.2;
-    margin-right: var(--space-sm);
+    margin-right: $space-sm;
   }
 }

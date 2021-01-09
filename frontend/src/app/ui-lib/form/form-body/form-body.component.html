@@ -1,0 +1,19 @@
+<form [formGroup]="fg">
+  <ng-container *ngFor="let field of fields" [ngSwitch]="field.type">
+    <div class="form-field-container" *ngSwitchCase="'container'">
+      <h2>{{ field.label }}</h2>
+      <ui-form-body [fields]="field.fields" [fg]="fg.controls[field.field_name]"></ui-form-body>
+    </div>
+
+    <ui-input *ngSwitchDefault
+      [type]="field.type"
+      [label]="field.label"
+      [hint]="field.hint"
+      [variant]="field.variant"
+      [placeholder]="field.default"
+      [validatorFunctions]="field.validators"
+      [formControlName]="field.field_name">
+      {{field.field_name}}
+    </ui-input>
+  </ng-container>
+</form>
