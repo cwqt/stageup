@@ -22,7 +22,6 @@
     "@eventi/interfaces": "file:../interfaces",
     "moment": "^2.24.0",
     "ng-click-outside": "^6.0.0",
-    "ng-dynamic-component": "^6.1.0",
     "ngx-cookie-service": "^3.0.3",
     "ngx-moment": "^3.5.0",
     "rxjs": "~6.5.4",
