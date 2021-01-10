@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from "@angular/core";
   styleUrls: ["./chip.component.scss"],
 })
 export class ChipComponent implements OnInit {
-  @Input() color:
+  @Input() kind:
     | "red"
     | "magenta"
     | "purple"
@@ -15,8 +15,8 @@ export class ChipComponent implements OnInit {
     | "teal"
     | "green"
     | "gray"
-    | "cool-gray"
-    | "warm-gray";
+    | "cool-grey"
+    | "warm-grey" = "cool-grey";
 
   constructor() {}
 

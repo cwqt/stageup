@@ -15,7 +15,7 @@ const typeIconMap = {
   styleUrls: ["./admonition.component.scss"],
 })
 export class AdmonitionComponent implements OnInit {
-  @Input() type: "warning" | "info" | "success" | "bug" | "example" | "failure";
+  @Input() kind: "warning" | "info" | "success" | "bug" | "example" | "failure" | "info";
   @Input() title: string;
 
   icon: string;
@@ -23,6 +23,6 @@ export class AdmonitionComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.icon = typeIconMap[this.type];
+    this.icon = typeIconMap[this.kind];
   }
 }

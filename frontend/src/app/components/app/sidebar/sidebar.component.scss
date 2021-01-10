@@ -24,8 +24,8 @@
   justify-content: space-between;
   width: 100%;
   ui-button {
+    @apply my-2;
     width: 100%;
-    margin: $space-lg 0;
     height: 75px !important;
     ::ng-deep button {
       background: transparent;

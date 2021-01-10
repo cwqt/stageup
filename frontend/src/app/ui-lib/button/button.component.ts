@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { ThemeDimension, ThemeKind } from "../ui-lib.interfaces";
 
 @Component({
   selector: "ui-button",
@@ -7,19 +8,13 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 })
 export class ButtonComponent implements OnInit {
   @Output() click = new EventEmitter();
+  @Input() kind?:ThemeKind = ThemeKind.Accent;
+  @Input() size?:ThemeDimension = ThemeDimension.Medium;
   @Input() tooltip?: string;
   @Input() disabled?: boolean = false;
   @Input() loading?: boolean = false;
   @Input() transparent?: boolean = false;
-  @Input() variant?:
-    | "primary"
-    | "secondary"
-    | "accent"
-    | "warn"
-    | "disabled"
-    | "basic" = "accent";
   @Input() icon?: string;
-  @Input() size?: "l" | "m" | "s";
   @Input() type?: "submit";
   @Input() fullWidth?:boolean=false;
 

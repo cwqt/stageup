@@ -1,22 +1,14 @@
-import { CookieService } from "ngx-cookie-service";
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 
 import { UiLibModule } from "./ui-lib/ui-lib.module";
 import { AngularMaterialModule } from "./angular-material.module";
 import { AppRoutingModule } from "./app.routes";
-import { HighchartsChartModule } from "highcharts-angular";
 import { HttpClientModule } from "@angular/common/http";
-import { MomentModule } from "ngx-moment";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DynamicComponentModule, DynamicIoModule } from "ng-dynamic-component";
-import { PickerModule } from "@ctrl/ngx-emoji-mart";
-import { ClickOutsideModule } from "ng-click-outside";
-import { CrystalLightboxModule } from "@crystalui/angular-lightbox";
-import { PopoverModule } from "../assets/popover";
-import { IvyCarouselModule } from "angular-responsive-carousel";
-import { NgxWidgetGridModule } from "ngx-widget-grid";
+import { CookieService } from 'ngx-cookie-service';
+import { ClickOutsideModule } from 'ng-click-outside';
 
 import { AppComponent } from "./app.component";
 import { LandingComponent } from "./routes/landing/landing.component";
@@ -97,16 +89,7 @@ import { SearchComponent } from './routes/search/search.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    DynamicComponentModule,
-    DynamicIoModule,
-    MomentModule,
-    PickerModule,
-    ClickOutsideModule,
-    CrystalLightboxModule,
-    PopoverModule,
-    NgxWidgetGridModule,
-    HighchartsChartModule,
-    IvyCarouselModule
+    ClickOutsideModule
   ],
   providers: [CookieService],
   entryComponents: [],

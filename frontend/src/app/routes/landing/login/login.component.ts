@@ -70,6 +70,14 @@ export class LoginComponent implements OnInit {
     };
   }
 
+  async TEST_LOGIN() {
+    let user = await this.authService.login({
+      email_address: "m@cass.si",
+      password: "helloworld"
+    });
+    this.onLoginSuccess(user);
+  }
+
   onLoginSuccess(user: IUser) {
     // get user, host & host info on login
     this.myselfService.getMyself().then(() => {

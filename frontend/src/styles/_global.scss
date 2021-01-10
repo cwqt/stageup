@@ -1,15 +1,5 @@
-@import "~@ctrl/ngx-emoji-mart/picker";
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
-
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-
-// @import './custom-tailwind/custom-components.css'; // added
-
-@import 'tailwindcss/utilities';
-
-// @import './custom-tailwind/custom-utilities.css'; // added
-
+@import "~src/styles/variables";
 
 * {
   box-sizing: border-box;
@@ -23,11 +13,11 @@ body {
 
 html,
 body {
-  font-size: var(--fs-base);
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  font-size: $fs-base;
 }
 
 b {

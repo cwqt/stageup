@@ -2,28 +2,28 @@
   <img src="https://i.ibb.co/sv4pqcN/pixomatic-1610055330936.png" alt="" class="logo">
 
   <div class="sidebar-main-buttons">
-    <ui-button (click)="gotoRoot()" variant="accent" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+    <ui-button (click)="gotoRoot()" kind="accent" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <ui-icon size="l">template</ui-icon>
     </ui-button>
 
-    <!-- <ui-button variant="accent" routerLinkActive="active">
+    <!-- <ui-button kind="accent" routerLinkActive="active">
       <ui-icon size="l">play--filled</ui-icon>
     </ui-button> -->
 
-    <!-- <ui-button variant="accent" routerLinkActive="active">
+    <!-- <ui-button kind="accent" routerLinkActive="active">
       <ui-icon size="l">analytics</ui-icon>
     </ui-button> -->
 
-    <ui-button *ngIf="myself.host" (click)="gotoHost()" variant="accent" routerLink="/host" routerLinkActive="active">
+    <ui-button *ngIf="myself.host" (click)="gotoHost()" kind="accent" routerLink="/host" routerLinkActive="active">
       <ui-icon size="l">events</ui-icon>
     </ui-button>
 
-    <ui-button *ngIf="myself.user.is_admin" (click)="gotoAdmin()" routerLink="/admin" variant="accent"
+    <ui-button *ngIf="myself.user.is_admin" (click)="gotoAdmin()" routerLink="/admin" kind="accent"
       routerLinkActive="active">
       <ui-icon size="l">user--admin</ui-icon>
     </ui-button>
 
-    <ui-button (click)="gotoSettings()" variant="accent" routerLink="/settings" routerLinkActive="active">
+    <ui-button (click)="gotoSettings()" kind="accent" routerLink="/settings" routerLinkActive="active">
       <ui-icon size="l">settings</ui-icon>
     </ui-button>
 

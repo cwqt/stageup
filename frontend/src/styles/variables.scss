@@ -1,7 +1,10 @@
-// import into component.scss via @import "~src/styles/variables";
-/* colour palette
-   lt: light, ltr: lighter
-   dk: dark, drk: darker
+/*
+import into component.scss via:
+@import "~src/styles/variables";
+
+colour palette:
+  lt: light, ltr: lighter
+  dk: dark, drk: darker
 */
 // base
 $clr-base: #fafafa;
@@ -13,10 +16,10 @@ $clr-ntrl-min: #fff;
 $clr-ntrl-max: #000;
 
 // primary colour
-$clr-primary: #d74192;
+$clr-primary: #f72485;
 $clr-primary-lt: #f2c3db;
 $clr-primary-ltr: lighten($clr-primary-lt, 10%);
-$clr-primary-dk: #d22e83;
+$clr-primary-dk: #d74192;
 $clr-primary-dkr: darken($clr-primary-dk, 10%);
 
 // secondary colour

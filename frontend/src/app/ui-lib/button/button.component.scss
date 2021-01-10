@@ -1,17 +1,81 @@
+@import "~src/styles/variables";
+
 ui-icon {
   margin-right: 10px;
 }
 
-button {
+::ng-deep button {
+  min-height: 40px;
+  border-radius: 5px !important;
+  overflow: hidden;
+
+  &.mat-button {
+    border: 1px solid rgba($color: #000000, $alpha: 0);
+    transition: 0.1s;
+    box-sizing: border-box;
+    font-weight: normal;
+    min-width: 0px;
+
+    .mat-button-wrapper {
+      min-width: 0px;
+      width: 100%;
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &.mat-primary {
+      background-color: $clr-primary;
+      color: white;
+      &:hover { background-color: $clr-primary-dk }
+      &:focus {
+        // box-shadow: inset 0 0 0 1px $clr-primary-dk, inset 0 0 0 2px white;
+      }
+    }
+
+    &.mat-secondary {
+      background: $clr-secondary;
+      color: white;
+      &:hover { background-color: $clr-secondary-lt; }
+      &:focus { 
+        // box-shadow: inset 0 0 0 1px $clr-secondary, inset 0 0 0 2px white;
+       }
+    }
+
+    &.mat-accent {
+      color: $clr-primary;
+      border: 1px solid $clr-primary;
+      ::ng-deep .mat-spinner circle { stroke: $clr-primary !important; }    
+
+      &:hover {
+        background-color: $clr-primary;
+        color: $clr-ntrl-min;
+        ::ng-deep .mat-spinner circle { stroke: white !important; }    
+       }
+    }
+
+    &.mat-warn {
+      background: $clr-bug;
+      color: white;
+
+      &:hover { background: $clr-red-drk }
+
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
   &.fullWidth {
     width: 100%;
     ::ng-deep .mat-button-wrapper {
       justify-content: flex-start !important;
     }
   }
-  min-height: 40px;
-  border-radius: 5px !important;
-  overflow: hidden;
+
+
 
   ::ng-deep .mat-spinner {
     display: inline-block;
