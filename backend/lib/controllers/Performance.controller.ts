@@ -10,7 +10,7 @@ import {
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Performance } from '../models/Performances/Performance.model';
-import { ErrorHandler } from '../common/errors';
+import { ErrorHandler, getCheck } from '../common/errors';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
 import Validators, { body } from '../common/validate';
@@ -166,7 +166,11 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async (req: Request): Promise<void> => {
+        const perf = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
+        await perf.remove();
+        return;
+      },
     };
   }
 }
