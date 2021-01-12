@@ -41,15 +41,15 @@ export const displayValidationErrors = (
   cacheable: ICacheable<any>
 ) => {
   // Recursively go through the controls setting the error messages
-  Y<[FormGroup, string], void>((r) => (fg, path) => {
+  Y<[FormGroup, string], void>(r => (fg, path) => {
     Object.keys(fg.controls).forEach((f) => {
       const control = fg.get(f);
-      const i = path ? path + `.${f}` : f;
+      const i = path ? path + `.${f}` : f; // make a.b.c.d for object path
       // Get error by path, if one exists in the cacheable form errors
       const e = i.split(".").reduce((acc, val) => acc && acc[val], cacheable.form_errors);
       if(e && typeof(e) == "string") {
         control.setErrors({ backendIssue: e });
-        control.markAsTouched();
+        control.markAsTouched(); // trigger change detection
       };
       if((control as FormGroup).controls) r(control as FormGroup, i);
     });

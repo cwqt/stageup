@@ -126,7 +126,6 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
       .then((v) => this.onSuccess.emit(v))
       .catch((e: HttpErrorResponse) => {
         this.cacheable = handleFormErrors(this.cacheable, e.error);
-        console.log(this.cacheable)
         displayValidationErrors(this.formGroup, this.cacheable);
         this.onFailure.emit(e);
       })

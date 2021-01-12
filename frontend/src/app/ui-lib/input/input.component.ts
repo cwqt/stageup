@@ -5,6 +5,7 @@ import {
   Optional,
 } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
+import { ErrCode } from "@eventi/interfaces";
 import { IUiFormFieldValidator } from "../form/form.interfaces";
 import { ThemeKind } from "../ui-lib.interfaces";
 
@@ -65,7 +66,7 @@ export class InputComponent implements ControlValueAccessor {
     const { errors } = this.control;
 
     // Fallback messages if none provided
-    const errorMap: { [index: string]: (e: any) => string } = {
+    const errorMap: { [index:string]: (e: any) => string } = {
       ["minlength"]: (e) =>
         `${this.label} must be at-least ${errors[e].requiredLength} characters`,
       ["maxlength"]: (e) =>
@@ -76,11 +77,12 @@ export class InputComponent implements ControlValueAccessor {
       ["backendIssue"]: (e) => this.control.getError("backendIssue"),
     };
 
+    // Actual error messages
     return Object.keys(errors || {}).map((e) => {
       const vf = this.validatorFunctions?.find((x) => x.type == e);
       return vf?.message
-        ? vf.message(this.control)
-        : errorMap[e]
+        ? vf.message(this.control) // client side message
+        : errorMap[e] // 
         ? errorMap[e](e)
         : "Invalid field";
     });
