@@ -8,7 +8,7 @@ import { UserType } from '../../environment';
 describe("User addresses CRUD", () => {
   it('Should add a new address for the user', async () => {});
 
-  it('Should read the users adddresses', async () => {});
+  it('Should read the users addresses', async () => {});
 
   it('Should update the user address', async () => {});
 

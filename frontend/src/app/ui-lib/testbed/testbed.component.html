@@ -72,28 +72,29 @@
   <h1>Buttons</h1>
 
   <div class="flex items-center space-x-4 mb-4">
-    <ui-button kind="primary">Primary</ui-button>
-    <ui-button kind="secondary">Secondary</ui-button>
-    <ui-button kind="accent">Accent</ui-button>
-    <ui-button kind="warn">Warn</ui-button>
-    <ui-button [disabled]="true">Disabled</ui-button>
+    <ui-button size="s" kind="primary">Primary</ui-button>
+    <ui-button size="s" kind="secondary">Secondary</ui-button>
+    <ui-button size="s" kind="accent">Accent</ui-button>
+    <ui-button size="s" kind="warning">Warning</ui-button>
+    <ui-button size="s" kind="danger">Danger</ui-button>
+    <ui-button size="s" [disabled]="true">Disabled</ui-button>
   </div>
 
   <div class="flex items-center space-x-4 mb-4">
-    <ui-button [loading]="true" kind="primary">Primary</ui-button>
-    <ui-button icon="settings" kind="secondary">Secondary</ui-button>
-    <ui-button [loading]="true" kind="accent">Accent</ui-button>
-    <ui-button icon="settings" kind="accent">Accent</ui-button>
-    <ui-button icon="settings" kind="warn">Warn</ui-button>
-    <ui-button [loading]="true" [disabled]="true">Disabled</ui-button>
+    <ui-button size="m" [loading]="true" kind="primary">Primary</ui-button>
+    <ui-button size="m" kind="secondary">Secondary</ui-button>
+    <ui-button size="m" [loading]="true" kind="accent">Accent</ui-button>
+    <ui-button size="m" icon="settings" kind="warning">Warning</ui-button>
+    <ui-button size="m" icon="favorite" kind="danger">Danger</ui-button>
+    <ui-button size="m" [loading]="true" [disabled]="true">Disabled</ui-button>
   </div>
 
   <div class="flex items-center space-x-4 mb-4">
-    <ui-button size="s" [loading]="true" kind="primary">Primary</ui-button>
-    <ui-button size="m" icon="settings" kind="secondary">Secondary</ui-button>
+    <ui-button size="l" [loading]="true" kind="primary">Primary</ui-button>
+    <ui-button size="l" icon="settings" kind="secondary">Secondary</ui-button>
     <ui-button size="l" [loading]="true" kind="accent">Accent</ui-button>
-    <ui-button size="m" icon="settings" kind="accent">Accent</ui-button>
-    <ui-button size="s" icon="settings" kind="warn">Warn</ui-button>
+    <ui-button size="l" icon="settings" kind="warning">Warning</ui-button>
+    <ui-button size="l" icon="settings" kind="danger">Danger</ui-button>
     <ui-button size="l" [loading]="true" [disabled]="true">Disabled</ui-button>
   </div>
 
@@ -103,7 +104,7 @@
 
   <ui-input [(ngModel)]="textString" icon="favorite" type="text" size="s" placeholder="Small input"></ui-input>
 
-  <ui-input [(ngModel)]="textString" icon="favorite--filled" type="text" label="Name please"></ui-input>
+  <ui-input [(ngModel)]="textString" icon="favorite--filled" type="password" label="Name please"></ui-input>
   <ui-input [(ngModel)]="numberString" type="number" label="Age please"></ui-input>
 
   <ui-input [(ngModel)]="textString" type="text"></ui-input>

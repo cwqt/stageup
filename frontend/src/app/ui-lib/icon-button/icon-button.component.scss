@@ -1,0 +1,13 @@
+
+.container {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: 100%;
+}
+
+.ripple-surface {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}

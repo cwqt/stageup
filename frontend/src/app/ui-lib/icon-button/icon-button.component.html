@@ -1,4 +1,10 @@
+<div class="container">
+
 <ui-button
+    matRipple
+    [matRippleCentered]="true"
+    [matRippleUnbounded]="true"
+    [matRippleRadius]="100"
     [disabled]="disabled"
     [tooltip]="tooltip"
     [kind]="variant">
@@ -6,3 +12,4 @@
             <ng-content></ng-content>
         </ui-icon>
 </ui-button>
+</div>

@@ -4,7 +4,6 @@ import { AngularMaterialModule } from "../angular-material.module";
 import { ClickOutsideModule } from "ng-click-outside";
 import { ReactiveFormsModule, FormsModule, NgForm } from "@angular/forms";
 
-import { LoadablePanelComponent } from "./loadable-panel/loadable-panel.component";
 import { ButtonComponent } from "./button/button.component";
 import { IconComponent } from "./icon/icon.component";
 import { TestbedComponent } from "./testbed/testbed.component";
@@ -21,7 +20,6 @@ import { FormBodyComponent } from "./form/form-body/form-body.component";
 import { HrComponent } from './hr/hr.component';
 
 const allComponents = [
-  LoadablePanelComponent,
   ButtonComponent,
   IconComponent,
   TestbedComponent,

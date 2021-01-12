@@ -76,6 +76,10 @@ $animation-duration: 0.2s;
     cursor: text !important;
   }
 
+  span {
+    opacity: .4;
+  }
+
 
   font-weight: normal;
   margin: 0;
@@ -118,6 +122,14 @@ $animation-duration: 0.2s;
     right: 0;
     transition: all $animation-duration;
     width: 0%;
+  }
+
+  .form-field__password {
+    position: absolute;
+    right: 50px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
   }
 }
 

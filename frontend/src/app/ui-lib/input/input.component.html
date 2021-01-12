@@ -1,6 +1,7 @@
 <div class="ui-input-wrapper" [class.ui-input-wrapper--has-icon]="icon">
   <!-- Input -->
   <div
+    (clickOutside)="togglePasswordVisibility(false)"
     (click)="input.select()"
     class="form-field"
     [class.form-field--is-active]="focused"
@@ -12,7 +13,7 @@
       <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
       <label *ngIf="label"
         [for]="formControlName || ''"
-        class="form-field__label">{{ label }}<super>{{ required ? " *" : ""}}</super></label>
+        class="form-field__label">{{ label }}<span>{{ required ? "*" : ""}}</span></label>
       <input
         #input
         [(ngModel)]="value"
@@ -21,12 +22,16 @@
         [id]="formControlName || ''"
         [disabled]="disabled"
         [placeholder]="placeholder"
-        [type]="type"
+        [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : type"
         tabindex="0"
         autocomplete="off"
         [required]="required"
         class="form-field__input" />
-    </div>
+        <div class="form-field__password" *ngIf="type == 'password'">
+          <ui-icon-button size="m" (click)="togglePasswordVisibility(false, $event)" *ngIf="passwordVisible"><ui-icon>view--filled</ui-icon></ui-icon-button>
+          <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>  
+        </div>
+      </div>
   </div>
 
   <!-- Textarea -->

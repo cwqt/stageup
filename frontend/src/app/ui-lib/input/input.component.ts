@@ -1,71 +1,39 @@
 import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from "@angular/animations";
-import {
   Component,
   Input,
-  forwardRef,
   Self,
   Optional,
-  ViewChild,
-  ElementRef,
 } from "@angular/core";
-import {
-  ControlValueAccessor,
-  NgControl,
-} from "@angular/forms";
+import { ControlValueAccessor, NgControl } from "@angular/forms";
 import { IUiFormFieldValidator } from "../form/form.interfaces";
 import { ThemeKind } from "../ui-lib.interfaces";
 
+
+//https://material-ui.com/components/text-fields/
 @Component({
   selector: "ui-input",
   templateUrl: "./input.component.html",
   styleUrls: ["./input.component.scss"],
-  animations: [
-    trigger("animation", [
-      state(
-        "show",
-        style({
-          opacity: 1,
-          height: "auto",
-        })
-      ),
-      state(
-        "hide",
-        style({
-          opacity: 0,
-          transform: "translateY(-1rem)",
-          height: 0,
-          overflow: "hidden",
-        })
-      ),
-      transition("show => hide", animate("200ms ease-out")),
-      transition("* => show", animate("200ms ease-in")),
-    ]),
-  ],
 })
 export class InputComponent implements ControlValueAccessor {
-  @Input() kind?: ThemeKind = ThemeKind.Basic;
+  @Input() kind?: ThemeKind = ThemeKind.Accent;
   @Input() type: "number" | "text" | "password" | "textarea" | "checkbox";
   @Input() label?: string = "";
   @Input() placeholder?: string = "";
   @Input() hint?: string = "";
   @Input() disabled: boolean = false;
-  @Input() icon?:string;
+  @Input() icon?: string;
 
-  @Input() required:boolean=true;
-  @Input() maxlength?:number;
-  @Input() minlength?:number; 
+  @Input() required: boolean = true;
+  @Input() maxlength?: number;
+  @Input() minlength?: number;
 
   @Input() formControlName?: string;
   @Input() validatorFunctions: IUiFormFieldValidator[];
 
   _state: string = "hide";
   focused: boolean = false;
+  passwordVisible: boolean = false;
 
   constructor(@Self() @Optional() public control: NgControl) {
     this.control && (this.control.valueAccessor = this);
@@ -73,7 +41,7 @@ export class InputComponent implements ControlValueAccessor {
 
   ngOnInit(): void {
     this.placeholder = this.placeholder || "";
-    setTimeout(() => console.log(this.value), 1000)
+    setTimeout(() => console.log(this.value), 1000);
   }
 
   public get invalid(): boolean {
@@ -160,5 +128,10 @@ export class InputComponent implements ControlValueAccessor {
   decrement(event) {
     event.preventDefault();
     this.value = <number>this.value - 1;
+  }
+
+  togglePasswordVisibility(state: boolean, event) {
+    this.passwordVisible = state;
+    if(event) event.stopPropagation();
   }
 }

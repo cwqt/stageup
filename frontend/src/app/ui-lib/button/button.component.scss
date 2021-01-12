@@ -1,117 +1,24 @@
 @import "~src/styles/variables";
 
-ui-icon {
-  margin-right: 10px;
-}
-
-::ng-deep button {
-  min-height: 40px;
-  border-radius: 5px !important;
-  overflow: hidden;
-
-  &.mat-button {
-    border: 1px solid rgba($color: #000000, $alpha: 0);
-    transition: 0.1s;
-    box-sizing: border-box;
-    font-weight: normal;
-    min-width: 0px;
-
-    .mat-button-wrapper {
-      min-width: 0px;
-      width: 100%;
-      display: flex;
-      flex-flow: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    &.mat-primary {
-      background-color: $clr-primary;
-      color: white;
-      &:hover { background-color: $clr-primary-dk }
-      &:focus {
-        // box-shadow: inset 0 0 0 1px $clr-primary-dk, inset 0 0 0 2px white;
-      }
-    }
-
-    &.mat-secondary {
-      background: $clr-secondary;
-      color: white;
-      &:hover { background-color: $clr-secondary-lt; }
-      &:focus { 
-        // box-shadow: inset 0 0 0 1px $clr-secondary, inset 0 0 0 2px white;
-       }
-    }
-
-    &.mat-accent {
-      color: $clr-primary;
-      border: 1px solid $clr-primary;
-      ::ng-deep .mat-spinner circle { stroke: $clr-primary !important; }    
-
-      &:hover {
-        background-color: $clr-primary;
-        color: $clr-ntrl-min;
-        ::ng-deep .mat-spinner circle { stroke: white !important; }    
-       }
-    }
-
-    &.mat-warn {
-      background: $clr-bug;
-      color: white;
-
-      &:hover { background: $clr-red-drk }
-
-    }
+.ui-button {
+  display: flex;
+  align-items: center;
+  position: relative;
+	outline: 0;
+	overflow: hidden;
+	position: relative;
+	user-select: none;
+  transition: 0.2s;
+  border-radius: 4px;
+  ui-icon, mat-spinner {
+    margin-right: 10px;
   }
-
-  &:disabled {
-    opacity: 0.5;
-  }
-
-  &.fullWidth {
-    width: 100%;
-    ::ng-deep .mat-button-wrapper {
-      justify-content: flex-start !important;
-    }
-  }
-
-
-
-  ::ng-deep .mat-spinner {
-    display: inline-block;
-    margin-right: 15px;
-
-    circle {
-      stroke: white;
-    }
-
-    opacity: 0.7;
-  }
-
-  &.isTransparent {
-    background: transparent !important;
-  }
-
-  &.mat-accent {
-    ::ng-deep .mat-spinner circle {
-      stroke: black !important;
-    }
-
-    &:disabled {
-      ::ng-deep .mat-spinner circle {
-        stroke: rgb(159, 159, 159) !important;
-      }
-    }
-  }
-
-  &.small {
-    padding: 2px 5px 2px 0;
-    border-radius: 4px !important;
-    font-size: 12px;
+  &--small {
+    padding: 7px 10px;
+    font-size: 15px;
     font-weight: 500;
     line-height: 0;
     min-height: 30px;
-
     mat-spinner {
       margin-left: 7px;
     }
@@ -121,13 +28,77 @@ ui-icon {
       margin-left: 4px;
     }
   }
-
-  &.med {
+  &--medium {
     padding: 8px 16px;
   }
-
-  &.large {
+  &--large {
     font-size: 18px;
     padding: 16px 48px 16px 16px;
   }
+  &:disabled {
+    background-color: #efefef;
+    opacity: .5;
+    &:hover {
+      cursor: not-allowed;
+      pointer-events: all !important;
+    }
+  }
+}
+
+.ui-button--primary {
+  background-color: $clr-primary;
+  color: white;
+  &:hover { background-color: $clr-primary-dk; }
+  ::ng-deep .mat-spinner circle { stroke: $clr-base !important; }    
+}
+
+.ui-button--secondary {
+  background-color: $clr-secondary;
+  color: white;
+  &:hover { background-color: $clr-secondary-lt; }
+  .ripple {
+    background-color: rgba($color: #fff, $alpha: 0.2) !important;
+  }
+  ::ng-deep .mat-spinner circle { stroke: $clr-base !important; }    
+}
+
+.ui-button--accent {
+  border: 1px solid #dedede;
+  &:hover { background-color: $clr-base-lt; }
+}
+
+.ui-button--warning {
+  background-color: $clr-warning;
+  color: white;
+  &:hover { background-color: darken($clr-warning, 10%); }
+  ::ng-deep .mat-spinner circle { stroke: $clr-base !important; }    
+}
+
+.ui-button--danger {
+  background-color: lighten($clr-red-drk, 20%);
+  color: white;
+  &:hover { background-color: lighten($clr-red-drk, 10%); }
+  ::ng-deep .mat-spinner circle { stroke: $clr-base !important; }    
+}
+
+.ripple {
+	background-color: rgba($color: #000000, $alpha: 0.2);
+	width: 1rem;
+	height: 1rem;
+	position: absolute;
+	border-radius: 50%;
+	transform: translateX(-100%) translateY(-100%);
+	// mix-blend-mode: screen;
+	animation: ripple 1250ms ease-out forwards, fade 1000ms ease-out forwards;
+}
+
+@keyframes ripple {
+	0%   { transform: translate(-100%, -100%); }
+	80%  { transform: translate(-100%, -100%) scale(50); }
+	100% { transform: translate(-100%, -100%) scale(50); opacity: 0; }
+}
+
+@keyframes fade {
+	0%   { opacity: 1; }
+	100% { opacity: 0; }
 }
