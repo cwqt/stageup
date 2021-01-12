@@ -70,7 +70,7 @@ export class HostService {
   }
 
   // router.put <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.updateOnboardingProcessStep());
-  updateOnboardingProcessStep(hostId:number, update:any):Promise<IOnboardingStep<any>> {
-    return this.http.put<IOnboardingStep<any>>(`/api/hosts/${hostId}`, update).toPromise();
+  updateOnboardingProcessStep(hostId:number, step:HostOnboardingStep, update:any):Promise<IOnboardingStep<any>> {
+    return this.http.put<IOnboardingStep<any>>(`/api/hosts/${hostId}/onboarding/${step}`, update).toPromise();
   }
 }

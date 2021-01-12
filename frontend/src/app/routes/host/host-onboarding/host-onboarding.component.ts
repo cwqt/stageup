@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { MatVerticalStepper } from "@angular/material/stepper";
 import {
   IHost,
   IHostOnboarding,
@@ -15,7 +16,8 @@ const createICacheable = ():ICacheable<null> => {
     data: null,
     loading: false,
     error: "",
-    form_errors: {}
+    form_errors: {},
+    meta: {}
   }
 }
 
@@ -32,6 +34,7 @@ interface IUiStep<T> {
 })
 export class HostOnboardingComponent implements OnInit {
   @Input() host: IHost;
+  @ViewChild(MatVerticalStepper, { static: false }) stepper:MatVerticalStepper;
 
   onboarding: ICacheable<IHostOnboarding> = {
     data: null,
@@ -67,6 +70,7 @@ export class HostOnboardingComponent implements OnInit {
             type: "number",
             field_name: "hmrc_company_number",
             label:"HMRC Company Number",
+            default: 12341234,
             validators: [
               { type: "minlength", value: 8, message: v => "Must be 8 characters" },
               { type: "maxlength", value: 8, message: v => "Must be 8 characters" },
@@ -74,6 +78,7 @@ export class HostOnboardingComponent implements OnInit {
           },
           {
             type: "text",
+            default: 1234,
             field_name: "business_contact_number",
             label:"Business Contact Number",
             validators: [{type: "required"}]
@@ -83,19 +88,18 @@ export class HostOnboardingComponent implements OnInit {
             field_name: "business_address",
             label: "Business Address",
             fields: [          
-              { type: "text", label: "City",          field_name: "city", validators: [{type: "required"}]},
-              { type: "text", label: "Country",       field_name: "iso_country_code", validators: [{type: "required"}]},
-              { type: "text", label: "Postcode",      field_name: "postcode", validators: [{type: "required"}]},
-              { type: "text", label: "Street Name",   field_name: "street_name", validators: [{type: "required"}]},
-              { type: "text", label: "Street Number", field_name: "street_number", validators: [{type: "required"}]},
+              { default:"123", type: "text",   label: "City",          field_name: "city", validators: [{type: "required"}]},
+              { default:123, type: "text",   label: "Country",       field_name: "iso_country_code", validators: [{type: "required"}]},
+              { default:1111, type: "text",   label: "Postcode",      field_name: "postcode", validators: [{type: "required"}]},
+              { default:123, type: "number", label: "Street Number", field_name: "street_number", validators: [{type: "required"}]},
+              { default:444, type: "text",   label: "Street Name",   field_name: "street_name", validators: [{type: "required"}]},
             ],
           },
-          { type: "checkbox", field_name: "checker"}
         ],
         submit: {
           variant: "primary",
           text: "Next",
-          handler: async () => {}
+          handler: async formData => this.handleStepCompletion(formData, HostOnboardingStep.ProofOfBusiness)
         }
       }
     },
@@ -172,6 +176,13 @@ export class HostOnboardingComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOnboarding();
+  }
+
+  handleStepCompletion(formData:any, step:HostOnboardingStep) {
+    console.log(formData, step)
+    return this.hostService.updateOnboardingProcessStep(this.host._id, step, formData)
+      .then(() => this.stepper.next())
+      .finally(() => console.log(this.stepData))
   }
 
   async getOnboarding() {

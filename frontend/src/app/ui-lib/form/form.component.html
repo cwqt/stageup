@@ -2,10 +2,8 @@
 
 <ui-button type="submit"
   [disabled]="cacheable.loading"
-  [fullWidth]="form.submit.fullWidth"
-  [size]="form.submit.size"
   [kind]="form.submit.variant"
-  (onClick)="onSubmit()">
+  (click)="onSubmit()">
   {{ form.submit.text }}
 </ui-button>
 

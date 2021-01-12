@@ -1,4 +1,5 @@
 import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
+import { Primitive } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
 
 
@@ -25,7 +26,7 @@ export interface IUiFormField {
   field_name: string;
   variant?: "primary" | "secondary";
   label?: string;
-  default?: string | boolean;
+  default?: Primitive;
   validators?: IUiFormFieldValidator[];
   hint?: string;
   fields?: IUiFormField[]; // for nested objects

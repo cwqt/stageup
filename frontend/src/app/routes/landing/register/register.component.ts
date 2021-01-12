@@ -21,9 +21,9 @@ export class RegisterComponent implements OnInit {
     error: "",
     loading: false,
     form_errors: {
-      username: "",
-      email_address: "",
-      password: "",
+      username: null,
+      email_address: null,
+      password: null,
     },
   };
 

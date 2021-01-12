@@ -20,9 +20,9 @@ export class CreateHostComponent implements OnInit {
     loading: false,
     error: "",
     form_errors: {
-      host_name: "",
-      host_username: "",
-      email_address: ""
+      host_name: null,
+      host_username: null,
+      email_address: null
     }
   }
 

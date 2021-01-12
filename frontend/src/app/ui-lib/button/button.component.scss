@@ -3,17 +3,18 @@
 .ui-button {
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
 	outline: 0;
 	overflow: hidden;
 	position: relative;
 	user-select: none;
-  transition: 0.2s;
+  transition: background-color 0.2s;
   border-radius: 4px;
   ui-icon, mat-spinner {
     margin-right: 10px;
   }
-  &--small {
+  &--s {
     padding: 7px 10px;
     font-size: 15px;
     font-weight: 500;
@@ -28,15 +29,15 @@
       margin-left: 4px;
     }
   }
-  &--medium {
+  &--m {
     padding: 8px 16px;
   }
-  &--large {
+  &--l {
     font-size: 18px;
     padding: 16px 48px 16px 16px;
   }
   &:disabled {
-    background-color: #efefef;
+    // background-color: #efefef;
     opacity: .5;
     &:hover {
       cursor: not-allowed;
@@ -63,6 +64,7 @@
 }
 
 .ui-button--accent {
+  background-color: white;
   border: 1px solid #dedede;
   &:hover { background-color: $clr-base-lt; }
 }

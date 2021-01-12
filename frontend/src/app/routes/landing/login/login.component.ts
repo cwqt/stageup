@@ -1,22 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import {
   FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
 } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
 
 import { AuthenticationService } from "../../../services/authentication.service";
 import { ICacheable } from "src/app/app.interfaces";
-import { IMyself, IUser } from "@eventi/interfaces";
+import { IUser } from "@eventi/interfaces";
 import { MyselfService } from "src/app/services/myself.service";
 import { BaseAppService } from "src/app/services/app.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import {
-  handleFormErrors,
-  displayValidationErrors,
-} from "src/app/_helpers/formErrorHandler";
 import { IUiForm } from "src/app/ui-lib/form/form.interfaces";
 
 @Component({
@@ -31,8 +22,8 @@ export class LoginComponent implements OnInit {
     error: "",
     loading: false,
     form_errors: {
-      email_address: "",
-      password: "",
+      email_address: null,
+      password: null,
     },
   };
 
@@ -71,10 +62,11 @@ export class LoginComponent implements OnInit {
   }
 
   async TEST_LOGIN() {
-    let user = await this.authService.login({
+    const user = await this.authService.login({
       email_address: "m@cass.si",
       password: "helloworld"
     });
+
     this.onLoginSuccess(user);
   }
 

@@ -55,6 +55,8 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    console.log(this.cacheable)
+
     const createFormGroup = (fields: IUiFormField[], parentForm?:FormComponent): FormGroup => {
       return this.fb.group(
         fields.reduce((acc, curr) => {
@@ -114,6 +116,8 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   onSubmit() {
+    console.log("SUBMITTING")
+
     this.cacheable.loading = true;
     this.inputs.forEach((i) => i.setDisabledState(true));
     this.submissionButton.loading = true;
@@ -122,6 +126,7 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
       .then((v) => this.onSuccess.emit(v))
       .catch((e: HttpErrorResponse) => {
         this.cacheable = handleFormErrors(this.cacheable, e.error);
+        console.log(this.cacheable)
         displayValidationErrors(this.formGroup, this.cacheable);
         this.onFailure.emit(e);
       })

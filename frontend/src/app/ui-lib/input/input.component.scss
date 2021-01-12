@@ -126,7 +126,10 @@ $animation-duration: 0.2s;
 
   .form-field__password {
     position: absolute;
-    right: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 10px;
     top: 0;
     bottom: 0;
     margin: auto;

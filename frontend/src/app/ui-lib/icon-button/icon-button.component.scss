@@ -1,9 +1,18 @@
 
-.container {
-  width: 48px;
-  height: 48px;
+.ui-icon-button {
+  width: 48px !important;
+  height: 48px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   border-radius: 100%;
+  padding: 0 !important;
+  ::ng-deep button {
+    width: 48px !important;
+    height: 48px !important;  
+    padding: 0 !important;
+  }
 }
 
 .ripple-surface {

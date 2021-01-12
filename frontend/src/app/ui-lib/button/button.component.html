@@ -3,7 +3,7 @@
   tabindex="0"
   [disabled]="disabled"
   [ngClass]="[
-    'ui-button--' + dimensionClassMap[size],
+    'ui-button--' + size,
     'ui-button--' + kind
   ]"
   (click)="onClick($event); animateRipple($event)">
