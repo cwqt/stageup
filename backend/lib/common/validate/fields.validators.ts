@@ -2,7 +2,6 @@ import { ErrCode } from '@eventi/interfaces';
 import { ValidationChain } from 'express-validator';
 
 const FORBIDDEN_USERNAMES: string[] = [];
-
 export namespace FieldValidators {
   type CustomValidator = (v: ValidationChain, message?: ErrCode) => ValidationChain;
 

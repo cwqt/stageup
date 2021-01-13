@@ -17,7 +17,8 @@
 import { HostSubscriptionLevel } from '../Common/Subscription.model';
 import { IAddress, IPersonInfo } from '../Users/Person.model';
 import { IUserStub } from '../Users/User.model';
-import { HostPermission, ISocialInfo, IHostStub } from './Host.model';
+import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './Host.model';
+import { IOnboardingStepReview } from './OnboardingStepReview.model';
 
 export enum HostOnboardingStep {
   ProofOfBusiness,
@@ -31,16 +32,16 @@ export enum HostOnboardingState {
   AwaitingChanges, // not submitted
   PendingVerification, // submit & awaiting verification from admin
   HasIssues, // verified has having problems
-  Verified, // verified as valud
+  Verified, // verified as valid
   Enacted, // all stages verified & submitted as complete
 }
 
-export type IHostOnboardingProcess = IHostOnboarding & { steps: IOnboardingStepMap };
+export type IHostOnboardingProcess = Omit<IHostOnboarding, 'steps'> & { steps: IOnboardingStepMap };
 
 export interface IHostOnboarding {
   _id: number;
-  status: HostOnboardingState; // when all steps verified, process is complete
-  started_at: number;
+  state: HostOnboardingState; // when all steps verified, process is complete
+  created_at: number;
   completed_at: number | null;
   last_submitted: number | null;
   last_modified: number;
@@ -49,6 +50,7 @@ export interface IHostOnboarding {
   // we won't store actual snapshots of onboardings, just as a link to
   // a version which an isssue was in
   host: IHostStub;
+  steps: { [index in HostOnboardingStep]: HostOnboardingState };
 }
 
 export interface IOnboardingStepMap {
@@ -60,23 +62,12 @@ export interface IOnboardingStepMap {
 }
 
 export interface IOnboardingStep<T> {
-  status: HostOnboardingState.AwaitingChanges | HostOnboardingState.HasIssues | HostOnboardingState.Verified;
-  issues: IOnboardingIssue[];
+  state: HostOnboardingState.AwaitingChanges | HostOnboardingState.HasIssues | HostOnboardingState.Verified;
+  review?: IOnboardingStepReview;
   valid: boolean; //just if all the data is filled out & correct
   data: T;
 }
-
-export interface IOnboardingIssue {
-  param: string;
-  message: string;
-  version?: number; //which onboarding version this issue relates to
-}
-
-export interface IOnboardingProofOfBusiness {
-  hmrc_company_number: number;
-  business_contact_number: number;
-  business_address: IAddress;
-}
+export type IOnboardingProofOfBusiness = IHostBusinessDetails;
 
 export interface IOnboardingOwnerDetails {
   owner_info: IPersonInfo;

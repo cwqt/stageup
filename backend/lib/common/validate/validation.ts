@@ -4,6 +4,7 @@ import { NextFunction, Response } from 'express-async-router';
 import { CustomValidator, Meta, ValidationChain, Location, ValidationError } from 'express-validator';
 import { body as bodyRunner, param as paramRunner, query as queryRunner } from 'express-validator';
 import { ErrorHandler } from '../errors';
+import logger from '../logger';
 
 type VData<T> = T & {
   __this?: T; // self-reference
@@ -184,6 +185,7 @@ export const validatorMiddleware = (validators: VReqHandlerFunctor[]) => {
       .filter(e => e.status == 'fulfilled')
       .flatMap(e => (<any>e).value);
 
+    if(errors.length) console.log(JSON.stringify(errors, null, 2));
     if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
     next();
   };
