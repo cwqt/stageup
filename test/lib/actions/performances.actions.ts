@@ -5,7 +5,7 @@ import { IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformancePurch
 
 export default {
 // router.post<IPerf>("/performances",Perfs.createPerformance());
-createPerformance: async (data:{name: string, description: string, price: number, currency: string}) => {
+createPerformance: async (data:{name: string, description: string, price: number, currency: CurrencyCode}) => {
     const res = await Axios.post(`${env.baseUrl}/performances}`, data,
           env.getOptions()
         );    

@@ -6,6 +6,7 @@ import {
   IPerformanceUserInfo,
   HTTP,
   ErrCode,
+  HostPermission,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
@@ -165,7 +166,7 @@ export default class PerformanceController extends BaseController {
   deletePerformance(): IControllerEndpoint<void> {
     return {
       validators: [],
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async (req: Request): Promise<void> => {
         const perf = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
         await perf.remove();

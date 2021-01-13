@@ -8,13 +8,13 @@ import { performance } from 'perf_hooks';
 import { CurrencyCode } from '@eventi/interfaces/lib/Common/Currency.types';
 
 
-describe('As a user, I want to be able to do performance CRUD', async () => {
+describe('As a user, I want to be able to do purchase performance', async () => {
   let host: IHost;
   let perf: IPerformance;
   let client: IUser;
   
 
-  it('Should create a performance and get the newly created performance', async () => {
+  it('Should purchase a performance', async () => {
     
     client = await Stories.actions.users.createUser(UserType.Client);
     await Stories.actions.common.switchActor(UserType.Client)
@@ -29,38 +29,13 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
       name: "Shakespeare",
       description: "To be or not to be.",
       price: 24,
-      currency: 'GBP'
-   
-    });
-    
-    expect(perf).to.not.be.null;
-    expect(perf.name).to.be.eq("Shakespeare");
-    expect(perf.description).to.be.eq("To be or not to be");
-    expect(perf.price).to.be.eq(24);
-    expect(perf.currency).to.be.eq("GBP");    
-    
-  });
-
-  it('Should update a performance', async() => {
-    let perf = await Stories.actions.performances.updatePerformance({
-      
-    }
-
-  })
-
-
-  it('Should delete a performance', async () => {
-    let perf = await Stories.actions.performances.createPerformance({
-      name: "Shakespeare",
-      description: "To be or not to be.",
-      price: 24,
       currency: "GBP"
    
     });
-    
-      let delPerf = await Stories.actions.performances.deletePerformance(perf._id);
-      expect (delPerf._id).to.not.exist;    
 
+      let purchPerf = await Stories.actions.performances.purchase(perf._id);
+      expect(purchPerf.currency).to.be.equal(perf.currency);
+    
   });
-        
+
 });
