@@ -39,11 +39,15 @@ export default class AdminController extends BaseController {
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
-        const onboardingEnvelope = await this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop')
+        const qb = this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop')
           .innerJoinAndSelect('hop.host', 'host') // pull in host & filter by host
-          .where(`host.username LIKE :username`, { username: req.query.username ? `%${req.query.username}%` : '%' })
-          .andWhere(`hop.state = :state`, { state: req.query.state }) 
-          .orderBy(`hop.last_submitted`, (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
+          .where(`host.username LIKE :username`, { username: req.query.username ? `%${req.query.username}%` : '%' });
+
+        // not sure about fuzzy matching ints
+        if(req.query.state)
+          qb.andWhere(`hop.state = :state`, { state: req.query.state }) 
+
+        const onboardingEnvelope = await qb.orderBy(`hop.last_submitted`, (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
           .paginate();
 
         return {
