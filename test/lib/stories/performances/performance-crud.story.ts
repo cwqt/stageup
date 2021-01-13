@@ -25,7 +25,7 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
       email_address: 'host@cass.si',
     });
         
-      perf = await Stories.actions.performances.createPerformance({
+    let perf = await Stories.actions.performances.createPerformance({
       name: "Shakespeare",
       description: "To be or not to be.",
       price: 24,
@@ -41,16 +41,34 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
     
   });
 
+
   it('Should purchase a performance', async () => {
+    let perf = await Stories.actions.performances.createPerformance({
+      name: "Shakespeare",
+      description: "To be or not to be.",
+      price: 24,
+      currency: "GBP"
+   
+    });
     
-
-
-
+      let purchPerf = await Stories.actions.performances.purchase(perf._id);
+      expect(purchPerf.currency).to.be.equal(perf.currency);
+    
   });
 
 
+  it('Should delete a performance', async () => {
+    let perf = await Stories.actions.performances.createPerformance({
+      name: "Shakespeare",
+      description: "To be or not to be.",
+      price: 24,
+      currency: "GBP"
+   
+    });
+    
+      let delPerf = await Stories.actions.performances.deletePerformance(perf._id);
+      expect (delPerf._id).to.not.exist;    
 
-  it('Should delete a performance', async () => {});
-
-
+  });
+        
 });
