@@ -11,3 +11,14 @@ export interface ICacheable<T> {
 export interface FormErrors {
   [index:string]: null | ErrCode | FormErrors;
 }
+
+
+export const createICacheable = ():ICacheable<null> => {
+  return {
+    data: null,
+    loading: false,
+    error: "",
+    form_errors: {},
+    meta: {}
+  }
+}

@@ -155,6 +155,7 @@ export default class AdminController extends BaseController {
 
             // TODO: Once the onboarding process is complete, we no longer need it & it + it's onboarding issues
             // can be deleted
+            host.is_onboarded = true;
             await txc.save(host);
             logger.info('All steps valid & signed off!');
           } else {

@@ -7,8 +7,8 @@ import { AppRoutingModule } from "./app.routes";
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { CookieService } from 'ngx-cookie-service';
-import { ClickOutsideModule } from 'ng-click-outside';
+import { CookieService } from "ngx-cookie-service";
+import { ClickOutsideModule } from "ng-click-outside";
 
 import { AppComponent } from "./app.component";
 import { LandingComponent } from "./routes/landing/landing.component";
@@ -28,23 +28,23 @@ import { FooterComponent } from "./components/app/footer/footer.component";
 import { PageComponent } from "./components/app/page/page.component";
 
 import { CatalogComponent } from "./routes/catalog/catalog.component";
-import { SidebarComponent } from './components/app/sidebar/sidebar.component';
-import { FeedComponent } from './routes/feed/feed.component';
-import { PerformanceComponent } from './routes/performance/performance.component';
-import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
-import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
-import { HostComponent } from './routes/host/host.component';
-import { CreatePerformanceComponent } from './routes/host/create-performance/create-performance.component';
-import { PlayerComponent } from './components/player/player.component';
+import { SidebarComponent } from "./components/app/sidebar/sidebar.component";
+import { FeedComponent } from "./routes/feed/feed.component";
+import { PerformanceComponent } from "./routes/performance/performance.component";
+import { PerformanceWatchComponent } from "./routes/performance-watch/performance-watch.component";
+import { HostPerformancesComponent } from "./routes/host/host-performances/host-performances.component";
+import { HostComponent } from "./routes/host/host.component";
+import { CreatePerformanceComponent } from "./routes/host/create-performance/create-performance.component";
+import { PlayerComponent } from "./components/player/player.component";
 import { SettingsComponent } from "./routes/settings/settings.component";
 import { ProfileSettingsComponent } from "./routes/settings/profile-settings/profile-settings.component";
 import { BillingSettingsComponent } from "./routes/settings/billing-settings/billing-settings.component";
 import { AccountSettingsComponent } from "./routes/settings/account-settings/account-settings.component";
 import { HostSettingsComponent } from "./routes/settings/host-settings/host-settings.component";
 import { CreateHostComponent } from "./routes/settings/host-settings/create-host/create-host.component";
-import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
+import { HostOnboardingComponent, PageDirective } from "./routes/host/host-onboarding/host-onboarding.component";
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
-import { SearchComponent } from './routes/search/search.component';
+import { SearchComponent } from "./routes/search/search.component";
 
 @NgModule({
   declarations: [
@@ -78,7 +78,8 @@ import { SearchComponent } from './routes/search/search.component';
     CreateHostComponent,
     HostOnboardingComponent,
     AdminPanelComponent,
-    SearchComponent
+    SearchComponent,
+    PageDirective
   ],
   imports: [
     AngularMaterialModule,
@@ -89,9 +90,11 @@ import { SearchComponent } from './routes/search/search.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    ClickOutsideModule
+    ClickOutsideModule,
   ],
-  providers: [CookieService],
+  providers: [
+    CookieService
+  ],
   entryComponents: [],
   bootstrap: [AppComponent],
 })

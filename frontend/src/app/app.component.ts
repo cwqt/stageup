@@ -3,6 +3,7 @@ import { environment } from "../environments/environment";
 import { Title } from "@angular/platform-browser";
 import { AuthenticationService } from "./services/authentication.service";
 import { MyselfService } from './services/myself.service';
+import { FormControl } from "@angular/forms";
 
 @Component({
   selector: "app-root",
@@ -11,6 +12,10 @@ import { MyselfService } from './services/myself.service';
 })
 export class AppComponent implements OnInit {
   loading: boolean = true;
+
+  toppings = new FormControl();
+
+  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   constructor(
     private myselfService:MyselfService,

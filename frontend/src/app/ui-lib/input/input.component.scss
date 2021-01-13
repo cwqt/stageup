@@ -259,3 +259,48 @@ ui-icon {
 //   }
 // }
 
+
+mat-form-field {
+  position: relative;
+}
+
+mat-tree-node {
+  display: flex;
+  align-items: center;
+  height: 3em;
+  line-height: 3em;
+  overflow: visible;
+  transition: .2s;
+  overflow: hidden;
+  &:hover {
+      background-color: rgb(245 245 245);
+  }
+  &.root-node:not(:last-child) {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+  }
+  p {
+    margin: 0;
+    width: 100%;
+    margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    span {
+      opacity: 0.5;
+      float: right;
+      margin-left: auto;
+      font-weight: normal;
+      margin-right: 10px;
+    }
+  }
+}
+
+
+.additional-selection {
+  &::before { content: " "}
+  opacity: 0.75;
+  font-size: 0.75em;
+}
+
+ui-icon {
+  margin-left: 10px;
+}

@@ -20,7 +20,6 @@ export class FormBodyComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('--->', this.fg)
 
   }
 }

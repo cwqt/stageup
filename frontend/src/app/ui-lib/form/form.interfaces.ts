@@ -1,6 +1,7 @@
 import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
 import { Primitive } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
+import { IFlatGraphNode } from "../input/input.component";
 
 
 export interface GroupControlComponentData {
@@ -22,7 +23,7 @@ export interface IUiForm<T> {
 }
 
 export interface IUiFormField {
-  type: "number" | "text" | "password" | "textarea" | "checkbox" | "container";
+  type: "number" | "text" | "password" | "textarea" | "checkbox" | "select" | "container";
   field_name: string;
   variant?: "primary" | "secondary";
   label?: string;
@@ -32,10 +33,17 @@ export interface IUiFormField {
   fields?: IUiFormField[]; // for nested objects
   width?: number; //for containers
 
+  options?: IUiFieldSelectOptions | any;
+
+
   // internal ----------------------
-  parentFg?:FormGroup;
   disabled?: boolean;
   errors?: string[];
+}
+
+export interface IUiFieldSelectOptions {
+  values: Omit<IFlatGraphNode, "level" | "expandable">[];
+  multi: boolean;
 }
 
 export interface IUiFormFieldValidator {

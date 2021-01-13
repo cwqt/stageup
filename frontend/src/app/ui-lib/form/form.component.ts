@@ -19,7 +19,7 @@ import {
   ValidatorFn,
   Validators,
 } from "@angular/forms";
-import { IFormErrorField } from "@eventi/interfaces";
+import { Y } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
 import {
   displayValidationErrors,
@@ -55,43 +55,44 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    console.log(this.cacheable)
+    this.formGroup = Y<any, FormGroup>(
+      (r) => (
+        fields: IUiFormField[]
+      ): FormGroup => {
+        return this.fb.group(
+          fields.reduce((acc, curr) => {
+            if (curr.type == "container") {
+              acc[curr.field_name] = r(curr.fields);
+            } else {
+              acc[curr.field_name] = [
+                { value: curr.default ?? "", disabled: curr.disabled || false },
+                curr.validators?.map((v) => {
+                  switch (v.type) {
+                    case "required":
+                      return Validators.required;
+                    case "email":
+                      return Validators.email;
+                    case "minlength":
+                      return Validators.minLength(v.value as number);
+                    case "maxlength":
+                      return Validators.maxLength(v.value as number);
+                    case "pattern":
+                      return Validators.pattern(v.value as RegExp);
+                    case "custom":
+                      return this.parseCustomValidator.bind(this)(v);
+                  }
+                }),
+              ];
+            }
 
-    const createFormGroup = (fields: IUiFormField[], parentForm?:FormComponent): FormGroup => {
-      return this.fb.group(
-        fields.reduce((acc, curr) => {
-          if (curr.type == "container") {
-            acc[curr.field_name] = createFormGroup(curr.fields);
-          } else {
-            acc[curr.field_name] = [
-              { value: curr.default ?? "", disabled: curr.disabled || false },
-              curr.validators?.map((v) => {
-                switch (v.type) {
-                  case "required":
-                    return Validators.required;
-                  case "email":
-                    return Validators.email;
-                  case "minlength":
-                    return Validators.minLength(v.value as number);
-                  case "maxlength":
-                    return Validators.maxLength(v.value as number);
-                  case "pattern":
-                    return Validators.pattern(v.value as RegExp);
-                  case "custom":
-                    return this.parseCustomValidator.bind(this)(v);
-                }
-              }),
-            ];
-          }
-
-          return acc;
-        }, {})
-      );
-    };
-
-    this.formGroup = createFormGroup(this.form.fields, null);
-    console.log(this.formGroup)
+            return acc;
+          }, {})
+        );
+      }
+    )(this.form.fields);
   }
+
+  generateForm() {}
 
   ngAfterViewInit() {
     this.submissionButton = this.buttons.find((b) => b.type == "submit");
@@ -116,7 +117,7 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   onSubmit() {
-    console.log("SUBMITTING")
+    console.log("SUBMITTING");
 
     this.cacheable.loading = true;
     this.inputs.forEach((i) => i.setDisabledState(true));

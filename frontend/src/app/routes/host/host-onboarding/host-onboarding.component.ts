@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { StepperSelectionEvent, STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
+import { AfterViewInit, Component, ComponentFactoryResolver, Input, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
 import { MatVerticalStepper } from "@angular/material/stepper";
 import {
   IHost,
@@ -7,18 +8,19 @@ import {
   HostOnboardingStep,
   IOnboardingStep,
 } from "@eventi/interfaces";
-import { ICacheable } from "src/app/app.interfaces";
+import { createICacheable, ICacheable } from "src/app/app.interfaces";
 import { HostService } from "src/app/services/host.service";
+import { FormComponent } from "src/app/ui-lib/form/form.component";
 import { IUiForm } from "src/app/ui-lib/form/form.interfaces";
 
-const createICacheable = ():ICacheable<null> => {
-  return {
-    data: null,
-    loading: false,
-    error: "",
-    form_errors: {},
-    meta: {}
-  }
+
+import { Directive, ViewContainerRef } from '@angular/core';
+
+@Directive({
+  selector: '[pageDirective]'
+})
+export class PageDirective {
+  constructor(public viewContainerRef: ViewContainerRef) { }
 }
 
 interface IUiStep<T> {
@@ -31,11 +33,17 @@ interface IUiStep<T> {
   selector: "app-host-onboarding",
   templateUrl: "./host-onboarding.component.html",
   styleUrls: ["./host-onboarding.component.scss"],
+  providers: [{
+    provide: STEPPER_GLOBAL_OPTIONS, useValue: { showError: true }
+  }]
 })
-export class HostOnboardingComponent implements OnInit {
+export class HostOnboardingComponent implements OnInit, AfterViewInit {
   @Input() host: IHost;
   @ViewChild(MatVerticalStepper, { static: false }) stepper:MatVerticalStepper;
+  @ViewChild(PageDirective) pageHost: PageDirective;
 
+  selectedStep:HostOnboardingStep;
+  componentRefreshing:boolean = true;
   onboarding: ICacheable<IHostOnboarding> = {
     data: null,
     loading: false,
@@ -103,55 +111,81 @@ export class HostOnboardingComponent implements OnInit {
         }
       }
     },
-    // [HostOnboardingStep.OwnerDetails]: {
-    //   label: "Owner Details",
-    //   data: null,
-    //   form: {
-    //     fields: [],
-    //     submit: {
-    //       variant: "primary",
-    //       text: "",
-    //       handler: async () => {}
-    //     }
-    //   }
-    // },
-    // [HostOnboardingStep.SocialPresence]: {
-    //   label: "Social Presence",
-    //   data: null,
-    //   form: {
-    //     fields: [],
-    //     submit: {
-    //       variant: "primary",
-    //       text: "",
-    //       handler: async () => {}
-    //     }
-    //   }
-    // },
-    // [HostOnboardingStep.AddMembers]: {
-    //   label: "Add Members",
-    //   data: null,
-    //   form: {
-    //     fields: [],
-    //     submit: {
-    //       variant: "primary",
-    //       text: "",
-    //       handler: async () => {}
-    //     }
-    //   }
-    // },
-    // [HostOnboardingStep.SubscriptionConfiguration]: {
-    //   label: "Subscription Configuration",
-    //   data: null,
-    //   form: {
-    //     fields: [],
-    //     submit: {
-    //       variant: "primary",
-    //       text: "",
-    //       handler: async () => {}
-    //     }
-    //   }
-    // },
+    [HostOnboardingStep.OwnerDetails]: {
+      label: "Owner Details",
+      data: null,
+      form: {
+        fields: [
+          {
+            type: "container",
+            field_name: "owner_info",
+            label: "Owner Information",
+            fields: [
+              { type: "text", field_name: "title", label: "Title" },
+              { type: "text", field_name: "first_name", label: "First name" },
+              { type: "text", field_name: "last_name", label: "Last name" },    
+            ]
+          }
+        ],
+        submit: {
+          variant: "primary",
+          text: "Next",
+          handler: async () => {}
+        }
+      }
+    },
+    [HostOnboardingStep.SocialPresence]: {
+      label: "Social Presence",
+      data: null,
+      form: {
+        fields: [
+          {
+            type: "container",
+            field_name: "social",
+            label: "Social Information",
+            fields: [
+              { type: "text", field_name: "linkedin_url", label: "LinkedIn" },
+              { type: "text", field_name: "facebook_url", label: "Facebook" },
+              { type: "text", field_name: "instagram_url", label: "Instagram" },    
+            ]
+          }
+        ],
+        submit: {
+          variant: "primary",
+          text: "Next",
+          handler: async formData => this.handleStepCompletion(formData, HostOnboardingStep.SocialPresence)
+        }
+      }
+    },
+    [HostOnboardingStep.AddMembers]: {
+      label: "Add Members",
+      data: null,
+      form: {
+        fields: [],
+        submit: {
+          variant: "primary",
+          text: "Next",
+          handler: async () => {}
+        }
+      }
+    },
+    [HostOnboardingStep.SubscriptionConfiguration]: {
+      label: "Subscription Configuration",
+      data: null,
+      form: {
+        fields: [
+          { type: "number", field_name: "tier", label: "Subscription Tier"}
+        ],
+        submit: {
+          variant: "primary",
+          text: "Next",
+          handler: async () => {}
+        }
+      }
+    },
   }
+
+  constructor(private hostService: HostService, private cfr:ComponentFactoryResolver) {}
 
   get steps() {
     return this.onboarding.data.steps;
@@ -172,17 +206,39 @@ export class HostOnboardingComponent implements OnInit {
     return this.steps[HostOnboardingStep.SubscriptionConfiguration];
   }
 
-  constructor(private hostService: HostService) {}
+  switchStep(step:HostOnboardingStep) {
+    this.componentRefreshing = true;
+    this.selectedStep = step;
+    setTimeout(() => { // push to next tick
+      this.componentRefreshing = false;
+    }, 0);
+  }
 
   ngOnInit(): void {
-    this.getOnboarding();
+    this.getOnboarding().then(() => this.switchStep(HostOnboardingStep.ProofOfBusiness));
   }
+
+  ngAfterViewInit() {
+  }
+
+  handleSelectionChange(event:StepperSelectionEvent) {
+    console.log(event)
+    this.switchStep(event.selectedIndex)
+  };
 
   handleStepCompletion(formData:any, step:HostOnboardingStep) {
     console.log(formData, step)
     return this.hostService.updateOnboardingProcessStep(this.host._id, step, formData)
       .then(() => this.stepper.next())
       .finally(() => console.log(this.stepData))
+  }
+
+  handleStepSuccess(step:HostOnboardingStep) {
+
+  }
+
+  handleStepFailure(step:HostOnboardingStep) {
+
   }
 
   async getOnboarding() {
