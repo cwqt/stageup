@@ -59,7 +59,8 @@ export class Host extends BaseEntity implements IHostPrivate {
   async addMember(user:User, permissionLevel:HostPermission, txc:EntityManager) {
     // Create permissions link
     const userHostInfo = new UserHostInfo(user, this, permissionLevel);
-    await txc.save(userHostInfo);
+    user.host = this; // add relationship
+    await Promise.all([txc.save(userHostInfo), txc.save(user)]);
 
     // Add user to host group
     this.members_info.push(userHostInfo);
