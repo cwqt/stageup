@@ -1,11 +1,11 @@
 import Axios from 'axios';
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
-import { IMyself, IUser, IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformancePurchase } from '@eventi/interfaces';
+import { IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformancePurchase, CurrencyCode } from '@eventi/interfaces';
 
 export default {
 // router.post<IPerf>("/performances",Perfs.createPerformance());
-createPerformance: async (data:{name: string}) => {
+createPerformance: async (data:{name: string, description: string, price: number, currency: string}) => {
     const res = await Axios.post(`${env.baseUrl}/performances}`, data,
           env.getOptions()
         );    

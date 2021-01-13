@@ -5,16 +5,18 @@ import { IHost, IPerformance, IUser } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { environment, UserType } from '../../environment';
 import { performance } from 'perf_hooks';
+import { CurrencyCode } from '@eventi/interfaces/lib/Common/Currency.types';
 
 
 describe('As a user, I want to be able to do performance CRUD', async () => {
-  let user: IUser;
   let host: IHost;
   let perf: IPerformance;
+  let client: IUser;
+  
 
-  it('Should create a performance', async () => {
+  it('Should create a performance and get the newly created performance', async () => {
     
-    var client = await Stories.actions.users.createUser(UserType.Client);
+    client = await Stories.actions.users.createUser(UserType.Client);
     await Stories.actions.common.switchActor(UserType.Client)
     await Stories.actions.common.setup();
     host = await Stories.actions.hosts.createHost({
@@ -23,16 +25,30 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
       email_address: 'host@cass.si',
     });
         
-    var perfo = await Stories.actions.performances.createPerformance(name);
-
-    expect(perfo).to.not.be.null;
-
-    expect(perfo._id).to.be.eq(perf._id);
+      perf = await Stories.actions.performances.createPerformance({
+      name: "Shakespeare",
+      description: "To be or not to be.",
+      price: 24,
+      currency: "GBP"
+   
+    });
+    
+    expect(perf).to.not.be.null;
+    expect(perf.name).to.be.eq("Shakespeare");
+    expect(perf.description).to.be.eq("To be or not to be");
+    expect(perf.price).to.be.eq(24);
+    expect(perf.currency).to.be.eq("GBP");    
+    
   });
 
-  it('Should get the newly created performance', async () => {});
+  it('Should purchase a performance', async () => {
+    
 
-  it('Should update a performance & ensure only certain fields can be modified', async () => {});
+
+
+  });
+
+
 
   it('Should delete a performance', async () => {});
 
