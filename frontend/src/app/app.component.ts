@@ -13,10 +13,6 @@ import { FormControl } from "@angular/forms";
 export class AppComponent implements OnInit {
   loading: boolean = true;
 
-  toppings = new FormControl();
-
-  toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
-
   constructor(
     private myselfService:MyselfService,
     private titleService: Title,

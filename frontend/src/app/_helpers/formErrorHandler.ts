@@ -10,8 +10,6 @@ export const handleFormErrors = (
   const o = Object.assign({}, obj);
   o.error = null;
 
-  console.log("--->", error);
-
   // Assign does shallow copy, but we want all props from prev obj
   o.form_errors = Object.keys(o.form_errors).reduce(
     (acc, curr) => ({ ...acc, [curr]: null }),
