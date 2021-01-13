@@ -41,12 +41,6 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
     
   });
 
-  it('Should update a performance', async() => {
-    let perf = await Stories.actions.performances.updatePerformance({
-      
-    }
-
-  })
 
 
   it('Should delete a performance', async () => {
