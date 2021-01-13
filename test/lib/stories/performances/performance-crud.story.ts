@@ -6,17 +6,28 @@ import { Stories } from '../../stories';
 import { environment, UserType } from '../../environment';
 import { performance } from 'perf_hooks';
 
+
 describe('As a user, I want to be able to do performance CRUD', async () => {
   let user: IUser;
   let host: IHost;
   let perf: IPerformance;
 
   it('Should create a performance', async () => {
-    perf = await Stories.actions.performances.createPerformance(name);
+    
+    var client = await Stories.actions.users.createUser(UserType.Client);
+    await Stories.actions.common.switchActor(UserType.Client)
+    await Stories.actions.common.setup();
+    host = await Stories.actions.hosts.createHost({
+      username: 'somecoolhost',
+      name: 'Some Cool Host',
+      email_address: 'host@cass.si',
+    });
+        
+    var perfo = await Stories.actions.performances.createPerformance(name);
 
-    expect(perf).to.not.be.null;
+    expect(perfo).to.not.be.null;
 
-    expect(perf).to.be.eq(environment.userCreationData[UserType.Client].username);
+    expect(perfo._id).to.be.eq(perf._id);
   });
 
   it('Should get the newly created performance', async () => {});
