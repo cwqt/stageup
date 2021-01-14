@@ -41,13 +41,24 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
     
   });
   it('Should update a performance', async () => {
-      let perf = await Stories.actions.performances.updatePerformance({
-        
-        name: "Shakespeare",
-        description: "To be or not to be.",
-        price: 24,
+    let perf = await Stories.actions.performances.createPerformance({
+      name: "Shakespeare",
+      description: "To be or not to be.",
+      price: 24,
+      currency: CurrencyCode.GBP
 
-      })
+    })
+
+    let updatePerf = await Stories.actions.performances.updatePerformance(perf._id, {
+      name: "Othello",
+      description: "For she had eyes and chose me.",
+      price: 24,
+
+      });
+
+      expect (updatePerf.name).to.be.eq("Othello");
+      expect (updatePerf.description).to.be.eq("For she had eyes and chose me.");
+      expect (updatePerf.price).to.be.eq(24);
   
     });
 
