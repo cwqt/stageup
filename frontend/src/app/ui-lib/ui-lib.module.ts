@@ -4,6 +4,7 @@ import { AngularMaterialModule } from "../angular-material.module";
 import { ClickOutsideModule } from "ng-click-outside";
 import { ReactiveFormsModule, FormsModule, NgForm } from "@angular/forms";
 import { NgxMaskModule } from 'ngx-mask'
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { ButtonComponent } from "./button/button.component";
 import { IconComponent } from "./icon/icon.component";
@@ -19,6 +20,7 @@ import { FormComponent } from "./form/form.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormBodyComponent } from "./form/form-body/form-body.component";
 import { HrComponent } from './hr/hr.component';
+
 
 const allComponents = [
   ButtonComponent,
@@ -48,7 +50,7 @@ const allComponents = [
     FormsModule,
     HttpClientModule,
     NgxMaskModule.forRoot(),
-
+    NgxMatSelectSearchModule
   ],
   exports: allComponents,
   providers: [],

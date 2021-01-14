@@ -44,7 +44,7 @@ import { BillingSettingsComponent } from "./routes/settings/billing-settings/bil
 import { AccountSettingsComponent } from "./routes/settings/account-settings/account-settings.component";
 import { HostSettingsComponent } from "./routes/settings/host-settings/host-settings.component";
 import { CreateHostComponent } from "./routes/settings/host-settings/create-host/create-host.component";
-import { HostOnboardingComponent, PageDirective } from "./routes/host/host-onboarding/host-onboarding.component";
+import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
 import { SearchComponent } from "./routes/search/search.component";
 
@@ -84,7 +84,6 @@ export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
     HostOnboardingComponent,
     AdminPanelComponent,
     SearchComponent,
-    PageDirective
   ],
   imports: [
     AngularMaterialModule,

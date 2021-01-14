@@ -24,7 +24,10 @@
         [disabled]="disabled"
         [placeholder]="placeholder"
         [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : (type == 'phone' ? 'tel' : type)"
-        [mask]="type == 'phone' ? '(000) 000-0000' : ''"
+        [showMaskTyped]="(value !== '' || focused) ? true : false"
+        [mask]="options?.mask ? options.mask.value : (type == 'phone' ? '(0000) 000-000' : '')"
+        [suffix]="(value !== '' || focused) ? (options?.mask ? options.mask.suffix : '') : ''"
+        [prefix]="(value !== '' || focused) ? (options?.mask ? options.mask.prefix : (type == 'phone' ? '+44' : '')) : ''"
         [required]="required"
         tabindex="0"
         autocomplete="off"
@@ -82,7 +85,6 @@
     class="ui-input"
     appearance="fill"
     [class.errored]="showError"
-    [class.hasHint]="hint"
     [class.dark]="kind == 'secondary'"
     [class.small]="!label"
     [class.checkbox]="type == 'checkbox'">
@@ -92,17 +94,52 @@
     <input matInput placeholder="Input" style="display: none" >
   </mat-form-field>
 
+  <!-- Select with search -->
+  <mat-form-field *ngIf="type == 'select'" appearance="fill">
+    <mat-label>{{ label }}</mat-label>
+    <mat-select #singleSelect
+      (blur)="onTouched()"
+      (focus)="onFocus()"
+      [(ngModel)]="value"
+      disableOptionCentering>
+      <mat-option *ngIf="options.search">
+        <ngx-mat-select-search ngModel
+        (ngModelChange)="filterSelectionItems($event)"
+          placeholderLabel="Search"
+          noEntriesFoundLabel="No results"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.key">
+        {{ item.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
-  <mat-form-field *ngIf="type == 'select'">
+  <!-- Hint message -->
+  <span *ngIf="hint" class="form-field__hint">{{ hint }}</span>
+
+  <!-- Form errors -->
+  <div *ngIf="showError" class="form-field__errors">
+    <span *ngFor="let error of errors">{{ error }}</span>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- leave this for later -->
+<ng-container *ngIf="false">
+  <mat-form-field *ngIf="type == 'select'" appearance="fill" >
     <mat-label>{{ label || "Select option"}}</mat-label>
-    <mat-select #selector id="special"
+    <mat-select #selector
         [disabled]="disabled"
         [required]="required"
         [value]="!checklistSelection.isEmpty() ? 'always_exist' : null">
         <!-- show selection text - name (+n others) -->
         <mat-select-trigger>
             <ng-container *ngIf="!checklistSelection.isEmpty()">
-                <span>{{ checklistSelection.selected[0].name }}</span>
+                <span>{{ checklistSelection.selected[0].value }}</span>
                 <span [ngPlural]="checklistSelection.selected.length - 1" class="additional-selection">
                     <ng-template ngPluralCase="=0"></ng-template>
                     <ng-template ngPluralCase="=1">(+1 other)</ng-template>
@@ -110,10 +147,10 @@
                 </span>    
             </ng-container>
         </mat-select-trigger>
-
+  
         <!-- make the select actually open -->
         <mat-option style="display: none;" value="always_exist"></mat-option>
-
+  
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
             <mat-tree-node
                 (click)="leafNodeItemSelectionToggle(node)"
@@ -126,9 +163,9 @@
                     [checked]="checklistSelection.isSelected(node)"
                     (change)="leafNodeItemSelectionToggle(node)">
                 </mat-checkbox>
-                <p>{{node.name}}<span *ngIf="showId"> {{node._id.substr(-6)}}</span></p>
+                <p>{{ node.value }}</p>
             </mat-tree-node>
-
+  
             <mat-tree-node
                 (click)="rootNodeSelectionToggle(node)"
                 class="root-node"
@@ -147,17 +184,9 @@
                     [indeterminate]="descendantsPartiallySelected(node)"
                     (change)="rootNodeSelectionToggle(node)">
                 </mat-checkbox>
-                <p>{{node.name}}<span *ngIf="showId"> {{node._id.substr(-6)}}</span></p>
+                <p>{{ node.value }}</p>
             </mat-tree-node>
         </mat-tree>
     </mat-select>
   </mat-form-field>
-
-  <!-- Hint message -->
-  <span *ngIf="hint && !showError" class="form-field__hint">{{ hint }}</span>
-
-  <!-- Form errors -->
-  <div *ngIf="showError" class="form-field__errors" [class.shiftMore]="hint">
-    <span *ngFor="let error of errors">{{ error }}</span>
-  </div>
-</div>
+</ng-container>

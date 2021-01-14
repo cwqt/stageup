@@ -121,7 +121,7 @@ export enum CurrencyCode {
 }
 
 //https://gist.github.com/KingDarBoja/cf664cc395c4d95e645fd1f720c13746
-export enum ISO3166Alpha3Code {
+export enum ISOCountryCode {
   AFG = 'Afghanistan',
   ALA = 'Aland Islands',
   ALB = 'Albania',

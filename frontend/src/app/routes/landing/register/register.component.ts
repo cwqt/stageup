@@ -99,12 +99,12 @@ export class RegisterComponent implements OnInit {
   }
 
   handleRegisterSuccess(user: IUser) {
-    // const { email_address, password } = this.form.formGroup.value; 
+    const { email_address, password } = this.form.formGroup.value; 
     // get user, host & host info on login
-    // this.authService.login({ email_address, password }).then(() => {
-    //   this.myselfService.getMyself().then(() => {
-    //     this.appService.navigateTo("/");
-    //   });
-    // });
+    this.authService.login({ email_address, password }).then(() => {
+      this.myselfService.getMyself().then(() => {
+        this.appService.navigateTo("/");
+      });
+    });
   }
 }

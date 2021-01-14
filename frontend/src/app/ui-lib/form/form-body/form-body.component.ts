@@ -19,7 +19,6 @@ export class FormBodyComponent implements OnInit {
   }
 
   ngOnInit() {
-
   }
 
   fieldIsRequired(field:IUiFormField):boolean {

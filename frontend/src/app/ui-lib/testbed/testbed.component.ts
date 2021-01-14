@@ -50,18 +50,17 @@ export class TestbedComponent implements OnInit {
               multi: true,
               values: [
                 {
-                  _id: 1,
-                  name: "hello",
+                  key: 1,
+                  value: "hello",
                   icon: "person",
                 },
                 {
-                  _id: 2,
-                  name: "world",
-                  icon: "person",
+                  key: "wow",
+                  value: "world",
                   children: [
                     {
-                      _id: 3,
-                      name: "world",
+                      key: 3,
+                      value: "world",
                       icon: "person",
                     }    
                   ]

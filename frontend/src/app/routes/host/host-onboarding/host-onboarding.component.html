@@ -2,34 +2,35 @@
 <mat-divider></mat-divider>
 <br>
 
-<!-- {{ selectedStep }} -->
-
 <div class="flex h-full">
   <div class="flex-initial rounded shadow overflow-hidden mr-6">
     <mat-vertical-stepper #stepper *ngIf="onboarding.data" class="h-full" (selectionChange)="handleSelectionChange($event)">
-      <mat-step *ngFor="let step of stepUiMap | keyvalue" [label]="step.value.label">
+      <mat-step *ngFor="let step of stepUiMap | keyvalue" [label]="step.value['label']">
         <br /> 
       </mat-step>
     
-      <mat-step label="Submit for Verification">
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.reset()">Reset</button>
-        </div>
-      </mat-step>
+      <mat-step label="Review & Submit"></mat-step>
     </mat-vertical-stepper>
   </div>
 
   <div class="flex-grow md:max-w-2xl">
-    <mat-spinner *ngIf="componentRefreshing"></mat-spinner>
-    <ng-container *ngIf="!componentRefreshing">
-      <ui-form
-        (onSuccess)="handleStepSuccess(selectedStep.key)"
-        (onFailure)="handleStepFailure(selectedStep.key)"
-        [form]="stepUiMap[selectedStep].form"
-        [cacheable]="stepData[selectedStep]">
-      </ui-form>
-    </ng-container>        
+    <ng-container *ngIf="!onReviewStep">
+      <mat-spinner *ngIf="componentRefreshing"></mat-spinner>
+      <ng-container *ngIf="!componentRefreshing">
+        <ui-form
+          (onSuccess)="handleStepSuccess(selectedStep)"
+          (onFailure)="handleStepFailure(selectedStep)"
+          [form]="stepUiMap[selectedStep].form"
+          [cacheable]="stepData[selectedStep]">
+        </ui-form>
+      </ng-container>  
+    </ng-container>
+
+
+    <ng-container *ngIf="onReviewStep">
+      <h2>Review & submit for verification</h2>
+      <p>Please ensure all steps are valid to the best of your knowledge before submitting.</p>
+    </ng-container>
   </div>
 </div>
   

@@ -1,7 +1,7 @@
 import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
 import { Primitive } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
-import { IFlatGraphNode } from "../input/input.component";
+import { IGraphNode } from "../input/input.component";
 
 /**
  * @param submit, T => submit handler return type
@@ -12,26 +12,37 @@ export interface IUiForm<T> {
 }
 
 export interface IUiFormField {
-  type: "number" | "text" | "password" | "textarea" | "checkbox" | "select" | "phone" | "container";
+  type: "number" | "text" | "password" | "textarea" | "checkbox" | "select" | "tree" | "phone" | "container";
   field_name: string;
   variant?: "primary" | "secondary";
   label?: string;
   initial?: Primitive;
+  placeholder?:string;
   validators?: IUiFormFieldValidator[];
   hint?: string;
   fields?: IUiFormField[]; // for nested objects
   width?: number; //for containers
 
-  options?: IUiFieldSelectOptions | any;
+  options?: IUiFieldSelectOptions | IUiFieldTextOptions | any;
 
   // internal ----------------------
   disabled?: boolean;
   errors?: string[];
 }
 
+export interface IMaskOptions {
+  prefix?: string;
+  suffix?: string;
+  value: string;
+}
+
+export interface IUiFieldTextOptions {
+  mask?:IMaskOptions;
+}
 export interface IUiFieldSelectOptions {
-  values: Omit<IFlatGraphNode, "level" | "expandable">[];
+  values: Omit<IGraphNode, "level" | "expandable" | "icon">[];
   multi: boolean;
+  search: boolean;
 }
 
 export interface IUiFormFieldValidator {

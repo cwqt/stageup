@@ -36,6 +36,8 @@ export class AppComponent implements OnInit {
       this.authService.logout();
     }
 
-    this.loading = false;
+    setTimeout(() => {
+      this.loading = false;
+    }, 1000);
   }
 }

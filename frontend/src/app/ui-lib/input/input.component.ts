@@ -8,10 +8,14 @@ import {
   EventEmitter,
   OnInit,
   AfterViewInit,
+  OnDestroy,
 } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
 import { Primitive } from "@eventi/interfaces";
-import { IUiFormFieldValidator } from "../form/form.interfaces";
+import {
+  IUiFieldSelectOptions,
+  IUiFormFieldValidator,
+} from "../form/form.interfaces";
 import { ThemeKind } from "../ui-lib.interfaces";
 import { IUiFormField } from "../form/form.interfaces";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -21,24 +25,27 @@ import {
 } from "@angular/material/tree";
 import { FlatTreeControl } from "@angular/cdk/tree";
 import { MatSelect } from "@angular/material/select";
-
+import { ReplaySubject, Subject } from "rxjs";
+import { } from "@angular/material/autocomplete";
+import { take, takeUntil } from "rxjs/operators";
 
 export class IFlatGraphNode {
-  _id: number;
-  name: string;
-  level: number;
-  expandable: boolean;
-  icon: string;
+  key: number | string;
+  value: Primitive;
+  icon?: string;
+
+  level?: number;
+  expandable?: boolean;
 }
 
 export interface IGraphNode {
-  name: string;
-  _id: number;
+  key: number | string;
+  value: Primitive;
+  icon?: string;
   children?: IGraphNode[];
 
   level: number;
   expandable: boolean;
-  icon: string;
 }
 
 //https://material-ui.com/components/text-fields/
@@ -47,19 +54,19 @@ export interface IGraphNode {
   templateUrl: "./input.component.html",
   styleUrls: ["./input.component.scss"],
 })
-export class InputComponent implements ControlValueAccessor, OnInit {
-  @ViewChild("selector") selector?: MatSelect;
+export class InputComponent
+  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
+  @Output() selectionChange: EventEmitter<IGraphNode[]> = new EventEmitter();
 
+  // Interface inputs
   @Input() kind?: ThemeKind = ThemeKind.Accent;
   @Input() type: IUiFormField["type"];
   @Input() label?: string = "";
   @Input() placeholder?: string = "";
-  @Input() initial?:Primitive = "";
+  @Input() initial?: Primitive = "";
   @Input() hint?: string = "";
   @Input() disabled: boolean = false;
   @Input() icon?: string;
-
-  @Output() selectionChange: EventEmitter<IGraphNode[]> = new EventEmitter();
 
   @Input() options?: IUiFormField["options"];
 
@@ -79,32 +86,14 @@ export class InputComponent implements ControlValueAccessor, OnInit {
   }
 
   ngOnInit(): void {
-    if (this.type == "select") {
-      this.treeFlattener = new MatTreeFlattener(
-        this.transformer,
-        this.getLevel,
-        this.isExpandable,
-        this.getChildren
-      );
-      this.treeControl = new FlatTreeControl<IFlatGraphNode>(
-        this.getLevel,
-        this.isExpandable
-      );
-      this.dataSource = new MatTreeFlatDataSource(
-        this.treeControl,
-        this.treeFlattener
-      );
-
-      this.checklistSelection = new SelectionModel<IFlatGraphNode>(
-        this.options.multi
-      );
-      this.dataSource.data = this.options.values;
-      this.noNestedNodes = this.options.values.every(
-        (x) => x.children == null || x.children?.length == 0
-      );
-    }
+    if (this.type == "select") this.initialiseSelection();
+    if (this.type == "tree") this.initialiseTree();
 
     this.placeholder = this.placeholder || "";
+  }
+
+  ngAfterViewInit() {
+    if (this.type == "select") this.setInitialSelectValue();
   }
 
   public get invalid(): boolean {
@@ -151,11 +140,11 @@ export class InputComponent implements ControlValueAccessor, OnInit {
   }
 
   // Form control configurations
-  private _value: Primitive;
-  public get value(): Primitive {
+  private _value: any;
+  public get value(): any {
     return this._value;
   }
-  public set value(v: Primitive) {
+  public set value(v: any) {
     if (v !== this._value) {
       this._value = v;
       this.onChange(v);
@@ -199,7 +188,52 @@ export class InputComponent implements ControlValueAccessor, OnInit {
     if (event) event.stopPropagation();
   }
 
-  // Select / tree (w/ support for nested items) ------------------------------------------------------------------------
+  // Select ---------------------------------------------------------------------------------------------------
+  @ViewChild("singleSelect", { static: false }) singleSelect: MatSelect;
+  public filteredSelectionItems: ReplaySubject<
+    IGraphNode[]
+  > = new ReplaySubject<IGraphNode[]>(1);
+  protected _onDestroy = new Subject<void>();
+
+  initialiseSelection() {
+    // load the initial items list
+    this.filteredSelectionItems.next(this.options.values.slice());
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  protected setInitialSelectValue() {
+    this.filteredSelectionItems
+      .pipe(take(1), takeUntil(this._onDestroy))
+      .subscribe(() => {
+        // setting the compareWith property to a comparison function
+        // triggers initializing the selection according to the initial value of
+        // the form control (i.e. _initializeSelection())
+        // this needs to be done after the filteredSelectionItems are loaded initially
+        // and after the mat-option elements are available
+        this.singleSelect.compareWith = (a: IGraphNode, b: IGraphNode) =>
+          a && b && a === b;
+      });
+  }
+
+  protected filterSelectionItems(event: string) {
+    if (!this.options.values) return;
+    if (!event)
+      return this.filteredSelectionItems.next(this.options.values.slice());
+
+    // Filter items by value
+    this.filteredSelectionItems.next(
+      this.options.values.filter(
+        (node) => node.value.toLowerCase().indexOf(event.toLowerCase()) > -1
+      )
+    );
+  }
+
+  // Tree (w/ support for nested items) ------------------------------------------------------------------------
+  @ViewChild("selector") selector?: MatSelect;
   noNestedNodes: boolean = false;
   flatNodeMap = new Map<IFlatGraphNode, IGraphNode>();
   nestedNodeMap = new Map<IGraphNode, IFlatGraphNode>();
@@ -207,6 +241,32 @@ export class InputComponent implements ControlValueAccessor, OnInit {
   treeFlattener: MatTreeFlattener<IGraphNode, IFlatGraphNode>;
   dataSource: MatTreeFlatDataSource<IFlatGraphNode, IFlatGraphNode>;
   checklistSelection: SelectionModel<IFlatGraphNode>;
+
+  initialiseTree() {
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer,
+      this.getLevel,
+      this.isExpandable,
+      this.getChildren
+    );
+    this.treeControl = new FlatTreeControl<IFlatGraphNode>(
+      this.getLevel,
+      this.isExpandable
+    );
+    this.dataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      this.treeFlattener
+    );
+
+    this.checklistSelection = new SelectionModel<IFlatGraphNode>(
+      this.options.multi
+    );
+
+    this.dataSource.data = (<IUiFieldSelectOptions>this.options).values;
+    this.noNestedNodes = this.options.values.every(
+      (x) => x.children == null || x.children?.length == 0
+    );
+  }
 
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: IFlatGraphNode): boolean {
@@ -231,14 +291,14 @@ export class InputComponent implements ControlValueAccessor, OnInit {
   untoggleAll(node) {
     let parents = [];
     let parent = this.getParentNode(node);
-    if (parent) parents.push(parent._id);
+    if (parent) parents.push(parent.key);
     while (parent) {
       parent = this.getParentNode(parent);
-      if (parent) parents.push(parent._id);
+      if (parent) parents.push(parent.key);
     }
 
     this.treeControl.dataNodes.forEach((n) => {
-      if (!parents.includes(n._id) && n._id !== node._id) {
+      if (!parents.includes(n.key) && n.key !== node.key) {
         this.treeControl.collapse(n);
       }
     });
@@ -328,11 +388,12 @@ export class InputComponent implements ControlValueAccessor, OnInit {
   transformer = (node: IGraphNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
     const flatNode =
-      existingNode && existingNode._id === node._id
+      existingNode && existingNode.key === node.key
         ? existingNode
         : ({} as IFlatGraphNode);
-    flatNode._id = node._id;
-    flatNode.name = node.name;
+    flatNode.key = node.key;
+    flatNode.value = node.value;
+
     flatNode.level = level;
     flatNode.expandable = !!node.children?.length;
     flatNode.icon = (<any>node).icon;

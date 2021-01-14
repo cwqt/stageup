@@ -3,7 +3,7 @@
     "customizeUI.titleBar": "frameless",
     "spellright.language": ["en"],
     "spellright.documentTypes": ["markdown", "latex"],
-    "explorer.autoReveal": false,
+    "explorer.autoReveal": true,
     "prettier.printWidth": 120,
     "prettier.singleQuote": true,
     "prettier.useTabs": false,

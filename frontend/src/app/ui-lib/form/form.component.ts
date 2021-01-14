@@ -118,6 +118,22 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
     this.cacheable.loading = true;
     this.inputs.forEach((i) => i.setDisabledState(true));
     this.submissionButton.loading = true;
+
+    // Save the value into the IUiForm by setting each fields 'initial' to the sent value
+    // for e.g. when in the host onboarding switching back & forth we want to maintain state
+    Y(r => (x:[IUiFormField[], FormGroup]) => {
+      let [fields, fg] = x;
+      fields.forEach(f => {
+        if(fg.controls[f.field_name]) {
+          if((fg.controls[f.field_name] as FormGroup).controls) {
+            r([f.fields, (fg.controls[f.field_name] as FormGroup)])
+          } else {
+            f.initial = fg.controls[f.field_name].value;
+          }
+        }
+      })
+    })([this.form.fields, this.formGroup]);
+
     this.form.submit
       .handler(this.formGroup.value)
       .then((v) => this.onSuccess.emit(v))
