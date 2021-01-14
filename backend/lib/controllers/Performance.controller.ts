@@ -29,7 +29,7 @@ export default class PerformanceController extends BaseController {
           name: v => Validators.Fields.isString(v),
         }),
       ],
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async (req: Request): Promise<IPerformance> => {
         const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
 
@@ -132,6 +132,22 @@ export default class PerformanceController extends BaseController {
         delete performanceHostInfo.signing_key;
 
         return performanceHostInfo as IPerformanceHostInfo;
+      },
+    };
+  }
+
+  updatePerformance(): IControllerEndpoint<IPerformance> {
+    return {
+      validators: [],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async (req: Request): Promise<IPerformance> => {
+        let p = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
+        p = await p.update({ 
+          name: req.body.name,
+          price: req.body.price,
+          description: req.body.description
+         });
+        return p.toFull();
       },
     };
   }

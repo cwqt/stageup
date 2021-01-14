@@ -37,6 +37,14 @@ readPerformanceHostInfo: async (performance: IPerformance): Promise<IPerformance
     );
     return res.data;
 },
+// router.put<IPerf>("/performance/:pid",Perfs.updatePerformance());
+updatePerformance: async (performance: IPerformance, data:{name: string, description: string, price: number}): Promise<IPerformance> => {
+    const res = await Axios.put (`${env.baseUrl}/performance/${performance._id}`,
+    env.getOptions()
+    );
+    return res.data;
+},
+    
 
 // router.post<void>("/performances/:pid/purchase",Perfs.purchase());
 purchase: async( performance: IPerformancePurchase): Promise<IPerformancePurchase> => {

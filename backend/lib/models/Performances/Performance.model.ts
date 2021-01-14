@@ -80,4 +80,12 @@ export class Performance extends BaseEntity implements IPerformance {
       currency: this.currency,
     }
   }
+
+  async update(updates:Partial<Pick<IPerformance, "name" | "description" | "price">>):Promise<Performance> {
+    Object.entries(updates).forEach(([k,v]:[string,any]) => {
+      (<any>this)[k] = v ?? (<any>this)[k];
+    })  
+
+    return await this.save();
+  }
 }

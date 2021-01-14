@@ -40,9 +40,18 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
     expect(perf.currency).to.be.eq(CurrencyCode.GBP);    
     
   });
+  it('Should update a performance', async () => {
+      let perf = await Stories.actions.performances.updatePerformance({
+        
+        name: "Shakespeare",
+        description: "To be or not to be.",
+        price: 24,
 
+      })
+  
+    });
 
-
+  
   it('Should delete a performance', async () => {
     let perf = await Stories.actions.performances.createPerformance({
       name: "Shakespeare",
@@ -52,7 +61,7 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
    
     });
     
-      let delPerf = await Stories.actions.performances.deletePerformance(perf._id);
+    let delPerf = await Stories.actions.performances.deletePerformance(perf._id);
       expect (delPerf._id).to.not.exist;    
 
   });
