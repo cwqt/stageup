@@ -29,7 +29,7 @@ describe('As a user, I want to be able to do purchase performance', async () => 
       name: "Shakespeare",
       description: "To be or not to be.",
       price: 24,
-      currency: "GBP"
+      currency: CurrencyCode.GBP
    
     });
 

@@ -29,7 +29,7 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
       name: "Shakespeare",
       description: "To be or not to be.",
       price: 24,
-      currency: 'GBP'
+      currency: CurrencyCode.GBP
    
     });
     
@@ -37,7 +37,7 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
     expect(perf.name).to.be.eq("Shakespeare");
     expect(perf.description).to.be.eq("To be or not to be");
     expect(perf.price).to.be.eq(24);
-    expect(perf.currency).to.be.eq("GBP");    
+    expect(perf.currency).to.be.eq(CurrencyCode.GBP);    
     
   });
 
@@ -48,7 +48,7 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
       name: "Shakespeare",
       description: "To be or not to be.",
       price: 24,
-      currency: "GBP"
+      currency: CurrencyCode.GBP
    
     });
     
