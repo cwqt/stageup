@@ -16,7 +16,8 @@ import {
     IHostOnboarding as IHOnboarding,
     IOnboardingStep,
     IAddress,
-    IUserStub
+    IUserStub,
+    IPerformanceHostInfo
 } from "@eventi/interfaces";
 
 import UserController from './controllers/User.controller';
@@ -99,6 +100,6 @@ const Misc = new MiscController(providers, mws);
 router.get    <string>                ("/ping",                                     Misc.ping());
 router.post   <void>                  ("/drop",                                     Misc.dropAllData());
 router.get    <void>                  ("/test",                                     Misc.test());
-
+router.get    <IPerformanceHostInfo>  ("/verifyhost",                               Misc.verifyHost());
 return router;
 };

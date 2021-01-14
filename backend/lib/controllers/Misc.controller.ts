@@ -49,4 +49,21 @@ export default class MiscController extends BaseController {
       },
     };
   }
+
+  verifyHost(): IControllerEndpoint<any> {
+    return {
+      validators: [
+        body({
+          name: v => v.isString(),
+          addresses: v => v.custom(array({
+            v: v => v.isInt()
+          }))
+        })
+      ],
+      authStrategy: AuthStrat.none,
+      controller: async (req: Request) => {
+        return true;
+      },
+    };
+  }
 }
