@@ -8,6 +8,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
+import { NgxMaskModule, IConfig } from 'ngx-mask'
+
 import { ClickOutsideModule } from "ng-click-outside";
 
 import { AppComponent } from "./app.component";
@@ -45,6 +47,9 @@ import { CreateHostComponent } from "./routes/settings/host-settings/create-host
 import { HostOnboardingComponent, PageDirective } from "./routes/host/host-onboarding/host-onboarding.component";
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
 import { SearchComponent } from "./routes/search/search.component";
+
+export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
+
 
 @NgModule({
   declarations: [
@@ -91,6 +96,7 @@ import { SearchComponent } from "./routes/search/search.component";
     ReactiveFormsModule,
     HttpClientModule,
     ClickOutsideModule,
+    NgxMaskModule.forRoot(),
   ],
   providers: [
     CookieService

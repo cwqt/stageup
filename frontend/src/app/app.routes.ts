@@ -1,8 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { LoggedInGuard } from "./_helpers";
-
 import { ProfileComponent } from "./routes/profile/profile.component";
 
 import { VerifiedComponent } from "./components/pages/verified/verified.component";

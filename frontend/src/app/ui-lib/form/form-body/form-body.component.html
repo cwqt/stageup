@@ -11,10 +11,12 @@
       [hint]="field.hint"
       [kind]="field.variant"
       [options]="field.options"
-      [placeholder]="field.default"
+      [placeholder]="field.placeholder"
+      [initial]="field.initial"
+      [required]="fieldIsRequired(field)"
       [validatorFunctions]="field.validators"
       [formControlName]="field.field_name">
-      {{field.field_name}}
+      {{ field.field_name }}
     </ui-input>
   </ng-container>
 </form>

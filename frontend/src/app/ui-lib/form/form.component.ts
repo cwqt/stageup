@@ -65,7 +65,7 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
               acc[curr.field_name] = r(curr.fields);
             } else {
               acc[curr.field_name] = [
-                { value: curr.default ?? "", disabled: curr.disabled || false },
+                { value: curr.initial ?? "", disabled: curr.disabled || false },
                 curr.validators?.map((v) => {
                   switch (v.type) {
                     case "required":
@@ -92,8 +92,6 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
     )(this.form.fields);
   }
 
-  generateForm() {}
-
   ngAfterViewInit() {
     this.submissionButton = this.buttons.find((b) => b.type == "submit");
     if (!this.submissionButton)
@@ -117,8 +115,6 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   onSubmit() {
-    console.log("SUBMITTING");
-
     this.cacheable.loading = true;
     this.inputs.forEach((i) => i.setDisabledState(true));
     this.submissionButton.loading = true;

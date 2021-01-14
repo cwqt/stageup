@@ -78,7 +78,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
             type: "number",
             field_name: "hmrc_company_number",
             label:"HMRC Company Number",
-            default: 12341234,
+            initial: 12341234,
             validators: [
               { type: "minlength", value: 8, message: v => "Must be 8 characters" },
               { type: "maxlength", value: 8, message: v => "Must be 8 characters" },
@@ -86,7 +86,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
           },
           {
             type: "text",
-            default: 1234,
+            initial: 1234,
             field_name: "business_contact_number",
             label:"Business Contact Number",
             validators: [{type: "required"}]
@@ -96,11 +96,11 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
             field_name: "business_address",
             label: "Business Address",
             fields: [          
-              { default:"123", type: "text",   label: "City",          field_name: "city", validators: [{type: "required"}]},
-              { default:123, type: "text",   label: "Country",       field_name: "iso_country_code", validators: [{type: "required"}]},
-              { default:1111, type: "text",   label: "Postcode",      field_name: "postcode", validators: [{type: "required"}]},
-              { default:123, type: "number", label: "Street Number", field_name: "street_number", validators: [{type: "required"}]},
-              { default:444, type: "text",   label: "Street Name",   field_name: "street_name", validators: [{type: "required"}]},
+              { initial: "123", type: "text",   label: "City",          field_name: "city", validators: [{type: "required"}]},
+              { initial: 123, type: "text",   label: "Country",       field_name: "iso_country_code", validators: [{type: "required"}]},
+              { initial: 1111, type: "text",   label: "Postcode",      field_name: "postcode", validators: [{type: "required"}]},
+              { initial: 123, type: "number", label: "Street Number", field_name: "street_number", validators: [{type: "required"}]},
+              { initial: 444, type: "text",   label: "Street Name",   field_name: "street_name", validators: [{type: "required"}]},
             ],
           },
         ],

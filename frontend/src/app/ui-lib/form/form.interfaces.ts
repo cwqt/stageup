@@ -3,17 +3,6 @@ import { Primitive } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
 import { IFlatGraphNode } from "../input/input.component";
 
-
-export interface GroupControlComponentData {
-  conjunctor?: null;
-  conditions: ConditionFormComponentData[];
-  groups: GroupControlComponentData[];
-}
-
-export interface ConditionFormComponentData {
-  variable: any;
-  field?: IUiFormField;
-}
 /**
  * @param submit, T => submit handler return type
  */
@@ -23,18 +12,17 @@ export interface IUiForm<T> {
 }
 
 export interface IUiFormField {
-  type: "number" | "text" | "password" | "textarea" | "checkbox" | "select" | "container";
+  type: "number" | "text" | "password" | "textarea" | "checkbox" | "select" | "phone" | "container";
   field_name: string;
   variant?: "primary" | "secondary";
   label?: string;
-  default?: Primitive;
+  initial?: Primitive;
   validators?: IUiFormFieldValidator[];
   hint?: string;
   fields?: IUiFormField[]; // for nested objects
   width?: number; //for containers
 
   options?: IUiFieldSelectOptions | any;
-
 
   // internal ----------------------
   disabled?: boolean;

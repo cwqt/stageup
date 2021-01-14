@@ -6,16 +6,22 @@ import {
   ViewChild,
   Output,
   EventEmitter,
+  OnInit,
+  AfterViewInit,
 } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
-import { ErrCode } from "@eventi/interfaces";
+import { Primitive } from "@eventi/interfaces";
 import { IUiFormFieldValidator } from "../form/form.interfaces";
 import { ThemeKind } from "../ui-lib.interfaces";
-import { IUiFormField } from '../form/form.interfaces';
+import { IUiFormField } from "../form/form.interfaces";
 import { SelectionModel } from "@angular/cdk/collections";
-import { MatTreeFlatDataSource, MatTreeFlattener } from "@angular/material/tree";
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener,
+} from "@angular/material/tree";
 import { FlatTreeControl } from "@angular/cdk/tree";
 import { MatSelect } from "@angular/material/select";
+
 
 export class IFlatGraphNode {
   _id: number;
@@ -30,11 +36,10 @@ export interface IGraphNode {
   _id: number;
   children?: IGraphNode[];
 
-  level:number;
-  expandable:boolean;
-  icon:string;
+  level: number;
+  expandable: boolean;
+  icon: string;
 }
-
 
 //https://material-ui.com/components/text-fields/
 @Component({
@@ -42,28 +47,25 @@ export interface IGraphNode {
   templateUrl: "./input.component.html",
   styleUrls: ["./input.component.scss"],
 })
-export class InputComponent implements ControlValueAccessor {
-  @ViewChild('selector') selector:MatSelect;
-
-
+export class InputComponent implements ControlValueAccessor, OnInit {
+  @ViewChild("selector") selector?: MatSelect;
 
   @Input() kind?: ThemeKind = ThemeKind.Accent;
   @Input() type: IUiFormField["type"];
   @Input() label?: string = "";
   @Input() placeholder?: string = "";
+  @Input() initial?:Primitive = "";
   @Input() hint?: string = "";
   @Input() disabled: boolean = false;
   @Input() icon?: string;
 
   @Output() selectionChange: EventEmitter<IGraphNode[]> = new EventEmitter();
 
-
-
   @Input() options?: IUiFormField["options"];
 
-  @Input() required: boolean = true;
-  @Input() maxlength?: number;
-  @Input() minlength?: number;
+  @Input() required: boolean = false;
+  @Input() maxlength?: number = null;
+  @Input() minlength?: number = null;
 
   @Input() formControlName?: string;
   @Input() validatorFunctions: IUiFormFieldValidator[];
@@ -77,8 +79,7 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   ngOnInit(): void {
-    if(this.type == "select") {
-
+    if (this.type == "select") {
       this.treeFlattener = new MatTreeFlattener(
         this.transformer,
         this.getLevel,
@@ -94,9 +95,13 @@ export class InputComponent implements ControlValueAccessor {
         this.treeFlattener
       );
 
-      this.checklistSelection = new SelectionModel<IFlatGraphNode>(this.options.multi);
+      this.checklistSelection = new SelectionModel<IFlatGraphNode>(
+        this.options.multi
+      );
       this.dataSource.data = this.options.values;
-      this.noNestedNodes = this.options.values.every(x => x.children == null || x.children?.length == 0);  
+      this.noNestedNodes = this.options.values.every(
+        (x) => x.children == null || x.children?.length == 0
+      );
     }
 
     this.placeholder = this.placeholder || "";
@@ -123,7 +128,7 @@ export class InputComponent implements ControlValueAccessor {
     const { errors } = this.control;
 
     // Fallback messages if none provided
-    const errorMap: { [index:string]: (e: any) => string } = {
+    const errorMap: { [index: string]: (e: any) => string } = {
       ["minlength"]: (e) =>
         `${this.label} must be at-least ${errors[e].requiredLength} characters`,
       ["maxlength"]: (e) =>
@@ -139,18 +144,18 @@ export class InputComponent implements ControlValueAccessor {
       const vf = this.validatorFunctions?.find((x) => x.type == e);
       return vf?.message
         ? vf.message(this.control) // client side message
-        : errorMap[e] // 
+        : errorMap[e] //
         ? errorMap[e](e)
         : "Invalid field";
     });
   }
 
   // Form control configurations
-  private _value: string | number;
-  public get value(): string | number {
+  private _value: Primitive;
+  public get value(): Primitive {
     return this._value;
   }
-  public set value(v: string | number) {
+  public set value(v: Primitive) {
     if (v !== this._value) {
       this._value = v;
       this.onChange(v);
@@ -191,29 +196,11 @@ export class InputComponent implements ControlValueAccessor {
 
   togglePasswordVisibility(state: boolean, event) {
     this.passwordVisible = state;
-    if(event) event.stopPropagation();
+    if (event) event.stopPropagation();
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  noNestedNodes:boolean = false;
-
+  // Select / tree (w/ support for nested items) ------------------------------------------------------------------------
+  noNestedNodes: boolean = false;
   flatNodeMap = new Map<IFlatGraphNode, IGraphNode>();
   nestedNodeMap = new Map<IGraphNode, IFlatGraphNode>();
   treeControl: FlatTreeControl<IFlatGraphNode>;
@@ -224,10 +211,12 @@ export class InputComponent implements ControlValueAccessor {
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: IFlatGraphNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    if(descendants.length === 0)
-      return this.checklistSelection.isSelected(node)
+    if (descendants.length === 0)
+      return this.checklistSelection.isSelected(node);
 
-    return descendants.every(child => this.checklistSelection.isSelected(child));
+    return descendants.every((child) =>
+      this.checklistSelection.isSelected(child)
+    );
   }
 
   /** Whether part of the descendants are selected */
@@ -241,11 +230,11 @@ export class InputComponent implements ControlValueAccessor {
 
   untoggleAll(node) {
     let parents = [];
-    let parent = this.getParentNode(node);  
-    if(parent) parents.push(parent._id)
-    while(parent) {
+    let parent = this.getParentNode(node);
+    if (parent) parents.push(parent._id);
+    while (parent) {
       parent = this.getParentNode(parent);
-      if(parent) parents.push(parent._id)
+      if (parent) parents.push(parent._id);
     }
 
     this.treeControl.dataNodes.forEach((n) => {
@@ -255,7 +244,7 @@ export class InputComponent implements ControlValueAccessor {
     });
   }
 
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
+  /** Toggle the item selection. Select/deselect all the descendants node */
   rootNodeSelectionToggle(node: IFlatGraphNode): void {
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
@@ -270,7 +259,9 @@ export class InputComponent implements ControlValueAccessor {
     // Force update for the parent
     descendants.every((child) => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
-    this.selectionChange.emit(this.checklistSelection.selected.map(n => this.flatNodeMap.get(n)));
+    this.selectionChange.emit(
+      this.checklistSelection.selected.map((n) => this.flatNodeMap.get(n))
+    );
   }
 
   /** Toggle a leaf node selection. Check all the parents to see if they changed */
@@ -278,8 +269,10 @@ export class InputComponent implements ControlValueAccessor {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
     // this.selectionChange.emit(this.checklistSelection.selected.map(x => this.dataSource.));
-    if(this.noNestedNodes) this.selector.close();
-    this.selectionChange.emit(this.checklistSelection.selected.map(n => this.flatNodeMap.get(n)));
+    if (this.noNestedNodes) this.selector.close();
+    this.selectionChange.emit(
+      this.checklistSelection.selected.map((n) => this.flatNodeMap.get(n))
+    );
   }
 
   /* Checks all the parents when a leaf node is selected/unselected */
@@ -303,7 +296,10 @@ export class InputComponent implements ControlValueAccessor {
     if (nodeSelected && !descAllSelected) {
       this.checklistSelection.deselect(node);
     } else if (!nodeSelected && descAllSelected) {
-      if(this.checklistSelection.isMultipleSelection() && descendants.length != 1) {      
+      if (
+        this.checklistSelection.isMultipleSelection() &&
+        descendants.length != 1
+      ) {
         this.checklistSelection.select(node);
       }
     }
@@ -314,7 +310,7 @@ export class InputComponent implements ControlValueAccessor {
     const currentLevel = this.getLevel(node);
     if (currentLevel < 1) return null;
 
-    for (let i = (this.treeControl.dataNodes.indexOf(node) - 1); i >= 0; i--) {
+    for (let i = this.treeControl.dataNodes.indexOf(node) - 1; i >= 0; i--) {
       const currentNode = this.treeControl.dataNodes[i];
       if (this.getLevel(currentNode) < currentLevel) {
         return currentNode;
@@ -323,7 +319,6 @@ export class InputComponent implements ControlValueAccessor {
 
     return null;
   }
-
 
   getLevel = (node: IFlatGraphNode) => node.level;
   isExpandable = (node: IFlatGraphNode) => node.expandable;
@@ -345,10 +340,9 @@ export class InputComponent implements ControlValueAccessor {
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
-  }
+  };
 
   getSelection(): IFlatGraphNode[] {
     return this.checklistSelection.selected;
   }
-
 }
