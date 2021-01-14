@@ -8,7 +8,7 @@
     [class.form-field--is-filled]="value !== ''"
     [class.form-field--is-small]="!label"
     [class.form-field--is-errored]="showError"
-    *ngIf="type == 'number' || type == 'text' || type == 'password'">
+    *ngIf="type == 'number' || type == 'text' || type == 'password' || type == 'phone'">
     <div class="form-field__control">
       <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
       <label *ngIf="label"
@@ -17,6 +17,7 @@
       <input
         #input
         [(ngModel)]="value"
+        [validation]="true"
         (blur)="onTouched()"
         (focus)="onFocus()"
         [id]="formControlName || ''"

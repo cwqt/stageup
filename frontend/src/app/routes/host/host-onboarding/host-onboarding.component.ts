@@ -85,7 +85,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
             ]
           },
           {
-            type: "text",
+            type: "phone",
             initial: 1234,
             field_name: "business_contact_number",
             label:"Business Contact Number",
