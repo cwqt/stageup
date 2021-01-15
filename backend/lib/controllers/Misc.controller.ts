@@ -3,7 +3,7 @@ import { BaseArgs, BaseController, IControllerEndpoint } from '../common/control
 import config from '../config';
 import AuthStrat from '../common/authorisation';
 import { body, params, query, object, array, single } from '../common/validate';
-import { HTTP, IAddress, IContactInfo, IPerson, IPersonInfo, IHost, IHostStub } from '@eventi/interfaces';
+import { HTTP, IAddress, IContactInfo, IPerson, IPersonInfo, IHost, IHostStub , HostOnboardingState} from '@eventi/interfaces';
 import { ErrorHandler, getCheck } from '../common/errors';
 import { hostname } from 'os';
 import { Host } from '../models/Hosts/Host.model';
@@ -52,13 +52,16 @@ export default class MiscController extends BaseController {
       },
     };
   }
-  // router.get<IHostStub>("/verifyhost",Misc.verifyHost());
+  // router.get<void>("/verifyhost/:oid",Misc.verifyHost());
   verifyHost(): IControllerEndpoint<any> {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<IHostStub> => {
+      controller: async (req: Request) => {
         const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: parseInt(req.params.oid) }));
+        if (onboarding.state === HostOnboardingState.Verified){
+        return true;
+        }
       },
     };
   }
