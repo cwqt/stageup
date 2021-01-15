@@ -1,9 +1,7 @@
-import { Request } from 'express';
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
 import config from '../config';
 import AuthStrat from '../common/authorisation';
-import { body, params, query, object, array, single } from '../common/validate';
-import { ErrorHandler, getCheck } from '../common/errors';
+import { getCheck } from '../common/errors';
 import { Host } from '../models/Hosts/Host.model';
 
 
@@ -14,8 +12,8 @@ export default class MiscController extends BaseController {
 
   ping(): IControllerEndpoint<string> {
     return {
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request) => {
+      authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
+      controller: async req => {
         return 'Pong!';
       },
     };
@@ -24,7 +22,7 @@ export default class MiscController extends BaseController {
   dropAllData(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
-      controller: async (req: Request) => {
+      controller: async req => {
         // Clear Influx, Redis, Postgres & session store
         await this.dc.influx?.query(`DROP SERIES FROM /.*/`);
         await new Promise(res => this.dc.redis.flushdb(res));
@@ -34,32 +32,14 @@ export default class MiscController extends BaseController {
     };
   }
 
-  test(): IControllerEndpoint<any> {
+  verifyHost(): IControllerEndpoint<void> {
     return {
-      validators: [
-        body({
-          name: v => v.isString(),
-          addresses: v => v.custom(array({
-            v: v => v.isInt()
-          }))
-        })
-      ],
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request) => {
-        return true;
-      },
-    };
-  }
-  // router.get<void>("/verifyhost/:hid",Misc.verifyHost());
-  verifyHost(): IControllerEndpoint<any> {
-    return {
-      validators: [],
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request) => {
-      const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid) }))
-            host.is_onboarded = true;
-            await host.save();
-            return host.toFull();
+      authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid) }))
+        host.is_onboarded = true;
+        await host.save();
+        return host.toFull();
       },
     };
   }
