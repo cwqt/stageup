@@ -42,7 +42,7 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
   });
     it('Should update a performance', async () => {
       
-      let updatePerf = await Stories.actions.performances.updatePerformance(perf._id, {
+      let updatePerf = await Stories.actions.performances.updatePerformance(perf, {
       name: "Othello",
       description: "For she had eyes and chose me.",
       price: 24,
@@ -57,10 +57,8 @@ describe('As a user, I want to be able to do performance CRUD', async () => {
 
   
     it('Should delete a performance', async () => {
-      let delPerf = await Stories.actions.performances.deletePerformance(perf._id);
-          
-      expect (delPerf._id).to.not.exist;    
-
+      await Stories.actions.performances.deletePerformance(perf);          
+      
   });
         
 });
