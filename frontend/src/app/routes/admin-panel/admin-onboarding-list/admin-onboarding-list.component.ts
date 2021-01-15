@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { IEnvelopedData, IHostOnboarding } from '@eventi/interfaces';
+import { AdminService } from "src/app/services/admin.service";
 
 @Component({
   selector: 'app-admin-onboarding-list',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminOnboardingListComponent implements OnInit {
 
-  constructor() { }
+  private onboardingList: IEnvelopedData<IHostOnboarding[], void>;
 
-  ngOnInit(): void {
+  constructor(private adminService: AdminService) { }
+
+  async ngOnInit() {
+    await this.getOnboardingProcesses();  
+  }
+
+  async getOnboardingProcesses() {
+     console.log(await this.adminService.readOnboardingProcesses());
   }
 
 }

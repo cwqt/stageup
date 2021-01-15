@@ -28,22 +28,26 @@ export default class AdminController extends BaseController {
     return {
       validators: [
         query<{
-          host_name: string;
+          username: string;
           submission_date_sort: string;
           state: HostOnboardingState;
         }>({
-          host_name: v => v.optional(true).isString(),
+          username: v => v.optional(true).isString(),
           submission_date_sort: v => v.optional(true).isIn(['ASC', 'DESC']),
           state: v => v.optional(true).isIn(Object.values(HostOnboardingState)),
         }),
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
-        const onboardingEnvelope = await this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop')
-          .innerJoinAndSelect('hop.host', 'host')
-          .where(`host.name LIKE :hostname`, { hostname: req.query.host_name ? `%${req.query.host_name}%` : '%' })
-          .andWhere(`hop.state = :state`, { state: req.query.state ?? HostOnboardingState.PendingVerification })
-          .orderBy(`hop.last_submitted`, (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
+        const qb = this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop')
+          .innerJoinAndSelect('hop.host', 'host') // pull in host & filter by host
+          .where(`host.username LIKE :username`, { username: req.query.username ? `%${req.query.username}%` : '%' });
+
+        // not sure about fuzzy matching ints
+        if(req.query.state)
+          qb.andWhere(`hop.state = :state`, { state: req.query.state }) 
+
+        const onboardingEnvelope = await qb.orderBy(`hop.last_submitted`, (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
           .paginate();
 
         return {
@@ -101,57 +105,59 @@ export default class AdminController extends BaseController {
         // by which I mean shift the data from Onboarding -> Host & send out invites for added members
         await this.ORM.transaction(async txc => {
           if (Object.values(onboarding.steps).every(o => o.state == HostOnboardingState.Verified)) {
-            const host = onboarding.host;//eager loaded
-  
-            // Proof of Business 
+            const host = onboarding.host; //eager loaded
+
+            // Proof of Business
             const proofOfBusinessData = onboarding.steps[HostOnboardingStep.ProofOfBusiness].data;
             host.business_details = proofOfBusinessData;
-  
+
             // Owner Details
-            const ownerDetailsData = onboarding.steps[HostOnboardingStep.OwnerDetails].data;          
+            const ownerDetailsData = onboarding.steps[HostOnboardingStep.OwnerDetails].data;
             let owner = await UserHostInfo.findOne({
               relations: {
                 user: {
-                  personal_details: true
+                  personal_details: true,
                 },
               },
               where: {
-                permissions: HostPermission.Owner
-              }
+                permissions: HostPermission.Owner,
+              },
             });
 
             owner.user.personal_details.first_name = ownerDetailsData.owner_info.first_name;
             owner.user.personal_details.last_name = ownerDetailsData.owner_info.last_name;
             owner.user.personal_details.title = ownerDetailsData.owner_info.title;
             await txc.save(owner.user.personal_details);
-            
+
             // Social Info
             const socialInfoData = onboarding.steps[HostOnboardingStep.SocialPresence].data;
             host.social_info = socialInfoData.social_info;
-  
+
             // Add Members
-            const addMemberData = onboarding.steps[HostOnboardingStep.AddMembers].data;  
+            const addMemberData = onboarding.steps[HostOnboardingStep.AddMembers].data;
             // These are all just 'add' actions, so send an invitation & add them to the host
-            for(let member of addMemberData.members_to_add) {
+            for (let member of addMemberData.members_to_add) {
               try {
                 const potentialMember = await User.findOne({ _id: member.user_id });
                 // Don't add the owner if they're already in
-                if(potentialMember?._id !== owner.user._id) {
-                  if(potentialMember) {
-                    if(!config.PRODUCTION) sendUserHostMembershipInvitation(potentialMember.email_address, host)
-                  
+                if (potentialMember?._id !== owner.user._id) {
+                  if (potentialMember) {
+                    if (!config.PRODUCTION) sendUserHostMembershipInvitation(potentialMember.email_address, host);
+
                     // Add the member as pending (updated on membership acceptance to Member)
                     await host.addMember(potentialMember, HostPermission.Pending, txc);
                   } else {
-                    logger.error(`Found no such user with _id: ${member.user_id} in onboarding request: ${onboarding._id}`);
-                  }  
+                    logger.error(
+                      `Found no such user with _id: ${member.user_id} in onboarding request: ${onboarding._id}`
+                    );
+                  }
                 }
               } catch (error) {
-                logger.error(error);              
+                logger.error(error);
               }
             }
-            
-            // TODO: Subscription level 
+
+            // TODO: Subscription level
 
             // TODO: Once the onboarding process is complete, we no longer need it & it + it's onboarding issues
             // can be deleted
@@ -160,7 +166,7 @@ export default class AdminController extends BaseController {
           } else {
             logger.info('Not all steps are signed off as valid');
           }
-        })
+        });
       },
     };
   }
