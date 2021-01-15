@@ -3,8 +3,9 @@ import { BaseArgs, BaseController, IControllerEndpoint } from '../common/control
 import config from '../config';
 import AuthStrat from '../common/authorisation';
 import { body, params, query, object, array, single } from '../common/validate';
-import { HTTP, IAddress, IContactInfo, IPerson, IPersonInfo } from '@eventi/interfaces';
-import { ErrorHandler } from '../common/errors';
+import { ErrorHandler, getCheck } from '../common/errors';
+import { Host } from '../models/Hosts/Host.model';
+
 
 export default class MiscController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -46,6 +47,19 @@ export default class MiscController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async (req: Request) => {
         return true;
+      },
+    };
+  }
+  // router.get<void>("/verifyhost/:hid",Misc.verifyHost());
+  verifyHost(): IControllerEndpoint<any> {
+    return {
+      validators: [],
+      authStrategy: AuthStrat.none,
+      controller: async (req: Request) => {
+      const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid) }))
+            host.is_onboarded = true;
+            await host.save();
+            return host.toFull();
       },
     };
   }
