@@ -1,26 +1,29 @@
-<table mat-table [dataSource]="onboardingRequests">
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="onboardingRequests">
 
-    <ng-container matColumnDef="state">
-      <th mat-header-cell *matHeaderCellDef> State </th>
-      <td mat-cell *matCellDef="let hostOnboarding"> {{hostOnboarding.state}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="last_modified">
-      <th mat-header-cell *matHeaderCellDef> Last Updated </th>
-      <td mat-cell *matCellDef="let hostOnboarding"> {{hostOnboarding.last_modified}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="host">
-      <th mat-header-cell *matHeaderCellDef> Host </th>
-      <td mat-cell *matCellDef="let hostOnboarding"> {{hostOnboarding.host.name}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="onboarding_page">
-      <th mat-header-cell *matHeaderCellDef> Onboarding Page </th>
-      <td mat-cell *matCellDef="let hostOnboarding" ><button mat-stroked-button>Open</button></td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </table>
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef> State </th>
+          <td mat-cell *matCellDef="let hostOnboarding"> {{hostOnboarding.state}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="last_modified">
+          <th mat-header-cell *matHeaderCellDef> Last Updated </th>
+          <td mat-cell *matCellDef="let hostOnboarding"> {{hostOnboarding.last_modified}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="host">
+          <th mat-header-cell *matHeaderCellDef> Host </th>
+          <td mat-cell *matCellDef="let hostOnboarding"> {{hostOnboarding.host.name}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="onboarding_page">
+          <th mat-header-cell *matHeaderCellDef> Onboarding Page </th>
+          <td mat-cell *matCellDef="let hostOnboarding" ><button mat-stroked-button>Open</button></td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+       
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
