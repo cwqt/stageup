@@ -101,7 +101,7 @@ const Misc = new MiscController(providers, mws);
 router.get    <string>                ("/ping",                                     Misc.ping());
 router.post   <void>                  ("/drop",                                     Misc.dropAllData());
 router.get    <void>                  ("/test",                                     Misc.test());
-router.get    <void>                  ("/verifyhost/:oid",                          Misc.verifyHost());
+router.get    <void>                  ("/verifyhost/:hid",                          Misc.verifyHost());
 
 return router;
 };
