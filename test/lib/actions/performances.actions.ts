@@ -47,7 +47,7 @@ updatePerformance: async (performance: IPerformance, data:{name: string, descrip
     
 
 // router.post<void>("/performances/:pid/purchase",Perfs.purchase());
-purchase: async(): Promise<void> => {
+purchase: async(performance: IPerformance): Promise<void> => {
     const res = await Axios.post (`${env.baseUrl}/performances/${performance._id}/purchase`, performance,
     env.getOptions()
     );
