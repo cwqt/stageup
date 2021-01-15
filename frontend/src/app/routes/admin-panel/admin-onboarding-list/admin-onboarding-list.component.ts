@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IEnvelopedData, IHostOnboarding } from '@eventi/interfaces';
+import { MatTableDataSource } from '@angular/material/table';
+import { IEnvelopedData, IHostOnboarding, IHostOnboardingProcess } from '@eventi/interfaces';
 import { AdminService } from "src/app/services/admin.service";
 
 @Component({
@@ -8,8 +9,10 @@ import { AdminService } from "src/app/services/admin.service";
   styleUrls: ['./admin-onboarding-list.component.scss']
 })
 export class AdminOnboardingListComponent implements OnInit {
-
-  private onboardingList: IEnvelopedData<IHostOnboarding[], void>;
+  
+  public onboardingRequests;
+  private onboardingTableData: IEnvelopedData<IHostOnboarding[], void>;
+  public displayedColumns: string[] = ['state', 'last_modified', 'host'];
 
   constructor(private adminService: AdminService) { }
 
@@ -18,7 +21,9 @@ export class AdminOnboardingListComponent implements OnInit {
   }
 
   async getOnboardingProcesses() {
-     console.log(await this.adminService.readOnboardingProcesses());
+    this.onboardingTableData = await this.adminService.readOnboardingProcesses();
+    this.onboardingRequests = new MatTableDataSource<IHostOnboarding>(this.onboardingTableData.data);
+    console.log(this.onboardingTableData.data);
   }
 
 }
