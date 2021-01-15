@@ -12,7 +12,7 @@ export class AdminOnboardingListComponent implements OnInit {
   
   public onboardingRequests;
   private onboardingTableData: IEnvelopedData<IHostOnboarding[], void>;
-  public displayedColumns: string[] = ['state', 'last_modified', 'host'];
+  public displayedColumns: string[] = ['state', 'last_modified', 'host', 'onboarding_page'];
 
   constructor(private adminService: AdminService) { }
 
@@ -23,7 +23,6 @@ export class AdminOnboardingListComponent implements OnInit {
   async getOnboardingProcesses() {
     this.onboardingTableData = await this.adminService.readOnboardingProcesses();
     this.onboardingRequests = new MatTableDataSource<IHostOnboarding>(this.onboardingTableData.data);
-    console.log(this.onboardingTableData.data);
   }
 
 }
