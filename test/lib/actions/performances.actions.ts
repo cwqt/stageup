@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
-import { IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformancePurchase, CurrencyCode } from '@eventi/interfaces';
+import { IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformancePurchase, CurrencyCode, IPerformanceUserInfo, IEnvelopedData } from '@eventi/interfaces';
 
 export default {
 // router.post<IPerf>("/performances",Perfs.createPerformance());
@@ -13,7 +13,7 @@ createPerformance: async (data:{name: string, description: string, price: number
       },
   
 // router.get<IE<IPerfS[], null>>("/performances",Perfs.readPerformances());
-readPerformances: async (performance:IPerformanceStub): Promise<IPerformanceStub> => {
+readPerformances: async(): Promise <IEnvelopedData<IPerformanceStub[], IPerformanceUserInfo>> => {
     const res = await Axios.get(`${env.baseUrl}/performances`,
         env.getOptions()
     );
@@ -22,7 +22,7 @@ readPerformances: async (performance:IPerformanceStub): Promise<IPerformanceStub
 
 
 // router.get<IE<IPerf, IPUInfo>>("/performances/:pid", Perfs.readPerformance());
-readPerformance: async (performance: IPerformance): Promise<IPerformance> =>{
+readPerformance: async (performance: IPerformance): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> =>{
     const res = await Axios.get (`${env.baseUrl}/performances/${performance._id}`,
     env.getOptions()
     );
@@ -47,7 +47,7 @@ updatePerformance: async (performance: IPerformance, data:{name: string, descrip
     
 
 // router.post<void>("/performances/:pid/purchase",Perfs.purchase());
-purchase: async( performance: IPerformancePurchase): Promise<IPerformancePurchase> => {
+purchase: async(): Promise<void> => {
     const res = await Axios.post (`${env.baseUrl}/performances/${performance._id}/purchase`, performance,
     env.getOptions()
     );
@@ -56,7 +56,7 @@ purchase: async( performance: IPerformancePurchase): Promise<IPerformancePurchas
 
 
 // router.delete <void>("/performance/:pid",Perfs.deletePerformance());
-deletePerformance: async (performance: IPerformance): Promise <IPerformancePurchase> => {
+deletePerformance: async (performance: IPerformance): Promise <void> => {
     const res = await Axios.delete (`${env.baseUrl}/performance/${performance._id}`, 
     env.getOptions()
     );

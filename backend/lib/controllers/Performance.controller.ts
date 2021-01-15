@@ -33,8 +33,6 @@ export default class PerformanceController extends BaseController {
       controller: async (req: Request): Promise<IPerformance> => {
         const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
 
-        // if (!user.host) throw new ErrorHandler(HTTP.BadRequest, ErrCode.MISSING_PERMS);
-
         const performance = await new Performance(
           {
             name: req.body.name,
