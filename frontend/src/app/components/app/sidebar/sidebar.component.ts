@@ -10,10 +10,8 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 })
 export class SidebarComponent implements OnInit {
   @Input() myself:IMyself;
-
-  userPopupOpen:boolean = false;
-
-  constructor(private appService:BaseAppService, private authService:AuthenticationService) { }
+  
+  constructor(private appService:BaseAppService) { }
 
   get user() { return this.myself.user }
   get host() { return this.myself.host }
@@ -22,15 +20,7 @@ export class SidebarComponent implements OnInit {
   }
 
   gotoRoot() { this.appService.navigateTo('/') }
-  gotoSettings() { this.appService.navigateTo('settings') }
   gotoHost() { this.appService.navigateTo('host') }
-  gotoAdminPanel() { this.appService.navigateTo('admin') }
-
-  toggleUserPopup(state:boolean) {
-    this.userPopupOpen = state;
-  }
-
-  logout() {
-    this.authService.logout();
-  }
+  gotoAdmin() { this.appService.navigateTo('admin') }
+  gotoSettings() { this.appService.navigateTo('settings') }
 }

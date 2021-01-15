@@ -13,11 +13,11 @@
         <ng-template matStepLabel>Upload an avatar</ng-template>
 
         <input hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file" formControlName="avatar">
-        <ui-button icon="attachment" [variant]="fileTypeError ? 'warn' : 'primary'" (click)="fileInput.click()" class="select-file">
+        <ui-button icon="attachment" [kind]="fileTypeError ? 'warn' : 'primary'" (click)="fileInput.click()" class="select-file">
             {{buttonText}}
         </ui-button>
 
-        <ui-icon-button size="m" variant="secondary" *ngIf="hasSelectedImage" (click)="clearAvatar()">
+        <ui-icon-button size="m" kind="secondary" *ngIf="hasSelectedImage" (click)="clearAvatar()">
           close
         </ui-icon-button>
 
@@ -25,7 +25,7 @@
 
         <div class="avatar-submit">
           <ui-button
-            [variant]="hasSelectedImage ? (errorMessage ? 'warn' : 'primary') : 'accent'"
+            [kind]="hasSelectedImage ? (errorMessage ? 'warn' : 'primary') : 'accent'"
             [loading]="loading"
             [disabled]="loading"
             (click)="handleUploadImage()">{{hasSelectedImage ? (errorMessage ? 'Error' : 'Upload') : 'Skip'}}</ui-button>
@@ -45,7 +45,7 @@
         <div>
 
           <ui-button
-            [variant]="errorMessage ? 'warn' : 'primary'"
+            [kind]="errorMessage ? 'warn' : 'primary'"
             [disabled]="!userNameFormGroup.dirty || loading"
             [loading]="loading" (onClick)="handleSubmitName()">
               Continue
@@ -60,7 +60,7 @@
       <h3>Welcome <b>{{userNameFormGroup.get('name').value}}</b>, you're ready to start browsing, for your information here are a few links to aid you along:</h3>
       <div>
         <br />
-        <ui-button icon="arrow--right" variant="primary" (click)="finishFirstTimeSetup()">Continue</ui-button>
+        <ui-button icon="arrow--right" kind="primary" (click)="finishFirstTimeSetup()">Continue</ui-button>
       </div>
     </mat-step>
 

@@ -14,6 +14,8 @@ export class UserHostInfo extends BaseEntity implements IUserHostInfo  {
 
     constructor(user:User, host:Host, permissions:HostPermission) {
         super();
+        user.host = host;
+
         this.user = user;
         this.host = host;
         this.joined_at = Math.floor(Date.now() / 1000);//timestamp in seconds

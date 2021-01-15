@@ -1,3 +1,5 @@
+@import "~src/styles/variables";
+
 .app-container {
   max-height: 100vh;
   height: 100vh;
@@ -7,10 +9,10 @@
 .app-content {
   height: 100vh;
   display: flex;
+  background-color: #f7f7f7;
 
   .left {
-    width: 18vw;
-    min-width: 250px;
+    width: $space-lg * 4;
     app-sidebar {
       width: 100%;
     }
@@ -20,21 +22,20 @@
     position: relative;
     width: 100%;
     min-height: 100vh;  
-    padding-top: 48px;//for header
     overflow: scroll;
     overflow-x: hidden;
 
     app-header-bar {
-      width: 80vw; // 100vw - sidebar
-      position: fixed;
-      top: 0;
-      right: 0;
+      display: block;
+      height: auto;
+      width: 100%;
+      padding: $space-lg;
     }
 
     .app-body {
       height: 100%;
-      min-height: calc(100vh - 48px);
-      padding: 10px 20px;
+      min-height: 100vh;
+      padding: $space $space-lg;
     }
   }
 }

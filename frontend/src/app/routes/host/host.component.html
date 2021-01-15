@@ -1,5 +1,5 @@
-<div class="host-wrapper" *ngIf="host">
-  <app-host-onboarding [host]="host" *ngIf="!host.is_onboarded"></app-host-onboarding>
+<div class="host-wrapper h-full" *ngIf="host">
+  <app-host-onboarding class="h-full" [host]="host" *ngIf="!host.is_onboarded"></app-host-onboarding>
 
   <ng-container *ngIf="host.is_onboarded">
     <router-outlet></router-outlet>  

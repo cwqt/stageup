@@ -1,4 +1,41 @@
 <div class="container">
+  <h1 class="text-5xl">UI & Component Library</h1>
+  <h5>Contains all the stylings and components to be used throughout the site, check <a
+      href="https://tailwindcss.com/docs">TailwindCSS</a> docs for more info.</h5>
+
+  <ui-hr></ui-hr>
+
+  <h1>Form</h1>
+  <ui-form [form]="form" [cacheable]="cacheable"></ui-form>
+
+  <ui-hr></ui-hr>
+
+  <div class="flex flex-row">
+    <div class="flex-1">
+      <h1>This is a h1 header</h1>
+      <h2>This is a h2 header</h2>
+      <h3>This is a h3 header</h3>
+      <h4>This is a h4 header</h4>
+      <h5>This is a h5 header</h5>
+    </div>
+
+    <div class="flex-1">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+        laborum.
+      </p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+        laborum.
+      </p>
+    </div>
+  </div>
+
+  <br>
   <h1>Accordion</h1>
   <mat-accordion>
     <mat-expansion-panel>
@@ -10,131 +47,118 @@
           This is a summary of the content
         </mat-panel-description>
       </mat-expansion-panel-header>
-      This is the primary content of the panel.    </mat-expansion-panel>
+      This is the primary content of the panel.
+    </mat-expansion-panel>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
           Self aware panel
         </mat-panel-title>
         <mat-panel-description>
-          Currently I am 
+          Currently I am
         </mat-panel-description>
       </mat-expansion-panel-header>
-      This is the primary content of the panel.    </mat-expansion-panel>
+      This is the primary content of the panel.
+    </mat-expansion-panel>
     <mat-expansion-panel [disabled]="true">
       <mat-expansion-panel-header>
         <mat-panel-title>
           Self aware panel
         </mat-panel-title>
         <mat-panel-description>
-          Currently I am 
+          Currently I am
         </mat-panel-description>
       </mat-expansion-panel-header>
-      This is the primary content of the panel.    </mat-expansion-panel>
+      This is the primary content of the panel.
+    </mat-expansion-panel>
   </mat-accordion>
 
+
   <br>
-
-
-  <h1>Select</h1>
-  <!-- <ui-select [graph]="graph"></ui-select> -->
-
-  <hr><br />
-
   <h1>Buttons</h1>
 
-  <div class="row">
-    <ui-button variant="primary">Primary</ui-button>
-    <ui-button variant="secondary">Secondary</ui-button>
-    <ui-button variant="accent">Accent</ui-button>
-    <ui-button variant="warn">Warn</ui-button>
-    <ui-button [disabled]="true">Disabled</ui-button>
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button size="s" kind="primary">Primary</ui-button>
+    <ui-button size="s" kind="secondary">Secondary</ui-button>
+    <ui-button size="s" kind="accent">Accent</ui-button>
+    <ui-button size="s" kind="warning">Warning</ui-button>
+    <ui-button size="s" kind="danger">Danger</ui-button>
+    <ui-button size="s" [disabled]="true">Disabled</ui-button>
   </div>
 
-  <div class="row">
-    <ui-button [loading]="true" variant="primary">Primary</ui-button>
-    <ui-button icon="settings" variant="secondary">Secondary</ui-button>
-    <ui-button [loading]="true" variant="accent">Accent</ui-button>
-    <ui-button icon="settings" variant="accent">Accent</ui-button>
-    <ui-button icon="settings" variant="warn">Warn</ui-button>
-    <ui-button [loading]="true" [disabled]="true">Disabled</ui-button>
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button size="m" [loading]="true" kind="primary">Primary</ui-button>
+    <ui-button size="m" kind="secondary">Secondary</ui-button>
+    <ui-button size="m" [loading]="true" kind="accent">Accent</ui-button>
+    <ui-button size="m" icon="settings" kind="warning">Warning</ui-button>
+    <ui-button size="m" icon="favorite" kind="danger">Danger</ui-button>
+    <ui-button size="m" [loading]="true" [disabled]="true">Disabled</ui-button>
   </div>
 
-  <div class="row">
-    <ui-button size="s" [loading]="true" variant="primary">Primary</ui-button>
-    <ui-button size="m" icon="settings" variant="secondary">Secondary</ui-button>
-    <ui-button size="l" [loading]="true" variant="accent">Accent</ui-button>
-    <ui-button size="m" icon="settings" variant="accent">Accent</ui-button>
-    <ui-button size="s" icon="settings" variant="warn">Warn</ui-button>
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button size="l" [loading]="true" kind="primary">Primary</ui-button>
+    <ui-button size="l" icon="settings" kind="secondary">Secondary</ui-button>
+    <ui-button size="l" [loading]="true" kind="accent">Accent</ui-button>
+    <ui-button size="l" icon="settings" kind="warning">Warning</ui-button>
+    <ui-button size="l" icon="settings" kind="danger">Danger</ui-button>
     <ui-button size="l" [loading]="true" [disabled]="true">Disabled</ui-button>
   </div>
 
-  <hr>
-
-  <h1>Button menu</h1>
-  <div class="row">
-    <ui-button-menu variant="primary" title="Hello world!">
-      <ui-button variant="primary">Hello world!</ui-button>
-      <ui-button variant="primary">Hello world!</ui-button>
-      <ui-button variant="primary">Hello world!</ui-button>
-      <ui-button variant="primary">Hello world!</ui-button>
-    </ui-button-menu>
-
-    <ui-button-menu variant="secondary" title="Hello world!">
-      <ui-button variant="secondary">Hello world!</ui-button>
-      <ui-button variant="secondary">Hello world!</ui-button>
-      <ui-button variant="secondary">Hello world!</ui-button>
-      <ui-button variant="secondary">Hello world!</ui-button>
-    </ui-button-menu>
-  </div>
-
-  <hr>
+  <ui-hr></ui-hr>
 
   <h1>Inputs</h1>
 
-  <ui-input [(ngModel)]="textString" type="text" size="s" placeholder="Small input"></ui-input>
+  <ui-input [(ngModel)]="textString" icon="favorite" type="text" size="s" placeholder="Small input"></ui-input>
 
-  <ui-input [(ngModel)]="textString" type="text" label="Name please"></ui-input>
+  <ui-input [(ngModel)]="textString" icon="favorite--filled" type="password" label="Name please"></ui-input>
   <ui-input [(ngModel)]="numberString" type="number" label="Age please"></ui-input>
 
   <ui-input [(ngModel)]="textString" type="text"></ui-input>
   <ui-input [(ngModel)]="numberString" type="number"></ui-input>
 
   <ui-input [(ngModel)]="textString" type="textarea" label="Text please"></ui-input>
-
   <ui-input [(ngModel)]="boolString" type="checkbox" label="Text please"></ui-input>
 
-  {{textString}}, {{numberString}},  {{boolString}}
+  {{textString}}, {{numberString}}, {{boolString}}
 
-  <br/>
-  <br/>
-
-
+  <br>
+  <br>
+  <h1>Chips</h1>
+  <ui-chip kind="red">Hello</ui-chip>
+  <ui-chip kind="magenta">Hello</ui-chip>
+  <ui-chip kind="purple">Hello</ui-chip>
+  <ui-chip kind="blue">Hello</ui-chip>
+  <ui-chip kind="cyan">Hello</ui-chip>
+  <ui-chip kind="teal">Hello</ui-chip>
+  <ui-chip kind="green">Hello</ui-chip>
+  <ui-chip kind="gray">Hello</ui-chip>
+  <ui-chip kind="cool-grey">Hello</ui-chip>
+  <ui-chip kind="warm-grey">Hello</ui-chip>
 
   <br />
   <br />
   <h1>Admonition</h1>
-  <ui-admonition type="info" title="During early access, getting a server for a world is complicated">
+  <ui-admonition kind="info" title="During early access, getting a server for a world is complicated">
     Eventually it will be easy. However, there's an advanced guide for
     self-hosting on Linux which you can find here
   </ui-admonition>
   <br />
-  <ui-admonition type="warning" title="During early access, getting a server for a world is complicated">
+  <ui-admonition kind="warning" title="During early access, getting a server for a world is complicated">
     Eventually it will be easy. However, there's an advanced guide for
     self-hosting on Linux which you can find here
   </ui-admonition>
   <br />
-  <ui-admonition type="bug" title="During early access, getting a server for a world is complicated">
+  <ui-admonition kind="bug" title="During early access, getting a server for a world is complicated">
     Eventually it will be easy. However, there's an advanced guide for
     self-hosting on Linux which you can find here
   </ui-admonition>
   <br />
-  <ui-admonition type="success" title="During early access, getting a server for a world is complicated">
+  <ui-admonition kind="success" title="During early access, getting a server for a world is complicated">
     Eventually it will be easy. However, there's an advanced guide for
     self-hosting on Linux which you can find here
   </ui-admonition>
   <br />
-  <ui-admonition type="example" title="During early access, getting a server for a world is complicated">
+  <ui-admonition kind="example" title="During early access, getting a server for a world is complicated">
     Eventually it will be easy. However, there's an advanced guide for
     self-hosting on Linux which you can find here
   </ui-admonition>

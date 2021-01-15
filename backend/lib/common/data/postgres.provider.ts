@@ -15,7 +15,7 @@ export const create = async (): Promise<TORM.Connection> => {
       password: config.PG.PASS,
       database: config.PG.DB,
       entities: [__dirname + '/../../**/*.model.{js,ts}'],
-      synchronize: true,
+      synchronize: config.PRODUCTION ? false : true,
       logging: false,
     });
 

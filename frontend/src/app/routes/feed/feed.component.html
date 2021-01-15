@@ -1,6 +1,7 @@
 <h1>Performances</h1>
 
 <h3 *ngIf="performances.loading">Loading...</h3>
+<h3 *ngIf="performances.data && performances.data.data.length == 0">Ain't no performances in ya DB</h3>
 
 <div class="performances" *ngIf="!performances.loading && performances.data">
     <div
