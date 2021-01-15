@@ -58,10 +58,10 @@ export default class MiscController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.none,
       controller: async (req: Request) => {
-        const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: parseInt(req.params.oid) }));
-        if (onboarding.state === HostOnboardingState.Verified){
-        return true;
-        }
+      const host = await getCheck(Host.findOne({ _id: parseInt(req.params.oid) }))
+            host.is_onboarded = true;
+            await host.save();
+            return host.toFull();
       },
     };
   }
