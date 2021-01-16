@@ -3,16 +3,17 @@ import jwt from 'jsonwebtoken';
 import Axios from "axios";
 import {environment as env, environment, UserType} from "../environment";
 import { expect } from 'chai';
-
+import { IUser } from '@eventi/interfaces';
 
 export default {
     /**
      * @description Drops all existing data, creates the admin user & switches to acting as them
      */
-    setup: async () => {
+    setup: async ():Promise<IUser> => {
       await Stories.actions.common.drop();
-      await Stories.actions.users.createUser(UserType.SiteAdmin);
+      const admin = await Stories.actions.users.createUser(UserType.SiteAdmin);
       await Stories.actions.common.switchActor(UserType.SiteAdmin);
+      return admin;
     },
 
     /**
