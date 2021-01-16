@@ -1,6 +1,4 @@
-# eventi
-
-![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg)
+# eventi &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg)
 
 # Installation
 Will work for macOS (& Linux with adjustment) - not sure about Windows :/
@@ -30,15 +28,22 @@ npm -v              #7.3.0
 brew install postgresql@11 
 
 brew cask install redis
-brew install influxdb
 ```
 
 Some tools to install;
 * __Postman__: https://www.postman.com/downloads/
 * __PostgreSQL & Redis__: https://tableplus.com/
-* __Chronograf__: `brew install chronograf`
 * __JSONView__: https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en
+
+Some extensions to install;
 * __Prettier__: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+* __Angular Language Service__: https://marketplace.visualstudio.com/items?itemName=Angular.ng-template
+* __Error Lens__: https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
+* __Git Lens__: https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
+* __SCSS Intellisense__: https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-scss
+* __Tailwind Intellisense__: https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
+* __Todo Tree__: https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree
+* __vscode-angular-html__: https://marketplace.visualstudio.com/items?itemName=ghaschel.vscode-angular-html
 
 ## Interfaces
 Provides e2e typing across backend & frontend.
@@ -114,7 +119,6 @@ npm install --force
 # Running
 
 * __Redis__: `redis-server /usr/local/etc/redis.conf`
-* __InfluxDB__: `influxd`
 * __PostgreSQL__: `brew services start postgresql@11`
 * __Frontend__: `npm run start`
 * __Backend__: `npm run start`
