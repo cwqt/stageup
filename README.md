@@ -30,12 +30,12 @@ brew install postgresql@11
 brew cask install redis
 ```
 
-Some tools to install;
+Some tools to install:
 * __Postman__: https://www.postman.com/downloads/
 * __PostgreSQL & Redis__: https://tableplus.com/
 * __JSONView__: https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en
 
-Some extensions to install;
+Some extensions to install:
 * __Prettier__: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 * __Angular Language Service__: https://marketplace.visualstudio.com/items?itemName=Angular.ng-template
 * __Error Lens__: https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
