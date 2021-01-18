@@ -1,12 +1,12 @@
 import Axios from 'axios';
 import { environment as env } from '../environment';
 import { HostOnboardingStep, IHost, IHostOnboarding, IHostOnboardingProcess, IHostStub, IMyself, IOnboardingStep, IUser, IUserStub } from '@eventi/interfaces';
+import { expect } from 'chai';
 
 export default {
   createHost: async (data:{username:string, name:string, email_address:string}):Promise<IHost> => {
     const res = await Axios.post<IHost>(`${env.baseUrl}/hosts`, data, env.getOptions());
     return res.data;
-    
   },
 
   // router.get <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep());

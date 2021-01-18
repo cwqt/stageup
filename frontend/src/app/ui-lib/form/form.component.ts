@@ -68,24 +68,27 @@ export class FormComponent implements OnInit, OnDestroy {
 
     this.$prefetchSubscription = this.$prefetchState
     .subscribe((v) => {
-      this.submissionButton = this.buttons.find((b) => b.type == "submit");
-      if (!this.submissionButton)
-        throw new Error('Form has no button of type "submit"');
-
-      // this.inputs.forEach((i) => (i.form = this.formGroup));
-      this.formGroup.statusChanges.subscribe((v) => {
-        if (v == "VALID") {
-          this.cacheable.error = ""; // form errors gone
-          this.submissionButton.disabled = false;
-        } else {
-          this.submissionButton.disabled = true;
-        }
-      });
-
       setTimeout(() => {
-        this.submissionButton.disabled = true;
-      }, 0);
-      return true;
+        this.submissionButton = this.buttons.find((b) => b.type == "submit");
+        if (!this.submissionButton)
+          throw new Error('Form has no button of type "submit"');
+  
+        // this.inputs.forEach((i) => (i.form = this.formGroup));
+        this.formGroup.statusChanges.subscribe((v) => {
+          if (v == "VALID") {
+            this.cacheable.error = ""; // form errors gone
+            this.submissionButton.disabled = false;
+          } else {
+            this.submissionButton.disabled = true;
+          }
+        });
+  
+        setTimeout(() => {
+          this.submissionButton.disabled = true;
+        }, 0);
+        return true;
+      }, 100)
+
     });
 
     setTimeout(() => {

@@ -45,8 +45,8 @@ export const create = async (): Promise<DataClient> => {
     session_store: null,
   };
 
-  // Once redis is connected, set up the session store
-  dataClient.session_store = await timeout(RedisProvider.store(dataClient.redis), 2000);
+  // Once (if assuming set to not use MemoryStore) - Redis is connected, set up the session store
+  if(dataClient.redis) dataClient.session_store = await timeout(RedisProvider.store(dataClient.redis), 2000);
   return dataClient;
 };
 

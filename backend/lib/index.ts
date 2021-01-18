@@ -3,7 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import cors from "cors";
-import session from "express-session";
+import session, { MemoryStore } from "express-session";
 import log, { stream } from "./common/logger";
 import http from "http";
 import helmet from 'helmet';
@@ -40,7 +40,7 @@ app.use(morgan("tiny", { stream }));
           httpOnly: !config.PRODUCTION ? false : true,
           secure: !config.PRODUCTION ? false : true,
         },
-        store: providers.session_store,
+        store: config.USE_MEMORYSTORE ? new MemoryStore() : providers.session_store,
       })
     );
 

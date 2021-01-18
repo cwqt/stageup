@@ -1,10 +1,10 @@
-import { Request } from 'express';
 import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
 import config from '../config';
 import AuthStrat from '../common/authorisation';
-import { body, params, query, object, array, single } from '../common/validate';
-import { HTTP, IAddress, IContactInfo, IPerson, IPersonInfo } from '@eventi/interfaces';
-import { ErrorHandler } from '../common/errors';
+import { getCheck } from '../common/errors';
+import { Host } from '../models/Hosts/Host.model';
+import { IHost } from '@eventi/interfaces';
+
 
 export default class MiscController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -14,7 +14,7 @@ export default class MiscController extends BaseController {
   ping(): IControllerEndpoint<string> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req: Request) => {
+      controller: async req => {
         return 'Pong!';
       },
     };
@@ -23,29 +23,24 @@ export default class MiscController extends BaseController {
   dropAllData(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.custom(async () => !config.PRODUCTION),
-      controller: async (req: Request) => {
+      controller: async req => {
         // Clear Influx, Redis, Postgres & session store
         await this.dc.influx?.query(`DROP SERIES FROM /.*/`);
         await new Promise(res => this.dc.redis.flushdb(res));
         await this.ORM.synchronize(true); //https://github.com/nestjs/nest/issues/409
-        await new Promise(res => this.dc.session_store.clear(res));
       },
     };
   }
 
-  test(): IControllerEndpoint<any> {
+  verifyHost(): IControllerEndpoint<IHost> {
     return {
-      validators: [
-        body({
-          name: v => v.isString(),
-          addresses: v => v.custom(array({
-            v: v => v.isInt()
-          }))
-        })
-      ],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request) => {
-        return true;
+      // authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid) }))
+        host.is_onboarded = true;
+        await host.save();
+        return host.toFull();
       },
     };
   }

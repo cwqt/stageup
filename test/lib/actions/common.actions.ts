@@ -1,8 +1,9 @@
 import Axios from "axios";
 import { Stories } from '../stories';
-import {environment as env, UserType} from "../environment";
-import { IUser } from '@eventi/interfaces';
 
+import {environment as env, environment, UserType} from "../environment";
+import { expect } from 'chai';
+import { IUser } from '@eventi/interfaces';
 
 export default {
     /**

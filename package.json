@@ -4,7 +4,7 @@
   "description": "![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg)",
   "main": "index.js",
   "directories": {
-    "test": "test"
+    "deploy": "test"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
