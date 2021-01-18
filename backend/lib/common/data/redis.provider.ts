@@ -6,7 +6,8 @@ import log from '../logger';
 
 export const create = async ():Promise<redis.RedisClient | null> => {
   log.info(`Connecting to Redis...`);
-  if(config.USE_MEMORYSTORE == false) {
+
+  if(config.USE_MEMORYSTORE) {
     log.info(`.env set to use MemoryStore, skipping Redis setup`);
     return null;
   }
