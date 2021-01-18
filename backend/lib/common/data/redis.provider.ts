@@ -4,8 +4,12 @@ import config from "../../config";
 import connectRedis from "connect-redis";
 import log from '../logger';
 
-export const create = async () => {
+export const create = async ():Promise<redis.RedisClient | null> => {
   log.info(`Connecting to Redis...`);
+  if(config.USE_MEMORYSTORE == false) {
+    log.info(`.env set to use MemoryStore, skipping Redis setup`);
+    return null;
+  }
 
   if (!config.REDIS.HOST) throw new Error("No Redis url found.");
 
@@ -25,17 +29,16 @@ export const store = (client: redis.RedisClient) => {
     log.info(`Creating Redis Store...`);
 
     const redisStore = connectRedis(session);
-  
+
     return new redisStore({
       client: client,
       host: config.REDIS.HOST,
       port: config.REDIS.PORT,
       ttl: config.REDIS.TTL,
-    });  
+    });
   }
 };
 
-export const hookStore = (client:redis.RedisClient) => 
-{}
+export const hookStore = (client:redis.RedisClient) => {}
 
 export default { create, store };

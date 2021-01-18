@@ -3,6 +3,7 @@ import config from '../config';
 import AuthStrat from '../common/authorisation';
 import { getCheck } from '../common/errors';
 import { Host } from '../models/Hosts/Host.model';
+import { IHost } from '@eventi/interfaces';
 
 
 export default class MiscController extends BaseController {
@@ -23,16 +24,17 @@ export default class MiscController extends BaseController {
     return {
       authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
       controller: async req => {
-        // Clear Influx, Redis, Postgres & session store
-        await this.dc.influx?.query(`DROP SERIES FROM /.*/`);
-        await new Promise(res => this.dc.redis.flushdb(res));
+        // Clear Influx, Redis, session store & Postgres
+        if(this.dc.influx) await this.dc.influx.query(`DROP SERIES FROM /.*/`);
+        if(this.dc.redis) await new Promise(res => this.dc.redis.flushdb(res));
+        if(this.dc.session_store) await new Promise(res => this.dc.session_store.clear(res));
+
         await this.ORM.synchronize(true); //https://github.com/nestjs/nest/issues/409
-        await new Promise(res => this.dc.session_store.clear(res));
       },
     };
   }
 
-  verifyHost(): IControllerEndpoint<void> {
+  verifyHost(): IControllerEndpoint<IHost> {
     return {
       authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
       controller: async req => {
