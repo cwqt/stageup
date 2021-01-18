@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "kill": "kill $(lsof -t -i:3000) | exit 0",
-        "start": "npm run kill & env NODE_ENV=development nodemon lib/index.ts",
+        "start": "nodemon lib/index.ts",
         "start:windows": "nodemon lib/index.ts",
         "start:test": "env NODE_ENV=testing nodemon lib/index.ts",
         "start:dev": "env NODE_ENV=development nodemon --inspect lib/index.ts",

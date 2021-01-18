@@ -29,12 +29,12 @@ export class Performance extends BaseEntity {
   ratings: IRating[];
 
   constructor(data:Pick<IPerformanceStub, "name" | "description"> &
-    Pick<IPerformance, "price">, creator:User) {
+    Pick<IPerformance, "price" | "currency">, creator:User) {
     super();
     this.name = data.name;
     this.description = data.description;
     this.price = data.price;
-    // this.currency = data.currency
+    this.currency = data.currency
 
     this.created_at = unixTimestamp(new Date());
     this.views = 0;
@@ -69,7 +69,7 @@ export class Performance extends BaseEntity {
     }
   }
 
-  toFull(): any {
+  toFull(): Required<IPerformance> {
     return {
       ...this.toStub(),
       created_at: this.created_at,
@@ -77,7 +77,7 @@ export class Performance extends BaseEntity {
       ratings: this.ratings,
       state: this.state,
       price: this.price,
-      // currency: this.currency,
+      currency: this.currency,
     }
   }
 }

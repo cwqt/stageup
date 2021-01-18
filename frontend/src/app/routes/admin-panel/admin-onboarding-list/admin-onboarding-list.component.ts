@@ -3,6 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { IEnvelopedData, IHostOnboarding, IHostOnboardingProcess } from '@eventi/interfaces';
 import { AdminService } from "src/app/services/admin.service";
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'
+import { ICacheable } from 'src/app/app.interfaces';
 
 @Component({
   selector: 'app-admin-onboarding-list',
@@ -12,8 +14,12 @@ import { AdminService } from "src/app/services/admin.service";
 export class AdminOnboardingListComponent implements OnInit {
   
   public onboardingRequests;
-  private onboardingTableData: IEnvelopedData<IHostOnboarding[], void>;
   public displayedColumns: string[] = ['state', 'last_modified', 'host', 'onboarding_page'];
+  public onboardingTableData:ICacheable<IEnvelopedData<IHostOnboarding[], void>> = {
+    data: null,
+    loading: false,
+    error: ""
+}
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private adminService: AdminService) { }
@@ -27,8 +33,8 @@ export class AdminOnboardingListComponent implements OnInit {
   }
 
   async getOnboardingProcesses() {
-    this.onboardingTableData = await this.adminService.readOnboardingProcesses();
-    this.onboardingRequests = new MatTableDataSource<IHostOnboarding>(this.onboardingTableData.data);
+    this.onboardingTableData.data = await this.adminService.readOnboardingProcesses();
+    this.onboardingRequests = new MatTableDataSource<IHostOnboarding>(this.onboardingTableData.data.data);
   }
 
 }
