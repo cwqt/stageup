@@ -1,0 +1,23 @@
+{
+  "name": "Eventi",
+  "version": "1.0.0",
+  "description": "![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EventiGroup/eventi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EventiGroup/eventi/issues"
+  },
+  "homepage": "https://github.com/EventiGroup/eventi#readme"
+}

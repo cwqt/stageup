@@ -12,7 +12,6 @@ import {
   IOnboardingSocialPresence,
   IOnboardingStep,
   IOnboardingSubscriptionConfiguration,
-  IUser,
   IUserHostInfo,
   pick,
   IUserStub,

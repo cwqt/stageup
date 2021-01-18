@@ -39,7 +39,7 @@ const paginate = async <T>(
   const skip = (page - 1) * per_page;
   const total = builder;
   const count = await total.getCount();
-  let res = await builder.skip(skip).take(per_page).getMany();
+  const res = await builder.skip(skip).take(per_page).getMany();
   
   return {
     data: res as T[],

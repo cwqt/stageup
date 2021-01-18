@@ -39,20 +39,18 @@ export class LoginComponent implements OnInit {
     if (this.myselfService.$myself.value) this.baseAppService.navigateTo("/");
 
     this.loginForm = {
-      fields: [
-        {
+      fields: {
+        email_address: {
           type: "text",
-          field_name: "email_address",
           label: "E-mail address",
           validators: [{ type: "required" }, { type: "email" }],
         },
-        {
+        password: {
           type: "password",
-          field_name: "password",
           label: "Password",
           validators: [{ type: "required" }],
         },
-      ],
+      },
       submit: {
         text: "Sign in",
         variant: "primary",

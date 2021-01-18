@@ -22,7 +22,7 @@ export default class MiscController extends BaseController {
 
   dropAllData(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
+      authStrategy: AuthStrat.custom(async () => !config.PRODUCTION),
       controller: async (req: Request) => {
         // Clear Influx, Redis, Postgres & session store
         await this.dc.influx?.query(`DROP SERIES FROM /.*/`);

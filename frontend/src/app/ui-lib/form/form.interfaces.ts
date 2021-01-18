@@ -7,21 +7,29 @@ import { IGraphNode } from "../input/input.component";
  * @param submit, T => submit handler return type
  */
 export interface IUiForm<T> {
-  fields: IUiFormField[]; // form fields
+  fields: { [index:string]:IUiFormField }; // form fields
   submit: IUiFormSubmit<T>; // what to do on submit
+  prefetch?: (mapping?: { [index: string]: string }) => Promise<any>; //populate form from object
 }
 
 export interface IUiFormField {
-  type: "number" | "text" | "password" | "textarea" | "checkbox" | "select" | "tree" | "phone" | "container";
-  field_name: string;
+  type:
+    | "number"
+    | "text"
+    | "password"
+    | "textarea"
+    | "checkbox"
+    | "select"
+    | "tree"
+    | "phone"
+    | "container";
   variant?: "primary" | "secondary";
   label?: string;
   initial?: Primitive;
-  placeholder?:string;
+  placeholder?: string;
   validators?: IUiFormFieldValidator[];
   hint?: string;
-  fields?: IUiFormField[]; // for nested objects
-  width?: number; //for containers
+  fields?: IUiForm<any>["fields"]; // for nested objects
 
   options?: IUiFieldSelectOptions | IUiFieldTextOptions | any;
 
@@ -36,10 +44,14 @@ export interface IMaskOptions {
   value: string;
 }
 
-export interface IUiFieldTextOptions {
-  mask?:IMaskOptions;
+export interface IUiFieldOptions {
+  width?: number; //for containers
 }
-export interface IUiFieldSelectOptions {
+export interface IUiFieldTextOptions extends IUiFieldOptions {
+  mask?: IMaskOptions;
+  transformer?: (v:Primitive) => Primitive;
+}
+export interface IUiFieldSelectOptions extends IUiFieldOptions {
   values: Omit<IGraphNode, "level" | "expandable" | "icon">[];
   multi: boolean;
   search: boolean;

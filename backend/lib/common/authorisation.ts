@@ -96,9 +96,9 @@ export const or = (...args: AuthStrategy[]): AuthStrategy => {
  * @description Custom AuthStrategy using HOF
  * @param f Custom function which returns true or false to allow/deny access
  */
-export const custom = (f: (req?: Request, dc?: DataClient) => boolean): AuthStrategy => {
+export const custom = (f: (req?: Request, dc?: DataClient) => Promise<boolean>): AuthStrategy => {
   return async (req: Request, dc): Promise<AuthStratReturn> => {
-    const res = f(req, dc);
+    const res = await f(req, dc);
     return [res, {}, res ? ErrCode.INVALID : null];
   };
 };

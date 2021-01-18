@@ -1,10 +1,12 @@
-<ui-form-body [fg]="formGroup" [fields]="form.fields"></ui-form-body>
+<ng-container *ngIf="$prefetchState | async">
+  <ui-form-body [fg]="formGroup" [fields]="form.fields"></ui-form-body>
 
-<ui-button type="submit"
-  [disabled]="cacheable.loading"
-  [kind]="form.submit.variant"
-  (click)="onSubmit()">
-  {{ form.submit.text }}
-</ui-button>
-
-<span *ngIf="cacheable.error">{{ cacheable.error }}</span>
+  <ui-button type="submit"
+    [disabled]="cacheable.loading"
+    [kind]="form.submit.variant"
+    (click)="onSubmit()">
+    {{ form.submit.text }}
+  </ui-button>
+  
+  <span *ngIf="cacheable.error">{{ cacheable.error }}</span>  
+</ng-container>

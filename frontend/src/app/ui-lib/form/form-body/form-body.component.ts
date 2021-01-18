@@ -21,6 +21,8 @@ export class FormBodyComponent implements OnInit {
   ngOnInit() {
   }
 
+  keepOrder = (a, b) => { return a }
+
   fieldIsRequired(field:IUiFormField):boolean {
     return field.validators?.find(f => f.type == "required") ? true : false;
   }

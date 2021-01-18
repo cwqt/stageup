@@ -28,6 +28,8 @@ import {
   IUiForm,
   IUiFieldSelectOptions,
 } from "../../../ui-lib/form/form.interfaces";
+import phone from 'phone';
+import isPostalCode from 'validator/es/lib/isPostalCode';
 
 interface IUiStep<T> {
   label: string;
@@ -50,7 +52,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   @Input() host: IHost;
   @ViewChild(MatVerticalStepper, { static: false }) stepper: MatVerticalStepper;
 
-  onReviewStep:boolean = false;
+  onReviewStep: boolean = false;
   selectedStep: HostOnboardingStep;
   componentRefreshing: boolean = true;
   onboarding: ICacheable<IHostOnboarding> = {
@@ -84,81 +86,79 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
       label: "Proof of Business",
       data: null,
       form: {
-        fields: [
-          {
+        prefetch: async () => {
+          return (await this.hostService.readOnboardingProcessStep(
+            this.host._id,
+            HostOnboardingStep.ProofOfBusiness
+          )).data;
+        },
+        fields: {
+          hmrc_company_number: {
             type: "number",
-            field_name: "hmrc_company_number",
             label: "HMRC Company Number",
             validators: [
-              {
-                type: "minlength",
-                value: 8,
-                message: (v) => "Must be 8 characters",
-              },
-              {
-                type: "maxlength",
-                value: 8,
-                message: (v) => "Must be 8 characters",
-              },
+              { type: "minlength", value: 8 },
+              { type: "maxlength", value: 8 },
             ],
           },
-          {
+          business_contact_number: {
             type: "phone",
-            field_name: "business_contact_number",
             label: "Business Contact Number",
             hint: "Of the form 1724 123321, no leading zero",
             validators: [{ type: "required" }],
+            options: {
+              transformer: v => phone(v, ISOCountryCode.GBR)
+            }
           },
-          {
+          business_address: {
             type: "container",
-            field_name: "business_address",
             label: "Business Address",
-            fields: [
-              {
+            fields: {
+              city: {
                 type: "text",
                 label: "City",
-                field_name: "city",
                 validators: [{ type: "required" }],
               },
-              {
+              iso_country_code: {
                 type: "select",
                 label: "Country",
-                field_name: "iso_country_code",
                 options: {
                   search: true,
-                  values: Object.keys(ISOCountryCode).reduce<
-                    IUiFieldSelectOptions["values"]
-                  >((acc, curr, idx) => {
-                    acc.push({
-                      key: curr,
-                      value: Object.values(ISOCountryCode)[idx],
-                    });
-                    return acc;
+                  values: Object.keys(ISOCountryCode).reduce((acc, curr, idx) => {
+                      acc.push({
+                        key: curr,
+                        value: Object.values(ISOCountryCode)[idx],
+                      });
+                      return acc;
                   }, []),
                 },
                 validators: [{ type: "required" }],
               },
-              {
+              postcode: {
                 type: "text",
                 label: "Postcode",
-                field_name: "postcode",
-                validators: [{ type: "required" }],
+                validators: [
+                  { type: "required" },
+                  {
+                    type: "custom",
+                    value: v => isPostalCode(v.value, 'GB'),
+                    message: v => `Not a valid postal code`
+                  }
+                ],
               },
-              {
+              street_number: {
                 type: "number",
                 label: "Street Number",
-                field_name: "street_number",
                 validators: [{ type: "required" }],
               },
-              {
+              street_name: {
                 type: "text",
                 label: "Street Name",
-                field_name: "street_name",
                 validators: [{ type: "required" }],
               },
-            ],
+            },
           },
-        ],
+        },
         submit: {
           variant: "primary",
           text: "Next",
@@ -174,15 +174,13 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
       label: "Owner Details",
       data: null,
       form: {
-        fields: [
-          {
+        fields: {
+          owner_info: {
             type: "container",
-            field_name: "owner_info",
             label: "Owner Information",
-            fields: [
-              {
+            fields: {
+              title: {
                 type: "select",
-                field_name: "title",
                 label: "Title",
                 options: {
                   values: Object.values(PersonTitle).reduce<
@@ -190,28 +188,26 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                   >((acc, curr) => {
                     acc.push({
                       key: curr,
-                      value: curr.charAt(0).toUpperCase() + curr.slice(1)
+                      value: curr.charAt(0).toUpperCase() + curr.slice(1),
                     });
                     return acc;
                   }, []),
                 },
                 validators: [{ type: "required" }],
               },
-              {
+              first_name: {
                 type: "text",
-                field_name: "first_name",
                 label: "First name",
                 validators: [{ type: "required" }],
               },
-              {
+              last_name: {
                 type: "text",
-                field_name: "last_name",
                 label: "Last name",
                 validators: [{ type: "required" }],
               },
-            ],
+            },
           },
-        ],
+        },
         submit: {
           variant: "primary",
           text: "Next",
@@ -219,26 +215,25 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
             this.handleStepCompletion(
               formData,
               HostOnboardingStep.OwnerDetails
-            )
-          },
+            ),
+        },
       },
     },
     [HostOnboardingStep.SocialPresence]: {
       label: "Social Presence",
       data: null,
       form: {
-        fields: [
-          {
+        fields: {
+          social_info: {
             type: "container",
-            field_name: "social_info",
             label: "Social Information",
-            fields: [
-              { type: "text", field_name: "linkedin_url", label: "LinkedIn" },
-              { type: "text", field_name: "facebook_url", label: "Facebook" },
-              { type: "text", field_name: "instagram_url", label: "Instagram" },
-            ],
+            fields: {
+              linkedin_url: { type: "text", label: "LinkedIn" },
+              facebook_url: { type: "text", label: "Facebook" },
+              instagram_url: { type: "text", label: "Instagram" },
+            },
           },
-        ],
+        },
         submit: {
           variant: "primary",
           text: "Next",
@@ -281,8 +276,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private hostService: HostService,
-    private cfr: ComponentFactoryResolver
+    private hostService: HostService
   ) {}
 
   get steps() {
@@ -317,16 +311,15 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     this.getOnboarding().then(() =>
       this.switchStep(HostOnboardingStep.ProofOfBusiness)
     );
-
-    console.log(this.stepUiMap)
   }
 
   ngAfterViewInit() {}
 
   handleSelectionChange(event: StepperSelectionEvent) {
     // Review step is the final step after all onboarding stages
-    this.onReviewStep = event.selectedIndex == Object.keys(this.stepUiMap).length;
-    if(!this.onReviewStep) this.switchStep(event.selectedIndex);
+    this.onReviewStep =
+      event.selectedIndex == Object.keys(this.stepUiMap).length;
+    if (!this.onReviewStep) this.switchStep(event.selectedIndex);
   }
 
   handleStepCompletion(formData: any, step: HostOnboardingStep) {
