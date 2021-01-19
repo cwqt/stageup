@@ -8,7 +8,7 @@ import { CurrencyCode } from "@eventi/interfaces";
 import { Purchase } from "../Purchase.model";
 import { unixTimestamp } from "../../common/helpers";
 @Entity()
-export class Performance extends BaseEntity {
+export class Performance extends BaseEntity implements IPerformance {
   @PrimaryGeneratedColumn() _id: number;
   @Column()                 created_at: number;  
   @Column()                 name: string;
