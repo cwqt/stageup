@@ -1,4 +1,4 @@
-<ng-container *ngIf="$prefetchState | async">
+<ng-container *ngIf="isactive">
   <ui-form-body [fg]="formGroup" [fields]="form.fields"></ui-form-body>
 
   <ui-button type="submit"
@@ -7,6 +7,6 @@
     (click)="onSubmit()">
     {{ form.submit.text }}
   </ui-button>
-  
-  <span *ngIf="cacheable.error">{{ cacheable.error }}</span>  
+
+  <span *ngIf="cacheable.error">{{ cacheable.error }}</span>
 </ng-container>

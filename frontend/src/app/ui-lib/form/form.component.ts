@@ -57,22 +57,25 @@ export class FormComponent implements OnInit, OnDestroy {
   $prefetchState: BehaviorSubject<boolean> = new BehaviorSubject(false);
   $prefetchSubscription: Subscription;
 
+  isactive: boolean = false;
+
   constructor(private fb: FormBuilder) {}
 
   async ngOnInit() {
-    if (this.form.prefetch) {
-      await this.populatePrefetch(this.form.prefetch);
-    } else {
+    // if (this.form.prefetch) {
+    //   await this.populatePrefetch(this.form.prefetch);
+    // } else {
       this.$prefetchState.next(true);
-    }
+      this.isactive = true;
+    // }
 
-    this.$prefetchSubscription = this.$prefetchState
-    .subscribe((v) => {
+    this.$prefetchSubscription = this.$prefetchState.subscribe((v) => {
       setTimeout(() => {
+        console.log("loading");
         this.submissionButton = this.buttons.find((b) => b.type == "submit");
         if (!this.submissionButton)
           throw new Error('Form has no button of type "submit"');
-  
+
         // this.inputs.forEach((i) => (i.form = this.formGroup));
         this.formGroup.statusChanges.subscribe((v) => {
           if (v == "VALID") {
@@ -82,18 +85,17 @@ export class FormComponent implements OnInit, OnDestroy {
             this.submissionButton.disabled = true;
           }
         });
-  
+
         setTimeout(() => {
           this.submissionButton.disabled = true;
         }, 0);
         return true;
-      }, 100)
-
+      }, 1000);
     });
 
     setTimeout(() => {
-      this.$prefetchState.next(!this.$prefetchState.value)
-    }, 1000)
+      this.$prefetchState.next(!this.$prefetchState.value);
+    }, 1000);
 
     this.formGroup = Y<any, FormGroup>(
       (r) => (fields: IUiForm<any>["fields"]): FormGroup => {
@@ -135,24 +137,23 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   populatePrefetch(prefetchFn: IUiForm<any>["prefetch"]) {
-    return prefetchFn()
-      .then((data) => {
-        // Save the value into the IUiForm by setting each fields 'initial' to the sent value
-        // for e.g. when in the host onboarding switching back & forth we want to maintain state
-        Y((r) => (x: [IUiForm<any>["fields"], any]) => {
-          let [fields, data] = x;
-          Object.entries(fields).forEach(([fieldName, field]) => {
-            if (data[fieldName]) {
-              if (field.type == "container") {
-                r([field.fields, data[fieldName]]);
-              } else {
-                field.initial = data[fieldName] || "";
-              }
+    return prefetchFn().then((data) => {
+      // Save the value into the IUiForm by setting each fields 'initial' to the sent value
+      // for e.g. when in the host onboarding switching back & forth we want to maintain state
+      Y((r) => (x: [IUiForm<any>["fields"], any]) => {
+        let [fields, data] = x;
+        Object.entries(fields).forEach(([fieldName, field]) => {
+          if (data[fieldName]) {
+            if (field.type == "container") {
+              r([field.fields, data[fieldName]]);
+            } else {
+              field.initial = data[fieldName] || "";
             }
-          });
-        })([this.form.fields, data]);
-      })
-      // .finally(() => this.$prefetchState.next(true));
+          }
+        });
+      })([this.form.fields, data]);
+    });
+    // .finally(() => this.$prefetchState.next(true));
   }
 
   getValue() {
