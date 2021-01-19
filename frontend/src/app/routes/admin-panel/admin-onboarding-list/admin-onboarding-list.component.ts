@@ -3,7 +3,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { IEnvelopedData, IHostOnboarding, IHostOnboardingProcess } from '@eventi/interfaces';
 import { AdminService } from "src/app/services/admin.service";
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'
 import { ICacheable } from 'src/app/app.interfaces';
 
 @Component({

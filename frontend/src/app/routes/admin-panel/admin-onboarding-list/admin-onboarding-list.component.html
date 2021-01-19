@@ -1,5 +1,5 @@
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="onboardingRequests">
+    <table mat-table [dataSource]="onboardingRequests" class="w-60">
 
         <ng-container matColumnDef="state">
           <th mat-header-cell *matHeaderCellDef> State </th>
@@ -26,5 +26,5 @@
        
       </table>
       <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-      <mat-spinner [loading]="onboardingTableData.loading"></mat-spinner>
+      <mat-spinner *ngIf="onboardingTableData.loading"></mat-spinner>
 </div>
