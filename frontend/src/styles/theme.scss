@@ -1,9 +1,6 @@
 @import "~@angular/material/theming";
 
-$custom-typography: mat-typography-config(
-  $font-family: "IBM Plex Sans, sans-serif",
-);
-@include mat-core($custom-typography);
+@include mat-core();
 
 /* ======== Angular material custom themes ======== */
 $my-custom-primary: mat-palette($mat-grey);
@@ -16,86 +13,6 @@ $my-custom-theme: mat-light-theme(
   $my-custom-warn
 );
 
-button {
-  &.mat-button {
-    border: 2px solid rgba($color: #000000, $alpha: 0);
-    transition: 0.1s;
-    border-radius: 0 !important;
-    box-sizing: border-box;
-    font-weight: normal;
-    min-width: 0px;
-
-    .mat-button-wrapper {
-      min-width: 0px;
-      width: 100%;
-      display: flex;
-      flex-flow: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    &.mat-primary {
-      // background-color: #0f62fe;
-      background-color: #f72485;
-      
-      .mat-button-wrapper {
-        color: white;
-      }
-
-      &:hover {
-        background-color: darken($color: #f72485, $amount: 10%);
-      }
-
-      &:focus {
-        border: 2px solid white;
-        // box-shadow: inset 0 0 0 1px #0f62fe, inset 0 0 0 2px #ffffff;
-      }
-    }
-
-    &.mat-secondary {
-      background: #181818;
-      color: white;
-
-      &:hover {
-        background-color: #353535;
-      }
-
-      &:focus {
-        border: 2px solid white;
-      }
-    }
-
-    &.mat-accent {
-      color: #393939;
-      background-color: #f4f4f4;
-
-      &:hover {
-        background-color: #e5e5e5;
-      }
-
-      &:focus {
-        border: 2px solid #f72485;
-      }
-    }
-
-    &.mat-warn {
-      background: #da1e28;
-      color: white;
-
-      &:hover {
-        background: #ba1b23;
-      }
-
-      &:focus {
-        box-shadow: inset 0 0 0 1px #da1e28, inset 0 0 0 2px #ffffff;
-      }
-    }
-  }
-
-  &:disabled {
-    opacity: 0.5;
-  }
-}
 
 mat-progress-bar {
   .mat-progress-bar-fill::after {
@@ -288,6 +205,26 @@ mat-tab-group {
       opacity: 1 !important;
     }
   }
+}
+
+// https://github.com/angular/components/issues/11756
+.mat-progress-spinner-indeterminate-animation {
+  /* keep anim slow to avoid wobble from rounding errors */
+  animation-duration: 9s !important;
+}
+.mat-progress-spinner-indeterminate-animation circle {
+  animation-name: progress-spinner-stroke-rotate !important;
+  animation-timing-function: linear !important;
+  animation-duration: 4s !important;
+}
+
+@keyframes progress-spinner-stroke-rotate {
+  $start: 200%; /* approx 2/3 of circle circumference */
+  $end: 20%;
+  0%   { stroke-dashoffset: $start; }
+  50%  { stroke-dashoffset: $end; }
+  /* removing transform: rotate(720deg) causes wobble */
+  100% { stroke-dashoffset: $start; transform: rotate(720deg); }
 }
 
 @include angular-material-theme($my-custom-theme);

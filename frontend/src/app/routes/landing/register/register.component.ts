@@ -4,7 +4,8 @@ import { ICacheable } from "src/app/app.interfaces";
 import { BaseAppService } from "src/app/services/app.service";
 import { AuthenticationService } from "src/app/services/authentication.service";
 import { MyselfService } from "src/app/services/myself.service";
-import { FormComponent, IUiForm } from "src/app/ui-lib/form/form.component";
+import { FormComponent } from "src/app/ui-lib/form/form.component";
+import { IUiForm } from "src/app/ui-lib/form/form.interfaces";
 
 import { UserService } from "../../../services/user.service";
 
@@ -20,9 +21,9 @@ export class RegisterComponent implements OnInit {
     error: "",
     loading: false,
     form_errors: {
-      username: "",
-      email_address: "",
-      password: "",
+      username: null,
+      email_address: null,
+      password: null,
     },
   };
 
@@ -98,12 +99,12 @@ export class RegisterComponent implements OnInit {
   }
 
   handleRegisterSuccess(user: IUser) {
-    const { email_address, password } = this.form.formGroup.value; 
+    // const { email_address, password } = this.form.formGroup.value; 
     // get user, host & host info on login
-    this.authService.login({ email_address, password }).then(() => {
-      this.myselfService.getMyself().then(() => {
-        this.appService.navigateTo("/");
-      });
-    });
+    // this.authService.login({ email_address, password }).then(() => {
+    //   this.myselfService.getMyself().then(() => {
+    //     this.appService.navigateTo("/");
+    //   });
+    // });
   }
 }

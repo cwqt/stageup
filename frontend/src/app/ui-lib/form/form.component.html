@@ -1,24 +1,10 @@
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-    <ui-input
-        *ngFor="let field of form.fields"
-        [type]="field.type"
-        [label]="field.label"
-        [hint]="field.hint"
-        [variant]="field.variant"
-        [placeholder]="field.default"
-        [validatorFunctions]="field.validators"
-        [formControlName]="field.field_name">
-        {{field.field_name}}
-    </ui-input>      
+<ui-form-body [fg]="formGroup" [fields]="form.fields"></ui-form-body>
 
-    <ui-button type="submit"
-        [disabled]="cacheable.loading"
-        [fullWidth]="form.submit.fullWidth"
-        [size]="form.submit.size"
-        [variant]="form.submit.variant"
-        (onClick)="onSubmit()">
-        {{ form.submit.text }}
-    </ui-button>
+<ui-button type="submit"
+  [disabled]="cacheable.loading"
+  [kind]="form.submit.variant"
+  (click)="onSubmit()">
+  {{ form.submit.text }}
+</ui-button>
 
-    <span *ngIf="cacheable.error">{{ cacheable.error }}</span>
-</form>
+<span *ngIf="cacheable.error">{{ cacheable.error }}</span>

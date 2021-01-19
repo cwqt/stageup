@@ -49,7 +49,7 @@ export namespace FieldValidators {
   };
 
   export const ISOCountry: CustomValidator = v => {
-    return isString(v).isISO31661Alpha3().withMessage('Not a valid ISO country code');
+    return isString(v).isISO31661Alpha3().withMessage(ErrCode.REGEX_MATCH);
   };
 
   export const isInt: CustomValidator = (v, msg) => {

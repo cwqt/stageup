@@ -1,10 +1,8 @@
 .settings-container {
   display: flex;
   flex-flow: row;
-  margin-top: -58px;
-  margin-left: -20px;
-  height: calc(100% + 68px);
-  width: calc(100% + 40px);
+  height: 100%;
+  width: 100%;
 
   .settings-container__sidebar,
   .settings-container__body {
@@ -57,6 +55,5 @@
 
   .settings-container__body {
     width: 70%;
-    background-color: #f3f3f3;
   }
 }

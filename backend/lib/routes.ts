@@ -16,7 +16,9 @@ import {
     IHostOnboarding as IHOnboarding,
     IOnboardingStep,
     IAddress,
-    IUserStub
+    IUserStub,
+    IPerformanceHostInfo,
+    IHostStub
 } from "@eventi/interfaces";
 
 import UserController from './controllers/User.controller';
@@ -57,7 +59,7 @@ router.delete <void>                  ("/users/:uid/addresses/:aid",            
 router.get    <void>                  ("/feed",                                     Users.readUserFeed());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
-const Hosts = new HostController(providers, mws);   
+const Hosts = new HostController(providers, mws);
 router.post   <IHost>                 ("/hosts",                                    Hosts.createHost());
 router.get    <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
 router.delete <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
@@ -98,7 +100,7 @@ router.redirect                       ("/auth/verify",                          
 const Misc = new MiscController(providers, mws);
 router.get    <string>                ("/ping",                                     Misc.ping());
 router.post   <void>                  ("/drop",                                     Misc.dropAllData());
-router.get    <void>                  ("/test",                                     Misc.test());
+router.get    <IHost>                 ("/verifyhost/:hid",                          Misc.verifyHost());
 
 return router;
 };

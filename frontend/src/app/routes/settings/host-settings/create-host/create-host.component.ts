@@ -1,11 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
 import { IHost, IHostStub, IUser } from '@eventi/interfaces';
 import { ICacheable } from 'src/app/app.interfaces';
 import { BaseAppService } from 'src/app/services/app.service';
 import { HostService } from 'src/app/services/host.service';
-import { IUiForm } from 'src/app/ui-lib/form/form.component';
+import { IUiForm } from 'src/app/ui-lib/form/form.interfaces';
 
 @Component({
   selector: 'app-create-host',
@@ -21,9 +20,9 @@ export class CreateHostComponent implements OnInit {
     loading: false,
     error: "",
     form_errors: {
-      host_name: "",
-      host_username: "",
-      email_address: ""
+      host_name: null,
+      host_username: null,
+      email_address: null
     }
   }
 

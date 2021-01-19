@@ -8,8 +8,7 @@ export class SessionInterceptor implements HttpInterceptor {
     constructor(private cookieService:CookieService) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // add authorization header with jwt token if available
-        let currentSession = this.cookieService.get('connect.sid');
+      let currentSession = this.cookieService.get('connect.sid');
         console.log('COOKIE: ', currentSession)
         if (currentSession) {
             request = request.clone({

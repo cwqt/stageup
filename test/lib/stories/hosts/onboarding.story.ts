@@ -26,7 +26,6 @@ import {
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { expect } from 'chai';
-import { on } from 'process';
 
 describe('As Client, I want to register a Host & be onboarded', async () => {
   let client: IUser;

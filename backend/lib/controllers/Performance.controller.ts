@@ -6,11 +6,12 @@ import {
   IPerformanceUserInfo,
   HTTP,
   ErrCode,
+  HostPermission,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Performance } from '../models/Performances/Performance.model';
-import { ErrorHandler } from '../common/errors';
+import { ErrorHandler, getCheck } from '../common/errors';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
 import Validators, { body } from '../common/validate';
@@ -28,11 +29,16 @@ export default class PerformanceController extends BaseController {
           name: v => Validators.Fields.isString(v),
         }),
       ],
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async (req: Request): Promise<IPerformance> => {
-        const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
-
-        if (!user.host) throw new ErrorHandler(HTTP.BadRequest, ErrCode.MISSING_PERMS);
+        const user = await getCheck(
+          User.findOne(
+            {
+              _id: req.session.user._id,
+            },
+            { relations: ['host'] }
+          )
+        );
 
         const performance = await new Performance(
           {
