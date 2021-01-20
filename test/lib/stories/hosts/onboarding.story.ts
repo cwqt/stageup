@@ -281,7 +281,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
         issues: [],
       });
 
-      await Stories.actions.admin.submitOnboardingProcess(onboarding);
+      await Stories.actions.admin.enactOnboardingProcess(onboarding);
     });
   });
 });

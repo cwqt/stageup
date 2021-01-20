@@ -33,10 +33,10 @@ export default {
     return res.data;
   },
 
-  // router.post <void> ("/admin/onboarding/:oid/submit", Admin.submitOnboardingProcess());
-  submitOnboardingProcess: async (onboarding: IHostOnboarding): Promise<void> => {
+  // router.post <void> ("/admin/onboarding/:oid/enact", Admin.enactOnboardingProcess());
+  enactOnboardingProcess: async (onboarding: IHostOnboarding): Promise<void> => {
     const res = await Axios.post(
-      `${environment.baseUrl}/admin/onboarding/${onboarding._id}/submit`,
+      `${environment.baseUrl}/admin/onboarding/${onboarding._id}/enact`,
       null,
       environment.getOptions()
     );

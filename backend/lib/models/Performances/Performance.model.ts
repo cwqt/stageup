@@ -10,7 +10,7 @@ import { unixTimestamp } from "../../common/helpers";
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
   @PrimaryGeneratedColumn() _id: number;
-  @Column()                 created_at: number;  
+  @Column()                 created_at: number;
   @Column()                 name: string;
   @Column()                 description?: string;
   @Column({nullable:true})  premiere_date?: number;

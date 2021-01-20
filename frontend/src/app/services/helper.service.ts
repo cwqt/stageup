@@ -10,7 +10,7 @@ export class HelperService {
 
   showDialog<T>(dialogRef: MatDialogRef<any>, callback: (result: T) => void, cancelCallback=(() => {})) {
     const close = fn => { fn(); dialogRef.close(); }
-    
+
     dialogRef.componentInstance.submit.subscribe(res => close(() => callback(res)));
     dialogRef.componentInstance.cancel.subscribe(() => close(cancelCallback));
     dialogRef.afterClosed().subscribe(result => {

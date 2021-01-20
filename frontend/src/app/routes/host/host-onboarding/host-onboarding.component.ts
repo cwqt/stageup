@@ -30,6 +30,7 @@ import {
 } from "../../../ui-lib/form/form.interfaces";
 import phone from 'phone';
 import isPostalCode from 'validator/es/lib/isPostalCode';
+import { HttpErrorResponse } from "@angular/common/http";
 
 interface IUiStep<T> {
   label: string;
@@ -52,6 +53,8 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   @Input() host: IHost;
   @ViewChild(MatVerticalStepper, { static: false }) stepper: MatVerticalStepper;
 
+  public states: typeof HostOnboardingState = HostOnboardingState;
+
   onReviewStep: boolean = false;
   selectedStep: HostOnboardingStep;
   componentRefreshing: boolean = true;
@@ -60,6 +63,13 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     loading: false,
     error: "",
   };
+
+  // For when the user submits for verification
+  submission:ICacheable<null> = {
+    data: null,
+    loading: false,
+    error: ""
+  }
 
   stepData: {
     [index in HostOnboardingStep]: ICacheable<IOnboardingStep<any>>;
@@ -297,6 +307,9 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   get subscriptionConfig() {
     return this.steps[HostOnboardingStep.SubscriptionConfiguration];
   }
+  get currentState() {
+    return this.onboarding.data.state;
+  }
 
   switchStep(step: HostOnboardingStep) {
     this.componentRefreshing = true;
@@ -338,7 +351,14 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     return this.hostService
       .readOnboardingProcessStatus(this.host._id)
       .then((o) => (this.onboarding.data = o))
-      .catch((e) => (this.onboarding.error = e.message))
+      .catch((e:HttpErrorResponse) => (this.onboarding.error = e.message))
       .finally(() => (this.onboarding.loading = false));
+  }
+
+  async submitForVerification() {
+    this.submission.loading = true;
+    return this.hostService.submitOnboardingProcess(this.host._id)
+      .catch((e:HttpErrorResponse) => this.submission.error = e.message)
+      .finally(() => this.submission.loading = false);
   }
 }

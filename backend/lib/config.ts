@@ -1,4 +1,4 @@
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 dotenv.config();
 
 interface IEnv {
@@ -13,121 +13,119 @@ interface IEnv {
   EXPRESS_PORT: number;
   LOCALTUNNEL_URL: string;
   SENDGRID: {
-    USERNAME:string;
-    API_KEY:string;
-  },
+    USERNAME: string;
+    API_KEY: string;
+  };
   MUX: {
     ACCESS_TOKEN: string;
     SECRET_KEY: string;
     HOOK_SIGNATURE: string;
     IMAGE_API_ENDPOINT: string;
-  },
+  };
   PG: {
-    USER:string;
-    HOST:string;
-    DB:string;
-    PASS:string;
-    PORT:number;
-  },
+    USER: string;
+    HOST: string;
+    DB: string;
+    PASS: string;
+    PORT: number;
+  };
   USE_MEMORYSTORE: boolean;
   REDIS: {
-    HOST:string;
-    PORT:number;
-    TTL:number;
-  },
+    HOST: string;
+    PORT: number;
+    TTL: number;
+  };
   INFLUX: {
-    HOST:string;
-    DB:string;
-  },
+    HOST: string;
+    DB: string;
+  };
   AWS: {
-    S3_ACCESS_KEY_ID:string;
-    S3_ACCESS_SECRET_KEY:string;
-    S3_BUCKET_NAME:string;
-  }
+    S3_ACCESS_KEY_ID: string;
+    S3_ACCESS_SECRET_KEY: string;
+    S3_BUCKET_NAME: string;
+  };
 }
 
-const base:Omit<IEnv, "API_URL" | "FE_URL" | "SITE_TITLE"> = {
+const base: Omit<IEnv, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
   EXPRESS_PORT: 3000,
   PRODUCTION: false, //set later
-  DEVELOPMENT: false,//set later
-  TESTING: false,    //set later
+  DEVELOPMENT: false, //set later
+  TESTING: false, //set later
   LOCALTUNNEL_URL: process.env.LOCALTUNNEL_URL,
   SENDGRID: {
     USERNAME: process.env.SENDGRID_USERNAME,
-    API_KEY: process.env.SENDGRID_API_KEY
+    API_KEY: process.env.SENDGRID_API_KEY,
   },
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
     HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE,
-    IMAGE_API_ENDPOINT: "https://image.mux.com"
+    IMAGE_API_ENDPOINT: 'https://image.mux.com',
   },
   PG: {
     USER: process.env.PG_USER,
     PASS: process.env.PG_PASS,
-    HOST: process.env.PRODUCTION === "true" ? process.env.POSTGRES_SERVICE_HOST : "localhost",
-    DB: "postgres",
+    HOST: process.env.PRODUCTION === 'true' ? process.env.POSTGRES_SERVICE_HOST : 'localhost',
+    DB: 'postgres',
     PORT: 5432,
   },
-  USE_MEMORYSTORE: process.env.USE_MEMORYSTORE === "true",
+  USE_MEMORYSTORE: process.env.USE_MEMORYSTORE === 'true',
   REDIS: {
-    HOST: process.env.PRODUCTION === "true" ? process.env.REDIS_SERVICE_HOST : "localhost",
+    HOST: process.env.PRODUCTION === 'true' ? process.env.REDIS_SERVICE_HOST : 'localhost',
     PORT: 6379,
     TTL: 86400,
   },
   AWS: {
     S3_ACCESS_KEY_ID: process.env.AWS_S3_KEY_ID,
     S3_ACCESS_SECRET_KEY: process.env.AWS_S3_ACCESS_SECRET_KEY,
-    S3_BUCKET_NAME: process.env.AWS_S3_ACCESS_SECRET_KEY
+    S3_BUCKET_NAME: process.env.AWS_S3_ACCESS_SECRET_KEY,
   },
   INFLUX: {
-    HOST: process.env.PRODUCTION === "true" ? process.env.INFLUX_HOST : "localhost",
-    DB: "metrics"
-  }
+    HOST: process.env.PRODUCTION === 'true' ? process.env.INFLUX_HOST : 'localhost',
+    DB: 'metrics',
+  },
 };
 
 const prod: IEnv = {
   ...base,
-  SITE_TITLE: "my.eventi.net",
-  API_URL: "https://api.eventi.com",
-  FE_URL: "https://eventi.com",
+  SITE_TITLE: 'my.eventi.net',
+  API_URL: 'https://api.eventi.com',
+  FE_URL: 'https://eventi.com',
   PRODUCTION: true,
 };
 
 const dev: IEnv = {
   ...base,
-  SITE_TITLE: "dev.eventi.net",
-  API_URL: "http://localhost:3000",
-  FE_URL: "http://localhost:4200",
+  SITE_TITLE: 'dev.eventi.net',
+  API_URL: 'http://localhost:3000',
+  FE_URL: 'http://localhost:4200',
   DEVELOPMENT: true,
 };
 
 const test: IEnv = {
   ...base,
-  SITE_TITLE: "dev.eventi.net",
-  API_URL: "http://localhost:3000",
-  FE_URL: "http://localhost:4200",
+  SITE_TITLE: 'dev.eventi.net',
+  API_URL: 'http://localhost:3000',
+  FE_URL: 'http://localhost:4200',
   TESTING: true,
 };
 
 let env: IEnv;
 
 switch (process.env.NODE_ENV) {
-  case "production":
+  case 'production':
     env = prod;
     break;
-  case "development":
+  case 'development':
     env = dev;
     break;
-  case "testing":
+  case 'testing':
     env = test;
     break;
 }
 
-console.log(
-  "\nBackend running in env: \x1b[04m" + process.env.NODE_ENV + "\x1b[0m\n"
-);
+console.log('\nBackend running in env: \x1b[04m' + process.env.NODE_ENV + '\x1b[0m\n');
 
 export default env;

@@ -12,6 +12,5 @@
     "prettier.arrowParens": "avoid",
     "prettier.bracketSpacing": true,
     "editor.folding": false,
-    "editor.wordWrapColumn": 120
+    "editor.wordWrapColumn": 120,
 }
-  

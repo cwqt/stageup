@@ -75,27 +75,21 @@ export default class AdminController extends BaseController {
         const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: parseInt(req.params.oid) }));
 
         const review = new OnboardingStepReview(step, onboarding, reviewer, submission);
-
         await this.ORM.transaction(async txc => {
           await txc.save(review);
-
           onboarding.steps[step].state = review.step_state;
-          if (Object.values(onboarding.steps).every(o => o.state == HostOnboardingState.Verified)) {
-            onboarding.state = HostOnboardingState.Verified;
-          } else {
-            onboarding.state = HostOnboardingState.AwaitingChanges;
-          }
-
           await txc.save(onboarding);
+          // The admin will then enact to push requested changes (if any) to the Host
         });
       },
     };
   }
 
   /**
-   * @description Merge the Hosts Onboarding Process with the host
+   * @description Merge the Hosts Onboarding Process with the host if all steps valid,
+   * otherwise submit e-mail requesting changes
    */
-  submitOnboardingProcess(): IControllerEndpoint<void> {
+  enactOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
@@ -157,7 +151,7 @@ export default class AdminController extends BaseController {
               }
             }
 
-            // TODO: Subscription level
+            // TODO: Subscription level (needs requirements)
 
             // TODO: Once the onboarding process is complete, we no longer need it & it + it's onboarding issues
             // can be deleted
@@ -166,6 +160,9 @@ export default class AdminController extends BaseController {
             logger.info('All steps valid & signed off!');
           } else {
             logger.info('Not all steps are signed off as valid');
+            onboarding.state = HostOnboardingState.HasIssues;
+            // TODO: Send an email requesting changes
+            await txc.save(onboarding);
           }
         });
       },

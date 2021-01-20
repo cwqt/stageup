@@ -20,9 +20,10 @@ import { FormComponent } from "./form/form.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormBodyComponent } from "./form/form-body/form-body.component";
 import { HrComponent } from './hr/hr.component';
+import { PlaceholderComponent } from "./placeholder/placeholder.component";
 
 
-const allComponents = [
+const ExportedUiComponents = [
   ButtonComponent,
   IconComponent,
   TestbedComponent,
@@ -35,12 +36,13 @@ const allComponents = [
   InputComponent,
   FormComponent,
   HrComponent,
+  PlaceholderComponent
 ];
 
 @NgModule({
   declarations: [
-    ...allComponents,
-    FormBodyComponent,
+    ...ExportedUiComponents,
+    FormBodyComponent, // internal recursive component for forms
   ],
   imports: [
     CommonModule,
@@ -52,7 +54,7 @@ const allComponents = [
     NgxMaskModule.forRoot(),
     NgxMatSelectSearchModule
   ],
-  exports: allComponents,
+  exports: ExportedUiComponents,
   providers: [],
   entryComponents: [],
   bootstrap: [],

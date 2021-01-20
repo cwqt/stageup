@@ -87,7 +87,7 @@ router.delete <void>                  ("/performance/:pid",                     
 const Admin = new AdminController(providers, mws);
 router.get  <IE<IHOnboarding[], void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
 router.post  <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
-router.post <void>                    ("/admin/onboarding/:oid/submit",             Admin.submitOnboardingProcess());
+router.post <void>                    ("/admin/onboarding/:oid/enact",              Admin.enactOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);

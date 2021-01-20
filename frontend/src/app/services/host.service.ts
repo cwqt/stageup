@@ -58,12 +58,12 @@ export class HostService {
   readOnboardingProcessStatus(hostId:number):Promise<IHostOnboarding> {
     return this.http.get<IHostOnboarding>(`/api/hosts/${hostId}/onboarding/status`).toPromise();
   }
-  
+
   // router.post<void> ("/hosts/:hid/onboarding/submit", Hosts.submitOnboardingProcess());
   submitOnboardingProcess(hostId:number):Promise<void> {
     return this.http.post<void>(`/api/hosts/${hostId}/onboarding/submit`, {}).toPromise();
   }
-  
+
   // router.get <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep());
   readOnboardingProcessStep(hostId:number, step:HostOnboardingStep):Promise<IOnboardingStep<any>> {
     return this.http.get<IOnboardingStep<any>>(`/api/hosts/${hostId}/onboarding/${step}`).toPromise();
