@@ -11,6 +11,7 @@ import { CookieService } from "ngx-cookie-service";
 import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 import { ClickOutsideModule } from "ng-click-outside";
+import { MomentModule } from 'ngx-moment';
 
 import { AppComponent } from "./app.component";
 import { LandingComponent } from "./routes/landing/landing.component";
@@ -46,7 +47,10 @@ import { HostSettingsComponent } from "./routes/settings/host-settings/host-sett
 import { CreateHostComponent } from "./routes/settings/host-settings/create-host/create-host.component";
 import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
+import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from "./routes/search/search.component";
+import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
+
 
 export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -84,6 +88,8 @@ export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
     HostOnboardingComponent,
     AdminPanelComponent,
     SearchComponent,
+    AdminOnboardingListComponent,
+    OnboardingStatePipe
   ],
   imports: [
     AngularMaterialModule,
@@ -96,9 +102,10 @@ export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
     HttpClientModule,
     ClickOutsideModule,
     NgxMaskModule.forRoot(),
+    MomentModule
   ],
   providers: [
-    CookieService
+    CookieService,
   ],
   entryComponents: [],
   bootstrap: [AppComponent],
