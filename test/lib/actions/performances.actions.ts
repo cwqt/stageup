@@ -5,7 +5,7 @@ import { IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformancePurch
 
 export default {
 // router.post<IPerf>("/performances",Perfs.createPerformance());
-createPerformance: async (data:{name: string, description: string, price: number, currency: CurrencyCode}) => {
+createPerformance: async (data:{name: string, description: string, price: number, currency: CurrencyCode}): Promise <IPerformance> => {
     const res = await Axios.post(`${env.baseUrl}/performances}`, data,
           env.getOptions()
         );    
@@ -13,7 +13,7 @@ createPerformance: async (data:{name: string, description: string, price: number
       },
   
 // router.get<IE<IPerfS[], null>>("/performances",Perfs.readPerformances());
-readPerformances: async(): Promise <IEnvelopedData<IPerformanceStub[], IPerformanceUserInfo>> => {
+readPerformances: async(): Promise <IEnvelopedData<IPerformanceStub[], null>> => {
     const res = await Axios.get(`${env.baseUrl}/performances`,
         env.getOptions()
     );
