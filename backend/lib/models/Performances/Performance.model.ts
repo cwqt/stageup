@@ -69,7 +69,7 @@ export class Performance extends BaseEntity implements IPerformance {
     }
   }
 
-  toFull():Required<IPerformance> {
+  toFull(): Required<IPerformance> {
     return {
       ...this.toStub(),
       created_at: this.created_at,
