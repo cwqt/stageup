@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Observable, BehaviorSubject } from "rxjs";
-import { map, tap } from "rxjs/operators";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { BehaviorSubject } from "rxjs";
+import { tap } from "rxjs/operators";
+import { HttpClient } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { UserService } from "./user.service";
 import { LoggedInGuard } from "../_helpers";
 import { MyselfService } from "./myself.service";
 import { IUser } from "@eventi/interfaces";

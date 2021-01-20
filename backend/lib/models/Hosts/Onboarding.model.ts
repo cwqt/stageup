@@ -14,7 +14,6 @@ import {
   IFormErrorField,
   IHostOnboarding,
   IHostOnboardingProcess,
-  IOnboardingStepMap,
   HostOnboardingState,
   IOnboardingAddMembers,
   IOnboardingOwnerDetails,

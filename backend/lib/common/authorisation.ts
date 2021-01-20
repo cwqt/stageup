@@ -68,6 +68,8 @@ export const isSiteAdmin: AuthStrategy = async (req: Request, dc: DataClient): P
   return [true, {}];
 };
 
+// export const hasClientSubscriptionTier 
+
 /**
  * @description Combine AuthStratgies into an AND operator
  * @param args authStrategy

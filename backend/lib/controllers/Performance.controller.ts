@@ -31,7 +31,14 @@ export default class PerformanceController extends BaseController {
       ],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async (req: Request): Promise<IPerformance> => {
-        const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
+        const user = await getCheck(
+          User.findOne(
+            {
+              _id: req.session.user._id,
+            },
+            { relations: ['host'] }
+          )
+        );
 
         const performance = await new Performance(
           {

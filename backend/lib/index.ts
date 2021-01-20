@@ -3,7 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import cors from "cors";
-import session from "express-session";
+import session, { MemoryStore } from "express-session";
 import log, { stream } from "./common/logger";
 import http from "http";
 import helmet from 'helmet';
@@ -13,7 +13,6 @@ import { ErrCode, HTTP } from "@eventi/interfaces";
 import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
 import { pagination } from './common/paginate'
-import logger from "./common/logger";
 import Routes from './routes';
 import config from "./config";
 
@@ -40,7 +39,7 @@ app.use(morgan("tiny", { stream }));
           httpOnly: !config.PRODUCTION ? false : true,
           secure: !config.PRODUCTION ? false : true,
         },
-        store: providers.session_store,
+        store: config.USE_MEMORYSTORE ? new MemoryStore() : providers.session_store,
       })
     );
 
@@ -73,7 +72,7 @@ app.use(morgan("tiny", { stream }));
 function gracefulExit(providers:DataClient) {
   return (err:any) => {
     log.info(`Termination requested, closing all connections`);
-    logger.error(err);
+    log.error(err);
     server.close();
     DataProvider.close(providers);
     process.exit(1);

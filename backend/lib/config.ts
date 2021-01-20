@@ -29,10 +29,11 @@ interface IEnv {
     PASS:string;
     PORT:number;
   },
+  USE_MEMORYSTORE: boolean;
   REDIS: {
     HOST:string;
     PORT:number;
-    TTL:number;  
+    TTL:number;
   },
   INFLUX: {
     HOST:string;
@@ -70,6 +71,7 @@ const base:Omit<IEnv, "API_URL" | "FE_URL" | "SITE_TITLE"> = {
     DB: "postgres",
     PORT: 5432,
   },
+  USE_MEMORYSTORE: process.env.USE_MEMORYSTORE === "true",
   REDIS: {
     HOST: process.env.PRODUCTION === "true" ? process.env.REDIS_SERVICE_HOST : "localhost",
     PORT: 6379,

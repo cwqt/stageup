@@ -273,8 +273,7 @@ export default class HostController extends BaseController {
         });
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
 
-        const user = await User.findOne({ _id: req.session.user._id });
-        if (!user) throw new ErrorHandler(HTTP.NotFound);
+        const user = await getCheck(User.findOne({ _id: req.session.user._id }));
 
         // pick updateable fields from interface type
         const u: { [index in HostOnboardingStep]: Function } = {

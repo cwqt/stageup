@@ -86,7 +86,7 @@ export default class UserController extends BaseController {
         return {
           user: user.toFull(),
           host: host?.toStub(),
-          host_info: host ? host.members_info.find(uhi => uhi.user._id == user._id) : null,
+          host_info: host ? host.members_info.find(uhi => uhi.user._id == user._id)?.toFull() : null,
         };
       },
     };

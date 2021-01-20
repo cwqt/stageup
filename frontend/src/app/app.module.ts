@@ -1,22 +1,15 @@
-import { CookieService } from "ngx-cookie-service";
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 
 import { UiLibModule } from "./ui-lib/ui-lib.module";
 import { AngularMaterialModule } from "./angular-material.module";
 import { AppRoutingModule } from "./app.routes";
-import { HighchartsChartModule } from "highcharts-angular";
 import { HttpClientModule } from "@angular/common/http";
-import { MomentModule } from "ngx-moment";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { DynamicComponentModule, DynamicIoModule } from "ng-dynamic-component";
-import { PickerModule } from "@ctrl/ngx-emoji-mart";
+import { CookieService } from "ngx-cookie-service";
 import { ClickOutsideModule } from "ng-click-outside";
-import { CrystalLightboxModule } from "@crystalui/angular-lightbox";
-import { PopoverModule } from "../assets/popover";
-import { IvyCarouselModule } from "angular-responsive-carousel";
-import { NgxWidgetGridModule } from "ngx-widget-grid";
+import { MomentModule } from 'ngx-moment';
 
 import { AppComponent } from "./app.component";
 import { LandingComponent } from "./routes/landing/landing.component";
@@ -32,20 +25,18 @@ import { HeaderBarComponent } from "./components/app/header-bar/header-bar.compo
 import { ProfileComponent } from "./routes/profile/profile.component";
 import { IndexComponent } from "./routes/index/index.component";
 
-import { HeaderBarUserMenuComponent } from "./components/app/header-bar/header-bar-user-menu/header-bar-user-menu.component";
 import { FooterComponent } from "./components/app/footer/footer.component";
 import { PageComponent } from "./components/app/page/page.component";
-import { HeaderUserButtonComponent } from "./components/app/header-bar/header-user-button/header-user-button.component";
 
 import { CatalogComponent } from "./routes/catalog/catalog.component";
-import { SidebarComponent } from './components/app/sidebar/sidebar.component';
-import { FeedComponent } from './routes/feed/feed.component';
-import { PerformanceComponent } from './routes/performance/performance.component';
-import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
-import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
-import { HostComponent } from './routes/host/host.component';
-import { CreatePerformanceComponent } from './routes/host/create-performance/create-performance.component';
-import { PlayerComponent } from './components/player/player.component';
+import { SidebarComponent } from "./components/app/sidebar/sidebar.component";
+import { FeedComponent } from "./routes/feed/feed.component";
+import { PerformanceComponent } from "./routes/performance/performance.component";
+import { PerformanceWatchComponent } from "./routes/performance-watch/performance-watch.component";
+import { HostPerformancesComponent } from "./routes/host/host-performances/host-performances.component";
+import { HostComponent } from "./routes/host/host.component";
+import { CreatePerformanceComponent } from "./routes/host/create-performance/create-performance.component";
+import { PlayerComponent } from "./components/player/player.component";
 import { SettingsComponent } from "./routes/settings/settings.component";
 import { ProfileSettingsComponent } from "./routes/settings/profile-settings/profile-settings.component";
 import { BillingSettingsComponent } from "./routes/settings/billing-settings/billing-settings.component";
@@ -54,7 +45,10 @@ import { HostSettingsComponent } from "./routes/settings/host-settings/host-sett
 import { CreateHostComponent } from "./routes/settings/host-settings/create-host/create-host.component";
 import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
-import { SearchComponent } from './routes/search/search.component';
+import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
+import { SearchComponent } from "./routes/search/search.component";
+import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
+
 
 @NgModule({
   declarations: [
@@ -68,11 +62,9 @@ import { SearchComponent } from './routes/search/search.component';
     HeaderBarComponent,
     WrapperComponent,
     NotFoundComponent,
-    HeaderBarUserMenuComponent,
     FooterComponent,
     IndexComponent,
     PageComponent,
-    HeaderUserButtonComponent,
     CatalogComponent,
     SidebarComponent,
     FeedComponent,
@@ -90,7 +82,9 @@ import { SearchComponent } from './routes/search/search.component';
     CreateHostComponent,
     HostOnboardingComponent,
     AdminPanelComponent,
-    SearchComponent
+    SearchComponent,
+    AdminOnboardingListComponent,
+    OnboardingStatePipe
   ],
   imports: [
     AngularMaterialModule,
@@ -101,18 +95,12 @@ import { SearchComponent } from './routes/search/search.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    DynamicComponentModule,
-    DynamicIoModule,
-    MomentModule,
-    PickerModule,
     ClickOutsideModule,
-    CrystalLightboxModule,
-    PopoverModule,
-    NgxWidgetGridModule,
-    HighchartsChartModule,
-    IvyCarouselModule
+    MomentModule
   ],
-  providers: [CookieService],
+  providers: [
+    CookieService,
+  ],
   entryComponents: [],
   bootstrap: [AppComponent],
 })

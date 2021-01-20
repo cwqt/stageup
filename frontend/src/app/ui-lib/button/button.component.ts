@@ -1,33 +1,63 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { animate, state, style, transition, trigger } from "@angular/animations";
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from "@angular/core";
+import { dimensionClassMap, ThemeDimension, ThemeKind } from "../ui-lib.interfaces";
+interface Ripple {
+  x: number;
+  y: number;
+  show: boolean;
+}
 
 @Component({
   selector: "ui-button",
   templateUrl: "./button.component.html",
   styleUrls: ["./button.component.scss"],
+  animations: [
+    trigger('toggle', [
+      transition(':enter', animate('500ms ease-in-out')),
+      transition(':leave', animate('500ms ease-in-out'))
+    ])
+  ],
 })
 export class ButtonComponent implements OnInit {
   @Output() click = new EventEmitter();
+  @Input() kind?:ThemeKind = ThemeKind.Accent;
+  @Input() size?:ThemeDimension = ThemeDimension.Medium;
   @Input() tooltip?: string;
   @Input() disabled?: boolean = false;
   @Input() loading?: boolean = false;
   @Input() transparent?: boolean = false;
-  @Input() variant?:
-    | "primary"
-    | "secondary"
-    | "accent"
-    | "warn"
-    | "disabled"
-    | "basic" = "accent";
   @Input() icon?: string;
-  @Input() size?: "l" | "m" | "s";
   @Input() type?: "submit";
-  @Input() fullWidth?:boolean=false;
+
+  @ViewChild('button') button:ElementRef;
+  dimensionClassMap = dimensionClassMap;
+  private ripples:Ripple[];
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.ripples = [];
+  }
 
   onClick(event) {
     // this.click.emit(event);
+  }
+
+  animateRipple(e:MouseEvent) {
+    let el  = this.button.nativeElement;
+    let pos = el.getBoundingClientRect();
+    
+    this.ripples.push({
+      x: e.clientX - pos.left,
+      y: e.clientY - pos.top,
+      show: true
+    });
+  }
+
+  rippleEnd(rippleIdx:number) {
+    // this.ripples[rippleIdx].show = false;
+    setTimeout(() => {
+      this.ripples.splice(rippleIdx, 1);
+    }, 2000);
   }
 }

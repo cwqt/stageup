@@ -49,6 +49,10 @@ export default class MUXHooksController extends BaseController {
     return {
       authStrategy: this.validHookStrat(),
       controller: async (req: Request) => {
+        if(!config.USE_MEMORYSTORE) {
+          logger.error(`Cannot handle MUX hook as Redis is disabled in .env`);
+        }
+
         // Is a valid hook & we should handle it
         const data: IMUXHookResponse<any> = req.body;
 

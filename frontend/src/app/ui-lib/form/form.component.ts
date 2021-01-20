@@ -19,6 +19,7 @@ import {
   ValidatorFn,
   Validators,
 } from "@angular/forms";
+import { Y } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
 import {
   displayValidationErrors,
@@ -26,44 +27,12 @@ import {
 } from "src/app/_helpers/formErrorHandler";
 import { ButtonComponent } from "../button/button.component";
 import { InputComponent } from "../input/input.component";
-
-export interface IUiFormField {
-  type: "number" | "text" | "password" | "textarea" | "checkbox";
-  field_name: string;
-  variant?: "primary" | "secondary";
-  label?: string;
-  default?: string | boolean;
-  validators?: IUiFormFieldValidator[];
-  hint?: string;
-
-  // internal
-  disabled?: boolean;
-  errors?: string[];
-}
-
-export interface IUiFormFieldValidator {
-  type: "required" | "pattern" | "minlength" | "maxlength" | "email" | "custom";
-  value?: number | string | RegExp | CustomUiFieldValidator;
-  message?: (e: NgControl | AbstractControl) => string;
-}
-
-type CustomUiFieldValidator = (
-  thisControl: AbstractControl,
-  formControls?: { [index: string]: AbstractControl }
-) => boolean;
-
-export interface IUiFormSubmit<T> {
-  variant: "primary" | "secondary";
-  size?: "s" | "m" | "l";
-  text: string;
-  loadingText?: string;
-  fullWidth?: boolean;
-  handler: (formData: AbstractControl["value"]) => Promise<T>;
-}
-export interface IUiForm<T> {
-  fields: IUiFormField[];
-  submit: IUiFormSubmit<T>;
-}
+import {
+  CustomUiFieldValidator,
+  IUiForm,
+  IUiFormField,
+  IUiFormFieldValidator,
+} from "./form.interfaces";
 
 @Component({
   selector: "ui-form",
@@ -86,32 +55,44 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.formGroup = this.fb.group(
-      this.form.fields.reduce((acc, curr) => {
-        acc[curr.field_name] = [
-          { value: curr.default ?? "", disabled: curr.disabled || false },
-          curr.validators.map((v) => {
-            switch (v.type) {
-              case "required":
-                return Validators.required;
-              case "email":
-                return Validators.email;
-              case "minlength":
-                return Validators.minLength(v.value as number);
-              case "maxlength":
-                return Validators.maxLength(v.value as number);
-              case "pattern":
-                return Validators.pattern(v.value as RegExp);
-              case "custom":
-                return this.parseCustomValidator.bind(this)(v);
+    this.formGroup = Y<any, FormGroup>(
+      (r) => (
+        fields: IUiFormField[]
+      ): FormGroup => {
+        return this.fb.group(
+          fields.reduce((acc, curr) => {
+            if (curr.type == "container") {
+              acc[curr.field_name] = r(curr.fields);
+            } else {
+              acc[curr.field_name] = [
+                { value: curr.default ?? "", disabled: curr.disabled || false },
+                curr.validators?.map((v) => {
+                  switch (v.type) {
+                    case "required":
+                      return Validators.required;
+                    case "email":
+                      return Validators.email;
+                    case "minlength":
+                      return Validators.minLength(v.value as number);
+                    case "maxlength":
+                      return Validators.maxLength(v.value as number);
+                    case "pattern":
+                      return Validators.pattern(v.value as RegExp);
+                    case "custom":
+                      return this.parseCustomValidator.bind(this)(v);
+                  }
+                }),
+              ];
             }
-          }),
-        ];
 
-        return acc;
-      }, {})
-    );
+            return acc;
+          }, {})
+        );
+      }
+    )(this.form.fields);
   }
+
+  generateForm() {}
 
   ngAfterViewInit() {
     this.submissionButton = this.buttons.find((b) => b.type == "submit");
@@ -136,6 +117,8 @@ export class FormComponent implements OnInit, AfterViewInit, AfterContentInit {
   }
 
   onSubmit() {
+    console.log("SUBMITTING");
+
     this.cacheable.loading = true;
     this.inputs.forEach((i) => i.setDisabledState(true));
     this.submissionButton.loading = true;

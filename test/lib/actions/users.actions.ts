@@ -9,8 +9,8 @@ export default {
     return res.data;
   },
 
-  createUser: async (user: UserType): Promise<IUser> => {
-    if (!Stories.cachedUsers[user]) {
+  createUser: async (user: UserType, force:boolean=false): Promise<IUser> => {
+    if (force || !Stories.cachedUsers[user]) {
       const res = await Axios.post<IUser>(`${env.baseUrl}/users`, env.userCreationData[user], env.getOptions());
       Stories.cachedUsers[user] = new CachedUser(res.data);
       return res.data;
