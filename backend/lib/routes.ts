@@ -81,6 +81,7 @@ router.get    <IE<IPerf, IPUInfo>>    ("/performances/:pid",                    
 router.get    <IPHInfo>               ("/performances/:pid/host_info",              Perfs.readPerformanceHostInfo());
 router.post   <void>                  ("/performances/:pid/purchase",               Perfs.purchase());
 router.delete <void>                  ("/performance/:pid",                         Perfs.deletePerformance());
+router.put    <IPerf>                 ("/performance/:pid",                         Perfs.updatePerformance());
 
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, mws);
