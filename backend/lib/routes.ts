@@ -18,7 +18,8 @@ import {
     IAddress,
     IUserStub,
     IPerformanceHostInfo,
-    IHostStub
+    IHostStub,
+    IOnboardingStepMap
 } from "@eventi/interfaces";
 
 import UserController from './controllers/User.controller';
@@ -72,6 +73,7 @@ router.get <IHOnboarding>             ("/hosts/:hid/onboarding/status",         
 router.post<void>                     ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
 router.get <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
+router.get   <IOnboardingStepMap>     ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps());                );
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
@@ -87,7 +89,7 @@ router.put    <IPerf>                 ("/performance/:pid",                     
 const Admin = new AdminController(providers, mws);
 router.get  <IE<IHOnboarding[], void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
 router.post  <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
-router.post <void>                    ("/admin/onboarding/:oid/submit",             Admin.submitOnboardingProcess());
+router.post  <void>                   ("/admin/onboarding/:oid/submit",             Admin.submitOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);
