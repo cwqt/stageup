@@ -142,23 +142,61 @@ export default class HostController extends BaseController {
       },
     };
   }
-
-  addUser(): IControllerEndpoint<void> {
+  //router.post<IHost>("/hosts/:hid/members", Hosts.addUser());
+  addUser(): IControllerEndpoint<IHost> {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async (req: Request): Promise<IHost> => {
+
+
+      },
     };
   }
 
+  // router.patch <IHost>("/hosts/:hid/members/:mid",Hosts.updateUser());
+  updateUser(): IControllerEndpoint<IUser> {
+    return {
+      validators: [],
+      authStrategy: AuthStrat.hasHostPermission((HostPermission.Owner)),
+      controller: async (req: Request): Promise<IUser> => {
+        const user = await User.findOne({_id: req.session.user._id }, { relations: ['host'] });
+        if (!user._id) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
+        
+
+        const updateUser = await user.update({ name: req.body.name});
+        return updateUser.toFull();
+        
+
+      },
+    };
+  }
+
+  // router.delete <void>("/hosts/:hid/members/:mid",Hosts.removeUser());
   removeUser(): IControllerEndpoint<void> {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async (req: Request): Promise<void> => {
+        const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
+        if (!user.host) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
+
+        const userHostInfo = await UserHostInfo.findOne({
+          relations: ['user', 'host'],
+          where: {
+            user: { _id: user._id },
+            host: { _id: user.host._id },
+          },
+        });
+
+        if (userHostInfo.permissions != HostPermission.Owner)
+          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+
+        await user.remove();
+      },
     };
   }
-
+       
   alterMemberPermissions(): IControllerEndpoint<void> {
     return {
       validators: [],

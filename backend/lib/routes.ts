@@ -72,7 +72,7 @@ router.get <IHOnboarding>             ("/hosts/:hid/onboarding/status",         
 router.post<void>                     ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
 router.get <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
-
+router.post  <IUser>                  ("/hosts/:hid/member")                        Hosts.createMember());
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
 router.post   <IPerf>                 ("/performances",                             Perfs.createPerformance());
