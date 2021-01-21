@@ -1,9 +1,14 @@
 import { Injectable } from "@angular/core";
-import { IHostOnboarding, IHostOnboardingProcess, IUser, IOnboardingStep as IOnboardingStep, IUserHostInfo, HostOnboardingStep } from "@eventi/interfaces";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import {
+  HostPermission,
+  IHostOnboarding,
+  IOnboardingStep as IOnboardingStep,
+  IUserHostInfo,
+  HostOnboardingStep,
+} from "@eventi/interfaces";
+import { BehaviorSubject } from "rxjs";
+import { tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
-import { UserService } from "./user.service";
 import { IHost, IHostStub } from "@eventi/interfaces";
 import { MyselfService } from "./myself.service";
 
@@ -19,7 +24,7 @@ export class HostService {
   public get hostId() {
     return this.$currentHost.value._id;
   }
-  public get userHostPermission() {
+  public get userHostPermission(): HostPermission {
     return this.$currentUserHostInfo.value.permissions;
   }
   public get currentHostValue() {
@@ -55,22 +60,40 @@ export class HostService {
   }
 
   // router.get <IHOnboarding> ("/hosts/:hid/onboarding/status", Hosts.readOnboardingProcessStatus());
-  readOnboardingProcessStatus(hostId:number):Promise<IHostOnboarding> {
-    return this.http.get<IHostOnboarding>(`/api/hosts/${hostId}/onboarding/status`).toPromise();
+  readOnboardingProcessStatus(hostId: number): Promise<IHostOnboarding> {
+    return this.http
+      .get<IHostOnboarding>(`/api/hosts/${hostId}/onboarding/status`)
+      .toPromise();
   }
-  
+
   // router.post<void> ("/hosts/:hid/onboarding/submit", Hosts.submitOnboardingProcess());
-  submitOnboardingProcess(hostId:number):Promise<void> {
-    return this.http.post<void>(`/api/hosts/${hostId}/onboarding/submit`, {}).toPromise();
+  submitOnboardingProcess(hostId: number): Promise<void> {
+    return this.http
+      .post<void>(`/api/hosts/${hostId}/onboarding/submit`, {})
+      .toPromise();
   }
-  
+
   // router.get <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep());
-  readOnboardingProcessStep(hostId:number, step:HostOnboardingStep):Promise<IOnboardingStep<any>> {
-    return this.http.get<IOnboardingStep<any>>(`/api/host/${hostId}/onboarding/${step}`).toPromise();
+  readOnboardingProcessStep(
+    hostId: number,
+    step: HostOnboardingStep
+  ): Promise<IOnboardingStep<any>> {
+    return this.http
+      .get<IOnboardingStep<any>>(`/api/host/${hostId}/onboarding/${step}`)
+      .toPromise();
   }
 
   // router.put <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.updateOnboardingProcessStep());
-  updateOnboardingProcessStep(hostId:number, step:HostOnboardingStep, update:any):Promise<IOnboardingStep<any>> {
-    return this.http.put<IOnboardingStep<any>>(`/api/hosts/${hostId}/onboarding/${step}`, update).toPromise();
+  updateOnboardingProcessStep(
+    hostId: number,
+    step: HostOnboardingStep,
+    update: any
+  ): Promise<IOnboardingStep<any>> {
+    return this.http
+      .put<IOnboardingStep<any>>(
+        `/api/hosts/${hostId}/onboarding/${step}`,
+        update
+      )
+      .toPromise();
   }
 }

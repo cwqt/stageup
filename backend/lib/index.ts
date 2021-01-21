@@ -13,7 +13,6 @@ import { ErrCode, HTTP } from "@eventi/interfaces";
 import { handleError, ErrorHandler } from "./common/errors";
 import { DataClient, DataProvider } from "./common/data";
 import { pagination } from './common/paginate'
-import logger from "./common/logger";
 import Routes from './routes';
 import config from "./config";
 
@@ -73,7 +72,7 @@ app.use(morgan("tiny", { stream }));
 function gracefulExit(providers:DataClient) {
   return (err:any) => {
     log.info(`Termination requested, closing all connections`);
-    logger.error(err);
+    log.error(err);
     server.close();
     DataProvider.close(providers);
     process.exit(1);

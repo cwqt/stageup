@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
 import { ClickOutsideModule } from "ng-click-outside";
+import { MomentModule } from 'ngx-moment';
 
 import { AppComponent } from "./app.component";
 import { LandingComponent } from "./routes/landing/landing.component";
@@ -42,9 +43,12 @@ import { BillingSettingsComponent } from "./routes/settings/billing-settings/bil
 import { AccountSettingsComponent } from "./routes/settings/account-settings/account-settings.component";
 import { HostSettingsComponent } from "./routes/settings/host-settings/host-settings.component";
 import { CreateHostComponent } from "./routes/settings/host-settings/create-host/create-host.component";
-import { HostOnboardingComponent, PageDirective } from "./routes/host/host-onboarding/host-onboarding.component";
+import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
+import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from "./routes/search/search.component";
+import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
+
 
 @NgModule({
   declarations: [
@@ -79,7 +83,8 @@ import { SearchComponent } from "./routes/search/search.component";
     HostOnboardingComponent,
     AdminPanelComponent,
     SearchComponent,
-    PageDirective
+    AdminOnboardingListComponent,
+    OnboardingStatePipe
   ],
   imports: [
     AngularMaterialModule,
@@ -91,9 +96,10 @@ import { SearchComponent } from "./routes/search/search.component";
     ReactiveFormsModule,
     HttpClientModule,
     ClickOutsideModule,
+    MomentModule
   ],
   providers: [
-    CookieService
+    CookieService,
   ],
   entryComponents: [],
   bootstrap: [AppComponent],

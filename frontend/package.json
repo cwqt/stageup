@@ -25,6 +25,7 @@
     "@eventi/interfaces": "../interfaces",
     "ng-click-outside": "^7.0.1",
     "ngx-cookie-service": "^11.0.2",
+    "ngx-moment": "^5.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
