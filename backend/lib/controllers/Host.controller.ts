@@ -16,6 +16,7 @@ import {
   IUserHostInfo,
   pick,
   IUserStub,
+  IOnboardingStepMap,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
@@ -251,6 +252,10 @@ export default class HostController extends BaseController {
         return { ...onboarding.steps[step], review: stepReview?.toFull() || null };
       },
     };
+  }
+
+  readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
+    return null;
   }
 
   updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
