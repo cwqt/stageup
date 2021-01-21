@@ -19,7 +19,7 @@ export const create = async (): Promise<TORM.Connection> => {
       logging: false,
     });
 
-    // await generateUML(conn);
+    //await generateUML(conn);
 
     return conn;
   } catch (error) {
@@ -33,7 +33,7 @@ import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
 const generateUML = async (conn: TORM.Connection) => {
   const flags: Flags = {
     direction: Direction.LR,
-    format: Format.SVG,
+    format: Format.PNG,
     handwritten: false,
   };
 

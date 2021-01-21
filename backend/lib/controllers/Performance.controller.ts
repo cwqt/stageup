@@ -141,6 +141,22 @@ export default class PerformanceController extends BaseController {
     };
   }
 
+  updatePerformance(): IControllerEndpoint<IPerformance> {
+    return {
+      validators: [],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async (req: Request): Promise<IPerformance> => {
+        let p = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
+        p = await p.update({ 
+          name: req.body.name,
+          price: req.body.price,
+          description: req.body.description
+         });
+        return p.toFull();
+      },
+    };
+  }
+
   purchase(): IControllerEndpoint<void> {
     return {
       validators: [],
@@ -171,8 +187,12 @@ export default class PerformanceController extends BaseController {
   deletePerformance(): IControllerEndpoint<void> {
     return {
       validators: [],
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async (req: Request): Promise<void> => {
+        const perf = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
+        await perf.remove();
+      
+      },
     };
   }
 }

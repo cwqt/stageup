@@ -10,7 +10,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "tsc && mocha --bail --timeout 100000 -r ts-node/register lib/stories/hosts/onboarding.story.ts"
+    "test": "tsc && mocha --bail --timeout 100000 -r ts-node/register lib/stories/hosts/onboarding.story.ts" 
   },
   "author": "",
   "license": "ISC",
