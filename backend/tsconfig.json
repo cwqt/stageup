@@ -12,7 +12,7 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "sourceMap": true,
-    "outDir": "./build",
+    "outDir": "./dist",
     "rootDirs": ["./lib"],
     "typeRoots": [
       "@types",

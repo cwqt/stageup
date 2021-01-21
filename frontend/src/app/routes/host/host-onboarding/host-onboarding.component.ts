@@ -6,6 +6,7 @@ import {
   AfterViewInit,
   Component,
   ComponentFactoryResolver,
+  Host,
   Input,
   OnInit,
   QueryList,
@@ -27,10 +28,12 @@ import { HostService } from "src/app/services/host.service";
 import {
   IUiForm,
   IUiFieldSelectOptions,
+  IUiFormPrefetchData,
 } from "../../../ui-lib/form/form.interfaces";
 import phone from 'phone';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { HttpErrorResponse } from "@angular/common/http";
+import { flatten } from "flat";
 
 interface IUiStep<T> {
   label: string;
@@ -45,7 +48,7 @@ interface IUiStep<T> {
   providers: [
     {
       provide: STEPPER_GLOBAL_OPTIONS,
-      useValue: { showError: true },
+      useValue: { showError: true, displayDefaultIndicatorType: false},
     },
   ],
 })
@@ -71,7 +74,8 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     error: ""
   }
 
-  stepData: {
+  stepData = createICacheable<IOnboardingStep<any>>();
+  stepCacheables: {
     [index in HostOnboardingStep]: ICacheable<IOnboardingStep<any>>;
   } = {
     [HostOnboardingStep.ProofOfBusiness]: createICacheable(),
@@ -91,16 +95,25 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     [HostOnboardingState.Verified]: { color: "", icon: "checkmark--outline" },
   };
 
+
   stepUiMap: { [index in HostOnboardingStep]?: IUiStep<any> } = {
     [HostOnboardingStep.ProofOfBusiness]: {
       label: "Proof of Business",
       data: null,
       form: {
-        prefetch: async () => {
-          return (await this.hostService.readOnboardingProcessStep(
+        prefetch: async ():Promise<IUiFormPrefetchData> => {
+          const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(
             this.host._id,
             HostOnboardingStep.ProofOfBusiness
-          )).data;
+          ));
+
+          return {
+            fields: flatten<any, IUiFormPrefetchData["fields"]>(stepData.data),
+            errors: Object.keys(stepData.review.issues).reduce((acc, curr) => {
+              acc[curr] = stepData.review.issues[curr].message
+              return acc;
+            }, {})
+          };
         },
         fields: {
           hmrc_company_number: {
@@ -314,10 +327,25 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   switchStep(step: HostOnboardingStep) {
     this.componentRefreshing = true;
     this.selectedStep = step;
-    setTimeout(() => {
-      // push to next tick
+
+    // Show on next tick to avoid val changed during change detection loop err
+    const nextTickPush = () => setTimeout(() => {
       this.componentRefreshing = false;
     }, 0);
+
+    // Fetch the current states reviews
+    if(this.onboarding.data.steps[step] == HostOnboardingState.HasIssues) {
+      this.stepData.loading = true;
+      this.hostService.readOnboardingProcessStep(this.host._id, step)
+        .then(d => this.stepData.data = d)
+        .catch((e:HttpErrorResponse) => this.stepData.error = e.message)
+        .finally(() => {
+          this.stepData.loading = false;
+          nextTickPush();
+        });
+    } else {
+      nextTickPush();
+    }
   }
 
   ngOnInit(): void {
@@ -330,8 +358,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
   handleSelectionChange(event: StepperSelectionEvent) {
     // Review step is the final step after all onboarding stages
-    this.onReviewStep =
-      event.selectedIndex == Object.keys(this.stepUiMap).length;
+    this.onReviewStep = event.selectedIndex == Object.keys(this.stepUiMap).length;
     if (!this.onReviewStep) this.switchStep(event.selectedIndex);
   }
 
@@ -339,12 +366,20 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     return this.hostService
       .updateOnboardingProcessStep(this.host._id, step, formData)
       .then(() => this.stepper.next())
-      .finally(() => console.log(this.stepData));
+      .finally(() => console.log(this.stepCacheables));
   }
 
   handleStepSuccess(step: HostOnboardingStep) {}
 
   handleStepFailure(step: HostOnboardingStep) {}
+
+  async readCurrentStep(step:HostOnboardingStep) {
+    this.stepData.loading = true;
+    return this.hostService.readOnboardingProcessStep(this.host._id, step)
+      .then(data => this.stepData.data = data)
+      .catch((e:HttpErrorResponse) => this.stepData.error = e.message)
+      .finally(() => this.stepData.loading = false)
+  }
 
   async getOnboarding() {
     this.onboarding.loading = true;

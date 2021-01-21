@@ -33,7 +33,8 @@
     }
 
     .app-body {
-      height: 100%;
+      margin-bottom: 20px;
+      height: auto;
       min-height: 100vh;
       padding: $space $space-lg;
     }

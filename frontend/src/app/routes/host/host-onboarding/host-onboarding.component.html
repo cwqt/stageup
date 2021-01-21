@@ -3,6 +3,9 @@
 
 <mat-spinner *ngIf="onboarding.loading"></mat-spinner>
 <ng-container *ngIf="onboarding.data">
+  <!-- <p><b>Onboarding Status:</b> {{ onboarding.data.state | onboardingStatePipe }}</p>
+  <p><b>Last Submitted:</b> {{ onboarding.data.last_submitted | amFromUnix | amTimeAgo }}</p> -->
+
   <!-- Form has been submitted for verification -->
   <div class="flex flex-col h-full" *ngIf="currentState == states.PendingVerification">
     <ng-container
@@ -12,13 +15,21 @@
 
   <!-- Form requires changing -->
   <div class="flex h-full" *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
-    <div class="flex-initial rounded shadow overflow-hidden mr-6">
+    <div class="flex-initial rounded shadow overflow-hidden mr-6 w-1/5">
       <mat-vertical-stepper #stepper *ngIf="onboarding.data" class="h-full" (selectionChange)="handleSelectionChange($event)">
-        <mat-step *ngFor="let step of stepUiMap | keyvalue" [label]="step.value['label']">
-          <br />
+        <mat-step *ngFor="let step of stepUiMap | keyvalue"
+          [state]="onboarding.data.steps[step.key]"
+          [label]="step.value['label']">
+
+          <!-- {{ onboarding.data.steps[step.key] | onboardingStatePipe }} -->
         </mat-step>
 
         <mat-step label="Review & Submit"></mat-step>
+
+        <ng-template *ngFor="let stepUi of stepStatusUiMap | keyvalue"
+          [matStepperIcon]="stepUi.key">
+          <mat-icon>{{ stepUi.value["icon"] }}</mat-icon>
+        </ng-template>
       </mat-vertical-stepper>
     </div>
 
@@ -26,11 +37,23 @@
       <ng-container *ngIf="!onReviewStep">
         <mat-spinner *ngIf="componentRefreshing"></mat-spinner>
         <ng-container *ngIf="!componentRefreshing">
+          <div *ngIf="(stepData.data?.review.issues |keyvalue )?.length" class="mb-5">
+            <ui-admonition
+              kind="warning"
+              [title]="(stepData.data.review.issues | objectLengthPipe) + ' issues found'">
+              <p>{{ stepData.data.review.review_message  }}</p>
+
+              <span>
+                Reviewed by <b>{{ stepData.data.review.reviewed_by.username}}</b> on <b>{{ stepData.data.review.reviewed_at | amFromUnix | amDateFormat }}</b>
+              </span>
+            </ui-admonition>
+          </div>
+
           <ui-form
             (onSuccess)="handleStepSuccess(selectedStep)"
             (onFailure)="handleStepFailure(selectedStep)"
             [form]="stepUiMap[selectedStep].form"
-            [cacheable]="stepData[selectedStep]">
+            [cacheable]="stepCacheables[selectedStep]">
           </ui-form>
         </ng-container>
       </ng-container>

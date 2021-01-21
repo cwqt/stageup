@@ -59,10 +59,10 @@ export class LoginComponent implements OnInit {
     };
   }
 
-  async TEST_LOGIN() {
+  async adminFastLogin() {
     const user = await this.authService.login({
-      email_address: "m@cass.si",
-      password: "helloworld"
+      email_address: "siteadmin@cass.si",
+      password: "siteadmin"
     });
 
     this.onLoginSuccess(user);

@@ -57,4 +57,4 @@ export const environment: IEnvironment = {
   },
 };
 
-console.log(environment)
+// console.log(environment)

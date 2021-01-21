@@ -1,6 +1,6 @@
-<ng-container *ngIf="isactive">
-  <ui-form-body [fg]="formGroup" [fields]="form.fields"></ui-form-body>
+<ui-form-body *ngIf="shouldBeVisible" [fg]="formGroup" [fields]="form.fields"></ui-form-body>
 
+<div class="ui-form" [class.visible]="shouldBeVisible">
   <ui-button type="submit"
     [disabled]="cacheable.loading"
     [kind]="form.submit.variant"
@@ -9,4 +9,4 @@
   </ui-button>
 
   <span *ngIf="cacheable.error">{{ cacheable.error }}</span>
-</ng-container>
+</div>

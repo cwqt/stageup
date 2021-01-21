@@ -13,7 +13,7 @@ export interface FormErrors {
 }
 
 
-export const createICacheable = ():ICacheable<null> => {
+export const createICacheable = <T = any>():ICacheable<T | null> => {
   return {
     data: null,
     loading: false,

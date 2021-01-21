@@ -69,7 +69,7 @@ export class HostService {
 
   // router.get <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep());
   readOnboardingProcessStep(hostId: number, step: HostOnboardingStep): Promise<IOnboardingStep<any>> {
-    return this.http.get<IOnboardingStep<any>>(`/api/host/${hostId}/onboarding/${step}`).toPromise();
+    return this.http.get<IOnboardingStep<any>>(`/api/hosts/${hostId}/onboarding/${step}`).toPromise();
   }
 
   // router.put <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.updateOnboardingProcessStep());

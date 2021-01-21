@@ -9,6 +9,7 @@ describe('As a user, I want to be able to CRUD', async () => {
   let user: IUser;
 
   it('Should create a user', async () => {
+    await Stories.actions.common.setup();
     user = await Stories.actions.users.createUser(UserType.Member);
 
     expect(user).to.not.be.null;
@@ -26,6 +27,10 @@ describe('Error checking for user CRUD', async () => {
   let user: IUser;
 
   it('Should not allow me to create an account with a pre-existing username/email-address', async () => {
-    user = await Stories.actions.users.createUser(UserType.Member, true);
+    try {
+      user = await Stories.actions.users.createUser(UserType.Member, true);
+    } catch (error) {
+      expect(error).to.exist;
+    }
   });
 });

@@ -314,7 +314,7 @@ export default class HostController extends BaseController {
           },
         });
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-        if (onboarding.state != HostOnboardingState.AwaitingChanges)
+        if (![HostOnboardingState.AwaitingChanges, HostOnboardingState.HasIssues].includes(onboarding.state))
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out

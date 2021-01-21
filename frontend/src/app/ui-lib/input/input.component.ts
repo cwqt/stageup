@@ -54,8 +54,7 @@ export interface IGraphNode {
   templateUrl: "./input.component.html",
   styleUrls: ["./input.component.scss"],
 })
-export class InputComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
+export class InputComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   @Output() selectionChange: EventEmitter<IGraphNode[]> = new EventEmitter();
 
   // Interface inputs
@@ -125,6 +124,7 @@ export class InputComponent
       ["required"]: (e) => `${this.label} is required`,
       ["email"]: (e) => `Must be a valid e-mail address`,
       ["pattern"]: (e) => `Must fufill ReGex`,
+      ["custom"]: (e) => this.control.getError(e),
       ["backendIssue"]: (e) => this.control.getError("backendIssue"),
     };
 

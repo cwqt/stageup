@@ -1,5 +1,5 @@
 import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
-import { Primitive } from "@eventi/interfaces";
+import { DottedPaths, Primitive } from "@eventi/interfaces";
 import { ICacheable } from "src/app/app.interfaces";
 import { IGraphNode } from "../input/input.component";
 
@@ -9,7 +9,12 @@ import { IGraphNode } from "../input/input.component";
 export interface IUiForm<T> {
   fields: { [index:string]:IUiFormField }; // form fields
   submit: IUiFormSubmit<T>; // what to do on submit
-  prefetch?: (mapping?: { [index: string]: string }) => Promise<any>; //populate form from object
+  prefetch?: (mapping?: { [index: string]: string }) => Promise<IUiFormPrefetchData>; //populate form from object
+}
+
+export interface IUiFormPrefetchData<T = any> {
+  fields: {[index in DottedPaths<T>]:string};
+  errors?: {[index in DottedPaths<T>]:string};
 }
 
 export interface IUiFormField {

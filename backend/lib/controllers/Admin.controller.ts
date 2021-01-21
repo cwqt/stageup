@@ -1,6 +1,6 @@
 import logger from '../common/logger';
 import config from '../config';
-import Validators from '../common/validate';
+import Validators, { single } from '../common/validate';
 import { getCheck } from '../common/errors';
 import {
   HostOnboardingState,
@@ -63,8 +63,10 @@ export default class AdminController extends BaseController {
       validators: [
         body<IOnboardingStepReviewSubmission<any>>({
           step_state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
-          issues: v => v.isArray().custom(array(Validators.Objects.IOnboardingIssue())),
           review_message: v => v.optional(true).isString(),
+          issues: v => v.custom(single({
+            "*": v => v.custom(single(Validators.Objects.IOnboardingIssue()))
+          }))
         }),
       ],
       authStrategy: AuthStrat.isSiteAdmin,

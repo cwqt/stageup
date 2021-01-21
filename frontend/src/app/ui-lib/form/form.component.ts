@@ -35,6 +35,7 @@ import {
   IUiForm,
   IUiFormField,
   IUiFormFieldValidator,
+  IUiFormPrefetchData,
 } from "./form.interfaces";
 
 @Component({
@@ -42,7 +43,7 @@ import {
   templateUrl: "./form.component.html",
   styleUrls: ["./form.component.scss"],
 })
-export class FormComponent implements OnInit, OnDestroy {
+export class FormComponent implements OnInit, AfterViewInit {
   @Input() cacheable: ICacheable<any>;
   @Input() form: IUiForm<any>;
 
@@ -54,49 +55,12 @@ export class FormComponent implements OnInit, OnDestroy {
 
   formGroup: FormGroup;
   submissionButton: ButtonComponent;
-  $prefetchState: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  $prefetchSubscription: Subscription;
 
-  isactive: boolean = false;
+  shouldBeVisible: boolean = false;
 
   constructor(private fb: FormBuilder) {}
 
   async ngOnInit() {
-    // if (this.form.prefetch) {
-    //   await this.populatePrefetch(this.form.prefetch);
-    // } else {
-      this.$prefetchState.next(true);
-      this.isactive = true;
-    // }
-
-    this.$prefetchSubscription = this.$prefetchState.subscribe((v) => {
-      setTimeout(() => {
-        console.log("loading");
-        this.submissionButton = this.buttons.find((b) => b.type == "submit");
-        if (!this.submissionButton)
-          throw new Error('Form has no button of type "submit"');
-
-        // this.inputs.forEach((i) => (i.form = this.formGroup));
-        this.formGroup.statusChanges.subscribe((v) => {
-          if (v == "VALID") {
-            this.cacheable.error = ""; // form errors gone
-            this.submissionButton.disabled = false;
-          } else {
-            this.submissionButton.disabled = true;
-          }
-        });
-
-        setTimeout(() => {
-          this.submissionButton.disabled = true;
-        }, 0);
-        return true;
-      }, 1000);
-    });
-
-    setTimeout(() => {
-      this.$prefetchState.next(!this.$prefetchState.value);
-    }, 1000);
-
     this.formGroup = Y<any, FormGroup>(
       (r) => (fields: IUiForm<any>["fields"]): FormGroup => {
         return this.fb.group(
@@ -125,7 +89,7 @@ export class FormComponent implements OnInit, OnDestroy {
                     case "custom":
                       return this.parseCustomValidator.bind(this)(v);
                   }
-                }),
+                })
               ];
             }
 
@@ -136,29 +100,72 @@ export class FormComponent implements OnInit, OnDestroy {
     )(this.form.fields);
   }
 
-  populatePrefetch(prefetchFn: IUiForm<any>["prefetch"]) {
-    return prefetchFn().then((data) => {
-      // Save the value into the IUiForm by setting each fields 'initial' to the sent value
-      // for e.g. when in the host onboarding switching back & forth we want to maintain state
-      Y((r) => (x: [IUiForm<any>["fields"], any]) => {
-        let [fields, data] = x;
-        Object.entries(fields).forEach(([fieldName, field]) => {
-          if (data[fieldName]) {
-            if (field.type == "container") {
-              r([field.fields, data[fieldName]]);
-            } else {
-              field.initial = data[fieldName] || "";
-            }
-          }
-        });
-      })([this.form.fields, data]);
+  ngAfterViewInit() {
+    // Form is hidden by CSS, but active in the DOM - isn't shown until shouldBeVisible == true
+    // which is after the prefetch populate has been completed (if any)
+    this.submissionButton = this.buttons.find((b) => b.type == "submit");
+    if (!this.submissionButton)
+      throw new Error('Form has no button of type "submit"');
+
+    // this.inputs.forEach((i) => (i.form = this.formGroup));
+    this.formGroup.statusChanges.subscribe((v) => {
+      if (v == "VALID") {
+        this.cacheable.error = ""; // form errors gone
+        this.submissionButton.disabled = false;
+      } else {
+        this.submissionButton.disabled = true;
+      }
     });
-    // .finally(() => this.$prefetchState.next(true));
+
+    setTimeout(() => {
+      this.submissionButton.disabled = true;
+      if (this.form.prefetch) {
+        this.populatePrefetch().finally(() => {
+          this.shouldBeVisible = true;
+          console.log(this.formGroup)
+        });
+      } else {
+        this.shouldBeVisible = true;
+      }
+    }, 0);
+  }
+
+  populatePrefetch() {
+    return this.form.prefetch().then((data:IUiFormPrefetchData) => {
+      //https://angular.io/api/forms/AbstractControl#setErrors
+      // is nice enough to let us use dot accessors, so no Y combis :( 
+      const { fields, errors } = data;
+
+      Object.entries(fields).forEach(([f,v]) => {
+        this.formGroup.get(f)?.setValue(v);
+      })
+      Object.entries(errors).forEach(([f,v]) => {
+        const control = this.formGroup.get(f);
+        if(control) {
+          control.setValidators(this.parseCustomValidator({
+            type: "custom",
+            value: c => c.value != fields[f],
+            message: e => `${v}`,
+          }))
+          control.updateValueAndValidity();
+          control.markAsTouched();
+        }
+
+        // console.log('-->',this.formGroup.get(f).setErrors)
+        // this.formGroup.get(f)?.setErrors({ backendIssue: v});
+        // console.log(this.formGroup.get(f))
+        // console.log('-->',this.formGroup.get(f).errors)
+      })
+
+      console.log(this.formGroup)
+
+      this.formGroup.markAllAsTouched();
+    });
   }
 
   getValue() {
     const formValue = this.formGroup.value;
-
+    // TODO: implement data transformers in fields
     return formValue;
   }
 
@@ -199,9 +206,5 @@ export class FormComponent implements OnInit, OnDestroy {
               : "Invalid body",
           };
     };
-  }
-
-  ngOnDestroy() {
-    this.$prefetchSubscription.unsubscribe();
   }
 }

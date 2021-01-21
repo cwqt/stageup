@@ -2,9 +2,9 @@ import {
   IEnvelopedData,
   IHostOnboarding,
   HostOnboardingStep,
+  IOnboardingStepReview,
   IOnboardingStepReviewSubmission,
 } from '@eventi/interfaces';
-import { IOnboardingStepReview } from '@eventi/interfaces';
 import Axios from 'axios';
 import { environment } from '../environment';
 

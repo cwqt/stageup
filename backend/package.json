@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "kill": "kill $(lsof -t -i:3000) | exit 0",
-    "start": "npm run kill & env NODE_ENV=development nodemon lib/index.ts",
+    "start": "env NODE_ENV=development nodemon lib/index.ts",
     "start:windows": "nodemon lib/index.ts",
-    "start:test": "env NODE_ENV=testing nodemon lib/index.ts",
     "start:dev": "env NODE_ENV=development nodemon --inspect lib/index.ts",
+    "start:test": "env NODE_ENV=testing nodemon lib/index.ts",
     "test": "env NODE_ENV=testing mocha --bail -r ts-node/register lib/test/**/*.test.ts",
     "test:dev": "env NODE_ENV=testing mocha -r ts-node/register lib/test/*.test.ts --bail --colors --timeout 9999 --inspect",
     "deploy:build": "tsc && docker build -t eventi/backend .",
@@ -32,6 +32,7 @@
     "express-rate-limit": "^5.2.3",
     "express-session": "^1.17.0",
     "express-validator": "^6.4.0",
+    "flat": "^4.1.1",
     "helmet": "^4.2.0",
     "influx": "^5.5.2",
     "morgan": "^1.9.1",
@@ -60,6 +61,7 @@
     "@types/express-rate-limit": "^5.1.0",
     "@types/express-session": "^1.17.0",
     "@types/express-validator": "^3.0.0",
+    "@types/flat": "^5.0.1",
     "@types/helmet": "^4.0.0",
     "@types/ip-address": "^5.8.2",
     "@types/localtunnel": "^2.0.0",
@@ -87,6 +89,6 @@
     "tsc-watch": "^4.2.3",
     "tslint": "^6.0.0",
     "typeorm-uml": "^1.6.1",
-    "typescript": "^3.8.3"
+    "typescript": "^4.1.2"
   }
 }

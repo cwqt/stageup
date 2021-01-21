@@ -13,4 +13,5 @@
     "prettier.bracketSpacing": true,
     "editor.folding": false,
     "editor.wordWrapColumn": 120,
+    "typescript.tsdk": "node_modules/typescript/lib"
 }
