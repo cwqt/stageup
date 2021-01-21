@@ -65,14 +65,15 @@ router.get    <IHost>                 ("/hosts/:hid",                           
 router.delete <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
 router.put    <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
 router.get    <IUserStub[]>           ("/hosts/:hid/members",                       Hosts.readHostMembers());
-// router.post   <IHost>                 ("/hosts/:hid/members",                      Hosts.addUser());
-// router.delete <IHost>                 ("/hosts/:hid/members",                      Hosts.removeUser());
-// router.delete <IHost>                 ("/hosts/:hid/members/:mid/permissions",     Hosts.alterMemberPermissions());
+router.post   <IUser>                 ("/hosts/:hid/members",                       Hosts.addUser());
+router.delete <void>                  ("/hosts/:hid/members/:mid",                  Hosts.removeUser());
+router.put    <IUser>                  ("/hosts/:hid/members/:mid",                  Hosts.updateUser());
+// router.delete <IHost>              ("/hosts/:hid/members/:mid/permissions",      Hosts.alterMemberPermissions());
 router.get <IHOnboarding>             ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
 router.post<void>                     ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
 router.get <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
-router.post  <IUser>                  ("/hosts/:hid/member")                        Hosts.createMember());
+
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
 router.post   <IPerf>                 ("/performances",                             Perfs.createPerformance());
