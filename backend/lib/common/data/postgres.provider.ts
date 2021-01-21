@@ -23,6 +23,8 @@ export const create = async (): Promise<TORM.Connection> => {
 
     return conn;
   } catch (error) {
+    console.log(error)
+    console.log(config.PG)
     log.error('Unable to connect to Postgres via TypeORM. Ensure a valid connection.');
     throw error;
   }

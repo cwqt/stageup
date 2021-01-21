@@ -59,7 +59,7 @@ const base:Omit<IEnv, "API_URL" | "FE_URL" | "SITE_TITLE"> = {
     API_KEY: process.env.SENDGRID_API_KEY
   },
   MUX: {
-    ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
+    ACCESS_TOKEN: process.env.MUX_TOKEN_ID,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
     HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE,
     IMAGE_API_ENDPOINT: "https://image.mux.com"
