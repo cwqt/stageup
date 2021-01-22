@@ -65,9 +65,9 @@ router.get    <IHost>                 ("/hosts/:hid",                           
 router.delete <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
 router.put    <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
 router.get    <IUserStub[]>           ("/hosts/:hid/members",                       Hosts.readHostMembers());
-router.post   <IUser>                 ("/hosts/:hid/members",                       Hosts.addUser());
+router.post   <IHost>                 ("/hosts/:hid/members",                       Hosts.addUser());
 router.delete <void>                  ("/hosts/:hid/members/:mid",                  Hosts.removeUser());
-router.put    <IUser>                  ("/hosts/:hid/members/:mid",                  Hosts.updateUser());
+router.put    <IUser>                 ("/hosts/:hid/members/:mid",                  Hosts.updateUser());
 // router.delete <IHost>              ("/hosts/:hid/members/:mid/permissions",      Hosts.alterMemberPermissions());
 router.get <IHOnboarding>             ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
 router.post<void>                     ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());

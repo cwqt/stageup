@@ -17,6 +17,7 @@ import {
   pick,
   IUserStub,
   IUserPrivate,
+  IHostMemberChangeRequest,
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
@@ -147,75 +148,49 @@ export default class HostController extends BaseController {
     };
   }
   //router.post<IHost>("/hosts/:hid/members", Hosts.addUser());
-  addUser(): IControllerEndpoint<IUser> {
+  addUser(): IControllerEndpoint<IHost> {
     return {
       validators: [
-        body<Pick<IUserPrivate, 'username' | 'email_address'> & { password: string }>({
-          username: v => Validators.Fields.username(v),
-          email_address: v => Validators.Fields.email(v),
-          password: v => Validators.Fields.password(v),
-        }),
+        body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest()),
       ],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<IUser> => {
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async (req):Promise<IHost> => {
+        const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid )}));
+        const changeRequest:IHostMemberChangeRequest = req.body;
 
-        const preExistingUser = await User.findOne({
-          where: [{ email_address: req.body.email_address }, { username: req.body.username }],
+        const user = await getCheck(User.findOne({ _id: changeRequest.value }, { relations: ["host"]}));
+        if(user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+
+        await this.ORM.transaction(async txc => {
+          await host.addMember(user, HostPermission.Member, txc);
+          await Email.sendUserHostMembershipInvitation(user.email_address, host);
+          await txc.save(host);
         });
 
-        // Check if some fields are already in use by someone else
-        const errors = new FormErrorResponse();
-        if (preExistingUser?.username == req.body.username) errors.push('username', ErrCode.IN_USE, req.body.username);
-        if (preExistingUser?.email_address == req.body.email_address)
-          errors.push('email_address', ErrCode.IN_USE, req.body.email_address);
-        if (errors.errors.length > 0) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE, errors.value);
-
-        // Fire off a verification email
-        const emailSent = await Email.sendVerificationEmail(req.body.email_address);
-        if (!emailSent) throw new ErrorHandler(HTTP.ServerError, ErrCode.EMAIL_SEND);
-
-        // Save the user through a transaction (creates ContactInfo & Person)
-        const user = await this.ORM.transaction(async (txc: EntityManager) => {
-          const u = await new User({
-            username: req.body.username,
-            email_address: req.body.email_address,
-            password: req.body.password,
-          }).setup(txc);
-
-          u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) == 0
-        
-          await txc.save(u);
-          return u;
-        });
-
-        return user.toFull();
+        return host.toFull();
       },
     };
   }
 
-  // router.patch <IHost>("/hosts/:hid/members/:mid",Hosts.updateUser());
-  updateUser(): IControllerEndpoint<IUser> {
+  // router.put <IHost>("/hosts/:hid/members/:mid",Hosts.updateUser());
+  updateUser(): IControllerEndpoint<void> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission((HostPermission.Owner)),
-      controller: async (req: Request): Promise<IUser> => {
-        const user = await User.findOne({_id: req.session.user._id }, { relations: ['host'] });
-        if (!user._id) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
-        
-        const userHostInfo = await UserHostInfo.findOne({
+      validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
+      authStrategy: AuthStrat.hasHostPermission((HostPermission.Admin)),
+      controller: async req => {
+        const userHostInfo = await getCheck(UserHostInfo.findOne({
           relations: ['user', 'host'],
           where: {
-            user: { _id: user._id },
-            host: { _id: user.host._id },
+            user: { _id: parseInt(req.params.mid) },
+            host: { _id: parseInt(req.params.hid) }
           },
-        });
+        }));
 
-        if (userHostInfo.permissions != HostPermission.Owner)
-          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+        const newUserPermission:HostPermission = req.body.value;
+        if(userHostInfo.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS)
 
-        const updateUser = await user.update({ name: req.body.name});
-        return updateUser.toFull();        
-
+        userHostInfo.permissions = newUserPermission;
+        await userHostInfo.save();
       },
     };
   }
@@ -224,23 +199,18 @@ export default class HostController extends BaseController {
   removeUser(): IControllerEndpoint<void> {
     return {
       validators: [],
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async (req: Request): Promise<void> => {
-        const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (!user.host) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
-
-        const userHostInfo = await UserHostInfo.findOne({
+        const userHostInfo = await getCheck(UserHostInfo.findOne({
           relations: ['user', 'host'],
           where: {
-            user: { _id: user._id },
-            host: { _id: user.host._id },
+            user: { _id: parseInt(req.params.mid) },
+            host: { _id: parseInt(req.params.hid) }
           },
-        });
+        }));
 
-        if (userHostInfo.permissions != HostPermission.Owner)
-          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
-
-        await user.remove();
+        if(userHostInfo.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS)
+        await userHostInfo.remove();
       },
     };
   }
