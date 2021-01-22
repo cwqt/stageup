@@ -8,19 +8,19 @@ import {
   HostPermission,
   IEnvelopedData,
   IHostOnboarding,
-  IOnboardingStepReviewSubmission,
+  IOnboardingStepReviewSubmission
 } from '@eventi/interfaces';
-import { BaseArgs, BaseController, IControllerEndpoint } from '../common/controller';
+import { BaseArguments, BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
-import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
+import { HostOnboardingProcess } from '../models/hosts/onboarding.model';
 import { body, array, query } from '../common/validate';
-import { OnboardingStepReview } from '../models/Hosts/OnboardingStepReview.model';
+import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
 import { User } from '../models/Users/User.model';
 import { sendUserHostMembershipInvitation } from '../common/email';
-import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
+import { UserHostInfo } from '../models/hosts/user-host-info.model';
 
 export default class AdminController extends BaseController {
-  constructor(...args: BaseArgs) {
+  constructor(...args: BaseArguments) {
     super(...args);
   }
 
@@ -34,8 +34,8 @@ export default class AdminController extends BaseController {
         }>({
           username: v => v.optional(true).isString(),
           submission_date_sort: v => v.optional(true).isIn(['ASC', 'DESC']),
-          state: v => v.optional(true).isIn(Object.values(HostOnboardingState)),
-        }),
+          state: v => v.optional(true).isIn(Object.values(HostOnboardingState))
+        })
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
@@ -44,17 +44,17 @@ export default class AdminController extends BaseController {
           .where(`host.username LIKE :username`, { username: req.query.username ? `%${req.query.username}%` : '%' });
 
         // not sure about fuzzy matching ints
-        if(req.query.state)
-          qb.andWhere(`hop.state = :state`, { state: req.query.state }) 
+        if (req.query.state) qb.andWhere(`hop.state = :state`, { state: req.query.state });
 
-        const onboardingEnvelope = await qb.orderBy(`hop.last_submitted`, (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
+        const onboardingEnvelope = await qb
+          .orderBy(`hop.last_submitted`, (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
           .paginate();
 
         return {
           data: onboardingEnvelope.data.map(o => o.toFull()),
-          __paging_data: onboardingEnvelope.__paging_data,
+          __paging_data: onboardingEnvelope.__paging_data
         };
-      },
+      }
     };
   }
 
@@ -64,8 +64,8 @@ export default class AdminController extends BaseController {
         body<IOnboardingStepReviewSubmission<any>>({
           step_state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
           issues: v => v.isArray().custom(array(Validators.Objects.IOnboardingIssue())),
-          review_message: v => v.optional(true).isString(),
-        }),
+          review_message: v => v.optional(true).isString()
+        })
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
@@ -88,7 +88,7 @@ export default class AdminController extends BaseController {
 
           await txc.save(onboarding);
         });
-      },
+      }
     };
   }
 
@@ -116,12 +116,12 @@ export default class AdminController extends BaseController {
             let owner = await UserHostInfo.findOne({
               relations: {
                 user: {
-                  personal_details: true,
-                },
+                  personal_details: true
+                }
               },
               where: {
-                permissions: HostPermission.Owner,
-              },
+                permissions: HostPermission.Owner
+              }
             });
 
             owner.user.personal_details.first_name = ownerDetailsData.owner_info.first_name;
@@ -168,7 +168,7 @@ export default class AdminController extends BaseController {
             logger.info('Not all steps are signed off as valid');
           }
         });
-      },
+      }
     };
   }
 }

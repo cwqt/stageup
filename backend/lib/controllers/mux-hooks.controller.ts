@@ -9,15 +9,15 @@ import { HTTP } from '@eventi/interfaces';
 import { RedisClient } from 'redis';
 import { MD5 } from 'object-hash';
 import { AuthStrategy } from '../common/authorisation';
-import { BaseArgs, IControllerEndpoint, BaseController } from '../common/controller';
+import { BaseArguments, IControllerEndpoint, BaseController } from '../common/controller';
 import { EROFS } from 'constants';
 export default class MUXHooksController extends BaseController {
   hookMap: { [index in MUXHook]?: (data: IMUXHookResponse<any>, dc: DataClient) => Promise<void> };
 
-  constructor(...args: BaseArgs) {
+  constructor(...args: BaseArguments) {
     super(...args);
     this.hookMap = {
-      [MUXHook.StreamCreated]: this.streamCreated,
+      [MUXHook.StreamCreated]: this.streamCreated
     };
   }
 
@@ -37,7 +37,7 @@ export default class MUXHooksController extends BaseController {
 
         if (!isValidHook) return [false, {}, ErrCode.INVALID];
       } catch (error) {
-        logger.error(error.message)
+        logger.error(error.message);
         return [false, {}, ErrCode.UNKNOWN];
       }
 
@@ -49,7 +49,7 @@ export default class MUXHooksController extends BaseController {
     return {
       authStrategy: this.validHookStrat(),
       controller: async (req: Request) => {
-        if(!config.USE_MEMORYSTORE) {
+        if (!config.USE_MEMORYSTORE) {
           logger.error(`Cannot handle MUX hook as Redis is disabled in .env`);
         }
 
@@ -74,7 +74,7 @@ export default class MUXHooksController extends BaseController {
         } catch (error) {
           throw new ErrorHandler(HTTP.ServerError, error);
         }
-      },
+      }
     };
   }
 
@@ -87,7 +87,7 @@ export default class MUXHooksController extends BaseController {
         .hmset(hookId, {
           hookId: data.id,
           objectId: data.object.id,
-          type: data.type,
+          type: data.type
         })
         .expire(hookId, 86400) //expire after 1 day
         .exec((err, reply) => {

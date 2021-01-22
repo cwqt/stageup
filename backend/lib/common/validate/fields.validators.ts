@@ -13,8 +13,8 @@ export namespace FieldValidators {
     return v.exists().withMessage(ErrCode.MISSING_FIELD);
   };
 
-  export const isString: CustomValidator = (v, msg = ErrCode.INVALID) => {
-    return exists(v).trim().notEmpty().isString().withMessage(msg);
+  export const isString: CustomValidator = (v, message = ErrCode.INVALID) => {
+    return exists(v).trim().notEmpty().isString().withMessage(message);
   };
 
   export const email: CustomValidator = v => {
@@ -35,7 +35,7 @@ export namespace FieldValidators {
       .withMessage(ErrCode.TOO_SHORT)
       .isLength({ max: 32 })
       .withMessage(ErrCode.TOO_LONG)
-      .matches(/^[a-zA-Z0-9]*$/)
+      .matches(/^[a-zA-Z\d]*$/)
       .withMessage(ErrCode.INVALID)
       .not()
       .isIn(FORBIDDEN_USERNAMES)
@@ -44,7 +44,7 @@ export namespace FieldValidators {
 
   export const postcode: CustomValidator = v => {
     return isString(v)
-      .isPostalCode('GB') //TODO: make open to all counties
+      .isPostalCode('GB') // TODO: make open to all counties
       .withMessage(ErrCode.REGEX_MATCH);
   };
 
@@ -52,9 +52,9 @@ export namespace FieldValidators {
     return isString(v).isISO31661Alpha3().withMessage(ErrCode.REGEX_MATCH);
   };
 
-  export const isInt: CustomValidator = (v, msg) => {
+  export const isInt: CustomValidator = (v, message) => {
     return exists(v)
       .isNumeric()
-      .withMessage(msg || ErrCode.REGEX_MATCH);
+      .withMessage(message || ErrCode.REGEX_MATCH);
   };
 }

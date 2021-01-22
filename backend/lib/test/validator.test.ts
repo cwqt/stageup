@@ -9,14 +9,14 @@ describe('Custom validation', () => {
     const data = {
       name: 'cass',
       age: 21,
-      location: 'cardiff',
+      location: 'cardiff'
     };
 
     // Should return 2 errors for name & age
     const errors = await object(data, {
       name: v => v.isInt(),
       age: v => v.isString(),
-      location: v => v.isString(),
+      location: v => v.isString()
     });
 
     expect(errors).to.be.lengthOf(2);
@@ -37,8 +37,8 @@ describe('Custom validation', () => {
       name: 'cass',
       address: {
         street_name: 'ham street',
-        street_number: 12,
-      },
+        street_number: 12
+      }
     };
 
     const errors = await object(data, {
@@ -48,11 +48,11 @@ describe('Custom validation', () => {
           single<typeof data.address>(
             {
               street_number: v => v.isString(),
-              street_name: v => v.isString(),
+              street_name: v => v.isString()
             },
             ErrCode.TOO_LONG
           )
-        ),
+        )
     });
 
     expect(errors).to.be.lengthOf(2);
@@ -69,7 +69,7 @@ describe('Custom validation', () => {
   it('Should return correct results for arrays of objects in an object', async () => {
     const data = {
       name: 'Cass',
-      addresses: [{ street_number: '2001' }, { street_number: '2000' }, { street_number: '2002' }],
+      addresses: [{ street_number: '2001' }, { street_number: '2000' }, { street_number: '2002' }]
     };
 
     const errors = await object(data, {
@@ -77,9 +77,9 @@ describe('Custom validation', () => {
       addresses: v =>
         v.custom(
           array({
-            street_number: v => v.equals('2000'),
+            street_number: v => v.equals('2000')
           })
-        ),
+        )
     });
 
     expect(errors).to.be.lengthOf(2);
@@ -100,66 +100,72 @@ describe('Custom validation', () => {
     expect(errors[1].nestedErrors[1].value).to.eq('2002');
   });
 
-  it("Should return errors for complex nested arrays of object", async () => {
+  it('Should return errors for complex nested arrays of object', async () => {
     const data = {
       fields: [
         {
-          name: "Not Cass", // this should error
+          name: 'Not Cass', // this should error
           address: {
-            street_number: "2001"
+            street_number: '2001'
           }
         },
         {
-          name: "Cass",
+          name: 'Cass',
           address: {
-            street_number: "2000" // this should error
+            street_number: '2000' // this should error
           }
         }
       ]
-    }
+    };
 
     const errors = await object(data, {
-      fields: v => v.custom(array({
-        name: v => v.equals("Cass"),
-        address: v => v.custom(single({
-          street_number: v => v.equals("2001")
-        }))
-      }))
+      fields: v =>
+        v.custom(
+          array({
+            name: v => v.equals('Cass'),
+            address: v =>
+              v.custom(
+                single({
+                  street_number: v => v.equals('2001')
+                })
+              )
+          })
+        )
     });
 
     //TODO: validate the whole response
-    expect(errors).to.be.lengthOf(1)
+    expect(errors).to.be.lengthOf(1);
   });
 
-  it("Should not return errors for valid data", async () => {
-    const data:{address:Idless<IAddress>} = {
+  it('Should not return errors for valid data', async () => {
+    const data: { address: Idless<IAddress> } = {
       address: {
-        city: "Scunny",
-        iso_country_code: "GBR",
-        postcode: "CF10 5NT",
-        street_name: "My Street",
+        city: 'Scunny',
+        iso_country_code: 'GBR',
+        postcode: 'CF10 5NT',
+        street_name: 'My Street',
         street_number: 12
       }
-    }
+    };
 
     const errors = await object(data, {
       address: v => v.custom(single(Validators.Objects.IAddress()))
     });
 
-    expect(errors).to.be.lengthOf(0)
-  })
+    expect(errors).to.be.lengthOf(0);
+  });
 
-  it("Should not return errors for IHostMemberChangeRequest Object Validator", async () => {
-    const data:IOnboardingAddMembers = {
-      members_to_add: [ { user_id: 1, change: 'add' }]
-    }
+  it('Should not return errors for IHostMemberChangeRequest Object Validator', async () => {
+    const data: IOnboardingAddMembers = {
+      members_to_add: [{ user_id: 1, change: 'add' }]
+    };
 
     const errors = await object(data, {
       members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest()))
     });
 
-    expect(errors).to.be.lengthOf(0)
-  })
+    expect(errors).to.be.lengthOf(0);
+  });
 
   // FIXME: Arrays of primitives don't work
   // it("Should return errors for objects with fields that are arrays of primitives", async () => {

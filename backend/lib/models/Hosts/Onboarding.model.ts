@@ -6,7 +6,7 @@ import {
   JoinColumn,
   OneToMany,
   OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from 'typeorm';
 import {
   HostOnboardingStep,
@@ -20,14 +20,15 @@ import {
   IOnboardingProofOfBusiness,
   IOnboardingSocialPresence,
   IOnboardingStep,
-  IOnboardingSubscriptionConfiguration,
+  IOnboardingSubscriptionConfiguration
 } from '@eventi/interfaces';
-import { Host } from '../Hosts/Host.model';
-import { User } from '../Users/User.model';
+
+import { Host } from '../hosts/host.model';
+import { User } from '../users/user.model';
 import { object, single, array } from '../../common/validate';
-import Validators from '../../common/validate';
 import { unixTimestamp } from '../../common/helpers';
-import { OnboardingStepReview } from './OnboardingStepReview.model';
+import { OnboardingStepReview } from './onboarding-step-review.model';
+import Validators from '../../common/validate';
 
 @Entity()
 export class HostOnboardingProcess extends BaseEntity implements IHostOnboardingProcess {
@@ -68,8 +69,8 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         data: {
           hmrc_company_number: null,
           business_contact_number: null,
-          business_address: null,
-        },
+          business_address: null
+        }
       },
       [HostOnboardingStep.OwnerDetails]: {
         valid: false,
@@ -78,9 +79,9 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
           owner_info: {
             title: null,
             first_name: null,
-            last_name: null,
-          },
-        },
+            last_name: null
+          }
+        }
       },
       [HostOnboardingStep.SocialPresence]: {
         valid: false,
@@ -89,24 +90,24 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
           social_info: {
             facebook_url: null,
             linkedin_url: null,
-            instagram_url: null,
-          },
-        },
+            instagram_url: null
+          }
+        }
       },
       [HostOnboardingStep.AddMembers]: {
         valid: false,
         state: HostOnboardingState.AwaitingChanges,
         data: {
-          members_to_add: [],
-        },
+          members_to_add: []
+        }
       },
       [HostOnboardingStep.SubscriptionConfiguration]: {
         valid: false,
         state: HostOnboardingState.AwaitingChanges,
         data: {
-          tier: null,
-        },
-      },
+          tier: null
+        }
+      }
     };
   }
 
@@ -135,12 +136,12 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
         let stepIdx = (curr as unknown) as HostOnboardingStep;
         acc[stepIdx] = this.steps[stepIdx].state;
         return acc;
-      }, {} as IHostOnboarding['steps']),
+      }, {} as IHostOnboarding['steps'])
     };
   }
 
   // TODO: cascade delete all reviews & onboarding process post enact
-  async delete(txc:EntityManager) {}
+  async delete(txc: EntityManager) {}
 
   async setLastUpdated(updater: User) {
     this.last_modified_by = updater;
@@ -171,17 +172,17 @@ const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IForm
     return await object(d, {
       hmrc_company_number: v => v.isInt().isLength({ min: 8, max: 8 }),
       business_contact_number: v => v.isMobilePhone('en-GB'),
-      business_address: v => v.custom(single(Validators.Objects.IAddress())),
+      business_address: v => v.custom(single(Validators.Objects.IAddress()))
     });
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
     return await object(d, {
-      owner_info: v => v.custom(single(Validators.Objects.IPersonInfo())),
+      owner_info: v => v.custom(single(Validators.Objects.IPersonInfo()))
     });
   },
   [HostOnboardingStep.AddMembers]: async (d: IOnboardingAddMembers) => {
     return await object(d, {
-      members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest())),
+      members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest()))
     });
   },
   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
@@ -191,14 +192,14 @@ const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IForm
           single<typeof d.social_info>({
             linkedin_url: v => Validators.Fields.isString(v),
             facebook_url: v => Validators.Fields.isString(v),
-            instagram_url: v => Validators.Fields.isString(v),
+            instagram_url: v => Validators.Fields.isString(v)
           })
-        ),
+        )
     });
   },
   [HostOnboardingStep.SubscriptionConfiguration]: async (d: IOnboardingSubscriptionConfiguration) => {
     return await object(d, {
-      tier: v => Validators.Fields.isInt(v).isIn(Object.values(HostSubscriptionLevel)),
+      tier: v => Validators.Fields.isInt(v).isIn(Object.values(HostSubscriptionLevel))
     });
-  },
+  }
 };

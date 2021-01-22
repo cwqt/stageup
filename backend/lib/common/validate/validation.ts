@@ -43,7 +43,7 @@ type VArrayReturn = { errors: IFormErrorField[]; message: string };
 const validatorRunnerMap: { [index in Location]?: typeof bodyRunner } = {
   body: bodyRunner,
   query: queryRunner,
-  params: paramRunner,
+  params: paramRunner
 };
 
 /**
@@ -64,7 +64,7 @@ export const runValidator = async <T extends object, U extends keyof T>(
   const wrappedData: VData<T> = {
     ...data,
     __this: data,
-    __callee: location,
+    __callee: location
   };
 
   // Pick the express-validator runner to ensure 'location' is correct
@@ -74,7 +74,7 @@ export const runValidator = async <T extends object, U extends keyof T>(
 
   const errors: ValidationError[] = (
     await runner.run({
-      [location ? location : 'body']: Array.isArray(data) ? wrappedData.__this : wrappedData,
+      [location ? location : 'body']: Array.isArray(data) ? wrappedData.__this : wrappedData
     })
   ).array();
 
@@ -82,7 +82,7 @@ export const runValidator = async <T extends object, U extends keyof T>(
     const res = {
       value: e.value,
       code: e.msg == 'Invalid value' ? ErrCode.INVALID : e.msg,
-      param: e.param,
+      param: e.param
     };
 
     // No location passed (in the case of used directly via object())
@@ -144,7 +144,7 @@ export const array = <T extends object>(validators: VFieldChainerMap<T>, code?: 
         // throw custom object to include the message since .withMessage chainer doesn't work with .custom
         message: code ?? ErrCode.INVALID,
         // use all settled as all singles will throw error & be rejected
-        errors: errors,
+        errors: errors
       };
     }
   };
@@ -167,7 +167,7 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>, code?:
     // Single should always throw
     throw {
       message: code ?? ErrCode.INVALID,
-      errors: e,
+      errors: e
     };
   };
 };
@@ -185,7 +185,7 @@ export const validatorMiddleware = (validators: VReqHandlerFunctor[]) => {
       .filter(e => e.status == 'fulfilled')
       .flatMap(e => (<any>e).value);
 
-    if(errors.length) console.log(JSON.stringify(errors, null, 2));
+    if (errors.length) console.log(JSON.stringify(errors, null, 2));
     if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
     next();
   };
@@ -209,5 +209,5 @@ export const params: VReqHandler = (validators, data) => (req: Request) =>
 const reqHandlerFunctorMap: { [index in Location]?: VReqHandler } = {
   body: body,
   query: query,
-  params: params,
+  params: params
 };

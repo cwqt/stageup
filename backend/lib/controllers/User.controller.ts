@@ -8,9 +8,9 @@ import {
   IAddress,
   IUserPrivate,
   Idless,
-  ErrCode,
+  ErrCode
 } from '@eventi/interfaces';
-import { IControllerEndpoint, BaseArgs, BaseController } from '../common/controller';
+import { IControllerEndpoint, BaseArguments, BaseController } from '../common/controller';
 import { Request } from 'express';
 import { body, params } from '../common/validate';
 import { ErrorHandler, FormErrorResponse, getCheck } from '../common/errors';
@@ -19,14 +19,14 @@ import Email = require('../common/email');
 import config from '../config';
 import AuthStrat from '../common/authorisation';
 
-import { User } from '../models/Users/User.model';
-import { Host } from '../models/Hosts/Host.model';
-import { Address } from '../models/Users/Address.model';
+import { User } from '../models/Users/user.model';
+import { Host } from '../models/hosts/host.model';
+import { Address } from '../models/Users/address.model';
 import { EntityManager } from 'typeorm';
 import Validators from '../common/validate';
 
 export default class UserController extends BaseController {
-  constructor(...args: BaseArgs) {
+  constructor(...args: BaseArguments) {
     super(...args);
   }
 
@@ -35,8 +35,8 @@ export default class UserController extends BaseController {
       validators: [
         body<Pick<IUserPrivate, 'email_address'> & { password: string }>({
           email_address: v => Validators.Fields.email(v),
-          password: v => Validators.Fields.password(v),
-        }),
+          password: v => Validators.Fields.password(v)
+        })
       ],
       preMiddlewares: [this.mws.limiter(3600, 10)],
       authStrategy: AuthStrat.none,
@@ -52,11 +52,11 @@ export default class UserController extends BaseController {
 
         req.session.user = {
           _id: u._id,
-          is_admin: u.is_admin || false,
+          is_admin: u.is_admin || false
         };
 
         return u.toFull();
-      },
+      }
     };
   }
 
@@ -71,24 +71,24 @@ export default class UserController extends BaseController {
         const host: Host = await Host.findOne({
           relations: {
             members_info: {
-              user: true,
-            },
+              user: true
+            }
           },
           where: {
             members_info: {
               user: {
-                _id: user._id,
-              },
-            },
-          },
+                _id: user._id
+              }
+            }
+          }
         });
 
         return {
           user: user.toFull(),
           host: host?.toStub(),
-          host_info: host ? host.members_info.find(uhi => uhi.user._id == user._id)?.toFull() : null,
+          host_info: host ? host.members_info.find(uhi => uhi.user._id == user._id)?.toFull() : null
         };
-      },
+      }
     };
   }
 
@@ -98,13 +98,13 @@ export default class UserController extends BaseController {
         body<Pick<IUserPrivate, 'username' | 'email_address'> & { password: string }>({
           username: v => Validators.Fields.username(v),
           email_address: v => Validators.Fields.email(v),
-          password: v => Validators.Fields.password(v),
-        }),
+          password: v => Validators.Fields.password(v)
+        })
       ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         const preExistingUser = await User.findOne({
-          where: [{ email_address: req.body.email_address }, { username: req.body.username }],
+          where: [{ email_address: req.body.email_address }, { username: req.body.username }]
         });
 
         // Check if a some fields are already in use by someone else
@@ -123,7 +123,7 @@ export default class UserController extends BaseController {
           const u = await new User({
             username: req.body.username,
             email_address: req.body.email_address,
-            password: req.body.password,
+            password: req.body.password
           }).setup(txc);
 
           // First user to be created will be an admin
@@ -134,7 +134,7 @@ export default class UserController extends BaseController {
         });
 
         return user.toFull();
-      },
+      }
     };
   }
 
@@ -146,7 +146,7 @@ export default class UserController extends BaseController {
           if (err) throw new ErrorHandler(HTTP.ServerError);
           return;
         });
-      },
+      }
     };
   }
 
@@ -154,14 +154,14 @@ export default class UserController extends BaseController {
     return {
       validators: [
         params<Pick<IUserPrivate, 'username'>>({
-          username: v => v.trim().notEmpty(),
-        }),
+          username: v => v.trim().notEmpty()
+        })
       ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUser> => {
         let u = await getCheck(User.findOne({ username: req.params.username }));
         return u.toFull();
-      },
+      }
     };
   }
 
@@ -171,7 +171,7 @@ export default class UserController extends BaseController {
       controller: async (req: Request): Promise<IUser> => {
         let u = await getCheck(User.findOne({ _id: parseInt(req.params.uid) }));
         return u.toFull();
-      },
+      }
     };
   }
 
@@ -182,7 +182,7 @@ export default class UserController extends BaseController {
         let u = await getCheck(User.findOne({ _id: parseInt(req.params.uid) }));
         u = await u.update({ name: req.body.name });
         return u.toFull();
-      },
+      }
     };
   }
 
@@ -193,7 +193,7 @@ export default class UserController extends BaseController {
         const u = await getCheck(User.findOne({ _id: parseInt(req.params.uid) }));
         await u.remove();
         return;
-      },
+      }
     };
   }
 
@@ -211,10 +211,10 @@ export default class UserController extends BaseController {
           __client_data: {
             //TODO: get host info and insert here
             permissions: HostPermission.Admin,
-            joined_at: 0,
-          },
+            joined_at: 0
+          }
         };
-      },
+      }
     };
   }
 
@@ -224,14 +224,14 @@ export default class UserController extends BaseController {
       controller: async (req: Request): Promise<IUser> => {
         // TODO: assets with s3
         return {} as IUser;
-      },
+      }
     };
   }
 
   forgotPassword(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async req => {},
+      controller: async req => {}
     };
   }
 
@@ -240,8 +240,8 @@ export default class UserController extends BaseController {
       validators: [
         body<{ new_password: string; old_password: string }>({
           new_password: v => Validators.Fields.password(v).withMessage('New password length must be >6 characters'),
-          old_password: v => Validators.Fields.password(v).withMessage('Old password length must be >6 characters'),
-        }),
+          old_password: v => Validators.Fields.password(v).withMessage('Old password length must be >6 characters')
+        })
       ],
       authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<void> => {
@@ -263,23 +263,23 @@ export default class UserController extends BaseController {
           html: `<p>
       Your account password has recently been changed.<br/><br/>
       If you did not make this change, please change your password assoon as possible. If you have recently changed your password, then please ignore this email.
-      </p>`,
+      </p>`
         });
-      },
+      }
     };
   }
 
   readUserHostPermissions(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async (req: Request): Promise<void> => {}
     };
   }
 
   readUserFeed(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      controller: async (req: Request): Promise<void> => {}
     };
   }
 
@@ -289,7 +289,7 @@ export default class UserController extends BaseController {
       controller: async (req: Request) => {
         const u = await User.findOne({ _id: parseInt(req.params.uid) }, { relations: ['personal_details'] });
         return (u.personal_details.contact_info.addresses || []).map(a => a.toFull());
-      },
+      }
     };
   }
 
@@ -308,7 +308,7 @@ export default class UserController extends BaseController {
           await txc.save(user);
           return address.toFull();
         });
-      },
+      }
     };
   }
 
@@ -320,7 +320,7 @@ export default class UserController extends BaseController {
         // TODO: update method in address model
 
         return address.toFull();
-      },
+      }
     };
   }
 
@@ -329,7 +329,7 @@ export default class UserController extends BaseController {
       authStrategy: AuthStrat.isOurself,
       controller: async (req: Request) => {
         await Address.delete({ _id: parseInt(req.params.aid) });
-      },
+      }
     };
   }
 }

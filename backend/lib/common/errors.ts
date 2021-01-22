@@ -4,13 +4,13 @@ import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@eventi/interfac
 
 /**
  * @description Used for checking if something exists, else throw a not found
- * @param f 
+ * @param f
  */
-export const getCheck = async <T>(f:Promise<T>):Promise<T> => {
+export const getCheck = async <T>(f: Promise<T>): Promise<T> => {
   const v = await f;
-  if(v == null || v == undefined) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
+  if (v == null || v == undefined) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
   return v;
-}
+};
 
 export const handleError = (req: Request, res: Response, next: NextFunction, err: ErrorHandler | Error) => {
   const errorType: HTTP = err instanceof ErrorHandler ? err.errorType : HTTP.ServerError;
@@ -20,7 +20,7 @@ export const handleError = (req: Request, res: Response, next: NextFunction, err
     status: `${errorType}`.startsWith('4') ? 'fail' : 'error',
     statusCode: errorType || 520,
     message: message,
-    errors: err instanceof ErrorHandler ? err.errors : [],
+    errors: err instanceof ErrorHandler ? err.errors : []
   };
 
   log.error(`(${errorType}) --> ${JSON.stringify(err.message)}`);

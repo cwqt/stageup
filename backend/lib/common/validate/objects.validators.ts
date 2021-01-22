@@ -9,7 +9,7 @@ import {
   IPerson,
   IPersonInfo,
   ISocialInfo,
-  IOnboardingIssue,
+  IOnboardingIssue
 } from '@eventi/interfaces';
 import { FieldValidators as FV } from './fields.validators';
 
@@ -22,7 +22,7 @@ export namespace ObjectValidators {
       iso_country_code: v => FV.ISOCountry(v),
       postcode: v => FV.postcode(v),
       street_name: v => FV.isString(v, ErrCode.INVALID),
-      street_number: v => FV.isInt(v, ErrCode.INVALID),
+      street_number: v => FV.isInt(v, ErrCode.INVALID)
     };
   };
 
@@ -30,7 +30,7 @@ export namespace ObjectValidators {
     return {
       title: v => FV.isString(v).isIn(Object.values(PersonTitle)),
       first_name: v => FV.isString(v),
-      last_name: v => FV.isString(v),
+      last_name: v => FV.isString(v)
     };
   };
 
@@ -39,7 +39,7 @@ export namespace ObjectValidators {
       ...IPersonInfo(),
       mobile_number: v => v.isMobilePhone('en-GB'),
       landline_number: v => v.isMobilePhone('en-GB'),
-      addresses: v => v.custom(array(IAddress())),
+      addresses: v => v.custom(array(IAddress()))
     };
   };
 
@@ -56,16 +56,16 @@ export namespace ObjectValidators {
       instagram_url: v =>
         FV.isString(v)
           .isURL({ host_whitelist: ['instagram.com'] })
-          .withMessage(ErrCode.NOT_URL),
+          .withMessage(ErrCode.NOT_URL)
     };
   };
 
-  export const IOnboardingIssue = ():ObjectValidator<IOnboardingIssue<any>> => {
+  export const IOnboardingIssue = (): ObjectValidator<IOnboardingIssue<any>> => {
     return {
       param: v => FV.isString(v),
-      message: v => FV.isString(v),
-    }
-  }
+      message: v => FV.isString(v)
+    };
+  };
 
   export const IHostMemberChangeRequest = (
     value: IHostMemberChangeRequest['value'] = null
@@ -73,7 +73,7 @@ export namespace ObjectValidators {
     return {
       user_id: v => FV.isInt(v),
       change: v => FV.isString(v).isIn(['add', 'update', 'del']),
-      value: v => v.optional(value == null ? true : false).equals(value?.toString()),
+      value: v => v.optional(value === null ? true : false).equals(value?.toString())
     };
   };
 }

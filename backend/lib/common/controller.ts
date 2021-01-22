@@ -7,25 +7,27 @@ import { IFormErrorField } from '@eventi/interfaces';
 
 export interface IControllerEndpoint<T> {
   validators?: Array<(req: Request) => Promise<IFormErrorField[]>>;
-  controller: (req: Request, dc:DataClient, locals: IResLocals, next: NextFunction) => Promise<T>;
+  controller: (req: Request, dc: DataClient, locals: IResLocals, next: NextFunction) => Promise<T>;
   preMiddlewares?: RequestHandler[];
   postMiddlewares?: RequestHandler[];
   authStrategy: AuthStrategy;
 }
 
-export type BaseArgs = [DataClient, Middlewares, string?];
+export type BaseArguments = [DataClient, Middlewares, string?];
 export class BaseController {
   dc: DataClient;
   mws: Middlewares;
-  path:string;
+  path: string;
 
-  constructor(providers: DataClient, middlewares: Middlewares, endpoint?:string) {
+  constructor(providers: DataClient, middlewares: Middlewares, endpoint?: string) {
     this.dc = providers;
     this.mws = middlewares;
 
     // Unused so far
-    this.path = endpoint ?? "";
+    this.path = endpoint ?? '';
   }
 
-  get ORM():DataClient["torm"] { return this.dc.torm; }
+  get ORM(): DataClient['torm'] {
+    return this.dc.torm;
+  }
 }

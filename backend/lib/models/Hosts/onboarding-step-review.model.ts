@@ -1,31 +1,33 @@
 import {
-  HostOnboardingState,
-  HostOnboardingStep,
-  IOnboardingIssue,
-  IOnboardingStepReview,
-} from '@eventi/interfaces';
-import {
   BaseEntity,
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from 'typeorm';
-import { User } from '../Users/User.model';
-import { IOnboardingStepReviewSubmission } from '@eventi/interfaces';
+
+import {
+  IOnboardingStepReviewSubmission,
+  HostOnboardingState,
+  HostOnboardingStep,
+  IOnboardingIssue,
+  IOnboardingStepReview
+} from '@eventi/interfaces';
+
+import { User } from '../users/user.model';
 import { unixTimestamp } from '../../common/helpers';
-import { HostOnboardingProcess } from './Onboarding.model';
+import { HostOnboardingProcess } from './onboarding.model';
 
 @Entity()
 export class OnboardingStepReview extends BaseEntity implements IOnboardingStepReview {
-  @PrimaryGeneratedColumn()   _id: number;
-  @Column()                   onboarding_step: HostOnboardingStep;
-  @Column()                   onboarding_version: number;
-  @Column()                   step_state: HostOnboardingState.Verified | HostOnboardingState.HasIssues;
-  @Column({ type: 'jsonb' })  issues: IOnboardingIssue<any>[];
-  @Column()                   review_message: string;
-  @Column()                   reviewed_at: number;
+  @PrimaryGeneratedColumn() _id: number;
+  @Column() onboarding_step: HostOnboardingStep;
+  @Column() onboarding_version: number;
+  @Column() step_state: HostOnboardingState.Verified | HostOnboardingState.HasIssues;
+  @Column({ type: 'jsonb' }) issues: IOnboardingIssue<any>[];
+  @Column() review_message: string;
+  @Column() reviewed_at: number;
 
   @ManyToOne(() => HostOnboardingProcess, hop => hop.reviews) onboarding: HostOnboardingProcess;
   @ManyToOne(() => User) @JoinColumn() reviewed_by: User;
@@ -57,7 +59,7 @@ export class OnboardingStepReview extends BaseEntity implements IOnboardingStepR
       issues: this.issues,
       reviewed_at: this.reviewed_at,
       reviewed_by: this.reviewed_by?.toStub(),
-      review_message: this.review_message,
+      review_message: this.review_message
     };
   }
 }

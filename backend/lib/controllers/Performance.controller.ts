@@ -6,19 +6,19 @@ import {
   IPerformanceUserInfo,
   HTTP,
   ErrCode,
-  HostPermission,
+  HostPermission
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
-import { Performance } from '../models/Performances/Performance.model';
+import { Performance } from '../models/performances/Performance.model';
 import { ErrorHandler, getCheck } from '../common/errors';
-import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
+import { BaseController, BaseArguments, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
 import Validators, { body } from '../common/validate';
-import { Purchase } from '../models/Purchase.model';
+import { Purchase } from '../models/purchase.model';
 
 export default class PerformanceController extends BaseController {
-  constructor(...args: BaseArgs) {
+  constructor(...args: BaseArguments) {
     super(...args);
   }
 
@@ -26,15 +26,15 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [
         body<Pick<IPerformanceStub, 'name'>>({
-          name: v => Validators.Fields.isString(v),
-        }),
+          name: v => Validators.Fields.isString(v)
+        })
       ],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async (req: Request): Promise<IPerformance> => {
         const user = await getCheck(
           User.findOne(
             {
-              _id: req.session.user._id,
+              _id: req.session.user._id
             },
             { relations: ['host'] }
           )
@@ -45,13 +45,13 @@ export default class PerformanceController extends BaseController {
             name: req.body.name,
             description: req.body.description ?? '',
             price: req.body.price,
-            currency: req.body.currency,
+            currency: req.body.currency
           },
           user
         ).setup(this.dc);
 
         return performance.toFull();
-      },
+      }
     };
   }
 
@@ -64,9 +64,9 @@ export default class PerformanceController extends BaseController {
 
         return {
           data: envelopedPerformances.data.map(p => p.toStub()),
-          __paging_data: envelopedPerformances.__paging_data,
+          __paging_data: envelopedPerformances.__paging_data
         };
-      },
+      }
     };
   }
 
@@ -97,8 +97,8 @@ export default class PerformanceController extends BaseController {
               relations: ['user', 'performance'],
               where: {
                 user: { _id: user._id },
-                performance: { _id: performance._id },
-              },
+                performance: { _id: performance._id }
+              }
             });
 
             token = previousPurchase.token;
@@ -117,10 +117,10 @@ export default class PerformanceController extends BaseController {
             signed_token: token,
             purchase_id: previousPurchase?._id,
             // TODO: token expiry
-            expires: false,
-          },
+            expires: false
+          }
         };
-      },
+      }
     };
   }
 
@@ -137,7 +137,7 @@ export default class PerformanceController extends BaseController {
         delete performanceHostInfo.signing_key;
 
         return performanceHostInfo as IPerformanceHostInfo;
-      },
+      }
     };
   }
 
@@ -147,13 +147,13 @@ export default class PerformanceController extends BaseController {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async (req: Request): Promise<IPerformance> => {
         let p = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
-        p = await p.update({ 
+        p = await p.update({
           name: req.body.name,
           price: req.body.price,
           description: req.body.description
-         });
+        });
         return p.toFull();
-      },
+      }
     };
   }
 
@@ -170,8 +170,8 @@ export default class PerformanceController extends BaseController {
           relations: ['user', 'performance'],
           where: {
             user: { _id: user._id },
-            performance: { _id: perf._id },
-          },
+            performance: { _id: perf._id }
+          }
         });
 
         if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
@@ -180,7 +180,7 @@ export default class PerformanceController extends BaseController {
         purchase.token = perf.host_info.signing_key.signToken(perf);
 
         await this.ORM.manager.save(purchase);
-      },
+      }
     };
   }
 
@@ -191,8 +191,7 @@ export default class PerformanceController extends BaseController {
       controller: async (req: Request): Promise<void> => {
         const perf = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
         await perf.remove();
-      
-      },
+      }
     };
   }
 }

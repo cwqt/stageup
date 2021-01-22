@@ -18,17 +18,16 @@ export default class Middlewares {
    * @param maxFileSize Max file size in kB
    * @param acceptedTypes Accepted file MIME types
    */
-  file(maxFileSize:number, acceptedTypes:string[]) {
+  file(maxFileSize: number, acceptedTypes: string[]) {
     return Multer({
       storage: Multer.memoryStorage(),
       limits: {
-        fileSize: maxFileSize * 1024,
+        fileSize: maxFileSize * 1024
       },
       fileFilter: (req: Request, file: Express.Multer.File, cb: Multer.FileFilterCallback) => {
-        if (!acceptedTypes.includes(file.mimetype))
-          return cb(new Error(`File type not allowed`));
+        if (!acceptedTypes.includes(file.mimetype)) return cb(new Error(`File type not allowed`));
         cb(null, true);
-      },
+      }
     });
   }
 
@@ -40,7 +39,7 @@ export default class Middlewares {
   cacher(period: string, cacheFunction?: (req: Request, res: Response) => boolean): any {
     return apicache
       .options({
-        redisClient: this.providers.redis,
+        redisClient: this.providers.redis
       })
       .middleware(period, cacheFunction);
   }
@@ -53,10 +52,10 @@ export default class Middlewares {
   limiter(period: number, max: number): RateLimiter.RateLimit {
     return RateLimiter({
       store: new RedisStore({
-        client: this.providers.redis,
+        client: this.providers.redis
       }),
       windowMs: period * 1000,
-      max: max,
+      max: max
     });
   }
 }

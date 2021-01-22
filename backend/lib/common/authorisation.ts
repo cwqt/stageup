@@ -1,9 +1,9 @@
 import { ErrCode, HostPermission } from '@eventi/interfaces';
 import { Request } from 'express';
 import { DataClient } from './data';
-import { User } from '../models/Users/User.model';
-import { Host } from '../models/Hosts/Host.model';
-import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
+import { User } from '../models/Users/user.model';
+import { Host } from '../models/hosts/host.model';
+import { UserHostInfo } from '../models/hosts/user-host-info.model';
 
 export type AuthStratReturn = [boolean, { [index: string]: any }, ErrCode?];
 export type AuthStrategy = (req: Request, dc: DataClient) => Promise<AuthStratReturn>;
@@ -34,16 +34,16 @@ export const isMemberOfHost: AuthStrategy = async (req: Request, dc: DataClient)
   const uhi = await UserHostInfo.findOne({
     relations: {
       user: true,
-      host: true,
+      host: true
     },
     where: {
       user: {
-        _id: req.session.user._id,
+        _id: req.session.user._id
       },
       host: {
-        _id: parseInt(req.params.hid),
-      },
-    },
+        _id: parseInt(req.params.hid)
+      }
+    }
   });
 
   if (!uhi) return [false, {}, ErrCode.NOT_MEMBER];
@@ -68,7 +68,7 @@ export const isSiteAdmin: AuthStrategy = async (req: Request, dc: DataClient): P
   return [true, {}];
 };
 
-// export const hasClientSubscriptionTier 
+// export const hasClientSubscriptionTier
 
 /**
  * @description Combine AuthStratgies into an AND operator
@@ -112,5 +112,5 @@ export default {
   isLoggedIn,
   isMemberOfHost,
   hasHostPermission,
-  isSiteAdmin,
+  isSiteAdmin
 };
