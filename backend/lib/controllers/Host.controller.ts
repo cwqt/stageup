@@ -15,25 +15,26 @@ import {
   IUser,
   IUserHostInfo,
   pick,
-  IUserStub
+  IUserStub,
+  HTTP
 } from '@eventi/interfaces';
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Host } from '../models/hosts/host.model';
 import { ErrorHandler, getCheck } from '../common/errors';
-import { HTTP } from '@eventi/interfaces';
+
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
 import { BaseController, BaseArguments, IControllerEndpoint } from '../common/controller';
 import { HostOnboardingProcess } from '../models/hosts/onboarding.model';
 import AuthStrat from '../common/authorisation';
-import { body, params, query } from '../common/validate';
-import Validators from '../common/validate';
+import Validators, { body, params as parameters, query } from '../common/validate';
+
 import { unixTimestamp } from '../common/helpers';
 import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
 
 export default class HostController extends BaseController {
-  constructor(...args: BaseArguments) {
-    super(...args);
+  constructor(...arguments_: BaseArguments) {
+    super(...arguments_);
   }
 
   createHost(): IControllerEndpoint<IHost> {
@@ -50,25 +51,29 @@ export default class HostController extends BaseController {
         })
       ],
       authStrategy: AuthStrat.isLoggedIn,
-      controller: async (req: Request): Promise<IHost> => {
-        const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+      controller: async (request: Request): Promise<IHost> => {
+        const user = await User.findOne({ _id: request.session.user._id }, { relations: ['host'] });
+        if (user.host) {
+          throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+        }
 
-        const h = await Host.findOne({ username: req.body.username });
-        if (h) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
+        const h = await Host.findOne({ username: request.body.username });
+        if (h) {
+          throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
+        }
 
         // Create host & add current user (creator) to it through transaction
         // & begin the onboarding process by running setup
-        return await this.ORM.transaction(async txc => {
+        return this.ORM.transaction(async txc => {
           const host = await txc.save(
             new Host({
-              username: req.body.username,
-              name: req.body.name,
-              email_address: req.body.email_address
+              username: request.body.username,
+              name: request.body.name,
+              email_address: request.body.email_address
             })
           );
 
-          // save before setup because onboarding process depends on PK existing
+          // Save before setup because onboarding process depends on PK existing
           await host.setup(user, txc);
           await host.addMember(user, HostPermission.Owner, txc);
           return (await txc.save(host)).toFull();
@@ -81,8 +86,8 @@ export default class HostController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.isLoggedIn,
-      controller: async (req: Request): Promise<IHost> => {
-        const host = await Host.findOne({ _id: parseInt(req.params.hid) });
+      controller: async (request: Request): Promise<IHost> => {
+        const host = await Host.findOne({ _id: Number.parseInt(request.params.hid) });
         return host.toFull();
       }
     };
@@ -92,9 +97,9 @@ export default class HostController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async req => {
+      controller: async request => {
         const host = await Host.findOne(
-          { _id: parseInt(req.params.hid) },
+          { _id: Number.parseInt(request.params.hid) },
           {
             relations: {
               members_info: {
@@ -112,7 +117,7 @@ export default class HostController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<IHost> => {
+      controller: async (request: Request): Promise<IHost> => {
         return {} as IHost;
       }
     };
@@ -122,9 +127,11 @@ export default class HostController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {
-        const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (!user.host) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
+      controller: async (request: Request): Promise<void> => {
+        const user = await User.findOne({ _id: request.session.user._id }, { relations: ['host'] });
+        if (!user.host) {
+          throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
+        }
 
         const userHostInfo = await UserHostInfo.findOne({
           relations: ['user', 'host'],
@@ -134,8 +141,9 @@ export default class HostController extends BaseController {
           }
         });
 
-        if (userHostInfo.permissions != HostPermission.Owner)
+        if (userHostInfo.permissions != HostPermission.Owner) {
           throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+        }
 
         // TODO: transactionally remove performances, signing keys, host infos etc etc.
         await user.host.remove();
@@ -147,7 +155,7 @@ export default class HostController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {}
+      controller: async (request: Request): Promise<void> => {}
     };
   }
 
@@ -155,7 +163,7 @@ export default class HostController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {}
+      controller: async (request: Request): Promise<void> => {}
     };
   }
 
@@ -163,7 +171,7 @@ export default class HostController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {}
+      controller: async (request: Request): Promise<void> => {}
     };
   }
 
@@ -171,7 +179,7 @@ export default class HostController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<void> => {}
+      controller: async (request: Request): Promise<void> => {}
     };
   }
 
@@ -182,15 +190,15 @@ export default class HostController extends BaseController {
           user: v => v.exists().toInt()
         })
       ],
-      controller: async (req: Request): Promise<IUserHostInfo> => {
+      controller: async (request: Request): Promise<IUserHostInfo> => {
         const uhi = await UserHostInfo.findOne({
           relations: ['host', 'user'],
           where: {
             user: {
-              _id: parseInt(req.query.user as string)
+              _id: Number.parseInt(request.query.user as string)
             },
             host: {
-              _id: parseInt(req.params.hid)
+              _id: Number.parseInt(request.params.hid)
             }
           }
         });
@@ -204,17 +212,20 @@ export default class HostController extends BaseController {
   readOnboardingProcessStatus(): IControllerEndpoint<IHostOnboarding> {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async req => {
+      controller: async request => {
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
             host: {
-              _id: parseInt(req.params.hid)
+              _id: Number.parseInt(request.params.hid)
             }
           },
           relations: ['host']
         });
 
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+        if (!onboarding) {
+          throw new ErrorHandler(HTTP.NotFound);
+        }
+
         return onboarding.toFull();
       }
     };
@@ -223,23 +234,25 @@ export default class HostController extends BaseController {
   readOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {
       validators: [
-        params<{ step: number }>({
+        parameters<{ step: number }>({
           step: v => v.exists().toInt().isIn(Object.values(HostOnboardingStep))
         })
       ],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<IOnboardingStep<any>> => {
+      controller: async (request: Request): Promise<IOnboardingStep<any>> => {
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
             host: {
-              _id: parseInt(req.params.hid)
+              _id: Number.parseInt(request.params.hid)
             }
           }
         });
 
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+        if (!onboarding) {
+          throw new ErrorHandler(HTTP.NotFound);
+        }
 
-        const step = (req.params.step as unknown) as HostOnboardingStep;
+        const step = (request.params.step as unknown) as HostOnboardingStep;
         const stepReview = await OnboardingStepReview.findOne({
           where: {
             onboarding_step: step,
@@ -256,26 +269,30 @@ export default class HostController extends BaseController {
   updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {
       validators: [
-        params<{ step: number }>({
+        parameters<{ step: number }>({
           step: v => v.exists().toInt().isIn(Object.values(HostOnboardingStep))
         })
       ],
-      authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<IOnboardingStep<any>> => {
-        if (!req.body) throw new ErrorHandler(HTTP.DataInvalid, ErrCode.NO_DATA);
+      authStrategy: AuthStrat.isLoggedIn, // AuthStrat.hasHostPermission(HostPermission.Owner),
+      controller: async (request: Request): Promise<IOnboardingStep<any>> => {
+        if (!request.body) {
+          throw new ErrorHandler(HTTP.DataInvalid, ErrCode.NO_DATA);
+        }
 
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
             host: {
-              _id: parseInt(req.params.hid)
+              _id: Number.parseInt(request.params.hid)
             }
           }
         });
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+        if (!onboarding) {
+          throw new ErrorHandler(HTTP.NotFound);
+        }
 
-        const user = await getCheck(User.findOne({ _id: req.session.user._id }));
+        const user = await getCheck(User.findOne({ _id: request.session.user._id }));
 
-        // pick updateable fields from interface type
+        // Pick updateable fields from interface type
         const u: { [index in HostOnboardingStep]: Function } = {
           [HostOnboardingStep.ProofOfBusiness]: (d: IOnboardingProofOfBusiness) =>
             pick(d, ['business_address', 'business_contact_number', 'hmrc_company_number']),
@@ -285,10 +302,10 @@ export default class HostController extends BaseController {
           [HostOnboardingStep.SubscriptionConfiguration]: (d: IOnboardingSubscriptionConfiguration) => pick(d, ['tier'])
         };
 
-        const step: HostOnboardingStep = parseInt(req.params.step);
+        const step: HostOnboardingStep = Number.parseInt(request.params.step);
 
         try {
-          await onboarding.updateStep(step, u[step](req.body));
+          await onboarding.updateStep(step, u[step](request.body));
         } catch (error) {
           console.log(error);
           throw new ErrorHandler(HTTP.DataInvalid, null, error);
@@ -303,18 +320,22 @@ export default class HostController extends BaseController {
 
   submitOnboardingProcess(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.isLoggedIn, //AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<void> => {
+      authStrategy: AuthStrat.isLoggedIn, // AuthStrat.hasHostPermission(HostPermission.Owner),
+      controller: async (request: Request): Promise<void> => {
         const onboarding = await HostOnboardingProcess.findOne({
           where: {
             host: {
-              _id: parseInt(req.params.hid)
+              _id: Number.parseInt(request.params.hid)
             }
           }
         });
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-        if (onboarding.state != HostOnboardingState.AwaitingChanges)
+        if (!onboarding) {
+          throw new ErrorHandler(HTTP.NotFound);
+        }
+
+        if (onboarding.state != HostOnboardingState.AwaitingChanges) {
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
+        }
 
         // TODO: verify all steps filled out
         // TODO: delete all previous version step reviews

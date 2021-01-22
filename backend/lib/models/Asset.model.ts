@@ -18,7 +18,7 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
   }
 
   getEndpoint(): string {
-    // hack the typing a little
+    // Hack the typing a little
     const meta = this.asset_meta.data as unknown;
     const endpointMappers: { [index in AssetType]?: string } = {
       [AssetType.Image]: `http://INSERT_S3_URL_HERE.com/${(<IStaticMeta>meta).key_id}`,
@@ -30,7 +30,7 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
   }
 
   createThumbnailUrl = (assetMeta: IThumbnailMeta): string => {
-    const params: Omit<IThumbnailMeta, 'playback_id'> = {
+    const parameters: Omit<IThumbnailMeta, 'playback_id'> = {
       width: assetMeta.width ?? 300,
       height: assetMeta.height ?? 300,
       flip_h: assetMeta.flip_h ?? false,
@@ -40,11 +40,11 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
       fit_mode: assetMeta.fit_mode ?? 'smartcrop'
     };
 
-    return `${config.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}${stitchParams(params)}`;
+    return `${config.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}${stitchParameters(parameters)}`;
   };
 
   createGIFUrl = (assetMeta: IGIFMeta): string => {
-    const params: Omit<IGIFMeta, 'playback_id'> = {
+    const parameters: Omit<IGIFMeta, 'playback_id'> = {
       width: assetMeta.width ?? 300,
       height: assetMeta.height ?? 300,
       start: assetMeta.start ?? 0,
@@ -52,13 +52,13 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
       fps: assetMeta.fps ?? 15
     };
 
-    return `${config.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}/${stitchParams(params)}`;
+    return `${config.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}/${stitchParameters(parameters)}`;
   };
 }
 
-// join kv's and uri escape
-const stitchParams = (input: { [index: string]: Primitive }): string => {
-  return Object.entries(input).reduce((acc, curr, idx) => {
-    return acc + `${idx == 0 ? '?' : '&'}${curr[0]}=${curr[1]}`;
+// Join kv's and uri escape
+const stitchParameters = (input: Record<string, Primitive>): string => {
+  return Object.entries(input).reduce((accumulator, current, index) => {
+    return accumulator + `${index == 0 ? '?' : '&'}${current[0]}=${current[1]}`;
   }, '');
 };

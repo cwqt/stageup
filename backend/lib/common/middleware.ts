@@ -24,8 +24,12 @@ export default class Middlewares {
       limits: {
         fileSize: maxFileSize * 1024
       },
-      fileFilter: (req: Request, file: Express.Multer.File, cb: Multer.FileFilterCallback) => {
-        if (!acceptedTypes.includes(file.mimetype)) return cb(new Error(`File type not allowed`));
+      fileFilter: (request: Request, file: Express.Multer.File, cb: Multer.FileFilterCallback) => {
+        if (!acceptedTypes.includes(file.mimetype)) {
+          cb(new Error('File type not allowed'));
+          return;
+        }
+
         cb(null, true);
       }
     });
@@ -36,7 +40,7 @@ export default class Middlewares {
    * @param period Plain-english cache duration e.g. "5 minutes"
    * @param cacheFunction Cache only when true, passed req & res objects
    */
-  cacher(period: string, cacheFunction?: (req: Request, res: Response) => boolean): any {
+  cacher(period: string, cacheFunction?: (request: Request, res: Response) => boolean): any {
     return apicache
       .options({
         redisClient: this.providers.redis
@@ -60,5 +64,5 @@ export default class Middlewares {
   }
 }
 
-export const cacheOnOk = (req: Request, res: Response) => res.statusCode == HTTP.OK;
-export const cacheOnFail = (req: Request, res: Response) => res.statusCode == HTTP.ServerError;
+export const cacheOnOk = (request: Request, res: Response) => res.statusCode === HTTP.OK;
+export const cacheOnFail = (request: Request, res: Response) => res.statusCode === HTTP.ServerError;

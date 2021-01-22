@@ -1,6 +1,5 @@
-import { NextFunction } from 'express';
-import { Response } from 'express';
-import { Request } from 'express';
+import { NextFunction, Response, Request } from 'express';
+
 import { SelectQueryBuilder } from 'typeorm';
 import { IEnvelopedData } from '@eventi/interfaces';
 
@@ -15,17 +14,17 @@ declare module 'typeorm' {
 /**
  * Boot the package by patching the SelectQueryBuilder
  */
-export const pagination = (req: Request, res: Response, next: NextFunction) => {
-  // use function instead of => to have this reference in queryBuilder chain
+export const pagination = (request: Request, res: Response, next: NextFunction) => {
+  // Use function instead of => to have this reference in queryBuilder chain
   SelectQueryBuilder.prototype.paginate = async function <T>(
     per_page?: number | null
   ): Promise<IEnvelopedData<T[], null>> {
-    //FIXME: not sure why this returns [Object: null prototype], but coercing it back and forth gives us an object
+    // FIXME: not sure why this returns [Object: null prototype], but coercing it back and forth gives us an object
     const locals = JSON.parse(JSON.stringify(res.locals));
-    let current_page = locals.page == 0 ? 1 : locals.page;
+    const current_page = locals.page === 0 ? 1 : locals.page;
     per_page = per_page || locals.per_page;
 
-    return await paginate(this, current_page, per_page);
+    return paginate(this, current_page, per_page);
   };
 
   next();
@@ -39,7 +38,7 @@ const paginate = async <T>(
   const skip = (page - 1) * per_page;
   const total = builder;
   const count = await total.getCount();
-  let res = await builder.skip(skip).take(per_page).getMany();
+  const res = await builder.skip(skip).take(per_page).getMany();
 
   return {
     data: res as T[],

@@ -23,12 +23,11 @@ import {
   IOnboardingSubscriptionConfiguration
 } from '@eventi/interfaces';
 
-import { Host } from '../hosts/host.model';
+import { Host } from './host.model';
 import { User } from '../users/user.model';
-import { object, single, array } from '../../common/validate';
+import Validators, { object, single, array } from '../../common/validate';
 import { unixTimestamp } from '../../common/helpers';
 import { OnboardingStepReview } from './onboarding-step-review.model';
-import Validators from '../../common/validate';
 
 @Entity()
 export class HostOnboardingProcess extends BaseEntity implements IHostOnboardingProcess {
@@ -111,7 +110,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     };
   }
 
-  // toSteps(): IOnboardingStepMap {
+  // ToSteps(): IOnboardingStepMap {
   //   return  {
   //     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
   //     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
@@ -132,11 +131,11 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       completed_at: this.completed_at,
       version: this.version,
       host: this.host.toStub(),
-      steps: Object.keys(this.steps).reduce((acc, curr) => {
-        let stepIdx = (curr as unknown) as HostOnboardingStep;
-        acc[stepIdx] = this.steps[stepIdx].state;
-        return acc;
-      }, {} as IHostOnboarding['steps'])
+      steps: Object.keys(this.steps).reduce<IHostOnboarding['steps']>((accumulator, current) => {
+        const stepIndex = (current as unknown) as HostOnboardingStep;
+        accumulator[stepIndex] = this.steps[stepIndex].state;
+        return accumulator;
+      }, {})
     };
   }
 
@@ -148,45 +147,48 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     this.last_modified = Math.floor(Date.now() / 1000);
   }
 
-  async updateStep<T extends object>(stepIdx: HostOnboardingStep, updates: Partial<T>): Promise<IOnboardingStep<any>> {
-    const validationResult = await stepValidators[stepIdx](updates);
-    if (validationResult.length) {
-      this.steps[stepIdx].valid = false;
+  async updateStep<T extends Record<string, unknown>>(
+    stepIndex: HostOnboardingStep,
+    updates: Partial<T>
+  ): Promise<IOnboardingStep<any>> {
+    const validationResult = await stepValidators[stepIndex](updates);
+    if (validationResult.length > 0) {
+      this.steps[stepIndex].valid = false;
       throw validationResult;
     } else {
-      // data fully valid, so is the step - as a consequence we can't partially update fields
+      // Data fully valid, so is the step - as a consequence we can't partially update fields
       // but i doubt we'll need that since each step is quite small
-      this.steps[stepIdx].valid = true;
+      this.steps[stepIndex].valid = true;
     }
 
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
-      (<any>this.steps[stepIdx].data)[k] = v ?? (<any>this.steps[stepIdx].data)[k];
+      (<any>this.steps[stepIndex].data)[k] = v ?? (<any>this.steps[stepIndex].data)[k];
     });
 
-    return this.steps[stepIdx];
+    return this.steps[stepIndex];
   }
 }
 
 const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IFormErrorField[]> } = {
   [HostOnboardingStep.ProofOfBusiness]: async (d: IOnboardingProofOfBusiness) => {
-    return await object(d, {
+    return object(d, {
       hmrc_company_number: v => v.isInt().isLength({ min: 8, max: 8 }),
       business_contact_number: v => v.isMobilePhone('en-GB'),
       business_address: v => v.custom(single(Validators.Objects.IAddress()))
     });
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
-    return await object(d, {
+    return object(d, {
       owner_info: v => v.custom(single(Validators.Objects.IPersonInfo()))
     });
   },
   [HostOnboardingStep.AddMembers]: async (d: IOnboardingAddMembers) => {
-    return await object(d, {
+    return object(d, {
       members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest()))
     });
   },
   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
-    return await object(d, {
+    return object(d, {
       social_info: v =>
         v.custom(
           single<typeof d.social_info>({
@@ -198,7 +200,7 @@ const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IForm
     });
   },
   [HostOnboardingStep.SubscriptionConfiguration]: async (d: IOnboardingSubscriptionConfiguration) => {
-    return await object(d, {
+    return object(d, {
       tier: v => Validators.Fields.isInt(v).isIn(Object.values(HostSubscriptionLevel))
     });
   }

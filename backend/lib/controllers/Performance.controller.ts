@@ -18,8 +18,8 @@ import Validators, { body } from '../common/validate';
 import { Purchase } from '../models/purchase.model';
 
 export default class PerformanceController extends BaseController {
-  constructor(...args: BaseArguments) {
-    super(...args);
+  constructor(...arguments_: BaseArguments) {
+    super(...arguments_);
   }
 
   createPerformance(): IControllerEndpoint<IPerformance> {
@@ -30,11 +30,11 @@ export default class PerformanceController extends BaseController {
         })
       ],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async (req: Request): Promise<IPerformance> => {
+      controller: async (request: Request): Promise<IPerformance> => {
         const user = await getCheck(
           User.findOne(
             {
-              _id: req.session.user._id
+              _id: request.session.user._id
             },
             { relations: ['host'] }
           )
@@ -42,10 +42,10 @@ export default class PerformanceController extends BaseController {
 
         const performance = await new Performance(
           {
-            name: req.body.name,
-            description: req.body.description ?? '',
-            price: req.body.price,
-            currency: req.body.currency
+            name: request.body.name,
+            description: request.body.description ?? '',
+            price: request.body.price,
+            currency: request.body.currency
           },
           user
         ).setup(this.dc);
@@ -59,7 +59,7 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async req => {
+      controller: async request => {
         const envelopedPerformances = await this.ORM.createQueryBuilder(Performance, 'p').paginate();
 
         return {
@@ -74,24 +74,28 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
+      controller: async (request: Request): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
         const performance = await Performance.findOne(
-          { _id: parseInt(req.params.pid) },
+          { _id: Number.parseInt(request.params.pid) },
           { relations: ['host', 'host_info'] }
         );
 
-        if (!performance) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
+        if (!performance) {
+          throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
+        }
 
-        // see if current user has access/bought the performance
+        // See if current user has access/bought the performance
         let token: string;
-        let memberOfHost: boolean = false;
+        let memberOfHost = false;
         let previousPurchase: Purchase | null;
-        if (req.session?.user._id) {
-          // check if user is part of host that created performance
-          const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-          if (user.host._id == performance.host._id) memberOfHost = true;
+        if (request.session?.user._id) {
+          // Check if user is part of host that created performance
+          const user = await User.findOne({ _id: request.session.user._id }, { relations: ['host'] });
+          if (user.host._id == performance.host._id) {
+            memberOfHost = true;
+          }
 
-          // check if user has purchased the performance
+          // Check if user has purchased the performance
           if (!memberOfHost) {
             previousPurchase = await Purchase.findOne({
               relations: ['user', 'performance'],
@@ -104,11 +108,15 @@ export default class PerformanceController extends BaseController {
             token = previousPurchase.token;
           }
 
-          // neither member of host, nor has a purchased token
-          if (!(memberOfHost || token)) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+          // Neither member of host, nor has a purchased token
+          if (!(memberOfHost || token)) {
+            throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+          }
 
-          // sign on the fly for a member of the host
-          if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
+          // Sign on the fly for a member of the host
+          if (memberOfHost) {
+            token = performance.host_info.signing_key.signToken(performance);
+          }
         }
 
         return {
@@ -128,11 +136,14 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<IPerformanceHostInfo> => {
-        const performance = await Performance.findOne({ _id: parseInt(req.params.pid) }, { relations: ['host_info'] });
+      controller: async (request: Request): Promise<IPerformanceHostInfo> => {
+        const performance = await Performance.findOne(
+          { _id: Number.parseInt(request.params.pid) },
+          { relations: ['host_info'] }
+        );
         const performanceHostInfo = performance.host_info;
 
-        // host_info eager loads signing_key, which is very convenient usually
+        // Host_info eager loads signing_key, which is very convenient usually
         // but we do not wanna send keys and such over the wire
         delete performanceHostInfo.signing_key;
 
@@ -145,12 +156,12 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async (req: Request): Promise<IPerformance> => {
-        let p = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
+      controller: async (request: Request): Promise<IPerformance> => {
+        let p = await getCheck(Performance.findOne({ _id: Number.parseInt(request.params.pid) }));
         p = await p.update({
-          name: req.body.name,
-          price: req.body.price,
-          description: req.body.description
+          name: request.body.name,
+          price: request.body.price,
+          description: request.body.description
         });
         return p.toFull();
       }
@@ -161,11 +172,14 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {
-        const user = await User.findOne({ _id: req.session.user._id });
-        const perf = await Performance.findOne({ _id: parseInt(req.params.pid) }, { relations: ['host_info'] });
+      controller: async (request: Request): Promise<void> => {
+        const user = await User.findOne({ _id: request.session.user._id });
+        const perf = await Performance.findOne(
+          { _id: Number.parseInt(request.params.pid) },
+          { relations: ['host_info'] }
+        );
 
-        //check user hasn't already purchased performance
+        // Check user hasn't already purchased performance
         const previousPurchase = await Purchase.findOne({
           relations: ['user', 'performance'],
           where: {
@@ -174,7 +188,9 @@ export default class PerformanceController extends BaseController {
           }
         });
 
-        if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
+        if (previousPurchase) {
+          throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
+        }
 
         const purchase = new Purchase(user, perf);
         purchase.token = perf.host_info.signing_key.signToken(perf);
@@ -188,8 +204,8 @@ export default class PerformanceController extends BaseController {
     return {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async (req: Request): Promise<void> => {
-        const perf = await getCheck(Performance.findOne({ _id: parseInt(req.params.pid) }));
+      controller: async (request: Request): Promise<void> => {
+        const perf = await getCheck(Performance.findOne({ _id: Number.parseInt(request.params.pid) }));
         await perf.remove();
       }
     };

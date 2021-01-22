@@ -16,9 +16,7 @@ import {
   IHostOnboarding as IHOnboarding,
   IOnboardingStep,
   IAddress,
-  IUserStub,
-  IPerformanceHostInfo,
-  IHostStub
+  IUserStub
 } from '@eventi/interfaces';
 
 import UserController from './controllers/user.controller';
@@ -43,7 +41,7 @@ export default (providers: DataClient): Router => {
   router.post<void>('/users/logout', Users.logoutUser());
   router.post<IUser>('/users/login', Users.loginUser());
   router.put<void>('/users/forgotpassword', Users.forgotPassword());
-  router.get<IUser>('/users/@:username', Users.readUserByUsername()); // order matters
+  router.get<IUser>('/users/@:username', Users.readUserByUsername()); // Order matters
   router.get<IUser>('/users/:uid', Users.readUserById());
   router.put<IUser>('/users/:uid', Users.updateUser());
   router.delete<void>('/users/:uid', Users.deleteUser());
@@ -54,7 +52,7 @@ export default (providers: DataClient): Router => {
   router.post<IAddress>('/users/:uid/addresses', Users.createAddress());
   router.put<IAddress>('/users/:uid/addresses/:aid', Users.updateAddress());
   router.delete<void>('/users/:uid/addresses/:aid', Users.deleteAddress());
-  // router.get    <IPurchase[]>           ("/users/:uid/purchases",                     Users.getPurchases());
+  // Router.get    <IPurchase[]>           ("/users/:uid/purchases",                     Users.getPurchases());
   // router.get    <IUserHostInfo>         ("/hosts/:hid/permissions",                   Users.getUserHostPermissions());
   router.get<void>('/feed', Users.readUserFeed());
 
@@ -65,7 +63,7 @@ export default (providers: DataClient): Router => {
   router.delete<void>('/hosts/:hid', Hosts.deleteHost());
   router.put<IHost>('/hosts/:hid', Hosts.updateHost());
   router.get<IUserStub[]>('/hosts/:hid/members', Hosts.readHostMembers());
-  // router.post   <IHost>                 ("/hosts/:hid/members",                      Hosts.addUser());
+  // Router.post   <IHost>                 ("/hosts/:hid/members",                      Hosts.addUser());
   // router.delete <IHost>                 ("/hosts/:hid/members",                      Hosts.removeUser());
   // router.delete <IHost>                 ("/hosts/:hid/members/:mid/permissions",     Hosts.alterMemberPermissions());
   router.get<IHOnboarding>('/hosts/:hid/onboarding/status', Hosts.readOnboardingProcessStatus());
@@ -85,8 +83,8 @@ export default (providers: DataClient): Router => {
 
   // ADMIN PANEL --------------------------------------------------------------------------------------------------------
   const Admin = new AdminController(providers, mws);
-  router.get<IE<IHOnboarding[], void>>(`/admin/onboarding`, Admin.readOnboardingProcesses());
-  router.post<void>(`/admin/onboarding/:oid/:step/review`, Admin.reviewStep());
+  router.get<IE<IHOnboarding[], void>>('/admin/onboarding', Admin.readOnboardingProcesses());
+  router.post<void>('/admin/onboarding/:oid/:step/review', Admin.reviewStep());
   router.post<void>('/admin/onboarding/:oid/submit', Admin.submitOnboardingProcess());
 
   // MUX HOOKS ----------------------------------------------------------------------------------------------------------

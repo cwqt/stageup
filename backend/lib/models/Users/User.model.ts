@@ -36,19 +36,19 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() private salt: string;
   @Column() private pw_hash: string;
 
-  @ManyToOne(() => Host, host => host.members_info) host: Host; //in one host only
-  @OneToMany(() => Purchase, purchase => purchase.user) purchases: Purchase[]; //many purchases
+  @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
+  @OneToMany(() => Purchase, purchase => purchase.user) purchases: Purchase[]; // Many purchases
   @OneToMany(() => Performance, performance => performance.creator) performances: Performance[];
-  @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; //lazy
+  @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
 
   constructor(data: { email_address: string; username: string; password: string }) {
     super();
     this.username = data.username;
     this.email_address = data.email_address;
-    this.created_at = Math.floor(Date.now() / 1000); //timestamp in seconds
+    this.created_at = Math.floor(Date.now() / 1000); // Timestamp in seconds
     this.is_admin = false;
-    this.is_new_user = false; //TODO: change to true
-    this.is_verified = config.PRODUCTION ? false : true; //auto-verify when not in prod
+    this.is_new_user = false; // TODO: change to true
+    this.is_verified = !config.PRODUCTION; // Auto-verify when not in prod
     this.setPassword(data.password);
   }
 
@@ -90,7 +90,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
       is_admin: this.is_admin,
       cover_image: this.cover_image,
       bio: this.bio
-      // purchases: []
+      // Purchases: []
     };
   }
 
@@ -105,10 +105,10 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   }
 
   async verifyPassword(password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.pw_hash);
+    return bcrypt.compare(password, this.pw_hash);
   }
 
-  setPassword(password: string, saltRounds: number = 10) {
+  setPassword(password: string, saltRounds = 10) {
     this.salt = bcrypt.genSaltSync(saltRounds);
     this.pw_hash = bcrypt.hashSync(password, this.salt);
   }

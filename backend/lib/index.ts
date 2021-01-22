@@ -36,8 +36,8 @@ app.use(morgan('tiny', { stream }));
         resave: false,
         saveUninitialized: true,
         cookie: {
-          httpOnly: !config.PRODUCTION ? false : true,
-          secure: !config.PRODUCTION ? false : true
+          httpOnly: Boolean(config.PRODUCTION),
+          secure: Boolean(config.PRODUCTION)
         },
         store: config.USE_MEMORYSTORE ? new MemoryStore() : providers.session_store
       })
@@ -48,12 +48,14 @@ app.use(morgan('tiny', { stream }));
     app.use('/', Routes(providers).router);
 
     // Catch 404 errors
-    app.all('*', (req: any, res: any, next: any) => {
-      handleError(req, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND));
+    app.all('*', (request: any, res: any, next: any) => {
+      handleError(request, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND));
     });
 
     // Global error handler
-    app.use((err: any, req: any, res: any, next: any) => handleError(req, res, next, err));
+    app.use((error: any, request: any, res: any, next: any) => {
+      handleError(request, res, next, error);
+    });
 
     // Handle closing connections on failure
     process.on('SIGTERM', gracefulExit(providers));
@@ -62,17 +64,17 @@ app.use(morgan('tiny', { stream }));
 
     // Start listening for requests
     server = app.listen(config.EXPRESS_PORT, () => {
-      log.info(`\x1b[1mExpress listening on ${config.EXPRESS_PORT}\x1b[0m`);
+      log.info(`\u001B[1mExpress listening on ${config.EXPRESS_PORT}\u001B[0m`);
     });
-  } catch (err) {
-    log.error(err);
+  } catch (error) {
+    log.error(error);
   }
 })();
 
 function gracefulExit(providers: DataClient) {
-  return (err: any) => {
-    log.info(`Termination requested, closing all connections`);
-    log.error(err);
+  return (error: any) => {
+    log.info('Termination requested, closing all connections');
+    log.error(error);
     server.close();
     DataProvider.close(providers);
     process.exit(1);

@@ -1,27 +1,33 @@
 import config from '../config';
-const { generateVerificationHash, verifyHash } = require('dbless-email-verification');
+const dbless = require('dbless-email-verification');
 import nodemailer from 'nodemailer';
 import logger from './logger';
 import { Host } from '../models/hosts/host.model';
 
 const generateEmailHash = (email: string) => {
-  const hash = generateVerificationHash(email, config.PRIVATE_KEY, 60);
+  const hash = dbless.generateVerificationHash(email, config.PRIVATE_KEY, 60);
   return hash;
 };
 
 export const verifyEmail = (email: string, hash: string) => {
-  if (!config.PRODUCTION) return true;
-  return verifyHash(hash, email, config.PRIVATE_KEY);
+  if (!config.PRODUCTION) {
+    return true;
+  }
+
+  return dbless.erifyHash(hash, email, config.PRIVATE_KEY);
 };
 
 // Return bool for success instead of try/catching for brevity
-export const sendEmail = (
+export const sendEmail = async (
   mailOptions: nodemailer.SendMailOptions,
-  sendWhileNotInProd: boolean = false
+  sendWhileNotInProduction = false
 ): Promise<boolean> => {
   return new Promise((res, rej) => {
-    // don't send mail when in dev/test
-    if (!sendWhileNotInProd) return res(true);
+    // Don't send mail when in dev/test
+    if (!sendWhileNotInProduction) {
+      res(true);
+      return;
+    }
 
     const transporter = nodemailer.createTransport({
       service: 'SendGrid',
@@ -43,7 +49,7 @@ export const sendEmail = (
   });
 };
 
-export const sendVerificationEmail = (email_address: string): Promise<boolean> => {
+export const sendVerificationEmail = async (email_address: string): Promise<boolean> => {
   const hash = generateEmailHash(email_address);
   const verificationUrl = `${config.API_URL}/auth/verify?email=${email_address}&hash=${hash}`;
 
@@ -55,7 +61,7 @@ export const sendVerificationEmail = (email_address: string): Promise<boolean> =
   });
 };
 
-export const sendUserHostMembershipInvitation = (email_address: string, host: Host): Promise<boolean> => {
+export const sendUserHostMembershipInvitation = async (email_address: string, host: Host): Promise<boolean> => {
   const acceptanceUrl = '';
 
   return sendEmail({

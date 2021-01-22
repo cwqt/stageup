@@ -107,7 +107,9 @@
       "import/no-anonymous-default-export": [
         "error",
         {
-          "allowObject": true
+          "allowObject": true,
+          "allowAnonymousFunction": true,
+          "allowArrowFunction": true
         }
       ],
       "new-cap": [
@@ -118,12 +120,8 @@
       ],
       "capitalized-comments": [
         "error",
-        "always",
-        {
-          "line": {},
-          "block": {
-            "ignorePattern": "blockignore"
-          }
+        "always", {
+          "ignorePattern":".*"
         }
       ],
       "unicorn/prevent-abbreviations": [
@@ -132,10 +130,19 @@
           "replacements": {
             "res": false,
             "req": false,
-            "e": false
+            "e": false,
+            "cb": false
           }
         }
-      ]
+      ],
+      "@typescript-eslint/no-confusing-void-expression": [
+        "error",
+        {
+          "ignoreArrowShorthand": true
+        }
+      ],
+      "object-shorthand": ["error", "consistent-as-needed"],
+      "radix": ["error", "as-needed"]
     }
   }
 }

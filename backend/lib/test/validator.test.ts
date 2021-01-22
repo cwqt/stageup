@@ -1,8 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { body, query, object, single, array, params } from '../common/validate';
 import { ErrCode, IAddress, Idless, IOnboardingAddMembers } from '@eventi/interfaces';
-import Validators from '../common/validate';
+import Validators, { body, query, object, single, array, params as parameters } from '../common/validate';
 
 describe('Custom validation', () => {
   it('Should return correct results for simple, unnested objects', async () => {
@@ -86,7 +85,7 @@ describe('Custom validation', () => {
     expect(errors[0].code).to.be.eq(ErrCode.IN_USE);
 
     expect(errors[1].code).to.eq(ErrCode.INVALID);
-    expect(errors[1].value).to.eq(undefined); //don't return array value in error return
+    expect(errors[1].value).to.eq(undefined); // Don't return array value in error return
     expect(errors[1].nestedErrors).to.be.lengthOf(2);
 
     // 1st address
@@ -104,7 +103,7 @@ describe('Custom validation', () => {
     const data = {
       fields: [
         {
-          name: 'Not Cass', // this should error
+          name: 'Not Cass', // This should error
           address: {
             street_number: '2001'
           }
@@ -112,7 +111,7 @@ describe('Custom validation', () => {
         {
           name: 'Cass',
           address: {
-            street_number: '2000' // this should error
+            street_number: '2000' // This should error
           }
         }
       ]
@@ -133,7 +132,7 @@ describe('Custom validation', () => {
         )
     });
 
-    //TODO: validate the whole response
+    // TODO: validate the whole response
     expect(errors).to.be.lengthOf(1);
   });
 

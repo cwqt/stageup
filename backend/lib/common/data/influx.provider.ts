@@ -3,9 +3,14 @@ import * as Influx from 'influx';
 import log from '../logger';
 
 export const create = async () => {
-  log.info(`Connecting to Influx...`);
-  if (typeof config.INFLUX.HOST == 'undefined') throw new Error('');
-  if (typeof config.INFLUX.DB   == 'undefined') throw new Error('');
+  log.info('Connecting to Influx...');
+  if (typeof config.INFLUX.HOST === 'undefined') {
+    throw new TypeError('Missing .env INDFLUX_HOST');
+  }
+
+  if (typeof config.INFLUX.DB === 'undefined') {
+    throw new TypeError('Missing .env INFLUX_DB');
+  }
 
   const influxClient = new Influx.InfluxDB({
     host: config.INFLUX.HOST,

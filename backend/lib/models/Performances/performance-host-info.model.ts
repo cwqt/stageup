@@ -31,20 +31,20 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
   }
 
   async setup(dc: DataClient, transEntityManager: EntityManager): Promise<[PerformanceHostInfo, LiveStream]> {
-    //https://docs.mux.com/reference#create-a-live-stream
+    // https://docs.mux.com/reference#create-a-live-stream
     const stream: LiveStream = await dc.mux.Video.LiveStreams.create({
-      reconnect_window: 300, // time to wait for reconnect on signal loss
-      playback_policy: 'signed', // requires token
+      reconnect_window: 300, // Time to wait for reconnect on signal loss
+      playback_policy: 'signed', // Requires token
       new_asset_settings: {},
-      passthrough: '', //arbitrary passthru data inc. in LS object
+      passthrough: '', // Arbitrary passthru data inc. in LS object
       reduced_latency: false,
-      simulcast_targets: [], // for 3rd party re-streaming
-      test: !config.PRODUCTION // no cost during testing/dev
+      simulcast_targets: [], // For 3rd party re-streaming
+      test: !config.PRODUCTION // No cost during testing/dev
     });
 
     this.stream_key = stream.stream_key;
 
-    // create a signing key associated with this stream
+    // Create a signing key associated with this stream
     // so we can sign JWTs for PerformancePurchases on this Perf only
     const signingKey = await new SigningKey().setup(dc, transEntityManager);
     this.signing_key = signingKey;

@@ -6,8 +6,8 @@ import Middlewares from './middleware';
 import { IFormErrorField } from '@eventi/interfaces';
 
 export interface IControllerEndpoint<T> {
-  validators?: Array<(req: Request) => Promise<IFormErrorField[]>>;
-  controller: (req: Request, dc: DataClient, locals: IResLocals, next: NextFunction) => Promise<T>;
+  validators?: Array<(request: Request) => Promise<IFormErrorField[]>>;
+  controller: (request: Request, dc: DataClient, locals: IResLocals, next: NextFunction) => Promise<T>;
   preMiddlewares?: RequestHandler[];
   postMiddlewares?: RequestHandler[];
   authStrategy: AuthStrategy;

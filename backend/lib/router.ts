@@ -15,9 +15,11 @@ export interface IResLocals {
   };
 }
 
-const skip = (req: Request, res: Response, next: NextFunction) => next();
+const skip = (request: Request, res: Response, next: NextFunction) => {
+  next();
+};
 
-const endpointFunc = <T>(
+const endpointFunction = <T>(
   method: IRouterMatcher<T>,
   providers: DataClient,
   resCode?: HTTP,
@@ -29,18 +31,18 @@ const endpointFunc = <T>(
       executeAuthenticationStrategy(endpoint.authStrategy, providers),
       endpoint.validators ? validatorMiddleware(endpoint.validators) : skip,
       ...(endpoint.preMiddlewares || []),
-      (req: Request, res: Response, next: NextFunction) => {
-        res.locals.page = parseInt(req.query.page as string) || 0;
-        res.locals.per_page = parseInt(req.query.per_page as string) || 10;
+      (request: Request, res: Response, next: NextFunction) => {
+        res.locals.page = Number.parseInt(request.query.page as string) || 0;
+        res.locals.per_page = Number.parseInt(request.query.per_page as string) || 10;
         next();
       },
-      async (req: Request, res: Response, next: NextFunction) => {
+      async (request: Request, res: Response, next: NextFunction) => {
         try {
           const returnValue = await endpoint.controller(
-            req,
+            request,
             providers,
             {
-              file: req.file,
+              file: request.file,
               pagination: {
                 per_page: res.locals.per_page,
                 page: res.locals.page
@@ -49,8 +51,8 @@ const endpointFunc = <T>(
             next
           );
           lambda ? lambda(res, returnValue) : res.status(resCode || HTTP.OK).json(returnValue);
-        } catch (err) {
-          handleError(req, res, next, err);
+        } catch (error) {
+          handleError(request, res, next, error);
         }
       },
       ...(endpoint.postMiddlewares || [])
@@ -67,36 +69,47 @@ export class Router {
     this.providers = providers;
   }
 
-  get = <T>(path: string, endpoint: IControllerEndpoint<T>) =>
-    endpointFunc<T>(this.router.get, this.providers)(path, endpoint);
+  get = <T>(path: string, endpoint: IControllerEndpoint<T>) => {
+    endpointFunction<T>(this.router.get, this.providers)(path, endpoint);
+  };
 
-  put = <T>(path: string, endpoint: IControllerEndpoint<T>) =>
-    endpointFunc<T>(this.router.put, this.providers)(path, endpoint);
+  put = <T>(path: string, endpoint: IControllerEndpoint<T>) => {
+    endpointFunction<T>(this.router.put, this.providers)(path, endpoint);
+  };
 
-  post = <T>(path: string, endpoint: IControllerEndpoint<T>) =>
-    endpointFunc<T>(this.router.post, this.providers)(path, endpoint);
+  post = <T>(path: string, endpoint: IControllerEndpoint<T>) => {
+    endpointFunction<T>(this.router.post, this.providers)(path, endpoint);
+  };
 
-  delete = <T>(path: string, endpoint: IControllerEndpoint<T>) =>
-    endpointFunc<T>(this.router.delete, this.providers)(path, endpoint);
+  delete = <T>(path: string, endpoint: IControllerEndpoint<T>) => {
+    endpointFunction<T>(this.router.delete, this.providers)(path, endpoint);
+  };
 
-  redirect = (path: string, endpoint: IControllerEndpoint<string>) =>
-    endpointFunc<string>(this.router.get, this.providers, HTTP.Moved, (res: Response, data: string) =>
-      res.status(HTTP.Moved).redirect(data)
-    )(path, endpoint);
+  redirect = (path: string, endpoint: IControllerEndpoint<string>) => {
+    endpointFunction<string>(this.router.get, this.providers, HTTP.Moved, (res: Response, data: string) => {
+      res.status(HTTP.Moved).redirect(data);
+    })(path, endpoint);
+  };
 }
 
 const executeAuthenticationStrategy = (authStrategy: AuthStrategy, dc: DataClient) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (request: Request, res: Response, next: NextFunction) => {
     try {
       // Site admin can do anything
-      if (req.session?.user?.is_admin) return next();
+      if (request.session?.user?.is_admin) {
+        next();
+        return;
+      }
 
-      const [isAuthorised, _, reason] = await authStrategy(req, dc);
-      if (!isAuthorised) throw new ErrorHandler(HTTP.Unauthorised, reason);
+      const [isAuthorised, _, reason] = await authStrategy(request, dc);
+      if (!isAuthorised) {
+        throw new ErrorHandler(HTTP.Unauthorised, reason);
+      }
 
-      return next();
+      next();
+      return;
     } catch (error) {
-      return next(new ErrorHandler(HTTP.Unauthorised, error.message));
+      next(new ErrorHandler(HTTP.Unauthorised, error.message));
     }
   };
 };

@@ -1,11 +1,11 @@
-import { IPerformance, IPerformanceStub, IRating } from '@eventi/interfaces';
+import { IPerformance, IPerformanceStub, IRating, ISigningKey } from '@eventi/interfaces';
 import { Host } from '../hosts/host.model';
 import { BaseEntity, Column, Entity, EntityManager, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../Users/User.model';
-import { ISigningKey } from '@eventi/interfaces';
-import { LiveStream, Video } from '@mux/mux-node';
+
+import { LiveStream, Video, JWT } from '@mux/mux-node';
 import { DataClient } from '../../common/data';
-import { JWT } from '@mux/mux-node';
+
 import { Performance } from './Performance.model';
 import { unixTimestamp } from '../../common/helpers';
 
@@ -22,10 +22,10 @@ export class SigningKey extends BaseEntity implements ISigningKey {
   }
 
   async setup(dc: DataClient, txc: EntityManager): Promise<SigningKey> {
-    //https://docs.mux.com/reference#url-signing-keys
-    const signingKey = await (<any>dc).mux.Video.SigningKeys.create();
+    // https://docs.mux.com/reference#url-signing-keys
+    const signingKey = await dc.mux.Video.SigningKeys.create();
 
-    // response isn't actually enveloped - great docs :)
+    // Response isn't actually enveloped - great docs :)
     this.mux_key_id = signingKey.id;
     this.rsa256_key = signingKey.private_key;
 
@@ -38,7 +38,7 @@ export class SigningKey extends BaseEntity implements ISigningKey {
       type: 'video',
       keyId: this.mux_key_id,
       keySecret: this.rsa256_key
-      // expiration: string,
+      // Expiration: string,
       // params: any
     });
   }

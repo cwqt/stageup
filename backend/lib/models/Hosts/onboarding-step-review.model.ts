@@ -1,11 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn
-} from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import {
   IOnboardingStepReviewSubmission,
@@ -25,7 +18,7 @@ export class OnboardingStepReview extends BaseEntity implements IOnboardingStepR
   @Column() onboarding_step: HostOnboardingStep;
   @Column() onboarding_version: number;
   @Column() step_state: HostOnboardingState.Verified | HostOnboardingState.HasIssues;
-  @Column({ type: 'jsonb' }) issues: IOnboardingIssue<any>[];
+  @Column({ type: 'jsonb' }) issues: Array<IOnboardingIssue<any>>;
   @Column() review_message: string;
   @Column() reviewed_at: number;
 

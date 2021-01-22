@@ -1,4 +1,4 @@
-import { array } from '../validate';
+import { array } from '.';
 import { ValidationChain } from 'express-validator';
 import {
   ErrCode,
@@ -73,7 +73,7 @@ export namespace ObjectValidators {
     return {
       user_id: v => FV.isInt(v),
       change: v => FV.isString(v).isIn(['add', 'update', 'del']),
-      value: v => v.optional(value === null ? true : false).equals(value?.toString())
+      value: v => v.optional(value === null).equals(value?.toString())
     };
   };
 }

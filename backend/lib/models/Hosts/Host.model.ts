@@ -9,11 +9,8 @@ import {
   JoinColumn
 } from 'typeorm';
 
-import {
-  IHostPrivate,
-  IHost, IHostStub,
-  HostPermission, ISocialInfo, IHostBusinessDetails } from '@eventi/interfaces';
-  
+import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails } from '@eventi/interfaces';
+
 import { User } from '../users/user.model';
 import { Performance } from '../performances/performance.model';
 import { UserHostInfo } from './user-host-info.model';
@@ -23,21 +20,21 @@ import { unixTimestamp } from '../../common/helpers';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
-  @PrimaryGeneratedColumn()             _id: number;
-  @Column()                             created_at: number;
-  @Column()                             name: string;
-  @Column()                             username: string;
-  @Column({ nullable: true })           bio?: string;
-  @Column({ nullable: true })           avatar: string;
-  @Column()                             is_onboarded: boolean;
-  @Column('jsonb')                      social_info: ISocialInfo;
-  @Column()                             email_address: string;
-  @Column('jsonb', { nullable: true })  business_details: IHostBusinessDetails;
+  @PrimaryGeneratedColumn() _id: number;
+  @Column() created_at: number;
+  @Column() name: string;
+  @Column() username: string;
+  @Column({ nullable: true }) bio?: string;
+  @Column({ nullable: true }) avatar: string;
+  @Column() is_onboarded: boolean;
+  @Column('jsonb') social_info: ISocialInfo;
+  @Column() email_address: string;
+  @Column('jsonb', { nullable: true }) business_details: IHostBusinessDetails;
 
   @OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
-  @OneToMany(() => UserHostInfo, uhi => uhi.host)                     members_info: UserHostInfo[];
-  @OneToMany(() => Performance, performance => performance.host)      performances: Performance[];
-  @OneToOne(() => HostOnboardingProcess, hop => hop.host)             onboarding_process: HostOnboardingProcess;
+  @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
+  @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
+  @OneToOne(() => HostOnboardingProcess, hop => hop.host) onboarding_process: HostOnboardingProcess;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {
     super();
@@ -75,7 +72,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   async addMember(user: User, permissionLevel: HostPermission, txc: EntityManager) {
     // Create permissions link
     const userHostInfo = new UserHostInfo(user, this, permissionLevel);
-    user.host = this; // add relationship
+    user.host = this; // Add relationship
     await Promise.all([txc.save(userHostInfo), txc.save(user)]);
 
     // Add user to host group
@@ -85,7 +82,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   async removeMember(user: User, txc: EntityManager) {
     const uhi = await txc.findOne(UserHostInfo, { user: user, host: this });
     this.members_info = this.members_info.splice(
-      this.members_info.findIndex(m => m._id == user._id),
+      this.members_info.findIndex(m => m._id === user._id),
       1
     );
     user.host = null;

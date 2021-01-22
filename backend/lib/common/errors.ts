@@ -8,23 +8,28 @@ import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@eventi/interfac
  */
 export const getCheck = async <T>(f: Promise<T>): Promise<T> => {
   const v = await f;
-  if (v == null || v == undefined) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
+  if (v === null || v === undefined) {
+    throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND);
+  }
+
   return v;
 };
 
-export const handleError = (req: Request, res: Response, next: NextFunction, err: ErrorHandler | Error) => {
-  const errorType: HTTP = err instanceof ErrorHandler ? err.errorType : HTTP.ServerError;
-  const message: string = err.message;
+export const handleError = (request: Request, res: Response, next: NextFunction, error: ErrorHandler | Error) => {
+  const errorType: HTTP = error instanceof ErrorHandler ? error.errorType : HTTP.ServerError;
+  const message: string = error.message;
 
   const response: IErrorResponse = {
     status: `${errorType}`.startsWith('4') ? 'fail' : 'error',
     statusCode: errorType || 520,
     message: message,
-    errors: err instanceof ErrorHandler ? err.errors : []
+    errors: error instanceof ErrorHandler ? error.errors : []
   };
 
-  log.error(`(${errorType}) --> ${JSON.stringify(err.message)}`);
-  if (errorType !== HTTP.NotFound) console.log(err.stack);
+  log.error(`(${errorType}) --> ${JSON.stringify(error.message)}`);
+  if (errorType !== HTTP.NotFound) {
+    console.log(error.stack);
+  }
 
   res.status(response.statusCode).json(response);
 };
@@ -47,8 +52,8 @@ export class FormErrorResponse {
     this.errors = [];
   }
 
-  push(param: string, message: ErrCode, value: IFormErrorField['value'], location?: IFormErrorField['location']) {
-    this.errors.push({ param: param, code: message, value: value, location: location });
+  push(parameter: string, message: ErrCode, value: IFormErrorField['value'], location?: IFormErrorField['location']) {
+    this.errors.push({ param: parameter, code: message, value, location: location });
   }
 
   get value() {

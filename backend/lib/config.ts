@@ -1,15 +1,23 @@
-const dotenv = require('dotenv');
-dotenv.config();
+import { Except } from 'type-fest';
 
-interface IEnv {
+require('dotenv').config();
+
+export enum Environment {
+  Production = 'production',
+  Development = 'development',
+  Testing = 'testing'
+}
+
+if (!Object.values(Environment).includes(process.env.NODE_ENV as any))
+  throw new Error('Not a valid Environment');
+  
+interface IEnvironment {
   PRIVATE_KEY: string;
   EMAIL_ADDRESS: string;
   SITE_TITLE: string;
   API_URL: string;
   FE_URL: string;
-  PRODUCTION: boolean;
-  DEVELOPMENT: boolean;
-  TESTING: boolean;
+  ENVIRONMENT: Environment;
   EXPRESS_PORT: number;
   LOCALTUNNEL_URL: string;
   SENDGRID: {
@@ -44,15 +52,15 @@ interface IEnv {
     S3_ACCESS_SECRET_KEY: string;
     S3_BUCKET_NAME: string;
   };
+  isEnv: (env:Environment) => boolean
 }
 
-const base: Omit<IEnv, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
+const base: Except<IEnvironment, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
+  isEnv: (env:Environment) => env !== base.ENVIRONMENT,
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
   EXPRESS_PORT: 3000,
-  PRODUCTION: false, //set later
-  DEVELOPMENT: false, //set later
-  TESTING: false, //set later
+  ENVIRONMENT: process.env.NODE_ENV as Environment,
   LOCALTUNNEL_URL: process.env.LOCALTUNNEL_URL,
   SENDGRID: {
     USERNAME: process.env.SENDGRID_USERNAME,
@@ -88,44 +96,37 @@ const base: Omit<IEnv, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
   }
 };
 
-const prod: IEnv = {
-  ...base,
-  SITE_TITLE: 'my.eventi.net',
-  API_URL: 'https://api.eventi.com',
-  FE_URL: 'https://eventi.com',
-  PRODUCTION: true
-};
+const environment: IEnvironment = (() => {
+  switch (process.env.NODE_ENV) {
+    case Environment.Production:
+      return {
+        ...base,
+        SITE_TITLE: 'my.eventi.net',
+        API_URL: 'https://api.eventi.com',
+        FE_URL: 'https://eventi.com',
+        PRODUCTION: true
+      };
+    case Environment.Development:
+      return {
+        ...base,
+        SITE_TITLE: 'dev.eventi.net',
+        API_URL: 'http://localhost:3000',
+        FE_URL: 'http://localhost:4200',
+        DEVELOPMENT: true
+      };
+    case Environment.Testing:
+      return {
+        ...base,
+        SITE_TITLE: 'dev.eventi.net',
+        API_URL: 'http://localhost:3000',
+        FE_URL: 'http://localhost:4200',
+        TESTING: true
+      };
+    default:
+      throw new Error('Missing .env NODE_ENV');
+  }
+})();
 
-const dev: IEnv = {
-  ...base,
-  SITE_TITLE: 'dev.eventi.net',
-  API_URL: 'http://localhost:3000',
-  FE_URL: 'http://localhost:4200',
-  DEVELOPMENT: true
-};
+console.log('\nBackend running in env: \u001B[04m' + process.env.NODE_ENV + '\u001B[0m\n');
 
-const test: IEnv = {
-  ...base,
-  SITE_TITLE: 'dev.eventi.net',
-  API_URL: 'http://localhost:3000',
-  FE_URL: 'http://localhost:4200',
-  TESTING: true
-};
-
-let env: IEnv;
-
-switch (process.env.NODE_ENV) {
-  case 'production':
-    env = prod;
-    break;
-  case 'development':
-    env = dev;
-    break;
-  case 'testing':
-    env = test;
-    break;
-}
-
-console.log('\nBackend running in env: \x1b[04m' + process.env.NODE_ENV + '\x1b[0m\n');
-
-export default env;
+export default environment;

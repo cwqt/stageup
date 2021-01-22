@@ -1,12 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn
-} from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { HostPermission, IUserHostInfo } from '@eventi/interfaces';
 
 import { Host } from './host.model';
