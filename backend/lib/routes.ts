@@ -67,8 +67,7 @@ router.put    <IHost>                 ("/hosts/:hid",                           
 router.get    <IUserStub[]>           ("/hosts/:hid/members",                       Hosts.readHostMembers());
 router.post   <IHost>                 ("/hosts/:hid/members",                       Hosts.addUser());
 router.delete <void>                  ("/hosts/:hid/members/:mid",                  Hosts.removeUser());
-router.put    <void>                 ("/hosts/:hid/members/:mid",                  Hosts.updateUser());
-// router.delete <IHost>              ("/hosts/:hid/members/:mid/permissions",      Hosts.alterMemberPermissions());
+router.put    <void>                 ("/hosts/:hid/members/:mid",                   Hosts.updateUser());
 router.get <IHOnboarding>             ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
 router.post<void>                     ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
 router.get <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
