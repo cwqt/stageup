@@ -11,8 +11,7 @@ import {
   ErrCode,
   HTTP
 } from '@eventi/interfaces';
-import { IControllerEndpoint, BaseArguments, BaseController } from '../common/controller';
-import { Request } from 'express';
+import { IControllerEndpoint, BaseController } from '../common/controller';
 import Validators, { body, params as parameters } from '../common/validate';
 import { ErrorHandler, FormErrorResponse, getCheck } from '../common/errors';
 
@@ -20,16 +19,12 @@ import Email = require('../common/email');
 import config from '../config';
 import AuthStrat from '../common/authorisation';
 
-import { User } from '../models/Users/user.model';
+import { User } from '../models/users/user.model';
 import { Host } from '../models/hosts/host.model';
-import { Address } from '../models/Users/address.model';
+import { Address } from '../models/users/address.model';
 import { EntityManager } from 'typeorm';
 
 export default class UserController extends BaseController {
-  constructor(...arguments_: BaseArguments) {
-    super(...arguments_);
-  }
-
   loginUser(): IControllerEndpoint<IUser> {
     return {
       validators: [
@@ -40,21 +35,17 @@ export default class UserController extends BaseController {
       ],
       preMiddlewares: [this.mws.limiter(3600, 10)],
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<IUser> => {
-        const emailAddress = request.body.email_address;
-        const password = request.body.password;
+      controller: async req => {
+        const emailAddress = req.body.email_address;
+        const password = req.body.password;
 
         const u = await getCheck(User.findOne({ email_address: emailAddress }));
-        if (!u.is_verified) {
-          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.NOT_VERIFIED);
-        }
+        if (!u.is_verified) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.NOT_VERIFIED);
 
         const match = await u.verifyPassword(password);
-        if (!match) {
-          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.INCORRECT);
-        }
+        if (!match) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.INCORRECT);
 
-        request.session.user = {
+        req.session.user = {
           _id: u._id,
           is_admin: u.is_admin || false
         };
@@ -70,8 +61,8 @@ export default class UserController extends BaseController {
       preMiddlewares: [],
       postMiddlewares: [],
       authStrategy: AuthStrat.isLoggedIn,
-      controller: async (request: Request): Promise<IMyself> => {
-        const user = await getCheck(User.findOne({ _id: request.session.user._id }));
+      controller: async req => {
+        const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const host: Host = await Host.findOne({
           relations: {
             members_info: {
@@ -90,7 +81,7 @@ export default class UserController extends BaseController {
         return {
           user: user.toFull(),
           host: host?.toStub(),
-          host_info: host ? host.members_info.find(uhi => uhi.user._id == user._id)?.toFull() : null
+          host_info: host ? host.members_info.find(uhi => uhi.user._id === user._id)?.toFull() : null
         };
       }
     };
@@ -106,41 +97,32 @@ export default class UserController extends BaseController {
         })
       ],
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<IUser> => {
+      controller: async req => {
         const preExistingUser = await User.findOne({
-          where: [{ email_address: request.body.email_address }, { username: request.body.username }]
+          where: [{ email_address: req.body.email_address }, { username: req.body.username }]
         });
 
         // Check if a some fields are already in use by someone else
         const errors = new FormErrorResponse();
-        if (preExistingUser?.username == request.body.username) {
-          errors.push('username', ErrCode.IN_USE, request.body.username);
-        }
-
-        if (preExistingUser?.email_address == request.body.email_address) {
-          errors.push('email_address', ErrCode.IN_USE, request.body.email_address);
-        }
-
-        if (errors.errors.length > 0) {
-          throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE, errors.value);
-        }
+        if (preExistingUser?.username === req.body.username) errors.push('username', ErrCode.IN_USE, req.body.username);
+        if (preExistingUser?.email_address === req.body.email_address)
+          errors.push('email_address', ErrCode.IN_USE, req.body.email_address);
+        if (errors.errors.length > 0) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE, errors.value);
 
         // Fire off a verification email
-        const emailSent = await Email.sendVerificationEmail(request.body.email_address);
-        if (!emailSent) {
-          throw new ErrorHandler(HTTP.ServerError, ErrCode.EMAIL_SEND);
-        }
+        const emailSent = await Email.sendVerificationEmail(req.body.email_address);
+        if (!emailSent) throw new ErrorHandler(HTTP.ServerError, ErrCode.EMAIL_SEND);
 
         // Save the user through a transaction (creates ContactInfo & Person)
         const user = await this.ORM.transaction(async (txc: EntityManager) => {
           const u = await new User({
-            username: request.body.username,
-            email_address: request.body.email_address,
-            password: request.body.password
+            username: req.body.username,
+            email_address: req.body.email_address,
+            password: req.body.password
           }).setup(txc);
 
           // First user to be created will be an admin
-          u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) == 0;
+          u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) === 0;
 
           await txc.save(u);
           return u;
@@ -154,8 +136,8 @@ export default class UserController extends BaseController {
   logoutUser(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<void> => {
-        request.session.destroy(error => {
+      controller: async req => {
+        req.session.destroy(error => {
           if (error) {
             throw new ErrorHandler(HTTP.ServerError);
           }
@@ -172,8 +154,8 @@ export default class UserController extends BaseController {
         })
       ],
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<IUser> => {
-        const u = await getCheck(User.findOne({ username: request.params.username }));
+      controller: async req => {
+        const u = await getCheck(User.findOne({ username: req.params.username }));
         return u.toFull();
       }
     };
@@ -182,8 +164,8 @@ export default class UserController extends BaseController {
   readUserById(): IControllerEndpoint<IUser> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<IUser> => {
-        const u = await getCheck(User.findOne({ _id: Number.parseInt(request.params.uid) }));
+      controller: async req => {
+        const u = await getCheck(User.findOne({ _id: Number.parseInt(req.params.uid) }));
         return u.toFull();
       }
     };
@@ -192,9 +174,9 @@ export default class UserController extends BaseController {
   updateUser(): IControllerEndpoint<IUser> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<IUser> => {
-        let u = await getCheck(User.findOne({ _id: Number.parseInt(request.params.uid) }));
-        u = await u.update({ name: request.body.name });
+      controller: async req => {
+        let u = await getCheck(User.findOne({ _id: Number.parseInt(req.params.uid) }));
+        u = await u.update({ name: req.body.name });
         return u.toFull();
       }
     };
@@ -203,8 +185,8 @@ export default class UserController extends BaseController {
   deleteUser(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<void> => {
-        const u = await getCheck(User.findOne({ _id: Number.parseInt(request.params.uid) }));
+      controller: async req => {
+        const u = await getCheck(User.findOne({ _id: Number.parseInt(req.params.uid) }));
         await u.remove();
       }
     };
@@ -213,7 +195,7 @@ export default class UserController extends BaseController {
   readUserHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserHostInfo>> {
     return {
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<IEnvelopedData<IHost, IUserHostInfo>> => {
+      controller: async req => {
         const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
         if (!user.host) {
           throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
@@ -233,22 +215,23 @@ export default class UserController extends BaseController {
     };
   }
 
-  updateUserAvatar(): IControllerEndpoint<IUser> {
-    return {
-      authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<IUser> => {
-        // TODO: assets with s3
-        return {} as IUser;
-      }
-    };
-  }
+  // updateUserAvatar(): IControllerEndpoint<IUser> {
+  //   return {
+  //     authStrategy: AuthStrat.none,
+  //     controller: async req => {
+  //       // TODO: assets with s3
+  //       const user = {} as IUser;
+  //       return user;
+  //     }
+  //   };
+  // }
 
-  forgotPassword(): IControllerEndpoint<void> {
-    return {
-      authStrategy: AuthStrat.none,
-      controller: async request => {}
-    };
-  }
+  // forgotPassword(): IControllerEndpoint<void> {
+  //   return {
+  //     authStrategy: AuthStrat.none,
+  //     controller: async req => {}
+  //   };
+  // }
 
   resetPassword(): IControllerEndpoint<void> {
     return {
@@ -259,16 +242,14 @@ export default class UserController extends BaseController {
         })
       ],
       authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<void> => {
-        const oldPassword = request.body.old_password;
-        const newPassword = request.body.new_password;
-        const u = await getCheck(User.findOne({ _id: Number.parseInt(request.params.uid) }));
+      controller: async req => {
+        const oldPassword = req.body.old_password;
+        const newPassword = req.body.new_password;
+        const u = await getCheck(User.findOne({ _id: Number.parseInt(req.params.uid) }));
 
         // Check supplied password is valid
         const match = await u.verifyPassword(oldPassword);
-        if (!match) {
-          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.INCORRECT);
-        }
+        if (!match) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.INCORRECT);
 
         u.setPassword(newPassword);
         await u.save();
@@ -286,25 +267,25 @@ export default class UserController extends BaseController {
     };
   }
 
-  readUserHostPermissions(): IControllerEndpoint<void> {
-    return {
-      authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<void> => {}
-    };
-  }
+  // readUserHostPermissions(): IControllerEndpoint<void> {
+  //   return {
+  //     authStrategy: AuthStrat.none,
+  //     controller: async req => {}
+  //   };
+  // }
 
-  readUserFeed(): IControllerEndpoint<void> {
-    return {
-      authStrategy: AuthStrat.none,
-      controller: async (request: Request): Promise<void> => {}
-    };
-  }
+  // readUserFeed(): IControllerEndpoint<void> {
+  //   return {
+  //     authStrategy: AuthStrat.none,
+  //     controller: async req => {}
+  //   };
+  // }
 
   readAddresses(): IControllerEndpoint<IAddress[]> {
     return {
       authStrategy: AuthStrat.isOurself,
-      controller: async (request: Request) => {
-        const u = await User.findOne({ _id: Number.parseInt(request.params.uid) }, { relations: ['personal_details'] });
+      controller: async req => {
+        const u = await User.findOne({ _id: Number.parseInt(req.params.uid) }, { relations: ['personal_details'] });
         return (u.personal_details.contact_info.addresses || []).map(a => a.toFull());
       }
     };
@@ -314,13 +295,13 @@ export default class UserController extends BaseController {
     return {
       validators: [body<Idless<IAddress>>(Validators.Objects.IAddress())],
       authStrategy: AuthStrat.isOurself,
-      controller: async (request: Request) => {
+      controller: async req => {
         const user = await getCheck(
-          User.findOne({ _id: Number.parseInt(request.params.uid) }, { relations: ['personal_details'] })
+          User.findOne({ _id: Number.parseInt(req.params.uid) }, { relations: ['personal_details'] })
         );
 
         return this.ORM.transaction(async (txc: EntityManager) => {
-          const address = new Address(request.body);
+          const address = new Address(req.body);
           await user.personal_details.contact_info.addAddress(address, txc);
           await txc.save(user);
           return address.toFull();
@@ -332,8 +313,8 @@ export default class UserController extends BaseController {
   updateAddress(): IControllerEndpoint<IAddress> {
     return {
       authStrategy: AuthStrat.isOurself,
-      controller: async (request: Request) => {
-        const address = await Address.findOne({ _id: Number.parseInt(request.params.aid) });
+      controller: async req => {
+        const address = await Address.findOne({ _id: Number.parseInt(req.params.aid) });
         // TODO: update method in address model
 
         return address.toFull();
@@ -344,8 +325,8 @@ export default class UserController extends BaseController {
   deleteAddress(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.isOurself,
-      controller: async (request: Request) => {
-        await Address.delete({ _id: Number.parseInt(request.params.aid) });
+      controller: async req => {
+        await Address.delete({ _id: Number.parseInt(req.params.aid) });
       }
     };
   }

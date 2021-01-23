@@ -1,4 +1,4 @@
-const path = require('path');
+import path = require('path');
 import config, { Environment } from '../../config';
 import log from '../logger';
 import * as TORM from 'typeorm';
@@ -42,7 +42,7 @@ export const create = async (): Promise<TORM.Connection> => {
     // await generateUML(conn);
 
     return conn;
-  } catch (error) {
+  } catch (error: unknown) {
     log.error('Unable to connect to Postgres via TypeORM. Ensure a valid connection', error);
     throw error;
   }

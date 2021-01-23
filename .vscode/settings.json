@@ -13,4 +13,5 @@
     "prettier.semi": true,
     "prettier.arrowParens": "avoid",
     "prettier.bracketSpacing": true,
+    "xo.enable": true
 }

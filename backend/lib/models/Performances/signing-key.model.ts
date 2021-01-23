@@ -1,12 +1,12 @@
 import { IPerformance, IPerformanceStub, IRating, ISigningKey } from '@eventi/interfaces';
 import { Host } from '../hosts/host.model';
 import { BaseEntity, Column, Entity, EntityManager, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../Users/User.model';
+import { User } from '../users/user.model';
 
 import { LiveStream, Video, JWT } from '@mux/mux-node';
 import { DataClient } from '../../common/data';
 
-import { Performance } from './Performance.model';
+import { Performance } from './performance.model';
 import { unixTimestamp } from '../../common/helpers';
 
 @Entity()

@@ -110,7 +110,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     };
   }
 
-  // ToSteps(): IOnboardingStepMap {
+  // toSteps(): IOnboardingStepMap {
   //   return  {
   //     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
   //     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
@@ -131,23 +131,32 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
       completed_at: this.completed_at,
       version: this.version,
       host: this.host.toStub(),
-      steps: Object.keys(this.steps).reduce<IHostOnboarding['steps']>((accumulator, current) => {
-        const stepIndex = (current as unknown) as HostOnboardingStep;
-        accumulator[stepIndex] = this.steps[stepIndex].state;
-        return accumulator;
-      }, {})
+      steps: Object.keys(this.steps).reduce<IHostOnboarding['steps']>(
+        (acc, curr: unknown) => {
+          const stepIndex = curr as HostOnboardingStep;
+          acc[stepIndex] = this.steps[stepIndex].state;
+          return acc;
+        },
+        {
+          [0]: null,
+          [1]: null,
+          [2]: null,
+          [3]: null,
+          [4]: null
+        }
+      )
     };
   }
 
   // TODO: cascade delete all reviews & onboarding process post enact
-  async delete(txc: EntityManager) {}
+  // async delete(txc: EntityManager) {}
 
   async setLastUpdated(updater: User) {
     this.last_modified_by = updater;
     this.last_modified = Math.floor(Date.now() / 1000);
   }
 
-  async updateStep<T extends Record<string, unknown>>(
+  async updateStep<T extends object>(
     stepIndex: HostOnboardingStep,
     updates: Partial<T>
   ): Promise<IOnboardingStep<any>> {
@@ -162,7 +171,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     }
 
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
-      (<any>this.steps[stepIndex].data)[k] = v ?? (<any>this.steps[stepIndex].data)[k];
+      (this.steps[stepIndex].data as any)[k] = v ?? (this.steps[stepIndex].data as any)[k];
     });
 
     return this.steps[stepIndex];

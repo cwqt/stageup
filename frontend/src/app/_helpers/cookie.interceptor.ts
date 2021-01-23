@@ -11,7 +11,7 @@ export class SessionInterceptor implements HttpInterceptor {
       let currentSession = this.cookieService.get('connect.sid');
         console.log('COOKIE: ', currentSession)
         if (currentSession) {
-            request = request.clone({
+            request = req.clone({
                 setHeaders: { 
                     Cookie: `SESSION_ID=${currentSession}`
                 }

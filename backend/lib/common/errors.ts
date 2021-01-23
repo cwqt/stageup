@@ -52,8 +52,8 @@ export class FormErrorResponse {
     this.errors = [];
   }
 
-  push(parameter: string, message: ErrCode, value: IFormErrorField['value'], location?: IFormErrorField['location']) {
-    this.errors.push({ param: parameter, code: message, value, location: location });
+  push(param: string, code: ErrCode, value: IFormErrorField['value'], location?: IFormErrorField['location']) {
+    this.errors.push({ param, code, value, location });
   }
 
   get value() {

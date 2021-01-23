@@ -18,7 +18,7 @@ import { Purchase } from '../purchase.model';
 import { Performance } from '../performances/performance.model';
 import { Person } from './person.model';
 import { ContactInfo } from './contact-info.model';
-import config from '../../config';
+import config, { Environment } from '../../config';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
@@ -33,13 +33,14 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() is_new_user: boolean;
   @Column() is_admin: boolean;
   @Column() email_address: string;
-  @Column() private salt: string;
-  @Column() private pw_hash: string;
 
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
   @OneToMany(() => Purchase, purchase => purchase.user) purchases: Purchase[]; // Many purchases
   @OneToMany(() => Performance, performance => performance.creator) performances: Performance[];
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
+
+  @Column() private salt: string;
+  @Column() private pw_hash: string;
 
   constructor(data: { email_address: string; username: string; password: string }) {
     super();
@@ -48,7 +49,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     this.created_at = Math.floor(Date.now() / 1000); // Timestamp in seconds
     this.is_admin = false;
     this.is_new_user = false; // TODO: change to true
-    this.is_verified = !config.PRODUCTION; // Auto-verify when not in prod
+    this.is_verified = !config.isEnv(Environment.Production); // Auto-verify when not in prod
     this.setPassword(data.password);
   }
 
@@ -115,9 +116,9 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
 
   async update(updates: Partial<Pick<IUser, 'name' | 'bio' | 'avatar'>>): Promise<User> {
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
-      (<any>this)[k] = v ?? (<any>this)[k];
+      (this as any)[k] = v ?? (this as any)[k];
     });
 
-    return await this.save();
+    return this.save();
   }
 }

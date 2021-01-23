@@ -1,5 +1,5 @@
 import logger from '../common/logger';
-import config from '../config';
+import config, { Environment } from '../config';
 import Validators, { body, array, query } from '../common/validate';
 import { getCheck } from '../common/errors';
 import {
@@ -10,20 +10,16 @@ import {
   IHostOnboarding,
   IOnboardingStepReviewSubmission
 } from '@eventi/interfaces';
-import { BaseArguments, BaseController, IControllerEndpoint } from '../common/controller';
+import { BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
 import { HostOnboardingProcess } from '../models/hosts/onboarding.model';
 
 import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
-import { User } from '../models/Users/User.model';
+import { User } from '../models/users/user.model';
 import { sendUserHostMembershipInvitation } from '../common/email';
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
 
 export default class AdminController extends BaseController {
-  constructor(...arguments_: BaseArguments) {
-    super(...arguments_);
-  }
-
   readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
     return {
       validators: [
@@ -38,20 +34,20 @@ export default class AdminController extends BaseController {
         })
       ],
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async request => {
+      controller: async req => {
         const qb = this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop')
           .innerJoinAndSelect('hop.host', 'host') // Pull in host & filter by host
           .where('host.username LIKE :username', {
-            username: request.query.username ? `%${request.query.username}%` : '%'
+            username: req.body.username ? `%${req.body.username as string}%` : '%'
           });
 
-        // Not sure about fuzzy matching ints
-        if (request.query.state) {
-          qb.andWhere('hop.state = :state', { state: request.query.state });
+        // Not sure about fuzzy matching ints, so don't make a WHERE if none passed
+        if (req.query.state) {
+          qb.andWhere('hop.state = :state', { state: req.query.state });
         }
 
         const onboardingEnvelope = await qb
-          .orderBy('hop.last_submitted', (request.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
+          .orderBy('hop.last_submitted', (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
           .paginate();
 
         return {
@@ -72,11 +68,11 @@ export default class AdminController extends BaseController {
         })
       ],
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async request => {
-        const step: HostOnboardingStep = Number.parseInt(request.params.step);
-        const submission: IOnboardingStepReviewSubmission<any> = request.body;
-        const reviewer = await getCheck(User.findOne({ _id: request.session.user._id }));
-        const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: Number.parseInt(request.params.oid) }));
+      controller: async req => {
+        const step: HostOnboardingStep = Number.parseInt(req.params.step);
+        const submission: IOnboardingStepReviewSubmission<any> = req.body;
+        const reviewer = await getCheck(User.findOne({ _id: req.session.user._id }));
+        const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: Number.parseInt(req.params.oid) }));
 
         const review = new OnboardingStepReview(step, onboarding, reviewer, submission);
 
@@ -84,11 +80,9 @@ export default class AdminController extends BaseController {
           await txc.save(review);
 
           onboarding.steps[step].state = review.step_state;
-          if (Object.values(onboarding.steps).every(o => o.state == HostOnboardingState.Verified)) {
-            onboarding.state = HostOnboardingState.Verified;
-          } else {
-            onboarding.state = HostOnboardingState.AwaitingChanges;
-          }
+          onboarding.state = Object.values(onboarding.steps).every(o => o.state === HostOnboardingState.Verified)
+            ? HostOnboardingState.Verified
+            : HostOnboardingState.AwaitingChanges;
 
           await txc.save(onboarding);
         });
@@ -102,13 +96,13 @@ export default class AdminController extends BaseController {
   submitOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
-      controller: async request => {
-        const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: Number.parseInt(request.params.oid) }));
+      controller: async req => {
+        const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: Number.parseInt(req.params.oid) }));
 
         // Every step is verified when submitted, so enact the onboarding process
         // by which I mean shift the data from Onboarding -> Host & send out invites for added members
         await this.ORM.transaction(async txc => {
-          if (Object.values(onboarding.steps).every(o => o.state == HostOnboardingState.Verified)) {
+          if (Object.values(onboarding.steps).every(o => o.state === HostOnboardingState.Verified)) {
             const host = onboarding.host; // Eager loaded
 
             // Proof of Business
@@ -140,28 +134,30 @@ export default class AdminController extends BaseController {
             // Add Members
             const addMemberData = onboarding.steps[HostOnboardingStep.AddMembers].data;
             // These are all just 'add' actions, so send an invitation & add them to the host
-            for (const member of addMemberData.members_to_add) {
-              try {
-                const potentialMember = await User.findOne({ _id: member.user_id });
-                // Don't add the owner if they're already in
-                if (potentialMember?._id !== owner.user._id) {
-                  if (potentialMember) {
-                    if (!config.PRODUCTION) {
-                      sendUserHostMembershipInvitation(potentialMember.email_address, host);
-                    }
+            await Promise.allSettled(
+              addMemberData.members_to_add.map(async member => {
+                try {
+                  const potentialMember = await User.findOne({ _id: member.user_id });
+                  // Don't add the owner if they're already in
+                  if (potentialMember?._id !== owner.user._id) {
+                    if (potentialMember) {
+                      if (!config.isEnv(Environment.Production)) {
+                        sendUserHostMembershipInvitation(potentialMember.email_address, host);
+                      }
 
-                    // Add the member as pending (updated on membership acceptance to Member)
-                    await host.addMember(potentialMember, HostPermission.Pending, txc);
-                  } else {
-                    logger.error(
-                      `Found no such user with _id: ${member.user_id} in onboarding request: ${onboarding._id}`
-                    );
+                      // Add the member as pending (updated on membership acceptance to Member)
+                      await host.addMember(potentialMember, HostPermission.Pending, txc);
+                    } else {
+                      logger.error(
+                        `Found no such user with _id: ${member.user_id} in onboarding request: ${onboarding._id}`
+                      );
+                    }
                   }
+                } catch (error) {
+                  logger.error(error);
                 }
-              } catch (error) {
-                logger.error(error);
-              }
-            }
+              })
+            );
 
             // TODO: Subscription level
 

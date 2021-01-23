@@ -1,4 +1,3 @@
-require('dotenv').config();
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
@@ -7,14 +6,13 @@ import session, { MemoryStore } from 'express-session';
 import log, { stream } from './common/logger';
 import http from 'http';
 import helmet from 'helmet';
-import 'reflect-metadata';
 
 import { ErrCode, HTTP } from '@eventi/interfaces';
 import { handleError, ErrorHandler } from './common/errors';
 import { DataClient, DataProvider } from './common/data';
 import { pagination } from './common/paginate';
 import Routes from './routes';
-import config from './config';
+import config, { Environment } from './config';
 
 let server: http.Server;
 const app = express();
@@ -36,8 +34,8 @@ app.use(morgan('tiny', { stream }));
         resave: false,
         saveUninitialized: true,
         cookie: {
-          httpOnly: Boolean(config.PRODUCTION),
-          secure: Boolean(config.PRODUCTION)
+          httpOnly: config.isEnv(Environment.Production),
+          secure: config.isEnv(Environment.Production)
         },
         store: config.USE_MEMORYSTORE ? new MemoryStore() : providers.session_store
       })
@@ -48,13 +46,13 @@ app.use(morgan('tiny', { stream }));
     app.use('/', Routes(providers).router);
 
     // Catch 404 errors
-    app.all('*', (request: any, res: any, next: any) => {
-      handleError(request, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND));
+    app.all('*', (req, res, next) => {
+      handleError(req, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND));
     });
 
     // Global error handler
-    app.use((error: any, request: any, res: any, next: any) => {
-      handleError(request, res, next, error);
+    app.use((err: any, req: any, res: any, next: any) => {
+      handleError(req, res, next, err);
     });
 
     // Handle closing connections on failure
@@ -66,7 +64,7 @@ app.use(morgan('tiny', { stream }));
     server = app.listen(config.EXPRESS_PORT, () => {
       log.info(`\u001B[1mExpress listening on ${config.EXPRESS_PORT}\u001B[0m`);
     });
-  } catch (error) {
+  } catch (error: unknown) {
     log.error(error);
   }
 })();

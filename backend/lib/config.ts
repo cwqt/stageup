@@ -1,6 +1,6 @@
-import { Except } from 'type-fest';
-
+/* eslint @typescript-eslint/no-var-requires: "off" */
 require('dotenv').config();
+import { Except } from 'type-fest';
 
 export enum Environment {
   Production = 'production',
@@ -8,9 +8,8 @@ export enum Environment {
   Testing = 'testing'
 }
 
-if (!Object.values(Environment).includes(process.env.NODE_ENV as any))
-  throw new Error('Not a valid Environment');
-  
+if (!Object.values(Environment).includes(process.env.NODE_ENV as any)) throw new Error('Not a valid Environment');
+
 interface IEnvironment {
   PRIVATE_KEY: string;
   EMAIL_ADDRESS: string;
@@ -51,12 +50,13 @@ interface IEnvironment {
     S3_ACCESS_KEY_ID: string;
     S3_ACCESS_SECRET_KEY: string;
     S3_BUCKET_NAME: string;
+    S3_URL: string;
   };
-  isEnv: (env:Environment) => boolean
+  isEnv: (env: Environment) => boolean;
 }
 
 const base: Except<IEnvironment, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
-  isEnv: (env:Environment) => env !== base.ENVIRONMENT,
+  isEnv: (env: Environment) => env !== base.ENVIRONMENT,
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
   EXPRESS_PORT: 3000,
@@ -88,7 +88,8 @@ const base: Except<IEnvironment, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
   AWS: {
     S3_ACCESS_KEY_ID: process.env.AWS_S3_KEY_ID,
     S3_ACCESS_SECRET_KEY: process.env.AWS_S3_ACCESS_SECRET_KEY,
-    S3_BUCKET_NAME: process.env.AWS_S3_ACCESS_SECRET_KEY
+    S3_BUCKET_NAME: process.env.AWS_S3_ACCESS_SECRET_KEY,
+    S3_URL: process.env.AWS_S3_URL
   },
   INFLUX: {
     HOST: process.env.PRODUCTION === 'true' ? process.env.INFLUX_HOST : 'localhost',

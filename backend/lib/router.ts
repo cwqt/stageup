@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction, IRouterMatcher } from 'express';
+import { AsyncRouter, RequestHandler } from 'express-async-router';
+import { HTTP } from '@eventi/interfaces';
+
 import { ErrorHandler, handleError } from './common/errors';
 import { DataClient } from './common/data';
 import { AuthStrategy } from './common/authorisation';
-import { HTTP } from '@eventi/interfaces';
 import { IControllerEndpoint } from './common/controller';
 import { validatorMiddleware } from './common/validate';
-
-const AsyncRouter = require('express-async-router').AsyncRouter;
 
 export interface IResLocals {
   pagination?: {
@@ -14,10 +14,6 @@ export interface IResLocals {
     page: number;
   };
 }
-
-const skip = (request: Request, res: Response, next: NextFunction) => {
-  next();
-};
 
 const endpointFunction = <T>(
   method: IRouterMatcher<T>,
@@ -29,20 +25,20 @@ const endpointFunction = <T>(
     method(
       path,
       executeAuthenticationStrategy(endpoint.authStrategy, providers),
-      endpoint.validators ? validatorMiddleware(endpoint.validators) : skip,
+      endpoint.validators ? validatorMiddleware(endpoint.validators) : (req, res, next) => next(),
       ...(endpoint.preMiddlewares || []),
-      (request: Request, res: Response, next: NextFunction) => {
-        res.locals.page = Number.parseInt(request.query.page as string) || 0;
-        res.locals.per_page = Number.parseInt(request.query.per_page as string) || 10;
+      (req: Request, res: Response, next: NextFunction) => {
+        res.locals.page = Number.parseInt(req.query.page as string) || 0;
+        res.locals.per_page = Number.parseInt(req.query.per_page as string) || 10;
         next();
       },
-      async (request: Request, res: Response, next: NextFunction) => {
+      async (req: Request, res: Response, next: NextFunction) => {
         try {
           const returnValue = await endpoint.controller(
-            request,
+            req,
             providers,
             {
-              file: request.file,
+              file: req.file,
               pagination: {
                 per_page: res.locals.per_page,
                 page: res.locals.page
@@ -51,8 +47,8 @@ const endpointFunction = <T>(
             next
           );
           lambda ? lambda(res, returnValue) : res.status(resCode || HTTP.OK).json(returnValue);
-        } catch (error) {
-          handleError(request, res, next, error);
+        } catch (error: unknown) {
+          handleError(req, res, next, error as ErrorHandler | Error);
         }
       },
       ...(endpoint.postMiddlewares || [])
@@ -93,21 +89,15 @@ export class Router {
 }
 
 const executeAuthenticationStrategy = (authStrategy: AuthStrategy, dc: DataClient) => {
-  return async (request: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Site admin can do anything
-      if (request.session?.user?.is_admin) {
-        next();
-        return;
-      }
+      if (req.session?.user?.is_admin) return next();
 
-      const [isAuthorised, _, reason] = await authStrategy(request, dc);
-      if (!isAuthorised) {
-        throw new ErrorHandler(HTTP.Unauthorised, reason);
-      }
+      const [isAuthorised, _, reason] = await authStrategy(req, dc);
+      if (!isAuthorised) throw new ErrorHandler(HTTP.Unauthorised, reason);
 
-      next();
-      return;
+      return next();
     } catch (error) {
       next(new ErrorHandler(HTTP.Unauthorised, error.message));
     }

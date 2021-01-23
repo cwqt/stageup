@@ -1,20 +1,20 @@
-import config from '../config';
-const dbless = require('dbless-email-verification');
 import nodemailer from 'nodemailer';
+import dbless from 'dbless-email-verification';
+import config, { Environment } from '../config';
 import logger from './logger';
 import { Host } from '../models/hosts/host.model';
 
-const generateEmailHash = (email: string) => {
+const generateEmailHash = (email: string): string => {
   const hash = dbless.generateVerificationHash(email, config.PRIVATE_KEY, 60);
   return hash;
 };
 
-export const verifyEmail = (email: string, hash: string) => {
-  if (!config.PRODUCTION) {
+export const verifyEmail = (email: string, hash: string): boolean => {
+  if (!config.isEnv(Environment.Production)) {
     return true;
   }
 
-  return dbless.erifyHash(hash, email, config.PRIVATE_KEY);
+  return dbless.verifyHash(hash, email, config.PRIVATE_KEY);
 };
 
 // Return bool for success instead of try/catching for brevity
@@ -22,12 +22,9 @@ export const sendEmail = async (
   mailOptions: nodemailer.SendMailOptions,
   sendWhileNotInProduction = false
 ): Promise<boolean> => {
-  return new Promise((res, rej) => {
+  return new Promise((resolve, reject) => {
     // Don't send mail when in dev/test
-    if (!sendWhileNotInProduction) {
-      res(true);
-      return;
-    }
+    if (!sendWhileNotInProduction) return resolve(true);
 
     const transporter = nodemailer.createTransport({
       service: 'SendGrid',
@@ -38,13 +35,12 @@ export const sendEmail = async (
     });
 
     transporter.sendMail(mailOptions, (error: Error) => {
-      console.log(error);
       if (error) {
-        logger.error(error);
-        res(false);
+        logger.error('Error sending e-mail', error);
+        return resolve(false);
       }
 
-      res(true);
+      return resolve(true);
     });
   });
 };

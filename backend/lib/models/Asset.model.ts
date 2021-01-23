@@ -2,6 +2,7 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { IAsset, IAssetMeta, IGIFMeta, AssetType, IThumbnailMeta, IStaticMeta, Primitive } from '@eventi/interfaces';
 import config from '../config';
 import { unixTimestamp } from '../common/helpers';
+import { Except } from 'type-fest';
 
 @Entity()
 export class Asset<T> extends BaseEntity implements IAsset<T> {
@@ -21,16 +22,16 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
     // Hack the typing a little
     const meta = this.asset_meta.data as unknown;
     const endpointMappers: { [index in AssetType]?: string } = {
-      [AssetType.Image]: `http://INSERT_S3_URL_HERE.com/${(<IStaticMeta>meta).key_id}`,
-      [AssetType.Thumbnail]: this.createThumbnailUrl(<IThumbnailMeta>meta),
-      [AssetType.AnimatedGIF]: this.createGIFUrl(<IGIFMeta>meta)
+      [AssetType.Image]: `http://${config.AWS.S3_URL}.com/${(meta as IStaticMeta).key_id}`,
+      [AssetType.Thumbnail]: this.createThumbnailUrl(meta as IThumbnailMeta),
+      [AssetType.AnimatedGIF]: this.createGIFUrl(meta as IGIFMeta)
     };
 
     return endpointMappers[this.asset_type];
   }
 
   createThumbnailUrl = (assetMeta: IThumbnailMeta): string => {
-    const parameters: Omit<IThumbnailMeta, 'playback_id'> = {
+    const parameters: Except<IThumbnailMeta, 'playback_id'> = {
       width: assetMeta.width ?? 300,
       height: assetMeta.height ?? 300,
       flip_h: assetMeta.flip_h ?? false,
@@ -44,7 +45,7 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
   };
 
   createGIFUrl = (assetMeta: IGIFMeta): string => {
-    const parameters: Omit<IGIFMeta, 'playback_id'> = {
+    const parameters: Except<IGIFMeta, 'playback_id'> = {
       width: assetMeta.width ?? 300,
       height: assetMeta.height ?? 300,
       start: assetMeta.start ?? 0,
@@ -57,8 +58,8 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
 }
 
 // Join kv's and uri escape
-const stitchParameters = (input: Record<string, Primitive>): string => {
+const stitchParameters = (input: { [index: string]: Primitive }): string => {
   return Object.entries(input).reduce((accumulator, current, index) => {
-    return accumulator + `${index == 0 ? '?' : '&'}${current[0]}=${current[1]}`;
+    return accumulator + `${index === 0 ? '?' : '&'}${current[0]}=${current[1].toString()}`;
   }, '');
 };

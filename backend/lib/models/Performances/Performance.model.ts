@@ -61,7 +61,7 @@ export class Performance extends BaseEntity implements IPerformance {
     await dc.torm.transaction(async transEntityManager => {
       const [hostInfo, stream] = await new PerformanceHostInfo().setup(dc, transEntityManager);
       this.host_info = hostInfo;
-      this.playback_id = stream.playback_ids.find(p => p.policy == 'signed').id;
+      this.playback_id = stream.playback_ids.find(p => p.policy === 'signed').id;
 
       await transEntityManager.save(this);
     });
@@ -95,9 +95,9 @@ export class Performance extends BaseEntity implements IPerformance {
 
   async update(updates: Partial<Pick<IPerformance, 'name' | 'description' | 'price'>>): Promise<Performance> {
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
-      (<any>this)[k] = v ?? (<any>this)[k];
+      (this as any)[k] = v ?? (this as any)[k];
     });
 
-    return await this.save();
+    return this.save();
   }
 }

@@ -24,6 +24,7 @@
     "apicache": "^1.5.3",
     "aws-sdk": "^2.799.0",
     "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
     "connect-redis": "^4.0.4",
     "cors": "^2.8.5",
     "dbless-email-verification": "^1.0.0",
@@ -92,57 +93,5 @@
     "typescript": "^3.8.3",
     "xo": "^0.37.1",
     "xo-summary": "^1.0.1"
-  },
-  "xo": {
-    "plugins": [
-      "unicorn"
-    ],
-    "rules": {
-      "unicorn/filename-case": [
-        "error",
-        {
-          "case": "kebabCase"
-        }
-      ],
-      "import/no-anonymous-default-export": [
-        "error",
-        {
-          "allowObject": true,
-          "allowAnonymousFunction": true,
-          "allowArrowFunction": true
-        }
-      ],
-      "new-cap": [
-        "error",
-        {
-          "capIsNewExceptionPattern": "^@*"
-        }
-      ],
-      "capitalized-comments": [
-        "error",
-        "always", {
-          "ignorePattern":".*"
-        }
-      ],
-      "unicorn/prevent-abbreviations": [
-        "error",
-        {
-          "replacements": {
-            "res": false,
-            "req": false,
-            "e": false,
-            "cb": false
-          }
-        }
-      ],
-      "@typescript-eslint/no-confusing-void-expression": [
-        "error",
-        {
-          "ignoreArrowShorthand": true
-        }
-      ],
-      "object-shorthand": ["error", "consistent-as-needed"],
-      "radix": ["error", "as-needed"]
-    }
   }
 }
