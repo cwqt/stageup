@@ -84,7 +84,7 @@ export interface IOnboardingSocialPresence {
  * DELETE member -> value: null             /members/:mid -> user_id
  */
 export interface IHostMemberChangeRequest {
-  value: HostPermission | number;
+  value: HostPermission | number; 
 }
 
 export interface IOnboardingAddMembers {

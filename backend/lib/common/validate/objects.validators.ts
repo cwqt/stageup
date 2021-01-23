@@ -68,8 +68,7 @@ export namespace ObjectValidators {
   }
 
   export const IHostMemberChangeRequest = (
-    value: IHostMemberChangeRequest['value'] = null
-  ): ObjectValidator<IHostMemberChangeRequest> => {
+    value: IHostMemberChangeRequest['value'] = null): ObjectValidator<IHostMemberChangeRequest> => {
     return {
       value: v => v.optional(true),
     };
