@@ -34,7 +34,7 @@ describe('As a user, I want to be able to do purchase performance', async () => 
     });
 
       let purchPerf = await Stories.actions.performances.purchase(perf._id);
-      expect(purchPerf.currency).to.be.equal(perf.currency);
+      expect(purchPerf.currency).to.be.equal(perf.currency); 
     
   });
 
