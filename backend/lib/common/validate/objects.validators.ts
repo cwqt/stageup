@@ -71,7 +71,7 @@ export namespace ObjectValidators {
     value: IHostMemberChangeRequest['value'] = null
   ): ObjectValidator<IHostMemberChangeRequest> => {
     return {
-      value: v => v.optional(true),
+      value: v => v.optional(true), // TODO: update this validator to check for either typeof HostPermission or number
     };
   };
 }
