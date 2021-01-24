@@ -25,7 +25,7 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column() description?: string;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
-  @Column() views = 0;
+  @Column() views: number;
   @Column({ nullable: true }) state: PerformanceState;
   @Column() price: number;
   @Column() currency: CurrencyCode;
