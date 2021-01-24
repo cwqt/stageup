@@ -138,7 +138,7 @@ export default class AdminController extends BaseController {
             // These are all just 'add' actions, so send an invitation & add them to the host
             for (let member of addMemberData.members_to_add) {
               try {
-                const potentialMember = await User.findOne({ _id: member.user_id });
+                const potentialMember = await User.findOne({ _id: member.value});
                 // Don't add the owner if they're already in
                 if (potentialMember?._id !== owner.user._id) {
                   if (potentialMember) {
@@ -148,7 +148,7 @@ export default class AdminController extends BaseController {
                     await host.addMember(potentialMember, HostPermission.Pending, txc);
                   } else {
                     logger.error(
-                      `Found no such user with _id: ${member.user_id} in onboarding request: ${onboarding._id}`
+                      `Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`
                     );
                   }
                 }

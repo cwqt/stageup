@@ -3,6 +3,7 @@ import {
     IHostOnboarding,
     IHost,
     IUser,
+    IHostOnboardingProcess,
 } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
@@ -11,11 +12,12 @@ import { expect } from 'chai';
 describe("Verify the Onboarding process pulls in the host relationship", async () => {
     let host: IHost;
     let client: IUser;
+    let onboarding:IHostOnboarding;
     
     it('Onboarding process has a "host" field inside of it', async () => {
+        await Stories.actions.common.setup();
         client = await Stories.actions.users.createUser(UserType.Client);
         await Stories.actions.common.switchActor(UserType.Client)
-        await Stories.actions.common.setup();
         
         host = await Stories.actions.hosts.createHost({
             username: 'somecoolhost',
@@ -23,7 +25,8 @@ describe("Verify the Onboarding process pulls in the host relationship", async (
             email_address: 'host@cass.si',
         });
 
-        let onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
+        onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
+
         expect(onboarding.host).to.exist;
         expect(onboarding.created_at).to.exist;
         expect(onboarding.last_modified).to.exist;
