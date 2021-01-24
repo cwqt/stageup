@@ -261,16 +261,15 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
-        const onboarding = await HostOnboardingProcess.findOne({
+        const onboarding = await getCheck(HostOnboardingProcess.findOne({
           where: {
             host: {
               _id: parseInt(req.params.hid),
             },
           },
           relations: ['host'],
-        });
+        }));
 
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
         return onboarding.toFull();
       },
     };
