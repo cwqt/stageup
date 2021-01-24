@@ -1,14 +1,40 @@
 import Axios from 'axios';
-import { environment as env } from '../environment';
-import { HostOnboardingStep, IHost, IHostOnboarding, IHostOnboardingProcess, IHostStub, IMyself, IOnboardingStep, IUser, IUserStub } from '@eventi/interfaces';
+import { environment as env, UserType } from '../environment';
+import { HostOnboardingStep, IHost, IHostOnboarding, IHostOnboardingProcess, IHostStub, IMyself, IOnboardingStep, IUser, IUserStub, IUserHostInfo } from '@eventi/interfaces';
 
 export default {
+
+  // Host CRUD --------------------------------------------------------------------------------------------------------------
+  
+  // router.post<IHost>("/hosts", Hosts.createHost());
   createHost: async (data:{username:string, name:string, email_address:string}):Promise<IHost> => {
     const res = await Axios.post<IHost>(`${env.baseUrl}/hosts`, data, env.getOptions());
     return res.data;
     
   },
 
+  // router.get<IHost>("/hosts/:hid",Hosts.readHost())
+  readHost: async (host:IHostStub):Promise <IHostStub> =>{
+    const res = await Axios.get<IHost>(`${env.baseUrl}/hosts/${host._id}`, env.getOptions());
+    return res.data;
+  },
+  
+  // router.delete <void>("/hosts/:hid",Hosts.deleteHost());
+  deleteHost: async (host:IHost) => {
+    const res = await Axios.delete<void>(`${env.baseUrl}/hosts/${host._id}`,env.getOptions());
+    return res.data;
+  },
+   
+
+  // router.put<IHost> ("/hosts/:hid",Hosts.updateHost());
+  updateHost: async (host:IHost) => {
+    const res = await Axios.put<IHost>(`${env.baseUrl}/hosts/${host._id}`, env.getOptions());
+    return res.data;
+
+  },
+
+  // Host Onboarding --------------------------------------------------------------------------------------------------------------
+  
   // router.get <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep());
   readOnboardingProcessStep: async <T>(host:IHostStub, step:HostOnboardingStep) => {
     const res = await Axios.get<IOnboardingStep<T>>(`${env.baseUrl}/hosts/${host._id}/onboarding/${step}`, env.getOptions());
@@ -31,5 +57,33 @@ export default {
   submitOnboardingProcess: async (host:IHost | IHost) => {
     let res = await Axios.post<void>(`${env.baseUrl}/hosts/${host._id}/onboarding/submit`, null, env.getOptions());      
     return res.data;
+  },
+
+  
+  // Host member CRUD --------------------------------------------------------------------------------------------------------------
+
+  // router.get <IUserStub[]>("/hosts/:hid/members", Hosts.readHostMembers());
+  readHostMembers: async(host:IHost) => {
+    let res = await Axios.get<IUserStub[]>(`${env.baseUrl}/hosts/${host._id}/members`, env.getOptions());      
+    return res.data;
+  },
+
+  // router.post<IHost>("/hosts/:hid/members",Hosts.addUser());
+  addUser: async(host:IHost) => {
+    let res = await Axios.post<IHost>(`${env.baseUrl}/hosts/${host._id}/members`, env.getOptions());      
+    return res.data;
+  },
+
+  // router.delete <void> ("/hosts/:hid/members/:mid",Hosts.removeHostMember());
+  removeHostMember: async(host:IHost, user:IUser) => {
+   let res = await Axios.delete<void>(`${env.baseUrl}/hosts/${host._id}/members/${user._id}`, env.getOptions());      
+    return res.data;
+  },
+
+// router.put<void>("/hosts/:hid/members/:mid",Hosts.updateHostMember());
+  updateHostMember: async(host:IHost, user:IUser) => {
+    let res = await Axios.put<void>(`${env.baseUrl}/hosts/${host._id}/members/${user._id}`, env.getOptions());      
+    return res.data;
   }
+
 };
