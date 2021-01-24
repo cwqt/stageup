@@ -26,20 +26,21 @@ export default {
   },
 
   //router.get <IAddress[]> ("/users/:uid/addresses", Users.readAddresses());
-  readAddresses: async ( user: IUser, data: {} ) => {
-    const res = await Axios.get<IAddress[]>(`${env.baseUrl}/users/${user._id}/Addresses`, env.getOptions());
-    return res.data[0];    // Temporary Locator
+  readAddresses: async ( user:IUser ): Promise<IAddress[]>=> {
+    const res = await Axios.get<IAddress[]>(`${env.baseUrl}/users/${user._id}/addresses`, env.getOptions());
+    return res.data;    
   },
 
   //router.put <IAddress> ("/users/:uid/addresses/:aid", Users.updateAddress());
-  updateAddresses: async(user: IUser, data: Idless<IAddress> ): Promise<IAddress> => {
-    const res = await Axios.put<IAddress>(`${env.baseUrl}/users/${user._id}`, data, env.getOptions());
+  updateAddress: async( user: IUser, address: IAddress, data : { city: string, iso_country_code: string,
+    postcode: string, street_name: string, street_number: number} ): Promise<IAddress> => {
+    const res = await Axios.put<IAddress>(`${env.baseUrl}/users/${user._id}/addresses/${address._id}`, data, env.getOptions());
     return res.data;
   },
 
   //router.delete <void> ("/users/:uid/addresses/:aid", Users.deleteAddress());
-  deleteAddresses: async(user : IUser): Promise <void> => {
-    const res = await Axios.delete(`${env.baseUrl}/users/${user._id}/addresses/${user._id}`, env.getOptions());
+  deleteAddress: async( user:IUser, address:IAddress): Promise <void> => {
+    const res = await Axios.delete(`${env.baseUrl}/users/${user._id}/addresses/${address._id}`, env.getOptions());
     return res.data;
   },
 
