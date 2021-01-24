@@ -148,7 +148,7 @@ export default class HostController extends BaseController {
     };
   }
   //router.post<IHost>("/hosts/:hid/members", Hosts.addUser());
-  addUser(): IControllerEndpoint<IHost> {
+  addMember(): IControllerEndpoint<IHost> {
     return {
       validators: [
         body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest()),
@@ -173,7 +173,7 @@ export default class HostController extends BaseController {
   }
 
   // router.put <IHost>("/hosts/:hid/members/:mid",Hosts.updateHostMember());
-  updateHostMember(): IControllerEndpoint<void> {
+  updateMember(): IControllerEndpoint<void> {
     return {
       validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
       authStrategy: AuthStrat.hasHostPermission((HostPermission.Admin)),
@@ -195,8 +195,8 @@ export default class HostController extends BaseController {
     };
   }
 
-  // router.delete <void>("/hosts/:hid/members/:mid", Hosts.removeHostMember());
-  removeHostMember(): IControllerEndpoint<void> {
+  // router.delete <void>("/hosts/:hid/members/:mid", Hosts.removeMember());
+  removeMember(): IControllerEndpoint<void> {
     return {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
