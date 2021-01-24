@@ -19,7 +19,7 @@ export const create = async (): Promise<TORM.Connection> => {
       logging: false,
     });
 
-    await generateUML(conn);
+    //await generateUML(conn);
 
     return conn;
   } catch (error) {
