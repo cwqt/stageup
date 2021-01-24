@@ -12,29 +12,27 @@ import {
   IOnboardingSocialPresence,
   IOnboardingStep,
   IOnboardingSubscriptionConfiguration,
-  IUser,
   IUserHostInfo,
   pick,
+  HTTP,
   IUserStub,
-  IUserPrivate,
   IHostMemberChangeRequest,
 } from '@eventi/interfaces';
+import Email = require('../common/email');
+import Validators from '../common/validate';
+import AuthStrat from '../common/authorisation';
+import config from '../config';
+
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Host } from '../models/Hosts/Host.model';
-import { ErrorHandler, getCheck, FormErrorResponse } from '../common/errors';
-import { HTTP } from '@eventi/interfaces';
+import { ErrorHandler, getCheck } from '../common/errors';
 import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
-import Email = require('../common/email');
-import config from '../config';
-import AuthStrat from '../common/authorisation';
 import { body, params, query } from '../common/validate';
-import Validators from '../common/validate';
 import { unixTimestamp } from '../common/helpers';
 import { OnboardingStepReview } from '../models/Hosts/OnboardingStepReview.model';
-import { EntityManager } from 'typeorm';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -59,6 +57,7 @@ export default class HostController extends BaseController {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
+        // Check if user is already part of a host - which they shouldn't
         const h = await Host.findOne({ username: req.body.username });
         if (h) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
 
@@ -93,7 +92,7 @@ export default class HostController extends BaseController {
     };
   }
 
-  readHostMembers(): IControllerEndpoint<IUserStub[]> {
+  readMembers(): IControllerEndpoint<IUserStub[]> {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
@@ -147,24 +146,35 @@ export default class HostController extends BaseController {
       },
     };
   }
-  //router.post<IHost>("/hosts/:hid/members", Hosts.addUser());
+  
+  //router.post<IHost>("/hosts/:hid/members", Hosts.addMember());
   addMember(): IControllerEndpoint<IHost> {
     return {
-      validators: [
-        body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest()),
-      ],
+      validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async (req):Promise<IHost> => {
-        const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid )}));
-        const changeRequest:IHostMemberChangeRequest = req.body;
+      controller: async (req): Promise<IHost> => {
+        const changeRequest: IHostMemberChangeRequest = req.body;
+        // Check user not already part of a host in any capacity
+        const user = await getCheck(
+          User.findOne(
+            { _id: changeRequest.value },
+            { relations: ['host'] }
+          )
+        );
+        if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
-        const user = await getCheck(User.findOne({ _id: changeRequest.value }, { relations: ["host"]}));
-        if(user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+        // Get host & pull in members_info for new member push
+        const host = await getCheck(
+          Host.findOne(
+            { _id: parseInt(req.params.hid) },
+            { relations: ['members_info'] }
+          )
+        );
 
         await this.ORM.transaction(async txc => {
           await host.addMember(user, HostPermission.Member, txc);
-          await Email.sendUserHostMembershipInvitation(user.email_address, host);
           await txc.save(host);
+          await Email.sendUserHostMembershipInvitation(user.email_address, host);
         });
 
         return host.toFull();
@@ -172,22 +182,25 @@ export default class HostController extends BaseController {
     };
   }
 
-  // router.put <IHost>("/hosts/:hid/members/:mid",Hosts.updateHostMember());
+  // router.put <IHost>("/hosts/:hid/members/:mid",Hosts.updateMember());
   updateMember(): IControllerEndpoint<void> {
     return {
       validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
-      authStrategy: AuthStrat.hasHostPermission((HostPermission.Admin)),
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const userHostInfo = await getCheck(UserHostInfo.findOne({
-          relations: ['user', 'host'],
-          where: {
-            user: { _id: parseInt(req.params.mid) },
-            host: { _id: parseInt(req.params.hid) }
-          },
-        }));
+        const userHostInfo = await getCheck(
+          UserHostInfo.findOne({
+            relations: ['user', 'host'],
+            where: {
+              user: { _id: parseInt(req.params.mid) },
+              host: { _id: parseInt(req.params.hid) },
+            },
+          })
+        );
 
-        const newUserPermission:HostPermission = req.body.value;
-        if(userHostInfo.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS)
+        const newUserPermission: HostPermission = req.body.value;
+        if (userHostInfo.permissions == HostPermission.Owner)
+          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
 
         userHostInfo.permissions = newUserPermission;
         await userHostInfo.save();
@@ -201,33 +214,20 @@ export default class HostController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async (req: Request): Promise<void> => {
-        const userHostInfo = await getCheck(UserHostInfo.findOne({
-          relations: ['user', 'host'],
-          where: {
-            user: { _id: parseInt(req.params.mid) },
-            host: { _id: parseInt(req.params.hid) }
-          },
-        }));
+        const userHostInfo = await getCheck(
+          UserHostInfo.findOne({
+            relations: ['user', 'host'],
+            where: {
+              user: { _id: parseInt(req.params.mid) },
+              host: { _id: parseInt(req.params.hid) },
+            },
+          })
+        );
 
-        if(userHostInfo.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS)
+        if (userHostInfo.permissions == HostPermission.Owner)
+          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
         await userHostInfo.remove();
       },
-    };
-  }
-       
-  alterMemberPermissions(): IControllerEndpoint<void> {
-    return {
-      validators: [],
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
-    };
-  }
-
-  updateOnboarding(): IControllerEndpoint<void> {
-    return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<void> => {},
     };
   }
 
@@ -238,6 +238,7 @@ export default class HostController extends BaseController {
           user: v => v.exists().toInt(),
         }),
       ],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUserHostInfo> => {
         const uhi = await UserHostInfo.findOne({
           relations: ['host', 'user'],
@@ -253,7 +254,6 @@ export default class HostController extends BaseController {
 
         return uhi;
       },
-      authStrategy: AuthStrat.none,
     };
   }
 
@@ -261,14 +261,16 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
-        const onboarding = await getCheck(HostOnboardingProcess.findOne({
-          where: {
-            host: {
-              _id: parseInt(req.params.hid),
+        const onboarding = await getCheck(
+          HostOnboardingProcess.findOne({
+            where: {
+              host: {
+                _id: parseInt(req.params.hid),
+              },
             },
-          },
-          relations: ['host'],
-        }));
+            relations: ['host'],
+          })
+        );
 
         return onboarding.toFull();
       },
