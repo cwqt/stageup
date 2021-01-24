@@ -9,25 +9,25 @@ import {
 } from '@eventi/interfaces';
 
 import { User } from '../users/user.model';
-import { unixTimestamp } from '../../common/helpers';
-import { HostOnboardingProcess } from './onboarding.model';
+import { timestamp } from '../../common/helpers';
+import { Onboarding } from './onboarding.model';
 
 @Entity()
 export class OnboardingStepReview extends BaseEntity implements IOnboardingStepReview {
   @PrimaryGeneratedColumn() _id: number;
-  @Column() onboarding_step: HostOnboardingStep;
   @Column() onboarding_version: number;
-  @Column() step_state: HostOnboardingState.Verified | HostOnboardingState.HasIssues;
-  @Column({ type: 'jsonb' }) issues: Array<IOnboardingIssue<any>>;
   @Column() review_message: string;
   @Column() reviewed_at: number;
+  @Column('enum', { enum: HostOnboardingStep }) onboarding_step: HostOnboardingStep;
+  @Column('enum', { enum: [HostOnboardingState.Verified, HostOnboardingState.HasIssues] }) step_state: HostOnboardingState.Verified | HostOnboardingState.HasIssues;
+  @Column('jsonb') issues: Array<IOnboardingIssue<any>>;
 
-  @ManyToOne(() => HostOnboardingProcess, hop => hop.reviews) onboarding: HostOnboardingProcess;
-  @ManyToOne(() => User, {eager: true}) @JoinColumn() reviewed_by: User;
+  @ManyToOne(() => Onboarding, hop => hop.reviews) onboarding: Onboarding;
+  @ManyToOne(() => User, { eager: true }) @JoinColumn() reviewed_by: User;
 
   constructor(
     step: HostOnboardingStep,
-    onboarding: HostOnboardingProcess,
+    onboarding: Onboarding,
     reviewer: User,
     submission: IOnboardingStepReviewSubmission<any>
   ) {
@@ -41,7 +41,7 @@ export class OnboardingStepReview extends BaseEntity implements IOnboardingStepR
     this.issues = submission.issues;
     this.review_message = submission.review_message ?? '';
     this.onboarding_version = onboarding.version;
-    this.reviewed_at = unixTimestamp();
+    this.reviewed_at = timestamp();
   }
 
   toFull(): Required<IOnboardingStepReview> {

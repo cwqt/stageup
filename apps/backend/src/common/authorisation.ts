@@ -92,7 +92,7 @@ const isSiteAdmin: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
 
 const isEnv = (env: Environment): AuthStrategy => {
   return async (req, dc): Promise<AuthStratReturn> => {
-    if (config.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
+    if (!config.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
     return [true, {}];
   };
 };

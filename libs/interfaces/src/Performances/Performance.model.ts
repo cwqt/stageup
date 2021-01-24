@@ -1,7 +1,7 @@
-import { IHostStub } from '../Hosts/Host.model';
-import { IRating } from './Review.model';
-import { ISigningKey } from './SigningKey.model';
-import { CurrencyCode } from '../Common/Currency.types';
+import { IHostStub } from '../hosts/host.model';
+import { IRating } from './performance-review.model';
+import { ISigningKey } from './signing-key.model';
+import { CurrencyCode } from '../common/currency.types';
 
 export interface IPerformanceStub {
   _id: number;

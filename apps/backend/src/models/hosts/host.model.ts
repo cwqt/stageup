@@ -14,9 +14,9 @@ import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusin
 import { User } from '../users/user.model';
 import { Performance } from '../performances/performance.model';
 import { UserHostInfo } from './user-host-info.model';
-import { HostOnboardingProcess } from './onboarding.model';
+import { Onboarding } from './onboarding.model';
 import { ContactInfo } from '../users/contact-info.model';
-import { unixTimestamp } from '../../common/helpers';
+import { timestamp } from '../../common/helpers';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -27,14 +27,14 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column({ nullable: true }) bio?: string;
   @Column({ nullable: true }) avatar: string;
   @Column() is_onboarded: boolean;
-  @Column('jsonb') social_info: ISocialInfo;
   @Column() email_address: string;
+  @Column('jsonb') social_info: ISocialInfo;
   @Column('jsonb', { nullable: true }) business_details: IHostBusinessDetails;
 
   @OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
-  @OneToOne(() => HostOnboardingProcess, hop => hop.host) onboarding_process: HostOnboardingProcess;
+  @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {
     super();
@@ -43,7 +43,7 @@ export class Host extends BaseEntity implements IHostPrivate {
     this.email_address = data.email_address;
 
     this.is_onboarded = false;
-    this.created_at = unixTimestamp(new Date());
+    this.created_at = timestamp();
     this.members_info = [];
     this.social_info = {
       linkedin_url: null,
@@ -52,11 +52,8 @@ export class Host extends BaseEntity implements IHostPrivate {
     };
   }
 
-  /**
-   * @description Creates onboarding process
-   */
   async setup(creator: User, txc: EntityManager) {
-    this.onboarding_process = await txc.save(new HostOnboardingProcess(this, creator));
+    this.onboarding_process = await txc.save(new Onboarding(this, creator));
     this.contact_info = await txc.save(
       ContactInfo,
       new ContactInfo({

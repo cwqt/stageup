@@ -1,6 +1,5 @@
-import { ErrCode } from '../Common/Errors.model';
-import { IUserStub } from '../Users/User.model';
-import { HostOnboardingState, HostOnboardingStep } from './HostOnboarding.model';
+import { IUserStub } from '../users/user.model';
+import { HostOnboardingState, HostOnboardingStep } from './host-onboarding.model';
 
 export interface IOnboardingIssue<T> {
   param: keyof T;

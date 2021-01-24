@@ -1,19 +1,19 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { IAsset, IAssetMeta, IGIFMeta, AssetType, IThumbnailMeta, IStaticMeta, Primitive } from '@eventi/interfaces';
 import config from '../config';
-import { unixTimestamp } from '../common/helpers';
+import { timestamp } from '../common/helpers';
 import { Except } from 'type-fest';
 
 @Entity()
 export class Asset<T> extends BaseEntity implements IAsset<T> {
   @PrimaryGeneratedColumn() _id: number;
-  @Column() created_at: number;
-  @Column() asset_type: AssetType;
+  @Column('timestamp') created_at: number;
+  @Column('enum', { enum: AssetType }) asset_type: AssetType;
   @Column('jsonb') asset_meta: IAssetMeta<T>;
 
   constructor(assetType: AssetType, assetMeta: IAssetMeta<T>) {
     super();
-    this.created_at = unixTimestamp(new Date());
+    this.created_at = timestamp(new Date());
     this.asset_type = assetType;
     this.asset_meta = assetMeta;
   }

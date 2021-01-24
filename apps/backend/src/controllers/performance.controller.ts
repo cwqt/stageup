@@ -14,7 +14,7 @@ import { ErrorHandler, getCheck } from '../common/errors';
 import { BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
 import Validators, { body } from '../common/validate';
-import { Purchase } from '../models/purchase.model';
+import { PerformancePurchase } from '../models/performances/purchase.model';
 
 export default class PerformanceController extends BaseController {
   createPerformance(): IControllerEndpoint<IPerformance> {
@@ -76,7 +76,7 @@ export default class PerformanceController extends BaseController {
 
         // See if current user has access/bought the performance
         let token: string;
-        let previousPurchase: Purchase | null;
+        let previousPurchase: PerformancePurchase | null;
         if (req.session?.user._id) {
           // Check if user is part of host that created performance
           const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
@@ -84,7 +84,7 @@ export default class PerformanceController extends BaseController {
 
           // Check if user has purchased the performance
           if (!memberOfHost) {
-            previousPurchase = await Purchase.findOne({
+            previousPurchase = await PerformancePurchase.findOne({
               relations: ['user', 'performance'],
               where: {
                 user: { _id: user._id },
@@ -163,7 +163,7 @@ export default class PerformanceController extends BaseController {
         );
 
         // Check user hasn't already purchased performance
-        const previousPurchase = await Purchase.findOne({
+        const previousPurchase = await PerformancePurchase.findOne({
           relations: ['user', 'performance'],
           where: {
             user: { _id: user._id },
@@ -173,7 +173,7 @@ export default class PerformanceController extends BaseController {
 
         if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
 
-        const purchase = new Purchase(user, perf);
+        const purchase = new PerformancePurchase(user, perf);
         purchase.token = perf.host_info.signing_key.signToken(perf);
         await this.ORM.manager.save(purchase);
       }

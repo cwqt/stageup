@@ -1,13 +1,11 @@
-import { IPerformance, IPerformanceStub, IRating, ISigningKey } from '@eventi/interfaces';
-import { Host } from '../Hosts/host.model';
-import { BaseEntity, Column, Entity, EntityManager, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../users/user.model';
+import { IPerformance, ISigningKey } from '@eventi/interfaces';
+import { BaseEntity, Column, Entity, EntityManager, PrimaryGeneratedColumn } from 'typeorm';
 
 import { LiveStream, Video, JWT } from '@mux/mux-node';
 import { DataClient } from '../../common/data';
 
 import { Performance } from './performance.model';
-import { unixTimestamp } from '../../common/helpers';
+import { timestamp } from '../../common/helpers';
 
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
@@ -18,7 +16,7 @@ export class SigningKey extends BaseEntity implements ISigningKey {
 
   constructor() {
     super();
-    this.created_at = unixTimestamp(new Date());
+    this.created_at = timestamp(new Date());
   }
 
   async setup(dc: DataClient, txc: EntityManager): Promise<SigningKey> {

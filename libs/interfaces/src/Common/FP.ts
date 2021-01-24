@@ -1,6 +1,5 @@
-import { IContactInfo, IPerson } from "../Users/Person.model";
-import { IHost } from "../Hosts/Host.model";
-import { Primitive } from "./Node.model";
+export type Primitive = string | boolean | number;
+export type Idless<T> = Omit<T, '_id'>;
 
 export const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 

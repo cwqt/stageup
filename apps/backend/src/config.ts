@@ -56,7 +56,7 @@ interface IEnvironment {
 }
 
 const base: Except<IEnvironment, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
-  isEnv: (env: Environment) => env === base.ENVIRONMENT,
+  isEnv: (env: Environment) => env === process.env.NODE_ENV,
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
   EXPRESS_PORT: 3000,

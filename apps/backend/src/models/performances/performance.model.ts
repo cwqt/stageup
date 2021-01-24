@@ -11,11 +11,11 @@ import {
 import { CurrencyCode, IPerformance, IPerformanceStub, IRating, PerformanceState } from '@eventi/interfaces';
 
 import { PerformanceHostInfo as PHostInfo, PerformanceHostInfo } from './performance-host-info.model';
-import { Host } from '../Hosts/host.model';
+import { Host } from '../hosts/host.model';
 import { User } from '../users/user.model';
 import { DataClient } from '../../common/data';
-import { Purchase } from '../purchase.model';
-import { unixTimestamp } from '../../common/helpers';
+import { PerformancePurchase } from '../performances/purchase.model';
+import { timestamp } from '../../common/helpers';
 
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
@@ -23,18 +23,18 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column() created_at: number;
   @Column() name: string;
   @Column() description?: string;
+  @Column() views: number;
+  @Column() price: number;
+  @Column() playback_id: string;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
-  @Column() views: number;
-  @Column({ nullable: true }) state: PerformanceState;
-  @Column() price: number;
-  @Column() currency: CurrencyCode;
-  @Column() playback_id: string;
+  @Column('enum', { enum: PerformanceState })state: PerformanceState;
+  @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
 
   @OneToOne(() => PHostInfo) @JoinColumn() host_info: PHostInfo;
   @ManyToOne(() => Host, host => host.performances) host: Host;
   @ManyToOne(() => User, user => user.performances) creator: User;
-  @OneToMany(() => Purchase, purchase => purchase.performance) purchases: Purchase[];
+  @OneToMany(() => PerformancePurchase, purchase => purchase.performance) purchases: PerformancePurchase[];
 
   ratings: IRating[];
 
@@ -48,7 +48,7 @@ export class Performance extends BaseEntity implements IPerformance {
     this.price = data.price;
     this.currency = data.currency;
 
-    this.created_at = unixTimestamp(new Date());
+    this.created_at = timestamp(new Date());
     this.views = 0;
     this.average_rating = null;
     this.creator = creator;

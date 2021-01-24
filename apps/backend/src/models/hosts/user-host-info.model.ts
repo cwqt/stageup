@@ -3,13 +3,13 @@ import { HostPermission, IUserHostInfo } from '@eventi/interfaces';
 
 import { Host } from './host.model';
 import { User } from '../users/user.model';
-import { unixTimestamp } from '../../common/helpers';
+import { timestamp } from '../../common/helpers';
 
 @Entity()
 export class UserHostInfo extends BaseEntity implements IUserHostInfo {
   @PrimaryGeneratedColumn() _id: number;
   @Column() joined_at: number;
-  @Column() permissions: HostPermission;
+  @Column('enum', { enum: HostPermission }) permissions: HostPermission;
 
   @OneToOne(() => User) @JoinColumn() user: User;
   @ManyToOne(() => Host, host => host.members_info) host: Host;
@@ -20,7 +20,7 @@ export class UserHostInfo extends BaseEntity implements IUserHostInfo {
 
     this.user = user;
     this.host = host;
-    this.joined_at = unixTimestamp();
+    this.joined_at = timestamp();
     this.permissions = permissions;
   }
 

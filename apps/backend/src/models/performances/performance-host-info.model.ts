@@ -14,7 +14,7 @@ import { SigningKey } from './signing-key.model';
 import { DataClient } from '../../common/data';
 import config, { Environment } from '../../config';
 import { Performance } from './performance.model';
-import { unixTimestamp } from '../../common/helpers';
+import { timestamp } from '../../common/helpers';
 
 @Entity()
 export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostInfo {
@@ -27,7 +27,7 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
 
   constructor() {
     super();
-    this.created_at = unixTimestamp(new Date());
+    this.created_at = timestamp(new Date());
   }
 
   async setup(dc: DataClient, transEntityManager: EntityManager): Promise<[PerformanceHostInfo, LiveStream]> {

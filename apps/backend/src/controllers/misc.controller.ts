@@ -2,7 +2,7 @@ import { BaseController, IControllerEndpoint } from '../common/controller';
 import { Environment } from '../config';
 import AuthStrat from '../common/authorisation';
 import { getCheck } from '../common/errors';
-import { Host } from '../models/Hosts/host.model';
+import { Host } from '../models/hosts/host.model';
 import { IHost } from '@eventi/interfaces';
 
 export default class MiscController extends BaseController {

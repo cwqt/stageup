@@ -1,6 +1,6 @@
-import { IUserHostInfo, IUserStub } from '../Users/User.model';
-import { IPerformanceStub } from '../Performances/Performance.model';
-import { IAddress, IContactInfo } from '../Users/Person.model';
+import { IUserHostInfo } from '../users/user.model';
+import { IPerformanceStub } from '../performances/performance.model';
+import { IAddress, IContactInfo } from '../users/person.model';
 
 export interface IHostStub {
   _id: number;

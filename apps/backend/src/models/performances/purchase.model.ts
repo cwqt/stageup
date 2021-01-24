@@ -1,14 +1,14 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { IPerformancePurchase, CurrencyCode } from '@eventi/interfaces';
-import { User } from './users/user.model';
-import { Performance } from './performances/performance.model';
-import { unixTimestamp } from '../common/helpers';
+import { User } from '../users/user.model';
+import { Performance } from './performance.model';
+import { timestamp } from '../../common/helpers';
 @Entity()
-export class Purchase extends BaseEntity implements IPerformancePurchase {
+export class PerformancePurchase extends BaseEntity implements IPerformancePurchase {
   @PrimaryGeneratedColumn() _id: number;
   @Column() purchased_at: number;
-  @Column({ type: 'bigint', nullable: true }) price: number; // Stored as micro-pence
-  @Column() currency: CurrencyCode;
+  @Column('bigint', { nullable: true }) price: number; // Stored as micro-pence
+  @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
   @Column() token: string;
   @Column() payment_id: number;
   @Column() expiry: number;
@@ -23,6 +23,6 @@ export class Purchase extends BaseEntity implements IPerformancePurchase {
     this.performance = performance;
     this.price = performance.price;
     this.currency = performance.currency;
-    this.purchased_at = unixTimestamp(new Date());
+    this.purchased_at = timestamp(new Date());
   }
 }

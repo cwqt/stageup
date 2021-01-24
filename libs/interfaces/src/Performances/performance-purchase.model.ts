@@ -1,5 +1,5 @@
-import { CurrencyCode } from '../Common/Currency.types';
-import { IPerformanceStub } from './Performance.model';
+import { CurrencyCode } from '../common/currency.types';
+import { IPerformanceStub } from './performance.model';
 
 export interface IPerformancePurchase {
   _id: number;

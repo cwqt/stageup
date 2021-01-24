@@ -12,7 +12,7 @@ import {
 } from '@eventi/interfaces';
 import { BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
-import { HostOnboardingProcess } from '../models/Hosts/onboarding.model';
+import { Onboarding } from '../models/hosts/onboarding.model';
 
 import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
 import { User } from '../models/users/user.model';
@@ -35,7 +35,7 @@ export default class AdminController extends BaseController {
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
-        const qb = this.ORM.createQueryBuilder(HostOnboardingProcess, 'hop')
+        const qb = this.ORM.createQueryBuilder(Onboarding, 'hop')
           .innerJoinAndSelect('hop.host', 'host') // Pull in host & filter by host
           .where('host.username LIKE :username', {
             username: req.body.username ? `%${req.body.username as string}%` : '%'
@@ -72,7 +72,7 @@ export default class AdminController extends BaseController {
         const step: HostOnboardingStep = Number.parseInt(req.params.step);
         const submission: IOnboardingStepReviewSubmission<any> = req.body;
         const reviewer = await getCheck(User.findOne({ _id: req.session.user._id }));
-        const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: Number.parseInt(req.params.oid) }));
+        const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
 
         const review = new OnboardingStepReview(step, onboarding, reviewer, submission);
 
@@ -97,7 +97,7 @@ export default class AdminController extends BaseController {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
-        const onboarding = await getCheck(HostOnboardingProcess.findOne({ _id: Number.parseInt(req.params.oid) }));
+        const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
 
         // Every step is verified when submitted, so enact the onboarding process
         // by which I mean shift the data from Onboarding -> Host & send out invites for added members

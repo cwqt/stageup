@@ -13,8 +13,8 @@ import {
 import { Except } from 'type-fest';
 import { IUser, IUserStub, IUserPrivate } from '@eventi/interfaces';
 
-import { Host } from '../Hosts/host.model';
-import { Purchase } from '../purchase.model';
+import { Host } from '../hosts/host.model';
+import { PerformancePurchase } from '../performances/purchase.model';
 import { Performance } from '../performances/performance.model';
 import { Person } from './person.model';
 import { ContactInfo } from './contact-info.model';
@@ -35,7 +35,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() email_address: string;
 
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
-  @OneToMany(() => Purchase, purchase => purchase.user) purchases: Purchase[]; // Many purchases
+  @OneToMany(() => PerformancePurchase, purchase => purchase.user) purchases: PerformancePurchase[]; // Many purchases
   @OneToMany(() => Performance, performance => performance.creator) performances: Performance[];
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
 

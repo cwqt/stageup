@@ -18,16 +18,16 @@ import {
   HTTP
 } from '@eventi/interfaces';
 import { User } from '../models/users/user.model';
-import { Host } from '../models/Hosts/host.model';
+import { Host } from '../models/hosts/host.model';
 import { ErrorHandler, getCheck } from '../common/errors';
 
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
 import { BaseController, IControllerEndpoint } from '../common/controller';
-import { HostOnboardingProcess } from '../models/Hosts/onboarding.model';
+import { Onboarding } from '../models/hosts/onboarding.model';
 import AuthStrat from '../common/authorisation';
 import Validators, { body, params as parameters, query } from '../common/validate';
 
-import { unixTimestamp } from '../common/helpers';
+import { timestamp } from '../common/helpers';
 import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
 import logger from '../common/logger';
 
@@ -202,7 +202,7 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
-        const onboarding = await HostOnboardingProcess.findOne({
+        const onboarding = await Onboarding.findOne({
           where: {
             host: {
               _id: Number.parseInt(req.params.hid)
@@ -226,7 +226,7 @@ export default class HostController extends BaseController {
       ],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const onboarding = await HostOnboardingProcess.findOne({
+        const onboarding = await Onboarding.findOne({
           where: {
             host: {
               _id: Number.parseInt(req.params.hid)
@@ -261,7 +261,7 @@ export default class HostController extends BaseController {
       controller: async req => {
         if (!req.body) throw new ErrorHandler(HTTP.DataInvalid, ErrCode.NO_DATA);
 
-        const onboarding = await HostOnboardingProcess.findOne({
+        const onboarding = await Onboarding.findOne({
           where: {
             host: {
               _id: Number.parseInt(req.params.hid)
@@ -304,7 +304,7 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const onboarding = await HostOnboardingProcess.findOne({
+        const onboarding = await Onboarding.findOne({
           where: {
             host: {
               _id: Number.parseInt(req.params.hid)
@@ -317,7 +317,7 @@ export default class HostController extends BaseController {
 
         // TODO: verify all steps filled out
         // TODO: delete all previous version step reviews
-        onboarding.last_submitted = unixTimestamp();
+        onboarding.last_submitted = timestamp();
         onboarding.state = HostOnboardingState.PendingVerification;
         onboarding.version += 1;
         await onboarding.save();

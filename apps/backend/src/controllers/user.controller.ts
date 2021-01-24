@@ -20,7 +20,7 @@ import config from '../config';
 import AuthStrat from '../common/authorisation';
 
 import { User } from '../models/users/user.model';
-import { Host } from '../models/Hosts/host.model';
+import { Host } from '../models/hosts/host.model';
 import { Address } from '../models/users/address.model';
 import { EntityManager } from 'typeorm';
 

@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import dbless from 'dbless-email-verification';
 import config, { Environment } from '../config';
 import logger from './logger';
-import { Host } from '../models/Hosts/host.model';
+import { Host } from '../models/hosts/host.model';
 
 const generateEmailHash = (email: string): string => {
   const hash = dbless.generateVerificationHash(email, config.PRIVATE_KEY, 60);

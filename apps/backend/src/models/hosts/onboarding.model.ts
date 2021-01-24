@@ -27,13 +27,13 @@ import {
 import { Host } from '../hosts/host.model'
 import { User } from '../users/user.model';
 import Validators, { object, single, array } from '../../common/validate';
-import { unixTimestamp } from '../../common/helpers';
+import { timestamp } from '../../common/helpers';
 import { OnboardingStepReview } from './onboarding-step-review.model';
 
 @Entity()
-export class HostOnboardingProcess extends BaseEntity implements IHostOnboardingProcess {
+export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
   @PrimaryGeneratedColumn() _id: number;
-  @Column() state: HostOnboardingState;
+  @Column('enum', { enum: HostOnboardingState }) state: HostOnboardingState;
   @Column() created_at: number;
   @Column({ nullable: true }) completed_at: number;
   @Column({ nullable: true }) last_modified: number;
@@ -51,7 +51,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     this.host = host;
 
     this.state = HostOnboardingState.AwaitingChanges;
-    this.created_at = unixTimestamp(new Date());
+    this.created_at = timestamp(new Date());
     this.last_modified = this.created_at;
     this.version = 0;
     this.reviews = [];

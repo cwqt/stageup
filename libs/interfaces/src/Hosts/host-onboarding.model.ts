@@ -14,11 +14,11 @@
 //        - pro
 //        - premium
 
-import { HostSubscriptionLevel } from '../Common/Subscription.model';
-import { IAddress, IPersonInfo } from '../Users/Person.model';
-import { IUserStub } from '../Users/User.model';
-import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './Host.model';
-import { IOnboardingStepReview } from './OnboardingStepReview.model';
+import { HostSubscriptionLevel } from '../common/subscription.model';
+import { IPersonInfo } from '../users/person.model';
+import { IUserStub } from '../users/user.model';
+import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './host.model';
+import { IOnboardingStepReview } from './onboarding-step-review.model';
 
 export enum HostOnboardingStep {
   ProofOfBusiness,
@@ -67,6 +67,7 @@ export interface IOnboardingStep<T> {
   valid: boolean; //just if all the data is filled out & correct
   data: T;
 }
+
 export type IOnboardingProofOfBusiness = IHostBusinessDetails;
 
 export interface IOnboardingOwnerDetails {
