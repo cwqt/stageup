@@ -14,6 +14,7 @@
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-unused-expressions": "off",
     "@typescript-eslint/no-throw-literal":"off",
+    "@typescript-eslint/restrict-template-expressions":"off",
     "unicorn/filename-case": [
       "error",
       {
