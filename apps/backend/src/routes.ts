@@ -64,14 +64,19 @@ router.post   <IHost>                 ("/hosts",                                
 router.get    <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
 router.delete <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
 // router.put    <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
-router.get    <IUserStub[]>           ("/hosts/:hid/members",                       Hosts.readHostMembers());
-// router.post   <IHost>                 ("/hosts/:hid/members",                      Hosts.addUser());
-// router.delete <IHost>                 ("/hosts/:hid/members",                      Hosts.removeUser());
-// router.delete <IHost>                 ("/hosts/:hid/members/:mid/permissions",     Hosts.alterMemberPermissions());
-router.get <IHOnboarding>             ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
-router.post<void>                     ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
-router.get <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
-router.put <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
+router.get    <IUserStub[]>           ("/hosts/:hid/members",                       Hosts.readMembers());
+router.post   <IHost>                 ("/hosts/:hid/members",                       Hosts.addMember());
+router.delete <void>                  ("/hosts/:hid/members/:mid",                  Hosts.removeMember());
+router.put    <void>                  ("/hosts/:hid/members/:mid",                  Hosts.updateMember());
+router.get    <IHOnboarding>          ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
+router.post   <void>                  ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
+router.get    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
+router.put    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
+router.get    <IHOnboarding>          ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
+router.post   <void>                  ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
+router.get    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
+router.put    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
+
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);

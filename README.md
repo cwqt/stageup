@@ -1,13 +1,24 @@
-# eventi &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg)
+# eventi &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg) &nbsp; [![Nx](https://img.shields.io/badge/maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
+
 
 # Installation
-Will work for macOS (& Linux with adjustment) - not sure about Windows :/
 
-## Homebrew
+## Tools
+
+* __VSCode__: <https://code.visualstudio.com/>
+* __Postman__: <https://www.postman.com/downloads/>
+* __DB Client__: <https://tableplus.com/>
+* __JSONView__: <https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en>
+
+
+## Homebrew (skip if Windows)
 Install Homebrew if you haven't already (macOS)
 
-```shell
+```sh
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+brew -v       # Homebrew 2.7.5
+brew update
 ```
 
 Check if it works `brew -v`, should give something like: `Homebrew 2.5.11`.  
@@ -15,48 +26,65 @@ Then run `brew update`
 
 ## Node & npm
 
-```shell
-brew install node
-node -v             #v15.5.0
-npm -v              #7.3.0
+```sh
+brew install node   # install via https://nodejs.org/en/download/ on windows
+node -v             # v15.5.0
+npm -v              # 7.3.0
 ```
 
-## PostgreSQL, Redis & InfluxDB
+## PostgreSQL & Redis
 
-```shell
-# make sure you install postgres version 11 !
-brew install postgresql@11 
+To make life easier we'll be running the databases inside docker containers, first install Docker Desktop from here: <https://www.docker.com/products/docker-desktop>  
+To pull in the databases docker images use these commands:
 
-brew cask install redis
+```sh
+docker run --name vn-redis -p 6379:6379 -d redis  
+docker run --name vn-postgres -p 5432:5432 -d postgres
 ```
 
-Some tools to install:
-* __Postman__: https://www.postman.com/downloads/
-* __PostgreSQL & Redis__: https://tableplus.com/
-* __JSONView__: https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en
+And the containers should be shown as running in Docker Desktop.
 
-Some extensions to install:
-* __Prettier__: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
-* __Angular Language Service__: https://marketplace.visualstudio.com/items?itemName=Angular.ng-template
-* __Error Lens__: https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
-* __Git Lens__: https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
-* __SCSS Intellisense__: https://marketplace.visualstudio.com/items?itemName=mrmlnc.vscode-scss
-* __Tailwind Intellisense__: https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
-* __Todo Tree__: https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree
-* __vscode-angular-html__: https://marketplace.visualstudio.com/items?itemName=ghaschel.vscode-angular-html
+## Nx
 
-## Interfaces
-Provides e2e typing across backend & frontend.
+[Nx](https://nx.dev/) is described as 'Extensible Dev Tools for Monorepos' - Nx allows for seamless code sharing & versioning management.  
+To install it run:
 
-```shell
-cd interfaces
-npm install --force
-tsc
+```sh
+npm install -g nx   # 11.1.5
 ```
 
+Currently we just have just two applications - a frontend & a backend, but in the future this will be expanded to adding a task runner, notifications fan-out, recommendations engine etc, all of which will be sharing the interfaces + other shared code.
+
+## Project Layout
+
+```sh
+  apps               # where all the apps live
+    frontend         # the eventi frontend
+    backend          # the eventi api
+    api-tests        # integration tests
+        
+  libs               # where all shared code live
+    interfaces       # typescript interfaces
+      
+  deploys            # info pertaining to deployment
+    k8s              # kubernetes files (unused for now)
+    docker           # docker-compose (dev, prod)
+    nginx.conf       # nginx config for frontend server
+      
+  tools              # non-source code stuff
+      
+  .github            # github actions
+  .vscode            # editor settings
+  .prettierrc        # code formatting config
+  .xo-config.json    # linter config
+  nx.json            # workspace config
+  package.json       # where _all_ packages are listed
+  tsconfig.base.json # base ts config
+  workspace.json     # where all apps, libs are defined
+```
 
 ## Backend
-Create a `.env` file in the root of `backend/`, this will store our secret variables - please never share these with anyone - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
+Create a `.env` file in the root of `apps/backend/`, this will store our secret variables - please never share these with anyone - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
 
 ```
 PRIVATE_KEY="SOME_PASSWORD"
@@ -76,8 +104,8 @@ NODE_ENV="development"
 We'll also need some private data from MUX, so now you'll need to sign up on there: <https://dashboard.mux.com/signup?type=video>  
 Once you're signed up go to <https://dashboard.mux.com/settings/access-tokens>
 
-Click 'Generate new token' on the right.  
-Click 'Full access' on MUX Video for permissions & then click 'Generate token'.
+Click _'Generate new token'_ on the right.  
+Click _'Full access'_ on MUX Video for permissions & then click _'Generate token'_.
 
 Add the following to your `.env` file by copy & pasting the values:
 
@@ -87,70 +115,29 @@ MUX_SECRET_KEY="Secret Key"
 LOCALTUNNEL_URL="eventi-YOUR_NAME"
 ```
 
-* `LOCALTUNNEL_URL`: When testing locally we want to be able to recieve webhooks from MUX, instead of port forwarding our router we'll use HTTP tunneling via [localtunnel](https://localtunnel.me/) to recieve them.
+* `LOCALTUNNEL_URL`: When testing locally we want to be able to recieve webhooks from MUX, instead of port forwarding our router we'll use HTTP tunneling via [localtunnel](https://localtunnel.me/) to receive them.
 
 We'll also need to add a new webhook, go to: <https://dashboard.mux.com/settings/webhooks>
 
-Click 'Create new webhook'.  
-For the 'URL to notify' add `https://eventi-YOUR_NAME.loca.lt/mux/hooks`.  
-And then click 'Create webhook.
+Click _'Create new webhook'_.  
+For the _'URL to notify'_ add `https://eventi-YOUR_NAME.loca.lt/mux/hooks`.  
+And then click _'Create webhook'_.
 
-There should be a row with your webhook, click 'Show Signing Secret' & paste it into your `.env`.
+There should be a row with your webhook, click _'Show Signing Secret'_ & paste it into your `.env`.
 
 ```
 MUX_HOOK_SIGNATURE="MY_SIGNING_SECRET"
 ```
 
-Once that's all done, to install libraries for the backend - assuming you're in the backend root.
-
-```shell
-npm install --force
-```
-
-## Frontend
-
-```
-npm install -g angular
-cd frontend
-npm install --force
-```
-
-
 # Running
 
-* __Redis__: `redis-server /usr/local/etc/redis.conf`
-* __PostgreSQL__: `brew services start postgresql@11`
-* __Frontend__: `npm run start`
-* __Backend__: `npm run start`
-  - To enable debug mode use `npm run start:dev`
+All packages that are used throughout all apps & libs are defined within a single `package.json` - the reason being having consistent versioning of dependencies across all applications.
 
----
+Do `npm install` in the project root to install all required dependencies.
 
-# Testing
+* __Frontend__: `nx serve frontend`
+* __Backend__: `nx serve backend`
+* __API Tests__: `nx run api-tests`
+* __Redis__: Start from Docker Desktop
+* __PostgreSQL__: Start from Docker Desktop
 
-* __Backend__: `npm run test`
-  - To enable debug mode use `npm run test:dev`
-* __REST__: `npm run test`
-  * Add `BASE_URL="http://localhost:3000"` to `.env`
-
-# Deployment
-
-```
-docker create network eventi
-```
-
-Create the K8s cluster:
-
-```shell
-brew install minikube
-minikube start 
-
-kubectl cluster-info
-kubectl get nodes
-```
-
-# Actions
-
-Use `act` to test GH Actions locally:
-
-`act -j build`

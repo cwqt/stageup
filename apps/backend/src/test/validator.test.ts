@@ -154,10 +154,10 @@ describe('Custom validation', () => {
     expect(errors).to.be.lengthOf(0);
   });
 
-  it('Should not return errors for IHostMemberChangeRequest Object Validator', async () => {
-    const data: IOnboardingAddMembers = {
-      members_to_add: [{ user_id: 1, change: 'add' }]
-    };
+  it("Should not return errors for IHostMemberChangeRequest Object Validator", async () => {
+    const data:IOnboardingAddMembers = {
+      members_to_add: [ { value: 1 }]
+    }
 
     const errors = await object(data, {
       members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest()))

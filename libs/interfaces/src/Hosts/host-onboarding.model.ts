@@ -78,10 +78,14 @@ export interface IOnboardingSocialPresence {
   social_info: ISocialInfo;
 }
 
+/**
+ * @description
+ * POST member ->   value: user_id          /members 
+ * PUT member ->    value: HostPermission   /members/:mid -> user_id
+ * DELETE member -> value: null             /members/:mid -> user_id
+ */
 export interface IHostMemberChangeRequest {
-  user_id: number;
-  change: 'add' | 'update' | 'del';
-  value?: HostPermission;
+  value: HostPermission | number; 
 }
 
 export interface IOnboardingAddMembers {
