@@ -48,8 +48,11 @@
       "prefix": "eventi",
       "targets": {
         "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+          "executor": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "apps/frontend/webpack.config.js"
+            },
             "outputPath": "dist/apps/frontend",
             "index": "apps/frontend/src/index.html",
             "main": "apps/frontend/src/main.ts",
@@ -61,7 +64,11 @@
               "apps/frontend/src/assets"
             ],
             "styles": [
-              "apps/frontend/src/styles.scss"
+              "apps/frontend/src/styles/theme.scss",
+              "apps/frontend/src/styles/_global.scss",
+              "apps/frontend/src/styles/_overrides.scss",
+              "apps/frontend/src/styles/variables.scss",
+              "apps/frontend/src/tailwind.scss"
             ],
             "scripts": []
           },
@@ -96,7 +103,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
+          "executor": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "frontend:build"
           },
@@ -104,12 +111,6 @@
             "production": {
               "browserTarget": "frontend:build:production"
             }
-          }
-        },
-        "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "frontend:build"
           }
         }
       }

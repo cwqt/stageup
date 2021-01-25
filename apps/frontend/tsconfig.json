@@ -1,21 +1,13 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es2015",
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "inlineSources": true,
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2019", "dom"]
-  },
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true

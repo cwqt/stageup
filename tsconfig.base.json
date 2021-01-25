@@ -16,6 +16,7 @@
     "skipDefaultLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "typeRoots": ["node_modules/@types"],
     "paths": {
       "@eventi/interfaces": ["libs/interfaces/src/index.ts"]
     }
