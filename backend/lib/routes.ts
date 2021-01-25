@@ -69,11 +69,12 @@ router.get    <IUserStub[]>           ("/hosts/:hid/members",                   
 // router.post   <IHost>                 ("/hosts/:hid/members",                      Hosts.addUser());
 // router.delete <IHost>                 ("/hosts/:hid/members",                      Hosts.removeUser());
 // router.delete <IHost>                 ("/hosts/:hid/members/:mid/permissions",     Hosts.alterMemberPermissions());
+router.get <IOnboardingStepMap>       ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps());  
 router.get <IHOnboarding>             ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
 router.post<void>                     ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
 router.get <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put <IOnboardingStep<any>>     ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
-router.get   <IOnboardingStepMap>     ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps());                );
+    
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
@@ -96,7 +97,7 @@ const MUXHooks = new MUXHooksController(providers, mws);
 router.post   <void>                  ("/mux/hooks",                                MUXHooks.handleHook());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
-const Auth =  new AuthController(providers, mws);
+const Auth =  new AuthController(providers, mws)
 router.redirect                       ("/auth/verify",                              Auth.verifyUserEmail());
 
 // MISC ---------------------------------------------------------------------------------------------------------------

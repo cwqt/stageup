@@ -254,8 +254,59 @@ export default class HostController extends BaseController {
     };
   }
 
+  // router.get <IOnboardingStepMap>       ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps()); 
   readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
-    return null;
+    return {
+      
+      authStrategy: AuthStrat.none,
+      controller: async (req: Request): Promise<IOnboardingStepMap> => {
+        const onboarding = await HostOnboardingProcess.findOne({
+          where: {
+            host: {
+              _id: parseInt(req.params.hid),
+            }
+          },
+          
+        });
+
+        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+
+        let stepMap: IOnboardingStepMap;
+        
+        let stepReviews = [];
+
+        for (let step = 0; step < 5 ; step++) {
+          const stepReview = await OnboardingStepReview.findOne({
+            where: {
+              onboarding_step: step,
+              onboarding_version: onboarding.version,
+            },
+            relations: ['reviewed_by'],
+          }); 
+          console.log(stepReview);
+          stepReviews.push(stepReview);
+        }
+
+        // let stepReviews = await Promise.all(Object.values(HostOnboardingStep).map((step: HostOnboardingStep) => OnboardingStepReview.findOne({
+        //   where: {
+        //     onboarding_step: step,
+        //   }
+        // }) ))
+      
+        console.log(stepReviews);
+        stepMap[HostOnboardingStep.ProofOfBusiness] = {...onboarding.steps[HostOnboardingStep.ProofOfBusiness], review: stepReviews[0]?.toFull() || null }
+        stepMap[HostOnboardingStep.OwnerDetails] = {...onboarding.steps[HostOnboardingStep.OwnerDetails], review: stepReviews[1]?.toFull() || null }
+        stepMap[HostOnboardingStep.SocialPresence] = {...onboarding.steps[HostOnboardingStep.SocialPresence], review: stepReviews[2]?.toFull() || null }
+        stepMap[HostOnboardingStep.AddMembers] = {...onboarding.steps[HostOnboardingStep.AddMembers], review: stepReviews[3]?.toFull() || null }
+        stepMap[HostOnboardingStep.SubscriptionConfiguration] = {...onboarding.steps[HostOnboardingStep.SubscriptionConfiguration], review: stepReviews[4]?.toFull() || null }
+
+        return  stepMap;
+      }
+    }
+  }
+
+  getStepReviewForStep(step: HostOnboardingStep){
+    
   }
 
   updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {

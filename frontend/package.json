@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~11.0.6",
     "@angular/router": "~11.0.6",
     "@eventi/interfaces": "../interfaces",
+    "moment": "^2.29.1",
     "ng-click-outside": "^7.0.1",
     "ngx-cookie-service": "^11.0.2",
     "ngx-moment": "^5.0.0",
