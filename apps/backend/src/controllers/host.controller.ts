@@ -239,8 +239,8 @@ export default class HostController extends BaseController {
         const step = (req.params.step as unknown) as HostOnboardingStep;
         const stepReview = await OnboardingStepReview.findOne({
           where: {
-            onboarding_step: step,
-            onboarding_version: onboarding.version
+            onboarding_version: onboarding.version,
+            
           },
           relations: ['reviewed_by']
         });

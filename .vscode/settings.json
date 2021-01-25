@@ -3,7 +3,7 @@
     "customizeUI.titleBar": "frameless",
     "spellright.language": ["en"],
     "spellright.documentTypes": ["markdown", "latex"],
-    "explorer.autoReveal": false,
+    "explorer.autoReveal": true,
     "editor.wordWrapColumn": 120,
     "editor.folding": false,
     "prettier.printWidth": 120,

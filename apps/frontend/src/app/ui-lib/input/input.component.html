@@ -1,7 +1,7 @@
 <div class="ui-input-wrapper" [class.ui-input-wrapper--has-icon]="icon">
   <!-- Input -->
   <div
-    (clickOutside)="togglePasswordVisibility(false)"
+    (clickOutside)="togglePasswordVisibility(false, $event)"
     (click)="input.select()"
     class="form-field"
     [class.form-field--is-active]="focused"
@@ -119,7 +119,6 @@
                   [checked]="checklistSelection.isSelected(node)"
                   (change)="leafNodeItemSelectionToggle(node)">
               </mat-checkbox>
-              <p>{{node.name}}<span *ngIf="showId"> {{node._id.substr(-6)}}</span></p>
           </mat-tree-node>
 
           <mat-tree-node
@@ -140,7 +139,6 @@
                   [indeterminate]="descendantsPartiallySelected(node)"
                   (change)="rootNodeSelectionToggle(node)">
               </mat-checkbox>
-              <p>{{node.name}}<span *ngIf="showId"> {{node._id.substr(-6)}}</span></p>
           </mat-tree-node>
       </mat-tree>
   </mat-select>

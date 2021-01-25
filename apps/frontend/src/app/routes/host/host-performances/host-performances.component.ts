@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BaseAppService, RouteParam } from 'src/app/services/app.service';
+import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 
 @Component({
   selector: 'app-host-performances',

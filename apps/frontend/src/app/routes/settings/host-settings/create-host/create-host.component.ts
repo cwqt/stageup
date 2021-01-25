@@ -1,10 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { IHost, IHostStub, IUser } from '@eventi/interfaces';
-import { ICacheable } from 'src/app/app.interfaces';
-import { BaseAppService } from 'src/app/services/app.service';
-import { HostService } from 'src/app/services/host.service';
-import { IUiForm } from 'src/app/ui-lib/form/form.interfaces';
+import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { HostService } from 'apps/frontend/src/app/services/host.service';
+import { IUiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 
 @Component({
   selector: 'app-create-host',

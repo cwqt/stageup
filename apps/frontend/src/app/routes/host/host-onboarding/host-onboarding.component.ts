@@ -8,10 +8,10 @@ import {
   HostOnboardingStep,
   IOnboardingStep,
 } from "@eventi/interfaces";
-import { createICacheable, ICacheable } from "src/app/app.interfaces";
-import { HostService } from "src/app/services/host.service";
-import { FormComponent } from "src/app/ui-lib/form/form.component";
-import { IUiForm } from "src/app/ui-lib/form/form.interfaces";
+import { createICacheable, ICacheable } from "apps/frontend/src/app/app.interfaces";
+import { HostService } from "apps/frontend/src/app/services/host.service";
+import { FormComponent } from "apps/frontend/src/app/ui-lib/form/form.component";
+import { IUiForm } from "apps/frontend/src/app/ui-lib/form/form.interfaces";
 
 
 import { Directive, ViewContainerRef } from '@angular/core';

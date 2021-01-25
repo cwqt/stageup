@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IEnvelopedData as IEnv, IPerformanceStub } from '@eventi/interfaces';
-import { ICacheable } from 'src/app/app.interfaces';
-import { BaseAppService } from 'src/app/services/app.service';
-import { FeedService } from 'src/app/services/feed.service';
+import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 
 @Component({
   selector: 'app-feed',

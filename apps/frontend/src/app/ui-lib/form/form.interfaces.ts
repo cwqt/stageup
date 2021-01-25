@@ -1,6 +1,6 @@
 import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
 import { Primitive } from "@eventi/interfaces";
-import { ICacheable } from "src/app/app.interfaces";
+import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import { IFlatGraphNode } from "../input/input.component";
 
 

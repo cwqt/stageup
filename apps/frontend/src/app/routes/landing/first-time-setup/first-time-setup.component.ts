@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "../../../services/user.service";
-import { AuthenticationService } from "src/app/services/authentication.service";
+import { AuthenticationService } from "apps/frontend/src/app/services/authentication.service";
 import { MatStepper } from "@angular/material/stepper";
 import { Router } from "@angular/router";
-import { MyselfService } from 'src/app/services/myself.service';
+import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 
 @Component({
   selector: "app-first-time-setup",

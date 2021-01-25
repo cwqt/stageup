@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IHostStub, IUser } from '@eventi/interfaces';
-import { MyselfService } from 'src/app/services/myself.service';
+import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 
 @Component({
   selector: 'app-host-settings',

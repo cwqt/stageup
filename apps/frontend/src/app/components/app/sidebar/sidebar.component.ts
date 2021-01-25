@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IHostStub, IMyself, IUser } from '@eventi/interfaces';
-import { BaseAppService } from 'src/app/services/app.service';
-import { AuthenticationService } from 'src/app/services/authentication.service';
+import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 
 @Component({
   selector: 'app-sidebar',

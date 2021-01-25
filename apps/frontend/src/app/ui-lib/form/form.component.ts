@@ -20,11 +20,11 @@ import {
   Validators,
 } from "@angular/forms";
 import { Y } from "@eventi/interfaces";
-import { ICacheable } from "src/app/app.interfaces";
+import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import {
   displayValidationErrors,
   handleFormErrors,
-} from "src/app/_helpers/formErrorHandler";
+} from "apps/frontend/src/app/_helpers/formErrorHandler";
 import { ButtonComponent } from "../button/button.component";
 import { InputComponent } from "../input/input.component";
 import {

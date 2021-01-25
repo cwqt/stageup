@@ -7,7 +7,7 @@
 <div class="flex h-full">
   <div class="flex-initial rounded shadow overflow-hidden mr-6">
     <mat-vertical-stepper #stepper *ngIf="onboarding.data" class="h-full" (selectionChange)="handleSelectionChange($event)">
-      <mat-step *ngFor="let step of stepUiMap | keyvalue" [label]="step.value.label">
+      <mat-step *ngFor="let step of stepUiMap | keyvalue" [label]="step.value['label']">
         <br /> 
       </mat-step>
     
@@ -24,8 +24,8 @@
     <mat-spinner *ngIf="componentRefreshing"></mat-spinner>
     <ng-container *ngIf="!componentRefreshing">
       <ui-form
-        (onSuccess)="handleStepSuccess(selectedStep.key)"
-        (onFailure)="handleStepFailure(selectedStep.key)"
+        (onSuccess)="handleStepSuccess(selectedStep)"
+        (onFailure)="handleStepFailure(selectedStep)"
         [form]="stepUiMap[selectedStep].form"
         [cacheable]="stepData[selectedStep]">
       </ui-form>

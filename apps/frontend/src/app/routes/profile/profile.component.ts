@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { UserService } from "src/app/services/user.service";
+import { UserService } from "apps/frontend/src/app/services/user.service";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { IUser } from "@eventi/interfaces";
 
-import { ProfileService } from "src/app/services/profile.service";
+import { ProfileService } from "apps/frontend/src/app/services/profile.service";
 import { BehaviorSubject } from "rxjs";
 
 @Component({

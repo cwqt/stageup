@@ -3,9 +3,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { IPerformance, IPerformancePurchase, IPerformanceUserInfo } from "@eventi/interfaces";
-import { ICacheable } from "src/app/app.interfaces";
-import { BaseAppService, RouteParam } from "src/app/services/app.service";
-import { PerformanceService } from "src/app/services/performance.service";
+import { ICacheable } from "apps/frontend/src/app/app.interfaces";
+import { BaseAppService, RouteParam } from "apps/frontend/src/app/services/app.service";
+import { PerformanceService } from "apps/frontend/src/app/services/performance.service";
 
 @Component({
   selector: "app-performance",

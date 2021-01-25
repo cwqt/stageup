@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IUser } from '@eventi/interfaces';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from 'apps/frontend/src/app/services/user.service';
 
 @Component({
   selector: 'app-profile-settings',

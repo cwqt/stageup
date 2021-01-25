@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IHost } from '@eventi/interfaces';
-import { HostService } from 'src/app/services/host.service';
+import { HostService } from 'apps/frontend/src/app/services/host.service';
 
 @Component({
   selector: 'app-host',

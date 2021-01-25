@@ -4,11 +4,11 @@ import {
 } from "@angular/forms";
 
 import { AuthenticationService } from "../../../services/authentication.service";
-import { ICacheable } from "src/app/app.interfaces";
+import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import { IUser } from "@eventi/interfaces";
-import { MyselfService } from "src/app/services/myself.service";
-import { BaseAppService } from "src/app/services/app.service";
-import { IUiForm } from "src/app/ui-lib/form/form.interfaces";
+import { MyselfService } from "apps/frontend/src/app/services/myself.service";
+import { BaseAppService } from "apps/frontend/src/app/services/app.service";
+import { IUiForm } from "apps/frontend/src/app/ui-lib/form/form.interfaces";
 
 @Component({
   selector: "app-login",

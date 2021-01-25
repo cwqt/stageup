@@ -7,17 +7,17 @@ import { CookieService } from 'ngx-cookie-service';
 export class SessionInterceptor implements HttpInterceptor {
     constructor(private cookieService:CookieService) {}
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
       let currentSession = this.cookieService.get('connect.sid');
         console.log('COOKIE: ', currentSession)
         if (currentSession) {
-            request = req.clone({
+            req = req.clone({
                 setHeaders: { 
                     Cookie: `SESSION_ID=${currentSession}`
                 }
             });
         }
 
-        return next.handle(request);
+        return next.handle(req);
     }
 }

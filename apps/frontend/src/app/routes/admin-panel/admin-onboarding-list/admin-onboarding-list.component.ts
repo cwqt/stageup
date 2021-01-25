@@ -2,9 +2,9 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { IEnvelopedData, IHostOnboarding } from '@eventi/interfaces';
-import { AdminService } from "src/app/services/admin.service";
-import { ICacheable } from 'src/app/app.interfaces';
-import { BaseAppService } from 'src/app/services/app.service';
+import { AdminService } from "apps/frontend/src/app/services/admin.service";
+import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 
 @Component({
   selector: 'app-admin-onboarding-list',

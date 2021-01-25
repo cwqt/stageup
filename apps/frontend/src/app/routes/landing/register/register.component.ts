@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { IUser } from "@eventi/interfaces";
-import { ICacheable } from "src/app/app.interfaces";
-import { BaseAppService } from "src/app/services/app.service";
-import { AuthenticationService } from "src/app/services/authentication.service";
-import { MyselfService } from "src/app/services/myself.service";
-import { FormComponent } from "src/app/ui-lib/form/form.component";
-import { IUiForm } from "src/app/ui-lib/form/form.interfaces";
+import { ICacheable } from "apps/frontend/src/app/app.interfaces";
+import { BaseAppService } from "apps/frontend/src/app/services/app.service";
+import { AuthenticationService } from "apps/frontend/src/app/services/authentication.service";
+import { MyselfService } from "apps/frontend/src/app/services/myself.service";
+import { FormComponent } from "apps/frontend/src/app/ui-lib/form/form.component";
+import { IUiForm } from "apps/frontend/src/app/ui-lib/form/form.interfaces";
 
 import { UserService } from "../../../services/user.service";
 

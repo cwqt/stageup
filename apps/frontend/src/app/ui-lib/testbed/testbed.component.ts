@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { resolve } from "dns";
-import { createICacheable } from "src/app/app.interfaces";
+import { createICacheable } from "apps/frontend/src/app/app.interfaces";
 import { IUiFieldSelectOptions, IUiForm } from "../form/form.interfaces";
 
 @Component({

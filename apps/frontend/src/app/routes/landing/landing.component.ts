@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from '@angular/router';
 import { IMyself, IUser } from "@eventi/interfaces";
-import { MyselfService } from 'src/app/services/myself.service';
-import { UserService } from "src/app/services/user.service";
+import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
+import { UserService } from "apps/frontend/src/app/services/user.service";
 import { environment } from '../../../environments/environment';
 
 @Component({

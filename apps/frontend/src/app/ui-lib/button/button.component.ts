@@ -31,7 +31,7 @@ export class ButtonComponent implements OnInit {
 
   @ViewChild('button') button:ElementRef;
   dimensionClassMap = dimensionClassMap;
-  private ripples:Ripple[];
+  ripples:Ripple[];
 
   constructor() {}
 
