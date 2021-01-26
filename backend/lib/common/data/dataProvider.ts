@@ -38,7 +38,7 @@ const timeout = async <T>(f:() => Promise<T>, maxExecutionTime:number):Promise<T
 export const create = async (): Promise<DataClient> => {
   const dataClient: DataClient = {
     // tunnel: await timeout(tunnelProvider.create, 5000),
-    torm: await timeout(PostgresProvider.create, 5000),
+    torm: await timeout(PostgresProvider.create, 10000),
     redis: await timeout(RedisProvider.create, 5000),
     mux: null,  // await timeout(MUXProvider.create, 5000),
     influx: null, //await timeout(InfluxProvider.create, 2000),

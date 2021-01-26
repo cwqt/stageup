@@ -12,23 +12,26 @@ import {
   IOnboardingSocialPresence,
   IOnboardingStep,
   IOnboardingSubscriptionConfiguration,
-  IUser,
   IUserHostInfo,
   pick,
+  HTTP,
   IUserStub,
+  IHostMemberChangeRequest,
   IOnboardingStepMap,
 } from '@eventi/interfaces';
+import Email = require('../common/email');
+import Validators from '../common/validate';
+import AuthStrat from '../common/authorisation';
+import config from '../config';
+
 import { Request } from 'express';
 import { User } from '../models/Users/User.model';
 import { Host } from '../models/Hosts/Host.model';
 import { ErrorHandler, getCheck } from '../common/errors';
-import { HTTP } from '@eventi/interfaces';
 import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
 import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
 import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
-import AuthStrat from '../common/authorisation';
 import { body, params, query } from '../common/validate';
-import Validators from '../common/validate';
 import { unixTimestamp } from '../common/helpers';
 import { OnboardingStepReview } from '../models/Hosts/OnboardingStepReview.model';
 
@@ -55,6 +58,7 @@ export default class HostController extends BaseController {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
+        // Check if user is already part of a host - which they shouldn't
         const h = await Host.findOne({ username: req.body.username });
         if (h) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
 
@@ -89,7 +93,7 @@ export default class HostController extends BaseController {
     };
   }
 
-  readHostMembers(): IControllerEndpoint<IUserStub[]> {
+  readMembers(): IControllerEndpoint<IUserStub[]> {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
@@ -143,36 +147,88 @@ export default class HostController extends BaseController {
       },
     };
   }
-
-  addUser(): IControllerEndpoint<void> {
+  
+  //router.post<IHost>("/hosts/:hid/members", Hosts.addMember());
+  addMember(): IControllerEndpoint<IHost> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async (req): Promise<IHost> => {
+        const changeRequest: IHostMemberChangeRequest = req.body;
+        // Check user not already part of a host in any capacity
+        const user = await getCheck(
+          User.findOne(
+            { _id: changeRequest.value },
+            { relations: ['host'] }
+          )
+        );
+        if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+
+        // Get host & pull in members_info for new member push
+        const host = await getCheck(
+          Host.findOne(
+            { _id: parseInt(req.params.hid) },
+            { relations: ['members_info'] }
+          )
+        );
+
+        await this.ORM.transaction(async txc => {
+          await host.addMember(user, HostPermission.Member, txc);
+          await txc.save(host);
+          await Email.sendUserHostMembershipInvitation(user.email_address, host);
+        });
+
+        return host.toFull();
+      },
     };
   }
 
-  removeUser(): IControllerEndpoint<void> {
+  // router.put <IHost>("/hosts/:hid/members/:mid",Hosts.updateMember());
+  updateMember(): IControllerEndpoint<void> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
+      validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const userHostInfo = await getCheck(
+          UserHostInfo.findOne({
+            relations: ['user', 'host'],
+            where: {
+              user: { _id: parseInt(req.params.mid) },
+              host: { _id: parseInt(req.params.hid) },
+            },
+          })
+        );
+
+        const newUserPermission: HostPermission = req.body.value;
+        if (userHostInfo.permissions == HostPermission.Owner)
+          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+
+        userHostInfo.permissions = newUserPermission;
+        await userHostInfo.save();
+      },
     };
   }
 
-  alterMemberPermissions(): IControllerEndpoint<void> {
+  // router.delete <void>("/hosts/:hid/members/:mid", Hosts.removeMember());
+  removeMember(): IControllerEndpoint<void> {
     return {
       validators: [],
-      authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<void> => {},
-    };
-  }
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async (req: Request): Promise<void> => {
+        const userHostInfo = await getCheck(
+          UserHostInfo.findOne({
+            relations: ['user', 'host'],
+            where: {
+              user: { _id: parseInt(req.params.mid) },
+              host: { _id: parseInt(req.params.hid) },
+            },
+          })
+        );
 
-  updateOnboarding(): IControllerEndpoint<void> {
-    return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
-      controller: async (req: Request): Promise<void> => {},
+        if (userHostInfo.permissions == HostPermission.Owner)
+          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+        await userHostInfo.remove();
+      },
     };
   }
 
@@ -183,6 +239,7 @@ export default class HostController extends BaseController {
           user: v => v.exists().toInt(),
         }),
       ],
+      authStrategy: AuthStrat.none,
       controller: async (req: Request): Promise<IUserHostInfo> => {
         const uhi = await UserHostInfo.findOne({
           relations: ['host', 'user'],
@@ -198,7 +255,6 @@ export default class HostController extends BaseController {
 
         return uhi;
       },
-      authStrategy: AuthStrat.none,
     };
   }
 
@@ -206,16 +262,17 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
-        const onboarding = await HostOnboardingProcess.findOne({
-          where: {
-            host: {
-              _id: parseInt(req.params.hid),
+        const onboarding = await getCheck(
+          HostOnboardingProcess.findOne({
+            where: {
+              host: {
+                _id: parseInt(req.params.hid),
+              },
             },
-          },
-          relations: ['host'],
-        });
+            relations: ['host'],
+          })
+        );
 
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
         return onboarding.toFull();
       },
     };
@@ -254,60 +311,112 @@ export default class HostController extends BaseController {
     };
   }
 
-  // router.get <IOnboardingStepMap>       ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps()); 
-  readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
+readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
     return {
-      
       authStrategy: AuthStrat.none,
-      controller: async (req: Request): Promise<IOnboardingStepMap> => {
-        const onboarding = await HostOnboardingProcess.findOne({
-          where: {
-            host: {
-              _id: parseInt(req.params.hid),
-            }
-          },
-          
-        });
-
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-
-        let stepMap: IOnboardingStepMap;
-        
-        let stepReviews = [];
-
-        for (let step = 0; step < 5 ; step++) {
-          const stepReview = await OnboardingStepReview.findOne({
+      controller: async req => {
+        const onboarding = await getCheck(
+          HostOnboardingProcess.findOne({
             where: {
-              onboarding_step: step,
-              onboarding_version: onboarding.version,
-            },
-            relations: ['reviewed_by'],
-          }); 
-          console.log(stepReview);
-          stepReviews.push(stepReview);
-        }
-
-        // let stepReviews = await Promise.all(Object.values(HostOnboardingStep).map((step: HostOnboardingStep) => OnboardingStepReview.findOne({
-        //   where: {
-        //     onboarding_step: step,
-        //   }
-        // }) ))
-      
-        console.log(stepReviews);
-        stepMap[HostOnboardingStep.ProofOfBusiness] = {...onboarding.steps[HostOnboardingStep.ProofOfBusiness], review: stepReviews[0]?.toFull() || null }
-        stepMap[HostOnboardingStep.OwnerDetails] = {...onboarding.steps[HostOnboardingStep.OwnerDetails], review: stepReviews[1]?.toFull() || null }
-        stepMap[HostOnboardingStep.SocialPresence] = {...onboarding.steps[HostOnboardingStep.SocialPresence], review: stepReviews[2]?.toFull() || null }
-        stepMap[HostOnboardingStep.AddMembers] = {...onboarding.steps[HostOnboardingStep.AddMembers], review: stepReviews[3]?.toFull() || null }
-        stepMap[HostOnboardingStep.SubscriptionConfiguration] = {...onboarding.steps[HostOnboardingStep.SubscriptionConfiguration], review: stepReviews[4]?.toFull() || null }
-
-        return  stepMap;
+              host: {
+                _id: parseInt(req.params.hid)
+              }
+            }
+          })
+        );
+        const stepReviews = (
+          await Promise.all(
+            Object.values(HostOnboardingStep)
+              .filter(x => typeof x == 'number')
+              .map((step: any) => {
+                return OnboardingStepReview.findOne({
+                  where: {
+                    onboarding_step: step,
+                    onboarding_version: onboarding.version
+                  },
+                  relations: ['reviewed_by']
+                });
+              })
+          )
+        ).filter(r => r !== undefined);
+        return Object.entries(onboarding.steps).reduce((acc, curr: [string, IOnboardingStep<any>]) => {
+          const [step, stepData] = curr;
+          stepData.review = stepReviews.find(r => (r.onboarding_step = (step as unknown) as HostOnboardingStep));
+          acc[(step as unknown) as HostOnboardingStep] = stepData;
+          return acc;
+        }, {} as IOnboardingStepMap);
       }
-    }
+    };
   }
 
-  getStepReviewForStep(step: HostOnboardingStep){
+  // // router.get <IOnboardingStepMap>       ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps()); 
+  // readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
+  //   return {
+      
+  //     authStrategy: AuthStrat.none,
+  //     controller: async (req: Request): Promise<IOnboardingStepMap> => {
+  //       const onboarding = await HostOnboardingProcess.findOne({
+  //         where: {
+  //           host: {
+  //             _id: parseInt(req.params.hid),
+  //           }
+  //         },
+          
+  //       });
+
+  //       if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+
+  //       let stepMap: IOnboardingStepMap;
+        
+  //       let stepReviews;
+
+  //       // for (let step = 0; step < 5 ; step++) {
+  //       //   const stepReview = await OnboardingStepReview.findOne({
+  //       //     where: {
+  //       //       onboarding_step: step,
+  //       //       onboarding_version: onboarding.version,
+  //       //     },
+  //       //     relations: ['reviewed_by'],
+  //       //   }); 
+  //       //   console.log(stepReview);
+  //       //   stepReviews.push(stepReview);
+  //       // }
+
+  //       // stepReviews = await Promise.all(Object.values<HostOnboardingStep>(HostOnboardingStep).map((step: HostOnboardingStep) => { return OnboardingStepReview.findOne({
+  //       //   where: {
+  //       //           onboarding_step: step,
+  //       //           onboarding_version: onboarding.version,
+  //       //         },
+  //       //         relations: ['reviewed_by'],
+  //       // })}));
+
+  //       stepReviews = await Promise.all(
+  //         Object.values(HostOnboardingStep).map((step:string) => {
+  //           return OnboardingStepReview.findOne({
+  //             where: {
+  //               onboarding_step: step as unknown as HostOnboardingStep,
+  //               onboarding_version: onboarding.version
+  //             },
+  //             relations: ['reviewed_by']
+  //           });
+  //         })
+  //       );
+      
+  //       console.log(stepReviews);
+  //       stepMap[HostOnboardingStep.ProofOfBusiness] = {...onboarding.steps[HostOnboardingStep.ProofOfBusiness], review: stepReviews[0]?.toFull() || null }
+  //       stepMap[HostOnboardingStep.OwnerDetails] = {...onboarding.steps[HostOnboardingStep.OwnerDetails], review: stepReviews[1]?.toFull() || null }
+  //       stepMap[HostOnboardingStep.SocialPresence] = {...onboarding.steps[HostOnboardingStep.SocialPresence], review: stepReviews[2]?.toFull() || null }
+  //       stepMap[HostOnboardingStep.AddMembers] = {...onboarding.steps[HostOnboardingStep.AddMembers], review: stepReviews[3]?.toFull() || null }
+  //       stepMap[HostOnboardingStep.SubscriptionConfiguration] = {...onboarding.steps[HostOnboardingStep.SubscriptionConfiguration], review: stepReviews[4]?.toFull() || null }
+
+  //       return  stepMap;
+  //     }
+  //   }
+  // }
+
+  // getStepReviewForStep(step: HostOnboardingStep){
     
-  }
+  // }
 
   updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {

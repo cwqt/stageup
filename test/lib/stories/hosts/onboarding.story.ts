@@ -47,16 +47,18 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       name: 'Some Cool Host',
       email_address: 'host@cass.si',
     });
+
+    expect(host).to.not.be.null;
   });
 
   it('Should get the created onboarding process', async () => {
-    let onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
+    onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
+
     expect(onboarding.state).to.equal(HostOnboardingState.AwaitingChanges);
     expect(onboarding.last_modified_by.username).to.equal(client.username);
     expect(onboarding.last_modified_by.name).to.equal(client.name);
     expect(onboarding.host.name).to.equal(host.name);
     expect(onboarding.host.username).to.equal(host.username);
-    
   });
 
   it('Should update the Proof Of Business section', async () => {
@@ -74,9 +76,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
         business_contact_number: '+447625143141',
         hmrc_company_number: 11940210,
       }
-      
     );
-
   });
 
   it('Should update the Owner Details step', async () => {
@@ -114,8 +114,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       {
         members_to_add: [
           {
-            user_id: client._id,
-            change: 'add',
+            value: client._id,
           },
         ],
       }
@@ -137,40 +136,39 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       host,
       HostOnboardingStep.ProofOfBusiness
     );
-      expect(step0.state).to.equal(HostOnboardingState.AwaitingChanges);
-      expect(step0.data.hmrc_company_number).to.equal(11940210);
-      expect(step0.data.business_address.city).to.equal('Cardiff');
-      expect(step0.data.business_address.iso_country_code).to.equal('GBR');
-      expect(step0.data.business_address.postcode).to.equal('NE62 5DE');
-      expect(step0.data.business_address.street_name).to.equal('Marquee Court');
-      expect(step0.data.business_address.street_number).to.equal(32);
-      expect(step0.data.business_contact_number).to.equal('+447625143141');
+    expect(step0.state).to.equal(HostOnboardingState.AwaitingChanges);
+    expect(step0.data.hmrc_company_number).to.equal(11940210);
+    expect(step0.data.business_address.city).to.equal('Cardiff');
+    expect(step0.data.business_address.iso_country_code).to.equal('GBR');
+    expect(step0.data.business_address.postcode).to.equal('NE62 5DE');
+    expect(step0.data.business_address.street_name).to.equal('Marquee Court');
+    expect(step0.data.business_address.street_number).to.equal(32);
+    expect(step0.data.business_contact_number).to.equal('+447625143141');
 
     let step1 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingOwnerDetails>(
       host,
       HostOnboardingStep.OwnerDetails
     );
     expect(step1.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(step1.data.owner_info.first_name).to.equal("Drake");
-    expect(step1.data.owner_info.last_name).to.equal("Drakeford");
-    expect(step1.data.owner_info.title).to.equal("mr");
+    expect(step1.data.owner_info.first_name).to.equal('Drake');
+    expect(step1.data.owner_info.last_name).to.equal('Drakeford');
+    expect(step1.data.owner_info.title).to.equal('mr');
 
     let step2 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSocialPresence>(
       host,
       HostOnboardingStep.SocialPresence
     );
     expect(step2.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(step2.data.social_info.facebook_url).to.equal("https://facebook.com/eventi");
-    expect(step2.data.social_info.instagram_url).to.equal("https://instagram.com/eventi");
-    expect(step2.data.social_info.linkedin_url).to.equal("https://linkedin.com/eventi");
+    expect(step2.data.social_info.facebook_url).to.equal('https://facebook.com/eventi');
+    expect(step2.data.social_info.instagram_url).to.equal('https://instagram.com/eventi');
+    expect(step2.data.social_info.linkedin_url).to.equal('https://linkedin.com/eventi');
 
     let step3 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingAddMembers>(
       host,
       HostOnboardingStep.AddMembers
     );
     expect(step3.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(step3.data.members_to_add[0].change).to.equal("add");
-    expect(step3.data.members_to_add[0].user_id).to.equal(client._id);   
+    expect(step3.data.members_to_add[0].value).to.equal(client._id);
 
     let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
       host,
@@ -179,7 +177,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     expect(step4.state).to.equal(HostOnboardingState.AwaitingChanges);
     expect(step4.data.tier).to.equal(HostSubscriptionLevel.Enterprise);
 
-    // Make a
+    // Make the IOnboardingStepMap
     steps = {
       [HostOnboardingStep.ProofOfBusiness]: step0,
       [HostOnboardingStep.OwnerDetails]: step1,
@@ -191,7 +189,6 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
 
   it('Should submit the onboarding process for verification', async () => {
     await Stories.actions.hosts.submitOnboardingProcess(host);
-    
   });
 
   describe('As a Site Admin, I want to verify some steps & submit issues with others', async () => {
@@ -286,8 +283,6 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       });
 
       await Stories.actions.admin.submitOnboardingProcess(onboarding);
-      
-      
     });
   });
 });

@@ -23,7 +23,7 @@ import {
   IOnboardingSubscriptionConfiguration,
   IOnboardingStepMap,
 } from '@eventi/interfaces';
-import { Host } from '../Hosts/Host.model';
+import { Host } from './Host.model';
 import { User } from '../Users/User.model';
 import { object, single, array } from '../../common/validate';
 import Validators from '../../common/validate';
