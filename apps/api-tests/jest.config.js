@@ -2,7 +2,9 @@ module.exports = {
   displayName: 'api-tests',
   preset: '../../jest.preset.js',
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec|story))\\.[jt]sx?$",
-  testRunner: 'jest-serial-runner',
+  testEnvironment: "node",
+  verbose: true,
+  bail: true,
   globals: {
     'ts-jest': {
       tsConfig: '<rootDir>/tsconfig.spec.json',

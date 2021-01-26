@@ -72,7 +72,7 @@ app.use(morgan('tiny', { stream }));
 function gracefulExit(providers: DataClient) {
   return (error: any) => {
     log.info('Termination requested, closing all connections');
-    log.error(error);
+    console.log(error);
     server.close();
     DataProvider.close(providers);
     process.exit(1);

@@ -128,46 +128,15 @@
       "projectType": "application",
       "prefix": "api-tests",
       "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
-          "options": {
-            "outputPath": "dist/apps/api-tests",
-            "main": "apps/api-tests/src/index.ts",
-            "tsConfig": "apps/api-tests/tsconfig.app.json",
-            "showCircularDependencies": false,
-            "assets": []
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/api-tests/src/environments/environment.ts",
-                  "with": "apps/api-tests/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "api-tests:build"
-          }
-        },
         "test": {
           "executor": "@nrwl/jest:jest",
           "outputs": [
             "coverage/apps/api-tests"
           ],
           "options": {
-            "jestConfig": "apps/api-tests/jest.config.js",
             "passWithNoTests": true,
+            "runInBand": true,
+            "jestConfig": "apps/api-tests/jest.config.js",
             "tsConfig": "apps/api-tests/tsconfig.spec.json"
           }
         }

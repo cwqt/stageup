@@ -2,17 +2,16 @@ import { HostPermission, IHost, IUser } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 
-describe('As a user-host, I want to be able to do Member CRUD', async () => {
+describe('As a user-host, I want to be able to do Member CRUD', () => {
   let host: IHost;
   let member: IUser;
 
   it('Should add an existing user as member of host', async () => {
-    // Create a host as a site admin
     await Stories.actions.common.setup();
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si',
+      email_address: 'host@cass.si'
     });
 
     // Then create a new user, and add them to the host

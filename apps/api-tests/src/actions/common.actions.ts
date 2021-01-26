@@ -2,7 +2,6 @@ import { Stories } from '../stories';
 import jwt from 'jsonwebtoken';
 import Axios from "axios";
 import {environment as env, environment, UserType} from "../environment";
-import { expect } from 'chai';
 import { IUser } from '@eventi/interfaces';
 
 export default {

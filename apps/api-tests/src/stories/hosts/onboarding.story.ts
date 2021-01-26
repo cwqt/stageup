@@ -6,7 +6,6 @@
 // verify onboarding
 // done
 
-import { describe, it } from 'mocha';
 import {
   HostOnboardingState,
   HostOnboardingStep,
@@ -21,13 +20,12 @@ import {
   IOnboardingSubscriptionConfiguration,
   IPerson,
   IUser,
-  PersonTitle,
+  PersonTitle
 } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
-import { expect } from 'chai';
 
-describe('As Client, I want to register a Host & be onboarded', async () => {
+describe('As Client, I want to register a Host & be onboarded', () => {
   let client: IUser;
   let admin: IUser;
   let host: IHost;
@@ -45,20 +43,20 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si',
+      email_address: 'host@cass.si'
     });
 
-    expect(host).to.not.be.null;
+    expect(host).not.toBeNull();
   });
 
   it('Should get the created onboarding process', async () => {
     onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
 
-    expect(onboarding.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(onboarding.last_modified_by.username).to.equal(client.username);
-    expect(onboarding.last_modified_by.name).to.equal(client.name);
-    expect(onboarding.host.name).to.equal(host.name);
-    expect(onboarding.host.username).to.equal(host.username);
+    expect(onboarding.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(onboarding.last_modified_by.username).toBe(client.username);
+    expect(onboarding.last_modified_by.name).toBe(client.name);
+    expect(onboarding.host.name).toBe(host.name);
+    expect(onboarding.host.username).toBe(host.username);
   });
 
   it('Should update the Proof Of Business section', async () => {
@@ -71,10 +69,10 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
           iso_country_code: 'GBR',
           postcode: 'NE62 5DE',
           street_name: 'Marquee Court',
-          street_number: 32,
+          street_number: 32
         },
         business_contact_number: '+447625143141',
-        hmrc_company_number: 11940210,
+        hmrc_company_number: 11940210
       }
     );
   });
@@ -87,8 +85,8 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
         owner_info: {
           title: PersonTitle.Mr,
           first_name: 'Drake',
-          last_name: 'Drakeford',
-        },
+          last_name: 'Drakeford'
+        }
       }
     );
   });
@@ -101,8 +99,8 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
         social_info: {
           linkedin_url: 'https://linkedin.com/eventi',
           facebook_url: 'https://facebook.com/eventi',
-          instagram_url: 'https://instagram.com/eventi',
-        },
+          instagram_url: 'https://instagram.com/eventi'
+        }
       }
     );
   });
@@ -114,9 +112,9 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       {
         members_to_add: [
           {
-            value: client._id,
-          },
-        ],
+            value: client._id
+          }
+        ]
       }
     );
   });
@@ -126,7 +124,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       host,
       HostOnboardingStep.SubscriptionConfiguration,
       {
-        tier: HostSubscriptionLevel.Enterprise,
+        tier: HostSubscriptionLevel.Enterprise
       }
     );
   });
@@ -136,46 +134,46 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       host,
       HostOnboardingStep.ProofOfBusiness
     );
-    expect(step0.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(step0.data.hmrc_company_number).to.equal(11940210);
-    expect(step0.data.business_address.city).to.equal('Cardiff');
-    expect(step0.data.business_address.iso_country_code).to.equal('GBR');
-    expect(step0.data.business_address.postcode).to.equal('NE62 5DE');
-    expect(step0.data.business_address.street_name).to.equal('Marquee Court');
-    expect(step0.data.business_address.street_number).to.equal(32);
-    expect(step0.data.business_contact_number).to.equal('+447625143141');
+    expect(step0.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(step0.data.hmrc_company_number).toBe(11940210);
+    expect(step0.data.business_address.city).toBe('Cardiff');
+    expect(step0.data.business_address.iso_country_code).toBe('GBR');
+    expect(step0.data.business_address.postcode).toBe('NE62 5DE');
+    expect(step0.data.business_address.street_name).toBe('Marquee Court');
+    expect(step0.data.business_address.street_number).toBe(32);
+    expect(step0.data.business_contact_number).toBe('+447625143141');
 
     let step1 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingOwnerDetails>(
       host,
       HostOnboardingStep.OwnerDetails
     );
-    expect(step1.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(step1.data.owner_info.first_name).to.equal('Drake');
-    expect(step1.data.owner_info.last_name).to.equal('Drakeford');
-    expect(step1.data.owner_info.title).to.equal('mr');
+    expect(step1.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(step1.data.owner_info.first_name).toBe('Drake');
+    expect(step1.data.owner_info.last_name).toBe('Drakeford');
+    expect(step1.data.owner_info.title).toBe('mr');
 
     let step2 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSocialPresence>(
       host,
       HostOnboardingStep.SocialPresence
     );
-    expect(step2.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(step2.data.social_info.facebook_url).to.equal('https://facebook.com/eventi');
-    expect(step2.data.social_info.instagram_url).to.equal('https://instagram.com/eventi');
-    expect(step2.data.social_info.linkedin_url).to.equal('https://linkedin.com/eventi');
+    expect(step2.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(step2.data.social_info.facebook_url).toBe('https://facebook.com/eventi');
+    expect(step2.data.social_info.instagram_url).toBe('https://instagram.com/eventi');
+    expect(step2.data.social_info.linkedin_url).toBe('https://linkedin.com/eventi');
 
     let step3 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingAddMembers>(
       host,
       HostOnboardingStep.AddMembers
     );
-    expect(step3.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(step3.data.members_to_add[0].value).to.equal(client._id);
+    expect(step3.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(step3.data.members_to_add[0].value).toBe(client._id);
 
     let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
       host,
       HostOnboardingStep.SubscriptionConfiguration
     );
-    expect(step4.state).to.equal(HostOnboardingState.AwaitingChanges);
-    expect(step4.data.tier).to.equal(HostSubscriptionLevel.Enterprise);
+    expect(step4.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(step4.data.tier).toBe(HostSubscriptionLevel.Enterprise);
 
     // Make the IOnboardingStepMap
     steps = {
@@ -183,7 +181,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       [HostOnboardingStep.OwnerDetails]: step1,
       [HostOnboardingStep.SocialPresence]: step2,
       [HostOnboardingStep.AddMembers]: step3,
-      [HostOnboardingStep.SubscriptionConfiguration]: step4,
+      [HostOnboardingStep.SubscriptionConfiguration]: step4
     };
   });
 
@@ -191,13 +189,13 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     await Stories.actions.hosts.submitOnboardingProcess(host);
   });
 
-  describe('As a Site Admin, I want to verify some steps & submit issues with others', async () => {
+  describe('As a Site Admin, I want to verify some steps & submit issues with others', () => {
     it('Should get the pending onboarding request in the admin panel', async () => {
       await Stories.actions.common.switchActor(UserType.SiteAdmin);
       let localOnboarding = await Stories.actions.admin.readOnboardingProcesses();
-      expect(localOnboarding.data).to.be.lengthOf(1);
-      expect(localOnboarding.data[0].last_modified_by._id).to.eq(client._id);
-      expect(localOnboarding.data[0].last_submitted).to.not.eq(null);
+      expect(localOnboarding.data).toHaveLength(1);
+      expect(localOnboarding.data[0].last_modified_by._id).toBe(client._id);
+      expect(localOnboarding.data[0].last_submitted).not.toBe(null);
 
       // Set global for other tests to access
       onboarding = localOnboarding.data[0];
@@ -207,19 +205,19 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       // All but the Proof Of Business to be verified
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.AddMembers, {
         step_state: HostOnboardingState.Verified,
-        issues: [],
+        issues: []
       });
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, {
         step_state: HostOnboardingState.Verified,
-        issues: [],
+        issues: []
       });
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SocialPresence, {
         step_state: HostOnboardingState.Verified,
-        issues: [],
+        issues: []
       });
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, {
         step_state: HostOnboardingState.Verified,
-        issues: [],
+        issues: []
       });
     });
 
@@ -232,14 +230,14 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
           issues: [
             {
               param: 'hmrc_company_number',
-              message: "Couldn't find this company number in the registry",
+              message: "Couldn't find this company number in the registry"
             },
             {
               param: 'business_address',
               //TODO: make this better with nested issues
-              message: 'The street address & street number is invalid',
-            },
-          ],
+              message: 'The street address & street number is invalid'
+            }
+          ]
         }
       );
 
@@ -247,14 +245,14 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     });
   });
 
-  describe('As a Client, I want to resolve issues with my onboarding process & then re-submit for verification', async () => {
+  describe('As a Client, I want to resolve issues with my onboarding process & then re-submit for verification', () => {
     it('Should get the step that had issues attached to it by the Site Admin', async () => {
       await Stories.actions.common.switchActor(UserType.Client);
       const step = await Stories.actions.hosts.readOnboardingProcessStep(host, HostOnboardingStep.ProofOfBusiness);
 
-      expect(step.state).to.eq(HostOnboardingState.HasIssues);
-      expect(step.review?.issues).to.be.lengthOf(2);
-      expect(step.review?.reviewed_by.username).to.eq(Stories.cachedUsers[UserType.SiteAdmin]?.user.username);
+      expect(step.state).toBe(HostOnboardingState.HasIssues);
+      expect(step.review?.issues).toHaveLength(2);
+      expect(step.review?.reviewed_by.username).toBe(Stories.cachedUsers[UserType.SiteAdmin]?.user.username);
     });
 
     it('Should update the the step with issues & re-submit for verification', async () => {
@@ -264,22 +262,22 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
           iso_country_code: 'GBR',
           postcode: 'NE62 5DE',
           street_name: 'Marquee Court',
-          street_number: 32,
+          street_number: 32
         },
         business_contact_number: '+447625143141',
-        hmrc_company_number: 11940213,
+        hmrc_company_number: 11940213
       });
 
       await Stories.actions.hosts.submitOnboardingProcess(host);
     });
   });
 
-  describe('As a Site Admin, I want to verify the last step, and then enact the onboarding', async () => {
+  describe('As a Site Admin, I want to verify the last step, and then enact the onboarding', () => {
     it('Should review the step, and then submit the onboarding request review', async () => {
       await Stories.actions.common.switchActor(UserType.SiteAdmin);
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.ProofOfBusiness, {
         step_state: HostOnboardingState.Verified,
-        issues: [],
+        issues: []
       });
 
       await Stories.actions.admin.submitOnboardingProcess(onboarding);

@@ -112,7 +112,7 @@
     "@types/express-validator": "^3.0.0",
     "@types/helmet": "^4.0.0",
     "@types/ip-address": "^5.8.2",
-    "@types/jest": "26.0.8",
+    "@types/jest": "^26.0.8",
     "@types/jsonwebtoken": "^8.3.9",
     "@types/localtunnel": "^2.0.0",
     "@types/mocha": "^7.0.2",
