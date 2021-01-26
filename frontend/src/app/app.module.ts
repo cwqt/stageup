@@ -48,9 +48,8 @@ import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component"
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from "./routes/search/search.component";
 import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
-import { AdminOnboardingViewComponentComponent } from './routes/admin-panel/admin-onboarding-view-component/admin-onboarding-view-component.component';
-import { OnboardingViewComponentComponent } from './routes/admin-panel/onboarding-view-component/onboarding-view-component.component';
-
+import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
+import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 
 @NgModule({
   declarations: [
@@ -87,8 +86,8 @@ import { OnboardingViewComponentComponent } from './routes/admin-panel/onboardin
     SearchComponent,
     AdminOnboardingListComponent,
     OnboardingStatePipe,
-    AdminOnboardingViewComponentComponent,
-    OnboardingViewComponentComponent
+    AdminOnboardingViewComponent,
+    OnboardingViewComponent,
   ],
   imports: [
     AngularMaterialModule,
