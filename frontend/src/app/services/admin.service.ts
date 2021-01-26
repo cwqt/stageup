@@ -4,6 +4,7 @@ import {
   IEnvelopedData,
   IHostOnboarding,
   IHostOnboardingProcess,
+  IOnboardingStepMap,
 } from "@eventi/interfaces";
 import { Observable } from "rxjs";
 
@@ -22,5 +23,10 @@ export class AdminService {
         `/api/admin/onboarding?page=${page}&per_page=${perPage}`
       )
       .toPromise();
+  }
+
+  readOnboardingSteps(): Promise<IOnboardingStepMap>{
+    console.log("test");
+    return null;
   }
 }
