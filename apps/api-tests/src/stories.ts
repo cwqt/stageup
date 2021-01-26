@@ -5,9 +5,9 @@ export class CachedUser {
   user: IUser;
   session: string;
 
-  constructor(user:IUser) {
+  constructor(user: IUser) {
     this.user = user;
-    this.session = "";
+    this.session = '';
   }
 }
 
@@ -20,7 +20,7 @@ import performanceActions from './actions/performances.actions';
 export const Stories = {
   log: true,
   activeUser: null as any,
-  cachedUsers: {} as {[index in UserType]?:CachedUser},
+  cachedUsers: {} as { [index in UserType]?: CachedUser },
   actions: {
     common: commonActions,
     users: usersActions,
@@ -37,6 +37,4 @@ export const Stories = {
     return Stories.activeUser;
   }
 };
-
-
 

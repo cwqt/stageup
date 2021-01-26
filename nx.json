@@ -16,6 +16,7 @@
   "projects": {
     "backend": { "tags": [] },
     "frontend": { "tags": [] },
+    "api-tests": { "tags": [] },
     "interfaces": { "tags": [] }
   }
 }

@@ -1,4 +1,4 @@
-# eventi &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg) &nbsp; [![Nx](https://img.shields.io/badge/maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
+# eventi &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
 
 
 # Installation
@@ -140,4 +140,3 @@ Do `npm install` in the project root to install all required dependencies.
 * __API Tests__: `nx run api-tests`
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
-

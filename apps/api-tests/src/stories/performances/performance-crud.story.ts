@@ -1,9 +1,8 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser } from '@eventi/interfaces';
+import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
-import { CurrencyCode } from '@eventi/interfaces/lib/Common/Currency.types';
 import { AxiosError } from 'axios';
 
 describe('As a user, I want to be able to do performance CRUD', async () => {

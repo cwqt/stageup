@@ -16,7 +16,8 @@ import {
   pick,
   IUserStub,
   HTTP,
-  IHostMemberChangeRequest
+  IHostMemberChangeRequest,
+  IOnboardingStepMap
 } from '@eventi/interfaces';
 import { User } from '../models/users/user.model';
 import { Host } from '../models/hosts/host.model';
@@ -31,7 +32,7 @@ import { timestamp } from '../common/helpers';
 import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
 
 import logger from '../common/logger';
-import Email = require("../common/email");
+import Email = require('../common/email');
 
 export default class HostController extends BaseController {
   createHost(): IControllerEndpoint<IHost> {
@@ -139,10 +140,10 @@ export default class HostController extends BaseController {
 
         // TODO: transactionally remove performances, signing keys, host infos etc etc.
         await user.host.remove();
-      },
+      }
     };
   }
-  
+
   //router.post<IHost>("/hosts/:hid/members", Hosts.addMember());
   addMember(): IControllerEndpoint<IHost> {
     return {
@@ -151,21 +152,11 @@ export default class HostController extends BaseController {
       controller: async (req): Promise<IHost> => {
         const changeRequest: IHostMemberChangeRequest = req.body;
         // Check user not already part of a host in any capacity
-        const user = await getCheck(
-          User.findOne(
-            { _id: changeRequest.value },
-            { relations: ['host'] }
-          )
-        );
+        const user = await getCheck(User.findOne({ _id: changeRequest.value }, { relations: ['host'] }));
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
         // Get host & pull in members_info for new member push
-        const host = await getCheck(
-          Host.findOne(
-            { _id: parseInt(req.params.hid) },
-            { relations: ['members_info'] }
-          )
-        );
+        const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ['members_info'] }));
 
         await this.ORM.transaction(async txc => {
           await host.addMember(user, HostPermission.Member, txc);
@@ -174,7 +165,7 @@ export default class HostController extends BaseController {
         });
 
         return host.toFull();
-      },
+      }
     };
   }
 
@@ -189,8 +180,8 @@ export default class HostController extends BaseController {
             relations: ['user', 'host'],
             where: {
               user: { _id: parseInt(req.params.mid) },
-              host: { _id: parseInt(req.params.hid) },
-            },
+              host: { _id: parseInt(req.params.hid) }
+            }
           })
         );
 
@@ -200,7 +191,7 @@ export default class HostController extends BaseController {
 
         userHostInfo.permissions = newUserPermission;
         await userHostInfo.save();
-      },
+      }
     };
   }
 
@@ -215,15 +206,15 @@ export default class HostController extends BaseController {
             relations: ['user', 'host'],
             where: {
               user: { _id: parseInt(req.params.mid) },
-              host: { _id: parseInt(req.params.hid) },
-            },
+              host: { _id: parseInt(req.params.hid) }
+            }
           })
         );
 
         if (userHostInfo.permissions == HostPermission.Owner)
           throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
         await userHostInfo.remove();
-      },
+      }
     };
   }
 
@@ -249,7 +240,7 @@ export default class HostController extends BaseController {
         });
 
         return uhi;
-      },
+      }
     };
   }
 
@@ -293,8 +284,7 @@ export default class HostController extends BaseController {
         const step = (req.params.step as unknown) as HostOnboardingStep;
         const stepReview = await OnboardingStepReview.findOne({
           where: {
-            onboarding_version: onboarding.version,
-            
+            onboarding_version: onboarding.version
           },
           relations: ['reviewed_by']
         });
