@@ -271,20 +271,19 @@ export default class HostController extends BaseController {
       ],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const onboarding = await Onboarding.findOne({
+        const onboarding = await getCheck(Onboarding.findOne({
           where: {
             host: {
               _id: Number.parseInt(req.params.hid)
             }
           }
-        });
-
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
+        }));
 
         const step = (req.params.step as unknown) as HostOnboardingStep;
         const stepReview = await OnboardingStepReview.findOne({
           where: {
-            onboarding_version: onboarding.version
+            onboarding_version: onboarding.version,
+            onboarding_step: step
           },
           relations: ['reviewed_by']
         });

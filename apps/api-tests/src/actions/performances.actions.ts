@@ -9,17 +9,19 @@ import {
   CurrencyCode,
   IPerformanceUserInfo,
   IEnvelopedData,
+  IHost,
+  IHostStub,
 } from '@eventi/interfaces';
 
 export default {
   // router.post<IPerf>("/performances",Perfs.createPerformance());
-  createPerformance: async (data: {
+  createPerformance: async (host:IHost | IHostStub, data: {
     name: string;
     description: string;
     price: number;
     currency: CurrencyCode;
   }): Promise<IPerformance> => {
-    const res = await Axios.post(`${env.baseUrl}/performances`, data, env.getOptions());
+    const res = await Axios.post(`${env.baseUrl}/hosts/${host._id}/performances`, data, env.getOptions());
     return res.data;
   },
 

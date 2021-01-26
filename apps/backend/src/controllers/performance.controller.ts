@@ -17,6 +17,7 @@ import Validators, { body } from '../common/validate';
 import { PerformancePurchase } from '../models/performances/purchase.model';
 
 export default class PerformanceController extends BaseController {
+  // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
       validators: [

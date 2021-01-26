@@ -30,7 +30,7 @@ export default {
       password: env.userCreationData[user].password,
     }, env.getOptions());
 
-    console.log(`SWITCHED ACTOR: ${env.userActorNameMap[user]} -----------------------------------`);   
+    // console.log(`SWITCHED ACTOR: ${env.userActorNameMap[user]} -----------------------------------`);   
     Stories.cachedUsers[user]!.session = res.headers['set-cookie'][0].split(";")[0];
     Stories.activeUser = Stories.cachedUsers[user];
     return Stories.cachedUsers[user]!;

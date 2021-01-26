@@ -4,6 +4,8 @@ import { DataClient } from './data';
 import { User } from '../models/users/user.model';
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
 import config, { Environment } from '../config';
+import { Host } from '../models/hosts/host.model';
+import { Performance } from '../models/performances/performance.model';
 
 export type AuthStratReturn = [boolean, { [index: string]: any }, ErrCode?];
 export type AuthStrategy = (req: Request, dc: DataClient) => Promise<AuthStratReturn>;
@@ -36,29 +38,49 @@ const isOurself: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
 
 const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
   const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
-  if (!isAuthorised) {
-    return [isAuthorised, _, reason];
+  if (!isAuthorised) return [isAuthorised, _, reason];
+
+  let hostId = req.params.hid ? Number.parseInt(req.params.hid) : null;
+
+  // For performances - check intersection between performance host & user host
+  if(!hostId && req.params.pid) {
+    const performance = await Performance.findOne({
+      relations: {
+        host: {
+          members_info: {
+            user: true
+          }
+        }
+      },
+      where: {
+        _id: Number.parseInt(req.params.pid),
+        host: {
+          members_info: {
+            user: {
+              _id: req.session.user._id
+            }
+          }
+        }
+      }
+    });
+
+    if (!performance) return [false, {}, ErrCode.NOT_MEMBER];
+    hostId = performance.host._id;
   }
 
   const uhi = await UserHostInfo.findOne({
-    relations: {
-      user: true,
-      host: true
-    },
+    relations: ["user", "host"],
     where: {
       user: {
         _id: req.session.user._id
       },
       host: {
-        _id: Number.parseInt(req.params.hid)
+        _id: hostId
       }
     }
   });
 
-  if (!uhi) {
-    return [false, {}, ErrCode.NOT_MEMBER];
-  }
-
+  if (!uhi) return [false, {}, ErrCode.NOT_MEMBER];
   return [true, { uhi }];
 };
 
@@ -69,7 +91,9 @@ const hasHostPermission = (permission: HostPermission): AuthStrategy => {
       return [false, {}, reason];
     }
 
-    if (passthru.uhi.permissions < permission) {
+    // Highest Perms (Owner)  = 0
+    // Lowest Perfs (Pending) = 4 
+    if (passthru.uhi.permissions > permission) {
       return [false, {}, ErrCode.MISSING_PERMS];
     }
 

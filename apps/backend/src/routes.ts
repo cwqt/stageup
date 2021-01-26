@@ -80,7 +80,7 @@ router.put    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",          
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
-router.post   <IPerf>                 ("/performances",                             Perfs.createPerformance());
+router.post   <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance());
 router.get    <IE<IPerfS[], null>>    ("/performances",                             Perfs.readPerformances());
 router.get    <IE<IPerf, IPUInfo>>    ("/performances/:pid",                        Perfs.readPerformance());
 router.get    <IPHInfo>               ("/performances/:pid/host_info",              Perfs.readPerformanceHostInfo());

@@ -28,7 +28,7 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column() playback_id: string;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
-  @Column('enum', { enum: PerformanceState })state: PerformanceState;
+  @Column('enum', { enum: PerformanceState }) state: PerformanceState;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
 
   @OneToOne(() => PHostInfo) @JoinColumn() host_info: PHostInfo;

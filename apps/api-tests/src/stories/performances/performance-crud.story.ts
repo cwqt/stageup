@@ -10,6 +10,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
 
   it('Should create a performance and get the newly created performance', async () => {
     await Stories.actions.common.setup();
+
     client = await Stories.actions.users.createUser(UserType.Client);
     await Stories.actions.common.switchActor(UserType.Client);
     host = await Stories.actions.hosts.createHost({
@@ -18,7 +19,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       email_address: 'host@cass.si'
     });
 
-    perf = await Stories.actions.performances.createPerformance({
+    perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Shakespeare',
       description: 'To be or not to be',
       price: 24,
