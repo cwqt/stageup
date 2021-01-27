@@ -37,6 +37,11 @@ export const pick = <T extends object, U extends keyof T>(obj: T, paths: Array<U
 };
 
 // Typed nested object dot accessor -----------------------------------------------------
+// FIXME: angular 11.1.0 supports ts 4.1 which is whats required for template string types
+// which came out 18 hrs before now 21/01/20 2:17 so unfortunately it's bugged as fuck right now
+// we'll have to do this later i guess when things are advanced some in the versioning
+export type DottedPaths<T> = string;
+
 // type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 // type DottablePaths<T, P extends Prev[number] = 10> = [] | ([P] extends [never] ? never :
 //     T extends readonly any[] ? never :

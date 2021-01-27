@@ -175,17 +175,10 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
 
 const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IFormErrorField[]> } = {
   [HostOnboardingStep.ProofOfBusiness]: async (d: IOnboardingProofOfBusiness) => {
-<<<<<<< HEAD:apps/backend/src/models/hosts/onboarding.model.ts
-    return object(d, {
-      hmrc_company_number: v => v.isInt().isLength({ min: 8, max: 8 }),
-      business_contact_number: v => v.isMobilePhone('en-GB'),
-      business_address: v => v.custom(single(Validators.Objects.IAddress()))
-=======
     return await object(d, {
       hmrc_company_number: v => v.optional({ checkFalsy: true }).isInt().isLength({ min: 8, max: 8 }),
       business_contact_number: v => v.isMobilePhone('any'),//TODO: en-GB locale
       business_address: v => v.custom(single(Validators.Objects.IAddress())),
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/models/Hosts/Onboarding.model.ts
     });
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {

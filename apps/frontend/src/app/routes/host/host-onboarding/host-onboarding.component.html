@@ -1,25 +1,4 @@
 <h1>Host Onboarding</h1>
-<<<<<<< HEAD:apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html
-<mat-divider></mat-divider>
-<br>
-
-<!-- {{ selectedStep }} -->
-
-<div class="flex h-full">
-  <div class="flex-initial rounded shadow overflow-hidden mr-6">
-    <mat-vertical-stepper #stepper *ngIf="onboarding.data" class="h-full" (selectionChange)="handleSelectionChange($event)">
-      <mat-step *ngFor="let step of stepUiMap | keyvalue" [label]="step.value['label']">
-        <br /> 
-      </mat-step>
-    
-      <mat-step label="Submit for Verification">
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.reset()">Reset</button>
-        </div>
-      </mat-step>
-    </mat-vertical-stepper>
-=======
 <ui-hr></ui-hr>
 
 <mat-spinner *ngIf="onboarding.loading"></mat-spinner>
@@ -81,7 +60,6 @@
 
       <ng-container *ngIf="onReviewStep" [ngTemplateOutlet]="review"></ng-container>
     </div>
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html
   </div>
 </ng-container>
 
@@ -106,18 +84,6 @@
 
   <ui-placeholder><h3>Review step map from VN-135</h3></ui-placeholder>
 
-<<<<<<< HEAD:apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html
-  <div class="flex-grow md:max-w-2xl">
-    <mat-spinner *ngIf="componentRefreshing"></mat-spinner>
-    <ng-container *ngIf="!componentRefreshing">
-      <ui-form
-        (onSuccess)="handleStepSuccess(selectedStep)"
-        (onFailure)="handleStepFailure(selectedStep)"
-        [form]="stepUiMap[selectedStep].form"
-        [cacheable]="stepData[selectedStep]">
-      </ui-form>
-    </ng-container>        
-=======
   <div class="mt-5" *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
     <ui-button
       kind="primary" size="l"
@@ -125,6 +91,5 @@
       [loading]="onboarding.loading">
         Submit for Verification
     </ui-button>
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html
   </div>
 </ng-template>

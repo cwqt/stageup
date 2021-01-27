@@ -1,11 +1,6 @@
-<<<<<<< HEAD:libs/interfaces/src/Hosts/onboarding-step-review.model.ts
-import { IUserStub } from '../users/user.model';
-import { HostOnboardingState, HostOnboardingStep } from './host-onboarding.model';
-=======
 import { IUserStub } from '../Users/User.model';
-import { HostOnboardingState, HostOnboardingStep, IHostOnboarding } from './HostOnboarding.model';
+import { HostOnboardingState, HostOnboardingStep, IHostOnboarding } from './host-onboarding.model';
 import { DottedPaths } from '../Common/FP';
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:interfaces/lib/Hosts/OnboardingStepReview.model.ts
 
 /**
  * @description What the Admin sends to the /review route which is formed into an IOnboardingStepReview

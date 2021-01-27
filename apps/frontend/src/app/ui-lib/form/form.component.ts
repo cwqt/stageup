@@ -21,13 +21,9 @@ import {
   Validators,
 } from "@angular/forms";
 import { Y } from "@eventi/interfaces";
-<<<<<<< HEAD:apps/frontend/src/app/ui-lib/form/form.component.ts
-import { ICacheable } from "apps/frontend/src/app/app.interfaces";
-=======
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { takeUntil, takeWhile } from "rxjs/operators";
-import { ICacheable } from "src/app/app.interfaces";
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:frontend/src/app/ui-lib/form/form.component.ts
+import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import {
   displayValidationErrors,
   handleFormErrors,

@@ -1,13 +1,7 @@
 import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
-<<<<<<< HEAD:apps/frontend/src/app/ui-lib/form/form.interfaces.ts
-import { Primitive } from "@eventi/interfaces";
-import { ICacheable } from "apps/frontend/src/app/app.interfaces";
-import { IFlatGraphNode } from "../input/input.component";
-=======
 import { DottedPaths, Primitive } from "@eventi/interfaces";
-import { ICacheable } from "src/app/app.interfaces";
+import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import { IGraphNode } from "../input/input.component";
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:frontend/src/app/ui-lib/form/form.interfaces.ts
 
 /**
  * @param submit, T => submit handler return type

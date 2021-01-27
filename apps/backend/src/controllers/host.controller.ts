@@ -31,22 +31,8 @@ import Validators, { body, params as parameters, query } from '../common/validat
 import { timestamp } from '../common/helpers';
 import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
 
-<<<<<<< HEAD:apps/backend/src/controllers/host.controller.ts
 import logger from '../common/logger';
 import Email = require('../common/email');
-=======
-import { Request } from 'express';
-import { User } from '../models/Users/User.model';
-import { Host } from '../models/Hosts/Host.model';
-import { ErrorHandler, getCheck } from '../common/errors';
-import { UserHostInfo } from '../models/Hosts/UserHostInfo.model';
-import { BaseController, BaseArgs, IControllerEndpoint } from '../common/controller';
-import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
-import { body, params, query } from '../common/validate';
-import { unixTimestamp } from '../common/helpers';
-import { OnboardingStepReview } from '../models/Hosts/OnboardingStepReview.model';
-import logger from '../common/logger';
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/controllers/Host.controller.ts
 
 export default class HostController extends BaseController {
   createHost(): IControllerEndpoint<IHost> {
@@ -364,19 +350,15 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const onboarding = await Onboarding.findOne({
+        const onboarding = await getCheck(Onboarding.findOne({
           where: {
             host: {
               _id: Number.parseInt(req.params.hid)
             }
           }
-        });
-        if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-<<<<<<< HEAD:apps/backend/src/controllers/host.controller.ts
-        if (onboarding.state !== HostOnboardingState.AwaitingChanges)
-=======
+        }));
+
         if (![HostOnboardingState.AwaitingChanges, HostOnboardingState.HasIssues].includes(onboarding.state))
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/controllers/Host.controller.ts
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out

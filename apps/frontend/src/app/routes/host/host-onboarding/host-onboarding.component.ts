@@ -23,22 +23,6 @@ import {
   ISOCountryCode,
   PersonTitle,
 } from "@eventi/interfaces";
-<<<<<<< HEAD:apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts
-import { createICacheable, ICacheable } from "apps/frontend/src/app/app.interfaces";
-import { HostService } from "apps/frontend/src/app/services/host.service";
-import { FormComponent } from "apps/frontend/src/app/ui-lib/form/form.component";
-import { IUiForm } from "apps/frontend/src/app/ui-lib/form/form.interfaces";
-
-
-import { Directive, ViewContainerRef } from '@angular/core';
-
-@Directive({
-  selector: '[pageDirective]'
-})
-export class PageDirective {
-  constructor(public viewContainerRef: ViewContainerRef) { }
-}
-=======
 import { createICacheable, ICacheable } from "src/app/app.interfaces";
 import { HostService } from "src/app/services/host.service";
 import {
@@ -50,7 +34,6 @@ import phone from 'phone';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { HttpErrorResponse } from "@angular/common/http";
 import { flatten } from "flat";
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts
 
 interface IUiStep<T> {
   label: string;

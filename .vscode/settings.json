@@ -4,11 +4,8 @@
     "spellright.language": ["en"],
     "spellright.documentTypes": ["markdown", "latex"],
     "explorer.autoReveal": true,
-<<<<<<< HEAD
     "editor.wordWrapColumn": 120,
     "editor.folding": false,
-=======
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5
     "prettier.printWidth": 120,
     "prettier.singleQuote": true,
     "prettier.useTabs": false,
@@ -16,12 +13,4 @@
     "prettier.semi": true,
     "prettier.arrowParens": "avoid",
     "prettier.bracketSpacing": true,
-<<<<<<< HEAD
-    "xo.enable": true
 }
-=======
-    "editor.folding": false,
-    "editor.wordWrapColumn": 120,
-    "typescript.tsdk": "node_modules/typescript/lib"
-}
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5

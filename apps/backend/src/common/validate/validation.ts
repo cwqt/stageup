@@ -12,6 +12,7 @@ import {
 } from 'express-validator';
 
 import { ErrorHandler } from '../errors';
+import logger from '../logger';
 
 type VData<T> = T & {
   __this?: T; // self-reference
@@ -106,9 +107,6 @@ export const runValidator = async <T extends object, U extends keyof T>(
  * @param validators key-value pair of field-vchainer
  * @param location used by VReqHandlerFunctors to specify location of field
  */
-<<<<<<< HEAD:apps/backend/src/common/validate/validation.ts
-export const object: VFunctor = async (data, validators, location = null, index = null): Promise<IFormErrorField[]> => {
-=======
 export const object: VFunctor = async (data, validators, location = null, idx = null): Promise<IFormErrorField[]> => {
   // Match all if only validator is a * - for use with unstructured objects where all values are of the same form
   if(Object.keys(validators).length == 1 && validators["*"]) {
@@ -118,7 +116,6 @@ export const object: VFunctor = async (data, validators, location = null, idx = 
     }, {})
   }
 
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/common/validate/validation.ts
   const errors: IFormErrorField[] = (
     await Promise.all(
       Object.keys(validators).map(async (index: any) => runValidator(data, index, validators[index], location))
@@ -214,12 +211,6 @@ export const validatorMiddleware = (validators: VReqHandlerFunctor[]): RequestHa
 
     if (errors.length > 0) console.log(JSON.stringify(errors, null, 2));
     if (errors.length > 0) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
-
-<<<<<<< HEAD:apps/backend/src/common/validate/validation.ts
-=======
-    if(errors.length) logger.error(JSON.stringify(errors, null, 2));
-    if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/common/validate/validation.ts
     next();
   };
 };
