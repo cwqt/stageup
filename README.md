@@ -140,3 +140,12 @@ Do `npm install` in the project root to install all required dependencies.
 * __API Tests__: `nx run api-tests`
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
+
+
+# Deployment
+
+## shipjs
+
+* Create a new token <https://github.com/settings/tokens>
+* Add `.env` into root directory
+* Add value called `GITHUB_TOKEN=XXXX`
