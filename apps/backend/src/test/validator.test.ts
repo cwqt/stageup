@@ -1,5 +1,3 @@
-import { describe, it } from 'mocha';
-import { expect } from 'chai';
 import { ErrCode, IAddress, Idless, IOnboardingAddMembers } from '@eventi/interfaces';
 import Validators, { object, single, array } from '../common/validate';
 
@@ -18,17 +16,17 @@ describe('Custom validation', () => {
       location: v => v.isString()
     });
 
-    expect(errors).to.be.lengthOf(2);
+    expect(errors).toHaveLength(2);
 
-    expect(errors[0].location).to.eq(undefined);
-    expect(errors[0].code).to.eq(ErrCode.INVALID);
-    expect(errors[0].param).to.eq('name');
-    expect(errors[0].value).to.eq(data.name);
+    expect(errors[0].location).toBeUndefined();
+    expect(errors[0].code).toBe(ErrCode.INVALID);
+    expect(errors[0].param).toBe('name');
+    expect(errors[0].value).toBe(data.name);
 
-    expect(errors[1].location).to.eq(undefined);
-    expect(errors[1].code).to.eq(ErrCode.INVALID);
-    expect(errors[1].param).to.eq('age');
-    expect(errors[1].value).to.eq(data.age);
+    expect(errors[1].location).toBeUndefined();
+    expect(errors[1].code).toBe(ErrCode.INVALID);
+    expect(errors[1].param).toBe('age');
+    expect(errors[1].value).toBe(data.age);
   });
 
   it('Should return correct results for nested objects', async () => {
@@ -54,15 +52,11 @@ describe('Custom validation', () => {
         )
     });
 
-    expect(errors).to.be.lengthOf(2);
-    expect(errors[0].param).to.be.eq('name');
-
-    expect(errors[1].param).to.be.eq('address');
-    expect(errors[1].value).to.include(data.address);
-
-    expect(errors[1].nestedErrors).to.be.an('array');
-    expect(errors[1].nestedErrors).to.be.lengthOf(1);
-    expect(errors[1].nestedErrors[0].param).to.eq('street_number');
+    expect(errors).toHaveLength(2);
+    expect(errors[0].param).toBe('name');
+    expect(errors[1].param).toBe('address');
+    expect(errors[1].nestedErrors).toHaveLength(1);
+    expect(errors[1].nestedErrors[0].param).toBe('street_number');
   });
 
   it('Should return correct results for arrays of objects in an object', async () => {
@@ -81,22 +75,22 @@ describe('Custom validation', () => {
         )
     });
 
-    expect(errors).to.be.lengthOf(2);
-    expect(errors[0].code).to.be.eq(ErrCode.IN_USE);
+    expect(errors).toHaveLength(2);
+    expect(errors[0].code).toBe(ErrCode.IN_USE);
 
-    expect(errors[1].code).to.eq(ErrCode.INVALID);
-    expect(errors[1].value).to.eq(undefined); // Don't return array value in error return
-    expect(errors[1].nestedErrors).to.be.lengthOf(2);
+    expect(errors[1].code).toBe(ErrCode.INVALID);
+    expect(errors[1].value).toBeUndefined(); // Don't return array value in error return
+    expect(errors[1].nestedErrors).toHaveLength(2);
 
     // 1st address
-    expect(errors[1].nestedErrors[0].idx).to.eq(0);
-    expect(errors[1].nestedErrors[0].param).to.eq('street_number');
-    expect(errors[1].nestedErrors[0].value).to.eq('2001');
+    expect(errors[1].nestedErrors[0].idx).toBe(0);
+    expect(errors[1].nestedErrors[0].param).toBe('street_number');
+    expect(errors[1].nestedErrors[0].value).toBe('2001');
 
     // 3rd address
-    expect(errors[1].nestedErrors[1].idx).to.eq(2);
-    expect(errors[1].nestedErrors[1].param).to.eq('street_number');
-    expect(errors[1].nestedErrors[1].value).to.eq('2002');
+    expect(errors[1].nestedErrors[1].idx).toBe(2);
+    expect(errors[1].nestedErrors[1].param).toBe('street_number');
+    expect(errors[1].nestedErrors[1].value).toBe('2002');
   });
 
   it('Should return errors for complex nested arrays of object', async () => {
@@ -133,7 +127,7 @@ describe('Custom validation', () => {
     });
 
     // TODO: validate the whole response
-    expect(errors).to.be.lengthOf(1);
+    expect(errors).toHaveLength(1);
   });
 
   it('Should not return errors for valid data', async () => {
@@ -151,7 +145,7 @@ describe('Custom validation', () => {
       address: v => v.custom(single(Validators.Objects.IAddress()))
     });
 
-    expect(errors).to.be.lengthOf(0);
+    expect(errors).toHaveLength(0);
   });
 
   it("Should not return errors for IHostMemberChangeRequest Object Validator", async () => {
@@ -163,7 +157,7 @@ describe('Custom validation', () => {
       members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest()))
     });
 
-    expect(errors).to.be.lengthOf(0);
+    expect(errors).toHaveLength(0);
   });
 
   // FIXME: Arrays of primitives don't work
