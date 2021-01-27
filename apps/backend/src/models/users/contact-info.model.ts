@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, EntityManager, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IContactInfo, IPersonInfo, PersonTitle } from '@eventi/interfaces';
+import { BaseEntity, Column, Entity, EntityManager, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { IContactInfo } from '@eventi/interfaces';
 import { Address } from './address.model';
 
 @Entity()

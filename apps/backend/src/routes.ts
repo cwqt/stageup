@@ -9,7 +9,6 @@ import {
     IPerformance as IPerf,
     IPerformanceHostInfo as IPHInfo, 
     IUserHostInfo as IUHInfo,
-    IPerformancePurchase as IPurchase,
     IEnvelopedData as IE,
     IPerformanceUserInfo as IPUInfo,
     IMyself,

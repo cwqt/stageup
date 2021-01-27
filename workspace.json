@@ -38,6 +38,26 @@
           "options": {
             "buildTarget": "backend:build"
           }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/backend"
+          ],
+          "options": {
+            "passWithNoTests": true,
+            "runInBand": false,
+            "jestConfig": "apps/backend/jest.config.js",
+            "tsConfig": "apps/backend/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/backend/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
         }
       }
     },

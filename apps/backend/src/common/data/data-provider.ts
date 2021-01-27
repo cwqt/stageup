@@ -22,7 +22,7 @@ export interface DataClient {
   mux: Mux;
 }
 
-const timeout = async <T>(f: () => Promise<T>, maxExecutionTime: number = 10000): Promise<T> => {
+const timeout = async <T>(f: () => Promise<T>, maxExecutionTime = 10000): Promise<T> => {
   return new Promise((resolve, _) => {
     const t = setTimeout(() => {
       log.error('Took took long to connect to service.');

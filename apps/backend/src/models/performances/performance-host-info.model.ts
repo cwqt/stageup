@@ -1,12 +1,11 @@
 import { LiveStream } from '@mux/mux-node';
-import { IPerformanceHostInfo, IPerformanceStub, IRating } from '@eventi/interfaces';
+import { IPerformanceHostInfo } from '@eventi/interfaces';
 import {
   BaseEntity,
   Column,
   Entity,
   EntityManager,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn
 } from 'typeorm';

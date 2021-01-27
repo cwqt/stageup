@@ -8,7 +8,7 @@ import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.s
   styleUrls: ['./host-performances.component.scss']
 })
 export class HostPerformancesComponent implements OnInit {
-  hostId:number;
+  hostId:number;x
 
   constructor(private appService:BaseAppService, private route:ActivatedRoute, ) { }
 
