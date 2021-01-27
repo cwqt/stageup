@@ -32,10 +32,9 @@ export class CreateHostComponent implements OnInit {
 
   ngOnInit(): void {
     this.hostForm = {
-      fields: [
-        {
+      fields: {
+        username: {
           type: "text",
-          field_name: "username",
           hint: "This will be the name of your host account on Eventi. Your URL will be: https://eventi.com/username",
           label: "Host Username",
           validators: [
@@ -45,9 +44,8 @@ export class CreateHostComponent implements OnInit {
             { type: "pattern", value: /^[a-zA-Z0-9]*$/, message: e => "Must be alphanumeric with no spaces" }
           ]
         },
-        {
+        name: {
           type: "text",
-          field_name: "name",
           label: "Host Name",
           validators: [
             { type: "required" },
@@ -55,9 +53,8 @@ export class CreateHostComponent implements OnInit {
             { type: "maxlength", value: 32 }
           ]
         },
-        {
+        email_address: {
           type: "text",
-          field_name: "email_address",
           label: "Contact e-mail",
           validators: [
             { type: "required" },
@@ -65,8 +62,7 @@ export class CreateHostComponent implements OnInit {
             { type: "maxlength", value: 32 }
           ]
         },
-
-      ],
+      },
       submit: {
         variant: "primary",
         text: "Create Host",

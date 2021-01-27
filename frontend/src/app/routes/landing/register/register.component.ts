@@ -38,10 +38,9 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = {
-      fields: [
-        {
+      fields: {
+        username: {
           type: "text",
-          field_name: "username",
           label: "Username",
           validators: [
             { type: "required" },
@@ -54,9 +53,8 @@ export class RegisterComponent implements OnInit {
             },
           ],
         },
-        {
+        email_address: {
           type: "text",
-          field_name: "email_address",
           label: "E-mail address",
           validators: [
             { type: "required" },
@@ -64,9 +62,8 @@ export class RegisterComponent implements OnInit {
             { type: "maxlength", value: 32 },
           ],
         },
-        {
+        password: {
           type: "password",
-          field_name: "password",
           label: "Password",
           validators: [
             { type: "required" },
@@ -74,9 +71,8 @@ export class RegisterComponent implements OnInit {
             { type: "maxlength", value: 16 },
           ],
         },
-        {
+        password_match: {
           type: "password",
-          field_name: "password_match",
           label: "Repeat password",
           validators: [
             { type: "required" },
@@ -89,7 +85,7 @@ export class RegisterComponent implements OnInit {
             },
           ],
         },
-      ],
+      },
       submit: {
         text: "Register",
         variant: "primary",
@@ -99,12 +95,12 @@ export class RegisterComponent implements OnInit {
   }
 
   handleRegisterSuccess(user: IUser) {
-    // const { email_address, password } = this.form.formGroup.value; 
+    const { email_address, password } = this.form.formGroup.value; 
     // get user, host & host info on login
-    // this.authService.login({ email_address, password }).then(() => {
-    //   this.myselfService.getMyself().then(() => {
-    //     this.appService.navigateTo("/");
-    //   });
-    // });
+    this.authService.login({ email_address, password }).then(() => {
+      this.myselfService.getMyself().then(() => {
+        this.appService.navigateTo("/");
+      });
+    });
   }
 }

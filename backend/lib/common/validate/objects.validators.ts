@@ -60,9 +60,8 @@ export namespace ObjectValidators {
     };
   };
 
-  export const IOnboardingIssue = ():ObjectValidator<IOnboardingIssue<any>> => {
+  export const IOnboardingIssue = ():ObjectValidator<IOnboardingIssue> => {
     return {
-      param: v => FV.isString(v),
       message: v => FV.isString(v),
     }
   }

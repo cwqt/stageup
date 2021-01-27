@@ -29,7 +29,7 @@ export const sendEmail = (mailOptions:nodemailer.SendMailOptions, sendWhileNotIn
     });
 
     transporter.sendMail(mailOptions, (error: Error) => {
-      console.log(error)
+      logger.error(error)
       if (error) {
         logger.error(error);
         res(false);

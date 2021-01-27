@@ -73,6 +73,7 @@ router.post   <void>                  ("/hosts/:hid/onboarding/submit",         
 router.get    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 
+
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providers, mws);
 router.post   <IPerf>                 ("/performances",                             Perfs.createPerformance());
@@ -87,7 +88,7 @@ router.put    <IPerf>                 ("/performance/:pid",                     
 const Admin = new AdminController(providers, mws);
 router.get  <IE<IHOnboarding[], void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
 router.post  <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
-router.post <void>                    ("/admin/onboarding/:oid/submit",             Admin.submitOnboardingProcess());
+router.post <void>                    ("/admin/onboarding/:oid/enact",              Admin.enactOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);

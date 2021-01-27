@@ -33,6 +33,7 @@ import { HostOnboardingProcess } from '../models/Hosts/Onboarding.model';
 import { body, params, query } from '../common/validate';
 import { unixTimestamp } from '../common/helpers';
 import { OnboardingStepReview } from '../models/Hosts/OnboardingStepReview.model';
+import logger from '../common/logger';
 
 export default class HostController extends BaseController {
   constructor(...args: BaseArgs) {
@@ -348,7 +349,7 @@ export default class HostController extends BaseController {
         try {
           await onboarding.updateStep(step, u[step](req.body));
         } catch (error) {
-          console.log(error);
+          logger.error(error);
           throw new ErrorHandler(HTTP.DataInvalid, null, error);
         }
 
@@ -371,7 +372,7 @@ export default class HostController extends BaseController {
           },
         });
         if (!onboarding) throw new ErrorHandler(HTTP.NotFound);
-        if (onboarding.state != HostOnboardingState.AwaitingChanges)
+        if (![HostOnboardingState.AwaitingChanges, HostOnboardingState.HasIssues].includes(onboarding.state))
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out

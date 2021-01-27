@@ -8,6 +8,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
+import { NgxMaskModule, IConfig } from 'ngx-mask'
+
 import { ClickOutsideModule } from "ng-click-outside";
 import { MomentModule } from 'ngx-moment';
 
@@ -48,6 +50,10 @@ import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component"
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from "./routes/search/search.component";
 import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
+import { ObjectLengthPipe } from "./_pipes/ObjectLengthPipe";
+
+
+export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 
 @NgModule({
@@ -84,7 +90,8 @@ import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
     AdminPanelComponent,
     SearchComponent,
     AdminOnboardingListComponent,
-    OnboardingStatePipe
+    OnboardingStatePipe,
+    ObjectLengthPipe
   ],
   imports: [
     AngularMaterialModule,
@@ -96,6 +103,7 @@ import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
     ReactiveFormsModule,
     HttpClientModule,
     ClickOutsideModule,
+    NgxMaskModule.forRoot(),
     MomentModule
   ],
   providers: [

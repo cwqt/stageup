@@ -56,3 +56,5 @@ export const environment: IEnvironment = {
     [UserType.None]: makeUserData('eventinone@cass.si', '', ''),
   },
 };
+
+// console.log(environment)

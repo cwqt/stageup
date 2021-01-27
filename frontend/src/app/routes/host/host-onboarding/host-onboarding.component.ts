@@ -1,5 +1,18 @@
-import { StepperSelectionEvent, STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
-import { AfterViewInit, Component, ComponentFactoryResolver, Input, OnInit, QueryList, ViewChild, ViewChildren } from "@angular/core";
+import {
+  StepperSelectionEvent,
+  STEPPER_GLOBAL_OPTIONS,
+} from "@angular/cdk/stepper";
+import {
+  AfterViewInit,
+  Component,
+  ComponentFactoryResolver,
+  Host,
+  Input,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from "@angular/core";
 import { MatVerticalStepper } from "@angular/material/stepper";
 import {
   IHost,
@@ -7,25 +20,24 @@ import {
   HostOnboardingState,
   HostOnboardingStep,
   IOnboardingStep,
+  ISOCountryCode,
+  PersonTitle,
 } from "@eventi/interfaces";
 import { createICacheable, ICacheable } from "src/app/app.interfaces";
 import { HostService } from "src/app/services/host.service";
-import { FormComponent } from "src/app/ui-lib/form/form.component";
-import { IUiForm } from "src/app/ui-lib/form/form.interfaces";
-
-
-import { Directive, ViewContainerRef } from '@angular/core';
-
-@Directive({
-  selector: '[pageDirective]'
-})
-export class PageDirective {
-  constructor(public viewContainerRef: ViewContainerRef) { }
-}
+import {
+  IUiForm,
+  IUiFieldSelectOptions,
+  IUiFormPrefetchData,
+} from "../../../ui-lib/form/form.interfaces";
+import phone from 'phone';
+import isPostalCode from 'validator/es/lib/isPostalCode';
+import { HttpErrorResponse } from "@angular/common/http";
+import { flatten } from "flat";
 
 interface IUiStep<T> {
   label: string;
-  form:IUiForm<T>;
+  form: IUiForm<T>;
   data: IOnboardingStep<T> | null;
 }
 
@@ -33,30 +45,45 @@ interface IUiStep<T> {
   selector: "app-host-onboarding",
   templateUrl: "./host-onboarding.component.html",
   styleUrls: ["./host-onboarding.component.scss"],
-  providers: [{
-    provide: STEPPER_GLOBAL_OPTIONS, useValue: { showError: true }
-  }]
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { showError: true, displayDefaultIndicatorType: false},
+    },
+  ],
 })
 export class HostOnboardingComponent implements OnInit, AfterViewInit {
   @Input() host: IHost;
-  @ViewChild(MatVerticalStepper, { static: false }) stepper:MatVerticalStepper;
-  @ViewChild(PageDirective) pageHost: PageDirective;
+  @ViewChild(MatVerticalStepper, { static: false }) stepper: MatVerticalStepper;
 
-  selectedStep:HostOnboardingStep;
-  componentRefreshing:boolean = true;
+  public states: typeof HostOnboardingState = HostOnboardingState;
+
+  onReviewStep: boolean = false;
+  selectedStep: HostOnboardingStep;
+  componentRefreshing: boolean = true;
   onboarding: ICacheable<IHostOnboarding> = {
     data: null,
     loading: false,
     error: "",
   };
 
-  stepData:{[index in HostOnboardingStep]:ICacheable<IOnboardingStep<any>>} = {
+  // For when the user submits for verification
+  submission:ICacheable<null> = {
+    data: null,
+    loading: false,
+    error: ""
+  }
+
+  stepData = createICacheable<IOnboardingStep<any>>();
+  stepCacheables: {
+    [index in HostOnboardingStep]: ICacheable<IOnboardingStep<any>>;
+  } = {
     [HostOnboardingStep.ProofOfBusiness]: createICacheable(),
     [HostOnboardingStep.OwnerDetails]: createICacheable(),
     [HostOnboardingStep.SocialPresence]: createICacheable(),
     [HostOnboardingStep.AddMembers]: createICacheable(),
     [HostOnboardingStep.SubscriptionConfiguration]: createICacheable(),
-  }
+  };
 
   stepStatusUiMap: {
     [index in HostOnboardingState]: { color: string; icon: string };
@@ -68,124 +95,212 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     [HostOnboardingState.Verified]: { color: "", icon: "checkmark--outline" },
   };
 
-  stepUiMap:{[index in HostOnboardingStep]?:IUiStep<any>} = {
+
+  stepUiMap: { [index in HostOnboardingStep]?: IUiStep<any> } = {
     [HostOnboardingStep.ProofOfBusiness]: {
       label: "Proof of Business",
       data: null,
       form: {
-        fields: [
-          {
+        prefetch: async ():Promise<IUiFormPrefetchData> => {
+          const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(
+            this.host._id,
+            HostOnboardingStep.ProofOfBusiness
+          ));
+
+          return {
+            fields: flatten<any, IUiFormPrefetchData["fields"]>(stepData.data),
+            errors: Object.keys(stepData.review.issues).reduce((acc, curr) => {
+              acc[curr] = stepData.review.issues[curr].message
+              return acc;
+            }, {})
+          };
+        },
+        fields: {
+          hmrc_company_number: {
             type: "number",
-            field_name: "hmrc_company_number",
-            label:"HMRC Company Number",
-            default: 12341234,
+            label: "HMRC Company Number",
             validators: [
-              { type: "minlength", value: 8, message: v => "Must be 8 characters" },
-              { type: "maxlength", value: 8, message: v => "Must be 8 characters" },
-            ]
-          },
-          {
-            type: "text",
-            default: 1234,
-            field_name: "business_contact_number",
-            label:"Business Contact Number",
-            validators: [{type: "required"}]
-          },
-          {
-            type: "container",
-            field_name: "business_address",
-            label: "Business Address",
-            fields: [          
-              { default:"123", type: "text",   label: "City",          field_name: "city", validators: [{type: "required"}]},
-              { default:123, type: "text",   label: "Country",       field_name: "iso_country_code", validators: [{type: "required"}]},
-              { default:1111, type: "text",   label: "Postcode",      field_name: "postcode", validators: [{type: "required"}]},
-              { default:123, type: "number", label: "Street Number", field_name: "street_number", validators: [{type: "required"}]},
-              { default:444, type: "text",   label: "Street Name",   field_name: "street_name", validators: [{type: "required"}]},
+              { type: "minlength", value: 8 },
+              { type: "maxlength", value: 8 },
             ],
           },
-        ],
+          business_contact_number: {
+            type: "phone",
+            label: "Business Contact Number",
+            hint: "Of the form 1724 123321, no leading zero",
+            validators: [{ type: "required" }],
+            options: {
+              transformer: v => phone(v, ISOCountryCode.GBR)
+            }
+          },
+          business_address: {
+            type: "container",
+            label: "Business Address",
+            fields: {
+              city: {
+                type: "text",
+                label: "City",
+                validators: [{ type: "required" }],
+              },
+              iso_country_code: {
+                type: "select",
+                label: "Country",
+                options: {
+                  search: true,
+                  values: Object.keys(ISOCountryCode).reduce((acc, curr, idx) => {
+                      acc.push({
+                        key: curr,
+                        value: Object.values(ISOCountryCode)[idx],
+                      });
+                      return acc;
+                  }, []),
+                },
+                validators: [{ type: "required" }],
+              },
+              postcode: {
+                type: "text",
+                label: "Postcode",
+                validators: [
+                  { type: "required" },
+                  {
+                    type: "custom",
+                    value: v => isPostalCode(v.value, 'GB'),
+                    message: v => `Not a valid postal code`
+                  }
+                ],
+              },
+              street_number: {
+                type: "number",
+                label: "Street Number",
+                validators: [{ type: "required" }],
+              },
+              street_name: {
+                type: "text",
+                label: "Street Name",
+                validators: [{ type: "required" }],
+              },
+            },
+          },
+        },
         submit: {
           variant: "primary",
           text: "Next",
-          handler: async formData => this.handleStepCompletion(formData, HostOnboardingStep.ProofOfBusiness)
-        }
-      }
+          handler: async (formData) =>
+            this.handleStepCompletion(
+              formData,
+              HostOnboardingStep.ProofOfBusiness
+            ),
+        },
+      },
     },
     [HostOnboardingStep.OwnerDetails]: {
       label: "Owner Details",
       data: null,
       form: {
-        fields: [
-          {
+        fields: {
+          owner_info: {
             type: "container",
-            field_name: "owner_info",
             label: "Owner Information",
-            fields: [
-              { type: "text", field_name: "title", label: "Title" },
-              { type: "text", field_name: "first_name", label: "First name" },
-              { type: "text", field_name: "last_name", label: "Last name" },    
-            ]
-          }
-        ],
+            fields: {
+              title: {
+                type: "select",
+                label: "Title",
+                options: {
+                  values: Object.values(PersonTitle).reduce<
+                    IUiFieldSelectOptions["values"]
+                  >((acc, curr) => {
+                    acc.push({
+                      key: curr,
+                      value: curr.charAt(0).toUpperCase() + curr.slice(1),
+                    });
+                    return acc;
+                  }, []),
+                },
+                validators: [{ type: "required" }],
+              },
+              first_name: {
+                type: "text",
+                label: "First name",
+                validators: [{ type: "required" }],
+              },
+              last_name: {
+                type: "text",
+                label: "Last name",
+                validators: [{ type: "required" }],
+              },
+            },
+          },
+        },
         submit: {
           variant: "primary",
           text: "Next",
-          handler: async () => {}
-        }
-      }
+          handler: async (formData) =>
+            this.handleStepCompletion(
+              formData,
+              HostOnboardingStep.OwnerDetails
+            ),
+        },
+      },
     },
     [HostOnboardingStep.SocialPresence]: {
       label: "Social Presence",
       data: null,
       form: {
-        fields: [
-          {
+        fields: {
+          social_info: {
             type: "container",
-            field_name: "social",
             label: "Social Information",
-            fields: [
-              { type: "text", field_name: "linkedin_url", label: "LinkedIn" },
-              { type: "text", field_name: "facebook_url", label: "Facebook" },
-              { type: "text", field_name: "instagram_url", label: "Instagram" },    
-            ]
-          }
-        ],
+            fields: {
+              linkedin_url: { type: "text", label: "LinkedIn" },
+              facebook_url: { type: "text", label: "Facebook" },
+              instagram_url: { type: "text", label: "Instagram" },
+            },
+          },
+        },
         submit: {
           variant: "primary",
           text: "Next",
-          handler: async formData => this.handleStepCompletion(formData, HostOnboardingStep.SocialPresence)
-        }
-      }
+          handler: async (formData) =>
+            this.handleStepCompletion(
+              formData,
+              HostOnboardingStep.SocialPresence
+            ),
+        },
+      },
     },
-    [HostOnboardingStep.AddMembers]: {
-      label: "Add Members",
-      data: null,
-      form: {
-        fields: [],
-        submit: {
-          variant: "primary",
-          text: "Next",
-          handler: async () => {}
-        }
-      }
-    },
-    [HostOnboardingStep.SubscriptionConfiguration]: {
-      label: "Subscription Configuration",
-      data: null,
-      form: {
-        fields: [
-          { type: "number", field_name: "tier", label: "Subscription Tier"}
-        ],
-        submit: {
-          variant: "primary",
-          text: "Next",
-          handler: async () => {}
-        }
-      }
-    },
-  }
+    // TODO: Doesn't seem necessary at this stage to add members
+    // [HostOnboardingStep.AddMembers]: {
+    //   label: "Add Members",
+    //   data: null,
+    //   form: {
+    //     fields: [],
+    //     submit: {
+    //       variant: "primary",
+    //       text: "Next",
+    //       handler: async () => {},
+    //     },
+    //   },
+    // },
+    // TODO: not enough requirements on subscriptions at this stage to comment
+    // [HostOnboardingStep.SubscriptionConfiguration]: {
+    //   label: "Subscription Configuration",
+    //   data: null,
+    //   form: {
+    //     fields: [
+    //       { type: "number", field_name: "tier", label: "Subscription Tier" },
+    //     ],
+    //     submit: {
+    //       variant: "primary",
+    //       text: "Next",
+    //       handler: async () => {},
+    //     },
+    //   },
+    // },
+  };
 
-  constructor(private hostService: HostService, private cfr:ComponentFactoryResolver) {}
+  constructor(
+    private hostService: HostService
+  ) {}
 
   get steps() {
     return this.onboarding.data.steps;
@@ -205,40 +320,65 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   get subscriptionConfig() {
     return this.steps[HostOnboardingStep.SubscriptionConfiguration];
   }
+  get currentState() {
+    return this.onboarding.data.state;
+  }
 
-  switchStep(step:HostOnboardingStep) {
+  switchStep(step: HostOnboardingStep) {
     this.componentRefreshing = true;
     this.selectedStep = step;
-    setTimeout(() => { // push to next tick
+
+    // Show on next tick to avoid val changed during change detection loop err
+    const nextTickPush = () => setTimeout(() => {
       this.componentRefreshing = false;
     }, 0);
+
+    // Fetch the current states reviews
+    if(this.onboarding.data.steps[step] == HostOnboardingState.HasIssues) {
+      this.stepData.loading = true;
+      this.hostService.readOnboardingProcessStep(this.host._id, step)
+        .then(d => this.stepData.data = d)
+        .catch((e:HttpErrorResponse) => this.stepData.error = e.message)
+        .finally(() => {
+          this.stepData.loading = false;
+          nextTickPush();
+        });
+    } else {
+      nextTickPush();
+    }
   }
 
   ngOnInit(): void {
-    this.getOnboarding().then(() => this.switchStep(HostOnboardingStep.ProofOfBusiness));
+    this.getOnboarding().then(() =>
+      this.switchStep(HostOnboardingStep.ProofOfBusiness)
+    );
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {}
+
+  handleSelectionChange(event: StepperSelectionEvent) {
+    // Review step is the final step after all onboarding stages
+    this.onReviewStep = event.selectedIndex == Object.keys(this.stepUiMap).length;
+    if (!this.onReviewStep) this.switchStep(event.selectedIndex);
   }
 
-  handleSelectionChange(event:StepperSelectionEvent) {
-    console.log(event)
-    this.switchStep(event.selectedIndex)
-  };
-
-  handleStepCompletion(formData:any, step:HostOnboardingStep) {
-    console.log(formData, step)
-    return this.hostService.updateOnboardingProcessStep(this.host._id, step, formData)
+  handleStepCompletion(formData: any, step: HostOnboardingStep) {
+    return this.hostService
+      .updateOnboardingProcessStep(this.host._id, step, formData)
       .then(() => this.stepper.next())
-      .finally(() => console.log(this.stepData))
+      .finally(() => console.log(this.stepCacheables));
   }
 
-  handleStepSuccess(step:HostOnboardingStep) {
+  handleStepSuccess(step: HostOnboardingStep) {}
 
-  }
+  handleStepFailure(step: HostOnboardingStep) {}
 
-  handleStepFailure(step:HostOnboardingStep) {
-
+  async readCurrentStep(step:HostOnboardingStep) {
+    this.stepData.loading = true;
+    return this.hostService.readOnboardingProcessStep(this.host._id, step)
+      .then(data => this.stepData.data = data)
+      .catch((e:HttpErrorResponse) => this.stepData.error = e.message)
+      .finally(() => this.stepData.loading = false)
   }
 
   async getOnboarding() {
@@ -246,7 +386,14 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     return this.hostService
       .readOnboardingProcessStatus(this.host._id)
       .then((o) => (this.onboarding.data = o))
-      .catch((e) => (this.onboarding.error = e.message))
+      .catch((e:HttpErrorResponse) => (this.onboarding.error = e.message))
       .finally(() => (this.onboarding.loading = false));
+  }
+
+  async submitForVerification() {
+    this.submission.loading = true;
+    return this.hostService.submitOnboardingProcess(this.host._id)
+      .catch((e:HttpErrorResponse) => this.submission.error = e.message)
+      .finally(() => this.submission.loading = false);
   }
 }

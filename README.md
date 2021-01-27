@@ -124,6 +124,7 @@ npm install --force
 * __Backend__: `npm run start`
   - To enable debug mode use `npm run start:dev`
 
+
 ---
 
 # Testing
@@ -154,3 +155,9 @@ kubectl get nodes
 Use `act` to test GH Actions locally:
 
 `act -j build`
+
+
+---
+
+# Installation using Docker
+* __Redis__: `docker run -d --name some-redis -p 6379:6379 redis`

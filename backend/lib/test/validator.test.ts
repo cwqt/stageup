@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { body, query, object, single, array, params } from '../common/validate';
 import { ErrCode, IAddress, Idless, IOnboardingAddMembers } from '@eventi/interfaces';
 import Validators from '../common/validate';
+import { ViewColumn } from 'typeorm';
 
 describe('Custom validation', () => {
   it('Should return correct results for simple, unnested objects', async () => {
@@ -159,6 +160,24 @@ describe('Custom validation', () => {
     });
 
     expect(errors).to.be.lengthOf(0)
+  })
+
+  it("Should return errors for unstructred objects where all values are the same", async () => {
+    const data = {
+      "hello": { message: "world" },
+      "world": { message: 12 },
+    }
+
+    const errors = await object((<any>data), {
+      "*": v => v.custom(single({
+        message: v => v.isString()
+      }, ErrCode.REGEX_MATCH))
+    });
+
+    expect(errors).to.be.lengthOf(1);
+    expect(errors[0].param).to.eq("world");
+    expect(errors[0].nestedErrors).to.be.lengthOf(1);
+    expect(errors[0].nestedErrors[0].param).to.be.eq("message")
   })
 
   // FIXME: Arrays of primitives don't work

@@ -3,6 +3,8 @@ import { CommonModule } from "@angular/common";
 import { AngularMaterialModule } from "../angular-material.module";
 import { ClickOutsideModule } from "ng-click-outside";
 import { ReactiveFormsModule, FormsModule, NgForm } from "@angular/forms";
+import { NgxMaskModule } from 'ngx-mask'
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { ButtonComponent } from "./button/button.component";
 import { IconComponent } from "./icon/icon.component";
@@ -18,8 +20,10 @@ import { FormComponent } from "./form/form.component";
 import { HttpClientModule } from "@angular/common/http";
 import { FormBodyComponent } from "./form/form-body/form-body.component";
 import { HrComponent } from './hr/hr.component';
+import { PlaceholderComponent } from "./placeholder/placeholder.component";
 
-const allComponents = [
+
+const ExportedUiComponents = [
   ButtonComponent,
   IconComponent,
   TestbedComponent,
@@ -32,12 +36,13 @@ const allComponents = [
   InputComponent,
   FormComponent,
   HrComponent,
+  PlaceholderComponent
 ];
 
 @NgModule({
   declarations: [
-    ...allComponents,
-    FormBodyComponent,
+    ...ExportedUiComponents,
+    FormBodyComponent, // internal recursive component for forms
   ],
   imports: [
     CommonModule,
@@ -46,8 +51,10 @@ const allComponents = [
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    NgxMaskModule.forRoot(),
+    NgxMatSelectSearchModule
   ],
-  exports: allComponents,
+  exports: ExportedUiComponents,
   providers: [],
   entryComponents: [],
   bootstrap: [],

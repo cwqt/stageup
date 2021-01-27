@@ -13,7 +13,7 @@ export default class MiscController extends BaseController {
 
   ping(): IControllerEndpoint<string> {
     return {
-      authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
+      authStrategy: AuthStrat.none,
       controller: async req => {
         return 'Pong!';
       },
@@ -22,13 +22,11 @@ export default class MiscController extends BaseController {
 
   dropAllData(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
+      authStrategy: AuthStrat.custom(async () => !config.PRODUCTION),
       controller: async req => {
-        // Clear Influx, Redis, session store & Postgres
-        if(this.dc.influx) await this.dc.influx.query(`DROP SERIES FROM /.*/`);
-        if(this.dc.redis) await new Promise(res => this.dc.redis.flushdb(res));
-        if(this.dc.session_store) await new Promise(res => this.dc.session_store.clear(res));
-
+        // Clear Influx, Redis, Postgres & session store
+        await this.dc.influx?.query(`DROP SERIES FROM /.*/`);
+        await new Promise(res => this.dc.redis.flushdb(res));
         await this.ORM.synchronize(true); //https://github.com/nestjs/nest/issues/409
       },
     };
@@ -36,7 +34,8 @@ export default class MiscController extends BaseController {
 
   verifyHost(): IControllerEndpoint<IHost> {
     return {
-      authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
+      authStrategy: AuthStrat.none,
+      // authStrategy: AuthStrat.custom(() => !config.PRODUCTION),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid) }))
         host.is_onboarded = true;

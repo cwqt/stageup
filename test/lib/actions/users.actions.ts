@@ -1,8 +1,12 @@
 import Axios from 'axios';
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
+<<<<<<< HEAD
+import { IMyself, IUser, IAddress } from '@eventi/interfaces';
+=======
 import { IMyself, IUser } from '@eventi/interfaces';
 import userAddressesActions from './user-addresses.actions';
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
 
 export default {
   ...userAddressesActions,
@@ -20,6 +24,13 @@ export default {
     } else {
       return Stories.cachedUsers[user]?.user!;
     }
+  },
+
+  //router.post <IAddress> ("/users/uid/addresses", Users.createAddress());
+  createAddress: async (user: IUser, data: { city:string, iso_country_code:string, 
+    postcode:string, street_name:string, street_number:number}): Promise<IAddress> => {
+    const res = await Axios.post<IAddress>(`${env.baseUrl}/users/${user._id}/addresses`, data, env.getOptions());
+    return res.data;
   },
 
   login: async (user:UserType): Promise<CachedUser> => {
