@@ -41,7 +41,6 @@
     "@angular/router": "^11.0.0",
     "@mux/mux-node": "^3.1.0",
     "@nrwl/angular": "^11.1.5",
-    "apicache": "^1.5.3",
     "aws-sdk": "^2.799.0",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
@@ -52,6 +51,7 @@
     "dbless-email-verification": "^1.0.0",
     "deep-diff": "^1.0.2",
     "dotenv": "^8.2.0",
+    "eslint-plugin-import": "^2.22.1",
     "express": "4.17.1",
     "express-async-router": "^0.1.15",
     "express-rate-limit": "^5.2.3",
@@ -102,7 +102,6 @@
     "@nrwl/node": "11.1.5",
     "@nrwl/tao": "11.1.5",
     "@nrwl/workspace": "11.1.5",
-    "@types/apicache": "^1.2.2",
     "@types/aws-sdk": "^2.7.0",
     "@types/axios": "^0.14.0",
     "@types/bcrypt": "^3.0.0",
@@ -138,7 +137,6 @@
     "autoprefixer": "^10.0.2",
     "chai": "^4.2.0",
     "codelyzer": "^6.0.0",
-    "dotenv": "6.2.0",
     "eslint": "^7.10.0",
     "eslint-config-prettier": "6.0.0",
     "eslint-config-xo": "^0.34.0",
@@ -167,8 +165,6 @@
     "tsc-watch": "^4.2.3",
     "tslint": "~6.1.0",
     "typeorm-uml": "^1.6.1",
-    "typescript": "^4.0.5",
-    "xo": "^0.37.1",
-    "xo-summary": "^1.0.1"
+    "typescript": "^4.0.5"
   }
 }

@@ -1,5 +1,8 @@
 {
   "root": true,
+  "env": {
+    "node": true
+  },
   "ignorePatterns": ["**/*", "routes.ts"],
   "parser": "@typescript-eslint/parser",
   "plugins": ["@nrwl/nx", "unicorn", "@typescript-eslint", "import"],
