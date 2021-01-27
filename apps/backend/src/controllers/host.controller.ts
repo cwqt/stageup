@@ -50,10 +50,11 @@ export default class HostController extends BaseController {
       ],
       authStrategy: AuthStrat.isLoggedIn,
       controller: async req => {
+        // Check if user is already part of a host - which they shouldn't
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
-        // Check if user is already part of a host - which they shouldn't
+        // Check if the username for a host is already taken
         const h = await Host.findOne({ username: req.body.username });
         if (h) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
 
@@ -271,13 +272,15 @@ export default class HostController extends BaseController {
       ],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const onboarding = await getCheck(Onboarding.findOne({
-          where: {
-            host: {
-              _id: Number.parseInt(req.params.hid)
+        const onboarding = await getCheck(
+          Onboarding.findOne({
+            where: {
+              host: {
+                _id: Number.parseInt(req.params.hid)
+              }
             }
-          }
-        }));
+          })
+        );
 
         const step = (req.params.step as unknown) as HostOnboardingStep;
         const stepReview = await OnboardingStepReview.findOne({

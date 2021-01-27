@@ -16,9 +16,7 @@ import {
     IHostOnboarding as IHOnboarding,
     IOnboardingStep,
     IAddress,
-    IUserStub,
-    IPerformanceHostInfo,
-    IHostStub
+    IUserStub
 } from "@eventi/interfaces";
 
 import UserController from './controllers/user.controller';
@@ -68,10 +66,6 @@ router.get    <IUserStub[]>           ("/hosts/:hid/members",                   
 router.post   <IHost>                 ("/hosts/:hid/members",                       Hosts.addMember());
 router.delete <void>                  ("/hosts/:hid/members/:mid",                  Hosts.removeMember());
 router.put    <void>                  ("/hosts/:hid/members/:mid",                  Hosts.updateMember());
-router.get    <IHOnboarding>          ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
-router.post   <void>                  ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
-router.get    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
-router.put    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 router.get    <IHOnboarding>          ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
 router.post   <void>                  ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
 router.get    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());

@@ -24,7 +24,8 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "release": "shipjs prepare"
   },
   "private": true,
   "dependencies": {
@@ -134,7 +135,6 @@
     "autoprefixer": "^10.0.2",
     "chai": "^4.2.0",
     "codelyzer": "^6.0.0",
-    "cypress": "^6.0.1",
     "dotenv": "6.2.0",
     "eslint": "7.10.0",
     "eslint-config-prettier": "6.0.0",
@@ -153,6 +153,7 @@
     "postcss-loader": "^4.0.4",
     "postcss-scss": "^3.0.4",
     "prettier": "2.2.1",
+    "shipjs": "0.23.0",
     "supertest": "^4.0.2",
     "tailwindcss": "^2.0.1",
     "ts-jest": "26.4.0",

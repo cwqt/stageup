@@ -10,61 +10,26 @@ on:
     branches: [ dev, master ]
 
 jobs:
-  interfaces:
+  build:
+    name: deploy app
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
     steps:
-      - uses: actions/checkout@v2
-      - name: Install node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-          registry-url: 'https://registry.npmjs.org'
 
-      - name: Compile interfaces
-        working-directory: ./interfaces
-        run: |
-          npm install
-          tsc
+    - name: checkout code
+      uses: actions/checkout@v2
 
-  frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-          registry-url: 'https://registry.npmjs.org'
+    - name: install Nrwl Nx
+      run: npm i nx
 
-      - name: Build frontend
-        working-directory: ./frontend
-        run: |
-          npm ci
-          npm run build
+    - name: install dependencies
+      run: npm ci
 
-  backend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2      
-      - name: Install node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Lint backend
-        working-directory: ./backend
-        run: |
-          npm ci
-          npm run lint
-
-      - name: Transpile backend
-        working-directory: ./backend
-        run: |
-          npm install typescript -g
-          tsc
-
-      - name: Test Backend
-        working-directory: ./backend
-        run: |
-          npm run test
+    - name: Nrwl Nx
+      uses: MansaGroup/nrwl-nx-action@v1.0.1
+      with:
+        targets: build
+        projects: frontend, backend
+        args: --base=origin/main --stage=dev --configuration=dev

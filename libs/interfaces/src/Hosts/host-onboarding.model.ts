@@ -21,19 +21,19 @@ import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './
 import { IOnboardingStepReview } from './onboarding-step-review.model';
 
 export enum HostOnboardingStep {
-  ProofOfBusiness,
-  OwnerDetails,
-  SocialPresence,
-  AddMembers,
-  SubscriptionConfiguration,
+  ProofOfBusiness = 0,
+  OwnerDetails = 1,
+  SocialPresence = 2,
+  AddMembers = 3,
+  SubscriptionConfiguration = 4,
 }
 
 export enum HostOnboardingState {
-  AwaitingChanges, // not submitted
-  PendingVerification, // submit & awaiting verification from admin
-  HasIssues, // verified has having problems
-  Verified, // verified as valid
-  Enacted, // all stages verified & submitted as complete
+  AwaitingChanges = 0, // not submitted
+  PendingVerification = 1, // submit & awaiting verification from admin
+  HasIssues = 2, // verified has having problems
+  Verified = 3, // verified as valid
+  Enacted = 4, // all stages verified & submitted as complete
 }
 
 export type IHostOnboardingProcess = Omit<IHostOnboarding, 'steps'> & { steps: IOnboardingStepMap };

@@ -30,7 +30,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
   let admin: IUser;
   let host: IHost;
   let onboarding: IHostOnboarding;
-  let steps: IOnboardingStepMap;
+  let steps: IOnboardingStepMap;   
 
   it('Should create an admin user & a client user', async () => {
     await Stories.actions.common.setup();

@@ -10,13 +10,10 @@ import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.s
 export class HostPerformancesComponent implements OnInit {
   hostId:number;
 
-
   constructor(private appService:BaseAppService, private route:ActivatedRoute, ) { }
 
   async ngOnInit() {
     await this.appService.componentInitialising(this.route, false);
     this.hostId = parseInt(this.appService.getParam(RouteParam.HostId));
-
   }
-
 }
