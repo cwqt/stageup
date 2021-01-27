@@ -1,49 +1,71 @@
 import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
+<<<<<<< HEAD:apps/frontend/src/app/ui-lib/form/form.interfaces.ts
 import { Primitive } from "@eventi/interfaces";
 import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import { IFlatGraphNode } from "../input/input.component";
+=======
+import { DottedPaths, Primitive } from "@eventi/interfaces";
+import { ICacheable } from "src/app/app.interfaces";
+import { IGraphNode } from "../input/input.component";
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:frontend/src/app/ui-lib/form/form.interfaces.ts
 
-
-export interface GroupControlComponentData {
-  conjunctor?: null;
-  conditions: ConditionFormComponentData[];
-  groups: GroupControlComponentData[];
-}
-
-export interface ConditionFormComponentData {
-  variable: any;
-  field?: IUiFormField;
-}
 /**
  * @param submit, T => submit handler return type
  */
 export interface IUiForm<T> {
-  fields: IUiFormField[]; // form fields
+  fields: { [index:string]:IUiFormField }; // form fields
   submit: IUiFormSubmit<T>; // what to do on submit
+  prefetch?: (mapping?: { [index: string]: string }) => Promise<IUiFormPrefetchData>; //populate form from object
+}
+
+export interface IUiFormPrefetchData<T = any> {
+  fields: {[index in DottedPaths<T>]:string};
+  errors?: {[index in DottedPaths<T>]:string};
 }
 
 export interface IUiFormField {
-  type: "number" | "text" | "password" | "textarea" | "checkbox" | "select" | "container";
-  field_name: string;
+  type:
+    | "number"
+    | "text"
+    | "password"
+    | "textarea"
+    | "checkbox"
+    | "select"
+    | "tree"
+    | "phone"
+    | "container";
   variant?: "primary" | "secondary";
   label?: string;
-  default?: Primitive;
+  initial?: Primitive;
+  placeholder?: string;
   validators?: IUiFormFieldValidator[];
   hint?: string;
-  fields?: IUiFormField[]; // for nested objects
-  width?: number; //for containers
+  fields?: IUiForm<any>["fields"]; // for nested objects
 
-  options?: IUiFieldSelectOptions | any;
-
+  options?: IUiFieldSelectOptions | IUiFieldTextOptions | any;
 
   // internal ----------------------
   disabled?: boolean;
   errors?: string[];
 }
 
-export interface IUiFieldSelectOptions {
-  values: Omit<IFlatGraphNode, "level" | "expandable">[];
+export interface IMaskOptions {
+  prefix?: string;
+  suffix?: string;
+  value: string;
+}
+
+export interface IUiFieldOptions {
+  width?: number; //for containers
+}
+export interface IUiFieldTextOptions extends IUiFieldOptions {
+  mask?: IMaskOptions;
+  transformer?: (v:Primitive) => Primitive;
+}
+export interface IUiFieldSelectOptions extends IUiFieldOptions {
+  values: Omit<IGraphNode, "level" | "expandable" | "icon">[];
   multi: boolean;
+  search: boolean;
 }
 
 export interface IUiFormFieldValidator {

@@ -8,7 +8,7 @@
     [class.form-field--is-filled]="value !== ''"
     [class.form-field--is-small]="!label"
     [class.form-field--is-errored]="showError"
-    *ngIf="type == 'number' || type == 'text' || type == 'password'">
+    *ngIf="type == 'number' || type == 'text' || type == 'password' || type == 'phone'">
     <div class="form-field__control">
       <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
       <label *ngIf="label"
@@ -17,15 +17,20 @@
       <input
         #input
         [(ngModel)]="value"
+        [validation]="true"
         (blur)="onTouched()"
         (focus)="onFocus()"
         [id]="formControlName || ''"
         [disabled]="disabled"
         [placeholder]="placeholder"
-        [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : type"
+        [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : (type == 'phone' ? 'tel' : type)"
+        [showMaskTyped]="(value !== '' || focused) ? true : false"
+        [mask]="options?.mask ? options.mask.value : (type == 'phone' ? '(0000) 000-000' : '')"
+        [suffix]="(value !== '' || focused) ? (options?.mask ? options.mask.suffix : '') : ''"
+        [prefix]="(value !== '' || focused) ? (options?.mask ? options.mask.prefix : (type == 'phone' ? '+44' : '')) : ''"
+        [required]="required"
         tabindex="0"
         autocomplete="off"
-        [required]="required"
         class="form-field__input" />
         <div class="form-field__password" *ngIf="type == 'password'">
           <ui-icon-button size="m" (click)="togglePasswordVisibility(false, $event)" *ngIf="passwordVisible"><ui-icon>view--filled</ui-icon></ui-icon-button>
@@ -62,6 +67,12 @@
     </div>
   </div>
 
+  <!-- Field length indicators -->
+  <!-- <div class="form-field_lengths" *ngIf="maxlength || minlength" >
+    {{ maxlength }} / {{ value?.length }} /  {{ minlength }}
+  </div> -->
+
+
   <!-- Number input -->
   <!-- <div class="ui-input-number-buttons" *ngIf="type == 'number'">
     <ui-icon-button (click)="increment($event)">caret--up</ui-icon-button>
@@ -74,7 +85,6 @@
     class="ui-input"
     appearance="fill"
     [class.errored]="showError"
-    [class.hasHint]="hint"
     [class.dark]="kind == 'secondary'"
     [class.small]="!label"
     [class.checkbox]="type == 'checkbox'">
@@ -84,7 +94,27 @@
     <input matInput placeholder="Input" style="display: none" >
   </mat-form-field>
 
+  <!-- Select with search -->
+  <mat-form-field *ngIf="type == 'select'" appearance="fill">
+    <mat-label>{{ label }}</mat-label>
+    <mat-select #singleSelect
+      (blur)="onTouched()"
+      (focus)="onFocus()"
+      [(ngModel)]="value"
+      disableOptionCentering>
+      <mat-option *ngIf="options.search">
+        <ngx-mat-select-search ngModel
+        (ngModelChange)="filterSelectionItems($event)"
+          placeholderLabel="Search"
+          noEntriesFoundLabel="No results"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.key">
+        {{ item.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
+<<<<<<< HEAD:apps/frontend/src/app/ui-lib/input/input.component.html
   <mat-form-field *ngIf="type == 'select'">
 
   <mat-label>{{ label || "Select option"}}</mat-label>
@@ -143,16 +173,81 @@
       </mat-tree>
   </mat-select>
 </mat-form-field>
-
-
-
-
-
+=======
   <!-- Hint message -->
-  <span *ngIf="hint && !showError" class="form-field__hint">{{ hint }}</span>
+  <span *ngIf="hint" class="form-field__hint">{{ hint }}</span>
 
   <!-- Form errors -->
-  <div *ngIf="showError" class="form-field__errors" [class.shiftMore]="hint">
+  <div *ngIf="showError" class="form-field__errors">
     <span *ngFor="let error of errors">{{ error }}</span>
   </div>
 </div>
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:frontend/src/app/ui-lib/input/input.component.html
+
+
+
+
+
+
+<!-- leave this for later -->
+<ng-container *ngIf="false">
+  <mat-form-field *ngIf="type == 'select'" appearance="fill" >
+    <mat-label>{{ label || "Select option"}}</mat-label>
+    <mat-select #selector
+        [disabled]="disabled"
+        [required]="required"
+        [value]="!checklistSelection.isEmpty() ? 'always_exist' : null">
+        <!-- show selection text - name (+n others) -->
+        <mat-select-trigger>
+            <ng-container *ngIf="!checklistSelection.isEmpty()">
+                <span>{{ checklistSelection.selected[0].value }}</span>
+                <span [ngPlural]="checklistSelection.selected.length - 1" class="additional-selection">
+                    <ng-template ngPluralCase="=0"></ng-template>
+                    <ng-template ngPluralCase="=1">(+1 other)</ng-template>
+                    <ng-template ngPluralCase="other">(+{{ checklistSelection.selected.length - 1 }} others)</ng-template>
+                </span>    
+            </ng-container>
+        </mat-select-trigger>
+  
+        <!-- make the select actually open -->
+        <mat-option style="display: none;" value="always_exist"></mat-option>
+  
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+            <mat-tree-node
+                (click)="leafNodeItemSelectionToggle(node)"
+                *matTreeNodeDef="let node"
+                matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="27">
+                <button *ngIf="!noNestedNodes" mat-icon-button disabled></button>
+                <ui-icon *ngIf="node.icon">{{ node.icon }}</ui-icon>
+                <mat-checkbox class="checklist-leaf-node" *ngIf="!noNestedNodes" disableRipple
+                    (click)="$event.preventDefault()"
+                    [checked]="checklistSelection.isSelected(node)"
+                    (change)="leafNodeItemSelectionToggle(node)">
+                </mat-checkbox>
+                <p>{{ node.value }}</p>
+            </mat-tree-node>
+  
+            <mat-tree-node
+                (click)="rootNodeSelectionToggle(node)"
+                class="root-node"
+                *matTreeNodeDef="let node; when: hasChild"
+                matTreeNodePadding matTreeNodePaddingIndent="27">
+                <button mat-icon-button matTreeNodeToggle disableRipple
+                    (click)="untoggleAll(node)"
+                    [disabled]="!treeControl.isExpandable(node)">
+                    <mat-icon class="mat-icon-rtl-mirror">
+                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                    </mat-icon>
+                </button>
+                <mat-checkbox *ngIf="!noNestedNodes" disableRipple
+                    (click)="$event.preventDefault()"
+                    [checked]="checklistSelection.isSelected(node) || descendantsAllSelected(node)"
+                    [indeterminate]="descendantsPartiallySelected(node)"
+                    (change)="rootNodeSelectionToggle(node)">
+                </mat-checkbox>
+                <p>{{ node.value }}</p>
+            </mat-tree-node>
+        </mat-tree>
+    </mat-select>
+  </mat-form-field>
+</ng-container>

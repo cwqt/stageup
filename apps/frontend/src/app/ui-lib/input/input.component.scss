@@ -234,36 +234,11 @@ ui-icon {
 
 }
 
-// .ui-input {
-//   &.hasHint {
-//     margin-bottom: 1.34375em;
-//   }
-
-//   &.errored {
-//     ::ng-deep {
-//       .mat-form-field-ripple {
-//         transform: none !important;
-//         opacity: 1 !important;
-//         height: 2px !important;
-//         background-color: #f44335 !important;
-//       }
-//     }
-
-//     &.mat-focused {
-//       ::ng-deep {
-//         .mat-form-field-wrapper .mat-form-field-flex {
-//           border: 2px solid #f44335 !important;
-//         }
-//       }
-//     }
-//   }
-// }
-
-
 mat-form-field {
   position: relative;
 }
 
+// Select / tree ---------------------------------------------------------------------------------------------------------------
 mat-tree-node {
   display: flex;
   align-items: center;

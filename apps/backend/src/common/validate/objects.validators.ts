@@ -60,12 +60,20 @@ export namespace ObjectValidators {
     };
   };
 
+<<<<<<< HEAD:apps/backend/src/common/validate/objects.validators.ts
   export const IOnboardingIssue = (): ObjectValidator<IOnboardingIssue<any>> => {
     return {
       param: v => FV.isString(v),
       message: v => FV.isString(v)
     };
   };
+=======
+  export const IOnboardingIssue = ():ObjectValidator<IOnboardingIssue> => {
+    return {
+      message: v => FV.isString(v),
+    }
+  }
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/common/validate/objects.validators.ts
 
   export const IHostMemberChangeRequest = (
     value: IHostMemberChangeRequest['value'] = null): ObjectValidator<IHostMemberChangeRequest> => {

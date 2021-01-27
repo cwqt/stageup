@@ -39,7 +39,11 @@ const paginate = async <T>(
   const total = builder;
   const count = await total.getCount();
   const res = await builder.skip(skip).take(per_page).getMany();
+<<<<<<< HEAD:apps/backend/src/common/paginate.ts
 
+=======
+  
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/common/paginate/index.ts
   return {
     data: res as T[],
     __client_data: null,

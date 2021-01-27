@@ -1,6 +1,6 @@
-import { Stories } from '../stories';
-import jwt from 'jsonwebtoken';
 import Axios from "axios";
+import { Stories } from '../stories';
+
 import {environment as env, environment, UserType} from "../environment";
 import { IUser } from '@eventi/interfaces';
 

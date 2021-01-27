@@ -1,6 +1,11 @@
 import logger from '../common/logger';
+<<<<<<< HEAD:apps/backend/src/controllers/admin.controller.ts
 import config, { Environment } from '../config';
 import Validators, { body, array, query } from '../common/validate';
+=======
+import config from '../config';
+import Validators, { single } from '../common/validate';
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/controllers/Admin.controller.ts
 import { getCheck } from '../common/errors';
 import {
   HostOnboardingState,
@@ -63,9 +68,17 @@ export default class AdminController extends BaseController {
       validators: [
         body<IOnboardingStepReviewSubmission<any>>({
           step_state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
+<<<<<<< HEAD:apps/backend/src/controllers/admin.controller.ts
           issues: v => v.isArray().custom(array(Validators.Objects.IOnboardingIssue())),
           review_message: v => v.optional(true).isString()
         })
+=======
+          review_message: v => v.optional(true).isString(),
+          issues: v => v.custom(single({
+            "*": v => v.custom(single(Validators.Objects.IOnboardingIssue()))
+          }))
+        }),
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/controllers/Admin.controller.ts
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
@@ -75,25 +88,28 @@ export default class AdminController extends BaseController {
         const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
 
         const review = new OnboardingStepReview(step, onboarding, reviewer, submission);
-
         await this.ORM.transaction(async txc => {
           await txc.save(review);
-
           onboarding.steps[step].state = review.step_state;
+<<<<<<< HEAD:apps/backend/src/controllers/admin.controller.ts
           onboarding.state = Object.values(onboarding.steps).every(o => o.state === HostOnboardingState.Verified)
             ? HostOnboardingState.Verified
             : HostOnboardingState.AwaitingChanges;
 
+=======
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:backend/lib/controllers/Admin.controller.ts
           await txc.save(onboarding);
+          // The admin will then enact to push requested changes (if any) to the Host
         });
       }
     };
   }
 
   /**
-   * @description Merge the Hosts Onboarding Process with the host
+   * @description Merge the Hosts Onboarding Process with the host if all steps valid,
+   * otherwise submit e-mail requesting changes
    */
-  submitOnboardingProcess(): IControllerEndpoint<void> {
+  enactOnboardingProcess(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
@@ -159,7 +175,7 @@ export default class AdminController extends BaseController {
               })
             );
 
-            // TODO: Subscription level
+            // TODO: Subscription level (needs requirements)
 
             // TODO: Once the onboarding process is complete, we no longer need it & it + it's onboarding issues
             // can be deleted
@@ -168,6 +184,9 @@ export default class AdminController extends BaseController {
             logger.info('All steps valid & signed off!');
           } else {
             logger.info('Not all steps are signed off as valid');
+            onboarding.state = HostOnboardingState.HasIssues;
+            // TODO: Send an email requesting changes
+            await txc.save(onboarding);
           }
         });
       }

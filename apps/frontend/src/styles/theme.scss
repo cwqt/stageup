@@ -36,36 +36,36 @@ mat-table {
   }
 }
 
+
 mat-form-field {
   width: 100% !important;
   .mat-form-field-appearance-fill {
     border-radius: 0 !important;
   }
-
   .mat-form-field-flex {
     border-radius: 0 !important;
-    border: 2px solid transparent;
+    // border: 2px solid transparent;
   }
 
   &.mat-focused {
     .mat-form-field-ripple,
     .mat-form-field-underline {
-      display: none !important;
+      // display: none !important;
     }
 
     &.mat-form-field-invalid .mat-form-field-flex {
-      border: 2px solid red !important;
+      border-bottom: 1px solid red !important;
     }
 
     .mat-form-field-flex {
-      border: 2px solid #0f62fe;
+      // border: 2px solid #0f62fe;
     }
   }
 
   &:hover {
     &:not(.mat-form-field-invalid) {
       .mat-form-field-ripple {
-        background-color: #78a9ff;
+        // background-color: #78a9ff;
       }
     }
   }

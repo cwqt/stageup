@@ -16,52 +16,45 @@ export class TestbedComponent implements OnInit {
   cacheable = createICacheable();
 
   form:IUiForm<any> = {
-    fields: [
-      {
+    fields: {
+      text_field: {
         type: "text",
-        field_name: "text_field",
         label: "Text Field",
       },
-      {
+      number_field: {
         type: "text",
-        field_name: "number_field",
         label: "Number Field",
       },
-      {
+      textarea_field: {
         type: "textarea",
-        field_name: "textarea_field",
         label: "Textarea Field",
       },
-      {
+      container_field: {
         type: "container",
-        field_name: "container_field",
         label: "Container",
-        fields: [
-          {
+        fields: {
+          checkbox_field: {
             type: "checkbox",
-            field_name: "checkbox_field",
             label: "Checkbox Field",
           },    
-          {
+          select_field: {
             type: "select",
-            field_name: "select_field",
             label: "Select Field",
             options: <IUiFieldSelectOptions>{
               multi: true,
               values: [
                 {
-                  _id: 1,
-                  name: "hello",
+                  key: 1,
+                  value: "hello",
                   icon: "person",
                 },
                 {
-                  _id: 2,
-                  name: "world",
-                  icon: "person",
+                  key: "wow",
+                  value: "world",
                   children: [
                     {
-                      _id: 3,
-                      name: "world",
+                      key: 3,
+                      value: "world",
                       icon: "person",
                     }    
                   ]
@@ -69,14 +62,13 @@ export class TestbedComponent implements OnInit {
               ]
             }
           },
-        ]
+        }
       },
-      {
+      password_field: {
         type: "password",
-        field_name: "password_field",
         label: "Password Field",
       },
-    ],
+    },
     submit: {
       variant: "primary",
       text: "Send form!",

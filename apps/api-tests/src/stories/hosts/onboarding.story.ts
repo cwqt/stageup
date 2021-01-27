@@ -18,7 +18,6 @@ import {
   IOnboardingSocialPresence,
   IOnboardingStepMap,
   IOnboardingSubscriptionConfiguration,
-  IPerson,
   IUser,
   PersonTitle
 } from '@eventi/interfaces';
@@ -165,8 +164,18 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       host,
       HostOnboardingStep.AddMembers
     );
+<<<<<<< HEAD:apps/api-tests/src/stories/hosts/onboarding.story.ts
     expect(step3.state).toBe(HostOnboardingState.AwaitingChanges);
     expect(step3.data.members_to_add[0].value).toBe(client._id);
+=======
+    expect(step3.state).to.equal(HostOnboardingState.AwaitingChanges);
+<<<<<<< HEAD
+    expect(step3.data.members_to_add[0].change).to.equal('add');
+    expect(step3.data.members_to_add[0].user_id).to.equal(client._id);
+=======
+    expect(step3.data.members_to_add[0].value).to.equal(client._id);
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:test/lib/stories/hosts/onboarding.story.ts
 
     let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
       host,
@@ -205,6 +214,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       // All but the Proof Of Business to be verified
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.AddMembers, {
         step_state: HostOnboardingState.Verified,
+<<<<<<< HEAD:apps/api-tests/src/stories/hosts/onboarding.story.ts
         issues: []
       });
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, {
@@ -218,6 +228,21 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, {
         step_state: HostOnboardingState.Verified,
         issues: []
+=======
+        issues: {},
+      });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, {
+        step_state: HostOnboardingState.Verified,
+        issues: {},
+      });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SocialPresence, {
+        step_state: HostOnboardingState.Verified,
+        issues: {},
+      });
+      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, {
+        step_state: HostOnboardingState.Verified,
+        issues: {},
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:test/lib/stories/hosts/onboarding.story.ts
       });
     });
 
@@ -227,6 +252,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
         HostOnboardingStep.ProofOfBusiness,
         {
           step_state: HostOnboardingState.HasIssues,
+<<<<<<< HEAD:apps/api-tests/src/stories/hosts/onboarding.story.ts
           issues: [
             {
               param: 'hmrc_company_number',
@@ -238,10 +264,18 @@ describe('As Client, I want to register a Host & be onboarded', () => {
               message: 'The street address & street number is invalid'
             }
           ]
+=======
+          issues: {
+            ['hmrc_company_number']: { message: "Couldn't find this company number in the registry" },
+            ['business_address.street_name']: { message: 'The street address could not be found' },
+            ['business_address.street_number']: { message: 'The street number could not be found' },
+            ['business_address']: { message: 'Incorrect details provided' },
+          },
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:test/lib/stories/hosts/onboarding.story.ts
         }
       );
 
-      await Stories.actions.admin.submitOnboardingProcess(onboarding);
+      await Stories.actions.admin.enactOnboardingProcess(onboarding);
     });
   });
 
@@ -250,9 +284,21 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       await Stories.actions.common.switchActor(UserType.Client);
       const step = await Stories.actions.hosts.readOnboardingProcessStep(host, HostOnboardingStep.ProofOfBusiness);
 
+<<<<<<< HEAD:apps/api-tests/src/stories/hosts/onboarding.story.ts
       expect(step.state).toBe(HostOnboardingState.HasIssues);
       expect(step.review?.issues).toHaveLength(2);
       expect(step.review?.reviewed_by.username).toBe(Stories.cachedUsers[UserType.SiteAdmin]?.user.username);
+=======
+      expect(step.state).to.eq(HostOnboardingState.HasIssues);
+      expect(step.review.issues).to.have.all.keys([
+        'hmrc_company_number',
+        'business_address.street_name',
+        'business_address.street_number',
+        'business_address',
+      ]);
+
+      expect(step.review?.reviewed_by.username).to.eq(Stories.cachedUsers[UserType.SiteAdmin]?.user.username);
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:test/lib/stories/hosts/onboarding.story.ts
     });
 
     it('Should update the the step with issues & re-submit for verification', async () => {
@@ -277,10 +323,18 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       await Stories.actions.common.switchActor(UserType.SiteAdmin);
       await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.ProofOfBusiness, {
         step_state: HostOnboardingState.Verified,
+<<<<<<< HEAD:apps/api-tests/src/stories/hosts/onboarding.story.ts
         issues: []
+=======
+        issues: {},
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5:test/lib/stories/hosts/onboarding.story.ts
       });
 
+<<<<<<< HEAD
+      await Stories.actions.admin.enactOnboardingProcess(onboarding);
+=======
       await Stories.actions.admin.submitOnboardingProcess(onboarding);
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
     });
   });
 });

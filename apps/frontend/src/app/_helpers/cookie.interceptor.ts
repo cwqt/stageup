@@ -9,7 +9,6 @@ export class SessionInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
       let currentSession = this.cookieService.get('connect.sid');
-        console.log('COOKIE: ', currentSession)
         if (currentSession) {
             req = req.clone({
                 setHeaders: { 

@@ -4,6 +4,6 @@
         "secure": false,
         "pathRewrite": {
             "^/api/": "/"
-        }    
+        }
     }
 }

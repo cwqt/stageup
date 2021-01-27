@@ -1,20 +1,22 @@
 <form [formGroup]="fg">
-  <ng-container *ngFor="let field of fields" [ngSwitch]="field.type">
+  <ng-container *ngFor="let field of fields | keyvalue: keepOrder" [ngSwitch]="field.value['type']">
     <div class="form-field-container" *ngSwitchCase="'container'">
-      <h2>{{ field.label }}</h2>
-      <ui-form-body [fields]="field.fields" [fg]="fg.controls[field.field_name]"></ui-form-body>
+      <h2>{{ field.value["label"] }}</h2>
+      <ui-form-body [fields]="field.value['fields']" [fg]="fg.controls[field.key]"></ui-form-body>
     </div>
 
     <ui-input *ngSwitchDefault
-      [type]="field.type"
-      [label]="field.label"
-      [hint]="field.hint"
-      [kind]="field.variant"
-      [options]="field.options"
-      [placeholder]="field.default"
-      [validatorFunctions]="field.validators"
-      [formControlName]="field.field_name">
-      {{field.field_name}}
+      [type]="field.value['type']"
+      [label]="field.value['label']"
+      [hint]="field.value['hint']"
+      [kind]="field.value['kind']"
+      [options]="field.value['options']"
+      [placeholder]="field.value['placeholder']"
+      [initial]="field.value['initial']"
+      [required]="fieldIsRequired(field.value)"
+      [validatorFunctions]="field.value['validators']"
+      [formControlName]="field.key">
+      {{ field.key }}
     </ui-input>
   </ng-container>
 </form>

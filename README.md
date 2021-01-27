@@ -1,5 +1,6 @@
 # eventi &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
 
+Live-streaming & VOD platform for the performance arts.
 
 # Installation
 
