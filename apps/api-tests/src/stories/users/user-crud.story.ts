@@ -10,7 +10,7 @@ describe('As a user, I want to be able to CRUD', () => {
     user = await Stories.actions.users.createUser(UserType.Member);
 
     expect(user).not.toBeNull();
-    expect(user.username).toBe(environment.userCreationData[UserType.Client].username);
+    expect(user.username).toBe(environment.userCreationData[UserType.Member].username);
   });
 
   it('Should get the newly created user', async () => {});

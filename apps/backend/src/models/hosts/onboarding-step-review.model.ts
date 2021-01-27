@@ -5,7 +5,8 @@ import {
   HostOnboardingState,
   HostOnboardingStep,
   IOnboardingIssue,
-  IOnboardingStepReview
+  IOnboardingStepReview,
+  DottedPaths
 } from '@eventi/interfaces';
 
 import { User } from '../users/user.model';
@@ -20,7 +21,7 @@ export class OnboardingStepReview extends BaseEntity implements IOnboardingStepR
   @Column() reviewed_at: number;
   @Column('enum', { enum: HostOnboardingStep }) onboarding_step: HostOnboardingStep;
   @Column('enum', { enum: [HostOnboardingState.Verified, HostOnboardingState.HasIssues] }) step_state: HostOnboardingState.Verified | HostOnboardingState.HasIssues;
-  @Column('jsonb') issues: Array<IOnboardingIssue<any>>;
+  @Column('jsonb') issues: {[index in DottedPaths<any>]?:IOnboardingIssue}
 
   @ManyToOne(() => Onboarding, hop => hop.reviews) onboarding: Onboarding;
   @ManyToOne(() => User, { eager: true }) @JoinColumn() reviewed_by: User;

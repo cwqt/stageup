@@ -1,10 +1,8 @@
-import { describe, it } from 'mocha';
-import { expect } from 'chai';
 import { IUser } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 
-describe('As a user, I want to be able to CRUD', async () => {
+describe('As a user, I want to be able to CRUD', () => {
   let user: IUser;
   let userAdmin: IUser;
   
@@ -13,8 +11,8 @@ describe('As a user, I want to be able to CRUD', async () => {
       user = await Stories.actions.users.createUser(UserType.Client);
       await Stories.actions.common.switchActor(UserType.Client);
       
-    expect(user).to.not.be.null;
-    expect(user.username).to.be.eq('hostclient');
+    expect(user).not.toBeNull;
+    expect(user.username).toEqual('hostclient');
 
    });
 

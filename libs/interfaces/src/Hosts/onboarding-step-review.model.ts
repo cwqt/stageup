@@ -1,6 +1,6 @@
-import { IUserStub } from '../Users/User.model';
+import { IUserStub } from '../users/user.model';
 import { HostOnboardingState, HostOnboardingStep, IHostOnboarding } from './host-onboarding.model';
-import { DottedPaths } from '../Common/FP';
+import { DottedPaths } from '../common/fp';
 
 /**
  * @description What the Admin sends to the /review route which is formed into an IOnboardingStepReview

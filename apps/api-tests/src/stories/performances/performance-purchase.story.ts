@@ -1,4 +1,7 @@
-// import { describe, it } from 'mocha';
+describe('Logger', () => {
+  test.todo('please pass');
+});
+
 // import { IHost, IPerformance, IUser } from '@eventi/interfaces';
 // import { Stories } from '../../stories';
 // import { UserType } from '../../environment';
@@ -29,7 +32,3 @@
 //     await Stories.actions.performances.purchase(perf);
 //   });
 // });
-
-describe('Logger', () => {
-  test.todo('please pass');
-});

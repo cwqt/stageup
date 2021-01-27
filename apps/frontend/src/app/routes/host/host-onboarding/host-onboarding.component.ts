@@ -5,13 +5,9 @@ import {
 import {
   AfterViewInit,
   Component,
-  ComponentFactoryResolver,
-  Host,
   Input,
   OnInit,
-  QueryList,
   ViewChild,
-  ViewChildren,
 } from "@angular/core";
 import { MatVerticalStepper } from "@angular/material/stepper";
 import {
@@ -23,13 +19,13 @@ import {
   ISOCountryCode,
   PersonTitle,
 } from "@eventi/interfaces";
-import { createICacheable, ICacheable } from "src/app/app.interfaces";
-import { HostService } from "src/app/services/host.service";
+import { createICacheable, ICacheable } from "apps/frontend/src/app/app.interfaces";
+import { HostService } from "apps/frontend/src/app/services/host.service";
 import {
   IUiForm,
   IUiFieldSelectOptions,
   IUiFormPrefetchData,
-} from "../../../ui-lib/form/form.interfaces";
+} from "apps/frontend/src/app/ui-lib/form/form.interfaces";
 import phone from 'phone';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { HttpErrorResponse } from "@angular/common/http";

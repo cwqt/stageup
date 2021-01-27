@@ -193,7 +193,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   public filteredSelectionItems: ReplaySubject<
     IGraphNode[]
   > = new ReplaySubject<IGraphNode[]>(1);
-  protected _onDestroy = new Subject<void>();
+  _onDestroy = new Subject<void>();
 
   initialiseSelection() {
     // load the initial items list
@@ -205,7 +205,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     this._onDestroy.complete();
   }
 
-  protected setInitialSelectValue() {
+  setInitialSelectValue() {
     this.filteredSelectionItems
       .pipe(take(1), takeUntil(this._onDestroy))
       .subscribe(() => {
@@ -219,7 +219,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
       });
   }
 
-  protected filterSelectionItems(event: string) {
+  filterSelectionItems(event: string) {
     if (!this.options.values) return;
     if (!event)
       return this.filteredSelectionItems.next(this.options.values.slice());
