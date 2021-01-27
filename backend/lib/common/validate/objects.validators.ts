@@ -67,12 +67,9 @@ export namespace ObjectValidators {
   }
 
   export const IHostMemberChangeRequest = (
-    value: IHostMemberChangeRequest['value'] = null
-  ): ObjectValidator<IHostMemberChangeRequest> => {
+    value: IHostMemberChangeRequest['value'] = null): ObjectValidator<IHostMemberChangeRequest> => {
     return {
-      user_id: v => FV.isInt(v),
-      change: v => FV.isString(v).isIn(['add', 'update', 'del']),
-      value: v => v.optional(value == null ? true : false).equals(value?.toString()),
+      value: v => v.optional(true), // TODO: update this validator to check for either typeof HostPermission or number
     };
   };
 }

@@ -11,6 +11,7 @@ export default {
      */
     setup: async ():Promise<IUser> => {
       await Stories.actions.common.drop();
+      Stories.cachedUsers = {};//clear user cache
       const admin = await Stories.actions.users.createUser(UserType.SiteAdmin);
       await Stories.actions.common.switchActor(UserType.SiteAdmin);
       return admin;
@@ -29,7 +30,7 @@ export default {
      * @description Drop data from all databases
      */
     drop: async () => {
-      await Axios.post(`${env.baseUrl}/drop`);
+      return Axios.post(`${env.baseUrl}/drop`);
     },
 
     timeout: (ms:number) =>  {

@@ -1,9 +1,16 @@
 import Axios from 'axios';
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
+<<<<<<< HEAD
 import { IMyself, IUser, IAddress } from '@eventi/interfaces';
+=======
+import { IMyself, IUser } from '@eventi/interfaces';
+import userAddressesActions from './user-addresses.actions';
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
 
 export default {
+  ...userAddressesActions,
+
   getMyself: async (): Promise<IMyself> => {
     const res = await Axios.get<IMyself>(`${env.baseUrl}/myself`, env.getOptions());
     return res.data;
@@ -34,7 +41,7 @@ export default {
       password: env.userCreationData[user].password,
     }, env.getOptions());
 
-    console.log(`SWITCHED ACTOR: ${env.userActorMap[user]} -----------------------------------`);   
+    console.log(`SWITCHED ACTOR: ${env.userActorNameMap[user]} -----------------------------------`);   
     Stories.cachedUsers[user]!.session = res.headers['set-cookie'][0].split(";")[0];
     Stories.activeUser = Stories.cachedUsers[user];
     return Stories.cachedUsers[user]!;

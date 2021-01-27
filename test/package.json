@@ -11,9 +11,13 @@
   ],
   "scripts": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "test": "tsc && mocha --bail --timeout 100000 -r ts-node/register lib/stories/hosts/onboarding.story.ts" 
 =======
     "test": "tsc && set TS_NODE_COMPILER_OPTIONS={\"strict\":false} && set NODE_ENV=testing&& mocha --bail --timeout 1800000 -r ts-node/register lib/stories/users/user-reg.story.ts",
+=======
+    "test": "tsc && set TS_NODE_COMPILER_OPTIONS={\"strict\":false} && set NODE_ENV=testing&& mocha --bail --timeout 1800000 -r ts-node/register lib/stories/**/*.story.ts",
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
     "test-dev": "tsc && set TS_NODE_COMPILER_OPTIONS={\"strict\":false} && set NODE_ENV=testing&& mocha --inspect-brk -r ts-node/register lib/stories/**/*.story.ts"
 >>>>>>> 4948f0e3eaf860cf16d2c531141da823ef7aa2a9
   },
@@ -23,8 +27,11 @@
     "@eventi/interfaces": "../interfaces",
     "@types/mongoose": "^5.7.29",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "axios": "^0.19.2",
 =======
+=======
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
     "axios": "^0.21.1",
     "chai": "^4.2.0",
     "debug": "^4.3.1",
@@ -36,9 +43,13 @@
     "fsevents": "^2.3.1",
     "jsonwebtoken": "^8.5.1",
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     "mocha": "^7.2.0",
 >>>>>>> 4948f0e3eaf860cf16d2c531141da823ef7aa2a9
+=======
+    "mocha": "^7.2.0",
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
     "mongoose": "5.9.6",
     "ng": "0.0.0",
     "uuid": "^8.0.0"

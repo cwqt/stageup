@@ -152,7 +152,7 @@ describe('Custom validation', () => {
 
   it("Should not return errors for IHostMemberChangeRequest Object Validator", async () => {
     const data:IOnboardingAddMembers = {
-      members_to_add: [ { user_id: 1, change: 'add' }]
+      members_to_add: [ { value: 1 }]
     }
 
     const errors = await object(data, {

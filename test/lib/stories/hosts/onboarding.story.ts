@@ -46,10 +46,13 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       name: 'Some Cool Host',
       email_address: 'host@cass.si',
     });
+
+    expect(host).to.not.be.null;
   });
 
   it('Should get the created onboarding process', async () => {
-    let onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
+    onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
+
     expect(onboarding.state).to.equal(HostOnboardingState.AwaitingChanges);
     expect(onboarding.last_modified_by.username).to.equal(client.username);
     expect(onboarding.last_modified_by.name).to.equal(client.name);
@@ -110,8 +113,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       {
         members_to_add: [
           {
-            user_id: client._id,
-            change: 'add',
+            value: client._id,
           },
         ],
       }
@@ -165,8 +167,12 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
       HostOnboardingStep.AddMembers
     );
     expect(step3.state).to.equal(HostOnboardingState.AwaitingChanges);
+<<<<<<< HEAD
     expect(step3.data.members_to_add[0].change).to.equal('add');
     expect(step3.data.members_to_add[0].user_id).to.equal(client._id);
+=======
+    expect(step3.data.members_to_add[0].value).to.equal(client._id);
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
 
     let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
       host,
@@ -175,7 +181,7 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
     expect(step4.state).to.equal(HostOnboardingState.AwaitingChanges);
     expect(step4.data.tier).to.equal(HostSubscriptionLevel.Enterprise);
 
-    // Make a
+    // Make the IOnboardingStepMap
     steps = {
       [HostOnboardingStep.ProofOfBusiness]: step0,
       [HostOnboardingStep.OwnerDetails]: step1,
@@ -281,7 +287,11 @@ describe('As Client, I want to register a Host & be onboarded', async () => {
         issues: {},
       });
 
+<<<<<<< HEAD
       await Stories.actions.admin.enactOnboardingProcess(onboarding);
+=======
+      await Stories.actions.admin.submitOnboardingProcess(onboarding);
+>>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
     });
   });
 });
