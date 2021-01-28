@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { IHost } from '@eventi/interfaces';
+import { HostService } from 'src/app/services/host.service';
 
 @Component({
   selector: 'app-admin-onboarding-view',
@@ -7,13 +10,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminOnboardingViewComponent implements OnInit {
 
-  public hostName: string;
+  public hostName: IHost;
 
-  constructor() { }
+  constructor(private hostService: HostService, private _Activatedroute:ActivatedRoute) { }
 
   ngOnInit(): void {
-    
+    this.getHost();
   }
 
-
+  async getHost(){
+    this.hostName = await this.hostService.getHost(this._Activatedroute.snapshot.paramMap.get("hostId") as unknown as number);
+  }
 }
