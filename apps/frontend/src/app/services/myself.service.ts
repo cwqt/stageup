@@ -8,6 +8,7 @@ import { AuthenticationService } from "./authentication.service";
 import { BaseAppService } from "./app.service";
 import { Router } from "@angular/router";
 
+
 @Injectable({
   providedIn: "root",
 })
@@ -18,14 +19,14 @@ export class MyselfService {
     this.$myself = new BehaviorSubject(this.hydrate());
   }
 
-  store(myself: IMyself | null, reHydrate?: boolean) {
+  store(myself: IMyself | null, rehydrate?: boolean) {
     if (myself == null) {
       localStorage.removeItem("lastMyself");
     } else {
       localStorage.setItem("lastMyself", JSON.stringify(myself));
     }
 
-    if (reHydrate) this.hydrate(myself);
+    if (rehydrate) this.hydrate(myself);
   }
 
   /**
@@ -53,7 +54,7 @@ export class MyselfService {
             this.store(this.hydrate(myself));
           },
           (e:HttpErrorResponse) => {
-            if(e.status == HTTP.NotFound) {
+            if(e.status == HTTP.NotFound || e.status == HTTP.Unauthorised ) {
               // don't use authService because of circular DI
               this.store(null);
               this.router.navigate(['/']);

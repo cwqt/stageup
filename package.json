@@ -23,9 +23,9 @@
     "update": "nx migrate latest",
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
-    "help": "nx help",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
-    "release": "shipjs prepare"
+    "release": "shipjs prepare",
+    "bundle-report-frontend": "nx build frontend --prod --stats-json && webpack-bundle-analyzer dist/apps/frontend/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +41,7 @@
     "@angular/router": "^11.0.0",
     "@mux/mux-node": "^3.1.0",
     "@nrwl/angular": "^11.1.5",
+    "apicache": "^1.5.3",
     "aws-sdk": "^2.799.0",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
@@ -102,6 +103,7 @@
     "@nrwl/node": "11.1.5",
     "@nrwl/tao": "11.1.5",
     "@nrwl/workspace": "11.1.5",
+    "@types/apicache": "^1.2.2",
     "@types/aws-sdk": "^2.7.0",
     "@types/axios": "^0.14.0",
     "@types/bcrypt": "^3.0.0",
@@ -165,6 +167,7 @@
     "tsc-watch": "^4.2.3",
     "tslint": "~6.1.0",
     "typeorm-uml": "^1.6.1",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "webpack-bundle-analyzer": "^4.4.0"
   }
 }
