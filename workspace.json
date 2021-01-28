@@ -138,7 +138,7 @@
     },
     "interfaces": {
       "root": "libs/interfaces",
-      "sourceRoot": "libs/interfaces/src",
+      "sourceRoot": "libs/interfaces/src/index.ts",
       "projectType": "library",
       "targets": {}
     },
