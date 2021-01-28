@@ -3,9 +3,11 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": ["jest", "node"],
-    "@eventi/interfaces" : [
-      "../../libs/interfaces/src/index.ts"
-    ]
+    "paths": {
+      "@eventi/interfaces" : [
+        "../../libs/interfaces/src/index.ts"
+      ]  
+    }
   },
   "include": ["**/*.test.ts", "**/*.d.ts"]
 }
