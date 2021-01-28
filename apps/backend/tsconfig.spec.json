@@ -2,8 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "@eventi/interfaces" : [
+      "../../libs/interfaces/src/index.ts"
+    ]
   },
   "include": ["**/*.test.ts", "**/*.d.ts"]
 }
