@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
   selector: 'app-admin-onboarding-view',
@@ -8,9 +7,13 @@ import { AdminService } from 'src/app/services/admin.service';
 })
 export class AdminOnboardingViewComponent implements OnInit {
 
-  constructor(private adminService: AdminService) { }
+  public hostName: string;
+
+  constructor() { }
 
   ngOnInit(): void {
+    
   }
+
 
 }

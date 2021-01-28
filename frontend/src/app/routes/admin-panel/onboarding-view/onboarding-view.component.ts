@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { IOnboardingStepMap } from '@eventi/interfaces';
+import { AdminService } from 'src/app/services/admin.service';
+import { flatten } from "flat";
+import { BaseAppService, RouteParam } from 'src/app/services/app.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-onboarding-view',
@@ -7,9 +12,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OnboardingViewComponent implements OnInit {
 
-  constructor() { }
+  public onboardingSteps: IOnboardingStepMap;
+  public hostId: number;
+  
+  constructor(private adminService: AdminService, private appService: BaseAppService, private _Activatedroute:ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.hostId = this.appService.getParam(RouteParam.HostId) as unknown as number;
+    this.getOnboardingSteps();
   }
 
+  async getOnboardingSteps(){
+    this.onboardingSteps = await this.adminService.readOnboardingSteps(this._Activatedroute.snapshot.paramMap.get("hostId") as unknown as number);
+    this.flattenOnboardingStepMap();
+  }
+
+  flattenOnboardingStepMap(){
+    Object.entries(this.onboardingSteps).forEach(([step, stepData]) => {this.onboardingSteps[step] = flatten(stepData)});
+  }
+
+  checkForDataField(field: string){
+      if (field.substr(0, 4) === "data") return true;
+      return false;
+  }
+
+  getPrettyDataFieldKey(field: string): string{
+    return field.substr(field.lastIndexOf("."), field.length).replace(/[._]/g, " ");
+  }
 }
+
