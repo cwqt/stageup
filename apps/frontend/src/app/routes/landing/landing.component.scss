@@ -4,7 +4,7 @@
   overflow: hidden;
   // background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16' xml:space='preserve'%3E%3Crect width='16' fill='none' height='16'/%3E%3Crect x='0' y='0' fill='white' width='1' height='1'/%3E%3C/svg%3E");
   height: 100vh;
-  background-color: #111;
+  background-color: #222;
   max-height: 100vh;
 }
 
@@ -44,7 +44,10 @@
       height: auto;
       max-width: 80vw;
     }
-    h1 {
+    .logo {
+      margin-left: -50px;
+      max-width: 800px;
+      filter: invert(1);
       margin-top: 10px;
     }
   }
