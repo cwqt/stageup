@@ -8,6 +8,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
+import { NgxMaskModule, IConfig } from 'ngx-mask'
+
 import { ClickOutsideModule } from "ng-click-outside";
 import { MomentModule } from 'ngx-moment';
 
@@ -48,8 +50,16 @@ import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component"
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from "./routes/search/search.component";
 import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
+<<<<<<< HEAD
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
+=======
+import { ObjectLengthPipe } from "./_pipes/ObjectLengthPipe";
+
+
+export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
+
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5
 
 @NgModule({
   declarations: [
@@ -86,8 +96,12 @@ import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/on
     SearchComponent,
     AdminOnboardingListComponent,
     OnboardingStatePipe,
+<<<<<<< HEAD
     AdminOnboardingViewComponent,
     OnboardingViewComponent,
+=======
+    ObjectLengthPipe
+>>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5
   ],
   imports: [
     AngularMaterialModule,
@@ -99,6 +113,7 @@ import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/on
     ReactiveFormsModule,
     HttpClientModule,
     ClickOutsideModule,
+    NgxMaskModule.forRoot(),
     MomentModule
   ],
   providers: [

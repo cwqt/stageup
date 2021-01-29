@@ -98,6 +98,14 @@ export const runValidator = async <T extends object, U extends keyof T>(
  * @param location used by VReqHandlerFunctors to specify location of field
  */
 export const object: VFunctor = async (data, validators, location = null, idx = null): Promise<IFormErrorField[]> => {
+  // Match all if only validator is a * - for use with unstructured objects where all values are of the same form
+  if(Object.keys(validators).length == 1 && validators["*"]) {
+    validators = Object.keys(data).reduce<VFieldChainerMap<any>>((acc, curr) => {
+      (<any>acc)[curr] = validators["*"];
+      return acc;
+    }, {})
+  }
+
   const errors: IFormErrorField[] = (
     await Promise.all(Object.keys(validators).map((i: any) => runValidator(data, i, validators[i], location)))
   ).flat();
@@ -185,7 +193,7 @@ export const validatorMiddleware = (validators: VReqHandlerFunctor[]) => {
       .filter(e => e.status == 'fulfilled')
       .flatMap(e => (<any>e).value);
 
-    if(errors.length) console.log(JSON.stringify(errors, null, 2));
+    if(errors.length) logger.error(JSON.stringify(errors, null, 2));
     if (errors.length) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
     next();
   };

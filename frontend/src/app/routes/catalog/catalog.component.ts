@@ -15,11 +15,9 @@ import {
   styleUrls: ["./catalog.component.scss"],
 })
 export class CatalogComponent implements OnInit {
-  // results$: Observable<Paginated<ISpeciesStub | IDeviceStub>>;
+  // results$: Observable<Paginated<any>>;
   private searchTerms = new Subject<string>();
 
-  // searchCategories = [NodeType.Species, NodeType.Device];
-  // activeCategory = NodeType.Species;
   loading: boolean = false;
   errors = {
     search: "",

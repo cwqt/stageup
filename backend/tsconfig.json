@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "es2018",
     "lib": [ "es2020" ],
     "noImplicitAny": true,
     "moduleResolution": "node",
@@ -12,7 +12,7 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "sourceMap": true,
-    "outDir": "./build",
+    "outDir": "./dist",
     "rootDirs": ["./lib"],
     "typeRoots": [
       "@types",

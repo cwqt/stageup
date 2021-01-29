@@ -3,9 +3,7 @@
     "customizeUI.titleBar": "frameless",
     "spellright.language": ["en"],
     "spellright.documentTypes": ["markdown", "latex"],
-    "explorer.autoReveal": false,
-    "editor.wordWrapColumn": 120,
-    "editor.folding": false,
+    "explorer.autoReveal": true,
     "prettier.printWidth": 120,
     "prettier.singleQuote": true,
     "prettier.useTabs": false,
@@ -13,4 +11,7 @@
     "prettier.semi": true,
     "prettier.arrowParens": "avoid",
     "prettier.bracketSpacing": true,
+    "editor.folding": false,
+    "editor.wordWrapColumn": 120,
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

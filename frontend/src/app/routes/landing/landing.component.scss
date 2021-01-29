@@ -2,14 +2,10 @@
   display: flex;
   flex-flow: column;
   overflow: hidden;
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16' xml:space='preserve'%3E%3Crect width='16' fill='none' height='16'/%3E%3Crect x='0' y='0' fill='white' width='1' height='1'/%3E%3C/svg%3E");
+  // background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16' xml:space='preserve'%3E%3Crect width='16' fill='none' height='16'/%3E%3Crect x='0' y='0' fill='white' width='1' height='1'/%3E%3C/svg%3E");
   height: 100vh;
+  background-color: #111;
   max-height: 100vh;
-
-
-  app-header-user-button ::ng-deep span {
-    color: white !important;
-  }
 }
 
 @media only screen and (max-width: 1000px) {
@@ -50,15 +46,6 @@
     }
     h1 {
       margin-top: 10px;
-    }
-    .landing-body__buttons {
-      ui-button {
-        ::ng-deep button {
-          border-radius: 4px !important;
-        }
-        
-        padding-right: 10px;
-      }
     }
   }
   .landing-body__bottom {

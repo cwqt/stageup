@@ -3,6 +3,7 @@ import {
   HostOnboardingStep,
   IOnboardingIssue,
   IOnboardingStepReview,
+  DottedPaths
 } from '@eventi/interfaces';
 import {
   BaseEntity,
@@ -23,7 +24,7 @@ export class OnboardingStepReview extends BaseEntity implements IOnboardingStepR
   @Column()                   onboarding_step: HostOnboardingStep;
   @Column()                   onboarding_version: number;
   @Column()                   step_state: HostOnboardingState.Verified | HostOnboardingState.HasIssues;
-  @Column({ type: 'jsonb' })  issues: IOnboardingIssue<any>[];
+  @Column({ type: 'jsonb' })  issues: {[index in DottedPaths<any>]?: IOnboardingIssue};
   @Column()                   review_message: string;
   @Column()                   reviewed_at: number;
 

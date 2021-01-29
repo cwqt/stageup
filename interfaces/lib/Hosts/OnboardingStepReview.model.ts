@@ -1,17 +1,27 @@
-import { ErrCode } from '../Common/Errors.model';
 import { IUserStub } from '../Users/User.model';
-import { HostOnboardingState, HostOnboardingStep } from './HostOnboarding.model';
+import { HostOnboardingState, HostOnboardingStep, IHostOnboarding } from './HostOnboarding.model';
+import { DottedPaths } from '../Common/FP';
 
-export interface IOnboardingIssue<T> {
-  param: keyof T;
-  message: string;
-}
-
-// what we send to the backend from the client
+/**
+ * @description What the Admin sends to the /review route which is formed into an IOnboardingStepReview
+ * @example
+ * let review:IOnboardingStepReviewSubmission<IOnboardingOwnerDetails> = {
+ *   step_state: HostOnboardingState.HasIssues,
+ *   review_message: "not great",
+ *   issues: {
+ *     ["owner_info.title"]:{ message: "ya dun goofed" },
+ *     ["owner_info.last_name"]:{ message: "not valid" }
+ *   }
+ * }
+ */
 export interface IOnboardingStepReviewSubmission<T> {
   step_state: HostOnboardingState.HasIssues | HostOnboardingState.Verified;
-  issues: IOnboardingIssue<T>[];
+  issues: {[index in DottedPaths<T>]?:IOnboardingIssue}
   review_message?: string; // hand-written message
+}
+
+export interface IOnboardingIssue {
+  message: string;
 }
 
 // what the database stores
@@ -19,7 +29,7 @@ export interface IOnboardingStepReviewSubmission<T> {
 export interface IOnboardingStepReview extends Omit<IOnboardingStepReviewSubmission<any>, 'step_state'> {
   _id: number;
   onboarding_step: HostOnboardingStep;
-  onboarding_version?: number; //which onboarding version this issue relates to
+  onboarding_version?: IHostOnboarding["version"];
   reviewed_by: IUserStub;
   reviewed_at: number; // unix timestamp
 }

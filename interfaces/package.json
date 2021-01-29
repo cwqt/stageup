@@ -2,14 +2,16 @@
   "name": "@eventi/interfaces",
   "version": "1.0.1",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ip-address": "^6.3.0"
+    "ip-address": "^6.3.0",
+    "tsc": "^1.20150623.0"
   },
   "devDependencies": {
     "@types/ip-address": "^5.8.2",
