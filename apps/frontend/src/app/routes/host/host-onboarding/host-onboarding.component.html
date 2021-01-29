@@ -82,7 +82,9 @@
     <p>Please ensure all steps are valid to the best of your knowledge before submitting.</p>
   </ng-container>
 
-  <ui-placeholder><h3>Review step map from VN-135</h3></ui-placeholder>
+  <ui-hr></ui-hr>
+
+  <app-onboarding-view [adminView]="false" [hostId]="onboarding.data.host._id"></app-onboarding-view>
 
   <div class="mt-5" *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
     <ui-button

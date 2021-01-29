@@ -7,7 +7,7 @@
 
     <div class="right">
       <app-header-bar [myself]="myself"></app-header-bar>
-      <div class="app-body">
+      <div class="app-body container px-10">
         <app-page title="First time setup" *ngIf="myself && myself.user.is_new_user">
           <app-first-time-setup></app-first-time-setup>
         </app-page>

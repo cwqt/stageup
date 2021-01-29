@@ -1,12 +1,30 @@
-<div class="ml-40" *ngFor="let step of onboardingSteps | keyvalue" [ngSwitch]="step.key">
-    <h2 *ngSwitchCase="0">Proof of Business</h2>
-    <h2 *ngSwitchCase="1">Owner Details</h2>
-    <h2 *ngSwitchCase="2">Social Presence</h2>
-    <h2 *ngSwitchCase="3">Add Members</h2>
-    <h2 *ngSwitchCase="4">Subscription Configuration</h2>
-        <div class="mt-8" *ngFor="let stepAttribute of step.value | keyvalue">
-            <div *ngIf="checkForDataField(stepAttribute.key)">
-                <h3>{{ getPrettyDataFieldKey(stepAttribute.key) | titlecase }}</h3><h5>{{ stepAttribute.value }}</h5>
-            </div>       
-        </div>   
-</div>
+<mat-spinner *ngIf="onboardingSteps.loading"></mat-spinner>
+<ng-container *ngIf="onboardingFields">
+  <div *ngFor="let step of onboardingFields | keyvalue: keepOrder" [ngSwitch]="step.key">
+    <h3 *ngSwitchCase="0">Proof of Business</h3>
+    <h3 *ngSwitchCase="1">Owner Details</h3>
+    <h3 *ngSwitchCase="2">Social Presence</h3>
+    <h3 *ngSwitchCase="3">Add Members</h3>
+    <h3 *ngSwitchCase="4">Subscription Configuration</h3>
+  
+    <ul class="onboarding-step-meta">
+      <li *ngFor="let field of step.value" class="flex align-middle mb-2">
+        <mat-checkbox *ngIf="adminView" [checked]="field.valid" [disabled]="enactOnboarding.loading"></mat-checkbox>
+        <b>{{ field.key | titlecase }}:</b> {{ field.value }}
+      </li>
+    </ul>
+  
+    <ui-hr></ui-hr>
+  </div>
+  
+  <br />
+  
+  <ui-button
+    *ngIf="adminView"
+    [loading]="enactOnboarding.loading"
+    (click)="enactOnboardingProcess()"
+    kind="primary"
+    size="l">
+      Enact
+  </ui-button>
+</ng-container>

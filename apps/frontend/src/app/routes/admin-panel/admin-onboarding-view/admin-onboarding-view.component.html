@@ -1,12 +1,17 @@
 <mat-spinner *ngIf="onboarding.loading"></mat-spinner>
   <ng-container *ngIf="onboarding.data && !onboarding.loading">
-    <div class="ml-40 mb-10">
-      <h1>{{ onboarding.data.host.name }}</h1>
-      <h3>Status: {{ onboarding.data.state | onboardingStatePipe }}</h3>
-      <h3>Submitted: {{ onboarding.data.last_submitted | amFromUnix | amTimeAgo }}</h3>
-      <h3>Last Reviewed Date: {{ onboarding.data.last_modified  | amFromUnix | amTimeAgo}}</h3>
-      <h3>Last Reviewed By: {{ onboarding.data.last_modified_by.name }}</h3>
+    <div>
+      <h1>{{ onboarding.data.host.name }} <span class="opacity-20">(#{{ onboarding.data.host._id }})</span></h1>
+
+      <div class="onboarding-meta">
+        <p><b>Status:</b> {{ onboarding.data.state | onboardingStatePipe }}</p>
+        <p><b>Submitted:</b> {{ onboarding.data.last_submitted | amFromUnix | amTimeAgo }}</p>
+        <p><b>Last Reviewed:</b> {{ onboarding.data.last_modified  | amFromUnix | amTimeAgo}}</p>
+        <p><b>Last Reviewed By:</b>  {{ onboarding.data.last_modified_by.name }}</p>  
+      </div>
   </div>
 
-  <app-onboarding-view></app-onboarding-view>
+  <ui-hr></ui-hr>
+
+  <app-onboarding-view [adminView]="true" [hostId]="onboarding.data.host._id"></app-onboarding-view>
 </ng-container>

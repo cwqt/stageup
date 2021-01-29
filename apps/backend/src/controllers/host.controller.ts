@@ -288,7 +288,7 @@ export default class HostController extends BaseController {
             onboarding_version: onboarding.version,
             onboarding_step: step
           },
-          relations: ['reviewed_by']
+          relations: ['reviewed_by']   
         });
 
         return { ...onboarding.steps[step], review: stepReview?.toFull() || null };

@@ -1,6 +1,6 @@
+// Modules ----------------------------------------------------------------------------------------------------------------
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-
 import { UiLibModule } from "./ui-lib/ui-lib.module";
 import { AngularMaterialModule } from "./angular-material.module";
 import { AppRoutingModule } from "./app.routes";
@@ -8,11 +8,11 @@ import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CookieService } from "ngx-cookie-service";
-import { NgxMaskModule, IConfig } from 'ngx-mask'
-
+import { NgxMaskModule } from 'ngx-mask'
 import { ClickOutsideModule } from "ng-click-outside";
 import { MomentModule } from 'ngx-moment';
 
+// Components ----------------------------------------------------------------------------------------------------------------
 import { AppComponent } from "./app.component";
 import { LandingComponent } from "./routes/landing/landing.component";
 import { LoginComponent } from "./routes/landing/login/login.component";
@@ -49,14 +49,14 @@ import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onbo
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from "./routes/search/search.component";
-import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
-import { ObjectLengthPipe } from "./_pipes/ObjectLengthPipe";
 
-
-export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
-
+// Pipes ----------------------------------------------------------------------------------------------------------------
+// import { LogPipe } from "./_pipes/log.pipe";
+import { OnboardingStatePipe } from "./_pipes/object-state.pipe";
+import { ObjectLengthPipe } from "./_pipes/object-length.pipe";
+import { ShortDomainPipe } from "./_pipes/short-domain.pipe"
 
 @NgModule({
   declarations: [
@@ -92,10 +92,11 @@ export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
     AdminPanelComponent,
     SearchComponent,
     AdminOnboardingListComponent,
-    OnboardingStatePipe,
     AdminOnboardingViewComponent,
     OnboardingViewComponent,
-    ObjectLengthPipe
+    OnboardingStatePipe,
+    ObjectLengthPipe,
+    ShortDomainPipe
   ],
   imports: [
     AngularMaterialModule,
