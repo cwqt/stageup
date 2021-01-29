@@ -138,7 +138,7 @@ Do `npm install` in the project root to install all required dependencies.
 
 * __Frontend__: `nx serve frontend`
 * __Backend__: `nx serve backend`
-* __API Tests__: `nx run api-tests`
+* __API Tests__: `nx test api-tests`
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
 
