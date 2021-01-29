@@ -1,12 +1,8 @@
 import Axios from 'axios';
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
-<<<<<<< HEAD
-import { IMyself, IUser, IAddress } from '@eventi/interfaces';
-=======
 import { IMyself, IUser } from '@eventi/interfaces';
 import userAddressesActions from './user-addresses.actions';
->>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
 
 export default {
   ...userAddressesActions,
