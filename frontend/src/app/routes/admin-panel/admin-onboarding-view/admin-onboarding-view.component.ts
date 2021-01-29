@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostOnboarding } from '@eventi/interfaces';
+import { ICacheable } from 'src/app/app.interfaces';
+import { BaseAppService, RouteParam } from 'src/app/services/app.service';
 import { HostService } from 'src/app/services/host.service';
 
 @Component({
@@ -10,15 +12,19 @@ import { HostService } from 'src/app/services/host.service';
 })
 export class AdminOnboardingViewComponent implements OnInit {
 
-  public hostName: IHostOnboarding;
+  public onboarding:ICacheable<IHostOnboarding> = {
+    data: null,
+    loading: false,
+    error: ""
+  }
 
-  constructor(private hostService: HostService, private _Activatedroute:ActivatedRoute) { }
+  constructor(private hostService: HostService, private baseAppService: BaseAppService) { }
 
   ngOnInit(): void {
     this.getHostDetails();
   }
 
   async getHostDetails(){
-    this.hostName = await this.hostService.readOnboardingProcessStatus(this._Activatedroute.snapshot.paramMap.get("hostId") as unknown as number);
+    this.onboarding.data = await this.hostService.readOnboardingProcessStatus(this.baseAppService.getParam(RouteParam.HostId) as unknown as number);
   }
 }

@@ -15,14 +15,14 @@ export class OnboardingViewComponent implements OnInit {
   public onboardingSteps: IOnboardingStepMap;
   public hostId: number;
   
-  constructor(private adminService: AdminService, private _Activatedroute:ActivatedRoute) { }
+  constructor(private adminService: AdminService, private baseAppService: BaseAppService) { }
 
   ngOnInit(): void {
     this.getOnboardingSteps();
   }
 
   async getOnboardingSteps(){
-    this.onboardingSteps = await this.adminService.readOnboardingSteps(this._Activatedroute.snapshot.paramMap.get("hostId") as unknown as number);
+    this.onboardingSteps = await this.adminService.readOnboardingSteps(this.baseAppService.getParam(RouteParam.HostId) as unknown as number);
     this.flattenOnboardingStepMap();
   }
 
@@ -36,7 +36,7 @@ export class OnboardingViewComponent implements OnInit {
   }
 
   getPrettyDataFieldKey(field: string): string{
-    //Extract the word after the last '.' and replace 
+    //Extract the word after the last '.' and replace . and _ characters with spaces using regex
     return field.substr(field.lastIndexOf("."), field.length).replace(/[._]/g, " ");
   }
 }
