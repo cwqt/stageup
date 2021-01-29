@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IOnboardingStepMap } from '@eventi/interfaces';
-import { AdminService } from 'src/app/services/admin.service';
+import { AdminService } from 'apps/frontend/src/app/services/admin.service';
 import { flatten } from "flat";
-import { BaseAppService, RouteParam } from 'src/app/services/app.service';
+import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

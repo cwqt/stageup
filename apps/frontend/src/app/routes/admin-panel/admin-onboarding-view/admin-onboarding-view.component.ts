@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostOnboarding } from '@eventi/interfaces';
-import { ICacheable } from 'src/app/app.interfaces';
-import { BaseAppService, RouteParam } from 'src/app/services/app.service';
-import { HostService } from 'src/app/services/host.service';
+import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
+import { HostService } from 'apps/frontend/src/app/services/host.service';
 
 @Component({
   selector: 'app-admin-onboarding-view',
