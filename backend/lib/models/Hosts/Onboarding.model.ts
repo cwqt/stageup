@@ -21,6 +21,7 @@ import {
   IOnboardingSocialPresence,
   IOnboardingStep,
   IOnboardingSubscriptionConfiguration,
+  IOnboardingStepMap,
 } from '@eventi/interfaces';
 import { Host } from './Host.model';
 import { User } from '../Users/User.model';
@@ -38,14 +39,8 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
   @Column({ nullable: true }) last_modified: number;
   @Column({ nullable: true }) last_submitted: number;
   @Column() version: number;
-  @Column('jsonb', { nullable: true }) steps: {
-    [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
-    [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
-    [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
-    [HostOnboardingStep.AddMembers]: IOnboardingStep<IOnboardingAddMembers>;
-    [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
-  };
-
+  @Column('jsonb', { nullable: true }) steps: IOnboardingStepMap;
+  
   @OneToMany(() => OnboardingStepReview, osr => osr.onboarding) reviews: OnboardingStepReview[];
   @OneToOne(() => Host, host => host.onboarding_process, { eager: true }) @JoinColumn() host: Host;
   @OneToOne(() => User, { eager: true }) @JoinColumn() last_modified_by: User;
@@ -110,16 +105,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
     };
   }
 
-  // toSteps(): IOnboardingStepMap {
-  //   return  {
-  //     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
-  //     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
-  //     [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
-  //     [HostOnboardingStep.AddMembers]: IOnboardingStep<IOnboardingAddMembers>;
-  //     [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
-  //   }
-  // }
-
+  
   toFull(): Required<IHostOnboarding> {
     return {
       _id: this._id,

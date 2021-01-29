@@ -17,6 +17,7 @@ import {
   HTTP,
   IUserStub,
   IHostMemberChangeRequest,
+  IOnboardingStepMap,
 } from '@eventi/interfaces';
 import Email = require('../common/email');
 import Validators from '../common/validate';
@@ -308,6 +309,46 @@ export default class HostController extends BaseController {
 
         return { ...onboarding.steps[step], review: stepReview?.toFull() || null };
       },
+    };
+  }
+
+readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+        const onboarding = await getCheck(
+          HostOnboardingProcess.findOne({
+            where: {
+              host: {
+                _id: parseInt(req.params.hid)
+              }
+            }
+          })
+        );
+
+        const stepReviews = (
+          await Promise.all(
+            Object.values(HostOnboardingStep)
+              .filter(x => typeof x == 'number')
+              .map((step: any) => {
+                return OnboardingStepReview.findOne({
+                  where: {
+                    onboarding_step: step,
+                    onboarding_version: onboarding.version
+                  },
+                  relations: ['reviewed_by']
+                });
+              })
+          )
+        ).filter(r => r !== undefined);
+        
+        return Object.entries(onboarding.steps).reduce((acc, curr: [string, IOnboardingStep<any>]) => {
+          const [step, stepData] = curr;
+          stepData.review = stepReviews.find(r => (r.onboarding_step = (step as unknown) as HostOnboardingStep));
+          acc[(step as unknown) as HostOnboardingStep] = stepData;
+          return acc;
+        }, {} as IOnboardingStepMap);
+      }
     };
   }
 

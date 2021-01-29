@@ -1,0 +1,12 @@
+<div class="ml-40" *ngFor="let step of onboardingSteps | keyvalue" [ngSwitch]="step.key">
+    <h2 *ngSwitchCase="0">Proof of Business</h2>
+    <h2 *ngSwitchCase="1">Owner Details</h2>
+    <h2 *ngSwitchCase="2">Social Presence</h2>
+    <h2 *ngSwitchCase="3">Add Members</h2>
+    <h2 *ngSwitchCase="4">Subscription Configuration</h2>
+        <div class="mt-8" *ngFor="let stepAttribute of step.value | keyvalue">
+            <div *ngIf="checkForDataField(stepAttribute.key)">
+                <h3>{{ getPrettyDataFieldKey(stepAttribute.key) | titlecase }}</h3><h5>{{ stepAttribute.value }}</h5>
+            </div>       
+        </div>   
+</div>
