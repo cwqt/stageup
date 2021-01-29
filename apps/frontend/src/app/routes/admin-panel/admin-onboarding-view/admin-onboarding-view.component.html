@@ -1,0 +1,8 @@
+<div class="ml-40 mb-10">
+    <h1>{{ onboarding.host.name }}</h1>
+    <h3>Status: {{ onboarding.state | onboardingStatePipe }}</h3>
+    <h3>Submitted: {{ onboarding.last_submitted | amFromUnix | amTimeAgo }}</h3>
+    <h3>Last Reviewed Date: {{ onboarding.last_modified  | amFromUnix | amTimeAgo}}</h3>
+    <h3>Last Reviewed By: {{ onboarding.last_modified_by.name }}</h3>
+</div>
+<app-onboarding-view></app-onboarding-view>

@@ -1,1 +1,0 @@
-Just experimenting with Kubernetes - will use docker swarm for now - see `docker/docker-compose.yml`

@@ -1,0 +1,34 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Build
+
+on:
+  push:
+    branches: [ release-*, master ]
+  pull_request:
+    branches: [ dev, master ]
+
+jobs:
+  build:
+    name: deploy app
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: checkout code
+      uses: actions/checkout@v2
+      
+    - name: Setup node 13
+      uses: actions/setup-node@v1
+      with:
+        node-version: 13.x
+
+    - name: install dependencies
+      run: |
+        npm ci
+        npm i nx -g
+
+    - name: test & lint backend
+      run: |
+        nx test backend
+        nx lint backend --quiet

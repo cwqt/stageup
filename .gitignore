@@ -6,3 +6,4 @@ dist
 .env
 .env_prod
 sendgrid.env
+coverage

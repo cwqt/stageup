@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "Angular.ng-template",
+    "usernamehw.errorlens",
+    "eamodio.gitlens",
+    "mrmlnc.vscode-scss",
+    "bradlc.vscode-tailwindcss",
+    "Gruntfuggly.todo-tree",
+    "ghaschel.vscode-angular-html"
+  ]
+}

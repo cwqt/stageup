@@ -1,0 +1,42 @@
+@import "apps/frontend/src/styles/variables";
+
+.app-container {
+  max-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-content {
+  height: 100vh;
+  display: flex;
+  background-color: #f7f7f7;
+
+  .left {
+    width: $space-lg * 4;
+    app-sidebar {
+      width: 100%;
+    }
+  }
+
+  .right {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;  
+    overflow: scroll;
+    overflow-x: hidden;
+
+    app-header-bar {
+      display: block;
+      height: auto;
+      width: 100%;
+      padding: $space-lg;
+    }
+
+    .app-body {
+      margin-bottom: 20px;
+      height: auto;
+      min-height: 100vh;
+      padding: $space $space-lg;
+    }
+  }
+}

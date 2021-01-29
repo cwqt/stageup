@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

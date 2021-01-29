@@ -1,0 +1,22 @@
+{
+  "npmScope": "eventi",
+  "affected": { "defaultBase": "master" },
+  "implicitDependencies": {
+    "workspace.json": "*",
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "tsconfig.base.json": "*",
+    "nx.json": "*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+    }
+  },
+  "projects": {
+    "backend": { "tags": [] },
+    "frontend": { "tags": [] },
+    "api-tests": { "tags": [] },
+    "interfaces": { "tags": [] }
+  }
+}
