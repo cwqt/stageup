@@ -15,14 +15,10 @@ import {
     IHostOnboarding as IHOnboarding,
     IOnboardingStep,
     IAddress,
-<<<<<<< HEAD:apps/backend/src/routes.ts
-    IUserStub
-=======
     IUserStub,
     IPerformanceHostInfo,
     IHostStub,
     IOnboardingStepMap
->>>>>>> f2b1c8a6caa5030a52e653e766eb5d184e8d0640:backend/lib/routes.ts
 } from "@eventi/interfaces";
 
 import UserController from './controllers/user.controller';

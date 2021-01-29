@@ -7,7 +7,7 @@ describe('Logger', () => {
 // import { UserType } from '../../environment';
 // import { CurrencyCode } from '@eventi/interfaces/lib/Common/Currency.types';
 
-// describe('As a user, I want to be able to do purchase performance', async () => {
+// describe('As a user, I want to be able to do purchase performance', () => {
 //   let host: IHost;
 //   let perf: IPerformance;
 //   let client: IUser;

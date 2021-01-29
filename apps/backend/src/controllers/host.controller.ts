@@ -310,21 +310,12 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
           })
         );
 
-        const stepReviews = (
-          await Promise.all(
-            Object.values(HostOnboardingStep)
-              .filter(x => typeof x == 'number')
-              .map((step: any) => {
-                return OnboardingStepReview.findOne({
-                  where: {
-                    onboarding_step: step,
-                    onboarding_version: onboarding.version
-                  },
-                  relations: ['reviewed_by']
-                });
-              })
-          )
-        ).filter(r => r !== undefined);
+        const stepReviews = (await OnboardingStepReview.find({
+          where: {
+            onboarding_version: onboarding.version
+          },
+          relations: ["reviewed_by"]
+        })).filter(r => r !== undefined);
         
         return Object.entries(onboarding.steps).reduce((acc, curr: [string, IOnboardingStep<any>]) => {
           const [step, stepData] = curr;
@@ -336,7 +327,7 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
     };
   }
 
-  updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
+  updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<unknown>> {
     return {
       validators: [
         parameters<{ step: number }>({

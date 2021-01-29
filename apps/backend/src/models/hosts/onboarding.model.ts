@@ -2,7 +2,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  EntityManager,
   JoinColumn,
   OneToMany,
   OneToOne,
@@ -145,7 +144,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
   async updateStep<T extends object>(
     stepIndex: HostOnboardingStep,
     updates: Partial<T>
-  ): Promise<IOnboardingStep<any>> {
+  ): Promise<IOnboardingStep<unknown>> {
     const validationResult = await stepValidators[stepIndex](updates);
     if (validationResult.length > 0) {
       this.steps[stepIndex].valid = false;
@@ -156,15 +155,15 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
       this.steps[stepIndex].valid = true;
     }
 
-    Object.entries(updates).forEach(([k, v]: [string, any]) => {
-      (this.steps[stepIndex].data as any)[k] = v ?? (this.steps[stepIndex].data as any)[k];
+    Object.entries(updates).forEach(([k, v]: [string, unknown]) => {
+      (this.steps[stepIndex].data as unknown)[k] = v ?? (this.steps[stepIndex].data as unknown)[k];
     });
 
     return this.steps[stepIndex];
   }
 }
 
-const stepValidators: { [index in HostOnboardingStep]: (d: any) => Promise<IFormErrorField[]> } = {
+const stepValidators: { [index in HostOnboardingStep]: (d: unknown) => Promise<IFormErrorField[]> } = {
   [HostOnboardingStep.ProofOfBusiness]: async (d: IOnboardingProofOfBusiness) => {
     return await object(d, {
       hmrc_company_number: v => v.optional({ checkFalsy: true }).isInt().isLength({ min: 8, max: 8 }),

@@ -1,15 +1,13 @@
-import { describe, it } from 'mocha';
 import {
     IHostOnboarding,
     IHost,
-    IUser,
-    IHostOnboardingProcess,
+    IUser
 } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { expect } from 'chai';
 
-describe("Verify the Onboarding process pulls in the host relationship", async () => {
+describe("Verify the Onboarding process pulls in the host relationship", () => {
     let host: IHost;
     let client: IUser;
     let onboarding:IHostOnboarding;

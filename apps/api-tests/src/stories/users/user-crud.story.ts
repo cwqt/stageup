@@ -1,13 +1,13 @@
-import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import { IUser } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { environment, UserType } from '../../environment';
 
-describe('As a user, I want to be able to CRUD', async () => {
+describe('As a user, I want to be able to CRUD', () => {
   let user: IUser;
 
   it('Should create a user', async () => {
+    await Stories.actions.common.setup();
     user = await Stories.actions.users.createUser(UserType.Client);
 
     expect(user).to.not.be.null;
