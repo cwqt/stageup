@@ -71,7 +71,7 @@ router.delete <void>                  ("/hosts/:hid/members/:mid",              
 router.put    <void>                  ("/hosts/:hid/members/:mid",                  Hosts.updateMember());
 router.get    <IHOnboarding>          ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
 router.post   <void>                  ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
-router.get <IOnboardingStepMap>       ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps());
+router.get    <IOnboardingStepMap>    ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps());
 router.get    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 

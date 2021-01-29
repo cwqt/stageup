@@ -41,7 +41,7 @@ export class HostOnboardingProcess extends BaseEntity implements IHostOnboarding
   @Column() version: number;
   @Column('jsonb', { nullable: true }) steps: IOnboardingStepMap;
   
-  @OneToMany(() => OnboardingStepReview, osr => osr.onboarding, { eager: true }) reviews: OnboardingStepReview[];
+  @OneToMany(() => OnboardingStepReview, osr => osr.onboarding) reviews: OnboardingStepReview[];
   @OneToOne(() => Host, host => host.onboarding_process, { eager: true }) @JoinColumn() host: Host;
   @OneToOne(() => User, { eager: true }) @JoinColumn() last_modified_by: User;
 

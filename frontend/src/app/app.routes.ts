@@ -58,7 +58,6 @@ const APP_ROUTES: Routes = [
     children: [
       { path: "settings", component: HostSettingsComponent },
       { path: "performance", component: HostPerformancesComponent },
-      // { path: `/admin/onboarding/:${RP.HostId}`, component: AdminOnboardingViewComponent }
     ],
   },
   { path: `admin`, component: AdminPanelComponent },

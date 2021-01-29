@@ -324,6 +324,7 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
             }
           })
         );
+
         const stepReviews = (
           await Promise.all(
             Object.values(HostOnboardingStep)
@@ -339,6 +340,7 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
               })
           )
         ).filter(r => r !== undefined);
+        
         return Object.entries(onboarding.steps).reduce((acc, curr: [string, IOnboardingStep<any>]) => {
           const [step, stepData] = curr;
           stepData.review = stepReviews.find(r => (r.onboarding_step = (step as unknown) as HostOnboardingStep));

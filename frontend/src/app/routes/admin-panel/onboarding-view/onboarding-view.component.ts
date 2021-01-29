@@ -15,10 +15,9 @@ export class OnboardingViewComponent implements OnInit {
   public onboardingSteps: IOnboardingStepMap;
   public hostId: number;
   
-  constructor(private adminService: AdminService, private appService: BaseAppService, private _Activatedroute:ActivatedRoute) { }
+  constructor(private adminService: AdminService, private _Activatedroute:ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.hostId = this.appService.getParam(RouteParam.HostId) as unknown as number;
     this.getOnboardingSteps();
   }
 
@@ -37,6 +36,7 @@ export class OnboardingViewComponent implements OnInit {
   }
 
   getPrettyDataFieldKey(field: string): string{
+    //Extract the word after the last '.' and replace 
     return field.substr(field.lastIndexOf("."), field.length).replace(/[._]/g, " ");
   }
 }
