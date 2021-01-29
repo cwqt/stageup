@@ -1,9 +1,4 @@
 import Axios from 'axios';
-<<<<<<< HEAD
-import { environment as env } from '../environment';
-import { HostOnboardingStep, IHost, IHostOnboarding, IHostOnboardingProcess, IHostStub, IMyself, IOnboardingStep, IUser, IUserStub } from '@eventi/interfaces';
-import { expect } from 'chai';
-=======
 import { environment as env, UserType } from '../environment';
 import {
   HostOnboardingStep,
@@ -18,7 +13,6 @@ import {
   IUserHostInfo,
   IHostMemberChangeRequest,
 } from '@eventi/interfaces';
->>>>>>> 2468c0ad38103338f62b6653bf8912dd1b9cb703
 
 export default {
   // Host CRUD --------------------------------------------------------------------------------------------------------------

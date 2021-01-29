@@ -88,13 +88,9 @@ router.put    <IPerf>                 ("/performance/:pid",                     
 
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, mws);
-router.get  <IE<IHOnboarding[], void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
-router.post  <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
-<<<<<<< HEAD
-router.post  <void>                   ("/admin/onboarding/:oid/submit",             Admin.submitOnboardingProcess());
-=======
-router.post <void>                    ("/admin/onboarding/:oid/enact",              Admin.enactOnboardingProcess());
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5
+router.get  <IE<IHOnboarding[],void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
+router.post <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
+router.post <void>                   ("/admin/onboarding/:oid/enact",              Admin.enactOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);

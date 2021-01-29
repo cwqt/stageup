@@ -24,10 +24,7 @@
     "@angular/router": "~11.0.6",
     "@eventi/interfaces": "../interfaces",
     "flat": "^5.0.2",
-<<<<<<< HEAD
     "moment": "^2.29.1",
-=======
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5
     "ng-click-outside": "^7.0.1",
     "ngx-cookie-service": "^11.0.2",
     "ngx-mask": "^11.1.4",
@@ -44,10 +41,6 @@
     "@angular/cli": "~11.0.6",
     "@angular/compiler-cli": "~11.0.6",
     "@types/flat": "^5.0.1",
-<<<<<<< HEAD
-    "@types/jasmine": "~3.6.0",
-=======
->>>>>>> 892bedca0a09761bd2f0b196a88ab10c774bd8c5
     "@types/node": "^12.11.1",
     "@types/phone": "^2.4.0",
     "@types/validator": "^13.1.3",
