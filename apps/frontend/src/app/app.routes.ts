@@ -24,6 +24,7 @@ import { HostSettingsComponent } from "./routes/settings/host-settings/host-sett
 import { BillingPaymentComponent } from "./routes/settings/billing-settings/billing-payment/billing-payment.component";
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
 import { SearchComponent } from "./routes/search/search.component";
+import { AdminOnboardingViewComponent } from "./routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component";
 
 const APP_ROUTES: Routes = [
   { path: "", component: FeedComponent },
@@ -55,10 +56,10 @@ const APP_ROUTES: Routes = [
     children: [
       { path: "settings", component: HostSettingsComponent },
       { path: "performance", component: HostPerformancesComponent },
-      // { path: `:${RP.HostId}`, component: }
     ],
   },
   { path: `admin`, component: AdminPanelComponent },
+  { path: `admin/onboarding/:${RP.HostId}`, component: AdminOnboardingViewComponent},
   { path: `ui`, component: TestbedComponent },
   { path: "**", component: NotFoundComponent },
 ];

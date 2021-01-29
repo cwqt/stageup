@@ -20,8 +20,8 @@ import {
   IOnboardingProofOfBusiness,
   IOnboardingSocialPresence,
   IOnboardingStep,
+  IOnboardingSubscriptionConfiguration,
   IOnboardingStepMap,
-  IOnboardingSubscriptionConfiguration
 } from '@eventi/interfaces';
 
 import { Host } from '../hosts/host.model'
@@ -39,7 +39,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
   @Column({ nullable: true }) last_modified: number;
   @Column({ nullable: true }) last_submitted: number;
   @Column() version: number;
-  @Column('jsonb', { nullable: true }) steps:IOnboardingStepMap;
+  @Column('jsonb', { nullable: true }) steps: IOnboardingStepMap;
   
   @OneToMany(() => OnboardingStepReview, osr => osr.onboarding) reviews: OnboardingStepReview[];
   @OneToOne(() => Host, host => host.onboarding_process, { eager: true }) @JoinColumn() host: Host;
@@ -105,16 +105,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
     };
   }
 
-  // toSteps(): IOnboardingStepMap {
-  //   return  {
-  //     [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
-  //     [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
-  //     [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
-  //     [HostOnboardingStep.AddMembers]: IOnboardingStep<IOnboardingAddMembers>;
-  //     [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
-  //   }
-  // }
-
+  
   toFull(): Required<IHostOnboarding> {
     return {
       _id: this._id,

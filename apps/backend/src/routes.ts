@@ -15,7 +15,14 @@ import {
     IHostOnboarding as IHOnboarding,
     IOnboardingStep,
     IAddress,
+<<<<<<< HEAD:apps/backend/src/routes.ts
     IUserStub
+=======
+    IUserStub,
+    IPerformanceHostInfo,
+    IHostStub,
+    IOnboardingStepMap
+>>>>>>> f2b1c8a6caa5030a52e653e766eb5d184e8d0640:backend/lib/routes.ts
 } from "@eventi/interfaces";
 
 import UserController from './controllers/user.controller';
@@ -67,6 +74,7 @@ router.delete <void>                  ("/hosts/:hid/members/:mid",              
 router.put    <void>                  ("/hosts/:hid/members/:mid",                  Hosts.updateMember());
 router.get    <IHOnboarding>          ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
 router.post   <void>                  ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
+router.get    <IOnboardingStepMap>    ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps());
 router.get    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put    <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 
@@ -83,16 +91,16 @@ router.put    <IPerf>                 ("/performance/:pid",                     
 
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, mws);
-router.get  <IE<IHOnboarding[], void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
-router.post  <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
-router.post <void>                    ("/admin/onboarding/:oid/enact",              Admin.enactOnboardingProcess());
+router.get  <IE<IHOnboarding[],void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
+router.post <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
+router.post <void>                   ("/admin/onboarding/:oid/enact",              Admin.enactOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);
 router.post   <void>                  ("/mux/hooks",                                MUXHooks.handleHook());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
-const Auth =  new AuthController(providers, mws);
+const Auth =  new AuthController(providers, mws)
 router.redirect                       ("/auth/verify",                              Auth.verifyUserEmail());
 
 // MISC ---------------------------------------------------------------------------------------------------------------

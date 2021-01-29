@@ -164,6 +164,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       host,
       HostOnboardingStep.AddMembers
     );
+    
     expect(step3.state).toBe(HostOnboardingState.AwaitingChanges);
     expect(step3.data.members_to_add[0].value).toBe(client._id);
 

@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { environment as env } from '../environment';
+import { environment as env, UserType } from '../environment';
 import {
   HostOnboardingStep,
   IHost,

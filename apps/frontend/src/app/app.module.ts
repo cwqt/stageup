@@ -50,6 +50,8 @@ import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component"
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from "./routes/search/search.component";
 import { OnboardingStatePipe } from "./_pipes/OnboardingStatePipe";
+import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
+import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { ObjectLengthPipe } from "./_pipes/ObjectLengthPipe";
 
 
@@ -91,6 +93,8 @@ export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
     SearchComponent,
     AdminOnboardingListComponent,
     OnboardingStatePipe,
+    AdminOnboardingViewComponent,
+    OnboardingViewComponent,
     ObjectLengthPipe
   ],
   imports: [

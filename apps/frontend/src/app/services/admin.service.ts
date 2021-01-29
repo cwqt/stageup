@@ -3,9 +3,8 @@ import { Injectable } from "@angular/core";
 import {
   IEnvelopedData,
   IHostOnboarding,
-  IHostOnboardingProcess,
+  IOnboardingStepMap,
 } from "@eventi/interfaces";
-import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -22,5 +21,9 @@ export class AdminService {
         `/api/admin/onboarding?page=${page}&per_page=${perPage}`
       )
       .toPromise();
+  }
+
+  readOnboardingSteps(hostId: number): Promise<IOnboardingStepMap>{
+    return this.http.get<IOnboardingStepMap>(`/api/hosts/${hostId}/onboarding/steps`).toPromise();
   }
 }
