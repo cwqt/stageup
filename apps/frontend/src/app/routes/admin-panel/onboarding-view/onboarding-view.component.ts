@@ -8,12 +8,11 @@ import { ICacheable } from '../../../app.interfaces';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HostService } from '../../../services/host.service';
 
-interface IUiStepMapRow {
-  type: 'text' | 'title';
+export interface IUiStepMapField {
   level: number;
   value: Primitive;
   valid: boolean;
-  issues: string[];
+  issues: string[] | null;
 }
 
 @Component({
@@ -25,9 +24,11 @@ export class OnboardingViewComponent implements OnInit {
   @Input() adminView: boolean = false;
   @Input() hostId: number;
 
-  SKIPPED_STEPS = [HostOnboardingStep.AddMembers, HostOnboardingStep.SubscriptionConfiguration];
+  // TODO: some steps we don't have requirements for yet...
+  private SKIPPED_STEPS = [HostOnboardingStep.AddMembers, HostOnboardingStep.SubscriptionConfiguration];
+  public activeIssueMaker:[number, number] = [null, null];
 
-  public onboardingFields: Record<HostOnboardingStep, IUiStepMapRow[]>;
+  public onboardingFields: Record<HostOnboardingStep, IUiStepMapField[]>;
   public onboardingSteps: ICacheable<IOnboardingStepMap> = {
     data: null,
     loading: false,
@@ -41,12 +42,16 @@ export class OnboardingViewComponent implements OnInit {
 
   constructor(private hostService: HostService, private adminService: AdminService) {}
 
+  isActiveIssueMaker(stepIdx, fieldIdx) {
+    const [activeStep, activeField] = this.activeIssueMaker;
+    return (stepIdx == activeStep && fieldIdx == activeField);
+  }
+
   async ngOnInit() {
     // Get the steps & parse into data structure for template to consume
     await this.getOnboardingSteps();
     if (!this.onboardingSteps.error) {
       this.onboardingFields = this.parseOnboardingStepsIntoRows();
-      console.log(this.onboardingFields);
     }
   }
 
@@ -59,12 +64,12 @@ export class OnboardingViewComponent implements OnInit {
       .finally(() => (this.onboardingSteps.loading = false));
   }
 
-  parseOnboardingStepsIntoRows(): Record<HostOnboardingStep, IUiStepMapRow[]> {
+  parseOnboardingStepsIntoRows(): Record<HostOnboardingStep, IUiStepMapField[]> {
     return Object.keys(this.onboardingSteps.data)
       .map(step => Number.parseInt(step)) // as HostOnboardingSteps
       .filter(step => !this.SKIPPED_STEPS.includes(step as any)) // don't show skipped steps
       .reduce((acc, step) => {  // parse into IUiStepMapRow
-        acc[step as any] = Object.entries(flatten(this.onboardingSteps.data[step].data)).map<IUiStepMapRow>(
+        acc[step as any] = Object.entries(flatten(this.onboardingSteps.data[step].data)).map<IUiStepMapField>(
           ([key, value]) => {
             const splitKey = key.split('.');
 
@@ -74,13 +79,13 @@ export class OnboardingViewComponent implements OnInit {
               key: splitKey.pop().replace(/[._]/g, ' '),
               level: splitKey.length,
               valid: false,
-              issues: []
+              issues: null
             };
           }
         );
 
         return acc;
-      }, {} as Record<HostOnboardingStep, IUiStepMapRow[]>);
+      }, {} as Record<HostOnboardingStep, IUiStepMapField[]>);
   }
 
   enactOnboardingProcess() {
@@ -96,4 +101,9 @@ export class OnboardingViewComponent implements OnInit {
   keepOrder = (a, b) => {
     return a;
   };
+
+  addFieldIssue = (stepIdx:number, fieldIdx:number) => {
+    this.onboardingFields[stepIdx][fieldIdx].issues = this.onboardingFields[stepIdx][fieldIdx].issues || [];
+    this.activeIssueMaker = [stepIdx, fieldIdx];
+  }
 }

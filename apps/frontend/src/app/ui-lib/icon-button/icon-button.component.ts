@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output } from "@angular/core";
+import { EventEmitter } from "events";
 
 @Component({
   selector: "ui-icon-button",
@@ -13,5 +14,6 @@ export class IconButtonComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 }

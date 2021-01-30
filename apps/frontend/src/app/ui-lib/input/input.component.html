@@ -20,7 +20,7 @@
         [validation]="true"
         (blur)="onTouched()"
         (focus)="onFocus()"
-        [id]="formControlName || ''"
+        [id]="id || formControlName || ''"
         [disabled]="disabled"
         [placeholder]="placeholder"
         [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : (type == 'phone' ? 'tel' : type)"
@@ -122,71 +122,3 @@
     <span *ngFor="let error of errors">{{ error }}</span>
   </div>
 </div>
-
-
-
-
-
-
-<!-- leave this for later -->
-<ng-container *ngIf="false">
-  <mat-form-field *ngIf="type == 'select'" appearance="fill" >
-    <mat-label>{{ label || "Select option"}}</mat-label>
-    <mat-select #selector
-        [disabled]="disabled"
-        [required]="required"
-        [value]="!checklistSelection.isEmpty() ? 'always_exist' : null">
-        <!-- show selection text - name (+n others) -->
-        <mat-select-trigger>
-            <ng-container *ngIf="!checklistSelection.isEmpty()">
-                <span>{{ checklistSelection.selected[0].value }}</span>
-                <span [ngPlural]="checklistSelection.selected.length - 1" class="additional-selection">
-                    <ng-template ngPluralCase="=0"></ng-template>
-                    <ng-template ngPluralCase="=1">(+1 other)</ng-template>
-                    <ng-template ngPluralCase="other">(+{{ checklistSelection.selected.length - 1 }} others)</ng-template>
-                </span>    
-            </ng-container>
-        </mat-select-trigger>
-  
-        <!-- make the select actually open -->
-        <mat-option style="display: none;" value="always_exist"></mat-option>
-  
-        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-            <mat-tree-node
-                (click)="leafNodeItemSelectionToggle(node)"
-                *matTreeNodeDef="let node"
-                matTreeNodeToggle matTreeNodePadding matTreeNodePaddingIndent="27">
-                <button *ngIf="!noNestedNodes" mat-icon-button disabled></button>
-                <ui-icon *ngIf="node.icon">{{ node.icon }}</ui-icon>
-                <mat-checkbox class="checklist-leaf-node" *ngIf="!noNestedNodes" disableRipple
-                    (click)="$event.preventDefault()"
-                    [checked]="checklistSelection.isSelected(node)"
-                    (change)="leafNodeItemSelectionToggle(node)">
-                </mat-checkbox>
-                <p>{{ node.value }}</p>
-            </mat-tree-node>
-  
-            <mat-tree-node
-                (click)="rootNodeSelectionToggle(node)"
-                class="root-node"
-                *matTreeNodeDef="let node; when: hasChild"
-                matTreeNodePadding matTreeNodePaddingIndent="27">
-                <button mat-icon-button matTreeNodeToggle disableRipple
-                    (click)="untoggleAll(node)"
-                    [disabled]="!treeControl.isExpandable(node)">
-                    <mat-icon class="mat-icon-rtl-mirror">
-                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                    </mat-icon>
-                </button>
-                <mat-checkbox *ngIf="!noNestedNodes" disableRipple
-                    (click)="$event.preventDefault()"
-                    [checked]="checklistSelection.isSelected(node) || descendantsAllSelected(node)"
-                    [indeterminate]="descendantsPartiallySelected(node)"
-                    (change)="rootNodeSelectionToggle(node)">
-                </mat-checkbox>
-                <p>{{ node.value }}</p>
-            </mat-tree-node>
-        </mat-tree>
-    </mat-select>
-  </mat-form-field>
-</ng-container>

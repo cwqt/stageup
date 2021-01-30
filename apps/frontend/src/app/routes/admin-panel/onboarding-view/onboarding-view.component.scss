@@ -1,9 +1,25 @@
 .onboarding-step-meta {
-  b {
-    min-width: 35%;
-    display: inline-block;
-  }
-  mat-checkbox {
-    margin-right: 10px;
+  li {
+    overflow: visible;
+    &.is-admin {
+      position: relative;
+      padding-left: 40px;
+    }
+    p {
+      margin: 0;
+      b {
+        min-width: 250px;
+        width: 20%;
+        display: inline-block;
+      }
+    }
+
+    ui-icon-button {
+      position: absolute;
+      top: -3px;
+      bottom: 0;
+      margin: auto;
+      left: -5px;
+    }  
   }
 }

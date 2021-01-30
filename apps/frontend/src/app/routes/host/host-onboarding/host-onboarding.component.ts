@@ -105,7 +105,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
           return {
             fields: flatten<any, IUiFormPrefetchData["fields"]>(stepData.data),
-            errors: Object.keys(stepData.review.issues).reduce((acc, curr) => {
+            errors: Object.keys(stepData.review?.issues || []).reduce((acc, curr) => {
               acc[curr] = stepData.review.issues[curr].message
               return acc;
             }, {})
@@ -389,6 +389,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   async submitForVerification() {
     this.submission.loading = true;
     return this.hostService.submitOnboardingProcess(this.host._id)
+      .then(() => this.onboarding.data.state = HostOnboardingState.PendingVerification)
       .catch((e:HttpErrorResponse) => this.submission.error = e.message)
       .finally(() => this.submission.loading = false);
   }

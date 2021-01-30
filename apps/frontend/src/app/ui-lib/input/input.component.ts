@@ -9,6 +9,7 @@ import {
   OnInit,
   AfterViewInit,
   OnDestroy,
+  ElementRef,
 } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
 import { Primitive } from "@eventi/interfaces";
@@ -56,6 +57,7 @@ export interface IGraphNode {
 })
 export class InputComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   @Output() selectionChange: EventEmitter<IGraphNode[]> = new EventEmitter();
+  @ViewChild("input") input:ElementRef;
 
   // Interface inputs
   @Input() kind?: ThemeKind = ThemeKind.Accent;
@@ -66,6 +68,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   @Input() hint?: string = "";
   @Input() disabled: boolean = false;
   @Input() icon?: string;
+  @Input() id?:string;
 
   @Input() options?: IUiFormField["options"];
 
@@ -88,7 +91,9 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     if (this.type == "select") this.initialiseSelection();
     if (this.type == "tree") this.initialiseTree();
 
-    this.placeholder = this.placeholder || "";
+    // Override initial value
+    // this.value = (!this.value && (this.options?.initial || this.initial)) ? (this.options?.initial ?? this.initial) : "";
+    this.placeholder = this.placeholder ?? "";
   }
 
   ngAfterViewInit() {
@@ -140,7 +145,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   // Form control configurations
-  private _value: any;
+  private _value: any = "";
   public get value(): any {
     return this._value;
   }
@@ -149,6 +154,10 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
       this._value = v;
       this.onChange(v);
     }
+  }
+
+  select() {
+    this.input.nativeElement.select();
   }
 
   onFocus() {

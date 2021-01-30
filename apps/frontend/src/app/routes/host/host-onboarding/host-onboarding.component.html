@@ -69,12 +69,10 @@
   <ng-container *ngIf="currentState == states.PendingVerification">
     <h2>Under review</h2>
     <p>
-      Our team is currently in the process of reviewing your information, once complete we will notify you via e-mail for changes.
+      Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.
       <br/>
       This process typically takes around a day.
     </p>
-
-    <ui-hr></ui-hr>
   </ng-container>
 
   <ng-container *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
