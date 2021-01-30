@@ -79,13 +79,14 @@ export default class AdminController extends BaseController {
         const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
 
         const review = new OnboardingReview(onboarding, reviewer, submission);
+        Object.keys(submission)
+          .map(k => Number.parseInt(k))
+          .forEach(k => onboarding.steps[k].state = submission[k].state);
 
         await this.ORM.transaction(async txc => {
-          await txc.save(review);
-          Object.keys(submission)
-            .map(k => Number.parseInt(k))
-            .forEach(k => onboarding.steps[k].state = submission[k].state);
-          
+          await txc.save(review);          
+
+          onboarding.reviews.push(review);
           await txc.save(onboarding);
           // The admin will then enact to push requested changes (if any) to the Host
         });

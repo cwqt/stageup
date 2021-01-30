@@ -27,9 +27,9 @@ export class OnboardingReview extends BaseEntity implements IOnboardingReview {
     // Add relationships
     this.reviewed_by = reviewer;
     this.onboarding = onboarding;
-    // Then fields
     this.steps = submission;
     this.onboarding_version = onboarding.version;
+    // Then fields
     this.reviewed_at = timestamp();
   }
 
