@@ -27,7 +27,7 @@
           <p class="flex-1 flex"
             [class.cursor-pointer]="adminView">
             <b (click)="field.valid = !field.valid">
-              {{ field.key | titlecase }}:
+              {{ field.prettyKey | titlecase }}:
             </b> {{ field.value }}
           </p>
         </div>
@@ -42,10 +42,18 @@
     <ui-hr></ui-hr>
   </div>
 
-  <ui-button kind="primary" size="l"
+  <div class="flex align-center">
+    <ui-button kind="primary" size="l"
     *ngIf="adminView"
+    [disabled]="getUncheckedCount() > 0"
     [loading]="enactOnboarding.loading"
     (click)="enactOnboardingProcess()">
       Enact
-  </ui-button>
+    </ui-button>
+
+    <p class="ml-4 my-auto">
+      {{ getUncheckedCount() }} steps unchecked
+    </p>
+  </div>
+
 </ng-container>

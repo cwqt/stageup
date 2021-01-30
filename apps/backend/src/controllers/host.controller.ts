@@ -288,7 +288,7 @@ export default class HostController extends BaseController {
             onboarding_version: onboarding.version,
             onboarding_step: step
           },
-          relations: ['reviewed_by']   
+          relations: ['reviewed_by']
         });
 
         return { ...onboarding.steps[step], review: stepReview?.toFull() || null };
@@ -296,7 +296,7 @@ export default class HostController extends BaseController {
     };
   }
 
-readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
+  readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
@@ -310,13 +310,20 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
           })
         );
 
-        const stepReviews = (await OnboardingStepReview.find({
-          where: {
-            onboarding_version: onboarding.version
-          },
-          relations: ["reviewed_by"]
-        })).filter(r => r !== undefined);
-        
+        const stepReviews = (
+          await OnboardingStepReview.find({
+            where: {
+              onboarding_version: onboarding.version
+            },
+            relations: ['reviewed_by']
+          })
+        )
+          .filter(r => r !== undefined)
+          .map(r => ({
+            ...r,
+            reviewed_by: r.reviewed_by.toStub()
+          }));
+
         return Object.entries(onboarding.steps).reduce((acc, curr: [string, IOnboardingStep<any>]) => {
           const [step, stepData] = curr;
           stepData.review = stepReviews.find(r => (r.onboarding_step = (step as unknown) as HostOnboardingStep));
@@ -381,13 +388,15 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const onboarding = await getCheck(Onboarding.findOne({
-          where: {
-            host: {
-              _id: Number.parseInt(req.params.hid)
+        const onboarding = await getCheck(
+          Onboarding.findOne({
+            where: {
+              host: {
+                _id: Number.parseInt(req.params.hid)
+              }
             }
-          }
-        }));
+          })
+        );
 
         if (![HostOnboardingState.AwaitingChanges, HostOnboardingState.HasIssues].includes(onboarding.state))
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);

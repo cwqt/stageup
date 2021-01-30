@@ -1,6 +1,6 @@
 import logger from '../common/logger';
 import config, { Environment } from '../config';
-import Validators, { body, query, single } from '../common/validate';
+import Validators, { array, body, query, single } from '../common/validate';
 import { getCheck } from '../common/errors';
 import {
   HostOnboardingState,
@@ -18,6 +18,8 @@ import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.mod
 import { User } from '../models/users/user.model';
 import { sendUserHostMembershipInvitation } from '../common/email';
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
+import { CustomValidator, ValidationChain } from 'express-validator';
+import { CustomValidation } from 'express-validator/src/context-items';
 
 export default class AdminController extends BaseController {
   readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
@@ -58,14 +60,16 @@ export default class AdminController extends BaseController {
     };
   }
 
-  reviewStep(): IControllerEndpoint<void> {
+  reviewOnboardingProcess(): IControllerEndpoint<void> {
     return {
       validators: [
-        body<IOnboardingStepReviewSubmission<any>>({
-          step_state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
-          review_message: v => v.optional(true).isString(),
-          issues: v => v.custom(single({
-            "*": v => v.custom(single(Validators.Objects.IOnboardingIssue()))
+        body<{[index in HostOnboardingStep]?:IOnboardingStepReviewSubmission<any>}>({
+          "*": v => v.custom(single({
+            step_state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
+            review_message: v => v.optional(true).isString(),
+            issues: v => v.custom(single({
+              "*": v => v.isArray()
+            }))
           }))
         }),
       ],

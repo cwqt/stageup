@@ -88,7 +88,7 @@ router.put    <IPerf>                 ("/performance/:pid",                     
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, mws);
 router.get  <IE<IHOnboarding[],void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
-router.post <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
+router.post <void>                   (`/admin/onboarding/:oid/review`,             Admin.reviewOnboardingProcess());
 router.post <void>                   ("/admin/onboarding/:oid/enact",              Admin.enactOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------

@@ -4,9 +4,7 @@ import {
   IOnboardingStepReviewSubmission,
   HostOnboardingState,
   HostOnboardingStep,
-  IOnboardingIssue,
-  IOnboardingStepReview,
-  DottedPaths
+  IOnboardingReview
 } from '@eventi/interfaces';
 
 import { User } from '../users/user.model';
@@ -14,14 +12,14 @@ import { timestamp } from '../../common/helpers';
 import { Onboarding } from './onboarding.model';
 
 @Entity()
-export class OnboardingStepReview extends BaseEntity implements IOnboardingStepReview {
+export class OnboardingReview extends BaseEntity implements IOnboardingReview {
   @PrimaryGeneratedColumn() _id: number;
   @Column() onboarding_version: number;
   @Column() review_message: string;
   @Column() reviewed_at: number;
   @Column('enum', { enum: HostOnboardingStep }) onboarding_step: HostOnboardingStep;
   @Column('enum', { enum: [HostOnboardingState.Verified, HostOnboardingState.HasIssues] }) step_state: HostOnboardingState.Verified | HostOnboardingState.HasIssues;
-  @Column('jsonb') issues: {[index in DottedPaths<any>]?:IOnboardingIssue}
+  @Column('jsonb') steps: {[ index in HostOnboardingStep]: IOnboardingStepReviewSubmission<any>};
 
   @ManyToOne(() => Onboarding, hop => hop.reviews) onboarding: Onboarding;
   @ManyToOne(() => User, { eager: true }) @JoinColumn() reviewed_by: User;
@@ -30,7 +28,7 @@ export class OnboardingStepReview extends BaseEntity implements IOnboardingStepR
     step: HostOnboardingStep,
     onboarding: Onboarding,
     reviewer: User,
-    submission: IOnboardingStepReviewSubmission<any>
+    submission: IOnboardingStepReviewSubmission<unknown>
   ) {
     super();
     // Add relationships
@@ -38,22 +36,18 @@ export class OnboardingStepReview extends BaseEntity implements IOnboardingStepR
     this.onboarding_step = step;
     this.onboarding = onboarding;
     // Then fields
-    this.step_state = submission.step_state;
-    this.issues = submission.issues;
     this.review_message = submission.review_message ?? '';
     this.onboarding_version = onboarding.version;
     this.reviewed_at = timestamp();
   }
 
-  toFull(): Required<IOnboardingStepReview> {
+  toFull(): Required<IOnboardingReview> {
     return {
       _id: this._id,
-      onboarding_step: this.onboarding_step,
+      steps: this.steps,
       onboarding_version: this.onboarding_version,
-      issues: this.issues,
       reviewed_at: this.reviewed_at,
       reviewed_by: this.reviewed_by?.toStub(),
-      review_message: this.review_message
     };
   }
 }

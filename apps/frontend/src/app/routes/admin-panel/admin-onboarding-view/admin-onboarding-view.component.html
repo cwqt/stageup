@@ -6,7 +6,7 @@
       <div class="onboarding-meta">
         <p><b>Status:</b> {{ onboarding.data.state | onboardingStatePipe }}</p>
         <p><b>Submitted:</b> {{ onboarding.data.last_submitted | amFromUnix | amTimeAgo }}</p>
-        <p><b>Last Reviewed:</b> {{ onboarding.data.last_modified  | amFromUnix | amTimeAgo}}</p>
+        <p><b>Last Reviewed:</b>  {{ onboarding.data.last_modified_by.name }}</p>  
         <p><b>Last Reviewed By:</b>  {{ onboarding.data.last_modified_by.name }}</p>  
       </div>
   </div>

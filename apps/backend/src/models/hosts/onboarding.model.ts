@@ -27,7 +27,7 @@ import { Host } from '../hosts/host.model'
 import { User } from '../users/user.model';
 import Validators, { object, single, array } from '../../common/validate';
 import { timestamp } from '../../common/helpers';
-import { OnboardingStepReview } from './onboarding-step-review.model';
+import { OnboardingReview } from './onboarding-review.model';
 
 @Entity()
 export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
@@ -40,7 +40,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
   @Column() version: number;
   @Column('jsonb', { nullable: true }) steps: IOnboardingStepMap;
   
-  @OneToMany(() => OnboardingStepReview, osr => osr.onboarding) reviews: OnboardingStepReview[];
+  @OneToMany(() => OnboardingReview, osr => osr.onboarding) reviews: OnboardingReview[];
   @OneToOne(() => Host, host => host.onboarding_process, { eager: true }) @JoinColumn() host: Host;
   @OneToOne(() => User, { eager: true }) @JoinColumn() last_modified_by: User;
 

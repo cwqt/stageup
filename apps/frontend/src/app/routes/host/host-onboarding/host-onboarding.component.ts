@@ -106,7 +106,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
           return {
             fields: flatten<any, IUiFormPrefetchData["fields"]>(stepData.data),
             errors: Object.keys(stepData.review?.issues || []).reduce((acc, curr) => {
-              acc[curr] = stepData.review.issues[curr].message
+              acc[curr] = stepData.review.issues[curr]
               return acc;
             }, {})
           };

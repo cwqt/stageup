@@ -14,7 +14,7 @@ export interface IUiForm<T> {
 
 export interface IUiFormPrefetchData<T = any> {
   fields: {[index in DottedPaths<T>]:string};
-  errors?: {[index in DottedPaths<T>]:string};
+  errors?: {[index in DottedPaths<T>]:string[]};
 }
 
 export interface IUiFormField {

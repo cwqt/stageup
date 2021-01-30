@@ -8,8 +8,7 @@ import {
   IHostMemberChangeRequest,
   IPerson,
   IPersonInfo,
-  ISocialInfo,
-  IOnboardingIssue
+  ISocialInfo
 } from '@eventi/interfaces';
 import { FieldValidators as FV } from './fields.validators';
 
@@ -59,12 +58,6 @@ export namespace ObjectValidators {
           .withMessage(ErrCode.NOT_URL)
     };
   };
-
-  export const IOnboardingIssue = ():ObjectValidator<IOnboardingIssue> => {
-    return {
-      message: v => FV.isString(v),
-    }
-  }
 
   export const IHostMemberChangeRequest = (
     value: IHostMemberChangeRequest['value'] = null): ObjectValidator<IHostMemberChangeRequest> => {

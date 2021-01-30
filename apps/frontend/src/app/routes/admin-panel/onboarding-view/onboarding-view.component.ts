@@ -1,5 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { HostOnboardingStep, IOnboardingStep, IOnboardingStepMap, Primitive } from '@eventi/interfaces';
+import {
+  HostOnboardingState,
+  HostOnboardingStep,
+  IOnboardingStep,
+  IOnboardingStepMap,
+  IOnboardingStepReviewSubmission,
+  Primitive
+} from '@eventi/interfaces';
 import { AdminService } from 'apps/frontend/src/app/services/admin.service';
 import { flatten } from 'flat';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
@@ -11,6 +18,8 @@ import { HostService } from '../../../services/host.service';
 export interface IUiStepMapField {
   level: number;
   value: Primitive;
+  key: string;
+  prettyKey: string;
   valid: boolean;
   issues: string[] | null;
 }
@@ -26,7 +35,9 @@ export class OnboardingViewComponent implements OnInit {
 
   // TODO: some steps we don't have requirements for yet...
   private SKIPPED_STEPS = [HostOnboardingStep.AddMembers, HostOnboardingStep.SubscriptionConfiguration];
-  public activeIssueMaker:[number, number] = [null, null];
+
+  // step & field indexes - only have one open at a time
+  public activeIssueMaker: [number, number] = [null, null];
 
   public onboardingFields: Record<HostOnboardingStep, IUiStepMapField[]>;
   public onboardingSteps: ICacheable<IOnboardingStepMap> = {
@@ -44,7 +55,7 @@ export class OnboardingViewComponent implements OnInit {
 
   isActiveIssueMaker(stepIdx, fieldIdx) {
     const [activeStep, activeField] = this.activeIssueMaker;
-    return (stepIdx == activeStep && fieldIdx == activeField);
+    return stepIdx == activeStep && fieldIdx == activeField;
   }
 
   async ngOnInit() {
@@ -65,51 +76,87 @@ export class OnboardingViewComponent implements OnInit {
   }
 
   parseOnboardingStepsIntoRows(): Record<HostOnboardingStep, IUiStepMapField[]> {
-    return Object.keys(this.onboardingSteps.data)
-      .map(step => Number.parseInt(step)) // as HostOnboardingSteps
-      .filter(step => !this.SKIPPED_STEPS.includes(step as any)) // don't show skipped steps
-      .reduce((acc, step) => {  // parse into IUiStepMapRow
-        acc[step as any] = Object.entries(flatten(this.onboardingSteps.data[step].data)).map<IUiStepMapField>(
-          ([key, value]) => {
-            const splitKey = key.split('.');
+    return this.getAllValidSteps().reduce((acc, step) => {
+      // parse into IUiStepMapRow
+      acc[step as any] = Object.entries(flatten(this.onboardingSteps.data[step].data)).map<IUiStepMapField>(
+        ([key, value]) => {
+          const splitKey = key.split('.');
 
-            return {
-              type: 'text',
-              value: value as Primitive,
-              key: splitKey.pop().replace(/[._]/g, ' '),
-              level: splitKey.length,
-              valid: false,
-              issues: null
-            };
-          }
-        );
+          return {
+            type: 'text',
+            value: value as Primitive,
+            key: key,
+            prettyKey: splitKey.pop().replace(/[._]/g, ' '),
+            level: splitKey.length,
+            valid: false,
+            issues: null
+          };
+        }
+      );
 
-        return acc;
-      }, {} as Record<HostOnboardingStep, IUiStepMapField[]>);
+      return acc;
+    }, {} as Record<HostOnboardingStep, IUiStepMapField[]>);
   }
 
-  enactOnboardingProcess() {
+  getAllValidSteps(): HostOnboardingStep[] {
+    return Object.keys(this.onboardingSteps.data)
+      .map(step => Number.parseInt(step)) // as HostOnboardingSteps
+      .filter(step => !this.SKIPPED_STEPS.includes(step as any)); // don't show skipped steps
+  }
+
+  async enactOnboardingProcess() {
     this.enactOnboarding.loading = true;
-    setTimeout(() => {
-      return this.adminService
-        .enactOnboardingProcess(this.hostId)
-        .catch((e: HttpErrorResponse) => (this.enactOnboarding.error = e.message))
-        .finally(() => (this.enactOnboarding.loading = false));
-    }, 1000);
+
+    // Send all step reviews
+    try {
+      for await (const step of this.getAllValidSteps()) {
+        // don't show skipped steps
+        await this.adminService.reviewStep(
+          this.hostId,
+          step,
+          this.onboardingFields[step].reduce(
+            (acc, curr) => {
+              if (curr.issues.length > 0) acc.issues = { ...acc.issues, [curr.key]: curr.issues };
+              return acc;
+            },
+            {
+              issues: {},
+              step_state: this.onboardingFields[step].some(f => f.issues.length)
+                ? HostOnboardingState.HasIssues
+                : HostOnboardingState.Verified
+            }
+          )
+        );
+      }
+
+      // If all reviews send without fail, enact the onboarding
+      return this.adminService.enactOnboardingProcess(this.hostId);
+    } catch (error) {
+      this.enactOnboarding.error = error.message;
+    } finally {
+      this.enactOnboarding.loading = false;
+    }
   }
 
   keepOrder = (a, b) => {
     return a;
   };
 
-  addFieldIssue = (stepIdx:number, fieldIdx:number) => {
+  addFieldIssue = (stepIdx: number, fieldIdx: number) => {
     this.onboardingFields[stepIdx][fieldIdx].issues = this.onboardingFields[stepIdx][fieldIdx].issues || [];
     this.activeIssueMaker = [stepIdx, fieldIdx];
-  }
+  };
 
-  allFieldsChecked() {
-    console.log(flatten(this.onboardingFields))
-    return false
+  getUncheckedCount(): number {
+    const flatList = flatten(this.onboardingFields);
+    const unchecked = Object.keys(flatList)
+      .filter(k => k.includes('valid'))
+      .reduce((acc, curr) => {
+        if (flatList[curr] == false) acc += 1;
+        return acc;
+      }, 0);
+
+    return unchecked;
     // return Object.values(flatten())
   }
 }
