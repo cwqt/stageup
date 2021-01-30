@@ -1,4 +1,5 @@
 require('dotenv').config();
+import Axios from 'axios';
 import { HostPermission, IUserPrivate } from '@eventi/interfaces';
 import { Stories } from './stories';
 
@@ -57,4 +58,6 @@ export const environment: IEnvironment = {
   },
 };
 
-// console.log(environment)
+export const api = Axios.create({
+  baseURL: environment.baseUrl || "http://localhost:3000",
+});

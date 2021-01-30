@@ -1,6 +1,5 @@
 import logger from '../common/logger';
-import config, { Environment } from '../config';
-import Validators, { array, body, query, single } from '../common/validate';
+import { body, query, single } from '../common/validate';
 import { getCheck } from '../common/errors';
 import {
   HostOnboardingState,
@@ -8,8 +7,7 @@ import {
   HostPermission,
   IEnvelopedData,
   IHostOnboarding,
-  IOnboardingReview,
-  IOnboardingStepReview
+  IOnboardingReview
 } from '@eventi/interfaces';
 import { BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
@@ -62,29 +60,36 @@ export default class AdminController extends BaseController {
   reviewOnboardingProcess(): IControllerEndpoint<void> {
     return {
       validators: [
-        body<{[index in HostOnboardingStep]?:IOnboardingStepReview<any>}>({
-          "*": v => v.custom(single({
-            step_state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
-            review_message: v => v.optional(true).isString(),
-            issues: v => v.custom(single({
-              "*": v => v.isArray()
-            }))
-          }))
-        }),
+        body<IOnboardingReview['steps']>({
+          '*': v =>
+            v.custom(
+              single({
+                state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
+                review_message: v => v.optional(true).isString(),
+                issues: v =>
+                  v.custom(
+                    single({
+                      '*': v => v.isArray()
+                    })
+                  )
+              })
+            )
+        })
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
-        const submission: IOnboardingReview["steps"] = req.body;
+        const submission: IOnboardingReview['steps'] = req.body;
         const reviewer = await getCheck(User.findOne({ _id: req.session.user._id }));
+
         const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
 
         const review = new OnboardingReview(onboarding, reviewer, submission);
         Object.keys(submission)
           .map(k => Number.parseInt(k))
-          .forEach(k => onboarding.steps[k].state = submission[k].state);
+          .forEach(k => (onboarding.steps[k].state = submission[k].state));
 
         await this.ORM.transaction(async txc => {
-          await txc.save(review);          
+          await txc.save(review);
 
           onboarding.reviews.push(review);
           await txc.save(onboarding);
@@ -143,20 +148,17 @@ export default class AdminController extends BaseController {
               addMemberData.members_to_add.map(async member => {
                 try {
                   const potentialMember = await User.findOne({ _id: member.value });
-                  // Don't add the owner if they're already in
-                  if (potentialMember?._id !== owner.user._id) {
-                    if (potentialMember) {
-                      if (!config.isEnv(Environment.Production)) {
-                        sendUserHostMembershipInvitation(potentialMember.email_address, host);
-                      }
+                  if (!potentialMember)
+                    logger.error(
+                      `Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`
+                    );
 
-                      // Add the member as pending (updated on membership acceptance to Member)
-                      await host.addMember(potentialMember, HostPermission.Pending, txc);
-                    } else {
-                      logger.error(
-                        `Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`
-                      );
-                    }
+                  // Don't add the owner if they're already in
+                  if (potentialMember._id !== owner.user._id) {
+                    sendUserHostMembershipInvitation(potentialMember.email_address, host);
+
+                    // Add the member as pending (updated on membership acceptance to Member)
+                    await host.addMember(potentialMember, HostPermission.Pending, txc);
                   }
                 } catch (error) {
                   logger.error(error);
