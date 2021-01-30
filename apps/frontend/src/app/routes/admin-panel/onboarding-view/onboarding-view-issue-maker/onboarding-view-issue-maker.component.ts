@@ -32,10 +32,12 @@ export class OnboardingViewIssueMakerComponent implements OnInit, OnChanges {
   addIssue() {
     this.field.issues.push(this.currentIssueText);
     this.currentIssueText = "";
+    this.field.valid = true;
     this.input.select();
   }
 
   removeIssue(issueIdx:number) {
     this.field.issues = this.field.issues.splice(issueIdx, 1);
+    if(this.field.issues.length == 0) this.field.valid = false;
   }
 }

@@ -1,11 +1,7 @@
 <mat-spinner *ngIf="onboardingSteps.loading"></mat-spinner>
 <ng-container *ngIf="onboardingFields">
-  <div *ngFor="let step of onboardingFields | keyvalue: keepOrder" [ngSwitch]="step.key">
-    <h3 *ngSwitchCase="0">Proof of Business</h3>
-    <h3 *ngSwitchCase="1">Owner Details</h3>
-    <h3 *ngSwitchCase="2">Social Presence</h3>
-    <h3 *ngSwitchCase="3">Add Members</h3>
-    <h3 *ngSwitchCase="4">Subscription Configuration</h3>
+  <div *ngFor="let step of onboardingFields | keyvalue: keepOrder">
+    <h3>{{ step.key | prettyOnboardingStepNamePipe }}</h3>
 
     <ul class="onboarding-step-meta">
       <li *ngFor="let field of step.value; let idx = index" class="mb-2" [class.is-admin]="adminView">
@@ -42,9 +38,8 @@
     <ui-hr></ui-hr>
   </div>
 
-  <div class="flex align-center">
+  <div class="flex align-center"  *ngIf="adminView">
     <ui-button kind="primary" size="l"
-    *ngIf="adminView"
     [disabled]="getUncheckedCount() > 0"
     [loading]="enactOnboarding.loading"
     (click)="enactOnboardingProcess()">

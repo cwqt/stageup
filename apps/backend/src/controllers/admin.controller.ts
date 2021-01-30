@@ -8,18 +8,17 @@ import {
   HostPermission,
   IEnvelopedData,
   IHostOnboarding,
-  IOnboardingStepReviewSubmission
+  IOnboardingReview,
+  IOnboardingStepReview
 } from '@eventi/interfaces';
 import { BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
 import { Onboarding } from '../models/hosts/onboarding.model';
 
-import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
+import { OnboardingReview } from '../models/hosts/onboarding-review.model';
 import { User } from '../models/users/user.model';
 import { sendUserHostMembershipInvitation } from '../common/email';
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
-import { CustomValidator, ValidationChain } from 'express-validator';
-import { CustomValidation } from 'express-validator/src/context-items';
 
 export default class AdminController extends BaseController {
   readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
@@ -63,7 +62,7 @@ export default class AdminController extends BaseController {
   reviewOnboardingProcess(): IControllerEndpoint<void> {
     return {
       validators: [
-        body<{[index in HostOnboardingStep]?:IOnboardingStepReviewSubmission<any>}>({
+        body<{[index in HostOnboardingStep]?:IOnboardingStepReview<any>}>({
           "*": v => v.custom(single({
             step_state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
             review_message: v => v.optional(true).isString(),
@@ -75,15 +74,17 @@ export default class AdminController extends BaseController {
       ],
       authStrategy: AuthStrat.isSiteAdmin,
       controller: async req => {
-        const step: HostOnboardingStep = Number.parseInt(req.params.step);
-        const submission: IOnboardingStepReviewSubmission<any> = req.body;
+        const submission: IOnboardingReview["steps"] = req.body;
         const reviewer = await getCheck(User.findOne({ _id: req.session.user._id }));
         const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
 
-        const review = new OnboardingStepReview(step, onboarding, reviewer, submission);
+        const review = new OnboardingReview(onboarding, reviewer, submission);
+
         await this.ORM.transaction(async txc => {
           await txc.save(review);
-          onboarding.steps[step].state = review.step_state;
+          Object.keys(submission)
+            .map(k => Number.parseInt(k))
+            .forEach(k => onboarding.steps[k].state = submission[k].state);
           
           await txc.save(onboarding);
           // The admin will then enact to push requested changes (if any) to the Host

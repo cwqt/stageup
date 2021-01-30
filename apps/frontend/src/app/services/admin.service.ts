@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HostOnboardingStep, IEnvelopedData, IHostOnboarding, IOnboardingStepMap, IOnboardingStepReviewSubmission } from '@eventi/interfaces';
+import { IEnvelopedData, IHostOnboarding, IOnboardingReview } from '@eventi/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +18,8 @@ export class AdminService {
     return this.http.post<void>(`/api/admin/onboarding/${hostId}/enact`, null).toPromise();
   }
 
-  // router.post <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
-  reviewStep(hostId:number, step:HostOnboardingStep, review:IOnboardingStepReviewSubmission<any>):Promise<void> {
-    return this.http.post<void>(`/api/admin/onboarding/${hostId}/${step}/review`, review).toPromise();
+  // router.post <void> (`/admin/onboarding/:oid/review`, Admin.reviewOnboarding());
+  reviewOnboarding(hostId:number, review:IOnboardingReview["steps"]):Promise<void> {
+    return this.http.post<void>(`/api/admin/onboarding/${hostId}/review`, review).toPromise();
   }
 }

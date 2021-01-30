@@ -5,7 +5,7 @@ import log from '../logger';
 import * as TORM from 'typeorm';
 
 import { User } from '../../models/users/user.model';
-import { OnboardingStepReview } from '../../models/hosts/onboarding-step-review.model';
+import { OnboardingReview } from '../../models/hosts/onboarding-review.model';
 import { Onboarding } from '../../models/hosts/onboarding.model';
 import { Host } from '../../models/hosts/host.model';
 import { UserHostInfo } from '../../models/hosts/user-host-info.model';
@@ -53,7 +53,7 @@ export const create = async (): Promise<TORM.Connection> => {
         User,
         Onboarding,
         Host,
-        OnboardingStepReview,
+        OnboardingReview,
         UserHostInfo,
         PerformanceHostInfo,
         Performance,

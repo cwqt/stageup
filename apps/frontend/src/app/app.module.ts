@@ -58,6 +58,7 @@ import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboardi
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
 import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
+import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-name.pipe';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { ShortDomainPipe } from './_pipes/short-domain.pipe';
     OnboardingStatePipe,
     ObjectLengthPipe,
     ShortDomainPipe,
+    PrettyOnboardingStepNamePipe,
     OnboardingViewIssueMakerComponent
   ],
   imports: [

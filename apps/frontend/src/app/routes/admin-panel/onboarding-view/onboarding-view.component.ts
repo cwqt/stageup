@@ -4,7 +4,7 @@ import {
   HostOnboardingStep,
   IOnboardingStep,
   IOnboardingStepMap,
-  IOnboardingStepReviewSubmission,
+  IOnboardingStepReview,
   Primitive
 } from '@eventi/interfaces';
 import { AdminService } from 'apps/frontend/src/app/services/admin.service';
@@ -107,14 +107,12 @@ export class OnboardingViewComponent implements OnInit {
   async enactOnboardingProcess() {
     this.enactOnboarding.loading = true;
 
-    // Send all step reviews
     try {
-      for await (const step of this.getAllValidSteps()) {
-        // don't show skipped steps
-        await this.adminService.reviewStep(
-          this.hostId,
-          step,
-          this.onboardingFields[step].reduce(
+      // Send the onboarding review & enact
+      await this.adminService.reviewOnboarding(
+        this.hostId,
+        this.getAllValidSteps().reduce((map, step) => {
+          map[step] = this.onboardingFields[step].reduce(
             (acc, curr) => {
               if (curr.issues.length > 0) acc.issues = { ...acc.issues, [curr.key]: curr.issues };
               return acc;
@@ -125,9 +123,10 @@ export class OnboardingViewComponent implements OnInit {
                 ? HostOnboardingState.HasIssues
                 : HostOnboardingState.Verified
             }
-          )
-        );
-      }
+          );
+          return map;
+        }, {})
+      );
 
       // If all reviews send without fail, enact the onboarding
       return this.adminService.enactOnboardingProcess(this.hostId);
@@ -148,15 +147,15 @@ export class OnboardingViewComponent implements OnInit {
   };
 
   getUncheckedCount(): number {
-    const flatList = flatten(this.onboardingFields);
+    const flatList:Record<string, IUiStepMapField> = flatten(this.onboardingFields);
+
     const unchecked = Object.keys(flatList)
       .filter(k => k.includes('valid'))
       .reduce((acc, curr) => {
-        if (flatList[curr] == false) acc += 1;
+        if (!flatList[curr]) acc += 1;
         return acc;
       }, 0);
 
     return unchecked;
-    // return Object.values(flatten())
   }
 }

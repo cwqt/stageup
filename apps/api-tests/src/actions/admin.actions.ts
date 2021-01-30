@@ -1,9 +1,7 @@
 import {
   IEnvelopedData,
   IHostOnboarding,
-  HostOnboardingStep,
-  IOnboardingStepReview,
-  IOnboardingStepReviewSubmission,
+  IOnboardingReview
 } from '@eventi/interfaces';
 import Axios from 'axios';
 import { environment } from '../environment';
@@ -18,15 +16,11 @@ export default {
     return res.data;
   },
 
-  // router.post  <void> (`/admin/onboarding/:oid/:step/review`, Admin.reviewStep());
-  reviewStep: async <T>(
-    onboarding: IHostOnboarding,
-    step: HostOnboardingStep,
-    review: IOnboardingStepReviewSubmission<T>
-  ): Promise<void> => {
+  // router.post <void> (`/admin/onboarding/:oid/review`, Admin.reviewOnboardingProcess());
+  reviewOnboardingProcess: async <T>(onboarding: IHostOnboarding, reviews: IOnboardingReview['steps']): Promise<void> => {
     const res = await Axios.post(
-      `${environment.baseUrl}/admin/onboarding/${onboarding._id}/${step}/review`,
-      review,
+      `${environment.baseUrl}/admin/onboarding/${onboarding._id}/review`,
+      reviews,
       environment.getOptions()
     );
 
@@ -41,5 +35,5 @@ export default {
       environment.getOptions()
     );
     return res.data;
-  },
+  }
 };

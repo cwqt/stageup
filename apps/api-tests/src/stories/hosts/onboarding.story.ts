@@ -203,39 +203,37 @@ describe('As Client, I want to register a Host & be onboarded', () => {
 
     it('Should allow the Site Admin to verify some steps as valid', async () => {
       // All but the Proof Of Business to be verified
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.AddMembers, {
-        step_state: HostOnboardingState.Verified,
-        issues: {},
-      });
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.OwnerDetails, {
-        step_state: HostOnboardingState.Verified,
-        issues: {},
-      });
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SocialPresence, {
-        step_state: HostOnboardingState.Verified,
-        issues: {},
-      });
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.SubscriptionConfiguration, {
-        step_state: HostOnboardingState.Verified,
-        issues: {},
-      });
-    });
-
-    it('Should allow the Site Admin to create issues on an onboarding process & then submit', async () => {
-      await Stories.actions.admin.reviewStep<IOnboardingProofOfBusiness>(
-        onboarding,
-        HostOnboardingStep.ProofOfBusiness,
-        {
+      await Stories.actions.admin.reviewOnboardingProcess(onboarding, {
+        [HostOnboardingStep.OwnerDetails]: {
+          step_state: HostOnboardingState.Verified,
+          issues: {},  
+        },
+        [HostOnboardingStep.SocialPresence]: {
+          step_state: HostOnboardingState.Verified,
+          issues: {},  
+        },
+        [HostOnboardingStep.SubscriptionConfiguration]: {
+          step_state: HostOnboardingState.Verified,
+          issues: {},  
+        },
+        [HostOnboardingStep.AddMembers]: {
+          step_state: HostOnboardingState.Verified,
+          issues: {},  
+        },
+        // Submit an issue here
+        [HostOnboardingStep.ProofOfBusiness]: {
           step_state: HostOnboardingState.HasIssues,
           issues: {
-            ['hmrc_company_number']: { message: "Couldn't find this company number in the registry" },
-            ['business_address.street_name']: { message: 'The street address could not be found' },
-            ['business_address.street_number']: { message: 'The street number could not be found' },
-            ['business_address']: { message: 'Incorrect details provided' },
-          },
+            ['hmrc_company_number']: ["Couldn't find this company number in the registry", "This is another issue"],
+            ['business_address.street_name']: ['The street address could not be found'],
+            ['business_address.street_number']: ['The street number could not be found'],
+            ['business_address']: ['Incorrect details provided']
+          }
         }
-      );
+      })
+    });
 
+    it('Should enact the onboarding request to send out the issues', async () => {
       await Stories.actions.admin.enactOnboardingProcess(onboarding);
     });
   });
@@ -253,7 +251,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       //   'business_address',
       // ]);
 
-      expect(step.review?.reviewed_by.username).toEqual(Stories.cachedUsers[UserType.SiteAdmin]?.user.username);
+      // expect(step.review?.reviewed_by.username).toEqual(Stories.cachedUsers[UserType.SiteAdmin]?.user.username);
     });
 
     it('Should update the the step with issues & re-submit for verification', async () => {
@@ -276,9 +274,11 @@ describe('As Client, I want to register a Host & be onboarded', () => {
   describe('As a Site Admin, I want to verify the last step, and then enact the onboarding', () => {
     it('Should review the step, and then submit the onboarding request review', async () => {
       await Stories.actions.common.switchActor(UserType.SiteAdmin);
-      await Stories.actions.admin.reviewStep(onboarding, HostOnboardingStep.ProofOfBusiness, {
-        step_state: HostOnboardingState.Verified,
-        issues: {},
+      await Stories.actions.admin.reviewOnboardingProcess(onboarding, {
+        [HostOnboardingStep.ProofOfBusiness]: {
+          step_state: HostOnboardingState.Verified,
+          issues: {}  
+        }
       });
 
       await Stories.actions.admin.enactOnboardingProcess(onboarding);

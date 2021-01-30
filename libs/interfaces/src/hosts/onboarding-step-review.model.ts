@@ -14,8 +14,8 @@ import { DottedPaths } from '../common/fp';
  *   }
  * }
  */
-export interface IOnboardingStepReviewSubmission<T> {
-  step_state: HostOnboardingState.HasIssues | HostOnboardingState.Verified;
+export interface IOnboardingStepReview<T> {
+  state: HostOnboardingState.HasIssues | HostOnboardingState.Verified;
   issues: {[index in DottedPaths<T>]?:string[]}
   review_message?: string; // hand-written message
 }
@@ -25,5 +25,5 @@ export interface IOnboardingReview {
   onboarding_version?: IHostOnboarding["version"];
   reviewed_by: IUserStub;
   reviewed_at: number; // unix timestamp
-  steps: {[ index in HostOnboardingStep]: IOnboardingStepReviewSubmission<any>}
+  steps: {[ index in HostOnboardingStep]?: IOnboardingStepReview<any>}
 };
