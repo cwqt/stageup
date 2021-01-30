@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { IUiStepMapField } from '../onboarding-view.component';
 
 @Component({
@@ -6,7 +6,7 @@ import { IUiStepMapField } from '../onboarding-view.component';
   templateUrl: './onboarding-view-issue-maker.component.html',
   styleUrls: ['./onboarding-view-issue-maker.component.scss']
 })
-export class OnboardingViewIssueMakerComponent implements OnInit {
+export class OnboardingViewIssueMakerComponent implements OnInit, OnChanges {
   @Input() field:IUiStepMapField;
   @Input() isActive:boolean;
 
@@ -20,10 +20,18 @@ export class OnboardingViewIssueMakerComponent implements OnInit {
     this.field.issues = [];
   }
 
+  ngOnChanges(changes:SimpleChanges) {
+    // Immediately select the input field when the onboarding view issue maker is active
+    if(changes["isActive"]) {
+      setTimeout(() => { // push to next tick while ngIf is set to active
+        if(changes["isActive"].currentValue) this.input.select();
+      }, 0);
+    }
+  }
+
   addIssue() {
     this.field.issues.push(this.currentIssueText);
     this.currentIssueText = "";
-    console.log(this.input)
     this.input.select();
   }
 

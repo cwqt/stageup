@@ -106,4 +106,10 @@ export class OnboardingViewComponent implements OnInit {
     this.onboardingFields[stepIdx][fieldIdx].issues = this.onboardingFields[stepIdx][fieldIdx].issues || [];
     this.activeIssueMaker = [stepIdx, fieldIdx];
   }
+
+  allFieldsChecked() {
+    console.log(flatten(this.onboardingFields))
+    return false
+    // return Object.values(flatten())
+  }
 }

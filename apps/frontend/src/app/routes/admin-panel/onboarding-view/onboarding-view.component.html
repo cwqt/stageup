@@ -8,12 +8,12 @@
     <h3 *ngSwitchCase="4">Subscription Configuration</h3>
 
     <ul class="onboarding-step-meta">
-      <li *ngFor="let field of step.value; let idx = index" class="mb-2 shadow-sm bg-white p-2 rounded" [class.is-admin]="adminView">
+      <li *ngFor="let field of step.value; let idx = index" class="mb-2" [class.is-admin]="adminView">
         <div class="flex align-middle">
           <ui-icon-button class="mr-4" size="m"
-            *ngIf="adminView && !isActiveIssueMaker(step.key, idx)"
+            *ngIf="adminView"
             (click)="addFieldIssue(step.key, idx)"
-            [disabled]="field.valid">
+            [disabled]="field.valid || isActiveIssueMaker(step.key, idx)">
               add
           </ui-icon-button>
 
@@ -42,8 +42,10 @@
     <ui-hr></ui-hr>
   </div>
 
-  <ui-button *ngIf="adminView" [loading]="enactOnboarding.loading" (click)="enactOnboardingProcess()" kind="primary"
-    size="l">
-    Enact
+  <ui-button kind="primary" size="l"
+    *ngIf="adminView"
+    [loading]="enactOnboarding.loading"
+    (click)="enactOnboardingProcess()">
+      Enact
   </ui-button>
 </ng-container>

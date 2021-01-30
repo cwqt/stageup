@@ -2,6 +2,7 @@
   li {
     overflow: visible;
     &.is-admin {
+      @apply bg-white p-2 rounded shadow-sm;
       position: relative;
       padding-left: 40px;
     }
