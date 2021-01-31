@@ -8,14 +8,6 @@ Basic architecture map of the application looks like this:
 
 ![](https://ftp.cass.si/u9bw2~4d5.png)
 
-## Tools
-
-* __VSCode__: <https://code.visualstudio.com/>
-* __Postman__: <https://www.postman.com/downloads/>
-* __DB Client__: <https://tableplus.com/>
-* __JSONView__: <https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en>
-
-
 ## Homebrew (skip if Windows)
 Install Homebrew if you haven't already (macOS)
 
@@ -149,7 +141,6 @@ Do `npm install` in the project root to install all required dependencies.
   - This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
   - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
   - Now you can develop the test & it will auto-re-run every time a change is made & saved
-  
 
 # Deployment
 
@@ -158,3 +149,10 @@ Do `npm install` in the project root to install all required dependencies.
 * Create a new token <https://github.com/settings/tokens>
 * Add `.env` into root directory
 * Add value called `GITHUB_TOKEN=XXXX`
+
+# Useful Tools
+
+* __VSCode__: <https://code.visualstudio.com/>
+* __Postman__: <https://www.postman.com/downloads/>
+* __DB Client__: <https://tableplus.com/>
+* __JSONView__: <https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en>
