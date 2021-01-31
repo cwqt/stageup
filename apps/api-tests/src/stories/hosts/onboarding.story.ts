@@ -234,8 +234,9 @@ describe('As Client, I want to register a Host & be onboarded', () => {
     });
 
     it("Should get the onboarding process in full", async () => {
+      const status = await Stories.actions.hosts.readOnboardingSteps(host);
+      expect(status[HostOnboardingStep.ProofOfBusiness].state).toEqual(HostOnboardingState.HasIssues);
 
-      const status = await Stories.actions.hosts.readOnboardingSteps
     })
 
     it('Should enact the onboarding request to send out the issues', async () => {

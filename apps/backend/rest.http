@@ -1,0 +1,62 @@
+### ------------------------------------------------------------------
+# @name createUser
+POST http://{{host}}/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "email_address":"{{email_address}}",
+  "password":"{{password}}"
+}
+
+### ------------------------------------------------------------------
+@userId = {{ createUser.response.body._id }}
+
+### ------------------------------------------------------------------
+# @name loginUser
+POST http://{{host}}/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email_address":"{{email_address}}",
+  "password":"{{password}}"
+}
+### ------------------------------------------------------------------
+# @name logoutUser
+POST http://{{host}}/users/logout HTTP/1.1
+### ------------------------------------------------------------------
+# @name readUserByUsername
+GET http://{{host}}/users/@{{ username }} HTTP/1.1
+### ------------------------------------------------------------------
+# @name readUserById
+GET http://{{host}}/users/{{userId}} HTTP/1.1
+### ------------------------------------------------------------------
+# @name deleteUser
+DELETE http://{{host}}/users/{{userId}} HTTP/1.1
+### ------------------------------------------------------------------
+# @name readUserHost
+GET http://{{host}}/users/{{userId}}/host 
+### ------------------------------------------------------------------
+# router.post   <IHost> ("/hosts", Hosts.createHost());
+# @name createHost
+POST http://{{host}}/hosts
+Content-Type: application/json
+
+{
+    "username":"testhost",
+    "name":"My Cool Host",
+    "email_address":"host@cass.si"
+}
+### ------------------------------------------------------------------
+@hostId = {{ createHost.response.body._id }}
+
+### ------------------------------------------------------------------
+# router.get    <IHost> ("/hosts/:hid", Hosts.readHost())
+# @name readHost
+GET http://{{host}}/hosts/{{hostId}}
+
+### ------------------------------------------------------------------
+# router.delete <void> ("/hosts/:hid", Hosts.deleteHost());
+# @name deleteHost
+
+### ------------------------------------------------------------------
