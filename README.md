@@ -136,12 +136,16 @@ All packages that are used throughout all apps & libs are defined within a singl
 
 Do `npm install` in the project root to install all required dependencies.
 
+* __Redis__: Start from Docker Desktop
+* __PostgreSQL__: Start from Docker Desktop
 * __Frontend__: `nx serve frontend`
 * __Backend__: `nx serve backend`
 * __API Tests__: `nx test api-tests`
-* __Redis__: Start from Docker Desktop
-* __PostgreSQL__: Start from Docker Desktop
-
+  - When developing a single test do: `nx test api-tests --watch`
+  - This will bring up a menu called `Watch Useage`, press `p` to filter by filename regex
+  - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
+  - Now you can develop the test & it will auto-re-run every time a change is made & saved
+  
 
 # Deployment
 
