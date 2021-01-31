@@ -142,7 +142,7 @@ Do `npm install` in the project root to install all required dependencies.
 * __Backend__: `nx serve backend`
 * __API Tests__: `nx test api-tests`
   - When developing a single test do: `nx test api-tests --watch`
-  - This will bring up a menu called `Watch Useage`, press `p` to filter by filename regex
+  - This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
   - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
   - Now you can develop the test & it will auto-re-run every time a change is made & saved
   
