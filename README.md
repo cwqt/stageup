@@ -4,6 +4,10 @@ Live-streaming & VOD platform for the performance arts.
 
 # Installation
 
+Basic architecture map of the application looks like this:
+
+![](https://ftp.cass.si/u9bw2~4d5.png)
+
 ## Tools
 
 * __VSCode__: <https://code.visualstudio.com/>
