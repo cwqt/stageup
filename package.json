@@ -39,7 +39,6 @@
     "@angular/platform-browser": "^11.0.0",
     "@angular/platform-browser-dynamic": "^11.0.0",
     "@angular/router": "^11.0.0",
-    "@material-ui/icons": "^4.11.2",
     "@mux/mux-node": "^3.1.0",
     "@nrwl/angular": "^11.1.5",
     "apicache": "^1.5.3",
