@@ -2,7 +2,7 @@
 
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/Dialog';
-import { DialogData } from './../../routes/feed/DialogData';
+import { IPerformanceStub } from '@eventi/interfaces';
 
 @Component({
   selector: 'performance-modal', 
@@ -12,7 +12,7 @@ import { DialogData } from './../../routes/feed/DialogData';
 export class PerformanceModalComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<PerformanceModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+    @Inject(MAT_DIALOG_DATA) public data: IPerformanceStub) { }
 
   onNoClick(): void {
     this.dialogRef.close();

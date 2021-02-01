@@ -1,20 +1,14 @@
 <h1>Performances</h1>
 
-<!-- Modal Test Button-->
-<div>    
-    <button mat-raised-button (click)="openDialog()">Modal Test</button>        
-</div>
-<br>
-
 <h3 *ngIf="performances.loading">Loading...</h3>
 <h3 *ngIf="performances.data && performances.data.data.length == 0">Ain't no performances in ya DB</h3>
 
 <div class="performances" *ngIf="!performances.loading && performances.data">
     <div
         *ngFor="let performance of performances.data.data; let i = index;"
-        (click)="gotoPerformance(i)"
+        (click)="openDialog(i)"
         class="performance-thumb">        
-        <div class="performance-thumb__content" (click)="openDialog()"> <!-- Add (click)="openDialog()" here to apply Modal functionality -->       
+        <div class="performance-thumb__content">    
             <h1>{{ performance.name }}</h1>
             <p>{{ performance.description }}</p>
             <div class="content-footer">

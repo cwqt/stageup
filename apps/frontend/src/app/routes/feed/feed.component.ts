@@ -13,10 +13,7 @@ import { PerformanceModalComponent } from './../../components/modals/performance
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit {
-  /* Modal Variables */
-  animal: string;
-  name: string;
-
+  
   performances:ICacheable<IEnv<IPerformanceStub[], void>> = {
     data: null,
     error: "",
@@ -41,15 +38,10 @@ export class FeedComponent implements OnInit {
       .finally(() => this.performances.loading = false);
   }
 
-  gotoPerformance(performanceIdx:number) {
-    const performance = this.performances.data.data[performanceIdx];
-    this.appService.navigateTo(`performance/${performance._id}`, {
-      state: { performance }
-    })    
-  }
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(PerformanceModalComponent, {});  
+  openDialog(performanceIdx:number): void {    
+    const dialogRef = this.dialog.open(PerformanceModalComponent, {      
+      data: this.performances.data.data[performanceIdx]
+    });
 
     dialogRef.afterClosed().subscribe(result => {});
   }  
