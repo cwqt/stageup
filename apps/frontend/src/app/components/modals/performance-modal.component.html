@@ -1,0 +1,73 @@
+<!-- Modal -->
+<section class="fixed inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen text-center sm:p-0 bg-gray-900 bg-opacity-40 overflow-y-auto">
+    <div class="align-bottom bg-white text-left overflow-hidden shadow-xl transform transition-all sm:max-w-4xl"
+      aria-labelledby="modal-headline" role="dialog" aria-hidden="true">
+
+      <!-- Cover -->
+      <div>
+        <img class="object-cover h-48 w-full" src="./../../../assets/D.jpg">
+      </div>
+
+      <!-- Modal Content -->
+      <div class="grid gap-2 grid-cols-3 px-2 pt-2 pb-2 sm:p-6 sm:pb-4">
+
+        <!-- Column 1 Content -->
+        <div class="flex flex-wrap overflow-y-auto col-span-2">
+          <div class="container px-2">
+            <h2>Performance Title</h2>            
+          </div>
+          <div class="container px-2">
+            <p>By Host Name Here</p>
+          </div>
+          <div class="container px-2">
+            <p>I returned, however, with unabated vigor to my work—a more arduous task than 
+            anyone can imagine, who has not felt something like the misery of being charged 
+            with the care and direction of a set of mischievous, turbulent rebels, whom
+            his utmost exertions cannot bind to their duty, while, at the same time, 
+            he is responsible for their conduct to a higher power, who exacts from him what 
+            cannot be achieved without the aid of the superior's more potent authority, which,
+            either from indolence, or the fear of becoming unpopular with the said rebellious 
+            gang, the latter refuses to give. I can conceive few situations more harassing than 
+            that wherein, however you may long for success, however you may labor to fulfill your
+            duty, your efforts are baffled and set at naught by those beneath you, and unjustly 
+            censured and misjudged by those above.</p>
+          </div>
+        </div>
+
+        <!-- Column 2 Content -->
+        <div class="flex flex-wrap overflow-auto">
+          <div class="container">
+            <button class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded w-full">Add to Cart</button>            
+          </div>                     
+            <p>Rate 5 / 5</p>         
+
+          <div class="container">
+            <p>Instructions to purchase a show.</p>
+            <div>
+              <ol>
+                <li>
+                  - JigglyPuff
+                </li>
+                <li>
+                  - Pikachu
+                </li>
+                <li>
+                  - Psyduck
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="container text-right">
+            <button class="bg-purple-500 hover:bg-purple-700 text-white py2 px-4 rounded w-2/5 d-inline" (click)="onNoClick()">Close</button>            
+          </div>
+
+        </div>
+
+      </div>        
+
+    </div>    
+  </div>
+</section>
+
