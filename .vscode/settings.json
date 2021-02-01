@@ -13,4 +13,15 @@
     "prettier.semi": true,
     "prettier.arrowParens": "avoid",
     "prettier.bracketSpacing": true,
+    "rest-client.environmentVariables": {
+      "local": {
+          "host": "localhost:3000",
+          "username": "siteadmin",
+          "email_address":"siteadmin@stageup.uk",
+          "password":"siteadmin"
+      },
+      "staging": {
+          "host": "stageup.uk",
+      }
+  }
 }
