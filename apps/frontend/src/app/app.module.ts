@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 
 import { UiLibModule } from "./ui-lib/ui-lib.module";
 import { AngularMaterialModule } from "./angular-material.module";
@@ -54,6 +54,7 @@ import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboard
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { ObjectLengthPipe } from "./_pipes/ObjectLengthPipe";
 
+import { PerformanceModalComponent } from './components/modals/performance-modal.component';
 
 export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
@@ -95,7 +96,8 @@ export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
     OnboardingStatePipe,
     AdminOnboardingViewComponent,
     OnboardingViewComponent,
-    ObjectLengthPipe
+    ObjectLengthPipe,
+    PerformanceModalComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -113,7 +115,8 @@ export const maskOptions: Partial<IConfig> | (() => Partial<IConfig>) = null;
   providers: [
     CookieService,
   ],
-  entryComponents: [],
+  entryComponents: [PerformanceModalComponent],
   bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

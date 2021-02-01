@@ -6,21 +6,20 @@
 <div class="performances" *ngIf="!performances.loading && performances.data">
     <div
         *ngFor="let performance of performances.data.data; let i = index;"
-        (click)="gotoPerformance(i)"
+        (click)="openDialog(i)"
         class="performance-thumb">        
-        <div class="performance-thumb__content">
+        <div class="performance-thumb__content">    
             <h1>{{ performance.name }}</h1>
             <p>{{ performance.description }}</p>
             <div class="content-footer">
-                <span>@{{ performance.host?.name || 'cass' }}</span>
+                <span>@{{ performance.host?.name }}</span>
                 <span>{{ performance.views }} viewers</span>    
-            </div>
-        </div>
+            </div>            
+        </div>        
         <!-- <img class="performance-thumb__icon" [src]="performance.avatar" alt=""> -->
         <img class="performance-thumb__icon" src="https://www.theatermania.com/dyn/photos/theatermania/v1finw2400x0y0w1200h774/madeleine-potter-as-gertrude-and-michael-urie-as-hamlet-in-132411.jpg" alt="">
         <div class="performance-thumb__gradient"></div>
         <ui-icon class="performance-thumb__expand">overflow-menu--horizontal</ui-icon>
-        <span class="performance-thumb__live">● LIVE</span>
-
-    </div>
+        <span class="performance-thumb__live">● LIVE</span>        
+    </div>    
 </div>
