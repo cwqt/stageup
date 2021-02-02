@@ -5,6 +5,7 @@ import {
   IOnboardingStep as IOnboardingStep,
   IUserHostInfo,
   HostOnboardingStep,
+  IOnboardingStepMap,
 } from '@eventi/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -75,5 +76,9 @@ export class HostService {
   // router.put <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.updateOnboardingProcessStep());
   updateOnboardingProcessStep(hostId: number, step: HostOnboardingStep, update: any): Promise<IOnboardingStep<any>> {
     return this.http.put<IOnboardingStep<any>>(`/api/hosts/${hostId}/onboarding/${step}`, update).toPromise();
+  }
+
+  readOnboardingSteps(hostId: number): Promise<IOnboardingStepMap> {
+    return this.http.get<IOnboardingStepMap>(`/api/hosts/${hostId}/onboarding/steps`).toPromise();
   }
 }

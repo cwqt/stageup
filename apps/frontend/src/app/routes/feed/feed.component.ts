@@ -4,7 +4,7 @@ import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 
-import {MatDialog, MatDialogRef, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material/Dialog';
+import {MatDialog, MatDialogRef, MatDialogConfig, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { PerformanceModalComponent } from './../../components/modals/performance-modal.component';
 
 @Component({

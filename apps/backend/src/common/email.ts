@@ -22,7 +22,7 @@ export const sendEmail = async (
   mailOptions: nodemailer.SendMailOptions,
   sendWhileNotInProduction = false
 ): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     // Don't send mail when in dev/test
     if (!sendWhileNotInProduction) return resolve(true);
 

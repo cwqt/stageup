@@ -5,7 +5,6 @@ import {
 } from '@eventi/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
-import { expect } from 'chai';
 
 describe("Verify the Onboarding process pulls in the host relationship", () => {
     let host: IHost;
@@ -25,11 +24,11 @@ describe("Verify the Onboarding process pulls in the host relationship", () => {
 
         onboarding = await Stories.actions.hosts.readOnboardingProcessStatus(host);
 
-        expect(onboarding.host).to.exist;
-        expect(onboarding.created_at).to.exist;
-        expect(onboarding.last_modified).to.exist;
-        expect(onboarding.last_modified_by._id).to.eq(client._id);
-        expect(onboarding.last_modified_by.name).to.eq(client.name);
-        expect(onboarding.last_modified_by.username).to.eq(client.username);
+        expect(onboarding.host).toBeDefined;
+        expect(onboarding.created_at).toBeDefined;
+        expect(onboarding.last_modified).toEqual;
+        expect(onboarding.last_modified_by._id).toEqual(client._id);
+        expect(onboarding.last_modified_by.name).toEqual(client.name);
+        expect(onboarding.last_modified_by.username).toEqual(client.username);
     }); 
 });

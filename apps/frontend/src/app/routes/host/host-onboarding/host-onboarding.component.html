@@ -3,9 +3,6 @@
 
 <mat-spinner *ngIf="onboarding.loading"></mat-spinner>
 <ng-container *ngIf="onboarding.data">
-  <!-- <p><b>Onboarding Status:</b> {{ onboarding.data.state | onboardingStatePipe }}</p>
-  <p><b>Last Submitted:</b> {{ onboarding.data.last_submitted | amFromUnix | amTimeAgo }}</p> -->
-
   <!-- Form has been submitted for verification -->
   <div class="flex flex-col h-full" *ngIf="currentState == states.PendingVerification">
     <ng-container
@@ -41,11 +38,8 @@
             <ui-admonition
               kind="warning"
               [title]="(stepData.data.review.issues | objectLengthPipe) + ' issues found'">
-              <p>{{ stepData.data.review.review_message  }}</p>
-
-              <span>
-                Reviewed by <b>{{ stepData.data.review.reviewed_by.username}}</b> on <b>{{ stepData.data.review.reviewed_at | amFromUnix | amDateFormat }}</b>
-              </span>
+              <span>Last reviewed by: {{ onboarding.data.last_reviewed_by.username  }}</span><br/>
+              <span>Last reviewed at: {{ onboarding.data.last_reviewed | amFromUnix  }}</span>
             </ui-admonition>
           </div>
 
@@ -69,12 +63,10 @@
   <ng-container *ngIf="currentState == states.PendingVerification">
     <h2>Under review</h2>
     <p>
-      Our team is currently in the process of reviewing your information, once complete we will notify you via e-mail for changes.
+      Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.
       <br/>
       This process typically takes around a day.
     </p>
-
-    <ui-hr></ui-hr>
   </ng-container>
 
   <ng-container *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
@@ -82,7 +74,9 @@
     <p>Please ensure all steps are valid to the best of your knowledge before submitting.</p>
   </ng-container>
 
-  <ui-placeholder><h3>Review step map from VN-135</h3></ui-placeholder>
+  <ui-hr></ui-hr>
+
+  <app-onboarding-view [adminView]="false" [hostId]="onboarding.data.host._id"></app-onboarding-view>
 
   <div class="mt-5" *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
     <ui-button

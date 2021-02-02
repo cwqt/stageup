@@ -46,6 +46,8 @@ export interface IHostOnboarding {
   last_submitted: number | null;
   last_modified: number;
   last_modified_by: IUserStub;
+  last_reviewed_by?: IUserStub;
+  last_reviewed?: number;
   version: number; // back and forth validation / issue handling
   // we won't store actual snapshots of onboardings, just as a link to
   // a version which an isssue was in
@@ -63,7 +65,7 @@ export interface IOnboardingStepMap {
 
 export interface IOnboardingStep<T> {
   state: HostOnboardingState.AwaitingChanges | HostOnboardingState.HasIssues | HostOnboardingState.Verified;
-  review?: IOnboardingStepReview;
+  review?: IOnboardingStepReview<T>;
   valid: boolean; //just if all the data is filled out & correct
   data: T;
 }

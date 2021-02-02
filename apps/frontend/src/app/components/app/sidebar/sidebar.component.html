@@ -1,18 +1,10 @@
 <div class="sidebar-wrapper">
-  <img src="/assets/stageup.png" alt="" class="logo">
+  <img src="/assets/logomark.svg" alt="" class="logo">
 
   <div class="sidebar-main-buttons">
     <ui-button (click)="gotoRoot()" kind="accent" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <ui-icon size="l">template</ui-icon>
     </ui-button>
-
-    <!-- <ui-button kind="accent" routerLinkActive="active">
-      <ui-icon size="l">play--filled</ui-icon>
-    </ui-button> -->
-
-    <!-- <ui-button kind="accent" routerLinkActive="active">
-      <ui-icon size="l">analytics</ui-icon>
-    </ui-button> -->
 
     <ui-button *ngIf="myself.host" (click)="gotoHost()" kind="accent" routerLink="/host" routerLinkActive="active">
       <ui-icon size="l">events</ui-icon>

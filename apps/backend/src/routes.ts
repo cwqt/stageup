@@ -16,8 +16,6 @@ import {
     IOnboardingStep,
     IAddress,
     IUserStub,
-    IPerformanceHostInfo,
-    IHostStub,
     IOnboardingStepMap
 } from "@eventi/interfaces";
 
@@ -87,9 +85,9 @@ router.put    <IPerf>                 ("/performance/:pid",                     
 
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, mws);
-router.get  <IE<IHOnboarding[],void>>(`/admin/onboarding`,                         Admin.readOnboardingProcesses());
-router.post <void>                   (`/admin/onboarding/:oid/:step/review`,       Admin.reviewStep());
-router.post <void>                   ("/admin/onboarding/:oid/enact",              Admin.enactOnboardingProcess());
+router.get  <IE<IHOnboarding[],void>>(`/admin/onboardings`,                         Admin.readOnboardingProcesses());
+router.post <void>                   (`/admin/onboardings/:oid/review`,             Admin.reviewOnboardingProcess());
+router.post <void>                   ("/admin/onboardings/:oid/enact",              Admin.enactOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
 const MUXHooks = new MUXHooksController(providers, mws);

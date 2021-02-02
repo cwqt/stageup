@@ -9,27 +9,21 @@ import { DottedPaths } from '../common/fp';
  *   step_state: HostOnboardingState.HasIssues,
  *   review_message: "not great",
  *   issues: {
- *     ["owner_info.title"]:{ message: "ya dun goofed" },
- *     ["owner_info.last_name"]:{ message: "not valid" }
+ *     ["owner_info.title"]:["Not a valid title"],
+ *     ["owner_info.last_name"]:["Please use full last name", "Name does not match HMRC company listing"]
  *   }
  * }
  */
-export interface IOnboardingStepReviewSubmission<T> {
-  step_state: HostOnboardingState.HasIssues | HostOnboardingState.Verified;
-  issues: {[index in DottedPaths<T>]?:IOnboardingIssue}
+export interface IOnboardingStepReview<T> {
+  state: HostOnboardingState.HasIssues | HostOnboardingState.Verified;
+  issues: {[index in DottedPaths<T>]?:string[]}
   review_message?: string; // hand-written message
 }
 
-export interface IOnboardingIssue {
-  message: string;
-}
-
-// what the database stores
-// step state merged into onboarding step status hence the omit
-export interface IOnboardingStepReview extends Omit<IOnboardingStepReviewSubmission<any>, 'step_state'> {
+export interface IOnboardingReview {
   _id: number;
-  onboarding_step: HostOnboardingStep;
   onboarding_version?: IHostOnboarding["version"];
   reviewed_by: IUserStub;
   reviewed_at: number; // unix timestamp
-}
+  steps: {[ index in HostOnboardingStep]?: IOnboardingStepReview<any>}
+};

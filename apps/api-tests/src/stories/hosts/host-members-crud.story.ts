@@ -12,7 +12,7 @@ describe('As a user-host, I want to be able to do Member CRUD', () => {
       username: 'somecoolhost',
       name: 'Some Cool Host',
       email_address: 'host@cass.si'
-    });
+    });   
 
     // Then create a new user, and add them to the host
     member = await Stories.actions.users.createUser(UserType.Member);

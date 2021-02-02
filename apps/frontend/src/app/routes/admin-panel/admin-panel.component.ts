@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BaseAppService } from '../../services/app.service';
 
 @Component({
   selector: 'app-admin-panel',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminPanelComponent implements OnInit {
 
-  constructor() { }
+  constructor(private baseAppService:BaseAppService) { }
 
   ngOnInit(): void {
   }
 
+  gotoOnboardingList() {
+    this.baseAppService.navigateTo(`/admin/onboarding`);
+  }
 }

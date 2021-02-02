@@ -29,7 +29,7 @@ import { Onboarding } from '../models/hosts/onboarding.model';
 import AuthStrat from '../common/authorisation';
 import Validators, { body, params as parameters, query } from '../common/validate';
 import { timestamp } from '../common/helpers';
-import { OnboardingStepReview } from '../models/hosts/onboarding-step-review.model';
+import { OnboardingReview } from '../models/hosts/onboarding-review.model';
 
 import logger from '../common/logger';
 import Email = require('../common/email');
@@ -255,8 +255,10 @@ export default class HostController extends BaseController {
               _id: Number.parseInt(req.params.hid)
             }
           },
-          relations: ['host']
+          relations: ['host', "reviews"]
         });
+
+        console.log(onboarding)
 
         return onboarding.toFull();
       }
@@ -272,6 +274,7 @@ export default class HostController extends BaseController {
       ],
       authStrategy: AuthStrat.none,
       controller: async req => {
+        const step = (req.params.step as unknown) as HostOnboardingStep;
         const onboarding = await getCheck(
           Onboarding.findOne({
             where: {
@@ -282,21 +285,27 @@ export default class HostController extends BaseController {
           })
         );
 
-        const step = (req.params.step as unknown) as HostOnboardingStep;
-        const stepReview = await OnboardingStepReview.findOne({
+        const review = await OnboardingReview.findOne({
+          relations: ['onboarding', 'reviewed_by'],
           where: {
             onboarding_version: onboarding.version,
-            onboarding_step: step
-          },
-          relations: ['reviewed_by']
+            onboarding: {
+              _id: onboarding._id
+            }
+          }
         });
 
-        return { ...onboarding.steps[step], review: stepReview?.toFull() || null };
+        return {
+          state: onboarding.steps[step].state,
+          valid: onboarding.steps[step].valid,
+          data: onboarding.steps[step].data,
+          review: review && review.steps[step]
+        };
       }
     };
   }
 
-readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
+  readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
@@ -310,17 +319,25 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
           })
         );
 
-        const stepReviews = (await OnboardingStepReview.find({
+        const review = await OnboardingReview.findOne({
+          relations: ['reviewed_by', 'onboarding'],
           where: {
-            onboarding_version: onboarding.version
-          },
-          relations: ["reviewed_by"]
-        })).filter(r => r !== undefined);
-        
+            onboarding_version: onboarding.version,
+            onboarding: {
+              _id: onboarding._id
+            }
+          }
+        });
+
         return Object.entries(onboarding.steps).reduce((acc, curr: [string, IOnboardingStep<any>]) => {
-          const [step, stepData] = curr;
-          stepData.review = stepReviews.find(r => (r.onboarding_step = (step as unknown) as HostOnboardingStep));
-          acc[(step as unknown) as HostOnboardingStep] = stepData;
+          const [step, data] = curr;
+          acc[step] = {
+            state: data.state,
+            valid: data.valid,
+            data: data.data,
+            review: review && review[step]
+          };
+
           return acc;
         }, {} as IOnboardingStepMap);
       }
@@ -337,17 +354,15 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         if (!req.body) throw new ErrorHandler(HTTP.DataInvalid, ErrCode.NO_DATA);
-
-        const onboarding = await Onboarding.findOne({
-          where: {
-            host: {
-              _id: Number.parseInt(req.params.hid)
+        const onboarding = await getCheck(
+          Onboarding.findOne({
+            where: {
+              host: {
+                _id: Number.parseInt(req.params.hid)
+              }
             }
-          }
-        });
-        if (!onboarding) {
-          throw new ErrorHandler(HTTP.NotFound);
-        }
+          })
+        );
 
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
 
@@ -381,13 +396,15 @@ readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const onboarding = await getCheck(Onboarding.findOne({
-          where: {
-            host: {
-              _id: Number.parseInt(req.params.hid)
+        const onboarding = await getCheck(
+          Onboarding.findOne({
+            where: {
+              host: {
+                _id: Number.parseInt(req.params.hid)
+              }
             }
-          }
-        }));
+          })
+        );
 
         if (![HostOnboardingState.AwaitingChanges, HostOnboardingState.HasIssues].includes(onboarding.state))
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);

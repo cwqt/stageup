@@ -1,7 +1,7 @@
 import { ErrCode } from "@eventi/interfaces";
 
 export interface ICacheable<T> {
-  data: T | null;
+  data?: T | null;
   error: string | null;
   loading: boolean;
   form_errors?: FormErrors;

@@ -27,7 +27,7 @@ import { Host } from '../hosts/host.model'
 import { User } from '../users/user.model';
 import Validators, { object, single, array } from '../../common/validate';
 import { timestamp } from '../../common/helpers';
-import { OnboardingStepReview } from './onboarding-step-review.model';
+import { OnboardingReview } from './onboarding-review.model';
 
 @Entity()
 export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
@@ -40,7 +40,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
   @Column() version: number;
   @Column('jsonb', { nullable: true }) steps: IOnboardingStepMap;
   
-  @OneToMany(() => OnboardingStepReview, osr => osr.onboarding) reviews: OnboardingStepReview[];
+  @OneToMany(() => OnboardingReview, osr => osr.onboarding, { eager: true }) reviews: OnboardingReview[];
   @OneToOne(() => Host, host => host.onboarding_process, { eager: true }) @JoinColumn() host: Host;
   @OneToOne(() => User, { eager: true }) @JoinColumn() last_modified_by: User;
 
@@ -106,12 +106,16 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
 
   
   toFull(): Required<IHostOnboarding> {
+    const lastReview = this.reviews?.find(r => r.onboarding_version == this.version);
+
     return {
       _id: this._id,
       state: this.state,
+      last_submitted: this.last_submitted,
       last_modified: this.last_modified,
       last_modified_by: this.last_modified_by.toStub(),
-      last_submitted: this.last_submitted,
+      last_reviewed: lastReview?.reviewed_at,
+      last_reviewed_by: lastReview?.reviewed_by.toStub(),
       created_at: this.created_at,
       completed_at: this.completed_at,
       version: this.version,

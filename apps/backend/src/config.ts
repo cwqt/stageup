@@ -5,10 +5,11 @@ import { Except } from 'type-fest';
 export enum Environment {
   Production = 'production',
   Development = 'development',
+  Staging = 'staging',
   Testing = 'testing'
 }
 
-if (!Object.values(Environment).includes(process.env.NODE_ENV as any)) throw new Error('Not a valid Environment');
+if (!Object.values(Environment).includes(process.env.NODE_ENV as Environment)) throw new Error('Not a valid Environment');
 
 interface IEnvironment {
   PRIVATE_KEY: string;
@@ -102,9 +103,17 @@ const environment: IEnvironment = (() => {
     case Environment.Production:
       return {
         ...base,
-        SITE_TITLE: 'my.eventi.net',
-        API_URL: 'https://api.eventi.com',
-        FE_URL: 'https://eventi.com',
+        SITE_TITLE: 'stageup.uk',
+        API_URL: 'https://api.stageup.uk',
+        FE_URL: 'https://stageup.uk',
+        PRODUCTION: true
+      };
+    case Environment.Staging: 
+      return {
+        ...base,
+        SITE_TITLE: 'staging.stageup.uk',
+        API_URL: 'https://staging.api.stageup.uk',
+        FE_URL: 'https://staging.stageup.uk',
         PRODUCTION: true
       };
     case Environment.Development:

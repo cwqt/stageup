@@ -1,17 +1,26 @@
-
 .ui-icon-button {
-  width: 48px !important;
-  height: 48px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 100%;
-  padding: 0 !important;
-  ::ng-deep button {
+  position: relative;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible;
+
+  ui-button {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    overflow: hidden;
+    height: 48px !important;
     width: 48px !important;
-    height: 48px !important;  
     padding: 0 !important;
+    ::ng-deep button {
+      height: 48px !important;
+      width: 48px !important;
+      padding: 0 !important;
+    }
   }
 }
 
