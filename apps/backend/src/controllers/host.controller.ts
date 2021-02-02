@@ -258,6 +258,8 @@ export default class HostController extends BaseController {
           relations: ['host', "reviews"]
         });
 
+        console.log(onboarding)
+
         return onboarding.toFull();
       }
     };

@@ -2,15 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
   HostOnboardingState,
   HostOnboardingStep,
-  IOnboardingStep,
+  IOnboardingReview,
   IOnboardingStepMap,
   IOnboardingStepReview,
   Primitive
 } from '@eventi/interfaces';
 import { AdminService } from 'apps/frontend/src/app/services/admin.service';
 import { flatten } from 'flat';
-import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
-import { ActivatedRoute } from '@angular/router';
 import { ICacheable } from '../../../app.interfaces';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HostService } from '../../../services/host.service';
@@ -37,16 +35,16 @@ export class OnboardingViewComponent implements OnInit {
   private SKIPPED_STEPS = [HostOnboardingStep.AddMembers, HostOnboardingStep.SubscriptionConfiguration];
 
   // step & field indexes - only have one open at a time
-  public activeIssueMaker: [number, number] = [null, null];
+  activeIssueMaker: [number, number] = [null, null];
 
-  public onboardingFields: Record<HostOnboardingStep, IUiStepMapField[]>;
-  public onboardingSteps: ICacheable<IOnboardingStepMap> = {
+  onboardingFields: Record<HostOnboardingStep, IUiStepMapField[]>;
+  onboardingSteps: ICacheable<IOnboardingStepMap> = {
     data: null,
     loading: false,
     error: ''
   };
 
-  public enactOnboarding: ICacheable<void> = {
+  enactOnboarding: ICacheable<void> = {
     loading: false,
     error: ''
   };
@@ -119,10 +117,10 @@ export class OnboardingViewComponent implements OnInit {
             },
             {
               issues: {},
-              step_state: this.onboardingFields[step].some(f => f.issues.length)
+              state: this.onboardingFields[step].some(f => f.issues.length)
                 ? HostOnboardingState.HasIssues
                 : HostOnboardingState.Verified
-            }
+            } as IOnboardingStepReview<any>
           );
           return map;
         }, {})
@@ -147,7 +145,7 @@ export class OnboardingViewComponent implements OnInit {
   };
 
   getUncheckedCount(): number {
-    const flatList:Record<string, IUiStepMapField> = flatten(this.onboardingFields);
+    const flatList: Record<string, IUiStepMapField> = flatten(this.onboardingFields);
 
     const unchecked = Object.keys(flatList)
       .filter(k => k.includes('valid'))

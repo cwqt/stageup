@@ -6,8 +6,8 @@
       <div class="onboarding-meta">
         <p><b>Status:</b> {{ onboarding.data.state | onboardingStatePipe }}</p>
         <p><b>Submitted:</b> {{ onboarding.data.last_submitted | amFromUnix }}</p>
-        <p><b>Last Reviewed:</b>  {{ (onboarding.data.last_reviewed | amFromUnix) || "Never" }}</p>  
-        <p><b>Last Reviewed By:</b>  {{ onboarding.data.last_reviewed_by?.username || "Never" }}</p>
+        <p><b>Last Reviewed:</b> {{ (onboarding.data.last_reviewed | amFromUnix) || "Never" }}</p>  
+        <p><b>Last Reviewed By:</b> {{ onboarding.data.last_reviewed_by?.username || "Never" }}</p>
       </div>
   </div>
 

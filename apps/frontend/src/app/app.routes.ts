@@ -25,6 +25,8 @@ import { BillingPaymentComponent } from "./routes/settings/billing-settings/bill
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
 import { SearchComponent } from "./routes/search/search.component";
 import { AdminOnboardingViewComponent } from "./routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component";
+import { LoggedInGuard } from "./_helpers";
+import { AdminOnboardingListComponent } from "./routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component";
 
 const APP_ROUTES: Routes = [
   { path: "", component: FeedComponent },
@@ -59,6 +61,7 @@ const APP_ROUTES: Routes = [
     ],
   },
   { path: `admin`, component: AdminPanelComponent },
+  { path: `admin/onboarding`, component: AdminOnboardingListComponent },
   { path: `admin/onboarding/:${RP.HostId}`, component: AdminOnboardingViewComponent},
   { path: `ui`, component: TestbedComponent },
   { path: "**", component: NotFoundComponent },
@@ -75,7 +78,7 @@ const APP_ROUTES: Routes = [
         {
           path: "",
           component: LandingComponent,
-          children: APP_ROUTES,
+          children: APP_ROUTES
           // canActivateChild: [LoggedInGuard]
         },
         { path: "**", component: NotFoundComponent },

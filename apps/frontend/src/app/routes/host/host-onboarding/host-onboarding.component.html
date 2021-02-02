@@ -3,9 +3,6 @@
 
 <mat-spinner *ngIf="onboarding.loading"></mat-spinner>
 <ng-container *ngIf="onboarding.data">
-  <!-- <p><b>Onboarding Status:</b> {{ onboarding.data.state | onboardingStatePipe }}</p>
-  <p><b>Last Submitted:</b> {{ onboarding.data.last_submitted | amFromUnix | amTimeAgo }}</p> -->
-
   <!-- Form has been submitted for verification -->
   <div class="flex flex-col h-full" *ngIf="currentState == states.PendingVerification">
     <ng-container
@@ -41,11 +38,8 @@
             <ui-admonition
               kind="warning"
               [title]="(stepData.data.review.issues | objectLengthPipe) + ' issues found'">
-              <p>{{ stepData.data.review.review_message  }}</p>
-
-              <span>
-                <!-- Reviewed by <b>{{ stepData.data.review.reviewed_by.username}}</b> on <b>{{ stepData.data.review.reviewed_at | amFromUnix | amDateFormat }}</b> -->
-              </span>
+              <span>Last reviewed by: {{ onboarding.data.last_reviewed_by.username  }}</span><br/>
+              <span>Last reviewed at: {{ onboarding.data.last_reviewed | amFromUnix  }}</span>
             </ui-admonition>
           </div>
 

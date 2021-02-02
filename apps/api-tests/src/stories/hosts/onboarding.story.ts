@@ -35,7 +35,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
     await Stories.actions.common.setup();    
     admin = Stories.cachedUsers[UserType.SiteAdmin]!.user;
     client = await Stories.actions.users.createUser(UserType.Client);
-    await Stories.actions.common.switchActor(UserType.Client);
+    await Stories.actions.common.switchActor(UserType.Client);   
   });
 
   it('Client user should register a host', async () => {
@@ -250,13 +250,6 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       const step = await Stories.actions.hosts.readOnboardingProcessStep(host, HostOnboardingStep.ProofOfBusiness);
 
       expect(step.state).toEqual(HostOnboardingState.HasIssues);
-      // expect(step.review.issues).toH([
-      //   'hmrc_company_number',
-      //   'business_address.street_name',
-      //   'business_address.street_number',
-      //   'business_address',
-      // ]);
-
       expect(step.review.issues).toMatchObject({
         ['hmrc_company_number']: ["Couldn't find this company number in the registry", "This is another issue"],
         ['business_address.street_name']: ['The street address could not be found'],

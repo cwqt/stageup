@@ -43,7 +43,7 @@ const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =
   let hostId = req.params.hid ? Number.parseInt(req.params.hid) : null;
 
   // For performances - check intersection between performance host & user host
-  if(!hostId && req.params.pid) {
+  if (!hostId && req.params.pid) {
     const performance = await Performance.findOne({
       relations: {
         host: {
@@ -69,7 +69,7 @@ const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =
   }
 
   const uhi = await UserHostInfo.findOne({
-    relations: ["user", "host"],
+    relations: ['user', 'host'],
     where: {
       user: {
         _id: req.session.user._id
@@ -92,7 +92,7 @@ const hasHostPermission = (permission: HostPermission): AuthStrategy => {
     }
 
     // Highest Perms (Owner)  = 0
-    // Lowest Perfs (Pending) = 4 
+    // Lowest Perfs (Pending) = 4
     if (passthru.uhi.permissions > permission) {
       return [false, {}, ErrCode.MISSING_PERMS];
     }
@@ -119,6 +119,18 @@ const isEnv = (env: Environment): AuthStrategy => {
     if (!config.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
     return [true, {}];
   };
+};
+
+
+/**
+ * @description Is currently running on a live, deployed instance
+ */
+const isLive: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
+  if (config.isEnv(Environment.Staging) || config.isEnv(Environment.Production)) {
+    return [true, {}];
+  } else {
+    return [false, {}];
+  }
 };
 
 /**
@@ -172,6 +184,7 @@ export default {
   or,
   not,
   isEnv,
+  isLive,
   isOurself,
   isLoggedIn,
   isMemberOfHost,

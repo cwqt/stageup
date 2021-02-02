@@ -10,16 +10,16 @@ export class AdminService {
 
   readOnboardingProcesses(page: number = 0, perPage: number = 10): Promise<IEnvelopedData<IHostOnboarding[], void>> {
     return this.http
-      .get<IEnvelopedData<IHostOnboarding[], void>>(`/api/admin/onboarding?page=${page}&per_page=${perPage}`)
+      .get<IEnvelopedData<IHostOnboarding[], void>>(`/api/admin/onboardings?page=${page}&per_page=${perPage}`)
       .toPromise();
   }
 
-  enactOnboardingProcess(hostId: number): Promise<void> {
-    return this.http.post<void>(`/api/admin/onboarding/${hostId}/enact`, null).toPromise();
+  enactOnboardingProcess(onboardingId: number): Promise<void> {
+    return this.http.post<void>(`/api/admin/onboardings/${onboardingId}/enact`, null).toPromise();
   }
 
   // router.post <void> (`/admin/onboarding/:oid/review`, Admin.reviewOnboarding());
-  reviewOnboarding(hostId:number, review:IOnboardingReview["steps"]):Promise<void> {
-    return this.http.post<void>(`/api/admin/onboarding/${hostId}/review`, review).toPromise();
+  reviewOnboarding(onboardingId:number, review:IOnboardingReview["steps"]):Promise<void> {
+    return this.http.post<void>(`/api/admin/onboardings/${onboardingId}/review`, review).toPromise();
   }
 }
