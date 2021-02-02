@@ -1,6 +1,6 @@
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app.routes';
@@ -53,6 +53,9 @@ import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboard
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 
+import { PerformanceModalComponent } from './components/modals/performance-modal.component';
+
+
 // Pipes ----------------------------------------------------------------------------------------------------------------
 // import { LogPipe } from "./_pipes/log.pipe";
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
@@ -100,7 +103,8 @@ import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-na
     ObjectLengthPipe,
     ShortDomainPipe,
     PrettyOnboardingStepNamePipe,
-    OnboardingViewIssueMakerComponent
+    OnboardingViewIssueMakerComponent,
+    PerformanceModalComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -116,7 +120,8 @@ import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-na
     MomentModule
   ],
   providers: [CookieService],
-  entryComponents: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [PerformanceModalComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

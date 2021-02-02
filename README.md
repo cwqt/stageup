@@ -1,16 +1,12 @@
-# eventi &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Node.js%20CI/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
+# core &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Build/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
 
 Live-streaming & VOD platform for the performance arts.
 
 # Installation
 
-## Tools
+Basic architecture map of the application looks like this:
 
-* __VSCode__: <https://code.visualstudio.com/>
-* __Postman__: <https://www.postman.com/downloads/>
-* __DB Client__: <https://tableplus.com/>
-* __JSONView__: <https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en>
-
+![StageUp](https://ftp.cass.si/h48o9h9km.png)
 
 ## Homebrew (skip if Windows)
 Install Homebrew if you haven't already (macOS)
@@ -136,12 +132,15 @@ All packages that are used throughout all apps & libs are defined within a singl
 
 Do `npm install` in the project root to install all required dependencies.
 
-* __Frontend__: `nx serve frontend`
-* __Backend__: `nx serve backend`
-* __API Tests__: `nx run api-tests`
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
-
+* __Frontend__: `nx serve frontend`
+* __Backend__: `nx serve backend`
+* __API Tests__: `nx test api-tests`
+  - When developing a single test do: `nx test api-tests --watch`
+  - This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
+  - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
+  - Now you can develop the test & it will auto-re-run every time a change is made & saved
 
 # Deployment
 
@@ -150,3 +149,10 @@ Do `npm install` in the project root to install all required dependencies.
 * Create a new token <https://github.com/settings/tokens>
 * Add `.env` into root directory
 * Add value called `GITHUB_TOKEN=XXXX`
+
+# Useful Tools
+
+* __VSCode__: <https://code.visualstudio.com/>
+* __Postman__: <https://www.postman.com/downloads/>
+* __DB Client__: <https://tableplus.com/>
+* __JSONView__: <https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en>
