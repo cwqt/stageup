@@ -1,5 +1,9 @@
 @import "apps/frontend/src/styles/variables";
 
+:host {
+  display: inline-block;
+}
+
 .ui-button {
   display: flex;
   align-items: center;
@@ -11,6 +15,7 @@
 	user-select: none;
   transition: background-color 0.2s;
   border-radius: 4px;
+  width: inherit;
   ui-icon, mat-spinner {
     margin-right: 10px;
   }

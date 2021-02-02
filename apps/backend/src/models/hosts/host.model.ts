@@ -87,15 +87,17 @@ export class Host extends BaseEntity implements IHostPrivate {
     await Promise.all([txc.remove(uhi), txc.save(this), txc.save(user)]);
   }
 
-  toStub(): IHostStub {
+  toStub(): Required<IHostStub> {
     return {
       _id: this._id,
       name: this.name,
-      username: this.username
+      username: this.username,
+      avatar: this.avatar,
+      bio: this.bio
     };
   }
 
-  toFull(): IHost {
+  toFull():Required<IHost> {
     return {
       ...this.toStub(),
       created_at: this.created_at,
@@ -106,7 +108,7 @@ export class Host extends BaseEntity implements IHostPrivate {
     };
   }
 
-  toPrivate(): IHostPrivate {
+  toPrivate():Required<IHostPrivate> {
     return {
       ...this.toFull(),
       email_address: this.email_address,

@@ -1,7 +1,25 @@
-<div class="host-wrapper h-full" *ngIf="host">
-  <app-host-onboarding class="h-full" [host]="host" *ngIf="!host.is_onboarded"></app-host-onboarding>
+<div class="flex items-stretch h-full" *ngIf="host">
+  <div class="bg-white rounded p-4 flex-1 w-1/5">
+      <app-user-thumb [user]="host"></app-user-thumb>
 
-  <ng-container *ngIf="host.is_onboarded">
-    <router-outlet></router-outlet>  
-  </ng-container>  
+      <div class="mt-4">
+
+
+        <div class="flex relative" *ngIf="!host.is_onboarded">
+          <ui-button class="w-full mb-2" routerLink="/host/onboarding" routerLinkActive="active-link">Onboarding</ui-button>
+
+          <span class="flex h-3 w-3 absolute right-0 top-0 ping">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+          </span>
+        </div>
+
+        <ui-button class="w-full mb-2" routerLink="/host/performances" routerLinkActive="active-link">Performances</ui-button>
+        <ui-button class="w-full mb-2" routerLink="/host/settings" routerLinkActive="active-link">Settings</ui-button>
+      </div>
+  </div>
+
+  <div class="w-4/5 ml-6">
+      <router-outlet></router-outlet>
+  </div>
 </div>

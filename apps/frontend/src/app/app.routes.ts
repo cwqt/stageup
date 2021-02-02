@@ -25,8 +25,9 @@ import { BillingPaymentComponent } from "./routes/settings/billing-settings/bill
 import { AdminPanelComponent } from "./routes/admin-panel/admin-panel.component";
 import { SearchComponent } from "./routes/search/search.component";
 import { AdminOnboardingViewComponent } from "./routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component";
-import { LoggedInGuard } from "./_helpers";
 import { AdminOnboardingListComponent } from "./routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component";
+import { HostOnboardingComponent } from "./routes/host/host-onboarding/host-onboarding.component";
+import { HostLandingComponent } from "./routes/host/host-landing/host-landing.component";
 
 const APP_ROUTES: Routes = [
   { path: "", component: FeedComponent },
@@ -56,8 +57,10 @@ const APP_ROUTES: Routes = [
     path: `host`,
     component: HostComponent,
     children: [
+      { path: "", component: HostLandingComponent },
+      { path: "onboarding", component: HostOnboardingComponent },
       { path: "settings", component: HostSettingsComponent },
-      { path: "performance", component: HostPerformancesComponent },
+      { path: "performances", component: HostPerformancesComponent },
     ],
   },
   { path: `admin`, component: AdminPanelComponent },

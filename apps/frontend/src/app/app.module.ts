@@ -52,6 +52,8 @@ import { SearchComponent } from './routes/search/search.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
+import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
+import { HostLandingComponent } from './routes/host/host-landing/host-landing.component'
 
 import { PerformanceModalComponent } from './components/modals/performance-modal.component';
 
@@ -104,7 +106,9 @@ import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-na
     ShortDomainPipe,
     PrettyOnboardingStepNamePipe,
     OnboardingViewIssueMakerComponent,
-    PerformanceModalComponent
+    PerformanceModalComponent,
+    UserThumbComponent,
+    HostLandingComponent
   ],
   imports: [
     AngularMaterialModule,

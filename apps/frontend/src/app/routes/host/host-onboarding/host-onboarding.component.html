@@ -1,6 +1,3 @@
-<h1>Host Onboarding</h1>
-<ui-hr></ui-hr>
-
 <mat-spinner *ngIf="onboarding.loading"></mat-spinner>
 <ng-container *ngIf="onboarding.data">
   <!-- Form has been submitted for verification -->
@@ -12,7 +9,7 @@
 
   <!-- Form requires changing -->
   <div class="flex h-full" *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
-    <div class="flex-initial rounded shadow overflow-hidden mr-6 w-1/5">
+    <div class="flex-initial rounded overflow-hidden mr-6 w-1/5">
       <mat-vertical-stepper #stepper *ngIf="onboarding.data" class="h-full" (selectionChange)="handleSelectionChange($event)">
         <mat-step *ngFor="let step of stepUiMap | keyvalue"
           [state]="onboarding.data.steps[step.key]"
@@ -30,7 +27,7 @@
       </mat-vertical-stepper>
     </div>
 
-    <div class="flex-grow md:max-w-2xl">
+    <div class="flex-grow">
       <ng-container *ngIf="!onReviewStep">
         <mat-spinner *ngIf="componentRefreshing"></mat-spinner>
         <ng-container *ngIf="!componentRefreshing">

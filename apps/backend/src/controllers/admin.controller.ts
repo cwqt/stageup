@@ -118,15 +118,16 @@ export default class AdminController extends BaseController {
         // by which I mean shift the data from Onboarding -> Host & send out invites for added members
         const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
 
-        await this.ORM.transaction(async txc => {
-          // Check if every step is set to valid, if not set state to HasIssues & request changes via email
-          if (Object.values(onboarding.steps).every(o => o.state === HostOnboardingState.Verified)) {
-            onboarding.state = HostOnboardingState.HasIssues;
-            // TODO: Send an email requesting changes
-            return await txc.save(onboarding);
-          }
+        // Check if every step is set to valid, if not set state to HasIssues & request changes via email
+        if (Object.values(onboarding.steps).every(o => o.state === HostOnboardingState.Verified)) {
+          onboarding.state = HostOnboardingState.HasIssues;
+          // TODO: Send an email requesting changes
+          await onboarding.save();
+          return;
+        }
 
-          // Steps are all valid, welcome the host onboard....
+        // Steps are all valid, welcome the host onboard....
+        await this.ORM.transaction(async txc => {
           const host = onboarding.host; // Eager loaded
 
           // Proof of Business

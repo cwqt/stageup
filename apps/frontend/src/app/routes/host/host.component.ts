@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { IHost } from '@eventi/interfaces';
+import { IHost, IMyself } from '@eventi/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
+import { MyselfService } from '../../services/myself.service';
 
 @Component({
   selector: 'app-host',
@@ -8,17 +9,19 @@ import { HostService } from 'apps/frontend/src/app/services/host.service';
   styleUrls: ['./host.component.scss']
 })
 export class HostComponent implements OnInit {
+  myself:IMyself;
   host:IHost;
+  
 
-  constructor(private hostService:HostService) {
+  constructor(private myselfService:MyselfService, private hostService:HostService) {
   }
 
   ngOnInit(): void {
+    this.myself = this.myselfService.$myself.value;
     this.getHost().then(h => this.host = h);
   }
 
   getHost():Promise<IHost> {
-    return this.hostService.getHost(this.hostService.currentHostValue._id)
+    return this.hostService.getHost(this.myself.host._id);
   }
-
 }

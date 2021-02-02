@@ -1,21 +1,15 @@
-<div class="settings-container">
-    <div class="settings-container__sidebar">
-        <div class="sidebar-header">
-            <img [src]="user.avatar">
-            <div class="sidebar-header__text">
-                <b>{{ user.username }}</b>
-                <span>Personal settings</span>
-            </div>
-        </div>
-        <div class="sidebar-buttons">
-            <ui-button fullWidth="true" routerLink="/settings/profile" routerLinkActive="active-link">Profile</ui-button>
-            <ui-button fullWidth="true" routerLink="/settings/billing" routerLinkActive="active-link">Billing & Plans</ui-button>
-            <ui-button fullWidth="true" routerLink="/settings/host" routerLinkActive="active-link">{{ userHost ? 'Host settings' : 'Create a Host' }}</ui-button>
-            <ui-button fullWidth="true" routerLink="/settings/account" routerLinkActive="active-link">Delete account</ui-button>    
+<div class="flex items-stretch h-full">
+    <div class="bg-white rounded p-4 flex-1 w-2/6">
+        <app-user-thumb [user]="user"></app-user-thumb>
+
+        <div class="mt-4">
+          <ui-button class="w-full mb-2" routerLink="/settings/profile" routerLinkActive="active-link">Profile</ui-button>
+          <ui-button class="w-full mb-2" routerLink="/settings/billing" routerLinkActive="active-link">Billing & Plans</ui-button>
+          <ui-button class="w-full mb-2" routerLink="/settings/account" routerLinkActive="active-link">Delete account</ui-button>    
         </div>
     </div>
 
-    <div class="settings-container__body">
+    <div class="w-4/6 ml-6">
         <router-outlet></router-outlet>
     </div>
 </div>

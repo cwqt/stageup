@@ -36,7 +36,7 @@ interface IUiStep<T> {
   ]
 })
 export class HostOnboardingComponent implements OnInit, AfterViewInit {
-  @Input() host: IHost;
+  host: IHost;
   @ViewChild(MatVerticalStepper, { static: false }) stepper: MatVerticalStepper;
 
   public states: typeof HostOnboardingState = HostOnboardingState;
@@ -257,6 +257,13 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
   constructor(private hostService: HostService) {}
 
+  async ngOnInit() {
+    this.host = await this.hostService.getHost(this.hostService.currentHostValue._id);
+    this.getOnboarding().then(() => this.switchStep(HostOnboardingStep.ProofOfBusiness));
+  }
+
+  ngAfterViewInit() {}
+
   get steps() {
     return this.onboarding.data.steps;
   }
@@ -316,12 +323,6 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
       nextTickPush();
     }
   }
-
-  ngOnInit(): void {
-    this.getOnboarding().then(() => this.switchStep(HostOnboardingStep.ProofOfBusiness));
-  }
-
-  ngAfterViewInit() {}
 
   handleSelectionChange(event: StepperSelectionEvent) {
     // Review step is the final step after all onboarding stages
