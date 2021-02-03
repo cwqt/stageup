@@ -87,7 +87,7 @@ Create a `.env` file in the root of `apps/backend/`, this will store our secret 
 PRIVATE_KEY="SOME_PASSWORD"
 EMAIL_ADDRESS="SOME_EMAIL"
 PG_USER="POSTGRES_USER"
-PG_PASS=""
+PG_PASS="mysecretpassword"
 NODE_ENV="development"
 ```
 
