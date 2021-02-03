@@ -15,17 +15,26 @@
     <div class="header-user">
       <img [src]="myself.user.avatar" alt="">
       <span>{{ myself.user.name || myself.user.username }}</span>
-      <ui-icon [matMenuTriggerFor]="appMenu">caret--down</ui-icon>      
+      <ui-icon [popper]="dropdownMenu" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true"
+      [popperHideOnScroll]="true" [popperPlacement]="'bottom'">caret--down</ui-icon>      
     </div>
 
-    <!-- * DROPDOWN MENU * -->
-    <mat-menu #appMenu="matMenu" xPosition="after" yPosition="above">
-      <button mat-menu-item>Profile</button>
-      <button mat-menu-item>Settings</button>
+    <!-- * DROPDOWN MENU * -->  
+    <popper-content #dropdownMenu class="shadow-xl">
+      <div class="container px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-pink-800">
+        <button>Profile</button>
+      </div>
+      <div class="container px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-pink-800">
+        <button>Settings</button>
+      </div>
       <a>
         <hr class="border-t mx-2">
       </a>
-      <button mat-menu-item (click)="userLogout()">Logout</button>      
-    </mat-menu>
+      <div class="container px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-pink-800">
+        <button (click)="userLogout()">Logout</button>
+      </div>
+    </popper-content>
+       
+    
 
 </div>
