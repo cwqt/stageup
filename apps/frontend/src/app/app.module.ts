@@ -11,6 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { NgxMaskModule } from 'ngx-mask';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { MomentModule } from 'ngx-moment';
+import { NgxPopperModule } from 'ngx-popper';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AppComponent } from './app.component';
@@ -121,7 +122,8 @@ import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-na
     HttpClientModule,
     ClickOutsideModule,
     NgxMaskModule.forRoot(),
-    MomentModule
+    MomentModule,
+    NgxPopperModule.forRoot()
   ],
   providers: [CookieService],
   bootstrap: [AppComponent],

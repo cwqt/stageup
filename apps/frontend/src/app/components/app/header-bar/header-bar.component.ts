@@ -33,8 +33,7 @@ export class HeaderBarComponent implements OnInit {
     this.userPopupOpen = state;
   }
 
-  gotoSettings() { this.appService.navigateTo('settings') }
-  logout() {
+  userLogout() {
     this.authService.logout();
   }
 }
