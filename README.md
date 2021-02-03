@@ -52,6 +52,18 @@ npm install -g nx   # 11.1.5
 
 Currently we just have just two applications - a frontend & a backend, but in the future this will be expanded to adding a task runner, notifications fan-out, recommendations engine etc, all of which will be sharing the interfaces + other shared code.
 
+# Angular Commands within NX
+
+In order to generate components under nx, instead of using the usual 
+```sh
+ng g n component-name
+```
+You will need to use:
+
+```sh
+npx nx g @nrwl/angular:component performances --project=frontend --skip-import
+```
+
 ## Project Layout
 
 ```sh
