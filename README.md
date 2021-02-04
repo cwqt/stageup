@@ -85,11 +85,11 @@ npx nx g @nrwl/angular:component performances --project=frontend --skip-import
   .github            # github actions
   .vscode            # editor settings
   .prettierrc        # code formatting config
-  .xo-config.json    # linter config
-  nx.json            # workspace config
+  nx.json            # nx workspace config
+  ship.config.js     # ship.js release tool config
   package.json       # where _all_ packages are listed
   tsconfig.base.json # base ts config
-  workspace.json     # where all apps, libs are defined
+  workspace.json     # where all apps/libs are defined
 ```
 
 ## Backend
