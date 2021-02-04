@@ -1,4 +1,4 @@
-import { ErrCode, IAddress, Idless, IOnboardingAddMembers } from '@eventi/interfaces';
+import { ErrCode, IAddress, Idless, IOnboardingAddMembers } from '@core/interfaces';
 import Validators, { object, single, array } from '../common/validate';
 
 describe('Custom validation', () => {

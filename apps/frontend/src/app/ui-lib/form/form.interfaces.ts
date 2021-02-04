@@ -1,5 +1,5 @@
 import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
-import { DottedPaths, Primitive } from "@eventi/interfaces";
+import { DottedPaths, Primitive } from '@core/interfaces';
 import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import { IGraphNode } from "../input/input.component";
 

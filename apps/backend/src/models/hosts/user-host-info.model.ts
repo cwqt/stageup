@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { HostPermission, IUserHostInfo } from '@eventi/interfaces';
+import { HostPermission, IUserHostInfo } from '@core/interfaces';
 
 import { Host } from './host.model';
 import { User } from '../users/user.model';

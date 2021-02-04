@@ -3,7 +3,7 @@ import { IResLocals } from '../router';
 import { AuthStrategy } from './authorisation';
 import { DataClient } from './data';
 import Middlewares from './middleware';
-import { IFormErrorField } from '@eventi/interfaces';
+import { IFormErrorField } from '@core/interfaces';
 
 export interface IControllerEndpoint<T> {
   validators?: Array<(request: Request) => Promise<IFormErrorField[]>>;

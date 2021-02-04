@@ -1,5 +1,5 @@
 import { ICacheable } from "../app.interfaces";
-import { IErrorResponse, IFormErrorField, Y } from "@eventi/interfaces";
+import { IErrorResponse, IFormErrorField, Y } from '@core/interfaces';
 import { FormGroup } from "@angular/forms";
 
 export const handleFormErrors = (

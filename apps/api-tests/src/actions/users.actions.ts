@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
-import { IMyself, IUser, IAddress } from '@eventi/interfaces';
+import { IMyself, IUser, IAddress } from '@core/interfaces';
 import { api } from '../environment';
 import userAddressesActions from './user-addresses.actions';
 

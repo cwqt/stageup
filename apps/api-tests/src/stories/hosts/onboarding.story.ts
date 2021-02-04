@@ -20,7 +20,7 @@ import {
   IOnboardingSubscriptionConfiguration,
   IUser,
   PersonTitle
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 

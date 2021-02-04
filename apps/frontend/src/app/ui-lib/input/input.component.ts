@@ -12,7 +12,7 @@ import {
   ElementRef,
 } from "@angular/core";
 import { ControlValueAccessor, NgControl } from "@angular/forms";
-import { Primitive } from "@eventi/interfaces";
+import { Primitive } from '@core/interfaces';
 import {
   IUiFieldSelectOptions,
   IUiFormFieldValidator,

@@ -7,3 +7,6 @@ dist
 .env_prod
 sendgrid.env
 coverage
+store
+deploy/env/*
+*.env

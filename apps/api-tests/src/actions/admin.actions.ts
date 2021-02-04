@@ -1,4 +1,4 @@
-import { IEnvelopedData, IHostOnboarding, IOnboardingReview } from '@eventi/interfaces';
+import { IEnvelopedData, IHostOnboarding, IOnboardingReview } from '@core/interfaces';
 import { api } from '../environment';
 import { environment } from '../environment';
 

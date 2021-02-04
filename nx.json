@@ -1,5 +1,5 @@
 {
-  "npmScope": "eventi",
+  "npmScope": "stageup-core",
   "affected": { "defaultBase": "master" },
   "implicitDependencies": {
     "workspace.json": "*",

@@ -9,7 +9,7 @@ import {
   JoinColumn
 } from 'typeorm';
 
-import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails } from '@eventi/interfaces';
+import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails } from '@core/interfaces';
 
 import { User } from '../users/user.model';
 import { Performance } from '../performances/performance.model';

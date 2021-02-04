@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from "rxjs";
 import { tap, map } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 
-import { IUser, IHost, Primitive } from "@eventi/interfaces";
+import { IUser, IHost, Primitive } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 
 @Injectable({

@@ -9,7 +9,7 @@ import {
   IEnvelopedData,
   IHost,
   IHostStub
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 
 export default {
   // router.post<IPerf>("/performances",Perfs.createPerformance());

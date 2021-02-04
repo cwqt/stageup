@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IEnvelopedData, IHostOnboarding, IOnboardingReview } from '@eventi/interfaces';
+import { IEnvelopedData, IHostOnboarding, IOnboardingReview } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root'

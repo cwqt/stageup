@@ -2,7 +2,7 @@ describe('Logger', () => {
   test.todo('please pass');
 });
 
-// import { IHost, IPerformance, IUser } from '@eventi/interfaces';
+// import { IHost, IPerformance, IUser } from '@core/interfaces';
 // import { Stories } from '../../stories';
 // import { UserType } from '../../environment';
 // import { CurrencyCode } from '@eventi/interfaces/lib/Common/Currency.types';

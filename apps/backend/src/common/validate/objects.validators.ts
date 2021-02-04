@@ -9,7 +9,7 @@ import {
   IPerson,
   IPersonInfo,
   ISocialInfo
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { FieldValidators as FV } from './fields.validators';
 
 export namespace ObjectValidators {

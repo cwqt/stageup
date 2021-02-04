@@ -7,12 +7,14 @@ import log, { stream } from './common/logger';
 import http from 'http';
 import helmet from 'helmet';
 
-import { ErrCode, HTTP } from '@eventi/interfaces';
+import { Environment, ErrCode, HTTP } from '@core/interfaces';
 import { handleError, ErrorHandler } from './common/errors';
 import { DataClient, DataProvider } from './common/data';
 import { pagination } from './common/paginate';
 import Routes from './routes';
-import config, { Environment } from './config';
+import config from './config';
+
+console.log('\nBackend running in env: \u001B[04m' + config.ENVIRONMENT + '\u001B[0m\n');
 
 let server: http.Server;
 const app = express();
@@ -21,6 +23,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan('tiny', { stream }));
+
 
 (async () => {
   try {

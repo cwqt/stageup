@@ -1,8 +1,9 @@
 import nodemailer from 'nodemailer';
 import dbless from 'dbless-email-verification';
-import config, { Environment } from '../config';
+import config from '../config';
 import logger from './logger';
 import { Host } from '../models/hosts/host.model';
+import { Environment } from '@core/interfaces';
 
 const generateEmailHash = (email: string): string => {
   const hash = dbless.generateVerificationHash(email, config.PRIVATE_KEY, 60);

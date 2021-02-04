@@ -1,21 +1,29 @@
+'use strict';
+const webpack = require('webpack');
+
 module.exports = {
-  module: {
+  module: { 
     rules: [
       {
-        test: /\.scss$/,
+        test: /tailwind\.scss$/,
         loader: 'postcss-loader',
         options: {
           postcssOptions: {
             ident: 'postcss',
             syntax: 'postcss-scss',
-            plugins: ['postcss-import', 'tailwindcss', 'autoprefixer'],
-          },
-        },
+            plugins: [
+              require('postcss-import'),
+              require('tailwindcss')(require('./tailwind.config.js')(true)),
+              require('autoprefixer')
+            ]
+          }
+        }
       },
       {
         test: /\.scss$/,
         loader: 'sass-loader'
       }
-    ],
+    ]
   },
-}
+  plugins: [new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)]
+};

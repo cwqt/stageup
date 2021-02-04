@@ -7,7 +7,7 @@ import {
   HTTP,
   ErrCode,
   HostPermission
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { Performance } from '../models/performances/performance.model';
 import { ErrorHandler, getCheck } from '../common/errors';

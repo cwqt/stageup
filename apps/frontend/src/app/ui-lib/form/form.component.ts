@@ -20,7 +20,7 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import { Y } from '@eventi/interfaces';
+import { Y } from '@core/interfaces';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { takeUntil, takeWhile } from 'rxjs/operators';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';

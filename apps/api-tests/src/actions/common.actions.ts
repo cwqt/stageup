@@ -2,7 +2,7 @@ import { api } from '../environment';
 import { Stories } from '../stories';
 
 import { environment as env, environment, UserType } from '../environment';
-import { IUser } from '@eventi/interfaces';
+import { IUser } from '@core/interfaces';
 
 export default {
   /**

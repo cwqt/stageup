@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, IRouterMatcher } from 'express';
 import { AsyncRouter, RequestHandler } from 'express-async-router';
-import { HTTP } from '@eventi/interfaces';
+import { HTTP } from '@core/interfaces';
 
 import { ErrorHandler, handleError } from './common/errors';
 import { DataClient } from './common/data';

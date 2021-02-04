@@ -6,11 +6,11 @@ import {
   IUserHostInfo,
   HostOnboardingStep,
   IOnboardingStepMap,
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { IHost, IHostStub } from '@eventi/interfaces';
+import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 
 @Injectable({

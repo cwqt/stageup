@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import { HostOnboardingState } from "@eventi/interfaces";
+import { HostOnboardingState } from '@core/interfaces';
 
 @Pipe({ name: "onboardingStatePipe" })
 export class OnboardingStatePipe implements PipeTransform {

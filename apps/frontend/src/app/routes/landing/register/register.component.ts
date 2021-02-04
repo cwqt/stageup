@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { IUser } from "@eventi/interfaces";
+import { IUser } from '@core/interfaces';
 import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import { BaseAppService } from "apps/frontend/src/app/services/app.service";
 import { AuthenticationService } from "apps/frontend/src/app/services/authentication.service";

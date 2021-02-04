@@ -1,4 +1,4 @@
-import { HTTP, IFormErrorField, ErrCode } from '@eventi/interfaces';
+import { HTTP, IFormErrorField, ErrCode } from '@core/interfaces';
 import { Request, RequestHandler } from 'express-async-router';
 import {
   CustomValidator,
@@ -108,7 +108,7 @@ export const runValidator = async <T extends object, U extends keyof T>(
  * @param location used by VReqHandlerFunctors to specify location of field
  */
 export const object: VFunctor = async (data, validators, location = null, idx = null): Promise<IFormErrorField[]> => {
-  // Match all if only validator is a * - for use with unstructured objects where all values are of the same form
+  // Match all if only validator is a '*' - for use with unstructured objects where all values are of the same form
   if(Object.keys(validators).length == 1 && validators["*"]) {
     validators = Object.keys(data).reduce<VFieldChainerMap<any>>((acc, curr) => {
       (<any>acc)[curr] = validators["*"];
@@ -125,8 +125,7 @@ export const object: VFunctor = async (data, validators, location = null, idx = 
   errors.forEach((e: any) => {
     // Handle .arrays & .single
     if (e.code.errors) {
-      // Don't need to take up bandwidth when we've indexed the errors
-      // in an .array
+      // Don't need to take up bandwidth when we've indexed the errors in an .array
       if (Array.isArray(e.value)) {
         delete e.value;
       }
@@ -200,7 +199,7 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>, code?:
 
 /**
  * @description Middleware for validating requests
- * @param f VFunctorFactory array
+ * @param validators VReqHandlerFunctor array
  */
 export const validatorMiddleware = (validators: VReqHandlerFunctor[]): RequestHandler => {
   return async (req, res, next) => {

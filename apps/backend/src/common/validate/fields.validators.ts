@@ -1,4 +1,4 @@
-import { ErrCode } from '@eventi/interfaces';
+import { ErrCode } from '@core/interfaces';
 import { ValidationChain } from 'express-validator';
 
 const FORBIDDEN_USERNAMES: string[] = [];

@@ -9,7 +9,8 @@
     </ui-form>
 
     <br>
-    <ui-button (click)="adminFastLogin()">Fast Admin Login</ui-button>
+
+    <ui-button (click)="adminFastLogin()" *ngIf="isDevelopment">Fast Admin Login</ui-button>
 
     <!-- TODO: SSO with passport -->
     <!-- <div class="alt-sign-in-buttons">

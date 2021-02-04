@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IHostStub, IMyself, IUser } from '@eventi/interfaces';
+import { IHostStub, IMyself, IUser } from '@core/interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 

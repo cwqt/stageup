@@ -11,14 +11,14 @@ import {
   EntityManager
 } from 'typeorm';
 import { Except } from 'type-fest';
-import { IUser, IUserStub, IUserPrivate } from '@eventi/interfaces';
+import { IUser, IUserStub, IUserPrivate, Environment } from '@core/interfaces';
 
 import { Host } from '../hosts/host.model';
 import { PerformancePurchase } from '../performances/purchase.model';
 import { Performance } from '../performances/performance.model';
 import { Person } from './person.model';
 import { ContactInfo } from './contact-info.model';
-import config, { Environment } from '../../config';
+import config from '../../config';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {

@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { DataClient } from '../common/data';
-import { MUXHook, IMUXHookResponse, ErrCode, HTTP } from '@eventi/interfaces';
+import { MUXHook, IMUXHookResponse, ErrCode, HTTP } from '@core/interfaces';
 import logger from '../common/logger';
 import { Webhooks, LiveStream } from '@mux/mux-node';
 import config from '../config';

@@ -1,8 +1,7 @@
-import { EOL } from 'os';
-import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
-import config, { Environment } from '../../config';
+import config from '../../config';
 import log from '../logger';
 import * as TORM from 'typeorm';
+import { Environment } from '@core/interfaces';
 
 import { User } from '../../models/users/user.model';
 import { OnboardingReview } from '../../models/hosts/onboarding-review.model';
@@ -77,16 +76,21 @@ export const create = async (): Promise<TORM.Connection> => {
   }
 };
 
-const generateUML = async (conn: TORM.Connection) => {
-  const flags: Flags = {
-    direction: Direction.LR,
-    format: Format.SVG,
-    handwritten: false
-  };
+// const generateUML = async (conn: TORM.Connection) => {
+// if(config.isEnv(Environment.Development)) {
+//     import { EOL } from 'os';
+//     import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
 
-  const typeormUml = new TypeormUml();
-  const url = await typeormUml.build(conn, flags);
-  process.stdout.write('Diagram URL: ' + url + EOL);
-};
+//     const flags: Flags = {
+//       direction: Direction.LR,
+//       format: Format.SVG,
+//       handwritten: false
+//     };
+  
+//     const typeormUml = new TypeormUml();
+//     const url = await typeormUml.build(conn, flags);
+//     process.stdout.write('Diagram URL: ' + url + EOL);
+//   }
+// }
 
 export default { create };

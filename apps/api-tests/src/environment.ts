@@ -1,6 +1,6 @@
 require('dotenv').config();
 import Axios from 'axios';
-import { HostPermission, IUserPrivate } from '@eventi/interfaces';
+import { HostPermission, IUserPrivate } from '@core/interfaces';
 import { Stories } from './stories';
 
 export enum UserType {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IHost, IMyself } from '@eventi/interfaces';
+import { IHost, IMyself } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { MyselfService } from '../../services/myself.service';
 

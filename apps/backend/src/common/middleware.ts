@@ -3,7 +3,7 @@ import RedisStore from 'rate-limit-redis';
 import { DataClient } from './data';
 import { Request, Response } from 'express';
 import apicache from 'apicache';
-import { HTTP } from '@eventi/interfaces';
+import { HTTP } from '@core/interfaces';
 import Multer from 'multer';
 
 export default class Middlewares {

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IHost, IHostOnboarding } from '@eventi/interfaces';
+import { IHost, IHostOnboarding } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';

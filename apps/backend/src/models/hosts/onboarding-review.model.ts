@@ -2,7 +2,7 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColu
 
 import {
   IOnboardingReview
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 
 import { User } from '../users/user.model';
 import { timestamp } from '../../common/helpers';

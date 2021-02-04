@@ -1,4 +1,4 @@
-import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode } from '@eventi/interfaces';
+import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { AxiosError } from 'axios';

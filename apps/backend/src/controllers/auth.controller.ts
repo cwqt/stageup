@@ -1,4 +1,4 @@
-import { ErrCode } from '@eventi/interfaces';
+import { ErrCode } from '@core/interfaces';
 import config from '../config';
 import { User } from '../models/users/user.model';
 import { verifyEmail } from '../common/email';

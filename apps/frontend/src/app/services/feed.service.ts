@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IEnvelopedData, IPerformanceStub } from '@eventi/interfaces';
+import { IEnvelopedData, IPerformanceStub } from '@core/interfaces';
 import { UserService } from './user.service';
 
 @Injectable({

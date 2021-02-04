@@ -21,7 +21,7 @@ import {
   IOnboardingStep,
   IOnboardingSubscriptionConfiguration,
   IOnboardingStepMap,
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 
 import { Host } from '../hosts/host.model'
 import { User } from '../users/user.model';

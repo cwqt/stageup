@@ -1,4 +1,4 @@
-import { IPerformance, ISigningKey } from '@eventi/interfaces';
+import { IPerformance, ISigningKey } from '@core/interfaces';
 import { BaseEntity, Column, Entity, EntityManager, PrimaryGeneratedColumn } from 'typeorm';
 
 import { LiveStream, Video, JWT } from '@mux/mux-node';

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { IMyself } from '@eventi/interfaces';
+import { IMyself } from '@core/interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { AuthenticationService } from "apps/frontend/src/app/services/authentication.service";
 

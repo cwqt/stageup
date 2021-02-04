@@ -9,7 +9,7 @@ import {
   IUserStub,
   IHostMemberChangeRequest,
   IOnboardingStepMap,
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { api } from '../environment';
 
 export default {

@@ -1,5 +1,5 @@
 import { LiveStream } from '@mux/mux-node';
-import { IPerformanceHostInfo } from '@eventi/interfaces';
+import { IPerformanceHostInfo, Environment } from '@core/interfaces';
 import {
   BaseEntity,
   Column,
@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { SigningKey } from './signing-key.model';
 import { DataClient } from '../../common/data';
-import config, { Environment } from '../../config';
+import config from '../../config';
 import { Performance } from './performance.model';
 import { timestamp } from '../../common/helpers';
 

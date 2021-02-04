@@ -18,7 +18,7 @@ import {
   HTTP,
   IHostMemberChangeRequest,
   IOnboardingStepMap
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { Host } from '../models/hosts/host.model';
 import { ErrorHandler, getCheck } from '../common/errors';

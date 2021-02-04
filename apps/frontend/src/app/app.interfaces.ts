@@ -1,4 +1,4 @@
-import { ErrCode } from "@eventi/interfaces";
+import { ErrCode } from '@core/interfaces';
 
 export interface ICacheable<T> {
   data?: T | null;

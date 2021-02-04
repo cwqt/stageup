@@ -1,4 +1,4 @@
-import { HostPermission, IHost, IUser } from '@eventi/interfaces';
+import { HostPermission, IHost, IUser } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 

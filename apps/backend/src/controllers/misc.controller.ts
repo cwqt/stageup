@@ -1,15 +1,14 @@
 import { BaseController, IControllerEndpoint } from '../common/controller';
-import { Environment } from '../config';
 import AuthStrat from '../common/authorisation';
 import { getCheck } from '../common/errors';
 import { Host } from '../models/hosts/host.model';
-import { IHost } from '@eventi/interfaces';
+import { IHost, Environment } from '@core/interfaces';
 
 export default class MiscController extends BaseController {
   ping(): IControllerEndpoint<string> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
-      controller: async req => {
+      controller: async () => {
         return 'Pong!';
       }
     };
@@ -18,7 +17,7 @@ export default class MiscController extends BaseController {
   dropAllData(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
-      controller: async req => {
+      controller: async () => {
         // Clear Influx, Redis, session store & Postgres
         if (this.dc.influx) {
           await this.dc.influx.query('DROP SERIES FROM /.*/');

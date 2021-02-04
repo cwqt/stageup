@@ -6,7 +6,7 @@ import {
   IOnboardingStepMap,
   IOnboardingStepReview,
   Primitive
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { AdminService } from 'apps/frontend/src/app/services/admin.service';
 import { flatten } from 'flat';
 import { ICacheable } from '../../../app.interfaces';

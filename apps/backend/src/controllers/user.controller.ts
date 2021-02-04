@@ -10,7 +10,7 @@ import {
   Idless,
   ErrCode,
   HTTP
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { IControllerEndpoint, BaseController } from '../common/controller';
 import Validators, { body, params as parameters } from '../common/validate';
 import { ErrorHandler, FormErrorResponse, getCheck } from '../common/errors';

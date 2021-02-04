@@ -9,7 +9,7 @@ import {
   IOnboardingStep,
   ISOCountryCode,
   PersonTitle
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { IUiForm, IUiFieldSelectOptions, IUiFormPrefetchData } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';

@@ -8,7 +8,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn
 } from 'typeorm';
-import { CurrencyCode, IPerformance, IPerformanceStub, IRating, PerformanceState } from '@eventi/interfaces';
+import { CurrencyCode, IPerformance, IPerformanceStub, IRating, PerformanceState } from '@core/interfaces';
 
 import { PerformanceHostInfo as PHostInfo, PerformanceHostInfo } from './performance-host-info.model';
 import { Host } from '../hosts/host.model';

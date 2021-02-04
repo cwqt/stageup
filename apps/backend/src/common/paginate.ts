@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
 
 import { SelectQueryBuilder } from 'typeorm';
-import { IEnvelopedData } from '@eventi/interfaces';
+import { IEnvelopedData } from '@core/interfaces';
 
 // Modified from
 // https://github.com/savannabits/typeorm-pagination

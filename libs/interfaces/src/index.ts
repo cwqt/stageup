@@ -22,3 +22,7 @@ export * from "./users/person.model";
 export * from './hooks/mux-hooks.model';
 // export * from './hooks/stripe-hooks.model';
 
+
+export * from './environments/environments';
+export * from './environments/backend.environment';
+export * from './environments/frontend.environment';

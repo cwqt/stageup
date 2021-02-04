@@ -1,6 +1,6 @@
 import { api } from '../environment';
 import { environment as env } from '../environment';
-import { IUser, IAddress, Idless } from '@eventi/interfaces';
+import { IUser, IAddress, Idless } from '@core/interfaces';
 
 export default {
   //router.post <IAddress> ("/users/uid/addresses", Users.createAddress());

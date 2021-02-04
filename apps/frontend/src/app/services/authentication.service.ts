@@ -6,7 +6,7 @@ import { CookieService } from "ngx-cookie-service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { LoggedInGuard } from "../_helpers";
 import { MyselfService } from "./myself.service";
-import { IUser } from "@eventi/interfaces";
+import { IUser } from '@core/interfaces';
 
 @Injectable({
   providedIn: "root",

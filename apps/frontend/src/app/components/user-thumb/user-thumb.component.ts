@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IUserStub } from '@eventi/interfaces';
+import { IUserStub } from '@core/interfaces';
 
 @Component({
   selector: 'app-user-thumb',

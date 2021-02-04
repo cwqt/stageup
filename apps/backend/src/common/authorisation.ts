@@ -1,9 +1,9 @@
-import { ErrCode, HostPermission } from '@eventi/interfaces';
+import { Environment, ErrCode, HostPermission } from '@core/interfaces';
 import { Request } from 'express';
 import { DataClient } from './data';
 import { User } from '../models/users/user.model';
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
-import config, { Environment } from '../config';
+import config from '../config';
 import { Host } from '../models/hosts/host.model';
 import { Performance } from '../models/performances/performance.model';
 

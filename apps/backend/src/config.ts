@@ -1,16 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 require('dotenv').config();
-import { Except } from 'type-fest';
-
-export enum Environment {
-  Production = 'production',
-  Development = 'development',
-  Staging = 'staging',
-  Testing = 'testing'
-}
-
-if (!Object.values(Environment).includes(process.env.NODE_ENV as Environment)) throw new Error('Not a valid Environment');
-
+import { Environment } from '@core/interfaces';
+import { environment } from '../environments/environment';
 interface IEnvironment {
   PRIVATE_KEY: string;
   EMAIL_ADDRESS: string;
@@ -56,13 +47,17 @@ interface IEnvironment {
   isEnv: (env: Environment) => boolean;
 }
 
-const base: Except<IEnvironment, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
+const Env:IEnvironment = {
   isEnv: (env: Environment) => env === process.env.NODE_ENV,
+  SITE_TITLE: "stageup",
+  API_URL: environment.apiUrl,
+  FE_URL: environment.frontendUrl,
+  ENVIRONMENT: environment.environment,
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
   EXPRESS_PORT: 3000,
-  ENVIRONMENT: process.env.NODE_ENV as Environment,
   LOCALTUNNEL_URL: process.env.LOCALTUNNEL_URL,
+  USE_MEMORYSTORE: process.env.USE_MEMORYSTORE === 'true',
   SENDGRID: {
     USERNAME: process.env.SENDGRID_USERNAME,
     API_KEY: process.env.SENDGRID_API_KEY
@@ -71,18 +66,17 @@ const base: Except<IEnvironment, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
     HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE,
-    IMAGE_API_ENDPOINT: 'https://image.mux.com'
+    IMAGE_API_ENDPOINT: process.env.MUX_IMAGE_API_ENDPOINT
   },
   PG: {
-    USER: process.env.PG_USER,
-    PASS: process.env.PG_PASS,
-    HOST: process.env.PRODUCTION === 'true' ? process.env.POSTGRES_SERVICE_HOST : 'localhost',
-    DB: 'postgres',
+    USER: process.env.POSTGRES_USER,
+    PASS: process.env.POSTGRES_PASS,
+    HOST: process.env.POSTGRES_HOST,
+    DB: environment.postgresDatabase,
     PORT: 5432
   },
-  USE_MEMORYSTORE: process.env.USE_MEMORYSTORE === 'true',
   REDIS: {
-    HOST: process.env.PRODUCTION === 'true' ? process.env.REDIS_SERVICE_HOST : 'localhost',
+    HOST: process.env.REDIS_HOST,
     PORT: 6379,
     TTL: 86400
   },
@@ -93,50 +87,11 @@ const base: Except<IEnvironment, 'API_URL' | 'FE_URL' | 'SITE_TITLE'> = {
     S3_URL: process.env.AWS_S3_URL
   },
   INFLUX: {
-    HOST: process.env.PRODUCTION === 'true' ? process.env.INFLUX_HOST : 'localhost',
-    DB: 'metrics'
+    HOST: process.env.INFLUX_HOST,
+    DB: process.env.INFLUX_DB
   }
-};
+}
 
-const environment: IEnvironment = (() => {
-  switch (process.env.NODE_ENV) {
-    case Environment.Production:
-      return {
-        ...base,
-        SITE_TITLE: 'stageup.uk',
-        API_URL: 'https://api.stageup.uk',
-        FE_URL: 'https://stageup.uk',
-        PRODUCTION: true
-      };
-    case Environment.Staging: 
-      return {
-        ...base,
-        SITE_TITLE: 'staging.stageup.uk',
-        API_URL: 'https://staging.api.stageup.uk',
-        FE_URL: 'https://staging.stageup.uk',
-        PRODUCTION: true
-      };
-    case Environment.Development:
-      return {
-        ...base,
-        SITE_TITLE: 'dev.eventi.net',
-        API_URL: 'http://localhost:3000',
-        FE_URL: 'http://localhost:4200',
-        DEVELOPMENT: true
-      };
-    case Environment.Testing:
-      return {
-        ...base,
-        SITE_TITLE: 'dev.eventi.net',
-        API_URL: 'http://localhost:3000',
-        FE_URL: 'http://localhost:4200',
-        TESTING: true
-      };
-    default:
-      throw new Error('Missing .env NODE_ENV');
-  }
-})();
+console.log(Env)
 
-console.log('\nBackend running in env: \u001B[04m' + process.env.NODE_ENV + '\u001B[0m\n');
-
-export default environment;
+export default Env;

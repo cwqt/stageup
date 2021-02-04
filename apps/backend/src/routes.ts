@@ -17,7 +17,7 @@ import {
     IAddress,
     IUserStub,
     IOnboardingStepMap
-} from "@eventi/interfaces";
+} from '@core/interfaces';
 
 import UserController from './controllers/user.controller';
 import HostController from './controllers/host.controller';

@@ -140,27 +140,87 @@ MUX_HOOK_SIGNATURE="MY_SIGNING_SECRET"
 
 # Running
 
-All packages that are used throughout all apps & libs are defined within a single `package.json` - the reason being having consistent versioning of dependencies across all applications.
+All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects.  
+Run `npm install` in the project root to install all required dependencies.
 
-Do `npm install` in the project root to install all required dependencies.
+Production builds perform tree-shaking optimization to remove unused libraries, so ensure you use ES6 import syntax.
+
+
+| Context     | frontend                                                                                                                          | backend                                                                                                            | api-tests                                                                        |
+|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| development | **Local running**, Faster re-building for development purposes<br>`npm run frontend`                                              | **Local running**, for development purposes<br>`npm run backend`                                                   | **Local running**, in watch mode for development purposes<br>`npm run api-tests` |
+| testing     |                                                                                                                                   | **Local running**, for api-tests to run against, switches to `test` PG database<br>`npm run backend:testing`       |                                                                                  |
+| staging     | **Live environment**, Staging build for live testing / demos<br>`npm run frontend:staging`<br>`npm run build:frontend:production` | **Live environment**, for api-tests to run against<br>`npm run backend:staging`<br>`npm run build:backend:staging` |                                                                                  |
+| production  | **Live environment**, Production build<br>`npm run frontend:production`<br>`npm run build:frontend:production`                    | **Live environment**, production build<br>`npm run backend:production`<br>`npm run build:backend:production`       | Running live against staging<br>`npm run build:api-tests`                        |
+
+
+<br />
 
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
-* __Frontend__: `nx serve frontend`
-* __Backend__: `nx serve backend`
-* __API Tests__: `nx test api-tests`
-  - When developing a single test do: `nx test api-tests --watch`
+* __api-tests__
+  - For developing a single test use: `npm run api-tests`
   - This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
   - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
   - Now you can develop the test & it will auto-re-run every time a change is made & saved
 
-# Deployment
+## Secrets
 
-## shipjs
+These are private values that should never be shared with anyone.
+### apps/backend/.env
+```d
+PRIVATE_KEY="somerandomprivatekey"
 
-* Create a new token <https://github.com/settings/tokens>
-* Add `.env` into root directory
+POSTGRES_HOST="localhost"
+POSTGRES_USER="postgres"
+POSTGRES_PASS="mysecretpassword"
+
+REDIS_HOST="localhost"
+
+MUX_ACCESS_TOKEN="muxaccesstoken"
+MUX_SECRET_KEY="muxsecretkey"
+MUX_HOOK_SIGNATURE="muxhooksignature"
+
+SENDGRID_USERNAME="sendgridusername"
+SENDGRID_API_KEY="sendgridapikey"
+
+AWS_S3_ACCESS_KEY_ID="awss3accesskeyid"
+AWS_S3_ACCESS_SECRET_KEY="awss3secretkey"
+AWS_S3_BUCKET_NAME="awss3bucketname"
+AWS_S3_URL="awss3bucketurl"
+
+# development only
+LOCALTUNNEL_URL="localtunnelurl"
+USE_MEMORYSTORE="true/false"
+```
+
+# Deployment - [Miro](https://miro.com/app/board/o9J_lZ6kqD4=/?moveToWidget=3074457353528169240&cot=14)
+
+At the end of every sprint a release will be deployed, going through a number of checks in the staging area & then onto production.  
+To be able to create a release first:
+* Create a new token: <https://github.com/settings/tokens>
+* Add a `.env` into the root directory
 * Add value called `GITHUB_TOKEN=XXXX`
+
+## Triggering a release
+
+* All code merged into dev ready for release
+* Create release tag using: `npm run release`
+* Review release PR on GitHub that will be put into master
+* Trigger release: `npm run deploy`, which will:
+  - Build all projects source & compile Docker images
+  - Push images to AWS Elastic Container Registry
+  - Deploy to AWS EC2 instance staging env.
+  - Integration tests against live staging env.
+* Finally, `npm run deploy:production`
+
+To build all projects & compile the docker images, run:
+
+```shell
+npm run deploy:staging # or :production
+```
+
+<br/>
 
 # Useful Tools
 

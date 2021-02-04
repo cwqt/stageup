@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IUser } from '@eventi/interfaces';
+import { IUser } from '@core/interfaces';
 import { UserService } from 'apps/frontend/src/app/services/user.service';
 
 @Component({

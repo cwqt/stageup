@@ -8,7 +8,7 @@ import {
   IEnvelopedData,
   IHostOnboarding,
   IOnboardingReview
-} from '@eventi/interfaces';
+} from '@core/interfaces';
 import { BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
 import { Onboarding } from '../models/hosts/onboarding.model';

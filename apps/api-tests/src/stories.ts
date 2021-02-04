@@ -1,5 +1,5 @@
 import { environment, UserType } from './environment';
-import { HostPermission, IUser } from '@eventi/interfaces';
+import { HostPermission, IUser } from '@core/interfaces';
 
 export class CachedUser {
   user: IUser;

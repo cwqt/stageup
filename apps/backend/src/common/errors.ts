@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import log from './logger';
-import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@eventi/interfaces';
+import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@core/interfaces';
 
 /**
  * @description Used for checking if something exists, else throw a not found

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { HostOnboardingStep } from '@eventi/interfaces';
+import { HostOnboardingStep } from '@core/interfaces';
 
 @Pipe({ name: 'prettyOnboardingStepNamePipe' })
 export class PrettyOnboardingStepNamePipe implements PipeTransform {

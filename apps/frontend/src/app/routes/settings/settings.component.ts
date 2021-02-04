@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IHost, IHostStub, IUser } from '@eventi/interfaces';
+import { IHost, IHostStub, IUser } from '@core/interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 

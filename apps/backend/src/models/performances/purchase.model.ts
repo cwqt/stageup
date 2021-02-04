@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { IPerformancePurchase, CurrencyCode } from '@eventi/interfaces';
+import { IPerformancePurchase, CurrencyCode } from '@core/interfaces';
 import { User } from '../users/user.model';
 import { Performance } from './performance.model';
 import { timestamp } from '../../common/helpers';

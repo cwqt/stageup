@@ -18,7 +18,7 @@
     "typeRoots": ["node_modules/@types"],
     "baseUrl": ".",
     "paths": {
-      "@eventi/interfaces": ["libs/interfaces/src/index.ts"]
+      "@core/interfaces": ["libs/interfaces/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

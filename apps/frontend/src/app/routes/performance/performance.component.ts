@@ -2,7 +2,7 @@ import { NumberFormatStyle } from "@angular/common";
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { IPerformance, IPerformancePurchase, IPerformanceUserInfo } from "@eventi/interfaces";
+import { IPerformance, IPerformancePurchase, IPerformanceUserInfo } from '@core/interfaces';
 import { ICacheable } from "apps/frontend/src/app/app.interfaces";
 import { BaseAppService, RouteParam } from "apps/frontend/src/app/services/app.service";
 import { PerformanceService } from "apps/frontend/src/app/services/performance.service";

@@ -1,4 +1,4 @@
-import { IUser, IAddress } from '@eventi/interfaces';
+import { IUser, IAddress } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 

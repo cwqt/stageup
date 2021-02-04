@@ -1,14 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import {
-  FormBuilder,
-} from "@angular/forms";
+import { Environment, IUser } from '@core/interfaces';
 
-import { AuthenticationService } from "../../../services/authentication.service";
 import { ICacheable } from "apps/frontend/src/app/app.interfaces";
-import { IUser } from "@eventi/interfaces";
+import { AuthenticationService } from "apps/frontend/src/app/services/authentication.service";
 import { MyselfService } from "apps/frontend/src/app/services/myself.service";
 import { BaseAppService } from "apps/frontend/src/app/services/app.service";
 import { IUiForm } from "apps/frontend/src/app/ui-lib/form/form.interfaces";
+import { environment as env } from "apps/frontend/src/environments/environment";
 
 @Component({
   selector: "app-login",
@@ -27,11 +25,12 @@ export class LoginComponent implements OnInit {
     },
   };
 
+  isDevelopment:boolean = env.environment == Environment.Development;
+
   constructor(
     private baseAppService: BaseAppService,
     private myselfService: MyselfService,
-    private authService: AuthenticationService,
-    private fb: FormBuilder
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {

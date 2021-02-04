@@ -10,9 +10,9 @@
       <h2 class="mb-8">Live streaming & VoD for Performance Arts</h2>
 
       <div class="flex">
-        <ui-button class="flex-initial mr-4" kind="accent" icon="email" *ngIf="isProduction">Join the mailing list</ui-button>
-        <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="gotoLogin()" *ngIf="!isProduction">Log In</ui-button>
-        <ui-button class="flex-initial mr-4" kind="primary" icon="user" (click)="gotoRegister()" *ngIf="!isProduction">Register</ui-button>
+        <ui-button class="flex-initial mr-4" kind="accent" icon="email" (click)="gotoMailingList()" *ngIf="isLive">Join the mailing list</ui-button>
+        <ui-button class="flex-initial mr-4" [kind]="isLive ? 'primary' :'accent'" icon="login" (click)="gotoLogin()" *ngIf="!isProduction">Log In</ui-button>
+        <ui-button class="flex-initial mr-4" kind="primary" icon="user" (click)="gotoRegister()" *ngIf="!isLive">Register</ui-button>
       </div>
       <br>
     </div>
@@ -23,6 +23,9 @@
         <span class="highlight-dark"> anywhere in the world </span>, from the comfort of your home.<br />
         A bespoke service tailored to the next generation of performance arts.
       </p>
+
+      <small *ngIf="isLive">Registrations are currently closed.</small>
+
       <div class="icons">
         <ui-icon>theater</ui-icon>
         <ui-icon>arrow--right</ui-icon>
