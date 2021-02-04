@@ -1,0 +1,92 @@
+.landing-wrapper {
+  display: flex;
+  flex-flow: column;
+  overflow: hidden;
+  // background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16' xml:space='preserve'%3E%3Crect width='16' fill='none' height='16'/%3E%3Crect x='0' y='0' fill='white' width='1' height='1'/%3E%3C/svg%3E");
+  height: 100vh;
+  background-color: #222;
+  max-height: 100vh;
+}
+
+@media only screen and (max-width: 1000px) {
+}
+
+
+.landing-cover {
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  .landing-cover-image {
+    width: 100%;
+    height: 100vh;
+    filter: brightness(0.5);
+    object-fit: cover;
+  }
+}
+
+
+.landing-cover-body {
+  display: flex;
+  flex-flow: column;
+  color: white;
+  position: absolute;
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  .landing-body__main {
+    margin-top: auto;
+    padding: 5vh 10vw;
+    padding-bottom: 0;
+    img {
+      height: auto;
+      max-width: 80vw;
+    }
+    .logo {
+      margin-left: -50px;
+      max-width: 800px;
+      filter: invert(1);
+      margin-top: 10px;
+    }
+  }
+  .landing-body__bottom {
+    width: 100%;
+    // background-color: #030303;
+    padding: 5vh 10vw;
+    padding-top: 1vh;
+    padding-bottom: 15vh;
+    p {
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .icons {
+      display: flex;
+      margin-top: 5vh;
+      margin-left: 10px;
+      ui-icon {
+        transform: scale(1.5);
+        margin-right: 20px;
+      }
+    }
+  
+  }
+}
+
+
+.dots {
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 16 16' style='enable-background:new 0 0 16 16' xml:space='preserve'%3E%3Crect width='16' fill='none' height='16'/%3E%3Crect x='0' y='0' fill='white' width='1' height='1'/%3E%3C/svg%3E");
+  background-size: 16px;
+  opacity: .35;
+}
+
+
+.highlight { background-color: #c9daf7; }
+.highlight-dark { background-color: lighten(#4c1521, 10%); }

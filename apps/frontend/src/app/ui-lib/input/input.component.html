@@ -1,0 +1,124 @@
+<div class="ui-input-wrapper" [class.ui-input-wrapper--has-icon]="icon">
+  <!-- Input -->
+  <div
+    (clickOutside)="togglePasswordVisibility(false, $event)"
+    (click)="input.select()"
+    class="form-field"
+    [class.form-field--is-active]="focused"
+    [class.form-field--is-filled]="value !== ''"
+    [class.form-field--is-small]="!label"
+    [class.form-field--is-errored]="showError"
+    *ngIf="type == 'number' || type == 'text' || type == 'password' || type == 'phone'">
+    <div class="form-field__control">
+      <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
+      <label *ngIf="label"
+        [for]="formControlName || ''"
+        class="form-field__label">{{ label }}<span>{{ required ? "*" : ""}}</span></label>
+      <input
+        #input
+        [(ngModel)]="value"
+        [validation]="true"
+        (blur)="onTouched()"
+        (focus)="onFocus()"
+        [id]="id || formControlName || ''"
+        [disabled]="disabled"
+        [placeholder]="placeholder"
+        [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : (type == 'phone' ? 'tel' : type)"
+        [showMaskTyped]="(value !== '' || focused) ? true : false"
+        [mask]="options?.mask ? options.mask.value : (type == 'phone' ? '(0000) 000-000' : '')"
+        [suffix]="(value !== '' || focused) ? (options?.mask ? options.mask.suffix : '') : ''"
+        [prefix]="(value !== '' || focused) ? (options?.mask ? options.mask.prefix : (type == 'phone' ? '+44' : '')) : ''"
+        [required]="required"
+        tabindex="0"
+        autocomplete="off"
+        class="form-field__input" />
+        <div class="form-field__password" *ngIf="type == 'password'">
+          <ui-icon-button size="m" (click)="togglePasswordVisibility(false, $event)" *ngIf="passwordVisible"><ui-icon>view--filled</ui-icon></ui-icon-button>
+          <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>  
+        </div>
+      </div>
+  </div>
+
+  <!-- Textarea -->
+  <div
+    (click)="textarea.select()"
+    class="form-field"
+    [class.form-field--is-active]="focused"
+    [class.form-field--is-filled]="value !== ''"
+    [class.form-field--is-small]="!label"
+    [class.form-field--is-errored]="showError"
+    *ngIf="type == 'textarea'">
+    <div class="form-field__control">
+      <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
+      <label *ngIf="label"
+        [for]="formControlName || ''"
+        class="form-field__label">{{ label }}</label>
+      <textarea
+        #textarea
+        [(ngModel)]="value"
+        (blur)="onTouched()"
+        (focus)="onFocus()"
+        [id]="formControlName || ''"
+        [disabled]="disabled"
+        [placeholder]="placeholder"
+        tabindex="0"
+        autocomplete="off"
+        class="form-field__textarea"></textarea>
+    </div>
+  </div>
+
+  <!-- Field length indicators -->
+  <!-- <div class="form-field_lengths" *ngIf="maxlength || minlength" >
+    {{ maxlength }} / {{ value?.length }} /  {{ minlength }}
+  </div> -->
+
+
+  <!-- Number input -->
+  <!-- <div class="ui-input-number-buttons" *ngIf="type == 'number'">
+    <ui-icon-button (click)="increment($event)">caret--up</ui-icon-button>
+    <ui-icon-button (click)="decrement($event)">caret--down</ui-icon-button>
+  </div> -->
+
+  <!-- Checkboxes -->
+  <mat-form-field
+    *ngIf="type == 'checkbox'"
+    class="ui-input"
+    appearance="fill"
+    [class.errored]="showError"
+    [class.dark]="kind == 'secondary'"
+    [class.small]="!label"
+    [class.checkbox]="type == 'checkbox'">
+    <mat-label *ngIf="label && type !== 'checkbox'">{{ label }}</mat-label>
+    <mat-checkbox matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
+    <!-- stop formcontrolname throwing errors -->
+    <input matInput placeholder="Input" style="display: none" >
+  </mat-form-field>
+
+  <!-- Select with search -->
+  <mat-form-field *ngIf="type == 'select'" appearance="fill">
+    <mat-label>{{ label }}</mat-label>
+    <mat-select #singleSelect
+      (blur)="onTouched()"
+      (focus)="onFocus()"
+      [(ngModel)]="value"
+      disableOptionCentering>
+      <mat-option *ngIf="options.search">
+        <ngx-mat-select-search ngModel
+        (ngModelChange)="filterSelectionItems($event)"
+          placeholderLabel="Search"
+          noEntriesFoundLabel="No results"></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.key">
+        {{ item.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Hint message -->
+  <span *ngIf="hint" class="form-field__hint">{{ hint }}</span>
+
+  <!-- Form errors -->
+  <div *ngIf="showError" class="form-field__errors">
+    <span *ngFor="let error of errors">{{ error }}</span>
+  </div>
+</div>

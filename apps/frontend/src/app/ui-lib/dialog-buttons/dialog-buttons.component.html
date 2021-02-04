@@ -1,0 +1,15 @@
+<div class="ui-dialog-buttons-wrapper">
+  <ui-button class="left"
+    [disabled]="leftDisabled"
+    [kind]="leftVariant"
+    (click)="onLeftClick($event)">
+      {{leftString}}
+  </ui-button>
+
+  <ui-button class="right"
+    [disabled]="rightDisabled"
+    [kind]="rightVariant"
+    (click)="onRightClick($event)">
+      {{rightString}}
+  </ui-button>
+</div>

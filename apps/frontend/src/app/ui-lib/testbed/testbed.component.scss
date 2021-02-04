@@ -1,0 +1,29 @@
+.container {
+  padding: 40px;
+  background-color: white;
+
+  h1 {
+    margin-left: -40px;
+    padding-left: 40px;
+    background: white;
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  align-items: center;
+  * {
+    margin-right: 10px;
+  }
+}
+
+.measurements-icon-wrapper {
+  p {
+    width: 100px;
+    span {
+      word-wrap: break-word;
+    }
+  }
+}

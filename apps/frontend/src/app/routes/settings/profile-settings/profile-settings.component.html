@@ -1,0 +1,25 @@
+<div class="profile-container">
+    <h1>Public Profile</h1>
+    <mat-divider></mat-divider>
+    <br>
+
+    <div class="profile-picture__container">
+        <img [src]="user.avatar" alt="">
+        <ui-button kind="accent"><ui-icon size="s">paint-brush--alt</ui-icon>Edit</ui-button>    
+    </div>
+
+    <br>
+
+    <ui-input type="text" label="Name" [(ngModel)]="user.name" hint="Your name may appear around Eventi where you contribute or are mentioned. You can remove it at any time.
+    "></ui-input>
+
+    <!-- <ui-input type="text" label="E-mail address" [(ngModel)]="user.email_address"></ui-input> -->
+
+    <!-- <br><br>
+    <ui-input type="text" label="Location" [(ngModel)]="user"></ui-input> -->
+
+    <p>All of the fields on this page are optional and can be deleted at any time, and by filling them out, you're giving us consent to share this data wherever your user profile appears. Please see our <a href="#">privacy statement</a> to learn more about
+        how we use this information.</p>
+
+    <ui-button class="profile-container__update" kind="primary">Update profile</ui-button>
+</div>

@@ -1,0 +1,26 @@
+mat-radio-group {
+  display: flex;
+  flex-flow: column;
+  * {
+    margin-bottom: 5px;
+  }
+}
+
+.results {
+  hr {
+    opacity: 0.4;
+    margin: 0;
+  }
+}
+.result-item {
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  b {
+    margin-right: 10px;
+  }
+  span {
+    margin-left: auto;
+    opacity: 0.7;
+  }
+}

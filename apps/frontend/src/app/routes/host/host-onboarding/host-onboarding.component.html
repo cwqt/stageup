@@ -1,0 +1,86 @@
+<mat-spinner *ngIf="onboarding.loading"></mat-spinner>
+<ng-container *ngIf="onboarding.data">
+  <!-- Form has been submitted for verification -->
+  <div class="flex flex-col h-full" *ngIf="currentState == states.PendingVerification">
+    <ng-container
+      [ngTemplateOutlet]="review">
+    </ng-container>
+  </div>
+
+  <!-- Form requires changing -->
+  <div class="flex h-full" *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
+    <div class="flex-initial rounded overflow-hidden mr-6 w-1/5">
+      <mat-vertical-stepper #stepper *ngIf="onboarding.data" class="h-full" (selectionChange)="handleSelectionChange($event)">
+        <mat-step *ngFor="let step of stepUiMap | keyvalue"
+          [state]="onboarding.data.steps[step.key]"
+          [label]="step.value['label']">
+
+          <!-- {{ onboarding.data.steps[step.key] | onboardingStatePipe }} -->
+        </mat-step>
+
+        <mat-step label="Review & Submit"></mat-step>
+
+        <ng-template *ngFor="let stepUi of stepStatusUiMap | keyvalue"
+          [matStepperIcon]="stepUi.key">
+          <mat-icon>{{ stepUi.value["icon"] }}</mat-icon>
+        </ng-template>
+      </mat-vertical-stepper>
+    </div>
+
+    <div class="flex-grow">
+      <ng-container *ngIf="!onReviewStep">
+        <mat-spinner *ngIf="componentRefreshing"></mat-spinner>
+        <ng-container *ngIf="!componentRefreshing">
+          <div *ngIf="(stepData.data?.review.issues |keyvalue )?.length" class="mb-5">
+            <ui-admonition
+              kind="warning"
+              [title]="(stepData.data.review.issues | objectLengthPipe) + ' issues found'">
+              <span>Last reviewed by: {{ onboarding.data.last_reviewed_by.username  }}</span><br/>
+              <span>Last reviewed at: {{ onboarding.data.last_reviewed | amFromUnix  }}</span>
+            </ui-admonition>
+          </div>
+
+          <ui-form
+            (onSuccess)="handleStepSuccess(selectedStep)"
+            (onFailure)="handleStepFailure(selectedStep)"
+            [form]="stepUiMap[selectedStep].form"
+            [cacheable]="stepCacheables[selectedStep]">
+          </ui-form>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="onReviewStep" [ngTemplateOutlet]="review"></ng-container>
+    </div>
+  </div>
+</ng-container>
+
+
+<!-- Re-useable template for review & pending verification -->
+<ng-template #review>
+  <ng-container *ngIf="currentState == states.PendingVerification">
+    <h2>Under review</h2>
+    <p>
+      Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.
+      <br/>
+      This process typically takes around a day.
+    </p>
+  </ng-container>
+
+  <ng-container *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
+    <h2>Review & submit for verification</h2>
+    <p>Please ensure all steps are valid to the best of your knowledge before submitting.</p>
+  </ng-container>
+
+  <ui-hr></ui-hr>
+
+  <app-onboarding-view [adminView]="false" [hostId]="onboarding.data.host._id"></app-onboarding-view>
+
+  <div class="mt-5" *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
+    <ui-button
+      kind="primary" size="l"
+      (click)="submitForVerification()"
+      [loading]="onboarding.loading">
+        Submit for Verification
+    </ui-button>
+  </div>
+</ng-template>

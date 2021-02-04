@@ -1,0 +1,26 @@
+.onboarding-step-meta {
+  li {
+    overflow: visible;
+    &.is-admin {
+      @apply bg-white p-2 rounded shadow-sm;
+      position: relative;
+      padding-left: 40px;
+    }
+    p {
+      margin: 0;
+      b {
+        min-width: 250px;
+        width: 20%;
+        display: inline-block;
+      }
+    }
+
+    ui-icon-button {
+      position: absolute;
+      top: -3px;
+      bottom: 0;
+      margin: auto;
+      left: -5px;
+    }  
+  }
+}

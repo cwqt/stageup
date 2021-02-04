@@ -1,0 +1,230 @@
+@import "~@angular/material/theming";
+
+@include mat-core();
+
+/* ======== Angular material custom themes ======== */
+$my-custom-primary: mat-palette($mat-grey);
+$my-custom-accent: mat-palette($mat-grey, 100, 500, A100);
+$my-custom-warn: mat-palette($mat-red);
+
+$my-custom-theme: mat-light-theme(
+  $my-custom-primary,
+  $my-custom-accent,
+  $my-custom-warn
+);
+
+
+mat-progress-bar {
+  .mat-progress-bar-fill::after {
+    background-color: rgba(255, 255, 255);
+  }
+  .mat-progress-bar-buffer {
+    background: #0f62fe;
+  }
+}
+
+mat-table {
+  mat-header-row {
+    min-height: 48px !important;
+
+    mat-header-cell {
+      background-color: #e0e0e0;
+      font-weight: bold;
+      color: #161616 !important;
+      font-size: 14px !important;
+    }
+  }
+}
+
+
+mat-form-field {
+  width: 100% !important;
+  .mat-form-field-appearance-fill {
+    border-radius: 0 !important;
+  }
+  .mat-form-field-flex {
+    border-radius: 0 !important;
+    // border: 2px solid transparent;
+  }
+
+  &.mat-focused {
+    .mat-form-field-ripple,
+    .mat-form-field-underline {
+      // display: none !important;
+    }
+
+    &.mat-form-field-invalid .mat-form-field-flex {
+      border-bottom: 1px solid red !important;
+    }
+
+    .mat-form-field-flex {
+      // border: 2px solid #0f62fe;
+    }
+  }
+
+  &:hover {
+    &:not(.mat-form-field-invalid) {
+      .mat-form-field-ripple {
+        // background-color: #78a9ff;
+      }
+    }
+  }
+}
+
+mat-checkbox {
+  &.mat-checkbox-checked.mat-accent .mat-checkbox-ripple .mat-ripple-element {
+    opacity: 0.03 !important;
+    background-color: #0f62fe !important;
+  }
+  &.mat-checkbox-checked.mat-accent .mat-checkbox-background,
+  &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #0f62fe !important;
+  }
+  &.mat-checkbox-ripple .mat-ripple-element,
+  &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+    background-color: #0f62fe !important;
+  }
+}
+
+mat-accordion {
+  mat-expansion-panel, .mat-accordion {
+    height: 40px;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #e5e5e5;
+    mat-expansion-panel-header {
+      max-height: 40px;
+      border: 2px solid transparent;
+
+      .mat-content {
+        justify-content: space-between;
+      }
+    
+      .mat-content > mat-panel-title, .mat-content > mat-panel-description {
+        flex: 0 0 auto;
+      }
+    }
+    &.mat-expansion-panel-spacing {
+      margin: 0 !important;
+    }
+    &.mat-expanded {
+      margin-bottom: 0;
+      height: auto !important;
+      mat-expansion-panel-header {
+        margin-bottom: 10px;
+        border: 2px solid #0f62fe !important;
+      }
+      .mat-expansion-panel-bottom {
+        padding-bottom: 0 !important;
+      }
+    }
+    &:first-child {
+      border-top: 1px solid #e5e5e5 !important;
+    }
+  }
+}
+
+mat-stepper,
+mat-vertical-stepper {
+  .mat-step-icon {
+    background-color: #78a9ff !important;
+    color: white !important;
+  }
+  .mat-step-icon-selected {
+    background-color: #0f62fe !important;
+  }
+}
+
+// mat-tab-group {
+//   .mat-tab-label {
+//     opacity: 1 !important;
+//     transition: 0.2s;
+//     border-bottom: 2px solid transparent;
+//     text-transform: capitalize;
+//     min-width: 0 !important;
+//     font-size: 15px !important;
+//     user-select: none;
+//     &:hover {
+//       background: #393939;
+//       color: #fff;
+//     }
+//     .mat-ripple-element {
+//       display: none;
+//     }
+//     .mat-tab-label-content {
+//       display: flex;
+//       align-items: center;
+//       ui-icon {
+//         margin-right: 8px !important;
+//         margin-top: 2px;
+//       }
+//     }
+//   }
+
+//   .mat-tab-labels {
+//     background-color: transparent;
+//     color: #c6c6c6;
+//   }
+
+//   .mat-tab-label-active {
+//     background: #393939;
+//     color: #fff;
+//   }
+
+//   mat-ink-bar {
+//     display: none !important;
+//   }
+
+//   .mat-tab-body-wrapper,
+//   .mat-tab-body-content {
+//     overflow: visible !important;
+//   }
+
+//   &.light {
+//     .mat-tab-labels {
+//       color: #161616;
+//       background-color: white !important;
+//     }
+//     .mat-tab-label {
+//       border-top: 0px solid transparent;
+//       border-bottom: 2px solid #e0e0e0;
+//       background: white !important;
+//       color: #161616;
+//       opacity: 0.7 !important;
+//       border: 2px solid transparent !important;
+//       &:focus {
+//         border: 2px solid #0f62fe !important;
+//       }
+//       &:hover {
+//         background-color: white;
+//         border-bottom: 2px solid #8c8d8c;
+//       }
+//     }
+//     .mat-tab-label-active {
+//       border-bottom: 2px solid #0f62fe !important;
+//       opacity: 1 !important;
+//     }
+//   }
+// }
+
+// https://github.com/angular/components/issues/11756
+.mat-progress-spinner-indeterminate-animation {
+  /* keep anim slow to avoid wobble from rounding errors */
+  animation-duration: 9s !important;
+}
+.mat-progress-spinner-indeterminate-animation circle {
+  animation-name: progress-spinner-stroke-rotate !important;
+  animation-timing-function: linear !important;
+  animation-duration: 4s !important;
+}
+
+@keyframes progress-spinner-stroke-rotate {
+  $start: 200%; /* approx 2/3 of circle circumference */
+  $end: 20%;
+  0%   { stroke-dashoffset: $start; }
+  50%  { stroke-dashoffset: $end; }
+  /* removing transform: rotate(720deg) causes wobble */
+  100% { stroke-dashoffset: $start; transform: rotate(720deg); }
+}
+
+@include angular-material-theme($my-custom-theme);

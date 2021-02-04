@@ -1,0 +1,8 @@
+<app-page class="register-wrapper">
+  <h1 class="mat-display-1">Register</h1>
+
+  <ui-form #form (onSuccess)="handleRegisterSuccess($event)"
+    [cacheable]="registerData"
+    [form]="registerForm">
+  </ui-form>
+</app-page>
