@@ -204,21 +204,17 @@ To be able to create a release first:
 
 ## Triggering a release
 
-* All code merged into dev ready for release
-* Create release tag using: `npm run release`
-* Review release PR on GitHub that will be put into master
-* Trigger release: `npm run deploy`, which will:
-  - Build all projects source & compile Docker images
-  - Push images to AWS Elastic Container Registry
-  - Deploy to AWS EC2 instance staging env.
-  - Integration tests against live staging env.
-* Finally, `npm run deploy:production`
-
-To build all projects & compile the docker images, run:
-
-```shell
-npm run deploy:staging # or :production
-```
+* All code merged into dev ready for release (`commit.yml`)
+* Prepare release via: `npm run release`, which will:
+  - Create a release PR on GitHub
+    * Automated actions on branch `release-*` (`build.yml`)
+      - Build all projects source & compile Docker images
+      - Push images to AWS Elastic Container Registry
+      - Deploy to staging AWS EC2 instance
+      - Integration tests against staging environment
+* Squash-merge release PR squash-merged into master
+  - Automated actions on branch `master` (`deploy.yml`)
+    * Deploy created images to production infrastructure
 
 <br/>
 
