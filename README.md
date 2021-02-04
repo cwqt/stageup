@@ -1,4 +1,4 @@
-# core &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Build/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
+# core &nbsp; ![Dev Build](https://github.com/StageUp/core/workflows/Build/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
 
 Live-streaming & VOD platform for the performance arts.
 
@@ -61,8 +61,8 @@ Currently we just have just two applications - a frontend & a backend, but in th
 
 ```sh
   apps               # where all the apps live
-    frontend         # the eventi frontend
-    backend          # the eventi api
+    frontend         # the stageup frontend
+    backend          # the stageup api
     api-tests        # integration tests
         
   libs               # where all shared code live
@@ -114,7 +114,7 @@ Add the following to your `.env` file by copy & pasting the values:
 ```
 MUX_ACCESS_TOKEN="Access Token ID"
 MUX_SECRET_KEY="Secret Key"
-LOCALTUNNEL_URL="eventi-YOUR_NAME"
+LOCALTUNNEL_URL="stageup-YOUR_NAME"
 ```
 
 * `LOCALTUNNEL_URL`: When testing locally we want to be able to recieve webhooks from MUX, instead of port forwarding our router we'll use HTTP tunneling via [localtunnel](https://localtunnel.me/) to receive them.
@@ -122,7 +122,7 @@ LOCALTUNNEL_URL="eventi-YOUR_NAME"
 We'll also need to add a new webhook, go to: <https://dashboard.mux.com/settings/webhooks>
 
 Click _'Create new webhook'_.  
-For the _'URL to notify'_ add `https://eventi-YOUR_NAME.loca.lt/mux/hooks`.  
+For the _'URL to notify'_ add `https://stageup-YOUR_NAME.loca.lt/mux/hooks`.  
 And then click _'Create webhook'_.
 
 There should be a row with your webhook, click _'Show Signing Secret'_ & paste it into your `.env`.
