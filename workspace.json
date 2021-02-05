@@ -84,6 +84,7 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
+            "directory": "apps/backend",
             "lintFilePatterns": [
               "apps/backend/**/*.{ts,tsx,js,jsx}"
             ]

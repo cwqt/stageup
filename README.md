@@ -98,7 +98,7 @@ NODE_ENV="development"
 
 * `PRIVATE_KEY`: Used for hashing/salting of passwords
 * `EMAIL_ADDRESS`: Used for the sender when sending e-mails via SendGrid
-* `PG_USER`: Your postgres user account
+* `POSTGRES_USER`: Your postgres user account
 * `NODE_ENV`: Used to define the environment in which the backend is running; can be `production`, `testing` or `development`
 
 ### MUX
@@ -157,36 +157,6 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
   - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
   - Now you can develop the test & it will auto-re-run every time a change is made & saved
 
-## Secrets
-
-These are private values that should never be shared with anyone.
-### apps/backend/.env
-```d
-PRIVATE_KEY="somerandomprivatekey"
-
-POSTGRES_HOST="localhost"
-POSTGRES_USER="postgres"
-POSTGRES_PASS="mysecretpassword"
-
-REDIS_HOST="localhost"
-
-MUX_ACCESS_TOKEN="muxaccesstoken"
-MUX_SECRET_KEY="muxsecretkey"
-MUX_HOOK_SIGNATURE="muxhooksignature"
-
-SENDGRID_USERNAME="sendgridusername"
-SENDGRID_API_KEY="sendgridapikey"
-
-AWS_S3_ACCESS_KEY_ID="awss3accesskeyid"
-AWS_S3_ACCESS_SECRET_KEY="awss3secretkey"
-AWS_S3_BUCKET_NAME="awss3bucketname"
-AWS_S3_URL="awss3bucketurl"
-
-# development only
-LOCALTUNNEL_URL="localtunnelurl"
-USE_MEMORYSTORE="true/false"
-```
-
 # Deployment - [Miro](https://miro.com/app/board/o9J_lZ6kqD4=/?moveToWidget=3074457353528169240&cot=14)
 
 At the end of every sprint a release will be deployed, going through a number of checks in the staging area & then onto production.  
@@ -199,14 +169,15 @@ To be able to create a release first:
 
 * All code merged into dev ready for release (`commit.yml`)
 * Prepare release via: `npm run release`, which will:
-  - Create a release PR on GitHub
-    * Automated actions on branch `release-*` (`build.yml`)
+  - Switch to `dev` branch
+  - Create a release PR on GitHub via _shipjs_ (`shipjs-prepare.yml`)
+    * Automated actions on branch `release-*` (`release-build.yml`)
       - Build all projects source & compile Docker images
       - Push images to AWS Elastic Container Registry
       - Deploy to staging AWS EC2 instance
       - Integration tests against staging environment
 * Squash-merge release PR squash-merged into master
-  - Automated actions on branch `master` (`deploy.yml`)
+  - Automated actions on branch `master` (`release-deploy.yml`)
     * Deploy created images to production infrastructure
 
 <br/>

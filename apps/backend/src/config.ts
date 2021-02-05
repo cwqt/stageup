@@ -1,7 +1,9 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 require('dotenv').config();
+
 import { Environment } from '@core/interfaces';
 import { environment } from '../environments/environment';
+
 interface IEnvironment {
   PRIVATE_KEY: string;
   EMAIL_ADDRESS: string;
