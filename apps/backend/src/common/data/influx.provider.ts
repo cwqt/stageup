@@ -1,20 +1,20 @@
-import config from '../../config';
+import Env from '../../env';
 import * as Influx from 'influx';
 import log from '../logger';
 
 export const create = async () => {
   log.info('Connecting to Influx...');
-  if (typeof config.INFLUX.HOST === 'undefined') {
+  if (typeof Env.INFLUX.HOST === 'undefined') {
     throw new TypeError('Missing .env INDFLUX_HOST');
   }
 
-  if (typeof config.INFLUX.DB === 'undefined') {
+  if (typeof Env.INFLUX.DB === 'undefined') {
     throw new TypeError('Missing .env INFLUX_DB');
   }
 
   const influxClient = new Influx.InfluxDB({
-    host: config.INFLUX.HOST,
-    database: config.INFLUX.DB
+    host: Env.INFLUX.HOST,
+    database: Env.INFLUX.DB
   });
 
   return new Promise<Influx.InfluxDB | void>((resolve, reject) => {

@@ -1,5 +1,5 @@
 import { ErrCode } from '@core/interfaces';
-import config from '../config';
+import Env from '../env';
 import { User } from '../models/users/user.model';
 import { verifyEmail } from '../common/email';
 
@@ -31,7 +31,7 @@ export default class AuthController extends BaseController {
         await u.save();
 
         // Return redirect address
-        return `${config.FE_URL}/verified?state=${isVerified ? 'true' : 'false'}`;
+        return `${Env.FE_URL}/verified?state=${isVerified ? 'true' : 'false'}`;
       }
     };
   }

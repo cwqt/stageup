@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { SigningKey } from './signing-key.model';
 import { DataClient } from '../../common/data';
-import config from '../../config';
+import Env from '../../Env';
 import { Performance } from './performance.model';
 import { timestamp } from '../../common/helpers';
 
@@ -38,7 +38,7 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
       passthrough: '', // Arbitrary passthru data inc. in LS object
       reduced_latency: false,
       simulcast_targets: [], // For 3rd party re-streaming
-      test: !config.isEnv(Environment.Production) // No cost during testing/dev
+      test: !Env.isEnv(Environment.Production) // No cost during testing/dev
     });
 
     this.stream_key = stream.stream_key;

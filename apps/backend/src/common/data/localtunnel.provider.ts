@@ -1,17 +1,17 @@
-import config from '../../config';
+import Env from '../../env';
 import log from '../logger';
 import localtunnel from 'localtunnel';
 
 export const create = async (): Promise<localtunnel.Tunnel> => {
-  log.info(`Opening up localtunnel on port ${config.EXPRESS_PORT}...`);
-  if (typeof config.LOCALTUNNEL_URL === 'undefined') {
+  log.info(`Opening up localtunnel on port ${Env.EXPRESS_PORT}...`);
+  if (typeof Env.LOCALTUNNEL_URL === 'undefined') {
     throw new TypeError('Missing .env LOCALTUNNEL_URL');
   }
 
   try {
     const lt = await localtunnel({
-      port: config.EXPRESS_PORT,
-      subdomain: config.LOCALTUNNEL_URL
+      port: Env.EXPRESS_PORT,
+      subdomain: Env.LOCALTUNNEL_URL
     });
 
     return lt;

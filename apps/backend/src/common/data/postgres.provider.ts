@@ -1,4 +1,4 @@
-import config from '../../config';
+import Env from '../../env';
 import log from '../logger';
 import * as TORM from 'typeorm';
 import { Environment } from '@core/interfaces';
@@ -20,34 +20,34 @@ import { PerformancePurchase } from '../../models/performances/purchase.model';
 export const create = async (): Promise<TORM.Connection> => {
   log.info('Connecting to PostgreSQL (TypeORM)...');
 
-  if (typeof config.PG.HOST === 'undefined') {
+  if (typeof Env.PG.HOST === 'undefined') {
     throw new TypeError('Missing .env PG_HOST');
   }
 
-  if (typeof config.PG.PORT === 'undefined') {
+  if (typeof Env.PG.PORT === 'undefined') {
     throw new TypeError('Missing .env PG_PORT');
   }
 
-  if (typeof config.PG.USER === 'undefined') {
+  if (typeof Env.PG.USER === 'undefined') {
     throw new TypeError('Missing .env PG_USER');
   }
 
-  if (typeof config.PG.PASS === 'undefined') {
+  if (typeof Env.PG.PASS === 'undefined') {
     throw new TypeError('Missing .env PG_PASS');
   }
 
-  if (typeof config.PG.DB === 'undefined') {
+  if (typeof Env.PG.DB === 'undefined') {
     throw new TypeError('Missing .env PG_DB');
   }
 
   try {
     const conn = await TORM.createConnection({
       type: 'postgres',
-      host: config.PG.HOST,
-      port: config.PG.PORT,
-      username: config.PG.USER,
-      password: config.PG.PASS,
-      database: config.PG.DB,
+      host: Env.PG.HOST,
+      port: Env.PG.PORT,
+      username: Env.PG.USER,
+      password: Env.PG.PASS,
+      database: Env.PG.DB,
       entities: [
         User,
         Onboarding,
@@ -63,7 +63,7 @@ export const create = async (): Promise<TORM.Connection> => {
         Asset,
         PerformancePurchase
       ],
-      synchronize: !config.isEnv(Environment.Production),
+      synchronize: !Env.isEnv(Environment.Production),
       logging: false
     });
 

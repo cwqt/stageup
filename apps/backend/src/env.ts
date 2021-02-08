@@ -1,8 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, `../.env.${process.env.NODE_ENV}`) });
 
 import { Environment } from '@core/interfaces';
-import { environment } from '../environments/environment';
 
 interface IEnvironment {
   PRIVATE_KEY: string;
@@ -49,12 +48,12 @@ interface IEnvironment {
   isEnv: (env: Environment) => boolean;
 }
 
-const Env:IEnvironment = {
+const Env: IEnvironment = {
   isEnv: (env: Environment) => env === process.env.NODE_ENV,
-  SITE_TITLE: "stageup",
-  API_URL: environment.apiUrl,
-  FE_URL: environment.frontendUrl,
-  ENVIRONMENT: environment.environment,
+  SITE_TITLE: 'stageup',
+  API_URL: process.env.API_URL,
+  FE_URL: process.env.FRONTEND_URL,
+  ENVIRONMENT: process.env.NODE_ENV as Environment,
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
   EXPRESS_PORT: 3000,
@@ -74,7 +73,7 @@ const Env:IEnvironment = {
     USER: process.env.POSTGRES_USER,
     PASS: process.env.POSTGRES_PASS,
     HOST: process.env.POSTGRES_HOST,
-    DB: environment.postgresDatabase,
+    DB: process.env.POSTGRES_DB,
     PORT: 5432
   },
   REDIS: {
@@ -92,8 +91,6 @@ const Env:IEnvironment = {
     HOST: process.env.INFLUX_HOST,
     DB: process.env.INFLUX_DB
   }
-}
-
-console.log(Env)
+};
 
 export default Env;

@@ -12,9 +12,9 @@ import { handleError, ErrorHandler } from './common/errors';
 import { DataClient, DataProvider } from './common/data';
 import { pagination } from './common/paginate';
 import Routes from './routes';
-import config from './config';
+import Env from './env';
 
-console.log('\nBackend running in env: \u001B[04m' + config.ENVIRONMENT + '\u001B[0m\n');
+console.log('\nBackend running in env: \u001B[04m' + Env.ENVIRONMENT + '\u001B[0m\n');
 
 let server: http.Server;
 const app = express();
@@ -33,14 +33,14 @@ app.use(morgan('tiny', { stream }));
     // Register Redis session store
     app.use(
       session({
-        secret: config.PRIVATE_KEY,
+        secret: Env.PRIVATE_KEY,
         resave: false,
         saveUninitialized: true,
         cookie: {
-          httpOnly: config.isEnv(Environment.Production),
-          secure: config.isEnv(Environment.Production)
+          httpOnly: Env.isEnv(Environment.Production),
+          secure: Env.isEnv(Environment.Production)
         },
-        store: config.USE_MEMORYSTORE ? new MemoryStore() : providers.session_store
+        store: Env.USE_MEMORYSTORE ? new MemoryStore() : providers.session_store
       })
     );
 
@@ -64,8 +64,8 @@ app.use(morgan('tiny', { stream }));
     process.on('uncaughtException', gracefulExit(providers));
 
     // Start listening for requests
-    server = app.listen(config.EXPRESS_PORT, () => {
-      log.info(`\u001B[1mExpress listening on ${config.EXPRESS_PORT}\u001B[0m`);
+    server = app.listen(Env.EXPRESS_PORT, () => {
+      log.info(`\u001B[1mExpress listening on ${Env.EXPRESS_PORT}\u001B[0m`);
     });
   } catch (error: unknown) {
     log.error(error);

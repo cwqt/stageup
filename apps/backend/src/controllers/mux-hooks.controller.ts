@@ -1,9 +1,8 @@
-import { Request } from 'express';
 import { DataClient } from '../common/data';
 import { MUXHook, IMUXHookResponse, ErrCode, HTTP } from '@core/interfaces';
 import logger from '../common/logger';
 import { Webhooks, LiveStream } from '@mux/mux-node';
-import config from '../config';
+import Env from '../env';
 import { ErrorHandler } from '../common/errors';
 
 import { RedisClient } from 'redis';
@@ -32,7 +31,7 @@ export default class MUXHooksController extends BaseController {
         const isValidHook = Webhooks.verifyHeader(
           JSON.stringify(req.body),
           req.headers['mux-signature'] as string,
-          config.MUX.HOOK_SIGNATURE
+          Env.MUX.HOOK_SIGNATURE
         );
 
         if (!isValidHook) {
@@ -51,7 +50,7 @@ export default class MUXHooksController extends BaseController {
     return {
       authStrategy: this.validHookStrat(),
       controller: async req => {
-        if (!config.USE_MEMORYSTORE) {
+        if (!Env.USE_MEMORYSTORE) {
           logger.error('Cannot handle MUX hook as Redis is disabled in .env');
         }
 

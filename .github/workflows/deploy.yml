@@ -1,2 +1,0 @@
-# - name: Amazon ECR "Login" Action for GitHub Actions
-#   uses: aws-actions/amazon-ecr-login@v1

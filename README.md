@@ -167,7 +167,7 @@ To be able to create a release first:
 
 ## Triggering a release
 
-* All code merged into dev ready for release (`commit.yml`)
+* All code merged into dev ready for release (`commit-build-test.yml`)
 * Prepare release via: `npm run release`, which will:
   - Switch to `dev` branch
   - Create a release PR on GitHub via _shipjs_ (`shipjs-prepare.yml`)

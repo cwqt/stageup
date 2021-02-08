@@ -7,19 +7,23 @@
     "backend:testing": "cross-env NODE_ENV=testing && nx serve backend --configuration=testing",
     "backend:staging": "cross-env NODE_ENV=staging && nx serve backend --configuration=staging",
     "backend:production": "cross-env NODE_ENV=production && nx serve backend --configuration=production",
-    "frontend": "cross-env NODE_ENV=development && nx serve frontend --configuration=development",
-    "frontend:staging": "cross-env NODE_ENV=staging && nx serve frontend --configuration=staging",
-    "frontend:production": "cross-env NODE_ENV=production && nx serve frontend --configuration=production",
+    
+    "frontend": "cross-env NG_ENV=development && nx serve frontend --configuration=development",
+    "frontend:staging": "cross-env NG_ENV=staging && nx serve frontend --configuration=staging",
+    "frontend:production": "cross-env NG_ENV=production && nx serve frontend --configuration=production",
+    
     "api-tests": "nx test api-tests --watch",
     "build:api-tests": "echo 'Not yet implemented'",
-    "build:backend:staging": "nx build backend --configuration=staging",
-    "build:backend:production": "nx build backend --configuration=production",
-    "build:frontend:staging": "nx build frontend --configuration=staging",
-    "build:frontend:production": "nx build frontend --configuration=production",
-    "build:staging": "npm run build:backend:staging && npm run build:frontend:staging",
-    "build:production": "npm run build:backend:production && npm run build:frontend:production; echo '\n(っ◔◡◔)っ ♥ SHIP EET ♥'",
-    "deploy:staging": "npm run build:staging && sh ./deploy/build.sh --staging",
-    "deploy:production": "npm run build:production && sh ./deploy/build.sh --production",
+
+    "build:backend:staging": "cross-env NODE_ENV=staging && nx build backend --configuration=staging",
+    "build:backend:production": "cross-env NODE_ENV=production && nx build backend --configuration=production",
+    
+    "build:frontend:staging": "cross-env NG_ENV=staging && nx build frontend --configuration=staging",
+    "build:frontend:production": "cross-env NG_ENV=production && nx build frontend --configuration=production",
+
+    "build:staging": "concurrently \"npm run build:backend:staging\" \"npm run build:frontend:staging\"",
+    "build:production": "concurrently \"npm run build:backend:production\" \"npm run build:frontend:production\"",
+    
     "lint": "nx workspace-lint && nx lint",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
@@ -32,7 +36,7 @@
     "format": "nx format:write",
     "format:write": "nx format:write",
     "format:check": "nx format:check",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "ng-postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "bundle-report-frontend": "nx build frontend --prod --stats-json && webpack-bundle-analyzer dist/apps/frontend/stats.json",
     "release": "shipjs prepare"
   },

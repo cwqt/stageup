@@ -1,32 +1,32 @@
 import redis from 'redis';
 import session from 'express-session';
-import config from '../../config';
+import Env from '../../env';
 import connectRedis from 'connect-redis';
 import log from '../logger';
 
 export const create = async (): Promise<redis.RedisClient | null> => {
   log.info('Connecting to Redis...');
 
-  if (config.USE_MEMORYSTORE) {
+  if (Env.USE_MEMORYSTORE) {
     log.info('.env set to use MemoryStore, skipping Redis setup');
     return null;
   }
 
-  if (!config.REDIS.HOST) {
+  if (!Env.REDIS.HOST) {
     throw new Error('Missing .env REDIS_HOST');
   }
 
-  if (!config.REDIS.PORT) {
+  if (!Env.REDIS.PORT) {
     throw new Error('Missing .env REDIS_PORT');
   }
 
-  if (!config.REDIS.TTL) {
+  if (!Env.REDIS.TTL) {
     throw new Error('Missing .env REDIS_TTL');
   }
 
   const redisClient = redis.createClient({
-    host: config.REDIS.HOST,
-    port: config.REDIS.PORT
+    host: Env.REDIS.HOST,
+    port: Env.REDIS.PORT
   });
 
   return new Promise<redis.RedisClient>((resolve, reject) => {
@@ -43,9 +43,9 @@ export const store = (client: redis.RedisClient) => {
 
     return new (connectRedis(session))({
       client: client,
-      host: config.REDIS.HOST,
-      port: config.REDIS.PORT,
-      ttl: config.REDIS.TTL
+      host: Env.REDIS.HOST,
+      port: Env.REDIS.PORT,
+      ttl: Env.REDIS.TTL
     });
   };
 };

@@ -16,7 +16,7 @@ import Validators, { body, params as parameters } from '../common/validate';
 import { ErrorHandler, FormErrorResponse, getCheck } from '../common/errors';
 
 import Email = require('../common/email');
-import config from '../config';
+import Env from '../env';
 import AuthStrat from '../common/authorisation';
 
 import { User } from '../models/users/user.model';
@@ -255,7 +255,7 @@ export default class UserController extends BaseController {
         await u.save();
 
         await Email.sendEmail({
-          from: config.EMAIL_ADDRESS,
+          from: Env.EMAIL_ADDRESS,
           to: u.email_address,
           subject: 'Your password was just changed',
           html: `<p>

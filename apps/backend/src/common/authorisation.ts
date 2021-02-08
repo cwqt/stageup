@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { DataClient } from './data';
 import { User } from '../models/users/user.model';
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
-import config from '../config';
+import Env from '../env';
 import { Host } from '../models/hosts/host.model';
 import { Performance } from '../models/performances/performance.model';
 
@@ -116,7 +116,7 @@ const isSiteAdmin: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
 
 const isEnv = (env: Environment): AuthStrategy => {
   return async (req, dc): Promise<AuthStratReturn> => {
-    if (!config.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
+    if (!Env.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
     return [true, {}];
   };
 };
@@ -126,7 +126,7 @@ const isEnv = (env: Environment): AuthStrategy => {
  * @description Is currently running on a live, deployed instance
  */
 const isLive: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
-  if (config.isEnv(Environment.Staging) || config.isEnv(Environment.Production)) {
+  if (Env.isEnv(Environment.Staging) || Env.isEnv(Environment.Production)) {
     return [true, {}];
   } else {
     return [false, {}];

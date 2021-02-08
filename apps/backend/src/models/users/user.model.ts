@@ -18,7 +18,7 @@ import { PerformancePurchase } from '../performances/purchase.model';
 import { Performance } from '../performances/performance.model';
 import { Person } from './person.model';
 import { ContactInfo } from './contact-info.model';
-import config from '../../config';
+import Env from '../../env';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
@@ -49,7 +49,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     this.created_at = Math.floor(Date.now() / 1000); // Timestamp in seconds
     this.is_admin = false;
     this.is_new_user = false; // TODO: change to true
-    this.is_verified = !config.isEnv(Environment.Production); // Auto-verify when not in prod
+    this.is_verified = !Env.isEnv(Environment.Production); // Auto-verify when not in prod
     this.setPassword(data.password);
   }
 
