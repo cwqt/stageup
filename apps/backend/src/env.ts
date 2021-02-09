@@ -1,5 +1,7 @@
+// https://stackoverflow.com/a/59805161/8526764
+const TRUE_ENV = process.env['NODE' + '_ENV'];
 /* eslint @typescript-eslint/no-var-requires: "off" */
-require('dotenv').config({ path: require('path').join(__dirname, `../.env.${process.env.NODE_ENV}`) });
+require('dotenv').config({ path: require('path').join(__dirname, `../../../apps/backend/.env.${TRUE_ENV}`) });
 
 import { Environment } from '@core/interfaces';
 
@@ -53,7 +55,7 @@ const Env: IEnvironment = {
   SITE_TITLE: 'stageup',
   API_URL: process.env.API_URL,
   FE_URL: process.env.FRONTEND_URL,
-  ENVIRONMENT: process.env.NODE_ENV as Environment,
+  ENVIRONMENT: TRUE_ENV as Environment,
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
   EXPRESS_PORT: 3000,
