@@ -6,7 +6,9 @@ import {
   OneToMany,
   EntityManager,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  BeforeInsert,
+  PrimaryColumn
 } from 'typeorm';
 
 import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails } from '@core/interfaces';
@@ -16,11 +18,13 @@ import { Performance } from '../performances/performance.model';
 import { UserHostInfo } from './user-host-info.model';
 import { Onboarding } from './onboarding.model';
 import { ContactInfo } from '../users/contact-info.model';
-import { timestamp } from '../../common/helpers';
+import { timestamp, uuid } from '../../common/helpers';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column() created_at: number;
   @Column() name: string;
   @Column() username: string;

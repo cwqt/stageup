@@ -1,15 +1,17 @@
 import { IPerformance, ISigningKey } from '@core/interfaces';
-import { BaseEntity, Column, Entity, EntityManager, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { LiveStream, Video, JWT } from '@mux/mux-node';
 import { DataClient } from '../../common/data';
 
 import { Performance } from './performance.model';
-import { timestamp } from '../../common/helpers';
+import { timestamp, uuid } from '../../common/helpers';
 
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column() rsa256_key: string;
   @Column() mux_key_id: string;
   @Column() created_at: number;

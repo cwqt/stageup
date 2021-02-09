@@ -1,10 +1,12 @@
-import { IHostStub } from '../hosts/host.model';
-import { IRating } from './performance-review.model';
-import { ISigningKey } from './signing-key.model';
-import { CurrencyCode } from '../common/currency.types';
+import { IHostStub } from '../hosts/host.interface';
+import { IRating } from './performance-review.interface';
+import { ISigningKey } from './signing-key.interface';
+import { CurrencyCode } from '../common/currency.interface';
+import { Genre } from './genres.interface';
+import { IPerformancePurchase } from './performance-purchase.interface';
 
 export interface IPerformanceStub {
-  _id: number;
+  _id: string;
   host: IHostStub; // who created the performance
   name: string; // title of performance
   description?: string; // description of performance
@@ -17,10 +19,15 @@ export interface IPerformance extends IPerformanceStub {
   premiere_date?: number; // when the performance is ready to be streamed
   ratings: IRating[]; // user ratings on performance
   state: PerformanceState; // status of stream
-  price: number; // cost to purchase
+  price: number; // cost to purchase (micro-pence)
   currency: CurrencyCode; // currency of price
+  genre: Genre;
+  is_private: boolean; // accessible only to host members 
   created_at: number;
 }
+
+// data transfer object
+export type DtoCreatePerformance = Pick<Required<IPerformance>, 'name' | 'premiere_date' | 'description' | 'genre' | "price" | "currency">;
 
 // private to host
 export interface IPerformanceHostInfo {
@@ -31,7 +38,7 @@ export interface IPerformanceHostInfo {
 export interface IPerformanceUserInfo {
   signed_token: string;
   expires: boolean;
-  purchase_id: number;
+  purchase_id: IPerformancePurchase["_id"];
 }
 
 export enum PerformanceState {
@@ -41,5 +48,5 @@ export enum PerformanceState {
   Recording = 'video.live_stream.recording',
   Active = 'video.live_stream.active',
   Idle = 'video.live_stream.idle',
-  StreamCompleted = 'video.asset.live_stream_completed',
+  StreamCompleted = 'video.asset.live_stream_completed'
 }

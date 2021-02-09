@@ -67,7 +67,6 @@ export class CreateHostComponent implements OnInit {
         variant: "primary",
         text: "Create Host",
         size: "l",
-        fullWidth: true,
         handler: async d => this.hostService.createHost(d)
       }
     }

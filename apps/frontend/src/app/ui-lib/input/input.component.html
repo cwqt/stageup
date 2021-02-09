@@ -114,6 +114,28 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Date picker -->
+  <mat-form-field appearance="fill" *ngIf="type == 'date'">
+    <mat-label>{{ label || 'Choose a date' }}</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="value">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- Time picker -->
+  <mat-form-field *ngIf="type == 'time'" appearance="fill">
+    <mat-label>{{ label }}</mat-label>
+    <mat-select #singleSelect
+      (blur)="onTouched()"
+      (focus)="onFocus()"
+      [(ngModel)]="value"
+      disableOptionCentering>
+      <mat-option *ngFor="let item of timeItems" [value]="item.key">
+        {{ item.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <!-- Hint message -->
   <span *ngIf="hint" class="form-field__hint">{{ hint }}</span>
 

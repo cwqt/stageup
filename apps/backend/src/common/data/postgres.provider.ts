@@ -21,23 +21,23 @@ export const create = async (): Promise<TORM.Connection> => {
   log.info('Connecting to PostgreSQL (TypeORM)...');
 
   if (typeof Env.PG.HOST === 'undefined') {
-    throw new TypeError('Missing .env PG_HOST');
+    throw new TypeError('Missing .env POSTGRES_HOST');
   }
 
   if (typeof Env.PG.PORT === 'undefined') {
-    throw new TypeError('Missing .env PG_PORT');
+    throw new TypeError('Missing .env POSTGRES_PORT');
   }
 
   if (typeof Env.PG.USER === 'undefined') {
-    throw new TypeError('Missing .env PG_USER');
+    throw new TypeError('Missing .env POSTGRES_USER');
   }
 
   if (typeof Env.PG.PASS === 'undefined') {
-    throw new TypeError('Missing .env PG_PASS');
+    throw new TypeError('Missing .env POSTGRES_PASS');
   }
 
   if (typeof Env.PG.DB === 'undefined') {
-    throw new TypeError('Missing .env PG_DB');
+    throw new TypeError('Missing .env POSTGRES_DB');
   }
 
   try {

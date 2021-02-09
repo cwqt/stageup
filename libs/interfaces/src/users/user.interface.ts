@@ -1,8 +1,8 @@
-import { HostPermission, IHostStub } from "../hosts/host.model";
-import { IPersonInfo } from "./person.model";
+import { HostPermission, IHostStub } from "../hosts/host.interface";
+import { IPersonInfo } from "./person.interface";
 
 export interface IUserStub {
-  _id: number;
+  _id: string;
   name: string;
   username: string;
   avatar?: string;  //s3 bucket url

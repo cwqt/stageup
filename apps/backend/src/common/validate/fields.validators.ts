@@ -20,6 +20,13 @@ export namespace FieldValidators {
   export const email: CustomValidator = v => {
     return isString(v).isEmail().withMessage(ErrCode.INVALID_EMAIL).normalizeEmail();
   };
+  
+  /**
+   * @description 10 byte unix timestamp
+   */
+  export const timestamp: CustomValidator = v => {
+    return isInt(v).isLength({ min: 10, max: 10 })
+  }
 
   export const name: CustomValidator = v => {
     return isString(v)

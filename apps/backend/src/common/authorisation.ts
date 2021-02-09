@@ -28,7 +28,7 @@ const isOurself: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
     return [isAuthorised, _, reason];
   }
 
-  const user = await User.findOne({ _id: Number.parseInt(req.params.uid) });
+  const user = await User.findOne({ _id: req.params.uid });
   if (user._id !== req.session.user._id) {
     return [false, {}, ErrCode.NO_SESSION];
   }
@@ -40,7 +40,7 @@ const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =
   const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
   if (!isAuthorised) return [isAuthorised, _, reason];
 
-  let hostId = req.params.hid ? Number.parseInt(req.params.hid) : null;
+  let hostId:string = req.params.hid || null;
 
   // For performances - check intersection between performance host & user host
   if (!hostId && req.params.pid) {
@@ -53,7 +53,7 @@ const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =
         }
       },
       where: {
-        _id: Number.parseInt(req.params.pid),
+        _id: req.params.pid,
         host: {
           members_info: {
             user: {

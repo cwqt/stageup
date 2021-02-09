@@ -14,13 +14,13 @@ export enum AssetType {
 }
 
 export interface IAsset<T> {
-  _id: number;
+  _id: string;
   created_at: number;
   asset_type: AssetType;
   asset_meta: IAssetMeta<T>; //stored as JSON-B in postgres
 }
 
-// yo i heard you like metadata on your metadata dawg
+// yo dawg i heard you like metadata on your metadata
 export interface IAssetMeta<T> {
   data: T;
 }

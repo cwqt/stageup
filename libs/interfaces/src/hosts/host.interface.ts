@@ -1,9 +1,11 @@
-import { IUserHostInfo } from '../users/user.model';
-import { IPerformanceStub } from '../performances/performance.model';
-import { IAddress, IContactInfo } from '../users/person.model';
+import { IUserHostInfo } from '../users/user.interface';
+import { IPerformanceStub } from '../performances/performance.interface';
+import { IContactInfo } from '../users/person.interface';
+import { IAddress } from '../users/address.interface';
+
 
 export interface IHostStub {
-  _id: number;
+  _id: string;
   name: string;
   username: string;
   bio?: string;

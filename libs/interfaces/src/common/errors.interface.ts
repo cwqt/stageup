@@ -1,4 +1,4 @@
-import { HTTP } from './http';
+import { HTTP } from './http.interface';
 
 export enum ErrCode {
   MISSING_FIELD = "MISSING_FIELD", // wasn't even present in data

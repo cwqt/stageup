@@ -1,28 +1,26 @@
-export * from './common/envelope';
-export * from './common/http';
-export * from "./common/fp";
-export * from './common/currency.types';
-export * from './common/asset.model';
-export * from './common/errors.model';
-export * from "./common/subscription.model";
+export * from './common/envelope.interface';
+export * from './common/http.interface';
+export * from './common/fp.interface';
+export * from './common/currency.interface';
+export * from './common/asset.interface';
+export * from './common/errors.interface';
+export * from './common/subscription.interface';
 
-export * from './hosts/host.model';
-export * from './hosts/host-onboarding.model';
-export * from './hosts/onboarding-step-review.model';
+export * from './hosts/host.interface';
+export * from './hosts/host-onboarding.interface';
+export * from './hosts/onboarding-step-review.interface';
 
-export * from './performances/performance.model';
-export * from './performances/genres.types';
-export * from './performances/performance-purchase.model';
-export * from './performances/performance-review.model'
-export * from './performances/signing-key.model';
+export * from './performances/performance.interface';
+export * from './performances/genres.interface';
+export * from './performances/performance-purchase.interface';
+export * from './performances/performance-review.interface';
+export * from './performances/signing-key.interface';
 
-export * from "./users/user.model";
-export * from "./users/person.model";
+export * from './users/user.interface';
+export * from './users/person.interface';
+export * from './users/address.interface';
 
-export * from './hooks/mux-hooks.model';
-// export * from './hooks/stripe-hooks.model';
+export * from './hooks/mux-hooks.interface';
+// export * from './hooks/stripe-hooks.interface';
 
-
-export * from './environments/environments';
-export * from './environments/backend.environment';
-export * from './environments/frontend.environment';
+export * from './common/environments.interface';

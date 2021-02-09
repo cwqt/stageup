@@ -81,7 +81,7 @@ export default class AdminController extends BaseController {
         // Controller does not actually submit to the host - that is done by enactOnboardingProcess
         const submission: IOnboardingReview['steps'] = req.body;
         const reviewer = await getCheck(User.findOne({ _id: req.session.user._id }));
-        const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
+        const onboarding = await getCheck(Onboarding.findOne({ _id: req.params.oid }));
         onboarding.version += 1;
 
         // Create new review & map the states onto the actual step data
@@ -116,7 +116,7 @@ export default class AdminController extends BaseController {
       controller: async req => {
         // Every step is verified when submitted, so enact the onboarding process
         // by which I mean shift the data from Onboarding -> Host & send out invites for added members
-        const onboarding = await getCheck(Onboarding.findOne({ _id: Number.parseInt(req.params.oid) }));
+        const onboarding = await getCheck(Onboarding.findOne({ _id: req.params.oid }));
 
         // Check if every step is set to valid, if not set state to HasIssues & request changes via email
         if (Object.values(onboarding.steps).every(o => o.state === HostOnboardingState.Verified)) {
@@ -162,7 +162,7 @@ export default class AdminController extends BaseController {
           await Promise.allSettled(
             addMemberData.members_to_add.map(async member => {
               try {
-                const potentialMember = await User.findOne({ _id: member.value });
+                const potentialMember = await User.findOne({ _id: member.value as string });
                 if (!potentialMember)
                   logger.error(`Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`);
 

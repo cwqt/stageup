@@ -6,7 +6,8 @@ import {
   IPerformanceUserInfo,
   HTTP,
   ErrCode,
-  HostPermission
+  HostPermission,
+  DtoCreatePerformance
 } from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { Performance } from '../models/performances/performance.model';
@@ -21,9 +22,7 @@ export default class PerformanceController extends BaseController {
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
       validators: [
-        body<Pick<IPerformanceStub, 'name'>>({
-          name: v => Validators.Fields.isString(v)
-        })
+        body<DtoCreatePerformance>(Validators.Objects.DtoCreatePerformance())
       ],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
@@ -72,7 +71,7 @@ export default class PerformanceController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async req => {
         const performance = await getCheck(
-          Performance.findOne({ _id: Number.parseInt(req.params.pid) }, { relations: ['host', 'host_info'] })
+          Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info'] })
         );
 
         // See if current user has access/bought the performance
@@ -107,7 +106,7 @@ export default class PerformanceController extends BaseController {
           data: performance.toFull(),
           __client_data: {
             signed_token: token,
-            purchase_id: previousPurchase?._id,
+            purchase_id: previousPurchase._id,
             // TODO: token expiry
             expires: false
           }
@@ -122,7 +121,7 @@ export default class PerformanceController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async req => {
         const performance = await Performance.findOne(
-          { _id: Number.parseInt(req.params.pid) },
+          { _id: req.params.pid },
           { relations: ['host_info'] }
         );
         const performanceHostInfo = performance.host_info;
@@ -140,7 +139,7 @@ export default class PerformanceController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const p = await getCheck(Performance.findOne({ _id: Number.parseInt(req.params.pid) }));
+        const p = await getCheck(Performance.findOne({ _id: req.params.pid }));
 
         await p.update({
           name: req.body.name,
@@ -160,7 +159,7 @@ export default class PerformanceController extends BaseController {
       controller: async req => {
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const perf = await getCheck(
-          Performance.findOne({ _id: Number.parseInt(req.params.pid) }, { relations: ['host_info'] })
+          Performance.findOne({ _id: req.params.pid }, { relations: ['host_info'] })
         );
 
         // Check user hasn't already purchased performance
@@ -186,7 +185,7 @@ export default class PerformanceController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const perf = await getCheck(Performance.findOne({ _id: Number.parseInt(req.params.pid) }));
+        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
         await perf.remove();
       }
     };

@@ -8,7 +8,9 @@ import {
   ManyToOne,
   OneToOne,
   JoinColumn,
-  EntityManager
+  EntityManager,
+  BeforeInsert,
+  PrimaryColumn
 } from 'typeorm';
 import { Except } from 'type-fest';
 import { IUser, IUserStub, IUserPrivate, Environment } from '@core/interfaces';
@@ -19,10 +21,13 @@ import { Performance } from '../performances/performance.model';
 import { Person } from './person.model';
 import { ContactInfo } from './contact-info.model';
 import Env from '../../env';
+import { uuid } from '../../common/helpers';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column() created_at: number;
   @Column({ nullable: true }) name: string;
   @Column() username: string;

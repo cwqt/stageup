@@ -7,30 +7,23 @@ import {
   EventEmitter,
   ViewChildren,
   AfterViewInit,
-  QueryList,
-  AfterContentInit,
-  OnDestroy
+  QueryList
 } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
-  NgControl,
   ValidatorFn,
   Validators
 } from '@angular/forms';
 import { Y } from '@core/interfaces';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { takeUntil, takeWhile } from 'rxjs/operators';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { displayValidationErrors, handleFormErrors } from 'apps/frontend/src/app/_helpers/formErrorHandler';
 import { ButtonComponent } from '../button/button.component';
-import { InputComponent } from '../input/input.component';
+
 import {
   CustomUiFieldValidator,
   IUiForm,
-  IUiFormField,
   IUiFormFieldValidator,
   IUiFormPrefetchData
 } from './form.interfaces';
@@ -46,13 +39,12 @@ export class FormComponent implements OnInit, AfterViewInit {
 
   @Output() onSuccess: EventEmitter<any> = new EventEmitter();
   @Output() onFailure: EventEmitter<HttpErrorResponse> = new EventEmitter();
+  @Output() change: EventEmitter<FormGroup> = new EventEmitter();
 
-  @ViewChildren(InputComponent) inputs: QueryList<InputComponent>;
   @ViewChildren(ButtonComponent) buttons: QueryList<ButtonComponent>;
 
   formGroup: FormGroup;
   submissionButton: ButtonComponent;
-
   shouldBeVisible: boolean = false;
 
   constructor(private fb: FormBuilder) {}
@@ -93,6 +85,8 @@ export class FormComponent implements OnInit, AfterViewInit {
         }, {})
       );
     })(this.form.fields);
+
+    this.formGroup.valueChanges.subscribe(v => this.change.emit(this.formGroup));
   }
 
   ngAfterViewInit() {
@@ -101,7 +95,6 @@ export class FormComponent implements OnInit, AfterViewInit {
     this.submissionButton = this.buttons.find(b => b.type == 'submit');
     if (!this.submissionButton) throw new Error('Form has no button of type "submit"');
 
-    // this.inputs.forEach((i) => (i.form = this.formGroup));
     this.formGroup.statusChanges.subscribe(v => {
       if (v == 'VALID') {
         this.cacheable.error = ''; // form errors gone
@@ -123,19 +116,22 @@ export class FormComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
+  /**
+   * @description populate a form with requested values before user input
+   */
   populatePrefetch() {
     return this.form
       .prefetch()
       .then((data: IUiFormPrefetchData) => {
         //https://angular.io/api/forms/AbstractControl#setErrors
-        // is nice enough to let us use dot accessors, so no Y combis :(
+        // is nice enough to let us use dot accessors, so no Y combis :<
         const { fields, errors } = data;
 
         // Set form control default value
         Object.entries(fields).forEach(([f, v]) => this.formGroup.get(f)?.setValue(v));
 
-        // Set form control errors by bodging validator to show message if value is the 
-        // same as it was prefetched
+        // Set form control errors by bodging validator to show message
+        // if value is the same as it was prefetched
         Object.entries(errors).forEach(([f, v]) => {
           const control = this.formGroup.get(f);
           if (control) {
@@ -153,18 +149,21 @@ export class FormComponent implements OnInit, AfterViewInit {
 
         this.formGroup.markAllAsTouched();
       })
-      .catch(e => console.log(e));
+      .catch(e => console.log(e))
   }
 
   getValue() {
     const formValue = this.formGroup.value;
-    // TODO: implement data transformers in fields
+    // TODO: before data structure transformer, recurse down tree & perform field level transformers
+
+    // Restructure the data according to some transformer
+    if(this.form.submit.transformer) return this.form.submit.transformer(formValue);
     return formValue;
   }
 
   onSubmit() {
     this.cacheable.loading = true;
-    this.inputs.forEach(i => i.setDisabledState(true));
+    Object.values(this.formGroup.controls).forEach(i => i.disable());
     this.submissionButton.loading = true;
 
     this.form.submit
@@ -176,7 +175,7 @@ export class FormComponent implements OnInit, AfterViewInit {
         this.onFailure.emit(e);
       })
       .finally(() => {
-        this.inputs.forEach(i => i.setDisabledState(false));
+        Object.values(this.formGroup.controls).forEach(i => i.enable());
         this.cacheable.loading = false;
         this.submissionButton.loading = false;
       });

@@ -42,7 +42,7 @@ export default class MiscController extends BaseController {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
       controller: async req => {
-        const host = await getCheck(Host.findOne({ _id: Number.parseInt(req.params.hid) }));
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
         host.is_onboarded = true;
         await host.save();
         return host.toFull();

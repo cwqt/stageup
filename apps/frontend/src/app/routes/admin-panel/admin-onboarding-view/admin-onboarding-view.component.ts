@@ -27,7 +27,7 @@ export class AdminOnboardingViewComponent implements OnInit {
 
   async getHostDetails(){
     this.onboarding.loading = true;
-    return this.hostService.readOnboardingProcessStatus(Number.parseInt(this.baseAppService.getParam(RouteParam.HostId)))
+    return this.hostService.readOnboardingProcessStatus(this.baseAppService.getParam(RouteParam.HostId))
       .then(data => this.onboarding.data = data)
       .catch((e:HttpErrorResponse) => this.onboarding.error = e.message)
       .finally(() => this.onboarding.loading = false);

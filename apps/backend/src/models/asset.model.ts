@@ -1,12 +1,14 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, BeforeInsert, PrimaryColumn } from 'typeorm';
 import { IAsset, IAssetMeta, IGIFMeta, AssetType, IThumbnailMeta, IStaticMeta, Primitive } from '@core/interfaces';
 import Env from '../env';
-import { timestamp } from '../common/helpers';
+import { timestamp, uuid } from '../common/helpers';
 import { Except } from 'type-fest';
 
 @Entity()
 export class Asset<T> extends BaseEntity implements IAsset<T> {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column('timestamp') created_at: number;
   @Column('enum', { enum: AssetType }) asset_type: AssetType;
   @Column('jsonb') asset_meta: IAssetMeta<T>;

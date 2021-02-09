@@ -9,26 +9,20 @@ import {
   OnInit,
   AfterViewInit,
   OnDestroy,
-  ElementRef,
-} from "@angular/core";
-import { ControlValueAccessor, NgControl } from "@angular/forms";
+  ElementRef
+} from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Primitive } from '@core/interfaces';
-import {
-  IUiFieldSelectOptions,
-  IUiFormFieldValidator,
-} from "../form/form.interfaces";
-import { ThemeKind } from "../ui-lib.interfaces";
-import { IUiFormField } from "../form/form.interfaces";
-import { SelectionModel } from "@angular/cdk/collections";
-import {
-  MatTreeFlatDataSource,
-  MatTreeFlattener,
-} from "@angular/material/tree";
-import { FlatTreeControl } from "@angular/cdk/tree";
-import { MatSelect } from "@angular/material/select";
-import { ReplaySubject, Subject } from "rxjs";
-import { } from "@angular/material/autocomplete";
-import { take, takeUntil } from "rxjs/operators";
+import { IUiFieldOptions, IUiFieldSelectOptions, IUiFormFieldValidator } from '../form/form.interfaces';
+import { ThemeKind } from '../ui-lib.interfaces';
+import { IUiFormField } from '../form/form.interfaces';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatSelect } from '@angular/material/select';
+import { ReplaySubject, Subject } from 'rxjs';
+import {} from '@angular/material/autocomplete';
+import { take, takeUntil } from 'rxjs/operators';
 
 export class IFlatGraphNode {
   key: number | string;
@@ -51,26 +45,26 @@ export interface IGraphNode {
 
 //https://material-ui.com/components/text-fields/
 @Component({
-  selector: "ui-input",
-  templateUrl: "./input.component.html",
-  styleUrls: ["./input.component.scss"],
+  selector: 'ui-input',
+  templateUrl: './input.component.html',
+  styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   @Output() selectionChange: EventEmitter<IGraphNode[]> = new EventEmitter();
-  @ViewChild("input") input:ElementRef;
+  @ViewChild('input') input: ElementRef;
 
   // Interface inputs
   @Input() kind?: ThemeKind = ThemeKind.Accent;
-  @Input() type: IUiFormField["type"];
-  @Input() label?: string = "";
-  @Input() placeholder?: string = "";
-  @Input() initial?: Primitive = "";
-  @Input() hint?: string = "";
+  @Input() type: IUiFormField['type'];
+  @Input() label?: string = '';
+  @Input() placeholder?: string = '';
+  @Input() initial?: Primitive = '';
+  @Input() hint?: string = '';
   @Input() disabled: boolean = false;
   @Input() icon?: string;
-  @Input() id?:string;
+  @Input() id?: string;
 
-  @Input() options?: IUiFormField["options"];
+  @Input() options?: IUiFormField['options'];
 
   @Input() required: boolean = false;
   @Input() maxlength?: number = null;
@@ -79,7 +73,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   @Input() formControlName?: string;
   @Input() validatorFunctions: IUiFormFieldValidator[];
 
-  _state: string = "hide";
+  _state: string = 'hide';
   focused: boolean = false;
   passwordVisible: boolean = false;
 
@@ -88,16 +82,33 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   ngOnInit(): void {
-    if (this.type == "select") this.initialiseSelection();
-    if (this.type == "tree") this.initialiseTree();
+    if (this.type == 'select') this.initialiseSelection();
+    if (this.type == 'tree') this.initialiseTree();
+    if (this.type == 'time') {
+      this.timeItems = new Array(96).fill(undefined).map((_, idx) => {
+        // unix timestamp offset of 15 minutes == 900 seconds
+        const offset = idx * 15 * 60;
+        // key == human readable time
+        let hours = Math.floor((offset % (3600 * 24)) / 3600);
+        let minutes = Math.floor((offset % 3600) / 60);
+
+        return {
+          key: offset,
+          value: `${hours}:${minutes.toLocaleString('en-GB', {
+            minimumIntegerDigits: 2,
+            useGrouping: false
+          })}`
+        };
+      });
+    }
 
     // Override initial value
     // this.value = (!this.value && (this.options?.initial || this.initial)) ? (this.options?.initial ?? this.initial) : "";
-    this.placeholder = this.placeholder ?? "";
+    this.placeholder = this.placeholder ?? '';
   }
 
   ngAfterViewInit() {
-    if (this.type == "select") this.setInitialSelectValue();
+    if (this.type == 'select') this.setInitialSelectValue();
   }
 
   public get invalid(): boolean {
@@ -107,12 +118,8 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     if (!this.control) return false;
 
     const { dirty, touched } = this.control;
-    const doShow = this.focused
-      ? false
-      : this.invalid
-      ? touched || dirty
-      : false;
-    this._state = doShow ? "show" : "hide";
+    const doShow = this.focused ? false : this.invalid ? touched || dirty : false;
+    this._state = doShow ? 'show' : 'hide';
     return doShow;
   }
 
@@ -122,30 +129,28 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
     // Fallback messages if none provided
     const errorMap: { [index: string]: (e: any) => string } = {
-      ["minlength"]: (e) =>
-        `${this.label} must be at-least ${errors[e].requiredLength} characters`,
-      ["maxlength"]: (e) =>
-        `${this.label} must be less than ${errors[e].requiredLength} characters`,
-      ["required"]: (e) => `${this.label} is required`,
-      ["email"]: (e) => `Must be a valid e-mail address`,
-      ["pattern"]: (e) => `Must fufill ReGex`,
-      ["custom"]: (e) => this.control.getError(e),
-      ["backendIssue"]: (e) => this.control.getError("backendIssue"),
+      ['minlength']: e => `${this.label} must be at-least ${errors[e].requiredLength} characters`,
+      ['maxlength']: e => `${this.label} must be less than ${errors[e].requiredLength} characters`,
+      ['required']: e => `${this.label} is required`,
+      ['email']: e => `Must be a valid e-mail address`,
+      ['pattern']: e => `Must fufill ReGex`,
+      ['custom']: e => this.control.getError(e),
+      ['backendIssue']: e => this.control.getError('backendIssue')
     };
 
     // Actual error messages
-    return Object.keys(errors || {}).map((e) => {
-      const vf = this.validatorFunctions?.find((x) => x.type == e);
+    return Object.keys(errors || {}).map(e => {
+      const vf = this.validatorFunctions?.find(x => x.type == e);
       return vf?.message
         ? vf.message(this.control) // client side message
         : errorMap[e] //
         ? errorMap[e](e)
-        : "Invalid field";
+        : 'Invalid field';
     });
   }
 
   // Form control configurations
-  private _value: any = "";
+  private _value: any = '';
   public get value(): any {
     return this._value;
   }
@@ -164,7 +169,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     this.focused = true;
   }
 
-  onChange = (_) => {};
+  onChange = _ => {};
   onTouched = () => {};
   writeValue(value: any): void {
     this.value = value;
@@ -198,10 +203,8 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   // Select ---------------------------------------------------------------------------------------------------
-  @ViewChild("singleSelect", { static: false }) singleSelect: MatSelect;
-  public filteredSelectionItems: ReplaySubject<
-    IGraphNode[]
-  > = new ReplaySubject<IGraphNode[]>(1);
+  @ViewChild('singleSelect', { static: false }) singleSelect: MatSelect;
+  public filteredSelectionItems: ReplaySubject<IGraphNode[]> = new ReplaySubject<IGraphNode[]>(1);
   _onDestroy = new Subject<void>();
 
   initialiseSelection() {
@@ -215,34 +218,32 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   setInitialSelectValue() {
-    this.filteredSelectionItems
-      .pipe(take(1), takeUntil(this._onDestroy))
-      .subscribe(() => {
-        // setting the compareWith property to a comparison function
-        // triggers initializing the selection according to the initial value of
-        // the form control (i.e. _initializeSelection())
-        // this needs to be done after the filteredSelectionItems are loaded initially
-        // and after the mat-option elements are available
-        this.singleSelect.compareWith = (a: IGraphNode, b: IGraphNode) =>
-          a && b && a === b;
-      });
+    this.filteredSelectionItems.pipe(take(1), takeUntil(this._onDestroy)).subscribe(() => {
+      // setting the compareWith property to a comparison function
+      // triggers initializing the selection according to the initial value of
+      // the form control (i.e. _initializeSelection())
+      // this needs to be done after the filteredSelectionItems are loaded initially
+      // and after the mat-option elements are available
+      this.singleSelect.compareWith = (a: IGraphNode, b: IGraphNode) => a && b && a === b;
+    });
   }
 
   filterSelectionItems(event: string) {
     if (!this.options.values) return;
-    if (!event)
-      return this.filteredSelectionItems.next(this.options.values.slice());
+    if (!event) return this.filteredSelectionItems.next(this.options.values.slice());
 
     // Filter items by value
     this.filteredSelectionItems.next(
-      this.options.values.filter(
-        (node) => node.value.toLowerCase().indexOf(event.toLowerCase()) > -1
-      )
+      this.options.values.filter(node => node.value.toLowerCase().indexOf(event.toLowerCase()) > -1)
     );
   }
 
+  // Time ------------------------------------------------------------------------------------------------------
+  // 24 hours / 15 minutes = 96 options, create an array of 15 minute increments
+  timeItems: IUiFieldSelectOptions['values'];
+
   // Tree (w/ support for nested items) ------------------------------------------------------------------------
-  @ViewChild("selector") selector?: MatSelect;
+  @ViewChild('selector') selector?: MatSelect;
   noNestedNodes: boolean = false;
   flatNodeMap = new Map<IFlatGraphNode, IGraphNode>();
   nestedNodeMap = new Map<IGraphNode, IFlatGraphNode>();
@@ -252,48 +253,28 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   checklistSelection: SelectionModel<IFlatGraphNode>;
 
   initialiseTree() {
-    this.treeFlattener = new MatTreeFlattener(
-      this.transformer,
-      this.getLevel,
-      this.isExpandable,
-      this.getChildren
-    );
-    this.treeControl = new FlatTreeControl<IFlatGraphNode>(
-      this.getLevel,
-      this.isExpandable
-    );
-    this.dataSource = new MatTreeFlatDataSource(
-      this.treeControl,
-      this.treeFlattener
-    );
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
+    this.treeControl = new FlatTreeControl<IFlatGraphNode>(this.getLevel, this.isExpandable);
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    this.checklistSelection = new SelectionModel<IFlatGraphNode>(
-      this.options.multi
-    );
+    this.checklistSelection = new SelectionModel<IFlatGraphNode>(this.options.multi);
 
     this.dataSource.data = (<IUiFieldSelectOptions>this.options).values;
-    this.noNestedNodes = this.options.values.every(
-      (x) => x.children == null || x.children?.length == 0
-    );
+    this.noNestedNodes = this.options.values.every(x => x.children == null || x.children?.length == 0);
   }
 
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: IFlatGraphNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    if (descendants.length === 0)
-      return this.checklistSelection.isSelected(node);
+    if (descendants.length === 0) return this.checklistSelection.isSelected(node);
 
-    return descendants.every((child) =>
-      this.checklistSelection.isSelected(child)
-    );
+    return descendants.every(child => this.checklistSelection.isSelected(child));
   }
 
   /** Whether part of the descendants are selected */
   descendantsPartiallySelected(node: IFlatGraphNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    const result = descendants.some((child) =>
-      this.checklistSelection.isSelected(child)
-    );
+    const result = descendants.some(child => this.checklistSelection.isSelected(child));
     return result && !this.descendantsAllSelected(node);
   }
 
@@ -306,7 +287,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
       if (parent) parents.push(parent.key);
     }
 
-    this.treeControl.dataNodes.forEach((n) => {
+    this.treeControl.dataNodes.forEach(n => {
       if (!parents.includes(n.key) && n.key !== node.key) {
         this.treeControl.collapse(n);
       }
@@ -326,11 +307,9 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     }
 
     // Force update for the parent
-    descendants.every((child) => this.checklistSelection.isSelected(child));
+    descendants.every(child => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
-    this.selectionChange.emit(
-      this.checklistSelection.selected.map((n) => this.flatNodeMap.get(n))
-    );
+    this.selectionChange.emit(this.checklistSelection.selected.map(n => this.flatNodeMap.get(n)));
   }
 
   /** Toggle a leaf node selection. Check all the parents to see if they changed */
@@ -339,9 +318,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     this.checkAllParentsSelection(node);
     // this.selectionChange.emit(this.checklistSelection.selected.map(x => this.dataSource.));
     if (this.noNestedNodes) this.selector.close();
-    this.selectionChange.emit(
-      this.checklistSelection.selected.map((n) => this.flatNodeMap.get(n))
-    );
+    this.selectionChange.emit(this.checklistSelection.selected.map(n => this.flatNodeMap.get(n)));
   }
 
   /* Checks all the parents when a leaf node is selected/unselected */
@@ -358,17 +335,12 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   checkRootNodeSelection(node: IFlatGraphNode): void {
     const nodeSelected = this.checklistSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every((child) =>
-      this.checklistSelection.isSelected(child)
-    );
+    const descAllSelected = descendants.every(child => this.checklistSelection.isSelected(child));
 
     if (nodeSelected && !descAllSelected) {
       this.checklistSelection.deselect(node);
     } else if (!nodeSelected && descAllSelected) {
-      if (
-        this.checklistSelection.isMultipleSelection() &&
-        descendants.length != 1
-      ) {
+      if (this.checklistSelection.isMultipleSelection() && descendants.length != 1) {
         this.checklistSelection.select(node);
       }
     }
@@ -396,10 +368,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
   transformer = (node: IGraphNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode =
-      existingNode && existingNode.key === node.key
-        ? existingNode
-        : ({} as IFlatGraphNode);
+    const flatNode = existingNode && existingNode.key === node.key ? existingNode : ({} as IFlatGraphNode);
     flatNode.key = node.key;
     flatNode.value = node.value;
 

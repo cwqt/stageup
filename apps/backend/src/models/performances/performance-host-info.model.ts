@@ -2,22 +2,26 @@ import { LiveStream } from '@mux/mux-node';
 import { IPerformanceHostInfo, Environment } from '@core/interfaces';
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   Entity,
   EntityManager,
   JoinColumn,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn
 } from 'typeorm';
 import { SigningKey } from './signing-key.model';
 import { DataClient } from '../../common/data';
-import Env from '../../Env';
+import Env from '../../env';
 import { Performance } from './performance.model';
-import { timestamp } from '../../common/helpers';
+import { timestamp, uuid } from '../../common/helpers';
 
 @Entity()
 export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostInfo {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column({ nullable: true }) stream_key: string;
   @Column() created_at: number;
 

@@ -83,7 +83,7 @@ export default class HostController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.isLoggedIn,
       controller: async req => {
-        const host = await Host.findOne({ _id: Number.parseInt(req.params.hid) });
+        const host = await Host.findOne({ _id: req.params.hid });
         return host.toFull();
       }
     };
@@ -95,7 +95,7 @@ export default class HostController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async req => {
         const host = await Host.findOne(
-          { _id: Number.parseInt(req.params.hid) },
+          { _id: req.params.hid },
           {
             relations: {
               members_info: {
@@ -153,11 +153,11 @@ export default class HostController extends BaseController {
       controller: async (req): Promise<IHost> => {
         const changeRequest: IHostMemberChangeRequest = req.body;
         // Check user not already part of a host in any capacity
-        const user = await getCheck(User.findOne({ _id: changeRequest.value }, { relations: ['host'] }));
+        const user = await getCheck(User.findOne({ _id: changeRequest.value as string }, { relations: ['host'] }));
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
         // Get host & pull in members_info for new member push
-        const host = await getCheck(Host.findOne({ _id: parseInt(req.params.hid) }, { relations: ['members_info'] }));
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['members_info'] }));
 
         await this.ORM.transaction(async txc => {
           await host.addMember(user, HostPermission.Member, txc);
@@ -180,8 +180,8 @@ export default class HostController extends BaseController {
           UserHostInfo.findOne({
             relations: ['user', 'host'],
             where: {
-              user: { _id: parseInt(req.params.mid) },
-              host: { _id: parseInt(req.params.hid) }
+              user: { _id: req.params.mid },
+              host: { _id: req.params.hid }
             }
           })
         );
@@ -206,8 +206,8 @@ export default class HostController extends BaseController {
           UserHostInfo.findOne({
             relations: ['user', 'host'],
             where: {
-              user: { _id: parseInt(req.params.mid) },
-              host: { _id: parseInt(req.params.hid) }
+              user: { _id: req.params.mid },
+              host: { _id: req.params.hid }
             }
           })
         );
@@ -232,10 +232,10 @@ export default class HostController extends BaseController {
           relations: ['host', 'user'],
           where: {
             user: {
-              _id: Number.parseInt(req.query.user as string)
+              _id: req.query.user as string
             },
             host: {
-              _id: Number.parseInt(req.params.hid)
+              _id: req.params.hid
             }
           }
         });
@@ -252,13 +252,11 @@ export default class HostController extends BaseController {
         const onboarding = await Onboarding.findOne({
           where: {
             host: {
-              _id: Number.parseInt(req.params.hid)
+              _id: req.params.hid
             }
           },
           relations: ['host', "reviews"]
         });
-
-        console.log(onboarding)
 
         return onboarding.toFull();
       }
@@ -279,7 +277,7 @@ export default class HostController extends BaseController {
           Onboarding.findOne({
             where: {
               host: {
-                _id: Number.parseInt(req.params.hid)
+                _id: req.params.hid
               }
             }
           })
@@ -313,7 +311,7 @@ export default class HostController extends BaseController {
           Onboarding.findOne({
             where: {
               host: {
-                _id: parseInt(req.params.hid)
+                _id: req.params.hid
               }
             }
           })
@@ -358,7 +356,7 @@ export default class HostController extends BaseController {
           Onboarding.findOne({
             where: {
               host: {
-                _id: Number.parseInt(req.params.hid)
+                _id: req.params.hid
               }
             }
           })
@@ -400,7 +398,7 @@ export default class HostController extends BaseController {
           Onboarding.findOne({
             where: {
               host: {
-                _id: Number.parseInt(req.params.hid)
+                _id: req.params.hid
               }
             }
           })

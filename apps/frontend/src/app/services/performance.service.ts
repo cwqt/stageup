@@ -6,10 +6,9 @@ import { IPerformance } from '@core/interfaces';
   providedIn: 'root'
 })
 export class PerformanceService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http:HttpClient) { }
-
-  getPerformance(pid:number | string):Promise<IPerformance> {
-    return this.http.get<IPerformance>(`/api/performances/${pid}`).toPromise();
+  getPerformance(performanceId: string): Promise<IPerformance> {
+    return this.http.get<IPerformance>(`/api/performances/${performanceId}`).toPromise();
   }
 }

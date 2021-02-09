@@ -1,11 +1,13 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeInsert, PrimaryColumn } from 'typeorm';
 import { IPerformancePurchase, CurrencyCode } from '@core/interfaces';
 import { User } from '../users/user.model';
 import { Performance } from './performance.model';
-import { timestamp } from '../../common/helpers';
+import { timestamp, uuid } from '../../common/helpers';
 @Entity()
 export class PerformancePurchase extends BaseEntity implements IPerformancePurchase {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column() purchased_at: number;
   @Column('bigint', { nullable: true }) price: number; // Stored as micro-pence
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
@@ -25,4 +27,6 @@ export class PerformancePurchase extends BaseEntity implements IPerformancePurch
     this.currency = performance.currency;
     this.purchased_at = timestamp(new Date());
   }
+
+  toStub() {}
 }

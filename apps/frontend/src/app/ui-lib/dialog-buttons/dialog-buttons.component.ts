@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { IUiDialogOptions } from "../ui-lib.interfaces";
 
 @Component({
   selector: "ui-dialog-buttons",
@@ -6,26 +7,9 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
   styleUrls: ["./dialog-buttons.component.scss"],
 })
 export class DialogButtonsComponent implements OnInit {
-  @Input() rightString: string;
-  @Input() rightVariant: string = "primary";
-  @Input() rightDisabled: boolean = false;
-
-  @Input() leftString: string;
-  @Input() leftVariant: string = "secondary";
-  @Input() leftDisabled: boolean = false;
-
-  @Output() leftClick = new EventEmitter();
-  @Output() rightClick = new EventEmitter();
+  @Input() buttons:IUiDialogOptions["buttons"];
 
   constructor() {}
 
   ngOnInit(): void {}
-
-  onLeftClick(event) {
-    this.leftClick.emit(event);
-  }
-
-  onRightClick(event) {
-    this.rightClick.emit(event);
-  }
 }

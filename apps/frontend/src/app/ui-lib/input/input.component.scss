@@ -147,6 +147,17 @@ $animation-duration: 0.2s;
   width: 100%;
 }
 
+mat-form-field ::ng-deep {
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+  .mat-form-field-underline {
+    max-height: 1px;
+    border-width: 1px;
+    bottom: 0;
+  }
+}
+
 // ::ng-deep .mat-form-field-flex {
 //   &:hover {
 //     cursor: text;

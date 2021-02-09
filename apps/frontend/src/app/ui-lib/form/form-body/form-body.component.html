@@ -2,6 +2,7 @@
   <ng-container *ngFor="let field of fields | keyvalue: keepOrder" [ngSwitch]="field.value['type']">
     <div class="form-field-container" *ngSwitchCase="'container'">
       <h2>{{ field.value["label"] }}</h2>
+      <p *ngIf="field.value['hint']">{{ field.value["hint"] }}</p>
       <ui-form-body [fields]="field.value['fields']" [fg]="fg.controls[field.key]"></ui-form-body>
     </div>
 

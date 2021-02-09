@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
 import { IMyself, IUser, IAddress } from '@core/interfaces';

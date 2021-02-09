@@ -14,11 +14,11 @@
 //        - pro
 //        - premium
 
-import { HostSubscriptionLevel } from '../common/subscription.model';
-import { IPersonInfo } from '../users/person.model';
-import { IUserStub } from '../users/user.model';
-import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './host.model';
-import { IOnboardingStepReview } from './onboarding-step-review.model';
+import { HostSubscriptionLevel } from '../common/subscription.interface';
+import { IPersonInfo } from '../users/person.interface';
+import { IUser, IUserStub } from '../users/user.interface';
+import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './host.interface';
+import { IOnboardingStepReview } from './onboarding-step-review.interface';
 
 export enum HostOnboardingStep {
   ProofOfBusiness = 0,
@@ -39,7 +39,7 @@ export enum HostOnboardingState {
 export type IHostOnboardingProcess = Omit<IHostOnboarding, 'steps'> & { steps: IOnboardingStepMap };
 
 export interface IHostOnboarding {
-  _id: number;
+  _id: string;
   state: HostOnboardingState; // when all steps verified, process is complete
   created_at: number;
   completed_at: number | null;
@@ -87,7 +87,7 @@ export interface IOnboardingSocialPresence {
  * DELETE member -> value: null             /members/:mid -> user_id
  */
 export interface IHostMemberChangeRequest {
-  value: HostPermission | number; 
+  value: HostPermission | IUser["_id"]; 
 }
 
 export interface IOnboardingAddMembers {

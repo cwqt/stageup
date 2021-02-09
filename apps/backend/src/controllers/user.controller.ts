@@ -165,7 +165,7 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const u = await getCheck(User.findOne({ _id: Number.parseInt(req.params.uid) }));
+        const u = await getCheck(User.findOne({ _id: req.params.uid }));
         return u.toFull();
       }
     };
@@ -175,7 +175,7 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
-        let u = await getCheck(User.findOne({ _id: Number.parseInt(req.params.uid) }));
+        let u = await getCheck(User.findOne({ _id: req.params.uid }));
         u = await u.update({ name: req.body.name });
         return u.toFull();
       }
@@ -186,7 +186,7 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const u = await getCheck(User.findOne({ _id: Number.parseInt(req.params.uid) }));
+        const u = await getCheck(User.findOne({ _id: req.params.uid }));
         await u.remove();
       }
     };
@@ -245,7 +245,7 @@ export default class UserController extends BaseController {
       controller: async req => {
         const oldPassword = req.body.old_password;
         const newPassword = req.body.new_password;
-        const u = await getCheck(User.findOne({ _id: Number.parseInt(req.params.uid) }));
+        const u = await getCheck(User.findOne({ _id: req.params.uid }));
 
         // Check supplied password is valid
         const match = await u.verifyPassword(oldPassword);
@@ -285,7 +285,7 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.isOurself,
       controller: async req => {
-        const u = await User.findOne({ _id: Number.parseInt(req.params.uid) }, { relations: ['personal_details'] });
+        const u = await User.findOne({ _id: req.params.uid }, { relations: ['personal_details'] });
         return (u.personal_details.contact_info.addresses || []).map(a => a.toFull());
       }
     };
@@ -297,7 +297,7 @@ export default class UserController extends BaseController {
       authStrategy: AuthStrat.isOurself,
       controller: async req => {
         const user = await getCheck(
-          User.findOne({ _id: Number.parseInt(req.params.uid) }, { relations: ['personal_details'] })
+          User.findOne({ _id: req.params.uid }, { relations: ['personal_details'] })
         );
 
         return this.ORM.transaction(async (txc: EntityManager) => {
@@ -314,7 +314,7 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.isOurself,
       controller: async req => {
-        const address = await Address.findOne({ _id: Number.parseInt(req.params.aid) });
+        const address = await Address.findOne({ _id: req.params.aid });
         // TODO: update method in address model
 
         return address.toFull();
@@ -326,7 +326,7 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.isOurself,
       controller: async req => {
-        await Address.delete({ _id: Number.parseInt(req.params.aid) });
+        await Address.delete({ _id: req.params.aid });
       }
     };
   }

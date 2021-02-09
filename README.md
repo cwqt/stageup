@@ -60,46 +60,38 @@ Currently we just have just two applications - a frontend & a backend, but in th
 ## Project Layout
 
 ```sh
-  apps               # where all the apps live
-    frontend         # the stageup frontend
-    backend          # the stageup api
-    api-tests        # integration tests
+  apps
+    frontend           # the stageup frontend
+    backend            # the stageup backend
+      .env.example     # example .env
+      .env.development # also .env.staging, .testing & .production
+    api-tests          # integration tests
+      .env.example     # example .env - call actual one just .env
+          
+  libs                 # where all shared code live
+    interfaces         # typescript interfaces
+    ui-lib             # frontend generic angular component library
         
-  libs               # where all shared code live
-    interfaces       # typescript interfaces
-      
-  deploys            # info pertaining to deployment
-    k8s              # kubernetes files (unused for now)
-    docker           # docker-compose (dev, prod)
-    nginx.conf       # nginx config for frontend server
-      
-  tools              # non-source code stuff
-      
-  .github            # github actions
-  .vscode            # editor settings
-  .prettierrc        # code formatting config
-  nx.json            # nx workspace config
-  ship.config.js     # ship.js release tool config
-  package.json       # where _all_ packages are listed
-  tsconfig.base.json # base ts config
-  workspace.json     # where all apps/libs are defined
+  deploys              # info pertaining to deployment
+    k8s                # kubernetes files (unused for now)
+    docker             # docker-compose (dev, prod)
+    nginx.conf         # nginx config for frontend server
+        
+  tools                # non-source code stuff
+        
+  .github              # github actions
+  .vscode              # editor settings
+  .prettierrc          # code formatting config
+  nx.json              # nx workspace config
+  ship.config.js       # ship.js release tool config
+  package.json         # where _all_ packages are listed
+  tsconfig.base.json   # base ts config
+  workspace.json       # where all apps/libs are defined
+  .env                 # .env for github tokens (deployment only)
 ```
 
 ## Backend
-Create a `.env` file in the root of `apps/backend/`, this will store our secret variables - please never share these with anyone - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
-
-```
-PRIVATE_KEY="SOME_PASSWORD"
-EMAIL_ADDRESS="SOME_EMAIL"
-PG_USER="POSTGRES_USER"
-PG_PASS="mysecretpassword"
-NODE_ENV="development"
-```
-
-* `PRIVATE_KEY`: Used for hashing/salting of passwords
-* `EMAIL_ADDRESS`: Used for the sender when sending e-mails via SendGrid
-* `POSTGRES_USER`: Your postgres user account
-* `NODE_ENV`: Used to define the environment in which the backend is running; can be `production`, `testing` or `development`
+Create a `.env.development` file in the root of `apps/backend/` based off of the provided `.env.example`, this will store our secret variables - please never share these with anyone - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
 
 ### MUX
 
@@ -109,7 +101,7 @@ Once you're signed up go to <https://dashboard.mux.com/settings/access-tokens>
 Click _'Generate new token'_ on the right.  
 Click _'Full access'_ on MUX Video for permissions & then click _'Generate token'_.
 
-Add the following to your `.env` file by copy & pasting the values:
+Add the following to your `.env.development` file by copy & pasting the values:
 
 ```
 MUX_ACCESS_TOKEN="Access Token ID"
@@ -125,7 +117,7 @@ Click _'Create new webhook'_.
 For the _'URL to notify'_ add `https://stageup-YOUR_NAME.loca.lt/mux/hooks`.  
 And then click _'Create webhook'_.
 
-There should be a row with your webhook, click _'Show Signing Secret'_ & paste it into your `.env`.
+There should be a row with your webhook, click _'Show Signing Secret'_ & paste it into your `.env.development`.
 
 ```
 MUX_HOOK_SIGNATURE="MY_SIGNING_SECRET"
@@ -152,6 +144,8 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
 * __api-tests__
+  - Create a new database using TablePlus called `testing`
+  - Make sure backend is running in test mode via `npm run backend:testing`
   - For developing a single test use: `npm run api-tests`
   - This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
   - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter

@@ -1,0 +1,14 @@
+<div class="ui-dialog">
+  <div class="ui-dialog--spinner" *ngIf="loading">
+    <mat-spinner ></mat-spinner>
+  </div>
+
+  <div class="ui-dialog--content p-4">
+    <h1>{{ title }}</h1>
+    <ui-hr></ui-hr>
+  
+    <ng-content></ng-content>      
+  </div>
+
+  <ui-dialog-buttons [buttons]="buttons"></ui-dialog-buttons>
+</div>

@@ -18,21 +18,22 @@ describe('User addresses CRUD', () => {
       street_number: 32
     });
 
-    expect(address.city).toBe('Cardiff');
-    expect(address.iso_country_code).toBe('GBR');
-    expect(address.postcode).toBe('NE62 5DE');
-    expect(address.street_name).toBe('Marquee Court');
-    expect(address.street_number).toBe(32);
+    expect(address.city).toEqual('Cardiff');
+    expect(address.iso_country_code).toEqual('GBR');
+    expect(address.postcode).toEqual('NE62 5DE');
+    expect(address.street_name).toEqual('Marquee Court');
+    expect(address.street_number).toEqual(32);
   });
 
   it('Should read the users addresses', async () => {
     const addresses = await Stories.actions.users.readAddresses(client);
+    
     expect(addresses).not.toBeNull();
-    expect(addresses[0].city).toBe(address.city);
-    expect(addresses[0].iso_country_code).toBe(address.iso_country_code);
-    expect(addresses[0].postcode).toBe(address.postcode);
-    expect(addresses[0].street_name).toBe(address.street_name);
-    expect(addresses[0].street_number).toBe(address.street_number);
+    expect(addresses[0].city).toEqual(address.city);
+    expect(addresses[0].iso_country_code).toEqual(address.iso_country_code);
+    expect(addresses[0].postcode).toEqual(address.postcode);
+    expect(addresses[0].street_name).toEqual(address.street_name);
+    expect(addresses[0].street_number).toEqual(address.street_number);
   });
 
   it('Should update the user address', async () => {
@@ -44,11 +45,11 @@ describe('User addresses CRUD', () => {
       street_number: 29
     });
 
-    expect(updatedAddress.city).toBe('Aberystwyth');
-    expect(updatedAddress.iso_country_code).toBe('GBR');
-    expect(updatedAddress.postcode).toBe('SY23 3QQ');
-    expect(updatedAddress.street_name).toBe('Maesceinion');
-    expect(updatedAddress.street_number).toBe(29);
+    expect(updatedAddress.city).toEqual('Aberystwyth');
+    expect(updatedAddress.iso_country_code).toEqual('GBR');
+    expect(updatedAddress.postcode).toEqual('SY23 3QQ');
+    expect(updatedAddress.street_name).toEqual('Maesceinion');
+    expect(updatedAddress.street_number).toEqual(29);
   });
 
   it('Should delete the user address', async () => {
