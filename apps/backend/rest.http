@@ -58,7 +58,34 @@ GET http://{{host}}/hosts/{{hostId}}
 # router.delete <void> ("/hosts/:hid", Hosts.deleteHost());
 # @name deleteHost
 DELETE http://{{host}}/hosts/{{hostId}}
+### ------------------------------------------------------------------
 
+###############################################################################################
+### ADMIN CONTROLLER 
+###############################################################################################
+# router.get  <IE<IHOnboarding[],void>>(`/admin/onboardings`, Admin.readOnboardingProcesses());
+# @name readOnboardingProcesses
+GET http://{{host}}/admin/onboardings
+### --------------------------------------------------------------------------------------------
+@onboardingId = {{ reviewOnboardingProcess.response.body[0]._id }}
+### --------------------------------------------------------------------------------------------
+# router.post <void> (`/admin/onboardings/:oid/review`, Admin.reviewOnboardingProcess());
+# @name reviewOnboardingProcess
+POST http://{{host}}/admin/onboardings/{{onboardingId}}/review
+Content-Type: application/json
+{
+  "0":{ "state": 3, "issues": []}, 
+  "1":{ "state": 3, "issues": []}, 
+  "2":{ "state": 3, "issues": []}, 
+  "3":{ "state": 3, "issues": []}, 
+  "4":{ "state": 3, "issues": []}, 
+}
+
+### --------------------------------------------------------------------------------------------
+# router.post <void> ("/admin/onboardings/:oid/enact", Admin.enactOnboardingProcess());
+# @name enactOnboardingProcess
+POST http://{{host}}/admin/onboardings/{{onboardingId}}/enact
+### --------------------------------------------------------------------------------------------
 
 ###############################################################################################
 ### MISC CONTROLLER 
