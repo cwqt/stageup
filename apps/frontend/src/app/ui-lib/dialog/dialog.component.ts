@@ -11,6 +11,8 @@ export class DialogComponent implements OnInit {
   @Input() title:string;
   @Input() loading:boolean;
 
+  @Input() noPadding:boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {

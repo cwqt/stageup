@@ -39,7 +39,7 @@ export class FormComponent implements OnInit, AfterViewInit {
 
   @Output() onSuccess: EventEmitter<any> = new EventEmitter();
   @Output() onFailure: EventEmitter<HttpErrorResponse> = new EventEmitter();
-  @Output() change: EventEmitter<FormGroup> = new EventEmitter();
+  @Output() onChange: EventEmitter<FormGroup> = new EventEmitter();
 
   @ViewChildren(ButtonComponent) buttons: QueryList<ButtonComponent>;
 
@@ -86,7 +86,7 @@ export class FormComponent implements OnInit, AfterViewInit {
       );
     })(this.form.fields);
 
-    this.formGroup.valueChanges.subscribe(v => this.change.emit(this.formGroup));
+    this.formGroup.valueChanges.subscribe(v => this.onChange.emit(this.formGroup));
   }
 
   ngAfterViewInit() {

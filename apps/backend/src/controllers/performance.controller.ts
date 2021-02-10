@@ -55,7 +55,10 @@ export default class PerformanceController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const envelopedPerformances = await this.ORM.createQueryBuilder(Performance, 'p').paginate();
+        const envelopedPerformances = await this.ORM
+          .createQueryBuilder(Performance, 'p')
+          .innerJoinAndSelect('p.host', 'host')
+          .paginate();
 
         return {
           data: envelopedPerformances.data.map(p => p.toStub()),
@@ -106,7 +109,7 @@ export default class PerformanceController extends BaseController {
           data: performance.toFull(),
           __client_data: {
             signed_token: token,
-            purchase_id: previousPurchase._id,
+            purchase_id: previousPurchase?._id,
             // TODO: token expiry
             expires: false
           }

@@ -10,7 +10,7 @@ export namespace FieldValidators {
   };
 
   export const exists: CustomValidator = v => {
-    return v.exists().withMessage(ErrCode.MISSING_FIELD);
+    return v.exists({ checkNull: false }).withMessage(ErrCode.MISSING_FIELD);
   };
 
   export const isString: CustomValidator = (v, message = ErrCode.INVALID) => {
@@ -19,6 +19,12 @@ export namespace FieldValidators {
 
   export const email: CustomValidator = v => {
     return isString(v).isEmail().withMessage(ErrCode.INVALID_EMAIL).normalizeEmail();
+  };
+
+  export const isInt: CustomValidator = (v, message) => {
+    return exists(v)
+      .isNumeric()
+      .withMessage(message || ErrCode.REGEX_MATCH);
   };
   
   /**
@@ -59,9 +65,5 @@ export namespace FieldValidators {
     return isString(v).isISO31661Alpha3().withMessage(ErrCode.REGEX_MATCH);
   };
 
-  export const isInt: CustomValidator = (v, message) => {
-    return exists(v)
-      .isNumeric()
-      .withMessage(message || ErrCode.REGEX_MATCH);
-  };
+
 }

@@ -1,61 +1,20 @@
-<!-- Modal -->
-<section class="fixed inset-0 overflow-y-auto">
-  <div class="flex items-center justify-center min-h-screen text-center sm:p-0 bg-gray-900 bg-opacity-40 overflow-y-auto">
-    <div class="align-bottom bg-white text-left overflow-hidden shadow-xl transform transition-all sm:max-w-4xl"
-      aria-labelledby="modal-headline" role="dialog" aria-hidden="true">
-
-      <!-- Cover -->
-      <div>
-        <img class="object-cover h-48 w-full" src="./../../../assets/D.jpg">
-      </div>
-
-      <!-- Modal Content -->
-      <div class="grid gap-2 grid-cols-3 px-2 pt-2 pb-2 sm:p-6 sm:pb-4">
-
-        <!-- Column 1 Content -->
-        <div class="flex flex-wrap overflow-y-auto col-span-2">
-          <div class="container px-2 performances">
-            <h2 mat-dialog-title>{{ data.name }}</h2>            
-          </div>
-          <div class="container px-2">
-            <p>By {{ data.host?.name }}</p>
-            
-          </div>
-          <div class="container px-2">
-            <p>{{ data.description }}</p>
-          </div>
-        </div>
-
-        <!-- Column 2 Content -->
-        <div class="flex flex-wrap overflow-auto">
-          <div class="container">
-            <button class="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded w-full">Add to Cart</button>            
-          </div>                     
-            <p>Rate 5 / 5</p>         
-
-          <div class="container">
-            <p>Instructions to purchase a show.</p>
-            <div>
-              <ol>
-                <li>
-                  - JigglyPuff
-                </li>
-                <li>
-                  - Pikachu
-                </li>
-                <li>
-                  - Psyduck
-                </li>
-              </ol>
-            </div>
-          </div>
-
-          <div class="container text-right">
-            <button class="bg-purple-500 hover:bg-purple-700 text-white py2 px-4 rounded w-2/5 d-inline" (click)="onNoClick()">Close</button>            
-          </div>
-        </div>
-      </div>        
-    </div>    
+<ui-dialog [noPadding]="true">
+  <div>
+    <img class="object-cover h-96 w-full" src="./../../../assets/D.jpg" />
   </div>
-</section>
 
+  <div class="flex p-4">
+    <div class="w-2/3">
+      <h1>{{ data.name }}</h1>
+      <app-user-thumb [user]="data.host"></app-user-thumb>
+
+      <ui-hr></ui-hr>
+
+      <p>{{ data.description }}</p>
+    </div>
+
+    <div class="w-1/3 ml-2 text-right">
+      <ui-button kind="secondary" size="l"><ui-icon>add</ui-icon>Add to Cart</ui-button>
+    </div>
+  </div>
+</ui-dialog>

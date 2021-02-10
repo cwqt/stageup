@@ -258,7 +258,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   constructor(private hostService: HostService) {}
 
   async ngOnInit() {
-    this.host = await this.hostService.getHost(this.hostService.currentHostValue._id);
+    this.host = await this.hostService.readHost(this.hostService.currentHostValue._id);
     this.getOnboarding().then(() => this.switchStep(HostOnboardingStep.ProofOfBusiness));
   }
 
@@ -287,15 +287,18 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   }
 
   async prefetchStepData(step: HostOnboardingStep): Promise<IUiFormPrefetchData> {
-    const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(this.host._id, step));
+    // Only perform prefetches if the user has submitted this onboarding before
+    if(this.onboarding.data.state == HostOnboardingState.HasIssues) {
+      const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(this.host._id, step));
 
-    return {
-      fields: flatten<any, IUiFormPrefetchData['fields']>(stepData.data),
-      errors: Object.keys(stepData.review?.issues || []).reduce((acc, curr) => {
-        acc[curr] = stepData.review.issues[curr];
-        return acc;
-      }, {})
-    };
+      return {
+        fields: flatten<any, IUiFormPrefetchData['fields']>(stepData.data),
+        errors: Object.keys(stepData.review?.issues || []).reduce((acc, curr) => {
+          acc[curr] = stepData.review.issues[curr];
+          return acc;
+        }, {})
+      };  
+    }
   }
 
   switchStep(step: HostOnboardingStep) {

@@ -23,9 +23,9 @@ export namespace ObjectValidators {
       name: v => FV.isString(v),
       description: v => FV.isString(v),
       genre: v => v.isIn(Object.values(Genre)),
-      premiere_date: v => v.optional({ nullable: true }).custom(v => FV.timestamp(v)),
       price: v => v.isInt(),
-      currency: v => v.isIn(Object.values(CurrencyCode))
+      currency: v => v.isIn(Object.values(CurrencyCode)),
+      premiere_date: v => v.optional({ nullable: true }).custom(x => FV.timestamp(v))
     };
   };
 

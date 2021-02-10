@@ -7,16 +7,17 @@ import {
   HostOnboardingStep,
   IOnboardingStepMap,
   IPerformance,
-  DtoCreatePerformance,
+  DtoCreatePerformance
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
+import { cachize, ICacheable } from '../app.interfaces';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class HostService {
   private $currentHost: BehaviorSubject<IHostStub> = new BehaviorSubject(null);
@@ -42,7 +43,7 @@ export class HostService {
     });
   }
 
-  getUserHostInfo(hostId: string, userId: string): Promise<IUserHostInfo> {
+  readUserHostInfo(hostId: string, userId: string): Promise<IUserHostInfo> {
     return this.http
       .get<IUserHostInfo>(`/api/hosts/${hostId}/permissions?user=${userId}`)
       .pipe(tap(hi => this.myselfService.setUserHostInfo(hi)))
@@ -56,7 +57,7 @@ export class HostService {
       .toPromise();
   }
 
-  getHost(hostId: string): Promise<IHost> {
+  readHost(hostId: string): Promise<IHost> {
     return this.http.get<IHost>(`/api/hosts/${hostId}`).toPromise();
   }
 
@@ -85,7 +86,12 @@ export class HostService {
   }
 
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
-  createPerformance(hostId:string, data:DtoCreatePerformance):Promise<IPerformance> {
+  createPerformance(hostId: string, data: DtoCreatePerformance): Promise<IPerformance> {
     return this.http.post<IPerformance>(`/api/hosts/${hostId}/performances`, data).toPromise();
+  }
+
+  // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
+  readHostByUsername(hostUsername: string, cacheable?: ICacheable<IHost>) {
+    return cachize(this.http.get<IHost>(`/api/hosts/@${hostUsername}`).toPromise(), cacheable);
   }
 }

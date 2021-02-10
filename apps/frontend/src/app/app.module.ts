@@ -65,6 +65,10 @@ import { OnboardingStatePipe } from './_pipes/object-state.pipe';
 import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-name.pipe';
+import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
+import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
+import { HostAboutComponent } from './routes/host/host-about/host-about.component';
+import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +113,11 @@ import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-na
     OnboardingViewIssueMakerComponent,
     PerformanceModalComponent,
     UserThumbComponent,
-    HostLandingComponent
+    HostLandingComponent,
+    HostProfileComponent,
+    HostContactComponent,
+    HostAboutComponent,
+    HostFeedComponent
   ],
   imports: [
     AngularMaterialModule,

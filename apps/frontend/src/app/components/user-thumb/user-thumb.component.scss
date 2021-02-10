@@ -2,4 +2,12 @@
   max-width: 100%;
 }
 
-img { min-width: 48px; }
+img {
+  height: 64px;
+  width: 64px;
+  object-fit: cover;
+}
+
+.thumb {
+  max-height: 64px;
+}

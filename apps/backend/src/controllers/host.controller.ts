@@ -83,7 +83,18 @@ export default class HostController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.isLoggedIn,
       controller: async req => {
-        const host = await Host.findOne({ _id: req.params.hid });
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+        return host.toFull();
+      }
+    };
+  }
+
+  readHostByUsername(): IControllerEndpoint<IHost> {
+    return {
+      validators: [],
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ username: req.params.username }));
         return host.toFull();
       }
     };
@@ -249,14 +260,14 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
-        const onboarding = await Onboarding.findOne({
+        const onboarding = await getCheck(Onboarding.findOne({
           where: {
             host: {
               _id: req.params.hid
             }
           },
           relations: ['host', "reviews"]
-        });
+        }));
 
         return onboarding.toFull();
       }

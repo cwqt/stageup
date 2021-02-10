@@ -22,6 +22,6 @@ export class HostComponent implements OnInit {
   }
 
   getHost():Promise<IHost> {
-    return this.hostService.getHost(this.myself.host._id);
+    return this.hostService.readHost(this.myself.host._id);
   }
 }

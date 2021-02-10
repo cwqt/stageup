@@ -16,6 +16,7 @@
 
         <ui-button class="w-full mb-2" routerLink="/host/performances" routerLinkActive="active-link">Performances</ui-button>
         <ui-button class="w-full mb-2" routerLink="/host/settings" routerLinkActive="active-link">Settings</ui-button>
+        <ui-button class="w-full mb-2" [routerLink]="'/host/@'+ host.username" routerLinkActive="active-link">Edit Profile</ui-button>
       </div>
   </div>
 

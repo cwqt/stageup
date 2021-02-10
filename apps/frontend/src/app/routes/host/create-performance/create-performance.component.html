@@ -1,6 +1,6 @@
 <ui-dialog title="Create Performance" [buttons]="buttons" [loading]="performance.loading">
   <ui-form #form
-    (change)="handleFormChange($event)"
+    (onChange)="handleFormChange($event)"
     (onSuccess)="handleCreatePerformanceSuccess($event)"
     (onFailure)="handleCreatePerformanceFailed()"
     [form]="createPerformanceForm"

@@ -59,6 +59,7 @@ router.delete <void>                  ("/users/:uid/addresses/:aid",            
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, mws);
 router.post   <IHost>                 ("/hosts",                                    Hosts.createHost());
+router.get    <IHost>                 ("/hosts/@:username",                         Hosts.readHostByUsername());
 router.get    <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
 router.delete <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
 // router.put    <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
@@ -80,8 +81,8 @@ router.get    <IE<IPerfS[], null>>    ("/performances",                         
 router.get    <IE<IPerf, IPUInfo>>    ("/performances/:pid",                        Perfs.readPerformance());
 router.get    <IPHInfo>               ("/performances/:pid/host_info",              Perfs.readPerformanceHostInfo());
 router.post   <void>                  ("/performances/:pid/purchase",               Perfs.purchase());
-router.delete <void>                  ("/performance/:pid",                         Perfs.deletePerformance());
-router.put    <IPerf>                 ("/performance/:pid",                         Perfs.updatePerformance());
+router.delete <void>                  ("/performances/:pid",                         Perfs.deletePerformance());
+router.put    <IPerf>                 ("/performances/:pid",                         Perfs.updatePerformance());
 
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, mws);

@@ -21,8 +21,14 @@ export default {
   },
 
   // router.get<IHost>("/hosts/:hid",Hosts.readHost())
-  readHost: async (host: IHostStub): Promise<IHostStub> => {
-    const res = await api.get<IHost>(`/hosts/${host._id}`, env.getOptions());
+  readHost: async (host: IHostStub, hostId?:string): Promise<IHostStub> => {
+    const res = await api.get<IHost>(`/hosts/${hostId || host._id}`, env.getOptions());
+    return res.data;
+  },
+
+  // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
+  readHostByUsername: async (host:IHostStub, hostUsername?:string):Promise<IHost> => {
+    const res = await api.get<IHost>(`/hosts/@${hostUsername || host.username}`, env.getOptions())
     return res.data;
   },
 

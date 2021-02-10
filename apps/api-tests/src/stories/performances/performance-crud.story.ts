@@ -1,4 +1,4 @@
-import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode } from '@core/interfaces';
+import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode, Genre } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { AxiosError } from 'axios';
@@ -23,7 +23,9 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       name: 'Shakespeare',
       description: 'To be or not to be',
       price: 24,
-      currency: CurrencyCode.GBP
+      currency: CurrencyCode.GBP,
+      genre: Genre.BourgeoisTragedy,
+      premiere_date: null
     });
 
     expect(perf).not.toBeNull();
@@ -32,6 +34,13 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     expect(perf.price).toBe(24);
     expect(perf.currency).toBe(CurrencyCode.GBP);
   });
+
+  it("Should read a performance", async () => {
+    let p = await Stories.actions.performances.readPerformance(perf);
+    expect(p).not.toBeNull();
+    //assert relationship pulled in
+    expect(p.data.host.username).toEqual(host.username);
+  })
 
   it('Should update a performance', async () => {
     const updatePerf = await Stories.actions.performances.updatePerformance(perf, {

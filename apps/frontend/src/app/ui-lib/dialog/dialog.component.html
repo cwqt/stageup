@@ -3,9 +3,11 @@
     <mat-spinner ></mat-spinner>
   </div>
 
-  <div class="ui-dialog--content p-4">
-    <h1>{{ title }}</h1>
-    <ui-hr></ui-hr>
+  <div class="ui-dialog--content" [class.p-4]="!noPadding">
+    <ng-container *ngIf="title">
+      <h1>{{ title }}</h1>
+      <ui-hr></ui-hr>  
+    </ng-container>
   
     <ng-content></ng-content>      
   </div>

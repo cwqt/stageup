@@ -8,19 +8,15 @@ import {
   IPerformanceUserInfo,
   IEnvelopedData,
   IHost,
-  IHostStub
+  IHostStub,
+  DtoCreatePerformance
 } from '@core/interfaces';
 
 export default {
   // router.post<IPerf>("/performances",Perfs.createPerformance());
   createPerformance: async (
     host: IHost | IHostStub,
-    data: {
-      name: string;
-      description: string;
-      price: number;
-      currency: CurrencyCode;
-    }
+    data: DtoCreatePerformance
   ): Promise<IPerformance> => {
     const res = await api.post(`/hosts/${host._id}/performances`, data, env.getOptions());
     return res.data;
@@ -49,7 +45,7 @@ export default {
     performance: IPerformance,
     data: { name: string; description: string; price: number }
   ): Promise<IPerformance> => {
-    const res = await api.put(`/performance/${performance._id}`, data, env.getOptions());
+    const res = await api.put(`/performances/${performance._id}`, data, env.getOptions());
     return res.data;
   },
 
@@ -61,7 +57,7 @@ export default {
 
   // router.delete <void>("/performance/:pid",Perfs.deletePerformance());
   deletePerformance: async (performance: IPerformance): Promise<void> => {
-    const res = await api.delete(`/performance/${performance._id}`, env.getOptions());
+    const res = await api.delete(`/performances/${performance._id}`, env.getOptions());
     return res.data;
   }
 };

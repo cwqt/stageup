@@ -103,7 +103,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     }
 
     // Override initial value
-    // this.value = (!this.value && (this.options?.initial || this.initial)) ? (this.options?.initial ?? this.initial) : "";
+    // this.value = undefined(!this.value && (this.options?.initial || this.initial)) ? (this.options?.initial ?? this.initial) : "";
     this.placeholder = this.placeholder ?? '';
   }
 
