@@ -18,18 +18,19 @@ export class UserHostInfo extends BaseEntity implements IUserHostInfo {
 
   constructor(user: User, host: Host, permissions: HostPermission) {
     super();
-    user.host = host;
-
-    this.user = user;
-    this.host = host;
     this.joined_at = timestamp();
     this.permissions = permissions;
+
+    user.host = host; // Add relationship
+    this.user = user;
+    this.host = host;
   }
 
   toFull(): Required<IUserHostInfo> {
     return {
       joined_at: this.joined_at,
-      permissions: this.permissions
+      permissions: this.permissions,
+      user: this.user.toStub()
     };
   }
 }

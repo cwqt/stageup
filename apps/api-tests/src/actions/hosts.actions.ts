@@ -11,6 +11,7 @@ import {
   IOnboardingStepMap,
 } from '@core/interfaces';
 import { api } from '../environment';
+import { Stories } from '../stories';
 
 export default {
   // Host CRUD --------------------------------------------------------------------------------------------------------------
@@ -21,7 +22,7 @@ export default {
   },
 
   // router.get<IHost>("/hosts/:hid",Hosts.readHost())
-  readHost: async (host: IHostStub, hostId?:string): Promise<IHostStub> => {
+  readHost: async (host: IHostStub, hostId?:string): Promise<IHost> => {
     const res = await api.get<IHost>(`/hosts/${hostId || host._id}`, env.getOptions());
     return res.data;
   },

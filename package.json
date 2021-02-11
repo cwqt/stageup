@@ -49,6 +49,7 @@
     "@mux/mux-node": "^3.1.0",
     "@nrwl/angular": "^11.1.5",
     "apicache": "^1.5.3",
+    "autoprefixer": "^10.2.4",
     "aws-sdk": "^2.799.0",
     "axios": "^0.21.1",
     "bcrypt": "^4.0.1",

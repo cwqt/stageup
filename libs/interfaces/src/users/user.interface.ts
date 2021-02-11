@@ -28,6 +28,7 @@ export interface IUserPrivate extends IUser {
 export interface IUserHostInfo {
   joined_at: number;  // when the user joined host
   permissions: HostPermission; // host permission level
+  user?: IUserStub // The user who is a member of the host
 }
 
 export interface IMyself {

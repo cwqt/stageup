@@ -72,6 +72,7 @@ export default class HostController extends BaseController {
           // Save before setup because onboarding process depends on PK existing
           await host.setup(user, txc);
           await host.addMember(user, HostPermission.Owner, txc);
+
           return (await txc.save(host)).toFull();
         });
       }
@@ -83,7 +84,17 @@ export default class HostController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.isLoggedIn,
       controller: async req => {
-        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+        const host = await Host.findOne(
+          { _id: req.params.hid },
+          {
+            relations: {
+              members_info: {
+                user: true
+              }
+            }
+          }
+        );
+
         return host.toFull();
       }
     };
@@ -168,7 +179,18 @@ export default class HostController extends BaseController {
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
         // Get host & pull in members_info for new member push
-        const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['members_info'] }));
+        const host = await getCheck(
+          Host.findOne(
+            { _id: req.params.hid },
+            {
+              relations: {
+                members_info: {
+                  user: true
+                }
+              }
+            }
+          )
+        );
 
         await this.ORM.transaction(async txc => {
           await host.addMember(user, HostPermission.Member, txc);
@@ -198,6 +220,8 @@ export default class HostController extends BaseController {
         );
 
         const newUserPermission: HostPermission = req.body.value;
+        if (newUserPermission == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised);
+
         if (userHostInfo.permissions == HostPermission.Owner)
           throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
 
@@ -260,14 +284,16 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
-        const onboarding = await getCheck(Onboarding.findOne({
-          where: {
-            host: {
-              _id: req.params.hid
-            }
-          },
-          relations: ['host', "reviews"]
-        }));
+        const onboarding = await getCheck(
+          Onboarding.findOne({
+            where: {
+              host: {
+                _id: req.params.hid
+              }
+            },
+            relations: ['host', 'reviews']
+          })
+        );
 
         return onboarding.toFull();
       }
