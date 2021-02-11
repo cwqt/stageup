@@ -14,7 +14,7 @@ import { Performance } from '../models/performances/performance.model';
 import { ErrorHandler, getCheck } from '../common/errors';
 import { BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
-import Validators, { body } from '../common/validate';
+import Validators, { body, query } from '../common/validate';
 import { PerformancePurchase } from '../models/performances/purchase.model';
 
 export default class PerformanceController extends BaseController {
@@ -49,15 +49,21 @@ export default class PerformanceController extends BaseController {
       }
     };
   }
-
+  
+  //router.get    <IE<IPerfS[], null>>    ("/performances", Perfs.readPerformances());
   readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
     return {
-      validators: [],
+      validators: [
+        query<{
+        search_query: string;   
+      }>({
+        search_query: v => v.optional({ nullable: true }).isString(),
+      })],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const envelopedPerformances = await this.ORM
-          .createQueryBuilder(Performance, 'p')
+        const envelopedPerformances = await this.ORM.createQueryBuilder(Performance, 'p')
           .innerJoinAndSelect('p.host', 'host')
+          .where('p.name LIKE :name', { name: req.query.search_query ? `%${req.query.search_query as string}%`: '%'})
           .paginate();
 
         return {
@@ -104,7 +110,7 @@ export default class PerformanceController extends BaseController {
           // Sign on the fly for a member of the host
           if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
         }
-
+       
         return {
           data: performance.toFull(),
           __client_data: {

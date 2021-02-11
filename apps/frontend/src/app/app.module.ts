@@ -50,6 +50,7 @@ import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onbo
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from './routes/search/search.component';
+import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
@@ -103,6 +104,7 @@ import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
     HostOnboardingComponent,
     AdminPanelComponent,
     SearchComponent,
+    SearchResultsComponent,
     AdminOnboardingListComponent,
     AdminOnboardingViewComponent,
     OnboardingViewComponent,

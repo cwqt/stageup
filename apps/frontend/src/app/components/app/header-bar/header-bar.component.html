@@ -7,7 +7,7 @@
 
     <div class="header-search">
       <!-- <ui-icon>search</ui-icon> -->
-      <ui-input type="text" placeholder="Search for performances..."></ui-input>
+      <ui-input type="text" placeholder="Search for performances..." (keydown.enter)="searchPerformances(searchBox.value)" #searchBox></ui-input>
     </div>
 
     <ui-icon class="header-notification">notification--new</ui-icon>
