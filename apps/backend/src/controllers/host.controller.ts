@@ -17,7 +17,9 @@ import {
   IUserStub,
   HTTP,
   IHostMemberChangeRequest,
-  IOnboardingStepMap
+  IOnboardingStepMap,
+  IEnvelopedData,
+  IPerformanceStub
 } from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { Host } from '../models/hosts/host.model';
@@ -30,6 +32,7 @@ import AuthStrat from '../common/authorisation';
 import Validators, { body, params as parameters, query } from '../common/validate';
 import { timestamp } from '../common/helpers';
 import { OnboardingReview } from '../models/hosts/onboarding-review.model';
+import { Performance } from '../models/performances/performance.model';
 
 import logger from '../common/logger';
 import Email = require('../common/email');
@@ -453,4 +456,20 @@ export default class HostController extends BaseController {
       }
     };
   }
+
+  readHostPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+        const hostPerformances = await this.ORM.createQueryBuilder(Performance, 'hps')
+          .innerJoinAndSelect('hps.host', 'host') 
+          .where('host._id = :id', { id: req.params.hid})         
+          .paginate(); 
+        return {
+          data: hostPerformances.data.map(o => o.toStub()),
+          __paging_data: hostPerformances.__paging_data
+        };
+      }
+    };
+  } 
 }

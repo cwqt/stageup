@@ -6,8 +6,10 @@ import {
   IUserHostInfo,
   HostOnboardingStep,
   IOnboardingStepMap,
+  IPerformanceStub,
   IPerformance,
-  DtoCreatePerformance
+  DtoCreatePerformance,
+  IEnvelopedData
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -93,5 +95,10 @@ export class HostService {
   // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
   readHostByUsername(hostUsername: string, cacheable?: ICacheable<IHost>) {
     return cachize(this.http.get<IHost>(`/api/hosts/@${hostUsername}`).toPromise(), cacheable);
+  }
+
+  //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
+  readHostPerformances(hostId: string, page: number = 0, perPage: number = 10): Promise<IEnvelopedData<IPerformanceStub[], null>> {
+    return this.http.get<IEnvelopedData<IPerformanceStub[], null>>(`/api/hosts/${hostId}/performances?page=${page}&per_page=${perPage}`).toPromise();
   }
 }

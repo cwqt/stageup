@@ -9,6 +9,8 @@ import {
   IUserStub,
   IHostMemberChangeRequest,
   IOnboardingStepMap,
+  IEnvelopedData,
+  IPerformance
 } from '@core/interfaces';
 import { api } from '../environment';
 import { Stories } from '../stories';
@@ -104,6 +106,12 @@ export default {
   // router.put<void>("/hosts/:hid/members/:mid",Hosts.updateMember());
   updateMember: async (host: IHost, user: IUser, update:IHostMemberChangeRequest) => {
     const res = await api.put<void>(`/hosts/${host._id}/members/${user._id}`, update, env.getOptions());
+    return res.data;
+  },
+
+  // router.get <IE<IPerf[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
+  readHostPerformances: async (host: IHost, page: number = 0, perPage: number = 10): Promise<IEnvelopedData<IPerformance[], null>> => {
+    const res = await api.get<IEnvelopedData<IPerformance[], null>>(`/hosts/${host._id}/performances?page=${page}&per_page=${perPage}`, env.getOptions());
     return res.data;
   },
 };
