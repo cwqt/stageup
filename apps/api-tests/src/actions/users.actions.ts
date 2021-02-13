@@ -12,9 +12,9 @@ export default {
     return res.data;
   },
 
-  createUser: async (user: UserType, force: boolean = false): Promise<IUser> => {
+  createUser: async (user: UserType, force: boolean = false): Promise<IMyself["user"]> => {
     if (force || !Stories.cachedUsers[user]) {
-      const res = await api.post<IUser>(`/users`, env.userCreationData[user], env.getOptions());
+      const res = await api.post<IMyself["user"]>(`/users`, env.userCreationData[user], env.getOptions());
       Stories.cachedUsers[user] = new CachedUser(res.data);
       return res.data;
     } else {

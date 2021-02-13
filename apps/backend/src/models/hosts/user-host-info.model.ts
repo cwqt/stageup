@@ -26,6 +26,7 @@ export class UserHostInfo extends BaseEntity implements IUserHostInfo {
     this.host = host;
   }
 
+  
   toFull(): Required<IUserHostInfo> {
     return {
       joined_at: this.joined_at,

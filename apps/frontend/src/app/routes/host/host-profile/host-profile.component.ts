@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostStub } from '@core/interfaces';
-import { createICacheable, ICacheable } from '../../../app.interfaces';
+import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { BaseAppService, RouteParam } from '../../../services/app.service';
 import { HostService } from '../../../services/host.service';
 
@@ -51,7 +51,7 @@ export class HostProfileComponent implements OnInit {
     if (!this.hostUsername) this.hostUsername = this.baseAppService.getParam(RouteParam.HostId).split('@').pop();
 
     // Get the host by username & populate the ICacheable
-    this.hostService.readHostByUsername(this.hostUsername, this.host);
+    cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
   }
 
   openHostPage(endpoint: string) {

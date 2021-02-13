@@ -9,6 +9,7 @@ import {
   IPerformanceStub,
   IPerformance,
   DtoCreatePerformance,
+  IHostMemberChangeRequest,
   IEnvelopedData
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
@@ -16,7 +17,6 @@ import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
-import { cachize, ICacheable } from '../app.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -93,8 +93,19 @@ export class HostService {
   }
 
   // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
-  readHostByUsername(hostUsername: string, cacheable?: ICacheable<IHost>) {
-    return cachize(this.http.get<IHost>(`/api/hosts/@${hostUsername}`).toPromise(), cacheable);
+  readHostByUsername(hostUsername: string): Promise<IHost> {
+    return this.http.get<IHost>(`/api/hosts/@${hostUsername}`).toPromise();
+  }
+
+  // router.get <IUserStub[]> ("/hosts/:hid/members", Hosts.readMembers());
+  readMembers(hostId: string): Promise<IEnvelopedData<IUserHostInfo[]>> {
+    return this.http.get<IEnvelopedData<IUserHostInfo[], null>>(`/api/hosts/${hostId}/members`).toPromise();
+  }
+
+  addMember(hostId: string, addition:IHostMemberChangeRequest): Promise<IUserHostInfo> {
+    return this.http
+      .post<IUserHostInfo>(`/api/hosts/${hostId}/members`, addition)
+      .toPromise();
   }
 
   //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());

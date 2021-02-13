@@ -43,5 +43,6 @@ export enum HostPermission {
   Admin, // can create / delete performances
   Editor, // can edit performance information
   Member, // has accepted & can view host
-  Pending // hasn't accepted invite
+  Pending, // hasn't accepted invite
+  Expired // had an invite that they didn't accept in time
 }

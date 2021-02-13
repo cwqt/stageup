@@ -79,7 +79,7 @@ export default class UserController extends BaseController {
         });
 
         return {
-          user: user.toFull(),
+          user: {...user.toFull(), email_address: user.email_address },
           host: host?.toStub(),
           host_info: host ? host.members_info.find(uhi => uhi.user._id === user._id)?.toFull() : null
         };
@@ -87,7 +87,7 @@ export default class UserController extends BaseController {
     };
   }
 
-  createUser(): IControllerEndpoint<IUser> {
+  createUser(): IControllerEndpoint<IMyself["user"]> {
     return {
       validators: [
         body<Pick<IUserPrivate, 'username' | 'email_address'> & { password: string }>({
@@ -109,9 +109,8 @@ export default class UserController extends BaseController {
           errors.push('email_address', ErrCode.IN_USE, req.body.email_address);
         if (errors.errors.length > 0) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE, errors.value);
 
-        // Fire off a verification email
-        const emailSent = await Email.sendVerificationEmail(req.body.email_address);
-        if (!emailSent) throw new ErrorHandler(HTTP.ServerError, ErrCode.EMAIL_SEND);
+        // Fire & forget off a verification email
+        Email.sendVerificationEmail(req.body.email_address);
 
         // Save the user through a transaction (creates ContactInfo & Person)
         const user = await this.ORM.transaction(async (txc: EntityManager) => {
@@ -128,7 +127,7 @@ export default class UserController extends BaseController {
           return u;
         });
 
-        return user.toFull();
+        return user.toMyself();
       }
     };
   }
@@ -171,13 +170,13 @@ export default class UserController extends BaseController {
     };
   }
 
-  updateUser(): IControllerEndpoint<IUser> {
+  updateUser(): IControllerEndpoint<IMyself["user"]> {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
         let u = await getCheck(User.findOne({ _id: req.params.uid }));
         u = await u.update({ name: req.body.name });
-        return u.toFull();
+        return u.toMyself();
       }
     };
   }
@@ -196,20 +195,20 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const user = await User.createQueryBuilder('user').leftJoinAndSelect('user.host', 'host').getOne();
-        if (!user.host) {
-          throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
-        }
-
-        const host = await Host.findOne({ _id: user.host._id });
+        const host = await getCheck(Host.findOne({ 
+          relations: { members_info: { user: true } },
+          where: {
+            members_info: {
+              user: {
+                _id: req.params.uid
+              }
+            }
+          }
+        }))
 
         return {
           data: host.toFull(),
-          __client_data: {
-            // TODO: get host info and insert here
-            permissions: HostPermission.Admin,
-            joined_at: 0
-          }
+          __client_data: host.members_info.find(uhi => uhi.user._id == req.params.uid)
         };
       }
     };

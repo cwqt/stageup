@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction, IRouterMatcher } from 'express';
-import { AsyncRouter } from 'express-async-router';
+import { Request, Response, NextFunction } from 'express';
+import { IRouterMatcher } from 'express-serve-static-core'
+import { AsyncRouter, AsyncRouterInstance } from 'express-async-router';
 import { HTTP } from '@core/interfaces';
 
 import { ErrorHandler, handleError } from './common/errors';
@@ -16,7 +17,7 @@ export interface IResLocals {
 }
 
 const endpointFunction = <T>(
-  method: IRouterMatcher<T>,
+  method: IRouterMatcher<AsyncRouterInstance, "get" | "post" | "put" | "delete">,
   providers: DataClient,
   resCode?: HTTP,
   lambda?: (res: Response, data: T) => void
@@ -57,7 +58,7 @@ const endpointFunction = <T>(
 };
 
 export class Router {
-  router: any;
+  router: AsyncRouterInstance;
   providers: DataClient;
 
   constructor(providers: DataClient) {

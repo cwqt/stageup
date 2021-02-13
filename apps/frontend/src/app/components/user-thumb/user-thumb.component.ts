@@ -8,6 +8,7 @@ import { IUserStub } from '@core/interfaces';
 })
 export class UserThumbComponent implements OnInit {
   @Input() user:IUserStub;
+  @Input() small:boolean=false;
 
   constructor() { }
 

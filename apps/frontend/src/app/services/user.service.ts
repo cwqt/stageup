@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
-import { IUser, IHost, Primitive } from '@core/interfaces';
+import { IUser, IHost, Primitive, IMyself } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 
 @Injectable({
@@ -29,9 +29,9 @@ export class UserService {
     return this.http.post<IUser>('/api/users', user).toPromise();
   }
 
-  updateUser(userId: string, body: { [index: string]: Primitive }): Promise<IUser> {
+  updateUser(userId: string, body: { [index: string]: Primitive }): Promise<IMyself["user"]> {
     return this.http
-      .put<IUser>(`/api/users/${userId}`, body)
+      .put<IMyself["user"]>(`/api/users/${userId}`, body)
       .pipe(
         tap(u => {
           if (u._id == userId) {
@@ -50,9 +50,9 @@ export class UserService {
     return this.http.get<IHost>(`/api/users/${userId}/host`).toPromise();
   }
 
-  changeAvatar(userId: string, formData: FormData): Promise<IUser> {
+  changeAvatar(userId: string, formData: FormData): Promise<IMyself["user"]> {
     return this.http
-      .put<IUser>(`/api/users/${userId}/avatar`, formData)
+      .put<IMyself["user"]>(`/api/users/${userId}/avatar`, formData)
       .pipe(
         tap(u => {
           if (u._id == userId) {

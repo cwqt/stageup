@@ -1,14 +1,13 @@
 import express from 'express';
 import morgan from 'morgan';
-import bodyParser from 'body-parser';
+import { json } from 'body-parser';
 import cors from 'cors';
-import session, { MemoryStore } from 'express-session';
 import log, { stream } from './common/logger';
 import http from 'http';
 import helmet from 'helmet';
 
-import { Environment, ErrCode, HTTP } from '@core/interfaces';
-import { handleError, ErrorHandler } from './common/errors';
+import { ErrCode, HTTP } from '@core/interfaces';
+import { globalErrorHandler, handleError, ErrorHandler } from './common/errors';
 import { DataClient, DataProvider } from './common/data';
 import { pagination } from './common/paginate';
 import Routes from './routes';
@@ -19,44 +18,24 @@ console.log('\nBackend running in env: \u001B[04m' + Env.ENVIRONMENT + '\u001B[0
 let server: http.Server;
 const app = express();
 app.set('trust proxy', 1);
-app.use(bodyParser.json());
+app.use(json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan('tiny', { stream }));
-
 
 (async () => {
   try {
     // Connect to all the databases
     const providers = await DataProvider.create();
 
-    // Register Redis session store
-    app.use(
-      session({
-        secret: Env.PRIVATE_KEY,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-          httpOnly: Env.isEnv(Environment.Production),
-          secure: Env.isEnv(Environment.Production)
-        },
-        store: Env.USE_MEMORYSTORE ? new MemoryStore() : providers.session_store
-      })
-    );
-
-    // Register routes
+    // Register session & pagination middleware, then add API router
+    app.use(providers.session_handler);
     app.use(pagination);
     app.use('/', Routes(providers).router);
 
-    // Catch 404 errors
-    app.all('*', (req, res, next) => {
-      handleError(req, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND));
-    });
-
-    // Global error handler
-    app.use((err: any, req: any, res: any, next: any) => {
-      handleError(req, res, next, err);
-    });
+    // Catch 404 errors & add the global handler
+    app.all('*', (req, res, next) => handleError(req, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND)));
+    app.use(globalErrorHandler);
 
     // Handle closing connections on failure
     process.on('SIGTERM', gracefulExit(providers));
@@ -64,9 +43,7 @@ app.use(morgan('tiny', { stream }));
     process.on('uncaughtException', gracefulExit(providers));
 
     // Start listening for requests
-    server = app.listen(Env.EXPRESS_PORT, () => {
-      log.info(`\u001B[1mExpress listening on ${Env.EXPRESS_PORT}\u001B[0m`);
-    });
+    server = app.listen(Env.EXPRESS_PORT, () => log.info(`\u001B[1mExpress listening on ${Env.EXPRESS_PORT}\u001B[0m`));
   } catch (error: unknown) {
     log.error(error);
   }
@@ -81,8 +58,3 @@ function gracefulExit(providers: DataClient) {
     process.exit(1);
   };
 }
-
-export default {
-  app,
-  gracefulExit
-};

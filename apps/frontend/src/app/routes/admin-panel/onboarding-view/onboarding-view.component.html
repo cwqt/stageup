@@ -1,7 +1,7 @@
 <mat-spinner *ngIf="onboardingSteps.loading"></mat-spinner>
 <ng-container *ngIf="onboardingFields">
   <div *ngFor="let step of onboardingFields | keyvalue: keepOrder">
-    <h3>{{ step.key | prettyOnboardingStepNamePipe }}</h3>
+    <h3>{{ step.key | onboardingStepPipe }}</h3>
 
     <ul class="onboarding-step-meta">
       <li *ngFor="let field of step.value; let idx = index" class="mb-2" [class.is-admin]="adminView">

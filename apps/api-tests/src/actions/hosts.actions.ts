@@ -10,7 +10,9 @@ import {
   IHostMemberChangeRequest,
   IOnboardingStepMap,
   IEnvelopedData,
-  IPerformance
+  IPerformance,
+  IUserHostInfo,
+  IMyself
 } from '@core/interfaces';
 import { api } from '../environment';
 import { Stories } from '../stories';
@@ -87,13 +89,13 @@ export default {
   // Host member CRUD --------------------------------------------------------------------------------------------------------------
   // router.get <IUserStub[]>("/hosts/:hid/members", Hosts.readMembers());
   readMembers: async (host: IHost) => {
-    const res = await api.get<IUserStub[]>(`/hosts/${host._id}/members`, env.getOptions());
+    const res = await api.get<IEnvelopedData<IUserHostInfo[]>>(`/hosts/${host._id}/members`, env.getOptions());
     return res.data;
   },
 
   // router.post<IHost>("/hosts/:hid/members",Hosts.addMember());
-  addMember: async (host: IHost, user:IUser) => {
-    const res = await api.post<IHost>(`/hosts/${host._id}/members`, { value: user._id}, env.getOptions());
+  addMember: async (host: IHost, user:IMyself["user"]) => {
+    const res = await api.post<IUserHostInfo>(`/hosts/${host._id}/members`, { value: user.email_address }, env.getOptions());
     return res.data;
   },
 

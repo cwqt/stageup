@@ -1,12 +1,12 @@
-import { ErrCode, HostPermission, HTTP, IErrorResponse, IHost, IUser, IUserStub } from '@core/interfaces';
+import { ErrCode, HostPermission, HTTP, IEnvelopedData, IErrorResponse, IHost, IMUXAsset, IMyself, IUser, IUserHostInfo, IUserStub } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 describe('As a user-host, I want to be able to do Member CRUD', () => {
   let host: IHost;
-  let member: IUser;
-  let members: IUserStub[];
+  let member: IMyself["user"];
+  let members: IEnvelopedData<IUserHostInfo[]>;
   let createdUser: IUser;
 
   it('Should add an existing user as member of host', async () => {
@@ -20,9 +20,10 @@ describe('As a user-host, I want to be able to do Member CRUD', () => {
     // Create user, add to host & assert they were added to the DB
     member = await Stories.actions.users.createUser(UserType.Member);
     await Stories.actions.hosts.addMember(host, member);
+    await Stories.actions.misc.acceptHostInvite(member);
     members = await Stories.actions.hosts.readMembers(host);
 
-    expect(members.find(user => user._id === member._id)).toBeDefined();
+    expect(members.data.find(uhi => uhi.user._id === member._id)).toBeDefined();
   });
 
   it('Should update a member permission (promote)', async () => {

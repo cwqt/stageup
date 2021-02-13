@@ -1,4 +1,4 @@
-export interface IEnvelopedData<T, K> {
+export interface IEnvelopedData<T, K=null> {
   data: T;
   __client_data?: K;
   __paging_data?: PagingData;

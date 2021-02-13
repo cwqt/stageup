@@ -16,6 +16,7 @@ import { ContactInfo } from '../../models/users/contact-info.model';
 import { Person } from '../../models/users/person.model';
 import { Asset } from '../../models/asset.model';
 import { PerformancePurchase } from '../../models/performances/purchase.model';
+import { HostInvitation } from '../../models/hosts/host-invitation.model';
 
 export const create = async (): Promise<TORM.Connection> => {
   log.info('Connecting to PostgreSQL (TypeORM)...');
@@ -61,7 +62,8 @@ export const create = async (): Promise<TORM.Connection> => {
         ContactInfo,
         Person,
         Asset,
-        PerformancePurchase
+        PerformancePurchase,
+        HostInvitation
       ],
       synchronize: !Env.isEnv(Environment.Production),
       logging: false

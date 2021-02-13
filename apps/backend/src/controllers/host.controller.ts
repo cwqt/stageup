@@ -14,11 +14,11 @@ import {
   IOnboardingSubscriptionConfiguration,
   IUserHostInfo,
   pick,
-  IUserStub,
   HTTP,
   IHostMemberChangeRequest,
   IOnboardingStepMap,
   IEnvelopedData,
+  HostInviteState,
   IPerformanceStub
 } from '@core/interfaces';
 import { User } from '../models/users/user.model';
@@ -36,6 +36,8 @@ import { Performance } from '../models/performances/performance.model';
 
 import logger from '../common/logger';
 import Email = require('../common/email');
+import { HostInvitation } from '../models/hosts/host-invitation.model';
+import Env from '../env';
 
 export default class HostController extends BaseController {
   createHost(): IControllerEndpoint<IHost> {
@@ -114,23 +116,15 @@ export default class HostController extends BaseController {
     };
   }
 
-  readMembers(): IControllerEndpoint<IUserStub[]> {
+  readMembers(): IControllerEndpoint<IEnvelopedData<IUserHostInfo[], null>> {
     return {
       validators: [],
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const host = await Host.findOne(
-          { _id: req.params.hid },
-          {
-            relations: {
-              members_info: {
-                user: true
-              }
-            }
-          }
-        );
-
-        return host.members_info.map(uhi => uhi.user.toStub());
+        return await this.ORM.createQueryBuilder(UserHostInfo, 'uhi')
+          .where('uhi.host_id = :host_id', { host_id: req.params.hid })
+          .innerJoinAndSelect('uhi.user', 'user')
+          .paginate(uhi => uhi.toFull());
       }
     };
   }
@@ -170,16 +164,33 @@ export default class HostController extends BaseController {
     };
   }
 
-  //router.post<IHost>("/hosts/:hid/members", Hosts.addMember());
-  addMember(): IControllerEndpoint<IHost> {
+  //router.post<IUserHostInfo>("/hosts/:hid/members", Hosts.addMember());
+  addMember(): IControllerEndpoint<IUserHostInfo> {
     return {
       validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async (req): Promise<IHost> => {
+      controller: async req => {
         const changeRequest: IHostMemberChangeRequest = req.body;
-        // Check user not already part of a host in any capacity
-        const user = await getCheck(User.findOne({ _id: changeRequest.value as string }, { relations: ['host'] }));
-        if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+
+        // Check invited user not already part of a host in any capacity
+        const invitee = await getCheck(
+          User.findOne({ email_address: changeRequest.value as string }, { relations: ['host'] })
+        );
+        if (invitee.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+
+        // Don't allow duplicate invites to be created for a user for the same host
+        if (
+          await HostInvitation.findOne({
+            where: {
+              invitee: {
+                _id: invitee._id
+              },
+              host: {
+                _id: req.params.hid
+              }
+            }
+          })
+        ) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
         // Get host & pull in members_info for new member push
         const host = await getCheck(
@@ -195,13 +206,57 @@ export default class HostController extends BaseController {
           )
         );
 
+        // Get the person making this request for invitation
+        const inviter = await getCheck(User.findOne({ _id: req.session.user._id }));
+
+        // Add member to host as 'Pending', create an invitation & submit the invitation e-mail
         await this.ORM.transaction(async txc => {
-          await host.addMember(user, HostPermission.Member, txc);
+          await host.addMember(invitee, HostPermission.Pending, txc);
           await txc.save(host);
-          await Email.sendUserHostMembershipInvitation(user.email_address, host);
+
+          // Fire & forget send e-mail, otherwise holds up the thread waiting for a response from sendgrid
+          Email.sendUserHostMembershipInvitation(inviter, invitee, host, txc);
         });
 
-        return host.toFull();
+        // Return newly added user UserHostInfo
+        return host.members_info.find(uhi => uhi.user?.email_address == changeRequest.value).toFull();
+      }
+    };
+  }
+
+  handleHostInvite(): IControllerEndpoint<string> {
+    return {
+      authStrategy: AuthStrat.hasSpecificHostPermission(HostPermission.Pending),
+      controller: async req => {
+        const invite = await getCheck(HostInvitation.findOne({ _id: req.params.iid }));
+        const uhi = await getCheck(
+          UserHostInfo.findOne({
+            relations: ['user'],
+            where: {
+              user: {
+                _id: req.session.user._id
+              }
+            }
+          })
+        );
+
+        // Ensure the invite has not expired
+        if (timestamp() > invite.expires_at) {
+          // TODO: have task runner set to expired
+          invite.state = HostInviteState.Expired;
+          await invite.save();
+          return `${Env.FE_URL}?invite_state=${HostInviteState.Expired}`;
+        }
+
+        // Otherwise accept the user into the host
+        await this.ORM.transaction(async txc => {
+          invite.state = HostInviteState.Accepted;
+          uhi.permissions = HostPermission.Member;
+
+          await Promise.all([txc.save(invite), txc.save(uhi)]);
+        });
+
+        return `${Env.FE_URL}?invite_accepted=${HostInviteState.Accepted}`;
       }
     };
   }
@@ -221,6 +276,9 @@ export default class HostController extends BaseController {
             }
           })
         );
+
+        // Don't be able to force increase permissions if the user hasn't accepted the invitation
+        if(userHostInfo.permissions > HostPermission.Member) throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
 
         const newUserPermission: HostPermission = req.body.value;
         if (newUserPermission == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised);

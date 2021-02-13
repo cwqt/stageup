@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
-import { CreatePerformanceComponent } from '../create-performance/create-performance.component';
+import { CreatePerformanceComponent } from './create-performance/create-performance.component';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -17,58 +17,62 @@ import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 })
 export class HostPerformancesComponent implements OnInit {
   hostId: string;
-  @ViewChild(MatPaginator) paginator: MatPaginator;  
-  hostPerformancesDataSrc:MatTableDataSource<IPerformanceStub>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  hostPerformancesDataSrc: MatTableDataSource<IPerformanceStub>;
   displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
-  performances:ICacheable<IEnvelopedData<IPerformanceStub[], null>> = {
+  performances: ICacheable<IEnvelopedData<IPerformanceStub[], null>> = {
     data: null,
     loading: false,
-    error: ""
-  }
+    error: ''
+  };
 
   constructor(
-    private hostService:HostService,
+    private hostService: HostService,
     private helperService: HelperService,
     private dialog: MatDialog,
-    private appService: BaseAppService    
+    private appService: BaseAppService
   ) {}
 
-  get pager():MatPaginator { return this.hostPerformancesDataSrc.paginator }
+  get pager(): MatPaginator {
+    return this.hostPerformancesDataSrc.paginator;
+  }
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
     this.hostPerformancesDataSrc = new MatTableDataSource<IPerformanceStub>([]);
-    this.getHostPerformancesList(); 
+    this.getHostPerformancesList();
   }
 
   ngAfterViewInit() {
     this.hostPerformancesDataSrc.paginator = this.paginator;
-  } 
+  }
 
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
       this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' }),
-      (perf:IPerformance | null) => {
-        // TODO: push to performances list outside         
-    });
+      (perf: IPerformance | null) => {
+        // TODO: push to performances list outside
+      }
+    );
   }
 
   async getHostPerformancesList() {
-  this.performances.loading = true;
-    return this.hostService.readHostPerformances(this.hostId, this.pager?.pageIndex, this.pager?.pageSize)
+    this.performances.loading = true;
+    return this.hostService
+      .readHostPerformances(this.hostId, this.pager?.pageIndex, this.pager?.pageSize)
       .then(hd => {
-        this.performances.data = hd;        
+        this.performances.data = hd;
         this.hostPerformancesDataSrc.data = hd.data;
-        if(this.pager) {
+        if (this.pager) {
           this.pager.length = hd.__paging_data.total;
         }
       })
 
-      .catch(e => this.performances.error = e)
-      .finally(() => this.performances.loading = false)
-    }
-
-      openPerformance(performances:IPerformance) {
-    this.appService.navigateTo(`/performance/${performances._id}`);    
+      .catch(e => (this.performances.error = e))
+      .finally(() => (this.performances.loading = false));
   }
-};
+
+  openPerformance(performances: IPerformance) {
+    this.appService.navigateTo(`/performance/${performances._id}`);
+  }
+}

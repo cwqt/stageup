@@ -28,11 +28,12 @@ export interface IUserPrivate extends IUser {
 export interface IUserHostInfo {
   joined_at: number;  // when the user joined host
   permissions: HostPermission; // host permission level
-  user?: IUserStub // The user who is a member of the host
+  user?: IUserStub // the user who is a member of the host
 }
 
 export interface IMyself {
-  user:IUser;
+  // Send along private e-mail address when requesting the users own account
+  user:IUser & { email_address: IUserPrivate["email_address"] };
   host?:IHostStub;
   host_info?:IUserHostInfo
 }

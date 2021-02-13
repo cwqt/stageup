@@ -5,21 +5,26 @@ import * as TORM from 'typeorm';
 import Mux from '@mux/mux-node';
 import log from '../logger';
 import localtunnel from 'localtunnel';
+import session, { MemoryStore } from 'express-session';
 
+import { Environment } from '@core/interfaces';
 import PostgresProvider from './postgres.provider';
 import RedisProvider from './redis.provider';
 import MUXProvider from './mux.provider';
+import Env from '../../env';
+import { RequestHandler } from 'express-async-router';
 // import TunnelProvider from './localtunnel.provider';
 // Import InfluxProvider from "./influx.provider";
 // import s3Provider from './awsS3.provider';
 
 export interface DataClient {
+  mux: Mux;
   redis: null | RedisClient;
   influx: null | Influx.InfluxDB;
   torm: null | TORM.Connection;
   tunnel: null | localtunnel.Tunnel;
-  session_store: null | connectRedis.RedisStore;
-  mux: Mux;
+  session_store: null | connectRedis.RedisStore | MemoryStore;
+  session_handler: RequestHandler;
 }
 
 const timeout = async <T>(f: () => Promise<T>, maxExecutionTime = 10000): Promise<T> => {
@@ -40,13 +45,28 @@ export const create = async (): Promise<DataClient> => {
     torm: await timeout(PostgresProvider.create),
     redis: await timeout(RedisProvider.create),
     mux: await timeout(MUXProvider.create),
-    tunnel: null, // await timeout(tunnelProvider.create),
+    tunnel: null, // await timeout(TunnelProvider.create),
     influx: null, // await timeout(InfluxProvider.create),
-    session_store: null
+    session_store: null,
+    session_handler: null
   };
 
   // Once (if assuming set to not use MemoryStore) - Redis is connected, set up the session store
-  if (dataClient.redis) dataClient.session_store = await timeout(RedisProvider.store(dataClient.redis), 2000);
+  dataClient.session_store = Env.USE_MEMORYSTORE
+    ? new MemoryStore()
+    : await timeout(RedisProvider.store(dataClient.redis), 2000);
+
+  // Create the Redis session handler middleware
+  dataClient.session_handler = session({
+    secret: Env.PRIVATE_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      httpOnly: Env.isEnv(Environment.Production),
+      secure: Env.isEnv(Environment.Production)
+    },
+    store: dataClient.session_store
+  });
 
   return dataClient;
 };

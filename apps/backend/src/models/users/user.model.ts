@@ -13,7 +13,7 @@ import {
   PrimaryColumn
 } from 'typeorm';
 import { Except } from 'type-fest';
-import { IUser, IUserStub, IUserPrivate, Environment } from '@core/interfaces';
+import { IUser, IUserStub, IUserPrivate, Environment, IMyself } from '@core/interfaces';
 
 import { Host } from '../hosts/host.model';
 import { PerformancePurchase } from '../performances/purchase.model';
@@ -98,6 +98,10 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
       bio: this.bio
       // Purchases: []
     };
+  }
+
+  toMyself(): Required<IMyself["user"]> {
+    return {...this.toFull(), email_address: this.email_address }
   }
 
   toPrivate(): Required<IUserPrivate> {

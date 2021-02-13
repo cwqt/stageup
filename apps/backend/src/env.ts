@@ -17,6 +17,7 @@ interface IEnvironment {
   SENDGRID: {
     USERNAME: string;
     API_KEY: string;
+    ENABLED_IN_DEVELOPMENT: boolean;
   };
   MUX: {
     ACCESS_TOKEN: string;
@@ -47,14 +48,15 @@ interface IEnvironment {
     S3_BUCKET_NAME: string;
     S3_URL: string;
   };
-  isEnv: (env: Environment) => boolean;
+  isEnv: (env: Environment | Environment[]) => boolean;
 }
 
 const Env: IEnvironment = {
-  isEnv: (env: Environment) => env === process.env.NODE_ENV,
-  SITE_TITLE: 'stageup',
+  isEnv: (env: Environment | Environment[]) =>
+    Array.isArray(env) ? env.some(e => e === TRUE_ENV) : env === TRUE_ENV,
+  SITE_TITLE: 'StageUp',
   API_URL: process.env.API_URL,
-  FE_URL: process.env.FRONTEND_URL,
+  FE_URL: process.env.FE_URL,
   ENVIRONMENT: TRUE_ENV as Environment,
   PRIVATE_KEY: process.env.PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
@@ -63,7 +65,8 @@ const Env: IEnvironment = {
   USE_MEMORYSTORE: process.env.USE_MEMORYSTORE === 'true',
   SENDGRID: {
     USERNAME: process.env.SENDGRID_USERNAME,
-    API_KEY: process.env.SENDGRID_API_KEY
+    API_KEY: process.env.SENDGRID_API_KEY,
+    ENABLED_IN_DEVELOPMENT: process.env.SENDGRID_ENABLED_IN_DEVELOPMENT === "true"
   },
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,

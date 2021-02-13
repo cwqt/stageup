@@ -16,7 +16,7 @@
 
 import { HostSubscriptionLevel } from '../common/subscription.interface';
 import { IPersonInfo } from '../users/person.interface';
-import { IUser, IUserStub } from '../users/user.interface';
+import { IUser, IUserPrivate, IUserStub } from '../users/user.interface';
 import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './host.interface';
 import { IOnboardingStepReview } from './onboarding-step-review.interface';
 
@@ -25,7 +25,7 @@ export enum HostOnboardingStep {
   OwnerDetails = 1,
   SocialPresence = 2,
   AddMembers = 3,
-  SubscriptionConfiguration = 4,
+  SubscriptionConfiguration = 4
 }
 
 export enum HostOnboardingState {
@@ -33,7 +33,7 @@ export enum HostOnboardingState {
   PendingVerification = 1, // submit & awaiting verification from admin
   HasIssues = 2, // verified has having problems
   Verified = 3, // verified as valid
-  Enacted = 4, // all stages verified & submitted as complete
+  Enacted = 4 // all stages verified & submitted as complete
 }
 
 export type IHostOnboardingProcess = Omit<IHostOnboarding, 'steps'> & { steps: IOnboardingStepMap };
@@ -82,12 +82,12 @@ export interface IOnboardingSocialPresence {
 
 /**
  * @description
- * POST member ->   value: user_id          /members 
+ * POST member ->   value: email_address    /members
  * PUT member ->    value: HostPermission   /members/:mid -> user_id
  * DELETE member -> value: null             /members/:mid -> user_id
  */
 export interface IHostMemberChangeRequest {
-  value: HostPermission | IUser["_id"]; 
+  value: HostPermission | IUserPrivate['email_address'] | IUser['_id'];
 }
 
 export interface IOnboardingAddMembers {

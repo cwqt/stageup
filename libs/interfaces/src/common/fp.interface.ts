@@ -1,9 +1,12 @@
 export type Primitive = string | boolean | number;
 export type Idless<T> = Omit<T, '_id'>;
 
-export const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
+/**
+ * @description Nano-id, 11 character alpha-numeric
+ */
+export type NUUID = string;
 
-type M<A extends any[], R> = (f: M<A, R>) => (...a: A) => R;
+export const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
 /**
  * @description Y-combinator
@@ -12,6 +15,8 @@ type M<A extends any[], R> = (f: M<A, R>) => (...a: A) => R;
 export const Y = <A extends any[], R>(f: (g: (...a: A) => R) => (...a: A) => R): ((...a: A) => R) =>
   ((m: M<A, R>) => f((...x) => m(m)(...x)))((m: M<A, R>) => f((...x) => m(m)(...x)));
 
+type M<A extends any[], R> = (f: M<A, R>) => (...a: A) => R;
+ 
 /**
  * @description in-place object array sorter
  */

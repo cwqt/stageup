@@ -81,19 +81,32 @@ const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =
   });
 
   if (!uhi) return [false, {}, ErrCode.NOT_MEMBER];
+  if(uhi && uhi.permissions == HostPermission.Expired) return [false, {}, ErrCode.NOT_MEMBER];
+
   return [true, { uhi }];
 };
 
 const hasHostPermission = (permission: HostPermission): AuthStrategy => {
   return async (req, dc): Promise<AuthStratReturn> => {
     const [isMember, passthru, reason] = await isMemberOfHost(req, dc);
-    if (!isMember) {
-      return [false, {}, reason];
-    }
+    if (!isMember) return [false, {}, reason];
 
     // Highest Perms (Owner)  = 0
     // Lowest Perfs (Pending) = 4
     if (passthru.uhi.permissions > permission) {
+      return [false, {}, ErrCode.MISSING_PERMS];
+    }
+
+    return [true, { user: passthru.user }];
+  };
+};
+
+const hasSpecificHostPermission = (permission: HostPermission): AuthStrategy => {
+  return async (req, dc): Promise<AuthStratReturn> => {
+    const [isMember, passthru, reason] = await isMemberOfHost(req, dc);
+    if (!isMember) return [false, {}, reason];
+
+    if (passthru.uhi.permissions !== permission) {
       return [false, {}, ErrCode.MISSING_PERMS];
     }
 
@@ -189,5 +202,6 @@ export default {
   isLoggedIn,
   isMemberOfHost,
   hasHostPermission,
+  hasSpecificHostPermission,
   isSiteAdmin
 };

@@ -81,7 +81,7 @@ export class RegisterComponent implements OnInit {
             {
               type: "custom",
               message: (e) => "Passwords do not match",
-              value: (t, c) => c["password"].value !== t.value,
+              value: (t, c) => c["password"].value == t.value,
             },
           ],
         },

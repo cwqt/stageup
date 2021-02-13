@@ -32,6 +32,7 @@ import { HostProfileComponent } from './routes/host/host-profile/host-profile.co
 import { HostAboutComponent } from './routes/host/host-about/host-about.component';
 import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
 import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
+import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
@@ -93,6 +94,7 @@ const APP_ROUTES: Routes = [
       { path: '', component: HostLandingComponent },
       { path: 'onboarding', component: HostOnboardingComponent },
       { path: 'settings', component: HostSettingsComponent },
+      { path: 'members', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
       {
         matcher: hostMatcher,

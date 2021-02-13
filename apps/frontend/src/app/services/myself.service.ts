@@ -61,7 +61,7 @@ export class MyselfService {
       .toPromise();
   }
 
-  setUser(user: IUser) {
+  setUser(user: IMyself["user"]) {
     this.store({ ...this.$myself.value, user: user }, true);
   }
 

@@ -3,11 +3,11 @@ import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DtoCreatePerformance, CurrencyCode, GenreMap, IPerformance } from '@core/interfaces';
 import {} from 'events';
-import { createICacheable, ICacheable } from '../../../app.interfaces';
-import { HostService } from '../../../services/host.service';
-import { FormComponent } from '../../../ui-lib/form/form.component';
-import { IUiForm } from '../../../ui-lib/form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
+import { createICacheable, ICacheable } from '../../../../app.interfaces';
+import { HostService } from '../../../../services/host.service';
+import { FormComponent } from '../../../../ui-lib/form/form.component';
+import { IUiForm } from '../../../../ui-lib/form/form.interfaces';
+import { IUiDialogOptions, ThemeKind } from '../../../../ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-create-performance',

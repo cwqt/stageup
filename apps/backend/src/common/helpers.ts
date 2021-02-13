@@ -1,3 +1,4 @@
+import { NUUID } from '@core/interfaces';
 import { nanoid } from 'nanoid'
 
 /**
@@ -9,5 +10,5 @@ export const timestamp = (date?: Date): number => Math.floor((date || new Date()
 /**
  * @description Generate a unique identifier which is as long as a YouTube ID
  */
-export const uuid = () => nanoid(11);
+export const uuid = () => nanoid(11) as NUUID;
 

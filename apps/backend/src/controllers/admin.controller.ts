@@ -38,21 +38,16 @@ export default class AdminController extends BaseController {
           .innerJoinAndSelect('hop.host', 'host') // Pull in host & filter by host
           .where('host.username LIKE :username', {
             username: req.body.username ? `%${req.body.username as string}%` : '%'
-          });
+          })
 
         // Not sure about fuzzy matching ints, so don't make a WHERE if none passed
         if (req.query.state) {
           qb.andWhere('hop.state = :state', { state: req.query.state });
         }
 
-        const onboardingEnvelope = await qb
+        return await qb
           .orderBy('hop.last_submitted', (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
-          .paginate();
-
-        return {
-          data: onboardingEnvelope.data.map(o => o.toFull()),
-          __paging_data: onboardingEnvelope.__paging_data
-        };
+          .paginate(o => o.toFull());
       }
     };
   }
@@ -168,7 +163,7 @@ export default class AdminController extends BaseController {
 
                 // Don't add the owner if they're already in
                 if (potentialMember._id !== owner.user._id) {
-                  sendUserHostMembershipInvitation(potentialMember.email_address, host);
+                  sendUserHostMembershipInvitation(owner.user, potentialMember, host, txc);
 
                   // Add the member as pending (updated on membership acceptance to Member)
                   await host.addMember(potentialMember, HostPermission.Pending, txc);

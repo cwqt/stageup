@@ -1,36 +1,50 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Environment, IMyself, IUser } from '@core/interfaces';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
-import { UserService } from "apps/frontend/src/app/services/user.service";
+import { UserService } from 'apps/frontend/src/app/services/user.service';
 import { environment } from '../../../environments/environment';
+import { BaseAppService } from '../../services/app.service';
 
 @Component({
-  selector: "app-landing",
-  templateUrl: "./landing.component.html",
-  styleUrls: ["./landing.component.scss"],
+  selector: 'app-landing',
+  templateUrl: './landing.component.html',
+  styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent implements OnInit {
   myself: IMyself;
-  isLoggedIn:boolean = false;
-  isProduction:boolean = environment.environment == Environment.Production;
-  isStaging:boolean = environment.environment == Environment.Staging;
-  isLive:boolean;
+  isLoggedIn: boolean = false;
+  isProduction: boolean = environment.environment == Environment.Production;
+  isStaging: boolean = environment.environment == Environment.Staging;
+  isLive: boolean;
 
-  constructor(private myselfService:MyselfService, private router:Router) {}
+  constructor(
+    private myselfService: MyselfService,
+    private router: Router,
+    private baseAppService: BaseAppService,
+    private route: ActivatedRoute
+  ) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.isLive = this.isProduction || this.isStaging;
+    this.myselfService.$myself.subscribe(m => (this.myself = m));
 
-    this.myselfService.$myself.subscribe(m => this.myself = m);
-    console.log(environment);
+    await this.baseAppService.componentInitialising(this.route);
+
+    // May be coming in from an e-mail to accept invite /?invite_accepted=...
+    const invite = this.baseAppService.getQueryParam('invite_accepted');
+    if(invite) this.baseAppService.navigateTo(`/host`);
   }
 
-  scroll(el:HTMLElement) {
+  scroll(el: HTMLElement) {
     el.scrollIntoView();
   }
 
-  gotoLogin() { this.router.navigate(["/login"]); }
-  gotoRegister() { this.router.navigate(["/register"]); }
+  gotoLogin() {
+    this.router.navigate(['/login']);
+  }
+  gotoRegister() {
+    this.router.navigate(['/register']);
+  }
   gotoMailingList() {}
 }

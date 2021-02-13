@@ -1,7 +1,6 @@
 import {
   BaseEntity,
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   EntityManager,

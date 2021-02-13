@@ -61,15 +61,11 @@ export default class PerformanceController extends BaseController {
       })],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const envelopedPerformances = await this.ORM.createQueryBuilder(Performance, 'p')
+        return await this.ORM
+          .createQueryBuilder(Performance, 'p')
           .innerJoinAndSelect('p.host', 'host')
           .where('p.name LIKE :name', { name: req.query.search_query ? `%${req.query.search_query as string}%`: '%'})
-          .paginate();
-
-        return {
-          data: envelopedPerformances.data.map(p => p.toStub()),
-          __paging_data: envelopedPerformances.__paging_data
-        };
+          .paginate(p => p.toStub());
       }
     };
   }

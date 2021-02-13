@@ -9,6 +9,7 @@ export * from './common/subscription.interface';
 export * from './hosts/host.interface';
 export * from './hosts/host-onboarding.interface';
 export * from './hosts/onboarding-step-review.interface';
+export * from './hosts/host-invite.interface';
 
 export * from './performances/performance.interface';
 export * from './performances/genres.interface';
