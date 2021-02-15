@@ -38,10 +38,12 @@ export class LandingComponent implements OnInit {
     const invite = this.baseAppService.getQueryParam('invite_accepted');
     if(invite) this.baseAppService.navigateTo(`/host`);
 
-    let dialogRef = this.dialog.open(UserTypeClarificationComponent, {
-      height: '70%',
-      width: '70%',
-    });
+    if(localStorage.getItem("clientOrHost") === null) {
+      let dialogRef = this.dialog.open(UserTypeClarificationComponent, {
+        height: '70%',
+        width: '70%',
+      });
+    }   
   }
 
   scroll(el: HTMLElement) {
