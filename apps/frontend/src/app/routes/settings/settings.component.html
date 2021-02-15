@@ -4,6 +4,7 @@
 
         <div class="mt-4">
           <ui-button class="w-full mb-2" routerLink="/settings/profile" routerLinkActive="active-link">Profile</ui-button>
+          <ui-button class="w-full mb-2" routerLink="/settings/host" routerLinkActive="active-link">{{ !userHost ? 'Create Host' : 'Host Settings' }}</ui-button>
           <ui-button class="w-full mb-2" routerLink="/settings/billing" routerLinkActive="active-link">Billing & Plans</ui-button>
           <ui-button class="w-full mb-2" routerLink="/settings/account" routerLinkActive="active-link">Delete account</ui-button>    
         </div>

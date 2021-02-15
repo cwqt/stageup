@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { IMyself } from '@core/interfaces';
+import { BaseAppService } from '../../../services/app.service';
+import { MyselfService } from '../../../services/myself.service';
 
 @Component({
   selector: 'app-host-landing',
@@ -6,8 +9,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./host-landing.component.scss']
 })
 export class HostLandingComponent implements OnInit {
+  myself:IMyself;
 
-  constructor() { }
+  constructor(private baseAppService:BaseAppService, private myselfService:MyselfService) { }
 
   ngOnInit(): void {
   }

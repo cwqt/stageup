@@ -1,0 +1,20 @@
+<ui-dialog [buttons]="buttons" title="Add new Members" [loading]="addedMembers.loading">
+  <p>Add e-mail addresses of StageUp users to be invited to your host as Members.</p>
+
+  <mat-form-field class="py-2">
+    <mat-label>Member e-mail addresses</mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let req of addedChangeRequests" class="block"
+        [removable]="true"
+        (removed)="remove(req)">
+        {{ req.value }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Add e-mail address"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="true"
+        (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
+  </mat-form-field>
+</ui-dialog>

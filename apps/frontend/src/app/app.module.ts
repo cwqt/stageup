@@ -11,6 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { NgxMaskModule } from 'ngx-mask';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { MomentModule } from 'ngx-moment';
+import { NgxPopperModule } from 'ngx-popper';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AppComponent } from './app.component';
@@ -37,7 +38,7 @@ import { PerformanceComponent } from './routes/performance/performance.component
 import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
 import { HostComponent } from './routes/host/host.component';
-import { CreatePerformanceComponent } from './routes/host/create-performance/create-performance.component';
+import { CreatePerformanceComponent } from './routes/host/host-performances/create-performance/create-performance.component';
 import { PlayerComponent } from './components/player/player.component';
 import { SettingsComponent } from './routes/settings/settings.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
@@ -49,21 +50,29 @@ import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onbo
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from './routes/search/search.component';
+import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
 import { HostLandingComponent } from './routes/host/host-landing/host-landing.component'
-
 import { PerformanceModalComponent } from './components/modals/performance-modal.component';
-
+import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
+import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
+import { HostAboutComponent } from './routes/host/host-about/host-about.component';
+import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
+import { HostMembersComponent } from './routes/host/host-members/host-members.component';
+import { HostAddMemberComponent } from './routes/host/host-members/host-add-member/host-add-member.component';
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 // import { LogPipe } from "./_pipes/log.pipe";
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
 import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
-import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-name.pipe';
+import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
+import { HostPermissionPipe } from './_pipes/host-permission.pipe';
+
+// ---------------------------------------------------------------------------------------------------------------------
 
 @NgModule({
   declarations: [
@@ -98,17 +107,25 @@ import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-na
     HostOnboardingComponent,
     AdminPanelComponent,
     SearchComponent,
+    SearchResultsComponent,
     AdminOnboardingListComponent,
     AdminOnboardingViewComponent,
     OnboardingViewComponent,
     OnboardingStatePipe,
     ObjectLengthPipe,
     ShortDomainPipe,
-    PrettyOnboardingStepNamePipe,
+    OnboardingStepPipe,
+    HostPermissionPipe,
     OnboardingViewIssueMakerComponent,
     PerformanceModalComponent,
     UserThumbComponent,
-    HostLandingComponent
+    HostLandingComponent,
+    HostProfileComponent,
+    HostContactComponent,
+    HostAboutComponent,
+    HostFeedComponent,
+    HostMembersComponent,
+    HostAddMemberComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -121,7 +138,8 @@ import { PrettyOnboardingStepNamePipe } from './_pipes/pretty-onboarding-step-na
     HttpClientModule,
     ClickOutsideModule,
     NgxMaskModule.forRoot(),
-    MomentModule
+    MomentModule,
+    NgxPopperModule.forRoot()
   ],
   providers: [CookieService],
   bootstrap: [AppComponent],

@@ -1,15 +1,9 @@
 <div class="ui-dialog-buttons-wrapper">
-  <ui-button class="left"
-    [disabled]="leftDisabled"
-    [kind]="leftVariant"
-    (click)="onLeftClick($event)">
-      {{leftString}}
-  </ui-button>
-
-  <ui-button class="right"
-    [disabled]="rightDisabled"
-    [kind]="rightVariant"
-    (click)="onRightClick($event)">
-      {{rightString}}
+  <ui-button *ngFor="let button of buttons; let i = index"
+    [kind]="button.kind"
+    [disabled]="button.disabled"
+    [size]="'l'"
+    (click)="button.callback()">
+    {{ button.text }}
   </ui-button>
 </div>

@@ -7,7 +7,7 @@
 
     <div class="header-search">
       <!-- <ui-icon>search</ui-icon> -->
-      <ui-input type="text" placeholder="Search for performances..."></ui-input>
+      <ui-input type="text" placeholder="Search for performances..." (keydown.enter)="searchPerformances(searchBox.value)" #searchBox></ui-input>
     </div>
 
     <ui-icon class="header-notification">notification--new</ui-icon>
@@ -15,31 +15,26 @@
     <div class="header-user">
       <img [src]="myself.user.avatar" alt="">
       <span>{{ myself.user.name || myself.user.username }}</span>
-      <ui-icon *ngIf="!userPopupOpen" (click)="toggleUserPopup(true)">caret--down</ui-icon>
-      <ui-icon *ngIf="userPopupOpen" (click)="toggleUserPopup(false)">caret--up</ui-icon>
+      <ui-icon [popper]="dropdownMenu" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true"
+      [popperHideOnScroll]="true" [popperPlacement]="'bottom'">caret--down</ui-icon>      
     </div>
 
-
-    <!-- <div class="header-user">
-      <div class="header-popup" *ngIf="userPopupOpen" (clickOutside)="toggleUserPopup(false)"
-        [exclude]="'.header-user__container'">
-        <div class="header-popup__buttons">
-          <ui-button (click)="logout()">
-            <ui-icon>logout</ui-icon>Log out
-          </ui-button>
-          <ui-button (click)="gotoSettings()">
-            <ui-icon>settings</ui-icon>Settings
-          </ui-button>
-        </div>
+    <!-- * DROPDOWN MENU * -->  
+    <popper-content #dropdownMenu class="shadow-xl">
+      <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
+        <button>Profile</button>
       </div>
-  
-      <button class="header-user__container" matRipple (click)="toggleUserPopup(true)">
-        <img [src]="myself.user.avatar" alt="">
-        <div class="header-user__details">
-          <span><strong>{{ myself.user.name }}</strong></span>
-          <span>@{{ myself.user.username }}</span>
-        </div>
-        <ui-icon>overflow-menu--horizontal</ui-icon>
-      </button>
-    </div> -->
+      <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
+        <button>Settings</button>
+      </div>
+      <a>
+        <hr class="border-t mx-2">
+      </a>
+      <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
+        <button (click)="userLogout()">Logout</button>
+      </div>
+    </popper-content>
+       
+    
+
 </div>

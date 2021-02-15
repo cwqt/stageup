@@ -8,12 +8,26 @@ import {
   IHostMemberChangeRequest,
   IPerson,
   IPersonInfo,
-  ISocialInfo
+  ISocialInfo,
+  DtoCreatePerformance,
+  Genre,
+  CurrencyCode
 } from '@core/interfaces';
 import { FieldValidators as FV } from './fields.validators';
 
 export namespace ObjectValidators {
   type ObjectValidator<T> = { [index in keyof T]: (v: ValidationChain) => ValidationChain };
+
+  export const DtoCreatePerformance = (): ObjectValidator<DtoCreatePerformance> => {
+    return {
+      name: v => FV.isString(v),
+      description: v => FV.isString(v),
+      genre: v => v.isIn(Object.values(Genre)),
+      price: v => v.isInt(),
+      currency: v => v.isIn(Object.values(CurrencyCode)),
+      premiere_date: v => v.optional({ nullable: true }).custom(x => FV.timestamp(v))
+    };
+  };
 
   export const IAddress = (): ObjectValidator<Idless<IAddress>> => {
     return {
@@ -60,9 +74,10 @@ export namespace ObjectValidators {
   };
 
   export const IHostMemberChangeRequest = (
-    value: IHostMemberChangeRequest['value'] = null): ObjectValidator<IHostMemberChangeRequest> => {
+    value: IHostMemberChangeRequest['value'] = null
+  ): ObjectValidator<IHostMemberChangeRequest> => {
     return {
-      value: v => v.optional(true), // TODO: update this validator to check for either typeof HostPermission or number
+      value: v => v.optional(true) // TODO: update this validator to check for either typeof HostPermission or number
     };
   };
 }

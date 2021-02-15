@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 @import "apps/frontend/src/styles/variables";
 
+popper-content .ngxp__container{ background: white; } // Adds white bg colour to poppers, transparent by default
+
 * {
   box-sizing: border-box;
 }

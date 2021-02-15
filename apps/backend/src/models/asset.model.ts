@@ -1,12 +1,14 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, BeforeInsert, PrimaryColumn } from 'typeorm';
 import { IAsset, IAssetMeta, IGIFMeta, AssetType, IThumbnailMeta, IStaticMeta, Primitive } from '@core/interfaces';
-import config from '../config';
-import { timestamp } from '../common/helpers';
+import Env from '../env';
+import { timestamp, uuid } from '../common/helpers';
 import { Except } from 'type-fest';
 
 @Entity()
 export class Asset<T> extends BaseEntity implements IAsset<T> {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column('timestamp') created_at: number;
   @Column('enum', { enum: AssetType }) asset_type: AssetType;
   @Column('jsonb') asset_meta: IAssetMeta<T>;
@@ -22,7 +24,7 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
     // Hack the typing a little
     const meta = this.asset_meta.data as unknown;
     const endpointMappers: { [index in AssetType]?: string } = {
-      [AssetType.Image]: `http://${config.AWS.S3_URL}.com/${(meta as IStaticMeta).key_id}`,
+      [AssetType.Image]: `http://${Env.AWS.S3_URL}.com/${(meta as IStaticMeta).key_id}`,
       [AssetType.Thumbnail]: this.createThumbnailUrl(meta as IThumbnailMeta),
       [AssetType.AnimatedGIF]: this.createGIFUrl(meta as IGIFMeta)
     };
@@ -41,7 +43,7 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
       fit_mode: assetMeta.fit_mode ?? 'smartcrop'
     };
 
-    return `${config.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}${stitchParameters(parameters)}`;
+    return `${Env.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}${stitchParameters(parameters)}`;
   };
 
   createGIFUrl = (assetMeta: IGIFMeta): string => {
@@ -53,7 +55,7 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
       fps: assetMeta.fps ?? 15
     };
 
-    return `${config.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}/${stitchParameters(parameters)}`;
+    return `${Env.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}/${stitchParameters(parameters)}`;
   };
 }
 

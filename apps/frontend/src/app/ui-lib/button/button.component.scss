@@ -41,6 +41,10 @@
     font-size: 18px;
     padding: 16px 48px 16px 16px;
   }
+  &--transparent {
+    background-color: transparent !important;
+    border: none !important;
+  }
   &:disabled {
     // background-color: #efefef;
     opacity: .5;

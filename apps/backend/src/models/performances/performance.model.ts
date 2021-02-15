@@ -1,25 +1,29 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn
 } from 'typeorm';
-import { CurrencyCode, IPerformance, IPerformanceStub, IRating, PerformanceState } from '@core/interfaces';
+import { CurrencyCode, Genre, IPerformance, IPerformanceStub, IRating, PerformanceState } from '@core/interfaces';
 
 import { PerformanceHostInfo as PHostInfo, PerformanceHostInfo } from './performance-host-info.model';
 import { Host } from '../hosts/host.model';
 import { User } from '../users/user.model';
 import { DataClient } from '../../common/data';
 import { PerformancePurchase } from '../performances/purchase.model';
-import { timestamp } from '../../common/helpers';
+import { timestamp, uuid } from '../../common/helpers';
 
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column() created_at: number;
   @Column() name: string;
   @Column() description?: string;
@@ -28,6 +32,8 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column() playback_id: string;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
+  @Column({ default: true }) is_private: boolean;
+  @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceState }) state: PerformanceState;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
 
@@ -89,7 +95,9 @@ export class Performance extends BaseEntity implements IPerformance {
       ratings: this.ratings,
       state: this.state,
       price: this.price,
-      currency: this.currency
+      currency: this.currency,
+      genre: this.genre,
+      is_private: this.is_private
     };
   }
 

@@ -21,6 +21,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { FormBodyComponent } from "./form/form-body/form-body.component";
 import { HrComponent } from './hr/hr.component';
 import { PlaceholderComponent } from "./placeholder/placeholder.component";
+import { DialogComponent } from './dialog/dialog.component';
 
 
 const ExportedUiComponents = [
@@ -36,13 +37,15 @@ const ExportedUiComponents = [
   InputComponent,
   FormComponent,
   HrComponent,
-  PlaceholderComponent
+  PlaceholderComponent,
+  DialogComponent
 ];
 
 @NgModule({
   declarations: [
     ...ExportedUiComponents,
-    FormBodyComponent, // internal recursive component for forms
+    FormBodyComponent
+     // internal recursive component for forms
   ],
   imports: [
     CommonModule,

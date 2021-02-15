@@ -1,4 +1,4 @@
-import config from '../../config';
+import Env from '../../env';
 import log from '../logger';
 import * as TORM from 'typeorm';
 import { Environment } from '@core/interfaces';
@@ -16,38 +16,39 @@ import { ContactInfo } from '../../models/users/contact-info.model';
 import { Person } from '../../models/users/person.model';
 import { Asset } from '../../models/asset.model';
 import { PerformancePurchase } from '../../models/performances/purchase.model';
+import { HostInvitation } from '../../models/hosts/host-invitation.model';
 
 export const create = async (): Promise<TORM.Connection> => {
   log.info('Connecting to PostgreSQL (TypeORM)...');
 
-  if (typeof config.PG.HOST === 'undefined') {
-    throw new TypeError('Missing .env PG_HOST');
+  if (typeof Env.PG.HOST === 'undefined') {
+    throw new TypeError('Missing .env POSTGRES_HOST');
   }
 
-  if (typeof config.PG.PORT === 'undefined') {
-    throw new TypeError('Missing .env PG_PORT');
+  if (typeof Env.PG.PORT === 'undefined') {
+    throw new TypeError('Missing .env POSTGRES_PORT');
   }
 
-  if (typeof config.PG.USER === 'undefined') {
-    throw new TypeError('Missing .env PG_USER');
+  if (typeof Env.PG.USER === 'undefined') {
+    throw new TypeError('Missing .env POSTGRES_USER');
   }
 
-  if (typeof config.PG.PASS === 'undefined') {
-    throw new TypeError('Missing .env PG_PASS');
+  if (typeof Env.PG.PASS === 'undefined') {
+    throw new TypeError('Missing .env POSTGRES_PASS');
   }
 
-  if (typeof config.PG.DB === 'undefined') {
-    throw new TypeError('Missing .env PG_DB');
+  if (typeof Env.PG.DB === 'undefined') {
+    throw new TypeError('Missing .env POSTGRES_DB');
   }
 
   try {
     const conn = await TORM.createConnection({
       type: 'postgres',
-      host: config.PG.HOST,
-      port: config.PG.PORT,
-      username: config.PG.USER,
-      password: config.PG.PASS,
-      database: config.PG.DB,
+      host: Env.PG.HOST,
+      port: Env.PG.PORT,
+      username: Env.PG.USER,
+      password: Env.PG.PASS,
+      database: Env.PG.DB,
       entities: [
         User,
         Onboarding,
@@ -61,9 +62,10 @@ export const create = async (): Promise<TORM.Connection> => {
         ContactInfo,
         Person,
         Asset,
-        PerformancePurchase
+        PerformancePurchase,
+        HostInvitation
       ],
-      synchronize: !config.isEnv(Environment.Production),
+      synchronize: !Env.isEnv(Environment.Production),
       logging: false
     });
 
@@ -76,10 +78,11 @@ export const create = async (): Promise<TORM.Connection> => {
   }
 };
 
+
+// import { EOL } from 'os';
+// import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
 // const generateUML = async (conn: TORM.Connection) => {
-// if(config.isEnv(Environment.Development)) {
-//     import { EOL } from 'os';
-//     import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
+// if(Env.isEnv(Environment.Development)) {
 
 //     const flags: Flags = {
 //       direction: Direction.LR,

@@ -1,4 +1,4 @@
-# core &nbsp; ![Dev Build](https://github.com/EventiGroup/eventi/workflows/Build/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
+# core &nbsp; ![Dev Build](https://github.com/StageUp/core/workflows/Build/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
 
 Live-streaming & VOD platform for the performance arts.
 
@@ -52,49 +52,46 @@ npm install -g nx   # 11.1.5
 
 Currently we just have just two applications - a frontend & a backend, but in the future this will be expanded to adding a task runner, notifications fan-out, recommendations engine etc, all of which will be sharing the interfaces + other shared code.
 
+### ng-cli commands within Nx
+
+* __Component__: `nx g @nrwl/angular:component components/COMPONENT_NAME --project=frontend --module=app.module`
+* __Service__: `nx g @nrwl/angular:service services/SERVICE_NAME --project=frontend ---module=app.module`
+
 ## Project Layout
 
 ```sh
-  apps               # where all the apps live
-    frontend         # the eventi frontend
-    backend          # the eventi api
-    api-tests        # integration tests
+  apps
+    frontend           # the stageup frontend
+    backend            # the stageup backend
+      .env.example     # example .env
+      .env.development # also .env.staging, .testing & .production
+    api-tests          # integration tests
+      .env.example     # example .env - call actual one just .env
+          
+  libs                 # where all shared code live
+    interfaces         # typescript interfaces
+    ui-lib             # frontend generic angular component library
         
-  libs               # where all shared code live
-    interfaces       # typescript interfaces
-      
-  deploys            # info pertaining to deployment
-    k8s              # kubernetes files (unused for now)
-    docker           # docker-compose (dev, prod)
-    nginx.conf       # nginx config for frontend server
-      
-  tools              # non-source code stuff
-      
-  .github            # github actions
-  .vscode            # editor settings
-  .prettierrc        # code formatting config
-  .xo-config.json    # linter config
-  nx.json            # workspace config
-  package.json       # where _all_ packages are listed
-  tsconfig.base.json # base ts config
-  workspace.json     # where all apps, libs are defined
+  deploys              # info pertaining to deployment
+    k8s                # kubernetes files (unused for now)
+    docker             # docker-compose (dev, prod)
+    nginx.conf         # nginx config for frontend server
+        
+  tools                # non-source code stuff
+        
+  .github              # github actions
+  .vscode              # editor settings
+  .prettierrc          # code formatting config
+  nx.json              # nx workspace config
+  ship.config.js       # ship.js release tool config
+  package.json         # where _all_ packages are listed
+  tsconfig.base.json   # base ts config
+  workspace.json       # where all apps/libs are defined
+  .env                 # .env for github tokens (deployment only)
 ```
 
 ## Backend
-Create a `.env` file in the root of `apps/backend/`, this will store our secret variables - please never share these with anyone - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
-
-```
-PRIVATE_KEY="SOME_PASSWORD"
-EMAIL_ADDRESS="SOME_EMAIL"
-PG_USER="POSTGRES_USER"
-PG_PASS="mysecretpassword"
-NODE_ENV="development"
-```
-
-* `PRIVATE_KEY`: Used for hashing/salting of passwords
-* `EMAIL_ADDRESS`: Used for the sender when sending e-mails via SendGrid
-* `PG_USER`: Your postgres user account
-* `NODE_ENV`: Used to define the environment in which the backend is running; can be `production`, `testing` or `development`
+Create a `.env.development` file in the root of `apps/backend/` based off of the provided `.env.example`, this will store our secret variables - please never share these with anyone - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
 
 ### MUX
 
@@ -104,12 +101,12 @@ Once you're signed up go to <https://dashboard.mux.com/settings/access-tokens>
 Click _'Generate new token'_ on the right.  
 Click _'Full access'_ on MUX Video for permissions & then click _'Generate token'_.
 
-Add the following to your `.env` file by copy & pasting the values:
+Add the following to your `.env.development` file by copy & pasting the values:
 
 ```
 MUX_ACCESS_TOKEN="Access Token ID"
 MUX_SECRET_KEY="Secret Key"
-LOCALTUNNEL_URL="eventi-YOUR_NAME"
+LOCALTUNNEL_URL="stageup-YOUR_NAME"
 ```
 
 * `LOCALTUNNEL_URL`: When testing locally we want to be able to recieve webhooks from MUX, instead of port forwarding our router we'll use HTTP tunneling via [localtunnel](https://localtunnel.me/) to receive them.
@@ -117,10 +114,10 @@ LOCALTUNNEL_URL="eventi-YOUR_NAME"
 We'll also need to add a new webhook, go to: <https://dashboard.mux.com/settings/webhooks>
 
 Click _'Create new webhook'_.  
-For the _'URL to notify'_ add `https://eventi-YOUR_NAME.loca.lt/mux/hooks`.  
+For the _'URL to notify'_ add `https://stageup-YOUR_NAME.loca.lt/mux/hooks`.  
 And then click _'Create webhook'_.
 
-There should be a row with your webhook, click _'Show Signing Secret'_ & paste it into your `.env`.
+There should be a row with your webhook, click _'Show Signing Secret'_ & paste it into your `.env.development`.
 
 ```
 MUX_HOOK_SIGNATURE="MY_SIGNING_SECRET"
@@ -147,40 +144,12 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
 * __api-tests__
+  - Create a new database using TablePlus called `testing`
+  - Make sure backend is running in test mode via `npm run backend:testing`
   - For developing a single test use: `npm run api-tests`
   - This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
   - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
   - Now you can develop the test & it will auto-re-run every time a change is made & saved
-
-## Secrets
-
-These are private values that should never be shared with anyone.
-### apps/backend/.env
-```d
-PRIVATE_KEY="somerandomprivatekey"
-
-POSTGRES_HOST="localhost"
-POSTGRES_USER="postgres"
-POSTGRES_PASS="mysecretpassword"
-
-REDIS_HOST="localhost"
-
-MUX_ACCESS_TOKEN="muxaccesstoken"
-MUX_SECRET_KEY="muxsecretkey"
-MUX_HOOK_SIGNATURE="muxhooksignature"
-
-SENDGRID_USERNAME="sendgridusername"
-SENDGRID_API_KEY="sendgridapikey"
-
-AWS_S3_ACCESS_KEY_ID="awss3accesskeyid"
-AWS_S3_ACCESS_SECRET_KEY="awss3secretkey"
-AWS_S3_BUCKET_NAME="awss3bucketname"
-AWS_S3_URL="awss3bucketurl"
-
-# development only
-LOCALTUNNEL_URL="localtunnelurl"
-USE_MEMORYSTORE="true/false"
-```
 
 # Deployment - [Miro](https://miro.com/app/board/o9J_lZ6kqD4=/?moveToWidget=3074457353528169240&cot=14)
 
@@ -192,18 +161,18 @@ To be able to create a release first:
 
 ## Triggering a release
 
-* Create release tag using: `npm run release`
-* Review release PR on GitHub
-* Trigger release
-* Build all projects & Docker images
-* Deploy to AWS Elastic Container Registry
-* Deploy to AWS EC2 instance
-
-To build all projects & compile the docker images, run:
-
-```shell
-npm run deploy:staging # or :production
-```
+* All code merged into dev ready for release (`commit-build-test.yml`)
+* Prepare release via: `npm run release`, which will:
+  - Switch to `dev` branch
+  - Create a release PR on GitHub via _shipjs_ (`shipjs-prepare.yml`)
+    * Automated actions on branch `release-*` (`release-build.yml`)
+      - Build all projects source & compile Docker images
+      - Push images to AWS Elastic Container Registry
+      - Deploy to staging AWS EC2 instance
+      - Integration tests against staging environment
+* Squash-merge release PR squash-merged into master
+  - Automated actions on branch `master` (`release-deploy.yml`)
+    * Deploy created images to production infrastructure
 
 <br/>
 

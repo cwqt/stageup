@@ -50,6 +50,6 @@ export class AdminOnboardingListComponent implements OnInit, AfterViewInit {
   }
 
   openOnboarding(onboarding:IHostOnboarding) {
-    this.appService.navigateTo(`/admin/onboarding/${onboarding._id}`);
+    this.appService.navigateTo(`/admin/onboarding/${onboarding.host._id}`);
   }
 }

@@ -32,10 +32,11 @@
         tabindex="0"
         autocomplete="off"
         class="form-field__input" />
-        <div class="form-field__password" *ngIf="type == 'password'">
+        <!-- FIXME: fix ui-icon-button to re-enable this icon to display password -->
+        <!-- <div class="form-field__password" *ngIf="type == 'password'">
           <ui-icon-button size="m" (click)="togglePasswordVisibility(false, $event)" *ngIf="passwordVisible"><ui-icon>view--filled</ui-icon></ui-icon-button>
           <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>  
-        </div>
+        </div> -->
       </div>
   </div>
 
@@ -109,6 +110,28 @@
           noEntriesFoundLabel="No results"></ngx-mat-select-search>
       </mat-option>
       <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.key">
+        {{ item.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Date picker -->
+  <mat-form-field appearance="fill" *ngIf="type == 'date'">
+    <mat-label>{{ label || 'Choose a date' }}</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="value">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- Time picker -->
+  <mat-form-field *ngIf="type == 'time'" appearance="fill">
+    <mat-label>{{ label }}</mat-label>
+    <mat-select #singleSelect
+      (blur)="onTouched()"
+      (focus)="onFocus()"
+      [(ngModel)]="value"
+      disableOptionCentering>
+      <mat-option *ngFor="let item of timeItems" [value]="item.key">
         {{ item.value }}
       </mat-option>
     </mat-select>

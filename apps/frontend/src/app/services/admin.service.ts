@@ -14,12 +14,12 @@ export class AdminService {
       .toPromise();
   }
 
-  enactOnboardingProcess(onboardingId: number): Promise<void> {
+  enactOnboardingProcess(onboardingId: string): Promise<void> {
     return this.http.post<void>(`/api/admin/onboardings/${onboardingId}/enact`, null).toPromise();
   }
 
   // router.post <void> (`/admin/onboarding/:oid/review`, Admin.reviewOnboarding());
-  reviewOnboarding(onboardingId:number, review:IOnboardingReview["steps"]):Promise<void> {
+  reviewOnboarding(onboardingId: string, review: IOnboardingReview['steps']): Promise<void> {
     return this.http.post<void>(`/api/admin/onboardings/${onboardingId}/review`, review).toPromise();
   }
 }

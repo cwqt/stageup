@@ -1,10 +1,13 @@
-import { BaseEntity, Column, Entity, EntityManager, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { IContactInfo } from '@core/interfaces';
 import { Address } from './address.model';
+import { uuid } from '../../common/helpers';
 
 @Entity()
 export class ContactInfo extends BaseEntity implements IContactInfo {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column({ nullable: true }) mobile_number: number;
   @Column({ nullable: true }) landline_number: number;
 

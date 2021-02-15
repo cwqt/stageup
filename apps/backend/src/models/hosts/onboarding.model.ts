@@ -1,10 +1,12 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
   OneToMany,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn
 } from 'typeorm';
 import {
@@ -26,12 +28,14 @@ import {
 import { Host } from '../hosts/host.model'
 import { User } from '../users/user.model';
 import Validators, { object, single, array } from '../../common/validate';
-import { timestamp } from '../../common/helpers';
+import { timestamp, uuid } from '../../common/helpers';
 import { OnboardingReview } from './onboarding-review.model';
 
 @Entity()
 export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column('enum', { enum: HostOnboardingState }) state: HostOnboardingState;
   @Column() created_at: number;
   @Column({ nullable: true }) completed_at: number;

@@ -10,9 +10,9 @@
       <h2 class="mb-8">Live streaming & VoD for Performance Arts</h2>
 
       <div class="flex">
-        <ui-button class="flex-initial mr-4" kind="accent" icon="email" (click)="gotoMailingList()" *ngIf="isLive">Join the mailing list</ui-button>
-        <ui-button class="flex-initial mr-4" [kind]="isLive ? 'primary' :'accent'" icon="login" (click)="gotoLogin()" *ngIf="!isProduction">Log In</ui-button>
-        <ui-button class="flex-initial mr-4" kind="primary" icon="user" (click)="gotoRegister()" *ngIf="!isLive">Register</ui-button>
+        <!-- <ui-button class="flex-initial mr-4" kind="accent" icon="email" (click)="gotoMailingList()" *ngIf="isLive">Join the mailing list</ui-button> -->
+        <ui-button class="flex-initial mr-4" [kind]="isLive ? 'primary' :'accent'" icon="login" (click)="gotoLogin()">Log In</ui-button>
+        <ui-button class="flex-initial mr-4" kind="primary" icon="user" (click)="gotoRegister()">Register</ui-button>
       </div>
       <br>
     </div>

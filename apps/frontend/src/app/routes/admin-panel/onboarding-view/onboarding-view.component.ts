@@ -29,7 +29,7 @@ export interface IUiStepMapField {
 })
 export class OnboardingViewComponent implements OnInit {
   @Input() adminView: boolean = false;
-  @Input() hostId: number;
+  @Input() hostId: string;
 
   // TODO: some steps we don't have requirements for yet...
   private SKIPPED_STEPS = [HostOnboardingStep.AddMembers, HostOnboardingStep.SubscriptionConfiguration];

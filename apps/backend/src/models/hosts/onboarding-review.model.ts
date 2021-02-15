@@ -1,16 +1,18 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import {
   IOnboardingReview
 } from '@core/interfaces';
 
 import { User } from '../users/user.model';
-import { timestamp } from '../../common/helpers';
+import { timestamp, uuid } from '../../common/helpers';
 import { Onboarding } from './onboarding.model';
 
 @Entity()
 export class OnboardingReview extends BaseEntity implements IOnboardingReview {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column() onboarding_version: number;
   @Column() reviewed_at: number;
   @Column('jsonb') steps: IOnboardingReview["steps"];

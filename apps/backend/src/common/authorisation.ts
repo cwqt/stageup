@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { DataClient } from './data';
 import { User } from '../models/users/user.model';
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
-import config from '../config';
+import Env from '../env';
 import { Host } from '../models/hosts/host.model';
 import { Performance } from '../models/performances/performance.model';
 
@@ -28,7 +28,7 @@ const isOurself: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
     return [isAuthorised, _, reason];
   }
 
-  const user = await User.findOne({ _id: Number.parseInt(req.params.uid) });
+  const user = await User.findOne({ _id: req.params.uid });
   if (user._id !== req.session.user._id) {
     return [false, {}, ErrCode.NO_SESSION];
   }
@@ -40,7 +40,7 @@ const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =
   const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
   if (!isAuthorised) return [isAuthorised, _, reason];
 
-  let hostId = req.params.hid ? Number.parseInt(req.params.hid) : null;
+  let hostId:string = req.params.hid || null;
 
   // For performances - check intersection between performance host & user host
   if (!hostId && req.params.pid) {
@@ -53,7 +53,7 @@ const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =
         }
       },
       where: {
-        _id: Number.parseInt(req.params.pid),
+        _id: req.params.pid,
         host: {
           members_info: {
             user: {
@@ -81,19 +81,32 @@ const isMemberOfHost: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =
   });
 
   if (!uhi) return [false, {}, ErrCode.NOT_MEMBER];
+  if(uhi && uhi.permissions == HostPermission.Expired) return [false, {}, ErrCode.NOT_MEMBER];
+
   return [true, { uhi }];
 };
 
 const hasHostPermission = (permission: HostPermission): AuthStrategy => {
   return async (req, dc): Promise<AuthStratReturn> => {
     const [isMember, passthru, reason] = await isMemberOfHost(req, dc);
-    if (!isMember) {
-      return [false, {}, reason];
-    }
+    if (!isMember) return [false, {}, reason];
 
     // Highest Perms (Owner)  = 0
     // Lowest Perfs (Pending) = 4
     if (passthru.uhi.permissions > permission) {
+      return [false, {}, ErrCode.MISSING_PERMS];
+    }
+
+    return [true, { user: passthru.user }];
+  };
+};
+
+const hasSpecificHostPermission = (permission: HostPermission): AuthStrategy => {
+  return async (req, dc): Promise<AuthStratReturn> => {
+    const [isMember, passthru, reason] = await isMemberOfHost(req, dc);
+    if (!isMember) return [false, {}, reason];
+
+    if (passthru.uhi.permissions !== permission) {
       return [false, {}, ErrCode.MISSING_PERMS];
     }
 
@@ -116,7 +129,7 @@ const isSiteAdmin: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
 
 const isEnv = (env: Environment): AuthStrategy => {
   return async (req, dc): Promise<AuthStratReturn> => {
-    if (!config.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
+    if (!Env.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
     return [true, {}];
   };
 };
@@ -126,7 +139,7 @@ const isEnv = (env: Environment): AuthStrategy => {
  * @description Is currently running on a live, deployed instance
  */
 const isLive: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
-  if (config.isEnv(Environment.Staging) || config.isEnv(Environment.Production)) {
+  if (Env.isEnv(Environment.Staging) || Env.isEnv(Environment.Production)) {
     return [true, {}];
   } else {
     return [false, {}];
@@ -189,5 +202,6 @@ export default {
   isLoggedIn,
   isMemberOfHost,
   hasHostPermission,
+  hasSpecificHostPermission,
   isSiteAdmin
 };

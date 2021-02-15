@@ -23,24 +23,12 @@
             "production": {
               "optimization": true,
               "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/backend/environments/environment.ts",
-                  "with": "apps/backend/environments/environment.prod.ts"
-                }
-              ]
+              "inspect": false
             },
             "staging": {
               "optimization": true,
               "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/backend/environments/environment.ts",
-                  "with": "apps/backend/environments/environment.staging.ts"
-                }
-              ]
+              "inspect": false
             }
           }
         },
@@ -51,15 +39,7 @@
               "buildTarget": "backend:build"
             },
             "testing": {
-              "buildTarget": "backend:build",
-              "options": {
-                "fileReplacements": [
-                  {
-                    "replace": "apps/backend/environments/environment.ts",
-                    "with": "apps/backend/environments/environment.testing.ts"
-                  }
-                ]  
-              }
+              "buildTarget": "backend:build"
             },
             "staging": {
               "buildTarget": "backend:build:staging"
@@ -84,6 +64,7 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
+            "directory": "apps/backend",
             "lintFilePatterns": [
               "apps/backend/**/*.{ts,tsx,js,jsx}"
             ]
@@ -121,12 +102,6 @@
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/frontend/src/environments/environment.ts",
-                  "with": "apps/frontend/src/environments/environment.prod.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -136,12 +111,6 @@
               "buildOptimizer": true
             },
             "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/frontend/src/environments/environment.ts",
-                  "with": "apps/frontend/src/environments/environment.staging.ts"
-                }
-              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,

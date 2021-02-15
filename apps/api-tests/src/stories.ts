@@ -1,17 +1,18 @@
 import { environment, UserType } from './environment';
-import { HostPermission, IUser } from '@core/interfaces';
+import { HostPermission, IMyself, IUser } from '@core/interfaces';
 
 export class CachedUser {
-  user: IUser;
+  user: IMyself["user"];
   session: string;
 
-  constructor(user: IUser) {
+  constructor(user: IMyself["user"]) {
     this.user = user;
     this.session = '';
   }
 }
 
 import commonActions from './actions/common.actions';
+import miscActions from './actions/misc.actions';
 import usersActions from './actions/users.actions';
 import hostsActions from './actions/hosts.actions';
 import adminActions from './actions/admin.actions';
@@ -23,6 +24,7 @@ export const Stories = {
   cachedUsers: {} as { [index in UserType]?: CachedUser },
   actions: {
     common: commonActions,
+    misc: miscActions,
     users: usersActions,
     hosts: hostsActions,
     admin: adminActions,

@@ -3,45 +3,50 @@ import { NextFunction, Response, Request } from 'express';
 import { SelectQueryBuilder } from 'typeorm';
 import { IEnvelopedData } from '@core/interfaces';
 
-// Modified from
-// https://github.com/savannabits/typeorm-pagination
+export type EntitySerialiser<T, K> = (e: T) => K;
+
+// Modified from https://github.com/savannabits/typeorm-pagination
 declare module 'typeorm' {
   export interface SelectQueryBuilder<Entity> {
-    paginate(per_page?: number | null): Promise<IEnvelopedData<Entity[], null>>;
+    paginate(): Promise<IEnvelopedData<Entity[], null>>;
+    paginate<K>(serialiser: EntitySerialiser<Entity, K>): Promise<IEnvelopedData<K[], null>>;
   }
 }
 
 /**
- * Boot the package by patching the SelectQueryBuilder
+ * @description Create a middleware which patches into SelectQueryBuilder prototype
  */
-export const pagination = (request: Request, res: Response, next: NextFunction) => {
+export const pagination = (req: Request, res: Response, next: NextFunction) => {
   // Use function instead of => to have this reference in queryBuilder chain
-  SelectQueryBuilder.prototype.paginate = async function <T>(
-    per_page?: number | null
-  ): Promise<IEnvelopedData<T[], null>> {
-    // FIXME: not sure why this returns [Object: null prototype], but coercing it back and forth gives us an object
-    const locals = JSON.parse(JSON.stringify(res.locals));
+  SelectQueryBuilder.prototype.paginate = async function <T, K>(
+    serialiser?: EntitySerialiser<T, K>
+  ): Promise<IEnvelopedData<T[] | K[], null>> {
+    const locals = res.locals;
     const current_page = locals.page === 0 ? 1 : locals.page;
-    per_page = per_page || locals.per_page;
 
-    return paginate(this, current_page, per_page);
+    return paginate<T, K>(
+      this,
+      current_page,
+      locals.per_page,
+      serialiser
+    );
   };
 
   next();
 };
 
-const paginate = async <T>(
-  builder: SelectQueryBuilder<any>,
+const paginate = async <T, K>(
+  builder: SelectQueryBuilder<T>,
   page: number,
-  per_page: number
-): Promise<IEnvelopedData<T[], null>> => {
+  per_page: number,
+  serialiser?: EntitySerialiser<T, K>
+): Promise<IEnvelopedData<K[] | T[], null>> => {
   const skip = (page - 1) * per_page;
-  const total = builder;
-  const count = await total.getCount();
-  const res = await builder.skip(skip).take(per_page).getMany();
+  const count = await builder.getCount();
+  const res = (await builder.skip(skip).take(per_page).getMany()) as T[];
 
   return {
-    data: res as T[],
+    data: serialiser ? res.map(e => serialiser(e)) : res,
     __client_data: null,
     __paging_data: {
       from: skip <= count ? skip + 1 : null,

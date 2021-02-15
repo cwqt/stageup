@@ -1,10 +1,13 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, BeforeInsert, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { IAddress } from '@core/interfaces';
 import { ContactInfo } from './contact-info.model';
+import { uuid } from '../../common/helpers';
 
 @Entity()
 export class Address extends BaseEntity implements IAddress {
-  @PrimaryGeneratedColumn() _id: number;
+  @PrimaryColumn() _id: string;
+  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+
   @Column() city: string;
   @Column() iso_country_code: string;
   @Column() postcode: string;
@@ -22,7 +25,7 @@ export class Address extends BaseEntity implements IAddress {
     this.street_number = data.street_number;
   }
 
-  toFull(): IAddress {
+  toFull(): Required<IAddress> {
     return {
       _id: this._id,
       city: this.city,

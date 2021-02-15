@@ -1,6 +1,5 @@
-import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
-import { DottedPaths, Primitive } from '@core/interfaces';
-import { ICacheable } from "apps/frontend/src/app/app.interfaces";
+import { AbstractControl, NgControl } from "@angular/forms";
+import { CurrencyCode, DottedPaths, Primitive } from '@core/interfaces';
 import { IGraphNode } from "../input/input.component";
 
 /**
@@ -25,6 +24,9 @@ export interface IUiFormField {
     | "textarea"
     | "checkbox"
     | "select"
+    | "money"
+    | "date"
+    | "time"
     | "tree"
     | "phone"
     | "container";
@@ -36,7 +38,8 @@ export interface IUiFormField {
   hint?: string;
   fields?: IUiForm<any>["fields"]; // for nested objects
 
-  options?: IUiFieldSelectOptions | IUiFieldTextOptions | any;
+  // ui-input options
+  options?: IUiFieldSelectOptions | IUiFieldTextOptions | IUiFieldMoneyOptions | any;
 
   // internal ----------------------
   disabled?: boolean;
@@ -49,9 +52,14 @@ export interface IMaskOptions {
   value: string;
 }
 
+export interface IUiFieldMoneyOptions {
+  currency: CurrencyCode;
+}
+
 export interface IUiFieldOptions {
   width?: number; //for containers
 }
+
 export interface IUiFieldTextOptions extends IUiFieldOptions {
   mask?: IMaskOptions;
   transformer?: (v:Primitive) => Primitive;
@@ -61,7 +69,6 @@ export interface IUiFieldSelectOptions extends IUiFieldOptions {
   multi: boolean;
   search: boolean;
 }
-
 export interface IUiFormFieldValidator {
   type: "required" | "pattern" | "minlength" | "maxlength" | "email" | "custom";
   value?: number | string | RegExp | CustomUiFieldValidator;
@@ -74,10 +81,11 @@ export type CustomUiFieldValidator = (
 ) => boolean;
 
 export interface IUiFormSubmit<T> {
+  text: string;
   variant: "primary" | "secondary";
   size?: "s" | "m" | "l";
-  text: string;
+  isHidden?: boolean;
   loadingText?: string;
-  fullWidth?: boolean;
-  handler: (formData: AbstractControl["value"]) => Promise<T>;
+  handler: (transformedData:any) => Promise<T>;
+  transformer?: (formData: AbstractControl["value"]) => any;
 }

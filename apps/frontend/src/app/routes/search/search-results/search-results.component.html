@@ -1,0 +1,15 @@
+<h2 class="mb-10">Showing results for '{{ searchQuery }}':</h2>
+<ng-container  *ngIf="searchResults.data?.data">
+    <div class="my-5 bg-white rounded shadow-lg grid grid-cols-3" *ngFor="let result of searchResults.data.data" (click)="openPerformanceModal(result._id)">
+        <div class="">
+            <img class="object-contain" src="https://www.countryandtownhouse.co.uk/wp-content/uploads/2021/01/Lauren-Cuthbertson-as-Alice-and-Federico-Bonelli-as-the-Knave-of-Hearts.-%D0%98-2017-ROH.-Photographed-by-Andrej-Uspenski..jpg">
+        </div>
+        <div class="col-span-2 py-5 px-5">
+            <h2 class="py-5">{{ result.name }}</h2>
+            <h2>{{ result.host }}</h2>
+            <p>{{ result.description }}</p>
+            <h5>Streaming in: </h5>
+        </div>
+    </div>
+</ng-container>
+<mat-paginator [pageSizeOptions]="[5, 10, 50, 100]" showFirstLastButtons></mat-paginator>

@@ -31,19 +31,18 @@ type VFunctor = <T extends object>(
 ) => Promise<IFormErrorField[]>;
 
 type VReqHandlerFunctor = (req: Request) => Promise<IFormErrorField[]>;
+type VArrayReturn = { errors: IFormErrorField[]; message: string };
 
 // Takes either req[location] as starting point or data in the case of nested objects/arrays
 type VReqHandler = <T extends object>(validators: VFieldChainerMap<T>, data?: T) => VReqHandlerFunctor;
-
-type VArrayReturn = { errors: IFormErrorField[]; message: string };
 
 // VFunctor  T       VData<T>
 //   v       v          v
 // object<IAddress>(address, {   <-- VFieldChainerMap<T>
 //  street_name: v => v.isInt()
-//     ^            ^
-//   keyof T     VChainer
-//
+//     ^         ^-----+-----^
+//   keyof T     |  VChainer
+//        ValidationChain
 // });
 
 // ============================================================================================================

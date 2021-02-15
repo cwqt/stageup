@@ -10,3 +10,4 @@ coverage
 store
 deploy/env/*
 *.env
+.env.*

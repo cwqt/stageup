@@ -6,6 +6,11 @@ import {
   IUserHostInfo,
   HostOnboardingStep,
   IOnboardingStepMap,
+  IPerformanceStub,
+  IPerformance,
+  DtoCreatePerformance,
+  IHostMemberChangeRequest,
+  IEnvelopedData
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -14,7 +19,7 @@ import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class HostService {
   private $currentHost: BehaviorSubject<IHostStub> = new BehaviorSubject(null);
@@ -40,7 +45,7 @@ export class HostService {
     });
   }
 
-  getUserHostInfo(hostId: number, userId: number): Promise<IUserHostInfo> {
+  readUserHostInfo(hostId: string, userId: string): Promise<IUserHostInfo> {
     return this.http
       .get<IUserHostInfo>(`/api/hosts/${hostId}/permissions?user=${userId}`)
       .pipe(tap(hi => this.myselfService.setUserHostInfo(hi)))
@@ -54,31 +59,57 @@ export class HostService {
       .toPromise();
   }
 
-  getHost(hostId: number): Promise<IHost> {
+  readHost(hostId: string): Promise<IHost> {
     return this.http.get<IHost>(`/api/hosts/${hostId}`).toPromise();
   }
 
   // router.get <IHOnboarding> ("/hosts/:hid/onboarding/status", Hosts.readOnboardingProcessStatus());
-  readOnboardingProcessStatus(hostId: number): Promise<IHostOnboarding> {
+  readOnboardingProcessStatus(hostId: string): Promise<IHostOnboarding> {
     return this.http.get<IHostOnboarding>(`/api/hosts/${hostId}/onboarding/status`).toPromise();
   }
 
   // router.post<void> ("/hosts/:hid/onboarding/submit", Hosts.submitOnboardingProcess());
-  submitOnboardingProcess(hostId: number): Promise<void> {
+  submitOnboardingProcess(hostId: string): Promise<void> {
     return this.http.post<void>(`/api/hosts/${hostId}/onboarding/submit`, {}).toPromise();
   }
 
   // router.get <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep());
-  readOnboardingProcessStep(hostId: number, step: HostOnboardingStep): Promise<IOnboardingStep<any>> {
+  readOnboardingProcessStep(hostId: string, step: HostOnboardingStep): Promise<IOnboardingStep<any>> {
     return this.http.get<IOnboardingStep<any>>(`/api/hosts/${hostId}/onboarding/${step}`).toPromise();
   }
 
   // router.put <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.updateOnboardingProcessStep());
-  updateOnboardingProcessStep(hostId: number, step: HostOnboardingStep, update: any): Promise<IOnboardingStep<any>> {
+  updateOnboardingProcessStep(hostId: string, step: HostOnboardingStep, update: any): Promise<IOnboardingStep<any>> {
     return this.http.put<IOnboardingStep<any>>(`/api/hosts/${hostId}/onboarding/${step}`, update).toPromise();
   }
 
-  readOnboardingSteps(hostId: number): Promise<IOnboardingStepMap> {
+  readOnboardingSteps(hostId: string): Promise<IOnboardingStepMap> {
     return this.http.get<IOnboardingStepMap>(`/api/hosts/${hostId}/onboarding/steps`).toPromise();
+  }
+
+  // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
+  createPerformance(hostId: string, data: DtoCreatePerformance): Promise<IPerformance> {
+    return this.http.post<IPerformance>(`/api/hosts/${hostId}/performances`, data).toPromise();
+  }
+
+  // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
+  readHostByUsername(hostUsername: string): Promise<IHost> {
+    return this.http.get<IHost>(`/api/hosts/@${hostUsername}`).toPromise();
+  }
+
+  // router.get <IUserStub[]> ("/hosts/:hid/members", Hosts.readMembers());
+  readMembers(hostId: string): Promise<IEnvelopedData<IUserHostInfo[]>> {
+    return this.http.get<IEnvelopedData<IUserHostInfo[], null>>(`/api/hosts/${hostId}/members`).toPromise();
+  }
+
+  addMember(hostId: string, addition:IHostMemberChangeRequest): Promise<IUserHostInfo> {
+    return this.http
+      .post<IUserHostInfo>(`/api/hosts/${hostId}/members`, addition)
+      .toPromise();
+  }
+
+  //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
+  readHostPerformances(hostId: string, page: number = 0, perPage: number = 10): Promise<IEnvelopedData<IPerformanceStub[], null>> {
+    return this.http.get<IEnvelopedData<IPerformanceStub[], null>>(`/api/hosts/${hostId}/performances?page=${page}&per_page=${perPage}`).toPromise();
   }
 }

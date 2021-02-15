@@ -1,0 +1,47 @@
+<div *ngIf="!host.loading && host.data">
+  
+  <div class="host-profile-header bg-white p-4 pb-0 rounded shadow-sm">
+    <img [src]="host.data.avatar" class="square absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
+
+    <div class="flex absolute right-4 top-4 align-middle w-auto">
+      <ui-button class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="add" kind="primary">Follow</ui-button>
+      <ui-button [transparent]="true" class="flex-1" size="m"><ui-icon size="l">overflow-menu--horizontal</ui-icon></ui-button>
+    </div>
+
+    <!-- Offset by 64 + 4 for abs positioned image -->
+    <div class="ml-8 pl-64 pt-2">
+      <div>
+        <h1 class="text-7xl mb-2">{{ host.data.name }}</h1>
+
+        <div class="flex align-middle justify-between mb-2">
+          <p class="flex-grow text-lg opacity-75 mr-2 mb-0">@{{ host.data.username }}</p>
+
+          <div class="flex flex-shrink">
+            <!-- <ui-icon *ngIf="host.data.social_info.">logo--twitter</ui-icon> -->
+            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('facebook_url')" *ngIf="host.data.social_info.facebook_url">logo--facebook</ui-icon>
+            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('instagram_url')" *ngIf="host.data.social_info.instagram_url">logo--instagram</ui-icon>
+            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('linkedin_url')" *ngIf="host.data.social_info.linkedin_url">logo--linkedin</ui-icon>
+          </div>      
+        </div>
+
+        <p *ngIf="host.data.bio">{{ host.data.bio }}</p>
+      </div>
+
+      <div class="flex">
+        <mat-tab-group (selectedTabChange)="handleTabChange($event)" class="flex-shrink">
+          <mat-tab
+            *ngFor="let tab of hostPages | keyvalue: originalOrder"
+            (click)="openHostPage(tab.key)"
+            [disabled]="tab.value['url'] == null"
+            [label]="tab.value['label']">
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+  
+  <div class="bg-white">
+    <!-- For all child routes -->
+    <router-outlet></router-outlet>
+  </div>
+</div>
