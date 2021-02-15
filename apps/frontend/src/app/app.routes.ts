@@ -34,6 +34,7 @@ import { HostContactComponent } from './routes/host/host-contact/host-contact.co
 import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
+import { UserTypeClarificationComponent } from './routes/landing/clarification-page/user-type-clarification/user-type-clarification.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {

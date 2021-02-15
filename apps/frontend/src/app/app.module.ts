@@ -48,6 +48,7 @@ import { HostSettingsComponent } from './routes/settings/host-settings/host-sett
 import { CreateHostComponent } from './routes/settings/host-settings/create-host/create-host.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
+import { UserTypeClarificationComponent } from './routes/landing/clarification-page/user-type-clarification/user-type-clarification.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from './routes/search/search.component';
 import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
@@ -73,6 +74,8 @@ import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 
 // ---------------------------------------------------------------------------------------------------------------------
+
+
 
 @NgModule({
   declarations: [
@@ -125,7 +128,8 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     HostAboutComponent,
     HostFeedComponent,
     HostMembersComponent,
-    HostAddMemberComponent
+    HostAddMemberComponent,
+    UserTypeClarificationComponent
   ],
   imports: [
     AngularMaterialModule,
