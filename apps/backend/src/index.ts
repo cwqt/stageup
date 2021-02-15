@@ -31,7 +31,7 @@ app.use(morgan('tiny', { stream }));
     // Register session & pagination middleware, then add API router
     app.use(providers.session_handler);
     app.use(pagination);
-    app.use('/', Routes(providers).router);
+    app.use(Env.API_ENDPOINT, Routes(providers).router);
 
     // Catch 404 errors & add the global handler
     app.all('*', (req, res, next) => handleError(req, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND)));

@@ -1,7 +1,7 @@
 module.exports = (isProd) => ({
   prefix: '',
   purge: {
-    enabled: false,
+    enabled: isProd,
     content: [
       '**/*.html',
       '**/*.ts',

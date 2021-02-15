@@ -79,21 +79,21 @@ export const create = async (): Promise<TORM.Connection> => {
 };
 
 
-import { EOL } from 'os';
-import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
-const generateUML = async (conn: TORM.Connection) => {
-if(Env.isEnv(Environment.Development)) {
+// import { EOL } from 'os';
+// import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
+// const generateUML = async (conn: TORM.Connection) => {
+// if(Env.isEnv(Environment.Development)) {
 
-    const flags: Flags = {
-      direction: Direction.LR,
-      format: Format.SVG,
-      handwritten: false
-    };
+//     const flags: Flags = {
+//       direction: Direction.LR,
+//       format: Format.SVG,
+//       handwritten: false
+//     };
   
-    const typeormUml = new TypeormUml();
-    const url = await typeormUml.build(conn, flags);
-    process.stdout.write('Diagram URL: ' + url + EOL);
-  }
-}
+//     const typeormUml = new TypeormUml();
+//     const url = await typeormUml.build(conn, flags);
+//     process.stdout.write('Diagram URL: ' + url + EOL);
+//   }
+// }
 
 export default { create };

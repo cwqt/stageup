@@ -9,6 +9,7 @@ interface IEnvironment {
   PRIVATE_KEY: string;
   EMAIL_ADDRESS: string;
   SITE_TITLE: string;
+  API_ENDPOINT:string;
   API_URL: string;
   FE_URL: string;
   ENVIRONMENT: Environment;
@@ -55,6 +56,7 @@ const Env: IEnvironment = {
   isEnv: (env: Environment | Environment[]) =>
     Array.isArray(env) ? env.some(e => e === TRUE_ENV) : env === TRUE_ENV,
   SITE_TITLE: 'StageUp',
+  API_ENDPOINT: process.env.API_ENDPOINT || "",
   API_URL: process.env.API_URL,
   FE_URL: process.env.FE_URL,
   ENVIRONMENT: TRUE_ENV as Environment,
