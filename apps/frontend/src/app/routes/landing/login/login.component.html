@@ -1,5 +1,4 @@
-<app-page class="login-wrapper">
-  <div class="content">
+<app-page class="login-wrapper">  
     <h1 class="mat-display-1">Sign in</h1>
 
     <ui-form #form
@@ -8,7 +7,15 @@
       [form]="loginForm">
     </ui-form>
 
-    <br>
+    <br>   
+    
+    <p class="text-center">Not registered?</p>
+
+    <div class="container mx-auto flex justify-center items-center">
+      <ui-button kind="primary" (click)="openRegister()">Register</ui-button>
+    </div>      
+    
+    <br><br>
 
     <ui-button (click)="adminFastLogin()" *ngIf="isDevelopment">Fast Admin Login</ui-button>
 
@@ -17,7 +24,6 @@
         <ui-button kind="secondary"><img src="/assets/gitlab.png"/>Gitlab</ui-button>
         <ui-button kind="secondary"><img src="/assets/github.png"/>GitHub</ui-button>
         <ui-button kind="secondary"><img src="/assets/google.png"/>Google</ui-button>
-      </div> -->
-
-  </div>
+      </div> -->  
 </app-page>
+
