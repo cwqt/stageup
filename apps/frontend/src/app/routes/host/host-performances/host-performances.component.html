@@ -1,9 +1,9 @@
-<ui-button (click)="openCreatePerformanceDialog()" kind="primary">Create Performance</ui-button>
 
 <div class="flex flex-row items-center mb-5">
     <h1 class="mb-0">Performances List</h1>
     <mat-spinner class="ml-5" [diameter]="50" *ngIf="performances.loading"></mat-spinner>
-</div>
+    <ui-button class="ml-auto" (click)="openCreatePerformanceDialog()" kind="primary"><ui-icon>add</ui-icon>Create Performance</ui-button>
+  </div>
 
 <table mat-table [dataSource]="hostPerformancesDataSrc" class="w-full">
     <ng-container matColumnDef="name">

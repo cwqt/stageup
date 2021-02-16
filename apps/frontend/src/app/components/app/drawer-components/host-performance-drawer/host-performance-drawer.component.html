@@ -1,0 +1,33 @@
+<ng-container *ngIf="data.performance">
+  <mat-spinner *ngIf="data.performance.loading"></mat-spinner>
+  <div class="h-full" *ngIf="data.performance.data">
+    <ui-button
+      (click)="gotoPerformancesList()"
+      [transparent]="true"
+      kind="secondary"
+      class="absolute right-2 top-2 z-10">
+        <ui-icon size="l">arrow--left</ui-icon>
+    </ui-button>
+
+    <div class="h-1/4 flex align-middle justify-center bg-gray-200 relative">
+
+      <div class="bg-gradient-to-b from-black to-transparent h-full w-full opacity-25 absolute bottom-0 left-0"></div>
+      <img class="host-icon rounded-full shadow h-32 w-32 mt-auto relative z-10" [src]="host.avatar || '/assets/avatar_placeholder.png'" alt="">
+    </div>
+
+
+    <div class="flex flex-col mt-10 sidebar-main-buttons">
+      <ui-button size="l" kind="accent" [routerLink]="'/host/performances/'+performance._id" routerLinkActive="active">
+        <ui-icon size="l">settings</ui-icon><p>Details</p>
+      </ui-button>
+
+      <ui-button size="l" kind="accent" [routerLink]="'/host/performances/'+performance._id+'/ticketing'" routerLinkActive="active">
+        <ui-icon size="l">ticket</ui-icon><p>Ticketing</p>
+      </ui-button>
+
+      <ui-button size="l" kind="accent" [routerLink]="'/host/performances/'+performance._id+'/analytics'" routerLinkActive="active">
+        <ui-icon size="l">analytics</ui-icon><p>Analytics</p>
+      </ui-button>
+    </div>
+  </div>
+</ng-container>

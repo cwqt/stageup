@@ -34,6 +34,7 @@ import { HostContactComponent } from './routes/host/host-contact/host-contact.co
 import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
+import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { UserTypeClarificationComponent } from './routes/landing/clarification-page/user-type-clarification/user-type-clarification.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
@@ -97,6 +98,7 @@ const APP_ROUTES: Routes = [
       { path: 'settings', component: HostSettingsComponent },
       { path: 'members', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
+      { path: `performances/:${RP.PerformanceId}`, component: HostPerformanceComponent },
       {
         matcher: hostMatcher,
         component: HostProfileComponent,
@@ -111,8 +113,8 @@ const APP_ROUTES: Routes = [
     ]
   },
   { path: `admin`, component: AdminPanelComponent },
-  { path: `admin/onboarding`, component: AdminOnboardingListComponent },
-  { path: `admin/onboarding/:${RP.HostId}`, component: AdminOnboardingViewComponent },
+  { path: `admin/onboardings`, component: AdminOnboardingListComponent },
+  { path: `admin/onboardings/:${RP.HostId}`, component: AdminOnboardingViewComponent },
   { path: `ui`, component: TestbedComponent },
   { path: '**', component: NotFoundComponent }
 ];

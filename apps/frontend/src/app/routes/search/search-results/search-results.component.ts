@@ -41,7 +41,7 @@ export class SearchResultsComponent implements OnInit {
 
   async searchPerformances(){
     this.searchResults.loading = true;
-    return this.performanceService.getPerfomances(this.searchQuery, this.pager?.pageIndex, this.pager?.pageSize)
+    return this.performanceService.readPerfomances(this.searchQuery, this.pager?.pageIndex, this.pager?.pageSize)
     .then( d =>{
       this.searchResults.data = d;
       if(this.pager) {

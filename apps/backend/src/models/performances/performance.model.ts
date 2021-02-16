@@ -83,14 +83,14 @@ export class Performance extends BaseEntity implements IPerformance {
       average_rating: this.average_rating,
       views: this.views,
       description: this.description,
-      playback_id: this.playback_id
+      playback_id: this.playback_id,
+      created_at: this.created_at
     };
   }
 
   toFull(): Required<IPerformance> {
     return {
       ...this.toStub(),
-      created_at: this.created_at,
       premiere_date: this.premiere_date,
       ratings: this.ratings,
       state: this.state,

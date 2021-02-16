@@ -40,7 +40,9 @@ export default class MiscController extends BaseController {
     };
   }
 
-  // For purposes of testing...
+  /**
+   * @description For purposes of testing, accept the invite without having to click a link from an email
+   * */ 
   acceptHostInvite(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),

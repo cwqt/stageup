@@ -64,8 +64,8 @@ export class PerformanceComponent implements OnInit {
   async getPerformance() {
     this.performance.loading = true;
     return this.performanceService
-      .getPerformance(this.appService.getParam(RouteParam.PerformanceId))
-      .then((p: IPerformance) => (this.performance.data = p))
+      .readPerformance(this.appService.getParam(RouteParam.PerformanceId))
+      .then((p) => (this.performance.data = p.data))
       .catch((e: HttpErrorResponse) => (this.performance.error = e.message))
       .finally(() => (this.performance.loading = false));
   }

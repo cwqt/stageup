@@ -64,6 +64,8 @@ import { HostAboutComponent } from './routes/host/host-about/host-about.componen
 import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { HostAddMemberComponent } from './routes/host/host-members/host-add-member/host-add-member.component';
+import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
+import { HostPerformanceDrawerComponent } from './components/app/drawer-components/host-performance-drawer/host-performance-drawer.component';
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 // import { LogPipe } from "./_pipes/log.pipe";
@@ -74,8 +76,6 @@ import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 
 // ---------------------------------------------------------------------------------------------------------------------
-
-
 
 @NgModule({
   declarations: [
@@ -129,7 +129,9 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     HostFeedComponent,
     HostMembersComponent,
     HostAddMemberComponent,
-    UserTypeClarificationComponent
+    HostPerformanceComponent,
+    UserTypeClarificationComponent,
+    HostPerformanceDrawerComponent
   ],
   imports: [
     AngularMaterialModule,

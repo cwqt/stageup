@@ -15,7 +15,8 @@ import {
     IHostOnboarding as IHOnboarding,
     IOnboardingStep,
     IAddress,
-    IOnboardingStepMap
+    IOnboardingStepMap,
+    IPerformanceHostInfo
 } from '@core/interfaces';
 
 import UserController from './controllers/user.controller';

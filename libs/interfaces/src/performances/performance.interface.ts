@@ -13,6 +13,7 @@ export interface IPerformanceStub {
   average_rating: number; // average rating across all ratings
   views: number; // total user view count
   playback_id: string; // address to view
+  created_at: number;
 }
 
 export interface IPerformance extends IPerformanceStub {
@@ -23,7 +24,6 @@ export interface IPerformance extends IPerformanceStub {
   currency: CurrencyCode; // currency of price
   genre: Genre;
   is_private: boolean; // accessible only to host members 
-  created_at: number;
 }
 
 // data transfer object

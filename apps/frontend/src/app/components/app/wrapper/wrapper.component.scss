@@ -4,40 +4,62 @@
   max-height: 100vh;
   height: 100vh;
   overflow: hidden;
+  background-color: #f7f7f7;
 }
 
-.app-content {
-  height: 100vh;
+app-sidebar {
+  position: absolute;
+  width: $space-lg * 4;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  &.raise-index {
+    z-index: 999
+  }
+  &.cancel-events {
+    pointer-events: none;
+  }
+}
+
+mat-drawer-container {
+  z-index: 99;
+  background-color: transparent;
+  // height: 100vh;
+  // width: 100vw;
   display: flex;
-  background-color: #f7f7f7;
+}
 
-  .left {
-    width: $space-lg * 4;
-    app-sidebar {
-      width: 100%;
-    }
-  }
+mat-drawer {
+  min-width: 20vw;
+  width: 20vw;
+  max-width: 20vw;
+  box-shadow: $box-shadow;
+  border: none;
+}
 
-  .right {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;  
-    overflow: scroll;
-    overflow-x: hidden;
+mat-drawer-content {
+  margin-left: $space-lg * 4;
+}
 
-    app-header-bar {
-      display: block;
-      height: auto;
-      width: 100%;
-      padding: $space-lg;
-    }
 
-    .app-body {
-      margin-bottom: 20px;
-      height: auto;
-      min-height: 100vh;
-      padding-top: $space;
-      padding-bottom: $space;
-    }
-  }
+app-header-bar {
+  display: block;
+  height: auto;
+  width: 100%;
+  padding: $space-lg;
+}
+
+.app-body {
+  height: auto;
+  min-height: 100vh;
+  padding: $space $space-lg;
+  margin-bottom: 20px;
+}
+
+
+
+.fadeout {
+
+  transition: opacity .5s ease-in-out;
+   opacity: 1;
 }

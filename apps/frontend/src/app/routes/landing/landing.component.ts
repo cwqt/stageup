@@ -38,8 +38,9 @@ export class LandingComponent implements OnInit {
     const invite = this.baseAppService.getQueryParam('invite_accepted');
     if(invite) this.baseAppService.navigateTo(`/host`);
 
+    // Only show modal when the user isn't logged in
     if(localStorage.getItem("clientOrHost") === null) {
-      let dialogRef = this.dialog.open(UserTypeClarificationComponent, {
+      this.dialog.open(UserTypeClarificationComponent, {
         height: '70%',
         width: '70%',
       });

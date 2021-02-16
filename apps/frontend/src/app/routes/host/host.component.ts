@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { HostPermission, IHost, IMyself } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { timeStamp } from 'console';
+import { Subject, Subscription } from 'rxjs';
 import { BaseAppService } from '../../services/app.service';
+import { DrawerService } from '../../services/drawer.service';
 import { MyselfService } from '../../services/myself.service';
 
 @Component({
@@ -14,20 +16,26 @@ export class HostComponent implements OnInit {
   myself:IMyself;
   host:IHost;
 
-  host_permission = HostPermission;
-  
+  hostPermission = HostPermission;
+  $drawerIsOpen:Subject<boolean>;
 
-  constructor(private myselfService:MyselfService, private hostService:HostService, private baseAppService:BaseAppService) {
-  }
+  constructor(
+    private myselfService:MyselfService,
+    private hostService:HostService,
+    private baseAppService:BaseAppService,
+    private drawerService:DrawerService)
+  {}
 
   ngOnInit(): void {
     this.myself = this.myselfService.$myself.value;
     if(this.myself.host_info.permissions >= HostPermission.Pending) {
       this.baseAppService.navigateTo(`/host`)
     }
-    this.getHost().then(h => this.host = h);
-  }
 
+    this.getHost().then(h => this.host = h);
+    this.$drawerIsOpen = this.drawerService.$drawerOpenInstant;
+  }
+  
   getHost():Promise<IHost> {
     return this.hostService.readHost(this.myself.host._id);
   }

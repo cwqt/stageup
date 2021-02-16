@@ -1,0 +1,6 @@
+<mat-spinner *ngIf="performance.loading && performanceHostInfo.loading"></mat-spinner>
+<ng-container *ngIf="performance.data && performanceHostInfo.data">
+  <h1>{{ performanceData.name }}</h1>
+  <ui-hr></ui-hr>
+</ng-container>
+
