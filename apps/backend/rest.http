@@ -60,6 +60,58 @@ GET http://{{host}}/hosts/{{hostId}}
 DELETE http://{{host}}/hosts/{{hostId}}
 ### ------------------------------------------------------------------
 
+@contentType = application/json
+###############################################################################################
+### PERFORMANCE CONTROLLER                                                                  ###
+###############################################################################################
+#router.post  <IPerf>("/hosts/:hid/performances", Perfs.createPerformance());
+# @name createPerformance
+POST http://{{host}}/hosts/{{hostId}}/performances HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "name":"New performance name",
+    "description":"New performance description",
+    "genre": "5",
+    "price":"40",
+    "currency": "GBP",
+    "premiere_date": 1613474834
+}
+###
+@performanceId = {{ createPerformance.response.body._id }}
+###
+#router.get <IE<IPerfS[]>>("/performances", Perfs.readPerformances());
+# @name readPerformances
+GET http://{{host}}/performances HTTP/1.1
+###
+#router.get <IE<IPerf, IPUInfo>>("/performances/:pid", Perfs.readPerformance());
+# @name readPerformance
+GET http://{{host}}/performances/{{performanceId}} HTTP/1.1
+###
+#router.get <IPHInfo>("/performances/:pid/host_info", Perfs.readPerformanceHostInfo());
+# @name readPerformanceHostInfo
+GET http://{{host}}/performances/{{performanceId}}/host_info HTTP/1.1
+###
+#router.post  <void>("/performances/:pid/purchase", Perfs.purchase());
+# @name purchasePerformance
+POST http://{{host}}/performances/{{performanceId}}/purchase HTTP/1.1
+###
+#router.delete  <void>("/performances/:pid", Perfs.deletePerformance());
+# @name deletePerformance
+DELETE http://{{host}}/performances/{{performanceId}} HTTP/1.1
+###
+#router.put <IPerf>("/performances/:pid", Perfs.updatePerformance());
+# @name updatePerformance
+PUT http://{{host}}/performances/{{performanceId}} HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "name":"New performance name",
+    "price":"40",
+    "description":"New performance description"
+}
+###--------------------------------------------------------------------------------------------
+
 ###############################################################################################
 ### ADMIN CONTROLLER 
 ###############################################################################################
