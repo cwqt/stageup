@@ -190,16 +190,7 @@ const stepValidators: { [index in HostOnboardingStep]: (d: unknown) => Promise<I
     });
   },
   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
-    return object(d, {
-      social_info: v =>
-        v.custom(
-          single<typeof d.social_info>({
-            linkedin_url: v => Validators.Fields.isString(v),
-            facebook_url: v => Validators.Fields.isString(v),
-            instagram_url: v => Validators.Fields.isString(v)
-          })
-        )
-    });
+    return object(d, { social_info: v => v.custom(single(Validators.Objects.ISocialInfo()))});
   },
   [HostOnboardingStep.SubscriptionConfiguration]: async (d: IOnboardingSubscriptionConfiguration) => {
     return object(d, {

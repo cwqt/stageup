@@ -59,15 +59,18 @@ export namespace ObjectValidators {
   export const ISocialInfo = (): ObjectValidator<ISocialInfo> => {
     return {
       linkedin_url: v =>
-        FV.isString(v)
+        v
+          .optional({ nullable: true, checkFalsy: true })
           .isURL({ host_whitelist: ['linkedin.com'] })
           .withMessage(ErrCode.NOT_URL),
       facebook_url: v =>
-        FV.isString(v)
+        v
+          .optional({ nullable: true, checkFalsy: true })
           .isURL({ host_whitelist: ['facebook.com'] })
           .withMessage(ErrCode.NOT_URL),
       instagram_url: v =>
-        FV.isString(v)
+        v
+          .optional({ nullable: true, checkFalsy: true })
           .isURL({ host_whitelist: ['instagram.com'] })
           .withMessage(ErrCode.NOT_URL)
     };
@@ -77,7 +80,7 @@ export namespace ObjectValidators {
     value: IHostMemberChangeRequest['value'] = null
   ): ObjectValidator<IHostMemberChangeRequest> => {
     return {
-      value: v => v.optional(true) // TODO: update this validator to check for either typeof HostPermission or number
+      value: v => v.optional({ nullable: true }) // TODO: update this validator to check for either typeof HostPermission or number
     };
   };
 }
