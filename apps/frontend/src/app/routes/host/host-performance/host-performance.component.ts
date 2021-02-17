@@ -1,3 +1,4 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -23,10 +24,16 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   host: IHostStub;
   performanceId: string;
   performance: ICacheable<IEnvelopedData<IPerformance, IPerformanceUserInfo>> = createICacheable();
-  performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable();
+  performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
+
+  copyMessage:string = "Copy";
 
   get performanceData() {
     return this.performance.data?.data;
+  }
+
+  get phiData() {
+    return this.performanceHostInfo.data;
   }
 
   constructor(
@@ -34,6 +41,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     private performanceService: PerformanceService,
     private baseAppService: BaseAppService,
     private drawerService: DrawerService,
+    private clipboard: Clipboard,
     private route: ActivatedRoute
   ) {}
 
@@ -51,13 +59,25 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
 
     this.drawerService.drawer.open();
     
-    // Fetch PerformanceHostInfo & IPerformance
-    cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);
-    cachize(this.performanceService.readPerformance(this.performanceId), this.performance)
+    // Fetch IPerformance
+    cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
   }
 
   ngOnDestroy() {
     this.drawerService.$drawer.value.close();
     this.drawerService.setDrawerState(this.drawerService.drawerData);
+  }
+
+  readStreamingKey() {
+    return cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);
+  }
+
+  copyStreamKeyToClipboard() {
+    this.clipboard.copy(this.performanceHostInfo.data.stream_key);
+
+    this.copyMessage = "Copied!";
+    setTimeout(() => {
+      this.copyMessage = "Copy";
+    }, 2000);
   }
 }

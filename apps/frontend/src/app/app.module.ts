@@ -12,6 +12,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { MomentModule } from 'ngx-moment';
 import { NgxPopperModule } from 'ngx-popper';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AppComponent } from './app.component';
@@ -145,7 +146,8 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     ClickOutsideModule,
     NgxMaskModule.forRoot(),
     MomentModule,
-    NgxPopperModule.forRoot()
+    NgxPopperModule.forRoot(),
+    ClipboardModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent],
