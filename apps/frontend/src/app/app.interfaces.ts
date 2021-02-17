@@ -7,16 +7,17 @@ import { ErrCode, Primitive } from '@core/interfaces';
  * @param c cacheable created from createICacheable
  * @example return cachize(this.http.get<IUser[]>(`/api/users`), cacheable);
  */
-function cachize<T>(promise: Promise<T>, c: ICacheable<T>): Promise<T>;
-function cachize<T, K>(promise: Promise<T>, c: ICacheable<K>, transformer: (d: T) => K): Promise<K>;
-function cachize<T, K = T>(promise: Promise<T | K>, c: ICacheable<T | K>, transformer?: (d: T) => K): Promise<T | K> {
-  c.loading = true;
+function cachize<T>(promise:Promise<T>, c:ICacheable<T>):Promise<T>;
+function cachize<T, K>(promise:Promise<T>, c:ICacheable<K>, transformer:(d:T) => K, showLoading?:boolean): Promise<K>;
+function cachize<T, K = T>(promise: Promise<T | K>, c: ICacheable<T | K>, transformer?:(d:T) => K, showLoading:boolean=true):Promise<T | K> {
+  if(showLoading) c.loading = true;
   promise = transformer ? promise.then(d => transformer(d as T)) : promise;
 
   promise
     .then(d => (c.data = d))
-    .catch(e => (c.error = e))
-    .finally(() => (c.loading = false));
+    .catch(e => (c.error = e));
+
+  if(showLoading) promise.finally(() => c.loading = false);
 
   return promise;
 }

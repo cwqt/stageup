@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IEnvelopedData, IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformanceUserInfo } from '@core/interfaces';
+import { IEnvelopedData, IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformanceUserInfo, Visibility } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +18,9 @@ export class PerformanceService {
 
   readPerformanceHostInfo(performanceId:string):Promise<IPerformanceHostInfo> {
     return this.http.get<IPerformanceHostInfo>(`/api/performances/${performanceId}/host_info`).toPromise();
+  }
+
+  updateVisibility(performanceId:string, visibility:Visibility):Promise<IPerformance> {
+    return this.http.put<IPerformance>(`/api/performances/${performanceId}/visibility`, { visibility: visibility }).toPromise();
   }
 }

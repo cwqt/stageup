@@ -3,6 +3,21 @@
   <h1>{{ performanceData.name }}</h1>
   <ui-hr></ui-hr>
 
+  <p>
+    <b>Visibility:</b> {{ performanceData.visibility }}
+  </p>
+
+  <br/>
+
+  <h2>Modify Visibility</h2>
+  <ui-hr></ui-hr>
+  <ui-input
+    type="select"
+    label="Visibility"
+    (selectionChange)="updateVisibility($event)"
+    [options]="visibilityOptions"
+    [initial]="performanceData.visibility">
+  </ui-input>
   <br />
 
   <h2>Stream Key</h2>

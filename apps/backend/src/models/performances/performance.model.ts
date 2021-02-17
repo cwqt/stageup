@@ -7,10 +7,9 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
-  PrimaryColumn,
-  PrimaryGeneratedColumn
+  PrimaryColumn
 } from 'typeorm';
-import { CurrencyCode, Genre, IPerformance, IPerformanceStub, IRating, PerformanceState } from '@core/interfaces';
+import { CurrencyCode, Genre, IPerformance, IPerformanceStub, IRating, PerformanceState, Visibility } from '@core/interfaces';
 
 import { PerformanceHostInfo as PHostInfo, PerformanceHostInfo } from './performance-host-info.model';
 import { Host } from '../hosts/host.model';
@@ -33,6 +32,7 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
   @Column({ default: true }) is_private: boolean;
+  @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceState }) state: PerformanceState;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
@@ -91,6 +91,7 @@ export class Performance extends BaseEntity implements IPerformance {
   toFull(): Required<IPerformance> {
     return {
       ...this.toStub(),
+      visibility: this.visibility,
       premiere_date: this.premiere_date,
       ratings: this.ratings,
       state: this.state,

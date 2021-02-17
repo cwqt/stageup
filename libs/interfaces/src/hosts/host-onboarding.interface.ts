@@ -63,7 +63,7 @@ export interface IOnboardingStepMap {
   [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
 }
 
-export interface IOnboardingStep<T> {
+export interface IOnboardingStep<T=any> {
   state: HostOnboardingState.AwaitingChanges | HostOnboardingState.HasIssues | HostOnboardingState.Verified;
   review?: IOnboardingStepReview<T>;
   valid: boolean; //just if all the data is filled out & correct

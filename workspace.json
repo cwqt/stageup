@@ -36,7 +36,9 @@
           "executor": "@nrwl/node:execute",
           "configurations": {
             "development": {
-              "buildTarget": "backend:build"
+              "buildTarget": "backend:build",
+              "inspect": true,
+              "port":7777
             },
             "testing": {
               "buildTarget": "backend:build"

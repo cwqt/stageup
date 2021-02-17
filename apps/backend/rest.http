@@ -110,6 +110,15 @@ Content-Type: {{contentType}}
     "price":"40",
     "description":"New performance description"
 }
+###
+#router.put <IPerf>("/performances/:pid/visibility", Perfs.updateVisibility());
+# @name updateVisibility
+PUT http://{{host}}/performances/{{performanceId}}/visibility HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "visibility":"public",
+}
 ###--------------------------------------------------------------------------------------------
 
 ###############################################################################################
@@ -125,6 +134,7 @@ GET http://{{host}}/admin/onboardings
 # @name reviewOnboardingProcess
 POST http://{{host}}/admin/onboardings/{{onboardingId}}/review
 Content-Type: application/json
+
 {
   "0":{ "state": 3, "issues": []}, 
   "1":{ "state": 3, "issues": []}, 
@@ -132,7 +142,6 @@ Content-Type: application/json
   "3":{ "state": 3, "issues": []}, 
   "4":{ "state": 3, "issues": []}, 
 }
-
 ### --------------------------------------------------------------------------------------------
 # router.post <void> ("/admin/onboardings/:oid/enact", Admin.enactOnboardingProcess());
 # @name enactOnboardingProcess

@@ -50,7 +50,7 @@ export interface IGraphNode {
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
-  @Output() selectionChange: EventEmitter<IGraphNode[]> = new EventEmitter();
+  @Output() selectionChange: EventEmitter<IGraphNode | IGraphNode[]> = new EventEmitter();
   @ViewChild('input') input: ElementRef;
 
   // Interface inputs
@@ -103,7 +103,10 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     }
 
     // Override initial value
-    // this.value = undefined(!this.value && (this.options?.initial || this.initial)) ? (this.options?.initial ?? this.initial) : "";
+    if(this.options?.initial || this.initial) {
+      this.value = this.options?.initial || this.initial
+    }
+    // this.value = (!this.value && (this.options?.initial || this.initial)) ? (this.options?.initial ?? this.initial) : "";
     this.placeholder = this.placeholder ?? '';
   }
 
@@ -237,6 +240,10 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
       this.options.values.filter(node => node.value.toLowerCase().indexOf(event.toLowerCase()) > -1)
     );
   }
+
+  emitSelectionChange(event:IGraphNode) {
+    this.selectionChange.emit(event);
+  } 
 
   // Time ------------------------------------------------------------------------------------------------------
   // 24 hours / 15 minutes = 96 options, create an array of 15 minute increments

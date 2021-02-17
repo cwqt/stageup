@@ -7,13 +7,16 @@ import {
   IHostStub,
   IPerformance,
   IPerformanceHostInfo,
-  IPerformanceUserInfo
+  IPerformanceUserInfo,
+  Visibility
 } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { DrawerKey, DrawerService } from '../../../services/drawer.service';
+import { IUiFieldSelectOptions } from '../../../ui-lib/form/form.interfaces';
+import { IGraphNode } from '../../../ui-lib/input/input.component';
 
 @Component({
   selector: 'app-host-performance',
@@ -27,6 +30,15 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
 
   copyMessage:string = "Copy";
+
+  visibilityOptions:IUiFieldSelectOptions = {
+    multi: false,
+    search: false,
+    values: [
+      { key: Visibility.Private, value: "Private" },
+      { key: Visibility.Public, value: "Public" }
+    ],
+  }
 
   get performanceData() {
     return this.performance.data?.data;
@@ -50,23 +62,31 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     this.performanceId = this.baseAppService.getParam(RouteParam.PerformanceId);
     this.host = this.hostService.currentHostValue;
 
-    // Immediately open the drawer with the currently loading performance
+    // Immediately fetch the performance & open the drawer with it in a loading state
     // pass by reference the this.performance so the sidebar can await the loading to be completed
+    cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
     this.drawerService.setDrawerState({
       key: DrawerKey.HostPerformance,
       data: { host: this.host, performance: this.performance }
     });
 
     this.drawerService.drawer.open();
-    
-    // Fetch IPerformance
-    cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
   }
 
   ngOnDestroy() {
     this.drawerService.$drawer.value.close();
     this.drawerService.setDrawerState(this.drawerService.drawerData);
   }
+
+  updateVisibility(value:IGraphNode) {
+    cachize(this.performanceService.updateVisibility(this.performanceId, value.key as Visibility), this.performance, d => {
+      // updateVisibility only returns an IPerformance but we want to keep having an IE<IPerformance, IPerformanceHostInfo>
+      return {
+        data: d,
+        __client_data: this.performance.data.__client_data
+      }
+    }, false)
+  } 
 
   readStreamingKey() {
     return cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);

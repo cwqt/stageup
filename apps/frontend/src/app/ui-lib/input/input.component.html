@@ -109,7 +109,7 @@
           placeholderLabel="Search"
           noEntriesFoundLabel="No results"></ngx-mat-select-search>
       </mat-option>
-      <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.key">
+      <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.key" (click)="emitSelectionChange(item)">
         {{ item.value }}
       </mat-option>
     </mat-select>

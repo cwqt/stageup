@@ -5,6 +5,10 @@ import { CurrencyCode } from '../common/currency.interface';
 import { Genre } from './genres.interface';
 import { IPerformancePurchase } from './performance-purchase.interface';
 
+export enum Visibility {
+  Public = "public",
+  Private = "private"
+}
 export interface IPerformanceStub {
   _id: string;
   host: IHostStub; // who created the performance
@@ -17,6 +21,7 @@ export interface IPerformanceStub {
 }
 
 export interface IPerformance extends IPerformanceStub {
+  visibility: Visibility;
   premiere_date?: number; // when the performance is ready to be streamed
   ratings: IRating[]; // user ratings on performance
   state: PerformanceState; // status of stream

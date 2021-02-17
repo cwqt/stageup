@@ -7,7 +7,8 @@ import {
   HTTP,
   ErrCode,
   HostPermission,
-  DtoCreatePerformance
+  DtoCreatePerformance,
+  Visibility
 } from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { Performance } from '../models/performances/performance.model';
@@ -139,10 +140,30 @@ export default class PerformanceController extends BaseController {
     };
   }
 
+  updateVisibility():IControllerEndpoint<IPerformance> {
+    return {
+      validators: [
+        body<{ visibility: Visibility }>({
+          visibility: v => v.isIn(Object.values(Visibility))
+        })
+      ],
+      // Only Admin/Owner can update visibility, but editors can update other fields
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const p = await getCheck(Performance.findOne({ _id: req.params.pid }));
+        const visibility:Visibility = req.body.visibility;
+        p.visibility = visibility;
+        await p.save();
+
+        return p.toFull();
+      }
+    }
+  }
+
   updatePerformance(): IControllerEndpoint<IPerformance> {
     return {
       validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Editor),
       controller: async req => {
         const p = await getCheck(Performance.findOne({ _id: req.params.pid }));
 

@@ -9,7 +9,8 @@ import {
   IEnvelopedData,
   IHost,
   IHostStub,
-  DtoCreatePerformance
+  DtoCreatePerformance,
+  Visibility
 } from '@core/interfaces';
 
 export default {
@@ -58,6 +59,12 @@ export default {
   // router.delete <void>("/performance/:pid",Perfs.deletePerformance());
   deletePerformance: async (performance: IPerformance): Promise<void> => {
     const res = await api.delete(`/performances/${performance._id}`, env.getOptions());
+    return res.data;
+  },
+
+  // router.put <IPerf> ("/performances/:pid/visibility", Perfs.updateVisibility());
+  updateVisibility: async (performance: IPerformance, visibility:Visibility): Promise<IPerformance> => {
+    const res = await api.put(`/performances/${performance._id}/visibility`, { visibility: visibility }, env.getOptions());
     return res.data;
   }
 };
