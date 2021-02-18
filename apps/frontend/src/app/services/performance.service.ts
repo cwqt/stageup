@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { IEnvelopedData, IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformanceUserInfo, Visibility } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PerformanceService {
+  
   constructor(private http: HttpClient) {}
 
   readPerformance(performanceId: string): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
@@ -23,4 +25,9 @@ export class PerformanceService {
   updateVisibility(performanceId:string, visibility:Visibility):Promise<IPerformance> {
     return this.http.put<IPerformance>(`/api/performances/${performanceId}/visibility`, { visibility: visibility }).toPromise();
   }
+
+  //router.put <IPerf> ("/performances/:pid", Perfs.updatePerformance())
+  updatePerformance(performanceId:string, data: { name: string, description: string }):Promise<IPerformance> {
+    return this.http.put<IPerformance>(`/api/performances/${performanceId}`, data).toPromise();
+  }  
 }

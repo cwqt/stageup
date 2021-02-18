@@ -55,3 +55,4 @@ export enum PerformanceState {
   Idle = 'video.live_stream.idle',
   StreamCompleted = 'video.asset.live_stream_completed'
 }
+

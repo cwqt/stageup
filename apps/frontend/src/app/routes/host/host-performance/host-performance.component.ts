@@ -98,4 +98,5 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
       this.copyMessage = "Copy";
     }, 2000);
   }
+
 }

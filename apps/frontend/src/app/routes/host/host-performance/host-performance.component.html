@@ -1,8 +1,13 @@
 <mat-spinner *ngIf="performance.loading"></mat-spinner>
 <ng-container *ngIf="performance.data">
-  <h1>{{ performanceData.name }}</h1>
+  <h1>{{ performanceData.name }}</h1>  
+  <p>{{ performanceData.description }}</p>
   <ui-hr></ui-hr>
+  <br/>
 
+  <app-update-performance></app-update-performance>
+
+  <ui-hr></ui-hr>
   <p>
     <b>Visibility:</b> {{ performanceData.visibility }}
   </p>

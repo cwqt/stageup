@@ -75,3 +75,4 @@ export class ProfileComponent implements OnInit {
     return (label.charAt(0).toUpperCase() + label.slice(1)).slice(0, -1);
   }
 }
+

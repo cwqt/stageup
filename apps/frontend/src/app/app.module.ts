@@ -41,6 +41,7 @@ import { PerformanceWatchComponent } from './routes/performance-watch/performanc
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
 import { HostComponent } from './routes/host/host.component';
 import { CreatePerformanceComponent } from './routes/host/host-performances/create-performance/create-performance.component';
+import { UpdatePerformanceComponent } from './routes/host/host-performance/update-performance/app-update-performance.component';
 import { PlayerComponent } from './components/player/player.component';
 import { SettingsComponent } from './routes/settings/settings.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
@@ -102,6 +103,7 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     HostComponent,
     HostPerformancesComponent,
     CreatePerformanceComponent,
+    UpdatePerformanceComponent,
     PlayerComponent,
     SettingsComponent,
     ProfileSettingsComponent,
