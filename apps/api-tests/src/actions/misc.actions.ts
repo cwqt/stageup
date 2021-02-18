@@ -18,5 +18,12 @@ export default {
   async acceptHostInvite(user:IUserStub):Promise<void> {
     const res = await api.post(`/acceptinvite/${user._id}`, env.getOptions());
     return res.data;
+  },
+
+  // router.get <IHost> ("/verifyhost/:hid", Misc.verifyHost());
+  async verifyHost(host:IHostStub):Promise<IHost> {
+    const res = await api.get(`/verifyhost/${host._id}`, env.getOptions());
+    return res.data;
   }
+
 }

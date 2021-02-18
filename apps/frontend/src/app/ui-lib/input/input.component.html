@@ -99,6 +99,7 @@
   <mat-form-field *ngIf="type == 'select'" appearance="fill">
     <mat-label>{{ label }}</mat-label>
     <mat-select #singleSelect
+      [disabled]="disabled"
       (blur)="onTouched()"
       (focus)="onFocus()"
       [(ngModel)]="value"

@@ -3,6 +3,7 @@ import { HostPermission, IHost, IMyself } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { timeStamp } from 'console';
 import { Subject, Subscription } from 'rxjs';
+import { cachize, createICacheable, ICacheable } from '../../app.interfaces';
 import { BaseAppService } from '../../services/app.service';
 import { DrawerService } from '../../services/drawer.service';
 import { MyselfService } from '../../services/myself.service';
@@ -14,7 +15,7 @@ import { MyselfService } from '../../services/myself.service';
 })
 export class HostComponent implements OnInit {
   myself:IMyself;
-  host:IHost;
+  host:ICacheable<IHost> = createICacheable();
 
   hostPermission = HostPermission;
   $drawerIsOpen:Subject<boolean>;
@@ -32,11 +33,16 @@ export class HostComponent implements OnInit {
       this.baseAppService.navigateTo(`/host`)
     }
 
-    this.getHost().then(h => this.host = h);
+    cachize(this.hostService.readHost(this.myself.host._id), this.host);
     this.$drawerIsOpen = this.drawerService.$drawerOpenInstant;
   }
   
   getHost():Promise<IHost> {
     return this.hostService.readHost(this.myself.host._id);
+  }
+
+  // Inject IHost into child components
+  onOutletLoaded(component) {
+    component.host = this.host.data;
   }
 }

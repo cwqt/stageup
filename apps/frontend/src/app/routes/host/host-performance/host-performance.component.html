@@ -11,10 +11,15 @@
 
   <h2>Modify Visibility</h2>
   <ui-hr></ui-hr>
+
+  <p *ngIf="host.is_onboarded == false">
+    You must first finish the <a routerLink="/host/onboarding">onboarding process</a> before any content can be made Public.
+  </p>
   <ui-input
     type="select"
     label="Visibility"
     (selectionChange)="updateVisibility($event)"
+    [disabled]="host.is_onboarded == false"
     [options]="visibilityOptions"
     [initial]="performanceData.visibility">
   </ui-input>

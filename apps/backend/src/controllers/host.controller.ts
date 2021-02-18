@@ -38,6 +38,7 @@ import logger from '../common/logger';
 import Email = require('../common/email');
 import { HostInvitation } from '../models/hosts/host-invitation.model';
 import Env from '../env';
+import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 
 export default class HostController extends BaseController {
   createHost(): IControllerEndpoint<IHost> {
@@ -53,9 +54,12 @@ export default class HostController extends BaseController {
           name: v => Validators.Fields.name(v)
         })
       ],
-      authStrategy: AuthStrat.isLoggedIn,
+      authStrategy: AuthStrat.runner(
+        { uid: IdFinderStrat.findUserIdFromSession },
+        AuthStrat.userEmailIsVerified(m => m.uid)
+      ),
       controller: async req => {
-        // Check if user is already part of a host - which they shouldn't
+        // Make sure user is not already part of a host
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
@@ -64,7 +68,7 @@ export default class HostController extends BaseController {
         if (h) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
 
         // Create host & add current user (creator) to it through transaction
-        // & begin the onboarding process by running setup
+        // & begin the onboarding process by running .setup()
         return this.ORM.transaction(async txc => {
           const host = await txc.save(
             new Host({
@@ -190,7 +194,8 @@ export default class HostController extends BaseController {
               }
             }
           })
-        ) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+        )
+          throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
         // Get host & pull in members_info for new member push
         const host = await getCheck(
@@ -278,7 +283,8 @@ export default class HostController extends BaseController {
         );
 
         // Don't be able to force increase permissions if the user hasn't accepted the invitation
-        if(userHostInfo.permissions > HostPermission.Member) throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
+        if (userHostInfo.permissions > HostPermission.Member)
+          throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
 
         const newUserPermission: HostPermission = req.body.value;
         if (newUserPermission == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised);
@@ -520,14 +526,14 @@ export default class HostController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async req => {
         const hostPerformances = await this.ORM.createQueryBuilder(Performance, 'hps')
-          .innerJoinAndSelect('hps.host', 'host') 
-          .where('host._id = :id', { id: req.params.hid})         
-          .paginate(); 
+          .innerJoinAndSelect('hps.host', 'host')
+          .where('host._id = :id', { id: req.params.hid })
+          .paginate();
         return {
           data: hostPerformances.data.map(o => o.toStub()),
           __paging_data: hostPerformances.__paging_data
         };
       }
     };
-  } 
+  }
 }

@@ -2,10 +2,11 @@ import { IUserHostInfo } from '../users/user.interface';
 import { IPerformanceStub } from '../performances/performance.interface';
 import { IContactInfo } from '../users/person.interface';
 import { IAddress } from '../users/address.interface';
+import { NUUID } from '../common/fp.interface';
 
 
 export interface IHostStub {
-  _id: string;
+  _id: NUUID;
   name: string;
   username: string;
   bio?: string;

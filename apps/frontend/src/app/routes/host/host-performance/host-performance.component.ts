@@ -24,7 +24,7 @@ import { IGraphNode } from '../../../ui-lib/input/input.component';
   styleUrls: ['./host-performance.component.scss']
 })
 export class HostPerformanceComponent implements OnInit, OnDestroy {
-  host: IHostStub;
+  host: IHost;// injected from parent router-outlet
   performanceId: string;
   performance: ICacheable<IEnvelopedData<IPerformance, IPerformanceUserInfo>> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
@@ -49,7 +49,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private hostService: HostService,
     private performanceService: PerformanceService,
     private baseAppService: BaseAppService,
     private drawerService: DrawerService,
@@ -60,7 +59,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     await this.baseAppService.componentInitialising(this.route);
     this.performanceId = this.baseAppService.getParam(RouteParam.PerformanceId);
-    this.host = this.hostService.currentHostValue;
 
     // Immediately fetch the performance & open the drawer with it in a loading state
     // pass by reference the this.performance so the sidebar can await the loading to be completed
