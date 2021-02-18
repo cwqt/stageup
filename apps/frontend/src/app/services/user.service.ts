@@ -27,6 +27,7 @@ export class UserService {
 
   register(user: Pick<IUser, 'name' | 'username'> & { password: string }): Promise<IUser> {
     return this.http.post<IUser>('/api/users', user).toPromise();
+
   }
 
   updateUser(userId: string, body: { [index: string]: Primitive }): Promise<IMyself["user"]> {

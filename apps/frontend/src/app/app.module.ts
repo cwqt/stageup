@@ -4,7 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app.routes';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
@@ -12,7 +12,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { MomentModule } from 'ngx-moment';
 import { NgxPopperModule } from 'ngx-popper';
-import {ClipboardModule} from '@angular/cdk/clipboard';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { HttpConfigInterceptor } from './_helpers/http.interceptor';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AppComponent } from './app.component';
@@ -57,7 +58,7 @@ import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboard
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
-import { HostLandingComponent } from './routes/host/host-landing/host-landing.component'
+import { HostLandingComponent } from './routes/host/host-landing/host-landing.component';
 import { PerformanceModalComponent } from './components/modals/performance-modal.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
 import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
@@ -149,7 +150,7 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     NgxPopperModule.forRoot(),
     ClipboardModule
   ],
-  providers: [CookieService],
+  providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],
   entryComponents: [PerformanceModalComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

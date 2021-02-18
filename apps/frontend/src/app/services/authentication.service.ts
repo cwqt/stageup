@@ -4,7 +4,7 @@ import { tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { LoggedInGuard } from "../_helpers";
+import { LoggedInGuard } from "../_helpers/logged-in.guard";
 import { MyselfService } from "./myself.service";
 import { IUser } from '@core/interfaces';
 

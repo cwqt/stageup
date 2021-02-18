@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import { Y } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { displayValidationErrors, handleFormErrors } from 'apps/frontend/src/app/_helpers/formErrorHandler';
+import { displayValidationErrors, handleFormErrors } from 'apps/frontend/src/app/_helpers/form-error.handler';
 import { ButtonComponent } from '../button/button.component';
 
 import {
