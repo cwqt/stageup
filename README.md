@@ -2,7 +2,7 @@
 
 Live-streaming & VoD platform for the performance arts.
 
-![StageUp](https://ftp.cass.si/Njeh8898q.png)
+![StageUp](https://ftp.cass.si/7x58=5j56.png)
 
 
 # Installation
