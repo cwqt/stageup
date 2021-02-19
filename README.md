@@ -1,4 +1,4 @@
-# core &nbsp; ![Dev Build](https://github.com/StageUp/core/workflows/Build/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
+# core &nbsp; ![Dev Build](https://github.com/StageUp/core/workflows/Build%20&%20Test/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/)
 
 Live-streaming & VOD platform for the performance arts.
 
