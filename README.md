@@ -2,11 +2,10 @@
 
 Live-streaming & VOD platform for the performance arts.
 
+![StageUp](https://ftp.cass.si/Njeh8898q.png)
+
+
 # Installation
-
-Basic architecture map of the application looks like this:
-
-![StageUp](https://ftp.cass.si/37ehR6u5g.png)
 
 ## Homebrew (skip if Windows)
 Install Homebrew if you haven't already (macOS)
