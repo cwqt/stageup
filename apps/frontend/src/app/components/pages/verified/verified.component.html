@@ -1,1 +1,14 @@
-<h1>your account is now verified!</h1>
+<div *ngIf="state === 'true'" class="object-center text-center bg-gray-200 p-10 rounded-lg shadow-2xl">
+    <mat-icon class="mt-10">gpp_good</mat-icon>
+    <h1 class="pt-20 pb-10">Account succesfully verified!</h1>
+    <h3 class="pb-10">You may now enjoy content on StageUp!</h3>
+    <a href=""><ui-button kind="primary" size="l"><strong>Return to feed</strong></ui-button></a>
+</div>
+<div *ngIf="state === 'false'" class="object-center text-center bg-gray-200 p-10 rounded-lg shadow-2xl">
+    <mat-icon class="mt-10">warning</mat-icon>
+    <h1 class="pb-10 pt-20">Please verify your email address</h1>
+    <h3>We have sent you an email to confirm your account, please click the confirmation link within 48 hours</h3>
+    <h3 class="pb-16">If you can't find this email please check your spam folder</h3>
+    <h3 class="pb-10">Not there either?</h3>
+    <a href=""><ui-button kind="primary" size="l" (click)="gotoSupportForm()"><strong>Contact our support team</strong></ui-button></a>
+</div>

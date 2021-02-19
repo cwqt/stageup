@@ -1,3 +1,9 @@
-h1 {
-    padding: 100px 80px !important
+@import "apps/frontend/src/styles/variables";
+
+mat-icon {
+    color: $clr-primary;
+    transform: scale(6);
 }
+
+
+
