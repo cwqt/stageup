@@ -132,17 +132,7 @@ export default class HostController extends BaseController {
       }
     };
   }
-
-  // updateHost(): IControllerEndpoint<IHost> {
-  //   return {
-  //     validators: [],
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {
-  //       return ({} as IHost);
-  //     }
-  //   };
-  // }
-
+  
   deleteHost(): IControllerEndpoint<void> {
     return {
       validators: [],
@@ -535,5 +525,15 @@ export default class HostController extends BaseController {
         };
       }
     };
-  }
+  } 
+
+  // updateHost(): IControllerEndpoint<IHost> {
+  //   return {
+  //     validators: [],
+  //     authStrategy: AuthStrat.none,
+  //     controller: async req => {
+  //       return ({} as IHost);
+  //     }
+  //   };
+  // }
 }
