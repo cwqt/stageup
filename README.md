@@ -30,8 +30,8 @@ npm -v              # 7.3.0
 
 ## PostgreSQL & Redis
 
-To make life easier we'll be running the databases inside docker containers, first install Docker Desktop from here: <https://www.docker.com/products/docker-desktop>  
-To pull in the databases docker images use these commands:
+To make life easier we'll be running the databases inside Docker containers, first install Docker Desktop from here: <https://www.docker.com/products/docker-desktop>  
+To pull in the databases Docker images use these commands:
 
 ```sh
 docker run --name su-redis -p 6379:6379 -d redis  
@@ -49,7 +49,7 @@ To install it run:
 npm install -g nx   # 11.1.5
 ```
 
-Currently we just have just two applications - a frontend & a backend, but in the future this will be expanded to adding a task runner, notifications fan-out, recommendations engine etc, all of which will be sharing the interfaces + other shared code.
+Currently we just have three applications - a frontend, backend & queue, but in the future this will be expanded to adding a recommendations, notifications etc., all of which will be sharing the interfaces + other shared code.
 
 ### ng-cli commands within Nx
 
@@ -64,12 +64,17 @@ Currently we just have just two applications - a frontend & a backend, but in th
     backend            # the stageup backend
       .env.example     # example .env
       .env.development # also .env.staging, .testing & .production
+    runner             # distributed job queue
     api-tests          # integration tests
       .env.example     # example .env - call actual one just .env
           
   libs                 # where all shared code live
     interfaces         # typescript interfaces
     ui-lib             # frontend generic angular component library
+    shared
+      api              # shared backend services utilities
+        providers      # utils for interacting with data sources
+      helpers          # utility functions for backend & frontend
         
   deploys              # info pertaining to deployment
     k8s                # kubernetes files (unused for now)
@@ -80,7 +85,6 @@ Currently we just have just two applications - a frontend & a backend, but in th
         
   .github              # github actions
   .vscode              # editor settings
-  .prettierrc          # code formatting config
   nx.json              # nx workspace config
   ship.config.js       # ship.js release tool config
   package.json         # where _all_ packages are listed
@@ -91,6 +95,9 @@ Currently we just have just two applications - a frontend & a backend, but in th
 
 ## Backend
 Create a `.env.development` file in the root of `apps/backend/` based off of the provided `.env.example`, this will store our secret variables - please never share these with anyone - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
+
+## Runner
+Create a `.env.development` based off the existing `.env.example`, same as in the backend.
 
 ### MUX
 
@@ -130,15 +137,12 @@ Run `npm install` in the project root to install all required dependencies.
 Production builds perform tree-shaking optimization to remove unused libraries, so ensure you use ES6 import syntax.
 
 
-| Context     | frontend                                                                                                                          | backend                                                                                                            | api-tests                                                                        |
-|-------------|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| development | **Local running**, Faster re-building for development purposes<br>`npm run frontend`                                              | **Local running**, for development purposes<br>`npm run backend`                                                   | **Local running**, in watch mode for development purposes<br>`npm run api-tests` |
-| testing     |                                                                                                                                   | **Local running**, for api-tests to run against, switches to `test` PG database<br>`npm run backend:testing`       |                                                                                  |
-| staging     | **Live environment**, Staging build for live testing / demos<br>`npm run frontend:staging`<br>`npm run build:frontend:production` | **Live environment**, for api-tests to run against<br>`npm run backend:staging`<br>`npm run build:backend:staging` |                                                                                  |
-| production  | **Live environment**, Production build<br>`npm run frontend:production`<br>`npm run build:frontend:production`                    | **Live environment**, production build<br>`npm run backend:production`<br>`npm run build:backend:production`       | Running live against staging<br>`npm run build:api-tests`                        |
-
-
-<br />
+| Context   | Development                                                                          | Testing                                                                      | Staging                                                                                                                                   | Production                                                                                   |
+|-----------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| frontend  | **Local running**, Faster re-building for development purposes<br>`npm run frontend` |                                                                              | **Live environment**<br>, Staging build for live testing / demos<br><br>`npm run frontend:staging`<br>`npm run build:frontend:production` | **Live environment**<br>`npm run frontend:production`<br>`npm run build:frontend:production` |
+| backend   | **Local running**<br>, for development purposes<br>`npm run backend`                 | **Local running**, for api-tests to run against<br>`npm run backend:testing` | **Live environment**<br>, for api-tests to run against<br>`npm run backend:staging`<br>`npm run build:backend:staging`                    | **Live environment**<br>`npm run backend:production`<br>`npm run build:backend:production`   |
+| runner    | **Local running**<br>, for development purposes<br>`npm run runner`                  |                                                                              | **Live environment**<br>, for api-tests to run against<br>`npm run runner:staging`<br>`npm run build:runner:staging`                      | **Live environment**<br>`npm run runner:production`<br>`npm run build:runner:production`     |
+| api-tests | **Local running**<br>, in watch mode for development purposes<br>`npm run api-tests` |                                                                              |                                                                                                                                           | Running live against staging<br>`npm run build:api-tests`                                    |
 
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
