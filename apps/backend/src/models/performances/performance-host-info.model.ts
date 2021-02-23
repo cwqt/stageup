@@ -9,13 +9,13 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryColumn,
-  PrimaryGeneratedColumn
 } from 'typeorm';
 import { SigningKey } from './signing-key.model';
-import { DataClient } from '../../common/data';
 import Env from '../../env';
 import { Performance } from './performance.model';
-import { timestamp, uuid } from '../../common/helpers';
+import { timestamp, uuid } from '@core/shared/helpers';
+import { DataConnections } from '@core/shared/api';
+import { BackendDataClient } from '../../common/data';
 
 @Entity()
 export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostInfo {
@@ -33,7 +33,7 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
     this.created_at = timestamp(new Date());
   }
 
-  async setup(dc: DataClient, transEntityManager: EntityManager): Promise<[PerformanceHostInfo, LiveStream]> {
+  async setup(dc: DataConnections<BackendDataClient>, transEntityManager: EntityManager): Promise<[PerformanceHostInfo, LiveStream]> {
     // https://docs.mux.com/reference#create-a-live-stream
     const stream: LiveStream = await dc.mux.Video.LiveStreams.create({
       reconnect_window: 300, // Time to wait for reconnect on signal loss

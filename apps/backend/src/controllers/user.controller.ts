@@ -11,9 +11,9 @@ import {
   ErrCode,
   HTTP
 } from '@core/interfaces';
-import { IControllerEndpoint, BaseController } from '../common/controller';
-import Validators, { body, params as parameters } from '../common/validate';
-import { ErrorHandler, FormErrorResponse, getCheck } from '../common/errors';
+import { IControllerEndpoint, BaseController } from '@core/shared/api';
+import { Validators, body, params as parameters } from '@core/shared/api';
+import { ErrorHandler, FormErrorResponse, getCheck } from '@core/shared/api';
 
 import Email = require('../common/email');
 import Env from '../env';

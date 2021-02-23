@@ -16,6 +16,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "no-empty-function": "warn",
         "unicorn/no-process-exit": "off",
         "no-promise-executor-return": "off",
         "import/no-named-as-default-member": "off",

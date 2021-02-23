@@ -8,19 +8,23 @@ import {
   ErrCode,
   HostPermission,
   DtoCreatePerformance,
-  Visibility
+  Visibility,
+  JobType,
+  IScheduleReleaseJobData
 } from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { Performance } from '../models/performances/performance.model';
-import { ErrorHandler, getCheck } from '../common/errors';
-import { BaseController, IControllerEndpoint } from '../common/controller';
-import Validators, { body, query } from '../common/validate';
+import { Auth, ErrorHandler, getCheck } from '@core/shared/api';
+import { BaseController, IControllerEndpoint } from '@core/shared/api';
+import { Validators, body, query } from '@core/shared/api';
 import { PerformancePurchase } from '../models/performances/purchase.model';
 
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
+import { BackendDataClient } from '../common/data';
+import Queue from '../common/queue';
 
-export default class PerformanceController extends BaseController {
+export default class PerformanceController extends BaseController<BackendDataClient> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
@@ -36,17 +40,29 @@ export default class PerformanceController extends BaseController {
           )
         );
 
-        const performance = await new Performance(
-          {
-            name: req.body.name,
-            description: req.body.description ?? '',
-            price: req.body.price,
-            currency: req.body.currency
-          },
-          user
-        ).setup(this.dc);
+        return await this.ORM.transaction(async txc => {
+          const performance = await new Performance(req.body, user);
+          await performance.setup(this.dc.connections, txc);
+          await txc.save(performance);
 
-        return performance.toFull();
+          // Push premiere to job queue for automated release
+          Queue.enqueue<IScheduleReleaseJobData>({
+            type: JobType.ScheduleRelease,
+            data: {
+              _id: performance._id,
+            },
+            options: {
+              // Use a repeating job with a limit of 1 to activate the scheduler
+              repeat: {
+                cron: "* * * * *",
+                startDate: performance.premiere_date,
+                limit: 1
+              }
+            }
+          });
+
+          return performance.toFull();
+        });
       }
     };
   }

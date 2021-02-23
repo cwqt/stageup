@@ -27,8 +27,8 @@ import {
 
 import { Host } from '../hosts/host.model'
 import { User } from '../users/user.model';
-import Validators, { object, single, array } from '../../common/validate';
-import { timestamp, uuid } from '../../common/helpers';
+import { Validators, object, single, array } from '@core/shared/api';
+import { timestamp, uuid } from '@core/shared/helpers';
 import { OnboardingReview } from './onboarding-review.model';
 
 @Entity()

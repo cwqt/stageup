@@ -1,6 +1,6 @@
-import logger from '../common/logger';
-import { body, query, single } from '../common/validate';
-import { getCheck } from '../common/errors';
+import { log } from '../common/logger';
+import { body, query, single } from '@core/shared/api';
+import { getCheck } from '@core/shared/api';
 import {
   HostOnboardingState,
   HostOnboardingStep,
@@ -9,7 +9,7 @@ import {
   IHostOnboarding,
   IOnboardingReview
 } from '@core/interfaces';
-import { BaseController, IControllerEndpoint } from '../common/controller';
+import { BaseController, IControllerEndpoint } from '@core/shared/api';
 import AuthStrat from '../common/authorisation';
 import { Onboarding } from '../models/hosts/onboarding.model';
 
@@ -159,7 +159,7 @@ export default class AdminController extends BaseController {
               try {
                 const potentialMember = await User.findOne({ _id: member.value as string });
                 if (!potentialMember)
-                  logger.error(`Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`);
+                  log.error(`Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`);
 
                 // Don't add the owner if they're already in
                 if (potentialMember._id !== owner.user._id) {
@@ -169,7 +169,7 @@ export default class AdminController extends BaseController {
                   await host.addMember(potentialMember, HostPermission.Pending, txc);
                 }
               } catch (error) {
-                logger.error(error);
+                log.error(error);
               }
             })
           );

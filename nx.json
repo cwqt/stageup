@@ -17,6 +17,8 @@
     "backend": { "tags": [] },
     "frontend": { "tags": [] },
     "api-tests": { "tags": [] },
-    "interfaces": { "tags": [] }
+    "interfaces": { "tags": [] },
+    "shared": { "tags": [] },
+    "runner": { "tags": [] }
   }
 }

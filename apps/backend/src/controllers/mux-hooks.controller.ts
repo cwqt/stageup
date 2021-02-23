@@ -1,17 +1,19 @@
-import { DataClient } from '../common/data';
-import { MUXHook, IMUXHookResponse, ErrCode, HTTP } from '@core/interfaces';
-import logger from '../common/logger';
-import { Webhooks, LiveStream } from '@mux/mux-node';
-import Env from '../env';
-import { ErrorHandler } from '../common/errors';
-
 import { RedisClient } from 'redis';
 import { MD5 } from 'object-hash';
-import { AuthStrategy } from '../common/authorisation';
-import { BaseArguments, IControllerEndpoint, BaseController } from '../common/controller';
+import { MUXHook, IMUXHookResponse, ErrCode, HTTP } from '@core/interfaces';
+import { Webhooks, LiveStream } from '@mux/mux-node';
+
+import Env from '../env';
+import { log } from '../common/logger';
+import { ErrorHandler } from '@core/shared/api';
+import { AuthStrategy } from '@core/shared/api';
+import { BaseArguments, IControllerEndpoint, BaseController } from '@core/shared/api';
+import { BackendDataClient } from '../common/data';
+import { DataConnections } from '@core/shared/api';
+import Auth from '../common/authorisation';
 
 export default class MUXHooksController extends BaseController {
-  readonly hookMap: { [index in MUXHook]?: (data: IMUXHookResponse<any>, dc: DataClient) => Promise<void> };
+  readonly hookMap: { [index in MUXHook]?: (data: IMUXHookResponse, dc: DataConnections<BackendDataClient>) => Promise<void> };
 
   constructor(...args: BaseArguments) {
     super(...args);
@@ -38,7 +40,7 @@ export default class MUXHooksController extends BaseController {
           return [false, {}, ErrCode.INVALID];
         }
       } catch (error) {
-        logger.error(error.message);
+        log.error(error.message);
         return [false, {}, ErrCode.UNKNOWN];
       }
 
@@ -48,28 +50,28 @@ export default class MUXHooksController extends BaseController {
 
   handleHook(): IControllerEndpoint<void> {
     return {
-      authStrategy: this.validHookStrat(),
+      authStrategy: Auth.none,//this.validHookStrat(),
       controller: async req => {
-        if (!Env.USE_MEMORYSTORE) {
-          logger.error('Cannot handle MUX hook as Redis is disabled in .env');
+        if (Env.STORE.USE_MEMORYSTORE == true) {
+          log.error('Cannot handle MUX hook as Redis is disabled in .env');
         }
 
         // Is a valid hook & we should handle it
-        const data: IMUXHookResponse<any> = req.body;
+        const data: IMUXHookResponse = req.body;
 
         // TODO: At some point we'll want to add these hooks to a FIFO task queue and just respond with a 200
         // for acknowledged handling, hook then handled by a separate micro-service
-        logger.http(`Received MUX hook: ${data.type}`);
+        log.http(`Received MUX hook: ${data.type}`);
 
         try {
           // Check if hook has already been handled by looking in the Redis store
-          if (data.attempts.length > 0 && (await this.checkPreviouslyHandledHook(req.body, this.dc.redis))) {
-            logger.info('Duplicate MUX hook');
+          if (data.attempts.length > 0 && (await this.checkPreviouslyHandledHook(req.body, this.dc.connections.redis))) {
+            log.info('Duplicate MUX hook');
             return;
           }
 
-          await (this.hookMap[data.type] || this.unsupportedHookHandler)(req.body, this.dc);
-          await this.setHookHandled(req.body, this.dc.redis);
+          await (this.hookMap[data.type] || this.unsupportedHookHandler)(req.body, this.dc.connections);
+          await this.setHookHandled(req.body, this.dc.connections.redis);
         } catch (error) {
           throw new ErrorHandler(HTTP.ServerError, error);
         }
@@ -77,7 +79,7 @@ export default class MUXHooksController extends BaseController {
     };
   }
 
-  setHookHandled = async (data: IMUXHookResponse<any>, redis: RedisClient): Promise<void> => {
+  setHookHandled = async (data: IMUXHookResponse, redis: RedisClient): Promise<void> => {
     return new Promise((resolve, reject) => {
       const hookId = `hook:${MD5(data.data)}`;
 
@@ -89,14 +91,14 @@ export default class MUXHooksController extends BaseController {
           type: data.type
         })
         .expire(hookId, 86400) // Expire after 1 day
-        .exec((error, reply) => {
+        .exec((error) => {
           if (error) return reject(error);
           return resolve();
         });
     });
   };
 
-  checkPreviouslyHandledHook = async (data: IMUXHookResponse<any>, redis: RedisClient): Promise<boolean> => {
+  checkPreviouslyHandledHook = async (data: IMUXHookResponse, redis: RedisClient): Promise<boolean> => {
     return new Promise((resolve, reject) => {
       redis.hmget(`hook:${MD5(data.data)}`, 'hookId', (error, reply) => {
         if (error) return reject(error);
@@ -106,7 +108,7 @@ export default class MUXHooksController extends BaseController {
     });
   };
 
-  async unsupportedHookHandler(data: IMUXHookResponse<any>) {
-    logger.http(`Un-supported MUX hook: ${data.type}`);
+  async unsupportedHookHandler(data: IMUXHookResponse) {
+    log.http(`Un-supported MUX hook: ${data.type}`);
   }
 }

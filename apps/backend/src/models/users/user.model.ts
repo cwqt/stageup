@@ -21,7 +21,7 @@ import { Performance } from '../performances/performance.model';
 import { Person } from './person.model';
 import { ContactInfo } from './contact-info.model';
 import Env from '../../env';
-import { uuid } from '../../common/helpers';
+import { uuid } from '@core/shared/helpers';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {

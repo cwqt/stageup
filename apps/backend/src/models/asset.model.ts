@@ -1,7 +1,7 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, BeforeInsert, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Entity, Column, BeforeInsert, PrimaryColumn } from 'typeorm';
 import { IAsset, IAssetMeta, IGIFMeta, AssetType, IThumbnailMeta, IStaticMeta, Primitive } from '@core/interfaces';
 import Env from '../env';
-import { timestamp, uuid } from '../common/helpers';
+import { timestamp, uuid } from '@core/shared/helpers';
 import { Except } from 'type-fest';
 
 @Entity()

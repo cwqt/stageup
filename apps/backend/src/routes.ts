@@ -1,6 +1,4 @@
-import { Router } from './router';
-import { DataClient } from './common/data';
-import Middlewares from './common/middleware';
+import { DataClient, AsyncRouter, Middlewares } from '@core/shared/api';
 
 import {
     IHost,
@@ -17,6 +15,7 @@ import {
     IAddress,
     IOnboardingStepMap,
 } from '@core/interfaces';
+import { BackendDataClient } from './common/data';
 
 import UserController from './controllers/user.controller';
 import HostController from './controllers/host.controller';
@@ -29,12 +28,9 @@ import AdminController from './controllers/admin.controller';
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
  */
-export default (providers:DataClient):Router => {
-const router = new Router(providers);
-const mws = new Middlewares(providers);
-
+export default (router: AsyncRouter, client: DataClient<BackendDataClient>, mws: Middlewares) => {
 // USERS --------------------------------------------------------------------------------------------------------------
-const Users = new UserController(providers, mws);
+const Users = new UserController(client, mws);
 router.get      <IMyself>               ("/myself",                                   Users.readMyself());
 // router.get      <void>                  ("/feed",                                     Users.readUserFeed());
 router.post     <IMyself["user"]>       ("/users",                                    Users.createUser());
@@ -55,7 +51,7 @@ router.delete   <void>                  ("/users/:uid/addresses/:aid",          
 // router.get      <IPurchase[]>           ("/users/:uid/purchases",                     Users.getPurchases());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
-const Hosts = new HostController(providers, mws);
+const Hosts = new HostController(client, mws);
 router.post     <IHost>                 ("/hosts",                                    Hosts.createHost());
 router.get      <IHost>                 ("/hosts/@:username",                         Hosts.readHostByUsername()); // order matters
 router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
@@ -74,7 +70,7 @@ router.redirect                         ("/hosts/:hid/invites/:iid",            
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
-const Perfs = new PerfController(providers, mws);
+const Perfs = new PerfController(client, mws);
 router.post     <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance());
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances());
 router.get      <IE<IPerf, IPUInfo>>    ("/performances/:pid",                        Perfs.readPerformance());
@@ -85,25 +81,24 @@ router.put      <IPerf>                 ("/performances/:pid",                  
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
 
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
-const Admin = new AdminController(providers, mws);
+const Admin = new AdminController(client, mws);
 router.get      <IE<IHOnboarding[]>>     (`/admin/onboardings`,                       Admin.readOnboardingProcesses());
 router.post     <void>                   (`/admin/onboardings/:oid/review`,           Admin.reviewOnboardingProcess());
 router.post     <void>                   ("/admin/onboardings/:oid/enact",            Admin.enactOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
-const MUXHooks = new MUXHooksController(providers, mws);
-router.post     <void>                  ("/mux/hooks",                                MUXHooks.handleHook());
+const MUXHooks = new MUXHooksController(client, mws);
+router.post     <void>                   ("/mux/hooks",                               MUXHooks.handleHook());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
-const Auth =  new AuthController(providers, mws)
-router.redirect                       ("/auth/verify",                                Auth.verifyUserEmail());
+const Auth =  new AuthController(client, mws)
+router.redirect                          ("/auth/verify",                             Auth.verifyUserEmail());
 
 // MISC ---------------------------------------------------------------------------------------------------------------
-const Misc = new MiscController(providers, mws);
-router.get      <string>                ("/ping",                                     Misc.ping());
-router.post     <void>                  ("/drop",                                     Misc.dropAllData());
-router.get      <IHost>                 ("/verifyhost/:hid",                          Misc.verifyHost());
-router.post     <void>                  ("/acceptinvite/:uid",                        Misc.acceptHostInvite());
-
-return router;
-};
+const Misc = new MiscController(client, mws);
+router.get      <string>                 ("/ping",                                    Misc.ping());
+router.post     <void>                   ("/drop",                                    Misc.dropAllData());
+router.get      <IHost>                  ("/verifyhost/:hid",                         Misc.verifyHost());
+router.post     <void>                   ("/acceptinvite/:uid",                       Misc.acceptHostInvite());
+router.get      <void>                   ("/sendgrid",                                Misc.testSendGrid());
+}

@@ -1,16 +1,20 @@
 import RateLimiter from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
-import { DataClient } from './data';
 import { Request, Response } from 'express';
 import apicache from 'apicache';
 import { HTTP } from '@core/interfaces';
 import Multer from 'multer';
+import { RedisClient } from 'redis';
 
-export default class Middlewares {
-  providers: DataClient;
+export interface IMiddlewareConnections {
+  redis: RedisClient
+}
 
-  constructor(providers: DataClient) {
-    this.providers = providers;
+export class Middlewares {
+  connections:IMiddlewareConnections;
+
+  constructor(connections: IMiddlewareConnections) {
+    this.connections = connections;
   }
 
   /**
@@ -43,7 +47,7 @@ export default class Middlewares {
   cacher(period: string, cacheFunction?: (request: Request, res: Response) => boolean): any {
     return apicache
       .options({
-        redisClient: this.providers.redis
+        redisClient: this.connections.redis
       })
       .middleware(period, cacheFunction);
   }
@@ -56,7 +60,7 @@ export default class Middlewares {
   limiter(period: number, max: number): RateLimiter.RateLimit {
     return RateLimiter({
       store: new RedisStore({
-        client: this.providers.redis
+        client: this.connections.redis
       }),
       windowMs: period * 1000,
       max: max

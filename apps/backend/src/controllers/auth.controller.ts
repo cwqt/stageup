@@ -4,8 +4,8 @@ import { User } from '../models/users/user.model';
 import { verifyEmail } from '../common/email';
 
 import AuthStrat from '../common/authorisation';
-import Validators, { query } from '../common/validate';
-import { BaseController, IControllerEndpoint } from '../common/controller';
+import { Validators, query } from '@core/shared/api';
+import { BaseController, IControllerEndpoint } from '@core/shared/api';
 
 export default class AuthController extends BaseController {
   verifyUserEmail(): IControllerEndpoint<string> {

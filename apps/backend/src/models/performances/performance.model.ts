@@ -3,20 +3,22 @@ import {
   BeforeInsert,
   Column,
   Entity,
+  EntityManager,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryColumn
 } from 'typeorm';
-import { CurrencyCode, Genre, IPerformance, IPerformanceStub, IRating, PerformanceState, Visibility } from '@core/interfaces';
+import { CurrencyCode, DtoCreatePerformance, Genre, IPerformance, IPerformanceStub, IRating, PerformanceState, Visibility } from '@core/interfaces';
 
 import { PerformanceHostInfo as PHostInfo, PerformanceHostInfo } from './performance-host-info.model';
 import { Host } from '../hosts/host.model';
 import { User } from '../users/user.model';
-import { DataClient } from '../../common/data';
 import { PerformancePurchase } from '../performances/purchase.model';
-import { timestamp, uuid } from '../../common/helpers';
+import { timestamp, uuid } from '@core/shared/helpers';
+import { DataConnections } from '@core/shared/api';
+import { BackendDataClient } from '../../common/data';
 
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
@@ -45,7 +47,7 @@ export class Performance extends BaseEntity implements IPerformance {
   ratings: IRating[];
 
   constructor(
-    data: Pick<IPerformanceStub, 'name' | 'description'> & Pick<IPerformance, 'price' | 'currency'>,
+    data: DtoCreatePerformance,
     creator: User
   ) {
     super();
@@ -53,6 +55,8 @@ export class Performance extends BaseEntity implements IPerformance {
     this.description = data.description;
     this.price = data.price;
     this.currency = data.currency;
+    this.premiere_date = data.premiere_date;
+    this.genre = data.genre;
 
     this.created_at = timestamp(new Date());
     this.views = 0;
@@ -62,15 +66,11 @@ export class Performance extends BaseEntity implements IPerformance {
     this.state = PerformanceState.Idle;
   }
 
-  async setup(dc: DataClient): Promise<Performance> {
+  async setup(dc: DataConnections<BackendDataClient>, txc:EntityManager): Promise<Performance> {
     // Create host info, which includes a signing key, thru atomic trans op
-    await dc.torm.transaction(async transEntityManager => {
-      const [hostInfo, stream] = await new PerformanceHostInfo().setup(dc, transEntityManager);
-      this.host_info = hostInfo;
-      this.playback_id = stream.playback_ids.find(p => p.policy === 'signed').id;
-
-      await transEntityManager.save(this);
-    });
+    const [hostInfo, stream] = await new PerformanceHostInfo().setup(dc, txc);
+    this.host_info = hostInfo;
+    this.playback_id = stream.playback_ids.find(p => p.policy === 'signed').id;
 
     return this;
   }

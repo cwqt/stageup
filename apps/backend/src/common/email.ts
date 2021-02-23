@@ -1,56 +1,41 @@
-import nodemailer from 'nodemailer';
+import { SendMailOptions } from 'nodemailer';
 import dbless from 'dbless-email-verification';
 import Env from '../env';
-import logger from './logger';
 import { Host } from '../models/hosts/host.model';
-import { Environment } from '@core/interfaces';
+import { Environment, JobType } from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { HostInvitation } from '../models/hosts/host-invitation.model';
 import { EntityManager } from 'typeorm';
+import { log } from './logger';
+import Queue from './queue';
 
 const generateEmailHash = (email: string): string => {
-  const hash = dbless.generateVerificationHash(email, Env.PRIVATE_KEY, 60);
-  return hash;
+  return dbless.generateVerificationHash(email, Env.PRIVATE_KEY, 60);
 };
 
 export const verifyEmail = (email: string, hash: string): boolean => {
-  if (!Env.isEnv(Environment.Production)) {
-    return true;
-  }
-
+  if (!Env.isEnv(Environment.Production)) return true;
   return dbless.verifyHash(hash, email, Env.PRIVATE_KEY);
 };
 
 // Return bool for success instead of try/catching for brevity
-export const sendEmail = async (
-  mailOptions: nodemailer.SendMailOptions
-): Promise<boolean> => {
-  return new Promise((resolve) => {
-    // Don't send mail when in dev/test, unless explicitly set in .env
-    if(Env.isEnv([Environment.Production, Environment.Staging]) == false) {
-      if(Env.SENDGRID.ENABLED_IN_DEVELOPMENT == false) return resolve(true);
+export const sendEmail = (mailOptions: SendMailOptions) => {
+  // Don't send mail when in dev/test, unless explicitly set in .env
+  if (Env.isEnv([Environment.Production, Environment.Staging]) == false) {
+    if (Env.EMAIL_IN_DEVELOPMENT == false) {
+      log.warn(`Did not send e-mail because it is disabled in development`);
+      return;
     }
+  }
 
-    const transporter = nodemailer.createTransport({
-      service: 'SendGrid',
-      auth: {
-        user: Env.SENDGRID.USERNAME,
-        pass: Env.SENDGRID.API_KEY
-      }
-    });
+  Queue.enqueue({
+    type: JobType.SendEmail,
+    data: mailOptions,
+  })
+}
 
-    transporter.sendMail(mailOptions, (error: Error) => {
-      if (error) {
-        logger.error('Error sending e-mail', error);
-        return resolve(false);
-      }
 
-      return resolve(true);
-    });
-  });
-};
-
-export const sendVerificationEmail = async (email_address: string): Promise<boolean> => {
+export const sendVerificationEmail = async (email_address: string) => {
   const hash = generateEmailHash(email_address);
   const verificationUrl = `${Env.API_URL}/auth/verify?email=${email_address}&hash=${hash}`;
 
@@ -62,7 +47,12 @@ export const sendVerificationEmail = async (email_address: string): Promise<bool
   });
 };
 
-export const sendUserHostMembershipInvitation = async (inviter:User, invitee: User, host: Host, txc:EntityManager): Promise<boolean> => {
+export const sendUserHostMembershipInvitation = async (
+  inviter: User,
+  invitee: User,
+  host: Host,
+  txc: EntityManager
+) => {
   const invite = new HostInvitation(inviter, invitee, host);
   await txc.save(invite);
 

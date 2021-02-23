@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import log from './logger';
 import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@core/interfaces';
+import { Logger } from 'winston';
 
 /**
  * @description Used for checking if something exists, else throw a not found
  * @param f
  */
-export const getCheck = async <T>(f: Promise<T>, code?:ErrCode): Promise<T> => {
+export const getCheck = async <T>(f: Promise<T>, code?: ErrCode): Promise<T> => {
   const v = await f;
   if (v === null || v === undefined) {
     throw new ErrorHandler(HTTP.NotFound, code || ErrCode.NOT_FOUND);
@@ -15,7 +15,13 @@ export const getCheck = async <T>(f: Promise<T>, code?:ErrCode): Promise<T> => {
   return v;
 };
 
-export const handleError = (request: Request, res: Response, next: NextFunction, error: ErrorHandler | Error) => {
+export const handleError = (
+  request: Request,
+  res: Response,
+  next: NextFunction,
+  error: ErrorHandler | Error,
+  log: Logger
+) => {
   const errorType: HTTP = error instanceof ErrorHandler ? error.errorType : HTTP.ServerError;
   const message: string = error.message;
 
@@ -34,9 +40,12 @@ export const handleError = (request: Request, res: Response, next: NextFunction,
   res.status(response.statusCode).json(response);
 };
 
-export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-  handleError(req, res, next, err);
-}
+export const global404Handler = logger => (req: Request, res: Response, next: NextFunction) =>
+  handleError(req, res, next, new ErrorHandler(HTTP.NotFound, ErrCode.NOT_FOUND), logger);
+
+export const globalErrorHandler = logger => (err: any, req: Request, res: Response, next: NextFunction) => {
+  handleError(req, res, next, err, logger);
+};
 
 export class ErrorHandler extends Error {
   errorType: HTTP;

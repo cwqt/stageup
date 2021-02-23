@@ -1,5 +1,5 @@
 import { ErrCode, IAddress, Idless, IOnboardingAddMembers } from '@core/interfaces';
-import Validators, { object, single, array } from '../common/validate';
+import { Validators, object, single, array } from '@core/shared/api';
 
 describe('Custom validation', () => {
   it('Should return correct results for simple, unnested objects', async () => {

@@ -1,38 +1,21 @@
-import { Environment, ErrCode, HostPermission, IHost, NUUID } from '@core/interfaces';
-import { Request } from 'express';
-import { DataClient } from '../data';
+import { Environment, ErrCode, HostPermission, IHost } from '@core/interfaces';
 import { User } from '../../models/users/user.model';
 import { UserHostInfo } from '../../models/hosts/user-host-info.model';
 import Env from '../../env';
 import { Host } from '../../models/hosts/host.model';
-import { IdFinderStrategy } from './id-finder-strategies';
+import { AuthStrategy, AuthStratReturn, MapAccessor, NUUIDMap } from '@core/shared/api';
 
-// Authorisation Strategies ------------------------------------------------------------------------------------------
-const runner = (idMap: { [index: string]: IdFinderStrategy }, authStrat: AuthStrategy): AuthStrategy => {
-  return async (req, dc) => {
-    return authStrat(
-      req,
-      dc,
-      (await Promise.all(Object.values(idMap).map(f => f(req, dc)))).reduce(
-        (acc, curr, idx) => ((acc.params[acc.keys[idx]] = curr), acc),
-        { params: {}, keys: Object.keys(idMap) }
-      ).params
-    );
-  };
-};
+const isFromService:AuthStrategy = async (req, dc):Promise<AuthStratReturn> => {
+  if(!req.headers.authorization) return [false, {}];
 
+  // Check bearer authentication matches internally known key
+  const auth = Buffer.from(req.headers.authorization.split(" ")[1], 'base64').toString();
+  if(auth != `service:${Env.INTERNAL_KEY}`) {
+    return [false, {}];
+  }
 
-
-export type AuthStratReturn = [boolean, { [index: string]: any }, ErrCode?];
-export type AuthStrategy = (req: Request, dc: DataClient, idMap?: Record<string, NUUID>) => Promise<AuthStratReturn>;
-
-export type NUUIDMap = Record<string, NUUID>;
-export type MapAccessor = (map:NUUIDMap) => NUUID;
-
-
-const none: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
   return [true, {}];
-};
+}
 
 const isLoggedIn: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
   if (!req.session.user) {
@@ -125,23 +108,6 @@ const isSiteAdmin: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
   return [true, {}];
 };
 
-const isEnv = (env: Environment): AuthStrategy => {
-  return async (req, dc): Promise<AuthStratReturn> => {
-    if (!Env.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
-    return [true, {}];
-  };
-};
-
-/**
- * @description Is currently running on a live, deployed instance
- */
-const isLive: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
-  if (Env.isEnv(Environment.Staging) || Env.isEnv(Environment.Production)) {
-    return [true, {}];
-  } else {
-    return [false, {}];
-  }
-};
 
 const hostIsOnboarded = (mapAccessor?: MapAccessor): AuthStrategy => {
   return async (req, dc, map): Promise<AuthStratReturn> => {
@@ -185,61 +151,18 @@ const userEmailIsVerified = (mapAccessor?:MapAccessor): AuthStrategy => {
   };
 };
 
-// Combinators ---------------------------------------------------------------------------------------------------------
-
-/**
- * @description Invert result of passed in Auth strategy
- * @param strategy Auth Strategy to invert
- */
-const not = (strategy: AuthStrategy): AuthStrategy => {
-  return async (req, dc, map): Promise<AuthStratReturn> => {
-    const [valid, passthru, reason]: AuthStratReturn = await strategy(req, dc, map);
-    return [!valid, passthru, reason];
-  };
-};
-
-/**
- * @description Combine AuthStratgies into an AND operator
- * @param args authStrategy
- */
-const and = (...args: AuthStrategy[]): AuthStrategy => {
-  return async (req, dc, map): Promise<AuthStratReturn> => {
-    const isValid = (await Promise.all(args.map(async as => as(req, dc, map)))).every(r => r[0]);
-    return [isValid, {}, ErrCode.MISSING_PERMS];
-  };
-};
-
-/**
- * @description Combine AuthStratgies into an OR operator
- * @param args authStrategy
- */
-const or = (...args: AuthStrategy[]): AuthStrategy => {
-  return async (req, dc, map): Promise<AuthStratReturn> => {
-    const isValid = (await Promise.all(args.map(async as => as(req, dc, map)))).some(r => r[0]);
-    return [isValid, {}, ErrCode.MISSING_PERMS];
-  };
-};
-
-/**
- * @description Custom AuthStrategy using HOF
- * @param f Custom function which returns true or false to allow/deny access
- */
-const custom = (f: (request?: Request, dc?: DataClient) => boolean): AuthStrategy => {
+const isEnv = (env: Environment): AuthStrategy => {
   return async (req, dc): Promise<AuthStratReturn> => {
-    const res = f(req, dc);
-    return [res, {}, res ? ErrCode.MISSING_PERMS : null];
+    if (!Env.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
+    return [true, {}];
   };
 };
 
+
+import { Auth } from '@core/shared/api';
 export default {
-  runner,
-  none,
-  custom,
-  and,
-  or,
-  not,
+  isFromService,
   isEnv,
-  isLive,
   isOurself,
   isLoggedIn,
   isMemberOfHost,
@@ -247,5 +170,6 @@ export default {
   userEmailIsVerified,
   hasHostPermission,
   hasSpecificHostPermission,
-  isSiteAdmin
+  isSiteAdmin,
+  ...Auth
 };

@@ -2,7 +2,7 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeIn
 import { IPerformancePurchase, CurrencyCode } from '@core/interfaces';
 import { User } from '../users/user.model';
 import { Performance } from './performance.model';
-import { timestamp, uuid } from '../../common/helpers';
+import { timestamp, uuid } from '@core/shared/helpers';
 @Entity()
 export class PerformancePurchase extends BaseEntity implements IPerformancePurchase {
   @PrimaryColumn() _id: string;
@@ -27,6 +27,4 @@ export class PerformancePurchase extends BaseEntity implements IPerformancePurch
     this.currency = performance.currency;
     this.purchased_at = timestamp(new Date());
   }
-
-  toStub() {}
 }

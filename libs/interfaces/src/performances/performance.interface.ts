@@ -6,8 +6,8 @@ import { Genre } from './genres.interface';
 import { IPerformancePurchase } from './performance-purchase.interface';
 
 export enum Visibility {
-  Public = "public",
-  Private = "private"
+  Public = 'public',
+  Private = 'private'
 }
 export interface IPerformanceStub {
   _id: string;
@@ -28,11 +28,14 @@ export interface IPerformance extends IPerformanceStub {
   price: number; // cost to purchase (micro-pence)
   currency: CurrencyCode; // currency of price
   genre: Genre;
-  is_private: boolean; // accessible only to host members 
+  is_private: boolean; // accessible only to host members
 }
 
 // data transfer object
-export type DtoCreatePerformance = Pick<Required<IPerformance>, 'name' | 'premiere_date' | 'description' | 'genre' | "price" | "currency">;
+export type DtoCreatePerformance = Pick<
+  Required<IPerformance>,
+  'name' | 'premiere_date' | 'description' | 'genre' | 'price' | 'currency'
+>;
 
 // private to host
 export interface IPerformanceHostInfo {
@@ -43,7 +46,7 @@ export interface IPerformanceHostInfo {
 export interface IPerformanceUserInfo {
   signed_token: string;
   expires: boolean;
-  purchase_id: IPerformancePurchase["_id"];
+  purchase_id: IPerformancePurchase['_id'];
 }
 
 export enum PerformanceState {

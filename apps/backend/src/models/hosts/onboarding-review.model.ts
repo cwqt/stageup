@@ -5,7 +5,7 @@ import {
 } from '@core/interfaces';
 
 import { User } from '../users/user.model';
-import { timestamp, uuid } from '../../common/helpers';
+import { timestamp, uuid } from '@core/shared/helpers';
 import { Onboarding } from './onboarding.model';
 
 @Entity()

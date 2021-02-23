@@ -1,10 +1,6 @@
-import { NUUID } from '@core/interfaces';
-import { Request } from 'express';
-import { FindOptions } from 'typeorm';
+import { IdFinderStrategy } from '@core/shared/api';
 import { Performance } from '../../models/performances/performance.model';
-import { DataClient } from '../data';
 
-export type IdFinderStrategy = (req: Request, dc: DataClient) => Promise<NUUID | null>;
 
 const findUserIdFromSession: IdFinderStrategy = async (req, dc) => {
   return req.session.user?._id;

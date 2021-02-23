@@ -11,8 +11,9 @@ import {
   query as queryRunner
 } from 'express-validator';
 
-import { ErrorHandler } from '../errors';
-import logger from '../logger';
+import { ErrorHandler } from '@core/shared/api';
+import { Logger } from 'winston';
+
 
 type VData<T> = T & {
   __this?: T; // self-reference
@@ -200,14 +201,14 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>, code?:
  * @description Middleware for validating requests
  * @param validators VReqHandlerFunctor array
  */
-export const validatorMiddleware = (validators: VReqHandlerFunctor[]): RequestHandler => {
+export const validatorMiddleware = (validators: VReqHandlerFunctor[], log:Logger): RequestHandler => {
   return async (req, res, next) => {
     const errors: IFormErrorField[] = (await Promise.allSettled(validators.map(async v => v(req))))
       .flat()
       .filter(e => e.status === 'fulfilled')
       .flatMap(e => (e as any).value);
 
-    if (errors.length > 0) console.log(JSON.stringify(errors, null, 2));
+    if (errors.length > 0) log.error(JSON.stringify(errors, null, 2));
     if (errors.length > 0) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID, errors);
     next();
   };

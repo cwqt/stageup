@@ -21,24 +21,25 @@ import {
   HostInviteState,
   IPerformanceStub
 } from '@core/interfaces';
+import { timestamp } from '@core/shared/helpers';
+
 import { User } from '../models/users/user.model';
 import { Host } from '../models/hosts/host.model';
-import { ErrorHandler, getCheck } from '../common/errors';
-
+import { HostInvitation } from '../models/hosts/host-invitation.model';
 import { UserHostInfo } from '../models/hosts/user-host-info.model';
-import { BaseController, IControllerEndpoint } from '../common/controller';
 import { Onboarding } from '../models/hosts/onboarding.model';
-import AuthStrat from '../common/authorisation';
-import Validators, { body, params as parameters, query } from '../common/validate';
-import { timestamp } from '../common/helpers';
 import { OnboardingReview } from '../models/hosts/onboarding-review.model';
 import { Performance } from '../models/performances/performance.model';
 
-import logger from '../common/logger';
-import Email = require('../common/email');
-import { HostInvitation } from '../models/hosts/host-invitation.model';
-import Env from '../env';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
+import AuthStrat from '../common/authorisation';
+import { Validators, body, params as parameters, query } from '@core/shared/api';
+import { BaseController, IControllerEndpoint } from '@core/shared/api';
+import { ErrorHandler, getCheck } from '@core/shared/api';
+
+import Env from '../env';
+import Email = require('../common/email');
+import { log } from '../common/logger';
 
 export default class HostController extends BaseController {
   createHost(): IControllerEndpoint<IHost> {
@@ -473,7 +474,7 @@ export default class HostController extends BaseController {
         try {
           await onboarding.updateStep(step, u[step](req.body));
         } catch (error) {
-          logger.error(error);
+          log.error(error);
           throw new ErrorHandler(HTTP.DataInvalid, null, error);
         }
 

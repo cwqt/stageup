@@ -3,7 +3,7 @@ import { HostPermission, IUserHostInfo } from '@core/interfaces';
 
 import { Host } from './host.model';
 import { User } from '../users/user.model';
-import { timestamp, uuid } from '../../common/helpers';
+import { timestamp, uuid } from '@core/shared/helpers';
 
 @Entity()
 export class UserHostInfo extends BaseEntity implements IUserHostInfo {
