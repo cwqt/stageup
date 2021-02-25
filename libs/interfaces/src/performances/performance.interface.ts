@@ -29,7 +29,6 @@ export interface IPerformance extends IPerformanceStub {
   price: number; // cost to purchase (micro-pence)
   currency: CurrencyCode; // currency of price
   genre: Genre;
-  is_private: boolean; // accessible only to host members
 }
 
 // data transfer object

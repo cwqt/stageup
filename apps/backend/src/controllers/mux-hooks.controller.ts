@@ -1,19 +1,18 @@
 import { RedisClient } from 'redis';
 import { MD5 } from 'object-hash';
 import { MUXHook, IMUXHookResponse, ErrCode, HTTP } from '@core/interfaces';
+import { AuthStrategy, ErrorHandler, DataConnections, BaseArguments, IControllerEndpoint, BaseController } from '@core/shared/api';
 import { Webhooks, LiveStream } from '@mux/mux-node';
 
 import Env from '../env';
 import { log } from '../common/logger';
-import { ErrorHandler } from '@core/shared/api';
-import { AuthStrategy } from '@core/shared/api';
-import { BaseArguments, IControllerEndpoint, BaseController } from '@core/shared/api';
 import { BackendDataClient } from '../common/data';
-import { DataConnections } from '@core/shared/api';
 import Auth from '../common/authorisation';
 
 export default class MUXHooksController extends BaseController {
-  readonly hookMap: { [index in MUXHook]?: (data: IMUXHookResponse, dc: DataConnections<BackendDataClient>) => Promise<void> };
+  readonly hookMap: {
+    [index in MUXHook]?: (data: IMUXHookResponse, dc: DataConnections<BackendDataClient>) => Promise<void>;
+  };
 
   constructor(...args: BaseArguments) {
     super(...args);
@@ -26,7 +25,7 @@ export default class MUXHooksController extends BaseController {
     console.log(data);
   }
 
-  validHookStrat(): AuthStrategy {
+  validHookStrat():AuthStrategy {
     return async req => {
       try {
         // https://github.com/muxinc/mux-node-sdk#verifying-webhook-signatures
@@ -50,7 +49,7 @@ export default class MUXHooksController extends BaseController {
 
   handleHook(): IControllerEndpoint<void> {
     return {
-      authStrategy: Auth.none,//this.validHookStrat(),
+      authStrategy: Auth.none, //this.validHookStrat(),
       controller: async req => {
         if (Env.STORE.USE_MEMORYSTORE == true) {
           log.error('Cannot handle MUX hook as Redis is disabled in .env');
@@ -65,7 +64,10 @@ export default class MUXHooksController extends BaseController {
 
         try {
           // Check if hook has already been handled by looking in the Redis store
-          if (data.attempts.length > 0 && (await this.checkPreviouslyHandledHook(req.body, this.dc.connections.redis))) {
+          if (
+            data.attempts.length > 0 &&
+            (await this.checkPreviouslyHandledHook(req.body, this.dc.connections.redis))
+          ) {
             log.info('Duplicate MUX hook');
             return;
           }
@@ -91,7 +93,7 @@ export default class MUXHooksController extends BaseController {
           type: data.type
         })
         .expire(hookId, 86400) // Expire after 1 day
-        .exec((error) => {
+        .exec(error => {
           if (error) return reject(error);
           return resolve();
         });

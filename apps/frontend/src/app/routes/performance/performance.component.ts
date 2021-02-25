@@ -48,8 +48,6 @@ export class PerformanceComponent implements OnInit {
       currency: this.perf.currency,
       style: 'currency'
     }).format(this.perf.price);
-
-    this.appService.$routeAltered.subscribe(o => console.log(o));
   }
 
   onRouterOutletActivate(event) {

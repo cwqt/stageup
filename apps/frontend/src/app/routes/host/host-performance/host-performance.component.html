@@ -1,8 +1,11 @@
 <mat-spinner *ngIf="performance.loading"></mat-spinner>
 <ng-container *ngIf="performance.data">
   <div class="flex align-middle">
-    <h1 class="flex-1">{{ performanceData.name }}</h1>
-    <ui-button (click)="openSharePerformanceDialog()" kind="primary" class="ml-auto my-auto"><ui-icon>share</ui-icon>&nbsp;Share</ui-button>
+    <h1 class="flex-1 mb-0">{{ performanceData.name }}</h1>
+    <div class="ml-auto my-auto">
+      <ui-button (click)="gotoPerformance()" kind="secondary" class="mr-2"><ui-icon>launch</ui-icon>&nbsp; Preview</ui-button>
+      <ui-button (click)="openSharePerformanceDialog()" kind="primary"><ui-icon>share</ui-icon></ui-button>  
+    </div>
   </div>
   <ui-hr></ui-hr>
 

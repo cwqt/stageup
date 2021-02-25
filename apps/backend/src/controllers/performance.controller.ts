@@ -11,6 +11,7 @@ import {
   Visibility,
   JobType,
   IScheduleReleaseJobData,
+  TokenProvisioner
 } from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { Performance } from '../models/performances/performance.model';
@@ -23,6 +24,8 @@ import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import { BackendDataClient } from '../common/data';
 import Queue from '../common/queue';
+import { AccessToken } from '../models/performances/access-token.model';
+import idFinderStrategies from '../common/authorisation/id-finder-strategies';
 
 export default class PerformanceController extends BaseController<BackendDataClient> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
@@ -49,12 +52,12 @@ export default class PerformanceController extends BaseController<BackendDataCli
           Queue.enqueue<IScheduleReleaseJobData>({
             type: JobType.ScheduleRelease,
             data: {
-              _id: performance._id,
+              _id: performance._id
             },
             options: {
               // Use a repeating job with a limit of 1 to activate the scheduler
               repeat: {
-                cron: "* * * * *",
+                cron: '* * * * *',
                 startDate: performance.premiere_date,
                 limit: 1
               }
@@ -82,6 +85,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
         return await this.ORM.createQueryBuilder(Performance, 'p')
           .innerJoinAndSelect('p.host', 'host')
           .where('p.name LIKE :name', { name: req.query.search_query ? `%${req.query.search_query as string}%` : '%' })
+          .andWhere('p.visibility = :state', { state: Visibility.Public })
           .paginate(p => p.toStub());
       }
     };
@@ -90,46 +94,47 @@ export default class PerformanceController extends BaseController<BackendDataCli
   readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, DtoAccessToken>> {
     return {
       validators: [],
-      authStrategy: AuthStrat.none,
-      controller: async req => {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async (req, dc) => {
         const performance = await getCheck(
           Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info'] })
         );
-
-        // See if current user has access/bought the performance
-        let token: string;
-        let previousPurchase: PerformancePurchase | null;
-        if (req.session?.user._id) {
-          // Check if user is part of host that created performance
-          const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-          const memberOfHost = user.host._id === performance.host._id;
-
-          // Check if user has purchased the performance
-          if (!memberOfHost) {
-            previousPurchase = await PerformancePurchase.findOne({
-              relations: ['user', 'performance'],
-              where: {
-                user: { _id: user._id },
-                performance: { _id: performance._id }
-              }
-            });
-
-            token = previousPurchase.token;
+        
+        // See if current user has access the performance by virtue of owning an Access Token
+        let token: AccessToken = await AccessToken.findOne({
+          relations: ['user'],
+          where: {
+            user: {
+              _id: req.session.user._id
+            }
+          },
+          select: {
+            user: { _id: true }
           }
+        });
 
-          // Neither member of host, nor has a purchased token
-          if (!(memberOfHost || token)) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+        if (!token) {
+          // Provision a token on the fly for all host members
+          const [isMemberOfHost, passthru] = await AuthStrat.runner(
+            {
+              hid: async () => performance.host._id
+            },
+            AuthStrat.isMemberOfHost(m => m.hid)
+          )(req, dc);
 
-          // Sign on the fly for a member of the host
-          if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
+          if (isMemberOfHost) {
+            token = new AccessToken(passthru.uhi.user, performance, passthru.uhi.user, TokenProvisioner.User).sign(
+              performance.host_info.signing_key
+            );
+          }
         }
 
-        // TODO: get token
-        const clientData = {} as DtoAccessToken
+        // return 404 barring the user has a token if the performance is private
+        if(!token && performance.visibility == Visibility.Private) throw new ErrorHandler(HTTP.NotFound);
 
         return {
           data: performance.toFull(),
-          __client_data: clientData
+          __client_data: token.toFull()
         };
       }
     };

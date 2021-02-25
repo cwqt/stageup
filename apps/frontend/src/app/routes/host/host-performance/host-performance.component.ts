@@ -115,4 +115,8 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
       () => {}
     );
   }
+
+  gotoPerformance() {
+    this.baseAppService.navigateTo(`/performances/${this.performanceData._id}`);
+  }
 }

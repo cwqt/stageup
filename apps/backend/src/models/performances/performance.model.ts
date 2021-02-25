@@ -33,7 +33,6 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column() playback_id: string;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
-  @Column({ default: true }) is_private: boolean;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceState }) state: PerformanceState;
@@ -98,7 +97,6 @@ export class Performance extends BaseEntity implements IPerformance {
       price: this.price,
       currency: this.currency,
       genre: this.genre,
-      is_private: this.is_private
     };
   }
 
