@@ -72,6 +72,7 @@ const hasHostPermission = (permission: HostPermission, mapAccessor?: MapAccessor
     const [isMember, passthru, reason] = await isMemberOfHost(mapAccessor, map)(req, dc);
     if (!isMember) return [false, {}, reason];
 
+
     // Highest Perms (Owner)  = 0
     // Lowest Perfs (Pending) = 5
     if (passthru.uhi.permissions > permission) {

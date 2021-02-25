@@ -10,15 +10,26 @@ import {
   IHost,
   IHostStub,
   DtoCreatePerformance,
-  Visibility
+  Visibility,
+  Genre
 } from '@core/interfaces';
+import { timestamp } from '@core/shared/helpers';
 
 export default {
   // router.post<IPerf>("/performances",Perfs.createPerformance());
   createPerformance: async (
     host: IHost | IHostStub,
-    data: DtoCreatePerformance
+    data?: DtoCreatePerformance
   ): Promise<IPerformance> => {
+    data = data || {
+      name: "performance name",
+      premiere_date: timestamp(),
+      genre: Genre.Allegory,
+      description: "some performance",
+      price: 10,
+      currency: CurrencyCode.GBP
+    }
+
     const res = await api.post(`/hosts/${host._id}/performances`, data, env.getOptions());
     return res.data;
   },

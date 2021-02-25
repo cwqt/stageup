@@ -3,14 +3,14 @@ import {
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
-  IPerformanceUserInfo,
+  DtoAccessToken,
   HTTP,
   ErrCode,
   HostPermission,
   DtoCreatePerformance,
   Visibility,
   JobType,
-  IScheduleReleaseJobData
+  IScheduleReleaseJobData,
 } from '@core/interfaces';
 import { User } from '../models/users/user.model';
 import { Performance } from '../models/performances/performance.model';
@@ -68,7 +68,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
   }
 
   //router.get <IE<IPerfS[], null>> ("/performances", Perfs.readPerformances());
-  readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
+  readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[]>> {
     return {
       validators: [
         query<{
@@ -87,7 +87,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
     };
   }
 
-  readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
+  readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, DtoAccessToken>> {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
@@ -124,14 +124,12 @@ export default class PerformanceController extends BaseController<BackendDataCli
           if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
         }
 
+        // TODO: get token
+        const clientData = {} as DtoAccessToken
+
         return {
           data: performance.toFull(),
-          __client_data: {
-            signed_token: token,
-            purchase_id: previousPurchase?._id,
-            // TODO: token expiry
-            expires: false
-          }
+          __client_data: clientData
         };
       }
     };

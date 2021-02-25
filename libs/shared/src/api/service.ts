@@ -20,7 +20,7 @@ export interface IServiceConfig<T> {
 }
 
 export default <T>(config: IServiceConfig<T>) => {
-  console.clear();
+  // console.clear();
   console.log(`\nRegistering service '${config.name}', running in env: \u001B[04m${config.environment}\u001B[0m\n`);
 
   let server: http.Server;

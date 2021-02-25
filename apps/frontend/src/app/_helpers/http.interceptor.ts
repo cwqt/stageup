@@ -35,7 +35,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         const body: IErrorResponse = error.error;
         this.toastService.emit(
-          `${body.statusCode}: ${body.message}${body.errors?.length && ` (${body.errors.length} errors)`}`,
+          `${body.statusCode}: ${body.message}${body.errors?.length ? ` (${body.errors.length} errors)`: ""}`,
           ThemeKind.Danger,
           { duration: 10000 }
         );

@@ -8,6 +8,7 @@ import { HostInvitation } from '../models/hosts/host-invitation.model';
 import { EntityManager } from 'typeorm';
 import { log } from './logger';
 import Queue from './queue';
+import { Performance } from '../models/performances/performance.model';
 
 const generateEmailHash = (email: string): string => {
   return dbless.generateVerificationHash(email, Env.PRIVATE_KEY, 60);
@@ -66,3 +67,14 @@ export const sendUserHostMembershipInvitation = async (
     html: `<p>Click the link to accept the inviation: <a href="${acceptanceUrl}">${acceptanceUrl}</a>, this invite will expire in 24 hours.</p>`
   });
 };
+
+export const sendPerformanceAccessTokenProvisioned = async (email_address:User["email_address"], performance:Performance, host:Host) => {
+  const performanceLink = `${Env.FE_URL}/performances/${performance._id}/watch`;
+
+  return sendEmail({
+    from: Env.EMAIL_ADDRESS,
+    to: email_address,
+    subject: `You have been invited to watch a private performance`,
+    html: `<p>Click the link to watch ${performance.name} by ${host.name} on StageUp now: <a href="${performanceLink}">${performanceLink}</a></p>`
+  })
+}

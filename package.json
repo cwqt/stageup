@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "runner": "cross-env NODE_ENV=development nx serve runner --configuration=development" ,
+    "runner": "cross-env NODE_ENV=development nx serve runner --configuration=development",
     "runner:testing": "cross-env NODE_ENV=testing nx serve runner --configuration=testing",
     "runner:staging": "cross-env NODE_ENV=staging nx serve runner --configuration=staging",
     "runner:production": "cross-env NODE_ENV=production nx serve runner --configuration=production",
-
     "backend": "cross-env NODE_ENV=development nx serve backend --configuration=development",
     "backend:testing": "cross-env NODE_ENV=testing nx serve backend --configuration=testing",
     "backend:staging": "cross-env NODE_ENV=staging nx serve backend --configuration=staging",
@@ -105,6 +104,7 @@
     "tslib": "^2.0.0",
     "type-fest": "^0.8.1",
     "typeorm": "^0.3.0-alpha.24",
+    "typeorm-naming-strategies": "^2.0.0",
     "typeorm-pagination": "^2.0.1",
     "uuid": "^8.0.0",
     "uwuify": "^1.0.1",

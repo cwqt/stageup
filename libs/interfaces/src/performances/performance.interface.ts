@@ -4,6 +4,7 @@ import { ISigningKey } from './signing-key.interface';
 import { CurrencyCode } from '../common/currency.interface';
 import { Genre } from './genres.interface';
 import { IPerformancePurchase } from './performance-purchase.interface';
+import { DtoAccessToken } from './access-token.interface';
 
 export enum Visibility {
   Public = 'public',
@@ -44,9 +45,8 @@ export interface IPerformanceHostInfo {
 }
 
 export interface IPerformanceUserInfo {
-  signed_token: string;
-  expires: boolean;
-  purchase_id: IPerformancePurchase['_id'];
+  access_token: DtoAccessToken;
+  has_liked?: boolean;
 }
 
 export enum PerformanceState {

@@ -10,6 +10,7 @@ import {
     IEnvelopedData as IE,
     IPerformanceUserInfo as IPUInfo,
     IMyself,
+    DtoAccessToken as DtoAT,
     IHostOnboarding as IHOnboarding,
     IOnboardingStep,
     IAddress,
@@ -68,12 +69,13 @@ router.get      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",        
 router.put      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 router.redirect                         ("/hosts/:hid/invites/:iid",                  Hosts.handleHostInvite());
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
+router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(client, mws);
 router.post     <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance());
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances());
-router.get      <IE<IPerf, IPUInfo>>    ("/performances/:pid",                        Perfs.readPerformance());
+router.get      <IE<IPerf, DtoAT>>      ("/performances/:pid",                        Perfs.readPerformance());
 router.get      <IPHInfo>               ("/performances/:pid/host_info",              Perfs.readPerformanceHostInfo());
 router.post     <void>                  ("/performances/:pid/purchase",               Perfs.purchase());
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());

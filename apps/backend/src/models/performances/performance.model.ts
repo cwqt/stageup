@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 import { CurrencyCode, DtoCreatePerformance, Genre, IPerformance, IPerformanceStub, IRating, PerformanceState, Visibility } from '@core/interfaces';
 
-import { PerformanceHostInfo as PHostInfo, PerformanceHostInfo } from './performance-host-info.model';
+import { PerformanceHostInfo } from './performance-host-info.model';
 import { Host } from '../hosts/host.model';
 import { User } from '../users/user.model';
 import { PerformancePurchase } from '../performances/purchase.model';
@@ -39,9 +39,9 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column('enum', { enum: PerformanceState }) state: PerformanceState;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
 
-  @OneToOne(() => PHostInfo) @JoinColumn() host_info: PHostInfo;
   @ManyToOne(() => Host, host => host.performances) host: Host;
   @ManyToOne(() => User, user => user.performances) creator: User;
+  @OneToOne(() =>  PerformanceHostInfo) @JoinColumn() host_info: PerformanceHostInfo;
   @OneToMany(() => PerformancePurchase, purchase => purchase.performance) purchases: PerformancePurchase[];
 
   ratings: IRating[];

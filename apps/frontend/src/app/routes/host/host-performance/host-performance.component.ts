@@ -1,10 +1,10 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import {
   IEnvelopedData,
   IHost,
-  IHostStub,
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceUserInfo,
@@ -12,11 +12,12 @@ import {
 } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
-import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { DrawerKey, DrawerService } from '../../../services/drawer.service';
+import { HelperService } from '../../../services/helper.service';
 import { IUiFieldSelectOptions } from '../../../ui-lib/form/form.interfaces';
 import { IGraphNode } from '../../../ui-lib/input/input.component';
+import { SharePerformanceDialogComponent } from './share-performance-dialog/share-performance-dialog.component';
 
 @Component({
   selector: 'app-host-performance',
@@ -24,21 +25,21 @@ import { IGraphNode } from '../../../ui-lib/input/input.component';
   styleUrls: ['./host-performance.component.scss']
 })
 export class HostPerformanceComponent implements OnInit, OnDestroy {
-  host: IHost;// injected from parent router-outlet
+  host: IHost; // injected from parent router-outlet
   performanceId: string;
   performance: ICacheable<IEnvelopedData<IPerformance, IPerformanceUserInfo>> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
 
-  copyMessage:string = "Copy";
+  copyMessage: string = 'Copy';
 
-  visibilityOptions:IUiFieldSelectOptions = {
+  visibilityOptions: IUiFieldSelectOptions = {
     multi: false,
     search: false,
     values: [
-      { key: Visibility.Private, value: "Private" },
-      { key: Visibility.Public, value: "Public" }
-    ],
-  }
+      { key: Visibility.Private, value: 'Private' },
+      { key: Visibility.Public, value: 'Public' }
+    ]
+  };
 
   get performanceData() {
     return this.performance.data?.data;
@@ -53,7 +54,9 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     private baseAppService: BaseAppService,
     private drawerService: DrawerService,
     private clipboard: Clipboard,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private helperService: HelperService,
+    private dialog: MatDialog
   ) {}
 
   async ngOnInit() {
@@ -76,15 +79,20 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     this.drawerService.setDrawerState(this.drawerService.drawerData);
   }
 
-  updateVisibility(value:IGraphNode) {
-    cachize(this.performanceService.updateVisibility(this.performanceId, value.key as Visibility), this.performance, d => {
-      // updateVisibility only returns an IPerformance but we want to keep having an IE<IPerformance, IPerformanceHostInfo>
-      return {
-        data: d,
-        __client_data: this.performance.data.__client_data
-      }
-    }, false)
-  } 
+  updateVisibility(value: IGraphNode) {
+    cachize(
+      this.performanceService.updateVisibility(this.performanceId, value.key as Visibility),
+      this.performance,
+      d => {
+        // updateVisibility only returns an IPerformance but we want to keep having an IE<IPerformance, IPerformanceHostInfo>
+        return {
+          data: d,
+          __client_data: this.performance.data.__client_data
+        };
+      },
+      false
+    );
+  }
 
   readStreamingKey() {
     return cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);
@@ -93,10 +101,18 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   copyStreamKeyToClipboard() {
     this.clipboard.copy(this.performanceHostInfo.data.stream_key);
 
-    this.copyMessage = "Copied!";
+    this.copyMessage = 'Copied!';
     setTimeout(() => {
-      this.copyMessage = "Copy";
+      this.copyMessage = 'Copy';
     }, 2000);
   }
 
+  openSharePerformanceDialog() {
+    this.helperService.showDialog(
+      this.dialog.open(SharePerformanceDialogComponent, {
+        data: { host: this.host, performance: this.performanceData }
+      }),
+      () => {}
+    );
+  }
 }

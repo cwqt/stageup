@@ -17,6 +17,7 @@ export * from './performances/genres.interface';
 export * from './performances/performance-purchase.interface';
 export * from './performances/performance-review.interface';
 export * from './performances/signing-key.interface';
+export * from './performances/access-token.interface';
 
 export * from './users/user.interface';
 export * from './users/person.interface';

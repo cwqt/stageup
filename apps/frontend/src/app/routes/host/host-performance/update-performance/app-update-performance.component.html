@@ -1,15 +1,4 @@
-
-<div class="profile-container">
-    <h2>Update Performance Details</h2>
-    <mat-divider></mat-divider>
-    <br>
-    
-    <ui-form 
-    (onSuccess)="handleSuccessfulUpdate($event)" 
-    [form]="performanceDetailsForm" 
-    [cacheable]="performanceCacheable">
-    </ui-form>
-</div>
-
-<br>
-
+<ui-form (onSuccess)="handleSuccessfulUpdate($event)"
+  [form]="performanceDetailsForm"
+  [cacheable]="performanceUpdateCacheable">
+</ui-form>

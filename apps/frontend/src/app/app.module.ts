@@ -15,6 +15,14 @@ import { NgxPopperModule } from 'ngx-popper';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HttpConfigInterceptor } from './_helpers/http.interceptor';
 
+// Pipes ----------------------------------------------------------------------------------------------------------------
+// import { LogPipe } from "./_pipes/log.pipe";
+import { OnboardingStatePipe } from './_pipes/object-state.pipe';
+import { ObjectLengthPipe } from './_pipes/object-length.pipe';
+import { ShortDomainPipe } from './_pipes/short-domain.pipe';
+import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
+import { HostPermissionPipe } from './_pipes/host-permission.pipe';
+
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AppComponent } from './app.component';
 import { LandingComponent } from './routes/landing/landing.component';
@@ -69,14 +77,7 @@ import { HostMembersComponent } from './routes/host/host-members/host-members.co
 import { HostAddMemberComponent } from './routes/host/host-members/host-add-member/host-add-member.component';
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostPerformanceDrawerComponent } from './components/app/drawer-components/host-performance-drawer/host-performance-drawer.component';
-
-// Pipes ----------------------------------------------------------------------------------------------------------------
-// import { LogPipe } from "./_pipes/log.pipe";
-import { OnboardingStatePipe } from './_pipes/object-state.pipe';
-import { ObjectLengthPipe } from './_pipes/object-length.pipe';
-import { ShortDomainPipe } from './_pipes/short-domain.pipe';
-import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
-import { HostPermissionPipe } from './_pipes/host-permission.pipe';
+import { SharePerformanceDialogComponent } from './routes/host/host-performance/share-performance-dialog/share-performance-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -135,7 +136,8 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     HostAddMemberComponent,
     HostPerformanceComponent,
     UserTypeClarificationComponent,
-    HostPerformanceDrawerComponent
+    HostPerformanceDrawerComponent,
+    SharePerformanceDialogComponent
   ],
   imports: [
     AngularMaterialModule,

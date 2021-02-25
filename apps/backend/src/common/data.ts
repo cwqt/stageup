@@ -23,6 +23,8 @@ import { Person } from '../models/users/person.model';
 import { Asset } from '../models/asset.model';
 import { PerformancePurchase } from '../models/performances/purchase.model';
 import { HostInvitation } from '../models/hosts/host-invitation.model';
+import { AccessToken } from '../models/performances/access-token.model';
+import { Environment } from '@core/interfaces';
 
 export interface BackendDataClient {
   mux: Mux;
@@ -48,7 +50,8 @@ export const create = (): ProviderMap<BackendDataClient> => {
     Person,
     Asset,
     PerformancePurchase,
-    HostInvitation
+    HostInvitation,
+    AccessToken
   ];
 
   return {
@@ -64,7 +67,8 @@ export const create = (): ProviderMap<BackendDataClient> => {
         port: Env.PG.PORT,
         username: Env.PG.USERNAME,
         password: Env.PG.PASSWORD,
-        database: Env.PG.DATABASE
+        database: Env.PG.DATABASE,
+        synchronize: Env.isEnv([Environment.Development, Environment.Testing])
       },
       models
     ),

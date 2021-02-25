@@ -58,7 +58,7 @@ const APP_ROUTES: Routes = [
   { path: 'search', component: SearchComponent },
   { path: 'results', component: SearchResultsComponent},
   {
-    path: `performance/:${RP.PerformanceId}`,
+    path: `performances/:${RP.PerformanceId}`,
     component: PerformanceComponent,
     children: [{ path: 'watch', component: PerformanceWatchComponent }]
   },

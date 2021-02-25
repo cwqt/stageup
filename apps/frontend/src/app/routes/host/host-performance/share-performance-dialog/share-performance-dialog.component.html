@@ -1,0 +1,20 @@
+<ui-dialog [buttons]="buttons" title="Share performance" [loading]="shareCacheable.loading">
+  <p>Add e-mail addresses of StageUp users to be granted permission to watch this performance</p>
+
+  <mat-form-field class="py-2">
+    <mat-label>User e-mail addresses</mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let email of addedEmailAddresses; let i = index" class="block"
+        [removable]="true"
+        (removed)="remove(i)">
+        {{ email }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Add e-mail address"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="true"
+        (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
+  </mat-form-field>
+</ui-dialog>

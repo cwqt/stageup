@@ -19,7 +19,9 @@ import {
   IOnboardingStepMap,
   IEnvelopedData,
   HostInviteState,
-  IPerformanceStub
+  IPerformanceStub,
+  JobType,
+  TokenProvisioner
 } from '@core/interfaces';
 import { timestamp } from '@core/shared/helpers';
 
@@ -40,6 +42,9 @@ import { ErrorHandler, getCheck } from '@core/shared/api';
 import Env from '../env';
 import Email = require('../common/email');
 import { log } from '../common/logger';
+import Queue from '../common/queue';
+import { AccessToken } from '../models/performances/access-token.model';
+import { In } from 'typeorm';
 
 export default class HostController extends BaseController {
   createHost(): IControllerEndpoint<IHost> {
@@ -127,13 +132,13 @@ export default class HostController extends BaseController {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         return await this.ORM.createQueryBuilder(UserHostInfo, 'uhi')
-          .where('uhi.host_id = :host_id', { host_id: req.params.hid })
+          .where('uhi.host__id = :host_id', { host_id: req.params.hid })
           .innerJoinAndSelect('uhi.user', 'user')
           .paginate(uhi => uhi.toFull());
       }
     };
   }
-  
+
   deleteHost(): IControllerEndpoint<void> {
     return {
       validators: [],
@@ -526,7 +531,76 @@ export default class HostController extends BaseController {
         };
       }
     };
-  } 
+  }
+
+  provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        body({
+          email_addresses: v => v.isArray()
+        })
+      ],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+        const provisioner = await getCheck(User.findOne({ _id: req.session.user._id }));
+        const performance = await getCheck(
+          Performance.findOne({ _id: req.params.pid }, { relations: { host_info: { signing_key: true } } })
+        );
+
+        // Get a list of all users by the passed in array of e-mail addresses
+        const users = (
+          await Promise.allSettled(
+            (req.body.email_addresses as string[]).map(email => {
+              return User.findOne(
+                {
+                  email_address: email
+                },
+                {
+                  select: {
+                    _id: true,
+                    email_address: true
+                  }
+                }
+              );
+            })
+          )
+        )
+          .filter(r => r.status == 'fulfilled' && r.value)
+          .map(p => (p as PromiseFulfilledResult<User>).value);
+
+        // Find tokens that already exit for provided users
+        // don't allow more than 1 access token / user
+        const existingUserTokens = (
+          await AccessToken.find({
+            relations: ["user"],
+            where: {
+              user: { _id: In(users.map(u => u._id)) }
+            },
+            select: {
+              user: { _id: true }
+            }
+          })
+        ).map(t => t.user._id);
+
+        await this.ORM.transaction(async txc => {
+          // Create all the access tokens & sign them with the performances' signing key
+          const tokens = users
+            .filter(u => !existingUserTokens.includes(u._id))
+            .map(u =>
+              new AccessToken(u, performance, provisioner, TokenProvisioner.User).sign(
+                performance.host_info.signing_key
+              )
+            );
+
+          await txc.save(tokens);
+
+          // Push e-mails out to everyone
+          users.forEach(user => Email.sendPerformanceAccessTokenProvisioned(user.email_address, performance, host));
+        });
+      }
+    };
+  }
 
   // updateHost(): IControllerEndpoint<IHost> {
   //   return {

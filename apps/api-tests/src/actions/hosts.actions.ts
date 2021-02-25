@@ -12,7 +12,8 @@ import {
   IEnvelopedData,
   IPerformance,
   IUserHostInfo,
-  IMyself
+  IMyself,
+  IPerformanceUserInfo
 } from '@core/interfaces';
 import { api } from '../environment';
 import { Stories } from '../stories';
@@ -116,4 +117,10 @@ export default {
     const res = await api.get<IEnvelopedData<IPerformance[], null>>(`/hosts/${host._id}/performances?page=${page}&per_page=${perPage}`, env.getOptions());
     return res.data;
   },
+
+  // router.post <void> ("/hosts/:hid/performances/:pid/provision", Hosts.provisionPerformanceAccessTokens());
+  provisionPerformanceAccessTokens: async (host:IHost, performance:IPerformance, data:{ email_addresses: string[] }):Promise<void>  => {
+    const res = await api.post<void>(`/hosts/${host._id}/performances/${performance._id}/provision`, data, env.getOptions());
+    return res.data;
+  }
 };
