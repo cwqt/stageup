@@ -177,8 +177,6 @@ export default class PerformanceController extends BaseController<BackendDataCli
       controller: async req => {
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
 
-        console.log("HEYYYYYYY")
-
         perf.visibility = req.body.visibility;
         return (await perf.save()).toFull();
       }
