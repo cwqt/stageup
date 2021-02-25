@@ -24,8 +24,6 @@ describe('As a Host Admin I want to provision performance access tokens', () => 
     randomUser = await Stories.actions.users.createUser(UserType.Client);
     hostMember = await Stories.actions.users.createUser(UserType.Member);
     await Stories.actions.hosts.addMember(host, hostMember);
-
-    console.log(Stories.activeUser)
   })
 
   it('Should provision a token for a host member', async () => {

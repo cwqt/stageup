@@ -1,7 +1,6 @@
 import {
   ErrCode,
   HTTP,
-  IErrorResponse,
   IHost,
   IPerformance,
   IUser,
@@ -12,18 +11,20 @@ import {
 } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
-import { AxiosError } from 'axios';
 
 describe('As a user, I want to be able to do performance CRUD', () => {
   let host: IHost;
   let perf: IPerformance;
-  let client: IUser;
+  let owner: IMyself["user"];
   let editor: IMyself["user"];
 
   it('Should create a performance and get the newly created performance', async () => {
     await Stories.actions.common.setup();
-    client = await Stories.actions.users.createUser(UserType.Owner);
+
+    // Create new user so we're not acting as a Site Admin
+    owner = await Stories.actions.users.createUser(UserType.Owner);
     await Stories.actions.common.switchActor(UserType.Owner);
+
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
@@ -38,7 +39,26 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       genre: Genre.BourgeoisTragedy,
       premiere_date: null
     });
+
+    editor = await Stories.actions.users.createUser(UserType.Editor);
   });
+
+  describe("Should test users trying to view a performane", () => {
+    it("Should allow a host member to view a private performance", async () => {
+      await Stories.actions.performances.readPerformance(perf);
+    })
+
+    it("Should NOT allow a user to view a private perfrormance", async () => {
+      await Stories.actions.common.switchActor(UserType.Editor)
+      try {
+        await Stories.actions.performances.readPerformance(perf);
+        throw Error('Should not have thrown this');
+      } catch (error) {
+        expect(error.response.status).toEqual(HTTP.NotFound);
+      }
+      await Stories.actions.common.switchActor(UserType.Owner);
+    })
+  })
 
   describe('Should test performance visibility', () => {
     it('Should assert that the performance is initially set to being Private', async () => {
@@ -63,7 +83,6 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     });
 
     it('Should NOT allow an Editor to update a performance to now be Private', async () => {
-      editor = await Stories.actions.users.createUser(UserType.Editor);
       await Stories.actions.hosts.addMember(host, editor);
       await Stories.actions.misc.acceptHostInvite(editor);
       await Stories.actions.common.switchActor(UserType.Editor);
