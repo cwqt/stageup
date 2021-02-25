@@ -68,7 +68,7 @@ import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/on
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
 import { HostLandingComponent } from './routes/host/host-landing/host-landing.component';
-import { PerformanceModalComponent } from './components/modals/performance-modal.component';
+import { PerformanceDialogComponent } from './components/dialogs/performance-dialog/performance-dialog.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
 import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
 import { HostAboutComponent } from './routes/host/host-about/host-about.component';
@@ -125,7 +125,7 @@ import { SharePerformanceDialogComponent } from './routes/host/host-performance/
     OnboardingStepPipe,
     HostPermissionPipe,
     OnboardingViewIssueMakerComponent,
-    PerformanceModalComponent,
+    PerformanceDialogComponent,
     UserThumbComponent,
     HostLandingComponent,
     HostProfileComponent,
@@ -156,7 +156,7 @@ import { SharePerformanceDialogComponent } from './routes/host/host-performance/
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],
-  entryComponents: [PerformanceModalComponent],
+  entryComponents: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { IEnvelopedData, IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformanceUserInfo, Visibility } from '@core/interfaces';
+import { DtoAccessToken, IEnvelopedData, IPerformance, IPerformanceHostInfo, IPerformanceStub, IPerformanceUserInfo, Visibility } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +10,8 @@ export class PerformanceService {
   
   constructor(private http: HttpClient) {}
 
-  readPerformance(performanceId: string): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
-    return this.http.get<IEnvelopedData<IPerformance, IPerformanceUserInfo>>(`/api/performances/${performanceId}`).toPromise();
+  readPerformance(performanceId: string): Promise<IEnvelopedData<IPerformance, DtoAccessToken>> {
+    return this.http.get<IEnvelopedData<IPerformance, DtoAccessToken>>(`/api/performances/${performanceId}`).toPromise();
   }
 
   readPerfomances(search_query: string, page: number = 0, perPage: number = 10): Promise<IEnvelopedData<IPerformanceStub[], null>> {

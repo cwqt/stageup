@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import {
+  DtoAccessToken,
   IEnvelopedData,
   IHost,
   IPerformance,
@@ -27,7 +28,7 @@ import { SharePerformanceDialogComponent } from './share-performance-dialog/shar
 export class HostPerformanceComponent implements OnInit, OnDestroy {
   host: IHost; // injected from parent router-outlet
   performanceId: string;
-  performance: ICacheable<IEnvelopedData<IPerformance, IPerformanceUserInfo>> = createICacheable();
+  performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
 
   copyMessage: string = 'Copy';
