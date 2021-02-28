@@ -5,5 +5,10 @@ module.exports = {
     packagesToBump: [],
     packagesToPublish: [],
     updateDependencies: true
-  }
+  },
+  mergeStrategy: {
+    toReleaseBranch: {
+      next: 'master',
+    },
+  },
 };
