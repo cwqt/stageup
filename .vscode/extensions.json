@@ -8,6 +8,7 @@
     "bradlc.vscode-tailwindcss",
     "Gruntfuggly.todo-tree",
     "ghaschel.vscode-angular-html",
-    "humao.rest-client"
+    "humao.rest-client",
+    "firsttris.vscode-jest-runner"
   ]
 }

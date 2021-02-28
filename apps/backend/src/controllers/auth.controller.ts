@@ -1,11 +1,9 @@
+import { Validators, query, User, BaseController, IControllerEndpoint  } from '@core/shared/api';
 import { ErrCode } from '@core/interfaces';
-import Env from '../env';
-import { User } from '../models/users/user.model';
-import { verifyEmail } from '../common/email';
 
+import Env from '../env';
 import AuthStrat from '../common/authorisation';
-import Validators, { query } from '../common/validate';
-import { BaseController, IControllerEndpoint } from '../common/controller';
+import { verifyEmail } from '../common/email';
 
 export default class AuthController extends BaseController {
   verifyUserEmail(): IControllerEndpoint<string> {

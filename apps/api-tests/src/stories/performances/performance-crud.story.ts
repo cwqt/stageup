@@ -1,4 +1,4 @@
-import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode, Genre } from '@core/interfaces';
+import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode, Genre, Visibility } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { AxiosError } from 'axios';
@@ -11,8 +11,8 @@ describe('As a user, I want to be able to do performance CRUD', () => {
   it('Should create a performance and get the newly created performance', async () => {
     await Stories.actions.common.setup();
 
-    client = await Stories.actions.users.createUser(UserType.Client);
-    await Stories.actions.common.switchActor(UserType.Client);
+    client = await Stories.actions.users.createUser(UserType.Owner);
+    await Stories.actions.common.switchActor(UserType.Owner);
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',

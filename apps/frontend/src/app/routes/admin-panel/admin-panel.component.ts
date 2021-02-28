@@ -14,6 +14,6 @@ export class AdminPanelComponent implements OnInit {
   }
 
   gotoOnboardingList() {
-    this.baseAppService.navigateTo(`/admin/onboarding`);
+    this.baseAppService.navigateTo(`/admin/onboardings`);
   }
 }

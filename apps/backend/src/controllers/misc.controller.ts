@@ -1,10 +1,16 @@
-import { BaseController, IControllerEndpoint } from '../common/controller';
 import AuthStrat from '../common/authorisation';
-import { getCheck } from '../common/errors';
-import { Host } from '../models/hosts/host.model';
-import { IHost, Environment, HostInviteState, HostPermission } from '@core/interfaces';
-import { HostInvitation } from '../models/hosts/host-invitation.model';
-import { UserHostInfo } from '../models/hosts/user-host-info.model';
+import {
+  Provider,
+  UserHostInfo,
+  Host,
+  getCheck,
+  HostInvitation,
+  BaseController,
+  IControllerEndpoint
+} from '@core/shared/api';
+import { IHost, Environment, HostInviteState, HostPermission, HTTP, ErrCode } from '@core/interfaces';
+import { sendEmail } from '../common/email';
+import Env from '../env';
 
 export default class MiscController extends BaseController {
   ping(): IControllerEndpoint<string> {
@@ -19,28 +25,15 @@ export default class MiscController extends BaseController {
   dropAllData(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
-      controller: async () => {
-        // Clear Influx, Redis, session store & Postgres
-        if (this.dc.influx) {
-          await this.dc.influx.query('DROP SERIES FROM /.*/');
-        }
-
-        if (this.dc.redis) {
-          await new Promise(resolve => this.dc.redis.flushdb(resolve));
-        }
-
-        if (this.dc.session_store) {
-          await new Promise(resolve => {
-            this.dc.session_store.clear(resolve);
-          });
-        }
-
-        await this.ORM.synchronize(true); // https://github.com/nestjs/nest/issues/409
+      controller: async (req, dc) => {
+        await Provider.drop(dc.providers);
       }
     };
   }
 
-  // For purposes of testing...
+  /**
+   * @description For purposes of testing, accept the invite without having to click a link from an email
+   * */
   acceptHostInvite(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
@@ -81,6 +74,20 @@ export default class MiscController extends BaseController {
         host.is_onboarded = true;
         await host.save();
         return host.toFull();
+      }
+    };
+  }
+
+  testSendGrid(): IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      controller: async req => {
+        sendEmail({
+          from: Env.EMAIL_ADDRESS,
+          to: 'm@cass.si',
+          subject: `This is a test email`,
+          html: `<p>This is a test email</p>`
+        });
       }
     };
   }

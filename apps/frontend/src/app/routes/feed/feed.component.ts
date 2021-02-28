@@ -5,8 +5,8 @@ import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 
 import { MatDialog, MatDialogRef, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PerformanceModalComponent } from './../../components/modals/performance-modal.component';
 import { HelperService } from '../../services/helper.service';
+import { PerformanceDialogComponent } from '../../components/dialogs/performance-dialog/performance-dialog.component';
 
 @Component({
   selector: 'app-feed',
@@ -42,7 +42,7 @@ export class FeedComponent implements OnInit {
 
   openDialog(performanceIdx: number): void {
     this.helperService.showDialog(
-      this.dialog.open(PerformanceModalComponent, {
+      this.dialog.open(PerformanceDialogComponent, {
         data: this.performances.data.data[performanceIdx]
       }),
       () => {}

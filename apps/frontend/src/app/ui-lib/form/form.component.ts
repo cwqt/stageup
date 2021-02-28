@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import { Y } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { displayValidationErrors, handleFormErrors } from 'apps/frontend/src/app/_helpers/formErrorHandler';
+import { displayValidationErrors, handleFormErrors } from 'apps/frontend/src/app/_helpers/form-error.handler';
 import { ButtonComponent } from '../button/button.component';
 
 import {
@@ -132,20 +132,22 @@ export class FormComponent implements OnInit, AfterViewInit {
 
         // Set form control errors by bodging validator to show message
         // if value is the same as it was prefetched
-        Object.entries(errors).forEach(([f, v]) => {
-          const control = this.formGroup.get(f);
-          if (control) {
-            control.setValidators(
-              this.parseCustomValidator({
-                type: 'custom',
-                value: c => c.value != fields[f],
-                message: e => `${v}`
-              })
-            );
-            control.updateValueAndValidity();
-            control.markAsTouched();
-          }
-        });
+        if(errors) {
+          Object.entries(errors).forEach(([f, v]) => {
+            const control = this.formGroup.get(f);
+            if (control) {
+              control.setValidators(
+                this.parseCustomValidator({
+                  type: 'custom',
+                  value: c => c.value != fields[f],
+                  message: e => `${v}`
+                })
+              );
+              control.updateValueAndValidity();
+              control.markAsTouched();
+            }
+          }); 
+        }
 
         this.formGroup.markAllAsTouched();
       })

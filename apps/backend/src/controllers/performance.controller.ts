@@ -3,27 +3,42 @@ import {
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
-  IPerformanceUserInfo,
+  DtoAccessToken,
   HTTP,
   ErrCode,
   HostPermission,
-  DtoCreatePerformance
+  DtoCreatePerformance,
+  Visibility,
+  JobType,
+  IScheduleReleaseJobData,
+  TokenProvisioner
 } from '@core/interfaces';
-import { User } from '../models/users/user.model';
-import { Performance } from '../models/performances/performance.model';
-import { ErrorHandler, getCheck } from '../common/errors';
-import { BaseController, IControllerEndpoint } from '../common/controller';
-import AuthStrat from '../common/authorisation';
-import Validators, { body, query } from '../common/validate';
-import { PerformancePurchase } from '../models/performances/purchase.model';
 
-export default class PerformanceController extends BaseController {
+import {
+  Auth,
+  ErrorHandler,
+  getCheck,
+  BaseController,
+  IControllerEndpoint,
+  Validators,
+  body,
+  query,
+  User,
+  Performance,
+  PerformancePurchase,
+  AccessToken
+} from '@core/shared/api';
+
+import AuthStrat from '../common/authorisation';
+import IdFinderStrat from '../common/authorisation/id-finder-strategies';
+import { BackendDataClient } from '../common/data';
+import Queue from '../common/queue';
+
+export default class PerformanceController extends BaseController<BackendDataClient> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
-      validators: [
-        body<DtoCreatePerformance>(Validators.Objects.DtoCreatePerformance())
-      ],
+      validators: [body<DtoCreatePerformance>(Validators.Objects.DtoCreatePerformance())],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const user = await getCheck(
@@ -35,86 +50,98 @@ export default class PerformanceController extends BaseController {
           )
         );
 
-        const performance = await new Performance(
-          {
-            name: req.body.name,
-            description: req.body.description ?? '',
-            price: req.body.price,
-            currency: req.body.currency
-          },
-          user
-        ).setup(this.dc);
+        return await this.ORM.transaction(async txc => {
+          const performance = await new Performance(req.body, user);
+          await performance.setup(this.dc.connections.mux, txc);
+          await txc.save(performance);
 
-        return performance.toFull();
+          // Push premiere to job queue for automated release
+          Queue.enqueue<IScheduleReleaseJobData>({
+            type: JobType.ScheduleRelease,
+            data: {
+              _id: performance._id
+            },
+            options: {
+              // Use a repeating job with a limit of 1 to activate the scheduler
+              repeat: {
+                cron: '* * * * *',
+                startDate: performance.premiere_date,
+                limit: 1
+              }
+            }
+          });
+
+          return performance.toFull();
+        });
       }
     };
   }
-  
-  //router.get    <IE<IPerfS[], null>>    ("/performances", Perfs.readPerformances());
-  readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
+
+  //router.get <IE<IPerfS[], null>> ("/performances", Perfs.readPerformances());
+  readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[]>> {
     return {
       validators: [
         query<{
-        search_query: string;   
-      }>({
-        search_query: v => v.optional({ nullable: true }).isString(),
-      })],
+          search_query: string;
+        }>({
+          search_query: v => v.optional({ nullable: true }).isString()
+        })
+      ],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        return await this.ORM
-          .createQueryBuilder(Performance, 'p')
+        return await this.ORM.createQueryBuilder(Performance, 'p')
           .innerJoinAndSelect('p.host', 'host')
-          .where('p.name LIKE :name', { name: req.query.search_query ? `%${req.query.search_query as string}%`: '%'})
+          .where('p.name LIKE :name', { name: req.query.search_query ? `%${req.query.search_query as string}%` : '%' })
+          .andWhere('p.visibility = :state', { state: Visibility.Public })
           .paginate(p => p.toStub());
       }
     };
   }
 
-  readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, IPerformanceUserInfo>> {
+  readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, DtoAccessToken>> {
     return {
       validators: [],
-      authStrategy: AuthStrat.none,
-      controller: async req => {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async (req, dc) => {
         const performance = await getCheck(
           Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info'] })
         );
 
-        // See if current user has access/bought the performance
-        let token: string;
-        let previousPurchase: PerformancePurchase | null;
-        if (req.session?.user._id) {
-          // Check if user is part of host that created performance
-          const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-          const memberOfHost = user.host._id === performance.host._id;
-
-          // Check if user has purchased the performance
-          if (!memberOfHost) {
-            previousPurchase = await PerformancePurchase.findOne({
-              relations: ['user', 'performance'],
-              where: {
-                user: { _id: user._id },
-                performance: { _id: performance._id }
-              }
-            });
-
-            token = previousPurchase.token;
+        // See if current user has access the performance by virtue of owning an Access Token
+        let token: AccessToken = await AccessToken.findOne({
+          relations: ['user'],
+          where: {
+            user: {
+              _id: req.session.user._id
+            }
+          },
+          select: {
+            user: { _id: true }
           }
+        });
 
-          // Neither member of host, nor has a purchased token
-          if (!(memberOfHost || token)) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+        if (!token) {
+          // Provision a token on the fly for all host members
+          const [isMemberOfHost, passthru] = await AuthStrat.runner(
+            {
+              hid: async () => performance.host._id
+            },
+            AuthStrat.isMemberOfHost(m => m.hid)
+          )(req, dc);
 
-          // Sign on the fly for a member of the host
-          if (memberOfHost) token = performance.host_info.signing_key.signToken(performance);
+          if (isMemberOfHost) {
+            token = new AccessToken(passthru.uhi.user, performance, passthru.uhi.user, TokenProvisioner.User).sign(
+              performance.host_info.signing_key
+            );
+          }
         }
-       
+
+        // return 404 barring the user has a token if the performance is private
+        if (!token && performance.visibility == Visibility.Private) throw new ErrorHandler(HTTP.NotFound);
+
         return {
           data: performance.toFull(),
-          __client_data: {
-            signed_token: token,
-            purchase_id: previousPurchase?._id,
-            // TODO: token expiry
-            expires: false
-          }
+          __client_data: token.toFull()
         };
       }
     };
@@ -125,10 +152,7 @@ export default class PerformanceController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const performance = await Performance.findOne(
-          { _id: req.params.pid },
-          { relations: ['host_info'] }
-        );
+        const performance = await Performance.findOne({ _id: req.params.pid }, { relations: ['host_info'] });
         const performanceHostInfo = performance.host_info;
 
         // Host_info eager loads signing_key, which is very convenient usually
@@ -139,20 +163,46 @@ export default class PerformanceController extends BaseController {
     };
   }
 
+  updateVisibility(): IControllerEndpoint<IPerformance> {
+    return {
+      validators: [
+        body<{ visibility: Visibility }>({
+          visibility: v => v.isIn(Object.values(Visibility))
+        })
+      ],
+      // Only Admin/Owner can update visibility, but editors can update other fields
+      // Must also be onboarded to be able to change visibility of a performance
+      authStrategy: AuthStrat.runner(
+        {
+          hid: IdFinderStrat.findHostIdFromPerformanceId
+        },
+        AuthStrat.and(
+          AuthStrat.hostIsOnboarded(m => m.hid),
+          AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
+        )
+      ),
+      controller: async req => {
+        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
+
+        perf.visibility = req.body.visibility;
+        return (await perf.save()).toFull();
+      }
+    };
+  }
+
   updatePerformance(): IControllerEndpoint<IPerformance> {
     return {
       validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Editor),
       controller: async req => {
-        const p = await getCheck(Performance.findOne({ _id: req.params.pid }));
-
-        await p.update({
+        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
+        await perf.update({
           name: req.body.name,
           price: req.body.price,
           description: req.body.description
         });
 
-        return p.toFull();
+        return perf.toFull();
       }
     };
   }
@@ -163,9 +213,7 @@ export default class PerformanceController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async req => {
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
-        const perf = await getCheck(
-          Performance.findOne({ _id: req.params.pid }, { relations: ['host_info'] })
-        );
+        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['host_info'] }));
 
         // Check user hasn't already purchased performance
         const previousPurchase = await PerformancePurchase.findOne({
@@ -179,7 +227,7 @@ export default class PerformanceController extends BaseController {
         if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
 
         const purchase = new PerformancePurchase(user, perf);
-        purchase.token = perf.host_info.signing_key.signToken(perf);
+        // TODO: create an access token
         await this.ORM.manager.save(purchase);
       }
     };
@@ -188,7 +236,15 @@ export default class PerformanceController extends BaseController {
   deletePerformance(): IControllerEndpoint<void> {
     return {
       validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      // By getting the hostId from the performanceId & then checking if the user has the host
+      // permission, there is an implicit intersection, because the UHI will not be returned
+      // if the user is not part of the host in which the performance belongs to
+      authStrategy: AuthStrat.runner(
+        {
+          hid: IdFinderStrat.findHostIdFromPerformanceId
+        },
+        AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
+      ),
       controller: async req => {
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
         await perf.remove();

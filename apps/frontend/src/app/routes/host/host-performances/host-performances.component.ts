@@ -73,6 +73,6 @@ export class HostPerformancesComponent implements OnInit {
   }
 
   openPerformance(performances: IPerformance) {
-    this.appService.navigateTo(`/performance/${performances._id}`);
+    this.appService.navigateTo(`/host/performances/${performances._id}`);
   }
 }

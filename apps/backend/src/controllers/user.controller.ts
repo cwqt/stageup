@@ -9,19 +9,27 @@ import {
   IUserPrivate,
   Idless,
   ErrCode,
-  HTTP
+  HTTP,
+  Environment
 } from '@core/interfaces';
-import { IControllerEndpoint, BaseController } from '../common/controller';
-import Validators, { body, params as parameters } from '../common/validate';
-import { ErrorHandler, FormErrorResponse, getCheck } from '../common/errors';
+import {
+  IControllerEndpoint,
+  BaseController,
+  User,
+  Host,
+  Address,
+  Validators,
+  body,
+  params as parameters,
+  ErrorHandler,
+  FormErrorResponse,
+  getCheck
+} from '@core/shared/api';
 
 import Email = require('../common/email');
 import Env from '../env';
 import AuthStrat from '../common/authorisation';
 
-import { User } from '../models/users/user.model';
-import { Host } from '../models/hosts/host.model';
-import { Address } from '../models/users/address.model';
 import { EntityManager } from 'typeorm';
 
 export default class UserController extends BaseController {
@@ -79,7 +87,7 @@ export default class UserController extends BaseController {
         });
 
         return {
-          user: {...user.toFull(), email_address: user.email_address },
+          user: { ...user.toFull(), email_address: user.email_address },
           host: host?.toStub(),
           host_info: host ? host.members_info.find(uhi => uhi.user._id === user._id)?.toFull() : null
         };
@@ -87,7 +95,7 @@ export default class UserController extends BaseController {
     };
   }
 
-  createUser(): IControllerEndpoint<IMyself["user"]> {
+  createUser(): IControllerEndpoint<IMyself['user']> {
     return {
       validators: [
         body<Pick<IUserPrivate, 'username' | 'email_address'> & { password: string }>({
@@ -122,6 +130,9 @@ export default class UserController extends BaseController {
 
           // First user to be created will be an admin
           u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) === 0;
+
+          // Verify user if in dev/testing
+          u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging])
 
           await txc.save(u);
           return u;
@@ -170,7 +181,7 @@ export default class UserController extends BaseController {
     };
   }
 
-  updateUser(): IControllerEndpoint<IMyself["user"]> {
+  updateUser(): IControllerEndpoint<IMyself['user']> {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
@@ -195,16 +206,18 @@ export default class UserController extends BaseController {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const host = await getCheck(Host.findOne({ 
-          relations: { members_info: { user: true } },
-          where: {
-            members_info: {
-              user: {
-                _id: req.params.uid
+        const host = await getCheck(
+          Host.findOne({
+            relations: { members_info: { user: true } },
+            where: {
+              members_info: {
+                user: {
+                  _id: req.params.uid
+                }
               }
             }
-          }
-        }))
+          })
+        );
 
         return {
           data: host.toFull(),
@@ -295,9 +308,7 @@ export default class UserController extends BaseController {
       validators: [body<Idless<IAddress>>(Validators.Objects.IAddress())],
       authStrategy: AuthStrat.isOurself,
       controller: async req => {
-        const user = await getCheck(
-          User.findOne({ _id: req.params.uid }, { relations: ['personal_details'] })
-        );
+        const user = await getCheck(User.findOne({ _id: req.params.uid }, { relations: ['personal_details'] }));
 
         return this.ORM.transaction(async (txc: EntityManager) => {
           const address = new Address(req.body);

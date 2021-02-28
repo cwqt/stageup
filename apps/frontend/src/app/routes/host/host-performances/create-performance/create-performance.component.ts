@@ -2,6 +2,8 @@ import { EventEmitter, Component, Inject, OnInit, Output, ViewChild } from '@ang
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DtoCreatePerformance, CurrencyCode, GenreMap, IPerformance } from '@core/interfaces';
+import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import {} from 'events';
 import { createICacheable, ICacheable } from '../../../../app.interfaces';
 import { HostService } from '../../../../services/host.service';
@@ -27,7 +29,9 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { host_id: string },
     private ref: MatDialogRef<CreatePerformanceComponent>,
-    private hostService: HostService
+    private hostService: HostService,
+    private toastService:ToastService,
+    private baseAppService:BaseAppService
   ) {}
 
   ngOnInit(): void {
@@ -107,11 +111,12 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   }
 
   handleCreatePerformanceSuccess(event:IPerformance) {
+    this.toastService.emit(`Created performance: ${event.name}!`);
+    this.baseAppService.navigateTo(`/host/performances/${event._id}`);
     this.ref.close(event);
   }
 
   handleCreatePerformanceFailed() {
-    // TODO: show a toast notification saying the request failed
     this.ref.close(null);
   }
 

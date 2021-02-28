@@ -73,4 +73,8 @@ export class LoginComponent implements OnInit {
       this.baseAppService.navigateTo("/");
     });
   }
+
+  openRegister() {
+    this.baseAppService.navigateTo(`/register`);
+  }
 }

@@ -103,4 +103,8 @@ export class RegisterComponent implements OnInit {
       });
     });
   }
+
+  openLogin() {
+    this.appService.navigateTo(`/login`);
+  }
 }

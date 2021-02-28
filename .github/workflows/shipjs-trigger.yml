@@ -3,7 +3,8 @@ on:
   pull_request:
     types:
       - closed
-jobs:
+
+      jobs:
   build:
     name: Release
     runs-on: ubuntu-latest
@@ -23,3 +24,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           SLACK_INCOMING_HOOK: ${{ secrets.SLACK_INCOMING_HOOK }}
+
+  

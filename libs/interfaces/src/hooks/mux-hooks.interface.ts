@@ -37,7 +37,7 @@ export enum MUXHook {
   StreamDisabled = 'video.live_stream.deleted',
 }
 
-export interface IMUXHookResponse<T> {
+export interface IMUXHookResponse<T=any> {
   type: MUXHook;
   created_at: Date;
   object: {

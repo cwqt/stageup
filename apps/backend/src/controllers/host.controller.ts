@@ -19,25 +19,37 @@ import {
   IOnboardingStepMap,
   IEnvelopedData,
   HostInviteState,
-  IPerformanceStub
+  IPerformanceStub,
+  TokenProvisioner
 } from '@core/interfaces';
-import { User } from '../models/users/user.model';
-import { Host } from '../models/hosts/host.model';
-import { ErrorHandler, getCheck } from '../common/errors';
 
-import { UserHostInfo } from '../models/hosts/user-host-info.model';
-import { BaseController, IControllerEndpoint } from '../common/controller';
-import { Onboarding } from '../models/hosts/onboarding.model';
-import AuthStrat from '../common/authorisation';
-import Validators, { body, params as parameters, query } from '../common/validate';
-import { timestamp } from '../common/helpers';
-import { OnboardingReview } from '../models/hosts/onboarding-review.model';
-import { Performance } from '../models/performances/performance.model';
+import {
+  Validators,
+  body,
+  params as parameters,
+  query,
+  BaseController,
+  IControllerEndpoint,
+  ErrorHandler,
+  getCheck,
+  User,
+  Host,
+  HostInvitation,
+  UserHostInfo,
+  Onboarding,
+  OnboardingReview,
+  Performance,
+  AccessToken
+} from '@core/shared/api';
 
-import logger from '../common/logger';
-import Email = require('../common/email');
-import { HostInvitation } from '../models/hosts/host-invitation.model';
+import { timestamp } from '@core/shared/helpers';
+
 import Env from '../env';
+import Email = require('../common/email');
+import IdFinderStrat from '../common/authorisation/id-finder-strategies';
+import AuthStrat from '../common/authorisation';
+import { log } from '../common/logger';
+import { In } from 'typeorm';
 
 export default class HostController extends BaseController {
   createHost(): IControllerEndpoint<IHost> {
@@ -53,9 +65,12 @@ export default class HostController extends BaseController {
           name: v => Validators.Fields.name(v)
         })
       ],
-      authStrategy: AuthStrat.isLoggedIn,
+      authStrategy: AuthStrat.runner(
+        { uid: IdFinderStrat.findUserIdFromSession },
+        AuthStrat.userEmailIsVerified(m => m.uid)
+      ),
       controller: async req => {
-        // Check if user is already part of a host - which they shouldn't
+        // Make sure user is not already part of a host
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
         if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
@@ -64,7 +79,7 @@ export default class HostController extends BaseController {
         if (h) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
 
         // Create host & add current user (creator) to it through transaction
-        // & begin the onboarding process by running setup
+        // & begin the onboarding process by running .setup()
         return this.ORM.transaction(async txc => {
           const host = await txc.save(
             new Host({
@@ -121,22 +136,12 @@ export default class HostController extends BaseController {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         return await this.ORM.createQueryBuilder(UserHostInfo, 'uhi')
-          .where('uhi.host_id = :host_id', { host_id: req.params.hid })
+          .where('uhi.host__id = :host_id', { host_id: req.params.hid })
           .innerJoinAndSelect('uhi.user', 'user')
           .paginate(uhi => uhi.toFull());
       }
     };
   }
-
-  // updateHost(): IControllerEndpoint<IHost> {
-  //   return {
-  //     validators: [],
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {
-  //       return ({} as IHost);
-  //     }
-  //   };
-  // }
 
   deleteHost(): IControllerEndpoint<void> {
     return {
@@ -189,7 +194,8 @@ export default class HostController extends BaseController {
               }
             }
           })
-        ) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+        )
+          throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
         // Get host & pull in members_info for new member push
         const host = await getCheck(
@@ -277,7 +283,8 @@ export default class HostController extends BaseController {
         );
 
         // Don't be able to force increase permissions if the user hasn't accepted the invitation
-        if(userHostInfo.permissions > HostPermission.Member) throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
+        if (userHostInfo.permissions > HostPermission.Member)
+          throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
 
         const newUserPermission: HostPermission = req.body.value;
         if (newUserPermission == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised);
@@ -476,7 +483,7 @@ export default class HostController extends BaseController {
         try {
           await onboarding.updateStep(step, u[step](req.body));
         } catch (error) {
-          logger.error(error);
+          log.error(error);
           throw new ErrorHandler(HTTP.DataInvalid, null, error);
         }
 
@@ -519,14 +526,93 @@ export default class HostController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async req => {
         const hostPerformances = await this.ORM.createQueryBuilder(Performance, 'hps')
-          .innerJoinAndSelect('hps.host', 'host') 
-          .where('host._id = :id', { id: req.params.hid})         
-          .paginate(); 
+          .innerJoinAndSelect('hps.host', 'host')
+          .where('host._id = :id', { id: req.params.hid })
+          .paginate();
         return {
           data: hostPerformances.data.map(o => o.toStub()),
           __paging_data: hostPerformances.__paging_data
         };
       }
     };
-  } 
+  }
+
+  provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        body({
+          email_addresses: v => v.isArray()
+        })
+      ],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+        const provisioner = await getCheck(User.findOne({ _id: req.session.user._id }));
+        const performance = await getCheck(
+          Performance.findOne({ _id: req.params.pid }, { relations: { host_info: { signing_key: true } } })
+        );
+
+        // Get a list of all users by the passed in array of e-mail addresses
+        const users = (
+          await Promise.allSettled(
+            (req.body.email_addresses as string[]).map(email => {
+              return User.findOne(
+                {
+                  email_address: email
+                },
+                {
+                  select: {
+                    _id: true,
+                    email_address: true
+                  }
+                }
+              );
+            })
+          )
+        )
+          .filter(r => r.status == 'fulfilled' && r.value)
+          .map(p => (p as PromiseFulfilledResult<User>).value);
+
+        // Find tokens that already exit for provided users
+        // don't allow more than 1 access token / user
+        const existingUserTokens = (
+          await AccessToken.find({
+            relations: ['user'],
+            where: {
+              user: { _id: In(users.map(u => u._id)) }
+            },
+            select: {
+              user: { _id: true }
+            }
+          })
+        ).map(t => t.user._id);
+
+        await this.ORM.transaction(async txc => {
+          // Create all the access tokens & sign them with the performances' signing key
+          const tokens = users
+            .filter(u => !existingUserTokens.includes(u._id))
+            .map(u =>
+              new AccessToken(u, performance, provisioner, TokenProvisioner.User).sign(
+                performance.host_info.signing_key
+              )
+            );
+
+          await txc.save(tokens);
+
+          // Push e-mails out to everyone
+          users.forEach(user => Email.sendPerformanceAccessTokenProvisioned(user.email_address, performance, host));
+        });
+      }
+    };
+  }
+
+  // updateHost(): IControllerEndpoint<IHost> {
+  //   return {
+  //     validators: [],
+  //     authStrategy: AuthStrat.none,
+  //     controller: async req => {
+  //       return ({} as IHost);
+  //     }
+  //   };
+  // }
 }

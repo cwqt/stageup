@@ -2,8 +2,8 @@ import { NumberFormatStyle } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IPerformance, IPerformancePurchase, IPerformanceUserInfo } from '@core/interfaces';
-import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { DtoAccessToken, IEnvelopedData, IPerformance, IPerformancePurchase, IPerformanceUserInfo } from '@core/interfaces';
+import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 
@@ -13,17 +13,8 @@ import { PerformanceService } from 'apps/frontend/src/app/services/performance.s
   styleUrls: ['./performance.component.scss']
 })
 export class PerformanceComponent implements OnInit {
-  performance: ICacheable<IPerformance> = {
-    data: null,
-    loading: false,
-    error: null
-  };
-
-  userPerformanceInfo: ICacheable<IPerformanceUserInfo> = {
-    data: null,
-    loading: false,
-    error: null
-  };
+  performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>> = createICacheable();
+  userPerformanceInfo: ICacheable<IPerformanceUserInfo> = createICacheable();
 
   currencyPrice: string;
   hasAccess: boolean;
@@ -37,7 +28,7 @@ export class PerformanceComponent implements OnInit {
   ) {}
 
   get perf() {
-    return this.performance.data;
+    return this.performance.data?.data;
   }
 
   async ngOnInit() {
@@ -48,8 +39,6 @@ export class PerformanceComponent implements OnInit {
       currency: this.perf.currency,
       style: 'currency'
     }).format(this.perf.price);
-
-    this.appService.$routeAltered.subscribe(o => console.log(o));
   }
 
   onRouterOutletActivate(event) {
@@ -62,15 +51,15 @@ export class PerformanceComponent implements OnInit {
   }
 
   async getPerformance() {
-    this.performance.loading = true;
-    return this.performanceService
-      .getPerformance(this.appService.getParam(RouteParam.PerformanceId))
-      .then((p: IPerformance) => (this.performance.data = p))
-      .catch((e: HttpErrorResponse) => (this.performance.error = e.message))
-      .finally(() => (this.performance.loading = false));
+    return cachize(this.performanceService
+      .readPerformance(this.appService.getParam(RouteParam.PerformanceId)), this.performance)
   }
 
   gotoWatch() {
-    this.appService.navigateTo(`performance/${this.perf._id}/watch`);
+    this.appService.navigateTo(`performances/${this.perf._id}/watch`);
+  }
+
+  gotoFeed() {
+    this.appService.navigateTo(`/`);
   }
 }

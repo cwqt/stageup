@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ErrCode } from '@core/interfaces';
-
+import { ErrCode, Primitive } from '@core/interfaces';
 
 /**
  * @description Wrapper around requests to do common actions when making requests
@@ -9,18 +8,19 @@ import { ErrCode } from '@core/interfaces';
  * @example return cachize(this.http.get<IUser[]>(`/api/users`), cacheable);
  */
 function cachize<T>(promise:Promise<T>, c:ICacheable<T>):Promise<T>;
-function cachize<T, K>(promise:Promise<T>, c:ICacheable<K>, transformer:(d:T) => K): Promise<K>;
-function cachize<T, K=T>(promise: Promise<T | K>, c: ICacheable<T | K>, transformer?:(d:T) => K):Promise<T | K> {
-  c.loading = true;
+function cachize<T, K>(promise:Promise<T>, c:ICacheable<K>, transformer:(d:T) => K, showLoading?:boolean): Promise<K>;
+function cachize<T, K = T>(promise: Promise<T | K>, c: ICacheable<T | K>, transformer?:(d:T) => K, showLoading:boolean=true):Promise<T | K> {
+  if(showLoading) c.loading = true;
   promise = transformer ? promise.then(d => transformer(d as T)) : promise;
 
   promise
     .then(d => (c.data = d))
-    .catch(e => (c.error = e))
-    .finally(() => (c.loading = false));
+    .catch(e => (c.error = e));
+
+  if(showLoading) promise.finally(() => c.loading = false);
 
   return promise;
-};
+}
 
 export { cachize };
 
@@ -39,12 +39,15 @@ export interface FormErrors {
   [index: string]: null | ErrCode | FormErrors;
 }
 
-export const createICacheable = <T = any>(initialValue?:any): ICacheable<T | null> => {
+export const createICacheable = <T = any>(
+  initialValue?: any,
+  meta?: Record<string, Primitive>
+): ICacheable<T | null> => {
   return {
     data: initialValue || null,
     loading: false,
     error: '',
     form_errors: {},
-    meta: {}
+    meta: meta || {}
   };
 };

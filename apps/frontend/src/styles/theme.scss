@@ -1,4 +1,6 @@
-@import "~@angular/material/theming";
+@import '~@angular/material/theming';
+@import "apps/frontend/src/styles/variables";
+
 
 @include mat-core();
 
@@ -7,12 +9,7 @@ $my-custom-primary: mat-palette($mat-grey);
 $my-custom-accent: mat-palette($mat-grey, 100, 500, A100);
 $my-custom-warn: mat-palette($mat-red);
 
-$my-custom-theme: mat-light-theme(
-  $my-custom-primary,
-  $my-custom-accent,
-  $my-custom-warn
-);
-
+$my-custom-theme: mat-light-theme($my-custom-primary, $my-custom-accent, $my-custom-warn);
 
 mat-progress-bar {
   .mat-progress-bar-fill::after {
@@ -35,7 +32,6 @@ mat-table {
     }
   }
 }
-
 
 mat-form-field {
   width: 100% !important;
@@ -87,7 +83,8 @@ mat-checkbox {
 }
 
 mat-accordion {
-  mat-expansion-panel, .mat-accordion {
+  mat-expansion-panel,
+  .mat-accordion {
     height: 40px;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -99,8 +96,9 @@ mat-accordion {
       .mat-content {
         justify-content: space-between;
       }
-    
-      .mat-content > mat-panel-title, .mat-content > mat-panel-description {
+
+      .mat-content > mat-panel-title,
+      .mat-content > mat-panel-description {
         flex: 0 0 auto;
       }
     }
@@ -134,6 +132,48 @@ mat-vertical-stepper {
     background-color: #0f62fe !important;
   }
 }
+
+
+@mixin ui-toast-maker($border, $bg, $color) {
+  border-left: 6px solid $border !important;
+  background-color: $bg !important;
+  // background-image: linear-gradient(to bottom, transparentize($border, 0.8), rgba(255,0,0,0) 50%, rgba(255,0,0,0) 100%) !important;
+  color: $color !important;
+  box-shadow: 0 8px 16px rgb(0 0 0 / 10%) !important;
+  .mat-simple-snackbar {
+    font-size: 18px !important;
+  }
+  .mat-simple-snackbar-action {
+    background-color: $bg;
+    border-radius: 4px;
+    overflow: hidden;
+    color: $color !important;
+    &:focus {
+      outline: none !important;
+    }
+  }
+}
+
+.ui-toast {
+  &--accent {
+    @include ui-toast-maker($clr-success, #fff, #333333 )
+  }
+  &--primary {
+    @include ui-toast-maker($clr-primary, #fff, #333333 )
+  }
+  &--secondary {
+    @include ui-toast-maker($clr-secondary, $clr-secondary, #f3f3f3)
+  }
+  &--warning {
+    @include ui-toast-maker($clr-warning, #fff, #333333 )
+  }
+  &--danger {
+    @include ui-toast-maker(lighten($clr-red-drk, 20%), lighten($clr-red-drk, 10%), #fff);
+  }
+}
+
+
+
 
 // mat-tab-group {
 //   .mat-tab-label {
@@ -221,10 +261,17 @@ mat-vertical-stepper {
 @keyframes progress-spinner-stroke-rotate {
   $start: 200%; /* approx 2/3 of circle circumference */
   $end: 20%;
-  0%   { stroke-dashoffset: $start; }
-  50%  { stroke-dashoffset: $end; }
+  0% {
+    stroke-dashoffset: $start;
+  }
+  50% {
+    stroke-dashoffset: $end;
+  }
   /* removing transform: rotate(720deg) causes wobble */
-  100% { stroke-dashoffset: $start; transform: rotate(720deg); }
+  100% {
+    stroke-dashoffset: $start;
+    transform: rotate(720deg);
+  }
 }
 
 @include angular-material-theme($my-custom-theme);

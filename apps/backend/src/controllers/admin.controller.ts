@@ -1,6 +1,3 @@
-import logger from '../common/logger';
-import { body, query, single } from '../common/validate';
-import { getCheck } from '../common/errors';
 import {
   HostOnboardingState,
   HostOnboardingStep,
@@ -9,14 +6,22 @@ import {
   IHostOnboarding,
   IOnboardingReview
 } from '@core/interfaces';
-import { BaseController, IControllerEndpoint } from '../common/controller';
-import AuthStrat from '../common/authorisation';
-import { Onboarding } from '../models/hosts/onboarding.model';
+import {
+  BaseController,
+  IControllerEndpoint,
+  getCheck,
+  body,
+  query,
+  single,
+  OnboardingReview,
+  Onboarding,
+  User,
+  UserHostInfo
+} from '@core/shared/api';
 
-import { OnboardingReview } from '../models/hosts/onboarding-review.model';
-import { User } from '../models/users/user.model';
-import { sendUserHostMembershipInvitation } from '../common/email';
-import { UserHostInfo } from '../models/hosts/user-host-info.model';
+import AuthStrat from '../common/authorisation';
+import Email = require('../common/email');
+import { log } from '../common/logger';
 
 export default class AdminController extends BaseController {
   readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
@@ -38,7 +43,7 @@ export default class AdminController extends BaseController {
           .innerJoinAndSelect('hop.host', 'host') // Pull in host & filter by host
           .where('host.username LIKE :username', {
             username: req.body.username ? `%${req.body.username as string}%` : '%'
-          })
+          });
 
         // Not sure about fuzzy matching ints, so don't make a WHERE if none passed
         if (req.query.state) {
@@ -86,10 +91,11 @@ export default class AdminController extends BaseController {
           .forEach(k => (onboarding.steps[k].state = submission[k].state));
 
         // If any step has issues, set the onboarding to has issues - otherwise all verified & awaiting enaction
-        onboarding.state = Object.keys(onboarding.steps)
-          .some(s => onboarding.steps[s as unknown as HostOnboardingStep].state == HostOnboardingState.HasIssues)
-            ? HostOnboardingState.HasIssues
-            : HostOnboardingState.Verified;
+        onboarding.state = Object.keys(onboarding.steps).some(
+          s => onboarding.steps[(s as unknown) as HostOnboardingStep].state == HostOnboardingState.HasIssues
+        )
+          ? HostOnboardingState.HasIssues
+          : HostOnboardingState.Verified;
 
         await this.ORM.transaction(async txc => {
           await txc.save(review);
@@ -159,17 +165,17 @@ export default class AdminController extends BaseController {
               try {
                 const potentialMember = await User.findOne({ _id: member.value as string });
                 if (!potentialMember)
-                  logger.error(`Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`);
+                  log.error(`Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`);
 
                 // Don't add the owner if they're already in
                 if (potentialMember._id !== owner.user._id) {
-                  sendUserHostMembershipInvitation(owner.user, potentialMember, host, txc);
+                  Email.sendUserHostMembershipInvitation(owner.user, potentialMember, host, txc);
 
                   // Add the member as pending (updated on membership acceptance to Member)
                   await host.addMember(potentialMember, HostPermission.Pending, txc);
                 }
               } catch (error) {
-                logger.error(error);
+                log.error(error);
               }
             })
           );

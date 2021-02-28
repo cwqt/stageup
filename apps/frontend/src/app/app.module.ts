@@ -4,7 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app.routes';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
@@ -12,6 +12,16 @@ import { NgxMaskModule } from 'ngx-mask';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { MomentModule } from 'ngx-moment';
 import { NgxPopperModule } from 'ngx-popper';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { HttpConfigInterceptor } from './_helpers/http.interceptor';
+
+// Pipes ----------------------------------------------------------------------------------------------------------------
+// import { LogPipe } from "./_pipes/log.pipe";
+import { OnboardingStatePipe } from './_pipes/object-state.pipe';
+import { ObjectLengthPipe } from './_pipes/object-length.pipe';
+import { ShortDomainPipe } from './_pipes/short-domain.pipe';
+import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
+import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AppComponent } from './app.component';
@@ -39,6 +49,7 @@ import { PerformanceWatchComponent } from './routes/performance-watch/performanc
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
 import { HostComponent } from './routes/host/host.component';
 import { CreatePerformanceComponent } from './routes/host/host-performances/create-performance/create-performance.component';
+import { UpdatePerformanceComponent } from './routes/host/host-performance/update-performance/app-update-performance.component';
 import { PlayerComponent } from './components/player/player.component';
 import { SettingsComponent } from './routes/settings/settings.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
@@ -48,6 +59,7 @@ import { HostSettingsComponent } from './routes/settings/host-settings/host-sett
 import { CreateHostComponent } from './routes/settings/host-settings/create-host/create-host.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
+import { UserTypeClarificationComponent } from './routes/landing/clarification-page/user-type-clarification/user-type-clarification.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from './routes/search/search.component';
 import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
@@ -55,22 +67,17 @@ import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboard
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
-import { HostLandingComponent } from './routes/host/host-landing/host-landing.component'
-import { PerformanceModalComponent } from './components/modals/performance-modal.component';
+import { HostLandingComponent } from './routes/host/host-landing/host-landing.component';
+import { PerformanceDialogComponent } from './components/dialogs/performance-dialog/performance-dialog.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
 import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
 import { HostAboutComponent } from './routes/host/host-about/host-about.component';
 import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { HostAddMemberComponent } from './routes/host/host-members/host-add-member/host-add-member.component';
-
-// Pipes ----------------------------------------------------------------------------------------------------------------
-// import { LogPipe } from "./_pipes/log.pipe";
-import { OnboardingStatePipe } from './_pipes/object-state.pipe';
-import { ObjectLengthPipe } from './_pipes/object-length.pipe';
-import { ShortDomainPipe } from './_pipes/short-domain.pipe';
-import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
-import { HostPermissionPipe } from './_pipes/host-permission.pipe';
+import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
+import { HostPerformanceDrawerComponent } from './components/app/drawer-components/host-performance-drawer/host-performance-drawer.component';
+import { SharePerformanceDialogComponent } from './routes/host/host-performance/share-performance-dialog/share-performance-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -97,6 +104,7 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     HostComponent,
     HostPerformancesComponent,
     CreatePerformanceComponent,
+    UpdatePerformanceComponent,
     PlayerComponent,
     SettingsComponent,
     ProfileSettingsComponent,
@@ -117,7 +125,7 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     OnboardingStepPipe,
     HostPermissionPipe,
     OnboardingViewIssueMakerComponent,
-    PerformanceModalComponent,
+    PerformanceDialogComponent,
     UserThumbComponent,
     HostLandingComponent,
     HostProfileComponent,
@@ -125,7 +133,11 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     HostAboutComponent,
     HostFeedComponent,
     HostMembersComponent,
-    HostAddMemberComponent
+    HostAddMemberComponent,
+    HostPerformanceComponent,
+    UserTypeClarificationComponent,
+    HostPerformanceDrawerComponent,
+    SharePerformanceDialogComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -139,11 +151,12 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
     ClickOutsideModule,
     NgxMaskModule.forRoot(),
     MomentModule,
-    NgxPopperModule.forRoot()
+    NgxPopperModule.forRoot(),
+    ClipboardModule
   ],
-  providers: [CookieService],
+  providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],
-  entryComponents: [PerformanceModalComponent],
+  entryComponents: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

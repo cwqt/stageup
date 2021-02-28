@@ -1,18 +1,19 @@
 version: "3"
 
+networks:
+  default:
+    driver: bridge
+
 services:
   api:
     container_name: api
-    env_file: 
-      - ./deploy/docker/env/backend.env
+    env_file:
+     - .env.${NODE_ENV:-development}
     environment: 
-      POSTGRES_HOST: host.docker.internal
-      REDIS_HOST: host.docker.internal
-      NODE_ENV: staging
       WAIT_HOSTS: postgres:5432, redis:6379
     build: 
       context: .
-      dockerfile: ./deploy/docker/backend.Dockerfile
+      dockerfile: ./apps/backend/Dockerfile
     depends_on:
       - redis
       - postgres
@@ -20,22 +21,50 @@ services:
      - postgres
      - redis
     ports:
-      - "3000:3000"
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: ingress
+    networks:
+      default:
+        aliases:
+          - api
+
+  runner:
+    container_name: runner
+    restart: always
+    env_file:
+     - .env.${NODE_ENV:-development}
+    environment: 
+      WAIT_HOSTS: redis:6379, api:3000
+    build: 
+      context: .
+      dockerfile: ./apps/runner/Dockerfile
+    depends_on:
+      - redis
+      - api
+    links:
+     - redis
+    ports:
+      - "3001:3001"
+    networks:
+      default:
+        aliases:
+          - runner
 
   web:
     container_name: nginx
     build: 
       context: .
-      dockerfile: ./deploy/docker/nginx.Dockerfile
+      dockerfile: ./apps/frontend/Dockerfile
     volumes:
       - ./dist:/usr/share/nginx/html
       - ./dist:/var/www/html
-      - ./deploy/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - postgres
-      - redis
+      - ./apps/frontend/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
+    depends_on:
+      - api
 
   postgres:
     container_name: psql
@@ -43,7 +72,7 @@ services:
     restart: always
     image: "postgres:11"
     env_file:
-      - ./deploy/docker/env/postgres.env
+     - .env.${NODE_ENV:-development}
     volumes:
       - ./store/postgres:/var/lib/postgresql/data/
     ports:
@@ -55,5 +84,7 @@ services:
     container_name: redis
     hostname: redis
     image: "redis"
+    env_file:
+     - .env.${NODE_ENV:-development}
     ports:
       - "6379:6379"

@@ -102,14 +102,27 @@ export class HostService {
     return this.http.get<IEnvelopedData<IUserHostInfo[], null>>(`/api/hosts/${hostId}/members`).toPromise();
   }
 
-  addMember(hostId: string, addition:IHostMemberChangeRequest): Promise<IUserHostInfo> {
-    return this.http
-      .post<IUserHostInfo>(`/api/hosts/${hostId}/members`, addition)
-      .toPromise();
+  addMember(hostId: string, addition: IHostMemberChangeRequest): Promise<IUserHostInfo> {
+    return this.http.post<IUserHostInfo>(`/api/hosts/${hostId}/members`, addition).toPromise();
   }
 
   //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
-  readHostPerformances(hostId: string, page: number = 0, perPage: number = 10): Promise<IEnvelopedData<IPerformanceStub[], null>> {
-    return this.http.get<IEnvelopedData<IPerformanceStub[], null>>(`/api/hosts/${hostId}/performances?page=${page}&per_page=${perPage}`).toPromise();
+  readHostPerformances(
+    hostId: string,
+    page: number = 0,
+    perPage: number = 10
+  ): Promise<IEnvelopedData<IPerformanceStub[], null>> {
+    return this.http
+      .get<IEnvelopedData<IPerformanceStub[], null>>(
+        `/api/hosts/${hostId}/performances?page=${page}&per_page=${perPage}`
+      )
+      .toPromise();
+  }
+
+  //router.get <void> ("/hosts/:hid/performances/:pid/provision", Hosts.provisionPerformanceAccessTokens());
+  provisionPerformanceAccessTokens(hostId: string, performanceId: string, emailAddresses: string[]): Promise<void> {
+    return this.http
+      .post<void>(`/api/hosts/${hostId}/performances/${performanceId}/provision`, { email_addresses: emailAddresses })
+      .toPromise();
   }
 }

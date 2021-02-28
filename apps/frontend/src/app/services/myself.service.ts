@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IHostStub, IMyself, IUser, IUserHostInfo } from '@core/interfaces';
+import { IHostStub, IMyself, IUser, IUserHostInfo, IPerformance } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HTTP } from '@core/interfaces';
@@ -72,4 +72,5 @@ export class MyselfService {
   setUserHostInfo(userHostInfo: IUserHostInfo) {
     this.store({ ...this.$myself.value, host_info: userHostInfo });
   }
+  
 }

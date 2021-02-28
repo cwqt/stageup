@@ -1,0 +1,50 @@
+@import "apps/frontend/src/styles/variables";
+
+:host {
+  height: 100%;
+}
+
+.host-icon {
+  margin-bottom: -32px;
+}
+
+.sidebar-main-buttons {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  width: 100%;
+  ui-button {
+    margin: 10px 0;
+    width: 100%;
+    height: 75px !important;
+    ::ng-deep button {
+      background: white;
+      width: 100%;
+      height: 75px !important;
+      border: 0px solid transparent;
+      border-radius: 0 !important;
+      p {
+        margin: 0;
+        margin-left: $space-lg;
+      }
+      span {
+        display: flex;
+        align-items: center;
+        justify-content: center;  
+      }
+    }
+    border-left: 2px solid transparent !important;
+    border-right: 2px solid transparent !important;
+    &.active {
+      border-right: 2px solid $clr-primary !important;
+      ::ng-deep button {
+        span {
+          opacity: 1;
+          ui-icon {
+            color:  $clr-primary;
+          }
+        }
+      }
+    }
+  }
+}

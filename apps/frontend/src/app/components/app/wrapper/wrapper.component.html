@@ -1,20 +1,25 @@
 <div class="app-container">
-  <div class="app-content" *ngIf="myself">
-    <div class="left">
-      <app-sidebar [myself]="myself">
-      </app-sidebar>
-    </div>
+  <app-sidebar
+    [class.raise-index]="!(drawerOpenSubject | async)"
+    [class.cancel-events]="drawerOpenSubject | async"
+    [myself]="myself">
+  </app-sidebar>
 
-    <div class="right">
+  <mat-drawer-container class="h-full" *ngIf="myself">
+    <mat-drawer #drawer mode="side" [ngSwitch]="drawerState.key">
+      <app-host-performance-drawer *ngSwitchCase="drawerKey.HostPerformance"></app-host-performance-drawer>
+    </mat-drawer>
+
+    <mat-drawer-content class="w-full h-full">
       <app-header-bar [myself]="myself"></app-header-bar>
-      <div class="app-body container px-10">
+      <div class="app-body container">
         <app-page title="First time setup" *ngIf="myself && myself.user.is_new_user">
           <app-first-time-setup></app-first-time-setup>
         </app-page>
 
         <ng-content *ngIf="myself && !myself.user.is_new_user"></ng-content>
       </div>
-      <app-footer></app-footer>
-    </div>
-  </div>
+      <app-footer></app-footer>  
+    </mat-drawer-content>
+  </mat-drawer-container>
 </div>

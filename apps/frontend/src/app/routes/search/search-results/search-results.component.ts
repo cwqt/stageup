@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import { IEnvelopedData, IPerformanceStub } from '@core/interfaces';
 import { ICacheable } from '../../../app.interfaces';
-import { PerformanceModalComponent } from '../../../components/modals/performance-modal.component';
+import { PerformanceDialogComponent } from '../../../components/dialogs/performance-dialog/performance-dialog.component';
 import { BaseAppService } from '../../../services/app.service';
 import { PerformanceService } from '../../../services/performance.service';
 
@@ -41,7 +41,7 @@ export class SearchResultsComponent implements OnInit {
 
   async searchPerformances(){
     this.searchResults.loading = true;
-    return this.performanceService.getPerfomances(this.searchQuery, this.pager?.pageIndex, this.pager?.pageSize)
+    return this.performanceService.readPerfomances(this.searchQuery, this.pager?.pageIndex, this.pager?.pageSize)
     .then( d =>{
       this.searchResults.data = d;
       if(this.pager) {
@@ -53,7 +53,7 @@ export class SearchResultsComponent implements OnInit {
   }
 
   openPerformanceModal(performanceId: number): void{
-    const modalRef = this.dialog.open(PerformanceModalComponent, {      
+    const modalRef = this.dialog.open(PerformanceDialogComponent, {      
       data: this.searchResults.data.data.find(p => p._id == performanceId as unknown as string)});
   }
 

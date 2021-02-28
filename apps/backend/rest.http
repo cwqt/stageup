@@ -4,9 +4,9 @@ POST http://{{host}}/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "username":"{{username}}",
-  "email_address":"{{email_address}}",
-  "password":"{{password}}"
+  "username":"{{ username }}",
+  "email_address":"{{ email_address }}",
+  "password":"{{ password }}"
 }
 
 ### --------------------------------------------------------------------------------------------
@@ -19,8 +19,9 @@ Content-Type: application/json
 
 {
   "email_address":"{{email_address}}",
-  "password":"{{password}}"
+  "password":"{{ password }}"
 }
+
 ### --------------------------------------------------------------------------------------------
 # @name logoutUser
 POST http://{{host}}/users/logout HTTP/1.1
@@ -37,28 +38,195 @@ DELETE http://{{host}}/users/{{userId}} HTTP/1.1
 # @name readUserHost
 GET http://{{host}}/users/{{userId}}/host 
 ### --------------------------------------------------------------------------------------------
-# router.post   <IHost> ("/hosts", Hosts.createHost());
+
+###############################################################################################
+### HOST CONTROLLER 
+###############################################################################################
+# router.post   <IHost> ("/hosts", Hosts.createHost())
 # @name createHost
-POST http://{{host}}/hosts
+POST http://{{host}}/hosts HTTP/1.1
 Content-Type: application/json
 
 {
     "username":"testhost",
     "name":"My Cool Host",
-    "email_address":"host@cass.si"
+    "email_address": "host@stageup.uk"
 }
+
 ### --------------------------------------------------------------------------------------------
 @hostId = {{ createHost.response.body._id }}
 
 ### --------------------------------------------------------------------------------------------
 # router.get    <IHost> ("/hosts/:hid", Hosts.readHost())
 # @name readHost
-GET http://{{host}}/hosts/{{hostId}}
+GET http://{{host}}/hosts/{{hostId}} HTTP/1.1
 ### --------------------------------------------------------------------------------------------
-# router.delete <void> ("/hosts/:hid", Hosts.deleteHost());
+@hostUsername = {{ createHost.response.body.username }}
+
+### --------------------------------------------------------------------------------------------
+# router.get  <IHost> ("/hosts/@:username", Hosts.readHostByUsername())
+# @name readHostByUsername
+GET http://{{host}}/hosts/@{{ hostUsername }} HTTP/1.1
+### --------------------------------------------------------------------------------------------
+# router.delete <void> ("/hosts/:hid", Hosts.deleteHost())
 # @name deleteHost
-DELETE http://{{host}}/hosts/{{hostId}}
-### ------------------------------------------------------------------
+DELETE http://{{host}}/hosts/{{hostId}} HTTP/1.1
+### --------------------------------------------------------------------------------------------
+# router.post  <IUHInfo>  ("/hosts/:hid/members",  Hosts.addMember())
+# @name addMember
+POST http://{{host}}/hosts/{{hostId}}/members HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_id": "{{userId}}"
+}
+
+### --------------------------------------------------------------------------------------------
+# router.get <IUserStub[]> ("/hosts/:hid/members", Hosts.readMembers())
+# @name readMembers
+GET http://{{host}}/hosts/{{hostId}}/members HTTP/1.1
+
+### --------------------------------------------------------------------------------------------
+# router.put <IHost>("/hosts/:hid/members/:mid",Hosts.updateMember())
+# @name updateMember
+PUT http://{{host}}/hosts/{{hostId}}/members/{{userId}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_id": "{{userId}}"
+}
+
+### --------------------------------------------------------------------------------------------
+# router.delete <void> ("/hosts/:hid/members/:mid",Hosts.removeMember())
+# @name removeMember
+DELETE http://{{host}}/hosts/{{hostId}}/members/{{userId}} HTTP/1.1
+### --------------------------------------------------------------------------------------------
+@status = {{ readOnboardingStatus.response.body.status }}
+
+### --------------------------------------------------------------------------------------------
+# router.get <IHOnboarding> ("/hosts/:hid/onboarding/status", Hosts.readOnboardingProcessStatus())
+# @name readOnboardingProcessStatus
+GET http://{{host}}/hosts/{{hostId}}/onboarding/status HTTP/1.1
+
+### --------------------------------------------------------------------------------------------
+@step = {{ readOnboardingProcessStep.request.body.step }}
+
+### --------------------------------------------------------------------------------------------
+# router.get <IOnboardingStep<any>>  ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep())
+# @name readOnboardingProcessStep
+GET http://{{host}}/hosts/{{hostId}}/onboarding/{{step}} HTTP/1.1
+
+### --------------------------------------------------------------------------------------------
+@steps = {{ readOnboardingSteps.request.body.steps }}
+
+### --------------------------------------------------------------------------------------------
+# router.get <IOnboardingStepMap> ("/hosts/:hid/onboarding/steps", Hosts.readOnboardingSteps())
+# @name readOnboardingSteps
+GET http://{{host}}/hosts/{{hostId}}/onboarding/steps HTTP/1.1
+
+### --------------------------------------------------------------------------------------------
+# router.put <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.updateOnboardingProcessStep());
+# @name updateOnboardingProcessStep
+PUT http://{{host}}/hosts/{{hostId}}/onboarding/{{step}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "0":{ "step": 3, "issues": []}, 
+  "1":{ "step": 3, "issues": []}, 
+  "2":{ "step": 3, "issues": []}, 
+  "3":{ "step": 3, "issues": []}, 
+  "4":{ "step": 3, "issues": []} 
+}
+
+### --------------------------------------------------------------------------------------------
+# router.post <void> ("/hosts/:hid/onboarding/submit", Hosts.submitOnboardingProcess())
+# @name submitOnboardingProcess
+POST http://{{host}}/hosts/{{hostId}}/onboarding/submit HTTP/1.1
+Content-Type: application/json
+
+{
+  "0":{ "step": 3, "issues": []}, 
+  "1":{ "step": 3, "issues": []}, 
+  "2":{ "step": 3, "issues": []}, 
+  "3":{ "step": 3, "issues": []}, 
+  "4":{ "step": 3, "issues": []} 
+}
+
+### --------------------------------------------------------------------------------------------
+# router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances())
+# @name readHostPerformances
+GET http://{{host}}/hosts/{{hostId}}/performances HTTP/1.1
+### --------------------------------------------------------------------------------------------
+
+#router.post <void> ("/hosts/:hid/performances/:pid/provision", Hosts.provisionPerformanceAccessTokens());
+# @name readHostPerformances
+
+POST http://{{host}}/hosts/{{hostId}}/performances/{{performanceId}}/provision HTTP/1.1
+{
+  "email_addresses":["other@cass.si"]
+}
+
+
+@contentType = application/json
+###############################################################################################
+### PERFORMANCE CONTROLLER                                                                  ###
+###############################################################################################
+#router.post  <IPerf>("/hosts/:hid/performances", Perfs.createPerformance());
+# @name createPerformance
+POST http://{{host}}/hosts/{{hostId}}/performances HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "name":"New performance name",
+    "description":"New performance description",
+    "genre": "5",
+    "price":"40",
+    "currency": "GBP",
+    "premiere_date": 1613474834
+}
+###
+@performanceId = {{ createPerformance.response.body._id }}
+###
+#router.get <IE<IPerfS[]>>("/performances", Perfs.readPerformances());
+# @name readPerformances
+GET http://{{host}}/performances HTTP/1.1
+###
+#router.get <IE<IPerf, IPUInfo>>("/performances/:pid", Perfs.readPerformance());
+# @name readPerformance
+GET http://{{host}}/performances/{{performanceId}} HTTP/1.1
+###
+#router.get <IPHInfo>("/performances/:pid/host_info", Perfs.readPerformanceHostInfo());
+# @name readPerformanceHostInfo
+GET http://{{host}}/performances/{{performanceId}}/host_info HTTP/1.1
+###
+#router.post  <void>("/performances/:pid/purchase", Perfs.purchase());
+# @name purchasePerformance
+POST http://{{host}}/performances/{{performanceId}}/purchase HTTP/1.1
+###
+#router.delete  <void>("/performances/:pid", Perfs.deletePerformance());
+# @name deletePerformance
+DELETE http://{{host}}/performances/{{performanceId}} HTTP/1.1
+###
+#router.put <IPerf>("/performances/:pid", Perfs.updatePerformance());
+# @name updatePerformance
+PUT http://{{host}}/performances/{{performanceId}} HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "name":"New performance name",
+    "price":"40",
+    "description":"New performance description"
+}
+###
+#router.put <IPerf>("/performances/:pid/visibility", Perfs.updateVisibility());
+# @name updateVisibility
+PUT http://{{host}}/performances/{{performanceId}}/visibility HTTP/1.1
+Content-Type: {{contentType}}
+
+{
+    "visibility":"public",
+}
+###--------------------------------------------------------------------------------------------
 
 ###############################################################################################
 ### ADMIN CONTROLLER 
@@ -66,8 +234,10 @@ DELETE http://{{host}}/hosts/{{hostId}}
 # router.get  <IE<IHOnboarding[],void>>(`/admin/onboardings`, Admin.readOnboardingProcesses());
 # @name readOnboardingProcesses
 GET http://{{host}}/admin/onboardings
+
 ### --------------------------------------------------------------------------------------------
 @onboardingId = {{ reviewOnboardingProcess.response.body[0]._id }}
+
 ### --------------------------------------------------------------------------------------------
 # router.post <void> (`/admin/onboardings/:oid/review`, Admin.reviewOnboardingProcess());
 # @name reviewOnboardingProcess
@@ -80,7 +250,6 @@ Content-Type: application/json
   "3":{ "state": 3, "issues": []}, 
   "4":{ "state": 3, "issues": []}, 
 }
-
 ### --------------------------------------------------------------------------------------------
 # router.post <void> ("/admin/onboardings/:oid/enact", Admin.enactOnboardingProcess());
 # @name enactOnboardingProcess

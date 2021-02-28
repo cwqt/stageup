@@ -9,14 +9,13 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/backend",
             "main": "apps/backend/src/index.ts",
             "tsConfig": "apps/backend/tsconfig.app.json",
             "showCircularDependencies": false,
+            "generatePackageJson": true,
             "assets": []
           },
           "configurations": {
@@ -36,7 +35,9 @@
           "executor": "@nrwl/node:execute",
           "configurations": {
             "development": {
-              "buildTarget": "backend:build"
+              "buildTarget": "backend:build",
+              "inspect": true,
+              "port": 7777
             },
             "testing": {
               "buildTarget": "backend:build"
@@ -46,14 +47,12 @@
             },
             "production": {
               "buildTarget": "backend:build:production"
-            }  
+            }
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/backend"
-          ],
+          "outputs": ["coverage/apps/backend"],
           "options": {
             "passWithNoTests": true,
             "runInBand": false,
@@ -65,9 +64,7 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "directory": "apps/backend",
-            "lintFilePatterns": [
-              "apps/backend/**/*.{ts,tsx,js,jsx}"
-            ]
+            "lintFilePatterns": ["apps/backend/**/*.{ts,tsx,js,jsx}"]
           }
         }
       }
@@ -89,15 +86,9 @@
             "main": "apps/frontend/src/main.ts",
             "polyfills": "apps/frontend/src/polyfills.ts",
             "tsConfig": "apps/frontend/tsconfig.app.json",
-            "aot":true,
-            "assets": [
-              "apps/frontend/src/favicon.ico",
-              "apps/frontend/src/assets"
-            ],
-            "styles": [
-              "apps/frontend/src/tailwind.scss",
-              "apps/frontend/src/styles.scss"
-            ],
+            "aot": true,
+            "assets": ["apps/frontend/src/favicon.ico", "apps/frontend/src/assets"],
+            "styles": ["apps/frontend/src/tailwind.scss", "apps/frontend/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -126,7 +117,7 @@
           "configurations": {
             "development": {
               "browserTarget": "frontend:build",
-              "proxyConfig": "apps/frontend/proxy.conf.json"  
+              "proxyConfig": "apps/frontend/proxy.conf.json"
             },
             "production": {
               "browserTarget": "frontend:build:production"
@@ -152,9 +143,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/api-tests"
-          ],
+          "outputs": ["coverage/apps/api-tests"],
           "options": {
             "passWithNoTests": true,
             "runInBand": true,
@@ -163,9 +152,87 @@
           }
         }
       }
+    },
+    "shared": {
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/shared/**/*.ts"]
+          }
+        }
+      }
+    },
+    "runner": {
+      "root": "apps/runner",
+      "sourceRoot": "apps/runner/src",
+      "projectType": "application",
+      "prefix": "runner",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/runner",
+            "main": "apps/runner/src/index.ts",
+            "tsConfig": "apps/runner/tsconfig.app.json",
+            "showCircularDependencies": false,
+            "generatePackageJson": true
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            },
+            "staging": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "configurations": {
+            "development": {
+              "buildTarget": "runner:build",
+              "inspect": true,
+              "port": 7778
+            },
+            "testing": {
+              "buildTarget": "runner:build"
+            },
+            "staging": {
+              "buildTarget": "runner:build:staging"
+            },
+            "production": {
+              "buildTarget": "runner:build:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/runner/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/runner"],
+          "options": {
+            "jestConfig": "apps/runner/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
     "defaultCollection": "@nrwl/express"
-  }
+  },
+  "defaultProject": "runner"
 }
