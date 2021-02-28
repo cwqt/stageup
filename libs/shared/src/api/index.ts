@@ -22,3 +22,5 @@ export { IPostgresProviderConfig } from './providers/postgres.provider'
 export { ISendGridProviderConfig } from './providers/sendgrid.provider'
 export { IRedisProviderConfig } from './providers/redis.provider'
 export { IStoreProviderConfig } from './providers/store.provider'
+
+export * from './entities';

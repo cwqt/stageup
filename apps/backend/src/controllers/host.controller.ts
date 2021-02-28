@@ -20,30 +20,35 @@ import {
   IEnvelopedData,
   HostInviteState,
   IPerformanceStub,
-  JobType,
   TokenProvisioner
 } from '@core/interfaces';
+
+import {
+  Validators,
+  body,
+  params as parameters,
+  query,
+  BaseController,
+  IControllerEndpoint,
+  ErrorHandler,
+  getCheck,
+  User,
+  Host,
+  HostInvitation,
+  UserHostInfo,
+  Onboarding,
+  OnboardingReview,
+  Performance,
+  AccessToken
+} from '@core/shared/api';
+
 import { timestamp } from '@core/shared/helpers';
-
-import { User } from '../models/users/user.model';
-import { Host } from '../models/hosts/host.model';
-import { HostInvitation } from '../models/hosts/host-invitation.model';
-import { UserHostInfo } from '../models/hosts/user-host-info.model';
-import { Onboarding } from '../models/hosts/onboarding.model';
-import { OnboardingReview } from '../models/hosts/onboarding-review.model';
-import { Performance } from '../models/performances/performance.model';
-
-import IdFinderStrat from '../common/authorisation/id-finder-strategies';
-import AuthStrat from '../common/authorisation';
-import { Validators, body, params as parameters, query } from '@core/shared/api';
-import { BaseController, IControllerEndpoint } from '@core/shared/api';
-import { ErrorHandler, getCheck } from '@core/shared/api';
 
 import Env from '../env';
 import Email = require('../common/email');
+import IdFinderStrat from '../common/authorisation/id-finder-strategies';
+import AuthStrat from '../common/authorisation';
 import { log } from '../common/logger';
-import Queue from '../common/queue';
-import { AccessToken } from '../models/performances/access-token.model';
 import { In } from 'typeorm';
 
 export default class HostController extends BaseController {
@@ -573,7 +578,7 @@ export default class HostController extends BaseController {
         // don't allow more than 1 access token / user
         const existingUserTokens = (
           await AccessToken.find({
-            relations: ["user"],
+            relations: ['user'],
             where: {
               user: { _id: In(users.map(u => u._id)) }
             },

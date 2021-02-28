@@ -12,11 +12,11 @@ import {
 
 import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails } from '@core/interfaces';
 
-import { User } from '../users/user.model';
-import { Performance } from '../performances/performance.model';
-import { UserHostInfo } from './user-host-info.model';
-import { Onboarding } from './onboarding.model';
-import { ContactInfo } from '../users/contact-info.model';
+import { User } from '../users/user.entity';
+import { Performance } from '../performances/performance.entity';
+import { UserHostInfo } from './user-host-info.entity';
+import { Onboarding } from './onboarding.entity';
+import { ContactInfo } from '../users/contact-info.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
 
 @Entity()

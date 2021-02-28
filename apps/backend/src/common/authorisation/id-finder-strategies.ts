@@ -1,6 +1,4 @@
-import { IdFinderStrategy } from '@core/shared/api';
-import { Performance } from '../../models/performances/performance.model';
-
+import { IdFinderStrategy, Performance } from '@core/shared/api';
 
 const findUserIdFromSession: IdFinderStrategy = async (req, dc) => {
   return req.session.user?._id;

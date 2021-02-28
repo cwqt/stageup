@@ -12,13 +12,13 @@ import {
 } from 'typeorm';
 import { CurrencyCode, DtoCreatePerformance, Genre, IPerformance, IPerformanceStub, IRating, PerformanceState, Visibility } from '@core/interfaces';
 
-import { PerformanceHostInfo } from './performance-host-info.model';
-import { Host } from '../hosts/host.model';
-import { User } from '../users/user.model';
-import { PerformancePurchase } from '../performances/purchase.model';
+import { PerformanceHostInfo } from './performance-host-info.entity';
+import { Host } from '../hosts/host.entity';
+import { User } from '../users/user.entity';
+import { PerformancePurchase } from '../performances/purchase.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
 import { DataConnections } from '@core/shared/api';
-import { BackendDataClient } from '../../common/data';
+import Mux from '@mux/mux-node';
 
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
@@ -65,9 +65,9 @@ export class Performance extends BaseEntity implements IPerformance {
     this.state = PerformanceState.Idle;
   }
 
-  async setup(dc: DataConnections<BackendDataClient>, txc:EntityManager): Promise<Performance> {
+  async setup(mux:Mux, txc:EntityManager): Promise<Performance> {
     // Create host info, which includes a signing key, thru atomic trans op
-    const [hostInfo, stream] = await new PerformanceHostInfo().setup(dc, txc);
+    const [hostInfo, stream] = await new PerformanceHostInfo().setup(mux, txc);
     this.host_info = hostInfo;
     this.playback_id = stream.playback_ids.find(p => p.policy === 'signed').id;
 

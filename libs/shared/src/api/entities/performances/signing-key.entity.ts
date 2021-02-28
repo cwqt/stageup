@@ -1,12 +1,10 @@
 import { IPerformance, ISigningKey } from '@core/interfaces';
 import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, PrimaryColumn } from 'typeorm';
 
-import { JWT } from '@mux/mux-node';
+import Mux, { JWT } from '@mux/mux-node';
 
-import { Performance } from './performance.model';
+import { Performance } from './performance.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
-import { DataConnections } from '@core/shared/api';
-import { BackendDataClient } from '../../common/data';
 
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
@@ -22,9 +20,9 @@ export class SigningKey extends BaseEntity implements ISigningKey {
     this.created_at = timestamp();
   }
 
-  async setup(dc: DataConnections<BackendDataClient>, txc: EntityManager): Promise<SigningKey> {
+  async setup(mux:Mux, txc: EntityManager): Promise<SigningKey> {
     // https://docs.mux.com/reference#url-signing-keys
-    const signingKey = await dc.mux.Video.SigningKeys.create();
+    const signingKey = await mux.Video.SigningKeys.create();
 
     // Response isn't actually enveloped - great docs :)
     this.mux_key_id = signingKey.id;

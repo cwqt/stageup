@@ -1,10 +1,10 @@
 import { BaseEntity, Entity, Column, BeforeInsert, PrimaryColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { IAccessToken, TokenProvisioner, DtoAccessToken } from '@core/interfaces';
-import { User } from '../users/user.model';
-import { Performance } from './performance.model';
+import { User } from '../users/user.entity';
+import { Performance } from './performance.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
-import { PerformancePurchase } from './purchase.model';
-import { SigningKey } from './signing-key.model';
+import { PerformancePurchase } from './purchase.entity';
+import { SigningKey } from './signing-key.entity';
 
 @Entity()
 export class AccessToken extends BaseEntity implements IAccessToken {

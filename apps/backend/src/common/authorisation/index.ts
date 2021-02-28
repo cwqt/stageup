@@ -1,9 +1,6 @@
-import { Environment, ErrCode, HostPermission, IHost } from '@core/interfaces';
-import { User } from '../../models/users/user.model';
-import { UserHostInfo } from '../../models/hosts/user-host-info.model';
 import Env from '../../env';
-import { Host } from '../../models/hosts/host.model';
-import { AuthStrategy, AuthStratReturn, MapAccessor, NUUIDMap } from '@core/shared/api';
+import { Environment, ErrCode, HostPermission, IHost } from '@core/interfaces';
+import { Auth, AuthStrategy, AuthStratReturn, MapAccessor, NUUIDMap, User, UserHostInfo, Host } from '@core/shared/api';
 
 const isFromService: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
   if (!req.headers.authorization) return [false, {}];
@@ -157,7 +154,6 @@ const isEnv = (env: Environment): AuthStrategy => {
   };
 };
 
-import { Auth } from '@core/shared/api';
 export default {
   isFromService,
   isEnv,

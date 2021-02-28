@@ -1,14 +1,12 @@
+import { EntityManager } from 'typeorm';
 import { SendMailOptions } from 'nodemailer';
 import dbless from 'dbless-email-verification';
-import Env from '../env';
-import { Host } from '../models/hosts/host.model';
 import { Environment, JobType } from '@core/interfaces';
-import { User } from '../models/users/user.model';
-import { HostInvitation } from '../models/hosts/host-invitation.model';
-import { EntityManager } from 'typeorm';
-import { log } from './logger';
+import { Host, User, HostInvitation, Performance } from '@core/shared/api';
+
+import Env from '../env';
 import Queue from './queue';
-import { Performance } from '../models/performances/performance.model';
+import { log } from './logger';
 
 const generateEmailHash = (email: string): string => {
   return dbless.generateVerificationHash(email, Env.PRIVATE_KEY, 60);
@@ -31,10 +29,9 @@ export const sendEmail = (mailOptions: SendMailOptions) => {
 
   Queue.enqueue({
     type: JobType.SendEmail,
-    data: mailOptions,
-  })
-}
-
+    data: mailOptions
+  });
+};
 
 export const sendVerificationEmail = async (email_address: string) => {
   const hash = generateEmailHash(email_address);
@@ -68,7 +65,11 @@ export const sendUserHostMembershipInvitation = async (
   });
 };
 
-export const sendPerformanceAccessTokenProvisioned = async (email_address:User["email_address"], performance:Performance, host:Host) => {
+export const sendPerformanceAccessTokenProvisioned = async (
+  email_address: User['email_address'],
+  performance: Performance,
+  host: Host
+) => {
   const performanceLink = `${Env.FE_URL}/performances/${performance._id}/watch`;
 
   return sendEmail({
@@ -76,5 +77,5 @@ export const sendPerformanceAccessTokenProvisioned = async (email_address:User["
     to: email_address,
     subject: `You have been invited to watch a private performance`,
     html: `<p>Click the link to watch ${performance.name} by ${host.name} on StageUp now: <a href="${performanceLink}">${performanceLink}</a></p>`
-  })
-}
+  });
+};

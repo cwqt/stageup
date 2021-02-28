@@ -1,7 +1,6 @@
 import { BaseEntity, Entity, Column, BeforeInsert, PrimaryColumn } from 'typeorm';
 import { IAsset, IAssetMeta, IGIFMeta, AssetType, IThumbnailMeta, IStaticMeta, Primitive } from '@core/interfaces';
-import Env from '../env';
-import { timestamp, uuid } from '@core/shared/helpers';
+import { stitchParameters, timestamp, uuid } from '@core/shared/helpers';
 import { Except } from 'type-fest';
 
 @Entity()
@@ -20,19 +19,19 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
     this.asset_meta = assetMeta;
   }
 
-  getEndpoint(): string {
+  getEndpoint(S3_URL:string, MUX_IMAGE_API_ENDPOINT:string): string {
     // Hack the typing a little
     const meta = this.asset_meta.data as unknown;
     const endpointMappers: { [index in AssetType]?: string } = {
-      [AssetType.Image]: `http://${Env.AWS.S3_URL}.com/${(meta as IStaticMeta).key_id}`,
-      [AssetType.Thumbnail]: this.createThumbnailUrl(meta as IThumbnailMeta),
-      [AssetType.AnimatedGIF]: this.createGIFUrl(meta as IGIFMeta)
+      [AssetType.Image]: `http://${S3_URL}.com/${(meta as IStaticMeta).key_id}`,
+      [AssetType.Thumbnail]: this.createThumbnailUrl(meta as IThumbnailMeta, MUX_IMAGE_API_ENDPOINT),
+      [AssetType.AnimatedGIF]: this.createGIFUrl(meta as IGIFMeta, MUX_IMAGE_API_ENDPOINT)
     };
 
     return endpointMappers[this.asset_type];
   }
 
-  createThumbnailUrl = (assetMeta: IThumbnailMeta): string => {
+  createThumbnailUrl = (assetMeta: IThumbnailMeta, MUX_IMAGE_API_ENDPOINT:string): string => {
     const parameters: Except<IThumbnailMeta, 'playback_id'> = {
       width: assetMeta.width ?? 300,
       height: assetMeta.height ?? 300,
@@ -43,10 +42,10 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
       fit_mode: assetMeta.fit_mode ?? 'smartcrop'
     };
 
-    return `${Env.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}${stitchParameters(parameters)}`;
+    return `${MUX_IMAGE_API_ENDPOINT}/${assetMeta.playback_id}${stitchParameters(parameters)}`;
   };
 
-  createGIFUrl = (assetMeta: IGIFMeta): string => {
+  createGIFUrl = (assetMeta: IGIFMeta, MUX_IMAGE_API_ENDPOINT:string): string => {
     const parameters: Except<IGIFMeta, 'playback_id'> = {
       width: assetMeta.width ?? 300,
       height: assetMeta.height ?? 300,
@@ -55,13 +54,6 @@ export class Asset<T> extends BaseEntity implements IAsset<T> {
       fps: assetMeta.fps ?? 15
     };
 
-    return `${Env.MUX.IMAGE_API_ENDPOINT}/${assetMeta.playback_id}/${stitchParameters(parameters)}`;
+    return `${MUX_IMAGE_API_ENDPOINT}/${assetMeta.playback_id}/${stitchParameters(parameters)}`;
   };
 }
-
-// Join kv's and uri escape
-const stitchParameters = (input: { [index: string]: Primitive }): string => {
-  return Object.entries(input).reduce((accumulator, current, index) => {
-    return accumulator + `${index === 0 ? '?' : '&'}${current[0]}=${current[1].toString()}`;
-  }, '');
-};

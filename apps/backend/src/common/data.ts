@@ -9,21 +9,24 @@ import { MemoryStore } from 'express-session';
 import { InfluxDB } from 'influx';
 import Env from '../env';
 
-import { User } from '../models/users/user.model';
-import { OnboardingReview } from '../models/hosts/onboarding-review.model';
-import { Onboarding } from '../models/hosts/onboarding.model';
-import { Host } from '../models/hosts/host.model';
-import { UserHostInfo } from '../models/hosts/user-host-info.model';
-import { PerformanceHostInfo } from '../models/performances/performance-host-info.model';
-import { Performance } from '../models/performances/performance.model';
-import { SigningKey } from '../models/performances/signing-key.model';
-import { Address } from '../models/users/address.model';
-import { ContactInfo } from '../models/users/contact-info.model';
-import { Person } from '../models/users/person.model';
-import { Asset } from '../models/asset.model';
-import { PerformancePurchase } from '../models/performances/purchase.model';
-import { HostInvitation } from '../models/hosts/host-invitation.model';
-import { AccessToken } from '../models/performances/access-token.model';
+import {
+  User,
+  AccessToken,
+  HostInvitation,
+  PerformancePurchase,
+  Asset,
+  Person,
+  ContactInfo,
+  OnboardingReview,
+  Address,
+  Onboarding,
+  SigningKey,
+  PerformanceHostInfo,
+  Host,
+  Performance,
+  UserHostInfo
+} from '@core/shared/api'
+
 import { Environment } from '@core/interfaces';
 
 export interface BackendDataClient {

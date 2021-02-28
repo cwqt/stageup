@@ -1,6 +1,6 @@
 import { BaseEntity, BeforeInsert, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { IAddress } from '@core/interfaces';
-import { ContactInfo } from './contact-info.model';
+import { ContactInfo } from './contact-info.entity';
 import { uuid } from '@core/shared/helpers';
 
 @Entity()

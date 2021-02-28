@@ -15,12 +15,11 @@ import {
 import { Except } from 'type-fest';
 import { IUser, IUserStub, IUserPrivate, Environment, IMyself } from '@core/interfaces';
 
-import { Host } from '../hosts/host.model';
-import { PerformancePurchase } from '../performances/purchase.model';
-import { Performance } from '../performances/performance.model';
-import { Person } from './person.model';
-import { ContactInfo } from './contact-info.model';
-import Env from '../../env';
+import { Host } from '../hosts/host.entity';
+import { PerformancePurchase } from '../performances/purchase.entity';
+import { Performance } from '../performances/performance.entity';
+import { Person } from './person.entity';
+import { ContactInfo } from './contact-info.entity';
 import { uuid } from '@core/shared/helpers';
 
 @Entity()
@@ -54,7 +53,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     this.created_at = Math.floor(Date.now() / 1000); // Timestamp in seconds
     this.is_admin = false;
     this.is_new_user = false; // TODO: change to true
-    this.is_verified = !Env.isEnv(Environment.Production); // Auto-verify when not in prod
+    this.is_verified = false;
     this.setPassword(data.password);
   }
 

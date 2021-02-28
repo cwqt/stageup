@@ -4,9 +4,9 @@ import {
   IOnboardingReview
 } from '@core/interfaces';
 
-import { User } from '../users/user.model';
+import { User } from '../users/user.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
-import { Onboarding } from './onboarding.model';
+import { Onboarding } from './onboarding.entity';
 
 @Entity()
 export class OnboardingReview extends BaseEntity implements IOnboardingReview {

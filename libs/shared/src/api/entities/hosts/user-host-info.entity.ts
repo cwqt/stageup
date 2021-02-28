@@ -1,8 +1,8 @@
 import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { HostPermission, IUserHostInfo } from '@core/interfaces';
 
-import { Host } from './host.model';
-import { User } from '../users/user.model';
+import { Host } from './host.entity';
+import { User } from '../users/user.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
 
 @Entity()

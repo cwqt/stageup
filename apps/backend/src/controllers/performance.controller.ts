@@ -13,19 +13,26 @@ import {
   IScheduleReleaseJobData,
   TokenProvisioner
 } from '@core/interfaces';
-import { User } from '../models/users/user.model';
-import { Performance } from '../models/performances/performance.model';
-import { Auth, ErrorHandler, getCheck } from '@core/shared/api';
-import { BaseController, IControllerEndpoint } from '@core/shared/api';
-import { Validators, body, query } from '@core/shared/api';
-import { PerformancePurchase } from '../models/performances/purchase.model';
+
+import {
+  Auth,
+  ErrorHandler,
+  getCheck,
+  BaseController,
+  IControllerEndpoint,
+  Validators,
+  body,
+  query,
+  User,
+  Performance,
+  PerformancePurchase,
+  AccessToken
+} from '@core/shared/api';
 
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import { BackendDataClient } from '../common/data';
 import Queue from '../common/queue';
-import { AccessToken } from '../models/performances/access-token.model';
-import idFinderStrategies from '../common/authorisation/id-finder-strategies';
 
 export default class PerformanceController extends BaseController<BackendDataClient> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
@@ -45,7 +52,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
 
         return await this.ORM.transaction(async txc => {
           const performance = await new Performance(req.body, user);
-          await performance.setup(this.dc.connections, txc);
+          await performance.setup(this.dc.connections.mux, txc);
           await txc.save(performance);
 
           // Push premiere to job queue for automated release
@@ -99,7 +106,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
         const performance = await getCheck(
           Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info'] })
         );
-        
+
         // See if current user has access the performance by virtue of owning an Access Token
         let token: AccessToken = await AccessToken.findOne({
           relations: ['user'],
@@ -130,7 +137,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
         }
 
         // return 404 barring the user has a token if the performance is private
-        if(!token && performance.visibility == Visibility.Private) throw new ErrorHandler(HTTP.NotFound);
+        if (!token && performance.visibility == Visibility.Private) throw new ErrorHandler(HTTP.NotFound);
 
         return {
           data: performance.toFull(),
@@ -220,7 +227,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
         if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
 
         const purchase = new PerformancePurchase(user, perf);
-        purchase.token = perf.host_info.signing_key.signToken(perf);
+        // TODO: create an access token
         await this.ORM.manager.save(purchase);
       }
     };

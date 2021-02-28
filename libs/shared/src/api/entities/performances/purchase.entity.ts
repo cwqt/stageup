@@ -1,7 +1,7 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, BeforeInsert, PrimaryColumn } from 'typeorm';
 import { IPerformancePurchase, CurrencyCode } from '@core/interfaces';
-import { User } from '../users/user.model';
-import { Performance } from './performance.model';
+import { User } from '../users/user.entity';
+import { Performance } from './performance.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
 @Entity()
 export class PerformancePurchase extends BaseEntity implements IPerformancePurchase {
@@ -11,7 +11,6 @@ export class PerformancePurchase extends BaseEntity implements IPerformancePurch
   @Column() purchased_at: number;
   @Column('bigint', { nullable: true }) price: number; // Stored as micro-pence
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
-  @Column() token: string;
   @Column() payment_id: number;
   @Column() expiry: number;
   @Column() key_id: string; // Signing-key
