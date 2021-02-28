@@ -1,6 +1,6 @@
 {
   "name": "stageup-core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "scripts": {
     "runner": "cross-env NODE_ENV=development nx serve runner --configuration=development",
