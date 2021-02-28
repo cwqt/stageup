@@ -92,6 +92,7 @@ export default class HostController extends BaseController {
           // Save before setup because onboarding process depends on PK existing
           await host.setup(user, txc);
           await host.addMember(user, HostPermission.Owner, txc);
+
           return (await txc.save(host)).toFull();
         });
       }

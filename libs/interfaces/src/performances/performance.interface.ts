@@ -10,6 +10,7 @@ export enum Visibility {
   Public = 'public',
   Private = 'private'
 }
+
 export interface IPerformanceStub {
   _id: string;
   host: IHostStub; // who created the performance

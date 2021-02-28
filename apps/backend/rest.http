@@ -243,6 +243,7 @@ GET http://{{host}}/admin/onboardings
 # @name reviewOnboardingProcess
 POST http://{{host}}/admin/onboardings/{{onboardingId}}/review
 Content-Type: application/json
+
 {
   "0":{ "state": 3, "issues": []}, 
   "1":{ "state": 3, "issues": []}, 

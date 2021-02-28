@@ -4,7 +4,7 @@ on:
     types:
       - closed
 
-      jobs:
+jobs:
   build:
     name: Release
     runs-on: ubuntu-latest
