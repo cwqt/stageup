@@ -81,6 +81,7 @@
     "helmet": "^4.2.0",
     "influx": "^5.5.2",
     "jsonwebtoken": "^8.5.1",
+    "localtunnel": "^2.0.0",
     "mocha": "^7.1.2",
     "moment": "^2.29.1",
     "morgan": "^1.9.1",
@@ -112,8 +113,7 @@
     "uwuify": "^1.0.1",
     "validator": "^13.5.2",
     "winston": "^3.3.3",
-    "zone.js": "^0.10.2",
-    "localtunnel": "^2.0.0"
+    "zone.js": "^0.10.2"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^11.0.0",
