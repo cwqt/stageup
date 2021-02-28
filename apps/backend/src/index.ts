@@ -15,7 +15,8 @@ Register<BackendDataClient>({
   environment: Env.ENVIRONMENT,
   port: Env.EXPRESS_PORT,
   logger: log,
-  stream: stream
+  stream: stream,
+  endpoint: Env.API_ENDPOINT
 })(async (app, client) => {
   // Register session middleware
   app.use(

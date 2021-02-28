@@ -16,7 +16,7 @@ export interface IServiceConfig<T> {
   providers: ProviderMap<T>;
   logger: Logger;
   stream: morgan.StreamOptions;
-  endpoint?:string;
+  endpoint?: string;
 }
 
 export default <T>(config: IServiceConfig<T>) => {
@@ -32,20 +32,22 @@ export default <T>(config: IServiceConfig<T>) => {
   app.use(helmet());
   app.use(morgan('tiny', { stream: config.stream }));
 
-  return async (f: (a: typeof app, client:DataClient<T>) => Promise<AsyncRouter<T>>): Promise<http.Server> => {
+  return async (f: (a: typeof app, client: DataClient<T>) => Promise<AsyncRouter<T>>): Promise<http.Server> => {
     try {
-      const client = await Provider.create(config.providers, config.logger)
+      const client = await Provider.create(config.providers, config.logger);
       const router = await f(app, client);
-      app.use(config.endpoint || "", router.router);
+      app.use('/' + config.endpoint || '/', router.router);
 
       // Catch 404 errors & provide a top-level error handler
       app.all('*', global404Handler(config.logger));
       app.use(globalErrorHandler(config.logger));
 
-      server = app.listen(config.port, () => config.logger.info(`\u001B[1m${config.name} listening on ${config.port}\u001B[0m`));
+      server = app.listen(config.port, () =>
+        config.logger.info(`\u001B[1m${config.name} listening on ${config.port}\u001B[0m`)
+      );
 
       process.on('SIGTERM', gracefulExit(server, client.providers, config.logger));
-      process.on('SIGINT', gracefulExit(server, client.providers, config.logger)); 
+      process.on('SIGINT', gracefulExit(server, client.providers, config.logger));
       process.on('uncaughtException', gracefulExit(server, client.providers, config.logger));
 
       return server;
@@ -55,7 +57,7 @@ export default <T>(config: IServiceConfig<T>) => {
   };
 };
 
-function gracefulExit<T>(server: http.Server, providers: ProviderMap<T>, logger:Logger) {
+function gracefulExit<T>(server: http.Server, providers: ProviderMap<T>, logger: Logger) {
   return error => {
     logger.error('Termination requested, closing all connections');
     server.close();

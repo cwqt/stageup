@@ -32,7 +32,6 @@ services:
 
   runner:
     container_name: runner
-    restart: always
     env_file:
      - .env.${NODE_ENV:-development}
     environment: 
@@ -58,8 +57,8 @@ services:
       context: .
       dockerfile: ./apps/frontend/Dockerfile
     volumes:
-      - ./dist:/usr/share/nginx/html
-      - ./dist:/var/www/html
+      - ./dist/apps/frontend:/usr/share/nginx/html
+      - ./dist/apps/frontend:/var/www/html
       - ./apps/frontend/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"

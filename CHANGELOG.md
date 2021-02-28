@@ -17,7 +17,6 @@
 * `SU-223` Host Social inputs doesn't accept null values	
 * `SU-225` Frontend global error handler with Toasts
 
-
 ## 0.0.2 (2021-02-15)
 * Able to log out using header bar button
 * Added ability to create a new performance as a Host Owner
