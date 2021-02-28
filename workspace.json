@@ -9,14 +9,13 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/backend",
             "main": "apps/backend/src/index.ts",
             "tsConfig": "apps/backend/tsconfig.app.json",
             "showCircularDependencies": false,
+            "generatePackageJson": true,
             "assets": []
           },
           "configurations": {
@@ -53,9 +52,7 @@
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/backend"
-          ],
+          "outputs": ["coverage/apps/backend"],
           "options": {
             "passWithNoTests": true,
             "runInBand": false,
@@ -67,9 +64,7 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "directory": "apps/backend",
-            "lintFilePatterns": [
-              "apps/backend/**/*.{ts,tsx,js,jsx}"
-            ]
+            "lintFilePatterns": ["apps/backend/**/*.{ts,tsx,js,jsx}"]
           }
         }
       }
@@ -92,14 +87,8 @@
             "polyfills": "apps/frontend/src/polyfills.ts",
             "tsConfig": "apps/frontend/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/frontend/src/favicon.ico",
-              "apps/frontend/src/assets"
-            ],
-            "styles": [
-              "apps/frontend/src/tailwind.scss",
-              "apps/frontend/src/styles.scss"
-            ],
+            "assets": ["apps/frontend/src/favicon.ico", "apps/frontend/src/assets"],
+            "styles": ["apps/frontend/src/tailwind.scss", "apps/frontend/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -154,9 +143,7 @@
       "targets": {
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/api-tests"
-          ],
+          "outputs": ["coverage/apps/api-tests"],
           "options": {
             "passWithNoTests": true,
             "runInBand": true,
@@ -174,9 +161,7 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "libs/shared/**/*.ts"
-            ]
+            "lintFilePatterns": ["libs/shared/**/*.ts"]
           }
         }
       }
@@ -189,26 +174,24 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/runner",
             "main": "apps/runner/src/index.ts",
             "tsConfig": "apps/runner/tsconfig.app.json",
-            "showCircularDependencies": false
+            "showCircularDependencies": false,
+            "generatePackageJson": true
           },
           "configurations": {
             "production": {
               "optimization": true,
               "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/runner/src/environments/environment.ts",
-                  "with": "apps/runner/src/environments/environment.prod.ts"
-                }
-              ]
+              "inspect": false
+            },
+            "staging": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
             }
           }
         },
@@ -234,16 +217,12 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/runner/**/*.ts"
-            ]
+            "lintFilePatterns": ["apps/runner/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/runner"
-          ],
+          "outputs": ["coverage/apps/runner"],
           "options": {
             "jestConfig": "apps/runner/jest.config.js",
             "passWithNoTests": true

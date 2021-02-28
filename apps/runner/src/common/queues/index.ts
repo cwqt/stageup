@@ -9,23 +9,43 @@ export interface IQueue {
 }
 
 export type QueueMap = { [index in JobType]: IQueue };
-export type WorkerFunction = () => Worker;
+export type WorkerFunction = (providers: DataClient<RunnerDataClient>) => Worker;
 
 import SendEmailWorker from './workers/send_email.worker';
 import ScheduleReleaseWorker from './workers/schedule_release.worker';
 import { log } from '../logger';
+import { DataClient, ProviderMap } from '@core/shared/api';
+import { RunnerDataClient } from '../data';
 
-const workers: { [index in JobType]: WorkerFunction } = {
-  [JobType.SendEmail]: SendEmailWorker,
-  [JobType.ScheduleRelease]: ScheduleReleaseWorker
-};
+const create = (client: DataClient<RunnerDataClient>): QueueMap => {
+  const workers: { [index in JobType]: WorkerFunction } = {
+    [JobType.SendEmail]: SendEmailWorker,
+    [JobType.ScheduleRelease]: ScheduleReleaseWorker
+  };
 
-const create = (): QueueMap => {
   return Object.values(JobType).reduce((acc, type) => {
-    const queue = new Queue(type);
-    const events = new QueueEvents(type);
-    const scheduler = new QueueScheduler(type);
-    const worker = workers[type]();
+    const queue = new Queue(type, {
+      connection: {
+        host: 'redis',
+        port: 6379
+      }
+    });
+
+    const events = new QueueEvents(type, {
+      connection: {
+        host: 'redis',
+        port: 6379
+      }
+    });
+    
+    const scheduler = new QueueScheduler(type, {
+      connection: {
+        host: 'redis',
+        port: 6379
+      }
+    });
+
+    const worker = workers[type](client);
 
     events.on('completed', job => log.info(`Completed job: ${job.jobId}`));
     events.on('failed', (job, err) => log.error(`Failed job: ${job.jobId}`, err));
@@ -41,9 +61,9 @@ const create = (): QueueMap => {
   }, {} as QueueMap);
 };
 
-const close = (map:QueueMap) => {
-  log.info(`Closing queue schedulers...`)
+const close = (map: QueueMap) => {
+  log.info(`Closing queue schedulers...`);
   Object.values(map).forEach(m => m.scheduler.close());
-}
+};
 
 export default { create, close };

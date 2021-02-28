@@ -33,8 +33,8 @@ export interface BackendDataClient {
   mux: Mux;
   redis: RedisClient;
   torm: Connection;
-  tunnel: Tunnel;
   store: RedisStore | MemoryStore;
+  tunnel?: Tunnel;
   // influx: InfluxDB;
 }
 
@@ -57,7 +57,7 @@ export const create = (): ProviderMap<BackendDataClient> => {
     AccessToken
   ];
 
-  return {
+  const map:ProviderMap<BackendDataClient> = {
     mux: new Providers.Mux({
       access_token: Env.MUX.ACCESS_TOKEN,
       secret_key: Env.MUX.SECRET_KEY,
@@ -84,16 +84,18 @@ export const create = (): ProviderMap<BackendDataClient> => {
       port: Env.STORE.PORT,
       ttl: Env.STORE.TTL,
       use_memorystore: Env.STORE.USE_MEMORYSTORE
-    }),
-    tunnel: new Providers.LocalTunnel({
+    })
+  };
+
+  // Use HTTP tunnelling in development for receiving hooks
+  if(Env.isEnv([Environment.Production, Environment.Staging])) {
+    map.tunnel = new Providers.LocalTunnel({
       port: Env.LOCALTUNNEL.PORT,
       domain: Env.LOCALTUNNEL.DOMAIN
     })
-    // influx: new Providers.Influx({
-    //   host: Env.INFLUX.HOST,
-    //   database: Env.INFLUX.DB
-    // })
-  };
+  }
+
+  return map;
 };
 
 export default { create };

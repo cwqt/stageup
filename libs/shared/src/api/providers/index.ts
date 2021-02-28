@@ -5,21 +5,22 @@ import MuxProvider from './mux.provider';
 import PostgresProvider from './postgres.provider';
 import RedisProvider from './redis.provider';
 import StoreProvider from './store.provider';
+import SendGridProvider from './sendgrid.provider';
 
-const CONNECTION_TIMEOUT = 10000;
+const CONNECTION_TIMEOUT = 20000;
 
 export const connect = async <T>(
-  f: Provider<T>['create'],
+  provider: Provider<T>,
   connections: DataConnections,
   log: Logger
 ): Promise<T | void> => {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => {
-      log.error('Took took long to connect to service...');
+      log.error(`Took took long to connect to service ${provider.name}...`);
       process.exit();
     }, CONNECTION_TIMEOUT);
 
-    f(connections)
+    provider.create(connections)
       .catch(e => {
         clearTimeout(t);
         reject(e);
@@ -72,7 +73,7 @@ const create = async <T>(providers: ProviderMap<T>, log: Logger): Promise<DataCl
 
     // Attempt to connect, passing previous connections through to later ones
     try {
-      accumulator.connections[key] = await connect(provider.create.bind(provider), accumulator.connections, log);
+      accumulator.connections[key] = await connect(provider, accumulator.connections, log);
     } catch (error) {
       log.error(`Failed to connect to ${provider.name}`, error);
       process.exit(0);
@@ -107,5 +108,6 @@ export const Providers = {
   Redis: RedisProvider,
   Influx: InfluxProvider,
   LocalTunnel: LocalTunnelProvider,
-  Store: StoreProvider
+  Store: StoreProvider,
+  SendGrid: SendGridProvider
 };

@@ -1,7 +1,6 @@
 // https://stackoverflow.com/a/59805161/8526764
 const TRUE_ENV = process.env['NODE' + '_ENV'];
-/* eslint @typescript-eslint/no-var-requires: "off" */
-require('dotenv').config({ path: require('path').join(__dirname, `../../../apps/backend/.env.${TRUE_ENV}`) });
+require('dotenv-flow').config({ node_env: TRUE_ENV });
 
 import { isEnv } from '@core/shared/helpers';
 import { Environment } from '@core/interfaces';
@@ -11,7 +10,6 @@ import {
   IPostgresProviderConfig,
   IRedisProviderConfig,
   IAWS3ProviderConfig,
-  ISendGridProviderConfig,
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
 } from '@core/shared/api';
@@ -31,7 +29,6 @@ interface IEnvironment {
   EXPRESS_PORT: number;
   UWU_MODE: boolean;
   INTERNAL_KEY: string;
-  EMAIL_IN_DEVELOPMENT: boolean;
   PG: Envify<IPostgresProviderConfig>;
   MUX: Envify<IMuxProviderConfig>;
   AWS: Envify<IAWS3ProviderConfig>;
@@ -59,7 +56,6 @@ const Env: IEnvironment = {
     DOMAIN: process.env.LOCALTUNNEL_URL
   },
   UWU_MODE: process.env.UWU_MODE === 'true',
-  EMAIL_IN_DEVELOPMENT: process.env.SENDGRID_ENABLED_IN_DEVELOPMENT === 'true',
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
@@ -67,10 +63,10 @@ const Env: IEnvironment = {
     IMAGE_API_ENDPOINT: process.env.MUX_IMAGE_API_ENDPOINT
   },
   PG: {
-    USERNAME: process.env.POSTGRES_USERNAME,
+    USERNAME: process.env.POSTGRES_USER,
     PASSWORD: process.env.POSTGRES_PASSWORD,
     HOST: process.env.POSTGRES_HOST,
-    DATABASE: process.env.POSTGRES_DATABASE,
+    DATABASE: process.env.POSTGRES_DB,
     PORT: 5432
   },
   REDIS: {
@@ -86,7 +82,7 @@ const Env: IEnvironment = {
   AWS: {
     S3_ACCESS_KEY_ID: process.env.AWS_S3_KEY_ID,
     S3_ACCESS_SECRET_KEY: process.env.AWS_S3_ACCESS_SECRET_KEY,
-    S3_BUCKET_NAME: process.env.AWS_S3_ACCESS_SECRET_KEY,
+    S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
     S3_URL: process.env.AWS_S3_URL
   },
   INFLUX: {

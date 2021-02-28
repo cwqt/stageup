@@ -11,3 +11,5 @@ store
 deploy/env/*
 *.env
 .env.*
+!.env.example
+bundle.7z

@@ -23,7 +23,7 @@ Register<RunnerDataClient>({
   stream: stream
 })(async (app, client) => {
   try {
-    const queues = Queues.create();
+    const queues = Queues.create(client);
     app.on('close', () => Queues.close(queues));
 
     setQueues(Object.values(queues).map(q => new BullMQAdapter(q.queue)));

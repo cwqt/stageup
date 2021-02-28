@@ -6,7 +6,6 @@ import { Host, User, HostInvitation, Performance } from '@core/shared/api';
 
 import Env from '../env';
 import Queue from './queue';
-import { log } from './logger';
 
 const generateEmailHash = (email: string): string => {
   return dbless.generateVerificationHash(email, Env.PRIVATE_KEY, 60);
@@ -19,14 +18,6 @@ export const verifyEmail = (email: string, hash: string): boolean => {
 
 // Return bool for success instead of try/catching for brevity
 export const sendEmail = (mailOptions: SendMailOptions) => {
-  // Don't send mail when in dev/test, unless explicitly set in .env
-  if (Env.isEnv([Environment.Production, Environment.Staging]) == false) {
-    if (Env.EMAIL_IN_DEVELOPMENT == false) {
-      log.warn(`Did not send e-mail because it is disabled in development`);
-      return;
-    }
-  }
-
   Queue.enqueue({
     type: JobType.SendEmail,
     data: mailOptions

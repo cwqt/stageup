@@ -7,6 +7,8 @@
     "runner:testing": "cross-env NODE_ENV=testing nx serve runner --configuration=testing",
     "runner:staging": "cross-env NODE_ENV=staging nx serve runner --configuration=staging",
     "runner:production": "cross-env NODE_ENV=production nx serve runner --configuration=production",
+    "build:runner:staging": "cross-env NODE_ENV=staging nx build runner --configuration=staging --generatePackageJson",
+    "build:runner:production": "cross-env NODE_ENV=production nx build runner --configuration=production --generatePackageJson",
     "backend": "cross-env NODE_ENV=development nx serve backend --configuration=development",
     "backend:testing": "cross-env NODE_ENV=testing nx serve backend --configuration=testing",
     "backend:staging": "cross-env NODE_ENV=staging nx serve backend --configuration=staging",
@@ -20,8 +22,8 @@
     "build:backend:production": "cross-env NODE_ENV=production nx build backend --configuration=production --generatePackageJson",
     "build:frontend:staging": "cross-env NG_ENV=staging nx build frontend --configuration=staging",
     "build:frontend:production": "cross-env NG_ENV=production nx build frontend --configuration=production",
-    "build:staging": "concurrently \"npm run build:backend:staging\" \"npm run build:frontend:staging\" \"npm run build:runner:staging\"",
-    "build:production": "concurrently \"npm run build:backend:production\" \"npm run build:frontend:production\" \"npm run build:runner:staging\"",
+    "build:staging": "clear && nx affected:build --parallel --configuration=staging",
+    "build:production": "clear && nx affected:build --parallel --configuration=production",
     "lint": "nx workspace-lint && nx lint",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
@@ -110,7 +112,8 @@
     "uwuify": "^1.0.1",
     "validator": "^13.5.2",
     "winston": "^3.3.3",
-    "zone.js": "^0.10.2"
+    "zone.js": "^0.10.2",
+    "localtunnel": "^2.0.0"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^11.0.0",
@@ -176,7 +179,6 @@
     "jest": "^26.2.2",
     "jest-preset-angular": "8.3.1",
     "jest-runner-mocha": "^0.6.0",
-    "localtunnel": "^2.0.0",
     "mocha": "^7.1.1",
     "ngx-build-plus": "^10.1.1",
     "node-fetch": "^2.6.0",

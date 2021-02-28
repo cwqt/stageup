@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.loading = true;
-    this.titleService.setTitle('StageUp');
+    this.titleService.setTitle('StageUp 0.3.0');
 
     // Upon start up, check if logged in by re-hydrating stored data (if any exists)
     // and then re-fetch the user incase of any changes
