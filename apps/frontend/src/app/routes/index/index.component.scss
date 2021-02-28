@@ -1,0 +1,13 @@
+.index-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  .index-body-outlet {
+    height: 100%;
+    z-index: 9;
+    position: relative;
+  }
+}
+

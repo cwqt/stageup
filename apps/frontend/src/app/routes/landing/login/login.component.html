@@ -1,0 +1,23 @@
+<app-page class="login-wrapper">
+  <div class="content">
+    <h1 class="mat-display-1">Sign in</h1>
+
+    <ui-form #form
+      (onSuccess)="onLoginSuccess($event)"
+      [cacheable]="user"
+      [form]="loginForm">
+    </ui-form>
+
+    <br>
+
+    <ui-button (click)="adminFastLogin()" *ngIf="isDevelopment">Fast Admin Login</ui-button>
+
+    <!-- TODO: SSO with passport -->
+    <!-- <div class="alt-sign-in-buttons">
+        <ui-button kind="secondary"><img src="/assets/gitlab.png"/>Gitlab</ui-button>
+        <ui-button kind="secondary"><img src="/assets/github.png"/>GitHub</ui-button>
+        <ui-button kind="secondary"><img src="/assets/google.png"/>Google</ui-button>
+      </div> -->
+
+  </div>
+</app-page>

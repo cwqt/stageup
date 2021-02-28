@@ -1,0 +1,9 @@
+<div class="thumb flex w-auto align-center items-center" [class.thumb--small]="small">
+  <div class="rounded-full mr-4 overflow-hidden">
+    <img class="aspect-ratio-1/1" [src]="user.avatar || '/assets/avatar_placeholder.png'">
+  </div>
+  <div class="whitespace-nowrap inline align-middle">
+      <b class="block">{{ user.name }}</b>
+      <span class="block">@{{ user.username }}</span>
+  </div>
+</div>

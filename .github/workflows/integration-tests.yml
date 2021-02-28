@@ -1,0 +1,7 @@
+name: Staging Deploy
+
+on:
+  workflow_run:
+    workflows: ["Compile Docker Images"]
+    types:
+      - completed

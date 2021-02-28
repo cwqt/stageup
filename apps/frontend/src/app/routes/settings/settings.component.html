@@ -1,0 +1,16 @@
+<div class="flex items-stretch h-full">
+    <div class="bg-white rounded p-4 flex-1 w-2/6">
+        <app-user-thumb [user]="user"></app-user-thumb>
+
+        <div class="mt-4">
+          <ui-button class="w-full mb-2" routerLink="/settings/profile" routerLinkActive="active-link">Profile</ui-button>
+          <ui-button class="w-full mb-2" routerLink="/settings/host" routerLinkActive="active-link">{{ !userHost ? 'Create Host' : 'Host Settings' }}</ui-button>
+          <ui-button class="w-full mb-2" routerLink="/settings/billing" routerLinkActive="active-link">Billing & Plans</ui-button>
+          <ui-button class="w-full mb-2" routerLink="/settings/account" routerLinkActive="active-link">Delete account</ui-button>    
+        </div>
+    </div>
+
+    <div class="w-4/6 ml-6">
+        <router-outlet></router-outlet>
+    </div>
+</div>

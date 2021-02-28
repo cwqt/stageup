@@ -1,0 +1,18 @@
+<div class="profile-container">
+    <h1>Public Profile</h1>
+    <mat-divider></mat-divider>
+    <br>
+
+    <div class="profile-picture__container">
+      <img [src]="user.avatar" alt="">
+      <ui-button [disabled]="true" kind="accent"><ui-icon size="s">paint-brush--alt</ui-icon>Edit</ui-button>    
+    </div>
+
+    <br>
+
+    <ui-form
+      (onSucces)="handleSuccessfulUpdate($event)"
+      [form]="profileDetailsForm"
+      [cacheable]="userCacheable">
+    </ui-form>
+</div>

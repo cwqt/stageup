@@ -1,0 +1,12 @@
+<div [class]="'admonition-wrapper ' + kind">
+  <div class="admonition-title">
+    <ui-icon>{{icon}}</ui-icon>
+    <b>
+      {{title}}
+    </b>
+  </div>
+
+  <div class="admonition-body">
+    <ng-content></ng-content>
+  </div>
+</div>

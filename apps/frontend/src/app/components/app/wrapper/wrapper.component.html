@@ -1,0 +1,20 @@
+<div class="app-container">
+  <div class="app-content" *ngIf="myself">
+    <div class="left">
+      <app-sidebar [myself]="myself">
+      </app-sidebar>
+    </div>
+
+    <div class="right">
+      <app-header-bar [myself]="myself"></app-header-bar>
+      <div class="app-body container px-10">
+        <app-page title="First time setup" *ngIf="myself && myself.user.is_new_user">
+          <app-first-time-setup></app-first-time-setup>
+        </app-page>
+
+        <ng-content *ngIf="myself && !myself.user.is_new_user"></ng-content>
+      </div>
+      <app-footer></app-footer>
+    </div>
+  </div>
+</div>

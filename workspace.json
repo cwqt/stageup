@@ -1,0 +1,171 @@
+{
+  "version": 2,
+  "projects": {
+    "backend": {
+      "root": "apps/backend",
+      "sourceRoot": "apps/backend/src",
+      "projectType": "application",
+      "prefix": "backend",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/backend",
+            "main": "apps/backend/src/index.ts",
+            "tsConfig": "apps/backend/tsconfig.app.json",
+            "showCircularDependencies": false,
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            },
+            "staging": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "configurations": {
+            "development": {
+              "buildTarget": "backend:build"
+            },
+            "testing": {
+              "buildTarget": "backend:build"
+            },
+            "staging": {
+              "buildTarget": "backend:build:staging"
+            },
+            "production": {
+              "buildTarget": "backend:build:production"
+            }  
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/backend"
+          ],
+          "options": {
+            "passWithNoTests": true,
+            "runInBand": false,
+            "jestConfig": "apps/backend/jest.config.js",
+            "tsConfig": "apps/backend/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "directory": "apps/backend",
+            "lintFilePatterns": [
+              "apps/backend/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        }
+      }
+    },
+    "frontend": {
+      "projectType": "application",
+      "root": "apps/frontend",
+      "sourceRoot": "apps/frontend/src",
+      "prefix": "app",
+      "targets": {
+        "build": {
+          "executor": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "customWebpackConfig": {
+              "path": "apps/frontend/webpack.config.js"
+            },
+            "outputPath": "dist/apps/frontend",
+            "index": "apps/frontend/src/index.html",
+            "main": "apps/frontend/src/main.ts",
+            "polyfills": "apps/frontend/src/polyfills.ts",
+            "tsConfig": "apps/frontend/tsconfig.app.json",
+            "aot":true,
+            "assets": [
+              "apps/frontend/src/favicon.ico",
+              "apps/frontend/src/assets"
+            ],
+            "styles": [
+              "apps/frontend/src/tailwind.scss",
+              "apps/frontend/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "staging": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "executor": "@angular-builders/custom-webpack:dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "frontend:build",
+              "proxyConfig": "apps/frontend/proxy.conf.json"  
+            },
+            "production": {
+              "browserTarget": "frontend:build:production"
+            },
+            "staging": {
+              "browserTarget": "frontend:build:staging"
+            }
+          }
+        }
+      }
+    },
+    "interfaces": {
+      "root": "libs/interfaces",
+      "sourceRoot": "libs/interfaces/src",
+      "projectType": "library",
+      "targets": {}
+    },
+    "api-tests": {
+      "root": "apps/api-tests",
+      "sourceRoot": "apps/api-tests/src",
+      "projectType": "application",
+      "prefix": "api-tests",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/api-tests"
+          ],
+          "options": {
+            "passWithNoTests": true,
+            "runInBand": true,
+            "jestConfig": "apps/api-tests/jest.config.js",
+            "tsConfig": "apps/api-tests/tsconfig.spec.json"
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/express"
+  }
+}

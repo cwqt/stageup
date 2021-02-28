@@ -1,0 +1,42 @@
+.app-input-no-underline .mat-form-field-underline {
+  display: none;
+}
+
+@keyframes OffsetLabel {
+  from {
+    margin-bottom: 0;
+  }
+
+  to {
+    margin-bottom: 15px;
+  }
+}
+
+mat-form-field.ng-invalid.ng-touched {
+  animation: OffsetLabel;
+  animation-duration: 0.3s;
+  margin-bottom: 15px;
+}
+
+.mat-tab-group {
+  height: 100%;
+}
+
+.mat-tab-body-wrapper {
+  flex-grow: 1;
+}
+
+.mat-tab-body {
+  display: flex !important;
+  flex-direction: column;
+}
+
+.mat-tab-body-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.mat-dialog-container {
+  padding: 0 !important;
+}

@@ -1,0 +1,74 @@
+@import "apps/frontend/src/styles/variables";
+
+.header-container {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 999;
+  background: transparent;
+  overflow: visible;
+  .right {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.header-upload {
+  overflow: hidden;
+  margin-right: $space-lg;
+  ::ng-deep {
+    button {
+      border-radius: $space-lg !important;
+    }
+  }
+}
+
+.header-search {
+  display: flex;
+  align-items: center;
+  margin-right: $space-lg;
+  ui-icon {
+    margin-right: $space;
+  }
+  ui-input {
+    ::ng-deep mat-form-field {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+.header-notification {
+  margin-right: $space-lg;
+}
+
+.header-user {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-sm;
+  border-radius: 44px;
+  &:hover {
+    cursor: pointer;
+    background-color: $clr-base;
+  }
+  img {
+    width: 44px;
+    height: 44px;
+    // max-height: 100%;
+    // width: auto;
+    border-radius: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  span {
+    margin: 0 $space-sm 0 $space;
+  }
+  ui-icon {
+    opacity: 0.2;
+    margin-right: $space-sm;
+  }
+}

@@ -1,0 +1,126 @@
+.profile-wrapper {
+  display: flex;
+  flex-flow: column;
+  .profile-cover-container {
+    background-color: #000;
+    overflow: hidden;
+    width: 100%;
+    height: 30vh;
+    min-height: 325px;
+    display: flex;
+    flex-flow: column;
+    position: relative;
+
+    .profile-covers {
+      z-index: 0;
+      img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        object-position: center;
+      }
+      .profile-cover-gradient {
+        background-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 1)
+        );
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      img.profile-cover {
+        object-fit: contain;
+      }
+      img.profile-cover-blur {
+        object-fit: cover;
+        filter: brightness(1.2) blur(20px);
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .profile-body-container {
+    margin-left: 60px;
+    max-width: 100%;
+    height: auto;
+    padding-bottom: 20px;
+    display: flex;
+    flex-flow: row;
+    align-items: flex-start;
+    overflow: scroll;
+    overflow-x: hidden;
+    margin-top: -48px;
+    .profile-body {
+      padding: 0;
+      margin-left: 40px;
+      margin-bottom: 100px;
+      width: 1000px;
+    }
+  }
+}
+
+.profile-cover-body {
+  z-index: 2;
+  margin-top: auto;
+  color: white;
+  padding-left: 60px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(244, 244, 244, 0.2);
+  display: flex;
+  margin-bottom: 48px;
+  .profile-cover-body__content {
+    margin-top: auto;
+    margin-left: 20px;
+    padding-bottom: 10px;
+  }
+  .avatar-container {
+    img {
+      // border: 4px solid white;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      height: auto;
+
+      object-fit: cover;
+      object-position: center center;
+      width: 140px;
+      height: 140px;
+      background-color: lightgrey;
+    }
+  }
+}
+
+.outlet {
+  display: flex;
+  flex-flow: column;
+  &.isOutletting {
+    padding-top: calc(48px + 20px);
+  }
+}
+.tab-content {
+  padding-top: 20px;
+}
+
+.tab-body-header {
+  z-index: 2;
+  color: white;
+  margin-left: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  margin-top: -48px;
+  h3 {
+    margin: 0;
+    margin-left: 20px;
+    font-size: 18px;
+  }
+  .mat-icon-button {
+    background: transparent;
+    color: white !important;
+  }
+}

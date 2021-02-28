@@ -1,0 +1,13 @@
+node_modules
+.DS_Store
+logs
+build
+dist
+.env
+.env_prod
+sendgrid.env
+coverage
+store
+deploy/env/*
+*.env
+.env.*

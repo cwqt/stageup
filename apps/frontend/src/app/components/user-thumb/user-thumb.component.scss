@@ -1,0 +1,21 @@
+:host {
+  max-width: 100%;
+}
+
+
+.thumb {
+  max-height: 64px;
+  img {
+    height: 64px;
+    width: 64px;
+    object-fit: cover;
+  }
+  
+  &--small {
+    max-height: 48px;
+    img {
+      width: 48px;
+      height: 48px;
+    }
+  }
+}

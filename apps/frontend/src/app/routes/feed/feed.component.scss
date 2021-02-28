@@ -1,0 +1,85 @@
+
+.performances {
+    display: flex;
+
+    .performance-thumb {
+        margin-right: 10px;
+        height: 250px;
+        width: 400px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 4px;
+        box-shadow: 0 9px 30px 0 rgba(35, 39, 42, 0.1);
+        transition: 0.2s transform;
+        background-color: black;
+
+        &:hover {
+            cursor: pointer;
+            position: relative;
+            transform: scale(1.02);
+            z-index: 222;
+            p {
+                display: block !important;
+            }
+            img {
+                opacity: .5;
+            }
+        }
+
+        img {
+            transition: .5s opacity;
+            height: 250px;
+            width: 400px;
+            object-fit: cover;
+        }
+        .performance-thumb__live {
+            background: #f72485;
+            color: white;
+            border-radius: 5px;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            padding: 2px 4px;
+        }
+        .performance-thumb__expand {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: white;
+        }
+        .performance-thumb__gradient {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            bottom: 0;
+            background: linear-gradient(
+                to top,
+                black,
+                rgba(black, 0)
+              )
+        }
+        .performance-thumb__content {
+            position: absolute;
+            z-index: 9;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            padding: 10px 20px;
+            color: white;
+            display: flex;
+            flex-flow: column;
+            h1 {
+                margin: 0;
+                margin-top: auto;
+            }
+            p {
+                display: none;
+            }
+            .content-footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+    }
+}

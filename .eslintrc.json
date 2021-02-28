@@ -1,0 +1,105 @@
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "ignorePatterns": ["**/*", "routes.ts"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@nrwl/nx", "unicorn", "@typescript-eslint", "import"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "unicorn/no-process-exit": "off",
+        "no-promise-executor-return": "off",
+        "import/no-named-as-default-member": "off",
+        "unicorn/no-array-reduce": "off",
+        "no-useless-computed-key": "off",
+        "unicorn/filename-case": [
+          "error",
+          {
+            "case": "kebabCase"
+          }
+        ],
+        "import/no-anonymous-default-export": [
+          "error",
+          {
+            "allowObject": true,
+            "allowAnonymousFunction": true,
+            "allowArrowFunction": true
+          }
+        ],
+        "new-cap": [
+          "error",
+          {
+            "capIsNewExceptionPattern": "^@*"
+          }
+        ],
+        "capitalized-comments": [
+          "error",
+          "always",
+          {
+            "ignorePattern": ".*"
+          }
+        ],
+        "unicorn/prevent-abbreviations": [
+          "error",
+          {
+            "replacements": {
+              "res": false,
+              "req": false,
+              "e": false,
+              "cb": false,
+              "env": false,
+              "err": false,
+              "param": false,
+              "params": false,
+              "args": false,
+              "acc": false,
+              "curr": false,
+              "idx": false
+            }
+          }
+        ],
+        "object-shorthand": ["error", "consistent-as-needed"],
+        "radix": ["error", "as-needed"],
+        "@nrwl/nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nrwl/nx/typescript"],
+      "parserOptions": { "project": "./tsconfig.*?.json" },
+      "rules": {
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off",
+        "@typescript-eslint/no-implicit-any-catch": "off",
+        "@typescript-eslint/no-unused-expressions": "off",
+        "@typescript-eslint/no-throw-literal":"off",
+        "@typescript-eslint/restrict-template-expressions":"off",
+        "@typescript-eslint/no-namespace": "off"
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nrwl/nx/javascript"],
+      "rules": {}
+    }
+  ]
+}

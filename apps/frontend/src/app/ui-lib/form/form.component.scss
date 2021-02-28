@@ -1,0 +1,10 @@
+.ui-form {
+  display: none;
+  &.visible {
+    display: block !important;
+  }
+}
+
+.hidden {
+  display: none;
+}
