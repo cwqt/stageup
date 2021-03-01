@@ -1,5 +1,5 @@
 import { Environment, JobType } from '@core/interfaces';
-import { DataClient, ProviderMap } from '@core/shared/api';
+import { DataClient } from '@core/shared/api';
 import Env from 'apps/runner/src/env';
 import { Worker } from 'bullmq';
 import { SendMailOptions } from 'nodemailer';
@@ -15,7 +15,7 @@ export default (client: DataClient<RunnerDataClient>) => {
         if (Env.isEnv([Environment.Production, Environment.Staging]) == false) {
           if (client.providers.sendgrid.config.enabled == false) {
             log.warn(`Did not send e-mail because it is disabled from .env`);
-            return;
+            return resolve(true);
           }
         }
 
@@ -32,8 +32,8 @@ export default (client: DataClient<RunnerDataClient>) => {
     },
     {
       connection: {
-        host: 'redis',
-        port: 6379
+        host: Env.REDIS.host,
+        port: Env.REDIS.port
       }
     }
   );

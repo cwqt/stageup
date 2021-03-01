@@ -4,6 +4,7 @@ import { IHost, IHostStub, IUser } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
+import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { IUiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 
 @Component({

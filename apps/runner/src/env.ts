@@ -1,5 +1,6 @@
 // https://stackoverflow.com/a/59805161/8526764
 const TRUE_ENV = process.env['NODE' + '_ENV'];
+/* eslint @typescript-eslint/no-var-requires: "off" */
 require('dotenv-flow').config({ node_env: TRUE_ENV });
 
 import { Environment } from '@core/interfaces';
@@ -33,7 +34,7 @@ const Env: IEnvironment = {
     enabled: process.env.EMAIL_ENABLED === "true"
   },
   REDIS: {
-    host: process.env.REDIS_HOST,
+    host: process.env.BULLMQ_REDIS_HOST,
     port: 6379
   },
 };

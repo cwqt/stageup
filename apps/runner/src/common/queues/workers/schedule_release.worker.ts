@@ -9,8 +9,8 @@ export default () => {
     await api.put(`${Env.API_URL}/performances/${data._id}/visibility`, { visibility: Visibility.Public });
   }, {
     connection: {
-      host: "redis",
-      port: 6379
+      host: Env.REDIS.host,
+      port: Env.REDIS.port
     }
   });
 };

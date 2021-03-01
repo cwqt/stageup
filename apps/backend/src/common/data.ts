@@ -71,7 +71,7 @@ export const create = (): ProviderMap<BackendDataClient> => {
         username: Env.PG.USERNAME,
         password: Env.PG.PASSWORD,
         database: Env.PG.DATABASE,
-        synchronize: Env.isEnv([Environment.Development, Environment.Testing])
+        synchronize: true//Env.isEnv([Environment.Development, Environment.Testing])
       },
       models
     ),

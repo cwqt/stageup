@@ -16,6 +16,7 @@ import ScheduleReleaseWorker from './workers/schedule_release.worker';
 import { log } from '../logger';
 import { DataClient, ProviderMap } from '@core/shared/api';
 import { RunnerDataClient } from '../data';
+import Env from '../../env';
 
 const create = (client: DataClient<RunnerDataClient>): QueueMap => {
   const workers: { [index in JobType]: WorkerFunction } = {
@@ -26,23 +27,23 @@ const create = (client: DataClient<RunnerDataClient>): QueueMap => {
   return Object.values(JobType).reduce((acc, type) => {
     const queue = new Queue(type, {
       connection: {
-        host: 'redis',
-        port: 6379
-      }
+        host: Env.REDIS.host,
+        port: Env.REDIS.port
+        }
     });
 
     const events = new QueueEvents(type, {
       connection: {
-        host: 'redis',
-        port: 6379
-      }
+        host: Env.REDIS.host,
+        port: Env.REDIS.port
+        }
     });
     
     const scheduler = new QueueScheduler(type, {
       connection: {
-        host: 'redis',
-        port: 6379
-      }
+        host: Env.REDIS.host,
+        port: Env.REDIS.port
+        }
     });
 
     const worker = workers[type](client);

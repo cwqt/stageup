@@ -1,20 +1,20 @@
 import { DataClient, AsyncRouter, Middlewares } from '@core/shared/api';
 
 import {
-    IHost,
-    IUser,
-    IPerformanceStub as IPerfS,
-    IPerformance as IPerf,
-    IPerformanceHostInfo as IPHInfo, 
-    IUserHostInfo as IUHInfo,
-    IEnvelopedData as IE,
-    IPerformanceUserInfo as IPUInfo,
-    IMyself,
-    DtoAccessToken as DtoAT,
-    IHostOnboarding as IHOnboarding,
-    IOnboardingStep,
-    IAddress,
-    IOnboardingStepMap,
+  IHost,
+  IUser,
+  IPerformanceStub as IPerfS,
+  IPerformance as IPerf,
+  IPerformanceHostInfo as IPHInfo, 
+  IUserHostInfo as IUHInfo,
+  IEnvelopedData as IE,
+  IPerformanceUserInfo as IPUInfo,
+  IMyself,
+  DtoAccessToken as DtoAT,
+  IHostOnboarding as IHOnboarding,
+  IOnboardingStep,
+  IAddress,
+  IOnboardingStepMap,
 } from '@core/interfaces';
 import { BackendDataClient } from './common/data';
 

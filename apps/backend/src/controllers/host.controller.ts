@@ -234,7 +234,16 @@ export default class HostController extends BaseController {
     return {
       authStrategy: AuthStrat.hasSpecificHostPermission(HostPermission.Pending),
       controller: async req => {
-        const invite = await getCheck(HostInvitation.findOne({ _id: req.params.iid }));
+        const invite = await getCheck(
+          HostInvitation.findOne(
+            { _id: req.params.iid },
+            { relations: ['invitee'], select: { invitee: { _id: true } } }
+          )
+        );
+        
+        // Only accept the request if the logged in user matches the invites' user
+        if (invite.invitee._id !== req.session.user._id) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID);
+
         const uhi = await getCheck(
           UserHostInfo.findOne({
             relations: ['user'],
@@ -267,7 +276,7 @@ export default class HostController extends BaseController {
     };
   }
 
-  // router.put <IHost>("/hosts/:hid/members/:mid",Hosts.updateMember());
+  // router.put <IHost> ("/hosts/:hid/members/:mid", Hosts.updateMember());
   updateMember(): IControllerEndpoint<void> {
     return {
       validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
