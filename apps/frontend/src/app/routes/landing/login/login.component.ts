@@ -7,6 +7,7 @@ import { MyselfService } from "apps/frontend/src/app/services/myself.service";
 import { BaseAppService } from "apps/frontend/src/app/services/app.service";
 import { IUiForm } from "apps/frontend/src/app/ui-lib/form/form.interfaces";
 import { environment as env } from "apps/frontend/src/environments/environment";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: "app-login",

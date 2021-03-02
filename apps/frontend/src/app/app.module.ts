@@ -16,7 +16,6 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HttpConfigInterceptor } from './_helpers/http.interceptor';
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
-// import { LogPipe } from "./_pipes/log.pipe";
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
 import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
@@ -32,11 +31,10 @@ import { FirstTimeSetupComponent } from './routes/landing/first-time-setup/first
 import { VerifiedComponent } from './components/pages/verified/verified.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 
-import { WrapperComponent } from './components/app/wrapper/wrapper.component';
+import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
 import { HeaderBarComponent } from './components/app/header-bar/header-bar.component';
 
 import { ProfileComponent } from './routes/profile/profile.component';
-import { IndexComponent } from './routes/index/index.component';
 
 import { FooterComponent } from './components/app/footer/footer.component';
 import { PageComponent } from './components/app/page/page.component';
@@ -59,7 +57,6 @@ import { HostSettingsComponent } from './routes/settings/host-settings/host-sett
 import { CreateHostComponent } from './routes/settings/host-settings/create-host/create-host.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
-import { UserTypeClarificationComponent } from './routes/landing/clarification-page/user-type-clarification/user-type-clarification.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from './routes/search/search.component';
 import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
@@ -67,7 +64,6 @@ import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboard
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
-import { HostLandingComponent } from './routes/host/host-landing/host-landing.component';
 import { PerformanceDialogComponent } from './components/dialogs/performance-dialog/performance-dialog.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
 import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
@@ -78,6 +74,10 @@ import { HostAddMemberComponent } from './routes/host/host-members/host-add-memb
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostPerformanceDrawerComponent } from './components/app/drawer-components/host-performance-drawer/host-performance-drawer.component';
 import { SharePerformanceDialogComponent } from './routes/host/host-performance/share-performance-dialog/share-performance-dialog.component';
+import { ClientLandingComponent } from './routes/landing/client-landing/client-landing.component';
+import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
+import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
+import { UserTypeClarificationComponent } from './routes/landing/user-type-clarification/user-type-clarification.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -91,10 +91,9 @@ import { SharePerformanceDialogComponent } from './routes/host/host-performance/
     VerifiedComponent,
     FirstTimeSetupComponent,
     HeaderBarComponent,
-    WrapperComponent,
+    AppWrapperComponent,
     NotFoundComponent,
     FooterComponent,
-    IndexComponent,
     PageComponent,
     CatalogComponent,
     SidebarComponent,
@@ -117,6 +116,7 @@ import { SharePerformanceDialogComponent } from './routes/host/host-performance/
     SearchComponent,
     SearchResultsComponent,
     AdminOnboardingListComponent,
+    HostDashboardComponent,
     AdminOnboardingViewComponent,
     OnboardingViewComponent,
     OnboardingStatePipe,
@@ -127,7 +127,6 @@ import { SharePerformanceDialogComponent } from './routes/host/host-performance/
     OnboardingViewIssueMakerComponent,
     PerformanceDialogComponent,
     UserThumbComponent,
-    HostLandingComponent,
     HostProfileComponent,
     HostContactComponent,
     HostAboutComponent,
@@ -137,7 +136,9 @@ import { SharePerformanceDialogComponent } from './routes/host/host-performance/
     HostPerformanceComponent,
     UserTypeClarificationComponent,
     HostPerformanceDrawerComponent,
-    SharePerformanceDialogComponent
+    SharePerformanceDialogComponent,
+    ClientLandingComponent,
+    HostLandingComponent
   ],
   imports: [
     AngularMaterialModule,

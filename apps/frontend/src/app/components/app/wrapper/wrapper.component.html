@@ -17,7 +17,9 @@
           <app-first-time-setup></app-first-time-setup>
         </app-page>
 
-        <ng-content *ngIf="myself && !myself.user.is_new_user"></ng-content>
+        <ng-container *ngIf="myself && !myself.user.is_new_user">
+          <router-outlet></router-outlet>
+        </ng-container>
       </div>
       <app-footer></app-footer>  
     </mat-drawer-content>

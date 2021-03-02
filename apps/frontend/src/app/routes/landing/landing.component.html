@@ -1,39 +1,5 @@
-<div class="landing-wrapper" *ngIf="!myself">
+<div class="landing-wrapper">
   <div class="dots"></div>
-  <div class="landing-cover">
-    <!-- <img class="landing-cover-image" src="https://images.unsplash.com/photo-1471877325906-aee7c2240b5f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" /> -->
-  </div>
-
-  <div class="landing-cover-body">
-    <div class="landing-body__main">
-      <img class="logo mb-4" src="/assets/logo.svg">
-      <h2 class="mb-8">Live streaming & VoD for Performance Arts</h2>
-
-      <div class="flex">
-        <!-- <ui-button class="flex-initial mr-4" kind="accent" icon="email" (click)="gotoMailingList()" *ngIf="isLive">Join the mailing list</ui-button> -->
-        <ui-button class="flex-initial mr-4" [kind]="isLive ? 'primary' :'accent'" icon="login" (click)="gotoLogin()">Log In</ui-button>
-        <ui-button class="flex-initial mr-4" kind="primary" icon="user" (click)="gotoRegister()">Register</ui-button>
-      </div>
-      <br>
-    </div>
-
-    <div class="landing-body__bottom">
-      <p>
-        Watch live productions from
-        <span class="highlight-dark"> anywhere in the world </span>, from the comfort of your home.<br />
-        A bespoke service tailored to the next generation of performance arts.
-      </p>
-
-      <small *ngIf="isLive">Registrations are currently closed.</small>
-
-      <div class="icons">
-        <ui-icon>theater</ui-icon>
-        <ui-icon>arrow--right</ui-icon>
-        <ui-icon>devices</ui-icon>
-        <small>0.3.0</small>
-      </div>
-    </div>
-  </div>
+  <router-outlet></router-outlet>
 </div>
 
-<app-index *ngIf="myself"></app-index>

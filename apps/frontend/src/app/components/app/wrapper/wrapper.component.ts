@@ -4,13 +4,14 @@ import { IMyself } from '@core/interfaces';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { DrawerKey, DrawerService, IDrawerData } from 'apps/frontend/src/app/services/drawer.service';
 import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-wrapper',
   templateUrl: './wrapper.component.html',
   styleUrls: ['./wrapper.component.scss']
 })
-export class WrapperComponent implements OnInit, AfterViewInit {
+export class AppWrapperComponent implements OnInit, AfterViewInit {
   @ViewChild('drawer') drawer: MatDrawer;
 
   myself: IMyself;

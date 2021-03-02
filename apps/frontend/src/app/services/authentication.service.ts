@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { LoggedInGuard } from "../_helpers/logged-in.guard";
 import { MyselfService } from "./myself.service";
 import { IUser } from '@core/interfaces';
+import { BaseAppService } from "./app.service";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +20,7 @@ export class AuthenticationService {
     private myselfService: MyselfService,
     private cookieService: CookieService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   checkLoggedIn() {
@@ -39,12 +40,14 @@ export class AuthenticationService {
         tap((user) => {
           // Remove last logged in user stored
           this.myselfService.store(null);
+          this.myselfService.getMyself().then(() => this.$loggedIn.next(true))
         })
       )
       .toPromise();
   }
 
   logout() {
+    this.$loggedIn.next(false);
     this.cookieService.set("connect.sid", null);
     this.myselfService.store(null, true);
     this.http.post("/api/users/logout", {});

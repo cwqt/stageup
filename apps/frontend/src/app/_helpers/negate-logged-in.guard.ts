@@ -4,7 +4,7 @@ import {
   RouterStateSnapshot,
 } from "@angular/router";
 import { Injectable } from "@angular/core";
-import { LoggedInGuard } from "./LoggedIn.guard";
+import { LoggedInGuard } from "./logged-in.guard";
 
 @Injectable({ providedIn: "root" })
 export class NegateLoggedInGuard implements CanActivate {

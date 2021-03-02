@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, UrlMatcher, UrlSegment } from '@angular/router';
+import { Router, RouterModule, Routes, UrlMatcher, UrlSegment } from '@angular/router';
 
 import { ProfileComponent } from './routes/profile/profile.component';
 
@@ -27,7 +27,6 @@ import { SearchComponent } from './routes/search/search.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
-import { HostLandingComponent } from './routes/host/host-landing/host-landing.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
 import { HostAboutComponent } from './routes/host/host-about/host-about.component';
 import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
@@ -35,7 +34,15 @@ import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
-import { UserTypeClarificationComponent } from './routes/landing/clarification-page/user-type-clarification/user-type-clarification.component';
+import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
+import { ClientLandingComponent } from './routes/landing/client-landing/client-landing.component';
+import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
+import { LoggedInGuard } from './_helpers/logged-in.guard';
+import { NegateLoggedInGuard } from './_helpers/negate-logged-in.guard';
+
+import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
+import { UserType } from './routes/landing/user-type-clarification/user-type-clarification.component';
+import { Route } from '@angular/compiler/src/core';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -56,7 +63,7 @@ const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
 const APP_ROUTES: Routes = [
   { path: '', component: FeedComponent },
   { path: 'search', component: SearchComponent },
-  { path: 'results', component: SearchResultsComponent},
+  { path: 'results', component: SearchResultsComponent },
   {
     path: `performances/:${RP.PerformanceId}`,
     component: PerformanceComponent,
@@ -93,7 +100,7 @@ const APP_ROUTES: Routes = [
     path: `host`,
     component: HostComponent,
     children: [
-      { path: '', component: HostLandingComponent },
+      { path: '', component: HostDashboardComponent },
       { path: 'onboarding', component: HostOnboardingComponent },
       { path: 'settings', component: HostSettingsComponent },
       { path: 'members', component: HostMembersComponent },
@@ -119,24 +126,41 @@ const APP_ROUTES: Routes = [
   { path: '**', component: NotFoundComponent }
 ];
 
+const matcher = (f: (myself: string) => boolean): UrlMatcher => (segments: UrlSegment[]) => {
+  if (f(localStorage.getItem('lastMyself'))) {
+    return {
+      consumed: []
+    };
+  } else {
+    return null;
+  }
+};
+
 @NgModule({
   imports: [
     RouterModule.forRoot(
       [
         // Use two routers - one for external, non-logged in users
         // and another for internal logged in users
-        { path: 'login', component: LoginComponent },
-        { path: 'register', component: RegisterComponent },
         {
-          path: '',
           component: LandingComponent,
-          children: APP_ROUTES
-          // canActivateChild: [LoggedInGuard]
+          matcher: matcher(myself => typeof myself !== "string"),
+          children: [
+            { path: 'login', component: LoginComponent },
+            { path: 'register', component: RegisterComponent },
+            { path: 'client', component: ClientLandingComponent },
+            { path: 'host', component: HostLandingComponent },
+            { path: '**', redirectTo: '/' }
+          ]
         },
-        { path: '**', component: NotFoundComponent }
+        {
+          matcher: matcher(myself => typeof myself == "string"),
+          component: AppWrapperComponent,
+          children: APP_ROUTES
+        }
       ],
       {
-        // onSameUrlNavigation: "ignore",
+        onSameUrlNavigation: "reload",
         paramsInheritanceStrategy: 'always'
       }
     )

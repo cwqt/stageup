@@ -20,6 +20,8 @@ mat-error.form { display: inline-block !important }
 .login-wrapper {
   display: flex;
   overflow: hidden;
+  background-color: white;
+  height: 100vh;
 
   .image {
     width: 78px;

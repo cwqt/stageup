@@ -1,12 +1,14 @@
+import { LocationStrategy } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Environment, IMyself, IUser } from '@core/interfaces';
+import { IMyself } from '@core/interfaces';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
-import { UserService } from 'apps/frontend/src/app/services/user.service';
-import { environment } from '../../../environments/environment';
+import { filter } from 'rxjs/operators';
 import { BaseAppService } from '../../services/app.service';
-import { UserTypeClarificationComponent } from './clarification-page/user-type-clarification/user-type-clarification.component';
+import { UserType, UserTypeClarificationComponent } from './user-type-clarification/user-type-clarification.component';
+import { NavigationStart, Event as NavigationEvent } from '@angular/router';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-landing',
@@ -14,48 +16,37 @@ import { UserTypeClarificationComponent } from './clarification-page/user-type-c
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent implements OnInit {
-  myself: IMyself;
-  isLoggedIn: boolean = false;
-  isProduction: boolean = environment.environment == Environment.Production;
-  isStaging: boolean = environment.environment == Environment.Staging;
-  isLive: boolean;
-
   constructor(
-    private myselfService: MyselfService,
-    private router: Router,
-    private baseAppService: BaseAppService,
     private route: ActivatedRoute,
-    public dialog: MatDialog
+    private router: Router,
+    public dialog: MatDialog,
+    private authService: AuthenticationService
   ) {}
 
   async ngOnInit() {
-    this.isLive = this.isProduction || this.isStaging;
-    this.myselfService.$myself.subscribe(m => (this.myself = m));
+    // Show on landing, if not currently showing any route children
+    if (this.route.children.length == 0) this.openConfirmationDialog();
 
-    await this.baseAppService.componentInitialising(this.route);
-
-    // May be coming in from an e-mail to accept invite /?invite_accepted=...
-    const invite = this.baseAppService.getQueryParam('invite_accepted');
-    if(invite) this.baseAppService.navigateTo(`/host`);
-
-    // Only show modal when the user isn't logged in
-    if(localStorage.getItem("clientOrHost") === null) {
-      this.dialog.open(UserTypeClarificationComponent, {
-        height: '70%',
-        width: '70%',
+    // For any future route changes (going back to root), show the dialog
+    this.router.events
+      .pipe(
+        filter((event: NavigationEvent) => {
+          return event instanceof NavigationStart;
+        })
+      )
+      .subscribe(e => {
+        if ((e as NavigationStart).url == '/') this.openConfirmationDialog();
       });
-    }   
   }
 
-  scroll(el: HTMLElement) {
-    el.scrollIntoView();
-  }
+  openConfirmationDialog() {
+    if(this.authService.$loggedIn.getValue() == true) return;
 
-  gotoLogin() {
-    this.router.navigate(['/login']);
+    if(this.dialog.openDialogs.length == 0) {
+      this.dialog.open(UserTypeClarificationComponent, {
+        width: '70%',
+        disableClose: true
+      })  
+    }
   }
-  gotoRegister() {
-    this.router.navigate(['/register']);
-  }
-  gotoMailingList() {}
 }

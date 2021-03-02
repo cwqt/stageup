@@ -31,7 +31,8 @@ export class BaseAppService {
   $routeData: BehaviorSubject<Data>;
   $componentError: BehaviorSubject<boolean>;
   loggedIn: boolean;
-  // the boolean is whether the component was changed (initialised) - true means it was - false means just route params altered - query param changes are ignored
+  // the boolean is whether the component was changed (initialised)
+  // true means it was - false means just route params altered - query param changes are ignored
   $routeAltered: Subject<RouteChange> = new Subject();
 
   constructor(
