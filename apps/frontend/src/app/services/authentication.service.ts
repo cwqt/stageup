@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { LoggedInGuard } from "../_helpers/logged-in.guard";
 import { MyselfService } from "./myself.service";
 import { IUser } from '@core/interfaces';
-import { BaseAppService } from "./app.service";
 
 @Injectable({
   providedIn: "root",
@@ -23,11 +22,12 @@ export class AuthenticationService {
     private router: Router,
   ) {}
 
-  checkLoggedIn() {
+  checkLoggedIn(redirect?:boolean) {
     this.$loggedIn.next(
       new LoggedInGuard(this.router, this.myselfService).canActivate(
         this.route.snapshot,
-        this.router.routerState.snapshot
+        this.router.routerState.snapshot,
+        false
       )
     );
     return this.$loggedIn.getValue();

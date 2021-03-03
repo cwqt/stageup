@@ -79,7 +79,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
         }
       },
       submit: {
-        isHidden: true,
+        is_hidden: true,
         text: 'Create',
         variant: 'primary',
         handler: async v => this.hostService.createPerformance(this.data.host_id, v),
@@ -112,7 +112,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
 
   handleCreatePerformanceSuccess(event:IPerformance) {
     this.toastService.emit(`Created performance: ${event.name}!`);
-    this.baseAppService.navigateTo(`/host/performances/${event._id}`);
+    this.baseAppService.navigateTo(`/dashboard/performances/${event._id}`);
     this.ref.close(event);
   }
 

@@ -1,18 +1,16 @@
 import { NgModule } from '@angular/core';
-import { Router, RouterModule, Routes, UrlMatcher, UrlSegment } from '@angular/router';
-
-import { ProfileComponent } from './routes/profile/profile.component';
+import { RouterModule, Routes, UrlMatcher, UrlSegment } from '@angular/router';
+import { LoggedInGuard } from './_helpers/logged-in.guard';
+import { RouteParam as RP } from './services/app.service';
 
 import { VerifiedComponent } from './components/pages/verified/verified.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
-
+import { ProfileComponent } from './routes/profile/profile.component';
 import { TestbedComponent } from './ui-lib/testbed/testbed.component';
-import { LandingComponent } from './routes/landing/landing.component';
 import { RegisterComponent } from './routes/landing/register/register.component';
 import { LoginComponent } from './routes/landing/login/login.component';
 import { FeedComponent } from './routes/feed/feed.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
-import { RouteParam as RP } from './services/app.service';
 import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
 import { HostComponent } from './routes/host/host.component';
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
@@ -35,14 +33,9 @@ import { HostMembersComponent } from './routes/host/host-members/host-members.co
 import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
-import { ClientLandingComponent } from './routes/landing/client-landing/client-landing.component';
 import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
-import { LoggedInGuard } from './_helpers/logged-in.guard';
-import { NegateLoggedInGuard } from './_helpers/negate-logged-in.guard';
-
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
-import { UserType } from './routes/landing/user-type-clarification/user-type-clarification.component';
-import { Route } from '@angular/compiler/src/core';
+import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -60,27 +53,13 @@ const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
   return null;
 };
 
-const APP_ROUTES: Routes = [
-  { path: '', component: FeedComponent },
-  { path: 'search', component: SearchComponent },
-  { path: 'results', component: SearchResultsComponent },
+const LOGGED_IN_ROUTES: Routes = [
   {
     path: `performances/:${RP.PerformanceId}`,
     component: PerformanceComponent,
     children: [{ path: 'watch', component: PerformanceWatchComponent }]
   },
   { path: `user/:${RP.UserId}`, component: ProfileComponent },
-  {
-    matcher: hostMatcher,
-    component: HostProfileComponent,
-    data: { isHostView: false },
-    children: [
-      { path: '', component: HostFeedComponent },
-      { path: 'about', component: HostAboutComponent },
-      { path: 'contact', component: HostContactComponent },
-      { path: '**', component: NotFoundComponent }
-    ]
-  },
   { path: `verified`, component: VerifiedComponent },
   {
     path: `settings`,
@@ -97,7 +76,7 @@ const APP_ROUTES: Routes = [
     ]
   },
   {
-    path: `host`,
+    path: `dashboard`,
     component: HostComponent,
     children: [
       { path: '', component: HostDashboardComponent },
@@ -109,7 +88,7 @@ const APP_ROUTES: Routes = [
       {
         matcher: hostMatcher,
         component: HostProfileComponent,
-        data: { isHostView: true },
+        data: { is_host_view: true },
         children: [
           { path: '', component: HostFeedComponent },
           { path: 'about', component: HostAboutComponent },
@@ -122,46 +101,61 @@ const APP_ROUTES: Routes = [
   { path: `admin`, component: AdminPanelComponent },
   { path: `admin/onboardings`, component: AdminOnboardingListComponent },
   { path: `admin/onboardings/:${RP.HostId}`, component: AdminOnboardingViewComponent },
-  { path: `ui`, component: TestbedComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: `ui`, component: TestbedComponent }
 ];
-
-const matcher = (f: (myself: string) => boolean): UrlMatcher => (segments: UrlSegment[]) => {
-  if (f(localStorage.getItem('lastMyself'))) {
-    return {
-      consumed: []
-    };
-  } else {
-    return null;
-  }
-};
 
 @NgModule({
   imports: [
     RouterModule.forRoot(
       [
-        // Use two routers - one for external, non-logged in users
-        // and another for internal logged in users
+        { path: 'host', component: HostLandingComponent },
         {
-          component: LandingComponent,
-          matcher: matcher(myself => typeof myself !== "string"),
-          children: [
-            { path: 'login', component: LoginComponent },
-            { path: 'register', component: RegisterComponent },
-            { path: 'client', component: ClientLandingComponent },
-            { path: 'host', component: HostLandingComponent },
-            { path: '**', redirectTo: '/' }
-          ]
-        },
-        {
-          matcher: matcher(myself => typeof myself == "string"),
+          path: '',
           component: AppWrapperComponent,
-          children: APP_ROUTES
+          children: [
+            { path: 'client', redirectTo: '/' },
+            {
+              path: '',
+              component: FeedComponent,
+              children: [
+                {
+                  path: 'login',
+                  component: DialogEntryComponent,
+                  data: { open_dialog: LoginComponent }
+                },
+                {
+                  path: 'register',
+                  component: DialogEntryComponent,
+                  data: { open_dialog: RegisterComponent }
+                }
+              ]
+            },
+            { path: 'search', component: SearchComponent },
+            { path: 'results', component: SearchResultsComponent },
+            {
+              matcher: hostMatcher,
+              component: HostProfileComponent,
+              data: { is_host_view: false },
+              children: [
+                { path: '', component: HostFeedComponent },
+                { path: 'about', component: HostAboutComponent },
+                { path: 'contact', component: HostContactComponent },
+                { path: '**', component: NotFoundComponent }
+              ]
+            },
+            {
+              path: '',
+              canActivate: [LoggedInGuard],
+              children: LOGGED_IN_ROUTES
+            },
+            { path: '**', component: NotFoundComponent }
+          ]
         }
       ],
       {
-        onSameUrlNavigation: "reload",
-        paramsInheritanceStrategy: 'always'
+        // onSameUrlNavigation: 'reload',
+        paramsInheritanceStrategy: 'always',
+        // enableTracing: true
       }
     )
   ],

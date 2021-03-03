@@ -14,7 +14,14 @@
     </div>
 
     <div class="w-1/3 ml-2 text-right">
-      <ui-button kind="secondary" size="l"><ui-icon>add</ui-icon>Add to Cart</ui-button>
+      <ng-template ngxPermissionsOnly="none">
+        <p>You must <a (click)="openRegister()">register</a> before being able to purchase this performance</p>
+        <ui-button kind="secondary" disabled="true" size="l"><ui-icon>add</ui-icon>Add to Cart</ui-button>
+      </ng-template>
+
+      <ng-template ngxPermissionsOnly="user">
+        <ui-button kind="secondary" size="l"><ui-icon>add</ui-icon>Add to Cart</ui-button>
+      </ng-template>      
     </div>
   </div>
 </ui-dialog>

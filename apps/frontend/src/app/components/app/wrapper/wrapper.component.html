@@ -5,7 +5,7 @@
     [myself]="myself">
   </app-sidebar>
 
-  <mat-drawer-container class="h-full" *ngIf="myself">
+  <mat-drawer-container class="h-full">
     <mat-drawer #drawer mode="side" [ngSwitch]="drawerState.key">
       <app-host-performance-drawer *ngSwitchCase="drawerKey.HostPerformance"></app-host-performance-drawer>
     </mat-drawer>
@@ -17,9 +17,7 @@
           <app-first-time-setup></app-first-time-setup>
         </app-page>
 
-        <ng-container *ngIf="myself && !myself.user.is_new_user">
-          <router-outlet></router-outlet>
-        </ng-container>
+        <router-outlet></router-outlet>
       </div>
       <app-footer></app-footer>  
     </mat-drawer-content>

@@ -3,20 +3,23 @@
   </div>
 
   <div class="right">
-    <ui-button class="header-upload" kind="primary">Upload</ui-button>
-
     <div class="header-search">
       <!-- <ui-icon>search</ui-icon> -->
       <ui-input class="w-80" type="text" placeholder="Search for performances..." (keydown.enter)="searchPerformances(searchBox.value)" #searchBox></ui-input>
     </div>
 
-    <ui-icon class="header-notification">notification--new</ui-icon>
+    <ui-icon class="header-notification" *ngIf="myself">notification--new</ui-icon>
 
-    <div class="header-user">
+    <div class="header-user" *ngIf="myself">
       <img [src]="myself.user.avatar" alt="">
       <span>{{ myself.user.name || myself.user.username }}</span>
       <ui-icon [popper]="dropdownMenu" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true"
       [popperHideOnScroll]="true" [popperPlacement]="'bottom'">caret--down</ui-icon>      
+    </div>
+
+    <div class="flex" *ngIf="!myself">
+      <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="openLoginDialog()">Log In</ui-button>
+      <ui-button class="flex-initial mr-4" kind="accent" icon="user" (click)="openRegisterDialog()">Register</ui-button>
     </div>
 
     <!-- * DROPDOWN MENU * -->  
@@ -34,7 +37,4 @@
         <button (click)="userLogout()">Logout</button>
       </div>
     </popper-content>
-       
-    
-
 </div>

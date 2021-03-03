@@ -84,8 +84,8 @@ export interface IUiFormSubmit<T> {
   text: string;
   variant: "primary" | "secondary";
   size?: "s" | "m" | "l";
-  isHidden?: boolean;
-  loadingText?: string;
+  is_hidden?: boolean;
+  loading_text?: string;
   handler: (transformedData:any) => Promise<T>;
   transformer?: (formData: AbstractControl["value"]) => any;
 }

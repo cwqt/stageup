@@ -2,16 +2,7 @@
   <h1>{{ title }}</h1>
 
   <div class="content-wrapper">
-    <div class="left">
-      <hr />
-      <br/>
-        <ng-content select="[position=sidebar]"></ng-content>
-    </div>
-
-    <div class="right">
-      <br/>
-      <ng-content></ng-content>
-    </div>
+    <ng-content></ng-content>
   </div>
 
 </div>

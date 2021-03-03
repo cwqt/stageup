@@ -1,7 +1,11 @@
 import { Component, OnInit, Input } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { IMyself } from '@core/interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { AuthenticationService } from "apps/frontend/src/app/services/authentication.service";
+import { LoginComponent } from "../../../routes/landing/login/login.component";
+import { RegisterComponent } from "../../../routes/landing/register/register.component";
+import { HelperService } from "../../../services/helper.service";
 import { PerformanceService } from "../../../services/performance.service";
 
 @Component({
@@ -15,19 +19,21 @@ export class HeaderBarComponent implements OnInit {
   userPopupOpen:boolean = false;
 
   constructor(
-    private appService:BaseAppService,
-    private authService:AuthenticationService
+    private baseAppService:BaseAppService,
+    private authService:AuthenticationService,
+    private helperService:HelperService,
+    private dialog:MatDialog
   ) {}
 
   ngOnInit(): void {
   }
 
   gotoCatalog() {
-    this.appService.navigateTo("/catalog");
+    this.baseAppService.navigateTo("/catalog");
   }
 
   gotoRoot() {
-    this.appService.navigateTo("/");
+    this.baseAppService.navigateTo("/");
   }
 
   toggleUserPopup(state:boolean) {
@@ -39,6 +45,14 @@ export class HeaderBarComponent implements OnInit {
   }
 
   searchPerformances(searchQuery: string){
-    this.appService.navigateTo(`/results`, { queryParams: { search_query: searchQuery  }});
+    this.baseAppService.navigateTo(`/results`, { queryParams: { search_query: searchQuery  }});
+  }
+
+  openLoginDialog() {
+    this.baseAppService.navigateTo(`/login`);
+  }
+
+  openRegisterDialog() {
+    this.baseAppService.navigateTo(`/register`);
   }
 }

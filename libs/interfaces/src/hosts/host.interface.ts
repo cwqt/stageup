@@ -40,10 +40,20 @@ export interface ISocialInfo {
 }
 
 export enum HostPermission {
-  Owner, // can delete host
-  Admin, // can create / delete performances
-  Editor, // can edit performance information
-  Member, // has accepted & can view host
-  Pending, // hasn't accepted invite
-  Expired // had an invite that they didn't accept in time
+  Owner = "host_owner", // can delete host
+  Admin = "host_admin", // can create / delete performances
+  Editor = "host_editor", // can edit performance information
+  Member = "host_member", // has accepted & can view host
+  Pending = "host_pending", // hasn't accepted invite
+  Expired = "host_expired" // had an invite that they didn't accept in time
+}
+
+const HOST_PERMISSIONS_AS_VALUES = [...Object.values(HostPermission)] as const;
+/**
+ * @description Checks if 'current' has permissions of 'required' - since it operates off inheritance with HostPermission string enum
+ * @param current The current HostPermission
+ * @param required The required HostPermission
+ */
+export const hasRequiredHostPermission = (current:HostPermission, required:HostPermission): boolean => {
+  return HOST_PERMISSIONS_AS_VALUES.indexOf(current) > HOST_PERMISSIONS_AS_VALUES.indexOf(required)
 }

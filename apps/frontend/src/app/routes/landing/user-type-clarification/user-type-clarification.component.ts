@@ -24,7 +24,6 @@ export class UserTypeClarificationComponent implements OnInit {
   }
 
   gotoClientLanding() {
-    this.baseAppService.navigateTo('/client');
     this.dialogRef.close();
   }
 }

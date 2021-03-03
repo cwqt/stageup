@@ -13,6 +13,7 @@ import { ClickOutsideModule } from 'ng-click-outside';
 import { MomentModule } from 'ngx-moment';
 import { NgxPopperModule } from 'ngx-popper';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { HttpConfigInterceptor } from './_helpers/http.interceptor';
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
@@ -30,15 +31,11 @@ import { RegisterComponent } from './routes/landing/register/register.component'
 import { FirstTimeSetupComponent } from './routes/landing/first-time-setup/first-time-setup.component';
 import { VerifiedComponent } from './components/pages/verified/verified.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
-
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
 import { HeaderBarComponent } from './components/app/header-bar/header-bar.component';
-
 import { ProfileComponent } from './routes/profile/profile.component';
-
 import { FooterComponent } from './components/app/footer/footer.component';
 import { PageComponent } from './components/app/page/page.component';
-
 import { CatalogComponent } from './routes/catalog/catalog.component';
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
 import { FeedComponent } from './routes/feed/feed.component';
@@ -74,10 +71,10 @@ import { HostAddMemberComponent } from './routes/host/host-members/host-add-memb
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostPerformanceDrawerComponent } from './components/app/drawer-components/host-performance-drawer/host-performance-drawer.component';
 import { SharePerformanceDialogComponent } from './routes/host/host-performance/share-performance-dialog/share-performance-dialog.component';
-import { ClientLandingComponent } from './routes/landing/client-landing/client-landing.component';
 import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { UserTypeClarificationComponent } from './routes/landing/user-type-clarification/user-type-clarification.component';
+import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -137,8 +134,8 @@ import { UserTypeClarificationComponent } from './routes/landing/user-type-clari
     UserTypeClarificationComponent,
     HostPerformanceDrawerComponent,
     SharePerformanceDialogComponent,
-    ClientLandingComponent,
-    HostLandingComponent
+    HostLandingComponent,
+    DialogEntryComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -150,10 +147,11 @@ import { UserTypeClarificationComponent } from './routes/landing/user-type-clari
     ReactiveFormsModule,
     HttpClientModule,
     ClickOutsideModule,
-    NgxMaskModule.forRoot(),
     MomentModule,
+    ClipboardModule,
+    NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
-    ClipboardModule
+    NgxPermissionsModule.forRoot(),
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],

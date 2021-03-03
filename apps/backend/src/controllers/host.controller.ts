@@ -20,7 +20,8 @@ import {
   IEnvelopedData,
   HostInviteState,
   IPerformanceStub,
-  TokenProvisioner
+  TokenProvisioner,
+  hasRequiredHostPermission
 } from '@core/interfaces';
 
 import {
@@ -123,7 +124,7 @@ export default class HostController extends BaseController {
   readHostByUsername(): IControllerEndpoint<IHost> {
     return {
       validators: [],
-      authStrategy: AuthStrat.isLoggedIn,
+      authStrategy: AuthStrat.none,
       controller: async req => {
         const host = await getCheck(Host.findOne({ username: req.params.username }));
         return host.toFull();
@@ -293,7 +294,7 @@ export default class HostController extends BaseController {
         );
 
         // Don't be able to force increase permissions if the user hasn't accepted the invitation
-        if (userHostInfo.permissions > HostPermission.Member)
+        if(hasRequiredHostPermission(userHostInfo.permissions, HostPermission.Member))
           throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
 
         const newUserPermission: HostPermission = req.body.value;

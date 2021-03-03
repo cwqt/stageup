@@ -51,3 +51,9 @@ export const createICacheable = <T = any>(
     meta: meta || {}
   };
 };
+
+
+// Put these enums here to prevent circular dependency
+export enum LocalStorageKey {
+  Myself = 'myself',
+}

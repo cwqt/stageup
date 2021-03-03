@@ -20,7 +20,7 @@ export class SidebarComponent implements OnInit {
   }
 
   gotoRoot() { this.appService.navigateTo('/') }
-  gotoHost() { this.appService.navigateTo('host') }
-  gotoAdmin() { this.appService.navigateTo('admin') }
-  gotoSettings() { this.appService.navigateTo('settings') }
+  gotoHost() { this.appService.navigateTo('/dashboard') }
+  gotoAdmin() { this.appService.navigateTo('/admin') }
+  gotoSettings() { this.appService.navigateTo('/settings') }
 }

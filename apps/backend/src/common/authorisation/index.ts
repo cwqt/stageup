@@ -1,5 +1,5 @@
 import Env from '../../env';
-import { Environment, ErrCode, HostPermission, IHost } from '@core/interfaces';
+import { Environment, ErrCode, HostPermission, IHost, hasRequiredHostPermission } from '@core/interfaces';
 import { Auth, AuthStrategy, AuthStratReturn, MapAccessor, NUUIDMap, User, UserHostInfo, Host } from '@core/shared/api';
 
 const isFromService: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
@@ -69,9 +69,9 @@ const hasHostPermission = (permission: HostPermission, mapAccessor?: MapAccessor
     const [isMember, passthru, reason] = await isMemberOfHost(mapAccessor, map)(req, dc);
     if (!isMember) return [false, {}, reason];
 
-    // Highest Perms (Owner)  = 0
-    // Lowest Perfs (Pending) = 5
-    if (passthru.uhi.permissions > permission) {
+    // Highest Perms (Owner)  = "host_owner"
+    // Lowest Perfs (Pending) = "host_pending"
+    if(hasRequiredHostPermission(passthru.uhi.permissions, permission)) {
       return [false, {}, ErrCode.MISSING_PERMS];
     }
 

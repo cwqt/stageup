@@ -2,7 +2,8 @@
   min-width: 500px;
   display: flex;
   ui-button {
-    width: 50%;
+    width: auto;
+    flex: 1;
     ::ng-deep {
       button {
         width: 100%;

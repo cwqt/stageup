@@ -37,3 +37,10 @@ export interface IMyself {
   host?:IHostStub;
   host_info?:IUserHostInfo
 }
+
+// For normal users, outside of a Host
+export enum UserPermission {
+  SiteAdmin = "site_admin",
+  User = "user",
+  None = "none" // allow non-users to browse
+}

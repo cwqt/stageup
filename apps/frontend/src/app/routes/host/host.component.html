@@ -4,7 +4,7 @@
 
     <div class="mt-4" *ngIf="myself.host_info.permissions < hostPermission.Pending">
       <div class="flex relative" *ngIf="!host.data.is_onboarded">
-        <ui-button class="w-full mb-2" routerLink="/host/onboarding" routerLinkActive="active-link">Onboarding
+        <ui-button class="w-full mb-2" routerLink="/dashboard/onboarding" routerLinkActive="active-link">Onboarding
         </ui-button>
 
         <span class="flex h-3 w-3 absolute right-0 top-0 ping">
@@ -13,11 +13,11 @@
         </span>
       </div>
 
-      <ui-button class="w-full mb-2" routerLink="/host/performances" routerLinkActive="active-link">Performances
+      <ui-button class="w-full mb-2" routerLink="/dashboard/performances" routerLinkActive="active-link">Performances
       </ui-button>
-      <ui-button class="w-full mb-2" routerLink="/host/members" routerLinkActive="active-link">Members</ui-button>
-      <ui-button class="w-full mb-2" routerLink="/host/settings" routerLinkActive="active-link">Settings</ui-button>
-      <ui-button class="w-full mb-2" [routerLink]="'/host/@'+ host.data.username" routerLinkActive="active-link">Edit Profile
+      <ui-button class="w-full mb-2" routerLink="/dashboard/members" routerLinkActive="active-link">Members</ui-button>
+      <ui-button class="w-full mb-2" routerLink="/dashboard/settings" routerLinkActive="active-link">Settings</ui-button>
+      <ui-button class="w-full mb-2" [routerLink]="'/dashboard/@'+ host.data.username" routerLinkActive="active-link">Edit Profile
       </ui-button>
     </div>
   </div>

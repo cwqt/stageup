@@ -30,7 +30,7 @@ export class HostComponent implements OnInit {
   ngOnInit(): void {
     this.myself = this.myselfService.$myself.value;
     if(this.myself.host_info.permissions >= HostPermission.Pending) {
-      this.baseAppService.navigateTo(`/host`)
+      this.baseAppService.navigateTo(`/dashboard`)
     }
 
     cachize(this.hostService.readHost(this.myself.host._id), this.host);

@@ -21,8 +21,20 @@ export const stitchParameters = (input: { [index: string]: Primitive }): string 
 };
 
 /**
- * @description Creates a new function using the current application environment to see if the 
+ * @description Creates a new function using the current application environment to see if the
  * application is running in said environment or not
  */
-export const isEnv = (currentEnv:Environment) => (desiredEnv: Environment | Environment[]) =>
-  Array.isArray(desiredEnv) ? desiredEnv.some(e => e === currentEnv) : desiredEnv === currentEnv;
+export const isEnv = (currentEnv: Environment) => (desiredEnv: Environment | Environment[]) => {
+  return Array.isArray(desiredEnv) ? desiredEnv.some(e => e === currentEnv) : desiredEnv === currentEnv;
+};
+
+/**
+ * @description Turns an enum into it's value counterparts
+ * @param enumme some enum
+ * @example
+ * enum Test { hello = "world" }
+ * enumToValues(Test) // ["world"]
+ */
+export const enumToValues = (enumme: any): any => {
+  return Object.keys(enumme).map(key => enumme[key]).filter(value => typeof value === 'string') as string[];
+};

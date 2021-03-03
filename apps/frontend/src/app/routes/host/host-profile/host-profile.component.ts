@@ -56,7 +56,7 @@ export class HostProfileComponent implements OnInit {
 
   openHostPage(endpoint: string) {
     this.baseAppService.navigateTo(
-      `${this.route.snapshot.data['isHostView'] ? '/host' : ''}/@${this.hostUsername}/${endpoint}`
+      `${this.route.snapshot.data['is_host_view'] ? '/host' : ''}/@${this.hostUsername}/${endpoint}`
     );
   }
 
