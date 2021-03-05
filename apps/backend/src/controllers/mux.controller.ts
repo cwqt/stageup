@@ -9,7 +9,7 @@ import { log } from '../common/logger';
 import { BackendDataClient } from '../common/data';
 import Auth from '../common/authorisation';
 
-export default class MUXHooksController extends BaseController {
+export default class MUXController extends BaseController {
   readonly hookMap: {
     [index in MUXHook]?: (data: IMUXHookResponse, dc: DataConnections<BackendDataClient>) => Promise<void>;
   };
@@ -17,11 +17,21 @@ export default class MUXHooksController extends BaseController {
   constructor(...args: BaseArguments) {
     super(...args);
     this.hookMap = {
-      [MUXHook.StreamCreated]: this.streamCreated
+      [MUXHook.StreamCreated]: this.streamCreated,
+      [MUXHook.StreamActive]: this.streamActive,
+      [MUXHook.StreamIdle]: this.StreamIdle,
     };
   }
 
   async streamCreated(data: IMUXHookResponse<LiveStream>) {
+    console.log(data);
+  }
+
+  async streamActive(data: IMUXHookResponse<LiveStream>) {
+    console.log(data);
+  }
+
+  async StreamIdle(data: IMUXHookResponse<LiveStream>) {
     console.log(data);
   }
 
@@ -83,7 +93,7 @@ export default class MUXHooksController extends BaseController {
 
   setHookHandled = async (data: IMUXHookResponse, redis: RedisClient): Promise<void> => {
     return new Promise((resolve, reject) => {
-      const hookId = `hook:${MD5(data.data)}`;
+      const hookId = `mux:${MD5(data.data)}`;
 
       redis
         .multi() // Atomicity
@@ -102,7 +112,7 @@ export default class MUXHooksController extends BaseController {
 
   checkPreviouslyHandledHook = async (data: IMUXHookResponse, redis: RedisClient): Promise<boolean> => {
     return new Promise((resolve, reject) => {
-      redis.hmget(`hook:${MD5(data.data)}`, 'hookId', (error, reply) => {
+      redis.hmget(`mux:${MD5(data.data)}`, 'hookId', (error, reply) => {
         if (error) return reject(error);
         if (reply[0]) return resolve(true);
         return resolve(false);
@@ -111,6 +121,6 @@ export default class MUXHooksController extends BaseController {
   };
 
   async unsupportedHookHandler(data: IMUXHookResponse) {
-    log.http(`Un-supported MUX hook: ${data.type}`);
+    log.warn(`Un-supported MUX hook: ${data.type}`);
   }
 }

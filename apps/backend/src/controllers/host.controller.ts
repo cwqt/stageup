@@ -297,9 +297,11 @@ export default class HostController extends BaseController {
         if(hasRequiredHostPermission(userHostInfo.permissions, HostPermission.Member))
           throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
 
+        // Don't allow updating to Owner as that is a transfer of host ownership
         const newUserPermission: HostPermission = req.body.value;
         if (newUserPermission == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised);
 
+        // Don't allow admins to demote an Owner
         if (userHostInfo.permissions == HostPermission.Owner)
           throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
 

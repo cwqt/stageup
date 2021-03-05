@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IHostStub, IMyself, IUserHostInfo } from '@core/interfaces';
+import { DtoAccessToken, IEnvelopedData, IHostStub, IMyself, IPerformance, IUserHostInfo } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HTTP } from '@core/interfaces';
@@ -12,9 +12,11 @@ import { LocalStorageKey } from '../app.interfaces';
 })
 export class MyselfService {
   $myself: BehaviorSubject<IMyself | null>;
+  $currentlyWatching:BehaviorSubject<IEnvelopedData<IPerformance, DtoAccessToken> | null>;
 
   constructor(private http: HttpClient, private router: Router) {
     this.$myself = new BehaviorSubject(this.hydrate());
+    this.$currentlyWatching = new BehaviorSubject(null);
   }
 
   store(myself: IMyself | null, rehydrate?: boolean) {
@@ -72,5 +74,7 @@ export class MyselfService {
   setUserHostInfo(userHostInfo: IUserHostInfo) {
     this.store({ ...this.$myself.value, host_info: userHostInfo });
   }
+
+  
   
 }

@@ -3,25 +3,67 @@
     <img class="object-cover h-96 w-full" src="./../../../assets/D.jpg" />
   </div>
 
-  <div class="flex p-4">
-    <div class="w-2/3">
-      <h1>{{ data.name }}</h1>
-      <app-user-thumb [user]="data.host"></app-user-thumb>
+  <div class="flex">
+    <mat-spinner *ngIf="performanceCacheable.loading"></mat-spinner>
+    <ng-container *ngIf="performance">
+      <mat-tab-group #tabs class="w-full" dynamicHeight>
+        <mat-tab>
+          <div class="flex p-4">
+            <div class="w-2/3">
+              <h1>{{ performance.name }}</h1>
+              <app-user-thumb [user]="data.host"></app-user-thumb>
+        
+              <ui-hr></ui-hr>
+        
+              <p>{{ data.description }}</p>
+            </div>
+        
+            <div class="w-1/3 ml-2 text-right">
+              <ng-template ngxPermissionsOnly="none">
+                <p>You must <a (click)="openRegister()">register</a> before being able to purchase this performance</p>
+                <ui-button kind="secondary" disabled="true" size="l"><ui-icon>add</ui-icon>Purchase <b>£{{performance.price}}</b></ui-button>
+              </ng-template>
+        
+              <ng-template ngxPermissionsOnly="user">
+                <ui-button (click)="openPurchasePerformanceSection()" kind="secondary" size="l"><ui-icon>add</ui-icon> {{ performancePrice }}</ui-button>
+              </ng-template>      
+            </div>    
+          </div>    
+        </mat-tab>
 
-      <ui-hr></ui-hr>
+        <mat-tab>
+          <div class="flex flex-col p-4">
+            <h1 class="mb-0"><span class="opacity-50">CHECKOUT:</span> {{ performance.name }}</h1>
+            <ui-hr></ui-hr>
 
-      <p>{{ data.description }}</p>
-    </div>
+            <ui-placeholder><h1>PayPal purchase here</h1></ui-placeholder>
 
-    <div class="w-1/3 ml-2 text-right">
-      <ng-template ngxPermissionsOnly="none">
-        <p>You must <a (click)="openRegister()">register</a> before being able to purchase this performance</p>
-        <ui-button kind="secondary" disabled="true" size="l"><ui-icon>add</ui-icon>Add to Cart</ui-button>
-      </ng-template>
+            <br />
+            <ui-button kind="primary" size="l" icon="purchase" (click)="confirmPayment()">Pay {{ performancePrice }}</ui-button>
+          </div>
+        </mat-tab>
 
-      <ng-template ngxPermissionsOnly="user">
-        <ui-button kind="secondary" size="l"><ui-icon>add</ui-icon>Add to Cart</ui-button>
-      </ng-template>      
-    </div>
+        <mat-tab>
+          <div class="flex flex-col p-4">
+            <h1>Thanks for your order!</h1>
+            <ui-hr></ui-hr>
+
+            <h3>You're going to watch "<b>{{ performance.name }}</b>"</h3>
+            <br />
+
+            <p>{{ performance.host.username }} is due to premiere this stream at {{ performance.premiere_date | amFromUnix | amDateFormat}}, you'll be notified by e-mail before it begins.</p>
+            <p>Purchase confirmation will arrive at <b>{{ myself.email_address }}</b> shortly.</p>
+
+            <div class="flex ml-auto">
+              <ui-button size="m" kind="primary" class="mr-2" *ngIf="performance.state == 'video.live_stream.active'">Watch Now</ui-button>
+              <ui-button size="m" kind="primary" (click)="closeDialog()" class="mr-2">Watch Later</ui-button>
+              <ui-button size="m" kind="secondary" (click)="closeDialog()">Close</ui-button>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
   </div>
 </ui-dialog>
+
+

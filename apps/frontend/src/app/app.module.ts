@@ -15,6 +15,8 @@ import { NgxPopperModule } from 'ngx-popper';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { HttpConfigInterceptor } from './_helpers/http.interceptor';
+import { PlyrModule } from 'ngx-plyr';
+
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
@@ -152,6 +154,7 @@ import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-e
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
     NgxPermissionsModule.forRoot(),
+    PlyrModule
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],

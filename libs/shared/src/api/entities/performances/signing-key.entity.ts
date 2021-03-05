@@ -24,7 +24,6 @@ export class SigningKey extends BaseEntity implements ISigningKey {
     // https://docs.mux.com/reference#url-signing-keys
     const signingKey = await mux.Video.SigningKeys.create();
 
-    // Response isn't actually enveloped - great docs :)
     this.mux_key_id = signingKey.id;
     this.rsa256_key = signingKey.private_key;
 
@@ -37,8 +36,6 @@ export class SigningKey extends BaseEntity implements ISigningKey {
       type: 'video',
       keyId: this.mux_key_id,
       keySecret: this.rsa256_key
-      // Expiration: string,
-      // params: any
     });
   }
 }

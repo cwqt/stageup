@@ -88,7 +88,7 @@ export const create = (): ProviderMap<BackendDataClient> => {
   };
 
   // Use HTTP tunnelling in development for receiving hooks
-  if(Env.isEnv([Environment.Production, Environment.Staging])) {
+  if(!Env.isEnv([Environment.Production, Environment.Staging])) {
     map.tunnel = new Providers.LocalTunnel({
       port: Env.LOCALTUNNEL.PORT,
       domain: Env.LOCALTUNNEL.DOMAIN

@@ -1,18 +1,19 @@
 import { NumberFormatStyle } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DtoAccessToken, IEnvelopedData, IPerformance, IPerformancePurchase, IPerformanceUserInfo } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
+import { MyselfService } from '../../services/myself.service';
 
 @Component({
   selector: 'app-performance',
   templateUrl: './performance.component.html',
   styleUrls: ['./performance.component.scss']
 })
-export class PerformanceComponent implements OnInit {
+export class PerformanceComponent implements OnInit, OnDestroy {
   performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>> = createICacheable();
   userPerformanceInfo: ICacheable<IPerformanceUserInfo> = createICacheable();
 
@@ -21,6 +22,7 @@ export class PerformanceComponent implements OnInit {
   isWatching: boolean;
 
   constructor(
+    private myselfService:MyselfService,
     private performanceService: PerformanceService,
     private router: Router,
     private route: ActivatedRoute,
@@ -43,11 +45,13 @@ export class PerformanceComponent implements OnInit {
 
   onRouterOutletActivate(event) {
     this.isWatching = true;
+    this.myselfService.$currentlyWatching.next(this.performance.data);
     //get user token for access
   }
 
   onRouterOutletDeactivate($event) {
     this.isWatching = false;
+    this.myselfService.$currentlyWatching.next(null);
   }
 
   async getPerformance() {
@@ -61,5 +65,9 @@ export class PerformanceComponent implements OnInit {
 
   gotoFeed() {
     this.appService.navigateTo(`/`);
+  }
+
+  ngOnDestroy() {
+    this.myselfService.$currentlyWatching.next(null);
   }
 }

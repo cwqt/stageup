@@ -2,11 +2,12 @@ import { Request, NextFunction, RequestHandler } from 'express-async-router';
 import { IResLocals } from './router';
 import { AuthStrategy } from './authorisation';
 import { Middlewares } from './middleware';
-import { IFormErrorField } from '@core/interfaces';
+import { HTTP, IFormErrorField } from '@core/interfaces';
 import { DataClient, DataConnections } from '@core/shared/api';
 import { Connection } from 'typeorm';
 
 export interface IControllerEndpoint<T> {
+  code?:HTTP;
   validators?: Array<(request: Request) => Promise<IFormErrorField[]>>;
   controller: <K>(request: Request, dc: DataClient<K>, locals: IResLocals, next: NextFunction) => Promise<T>;
   preMiddlewares?: RequestHandler[];

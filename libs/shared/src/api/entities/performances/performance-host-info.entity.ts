@@ -31,13 +31,14 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
   }
 
   async setup(mux:Mux, transEntityManager: EntityManager): Promise<[PerformanceHostInfo, LiveStream]> {
+    try {
     // https://docs.mux.com/reference#create-a-live-stream
     const stream: LiveStream = await mux.Video.LiveStreams.create({
       reconnect_window: 300, // Time to wait for reconnect on signal loss
       playback_policy: 'signed', // Requires token
       new_asset_settings: {},
       passthrough: '', // Arbitrary passthru data inc. in LS object
-      reduced_latency: false,
+      reduced_latency: false, // https://mux.com/blog/reduced-latency-for-mux-live-streaming-now-available/
       simulcast_targets: [], // For 3rd party re-streaming
       test: true // No cost during testing/dev
     });
@@ -51,5 +52,9 @@ export class PerformanceHostInfo extends BaseEntity implements IPerformanceHostI
 
     await transEntityManager.save(this);
     return [this, stream];
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

@@ -21,7 +21,7 @@ import { BackendDataClient } from './common/data';
 import UserController from './controllers/user.controller';
 import HostController from './controllers/host.controller';
 import PerfController from './controllers/performance.controller';
-import MUXHooksController from './controllers/mux-hooks.controller';
+import MUXController from './controllers/mux.controller';
 import AuthController from './controllers/auth.controller';
 import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
@@ -89,8 +89,8 @@ router.post     <void>                   (`/admin/onboardings/:oid/review`,     
 router.post     <void>                   ("/admin/onboardings/:oid/enact",            Admin.enactOnboardingProcess());
 
 // MUX HOOKS ----------------------------------------------------------------------------------------------------------
-const MUXHooks = new MUXHooksController(client, mws);
-router.post     <void>                   ("/mux/hooks",                               MUXHooks.handleHook());
+const MUX = new MUXController(client, mws);
+router.post     <void>                   ("/mux/hooks",                               MUX.handleHook());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
 const Auth =  new AuthController(client, mws)
