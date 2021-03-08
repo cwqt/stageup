@@ -125,31 +125,33 @@ export class FormComponent implements OnInit, AfterViewInit {
       .then((data: IUiFormPrefetchData) => {
         //https://angular.io/api/forms/AbstractControl#setErrors
         // is nice enough to let us use dot accessors, so no Y combis :<
-        const { fields, errors } = data;
+        if(data) {
+          const { fields, errors } = data;
 
-        // Set form control default value
-        Object.entries(fields).forEach(([f, v]) => this.formGroup.get(f)?.setValue(v));
-
-        // Set form control errors by bodging validator to show message
-        // if value is the same as it was prefetched
-        if(errors) {
-          Object.entries(errors).forEach(([f, v]) => {
-            const control = this.formGroup.get(f);
-            if (control) {
-              control.setValidators(
-                this.parseCustomValidator({
-                  type: 'custom',
-                  value: c => c.value != fields[f],
-                  message: e => `${v}`
-                })
-              );
-              control.updateValueAndValidity();
-              control.markAsTouched();
-            }
-          }); 
+          // Set form control default value
+          Object.entries(fields).forEach(([f, v]) => this.formGroup.get(f)?.setValue(v));
+  
+          // Set form control errors by bodging validator to show message
+          // if value is the same as it was prefetched
+          if(errors) {
+            Object.entries(errors).forEach(([f, v]) => {
+              const control = this.formGroup.get(f);
+              if (control) {
+                control.setValidators(
+                  this.parseCustomValidator({
+                    type: 'custom',
+                    value: c => c.value != fields[f],
+                    message: e => `${v}`
+                  })
+                );
+                control.updateValueAndValidity();
+                control.markAsTouched();
+              }
+            }); 
+          }
+  
+          this.formGroup.markAllAsTouched();            
         }
-
-        this.formGroup.markAllAsTouched();
       })
       .catch(e => console.log(e))
   }

@@ -90,20 +90,6 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
             instagram_url: null
           }
         }
-      },
-      [HostOnboardingStep.AddMembers]: {
-        valid: false,
-        state: HostOnboardingState.AwaitingChanges,
-        data: {
-          members_to_add: []
-        }
-      },
-      [HostOnboardingStep.SubscriptionConfiguration]: {
-        valid: false,
-        state: HostOnboardingState.AwaitingChanges,
-        data: {
-          tier: null
-        }
       }
     };
   }
@@ -133,9 +119,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
         {
           [0]: null,
           [1]: null,
-          [2]: null,
-          [3]: null,
-          [4]: null
+          [2]: null
         }
       )
     };
@@ -167,6 +151,8 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
       (this.steps[stepIndex].data as unknown)[k] = v ?? (this.steps[stepIndex].data as unknown)[k];
     });
 
+    this.steps[stepIndex].state = HostOnboardingState.Modified;
+
     return this.steps[stepIndex];
   }
 }
@@ -184,18 +170,8 @@ const stepValidators: { [index in HostOnboardingStep]: (d: unknown) => Promise<I
       owner_info: v => v.custom(single(Validators.Objects.IPersonInfo()))
     });
   },
-  [HostOnboardingStep.AddMembers]: async (d: IOnboardingAddMembers) => {
-    return object(d, {
-      members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest()))
-    });
-  },
   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
     return object(d, { social_info: v => v.custom(single(Validators.Objects.ISocialInfo()))});
-  },
-  [HostOnboardingStep.SubscriptionConfiguration]: async (d: IOnboardingSubscriptionConfiguration) => {
-    return object(d, {
-      tier: v => Validators.Fields.isInt(v).isIn(Object.values(HostSubscriptionLevel))
-    });
   }
 };
 

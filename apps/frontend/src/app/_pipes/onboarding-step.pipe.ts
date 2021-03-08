@@ -7,9 +7,7 @@ export class OnboardingStepPipe implements PipeTransform {
     const prettyValues: { [index in HostOnboardingStep]: string } = {
       [HostOnboardingStep.ProofOfBusiness]: 'Proof of Business',
       [HostOnboardingStep.OwnerDetails]: 'Owner Details',
-      [HostOnboardingStep.SocialPresence]: 'Social Presence',
-      [HostOnboardingStep.AddMembers]: 'Add Members',
-      [HostOnboardingStep.SubscriptionConfiguration]: 'Subscription Configuration'
+      [HostOnboardingStep.SocialPresence]: 'Social Presence'
     };
 
     return prettyValues[value] || 'Unknown Step';

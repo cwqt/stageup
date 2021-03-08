@@ -1,0 +1,28 @@
+.host-register-wrapper {
+  ::ng-deep {
+    .mat-horizontal-content-container {
+      padding: 0 !important
+    }
+  }
+}
+
+
+.host-register-dialog {
+  &--audience {
+    ::ng-deep .mat-horizontal-stepper-header-container {
+      display: none;
+    }
+  }
+  &--business {}
+}
+
+app-user-register ::ng-deep {
+  width: 100%;
+  .ui-dialog {
+    width: 100%;
+  }
+}
+
+// .host-register-dialog ::ng-deep .ui-dialog--content {
+//   padding: 0 !important
+// }

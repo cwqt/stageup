@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { HelperService } from '../../../services/helper.service';
@@ -14,11 +14,12 @@ export class DialogEntryComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.pipe(first()).subscribe(data => {
-      if (data.open_dialog) this.openDialog(data.open_dialog);
+      if (data.open_dialog) this.openDialog(data.open_dialog, data.config);
     });
   }
 
-  openDialog(dialog: any) {
-    this.helperService.showDialog(this.dialog.open(dialog), () => {});
+  openDialog(dialog: any, config?:MatDialogConfig) {
+    console.log(dialog, config)
+    this.helperService.showDialog(this.dialog.open(dialog, config || {}), () => {});
   }
 }

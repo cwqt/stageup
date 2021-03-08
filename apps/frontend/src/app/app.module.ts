@@ -29,7 +29,7 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { AppComponent } from './app.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { LoginComponent } from './routes/landing/login/login.component';
-import { RegisterComponent } from './routes/landing/register/register.component';
+import { UserRegisterComponent } from './routes/landing/user-register/user-register.component';
 import { FirstTimeSetupComponent } from './routes/landing/first-time-setup/first-time-setup.component';
 import { VerifiedComponent } from './components/pages/verified/verified.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
@@ -77,6 +77,7 @@ import { HostLandingComponent } from './routes/landing/host-landing/host-landing
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { UserTypeClarificationComponent } from './routes/landing/user-type-clarification/user-type-clarification.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
+import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { ChangeImageComponent } from './routes/settings/change-image/change-image.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -86,7 +87,6 @@ import { ChangeImageComponent } from './routes/settings/change-image/change-imag
     AppComponent,
     LandingComponent,
     LoginComponent,
-    RegisterComponent,
     ProfileComponent,
     VerifiedComponent,
     FirstTimeSetupComponent,
@@ -139,7 +139,9 @@ import { ChangeImageComponent } from './routes/settings/change-image/change-imag
     ChangeImageComponent,
     SharePerformanceDialogComponent,
     HostLandingComponent,
-    DialogEntryComponent
+    DialogEntryComponent,
+    UserRegisterComponent,
+    RegisterDialogComponent
   ],
   imports: [
     AngularMaterialModule,

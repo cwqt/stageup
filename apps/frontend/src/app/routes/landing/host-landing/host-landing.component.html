@@ -5,8 +5,8 @@
     <h2 class="mb-8">Live streaming & VoD for Performance Arts</h2>
 
     <div class="flex">
+      <ui-button class="flex-initial mr-4" kind="primary" icon="user" (click)="openHostRegister()">Register</ui-button>
       <!-- <ui-button class="flex-initial mr-4" kind="primary" icon="document--view" (click)="gotoBrowseMode()">Browse</ui-button>
-      <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="gotoLogin()">Log In</ui-button>
       <ui-button class="flex-initial mr-4" kind="accent" icon="user" (click)="gotoRegister()">Register</ui-button> -->
     </div>
     <br>
@@ -28,3 +28,5 @@
   </div>
 </div>
 </app-landing>
+
+<router-outlet></router-outlet>

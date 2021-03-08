@@ -31,9 +31,6 @@ export class OnboardingViewComponent implements OnInit {
   @Input() adminView: boolean = false;
   @Input() hostId: string;
 
-  // TODO: some steps we don't have requirements for yet...
-  private SKIPPED_STEPS = [HostOnboardingStep.AddMembers, HostOnboardingStep.SubscriptionConfiguration];
-
   // step & field indexes - only have one open at a time
   activeIssueMaker: [number, number] = [null, null];
 
@@ -99,7 +96,6 @@ export class OnboardingViewComponent implements OnInit {
   getAllValidSteps(): HostOnboardingStep[] {
     return Object.keys(this.onboardingSteps.data)
       .map(step => Number.parseInt(step)) // as HostOnboardingSteps
-      .filter(step => !this.SKIPPED_STEPS.includes(step as any)); // don't show skipped steps
   }
 
   async enactOnboardingProcess() {

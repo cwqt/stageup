@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatTabGroup } from '@angular/material/tabs';
 import { IEnvelopedData, IMyself, IPerformance, IPerformanceStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
-import { RegisterComponent } from '../../../routes/landing/register/register.component';
+import { RegisterDialogComponent } from '../../../routes/landing/register-dialog/register-dialog.component';
 import { HelperService } from '../../../services/helper.service';
 import { MyselfService } from '../../../services/myself.service';
 import { PerformanceService } from '../../../services/performance.service';
@@ -48,7 +48,7 @@ export class PerformanceDialogComponent implements OnInit, IUiDialogOptions {
   }
 
   openRegister() {
-    this.helperService.showDialog(this.dialog.open(RegisterComponent), () => {});
+    this.helperService.showDialog(this.dialog.open(RegisterDialogComponent), () => {});
   }
 
   confirmPayment() {

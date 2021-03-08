@@ -1,7 +1,3 @@
-h1 {
-  margin-bottom: 20px !important;
-}
-
 mat-error.form {
   display: inline-block !important;
   margin-left: 20px;
@@ -11,5 +7,11 @@ mat-error.form {
     display: flex;
     overflow: hidden;
     background-color: white;
+}
 
+.labelBeforeSlide {
+  vertical-align: top;
+  line-height: 24px; 
+  margin-right:0.5rem;
+  margin-bottom:0.5rem;
 }

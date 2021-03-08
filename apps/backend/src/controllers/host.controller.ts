@@ -490,9 +490,7 @@ export default class HostController extends BaseController<BackendDataClient> {
           [HostOnboardingStep.ProofOfBusiness]: (d: IOnboardingProofOfBusiness) =>
             pick(d, ['business_address', 'business_contact_number', 'hmrc_company_number']),
           [HostOnboardingStep.OwnerDetails]: (d: IOnboardingOwnerDetails) => pick(d, ['owner_info']),
-          [HostOnboardingStep.SocialPresence]: (d: IOnboardingSocialPresence) => pick(d, ['social_info']),
-          [HostOnboardingStep.AddMembers]: (d: IOnboardingAddMembers) => pick(d, ['members_to_add']),
-          [HostOnboardingStep.SubscriptionConfiguration]: (d: IOnboardingSubscriptionConfiguration) => pick(d, ['tier'])
+          [HostOnboardingStep.SocialPresence]: (d: IOnboardingSocialPresence) => pick(d, ['social_info'])
         };
 
         const step: HostOnboardingStep = Number.parseInt(req.params.step);

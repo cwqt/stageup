@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { IUser } from '@core/interfaces';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { IMyself, IUser } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
@@ -13,11 +14,13 @@ import { UserService } from '../../../services/user.service';
 import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-user-register',
+  templateUrl: './user-register.component.html',
+  styleUrls: ['./user-register.component.scss']
 })
-export class RegisterComponent implements OnInit, IUiDialogOptions {
+export class UserRegisterComponent implements OnInit, IUiDialogOptions {
+  @Input() isBusinessRegister: boolean;
+
   registerForm: IUiForm<IUser>;
   registerData: ICacheable<string> = {
     data: null,
@@ -31,6 +34,8 @@ export class RegisterComponent implements OnInit, IUiDialogOptions {
   };
 
   @ViewChild('form') form: FormComponent;
+  @Output() userTypeChange: EventEmitter<boolean> = new EventEmitter();
+  @Output() userRegistered: EventEmitter<IUser> = new EventEmitter();
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
   buttons = [
@@ -51,6 +56,8 @@ export class RegisterComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.isBusinessRegister);
+
     this.registerForm = {
       fields: {
         username: {
@@ -101,13 +108,23 @@ export class RegisterComponent implements OnInit, IUiDialogOptions {
     };
   }
 
-  handleRegisterSuccess(user: IUser) {
+  onToggleChange(event: MatSlideToggleChange) {
+    this.userTypeChange.emit(event.checked);
+  }
+
+  handleRegisterSuccess(user: IMyself['user']) {
     const { email_address, password } = this.form.formGroup.value;
     // get user, host & host info on login
     this.authService.login({ email_address, password }).then(() => {
       this.myselfService.getMyself().then(() => {
-        this.appService.navigateTo('/');
-        this.dialog.closeAll();
+        // pass up value if in multi-stage business user register
+        if (this.isBusinessRegister) {
+          this.userRegistered.emit(user);
+        } else {
+          // otherwise just go to feed page
+          this.appService.navigateTo('/');
+          this.dialog.closeAll();
+        }
       });
     });
   }

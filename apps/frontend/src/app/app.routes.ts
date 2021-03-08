@@ -7,7 +7,7 @@ import { VerifiedComponent } from './components/pages/verified/verified.componen
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { TestbedComponent } from './ui-lib/testbed/testbed.component';
-import { RegisterComponent } from './routes/landing/register/register.component';
+import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { LoginComponent } from './routes/landing/login/login.component';
 import { FeedComponent } from './routes/feed/feed.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
@@ -108,7 +108,17 @@ const LOGGED_IN_ROUTES: Routes = [
   imports: [
     RouterModule.forRoot(
       [
-        { path: 'host', component: HostLandingComponent },
+        {
+          path: 'host',
+          component: HostLandingComponent,
+          children: [
+            {
+              path: 'register',
+              component: DialogEntryComponent,
+              data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'business' } } }
+            }
+          ]
+        },
         {
           path: '',
           component: AppWrapperComponent,
@@ -126,7 +136,7 @@ const LOGGED_IN_ROUTES: Routes = [
                 {
                   path: 'register',
                   component: DialogEntryComponent,
-                  data: { open_dialog: RegisterComponent }
+                  data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' } } }
                 }
               ]
             },
@@ -153,8 +163,8 @@ const LOGGED_IN_ROUTES: Routes = [
         }
       ],
       {
-        // onSameUrlNavigation: 'reload',
-        paramsInheritanceStrategy: 'always',
+        onSameUrlNavigation: 'reload',
+        paramsInheritanceStrategy: 'always'
         // enableTracing: true
       }
     )

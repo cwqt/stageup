@@ -1,0 +1,20 @@
+<ui-dialog class="register-wrapper" [buttons]="buttons">
+  <div class="flex justify-between align-middle mb-4">
+    <h2 class="mb-0">Register</h2>
+    <div class="flex align-middle">
+      <span class="my-auto mr-4">
+        <mat-label class="labelBeforeSlide">Audience</mat-label>
+        <mat-slide-toggle [checked]="isBusinessRegister" (change)="onToggleChange($event)">Business</mat-slide-toggle>  
+      </span>
+      <ui-button kind="secondary" (click)="openLogin()">Login?</ui-button>
+    </div>
+  </div>
+
+  <ui-form #form
+    (onChange)="handleFormChange($event)"
+    (onSuccess)="handleRegisterSuccess($event)"
+    [cacheable]="registerData"
+    [form]="registerForm">
+  </ui-form>
+</ui-dialog>
+

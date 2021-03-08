@@ -3,10 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { IMyself } from '@core/interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { AuthenticationService } from "apps/frontend/src/app/services/authentication.service";
-import { LoginComponent } from "../../../routes/landing/login/login.component";
-import { RegisterComponent } from "../../../routes/landing/register/register.component";
 import { HelperService } from "../../../services/helper.service";
-import { PerformanceService } from "../../../services/performance.service";
 
 @Component({
   selector: "app-header-bar",
@@ -20,9 +17,7 @@ export class HeaderBarComponent implements OnInit {
 
   constructor(
     private baseAppService:BaseAppService,
-    private authService:AuthenticationService,
-    private helperService:HelperService,
-    private dialog:MatDialog
+    private authService:AuthenticationService
   ) {}
 
   ngOnInit(): void {

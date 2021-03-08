@@ -14,18 +14,18 @@
 //        - pro
 //        - premium
 
+import { Except } from 'type-fest';
 import { HostSubscriptionLevel } from '../common/subscription.interface';
 import { IPersonInfo } from '../users/person.interface';
 import { IUser, IUserPrivate, IUserStub } from '../users/user.interface';
+import { HostInviteState } from './host-invite.interface';
 import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './host.interface';
 import { IOnboardingStepReview } from './onboarding-step-review.interface';
 
 export enum HostOnboardingStep {
   ProofOfBusiness = 0,
   OwnerDetails = 1,
-  SocialPresence = 2,
-  AddMembers = 3,
-  SubscriptionConfiguration = 4
+  SocialPresence = 2
 }
 
 export enum HostOnboardingState {
@@ -33,7 +33,8 @@ export enum HostOnboardingState {
   PendingVerification = 1, // submit & awaiting verification from admin
   HasIssues = 2, // verified has having problems
   Verified = 3, // verified as valid
-  Enacted = 4 // all stages verified & submitted as complete
+  Enacted = 4, // all stages verified & submitted as complete
+  Modified = 5 // step has been modified
 }
 
 export type IHostOnboardingProcess = Omit<IHostOnboarding, 'steps'> & { steps: IOnboardingStepMap };
@@ -59,12 +60,14 @@ export interface IOnboardingStepMap {
   [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
   [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
   [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
-  [HostOnboardingStep.AddMembers]: IOnboardingStep<IOnboardingAddMembers>;
-  [HostOnboardingStep.SubscriptionConfiguration]: IOnboardingStep<IOnboardingSubscriptionConfiguration>;
 }
 
-export interface IOnboardingStep<T=any> {
-  state: HostOnboardingState.AwaitingChanges | HostOnboardingState.HasIssues | HostOnboardingState.Verified;
+export interface IOnboardingStep<T = any> {
+  state:
+    | HostOnboardingState.AwaitingChanges
+    | HostOnboardingState.HasIssues
+    | HostOnboardingState.Verified
+    | HostOnboardingState.Modified;
   review?: IOnboardingStepReview<T>;
   valid: boolean; //just if all the data is filled out & correct
   data: T;

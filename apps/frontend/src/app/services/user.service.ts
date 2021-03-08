@@ -25,8 +25,8 @@ export class UserService {
     });
   }
 
-  register(user: Pick<IUser, 'name' | 'username'> & { password: string }): Promise<IUser> {
-    return this.http.post<IUser>('/api/users', user).toPromise();
+  register(user: Pick<IUser, 'name' | 'username'> & { password: string }): Promise<IMyself["user"]> {
+    return this.http.post<IMyself["user"]>('/api/users', user).toPromise();
 
   }
 

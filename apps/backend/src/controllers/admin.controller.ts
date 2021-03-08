@@ -157,31 +157,6 @@ export default class AdminController extends BaseController {
           const socialInfoData = onboarding.steps[HostOnboardingStep.SocialPresence].data;
           host.social_info = socialInfoData.social_info;
 
-          // Add Members
-          const addMemberData = onboarding.steps[HostOnboardingStep.AddMembers].data;
-          // These are all just 'add' actions, so send an invitation & add them to the host
-          await Promise.allSettled(
-            addMemberData.members_to_add.map(async member => {
-              try {
-                const potentialMember = await User.findOne({ _id: member.value as string });
-                if (!potentialMember)
-                  log.error(`Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`);
-
-                // Don't add the owner if they're already in
-                if (potentialMember._id !== owner.user._id) {
-                  Email.sendUserHostMembershipInvitation(owner.user, potentialMember, host, txc);
-
-                  // Add the member as pending (updated on membership acceptance to Member)
-                  await host.addMember(potentialMember, HostPermission.Pending, txc);
-                }
-              } catch (error) {
-                log.error(error);
-              }
-            })
-          );
-
-          // TODO: Subscription level (needs requirements)
-
           // TODO: Once the onboarding process is complete, we no longer need it & it + it's onboarding issues
           // can be deleted
           onboarding.state = HostOnboardingState.Enacted;
