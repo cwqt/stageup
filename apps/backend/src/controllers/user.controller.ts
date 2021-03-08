@@ -339,5 +339,5 @@ export default class UserController extends BaseController {
         await Address.delete({ _id: req.params.aid });
       }
     };
-  }
+  }  
 }

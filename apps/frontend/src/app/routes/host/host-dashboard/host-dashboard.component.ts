@@ -5,11 +5,13 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './host-dashboard.component.html',
   styleUrls: ['./host-dashboard.component.scss']
 })
-export class HostDashboardComponent implements OnInit {
 
-  constructor() { }
+export class HostDashboardComponent implements OnInit {
+  
+  constructor( 
+
+  ) {}
 
   ngOnInit(): void {
   }
-
 }

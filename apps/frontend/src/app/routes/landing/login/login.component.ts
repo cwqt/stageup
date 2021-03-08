@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { Environment, IUser } from '@core/interfaces';
-
-import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { Environment, IUser, IHost } from '@core/interfaces';
+import { Auth, ErrorHandler, handleError } from '@core/shared/api';
+import { ICacheable, createICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
@@ -18,7 +18,7 @@ import { FormComponent } from '../../../ui-lib/form/form.component';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, IUiDialogOptions {
-  @ViewChild('form') form: FormComponent;
+  @ViewChild('form') form: FormComponent;  
 
   loginForm: IUiForm<IUser>;
   user: ICacheable<IUser> = {
@@ -50,10 +50,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
     private dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {
-    // Can't login if already logged in
-    if (this.myselfService.$myself.value) this.baseAppService.navigateTo('/');
-
+  ngOnInit(): void {   
     this.loginForm = {
       fields: {
         email_address: {
@@ -76,7 +73,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
     };
   }
 
-  async adminFastLogin() {
+  async adminFastLogin() {    
     const user = await this.authService.login({
       email_address: 'siteadmin@cass.si',
       password: 'siteadmin'
@@ -86,10 +83,14 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
   }
 
   onLoginSuccess(user: IUser) {
-    // get user, host & host info on login
-    this.myselfService.getMyself().then(() => {
-      this.baseAppService.navigateTo('/');
-      this.dialog.closeAll();
+    // get user, host & host info on login    
+    this.myselfService.getMyself().then((myself) => {  
+      if(myself.host) {
+        this.baseAppService.navigateTo('/dashboard');        
+      } else {
+        this.baseAppService.navigateTo('/');      
+      } 
+      this.dialog.closeAll(); 
     });
   }
 

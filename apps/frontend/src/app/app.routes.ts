@@ -131,7 +131,7 @@ const LOGGED_IN_ROUTES: Routes = [
                 {
                   path: 'login',
                   component: DialogEntryComponent,
-                  data: { open_dialog: LoginComponent }
+                  data: { open_dialog: LoginComponent },
                 },
                 {
                   path: 'register',

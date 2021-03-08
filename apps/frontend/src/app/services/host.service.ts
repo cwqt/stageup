@@ -127,7 +127,7 @@ export class HostService {
       .toPromise();
   }
 
-  changeAvatar(hostId: string, data: fd){
+  changeAvatar(hostId: string, data: fd) {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/avatar`, data).toPromise();
   }
 }
