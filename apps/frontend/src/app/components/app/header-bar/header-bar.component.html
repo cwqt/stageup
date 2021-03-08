@@ -10,25 +10,25 @@
 
     <ui-icon class="header-notification" *ngIf="myself">notification--new</ui-icon>
 
-    <div class="header-user" *ngIf="myself">
-      <img [src]="myself.user.avatar" alt="">
-      <span>{{ myself.user.name || myself.user.username }}</span>
-      <ui-icon [popper]="dropdownMenu" [popperShowOnStart]="false" [popperTrigger]="'click'" [popperHideOnClickOutside]="true"
-      [popperHideOnScroll]="true" [popperPlacement]="'bottom'">caret--down</ui-icon>      
-    </div>
-
     <div class="flex" *ngIf="!myself">
       <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="openLoginDialog()">Log In</ui-button>
       <ui-button class="flex-initial mr-4" kind="accent" icon="user" (click)="openRegisterDialog()">Register</ui-button>
     </div>
 
-    <!-- * DROPDOWN MENU * -->  
+    <div class="header-user" *ngIf="myself" [popper]="dropdownMenu" [popperShowOnStart]="false" 
+      [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="true" [popperPlacement]="'bottom'">  
+      <img [src]="myself.user.avatar" alt="">
+      <span>{{ myself.user.name || myself.user.username }}</span>
+      <ui-icon>caret--down</ui-icon>           
+    </div>    
+
+    <!-- * DROPDOWN MENU * --> 
     <popper-content #dropdownMenu class="shadow-xl">
       <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
-        <button>Profile</button>
+        <button (click)="userProfile()">Profile</button>
       </div>
       <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
-        <button>Settings</button>
+        <button (click)="userSettings()">Settings</button>
       </div>
       <a>
         <hr class="border-t mx-2">

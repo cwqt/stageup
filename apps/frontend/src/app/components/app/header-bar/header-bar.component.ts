@@ -44,6 +44,14 @@ export class HeaderBarComponent implements OnInit {
     this.authService.logout();
   }
 
+  userSettings() {
+    // Link to a settings user/host
+  }
+
+  userProfile() {
+    this.baseAppService.navigateTo(`/settings/profile`);
+  }
+
   searchPerformances(searchQuery: string){
     this.baseAppService.navigateTo(`/results`, { queryParams: { search_query: searchQuery  }});
   }
