@@ -48,13 +48,13 @@ export const environment: IEnvironment = {
     };
   },
   userCreationData: {
-    [UserType.SiteAdmin]: makeUserData('siteadmin@cass.si', 'siteadmin', 'siteadmin'),
-    [UserType.Owner]: makeUserData('hostowner@cass.si', 'hostowner', 'hostowner'),
-    [UserType.Admin]: makeUserData('hostadmin@cass.si', 'hostadmin', 'hostadmin'),
-    [UserType.Editor]: makeUserData('hosteditor@cass.si', 'hosteditor', 'hosteditor'),
-    [UserType.Member]: makeUserData('hostmember@cass.si', 'hostmember', 'hostmember'),
-    [UserType.Client]: makeUserData('eventiclient@cass.si', 'hostclient', 'hostclient'),
-    [UserType.None]: makeUserData('eventinone@cass.si', '', ''),
+    [UserType.SiteAdmin]: makeUserData('siteadmin@stageup.uk', 'siteadmin', 'siteadmin'),
+    [UserType.Owner]: makeUserData('hostowner@stageup.uk', 'hostowner', 'hostowner'),
+    [UserType.Admin]: makeUserData('hostadmin@stageup.uk', 'hostadmin', 'hostadmin'),
+    [UserType.Editor]: makeUserData('hosteditor@stageup.uk', 'hosteditor', 'hosteditor'),
+    [UserType.Member]: makeUserData('hostmember@stageup.uk', 'hostmember', 'hostmember'),
+    [UserType.Client]: makeUserData('eventiclient@stageup.uk', 'hostclient', 'hostclient'),
+    [UserType.None]: makeUserData('eventinone@stageup.uk', '', ''),
   },
 };
 

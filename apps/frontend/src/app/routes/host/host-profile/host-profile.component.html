@@ -1,7 +1,12 @@
 <div *ngIf="!host.loading && host.data">
   
   <div class="host-profile-header bg-white p-4 pb-0 rounded shadow-sm">
-    <img [src]="host.data.avatar" class="square absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
+    <ui-button (click)="openChangeAvatarDialog()" class="edit-button" kind="accent"><ui-icon size="s">paint-brush--alt</ui-icon>Edit</ui-button>
+
+    <div class="profile-picture__container">
+      <img [src]="host.data.avatar" class="square absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
+    </div>
+    
 
     <div class="flex absolute right-4 top-4 align-middle w-auto">
       <ui-button class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="add" kind="primary">Follow</ui-button>

@@ -17,6 +17,7 @@ import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
+import fd from "form-data";
 
 @Injectable({
   providedIn: 'root'
@@ -124,5 +125,9 @@ export class HostService {
     return this.http
       .post<void>(`/api/hosts/${hostId}/performances/${performanceId}/provision`, { email_addresses: emailAddresses })
       .toPromise();
+  }
+
+  changeAvatar(hostId: string, data: fd){
+    return this.http.put<IHostStub>(`api/hosts/${hostId}/avatar`, data).toPromise();
   }
 }

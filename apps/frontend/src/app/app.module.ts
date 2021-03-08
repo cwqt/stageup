@@ -77,6 +77,7 @@ import { HostLandingComponent } from './routes/landing/host-landing/host-landing
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { UserTypeClarificationComponent } from './routes/landing/user-type-clarification/user-type-clarification.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
+import { ChangeImageComponent } from './routes/settings/change-image/change-image.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -135,6 +136,7 @@ import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-e
     HostPerformanceComponent,
     UserTypeClarificationComponent,
     HostPerformanceDrawerComponent,
+    ChangeImageComponent,
     SharePerformanceDialogComponent,
     HostLandingComponent,
     DialogEntryComponent

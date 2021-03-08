@@ -1,10 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { BaseAppService, RouteParam } from '../../../services/app.service';
+import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
+import { ChangeImageComponent } from '../../settings/change-image/change-image.component';
+import fd from 'form-data';
+import { MyselfService } from '../../../services/myself.service';
 
 @Component({
   selector: 'app-host-profile',
@@ -39,9 +44,12 @@ export class HostProfileComponent implements OnInit {
   };
 
   constructor(
+    private myselfService:MyselfService,
     private baseAppService: BaseAppService,
     private route: ActivatedRoute,
-    private hostService: HostService
+    private hostService: HostService,
+    private helperService: HelperService,
+    public dialog: MatDialog
   ) {}
 
   async ngOnInit() {
@@ -66,6 +74,24 @@ export class HostProfileComponent implements OnInit {
     this.openHostPage(page.url);
   }
 
-  openSocialLink(link: string) { window.open(link, '_blank') }
-  originalOrder() { return 0 }
+  openChangeAvatarDialog() {
+    this.helperService.showDialog(
+      this.dialog.open(ChangeImageComponent, { data: { fileHandler: this.handleUploadHostAvatar.bind(this) } }),
+      (event: IHostStub) => {
+        this.host.data.avatar = event.avatar;
+        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, avatar: event.avatar })
+      });
+  }
+
+  handleUploadHostAvatar(formData:fd) {
+    return this.hostService.changeAvatar(this.host.data._id, formData);
+  }
+
+  openSocialLink(link: string) {
+    window.open(link, '_blank');
+  }
+
+  originalOrder() {
+    return 0;
+  }
 }

@@ -15,6 +15,7 @@ import {
   IOnboardingStep,
   IAddress,
   IOnboardingStepMap,
+  IHostStub as IHostS,
 } from '@core/interfaces';
 import { BackendDataClient } from './common/data';
 
@@ -69,6 +70,7 @@ router.get      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",        
 router.put      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 router.redirect                         ("/hosts/:hid/invites/:iid",                  Hosts.handleHostInvite());
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
+router.put      <IHostS>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());
 router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------

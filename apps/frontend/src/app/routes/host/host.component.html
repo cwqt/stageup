@@ -1,6 +1,6 @@
 <div class="flex items-stretch h-full" *ngIf="host.data">
   <div class="bg-white rounded p-4 flex-1 w-1/5" *ngIf="!($drawerIsOpen | async)">
-    <app-user-thumb [user]="host.data"></app-user-thumb>
+    <app-user-thumb [user]="myself.host"></app-user-thumb>
 
     <div class="mt-4" *ngIf="myself.host_info.permissions < hostPermission.Pending">
       <div class="flex relative" *ngIf="!host.data.is_onboarded">

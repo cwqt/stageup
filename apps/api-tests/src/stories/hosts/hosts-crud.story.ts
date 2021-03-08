@@ -1,5 +1,7 @@
 import { IHost } from '@core/interfaces';
 import { Stories } from '../../stories';
+import { createReadStream } from "fs";
+import fd from "form-data";
 
 describe('As a user-host, I want to be able to do Host CRUD', () => {
   let host: IHost;
@@ -21,4 +23,13 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
     await Stories.actions.hosts.readHost(host);
     await Stories.actions.hosts.readHostByUsername(host);
   });
+
+  it('Should upload a profile picture to AWS S3 and check for a returned object URL', async () => {
+    const filePath = require('path').join(__dirname, `./../../../assets/cat.jpg`);
+    const form = new fd();
+    form.append('file', createReadStream(filePath));
+
+    const h = await Stories.actions.hosts.changeAvatar(host, form);
+    expect(typeof h.avatar).toEqual("string");
+  })
 });

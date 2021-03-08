@@ -6,6 +6,7 @@ import PostgresProvider from './postgres.provider';
 import RedisProvider from './redis.provider';
 import StoreProvider from './store.provider';
 import SendGridProvider from './sendgrid.provider';
+import S3Provider from './aws-s3.provider';
 
 const CONNECTION_TIMEOUT = 20000;
 
@@ -109,5 +110,6 @@ export const Providers = {
   Influx: InfluxProvider,
   LocalTunnel: LocalTunnelProvider,
   Store: StoreProvider,
-  SendGrid: SendGridProvider
+  SendGrid: SendGridProvider,
+  S3: S3Provider
 };

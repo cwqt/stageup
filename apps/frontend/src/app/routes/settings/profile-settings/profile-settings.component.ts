@@ -5,6 +5,9 @@ import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { MyselfService } from '../../../services/myself.service';
 import { IUiForm } from '../../../ui-lib/form/form.interfaces';
 import isEmail from 'validator/lib/isEmail';
+import { ChangeImageComponent } from '../change-image/change-image.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { HelperService } from '../../../services/helper.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -54,7 +57,10 @@ export class ProfileSettingsComponent implements OnInit {
     }
   };
 
-  constructor(private userService: UserService, private myselfService: MyselfService) {}
+  constructor(private userService: UserService, 
+    private myselfService: MyselfService,
+    private helperService: HelperService,
+    public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.user = this.myselfService.$myself.value.user;
@@ -62,5 +68,9 @@ export class ProfileSettingsComponent implements OnInit {
 
   handleSuccessfulUpdate(event:IMyself["user"]) {
     this.myselfService.setUser(event);
+  }
+
+  openChangeAvatarDialog(){
+    this.dialog.open(ChangeImageComponent);
   }
 }

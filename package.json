@@ -78,6 +78,7 @@
     "express-rate-limit": "^5.2.3",
     "express-session": "^1.17.0",
     "express-validator": "^6.4.0",
+    "file-type": "^16.2.0",
     "flat": "^5.0.2",
     "form-data": "^3.0.0",
     "generate-package-json-webpack-plugin": "^2.1.2",

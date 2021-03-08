@@ -81,10 +81,11 @@ const Env: IEnvironment = {
     TTL: 86400
   },
   AWS: {
-    S3_ACCESS_KEY_ID: process.env.AWS_S3_KEY_ID,
+    S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
     S3_ACCESS_SECRET_KEY: process.env.AWS_S3_ACCESS_SECRET_KEY,
     S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
-    S3_URL: process.env.AWS_S3_URL
+    S3_URL: process.env.AWS_S3_URL,
+    S3_REGION: process.env.AWS_S3_REGION
   },
   INFLUX: {
     HOST: process.env.INFLUX_HOST,

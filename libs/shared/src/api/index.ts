@@ -14,8 +14,9 @@ export { default as Validators } from './validate'
 export { default as Router } from './router';
 export { default as Register } from './service';
 
+
 export { IMuxProviderConfig } from './providers/mux.provider';
-export { IAWS3ProviderConfig } from './providers/aws-s3.provider'
+export { IAWS3ProviderConfig, S3Return } from './providers/aws-s3.provider'
 export { IInfluxProviderConfig } from './providers/influx.provider'
 export { ILocalTunnelProviderConfig } from './providers/localtunnel.provider'
 export { IPostgresProviderConfig } from './providers/postgres.provider'

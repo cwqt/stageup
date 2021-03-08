@@ -74,7 +74,7 @@ export class CreateHostComponent implements OnInit {
   }
 
   handleFormSuccess(host:IHost) {
-    this.appService.navigateTo('/host');
+    this.appService.navigateTo('/dashboard');
   }
 
   handleFormFailure(e:HttpErrorResponse) {

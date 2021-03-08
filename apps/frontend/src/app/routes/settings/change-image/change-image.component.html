@@ -1,0 +1,16 @@
+<ui-dialog [buttons]="buttons" title="Please select an image to upload" class="text-center">
+    <h4 class="mb-10">Images must be in .jpeg or .png format and be under 2MB</h4>
+
+    <div class="selected-image-container grid justify-items-center mb-10">
+      <div class="image-wrapper">
+        <img class="h-72" [src]="selectedImage" id="avatar-preview"/>
+      </div>
+    </div>
+
+    <input hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file">
+    <ui-button icon="attachment" [kind]="fileTypeError ? 'warn' : 'primary'" (click)="fileInput.click()" class="select-file mb-10">
+       {{buttonText}}
+    </ui-button>
+    
+    <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
+</ui-dialog>
