@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-
-import { IUser, IHost, Primitive, IMyself } from '@core/interfaces';
+import * as fd from 'form-data';
+import { IUser, IHost, Primitive, IMyself, IUserStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 
 @Injectable({
@@ -51,16 +51,8 @@ export class UserService {
     return this.http.get<IHost>(`/api/users/${userId}/host`).toPromise();
   }
 
-  changeAvatar(userId: string, formData: FormData): Promise<IMyself["user"]> {
+  changeAvatar(userId: string, formData: fd): Promise<IUserStub> {
     return this.http
-      .put<IMyself["user"]>(`/api/users/${userId}/avatar`, formData)
-      .pipe(
-        tap(u => {
-          if (u._id == userId) {
-            this.myselfService.setUser(u);
-          }
-        })
-      )
-      .toPromise();
+      .put<IUserStub>(`/api/users/${userId}/avatar`, formData).toPromise();
   }
 }

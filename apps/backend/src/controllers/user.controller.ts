@@ -10,7 +10,8 @@ import {
   Idless,
   ErrCode,
   HTTP,
-  Environment
+  Environment,
+  IUserStub
 } from '@core/interfaces';
 import {
   IControllerEndpoint,
@@ -31,6 +32,7 @@ import Env from '../env';
 import AuthStrat from '../common/authorisation';
 
 import { EntityManager } from 'typeorm';
+import S3Provider, { S3Return } from 'libs/shared/src/api/providers/aws-s3.provider';
 
 export default class UserController extends BaseController {
   loginUser(): IControllerEndpoint<IUser> {
@@ -237,6 +239,36 @@ export default class UserController extends BaseController {
   //     }
   //   };
   // }
+
+  changeAvatar(): IControllerEndpoint<IUserStub>{
+    return {
+      validators: [],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      preMiddlewares: [this.mws.file(2048, ["image/jpg", "image/jpeg", "image/png"]).single("file")],
+      controller: async (req, dc) => {
+        const s3Provider: S3Provider = dc.providers["s3"];
+
+        const user = await getCheck(User.findOne(
+          {
+            where: {
+              _id: req.params.uid
+            }
+          }
+        ));
+
+        // Check whether an image already exists for this user first
+        // Delete if so to save space on s3
+        if (user.avatar) await s3Provider.deleteImageFromS3(user.avatar);
+
+        const dataFromS3: S3Return = await s3Provider.uploadImagetoS3(req.file);
+
+        user.avatar = dataFromS3.Location;
+        
+        await user.save();
+        return user.toStub();
+      }
+    }
+  }
 
   // forgotPassword(): IControllerEndpoint<void> {
   //   return {

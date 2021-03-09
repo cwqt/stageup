@@ -16,6 +16,7 @@ import {
   IAddress,
   IOnboardingStepMap,
   IHostStub as IHostS,
+  IUserStub as IUserS,
 } from '@core/interfaces';
 import { BackendDataClient } from './common/data';
 
@@ -43,7 +44,7 @@ router.get      <IUser>                 ("/users/:uid",                         
 router.put      <IMyself["user"]>       ("/users/:uid",                               Users.updateUser());
 router.delete   <void>                  ("/users/:uid",                               Users.deleteUser());
 router.get      <IE<IHost, IUHInfo>>    ("/users/:uid/host",                          Users.readUserHost());
-// router.put      <IMyself["user"]>       ("/users/:uid/avatar",                        Users.updateUserAvatar());
+router.put      <IUserS>                ("/users/:uid/avatar",                        Users.changeAvatar());
 // router.put      <void>                  ("/users/forgotpassword",                     Users.forgotPassword());
 router.put      <void>                  ("/users/:uid/password",                      Users.resetPassword());
 router.get      <IAddress[]>            ("/users/:uid/addresses",                     Users.readAddresses());

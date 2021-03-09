@@ -570,7 +570,7 @@ export default class HostController extends BaseController<BackendDataClient> {
 
         // Check whether an image already exists for this host first
         // Delete if so to save space on s3
-        if (host.avatar !== null) s3Provider.deleteImageFromS3(host.avatar);
+        if (host.avatar) await s3Provider.deleteImageFromS3(host.avatar);
         
         const dataFromS3: S3Return = await s3Provider.uploadImagetoS3(req.file);
         

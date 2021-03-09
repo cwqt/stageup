@@ -1,8 +1,9 @@
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
-import { IMyself, IUser, IAddress } from '@core/interfaces';
+import { IMyself, IUser, IAddress, IUserStub } from '@core/interfaces';
 import { api } from '../environment';
 import userAddressesActions from './user-addresses.actions';
+import fd from 'form-data';
 
 export default {
   ...userAddressesActions,
@@ -55,6 +56,15 @@ export default {
     const cachedUser = Object.values(Stories.cachedUsers).find(u => u?.user._id == Stories.activeUser?.user._id);
     if (cachedUser) cachedUser.session = '';
     Stories.activeUser = null;
+  },
+
+  //router.put<IUserS>("/hosts/:uid/avatar", Users.changeAvatar());
+  changeAvatar: async (user: IUser, data: fd): Promise<IUserStub> => { 
+    const options = env.getOptions();
+    options.headers["Content-Type"] = data.getHeaders()["content-type"];
+
+    const res = await api.put<IUserStub>(`/users/${user._id}/avatar`, data, options);
+    return res.data;
   },
 
   updateUser: async (user: IUser, props: any) => {},

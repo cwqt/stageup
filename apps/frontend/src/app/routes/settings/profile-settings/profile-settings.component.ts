@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IMyself, IUser } from '@core/interfaces';
+import { IMyself, IUser, IUserStub } from '@core/interfaces';
 import { UserService } from 'apps/frontend/src/app/services/user.service';
 import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { MyselfService } from '../../../services/myself.service';
@@ -8,6 +8,7 @@ import isEmail from 'validator/lib/isEmail';
 import { ChangeImageComponent } from '../change-image/change-image.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HelperService } from '../../../services/helper.service';
+import * as fd from 'form-data';
 
 @Component({
   selector: 'app-profile-settings',
@@ -71,6 +72,16 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   openChangeAvatarDialog(){
-    this.dialog.open(ChangeImageComponent);
+    this.helperService.showDialog(
+      this.dialog.open(ChangeImageComponent, { data: { fileHandler: this.handleUploadHostAvatar.bind(this) } }),
+      (event: IUserStub) => {
+        this.user.avatar = event.avatar;
+        this.myselfService.setUser({...this.myselfService.$myself.getValue().user, avatar: event.avatar });
+      });
   }
+
+  handleUploadHostAvatar(formData:fd) {
+    return this.userService.changeAvatar(this.user._id, formData);
+  }
+
 }
