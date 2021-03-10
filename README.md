@@ -42,12 +42,10 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
 ```sh
   apps
     frontend           # the stageup frontend
+      nginx.conf       # nginx config for frontend server
     backend            # the stageup backend
-      .env.example     # example .env
-      .env.development # also .env.staging, .testing & .production
     runner             # distributed job queue
     api-tests          # integration tests
-      .env.example     # example .env - call actual one just .env
           
   libs                 # where all shared code live
     interfaces         # typescript interfaces
@@ -57,12 +55,11 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
         providers      # utils for interacting with data sources
       helpers          # utility functions for backend & frontend
         
-  deploys              # info pertaining to deployment
+  deploy               # info pertaining to deployment
     k8s                # kubernetes files (unused for now)
-    docker             # docker-compose (dev, prod)
-    nginx.conf         # nginx config for frontend server
         
   tools                # non-source code stuff
+    generate-uml.ts    # creates a plant-uml diagram of models
         
   .github              # github actions
   .vscode              # editor settings
@@ -71,7 +68,10 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
   package.json         # where _all_ packages are listed
   tsconfig.base.json   # base ts config
   workspace.json       # where all apps/libs are defined
+  docker-compose.yml   # local stack deployment
   .env                 # .env for github tokens (deployment only)
+  .env.example         # example .env
+  .env.development     # also .env.staging, .testing & .production
 ```
 
 ## Useful Tools
