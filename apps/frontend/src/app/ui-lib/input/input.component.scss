@@ -43,6 +43,20 @@ $animation-duration: 0.2s;
     }
   }
 
+  &--is-disabled {
+    opacity: .5;
+    &:hover {
+      cursor: not-allowed !important;
+      pointer-events: none !important;
+    }
+    .form-field__control {
+      &::after {
+        border-bottom: 2px solid transparent !important;
+      }
+    }
+
+  }
+
   &--is-filled {
     .form-field__label {
       @include label-active();
@@ -288,4 +302,27 @@ mat-tree-node {
 
 ui-icon {
   margin-left: 10px;
+}
+
+
+.form-field__radio {
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  mat-radio-group {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;  
+  }
+  ::ng-deep {
+    .mat-form-field-infix {
+      border: 0 !important;
+      padding: 0 !important;
+    }
+    .mat-form-field-underline {
+      display: none !important;
+    }
+  }
 }

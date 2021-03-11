@@ -1,7 +1,10 @@
-import { ErrCode } from '@core/interfaces';
+import { CurrencyCode, ErrCode } from '@core/interfaces';
+import { enumToValues } from '@core/shared/helpers';
 import { ValidationChain } from 'express-validator';
 
 const FORBIDDEN_USERNAMES: string[] = [];
+const CURRENCY_CODES = enumToValues(CurrencyCode);
+
 export namespace FieldValidators {
   type CustomValidator = (v: ValidationChain, message?: ErrCode) => ValidationChain;
 
@@ -65,5 +68,7 @@ export namespace FieldValidators {
     return isString(v).isISO31661Alpha3().withMessage(ErrCode.REGEX_MATCH);
   };
 
-
+  export const CurrencyCode:CustomValidator = v => {
+    return v.isIn(CURRENCY_CODES)
+  }
 }

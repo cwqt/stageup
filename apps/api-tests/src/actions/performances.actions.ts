@@ -11,7 +11,12 @@ import {
   IHostStub,
   DtoCreatePerformance,
   Visibility,
-  Genre
+  Genre,
+  hasRequiredHostPermission,
+  ITicketStub,
+  ITicket,
+  Idless,
+  DtoCreateTicket
 } from '@core/interfaces';
 import { timestamp } from '@core/shared/helpers';
 
@@ -76,6 +81,24 @@ export default {
   // router.put <IPerf> ("/performances/:pid/visibility", Perfs.updateVisibility());
   updateVisibility: async (performance: IPerformance, visibility:Visibility): Promise<IPerformance> => {
     const res = await api.put(`/performances/${performance._id}/visibility`, { visibility: visibility }, env.getOptions());
+    return res.data;
+  },
+
+  // router.post <ITicket> ("/performances/:pid/tickets", Perfs.createTicket());
+  createTicket: async (performance:IPerformance, ticket:DtoCreateTicket):Promise<ITicket> => {
+    const res = await api.post(`/performances/${performance._id}/tickets`, ticket, env.getOptions());
+    return res.data;
+  },
+
+  // router.get <ITicketStub[]> ("/performances/:pid/tickets", Perfs.getTickets());
+  getTickets: async (performance:IPerformance):Promise<ITicketStub[]> => {
+    const res = await api.get(`/performances/${performance._id}/tickets`, env.getOptions());
+    return res.data;
+  },
+
+  // router.delete <void> ("/performances/:pid/tickets/:tid", Perfs.deleteTicket());
+  deleteTicket: async (performance:IPerformance, ticket:ITicket | ITicketStub):Promise<ITicket> => {
+    const res = await api.delete(`/performances/${performance._id}/tickets/${ticket._id}`, env.getOptions());
     return res.data;
   }
 };

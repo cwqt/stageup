@@ -14,14 +14,16 @@ export * from './hosts/host-invite.interface';
 
 export * from './performances/performance.interface';
 export * from './performances/genres.interface';
-export * from './performances/performance-purchase.interface';
-export * from './performances/performance-review.interface';
+export * from './performances/review.interface';
 export * from './performances/signing-key.interface';
 export * from './performances/access-token.interface';
+export * from './performances/ticket.interface';
 
 export * from './users/user.interface';
 export * from './users/person.interface';
 export * from './users/address.interface';
+
+export * from './common/invoice.interface';
 
 export * from './hooks/mux-hooks.interface';
 // export * from './hooks/stripe-hooks.interface';

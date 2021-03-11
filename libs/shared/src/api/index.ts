@@ -14,7 +14,6 @@ export { default as Validators } from './validate'
 export { default as Router } from './router';
 export { default as Register } from './service';
 
-
 export { IMuxProviderConfig } from './providers/mux.provider';
 export { IAWS3ProviderConfig, S3Return } from './providers/aws-s3.provider'
 export { IInfluxProviderConfig } from './providers/influx.provider'
@@ -25,3 +24,4 @@ export { IRedisProviderConfig } from './providers/redis.provider'
 export { IStoreProviderConfig } from './providers/store.provider'
 
 export * from './entities';
+export const PG_MODELS = require("./entities");

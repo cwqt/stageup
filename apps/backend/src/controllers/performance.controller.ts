@@ -11,7 +11,9 @@ import {
   Visibility,
   JobType,
   IScheduleReleaseJobData,
-  TokenProvisioner
+  TokenProvisioner,
+  ITicket,
+  ITicketStub
 } from '@core/interfaces';
 
 import {
@@ -25,9 +27,12 @@ import {
   query,
   User,
   Performance,
-  PerformancePurchase,
-  AccessToken
+  AccessToken,
+  Invoice,
+  Ticket
 } from '@core/shared/api';
+import { timestamp } from '@core/shared/helpers';
+import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
 
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
@@ -212,23 +217,24 @@ export default class PerformanceController extends BaseController<BackendDataCli
       validators: [],
       authStrategy: AuthStrat.none,
       controller: async req => {
+        // TODO: update to work with invoices & stripe
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['host_info'] }));
 
         // Check user hasn't already purchased performance
-        const previousPurchase = await PerformancePurchase.findOne({
-          relations: ['user', 'performance'],
-          where: {
-            user: { _id: user._id },
-            performance: { _id: perf._id }
-          }
-        });
+        // const previousPurchase = await Invoice.findOne({
+        //   relations: ['user', 'performance'],
+        //   where: {
+        //     user: { _id: user._id },
+        //     performance: { _id: perf._id }
+        //   }
+        // });
 
-        if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
+        // if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
 
-        const purchase = new PerformancePurchase(user, perf);
+        // const purchase = new Invoice(user, perf);
         // TODO: create an access token
-        await this.ORM.manager.save(purchase);
+        // await this.ORM.manager.save(purchase);
       }
     };
   }
@@ -250,5 +256,58 @@ export default class PerformanceController extends BaseController<BackendDataCli
         await perf.remove();
       }
     };
+  }
+
+  createTicket(): IControllerEndpoint<ITicket> {
+    return {
+      validators: [body(ObjectValidators.DtoCreateTicket())],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const ticket = new Ticket(req.body);
+        const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ["tickets"]}));
+
+        await this.ORM.transaction(async txc => {
+          await txc.save(ticket);
+          performance.tickets.push(ticket);
+          await txc.save(performance);
+        })
+
+        return ticket.toFull();
+      }
+    }
+  }
+  
+  readTickets(): IControllerEndpoint<ITicketStub[]> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+        const tickets = await Ticket.find({
+          relations: {
+            performance: true
+          },
+          where: {
+            deleted_at: null,
+            performance: {
+              _id: req.params.pid
+            }
+          },
+          select: {
+            performance: { _id: true }
+          }
+        });
+
+        return (tickets || []).map(t => t.toStub());
+      }
+    }
+  }
+
+  deleteTicket(): IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const ticket = await getCheck(Ticket.findOne({ _id: req.params.tid }));
+        await ticket.softRemove();
+      }
+    }
   }
 }

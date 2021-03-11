@@ -14,7 +14,8 @@ import {
   User,
   AccessToken,
   HostInvitation,
-  PerformancePurchase,
+  Invoice,
+  Ticket,
   Asset,
   Person,
   ContactInfo,
@@ -54,7 +55,8 @@ export const create = (): ProviderMap<BackendDataClient> => {
     ContactInfo,
     Person,
     Asset,
-    PerformancePurchase,
+    Invoice,
+    Ticket,
     HostInvitation,
     AccessToken
   ];

@@ -1,0 +1,32 @@
+<div class="flex flex-row items-center mb-5">
+  <h1 class="mb-0">Ticketing</h1>
+  <mat-spinner class="ml-5" [diameter]="50" *ngIf="tickets.loading"></mat-spinner>
+  <ui-button class="ml-auto" (click)="openCreateTicketDialog()" kind="primary"><ui-icon>add</ui-icon>Create Ticket</ui-button>
+</div>
+
+<table mat-table [dataSource]="ticketsDataSrc" class="w-full">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> State </th>
+    <td mat-cell *matCellDef="let ticket"> {{ ticket.name }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef> Quantity </th>
+    <td mat-cell *matCellDef="let ticket"> {{ ticket.quantity }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef> Price </th>
+    <td mat-cell *matCellDef="let ticket"> {{ ticket.type == 'free' ? 'FREE' : (ticket.price + " " + ticket.currency) }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let ticket">
+      <ui-button><ui-icon>add</ui-icon></ui-button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

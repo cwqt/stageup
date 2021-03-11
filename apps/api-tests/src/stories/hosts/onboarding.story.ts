@@ -104,36 +104,12 @@ describe('As Client, I want to register a Host & be onboarded', () => {
     );
   });
 
-  it('Should update the Add Members step', async () => {
-    let addMemberStep = await Stories.actions.hosts.updateOnboardingProcessStep<IOnboardingAddMembers>(
-      host,
-      HostOnboardingStep.AddMembers,
-      {
-        members_to_add: [
-          {
-            value: client._id
-          }
-        ]
-      }
-    );
-  });
-
-  it('Should update the Subscription Tier step', async () => {
-    let subscriptionTier = await Stories.actions.hosts.updateOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
-      host,
-      HostOnboardingStep.SubscriptionConfiguration,
-      {
-        tier: HostSubscriptionLevel.Enterprise
-      }
-    );
-  });
-
   it('Should get the created onboarding processes steps', async () => {
     let step0 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingProofOfBusiness>(
       host,
       HostOnboardingStep.ProofOfBusiness
     );
-    expect(step0.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(step0.state).toBe(HostOnboardingState.Modified);
     expect(step0.data.hmrc_company_number).toBe(11940210);
     expect(step0.data.business_address.city).toBe('Cardiff');
     expect(step0.data.business_address.iso_country_code).toBe('GBR');
@@ -146,7 +122,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       host,
       HostOnboardingStep.OwnerDetails
     );
-    expect(step1.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(step1.state).toBe(HostOnboardingState.Modified);
     expect(step1.data.owner_info.first_name).toBe('Drake');
     expect(step1.data.owner_info.last_name).toBe('Drakeford');
     expect(step1.data.owner_info.title).toBe('mr');
@@ -155,33 +131,16 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       host,
       HostOnboardingStep.SocialPresence
     );
-    expect(step2.state).toBe(HostOnboardingState.AwaitingChanges);
+    expect(step2.state).toBe(HostOnboardingState.Modified);
     expect(step2.data.social_info.facebook_url).toBe('https://facebook.com/eventi');
     expect(step2.data.social_info.instagram_url).toBe('https://instagram.com/eventi');
     expect(step2.data.social_info.linkedin_url).toBe('https://linkedin.com/eventi');
-
-    let step3 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingAddMembers>(
-      host,
-      HostOnboardingStep.AddMembers
-    );
-    
-    expect(step3.state).toBe(HostOnboardingState.AwaitingChanges);
-    expect(step3.data.members_to_add[0].value).toBe(client._id);
-
-    let step4 = await Stories.actions.hosts.readOnboardingProcessStep<IOnboardingSubscriptionConfiguration>(
-      host,
-      HostOnboardingStep.SubscriptionConfiguration
-    );
-    expect(step4.state).toBe(HostOnboardingState.AwaitingChanges);
-    expect(step4.data.tier).toBe(HostSubscriptionLevel.Enterprise);
 
     // Make the IOnboardingStepMap
     steps = {
       [HostOnboardingStep.ProofOfBusiness]: step0,
       [HostOnboardingStep.OwnerDetails]: step1,
-      [HostOnboardingStep.SocialPresence]: step2,
-      [HostOnboardingStep.AddMembers]: step3,
-      [HostOnboardingStep.SubscriptionConfiguration]: step4
+      [HostOnboardingStep.SocialPresence]: step2
     };
   });
 
@@ -209,14 +168,6 @@ describe('As Client, I want to register a Host & be onboarded', () => {
           issues: {},  
         },
         [HostOnboardingStep.SocialPresence]: {
-          state: HostOnboardingState.Verified,
-          issues: {},  
-        },
-        [HostOnboardingStep.SubscriptionConfiguration]: {
-          state: HostOnboardingState.Verified,
-          issues: {},  
-        },
-        [HostOnboardingStep.AddMembers]: {
           state: HostOnboardingState.Verified,
           issues: {},  
         },

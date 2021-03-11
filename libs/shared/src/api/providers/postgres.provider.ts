@@ -47,24 +47,3 @@ export default class PostgresProvider implements Provider<Connection> {
     await this.connection.synchronize(true); // https://github.com/nestjs/nest/issues/409
   }
 }
-
-// const close = async (client: DataClient<any>) => {
-//   await client.torm.close();
-// };
-
-// import { EOL } from 'os';
-// import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
-// const generateUML = async (conn: TORM.Connection) => {
-// if(Env.isEnv(Environment.Development)) {
-
-//     const flags: Flags = {
-//       direction: Direction.LR,
-//       format: Format.SVG,
-//       handwritten: false
-//     };
-
-//     const typeormUml = new TypeormUml();
-//     const url = await typeormUml.build(conn, flags);
-//     process.stdout.write('Diagram URL: ' + url + EOL);
-//   }
-// }

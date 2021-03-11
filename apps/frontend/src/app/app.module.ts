@@ -79,6 +79,9 @@ import { UserTypeClarificationComponent } from './routes/landing/user-type-clari
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { ChangeImageComponent } from './routes/settings/change-image/change-image.component';
+import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
+import { CreateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-ticket/create-ticket.component';
+import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -141,7 +144,10 @@ import { ChangeImageComponent } from './routes/settings/change-image/change-imag
     HostLandingComponent,
     DialogEntryComponent,
     UserRegisterComponent,
-    RegisterDialogComponent
+    RegisterDialogComponent,
+    HostPerformanceTicketingComponent,
+    CreateTicketComponent,
+    HostPerformanceDetailsComponent
   ],
   imports: [
     AngularMaterialModule,

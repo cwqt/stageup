@@ -117,8 +117,8 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                   search: true,
                   values: Object.keys(ISOCountryCode).reduce((acc, curr, idx) => {
                     acc.push({
-                      key: curr,
-                      value: Object.values(ISOCountryCode)[idx]
+                      key: Object.values(ISOCountryCode)[idx],
+                      value: curr
                     });
                     return acc;
                   }, [])
@@ -173,8 +173,8 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                 options: {
                   values: Object.values(PersonTitle).reduce<IUiFieldSelectOptions['values']>((acc, curr) => {
                     acc.push({
-                      key: curr,
-                      value: curr.charAt(0).toUpperCase() + curr.slice(1)
+                      key: curr.charAt(0).toUpperCase() + curr.slice(1),
+                      value: curr
                     });
                     return acc;
                   }, [])

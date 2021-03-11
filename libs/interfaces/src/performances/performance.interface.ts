@@ -1,10 +1,9 @@
 import { IHostStub } from '../hosts/host.interface';
-import { IRating } from './performance-review.interface';
 import { ISigningKey } from './signing-key.interface';
 import { CurrencyCode } from '../common/currency.interface';
 import { Genre } from './genres.interface';
-import { IPerformancePurchase } from './performance-purchase.interface';
 import { DtoAccessToken } from './access-token.interface';
+import { ITicketStub } from './ticket.interface';
 
 export enum Visibility {
   Public = 'public',
@@ -24,11 +23,11 @@ export interface IPerformanceStub {
 export interface IPerformance extends IPerformanceStub {
   visibility: Visibility;
   premiere_date?: number; // when the performance is ready to be streamed
-  ratings: IRating[]; // user ratings on performance
   state: PerformanceState; // status of stream
   price: number; // cost to purchase (micro-pence)
   currency: CurrencyCode; // currency of price
   genre: Genre;
+  tickets: ITicketStub[];
 }
 
 // data transfer object

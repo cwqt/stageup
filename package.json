@@ -3,6 +3,7 @@
   "version": "0.0.3",
   "license": "MIT",
   "scripts": {
+    "uml": "ts-node --project tools/tsconfig.tools.json tools/scripts/generate-uml",
     "runner": "cross-env NODE_ENV=development nx serve runner --configuration=development",
     "runner:testing": "cross-env NODE_ENV=testing nx serve runner --configuration=testing",
     "runner:staging": "cross-env NODE_ENV=staging nx serve runner --configuration=staging",

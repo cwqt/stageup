@@ -14,11 +14,9 @@
 //        - pro
 //        - premium
 
-import { Except } from 'type-fest';
 import { HostSubscriptionLevel } from '../common/subscription.interface';
 import { IPersonInfo } from '../users/person.interface';
 import { IUser, IUserPrivate, IUserStub } from '../users/user.interface';
-import { HostInviteState } from './host-invite.interface';
 import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './host.interface';
 import { IOnboardingStepReview } from './onboarding-step-review.interface';
 

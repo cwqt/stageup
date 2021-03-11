@@ -36,6 +36,8 @@ import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashbo
 import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
+import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
+import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -84,7 +86,16 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: 'settings', component: HostSettingsComponent },
       { path: 'members', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
-      { path: `performances/:${RP.PerformanceId}`, component: HostPerformanceComponent },
+      {
+        path: `performances/:${RP.PerformanceId}`, component: HostPerformanceComponent,
+        children: [
+          { path: "", component: HostPerformanceDetailsComponent },
+          { path: "ticketing", component: HostPerformanceTicketingComponent },
+          // { path: "analytics", HostPerformanceDetailsComponent },
+          { path: '**', component: NotFoundComponent }
+
+        ]
+      },
       {
         matcher: hostMatcher,
         component: HostProfileComponent,

@@ -1,8 +1,6 @@
-import { NumberFormatStyle } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DtoAccessToken, IEnvelopedData, IPerformance, IPerformancePurchase, IPerformanceUserInfo } from '@core/interfaces';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DtoAccessToken, IEnvelopedData, IPerformance, IPerformanceUserInfo } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -24,7 +22,6 @@ export class PerformanceComponent implements OnInit, OnDestroy {
   constructor(
     private myselfService:MyselfService,
     private performanceService: PerformanceService,
-    private router: Router,
     private route: ActivatedRoute,
     private appService: BaseAppService
   ) {}

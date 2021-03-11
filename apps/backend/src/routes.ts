@@ -16,6 +16,8 @@ import {
   IAddress,
   IOnboardingStepMap,
   IHostStub as IHostS,
+  ITicket,
+  ITicketStub,
   IUserStub as IUserS,
 } from '@core/interfaces';
 import { BackendDataClient } from './common/data';
@@ -84,6 +86,9 @@ router.post     <void>                  ("/performances/:pid/purchase",         
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
+router.post     <ITicket>               ("/performances/:pid/tickets",                Perfs.createTicket());
+router.get      <ITicketStub[]>         ("/performances/:pid/tickets",                Perfs.readTickets());
+router.delete   <void>                  ("/performances/:pid/tickets/:tid",           Perfs.deleteTicket());
 
 // ADMIN PANEL --------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(client, mws);

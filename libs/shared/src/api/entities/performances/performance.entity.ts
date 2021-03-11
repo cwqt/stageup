@@ -15,10 +15,9 @@ import { CurrencyCode, DtoCreatePerformance, Genre, IPerformance, IPerformanceSt
 import { PerformanceHostInfo } from './performance-host-info.entity';
 import { Host } from '../hosts/host.entity';
 import { User } from '../users/user.entity';
-import { PerformancePurchase } from '../performances/purchase.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
-import { DataConnections } from '@core/shared/api';
 import Mux from '@mux/mux-node';
+import { Ticket } from './ticket.entity';
 
 @Entity()
 export class Performance extends BaseEntity implements IPerformance {
@@ -38,12 +37,10 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column('enum', { enum: PerformanceState }) state: PerformanceState;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
 
+  @OneToMany(() => Ticket, ticket => ticket.performance) tickets:Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
   @ManyToOne(() => User, user => user.performances) creator: User;
   @OneToOne(() =>  PerformanceHostInfo) @JoinColumn() host_info: PerformanceHostInfo;
-  @OneToMany(() => PerformancePurchase, purchase => purchase.performance) purchases: PerformancePurchase[];
-
-  ratings: IRating[];
 
   constructor(
     data: DtoCreatePerformance,
@@ -56,6 +53,7 @@ export class Performance extends BaseEntity implements IPerformance {
     this.currency = data.currency;
     this.premiere_date = data.premiere_date;
     this.genre = data.genre;
+    this.tickets = [];
 
     this.created_at = timestamp(new Date());
     this.views = 0;
@@ -92,11 +90,11 @@ export class Performance extends BaseEntity implements IPerformance {
       ...this.toStub(),
       visibility: this.visibility,
       premiere_date: this.premiere_date,
-      ratings: this.ratings,
       state: this.state,
       price: this.price,
       currency: this.currency,
       genre: this.genre,
+      tickets: (this.tickets || []).map(t => t.toStub())
     };
   }
 

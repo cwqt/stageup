@@ -1,4 +1,3 @@
-import ws from 'ws';
 import session from 'express-session';
 import { Environment } from '@core/interfaces';
 import { Register, Router } from '@core/shared/api';
@@ -44,9 +43,9 @@ Register<BackendDataClient>({
   )(routes);
 });
 
-
-// Set up a headless websocket server that prints any events that come in.
-const wsServer = new ws.Server({ noServer: true });
-wsServer.on('connection', socket => {
-  socket.on('message', message => console.log(message));
-});
+// import ws from 'ws';
+// // Set up a headless websocket server that prints any events that come in.
+// const wsServer = new ws.Server({ noServer: true });
+// wsServer.on('connection', socket => {
+//   socket.on('message', message => console.log(message));
+// });

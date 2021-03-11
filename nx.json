@@ -1,6 +1,6 @@
 {
   "npmScope": "stageup-core",
-  "affected": { "defaultBase": "master" },
+  "affected": { "defaultBase": "dev" },
   "implicitDependencies": {
     "workspace.json": "*",
     "package.json": { "dependencies": "*", "devDependencies": "*" },

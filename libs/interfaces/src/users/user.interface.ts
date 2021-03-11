@@ -15,7 +15,6 @@ export interface IUser extends IUserStub {
   is_verified: boolean; //has completed email verification
   is_new_user: boolean; //gone through first time setup
   is_admin?: boolean;   //site admin global perms
-  // purchases: IPerformancePurchase[]; // performances for which the user has bought
 }
 
 export interface IUserPrivate extends IUser {

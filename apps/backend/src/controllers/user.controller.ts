@@ -298,7 +298,7 @@ export default class UserController extends BaseController {
         u.setPassword(newPassword);
         await u.save();
 
-        await Email.sendEmail({
+        Email.sendEmail({
           from: Env.EMAIL_ADDRESS,
           to: u.email_address,
           subject: 'Your password was just changed',

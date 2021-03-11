@@ -157,7 +157,8 @@ export class FormComponent implements OnInit, AfterViewInit {
   }
 
   getValue() {
-    const formValue = this.formGroup.value;
+    // getRawValue to include disabled inputs
+    const formValue = this.formGroup.getRawValue();
     // TODO: before data structure transformer, recurse down tree & perform field level transformers
 
     // Restructure the data according to some transformer

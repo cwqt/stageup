@@ -8,6 +8,7 @@
     [class.form-field--is-filled]="value !== ''"
     [class.form-field--is-small]="!label"
     [class.form-field--is-errored]="showError"
+    [class.form-field--is-disabled]="disabled"
     *ngIf="type == 'number' || type == 'text' || type == 'password' || type == 'phone'">
     <div class="form-field__control">
       <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
@@ -110,8 +111,8 @@
           placeholderLabel="Search"
           noEntriesFoundLabel="No results"></ngx-mat-select-search>
       </mat-option>
-      <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.key" (click)="emitSelectionChange(item)">
-        {{ item.value }}
+      <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.value" (click)="emitSelectionChange(item)">
+        {{ item.key }}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -136,6 +137,20 @@
         {{ item.value }}
       </mat-option>
     </mat-select>
+  </mat-form-field>
+
+  <!-- Radio select -->
+  <mat-form-field class="form-field__radio" *ngIf="type == 'radio'" appearance="none">
+    <label [for]="formControlName">{{ label }}</label>
+    <mat-radio-group
+      [id]="formControlName"
+      [(ngModel)]="value">
+      <mat-radio-button *ngFor="let item of options.values" [value]="item.value">
+        {{ item.key }}
+      </mat-radio-button>
+    </mat-radio-group>
+    <!-- stop formcontrolname throwing errors -->
+    <input matInput placeholder="Input" style="display: none" >
   </mat-form-field>
 
   <!-- Hint message -->

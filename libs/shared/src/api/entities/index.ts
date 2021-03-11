@@ -13,8 +13,9 @@ export { UserHostInfo } from './hosts/user-host-info.entity';
 export { AccessToken } from './performances/access-token.entity';
 export { PerformanceHostInfo } from './performances/performance-host-info.entity';
 export { Performance } from './performances/performance.entity';
-export { PerformancePurchase } from './performances/purchase.entity';
-// export { Rating } from './performances/rating.entity';
 export { SigningKey } from './performances/signing-key.entity';
+export { Ticket } from './performances/ticket.entity';
+// export { Rating } from './performances/rating.entity';
 
-export { Asset } from './misc/asset.model';
+export { Asset } from './common/asset.entity';
+export { Invoice } from './common/invoice.entity';

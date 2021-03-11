@@ -3,8 +3,8 @@ import { IAccessToken, TokenProvisioner, DtoAccessToken } from '@core/interfaces
 import { User } from '../users/user.entity';
 import { Performance } from './performance.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
-import { PerformancePurchase } from './purchase.entity';
 import { SigningKey } from './signing-key.entity';
+import { Invoice } from '../common/invoice.entity';
 
 @Entity()
 export class AccessToken extends BaseEntity implements IAccessToken {
@@ -19,8 +19,9 @@ export class AccessToken extends BaseEntity implements IAccessToken {
 
   @ManyToOne(() => User) @JoinColumn() user: User;
   @ManyToOne(() => Performance) @JoinColumn() performance: Performance;
+  @ManyToOne(() => Invoice) @JoinColumn() invoice: Invoice;
 
-  constructor(user: User, performance: Performance, provisioner: User | PerformancePurchase, type: TokenProvisioner) {
+  constructor(user: User, performance: Performance, provisioner: User | Invoice, type: TokenProvisioner) {
     super();
 
     this.user = user;
@@ -38,7 +39,7 @@ export class AccessToken extends BaseEntity implements IAccessToken {
   }
 
   getProvisionerEntity() {
-    if(this.provisioner_type == TokenProvisioner.Purchase) return PerformancePurchase;
+    if(this.provisioner_type == TokenProvisioner.Purchase) return Invoice;
     return User;
   }
 
@@ -52,6 +53,7 @@ export class AccessToken extends BaseEntity implements IAccessToken {
       provisioner_id: this.provisioner_id,
       performance: this.performance._id,
       user: this.user._id,
+      invoice: this.invoice?._id
     }
   }
 }

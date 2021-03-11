@@ -11,9 +11,13 @@ import {
   ISocialInfo,
   DtoCreatePerformance,
   Genre,
-  CurrencyCode
+  DtoCreateTicket,
+  CurrencyCode,
+  TicketType,
+  TicketFees
 } from '@core/interfaces';
 import { FieldValidators as FV } from './fields.validators';
+import { enumToValues } from '@core/shared/helpers';
 
 export namespace ObjectValidators {
   type ObjectValidator<T> = { [index in keyof T]: (v: ValidationChain) => ValidationChain };
@@ -76,6 +80,20 @@ export namespace ObjectValidators {
     };
   };
 
+  export const DtoCreateTicket = ():ObjectValidator<DtoCreateTicket> => {
+    return {
+      name: v => FV.isString(v),
+      price: v => FV.isInt(v),
+      currency: v => FV.CurrencyCode(v),
+      type: v => v.isIn(enumToValues(TicketType)),
+      quantity: v => v.isInt(),
+      fees: v => v.isIn(enumToValues(TicketFees)),
+      start_datetime: v => FV.timestamp(v),
+      end_datetime: v => FV.timestamp(v),
+      is_visible: v => v.isBoolean()
+    }
+  }
+
   export const IHostMemberChangeRequest = (
     value: IHostMemberChangeRequest['value'] = null
   ): ObjectValidator<IHostMemberChangeRequest> => {
@@ -83,4 +101,5 @@ export namespace ObjectValidators {
       value: v => v.optional({ nullable: true }) // TODO: update this validator to check for either typeof HostPermission or number
     };
   };
+
 }

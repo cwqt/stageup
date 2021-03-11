@@ -57,8 +57,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           label: 'Genre',
           validators: [{ type: 'required' }],
           options: {
-            values: Object.entries(GenreMap).map(([key, value]) => {
-              return { key: key, value: value };
+            values: Object.entries(GenreMap).map(([value, key]) => {
+              return { key, value };
             })
           }
         },

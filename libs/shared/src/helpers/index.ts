@@ -35,6 +35,6 @@ export const isEnv = (currentEnv: Environment) => (desiredEnv: Environment | Env
  * enum Test { hello = "world" }
  * enumToValues(Test) // ["world"]
  */
-export const enumToValues = (enumme: any): any => {
+export const enumToValues = (enumme: any): string[] => {
   return Object.keys(enumme).map(key => enumme[key]).filter(value => typeof value === 'string') as string[];
 };
