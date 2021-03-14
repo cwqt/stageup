@@ -65,5 +65,4 @@ export namespace FieldValidators {
     return isString(v).isISO31661Alpha3().withMessage(ErrCode.REGEX_MATCH);
   };
 
-
 }

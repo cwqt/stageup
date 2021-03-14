@@ -1,0 +1,9 @@
+<ui-dialog title="Create Ticket" [buttons]="buttons" [loading]="ticket.loading">
+  <ui-form #form
+    (onChange)="handleFormChange($event)"
+    (onSuccess)="handleFormSuccess($event)"
+    (onFailure)="handleFormFailure()"
+    [form]="createTicketForm"
+    [cacheable]="ticket">
+  </ui-form>
+</ui-dialog>

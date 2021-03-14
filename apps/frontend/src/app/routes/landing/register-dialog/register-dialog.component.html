@@ -1,0 +1,29 @@
+<div class="host-register-wrapper">
+  <ui-dialog [noPadding]="true" class="host-register-dialog"
+    [class.host-register-dialog--audience]="userType == 'audience'"
+    [class.host-register-dialog--business]="userType == 'business'">
+    <mat-horizontal-stepper #stepper [linear]="true">
+      <mat-step label="Register User Account" class="flex justify-items-center" [completed]="cachedUser ? true : false" [editable]="false">
+        <app-user-register
+          [isBusinessRegister]="userType == 'business'"
+          (userRegistered)="onUserRegistered($event)"
+          (userTypeChange)="onUserTypeChanged($event)">
+        </app-user-register>
+      </mat-step>
+  
+      <mat-step label="Create a Host" [completed]="cachedHost ? true : false" [editable]="false">
+        <app-create-host 
+          (hostRegistered)="onHostRegistered($event)"
+          *ngIf="userType == 'business'">
+        </app-create-host>
+      </mat-step>
+  
+      <mat-step label="Onboarding">
+        <div class="mb-4 mr-4 relative">
+          <ui-button class="absolute bottom-0 right-0" kind="secondary" (click)="skipOnboarding()">Skip Onboarding</ui-button>
+          <app-host-onboarding *ngIf="cachedHost"></app-host-onboarding>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </ui-dialog>
+</div>

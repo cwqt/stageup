@@ -1,0 +1,32 @@
+<app-landing>
+<div class="landing-cover-body">
+  <div class="landing-body__main">
+    <img class="logo mb-4" src="/assets/logo.svg">
+    <h2 class="mb-8">Live streaming & VoD for Performance Arts</h2>
+
+    <div class="flex">
+      <ui-button class="flex-initial mr-4" kind="primary" icon="user" (click)="openHostRegister()">Register</ui-button>
+      <!-- <ui-button class="flex-initial mr-4" kind="primary" icon="document--view" (click)="gotoBrowseMode()">Browse</ui-button>
+      <ui-button class="flex-initial mr-4" kind="accent" icon="user" (click)="gotoRegister()">Register</ui-button> -->
+    </div>
+    <br>
+  </div>
+
+  <div class="landing-body__bottom">
+    <p>
+      Watch live productions from
+      <span class="highlight-dark"> anywhere in the world </span>, from the comfort of your home.<br />
+      A bespoke service tailored to the next generation of performance arts.
+    </p>
+
+    <div class="icons">
+      <ui-icon>theater</ui-icon>
+      <ui-icon>arrow--right</ui-icon>
+      <ui-icon>devices</ui-icon>
+      <small>0.3.0</small>
+    </div>
+  </div>
+</div>
+</app-landing>
+
+<router-outlet></router-outlet>
