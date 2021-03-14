@@ -50,8 +50,6 @@ export default class UserController extends BaseController {
         const password = req.body.password;
 
         const u = await getCheck(User.findOne({ email_address: emailAddress }));
-        if (!u.is_verified) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.NOT_VERIFIED);
-
         const match = await u.verifyPassword(password);
         if (!match) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.INCORRECT);
 
