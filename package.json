@@ -1,6 +1,6 @@
 {
   "name": "stageup-core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "scripts": {
     "uml": "ts-node --project tools/tsconfig.tools.json tools/scripts/generate-uml",
