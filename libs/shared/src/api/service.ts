@@ -36,7 +36,7 @@ export default <T>(config: IServiceConfig<T>) => {
     try {
       const client = await Provider.create(config.providers, config.logger);
       const router = await f(app, client);
-      app.use(config.endpoint ? `/${config}` : "", router.router);
+      app.use(config.endpoint ? `/${config.endpoint}` : "", router.router);
 
       // Catch 404 errors & provide a top-level error handler
       app.all('*', global404Handler(config.logger));
