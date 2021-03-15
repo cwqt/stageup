@@ -8,13 +8,14 @@ import {
   IPerformanceHostInfo as IPHInfo, 
   IUserHostInfo as IUHInfo,
   IEnvelopedData as IE,
-  IPerformanceUserInfo as IPUInfo,
+  IPerformanceUserInfo,
   IMyself,
   DtoAccessToken as DtoAT,
   IHostOnboarding as IHOnboarding,
   IOnboardingStep,
   IAddress,
   IOnboardingStepMap,
+  ISearchResponse,
   IHostStub as IHostS,
   ITicket,
   ITicketStub,
@@ -29,6 +30,7 @@ import MUXController from './controllers/mux.controller';
 import AuthController from './controllers/auth.controller';
 import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
+import SearchController from './controllers/search.controller';
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -111,4 +113,9 @@ router.post     <void>                   ("/drop",                              
 router.get      <IHost>                  ("/verifyhost/:hid",                         Misc.verifyHost());
 router.post     <void>                   ("/acceptinvite/:uid",                       Misc.acceptHostInvite());
 router.get      <void>                   ("/sendgrid",                                Misc.testSendGrid());
+
+// SEARCH ---------------------------------------------------------------------------------------------------------------
+const Search = new SearchController(client, mws);
+router.get      <ISearchResponse>        ("/search",                                  Search.search());
+
 }

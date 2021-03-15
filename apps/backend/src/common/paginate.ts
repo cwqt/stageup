@@ -20,13 +20,10 @@ export const pagination = (req: Request, res: Response, next: NextFunction) => {
   SelectQueryBuilder.prototype.paginate = async function <T, K>(
     serialiser?: EntitySerialiser<T, K>
   ): Promise<IEnvelopedData<T[] | K[], null>> {
-    const locals = res.locals;
-    const current_page = locals.page === 0 ? 1 : locals.page;
-
     return paginate<T, K>(
       this,
-      current_page,
-      locals.per_page,
+      res.locals.page,
+      res.locals.per_page,
       serialiser
     );
   };
@@ -40,6 +37,7 @@ const paginate = async <T, K>(
   per_page: number,
   serialiser?: EntitySerialiser<T, K>
 ): Promise<IEnvelopedData<K[] | T[], null>> => {
+  page += 1;
   const skip = (page - 1) * per_page;
   const count = await builder.getCount();
   const res = (await builder.skip(skip).take(per_page).getMany()) as T[];

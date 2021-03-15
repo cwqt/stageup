@@ -29,3 +29,5 @@ export * from './hooks/mux-hooks.interface';
 // export * from './hooks/stripe-hooks.interface';
 
 export * from './runner/job.interface';
+
+export * from './search/search.interface';

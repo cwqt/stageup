@@ -118,5 +118,5 @@ export class Host extends BaseEntity implements IHostPrivate {
       contact_info: this.contact_info.toFull(),
       business_details: this.business_details
     };
-  }
+  } 
 }

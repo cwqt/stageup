@@ -26,7 +26,7 @@ import {
   PerformanceHostInfo,
   Host,
   Performance,
-  UserHostInfo
+  UserHostInfo  
 } from '@core/shared/api'
 
 import { Environment } from '@core/interfaces';

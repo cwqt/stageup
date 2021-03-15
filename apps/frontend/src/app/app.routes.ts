@@ -30,7 +30,6 @@ import { HostAboutComponent } from './routes/host/host-about/host-about.componen
 import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
 import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
-import { SearchResultsComponent } from './routes/search/search-results/search-results.component';
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
@@ -87,13 +86,13 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: 'members', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
       {
-        path: `performances/:${RP.PerformanceId}`, component: HostPerformanceComponent,
+        path: `performances/:${RP.PerformanceId}`,
+        component: HostPerformanceComponent,
         children: [
-          { path: "", component: HostPerformanceDetailsComponent },
-          { path: "ticketing", component: HostPerformanceTicketingComponent },
+          { path: '', component: HostPerformanceDetailsComponent },
+          { path: 'ticketing', component: HostPerformanceTicketingComponent },
           // { path: "analytics", HostPerformanceDetailsComponent },
           { path: '**', component: NotFoundComponent }
-
         ]
       },
       {
@@ -142,7 +141,7 @@ const LOGGED_IN_ROUTES: Routes = [
                 {
                   path: 'login',
                   component: DialogEntryComponent,
-                  data: { open_dialog: LoginComponent },
+                  data: { open_dialog: LoginComponent }
                 },
                 {
                   path: 'register',
@@ -151,8 +150,10 @@ const LOGGED_IN_ROUTES: Routes = [
                 }
               ]
             },
-            { path: 'search', component: SearchComponent },
-            { path: 'results', component: SearchResultsComponent },
+            {
+              path: `search`,
+              component: SearchComponent
+            },
             {
               matcher: hostMatcher,
               component: HostProfileComponent,

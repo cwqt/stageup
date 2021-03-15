@@ -4,8 +4,7 @@
 
   <div class="right">
     <div class="header-search">
-      <!-- <ui-icon>search</ui-icon> -->
-      <ui-input class="w-80" type="text" placeholder="Search for performances..." (keydown.enter)="searchPerformances(searchBox.value)" #searchBox></ui-input>
+      <ui-input class="w-80" type="text" placeholder="Search for performances..." (keydown.enter)="search(searchBox.value)" #searchBox></ui-input>
     </div>
 
     <ui-icon class="header-notification" *ngIf="myself">notification--new</ui-icon>
@@ -25,10 +24,10 @@
     <!-- * DROPDOWN MENU * --> 
     <popper-content #dropdownMenu class="shadow-xl">
       <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
-        <button (click)="userProfile()">Profile</button>
+        <button routerLink="/profile">Profile</button>
       </div>
       <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
-        <button (click)="userSettings()">Settings</button>
+        <button routerLink="/settings/profile">Settings</button>
       </div>
       <a>
         <hr class="border-t mx-2">
