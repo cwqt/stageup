@@ -69,6 +69,7 @@ import { HostAboutComponent } from './routes/host/host-about/host-about.componen
 import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { HostAddMemberComponent } from './routes/host/host-members/host-add-member/host-add-member.component';
+import { HostMemberPermissionsDialogComponent } from './routes/host/host-members/host-member-permissions-dialog/host-member-permissions-dialog.component';
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostPerformanceDrawerComponent } from './components/app/drawer-components/host-performance-drawer/host-performance-drawer.component';
 import { SharePerformanceDialogComponent } from './routes/host/host-performance/share-performance-dialog/share-performance-dialog.component';
@@ -134,6 +135,7 @@ import { HostPerformanceDetailsComponent } from './routes/host/host-performance/
     HostFeedComponent,
     HostMembersComponent,
     HostAddMemberComponent,
+    HostMemberPermissionsDialogComponent, 
     HostPerformanceComponent,
     UserTypeClarificationComponent,
     HostPerformanceDrawerComponent,

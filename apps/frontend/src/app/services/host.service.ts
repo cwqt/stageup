@@ -17,7 +17,7 @@ import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
-import fd from "form-data";
+import fd from 'form-data';
 
 @Injectable({
   providedIn: 'root'
@@ -124,6 +124,13 @@ export class HostService {
   provisionPerformanceAccessTokens(hostId: string, performanceId: string, emailAddresses: string[]): Promise<void> {
     return this.http
       .post<void>(`/api/hosts/${hostId}/performances/${performanceId}/provision`, { email_addresses: emailAddresses })
+      .toPromise();
+  }
+
+  //router.put  <void>  ("/hosts/:hid/members/:mid", Hosts.updateMember());
+  updateMember(hostId: string, userId: string, permissions: HostPermission): Promise<void> {
+    return this.http
+      .put<void>(`/api/hosts/${hostId}/members/${userId}`, { value: permissions })
       .toPromise();
   }
 

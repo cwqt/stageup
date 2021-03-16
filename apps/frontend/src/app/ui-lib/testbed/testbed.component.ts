@@ -46,19 +46,7 @@ export class TestbedComponent implements OnInit {
                 {
                   key: 1,
                   value: "hello",
-                  icon: "person",
                 },
-                {
-                  key: "wow",
-                  value: "world",
-                  children: [
-                    {
-                      key: 3,
-                      value: "world",
-                      icon: "person",
-                    }    
-                  ]
-                }
               ]
             }
           },

@@ -83,7 +83,7 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: '', component: HostDashboardComponent },
       { path: 'onboarding', component: HostOnboardingComponent },
       { path: 'settings', component: HostSettingsComponent },
-      { path: 'members', component: HostMembersComponent },
+      { path: 'team', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
       {
         path: `performances/:${RP.PerformanceId}`,

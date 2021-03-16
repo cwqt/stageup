@@ -27,7 +27,6 @@ export interface IUiFormField {
     | 'money'
     | 'date'
     | 'time'
-    | 'tree'
     | 'phone'
     | 'radio'
     | 'container';
@@ -82,9 +81,9 @@ export interface IUiFieldTextOptions extends IUiFieldOptions {
   transformer?: (v: Primitive) => Primitive;
 }
 export interface IUiFieldSelectOptions extends IUiFieldOptions {
-  values: Omit<IGraphNode, 'level' | 'expandable' | 'icon'>[];
-  multi: boolean;
-  search: boolean;
+  values: Array<{ key: Primitive, value: Primitive, disabled?:boolean }>;
+  multi?: boolean;
+  search?: boolean;
 }
 export interface IUiFormFieldValidator {
   type: 'required' | 'pattern' | 'minlength' | 'maxlength' | 'email' | 'custom';
