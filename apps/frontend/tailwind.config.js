@@ -1,3 +1,5 @@
+// safelist array not currently supported, hack in a file with all safelisted classes
+// for the tailwind/jit compiler to keep them in https://github.com/tailwindlabs/tailwindcss-jit/issues/32
 module.exports = (isProd) => ({
   prefix: '',
   purge: {
@@ -5,6 +7,7 @@ module.exports = (isProd) => ({
     content: [
       '**/*.html',
       '**/*.ts',
+      './apps/frontend/safelist.txt',
     ],
     options: {
       safelist: [
