@@ -92,11 +92,15 @@
             "polyfills": "apps/frontend/src/polyfills.ts",
             "tsConfig": "apps/frontend/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/frontend/src/favicon.ico", "apps/frontend/src/assets"],
+            "assets": [
+              "apps/frontend/src/favicon.ico",
+              "apps/frontend/src/assets"
+            ],
             "styles": [
               "apps/frontend/src/tailwind.scss",
               "apps/frontend/src/styles.scss",
-              "node_modules/plyr/dist/plyr.css"
+              "node_modules/plyr/dist/plyr.css",
+              "apps/frontend/src/assets/fonts/fonts.css"
             ],
             "scripts": []
           },
