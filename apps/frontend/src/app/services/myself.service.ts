@@ -74,7 +74,4 @@ export class MyselfService {
   setUserHostInfo(userHostInfo: IUserHostInfo) {
     this.store({ ...this.$myself.value, host_info: userHostInfo });
   }
-
-  
-  
 }

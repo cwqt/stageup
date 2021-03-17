@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Host, Injectable } from '@angular/core';
 import {
   HostPermission,
   IHostOnboarding,
@@ -18,6 +18,7 @@ import { HttpClient } from '@angular/common/http';
 import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 import fd from 'form-data';
+import { timestamp } from '@core/shared/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,20 @@ export class HostService {
   createHost(data: Pick<IHost, 'name' | 'username'>): Promise<IHost> {
     return this.http
       .post<IHost>('/api/hosts', data)
-      .pipe(tap(d => this.myselfService.setHost(d)))
+      .pipe(
+        tap(d =>
+          this.myselfService.store({
+            user: this.myselfService.$myself.getValue().user,
+            // propagate both the new host, and the host creators (owner)
+            // permissions to the other services
+            host: d,
+            host_info: {
+              permissions: HostPermission.Owner,
+              joined_at: timestamp()
+            }
+          }, true)
+        )
+      )
       .toPromise();
   }
 
