@@ -16,9 +16,16 @@
             "tsConfig": "apps/backend/tsconfig.app.json",
             "showCircularDependencies": false,
             "generatePackageJson": true,
-            "assets": []
+            "assets": [],
+            "maxWorkers": 2,
+            "memoryLimit": 1024
           },
           "configurations": {
+            "development": {
+              "inspect": true,
+              "port": 7777,
+              "optimization": false
+            },
             "production": {
               "optimization": true,
               "extractLicenses": true,
@@ -35,12 +42,10 @@
           "executor": "@nrwl/node:execute",
           "configurations": {
             "development": {
-              "buildTarget": "backend:build",
-              "inspect": true,
-              "port": 7777
+              "buildTarget": "backend:build:development"
             },
             "testing": {
-              "buildTarget": "backend:build"
+              "buildTarget": "backend:build:development"
             },
             "staging": {
               "buildTarget": "backend:build:staging"
@@ -96,6 +101,20 @@
             "scripts": []
           },
           "configurations": {
+            "development": {
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "showCircularDependencies": false,
+              "aot": true,
+              "extractLicenses": false,
+              "statsJson": false,
+              "progress": false,
+              "vendorChunk": true,
+              "buildOptimizer": false
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
@@ -120,7 +139,7 @@
           "executor": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "development": {
-              "browserTarget": "frontend:build",
+              "browserTarget": "frontend:build:development",
               "proxyConfig": "apps/frontend/proxy.conf.json"
             },
             "production": {
