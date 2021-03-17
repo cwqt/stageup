@@ -108,10 +108,10 @@
               "extractCss": true,
               "namedChunks": false,
               "showCircularDependencies": false,
-              "aot": true,
+              "aot": false,
               "extractLicenses": false,
               "statsJson": false,
-              "progress": false,
+              "progress": true,
               "vendorChunk": true,
               "buildOptimizer": false
             },
