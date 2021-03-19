@@ -10,7 +10,8 @@ import {
   IPerformance,
   DtoCreatePerformance,
   IHostMemberChangeRequest,
-  IEnvelopedData
+  IEnvelopedData,
+  IHostStripeInfo
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -141,7 +142,11 @@ export class HostService {
       .toPromise();
   }
 
-  //router.put  <void>  ("/hosts/:hid/members/:mid", Hosts.updateMember());
+  connectStripe(hostId:string):Promise<string> {
+    return this.http.post<string>(`/api/hosts/${hostId}/stripe/connect`, null).toPromise();
+  }
+  
+  //router.put <void> ("/hosts/:hid/members/:mid", Hosts.updateMember());
   updateMember(hostId: string, userId: string, permissions: HostPermission): Promise<void> {
     return this.http
       .put<void>(`/api/hosts/${hostId}/members/${userId}`, { value: permissions })
@@ -152,8 +157,13 @@ export class HostService {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/avatar`, data).toPromise();
   }
 
+  // router.get <IHostStripeInfo> ("/hosts/:hid/stripe/info", Hosts.readStripeInfo());
+  readStripeInfo(hostId:string):Promise<IHostStripeInfo> {
+    return this.http.get<IHostStripeInfo>(`/api/hosts/${hostId}/stripe/info`).toPromise();
+  }
+
   //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
   changeBanner(hostId: string, data: fd | null) {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/banner`, data).toPromise();
   } 
-  }
+}

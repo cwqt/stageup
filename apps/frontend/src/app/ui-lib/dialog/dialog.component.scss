@@ -1,5 +1,10 @@
+:host {
+  width: auto;
+  height: auto;
+}
+
 .ui-dialog {
-  position: relative; 
+  position: relative;
   
   .ui-dialog--spinner {
     position: absolute;

@@ -3,7 +3,7 @@ import Env from '../env';
 import { AuthStrategy, AuthStratReturn } from '@core/shared/api';
 
 const isEnv = (env: Environment): AuthStrategy => {
-  return async (req, dc): Promise<AuthStratReturn> => {
+  return async (req, providers): Promise<AuthStratReturn> => {
     if (!Env.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
     return [true, {}];
   };

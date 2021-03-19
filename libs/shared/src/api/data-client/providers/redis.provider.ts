@@ -1,5 +1,5 @@
 import { RedisClient, createClient } from 'redis';
-import { Provider } from '.';
+import { Provider } from '../';
 
 export interface IRedisProviderConfig {
   host: string;
@@ -15,7 +15,7 @@ export default class RedisProvider implements Provider<RedisClient> {
     this.config = config;
   }
 
-  async create() {
+  async connect() {
     this.connection = createClient({
       host: this.config.host,
       port: this.config.port
@@ -29,7 +29,7 @@ export default class RedisProvider implements Provider<RedisClient> {
     });
   }
 
-  async close() {
+  async disconnect() {
     return this.connection.end();
   }
 

@@ -1,3 +1,7 @@
+import { config, S3 } from 'aws-sdk';
+import { v4 as uuidv4 } from 'uuid';
+import { Provider } from '../';
+
 export interface IAWS3ProviderConfig {
   s3_access_key_id: string;
   s3_access_secret_key: string;
@@ -6,28 +10,22 @@ export interface IAWS3ProviderConfig {
   s3_region: string;
 }
 
-import { config, S3 } from 'aws-sdk';
-import { v4 as uuidv4 } from 'uuid';
-import { Provider } from '.';
-import FormData from 'form-data';
-
 export interface S3Return {
   Location: string;
   ETag: string;
   Bucket: string;
 }
 
-export default class S3Provider implements Provider<any> {
-  name = 'S3 Bucket';
+export default class S3Provider implements Provider<S3> {
+  name = 'AWS S3';
   connection: S3;
   config: IAWS3ProviderConfig;
-  // private s3Params: S3Params;
 
   constructor(config: IAWS3ProviderConfig) {
     this.config = config;
   }
 
-  async create() {
+  async connect() {
     config.update({
       region: this.config.s3_region,
       accessKeyId: this.config.s3_access_key_id,
@@ -48,7 +46,7 @@ export default class S3Provider implements Provider<any> {
       : null;
   } 
 
-  async close() {
+  async disconnect() {
     return;
   }
 
@@ -104,17 +102,18 @@ export default class S3Provider implements Provider<any> {
         })
         .promise();
     } catch (error) {
-      throw new Error(`S3 deletion error:  ${error.message}`);
+      throw new Error(`S3 deletion error: ${error.message}`);
     }
   }
 
   private getFileExtension(file: Express.Multer.File): string {
-    return file.originalname.substr(file.originalname.lastIndexOf('.') + 1);
+    //e.g. "myfile.jpg" --> "jpg"
+    return file.originalname.split(".").pop();
   }
 
   private extractObjectKeyFromUrl(s3ObjectUrl: string): string {
     //Extract the key from the bucket object URL (everything after last slash)
     //e.g https://su-assets.s3.eu-west-2.amazonaws.com/   ce76acbd-cec5-476f-a80d-2a910c86710c.jpg
-    return s3ObjectUrl.substr(s3ObjectUrl.lastIndexOf('/') + 1);
+    return s3ObjectUrl.split("/").pop();
   }
 }

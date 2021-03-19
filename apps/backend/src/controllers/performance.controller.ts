@@ -5,7 +5,6 @@ import {
   IPerformanceStub,
   DtoAccessToken,
   HTTP,
-  ErrCode,
   HostPermission,
   DtoCreatePerformance,
   Visibility,
@@ -17,7 +16,6 @@ import {
 } from '@core/interfaces';
 
 import {
-  Auth,
   ErrorHandler,
   getCheck,
   BaseController,
@@ -28,18 +26,16 @@ import {
   User,
   Performance,
   AccessToken,
-  Invoice,
   Ticket
 } from '@core/shared/api';
-import { timestamp } from '@core/shared/helpers';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
+import { BackendProviderMap } from '..';
 
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
-import { BackendDataClient } from '../common/data';
 import Queue from '../common/queue';
 
-export default class PerformanceController extends BaseController<BackendDataClient> {
+export default class PerformanceController extends BaseController<BackendProviderMap> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
@@ -57,7 +53,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
 
         return await this.ORM.transaction(async txc => {
           const performance = await new Performance(req.body, user);
-          await performance.setup(this.dc.connections.mux, txc);
+          await performance.setup(this.providers.mux.connection, txc);
           await txc.save(performance);
 
           // Push premiere to job queue for automated release
@@ -107,7 +103,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
     return {
       validators: [],
       authStrategy: AuthStrat.isLoggedIn,
-      controller: async (req, dc) => {
+      controller: async req => {
         const performance = await getCheck(
           Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info'] })
         );
@@ -132,7 +128,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
               hid: async () => performance.host._id
             },
             AuthStrat.isMemberOfHost(m => m.hid)
-          )(req, dc);
+          )(req, this.providers);
 
           if (isMemberOfHost) {
             token = new AccessToken(passthru.uhi.user, performance, passthru.uhi.user, TokenProvisioner.User).sign(
@@ -146,7 +142,7 @@ export default class PerformanceController extends BaseController<BackendDataCli
 
         return {
           data: performance.toFull(),
-          __client_data: token.toFull()
+          __client_data: token?.toFull()
         };
       }
     };

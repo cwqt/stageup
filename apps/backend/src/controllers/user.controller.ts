@@ -32,9 +32,9 @@ import Env from '../env';
 import AuthStrat from '../common/authorisation';
 
 import { EntityManager } from 'typeorm';
-import S3Provider, { S3Return } from 'libs/shared/src/api/providers/aws-s3.provider';
+import { BackendProviderMap } from '..';
 
-export default class UserController extends BaseController {
+export default class UserController extends BaseController<BackendProviderMap> {
   loginUser(): IControllerEndpoint<IUser> {
     return {
       validators: [
@@ -232,7 +232,7 @@ export default class UserController extends BaseController {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       preMiddlewares: [this.mws.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file')],
-      controller: async (req, dc) => {
+      controller: async req => {
         const user = await getCheck(
           User.findOne({
             where: {
@@ -241,21 +241,12 @@ export default class UserController extends BaseController {
           })
         );
 
-        const s3: S3Provider = dc.providers['s3'];
-        user.avatar = await s3.upload(req.file, user.avatar);
-
+        user.avatar = await this.providers.s3.upload(req.file, user.avatar);
         await user.save();
         return user.toStub();
       }
     };
   }
-
-  // forgotPassword(): IControllerEndpoint<void> {
-  //   return {
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {}
-  //   };
-  // }
 
   resetPassword(): IControllerEndpoint<void> {
     return {
@@ -291,20 +282,6 @@ export default class UserController extends BaseController {
     };
   }
 
-  // readUserHostPermissions(): IControllerEndpoint<void> {
-  //   return {
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {}
-  //   };
-  // }
-
-  // readUserFeed(): IControllerEndpoint<void> {
-  //   return {
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {}
-  //   };
-  // }
-
   readAddresses(): IControllerEndpoint<IAddress[]> {
     return {
       authStrategy: AuthStrat.isOurself,
@@ -338,7 +315,6 @@ export default class UserController extends BaseController {
       controller: async req => {
         const address = await Address.findOne({ _id: req.params.aid });
         // TODO: update method in address model
-
         return address.toFull();
       }
     };

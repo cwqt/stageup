@@ -1,6 +1,6 @@
 import { createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
-import { Provider } from '.';
+import { Provider } from '../';
 
 export interface ISendGridProviderConfig {
   username: string;
@@ -17,7 +17,7 @@ export default class SendGrid implements Provider<Mail> {
     this.config = config;
   }
 
-  async create() {
+  async connect() {
     this.connection = createTransport({
       service: 'SendGrid',
       auth: {
@@ -29,7 +29,7 @@ export default class SendGrid implements Provider<Mail> {
     return this.connection;
   }
 
-  async close() {
+  async disconnect() {
     return this.connection.close();
   }
 }

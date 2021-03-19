@@ -1,5 +1,5 @@
 import localtunnel, { Tunnel } from 'localtunnel';
-import { Provider } from '.';
+import { Provider } from '../index';
 
 export interface ILocalTunnelProviderConfig {
   port: number;
@@ -15,7 +15,7 @@ export default class LocalTunnelProvider implements Provider<Tunnel> {
     this.config = config;
   }
 
-  async create() {
+  async connect() {
     this.connection = await localtunnel({
       port: this.config.port,
       subdomain: this.config.domain
@@ -24,7 +24,7 @@ export default class LocalTunnelProvider implements Provider<Tunnel> {
     return this.connection;
   }
 
-  async close() {
+  async disconnect() {
     return this.connection.close();
   }
 }

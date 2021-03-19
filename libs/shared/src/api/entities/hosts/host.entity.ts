@@ -32,6 +32,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column({ nullable: true }) banner: string;
   @Column() is_onboarded: boolean;
   @Column() email_address: string;
+  @Column({ nullable: true }) stripe_account_id: string;
   @Column('jsonb') social_info: ISocialInfo;
   @Column('jsonb', { nullable: true }) business_details: IHostBusinessDetails;
 
@@ -118,7 +119,8 @@ export class Host extends BaseEntity implements IHostPrivate {
       ...this.toFull(),
       email_address: this.email_address,
       contact_info: this.contact_info.toFull(),
-      business_details: this.business_details
+      business_details: this.business_details,
+      stripe_account_id: this.stripe_account_id,
     };
   } 
 }

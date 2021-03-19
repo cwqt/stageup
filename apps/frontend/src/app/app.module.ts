@@ -15,6 +15,7 @@ import { NgxPopperModule } from 'ngx-popper';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { HttpConfigInterceptor } from './_helpers/http.interceptor';
+import { NgxStripeModule } from 'ngx-stripe';
 import { PlyrModule } from 'ngx-plyr';
 
 
@@ -76,6 +77,11 @@ import { SharePerformanceDialogComponent } from './routes/host/host-performance/
 import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { UserTypeClarificationComponent } from './routes/landing/user-type-clarification/user-type-clarification.component';
+import { PaymentSuccessComponent } from './routes/payments/payment-success/payment-success.component';
+import { PaymentCancelComponent } from './routes/payments/payment-cancel/payment-cancel.component';
+import { PaymentCheckoutComponent } from './routes/payments/payment-checkout/payment-checkout.component';
+import { environment } from '../environments/environment';
+import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { ChangeImageComponent } from './routes/settings/change-image/change-image.component';
@@ -142,6 +148,10 @@ import { HostPerformanceDetailsComponent } from './routes/host/host-performance/
     ChangeImageComponent,
     SharePerformanceDialogComponent,
     HostLandingComponent,
+    PaymentSuccessComponent,
+    PaymentCancelComponent,
+    PaymentCheckoutComponent,
+    HostPaymentsComponent,
     DialogEntryComponent,
     UserRegisterComponent,
     RegisterDialogComponent,
@@ -163,6 +173,8 @@ import { HostPerformanceDetailsComponent } from './routes/host/host-performance/
     ClipboardModule,
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
+    NgxStripeModule.forRoot(environment.stripePublicKey),
+    ClipboardModule,
     NgxPermissionsModule.forRoot(),
     PlyrModule
   ],

@@ -1,20 +1,20 @@
 import { RedisClient } from 'redis';
 import { MD5 } from 'object-hash';
 import { MUXHook, IMUXHookResponse, ErrCode, HTTP } from '@core/interfaces';
-import { AuthStrategy, ErrorHandler, DataConnections, BaseArguments, IControllerEndpoint, BaseController } from '@core/shared/api';
+import { AuthStrategy, ErrorHandler, BaseArguments, IControllerEndpoint, BaseController } from '@core/shared/api';
 import { Webhooks, LiveStream } from '@mux/mux-node';
 
 import Env from '../env';
 import { log } from '../common/logger';
-import { BackendDataClient } from '../common/data';
 import Auth from '../common/authorisation';
+import { BackendProviderMap } from '..';
 
-export default class MUXController extends BaseController {
+export default class MUXController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
-    [index in MUXHook]?: (data: IMUXHookResponse, dc: DataConnections<BackendDataClient>) => Promise<void>;
+    [index in MUXHook]?: (data: IMUXHookResponse, pm: BackendProviderMap) => Promise<void>;
   };
 
-  constructor(...args: BaseArguments) {
+  constructor(...args: BaseArguments<BackendProviderMap>) {
     super(...args);
     this.hookMap = {
       [MUXHook.StreamCreated]: this.streamCreated,
@@ -76,14 +76,14 @@ export default class MUXController extends BaseController {
           // Check if hook has already been handled by looking in the Redis store
           if (
             data.attempts.length > 0 &&
-            (await this.checkPreviouslyHandledHook(req.body, this.dc.connections.redis))
+            (await this.checkPreviouslyHandledHook(req.body, this.providers.redis.connection))
           ) {
             log.info('Duplicate MUX hook');
             return;
           }
 
-          await (this.hookMap[data.type] || this.unsupportedHookHandler)(req.body, this.dc.connections);
-          await this.setHookHandled(req.body, this.dc.connections.redis);
+          await (this.hookMap[data.type] || this.unsupportedHookHandler)(req.body, this.providers);
+          await this.setHookHandled(req.body, this.providers.redis.connection);
         } catch (error) {
           throw new ErrorHandler(HTTP.ServerError, error);
         }

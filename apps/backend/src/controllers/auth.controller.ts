@@ -4,8 +4,9 @@ import { ErrCode } from '@core/interfaces';
 import Env from '../env';
 import AuthStrat from '../common/authorisation';
 import { verifyEmail } from '../common/email';
+import { BackendProviderMap } from '..';
 
-export default class AuthController extends BaseController {
+export default class AuthController extends BaseController<BackendProviderMap> {
   verifyUserEmail(): IControllerEndpoint<string> {
     return {
       validators: [

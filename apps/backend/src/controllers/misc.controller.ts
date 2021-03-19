@@ -6,13 +6,15 @@ import {
   getCheck,
   HostInvitation,
   BaseController,
-  IControllerEndpoint
+  IControllerEndpoint,
+  DataClient
 } from '@core/shared/api';
-import { IHost, Environment, HostInviteState, HostPermission, HTTP, ErrCode } from '@core/interfaces';
+import { IHost, Environment, HostInviteState, HostPermission } from '@core/interfaces';
 import { sendEmail } from '../common/email';
 import Env from '../env';
+import { BackendProviderMap } from '..';
 
-export default class MiscController extends BaseController {
+export default class MiscController extends BaseController<BackendProviderMap> {
   ping(): IControllerEndpoint<string> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
@@ -25,8 +27,8 @@ export default class MiscController extends BaseController {
   dropAllData(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
-      controller: async (req, dc) => {
-        await Provider.drop(dc.providers);
+      controller: async req => {
+        await DataClient.drop(this.providers);
       }
     };
   }

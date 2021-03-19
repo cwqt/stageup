@@ -1,5 +1,5 @@
 import { Connection, Entity, createConnection } from 'typeorm';
-import { Provider } from '.';
+import { Provider } from '../';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export interface IPostgresProviderConfig {
@@ -22,7 +22,7 @@ export default class PostgresProvider implements Provider<Connection> {
     this.models = models;
   }
 
-  async create() {
+  async connect() {
     this.connection = await createConnection({
       type: 'postgres',
       host: this.config.host,
@@ -39,7 +39,7 @@ export default class PostgresProvider implements Provider<Connection> {
     return this.connection;
   }
 
-  close() {
+  disconnect() {
     return this.connection.close();
   }
 

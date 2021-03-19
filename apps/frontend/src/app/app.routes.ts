@@ -34,6 +34,10 @@ import { HostPerformanceComponent } from './routes/host/host-performance/host-pe
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
+import { PaymentSuccessComponent } from './routes/payments/payment-success/payment-success.component';
+import { PaymentCancelComponent } from './routes/payments/payment-cancel/payment-cancel.component';
+import { PaymentCheckoutComponent } from './routes/payments/payment-checkout/payment-checkout.component';
+import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
@@ -83,6 +87,7 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: '', component: HostDashboardComponent },
       { path: 'onboarding', component: HostOnboardingComponent },
       { path: 'settings', component: HostSettingsComponent },
+      { path: 'payments', component: HostPaymentsComponent },
       { path: 'team', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
       {
@@ -106,6 +111,14 @@ const LOGGED_IN_ROUTES: Routes = [
           { path: '**', component: NotFoundComponent }
         ]
       }
+    ]
+  },
+  {
+    path: 'payments',
+    children: [
+      { path: 'checkout', component: PaymentCheckoutComponent },
+      { path: 'success', component: PaymentSuccessComponent },
+      { path: 'cancel', component: PaymentCancelComponent }
     ]
   },
   { path: `admin`, component: AdminPanelComponent },

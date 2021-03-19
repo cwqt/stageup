@@ -106,6 +106,12 @@
           },
           "configurations": {
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/frontend/src/environments/environment.ts",
+                  "with": "apps/frontend/src/environments/environment.development.ts"
+                }
+              ],
               "optimization": false,
               "outputHashing": "none",
               "sourceMap": true,
@@ -119,7 +125,13 @@
               "vendorChunk": true,
               "buildOptimizer": false
             },
-            "production": {
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/frontend/src/environments/environment.ts",
+                  "with": "apps/frontend/src/environments/environment.staging.ts"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -128,7 +140,13 @@
               "vendorChunk": false,
               "buildOptimizer": true
             },
-            "staging": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/frontend/src/environments/environment.ts",
+                  "with": "apps/frontend/src/environments/environment.production.ts"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -146,11 +164,11 @@
               "browserTarget": "frontend:build:development",
               "proxyConfig": "apps/frontend/proxy.conf.json"
             },
-            "production": {
-              "browserTarget": "frontend:build:production"
-            },
             "staging": {
               "browserTarget": "frontend:build:staging"
+            },
+            "production": {
+              "browserTarget": "frontend:build:production"
             }
           }
         }
@@ -207,7 +225,9 @@
             "main": "apps/runner/src/index.ts",
             "tsConfig": "apps/runner/tsconfig.app.json",
             "showCircularDependencies": false,
-            "generatePackageJson": true
+            "generatePackageJson": true,
+            "maxWorkers": 2,
+            "memoryLimit": 1024
           },
           "configurations": {
             "production": {

@@ -9,15 +9,12 @@
 import {
   HostOnboardingState,
   HostOnboardingStep,
-  HostSubscriptionLevel,
   IHost,
   IHostOnboarding,
-  IOnboardingAddMembers,
   IOnboardingOwnerDetails,
   IOnboardingProofOfBusiness,
   IOnboardingSocialPresence,
   IOnboardingStepMap,
-  IOnboardingSubscriptionConfiguration,
   IUser,
   PersonTitle
 } from '@core/interfaces';
@@ -162,7 +159,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
 
     it('Should allow the Site Admin to verify some steps as valid', async () => {
       // All but the Proof Of Business to be verified
-      await Stories.actions.admin.reviewOnboardingProcess(onboarding, {
+      await Stories.actions.admin.reviewOnboardingProcess(host, {
         [HostOnboardingStep.OwnerDetails]: {
           state: HostOnboardingState.Verified,
           issues: {},  
@@ -191,7 +188,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
     })
 
     it('Should enact the onboarding request to send out the issues', async () => {
-      await Stories.actions.admin.enactOnboardingProcess(onboarding);
+      await Stories.actions.admin.enactOnboardingProcess(host);
     });
   });
 
@@ -229,14 +226,14 @@ describe('As Client, I want to register a Host & be onboarded', () => {
   describe('As a Site Admin, I want to verify the last step, and then enact the onboarding', () => {
     it('Should review the step, and then submit the onboarding request review', async () => {
       await Stories.actions.common.switchActor(UserType.SiteAdmin);
-      await Stories.actions.admin.reviewOnboardingProcess(onboarding, {
+      await Stories.actions.admin.reviewOnboardingProcess(host, {
         [HostOnboardingStep.ProofOfBusiness]: {
           state: HostOnboardingState.Verified,
           issues: {}
         }
       });
 
-      await Stories.actions.admin.enactOnboardingProcess(onboarding);
+      await Stories.actions.admin.enactOnboardingProcess(host);
     });
   });
 });

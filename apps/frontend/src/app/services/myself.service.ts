@@ -49,7 +49,7 @@ export class MyselfService {
       .pipe(
         tap(
           (myself: IMyself) => {
-            myself.user.avatar = myself.user.avatar || 'assets/avatar_placeholder.png';
+            myself.user.avatar = myself.user.avatar || 'assets/avatar-placeholder.png';
             this.store(this.hydrate(myself));
           },
           (e: HttpErrorResponse) => {

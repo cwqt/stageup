@@ -268,7 +268,7 @@ GET http://{{host}}/ping
 # @name dropAllData
 POST http://{{host}}/drop
 ### --------------------------------------------------------------------------------------------
-# router.get <IHost> ("/verifyhost/:hid", Misc.verifyHost());
+# router.get <IHost> ("/verify-host/:hid", Misc.verifyHost());
 # @name verifyHost
-GET http://{{host}}/verifyhost/{{hostId}}
+GET http://{{host}}/verify-host/{{hostId}}
 ### --------------------------------------------------------------------------------------------

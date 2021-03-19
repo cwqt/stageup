@@ -66,7 +66,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
 
   public clearAvatar() {
     this.hasSelectedImage = false;
-    this.selectedImage = this.data.initialImage ? this.data.initialImage : '/assets/avatar_placeholder.png';
+    this.selectedImage = this.data.initialImage ? this.data.initialImage : '/assets/avatar-placeholder.png';
     this.buttonText = 'Select image';
     this.removeButtonText = 'Remove image';
     this.uploadButton.disabled = true;

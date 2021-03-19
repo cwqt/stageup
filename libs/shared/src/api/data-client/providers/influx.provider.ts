@@ -1,5 +1,5 @@
 import { InfluxDB, IPingStats } from 'influx';
-import { Provider } from '.';
+import { Provider } from '../';
 
 export interface IInfluxProviderConfig {
   host: string;
@@ -15,7 +15,7 @@ export default class InfluxProvider implements Provider<InfluxDB> {
     this.config = config;
   }
 
-  async create() {
+  async connect() {
     const influx = new InfluxDB({
       host: this.config.host,
       database: this.config.database
@@ -34,7 +34,7 @@ export default class InfluxProvider implements Provider<InfluxDB> {
     return this.connection;
   }
 
-  async close() {
+  async disconnect() {
     return;
   }
 

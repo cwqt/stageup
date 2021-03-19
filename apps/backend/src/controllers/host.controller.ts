@@ -6,12 +6,10 @@ import {
   IHostOnboarding,
   HostOnboardingState,
   IHostPrivate,
-  IOnboardingAddMembers,
   IOnboardingOwnerDetails,
   IOnboardingProofOfBusiness,
   IOnboardingSocialPresence,
   IOnboardingStep,
-  IOnboardingSubscriptionConfiguration,
   IUserHostInfo,
   pick,
   HTTP,
@@ -22,7 +20,8 @@ import {
   IPerformanceStub,
   IHostStub,
   TokenProvisioner,
-  hasRequiredHostPermission
+  hasRequiredHostPermission,
+  IHostStripeInfo
 } from '@core/interfaces';
 
 import {
@@ -52,11 +51,10 @@ import Email = require('../common/email');
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import AuthStrat from '../common/authorisation';
 import { log } from '../common/logger';
-import { In, IsNull } from 'typeorm';
-import { BackendDataClient } from '../common/data';
-import S3Provider from 'libs/shared/src/api/providers/aws-s3.provider';
+import { BackendProviderMap } from '..';
+import { In } from 'typeorm';
 
-export default class HostController extends BaseController<BackendDataClient> {
+export default class HostController extends BaseController<BackendProviderMap> {
   createHost(): IControllerEndpoint<IHost> {
     return {
       validators: [
@@ -245,7 +243,7 @@ export default class HostController extends BaseController<BackendDataClient> {
             { relations: ['invitee'], select: { invitee: { _id: true } } }
           )
         );
-        
+
         // Only accept the request if the logged in user matches the invites' user
         if (invite.invitee._id !== req.session.user._id) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID);
 
@@ -298,7 +296,7 @@ export default class HostController extends BaseController<BackendDataClient> {
         );
 
         // Don't be able to force increase permissions if the user hasn't accepted the invitation
-        if(hasRequiredHostPermission(userHostInfo.permissions, HostPermission.Member))
+        if (hasRequiredHostPermission(userHostInfo.permissions, HostPermission.Member))
           throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
 
         // Don't allow updating to Owner as that is a transfer of host ownership
@@ -523,7 +521,11 @@ export default class HostController extends BaseController<BackendDataClient> {
           })
         );
 
-        if (![HostOnboardingState.AwaitingChanges, HostOnboardingState.HasIssues].includes(onboarding.state))
+        if (
+          ![HostOnboardingState.AwaitingChanges, HostOnboardingState.HasIssues, HostOnboardingState.Modified].includes(
+            onboarding.state
+          )
+        )
           throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
 
         // TODO: verify all steps filled out
@@ -538,65 +540,105 @@ export default class HostController extends BaseController<BackendDataClient> {
 
   readHostPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
     return {
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Member),
       controller: async req => {
-        const hostPerformances = await this.ORM.createQueryBuilder(Performance, 'hps')
+        return await this.ORM.createQueryBuilder(Performance, 'hps')
           .innerJoinAndSelect('hps.host', 'host')
           .where('host._id = :id', { id: req.params.hid })
-          .paginate();
-        return {
-          data: hostPerformances.data.map(o => o.toStub()),
-          __paging_data: hostPerformances.__paging_data
-        };
+          .paginate(o => o.toStub());
       }
     };
   }
 
-  changeAvatar(): IControllerEndpoint<IHostStub>{
+  connectStripe(): IControllerEndpoint<string> {
+    return {
+      authStrategy: AuthStrat.and(AuthStrat.hasHostPermission(HostPermission.Owner), AuthStrat.hostIsOnboarded()),
+      controller: async req => {
+        // Creating a Standard Stripe account on behalf of the host to faciliate the following:
+        // https://stripe.com/img/docs/connect/direct_charges.svg
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+        if (!host.stripe_account_id) {
+          // 2 Create a connected account
+          // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-create-account
+          const account = await this.providers.stripe.connection.accounts.create(
+            {
+              // TODO: add details collected in onboarding in the .create options
+              type: 'standard'
+            },
+            {
+              apiKey: this.providers.stripe.config.private_key
+            }
+          );
+
+          host.stripe_account_id = account.id;
+          await host.save();
+        }
+
+        // 2.2 Create an account link,
+        // Account Links are the means by which a Connect platform grants a connected account permission
+        // to access Stripe-hosted applications, such as Connect Onboarding
+        // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-create-account-link
+        const link = await this.providers.stripe.connection.accountLinks.create(
+          {
+            account: host.stripe_account_id,
+            refresh_url: `${Env.API_URL}/stripe/refresh`,
+            return_url: `${Env.API_URL}/stripe/return`,
+            type: 'account_onboarding'
+          },
+          {
+            apiKey: this.providers.stripe.config.private_key
+          }
+        );
+
+        // Frontend then consumes this URL & re-directs the user through the Stripe onboarding
+        return link.url;
+      }
+    };
+  }
+
+  changeAvatar(): IControllerEndpoint<IHostStub> {
     return {
       validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin), 
-      preMiddlewares: [this.mws.file(2048, ["image/jpg", "image/jpeg", "image/png"]).single("file")],
-      controller: async (req, dc) => {
-        const s3:S3Provider = dc.providers["s3"];
-        const host = await getCheck(Host.findOne(
-          {
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      preMiddlewares: [this.mws.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file')],
+      controller: async req => {
+        const host = await getCheck(
+          Host.findOne({
             where: {
               _id: req.params.hid
             }
-          }
-        ));
+          })
+        );
 
-        host.avatar = await s3.upload(req.file, host.avatar);
+        host.avatar = await this.providers.s3.upload(req.file, host.avatar);
         await host.save();
         return host.toStub();
-      },
-    }
+      }
+    };
   }
 
   //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
-  changeBanner(): IControllerEndpoint<IHostStub>{
+  changeBanner(): IControllerEndpoint<IHostStub> {
     return {
       validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin), 
-      preMiddlewares: [this.mws.file(2048, ["image/jpg", "image/jpeg", "image/png"]).single("file")],
-      controller: async (req, dc) => {
-        const s3:S3Provider = dc.providers["s3"];
-        const host = await getCheck(Host.findOne(
-          {
-            where: {            
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      preMiddlewares: [this.mws.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file')],
+      controller: async req => {
+        const host = await getCheck(
+          Host.findOne({
+            where: {
               _id: req.params.hid
             }
-          }
-        ));
-        
-        host.banner = await s3.upload(req.file, host.banner);
+          })
+        );
+
+        host.banner = await this.providers.s3.upload(req.file, host.banner);
         await host.save();
         return host.toStub();
-      },
-    }
-  }  
-  
+      }
+    };
+  }
+
   provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
     return {
       validators: [
@@ -666,14 +708,20 @@ export default class HostController extends BaseController<BackendDataClient> {
     };
   }
 
-  // updateHost(): IControllerEndpoint<IHost> {
-  //   return {
-  //     validators: [],
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {
-  //       return ({} as IHost);
-  //     }
-  //   };
-  // }
+  readStripeInfo(): IControllerEndpoint<IHostStripeInfo> {
+    return {
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+        const res = await this.providers.stripe.connection.accounts.retrieve({
+          stripeAccount: host.stripe_account_id,
+          apiKey: this.providers.stripe.config.private_key
+        });
 
+        return {
+          is_stripe_connected: res.charges_enabled
+        };
+      }
+    };
+  }
 }

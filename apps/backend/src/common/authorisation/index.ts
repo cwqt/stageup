@@ -2,7 +2,7 @@ import Env from '../../env';
 import { Environment, ErrCode, HostPermission, IHost, hasRequiredHostPermission } from '@core/interfaces';
 import { Auth, AuthStrategy, AuthStratReturn, MapAccessor, NUUIDMap, User, UserHostInfo, Host } from '@core/shared/api';
 
-const isFromService: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
+const isFromService: AuthStrategy = async (req, providers): Promise<AuthStratReturn> => {
   if (!req.headers.authorization) return [false, {}];
 
   // Check bearer authentication matches internally known key
@@ -14,7 +14,7 @@ const isFromService: AuthStrategy = async (req, dc): Promise<AuthStratReturn> =>
   return [true, {}];
 };
 
-const isLoggedIn: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
+const isLoggedIn: AuthStrategy = async (req, providers): Promise<AuthStratReturn> => {
   if (!req.session.user) {
     return [false, {}, ErrCode.NO_SESSION];
   }
@@ -22,8 +22,8 @@ const isLoggedIn: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
   return [true, {}];
 };
 
-const isOurself: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
-  const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
+const isOurself: AuthStrategy = async (req, providers): Promise<AuthStratReturn> => {
+  const [isAuthorised, _, reason] = await isLoggedIn(req, providers);
   if (!isAuthorised) {
     return [isAuthorised, _, reason];
   }
@@ -37,8 +37,8 @@ const isOurself: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
 };
 
 const isMemberOfHost = (mapAccessor?: MapAccessor, passedMap?: NUUIDMap): AuthStrategy => {
-  return async (req, dc, map): Promise<AuthStratReturn> => {
-    const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
+  return async (req, providers, map): Promise<AuthStratReturn> => {
+    const [isAuthorised, _, reason] = await isLoggedIn(req, providers);
     if (!isAuthorised) return [isAuthorised, _, reason];
 
     const hostId = mapAccessor ? mapAccessor(passedMap || map) : req.params.hid;
@@ -64,9 +64,9 @@ const isMemberOfHost = (mapAccessor?: MapAccessor, passedMap?: NUUIDMap): AuthSt
 };
 
 const hasHostPermission = (permission: HostPermission, mapAccessor?: MapAccessor): AuthStrategy => {
-  return async (req, dc, map): Promise<AuthStratReturn> => {
+  return async (req, providers, map): Promise<AuthStratReturn> => {
     // Pass this NUUIDMap down to the isMemberOfHost Auth Strategy
-    const [isMember, passthru, reason] = await isMemberOfHost(mapAccessor, map)(req, dc);
+    const [isMember, passthru, reason] = await isMemberOfHost(mapAccessor, map)(req, providers);
     if (!isMember) return [false, {}, reason];
 
     // Highest Perms (Owner)  = "host_owner"
@@ -80,8 +80,8 @@ const hasHostPermission = (permission: HostPermission, mapAccessor?: MapAccessor
 };
 
 const hasSpecificHostPermission = (permission: HostPermission): AuthStrategy => {
-  return async (req, dc): Promise<AuthStratReturn> => {
-    const [isMember, passthru, reason] = await isMemberOfHost()(req, dc);
+  return async (req, providers): Promise<AuthStratReturn> => {
+    const [isMember, passthru, reason] = await isMemberOfHost()(req, providers);
     if (!isMember) return [false, {}, reason];
 
     if (passthru.uhi.permissions !== permission) {
@@ -92,8 +92,8 @@ const hasSpecificHostPermission = (permission: HostPermission): AuthStrategy => 
   };
 };
 
-const isSiteAdmin: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
-  const [isAuthorised, _, reason] = await isLoggedIn(req, dc);
+const isSiteAdmin: AuthStrategy = async (req, providers): Promise<AuthStratReturn> => {
+  const [isAuthorised, _, reason] = await isLoggedIn(req, providers);
   if (!isAuthorised) {
     return [isAuthorised, _, reason];
   }
@@ -106,7 +106,7 @@ const isSiteAdmin: AuthStrategy = async (req, dc): Promise<AuthStratReturn> => {
 };
 
 const hostIsOnboarded = (mapAccessor?: MapAccessor): AuthStrategy => {
-  return async (req, dc, map): Promise<AuthStratReturn> => {
+  return async (req, providers, map): Promise<AuthStratReturn> => {
     const hostId: IHost['_id'] = mapAccessor ? await mapAccessor(map) : req.params.hid;
     if (!hostId) return [false, {}, ErrCode.MISSING_FIELD];
 
@@ -130,7 +130,7 @@ const hostIsOnboarded = (mapAccessor?: MapAccessor): AuthStrategy => {
 };
 
 const userEmailIsVerified = (mapAccessor?: MapAccessor): AuthStrategy => {
-  return async (req, dc, map): Promise<AuthStratReturn> => {
+  return async (req, providers, map): Promise<AuthStratReturn> => {
     const userId = mapAccessor ? await mapAccessor(map) : req.params.uid;
     if (!userId) return [false, {}, ErrCode.MISSING_FIELD];
 
@@ -148,7 +148,7 @@ const userEmailIsVerified = (mapAccessor?: MapAccessor): AuthStrategy => {
 };
 
 const isEnv = (env: Environment): AuthStrategy => {
-  return async (req, dc): Promise<AuthStratReturn> => {
+  return async (req, providers): Promise<AuthStratReturn> => {
     if (!Env.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
     return [true, {}];
   };

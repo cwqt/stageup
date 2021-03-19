@@ -23,9 +23,10 @@ export * from './users/user.interface';
 export * from './users/person.interface';
 export * from './users/address.interface';
 
+export * from './stripe/index.interface';
+export * from './mux/index.interface';
 export * from './common/invoice.interface';
 
-export * from './hooks/mux-hooks.interface';
 // export * from './hooks/stripe-hooks.interface';
 
 export * from './runner/job.interface';

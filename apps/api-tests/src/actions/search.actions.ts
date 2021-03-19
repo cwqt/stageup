@@ -7,7 +7,7 @@ import {
 export default {
     
     searchResponse: async (searchQuery: string, page: number = 0, perPage: number = 10): Promise<ISearchResponse> => {
-        const res = await api.get<ISearchResponse>(`/search/results?searchQuery=${searchQuery}&page=${page}&perPage=${perPage}`, env.getOptions());
+        const res = await api.get<ISearchResponse>(`/search?query=${searchQuery}&page=${page}&per_page=${perPage}`, env.getOptions());
         return res.data;
     }
 }

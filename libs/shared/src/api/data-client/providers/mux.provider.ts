@@ -1,5 +1,5 @@
 import Mux from '@mux/mux-node';
-import { Provider } from '.';
+import { Provider } from '../';
 
 export interface IMuxProviderConfig {
   access_token: string;
@@ -17,12 +17,12 @@ export default class MuxProvider implements Provider<Mux> {
     this.config = config;
   }
 
-  async create() {
+  async connect() {
     this.connection = new Mux(this.config.access_token, this.config.secret_key);
     return this.connection;
   }
 
-  async close() {
+  async disconnect() {
     return;
   }
 }

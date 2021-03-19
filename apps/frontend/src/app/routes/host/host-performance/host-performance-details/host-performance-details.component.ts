@@ -23,8 +23,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
     multi: false,
     search: false,
     values: [
-      { key: Visibility.Private, value: 'Private' },
-      { key: Visibility.Public, value: 'Public' }
+      { value: Visibility.Private, key: Visibility.Private },
+      { value: Visibility.Public, key: Visibility.Public }
     ]
   };
 

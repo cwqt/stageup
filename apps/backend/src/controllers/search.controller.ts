@@ -1,10 +1,10 @@
 import { ISearchResponse } from '@core/interfaces';
 
 import { BaseController, IControllerEndpoint, Performance, Host, query } from '@core/shared/api';
+import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
-import { BackendDataClient } from '../common/data';
 
-export default class SearchController extends BaseController<BackendDataClient> {
+export default class SearchController extends BaseController<BackendProviderMap> {
   search(): IControllerEndpoint<ISearchResponse> {
     return {
       validators: [

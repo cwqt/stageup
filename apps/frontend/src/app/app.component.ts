@@ -32,13 +32,13 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     this.loading = true;
     await this.baseAppService.componentInitialising(this.route);
-    this.titleService.setTitle('StageUp 0.3.0');
+    this.titleService.setTitle('StageUp - 0.0.4');
 
     // Upon start up, check if logged in by re-hydrating stored data (if any exists)
     // and then re-fetch the user incase of any changes & set all permissions
     if (this.authService.checkLoggedIn(false)) {
       await this.myselfService.getMyself();
-      this.toastService.emit('Welcome back to StageUp!');
+      this.toastService.emit('Welcome back to StageUp! (0.0.4)');
 
       // May be coming in from an e-mail to accept invite /?invite_accepted=...
       const invite = this.baseAppService.getQueryParam('invite_accepted');

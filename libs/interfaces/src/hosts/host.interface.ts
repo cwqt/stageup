@@ -23,6 +23,7 @@ export interface IHost extends IHostStub {
 }
 
 export type IHostPrivate = {
+  stripe_account_id: string;
   email_address: string;
   contact_info: IContactInfo;
   business_details: IHostBusinessDetails;
@@ -57,4 +58,8 @@ const HOST_PERMISSIONS_AS_VALUES = [...Object.values(HostPermission)] as const;
  */
 export const hasRequiredHostPermission = (current:HostPermission, required:HostPermission): boolean => {
   return HOST_PERMISSIONS_AS_VALUES.indexOf(current) > HOST_PERMISSIONS_AS_VALUES.indexOf(required)
+}
+
+export interface IHostStripeInfo {
+  is_stripe_connected: boolean;
 }

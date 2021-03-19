@@ -13,6 +13,7 @@ import {
   IAWS3ProviderConfig,
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
+  IStripeProviderConfig
 } from '@core/shared/api';
 
 type Envify<T> = { [index: string]: any };
@@ -30,11 +31,13 @@ interface IEnvironment {
   EXPRESS_PORT: number;
   UWU_MODE: boolean;
   INTERNAL_KEY: string;
+  WEBHOOK_URL: string;
   PG: Envify<IPostgresProviderConfig>;
   MUX: Envify<IMuxProviderConfig>;
   AWS: Envify<IAWS3ProviderConfig>;
   REDIS: Envify<IRedisProviderConfig>;
   STORE: Envify<IStoreProviderConfig>;
+  STRIPE: Envify<IStripeProviderConfig>;
   INFLUX: Envify<IInfluxProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   isEnv: (env: Environment | Environment[]) => boolean;
@@ -52,9 +55,9 @@ const Env: IEnvironment = {
   QUEUE_URL: process.env.QUEUE_URL,
   INTERNAL_KEY: process.env.INTERNAL_KEY,
   EXPRESS_PORT: 3000,
+  WEBHOOK_URL: process.env.WEBHOOK_URL,
   LOCALTUNNEL: {
     PORT: 3000,
-    DOMAIN: process.env.LOCALTUNNEL_URL
   },
   UWU_MODE: process.env.UWU_MODE === 'true',
   MUX: {
@@ -79,6 +82,11 @@ const Env: IEnvironment = {
     HOST: process.env.STORE_HOST,
     PORT: 6379,
     TTL: 86400
+  },
+  STRIPE: {
+    PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+    PRIVATE_KEY: process.env.STRIPE_PRIVATE_KEY,
+    HOOK_SIGNATURE: process.env.STRIPE_HOOK_SIGNATURE
   },
   AWS: {
     S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,

@@ -64,7 +64,6 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
   openConfirmationDialog() {
     if (this.dialog.openDialogs.length == 0) {
       this.dialog.open(UserTypeClarificationComponent, {
-        width: '70%',
         disableClose: true
       });
     }

@@ -1,4 +1,8 @@
-import { JobType } from '@core/interfaces';
+import Env from '../../env';
+import SendEmailWorker from './workers/send_email.worker';
+import ScheduleReleaseWorker from './workers/schedule_release.worker';
+import { log } from '../logger';
+import { RunnerProviderMap } from '../..';import { JobType } from '@core/interfaces';
 import { Queue, QueueEvents, QueueScheduler, Worker } from 'bullmq';
 
 export interface IQueue {
@@ -9,16 +13,11 @@ export interface IQueue {
 }
 
 export type QueueMap = { [index in JobType]: IQueue };
-export type WorkerFunction = (providers: DataClient<RunnerDataClient>) => Worker;
+export type WorkerFunction = (providers: RunnerProviderMap) => Worker;
 
-import SendEmailWorker from './workers/send_email.worker';
-import ScheduleReleaseWorker from './workers/schedule_release.worker';
-import { log } from '../logger';
-import { DataClient, ProviderMap } from '@core/shared/api';
-import { RunnerDataClient } from '../data';
-import Env from '../../env';
 
-const create = (client: DataClient<RunnerDataClient>): QueueMap => {
+
+const create = (pm:RunnerProviderMap): QueueMap => {
   const workers: { [index in JobType]: WorkerFunction } = {
     [JobType.SendEmail]: SendEmailWorker,
     [JobType.ScheduleRelease]: ScheduleReleaseWorker
@@ -46,7 +45,7 @@ const create = (client: DataClient<RunnerDataClient>): QueueMap => {
         }
     });
 
-    const worker = workers[type](client);
+    const worker = workers[type](pm);
 
     events.on('completed', job => log.info(`Completed job: ${job.jobId}`));
     events.on('failed', (job, err) => log.error(`Failed job: ${job.jobId}`, err));
