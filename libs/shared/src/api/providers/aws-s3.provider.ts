@@ -9,6 +9,7 @@ export interface IAWS3ProviderConfig {
 import { config, S3 } from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { Provider } from '.';
+import FormData from 'form-data';
 
 export interface S3Return {
   Location: string;
@@ -36,6 +37,16 @@ export default class S3Provider implements Provider<any> {
     this.connection = new S3({ apiVersion: '2006-03-01' });
     return this.connection;
   }
+
+  public async upload(asset:Express.Multer.File | null, oldUrl?:string) {
+    // !oldUrl && asset --> add file
+    // oldUrl && asset --> replace file
+    // oldUrl && !asset --> delete file
+    if(oldUrl || (asset == null && oldUrl)) await this.deleteImageFromS3(oldUrl);
+    return asset
+      ? (await this.uploadImagetoS3(asset)).Location
+      : null;
+  } 
 
   async close() {
     return;
@@ -66,7 +77,7 @@ export default class S3Provider implements Provider<any> {
     }
   }
 
-  public async uploadImagetoS3(file: Express.Multer.File): Promise<S3Return> {
+  private async uploadImagetoS3(file: Express.Multer.File): Promise<S3Return> {
     try {
       if (!file) throw new Error('No available file to upload');
 

@@ -52,7 +52,7 @@ import Email = require('../common/email');
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import AuthStrat from '../common/authorisation';
 import { log } from '../common/logger';
-import { In } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 import { BackendDataClient } from '../common/data';
 import S3Provider from 'libs/shared/src/api/providers/aws-s3.provider';
 
@@ -558,29 +558,45 @@ export default class HostController extends BaseController<BackendDataClient> {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin), 
       preMiddlewares: [this.mws.file(2048, ["image/jpg", "image/jpeg", "image/png"]).single("file")],
       controller: async (req, dc) => {
-        const s3Provider:S3Provider = dc.providers["s3"];
+        const s3:S3Provider = dc.providers["s3"];
         const host = await getCheck(Host.findOne(
           {
             where: {
-              
               _id: req.params.hid
             }
           }
         ));
 
-        // Check whether an image already exists for this host first
-        // Delete if so to save space on s3
-        if (host.avatar) await s3Provider.deleteImageFromS3(host.avatar);
-        
-        const dataFromS3: S3Return = await s3Provider.uploadImagetoS3(req.file);
-        
-        host.avatar = dataFromS3.Location;
-           
+        host.avatar = await s3.upload(req.file, host.avatar);
         await host.save();
         return host.toStub();
       },
     }
   }
+
+  //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
+  changeBanner(): IControllerEndpoint<IHostStub>{
+    return {
+      validators: [],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin), 
+      preMiddlewares: [this.mws.file(2048, ["image/jpg", "image/jpeg", "image/png"]).single("file")],
+      controller: async (req, dc) => {
+        const s3:S3Provider = dc.providers["s3"];
+        const host = await getCheck(Host.findOne(
+          {
+            where: {            
+              _id: req.params.hid
+            }
+          }
+        ));
+        
+        host.banner = await s3.upload(req.file, host.banner);
+        await host.save();
+        return host.toStub();
+      },
+    }
+  }  
+  
   provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
     return {
       validators: [

@@ -11,6 +11,7 @@ export interface IHostStub {
   username: string;
   bio?: string;
   avatar?: string;
+  banner?: string;
 }
 
 export interface IHost extends IHostStub {

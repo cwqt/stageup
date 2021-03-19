@@ -60,6 +60,15 @@ export default {
     return res.data;
   },
 
+  //router.put<IHostS>("/hosts/:hid/banner", Hosts.changeBanner());
+  changeBanner: async (host: IHost, data: fd): Promise<IHostStub> => { 
+    const options = env.getOptions();
+    options.headers["Content-Type"] = data.getHeaders()["content-type"];
+
+    const res = await api.put<IHostStub>(`/hosts/${host._id}/banner`, data, options);
+    return res.data;
+  },
+
   // Host Onboarding --------------------------------------------------------------------------------------------------------------
   // router.get <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep());
   readOnboardingProcessStep: async <T>(host: IHostStub, step: HostOnboardingStep) => {

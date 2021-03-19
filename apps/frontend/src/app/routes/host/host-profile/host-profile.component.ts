@@ -18,8 +18,8 @@ import { MyselfService } from '../../../services/myself.service';
 })
 export class HostProfileComponent implements OnInit {
   @Input() hostUsername?: string;
-  host: ICacheable<IHost> = createICacheable();
-
+  host: ICacheable<IHost> = createICacheable(); 
+    
   hostPages = {
     index: {
       label: 'Feed',
@@ -53,7 +53,7 @@ export class HostProfileComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.baseAppService.componentInitialising(this.route);
+    await this.baseAppService.componentInitialising(this.route);    
 
     // If not passed through input, get from route param since this is probably on /@host_username
     if (!this.hostUsername) this.hostUsername = this.baseAppService.getParam(RouteParam.HostId).split('@').pop();
@@ -64,11 +64,11 @@ export class HostProfileComponent implements OnInit {
 
   openHostPage(endpoint: string) {
     this.baseAppService.navigateTo(
-      `${this.route.snapshot.data['is_host_view'] ? '/host' : ''}/@${this.hostUsername}/${endpoint}`
+      `${this.route.snapshot.data['is_host_view'] ? '/dashboard' : ''}/@${this.hostUsername}/${endpoint}`
     );
-  }
+  }  
 
-  handleTabChange(event: MatTabChangeEvent) {
+ handleTabChange(event: MatTabChangeEvent) {
     const pageIndex = Object.keys(this.hostPages)[event.index];
     const page = this.hostPages[pageIndex];
     this.openHostPage(page.url);
@@ -76,18 +76,41 @@ export class HostProfileComponent implements OnInit {
 
   openChangeAvatarDialog() {
     this.helperService.showDialog(
-      this.dialog.open(ChangeImageComponent, { data: { fileHandler: this.handleUploadHostAvatar.bind(this) } }),
+      this.dialog.open(ChangeImageComponent, {
+        data: {
+          initialImage: this.host.data.avatar,
+          fileHandler: this.handleUploadHostAvatar.bind(this)
+        }
+      }),
       (event: IHostStub) => {
         this.host.data.avatar = event.avatar;
-        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, avatar: event.avatar })
+        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, avatar: this.host.data.avatar })
       });
   }
 
-  handleUploadHostAvatar(formData:fd) {
+ handleUploadHostAvatar(formData:fd) {
     return this.hostService.changeAvatar(this.host.data._id, formData);
   }
 
-  openSocialLink(link: string) {
+  openChangeBannerDialog() {
+    this.helperService.showDialog(
+      this.dialog.open(ChangeImageComponent, {
+        data: {
+          initialImage: this.host.data.banner,
+          fileHandler: this.handleUploadHostBanner.bind(this)
+        }
+      }),
+      (event: IHostStub) => {
+        this.host.data.banner = event.banner;
+        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, banner: event.banner })
+    });
+  }
+
+  handleUploadHostBanner(formData:fd) {
+    return this.hostService.changeBanner(this.host.data._id, formData);
+  }
+  
+ openSocialLink(link: string) {
     window.open(link, '_blank');
   }
 

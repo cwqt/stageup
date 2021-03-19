@@ -112,7 +112,7 @@
               "extractCss": true,
               "namedChunks": false,
               "showCircularDependencies": false,
-              "aot": false,
+              "aot": true,
               "extractLicenses": false,
               "statsJson": false,
               "progress": true,

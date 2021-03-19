@@ -132,7 +132,7 @@ export default class UserController extends BaseController {
           u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) === 0;
 
           // Verify user if in dev/testing
-          u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging])
+          u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
 
           await txc.save(u);
           return u;
@@ -227,45 +227,27 @@ export default class UserController extends BaseController {
     };
   }
 
-  // updateUserAvatar(): IControllerEndpoint<IUser> {
-  //   return {
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {
-  //       // TODO: assets with s3
-  //       const user = {} as IUser;
-  //       return user;
-  //     }
-  //   };
-  // }
-
-  changeAvatar(): IControllerEndpoint<IUserStub>{
+  changeAvatar(): IControllerEndpoint<IUserStub> {
     return {
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      preMiddlewares: [this.mws.file(2048, ["image/jpg", "image/jpeg", "image/png"]).single("file")],
+      preMiddlewares: [this.mws.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file')],
       controller: async (req, dc) => {
-        const s3Provider: S3Provider = dc.providers["s3"];
-
-        const user = await getCheck(User.findOne(
-          {
+        const user = await getCheck(
+          User.findOne({
             where: {
               _id: req.params.uid
             }
-          }
-        ));
+          })
+        );
 
-        // Check whether an image already exists for this user first
-        // Delete if so to save space on s3
-        if (user.avatar) await s3Provider.deleteImageFromS3(user.avatar);
+        const s3: S3Provider = dc.providers['s3'];
+        user.avatar = await s3.upload(req.file, user.avatar);
 
-        const dataFromS3: S3Return = await s3Provider.uploadImagetoS3(req.file);
-
-        user.avatar = dataFromS3.Location;
-        
         await user.save();
         return user.toStub();
       }
-    }
+    };
   }
 
   // forgotPassword(): IControllerEndpoint<void> {
@@ -369,5 +351,5 @@ export default class UserController extends BaseController {
         await Address.delete({ _id: req.params.aid });
       }
     };
-  }  
+  }
 }

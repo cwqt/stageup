@@ -29,7 +29,7 @@ export class Middlewares {
         fileSize: maxFileSize * 1024
       },
       fileFilter: (request: Request, file: Express.Multer.File, cb: Multer.FileFilterCallback) => {
-        if (!acceptedTypes.includes(file.mimetype)) {
+        if (![...acceptedTypes, 'image/gif'].includes(file.mimetype)) {
           cb(new Error('File type not allowed'));
           return;
         }

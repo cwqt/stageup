@@ -26,7 +26,7 @@ import { timestamp } from '@core/shared/helpers';
 export class HostService {
   private $currentHost: BehaviorSubject<IHostStub> = new BehaviorSubject(null);
   private $currentUserHostInfo: BehaviorSubject<IUserHostInfo> = new BehaviorSubject(null);
-
+  
   public get hostId() {
     return this.$currentHost.value._id;
   }
@@ -43,7 +43,7 @@ export class HostService {
   constructor(private http: HttpClient, private myselfService: MyselfService) {
     this.myselfService.$myself.subscribe(m => {
       this.$currentHost.next(m?.host);
-      this.$currentUserHostInfo.next(m?.host_info);
+      this.$currentUserHostInfo.next(m?.host_info);      
     });
   }
 
@@ -148,7 +148,12 @@ export class HostService {
       .toPromise();
   }
 
-  changeAvatar(hostId: string, data: fd) {
+  changeAvatar(hostId: string, data: fd | null) {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/avatar`, data).toPromise();
   }
-}
+
+  //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
+  changeBanner(hostId: string, data: fd | null) {
+    return this.http.put<IHostStub>(`api/hosts/${hostId}/banner`, data).toPromise();
+  } 
+  }

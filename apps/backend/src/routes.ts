@@ -76,6 +76,7 @@ router.put      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",        
 router.redirect                         ("/hosts/:hid/invites/:iid",                  Hosts.handleHostInvite());
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
 router.put      <IHostS>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());
+router.put      <IHostS>                ("/hosts/:hid/banner",                        Hosts.changeBanner());
 router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------

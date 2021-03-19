@@ -29,6 +29,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column() username: string;
   @Column({ nullable: true }) bio?: string;
   @Column({ nullable: true }) avatar: string;
+  @Column({ nullable: true }) banner: string;
   @Column() is_onboarded: boolean;
   @Column() email_address: string;
   @Column('jsonb') social_info: ISocialInfo;
@@ -96,6 +97,7 @@ export class Host extends BaseEntity implements IHostPrivate {
       name: this.name,
       username: this.username,
       avatar: this.avatar,
+      banner: this.banner,
       bio: this.bio
     };
   }

@@ -7,21 +7,10 @@
    }
 }
 
-.host-profile-header {
-  position: relative;
-  .edit-button {
-    z-index: 9999999;
-    position: absolute;
-    bottom: -50px;
-    left: 15px;
-  }
-}   
+.banner-picture__container img {
+  height: 200px;
+}
 
-.profile-container__update {
-  width: auto !important;
-  ::ng-deep {
-    button {
-      width: auto !important;
-    }
-  }
+.profile-picture__container {
+  margin-top: -40px;
 }
