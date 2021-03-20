@@ -3,8 +3,8 @@ import { RouterModule, Routes, UrlMatcher, UrlSegment } from '@angular/router';
 import { LoggedInGuard } from './_helpers/logged-in.guard';
 import { RouteParam as RP } from './services/app.service';
 
-import { VerifiedComponent } from './components/pages/verified/verified.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
+import { VerifiedComponent } from './components/pages/verified/verified.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { TestbedComponent } from './ui-lib/testbed/testbed.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';

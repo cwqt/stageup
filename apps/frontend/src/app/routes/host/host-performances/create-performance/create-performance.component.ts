@@ -47,11 +47,6 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           label: 'Description',
           validators: [{ type: 'maxlength', value: 100 }]
         },
-        price: {
-          type: 'number',
-          label: 'Price',
-          validators: [{ type: 'maxlength', value: 100 }]
-        },
         genre: {
           type: 'select',
           label: 'Genre',
@@ -88,8 +83,6 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           description: v.description,
           genre: v.genre,
           premiere_date: ((new Date(v.date.premiere_date).getTime() / 1000) + v.date.premiere_time),
-          price: v.price,
-          currency: CurrencyCode.GBP
         })
       }
     };

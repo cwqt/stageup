@@ -22,18 +22,13 @@ import { timestamp } from '@core/shared/helpers';
 
 export default {
   // router.post<IPerf>("/performances",Perfs.createPerformance());
-  createPerformance: async (
-    host: IHost | IHostStub,
-    data?: DtoCreatePerformance
-  ): Promise<IPerformance> => {
+  createPerformance: async (host: IHost | IHostStub, data?: DtoCreatePerformance): Promise<IPerformance> => {
     data = data || {
-      name: "performance name",
+      name: 'performance name',
       premiere_date: timestamp(),
       genre: Genre.Allegory,
-      description: "some performance",
-      price: 10,
-      currency: CurrencyCode.GBP
-    }
+      description: 'some performance'
+    };
 
     const res = await api.post(`/hosts/${host._id}/performances`, data, env.getOptions());
     return res.data;
@@ -51,24 +46,18 @@ export default {
     return res.data;
   },
 
-  // router.get<IPHInfo>("/performances/:pid/host_info", Perfs.readPerformanceHostInfo());
+  // router.get<IPHInfo>("/performances/:pid/host-info", Perfs.readPerformanceHostInfo());
   readPerformanceHostInfo: async (performance: IPerformance): Promise<IPerformanceHostInfo> => {
-    const res = await api.get(`/performances/${performance._id}/host_info`, env.getOptions());
+    const res = await api.get(`/performances/${performance._id}/host-info`, env.getOptions());
     return res.data;
   },
 
   // router.put<IPerf>("/performance/:pid",Perfs.updatePerformance());
   updatePerformance: async (
     performance: IPerformance,
-    data: { name: string; description: string; price: number }
+    data: Partial<{ name: string; description: string; amount: number }>
   ): Promise<IPerformance> => {
     const res = await api.put(`/performances/${performance._id}`, data, env.getOptions());
-    return res.data;
-  },
-
-  // router.post<void>("/performances/:pid/purchase",Perfs.purchase());
-  purchase: async (performance: IPerformance): Promise<void> => {
-    const res = await api.post(`/performances/${performance._id}/purchase`, performance, env.getOptions());
     return res.data;
   },
 
@@ -79,25 +68,29 @@ export default {
   },
 
   // router.put <IPerf> ("/performances/:pid/visibility", Perfs.updateVisibility());
-  updateVisibility: async (performance: IPerformance, visibility:Visibility): Promise<IPerformance> => {
-    const res = await api.put(`/performances/${performance._id}/visibility`, { visibility: visibility }, env.getOptions());
+  updateVisibility: async (performance: IPerformance, visibility: Visibility): Promise<IPerformance> => {
+    const res = await api.put(
+      `/performances/${performance._id}/visibility`,
+      { visibility: visibility },
+      env.getOptions()
+    );
     return res.data;
   },
 
   // router.post <ITicket> ("/performances/:pid/tickets", Perfs.createTicket());
-  createTicket: async (performance:IPerformance, ticket:DtoCreateTicket):Promise<ITicket> => {
+  createTicket: async (performance: IPerformance, ticket: DtoCreateTicket): Promise<ITicket> => {
     const res = await api.post(`/performances/${performance._id}/tickets`, ticket, env.getOptions());
     return res.data;
   },
 
   // router.get <ITicketStub[]> ("/performances/:pid/tickets", Perfs.getTickets());
-  getTickets: async (performance:IPerformance):Promise<ITicketStub[]> => {
+  getTickets: async (performance: IPerformance): Promise<ITicketStub[]> => {
     const res = await api.get(`/performances/${performance._id}/tickets`, env.getOptions());
     return res.data;
   },
 
   // router.delete <void> ("/performances/:pid/tickets/:tid", Perfs.deleteTicket());
-  deleteTicket: async (performance:IPerformance, ticket:ITicket | ITicketStub):Promise<ITicket> => {
+  deleteTicket: async (performance: IPerformance, ticket: ITicket | ITicketStub): Promise<ITicket> => {
     const res = await api.delete(`/performances/${performance._id}/tickets/${ticket._id}`, env.getOptions());
     return res.data;
   }

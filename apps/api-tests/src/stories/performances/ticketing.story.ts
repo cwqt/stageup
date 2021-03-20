@@ -7,7 +7,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
   let perf: IPerformance;
   let host: IHost;
   let tickets: ITicketStub[];
-  let ticket:ITicket;
+  let ticket: ITicket;
 
   it('Should perform initial setup', async () => {
     await Stories.actions.common.setup();
@@ -21,17 +21,15 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
     perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Shakespeare',
       description: 'To be or not to be',
-      price: 24,
-      currency: CurrencyCode.GBP,
       genre: Genre.BourgeoisTragedy,
       premiere_date: null
     });
   });
 
-  it("Should create a ticket on a performance", async () => {
+  it('Should create a ticket on a performance', async () => {
     const ticket = await Stories.actions.performances.createTicket(perf, {
-      name: "Test ticket",
-      price: 10,
+      name: 'Test ticket',
+      amount: 10,
       type: TicketType.Paid,
       currency: CurrencyCode.GBP,
       quantity: 100,
@@ -42,17 +40,15 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
     });
 
     expect(ticket._id).toBeTruthy;
-  })
+  });
 
-  it("Should allow a admin to update a ticket", async () => {
+  it('Should allow a admin to update a ticket', async () => {});
 
-  })
-  
-  it("Should allow a User to get a list of all performance tickets", async () => {
+  it('Should allow a User to get a list of all performance tickets', async () => {
     // Create another performance to get more than 1
     ticket = await Stories.actions.performances.createTicket(perf, {
-      name: "Test ticket 2",
-      price:4, 
+      name: 'Test ticket 2',
+      amount: 4,
       type: TicketType.Free,
       currency: CurrencyCode.GBP,
       quantity: 0,
@@ -66,12 +62,12 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
 
     expect(tickets).toHaveLength(2);
     expect(tickets.find(t => t.name == ticket.name).type).toEqual(ticket.type);
-  })
-  
-  it("Should allow a Host Admin to delete a ticket", async () => {
+  });
+
+  it('Should allow a Host Admin to delete a ticket', async () => {
     // Delete ticket, refectch & should be only one remaining
     await Stories.actions.performances.deleteTicket(perf, ticket);
     tickets = await Stories.actions.performances.getTickets(perf);
     expect(tickets).toHaveLength(1);
-  })
+  });
 });

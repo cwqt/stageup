@@ -28,14 +28,12 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column() name: string;
   @Column() description?: string;
   @Column() views: number;
-  @Column() price: number;
   @Column() playback_id: string;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceState }) state: PerformanceState;
-  @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
 
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets:Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
@@ -49,8 +47,6 @@ export class Performance extends BaseEntity implements IPerformance {
     super();
     this.name = data.name;
     this.description = data.description;
-    this.price = data.price;
-    this.currency = data.currency;
     this.premiere_date = data.premiere_date;
     this.genre = data.genre;
     this.tickets = [];
@@ -91,14 +87,12 @@ export class Performance extends BaseEntity implements IPerformance {
       visibility: this.visibility,
       premiere_date: this.premiere_date,
       state: this.state,
-      price: this.price,
-      currency: this.currency,
       genre: this.genre,
-      tickets: (this.tickets || []).map(t => t.toStub())
+      tickets: this.tickets?.map(t => t.toStub()) || []
     };
   }
 
-  async update(updates: Partial<Pick<IPerformance, 'name' | 'description' | 'price'>>): Promise<Performance> {
+  async update(updates: Partial<Pick<IPerformance, 'name' | 'description'>>): Promise<Performance> {
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (this as any)[k] = v ?? (this as any)[k];
     });

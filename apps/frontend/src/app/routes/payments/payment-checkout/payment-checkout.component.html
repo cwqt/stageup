@@ -1,10 +1,12 @@
-<form novalidate (ngSubmit)="createToken()" [formGroup]="stripeTest">
-  <input type="text" formControlName="name" placeholder="Jane Doe">
-  <ngx-stripe-card
-    [options]="cardOptions"
-    [elementsOptions]="elementsOptions"
-  ></ngx-stripe-card>
-  <button type="submit">
-    CREATE TOKEN
-  </button>
-</form>
+<div class="ui-payment-form flex-1">
+  <div class="shadow-md rounded-sm p-4 mb-4">
+    <ngx-stripe-card #card
+      (change)="onChange.emit($event)"
+      [stripe]="stripe"
+      [options]="cardOptions"
+      [elementsOptions]="elementsOptions">
+    </ngx-stripe-card>
+  </div>
+
+  <mat-error *ngIf="error">{{ error.message }}</mat-error>
+</div>

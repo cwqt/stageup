@@ -2,7 +2,8 @@ import { EntityManager } from 'typeorm';
 import { SendMailOptions } from 'nodemailer';
 import dbless from 'dbless-email-verification';
 import { Environment, JobType } from '@core/interfaces';
-import { Host, User, HostInvitation, Performance } from '@core/shared/api';
+import { prettifyMoney } from '@core/shared/helpers';
+import { Host, User, HostInvitation, Performance, Ticket } from '@core/shared/api';
 
 import Env from '../env';
 import Queue from './queue';
@@ -26,7 +27,7 @@ export const sendEmail = (mailOptions: SendMailOptions) => {
 
 export const sendVerificationEmail = async (email_address: string) => {
   const hash = generateEmailHash(email_address);
-  const verificationUrl = `${Env.API_URL}/auth/verify?email=${email_address}&hash=${hash}`;
+  const verificationUrl = `${Env.API_URL}/auth/verify-email?email=${email_address}&hash=${hash}`;
 
   return sendEmail({
     from: Env.EMAIL_ADDRESS,
@@ -68,5 +69,23 @@ export const sendPerformanceAccessTokenProvisioned = async (
     to: email_address,
     subject: `You have been invited to watch a private performance`,
     html: `<p>Click the link to watch ${performance.name} by ${host.name} on StageUp now: <a href="${performanceLink}">${performanceLink}</a></p>`
+  });
+};
+
+export const sendTicketPurchaseConfirmation = async (
+  purchaser: User,
+  ticket: Ticket,
+  performance: Performance,
+  receiptUrl: string
+) => {
+  return sendEmail({
+    from: Env.EMAIL_ADDRESS,
+    to: purchaser.email_address,
+    subject: `Receipt of purchase of StageUp ticket 🎭`,
+    html: `
+    <p>
+      You bought <b>${ticket.name}</b> for <b>${prettifyMoney(ticket.amount, ticket.currency)}</b> to watch <b>${performance.name}</b>.
+      <br/><a href="${receiptUrl}">${receiptUrl}</a>  
+    </p>`
   });
 };

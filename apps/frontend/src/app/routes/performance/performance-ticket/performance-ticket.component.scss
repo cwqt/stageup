@@ -1,0 +1,27 @@
+:host {
+  width: 100%;
+}
+
+ui-button  {
+  width: 100%;
+  margin-bottom: 10px;
+  ::ng-deep button {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start !important;
+    padding: 12px 16px !important;
+    div {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chip {
+      margin: 0;
+      margin-bottom: 5px;
+    }
+  }
+}
+

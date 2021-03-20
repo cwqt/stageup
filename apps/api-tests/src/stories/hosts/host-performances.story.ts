@@ -23,8 +23,6 @@ describe('As a user-host, I want to review all my performances', () => {
       perf = await Stories.actions.performances.createPerformance(host, {
           name: 'Shakespeare',
           description: 'To be or not to be',
-          price: 24,
-          currency: CurrencyCode.GBP,
           genre: Genre.BourgeoisTragedy,
           premiere_date: null
         });        
@@ -39,8 +37,6 @@ describe('As a user-host, I want to review all my performances', () => {
         expect(perf).not.toBeNull();
         expect(perf.name).toBe('Shakespeare');
         expect(perf.description).toBe('To be or not to be');
-        expect(perf.price).toBe(24);
-        expect(perf.currency).toBe(CurrencyCode.GBP);
 
         expect(performancesList).not.toBeNull();
         expect(performancesList.data[0].host._id).toEqual(host._id);

@@ -23,8 +23,6 @@ describe('As a user, I want to be able to search for hosts/performances', () => 
     perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Shakespeare',
       description: 'To be or not to be',
-      price: 24,
-      currency: CurrencyCode.GBP,
       genre: Genre.BourgeoisTragedy,
       premiere_date: null
     });

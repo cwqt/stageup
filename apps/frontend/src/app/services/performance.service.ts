@@ -1,15 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import {
   DtoAccessToken,
-  DtoCreatePerformance,
   DtoCreateTicket,
   IEnvelopedData,
+  IPaymentIntentClientSecret,
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
-  IPerformanceUserInfo,
   ITicket,
   ITicketStub,
   Visibility
@@ -40,7 +38,7 @@ export class PerformanceService {
   }
 
   readPerformanceHostInfo(performanceId: string): Promise<IPerformanceHostInfo> {
-    return this.http.get<IPerformanceHostInfo>(`/api/performances/${performanceId}/host_info`).toPromise();
+    return this.http.get<IPerformanceHostInfo>(`/api/performances/${performanceId}/host-info`).toPromise();
   }
 
   updateVisibility(performanceId: string, visibility: Visibility): Promise<IPerformance> {
@@ -67,5 +65,10 @@ export class PerformanceService {
   // router.delete <void> ("/performances/:pid/tickets/:tid", Perfs.deleteTicket());
   deleteTicket(performanceId: string, ticketId: string): Promise<void> {
     return this.http.delete<void>(`/api/performances/${performanceId}/tickets/${ticketId}`).toPromise();
+  }
+
+  // router.post <IPaymentICS> ("/tickets/:tid/payment-intent", Perfs.createPaymentIntent());
+  createPaymentIntent(ticket:ITicketStub):Promise<IPaymentIntentClientSecret> {
+    return this.http.post<IPaymentIntentClientSecret>(`/api/tickets/${ticket._id}/payment-intent`, null).toPromise();
   }
 }

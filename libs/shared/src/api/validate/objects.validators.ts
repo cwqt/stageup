@@ -27,8 +27,6 @@ export namespace ObjectValidators {
       name: v => FV.isString(v),
       description: v => FV.isString(v),
       genre: v => v.isIn(Object.values(Genre)),
-      price: v => v.isInt(),
-      currency: v => v.isIn(Object.values(CurrencyCode)),
       premiere_date: v => v.optional({ nullable: true }).custom(x => FV.timestamp(v))
     };
   };
@@ -83,7 +81,7 @@ export namespace ObjectValidators {
   export const DtoCreateTicket = ():ObjectValidator<DtoCreateTicket> => {
     return {
       name: v => FV.isString(v),
-      price: v => FV.isInt(v),
+      amount: v => FV.isInt(v),
       currency: v => FV.CurrencyCode(v),
       type: v => v.isIn(enumToValues(TicketType)),
       quantity: v => v.isInt(),

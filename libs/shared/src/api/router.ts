@@ -11,8 +11,8 @@ import { Logger } from 'winston';
 import { IMiddlewareConnections, Middlewares } from './middleware';
 import { ProviderMap } from './data-client';
 
-export default <K extends ProviderMap>(providerMap:K, auth:AuthStrategy, middlewares:IMiddlewareConnections, logger:Logger) => {
-  const router = new AsyncRouter(providerMap, auth, logger)
+export default <K extends ProviderMap>(providerMap:K, globalAuth:AuthStrategy, middlewares:IMiddlewareConnections, logger:Logger) => {
+  const router = new AsyncRouter(providerMap, globalAuth, logger)
   const mws = new Middlewares(middlewares);
 
   return (f:(router:AsyncRouter<K>, providerMap:K, mws:Middlewares) => void):AsyncRouter<K> => {

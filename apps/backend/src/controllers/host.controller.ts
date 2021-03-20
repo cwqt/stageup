@@ -40,8 +40,7 @@ import {
   Onboarding,
   OnboardingReview,
   Performance,
-  AccessToken,
-  S3Return
+  AccessToken
 } from '@core/shared/api';
 
 import { timestamp } from '@core/shared/helpers';
@@ -560,15 +559,10 @@ export default class HostController extends BaseController<BackendProviderMap> {
         if (!host.stripe_account_id) {
           // 2 Create a connected account
           // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-create-account
-          const account = await this.providers.stripe.connection.accounts.create(
-            {
-              // TODO: add details collected in onboarding in the .create options
-              type: 'standard'
-            },
-            {
-              apiKey: this.providers.stripe.config.private_key
-            }
-          );
+          const account = await this.providers.stripe.connection.accounts.create({
+            // TODO: add details collected in onboarding in the .create options
+            type: 'standard'
+          });
 
           host.stripe_account_id = account.id;
           await host.save();
@@ -578,17 +572,12 @@ export default class HostController extends BaseController<BackendProviderMap> {
         // Account Links are the means by which a Connect platform grants a connected account permission
         // to access Stripe-hosted applications, such as Connect Onboarding
         // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-create-account-link
-        const link = await this.providers.stripe.connection.accountLinks.create(
-          {
-            account: host.stripe_account_id,
-            refresh_url: `${Env.API_URL}/stripe/refresh`,
-            return_url: `${Env.API_URL}/stripe/return`,
-            type: 'account_onboarding'
-          },
-          {
-            apiKey: this.providers.stripe.config.private_key
-          }
-        );
+        const link = await this.providers.stripe.connection.accountLinks.create({
+          account: host.stripe_account_id,
+          refresh_url: `${Env.API_URL}/stripe/refresh`,
+          return_url: `${Env.API_URL}/stripe/return`,
+          type: 'account_onboarding'
+        });
 
         // Frontend then consumes this URL & re-directs the user through the Stripe onboarding
         return link.url;
@@ -713,13 +702,17 @@ export default class HostController extends BaseController<BackendProviderMap> {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
-        const res = await this.providers.stripe.connection.accounts.retrieve({
-          stripeAccount: host.stripe_account_id,
-          apiKey: this.providers.stripe.config.private_key
-        });
+        
+        const isStripeConnected = host.stripe_account_id
+          ? (
+              await this.providers.stripe.connection.accounts.retrieve({
+                stripeAccount: host.stripe_account_id
+              })
+            ).charges_enabled
+          : false;
 
         return {
-          is_stripe_connected: res.charges_enabled
+          is_stripe_connected: isStripeConnected
         };
       }
     };

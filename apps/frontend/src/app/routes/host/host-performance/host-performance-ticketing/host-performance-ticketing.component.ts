@@ -28,7 +28,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
 
   tickets: ICacheable<ITicketStub[]> = createICacheable([]);
   ticketsDataSrc: MatTableDataSource<ITicketStub>;
-  displayedColumns: string[] = ['name', 'quantity', 'price', 'actions'];
+  displayedColumns: string[] = ['name', 'quantity', 'amount', 'actions'];
 
   constructor(
     private dialog: MatDialog,

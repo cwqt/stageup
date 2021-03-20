@@ -15,7 +15,6 @@ export class PerformanceComponent implements OnInit, OnDestroy {
   performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>> = createICacheable();
   userPerformanceInfo: ICacheable<IPerformanceUserInfo> = createICacheable();
 
-  currencyPrice: string;
   hasAccess: boolean;
   isWatching: boolean;
 
@@ -33,17 +32,11 @@ export class PerformanceComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     await this.appService.componentInitialising(this.route);
     await this.getPerformance();
-
-    this.currencyPrice = new Intl.NumberFormat('en-GB', {
-      currency: this.perf.currency,
-      style: 'currency'
-    }).format(this.perf.price);
   }
 
   onRouterOutletActivate(event) {
     this.isWatching = true;
     this.myselfService.$currentlyWatching.next(this.performance.data);
-    //get user token for access
   }
 
   onRouterOutletDeactivate($event) {

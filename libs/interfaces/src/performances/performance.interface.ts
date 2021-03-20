@@ -1,6 +1,6 @@
 import { IHostStub } from '../hosts/host.interface';
 import { ISigningKey } from './signing-key.interface';
-import { CurrencyCode } from '../common/currency.interface';
+
 import { Genre } from './genres.interface';
 import { DtoAccessToken } from './access-token.interface';
 import { ITicketStub } from './ticket.interface';
@@ -24,17 +24,12 @@ export interface IPerformance extends IPerformanceStub {
   visibility: Visibility;
   premiere_date?: number; // when the performance is ready to be streamed
   state: PerformanceState; // status of stream
-  price: number; // cost to purchase (micro-pence)
-  currency: CurrencyCode; // currency of price
   genre: Genre;
   tickets: ITicketStub[];
 }
 
 // data transfer object
-export type DtoCreatePerformance = Pick<
-  Required<IPerformance>,
-  'name' | 'premiere_date' | 'description' | 'genre' | 'price' | 'currency'
->;
+export type DtoCreatePerformance = Pick<Required<IPerformance>, 'name' | 'premiere_date' | 'description' | 'genre'>;
 
 // private to host
 export interface IPerformanceHostInfo {
@@ -56,4 +51,3 @@ export enum PerformanceState {
   Idle = 'video.live_stream.idle',
   StreamCompleted = 'video.asset.live_stream_completed'
 }
-

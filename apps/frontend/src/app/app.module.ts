@@ -18,13 +18,13 @@ import { HttpConfigInterceptor } from './_helpers/http.interceptor';
 import { NgxStripeModule } from 'ngx-stripe';
 import { PlyrModule } from 'ngx-plyr';
 
-
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
 import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
+import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AppComponent } from './app.component';
@@ -63,7 +63,6 @@ import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboard
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
-import { PerformanceDialogComponent } from './components/dialogs/performance-dialog/performance-dialog.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
 import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
 import { HostAboutComponent } from './routes/host/host-about/host-about.component';
@@ -88,6 +87,9 @@ import { ChangeImageComponent } from './routes/settings/change-image/change-imag
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
 import { CreateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-ticket/create-ticket.component';
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
+import { PerformanceBrochureComponent } from './routes/performance/performance-brochure/performance-brochure.component';
+import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -132,8 +134,9 @@ import { HostPerformanceDetailsComponent } from './routes/host/host-performance/
     ShortDomainPipe,
     OnboardingStepPipe,
     HostPermissionPipe,
+    CurrencyCodePipe,
     OnboardingViewIssueMakerComponent,
-    PerformanceDialogComponent,
+    PerformanceBrochureComponent,
     UserThumbComponent,
     HostProfileComponent,
     HostContactComponent,
@@ -157,7 +160,8 @@ import { HostPerformanceDetailsComponent } from './routes/host/host-performance/
     RegisterDialogComponent,
     HostPerformanceTicketingComponent,
     CreateTicketComponent,
-    HostPerformanceDetailsComponent
+    HostPerformanceDetailsComponent,
+    PerformanceTicketComponent
   ],
   imports: [
     AngularMaterialModule,

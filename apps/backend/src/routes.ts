@@ -1,4 +1,4 @@
-import { AsyncRouter, Middlewares, ProviderMap } from '@core/shared/api';
+import { AsyncRouter, Middlewares } from '@core/shared/api';
 
 import {
   IHost,
@@ -14,13 +14,14 @@ import {
   IOnboardingStep,
   IAddress,
   IOnboardingStepMap,
-  IStripeCheckoutSession,
   ISearchResponse,
   IHostStub as IHostS,
   ITicket,
   ITicketStub,
   IUserStub as IUserS,
   IHostStripeInfo,
+  IPaymentIntentClientSecret as IPaymentICS,
+  IPaymentConfirmation,
 } from '@core/interfaces';
 
 import UserController from './controllers/user.controller';
@@ -51,7 +52,7 @@ router.put      <IMyself["user"]>       ("/users/:uid",                         
 router.delete   <void>                  ("/users/:uid",                               Users.deleteUser());
 router.get      <IE<IHost, IUHInfo>>    ("/users/:uid/host",                          Users.readUserHost());
 router.put      <IUserS>                ("/users/:uid/avatar",                        Users.changeAvatar());
-// router.put      <void>                  ("/users/forgotpassword",                     Users.forgotPassword());
+// router.put      <void>                  ("/users/forgot-password",                    Users.forgotPassword());
 router.put      <void>                  ("/users/:uid/password",                      Users.resetPassword());
 router.get      <IAddress[]>            ("/users/:uid/addresses",                     Users.readAddresses());
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
@@ -88,19 +89,19 @@ const Perfs = new PerfController(providerMap, middlewares);
 router.post     <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance());
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances());
 router.get      <IE<IPerf, DtoAT>>      ("/performances/:pid",                        Perfs.readPerformance());
-router.get      <IPHInfo>               ("/performances/:pid/host_info",              Perfs.readPerformanceHostInfo());
-router.post     <void>                  ("/performances/:pid/purchase",               Perfs.purchase());
+router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
 router.post     <ITicket>               ("/performances/:pid/tickets",                Perfs.createTicket());
 router.get      <ITicketStub[]>         ("/performances/:pid/tickets",                Perfs.readTickets());
 router.delete   <void>                  ("/performances/:pid/tickets/:tid",           Perfs.deleteTicket());
+router.post     <IPaymentICS>           ("/tickets/:tid/payment-intent",              Perfs.createPaymentIntent());
 
-// ADMIN PANEL --------------------------------------------------------------------------------------------------------
+// ADMIN  -------------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providerMap, middlewares);
-router.get      <IE<IHOnboarding[]>>     (`/admin/onboardings`,                       Admin.readOnboardingProcesses());
-router.post     <void>                   (`/admin/onboardings/:hid/review`,           Admin.reviewOnboardingProcess());
+router.get      <IE<IHOnboarding[]>>     ("/admin/onboardings",                       Admin.readOnboardingProcesses());
+router.post     <void>                   ("/admin/onboardings/:hid/review",           Admin.reviewOnboardingProcess());
 router.post     <void>                   ("/admin/onboardings/:hid/enact",            Admin.enactOnboardingProcess());
 
 // MUX ----------------------------------------------------------------------------------------------------------------
@@ -109,14 +110,13 @@ router.post     <void>                   ("/mux/hooks",                         
 
 // STRIPE -------------------------------------------------------------------------------------------------------------
 const Stripe = new StripeController(providerMap, middlewares);
-router.post     <void>                   ("/stripe/hooks",                            Stripe.handleHook());
-router.post     <IStripeCheckoutSession> ("/stripe/checkout-sessions",                Stripe.createCheckoutSession());
+router.post     <{ received: boolean }>  ("/stripe/hooks",                            Stripe.handleHook());
 router.redirect                          ("/stripe/return",                           Stripe.handleStripeConnectReturn());
 router.redirect                          ("/stripe/refresh",                          Stripe.handleStripeConnectRefresh());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
 const Auth =  new AuthController(providerMap, middlewares)
-router.redirect                          ("/auth/verify",                             Auth.verifyUserEmail());
+router.redirect                          ("/auth/verify-email",                       Auth.verifyUserEmail());
 
 // MISC ---------------------------------------------------------------------------------------------------------------
 const Misc = new MiscController(providerMap, middlewares);

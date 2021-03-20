@@ -22,8 +22,6 @@ describe('As a user-host, I want to update a performace details', () => {
     perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Shakespeare',
       description: 'To be or not to be',
-      price: 24,
-      currency: CurrencyCode.GBP,
       genre: Genre.BourgeoisTragedy,
       premiere_date: null
     });
@@ -31,11 +29,9 @@ describe('As a user-host, I want to update a performace details', () => {
     const updatePerf = await Stories.actions.performances.updatePerformance(perf, {
       name: 'Othello',
       description: 'For she had eyes and chose me.',
-      price: 24
     });
 
     expect(updatePerf.name).toBe('Othello');
     expect(updatePerf.description).toBe('For she had eyes and chose me.');
-    expect(updatePerf.price).toBe(24);
   });
 });

@@ -25,8 +25,6 @@ describe('Logger', () => {
 //     perf = await Stories.actions.performances.createPerformance({
 //       name: 'Shakespeare',
 //       description: 'To be or not to be.',
-//       price: 24,
-//       currency: CurrencyCode.GBP,
 //     });
 
 //     await Stories.actions.performances.purchase(perf);

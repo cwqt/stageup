@@ -8,9 +8,10 @@ export class Ticket extends BaseEntity implements ITicket {
   @BeforeInsert() private beforeInsert() { this._id = uuid() }
 
   @Column() name: string;
-  @Column() price: number;
+  @Column() amount: number; // int, in pennies
   @Column() version: number;
   @Column() quantity: number;
+  @Column() quantity_remaining: number;
   @Column() is_visible: boolean;
   @Column() start_datetime: number;
   @Column() end_datetime: number;
@@ -24,10 +25,11 @@ export class Ticket extends BaseEntity implements ITicket {
   constructor(ticket:DtoCreateTicket) {
     super();
     this.name = ticket.name;
-    this.price = ticket.type == TicketType.Free ? 0 : ticket.price;
+    this.amount = ticket.type == TicketType.Free ? 0 : ticket.amount;
     this.currency = ticket.currency;
     this.type = ticket.type;
     this.quantity = ticket.quantity;
+    this.quantity_remaining = this.quantity;
     this.fees = ticket.fees;
     this.start_datetime = ticket.start_datetime;
     this.end_datetime = ticket.end_datetime
@@ -39,9 +41,10 @@ export class Ticket extends BaseEntity implements ITicket {
     return {
       _id: this._id,
       name: this.name,
-      price: this.price,
+      amount: this.amount,
       currency: this.currency,
       quantity: this.quantity,
+      quantity_remaining: this.quantity_remaining,
       type: this.type
     }
   }

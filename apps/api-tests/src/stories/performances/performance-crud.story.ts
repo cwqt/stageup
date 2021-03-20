@@ -22,8 +22,6 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Shakespeare',
       description: 'To be or not to be',
-      price: 24,
-      currency: CurrencyCode.GBP,
       genre: Genre.BourgeoisTragedy,
       premiere_date: null
     });
@@ -31,8 +29,6 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     expect(perf).not.toBeNull();
     expect(perf.name).toBe('Shakespeare');
     expect(perf.description).toBe('To be or not to be');
-    expect(perf.price).toBe(24);
-    expect(perf.currency).toBe(CurrencyCode.GBP);
   });
 
   it("Should read a performance", async () => {
@@ -46,12 +42,10 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     const updatePerf = await Stories.actions.performances.updatePerformance(perf, {
       name: 'Othello',
       description: 'For she had eyes and chose me.',
-      price: 24
     });
 
     expect(updatePerf.name).toBe('Othello');
     expect(updatePerf.description).toBe('For she had eyes and chose me.');
-    expect(updatePerf.price).toBe(24);
   });
 
   it('Should delete a performance', async () => {

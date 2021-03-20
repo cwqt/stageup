@@ -1,66 +1,98 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
- 
-import { StripeService, StripeCardComponent } from 'ngx-stripe';
+import { Component, OnInit, Output, ViewChild, EventEmitter, AfterViewInit, OnDestroy, Input } from '@angular/core';
+import { StripeCardComponent, StripeFactoryService, StripeInstance, StripeService } from 'ngx-stripe';
 import {
+  PaymentIntent,
+  StripeCardElementChangeEvent,
   StripeCardElementOptions,
-  StripeElementsOptions
+  StripeElementChangeEvent,
+  StripeElementsOptions,
+  StripeError
 } from '@stripe/stripe-js';
- 
+import { Subscription } from 'rxjs';
+import { MyselfService } from '../../../services/myself.service';
+import { IPaymentIntentClientSecret } from '@core/interfaces';
+import { environment } from 'apps/frontend/src/environments/environment';
+
 @Component({
   selector: 'app-payment-checkout',
   templateUrl: './payment-checkout.component.html',
   styleUrls: ['./payment-checkout.component.scss']
 })
-export class PaymentCheckoutComponent implements OnInit {
-  @ViewChild(StripeCardComponent) card: StripeCardComponent;
- 
-  cardOptions: StripeCardElementOptions = {
+export class PaymentCheckoutComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(StripeCardComponent) private card: StripeCardComponent;
+  @Output() onChange: EventEmitter<StripeCardElementChangeEvent> = new EventEmitter();
+  @Output() onFailure: EventEmitter<StripeError> = new EventEmitter();
+  @Output() onSuccess: EventEmitter<PaymentIntent> = new EventEmitter();
+
+  private paymentIntent: IPaymentIntentClientSecret;
+  private subscription: Subscription;
+
+  public error: StripeElementChangeEvent['error'];
+  public loading: boolean = false;
+  stripe: StripeInstance;
+  readonly elementsOptions: StripeElementsOptions = { locale: 'en-GB' };
+  readonly cardOptions: StripeCardElementOptions = {
+    hidePostalCode: true,
     style: {
       base: {
-        iconColor: '#666EE8',
-        color: '#31325F',
-        fontWeight: '300',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSize: '18px',
-        '::placeholder': {
-          color: '#CFD7E0'
-        }
+        fontFamily: '"Roboto", Roboto, sans-serif',
+        fontSize: '18px'
       }
     }
   };
- 
-  elementsOptions: StripeElementsOptions = {
-    locale: 'en'
-  };
- 
-  stripeTest: FormGroup;
- 
-  constructor(private fb: FormBuilder, private stripeService: StripeService) {}
- 
-  ngOnInit(): void {
-    this.stripeTest = this.fb.group({
-      name: ['', [Validators.required]]
+
+
+  constructor(
+    private stripeFactory: StripeFactoryService,
+    private myselfService: MyselfService
+  ) {}
+
+  ngOnInit(): void {}
+
+  ngAfterViewInit() {
+    this.subscription = this.card.change.subscribe(e => {
+      this.error = e.error;
     });
   }
- 
-  createToken(): void {
-    const name = this.stripeTest.get('name').value;
 
-
-    // this.stripeService
-    //   .createSource(this.card.element, { name })
-    //   .subscribe((result) => {
-    //     if (result.token) {
-    //       // Use the token
-    //       console.log(result.token.id);
-    //     } else if (result.error) {
-    //       // Error creating the token
-    //       console.log(result.error.message);
-    //     }
-    //   });
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
+  /**
+   * @description Sets the payment intent & creates the CC info element
+   * @param paymentIntent
+   */
+  public setPaymentIntent(paymentIntent: IPaymentIntentClientSecret) {
+    this.paymentIntent = paymentIntent;
+    this.stripe = this.stripeFactory.create(environment.stripePublicKey, {
+      stripeAccount: this.paymentIntent.stripe_account_id
+    });
+  }
+
+  /**
+   * @description Finishes the transaction using the logged in users entered CC details
+   */
+  public async confirmPayment() {
+    const myself = this.myselfService.$myself.getValue();
+
+    this.loading = true;
+    return this.stripe
+      .confirmCardPayment(this.paymentIntent.client_secret, {
+        payment_method: {
+          card: this.card.element,
+          billing_details: {
+            name: myself.user.name,
+            email: myself.user.email_address
+          }
+        }
+      })
+      .toPromise()
+      .then(d => {
+        if (d.error) this.onFailure.emit(d.error);
+        if (d.paymentIntent) this.onSuccess.emit(d.paymentIntent);
+        return d;
+      })
+      .finally(() => (this.loading = false));
+  }
 }

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { IEnvelopedData as IEnv, IPerformanceStub } from '@core/interfaces';
-import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 
-import { MatDialog, MatDialogRef, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '../../services/helper.service';
-import { PerformanceDialogComponent } from '../../components/dialogs/performance-dialog/performance-dialog.component';
+import { PerformanceBrochureComponent } from '../performance/performance-brochure/performance-brochure.component';
 
 @Component({
   selector: 'app-feed',
@@ -32,18 +32,14 @@ export class FeedComponent implements OnInit {
   }
 
   getFeed() {
-    this.performances.loading = true;
-    this.feedService
-      .getFeed()
-      .then(p => (this.performances.data = p))
-      .catch(e => (this.performances.error = e))
-      .finally(() => (this.performances.loading = false));
+    return cachize(this.feedService.getFeed(), this.performances);
   }
 
   openDialog(performanceIdx: number): void {
     this.helperService.showDialog(
-      this.dialog.open(PerformanceDialogComponent, {
-        data: this.performances.data.data[performanceIdx]
+      this.dialog.open(PerformanceBrochureComponent, {
+        data: this.performances.data.data[performanceIdx],
+        position: { top: "5% "}
       }),
       () => {}
     );

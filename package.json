@@ -68,6 +68,7 @@
     "chai": "^4.2.0",
     "connect-redis": "^4.0.4",
     "cors": "^2.8.5",
+    "currency-symbol-map": "^5.0.1",
     "dbless-email-verification": "^1.0.0",
     "dotenv": "^8.2.0",
     "dotenv-flow": "^3.2.0",
@@ -206,7 +207,6 @@
     "typescript": "^4.0.5",
     "webpack": "^4.0.0",
     "webpack-bundle-analyzer": "^4.4.0",
-    "yargs": "^16.2.0",
-    "webpack":"^4.0.0"
+    "yargs": "^16.2.0"
   }
 }

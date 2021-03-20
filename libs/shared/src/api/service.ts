@@ -1,9 +1,9 @@
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 import http from 'http';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import express from 'express';
-import { json } from 'body-parser';
+import { json, OptionsJson } from 'body-parser';
 import { globalErrorHandler, global404Handler, DataClient } from '@core/shared/api';
 import { Logger } from 'winston';
 import { Environment } from '@core/interfaces';
@@ -18,6 +18,11 @@ export interface IServiceConfig<T extends ProviderMap> {
   logger: Logger;
   stream: morgan.StreamOptions;
   endpoint: string;
+  options?: {
+    body_parser?: OptionsJson;
+    cors?: CorsOptions;
+    helmet?:any;
+  };
 }
 
 export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
@@ -28,9 +33,9 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
   const app = express();
 
   app.set('trust proxy', 1);
-  app.use(json());
-  app.use(cors());
-  app.use(helmet());
+  app.use(json(config.options?.body_parser || {}));
+  app.use(cors(config.options?.cors || {}));
+  app.use(helmet(config.options?.helmet || {}));
   app.use(morgan('tiny', { stream: config.stream }));
 
   return async (Router: (a: typeof app, providerMap: T) => Promise<AsyncRouter<T>>): Promise<http.Server> => {

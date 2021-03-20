@@ -1,4 +1,4 @@
-import { IdFinderStrategy, Performance } from '@core/shared/api';
+import { IdFinderStrategy, Performance, Ticket } from '@core/shared/api';
 
 const findUserIdFromSession: IdFinderStrategy = async (req, pm) => {
   return req.session.user?._id;

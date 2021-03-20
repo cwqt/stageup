@@ -10,9 +10,11 @@ import {
   Visibility,
   JobType,
   IScheduleReleaseJobData,
+  IPaymentIntentClientSecret,
   TokenProvisioner,
   ITicket,
-  ITicketStub
+  ITicketStub,
+  ErrCode
 } from '@core/interfaces';
 
 import {
@@ -64,6 +66,7 @@ export default class PerformanceController extends BaseController<BackendProvide
             },
             options: {
               // Use a repeating job with a limit of 1 to activate the scheduler
+              // FIXME: use offset instead maybe?
               repeat: {
                 cron: '* * * * *',
                 startDate: performance.premiere_date,
@@ -102,48 +105,53 @@ export default class PerformanceController extends BaseController<BackendProvide
   readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, DtoAccessToken>> {
     return {
       validators: [],
-      authStrategy: AuthStrat.isLoggedIn,
+      authStrategy: AuthStrat.none,
       controller: async req => {
         const performance = await getCheck(
-          Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info'] })
+          Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info', 'tickets'] })
         );
 
-        // See if current user has access the performance by virtue of owning an Access Token
-        let token: AccessToken = await AccessToken.findOne({
-          relations: ['user'],
-          where: {
-            user: {
-              _id: req.session.user._id
-            }
-          },
-          select: {
-            user: { _id: true }
-          }
-        });
+        const response: IEnvelopedData<IPerformance, DtoAccessToken> = {
+          data: performance.toFull(),
+          __client_data: null
+        };
 
-        if (!token) {
-          // Provision a token on the fly for all host members
-          const [isMemberOfHost, passthru] = await AuthStrat.runner(
-            {
-              hid: async () => performance.host._id
+        // For logged in users, see if current user has access the performance by virtue of owning an Access Token
+        if (req.session.user) {
+          let token: AccessToken = await AccessToken.findOne({
+            relations: ['user'],
+            where: {
+              user: {
+                _id: req.session.user._id
+              }
             },
-            AuthStrat.isMemberOfHost(m => m.hid)
-          )(req, this.providers);
+            select: {
+              user: { _id: true }
+            }
+          });
 
-          if (isMemberOfHost) {
-            token = new AccessToken(passthru.uhi.user, performance, passthru.uhi.user, TokenProvisioner.User).sign(
-              performance.host_info.signing_key
-            );
+          // Also check if they're a member of the host which created the performance
+          // & if so provision a token on-the-fly for them to be able to watch without purchasing
+          if (!token) {
+            const [isMemberOfHost, passthru] = await AuthStrat.runner(
+              {
+                hid: async () => performance.host._id
+              },
+              AuthStrat.isMemberOfHost(m => m.hid)
+            )(req, this.providers);
+
+            if (isMemberOfHost) {
+              token = new AccessToken(passthru.uhi.user, performance, passthru.uhi.user, TokenProvisioner.User).sign(
+                performance.host_info.signing_key
+              );
+            }
           }
+
+          // return 404 barring the user has a token if the performance is private
+          if (!token && performance.visibility == Visibility.Private) throw new ErrorHandler(HTTP.NotFound);
         }
 
-        // return 404 barring the user has a token if the performance is private
-        if (!token && performance.visibility == Visibility.Private) throw new ErrorHandler(HTTP.NotFound);
-
-        return {
-          data: performance.toFull(),
-          __client_data: token?.toFull()
-        };
+        return response;
       }
     };
   }
@@ -199,7 +207,6 @@ export default class PerformanceController extends BaseController<BackendProvide
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
         await perf.update({
           name: req.body.name,
-          price: req.body.price,
           description: req.body.description
         });
 
@@ -208,29 +215,61 @@ export default class PerformanceController extends BaseController<BackendProvide
     };
   }
 
-  purchase(): IControllerEndpoint<void> {
+  createPaymentIntent(): IControllerEndpoint<IPaymentIntentClientSecret> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.isLoggedIn,
       controller: async req => {
-        // TODO: update to work with invoices & stripe
-        const user = await getCheck(User.findOne({ _id: req.session.user._id }));
-        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['host_info'] }));
+        // Stripe uses a PaymentIntent object to represent your **intent** to collect payment from a customer,
+        // tracking charge attempts and payment state changes throughout the process.
+        const ticket = await getCheck(
+          Ticket.findOne({
+            relations: {
+              performance: {
+                host: true
+              }
+            },
+            where: {
+              _id: req.params.tid
+            },
+            select: {
+              performance: {
+                _id: true,
+                host: {
+                  _id: true,
+                  stripe_account_id: true
+                }
+              }
+            }
+          })
+        );
 
-        // Check user hasn't already purchased performance
-        // const previousPurchase = await Invoice.findOne({
-        //   relations: ['user', 'performance'],
-        //   where: {
-        //     user: { _id: user._id },
-        //     performance: { _id: perf._id }
-        //   }
-        // });
+        // Can't sell more than there are tickets
+        if (ticket.quantity_remaining == 0) throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
 
-        // if (previousPurchase) throw new ErrorHandler(HTTP.BadRequest, ErrCode.DUPLICATE);
+        const res = await this.providers.stripe.connection.paymentIntents.create(
+          {
+            application_fee_amount: ticket.amount * 0.1, // IMPORTANT: have requirements on exact commission pricing
+            payment_method_types: ['card'],
+            amount: ticket.amount,
+            currency: ticket.currency, // ISO code - https://stripe.com/docs/currencies
+            metadata: {
+              // Passed through to webhook when charge successful
+              user_id: req.session.user._id,
+              ticket_id: ticket._id
+            }
+          },
+          {
+            // Who the payment is intended to be delivered to
+            stripeAccount: ticket.performance.host.stripe_account_id
+          }
+        );
 
-        // const purchase = new Invoice(user, perf);
-        // TODO: create an access token
-        // await this.ORM.manager.save(purchase);
+        // Return client secret to user, who will send it to purchaseTicket() alongside the CC info
+        // if they wish to actually buy the ticket
+        return {
+          client_secret: res.client_secret,
+          stripe_account_id: ticket.performance.host.stripe_account_id
+        };
       }
     };
   }
@@ -260,19 +299,19 @@ export default class PerformanceController extends BaseController<BackendProvide
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const ticket = new Ticket(req.body);
-        const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ["tickets"]}));
+        const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['tickets'] }));
 
         await this.ORM.transaction(async txc => {
           await txc.save(ticket);
           performance.tickets.push(ticket);
           await txc.save(performance);
-        })
+        });
 
         return ticket.toFull();
       }
-    }
+    };
   }
-  
+
   readTickets(): IControllerEndpoint<ITicketStub[]> {
     return {
       authStrategy: AuthStrat.none,
@@ -294,16 +333,21 @@ export default class PerformanceController extends BaseController<BackendProvide
 
         return (tickets || []).map(t => t.toStub());
       }
-    }
+    };
   }
 
   deleteTicket(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authStrategy: AuthStrat.runner(
+        {
+          hid: IdFinderStrat.findHostIdFromPerformanceId
+        },
+        AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
+      ),
       controller: async req => {
         const ticket = await getCheck(Ticket.findOne({ _id: req.params.tid }));
         await ticket.softRemove();
       }
-    }
+    };
   }
 }

@@ -15,9 +15,9 @@
     <td mat-cell *matCellDef="let ticket"> {{ ticket.quantity }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="price">
+  <ng-container matColumnDef="amount">
     <th mat-header-cell *matHeaderCellDef> Price </th>
-    <td mat-cell *matCellDef="let ticket"> {{ ticket.type == 'free' ? 'FREE' : (ticket.price + " " + ticket.currency) }} </td>
+    <td mat-cell *matCellDef="let ticket"> {{ ticket.type == 'free' ? 'FREE' : (ticket.amount | currencyPipe: ticket.currency) }} </td>
   </ng-container>
 
   <ng-container matColumnDef="actions">

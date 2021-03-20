@@ -180,8 +180,6 @@ Content-Type: {{contentType}}
     "name":"New performance name",
     "description":"New performance description",
     "genre": "5",
-    "price":"40",
-    "currency": "GBP",
     "premiere_date": 1613474834
 }
 ###
@@ -195,9 +193,9 @@ GET http://{{host}}/performances HTTP/1.1
 # @name readPerformance
 GET http://{{host}}/performances/{{performanceId}} HTTP/1.1
 ###
-#router.get <IPHInfo>("/performances/:pid/host_info", Perfs.readPerformanceHostInfo());
+#router.get <IPHInfo>("/performances/:pid/host-info", Perfs.readPerformanceHostInfo());
 # @name readPerformanceHostInfo
-GET http://{{host}}/performances/{{performanceId}}/host_info HTTP/1.1
+GET http://{{host}}/performances/{{performanceId}}/host-info HTTP/1.1
 ###
 #router.post  <void>("/performances/:pid/purchase", Perfs.purchase());
 # @name purchasePerformance
@@ -214,7 +212,6 @@ Content-Type: {{contentType}}
 
 {
     "name":"New performance name",
-    "price":"40",
     "description":"New performance description"
 }
 ###

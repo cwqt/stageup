@@ -66,13 +66,24 @@ Register<BackendProviderMap>({
       s3_url: Env.AWS.S3_URL,
       s3_region: Env.AWS.S3_REGION
     }),
-    // Use HTTP tunnelling in development for receiving hooks
+    // Use HTTP tunnelling in development for receiving webhooks
     tunnel: Env.isEnv([Environment.Production, Environment.Staging])
       ? null
       : new Providers.LocalTunnel({
           port: Env.LOCALTUNNEL.PORT,
           domain: new URL(Env.WEBHOOK_URL).hostname.split('.').shift()
         })
+  },
+  options: {
+    body_parser: {
+      // stripe hook signature verifier requires raw, un-parsed body
+      verify: function (req, _, buf) {
+        const url = req.url;
+        if (url.startsWith('/stripe/hooks') || url.startsWith('/mux/hooks')) {
+          (req as any).rawBody = buf.toString();
+        }
+      }
+    }
   }
 })(async (app, pm) => {
   // Register session middleware

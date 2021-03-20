@@ -10,7 +10,12 @@
         class="performance-thumb">        
         <div class="performance-thumb__content">    
             <h1>{{ performance.name }}</h1>
-            <p>{{ performance.description }}</p>
+            <p>
+              {{ (performance.description.length > 70)
+                ? performance.description.slice(0,70) + '...'
+                : performance.description 
+              }}
+            </p>
             <div class="content-footer">
                 <span>@{{ performance.host?.name }}</span>
                 <span>{{ performance.views }} viewers</span>    

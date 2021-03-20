@@ -6,7 +6,7 @@ import { Webhooks, LiveStream } from '@mux/mux-node';
 
 import Env from '../env';
 import { log } from '../common/logger';
-import Auth from '../common/authorisation';
+import AuthStrat from '../common/authorisation';
 import { BackendProviderMap } from '..';
 
 export default class MUXController extends BaseController<BackendProviderMap> {
@@ -19,7 +19,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
     this.hookMap = {
       [MUXHook.StreamCreated]: this.streamCreated,
       [MUXHook.StreamActive]: this.streamActive,
-      [MUXHook.StreamIdle]: this.StreamIdle,
+      [MUXHook.StreamIdle]: this.StreamIdle
     };
   }
 
@@ -35,31 +35,25 @@ export default class MUXController extends BaseController<BackendProviderMap> {
     console.log(data);
   }
 
-  validHookStrat():AuthStrategy {
-    return async req => {
-      try {
-        // https://github.com/muxinc/mux-node-sdk#verifying-webhook-signatures
-        const isValidHook = Webhooks.verifyHeader(
-          JSON.stringify(req.body),
-          req.headers['mux-signature'] as string,
-          Env.MUX.HOOK_SIGNATURE
-        );
-
-        if (!isValidHook) {
-          return [false, {}, ErrCode.INVALID];
-        }
-      } catch (error) {
-        log.error(error.message);
-        return [false, {}, ErrCode.UNKNOWN];
-      }
-
-      return [true, {}];
-    };
-  }
-
   handleHook(): IControllerEndpoint<void> {
     return {
-      authStrategy: Auth.none, //this.validHookStrat(),
+      authStrategy: async req => {
+        try {
+          // https://github.com/muxinc/mux-node-sdk#verifying-webhook-signatures
+          const isValidHook = Webhooks.verifyHeader(
+            (req as any).rawBody,
+            req.headers['mux-signature'] as string,
+            Env.MUX.HOOK_SIGNATURE
+          );
+
+          if (!isValidHook) return [false, {}, ErrCode.INVALID];
+        } catch (error) {
+          log.error(error.message);
+          return [false, {}, ErrCode.UNKNOWN];
+        }
+
+        return [true, {}];
+      },
       controller: async req => {
         if (Env.STORE.USE_MEMORYSTORE == true) {
           log.error('Cannot handle MUX hook as Redis is disabled in .env');

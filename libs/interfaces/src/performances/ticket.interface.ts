@@ -14,9 +14,10 @@ export enum TicketFees {
 export interface ITicketStub {
   _id: string;
   name: string;
-  price: number;
+  amount: number; // int, price in pennies
   currency: CurrencyCode;
   quantity: number;
+  quantity_remaining: number;
   type: TicketType;
 }
 
@@ -32,7 +33,7 @@ export type DtoCreateTicket = Required<
   Pick<
     ITicket,
     | 'currency'
-    | 'price'
+    | 'amount'
     | 'name'
     | 'type'
     | 'quantity'

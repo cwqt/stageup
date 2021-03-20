@@ -22,8 +22,6 @@
           },
           "configurations": {
             "development": {
-              "inspect": true,
-              "port": 7777,
               "optimization": false
             },
             "production": {
@@ -42,7 +40,9 @@
           "executor": "@nrwl/node:execute",
           "configurations": {
             "development": {
-              "buildTarget": "backend:build:development"
+              "buildTarget": "backend:build:development",
+              "inspect": true,
+              "port": 7777
             },
             "testing": {
               "buildTarget": "backend:build:development"

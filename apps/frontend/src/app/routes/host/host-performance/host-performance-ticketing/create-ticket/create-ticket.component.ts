@@ -58,7 +58,7 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
           label: 'Ticket title',
           validators: [{ type: 'required' }]
         },
-        price: {
+        amount: {
           width: 6,
           type: 'number',
           label: 'Price',
@@ -148,7 +148,7 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
         transformer: (v): DtoCreateTicket => ({
           name: v.name,
           currency: CurrencyCode.GBP,
-          price: v.type == TicketType.Free ? 0 : v.price,
+          amount: v.type == TicketType.Free ? 0 : v.amount * 100, // TODO: support more than pence
           type: v.type,
           quantity: v.quantity,
           fees: v.fees,
@@ -188,9 +188,9 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
   handleFormChange(event: FormGroup) {
     this.buttons[1].disabled = !event.valid;
     if (event.value.type == TicketType.Free) {
-      event.controls.price.disable({ emitEvent: false, onlySelf: true });
+      event.controls.amount.disable({ emitEvent: false, onlySelf: true });
     } else {
-      event.controls.price.enable({ emitEvent: false, onlySelf: true });
+      event.controls.amount.enable({ emitEvent: false, onlySelf: true });
     }
   }
 }
