@@ -16,13 +16,11 @@ import { Primitive } from '@core/interfaces';
 import { IUiFieldOptions, IUiFieldSelectOptions, IUiFormFieldValidator } from '../form/form.interfaces';
 import { ThemeKind } from '../ui-lib.interfaces';
 import { IUiFormField } from '../form/form.interfaces';
-import { SelectionModel } from '@angular/cdk/collections';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatSelect } from '@angular/material/select';
 import { ReplaySubject, Subject } from 'rxjs';
 import {} from '@angular/material/autocomplete';
 import { take, takeUntil } from 'rxjs/operators';
+import { KeyValue } from 'aws-sdk/clients/iot';
 
 export class IFlatGraphNode {
   key: number | string;
@@ -50,7 +48,7 @@ export interface IGraphNode {
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
-  @Output() selectionChange: EventEmitter<IGraphNode | IGraphNode[]> = new EventEmitter();
+  @Output() selectionChange: EventEmitter<Primitive> = new EventEmitter();
   @ViewChild('input') input: ElementRef;
 
   // Interface inputs
@@ -88,21 +86,25 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
     if (this.type == 'select') this.initialiseSelection();
     if (this.type == 'time') {
-      this.timeItems = new Array(96).fill(undefined).map((_, idx) => {
-        // unix timestamp offset of 15 minutes == 900 seconds
-        const offset = idx * 15 * 60;
-        // key == human readable time
-        let hours = Math.floor((offset % (3600 * 24)) / 3600);
-        let minutes = Math.floor((offset % 3600) / 60);
+      this.timeItems = new Map(
+        new Array(96).fill(undefined).map((_, idx) => {
+          // unix timestamp offset of 15 minutes == 900 seconds
+          const offset = idx * 15 * 60;
+          // key == human readable time
+          let hours = Math.floor((offset % (3600 * 24)) / 3600);
+          let minutes = Math.floor((offset % 3600) / 60);
 
-        return {
-          key: offset,
-          value: `${hours}:${minutes.toLocaleString('en-GB', {
-            minimumIntegerDigits: 2,
-            useGrouping: false
-          })}`
-        };
-      });
+          return [
+            offset,
+            {
+              label: `${hours}:${minutes.toLocaleString('en-GB', {
+                minimumIntegerDigits: 2,
+                useGrouping: false
+              })}`
+            }
+          ];
+        })
+      );
     }
   }
 
@@ -210,7 +212,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
   initialiseSelection() {
     // load the initial items list
-    this.filteredSelectionItems.next(this.options.values.slice());
+    this.filteredSelectionItems.next(this.options.values as IUiFieldSelectOptions['values']);
   }
 
   ngOnDestroy() {
@@ -226,32 +228,41 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
       // this needs to be done after the filteredSelectionItems are loaded initially
       // and after the mat-option elements are available
       // https://stackoverflow.com/a/54020212
-      this.singleSelect.compareWith = (a: any, b: any) => a && b && a === b;
+      this.singleSelect.compareWith = (a, b) => a && b && a === b;
 
       // Set value equal to compareWith value for initial value to be selected
-      if(this.initial) {
+      if (this.initial) {
         setTimeout(() => {
-          this.singleSelect.writeValue((this.value).value);
-        }, 0)  
+          this.singleSelect.writeValue(this.value);
+        }, 0);
       }
     });
   }
 
   filterSelectionItems(event: string) {
-    if (!this.options.values) return;
-    if (!event) return this.filteredSelectionItems.next(this.options.values.slice());
+    const options = this.options as IUiFieldSelectOptions;
+    if (!options.values) return;
+    if (!event) return this.filteredSelectionItems.next(options.values);
 
-    // Filter items by value
+    // Filter map items by labels & construct new filtered map
     this.filteredSelectionItems.next(
-      this.options.values.filter(node => node.value.toLowerCase().indexOf(event.toLowerCase()) > -1)
+      Array.from(options.values.keys())
+        .filter(node => options.values.get(node).label.toLowerCase().includes(event.toLowerCase()))
+        .reduce((acc, curr) => acc.set(curr, options.values.get(curr)), new Map())
     );
   }
 
-  emitSelectionChange(event: IGraphNode) {
+  emitSelectionChange(event: Primitive) {
     this.selectionChange.emit(event);
+  }
+
+  originalOrder = (a, b): number => {
+    return 0;
   }
 
   // Time ------------------------------------------------------------------------------------------------------
   // 24 hours / 15 minutes = 96 options, create an array of 15 minute increments
   timeItems: IUiFieldSelectOptions['values'];
+
+
 }

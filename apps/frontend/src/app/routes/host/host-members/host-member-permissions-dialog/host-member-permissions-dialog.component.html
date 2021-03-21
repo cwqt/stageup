@@ -1,14 +1,14 @@
 
 <ui-dialog [buttons]="buttons" title="Update member">
   <p>
-    Change current user permission from: <b>{{ this.initialPermission.key }}</b>
+    Change current user permission from: <b>{{ selectFieldOptions.values.get(data.uhi.permissions).label }}</b>
   </p>
   
   <ui-input
     type="select"
     label="Select permission"
     (selectionChange)="onSelectionChange($event)"
-    [initial]="initialPermission"
+    [initial]="data.uhi.permissions"
     [options]="selectFieldOptions">
   </ui-input>
 </ui-dialog>

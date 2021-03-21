@@ -1,6 +1,5 @@
 import { AbstractControl, NgControl } from '@angular/forms';
 import { CurrencyCode, DottedPaths, Primitive } from '@core/interfaces';
-import { IGraphNode } from '../input/input.component';
 
 /**
  * @param submit, T => submit handler return type
@@ -65,7 +64,7 @@ export interface IUiFieldContainerOptions {
 
 export interface IUIFieldRadioOptions {
   inline?: boolean;
-  values: Array<{ key: string; value: string }>;
+  values: Map<Primitive, { label: string; disabled?: boolean }>;
 }
 
 export interface IUiFieldMoneyOptions {
@@ -81,7 +80,7 @@ export interface IUiFieldTextOptions extends IUiFieldOptions {
   transformer?: (v: Primitive) => Primitive;
 }
 export interface IUiFieldSelectOptions extends IUiFieldOptions {
-  values: Array<{ key: Primitive, value: Primitive, disabled?:boolean }>;
+  values: Map<Primitive, { label: string; disabled?: boolean }>;
   multi?: boolean;
   search?: boolean;
 }

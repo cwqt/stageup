@@ -107,15 +107,16 @@
       disableOptionCentering>
       <mat-option *ngIf="options.search">
         <ngx-mat-select-search ngModel
-        (ngModelChange)="filterSelectionItems($event)"
+          (ngModelChange)="filterSelectionItems($event)"
           placeholderLabel="Search"
-          noEntriesFoundLabel="No results"></ngx-mat-select-search>
+          noEntriesFoundLabel="No results">
+        </ngx-mat-select-search>
       </mat-option>
-      <mat-option *ngFor="let item of filteredSelectionItems | async"
-        [value]="item.value"
-        [disabled]="item.disabled"
-        (click)="emitSelectionChange(item)">
-        {{ item.key }}
+      <mat-option *ngFor="let item of filteredSelectionItems | async | keyvalue: originalOrder"
+        [value]="item.key"
+        [disabled]="item.value.disabled"
+        (click)="emitSelectionChange(item.key)">
+        {{ item.value.label }}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -136,8 +137,8 @@
       (focus)="onFocus()"
       [(ngModel)]="value"
       disableOptionCentering>
-      <mat-option *ngFor="let item of timeItems" [value]="item.key">
-        {{ item.value }}
+      <mat-option *ngFor="let item of timeItems | keyvalue: originalOrder" [value]="item.key">
+        {{ item.value.label }}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -148,8 +149,8 @@
     <mat-radio-group
       [id]="formControlName"
       [(ngModel)]="value">
-      <mat-radio-button *ngFor="let item of options.values" [value]="item.value">
-        {{ item.key }}
+      <mat-radio-button *ngFor="let item of options.values | keyvalue: originalOrder" [value]="item.key">
+        {{ item.value.label }}
       </mat-radio-button>
     </mat-radio-group>
     <!-- stop formcontrolname throwing errors -->

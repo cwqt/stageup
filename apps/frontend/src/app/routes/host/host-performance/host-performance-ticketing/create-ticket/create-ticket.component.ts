@@ -46,11 +46,11 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
           label: 'Ticket type',
           validators: [{ type: 'required' }],
           options: {
-            values: [
-              { key: 'Free', value: TicketType.Free },
-              { key: 'Paid', value: TicketType.Paid },
-              { key: 'Donation', value: TicketType.Donation }
-            ]
+            values: new Map([
+              [TicketType.Paid, { label: "Paid"}],
+              [TicketType.Free, { label: "Free"}],
+              [TicketType.Donation, { label: "Donation"}],
+            ])
           }
         },
         name: {
@@ -76,10 +76,10 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
           label: 'Fees',
           validators: [{ type: 'required' }],
           options: {
-            values: [
-              { key: 'Absorb Fees', value: TicketFees.Absorb },
-              { key: 'Pass Onto Buyer', value: TicketFees.PassOntoPurchaser }
-            ]
+            values: new Map([
+              [TicketFees.Absorb, { label: 'Absord Fees' }],
+              [TicketFees.PassOntoPurchaser, { label: 'Pass onto Purchaser' }]
+            ])
           }
         },
         sales_starts: {

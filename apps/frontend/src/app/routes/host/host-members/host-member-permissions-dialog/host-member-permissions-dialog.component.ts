@@ -15,7 +15,6 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
   submit: EventEmitter<string> = new EventEmitter();
   cancel: EventEmitter<string> = new EventEmitter();
 
-  initialPermission: any;
   selectedPermission: HostPermission;
   selectFieldOptions: IUiFieldSelectOptions;
 
@@ -45,43 +44,44 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
   ) {}
 
   async ngOnInit(): Promise<void> {
+    // Typed mapping of permissions to labels
+    const allOptions: { [index in HostPermission]: string } = {
+      [HostPermission.Admin]: 'Admin',
+      [HostPermission.Editor]: 'Editor',
+      [HostPermission.Member]: 'Member',
+      [HostPermission.Owner]: 'Owner',
+      [HostPermission.Expired]: 'Expired',
+      [HostPermission.Pending]: 'Pending'
+    } as const;
+
     const options: IUiFieldSelectOptions = {
       multi: false,
       search: false,
-      values: [
-        // All possible permission options
-        { value: HostPermission.Admin, key: 'Admin' },
-        { value: HostPermission.Editor, key: 'Editor' },
-        { value: HostPermission.Member, key: 'Member' },
-        { value: HostPermission.Owner, key: 'Owner' },
-        { value: HostPermission.Expired, key: 'Expired' },
-        { value: HostPermission.Pending, key: 'Pending' }
-      ]
+      values: new Map<HostPermission, { label: string; disabled?: boolean }>()
     };
 
     // Get a copy of the current option & set it to disabled - since you can't re-update to same permission
-    this.initialPermission = { ...options.values.find(o => o.value == this.data.uhi.permissions), disabled: true };
+    options.values.set(this.data.uhi.permissions, { label: allOptions[this.data.uhi.permissions], disabled: true });
 
     // Remove all non-chooseable options
-    options.values = options.values.filter(o => {
-      return (
-        o.value !== HostPermission.Owner &&
-        o.value !== HostPermission.Pending &&
-        o.value !== HostPermission.Expired &&
-        o.value !== this.initialPermission.value // or the current users permission
-      );
-    });
-
-    // Put initial value back into options list
-    options.values.push(this.initialPermission);
+    Object.keys(allOptions)
+      .filter(permission => {
+        return (
+          permission !== HostPermission.Owner &&
+          permission !== HostPermission.Pending &&
+          permission !== HostPermission.Expired &&
+          permission !== this.data.uhi.permissions // or the current users permission
+        ); // Put initial value back into options list
+      })
+      .forEach(permission => options.values.set(permission, { label: allOptions[permission] }));
 
     // Set ui-select options
     this.selectFieldOptions = options;
   }
 
-  onSelectionChange(event: { value: HostPermission; key: string }) {
-    this.selectedPermission = event.value;
-    if (event.value !== this.initialPermission.value) {
+  onSelectionChange(event: HostPermission) {
+    this.selectedPermission = event;
+    if (event !== this.data.uhi.permissions) {
       this.buttons[1].disabled = false;
     } else {
       this.buttons[1].disabled = true;

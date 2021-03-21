@@ -22,11 +22,10 @@ export class HostPerformanceDetailsComponent implements OnInit {
   visibilityOptions: IUiFieldSelectOptions = {
     multi: false,
     search: false,
-    values: [
-      { value: Visibility.Private, key: Visibility.Private },
-      { value: Visibility.Public, key: Visibility.Public }
-    ]
-  };
+    values: new Map()
+      .set(Visibility.Private, { label: "Private"})
+      .set(Visibility.Public, { label: "Public" })
+    };
 
   get performanceData() { return this.performance.data?.data }
   get phiData() { return this.performanceHostInfo.data; }

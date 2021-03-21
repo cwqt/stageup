@@ -8,7 +8,8 @@ import {
   HostOnboardingStep,
   IOnboardingStep,
   ISOCountryCode,
-  PersonTitle
+  PersonTitle,
+  capitalize
 } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
@@ -17,6 +18,7 @@ import phone from 'phone';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { HttpErrorResponse } from '@angular/common/http';
 import { flatten } from 'flat';
+import { enumToValues } from '@core/shared/helpers';
 
 interface IUiStep<T> {
   label: string;
@@ -74,7 +76,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     [HostOnboardingState.HasIssues]: { color: '', icon: 'warning' },
     [HostOnboardingState.PendingVerification]: { color: '', icon: 'pending' },
     [HostOnboardingState.Verified]: { color: '', icon: 'checkmark--outline' },
-    [HostOnboardingState.Modified]: { color: '', icon: 'edit' },
+    [HostOnboardingState.Modified]: { color: '', icon: 'edit' }
   };
 
   stepUiMap: { [index in HostOnboardingStep]?: IUiStep<any> } = {
@@ -115,13 +117,10 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                 label: 'Country',
                 options: {
                   search: true,
-                  values: Object.keys(ISOCountryCode).reduce((acc, curr, idx) => {
-                    acc.push({
-                      key: Object.values(ISOCountryCode)[idx],
-                      value: curr
-                    });
+                  values: Object.keys(ISOCountryCode).reduce((acc, curr) => {
+                    acc.set(curr, { label: ISOCountryCode[curr] });
                     return acc;
-                  }, [])
+                  }, new Map())
                 },
                 validators: [{ type: 'required' }]
               },
@@ -171,13 +170,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                 type: 'select',
                 label: 'Title',
                 options: {
-                  values: Object.values(PersonTitle).reduce<IUiFieldSelectOptions['values']>((acc, curr) => {
-                    acc.push({
-                      key: curr.charAt(0).toUpperCase() + curr.slice(1),
-                      value: curr
-                    });
-                    return acc;
-                  }, [])
+                  values: new Map(enumToValues(PersonTitle).map(title => [title, { label: capitalize(title) }]))
                 },
                 validators: [{ type: 'required' }]
               },
@@ -253,8 +246,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
   async prefetchStepData(step: HostOnboardingStep): Promise<IUiFormPrefetchData> {
     // Only perform prefetches if the user has submitted this onboarding before
-    console.log(this.onboarding.data)
-    if(this.onboarding.data.steps[step] !== HostOnboardingState.AwaitingChanges) {
+    if (this.onboarding.data.steps[step] !== HostOnboardingState.AwaitingChanges) {
       const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(this.host._id, step));
 
       return {
@@ -263,7 +255,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
           acc[curr] = stepData.review.issues[curr];
           return acc;
         }, {})
-      };  
+      };
     }
   }
 
