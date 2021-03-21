@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import * as fd from 'form-data';
 import { IUser, IHost, Primitive, IMyself, IUserStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
+import { UserHostInfo } from '@core/shared/api';
 
 @Injectable({
   providedIn: 'root'

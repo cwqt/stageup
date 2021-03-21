@@ -70,14 +70,15 @@ const LOGGED_IN_ROUTES: Routes = [
     path: `settings`,
     component: SettingsComponent,
     children: [
-      { path: 'profile', component: ProfileSettingsComponent },
+      { path: '', component: ProfileSettingsComponent },
       {
         path: 'billing',
         component: BillingSettingsComponent,
         children: [{ path: 'payment', component: BillingPaymentComponent }]
       },
       { path: 'host', component: HostSettingsComponent },
-      { path: 'account', component: AccountSettingsComponent }
+      { path: 'account', component: AccountSettingsComponent },
+      { path: '**', component: NotFoundComponent }
     ]
   },
   {

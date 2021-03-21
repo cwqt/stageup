@@ -11,7 +11,8 @@ import {
   ErrCode,
   HTTP,
   Environment,
-  IUserStub
+  IUserStub,
+  pick
 } from '@core/interfaces';
 import {
   IControllerEndpoint,
@@ -24,7 +25,9 @@ import {
   params as parameters,
   ErrorHandler,
   FormErrorResponse,
-  getCheck
+  getCheck,
+  Auth,
+  UserHostInfo
 } from '@core/shared/api';
 
 import Email = require('../common/email');
@@ -33,6 +36,7 @@ import AuthStrat from '../common/authorisation';
 
 import { EntityManager } from 'typeorm';
 import { BackendProviderMap } from '..';
+import idFinderStrategies from '../common/authorisation/id-finder-strategies';
 
 export default class UserController extends BaseController<BackendProviderMap> {
   loginUser(): IControllerEndpoint<IUser> {
@@ -186,7 +190,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
       authStrategy: AuthStrat.none,
       controller: async req => {
         let u = await getCheck(User.findOne({ _id: req.params.uid }));
-        u = await u.update({ name: req.body.name });
+        u = await u.update(pick(req.body, ['name', 'avatar', 'bio']));
         return u.toMyself();
       }
     };
@@ -198,6 +202,38 @@ export default class UserController extends BaseController<BackendProviderMap> {
       controller: async req => {
         const u = await getCheck(User.findOne({ _id: req.params.uid }));
         await u.remove();
+      }
+    };
+  }
+
+  updatePreferredLandingPage(): IControllerEndpoint<IUserHostInfo> {
+    return {
+      validators: [
+        body<Pick<IUserHostInfo, 'prefers_dashboard_landing'>>({
+          prefers_dashboard_landing: v => v.isBoolean()
+        })
+      ],
+      authStrategy: AuthStrat.isMemberOfAnyHost,
+      controller: async req => {
+        const uhi = await getCheck(
+          UserHostInfo.findOne({
+            relations: ['user'],
+            where: {
+              user: {
+                _id: req.session.user._id
+              }
+            },
+            select: {
+              user: {
+                _id: true
+              }
+            }
+          })
+        );
+
+        uhi.prefers_dashboard_landing = req.body.prefers_dashboard_landing;
+        await uhi.save();
+        return uhi.toFull();
       }
     };
   }

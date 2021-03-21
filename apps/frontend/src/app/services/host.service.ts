@@ -67,7 +67,8 @@ export class HostService {
             host: d,
             host_info: {
               permissions: HostPermission.Owner,
-              joined_at: timestamp()
+              joined_at: timestamp(),
+              prefers_dashboard_landing: true
             }
           }, true)
         )

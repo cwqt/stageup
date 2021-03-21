@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
-import { IHost, IHostStub, IUser } from '@core/interfaces';
+import { IHost, IHostStub, IMyself, IUser } from '@core/interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 
@@ -10,20 +11,28 @@ import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-  user:IUser;
-  userHost:IHostStub;
+  myself:IMyself;
 
-  constructor(private myselfService:MyselfService, private route:ActivatedRoute, private baseAppService:BaseAppService) {
-  }
+  constructor(
+    private myselfService:MyselfService, 
+    private baseAppService:BaseAppService
+  ) { }
+
+  tabs:Array<{ label:string, route: string}>
 
   async ngOnInit() {
-    const myself = this.myselfService.$myself.value;
-    this.user = myself.user;
-    this.userHost = myself.host;
+    this.myself = this.myselfService.$myself.value;
 
-    if(this.route.children.length == 0) {
-      // not outletting, redirect to /settings/profile
-      this.baseAppService.navigateTo(`settings/profile`);
-    }
+    this.tabs = [
+      { label: "Your Account", route: "/settings" },
+      { label: "Payments", route: "/settings/billing" },
+      { label: "Patronage", route: "/settings/patronage" },
+      { label: "Subscriptions", route: "/settings/subscription" },
+      { label: this.myself.host ? "Host" : "Create a Host", route: "/settings/host" },
+    ]
+  }
+
+  openTabLink(event:MatTabChangeEvent) {
+    this.baseAppService.navigateTo(this.tabs[event.index].route);
   }
 }

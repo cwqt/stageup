@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { HTTP } from '@core/interfaces';
 import { Router } from '@angular/router';
 import { LocalStorageKey } from '../app.interfaces';
+import { UserHostInfo } from '@core/shared/api';
 
 @Injectable({
   providedIn: 'root'
@@ -73,5 +74,10 @@ export class MyselfService {
 
   setUserHostInfo(userHostInfo: IUserHostInfo) {
     this.store({ ...this.$myself.value, host_info: userHostInfo });
+  }
+
+  // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
+  updatePreferredLandingPage(data: Pick<UserHostInfo, "prefers_dashboard_landing">):Promise<IMyself["host_info"]> {
+    return this.http.put<IMyself["host_info"]>("/api/myself/landing-page", data).toPromise();
   }
 }

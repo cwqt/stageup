@@ -24,9 +24,7 @@ const isLoggedIn: AuthStrategy = async (req, providers): Promise<AuthStratReturn
 
 const isOurself: AuthStrategy = async (req, providers): Promise<AuthStratReturn> => {
   const [isAuthorised, _, reason] = await isLoggedIn(req, providers);
-  if (!isAuthorised) {
-    return [isAuthorised, _, reason];
-  }
+  if (!isAuthorised) return [isAuthorised, _, reason];
 
   const user = await User.findOne({ _id: req.params.uid });
   if (user._id !== req.session.user._id) {
@@ -35,6 +33,26 @@ const isOurself: AuthStrategy = async (req, providers): Promise<AuthStratReturn>
 
   return [true, { user }];
 };
+
+const isMemberOfAnyHost:AuthStrategy = async (req, providers, map):Promise<AuthStratReturn> => {
+  const [isAuthorised, _, reason] = await isLoggedIn(req, providers);
+  if (!isAuthorised) return [isAuthorised, _, reason];
+
+  const user = await User.findOne({
+    relations: ["host"],
+    where: {
+      _id: req.session.user._id,
+    },
+    select: {
+      host: {
+        _id: true
+      }
+    }
+  });
+
+  if(!user.host) return [false, {}, ErrCode.NOT_MEMBER];
+  return [true, { user }];
+}
 
 const isMemberOfHost = (mapAccessor?: MapAccessor, passedMap?: NUUIDMap): AuthStrategy => {
   return async (req, providers, map): Promise<AuthStratReturn> => {
@@ -160,6 +178,7 @@ export default {
   isOurself,
   isLoggedIn,
   isMemberOfHost,
+  isMemberOfAnyHost,
   hostIsOnboarded,
   userEmailIsVerified,
   hasHostPermission,

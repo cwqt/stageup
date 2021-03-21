@@ -1,7 +1,6 @@
-<div class="profile-container">
-    <h1>Public Profile</h1>
-    <mat-divider></mat-divider>
-    <br>
+<div class="profile-container p-4 pb-4">
+    <h2>Public Profile</h2>
+    <ui-hr></ui-hr>
 
     <div class="profile-picture__container">
       <img [src]="user.avatar" alt="">
@@ -11,8 +10,32 @@
     <br>
 
     <ui-form
-      (onSucces)="handleSuccessfulUpdate($event)"
+      (onSuccess)="handleSuccessfulUpdate($event)"
       [form]="profileDetailsForm"
       [cacheable]="userCacheable">
     </ui-form>
+
+    <h2 class="mt-8">Contact Information</h2>
+    <ui-hr></ui-hr>
+
+    <ng-container *ngIf="myself.host">
+      <h2 class="mt-8">Relation to Host</h2>
+      <ui-hr></ui-hr>
+      <app-user-thumb [user]="myself.host"></app-user-thumb>
+
+      <h2 class="mt-8">Default Homepage</h2>
+      <ui-hr></ui-hr>
+      <mat-label class="label-before-slide">Home Screen</mat-label>
+      <mat-slide-toggle
+        [checked]="myself.host_info.prefers_dashboard_landing"
+        (change)="updateLandingPage($event)">
+          Dashboard
+      </mat-slide-toggle>
+    </ng-container>
+
+    <h2 class="mt-8">Membership Options</h2>
+    <ui-hr></ui-hr>
+
+    <h2 class="mt-8">Delete Account</h2>
+    <ui-hr></ui-hr>
 </div>

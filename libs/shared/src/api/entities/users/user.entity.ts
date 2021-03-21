@@ -13,7 +13,7 @@ import {
   PrimaryColumn
 } from 'typeorm';
 import { Except } from 'type-fest';
-import { IUser, IUserStub, IUserPrivate, Environment, IMyself } from '@core/interfaces';
+import { IUser, IUserStub, IUserPrivate, IMyself } from '@core/interfaces';
 
 import { Host } from '../hosts/host.entity';
 import { Performance } from '../performances/performance.entity';
@@ -32,11 +32,11 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() username: string;
   @Column({ nullable: true }) avatar?: string;
   @Column({ nullable: true }) cover_image?: string;
-  @Column({ nullable: true }) bio?: string;
+  @Column({ nullable: true }) bio?: string; 
   @Column() is_verified: boolean;
   @Column() is_new_user: boolean;
   @Column() is_admin: boolean;
-  @Column() email_address: string;
+  @Column() email_address: string;  
 
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
   @OneToMany(() => Invoice, invoice => invoice.user) invoices: Invoice[]; // Many purchases
@@ -94,7 +94,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
       is_verified: this.is_verified,
       is_admin: this.is_admin,
       cover_image: this.cover_image,
-      bio: this.bio
+      bio: this.bio          
       // Purchases: []
     };
   }
@@ -126,7 +126,6 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (this as any)[k] = v ?? (this as any)[k];
     });
-
     return this.save();
   }
 }

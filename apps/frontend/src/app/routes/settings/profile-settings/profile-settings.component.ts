@@ -9,6 +9,7 @@ import { ChangeImageComponent } from '../change-image/change-image.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HelperService } from '../../../services/helper.service';
 import * as fd from 'form-data';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-profile-settings',
@@ -16,7 +17,11 @@ import * as fd from 'form-data';
   styleUrls: ['./profile-settings.component.scss']
 })
 export class ProfileSettingsComponent implements OnInit {
-  @Input() user: IMyself['user'];
+  myself:IMyself;
+
+
+  get user() { return this.myself.user; }
+
   userCacheable: ICacheable<IMyself['user']> = createICacheable();
   profileDetailsForm: IUiForm<IMyself['user']> = {
     prefetch: async () => {
@@ -64,7 +69,7 @@ export class ProfileSettingsComponent implements OnInit {
     public dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.user = this.myselfService.$myself.value.user;
+    this.myself = this.myselfService.$myself.getValue();
   }
 
   handleSuccessfulUpdate(event:IMyself["user"]) {
@@ -84,4 +89,8 @@ export class ProfileSettingsComponent implements OnInit {
     return this.userService.changeAvatar(this.user._id, formData);
   }
 
+  updateLandingPage(event:MatSlideToggleChange) {
+    this.myselfService.updatePreferredLandingPage({ prefers_dashboard_landing: event.checked });
+    this.myself.host_info.prefers_dashboard_landing = event.checked;
+  }
 }

@@ -20,8 +20,7 @@ import {
   ITicketStub,
   IUserStub as IUserS,
   IHostStripeInfo,
-  IPaymentIntentClientSecret as IPaymentICS,
-  IPaymentConfirmation,
+  IPaymentIntentClientSecret as IPaymentICS
 } from '@core/interfaces';
 
 import UserController from './controllers/user.controller';
@@ -42,6 +41,7 @@ export default (router:AsyncRouter<BackendProviderMap>, providerMap:BackendProvi
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providerMap, middlewares);
 router.get      <IMyself>               ("/myself",                                   Users.readMyself());
+router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Users.updatePreferredLandingPage());
 // router.get      <void>                  ("/feed",                                     Users.readUserFeed());
 router.post     <IMyself["user"]>       ("/users",                                    Users.createUser());
 router.post     <void>                  ("/users/logout",                             Users.logoutUser());

@@ -1,9 +1,5 @@
-<div class="host-container">
+<div class="p-4">
+  <div class="host-container">
     <app-create-host *ngIf="!host" [host]="host" [user]="user"></app-create-host>
-
-    <ng-container *ngIf="host">
-        <h1>Host settings</h1>
-        <mat-divider></mat-divider>
-        <br>    
-    </ng-container>
+  </div>
 </div>

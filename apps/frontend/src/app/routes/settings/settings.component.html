@@ -1,16 +1,10 @@
-<div class="flex items-stretch h-full">
-    <div class="bg-white rounded p-4 flex-1 w-2/6">
-        <app-user-thumb [user]="user"></app-user-thumb>
+<div class="bg-white rounded w-full h-full overflow-hidden">
+  <h1 class="p-4 mb-0">Account & Settings</h1>
+    <mat-tab-group (selectedTabChange)="openTabLink($event)">
+      <mat-tab *ngFor="let tab of tabs" [label]="tab.label"></mat-tab>
+    </mat-tab-group>
 
-        <div class="mt-4">
-          <ui-button class="w-full mb-2" routerLink="/settings/profile" routerLinkActive="active-link">Profile</ui-button>
-          <ui-button class="w-full mb-2" routerLink="/settings/host" routerLinkActive="active-link">{{ !userHost ? 'Create Host' : 'Host Settings' }}</ui-button>
-          <ui-button class="w-full mb-2" routerLink="/settings/billing" routerLinkActive="active-link">Billing & Plans</ui-button>
-          <ui-button class="w-full mb-2" routerLink="/settings/account" routerLinkActive="active-link">Delete account</ui-button>    
-        </div>
+    <div class="h-full bg-white mt-2 max-w-screen-md">
+      <router-outlet></router-outlet>
     </div>
-
-    <div class="w-4/6 ml-6">
-        <router-outlet></router-outlet>
-    </div>
-</div>
+</div>    

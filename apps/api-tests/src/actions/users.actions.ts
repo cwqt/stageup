@@ -1,6 +1,6 @@
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
-import { IMyself, IUser, IAddress, IUserStub } from '@core/interfaces';
+import { IMyself, IUser, IAddress, IUserStub, Primitive, IUserHostInfo } from '@core/interfaces';
 import { api } from '../environment';
 import userAddressesActions from './user-addresses.actions';
 import fd from 'form-data';
@@ -67,7 +67,17 @@ export default {
     return res.data;
   },
 
-  updateUser: async (user: IUser, props: any) => {},
+  //router.put  <IMyself["user"]> ("/users/:uid", Users.updateUser());
+  updateUser: async (user: IUser, data: { [index: string]: Primitive }): Promise<IMyself['user']> => {   
+    const res = await api.put<IMyself['user']>(`/users/${user._id}`, data, env.getOptions());
+    return res.data;
+  },
+  
+  // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
+  updatePreferredLandingPage: async (data: Pick<IUserHostInfo, "prefers_dashboard_landing">): Promise<IMyself["host_info"]> => {   
+    const res = await api.put<IMyself["host_info"]>(`/myself/landing-page`, data, env.getOptions());
+    return res.data;
+  },
 
   deleteUser: async (user: IUser) => {}
 };
