@@ -24,6 +24,7 @@
     "build:backend:production": "cross-env NODE_ENV=production nx build backend --configuration=production --generatePackageJson",
     "build:frontend:staging": "npm run frontend:setenv -- --env=staging && nx build frontend --configuration=staging",
     "build:frontend:production": "npm run frontend:setenv -- --env=production && nx build frontend --configuration=production",
+    "build:development": "clear && npm run frontend:setenv -- --env=development && nx run-many --all --target=build --parallel --configuration=development",
     "build:staging": "clear && npm run frontend:setenv -- --env=staging && nx run-many --all --target=build --parallel --configuration=staging",
     "build:production": "clear && npm run frontend:setenv -- --env=production && nx run-many --all --target=build --parallel --configuration=production",
     "lint": "nx workspace-lint && nx lint",

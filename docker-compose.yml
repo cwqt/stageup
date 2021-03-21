@@ -58,8 +58,8 @@ services:
       dockerfile: ./apps/frontend/Dockerfile
     volumes:
       - ./dist/apps/frontend:/usr/share/nginx/html
-      - ./dist/apps/frontend:/var/www/html
       - ./apps/frontend/nginx.conf:/etc/nginx/nginx.conf
+      - ./deploy/security-headers.conf:/etc/nginx/security-headers.conf
     ports:
       - "80:80"
     depends_on:
