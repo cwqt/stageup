@@ -14,7 +14,8 @@ import {
   TokenProvisioner,
   ITicket,
   ITicketStub,
-  ErrCode
+  ErrCode,
+  pick
 } from '@core/interfaces';
 
 import {
@@ -30,6 +31,7 @@ import {
   AccessToken,
   Ticket
 } from '@core/shared/api';
+import { IoT1ClickProjects } from 'aws-sdk';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
 import { BackendProviderMap } from '..';
 
@@ -332,6 +334,74 @@ export default class PerformanceController extends BaseController<BackendProvide
         });
 
         return (tickets || []).map(t => t.toStub());
+      }
+    };
+  }
+
+  readTicket(): IControllerEndpoint<ITicket> {
+    return {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const ticket = await getCheck(
+          Ticket.findOne({
+            _id: req.params.tid
+          })
+        );
+
+        return ticket.toFull();
+      }
+    };
+  }
+
+  updateTicket(): IControllerEndpoint<ITicket> {
+    return {
+      authStrategy: AuthStrat.runner(
+        {
+          hid: IdFinderStrat.findHostIdFromPerformanceId
+        },
+        AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
+      ),
+      controller: async req => {
+        // Make a clone of the ticket so that users who have purchased an older one
+        // get the details of the ticket before it was modified
+        const ticket = await getCheck(Ticket.findOne({ _id: req.params.tid }));
+
+        // Clone the ticket & overwrite fields with those from req.body
+        const newTicket = new Ticket(
+          pick(ticket, [
+            'type',
+            'currency',
+            'amount',
+            'name',
+            'quantity',
+            'fees',
+            'start_datetime',
+            'end_datetime',
+            'is_visible'
+          ])
+        );
+
+        // Persist remaining quantity
+        newTicket.quantity_remaining = ticket.quantity_remaining;
+
+        // Set relationship by _id rather than getting performance object
+        newTicket.performance = req.params.pid as any;
+        newTicket.version = ticket.version += 1;
+        newTicket.update(
+          pick(req.body, [
+            'currency',
+            'amount',
+            'name',
+            'quantity',
+            'fees',
+            'start_datetime',
+            'end_datetime',
+            'is_visible'
+          ])
+        );
+
+        await ticket.softRemove();
+        return newTicket.toFull();
       }
     };
   }

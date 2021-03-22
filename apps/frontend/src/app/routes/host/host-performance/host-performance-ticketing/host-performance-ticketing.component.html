@@ -23,7 +23,7 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef>Actions</th>
     <td mat-cell *matCellDef="let ticket">
-      <ui-button><ui-icon>add</ui-icon></ui-button>
+      <ui-button (click)="openUpdateTicketDialog(ticket._id)"><ui-icon>edit</ui-icon></ui-button>
     </td>
   </ng-container>
 

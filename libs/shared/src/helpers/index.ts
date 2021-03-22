@@ -10,7 +10,7 @@ export const timestamp = (date?: Date): number => Math.floor((date || new Date()
  * @description Delay async execution for a duration
  * @param duration time in milli-seconds
  */
-export const timeout = (duration:number=1000) => new Promise(resolve => setTimeout(resolve, duration));
+export const timeout = (duration: number = 1000) => new Promise(resolve => setTimeout(resolve, duration));
 
 /**
  * @description Generate a unique identifier which is as long as a YouTube ID
@@ -56,4 +56,18 @@ export const prettifyMoney = (amount: number, currency: CurrencyCode) => {
   return new Intl.NumberFormat('en-GB', { style: 'currency', currency: currency })
     .format(amount / 100) // amount should be stored in pennies
     .toString();
+};
+
+/**
+ * @description Strip time component from a date object
+ */
+export const timeless = (date: Date): Date => {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+
+/**
+ * @description Add days onto a date
+ */
+export const addDay = (date: Date, amount: number): Date => {
+  return timeless(new Date(new Date(date.getTime() + amount * 60 * 60 * 24 * 1000)));
 };

@@ -27,7 +27,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
   });
 
   it('Should create a ticket on a performance', async () => {
-    const ticket = await Stories.actions.performances.createTicket(perf, {
+    ticket = await Stories.actions.performances.createTicket(perf, {
       name: 'Test ticket',
       amount: 10,
       type: TicketType.Paid,
@@ -42,7 +42,19 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
     expect(ticket._id).toBeTruthy;
   });
 
-  it('Should allow a admin to update a ticket', async () => {});
+  it('Should allow a admin to update a ticket', async () => {
+    ticket = await Stories.actions.performances.updateTicket(perf, ticket, {
+      name: "very cool ticket",
+      amount: 100
+    });
+
+    expect(ticket.version).toEqual(1);//version 2
+
+    // Should softRemove old ticket & replace with new ticket
+    const tickets = await Stories.actions.performances.readTickets(perf);
+    expect(tickets.length).toEqual(1);
+    expect(tickets[0]._id).toEqual(ticket._id);
+  });
 
   it('Should allow a User to get a list of all performance tickets', async () => {
     // Create another performance to get more than 1

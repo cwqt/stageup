@@ -85,11 +85,10 @@ import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-e
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { ChangeImageComponent } from './routes/settings/change-image/change-image.component';
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
-import { CreateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-ticket/create-ticket.component';
+import { CreateUpdateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component';
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 import { PerformanceBrochureComponent } from './routes/performance/performance-brochure/performance-brochure.component';
 import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
-
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -144,7 +143,7 @@ import { PerformanceTicketComponent } from './routes/performance/performance-tic
     HostFeedComponent,
     HostMembersComponent,
     HostAddMemberComponent,
-    HostMemberPermissionsDialogComponent, 
+    HostMemberPermissionsDialogComponent,
     HostPerformanceComponent,
     UserTypeClarificationComponent,
     HostPerformanceDrawerComponent,
@@ -159,7 +158,7 @@ import { PerformanceTicketComponent } from './routes/performance/performance-tic
     UserRegisterComponent,
     RegisterDialogComponent,
     HostPerformanceTicketingComponent,
-    CreateTicketComponent,
+    CreateUpdateTicketComponent,
     HostPerformanceDetailsComponent,
     PerformanceTicketComponent
   ],

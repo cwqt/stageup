@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateTicketComponent } from './create-ticket/create-ticket.component';
+import { CreateUpdateTicketComponent } from './create-update-ticket/create-update-ticket.component';
 
 @Component({
   selector: 'app-host-performance-ticketing',
@@ -38,14 +38,29 @@ export class HostPerformanceTicketingComponent implements OnInit {
 
   ngOnInit(): void {
     this.ticketsDataSrc = new MatTableDataSource<ITicketStub>([]);
-    cachize(this.performanceService.readTickets(this.performanceId), this.tickets)
-      .then(d => (this.ticketsDataSrc.data = d));
+    cachize(this.performanceService.readTickets(this.performanceId), this.tickets).then(
+      d => (this.ticketsDataSrc.data = d)
+    );
   }
 
   openCreateTicketDialog() {
-    this.helperService.showDialog(this.dialog.open(CreateTicketComponent), (ticket: ITicketStub) => {
-      this.tickets.data.push(ticket);
-      this.ticketsDataSrc.data = this.tickets.data;
-    });
+    this.helperService.showDialog(
+      this.dialog.open(CreateUpdateTicketComponent, { data: { operation: 'create' } }),
+      (ticket: ITicketStub) => {
+        this.tickets.data.push(ticket);
+        this.ticketsDataSrc = new MatTableDataSource(this.tickets.data);
+      }
+    );
+  }
+
+  openUpdateTicketDialog(ticketId: string) {
+    this.helperService.showDialog(
+      this.dialog.open(CreateUpdateTicketComponent, { data: { operation: 'update', ticketId } }),
+      (ticket: ITicketStub) => {
+        // Remove old ticket & replace with updated one
+        this.tickets.data.splice(this.tickets.data.findIndex(t => t._id == ticketId), 1, ticket);
+        this.ticketsDataSrc = new MatTableDataSource(this.tickets.data);
+      }
+    );
   }
 }

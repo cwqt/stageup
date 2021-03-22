@@ -1,55 +1,79 @@
-import { Component, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
-import {
-  CurrencyCode,
-  DtoCreateTicket,
-  ITicket,
-  ITicketStub,
-  TicketFees,
-  TicketType
-} from '@core/interfaces';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { capitalize, CurrencyCode, DtoCreateTicket, ITicket, ITicketStub, TicketFees, TicketType } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { FormComponent } from 'apps/frontend/src/app/ui-lib/form/form.component';
-import { IUiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { IUiForm, IUiFormPrefetchData } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import flatten from 'flat';
+import { timeless } from '@core/shared/helpers';
 
 @Component({
-  selector: 'app-create-ticket',
-  templateUrl: './create-ticket.component.html',
-  styleUrls: ['./create-ticket.component.scss']
+  selector: 'app-create-update-ticket',
+  templateUrl: './create-update-ticket.component.html',
+  styleUrls: ['./create-update-ticket.component.scss']
 })
-export class CreateTicketComponent implements OnInit, IUiDialogOptions {
+export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
   @ViewChild('form') form: FormComponent;
   submit: EventEmitter<ITicketStub> = new EventEmitter();
   cancel: EventEmitter<void> = new EventEmitter();
   buttons: IUiDialogOptions['buttons'] = [];
 
-  createTicketForm: IUiForm<ITicket>;
+  ticketForm: IUiForm<ITicket>;
   ticket: ICacheable<ITicket> = createICacheable();
 
   constructor(
-    private ref: MatDialogRef<CreateTicketComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { operation: 'create' | 'update'; ticketId?: string },
+    private ref: MatDialogRef<CreateUpdateTicketComponent>,
     private toastService: ToastService,
     private performanceService: PerformanceService,
     private baseAppService: BaseAppService
   ) {}
 
   ngOnInit(): void {
-    this.createTicketForm = {
+    this.ticketForm = {
+      prefetch: async () => {
+        if (this.data.operation == 'update') {
+          const data = await this.performanceService.readTicket(
+            this.baseAppService.getParam(RouteParam.PerformanceId),
+            this.data.ticketId
+          );
+
+          const fields = flatten<any, IUiFormPrefetchData['fields']>(data);
+
+          const startDate = timeless(new Date(data.start_datetime * 1000));
+          const startTime = data.start_datetime - (startDate.getTime() / 1000);
+          fields["sales_starts.date"] = startDate as unknown as string;
+          fields["sales_starts.time"] = startTime as unknown as string;
+
+          const endDate = timeless(new Date(data.end_datetime * 1000));
+          const endTime = data.end_datetime - (endDate.getTime() / 1000);
+          fields["sales_end.date"] = endDate as unknown as string;
+          fields["sales_end.time"] = endTime as unknown as string;
+
+          // Convert back into pounds from pence
+          fields["amount"] = (data.amount / 100) as unknown as string;
+
+          return {
+            fields: fields
+          };
+        }
+      },
       fields: {
         type: {
           type: 'radio',
           label: 'Ticket type',
           validators: [{ type: 'required' }],
+          disabled: this.data.operation == "update",
           options: {
             values: new Map([
-              [TicketType.Paid, { label: "Paid"}],
-              [TicketType.Free, { label: "Free"}],
-              [TicketType.Donation, { label: "Donation"}],
+              [TicketType.Paid, { label: 'Paid' }],
+              [TicketType.Free, { label: 'Free' }],
+              [TicketType.Donation, { label: 'Donation' }]
             ])
           }
         },
@@ -77,7 +101,7 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
           validators: [{ type: 'required' }],
           options: {
             values: new Map([
-              [TicketFees.Absorb, { label: 'Absord Fees' }],
+              [TicketFees.Absorb, { label: 'Absorb Fees' }],
               [TicketFees.PassOntoPurchaser, { label: 'Pass onto Purchaser' }]
             ])
           }
@@ -141,10 +165,16 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
       },
       submit: {
         is_hidden: true,
-        text: 'Create',
+        text: capitalize(this.data.operation),
         variant: 'primary',
         handler: async v =>
-          this.performanceService.createTicket(this.baseAppService.getParam(RouteParam.PerformanceId), v),
+          this.data.operation == 'create'
+            ? this.performanceService.createTicket(this.baseAppService.getParam(RouteParam.PerformanceId), v)
+            : this.performanceService.updateTicket(
+                this.baseAppService.getParam(RouteParam.PerformanceId),
+                this.data.ticketId,
+                v
+              ),
         transformer: (v): DtoCreateTicket => ({
           name: v.name,
           currency: CurrencyCode.GBP,
@@ -167,7 +197,7 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
         callback: () => this.ref.close()
       },
       {
-        text: 'Create',
+        text: capitalize(this.data.operation),
         kind: ThemeKind.Primary,
         disabled: true,
         callback: () => this.form.onSubmit()
@@ -176,7 +206,7 @@ export class CreateTicketComponent implements OnInit, IUiDialogOptions {
   }
 
   handleFormSuccess(event: ITicket) {
-    this.toastService.emit(`Created ticket: ${event.name}!`);
+    this.toastService.emit(`${capitalize(this.data.operation)}d ticket: ${event.name}!`);
     this.submit.emit(event);
     this.ref.close(event);
   }

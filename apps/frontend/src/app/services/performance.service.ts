@@ -12,6 +12,7 @@ import {
   ITicketStub,
   Visibility
 } from '@core/interfaces';
+import { Except } from 'type-fest';
 
 @Injectable({
   providedIn: 'root'
@@ -62,9 +63,18 @@ export class PerformanceService {
     return this.http.get<ITicketStub[]>(`/api/performances/${performanceId}/tickets`).toPromise();
   }
 
+  readTicket(performanceId:string, ticketId: string):Promise<ITicket> {
+    return this.http.get<ITicket>(`/api/performances/${performanceId}/tickets/${ticketId}`).toPromise();
+  }
+
   // router.delete <void> ("/performances/:pid/tickets/:tid", Perfs.deleteTicket());
   deleteTicket(performanceId: string, ticketId: string): Promise<void> {
     return this.http.delete<void>(`/api/performances/${performanceId}/tickets/${ticketId}`).toPromise();
+  }
+
+  // router.put <ITicket> ("/performances/:pid/tickets/:tid", Perfs.updateTicket());
+  updateTicket(performanceId: string, ticketId: string, data:Except<DtoCreateTicket, "type">): Promise<ITicket> {
+    return this.http.put<ITicket>(`/api/performances/${performanceId}/tickets/${ticketId}`, data).toPromise();
   }
 
   // router.post <IPaymentICS> ("/tickets/:tid/payment-intent", Perfs.createPaymentIntent());

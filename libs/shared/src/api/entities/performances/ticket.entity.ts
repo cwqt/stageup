@@ -1,7 +1,8 @@
-import { BaseEntity, Entity, Column, ManyToOne, BeforeInsert, PrimaryColumn, DeleteDateColumn } from 'typeorm';
+import { BaseEntity, Entity, Column, ManyToOne, BeforeInsert, PrimaryColumn, DeleteDateColumn, JoinColumn } from 'typeorm';
 import { CurrencyCode, ITicket, ITicketStub, TicketType, DtoCreateTicket, TicketFees } from '@core/interfaces';
 import { uuid } from '@core/shared/helpers';
 import { Performance } from './performance.entity';
+import { Except } from 'type-fest';
 @Entity()
 export class Ticket extends BaseEntity implements ITicket {
   @PrimaryColumn() _id: string;
@@ -58,5 +59,12 @@ export class Ticket extends BaseEntity implements ITicket {
       start_datetime: this.start_datetime,
       end_datetime: this.end_datetime
     }
+  }
+  
+  async update(updates: Except<DtoCreateTicket, "type">): Promise<ITicket> {
+    Object.entries(updates).forEach(([k, v]: [string, any]) => {
+      (this as any)[k] = v ?? (this as any)[k];
+    });
+    return this.save();
   }
 }

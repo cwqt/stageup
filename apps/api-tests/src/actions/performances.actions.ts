@@ -19,6 +19,7 @@ import {
   DtoCreateTicket
 } from '@core/interfaces';
 import { timestamp } from '@core/shared/helpers';
+import { Except } from 'type-fest';
 
 export default {
   // router.post<IPerf>("/performances",Perfs.createPerformance());
@@ -93,5 +94,23 @@ export default {
   deleteTicket: async (performance: IPerformance, ticket: ITicket | ITicketStub): Promise<ITicket> => {
     const res = await api.delete(`/performances/${performance._id}/tickets/${ticket._id}`, env.getOptions());
     return res.data;
-  }
+  },
+
+  // router.get <ITicket[]> ("/performances/:pid/tickets", Perfs.readTickets());
+  readTickets: async (performance: IPerformance): Promise<ITicket[]> => {
+    const res = await api.get(`/performances/${performance._id}/tickets`, env.getOptions());
+    return res.data;
+  },
+
+  // router.get <ITicket> ("/performances/:pid/tickets/:tid", Perfs.readTicket());
+  readTicket: async (performance: IPerformance, ticket: ITicket | ITicketStub): Promise<ITicket> => {
+    const res = await api.get(`/performances/${performance._id}/tickets/${ticket._id}`, env.getOptions());
+    return res.data;
+  },
+
+  // router.put <ITicket> ("/performances/:pid/tickets/:tid", Perfs.updateTicket());
+  updateTicket: async (performance: IPerformance, ticket: ITicket | ITicketStub, data:Partial<Except<DtoCreateTicket, "type">>): Promise<ITicket> => {
+    const res = await api.put(`/performances/${performance._id}/tickets/${ticket._id}`, data, env.getOptions());
+    return res.data;
+  },
 };
