@@ -27,7 +27,7 @@ import { timestamp } from '@core/shared/helpers';
 export class HostService {
   private $currentHost: BehaviorSubject<IHostStub> = new BehaviorSubject(null);
   private $currentUserHostInfo: BehaviorSubject<IUserHostInfo> = new BehaviorSubject(null);
-  
+
   public get hostId() {
     return this.$currentHost.value._id;
   }
@@ -44,7 +44,7 @@ export class HostService {
   constructor(private http: HttpClient, private myselfService: MyselfService) {
     this.myselfService.$myself.subscribe(m => {
       this.$currentHost.next(m?.host);
-      this.$currentUserHostInfo.next(m?.host_info);      
+      this.$currentUserHostInfo.next(m?.host_info);
     });
   }
 
@@ -60,17 +60,20 @@ export class HostService {
       .post<IHost>('/api/hosts', data)
       .pipe(
         tap(d =>
-          this.myselfService.store({
-            user: this.myselfService.$myself.getValue().user,
-            // propagate both the new host, and the host creators (owner)
-            // permissions to the other services
-            host: d,
-            host_info: {
-              permissions: HostPermission.Owner,
-              joined_at: timestamp(),
-              prefers_dashboard_landing: true
-            }
-          }, true)
+          this.myselfService.store(
+            {
+              user: this.myselfService.$myself.getValue().user,
+              // propagate both the new host, and the host creators (owner)
+              // permissions to the other services
+              host: d,
+              host_info: {
+                permissions: HostPermission.Owner,
+                joined_at: timestamp(),
+                prefers_dashboard_landing: true
+              }
+            },
+            true
+          )
         )
       )
       .toPromise();
@@ -136,6 +139,17 @@ export class HostService {
       .toPromise();
   }
 
+  // router.delete   <void> ("/hosts/:hid/members/:uid", Hosts.removeMember());
+  removeMember(hostId: string, userId: string): Promise<void> {
+    return this.http
+      .delete<void>(`/api/hosts/${hostId}/members/${userId}`)
+      .toPromise()
+      .then(() => {
+        this.myselfService.setHost(null);
+        this.myselfService.setUserHostInfo(null);
+      });
+  }
+
   //router.get <void> ("/hosts/:hid/performances/:pid/provision", Hosts.provisionPerformanceAccessTokens());
   provisionPerformanceAccessTokens(hostId: string, performanceId: string, emailAddresses: string[]): Promise<void> {
     return this.http
@@ -143,10 +157,10 @@ export class HostService {
       .toPromise();
   }
 
-  connectStripe(hostId:string):Promise<string> {
+  connectStripe(hostId: string): Promise<string> {
     return this.http.post<string>(`/api/hosts/${hostId}/stripe/connect`, null).toPromise();
   }
-  
+
   //router.put <void> ("/hosts/:hid/members/:mid", Hosts.updateMember());
   updateMember(hostId: string, userId: string, permissions: HostPermission): Promise<void> {
     return this.http
@@ -159,12 +173,12 @@ export class HostService {
   }
 
   // router.get <IHostStripeInfo> ("/hosts/:hid/stripe/info", Hosts.readStripeInfo());
-  readStripeInfo(hostId:string):Promise<IHostStripeInfo> {
+  readStripeInfo(hostId: string): Promise<IHostStripeInfo> {
     return this.http.get<IHostStripeInfo>(`/api/hosts/${hostId}/stripe/info`).toPromise();
   }
 
   //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
   changeBanner(hostId: string, data: fd | null) {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/banner`, data).toPromise();
-  } 
+  }
 }

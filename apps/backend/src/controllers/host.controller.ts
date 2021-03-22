@@ -209,6 +209,13 @@ export default class HostController extends BaseController<BackendProviderMap> {
                 members_info: {
                   user: true
                 }
+              },
+              select: {
+                members_info: {
+                  user: {
+                    _id: true
+                  }
+                }
               }
             }
           )
@@ -288,7 +295,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           UserHostInfo.findOne({
             relations: ['user', 'host'],
             where: {
-              user: { _id: req.params.mid },
+              user: { _id: req.params.uid },
               host: { _id: req.params.hid }
             }
           })
@@ -312,7 +319,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
-  // router.delete <void>("/hosts/:hid/members/:mid", Hosts.removeMember());
+  // router.delete <void>("/hosts/:hid/members/:uid", Hosts.removeMember());
   removeMember(): IControllerEndpoint<void> {
     return {
       validators: [],
@@ -322,15 +329,18 @@ export default class HostController extends BaseController<BackendProviderMap> {
           UserHostInfo.findOne({
             relations: ['user', 'host'],
             where: {
-              user: { _id: req.params.mid },
+              user: { _id: req.params.uid },
               host: { _id: req.params.hid }
             }
           })
         );
 
-        if (userHostInfo.permissions == HostPermission.Owner)
-          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
-        await userHostInfo.remove();
+        // Can't leave host as host owner
+        if(userHostInfo.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
+
+        await this.ORM.transaction(async txc => {
+          await userHostInfo.host.removeMember(userHostInfo.user, txc);
+        });
       }
     };
   }

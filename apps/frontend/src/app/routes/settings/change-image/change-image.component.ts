@@ -8,7 +8,7 @@ import { HostService } from '../../../services/host.service';
 @Component({
   selector: 'app-change-image',
   templateUrl: './change-image.component.html',
-  styleUrls: ['./change-image.component.css']
+  styleUrls: ['./change-image.component.scss']
 })
 export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   submit: EventEmitter<string> = new EventEmitter();

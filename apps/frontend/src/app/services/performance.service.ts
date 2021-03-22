@@ -63,7 +63,7 @@ export class PerformanceService {
     return this.http.get<ITicketStub[]>(`/api/performances/${performanceId}/tickets`).toPromise();
   }
 
-  readTicket(performanceId:string, ticketId: string):Promise<ITicket> {
+  readTicket(performanceId: string, ticketId: string): Promise<ITicket> {
     return this.http.get<ITicket>(`/api/performances/${performanceId}/tickets/${ticketId}`).toPromise();
   }
 
@@ -73,12 +73,16 @@ export class PerformanceService {
   }
 
   // router.put <ITicket> ("/performances/:pid/tickets/:tid", Perfs.updateTicket());
-  updateTicket(performanceId: string, ticketId: string, data:Except<DtoCreateTicket, "type">): Promise<ITicket> {
+  updateTicket(performanceId: string, ticketId: string, data: Except<DtoCreateTicket, 'type'>): Promise<ITicket> {
     return this.http.put<ITicket>(`/api/performances/${performanceId}/tickets/${ticketId}`, data).toPromise();
   }
 
   // router.post <IPaymentICS> ("/tickets/:tid/payment-intent", Perfs.createPaymentIntent());
-  createPaymentIntent(ticket:ITicketStub):Promise<IPaymentIntentClientSecret> {
+  createPaymentIntent(ticket: ITicketStub): Promise<IPaymentIntentClientSecret> {
     return this.http.post<IPaymentIntentClientSecret>(`/api/tickets/${ticket._id}/payment-intent`, null).toPromise();
+  }
+
+  deletePerformance(performanceId: string) {
+    return this.http.delete(`/api/performances/${performanceId}`).toPromise();
   }
 }

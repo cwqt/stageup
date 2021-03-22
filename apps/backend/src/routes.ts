@@ -75,8 +75,8 @@ router.delete   <void>                  ("/hosts/:hid",                         
 // router.put      <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
 router.get      <IE<IUHInfo[]>>         ("/hosts/:hid/members",                       Hosts.readMembers());
 router.post     <IUHInfo>               ("/hosts/:hid/members",                       Hosts.addMember());
-router.delete   <void>                  ("/hosts/:hid/members/:mid",                  Hosts.removeMember());
-router.put      <void>                  ("/hosts/:hid/members/:mid",                  Hosts.updateMember());
+router.delete   <void>                  ("/hosts/:hid/members/:uid",                  Hosts.removeMember());
+router.put      <void>                  ("/hosts/:hid/members/:uid",                  Hosts.updateMember());
 router.get      <IHOnboarding>          ("/hosts/:hid/onboarding/status",             Hosts.readOnboardingProcessStatus());
 router.post     <void>                  ("/hosts/:hid/onboarding/submit",             Hosts.submitOnboardingProcess());
 router.get      <IOnboardingStepMap>    ("/hosts/:hid/onboarding/steps",              Hosts.readOnboardingSteps());

@@ -10,7 +10,7 @@ import {
   PrimaryColumn
 } from 'typeorm';
 
-import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails } from '@core/interfaces';
+import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails, HTTP, ErrCode } from '@core/interfaces';
 
 import { User } from '../users/user.entity';
 import { Performance } from '../performances/performance.entity';
@@ -18,6 +18,7 @@ import { UserHostInfo } from './user-host-info.entity';
 import { Onboarding } from './onboarding.entity';
 import { ContactInfo } from '../users/contact-info.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
+import { ErrorHandler } from '../../errors';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -83,6 +84,10 @@ export class Host extends BaseEntity implements IHostPrivate {
 
   async removeMember(user: User, txc: EntityManager) {
     const uhi = await txc.findOne(UserHostInfo, { user: user, host: this });
+
+    // Can't remove an Owner
+    if (uhi.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+
     this.members_info = this.members_info.splice(
       this.members_info.findIndex(m => m._id === user._id),
       1

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { IUiDialogOptions } from "../ui-lib.interfaces";
+import { MatDialogRef } from "@angular/material/dialog";
+import { IUiDialogOptions } from "../../ui-lib.interfaces";
 
 @Component({
   selector: "ui-dialog-buttons",
@@ -7,6 +8,7 @@ import { IUiDialogOptions } from "../ui-lib.interfaces";
   styleUrls: ["./dialog-buttons.component.scss"],
 })
 export class DialogButtonsComponent implements OnInit {
+  @Input() dialogRef:MatDialogRef<any>;
   @Input() buttons:IUiDialogOptions["buttons"];
 
   constructor() {}

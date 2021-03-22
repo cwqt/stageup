@@ -1,16 +1,16 @@
 // Modules ----------------------------------------------------------------------------------------------------------------
-import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app.routes';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
-import { NgxMaskModule } from 'ngx-mask';
+import { BrowserModule } from '@angular/platform-browser';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ClickOutsideModule } from 'ng-click-outside';
+import { CookieService } from 'ngx-cookie-service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MomentModule } from 'ngx-moment';
+import { NgxMaskModule } from 'ngx-mask';
 import { NgxPopperModule } from 'ngx-popper';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgxPermissionsModule } from 'ngx-permissions';
@@ -27,6 +27,11 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
+
+import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
+import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
+import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
+import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { AppComponent } from './app.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { LoginComponent } from './routes/landing/login/login.component';
@@ -48,17 +53,12 @@ import { HostComponent } from './routes/host/host.component';
 import { CreatePerformanceComponent } from './routes/host/host-performances/create-performance/create-performance.component';
 import { UpdatePerformanceComponent } from './routes/host/host-performance/update-performance/app-update-performance.component';
 import { PlayerComponent } from './components/player/player.component';
-import { SettingsComponent } from './routes/settings/settings.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
-import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
 import { HostSettingsComponent } from './routes/settings/host-settings/host-settings.component';
 import { CreateHostComponent } from './routes/settings/host-settings/create-host/create-host.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
-import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
-import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { SearchComponent } from './routes/search/search.component';
-import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
@@ -90,16 +90,24 @@ import { PerformanceBrochureComponent } from './routes/performance/performance-b
 import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { PerformanceThumbComponent } from './components/performance-thumb/performance-thumb.component';
+import { DeleteConfirmationDialogComponent } from './components/dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component'
+import { SettingsComponent } from './routes/settings/settings.component';
+
 
 // ---------------------------------------------------------------------------------------------------------------------
-
 @NgModule({
   declarations: [
+    AccountSettingsComponent,
+    AdminOnboardingListComponent,
+    AdminOnboardingViewComponent,
+    AdminPanelComponent,
     AppComponent,
     LandingComponent,
+    DeleteConfirmationDialogComponent,
     LoginComponent,
     ProfileComponent,
     VerifiedComponent,
+    SettingsComponent,
     FirstTimeSetupComponent,
     HeaderBarComponent,
     AppWrapperComponent,
@@ -115,14 +123,8 @@ import { PerformanceThumbComponent } from './components/performance-thumb/perfor
     CreatePerformanceComponent,
     UpdatePerformanceComponent,
     PlayerComponent,
-    SettingsComponent,
+    ProfileComponent,
     ProfileSettingsComponent,
-    BillingSettingsComponent,
-    AccountSettingsComponent,
-    HostSettingsComponent,
-    CreateHostComponent,
-    HostOnboardingComponent,
-    AdminPanelComponent,
     SearchComponent,
     AdminOnboardingListComponent,
     HostDashboardComponent,
@@ -162,14 +164,19 @@ import { PerformanceThumbComponent } from './components/performance-thumb/perfor
     HostPerformanceDetailsComponent,
     PerformanceTicketComponent,
     MyStuffComponent,
-    PerformanceThumbComponent
+    PerformanceThumbComponent,
+    BillingSettingsComponent,
+    HostSettingsComponent,
+    CreateHostComponent,
+    HostOnboardingComponent
   ],
   imports: [
     AngularMaterialModule,
     UiLibModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    ClickOutsideModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -185,7 +192,7 @@ import { PerformanceThumbComponent } from './components/performance-thumb/perfor
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],
-  entryComponents: [],
+  entryComponents: [DeleteConfirmationDialogComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { IUiFormField } from '../form/form.interfaces';
 
 @Component({
@@ -7,7 +8,8 @@ import { IUiFormField } from '../form/form.interfaces';
   styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent implements OnInit {
-  @Input() buttons
+  @Input() dialogRef:MatDialogRef<any>;
+  @Input() buttons;
   @Input() title:string;
   @Input() loading:boolean;
 
