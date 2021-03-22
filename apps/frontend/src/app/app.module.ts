@@ -27,7 +27,6 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
-
 import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
@@ -84,7 +83,6 @@ import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-e
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { ChangeImageComponent } from './routes/settings/change-image/change-image.component';
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
-import { CreateUpdateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component';
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 import { PerformanceBrochureComponent } from './routes/performance/performance-brochure/performance-brochure.component';
 import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
@@ -92,6 +90,7 @@ import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { PerformanceThumbComponent } from './components/performance-thumb/performance-thumb.component';
 import { DeleteConfirmationDialogComponent } from './components/dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component'
 import { SettingsComponent } from './routes/settings/settings.component';
+import { CreateUpdateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component';
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -160,6 +159,7 @@ import { SettingsComponent } from './routes/settings/settings.component';
     UserRegisterComponent,
     RegisterDialogComponent,
     HostPerformanceTicketingComponent,
+    HostPerformanceDetailsComponent,
     CreateUpdateTicketComponent,
     HostPerformanceDetailsComponent,
     PerformanceTicketComponent,
