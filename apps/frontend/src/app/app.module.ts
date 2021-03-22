@@ -39,7 +39,6 @@ import { HeaderBarComponent } from './components/app/header-bar/header-bar.compo
 import { ProfileComponent } from './routes/profile/profile.component';
 import { FooterComponent } from './components/app/footer/footer.component';
 import { PageComponent } from './components/app/page/page.component';
-import { CatalogComponent } from './routes/catalog/catalog.component';
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
 import { FeedComponent } from './routes/feed/feed.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
@@ -107,7 +106,6 @@ import { PerformanceThumbComponent } from './components/performance-thumb/perfor
     NotFoundComponent,
     FooterComponent,
     PageComponent,
-    CatalogComponent,
     SidebarComponent,
     FeedComponent,
     PerformanceComponent,
