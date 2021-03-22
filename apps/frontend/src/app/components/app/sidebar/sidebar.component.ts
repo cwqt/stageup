@@ -8,6 +8,7 @@ import { IHostStub, IMyself } from '@core/interfaces';
 })
 export class SidebarComponent implements OnInit {
   @Input() myself:IMyself;
+  isExpanded:false;
   
   constructor() { }
 

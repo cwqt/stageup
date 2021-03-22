@@ -1,39 +1,46 @@
-<div class="header-container">
-  <div class="left">
+<div class="flex justify-between items-stretch h-14 overflow-hidden bg-white shadow w-full">
+ 
+  <div class="center mr-auto search-box flex items-center w-1/3">
+    <img routerLink="/" class="logo ml-2 p-2 max-h-full h-auto object-contain" src="/assets/logomark.svg" alt="">
+    <input class="w-full ml-4 p-2 bg-gray-200 rounded focus:bg-gray-100 outline-none focus:ring-2 focus:ring-pink-500"
+      type="text"
+      placeholder="Search for performances..."
+      (keydown.enter)="search(searchBox.value)" #searchBox>
   </div>
-
-  <div class="right">
-    <div class="header-search">
-      <ui-input class="w-80" type="text" placeholder="Search for performances..." (keydown.enter)="search(searchBox.value)" #searchBox></ui-input>
+ 
+  <div class="right flex items-center ml-auto p-2 mr-2">
+    <div class="header-buttons flex space-x-2 mr-4">
+      <ui-button routerLink="/categories">Categories</ui-button>
+      <ui-button routerLink="/my-stuff">My Stuff</ui-button>
     </div>
 
-    <ui-icon class="header-notification" *ngIf="myself">notification--new</ui-icon>
+    <ui-icon *ngIf="myself">notification--new</ui-icon>
 
     <div class="flex" *ngIf="!myself">
       <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="openLoginDialog()">Log In</ui-button>
       <ui-button class="flex-initial mr-4" kind="accent" icon="user" (click)="openRegisterDialog()">Register</ui-button>
     </div>
 
-    <div class="header-user" *ngIf="myself" [popper]="dropdownMenu" [popperShowOnStart]="false" 
-      [popperTrigger]="'click'" [popperHideOnClickOutside]="true" [popperHideOnScroll]="true" [popperPlacement]="'bottom'">  
-      <img [src]="myself.user.avatar" alt="">
+    <div class="flex items-center cursor-pointer"
+      *ngIf="myself"
+      [popper]="userDropdownMenu"
+      [popperShowOnStart]="false" 
+      [popperHideOnClickOutside]="true"
+      [popperHideOnScroll]="true"
+      [popperApplyClass]="'user-dropdown-menu'"
+      popperTrigger="click"
+      popperPlacement="bottom">  
+      <img class="rounded-full w-10 h-10 mx-4" [src]="myself.user.avatar" alt="">
       <span>{{ myself.user.name || myself.user.username }}</span>
       <ui-icon>caret--down</ui-icon>           
-    </div>    
-
-    <!-- * DROPDOWN MENU * --> 
-    <popper-content #dropdownMenu class="shadow-xl">
-      <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
-        <button routerLink="/profile">Profile</button>
-      </div>
-      <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
-        <button routerLink="/settings/profile">Settings</button>
-      </div>
-      <a>
-        <hr class="border-t mx-2">
-      </a>
-      <div class="container px-4 py-2 text-gray-600 hover:bg-white hover:text-black">
-        <button (click)="userLogout()">Logout</button>
-      </div>
-    </popper-content>
+    </div> 
+  </div>   
 </div>
+
+<popper-content #userDropdownMenu>
+  <div class="buttons">
+    <ui-button icon="user" size="l" routerLink="/profile">Profile</ui-button>
+    <ui-button icon="settings" size="l" routerLink="/settings/profile">Settings</ui-button>
+    <ui-button icon="exit" size="l" (click)="userLogout()">Logout</ui-button>  
+  </div>
+</popper-content>

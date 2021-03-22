@@ -1,6 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DtoAccessToken, IEnvelopedData, IHostStub, IMyself, IPerformance, IUserHostInfo } from '@core/interfaces';
+import {
+  DtoAccessToken,
+  IEnvelopedData,
+  IHostStub,
+  IMyself,
+  IPerformance,
+  IPerformanceStub,
+  IUserHostInfo
+} from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HTTP } from '@core/interfaces';
@@ -13,7 +21,7 @@ import { UserHostInfo } from '@core/shared/api';
 })
 export class MyselfService {
   $myself: BehaviorSubject<IMyself | null>;
-  $currentlyWatching:BehaviorSubject<IEnvelopedData<IPerformance, DtoAccessToken> | null>;
+  $currentlyWatching: BehaviorSubject<IEnvelopedData<IPerformance, DtoAccessToken> | null>;
 
   constructor(private http: HttpClient, private router: Router) {
     this.$myself = new BehaviorSubject(this.hydrate());
@@ -64,7 +72,7 @@ export class MyselfService {
       .toPromise();
   }
 
-  setUser(user: IMyself["user"]) {
+  setUser(user: IMyself['user']) {
     this.store({ ...this.$myself.value, user: user }, true);
   }
 
@@ -77,7 +85,14 @@ export class MyselfService {
   }
 
   // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
-  updatePreferredLandingPage(data: Pick<UserHostInfo, "prefers_dashboard_landing">):Promise<IMyself["host_info"]> {
-    return this.http.put<IMyself["host_info"]>("/api/myself/landing-page", data).toPromise();
+  updatePreferredLandingPage(data: Pick<UserHostInfo, 'prefers_dashboard_landing'>): Promise<IMyself['host_info']> {
+    return this.http.put<IMyself['host_info']>('/api/myself/landing-page', data).toPromise();
+  }
+
+  // router.get <IE<IPerfS[]>> ("/myself/purchased-performances", Myself.readMyPurchasedPerformances());
+  readMyPurchasedPerformances(name?: string): Promise<IEnvelopedData<IPerformanceStub[]>> {
+    return this.http
+      .get<IEnvelopedData<IPerformanceStub[]>>(`/api/myself/purchased-performances${name ? `?name=${name}` : ''}`)
+      .toPromise();
   }
 }

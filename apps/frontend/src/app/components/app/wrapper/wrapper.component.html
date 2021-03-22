@@ -1,21 +1,23 @@
 <div class="app-container">
-  <app-sidebar
+  <app-header-bar [myself]="myself"></app-header-bar>
+  <app-sidebar *ngIf="myself?.user.is_admin || myself?.host"
     [class.raise-index]="!(drawerOpenSubject | async)"
-    [class.cancel-events]="drawerOpenSubject | async"
+    [class.shadow-lg]="drawerOpenSubject | async"
     [myself]="myself">
   </app-sidebar>
+    <!-- [class.cancel-events]="drawerOpenSubject | async" -->
 
-  <mat-drawer-container class="h-full">
+  <mat-drawer-container class="h-full relative">
     <mat-drawer #drawer mode="side" [ngSwitch]="drawerState.key">
       <app-host-performance-drawer *ngSwitchCase="drawerKey.HostPerformance"></app-host-performance-drawer>
     </mat-drawer>
 
     <mat-drawer-content class="w-full h-full">
-      <app-header-bar [myself]="myself"></app-header-bar>
-      <div class="app-body container">
-        <app-page title="First time setup" *ngIf="myself && myself.user.is_new_user">
+
+      <div class="app-body container pt-16 px-8">
+        <!-- <app-page title="First time setup" *ngIf="myself && myself.user.is_new_user">
           <app-first-time-setup></app-first-time-setup>
-        </app-page>
+        </app-page> -->
 
         <router-outlet></router-outlet>
       </div>

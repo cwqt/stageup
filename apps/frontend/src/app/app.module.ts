@@ -89,6 +89,8 @@ import { CreateUpdateTicketComponent } from './routes/host/host-performance/host
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 import { PerformanceBrochureComponent } from './routes/performance/performance-brochure/performance-brochure.component';
 import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
+import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
+import { PerformanceThumbComponent } from './components/performance-thumb/performance-thumb.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -160,7 +162,9 @@ import { PerformanceTicketComponent } from './routes/performance/performance-tic
     HostPerformanceTicketingComponent,
     CreateUpdateTicketComponent,
     HostPerformanceDetailsComponent,
-    PerformanceTicketComponent
+    PerformanceTicketComponent,
+    MyStuffComponent,
+    PerformanceThumbComponent
   ],
   imports: [
     AngularMaterialModule,

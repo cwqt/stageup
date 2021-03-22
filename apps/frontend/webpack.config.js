@@ -13,7 +13,7 @@ module.exports = {
             syntax: 'postcss-scss',
             plugins: [
               require('postcss-import'),
-              require('@tailwindcss/jit')(require('./tailwind.config.js')(false)),
+              require('tailwindcss')(require('./tailwind.config.js')(false)),
               require('autoprefixer')
             ]
           }

@@ -1,22 +1,18 @@
 <div class="sidebar-wrapper">
-  <img src="/assets/logomark.svg" alt="" class="logo">
 
-  <div class="sidebar-main-buttons">
-    <ui-button kind="accent" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <ui-icon size="l">template</ui-icon>
-    </ui-button>
-
+  <div class="sidebar-main-buttons" [class.sidebar-main-buttons--is-expanded]="isExpanded">
     <ui-button *ngIf="myself?.host" kind="accent" routerLink="/dashboard" routerLinkActive="active">
-      <ui-icon size="l">events</ui-icon>
+      <img class="rounded-full transform scale-150 w-auto h-auto object-contain my-4 mx-auto"
+        [src]="myself.host.avatar || '/assets/avatar-placeholder.png'" alt="">
     </ui-button>
 
     <ui-button *ngIf="myself?.user.is_admin" routerLink="/admin" kind="accent"
       routerLinkActive="active">
-      <ui-icon size="l">virtual-private-cloud</ui-icon>
+      <ui-icon>virtual-private-cloud</ui-icon>
     </ui-button>
 
     <ui-button *ngIf="myself" kind="accent" routerLink="/settings" routerLinkActive="active">
-      <ui-icon size="l">settings</ui-icon>
+      <ui-icon>settings</ui-icon>
     </ui-button>
   </div>
 </div>

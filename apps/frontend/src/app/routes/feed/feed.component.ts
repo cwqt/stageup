@@ -35,10 +35,10 @@ export class FeedComponent implements OnInit {
     return cachize(this.feedService.getFeed(), this.performances);
   }
 
-  openDialog(performanceIdx: number): void {
+  openDialog(performance: IPerformanceStub): void {
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
-        data: this.performances.data.data[performanceIdx],
+        data: performance,
         position: { top: "5% "}
       }),
       () => {}

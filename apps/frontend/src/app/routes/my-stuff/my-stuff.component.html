@@ -1,0 +1,15 @@
+<h1>Purchases library</h1>
+<ui-hr></ui-hr>
+
+<ui-input type="text"
+  (change)="onChange($event)" 
+  placeholder="Search for purchased performance...">
+</ui-input>
+
+<mat-spinner *ngIf="myStuff.loading"></mat-spinner>
+
+<h3 *ngIf="myStuff.data?.data?.length == 0">No purchases found</h3>
+
+<app-performance-thumb *ngFor="let performance of myStuff.data.data"
+  [performance]="performance">
+</app-performance-thumb>

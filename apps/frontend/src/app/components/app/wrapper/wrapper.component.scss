@@ -1,4 +1,14 @@
 @import "apps/frontend/src/styles/variables";
+$sidebar-width: $space-lg * 3;
+
+app-header-bar {
+  width: 100vw;
+  display: block;
+  height: auto;
+  width: 100%;
+  position: relative;
+  z-index: 1000;
+}
 
 .app-container {
   max-height: 100vh;
@@ -9,7 +19,7 @@
 
 app-sidebar {
   position: absolute;
-  width: $space-lg * 4;
+  width: $sidebar-width;
   left: 0;
   top: 0;
   z-index: 2;
@@ -22,7 +32,6 @@ app-sidebar {
 }
 
 mat-drawer-container {
-  z-index: 99;
   background-color: transparent;
   // height: 100vh;
   // width: 100vw;
@@ -38,28 +47,17 @@ mat-drawer {
 }
 
 mat-drawer-content {
-  margin-left: $space-lg * 4;
+  margin-left: $sidebar-width;
 }
 
-
-app-header-bar {
-  display: block;
-  height: auto;
-  width: 100%;
-  padding: $space-lg;
-}
 
 .app-body {
   height: auto;
   min-height: 100vh;
-  padding: $space $space-lg;
   margin-bottom: 20px;
 }
 
-
-
 .fadeout {
-
   transition: opacity .5s ease-in-out;
-   opacity: 1;
+  opacity: 1;
 }

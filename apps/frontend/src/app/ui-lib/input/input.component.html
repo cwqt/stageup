@@ -1,7 +1,7 @@
 <div class="ui-input-wrapper" [class.ui-input-wrapper--has-icon]="icon">
   <!-- Input -->
   <div
-    (clickOutside)="togglePasswordVisibility(false, $event)"
+    (clickOutside)="togglePasswordVisibility(false, $event); focused = false"
     (click)="input.select()"
     class="form-field"
     [class.form-field--is-active]="focused"
@@ -19,8 +19,9 @@
         #input
         [(ngModel)]="value"
         [validation]="true"
-        (blur)="onTouched()"
-        (focus)="onFocus()"
+        (ngModelChange)="change.emit($event)"
+        (blur)="onTouchedCallback()"
+        (focus)="onFocusCallback()"
         [id]="id || formControlName || ''"
         [disabled]="disabled"
         [placeholder]="placeholder"
@@ -36,7 +37,7 @@
         <!-- FIXME: fix ui-icon-button to re-enable this icon to display password -->
         <!-- <div class="form-field__password" *ngIf="type == 'password'">
           <ui-icon-button size="m" (click)="togglePasswordVisibility(false, $event)" *ngIf="passwordVisible"><ui-icon>view--filled</ui-icon></ui-icon-button>
-          <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>  
+          <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>
         </div> -->
       </div>
   </div>
@@ -58,8 +59,8 @@
       <textarea
         #textarea
         [(ngModel)]="value"
-        (blur)="onTouched()"
-        (focus)="onFocus()"
+        (blur)="onTouchedCallback()"
+        (focus)="onFocusCallback()"
         [id]="formControlName || ''"
         [disabled]="disabled"
         [placeholder]="placeholder"
@@ -101,8 +102,8 @@
     <mat-label>{{ label }}</mat-label>
     <mat-select #singleSelect
       [disabled]="disabled"
-      (blur)="onTouched()"
-      (focus)="onFocus()"
+      (blur)="onTouchedCallback()"
+      (focus)="onFocusCallback()"
       [(ngModel)]="value"
       disableOptionCentering>
       <mat-option *ngIf="options.search">
@@ -133,8 +134,8 @@
   <mat-form-field *ngIf="type == 'time'" appearance="fill">
     <mat-label>{{ label }}</mat-label>
     <mat-select #singleSelect
-      (blur)="onTouched()"
-      (focus)="onFocus()"
+      (blur)="onTouchedCallback()"
+      (focus)="onFocusCallback()"
       [(ngModel)]="value"
       disableOptionCentering>
       <mat-option *ngFor="let item of timeItems | keyvalue: originalOrder" [value]="item.key">

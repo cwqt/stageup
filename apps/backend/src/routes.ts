@@ -20,9 +20,11 @@ import {
   ITicketStub,
   IUserStub as IUserS,
   IHostStripeInfo,
-  IPaymentIntentClientSecret as IPaymentICS
+  IPaymentIntentClientSecret as IPaymentICS,
+  IPerformanceStub
 } from '@core/interfaces';
 
+import MyselfController from './controllers/myself.controller';
 import UserController from './controllers/user.controller';
 import HostController from './controllers/host.controller';
 import PerfController from './controllers/performance.controller';
@@ -38,10 +40,14 @@ import { BackendProviderMap } from '.';
  * @description: Create a router, passing in the providers to be accessible to routes
  */
 export default (router:AsyncRouter<BackendProviderMap>, providerMap:BackendProviderMap, middlewares:Middlewares) => {
+// MYSELF -------------------------------------------------------------------------------------------------------------
+const Myself = new MyselfController(providerMap, middlewares);
+router.get      <IMyself>               ("/myself",                                   Myself.readMyself());
+router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
+router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
+
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providerMap, middlewares);
-router.get      <IMyself>               ("/myself",                                   Users.readMyself());
-router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Users.updatePreferredLandingPage());
 // router.get      <void>                  ("/feed",                                     Users.readUserFeed());
 router.post     <IMyself["user"]>       ("/users",                                    Users.createUser());
 router.post     <void>                  ("/users/logout",                             Users.logoutUser());

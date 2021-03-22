@@ -18,8 +18,6 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 })
 export class ProfileSettingsComponent implements OnInit {
   myself:IMyself;
-
-
   get user() { return this.myself.user; }
 
   userCacheable: ICacheable<IMyself['user']> = createICacheable();

@@ -11,7 +11,7 @@ import {
   OnDestroy,
   ElementRef
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Primitive } from '@core/interfaces';
 import { IUiFieldOptions, IUiFieldSelectOptions, IUiFormFieldValidator } from '../form/form.interfaces';
 import { ThemeKind } from '../ui-lib.interfaces';
@@ -48,7 +48,9 @@ export interface IGraphNode {
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
+  @Output() change:EventEmitter<any> = new EventEmitter();
   @Output() selectionChange: EventEmitter<Primitive> = new EventEmitter();
+  
   @ViewChild('input') input: ElementRef;
 
   // Interface inputs
@@ -112,9 +114,52 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     if (this.type == 'select') this.setInitialSelectValue();
   }
 
+  // ControlValueAccessor --------------------------------------------------------------------------------
+  private _value: any = '';
+  public get value(): any {
+    return this._value;
+  }
+
+  public set value(v: any) {
+    if (v !== this._value) {
+      this._value = v;
+      this.onChangeCallback(v);
+    }
+  }
+
+  onFocusCallback = () => { this.focused = true }
+  onChangeCallback = _ => {};
+  onTouchedCallback = () => {};
+
+  writeValue(value: any): void {
+    if (value !== this._value) {
+      this._value = value;
+    }
+
+    this.onChangeCallback(this.value);
+    this.change.emit(this.value);
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChangeCallback = fn;
+  }
+  
+  registerOnTouched(fn: any): void {
+    this.onTouchedCallback = () => {
+      fn();
+      this.focused = false;
+    };
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+  // -------------------------------------------------------------------------------------------------------
+
   public get invalid(): boolean {
     return this.control ? this.control.invalid : false;
   }
+
   public get showError(): boolean {
     if (!this.control) return false;
 
@@ -150,43 +195,10 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     });
   }
 
-  // Form control configurations
-  private _value: any = '';
-  public get value(): any {
-    return this._value;
-  }
-  public set value(v: any) {
-    if (v !== this._value) {
-      this._value = v;
-      this.onChange(v);
-    }
-  }
+  
+  select() { this.input.nativeElement.select(); }
 
-  select() {
-    this.input.nativeElement.select();
-  }
 
-  onFocus() {
-    this.focused = true;
-  }
-
-  onChange = _ => {};
-  onTouched = () => {};
-  writeValue(value: any): void {
-    this.value = value;
-  }
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-  registerOnTouched(fn: any): void {
-    this.onTouched = () => {
-      fn();
-      this.focused = false;
-    };
-  }
-  setDisabledState?(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
 
   increment(event) {
     event.preventDefault();
