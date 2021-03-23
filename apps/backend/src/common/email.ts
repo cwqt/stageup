@@ -78,14 +78,20 @@ export const sendTicketPurchaseConfirmation = async (
   performance: Performance,
   receiptUrl: string
 ) => {
+  const performanceLink = `${Env.FE_URL}/performances/${performance._id}/watch`;
+
   return sendEmail({
     from: Env.EMAIL_ADDRESS,
     to: purchaser.email_address,
     subject: `Receipt of purchase of StageUp ticket 🎭`,
     html: `
     <p>
-      You bought <b>${ticket.name}</b> for <b>${prettifyMoney(ticket.amount, ticket.currency)}</b> to watch <b>${performance.name}</b>.
-      <br/><a href="${receiptUrl}">${receiptUrl}</a>  
+      You purchased a <b>${ticket.name}</b> ticket to watch <b>${performance.name}</b> for <b>${prettifyMoney(ticket.amount, ticket.currency)}</b>.<br/>
+      <br/><a href="${performanceLink}">Click here to watch</a>
+      <br/>
+      <br/>Reciept of this purchase: <a href="${receiptUrl}">${receiptUrl}</a> 
+      <br/>
+      <br/>Thanks,<br/>StageUp Team
     </p>`
   });
 };
