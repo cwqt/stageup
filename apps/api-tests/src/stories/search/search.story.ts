@@ -30,13 +30,13 @@ describe('As a user, I want to be able to search for hosts/performances', () => 
 
   it('Should search for host', async () => {
     let searchQuery = host.name;
-    let hostResults = await Stories.actions.search.searchResponse(searchQuery, page, perPage);
+    let hostResults = await Stories.actions.search.search(searchQuery, page, perPage);
     expect(hostResults.hosts.data.find(host => host.name === host.name));
   });
 
   it('Should search for performance', async () => {
     let searchQuery = perf.name;
-    let perfResults = await Stories.actions.search.searchResponse(searchQuery, page, perPage);
+    let perfResults = await Stories.actions.search.search(searchQuery, page, perPage);
     expect(perfResults.performances.data.find(performance => perf.name === performance.name));
   });
 });

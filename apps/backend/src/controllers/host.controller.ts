@@ -327,7 +327,12 @@ export default class HostController extends BaseController<BackendProviderMap> {
       controller: async req => {
         const userHostInfo = await getCheck(
           UserHostInfo.findOne({
-            relations: ['user', 'host'],
+            relations: {
+              user: true,
+              host: {
+                members_info: true
+              }
+            },
             where: {
               user: { _id: req.params.uid },
               host: { _id: req.params.hid }
@@ -336,7 +341,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
         );
 
         // Can't leave host as host owner
-        if(userHostInfo.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
+        if(userHostInfo.permissions == HostPermission.Owner)
+          throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
 
         await this.ORM.transaction(async txc => {
           await userHostInfo.host.removeMember(userHostInfo.user, txc);
