@@ -14,7 +14,8 @@ envConfigFile += `export const environment = {
    apiUrl: '${process.env.API_URL}',
    frontendUrl: '${process.env.FE_URL}',
    environment: '${environment}',
-   stripePublicKey: '${process.env.STRIPE_PUBLIC_KEY}'
+   stripePublicKey: '${process.env.STRIPE_PUBLIC_KEY}',
+   appVersion: '${process.env.npm_package_version}'
 };
 `;
 

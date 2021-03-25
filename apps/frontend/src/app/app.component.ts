@@ -29,16 +29,17 @@ export class AppComponent implements OnInit {
     console.log(`Running in: ${environment.environment}`);
   }
 
-  async ngOnInit() {
+  
+  async ngOnInit() {  
     this.loading = true;
     await this.baseAppService.componentInitialising(this.route);
-    this.titleService.setTitle('StageUp - 0.0.4');
+    this.titleService.setTitle(`StageUp - ${environment.appVersion}`);
 
     // Upon start up, check if logged in by re-hydrating stored data (if any exists)
     // and then re-fetch the user incase of any changes & set all permissions
-    if (this.authService.checkLoggedIn(false)) {
+    if (this.authService.checkLoggedIn(false)) {      
       await this.myselfService.getMyself();
-      this.toastService.emit('Welcome back to StageUp! (0.0.4)');
+      this.toastService.emit(`Welcome back to StageUp! (${environment.appVersion})`);
 
       // May be coming in from an e-mail to accept invite /?invite_accepted=...
       const invite = this.baseAppService.getQueryParam('invite_accepted');

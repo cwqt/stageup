@@ -5,6 +5,7 @@ export const environment:IFrontendEnvironment = {
   apiUrl: 'http://localhost:3000',
   frontendUrl: 'http://localhost:4200',
   stripePublicKey: "",
+  appVersion: ""
 };
 
 import 'zone.js/dist/zone-error';  // Included with Angular CLI.
