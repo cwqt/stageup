@@ -326,7 +326,6 @@ export default class UserController extends BaseController {
       controller: async req => {
         const address = await Address.findOne({ _id: req.params.aid });
         // TODO: update method in address model
-
         return address.toFull();
       }
     };

@@ -1,0 +1,63 @@
+<div [ngSwitch]="ticket.type">
+  <div *ngSwitchCase="'paid'">
+    <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" 
+      size="l"
+      (click)="clicked.emit(ticket)">
+        <div>
+          <ui-chip kind="magenta">PAID</ui-chip>
+          <b class="ml-4">{{ ticket.amount | currencyPipe: ticket.currency }}</b>
+        </div>
+
+        <div>
+          <span>{{ ticket.name }}</span>
+          <span class="opacity-50">
+            {{ ticket.quantity_remaining > 0
+              ? (ticket.quantity_remaining + ' remaining')
+              : 'SOLD OUT'
+            }}
+          </span>
+        </div>
+    </ui-button>
+  </div>
+  
+  <div *ngSwitchCase="'dono'">
+    <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" 
+      size="l"
+      (click)="clicked.emit(ticket)">
+        <div>
+          <ui-chip kind="blue">DONATION</ui-chip>
+          <b class="ml-4">min. {{ ticket.amount | currencyPipe: ticket.currency }}</b>
+        </div>
+
+        <div>
+          <span>{{ ticket.name }}</span>
+          <span class="opacity-50">
+            {{ ticket.quantity_remaining > 0
+              ? (ticket.quantity_remaining + ' remaining')
+              : 'SOLD OUT'
+            }}
+          </span>
+        </div>
+    </ui-button>
+  </div>
+  
+  <div *ngSwitchCase="'free'">
+    <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" 
+      size="l"
+      (click)="clicked.emit(ticket)">
+        <div>
+          <ui-chip kind="green">FREE</ui-chip>
+        </div>
+
+        <div>
+          <span>{{ ticket.name }}</span>
+          <span class="opacity-50">
+            {{ ticket.quantity_remaining > 0
+              ? (ticket.quantity_remaining + ' remaining')
+              : 'SOLD OUT'
+            }}
+          </span>
+        </div>
+    </ui-button>
+  </div>
+</div>

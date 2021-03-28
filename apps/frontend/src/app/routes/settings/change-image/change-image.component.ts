@@ -97,7 +97,6 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
     return new Promise((resolve, reject) => {
       try {
         const inputElement = this.inputElement.nativeElement;
-
         // Read file again & upload file
         if (typeof FileReader !== 'undefined') {
           const reader = new FileReader();

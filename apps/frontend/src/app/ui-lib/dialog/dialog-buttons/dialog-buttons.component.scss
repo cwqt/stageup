@@ -1,0 +1,25 @@
+.ui-dialog-buttons-wrapper {
+  min-width: 500px;
+  display: flex;
+  ui-button {
+    width: auto;
+    flex: 1;
+    ::ng-deep {
+      button {
+        width: 100%;
+        min-height: 64px;
+        display: flex;
+        border-radius: 0;
+        .mat-button-wrapper {
+          margin-bottom: auto;
+          font-size: 16px;
+          margin-top: 5px;
+        }
+      }
+    }
+    &.left {
+    }
+    &.right {
+    }
+  }
+}

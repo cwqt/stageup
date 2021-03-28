@@ -1,0 +1,27 @@
+<h1>Payments</h1>
+<ui-hr></ui-hr>
+
+<mat-spinner *ngIf="stripeInfo.loading"></mat-spinner>
+
+<ng-container *ngIf="stripeInfo.data">
+  <p *ngIf="connectSuccess == false">An error occured while connecting Stripe, try again?</p>
+
+  <ng-container *ngIf="stripeInfo.data.is_stripe_connected">
+    <h3>Stripe is connected!</h3>
+  </ng-container>
+  
+  <ng-container *ngIf="stripeInfo.data.is_stripe_connected == false">
+    <ui-button
+      kind="secondary"
+      size="l"
+      (click)="openConnectStripe()"
+      [disabled]="connect.loading"
+      [loading]="connect.loading">
+      <span>Connect with</span>
+      <svg width="100" height="50" xmlns="http://www.w3.org/2000/svg">
+        <image href="/assets/stripe/logo.svg" width="100" height="50"/>
+      </svg>
+    </ui-button>
+  </ng-container>
+</ng-container>
+

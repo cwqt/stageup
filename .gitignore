@@ -13,3 +13,7 @@ deploy/env/*
 .env.*
 !.env.example
 bundle.7z
+bundle.7z
+
+environment.*
+!environment.ts

@@ -1,0 +1,98 @@
+<ui-dialog [noPadding]="true" [loading]="performanceCacheable.loading || paymentIntent.loading">
+  <div>
+    <img class="object-cover h-96 w-full" src="/assets/banner-placeholder.png" />
+  </div>
+
+  <div class="flex">
+    <ng-container *ngIf="performance">
+      <mat-tab-group #tabs class="w-full" dynamicHeight>
+        <mat-tab>
+          <div class="flex p-4">
+            <div class="w-2/3">
+              <h1>{{ performance.name }}</h1>
+              <app-user-thumb [user]="data.host"></app-user-thumb>
+              <ui-hr></ui-hr>
+              <p>{{ data.description }}</p>
+            </div>
+        
+            <div class="w-1/3 ml-4 text-right">
+              <h2>Tickets</h2>
+              <p class="text-lg" *ngIf="!myself">
+                You must <a class="cursor-pointer" (click)="openRegister()">register</a>
+                or <a class="cursor-pointer" (click)="openLogin()">log in</a>
+                before being able to purchase this performance.
+              </p>
+
+              <div *ngFor="let ticket of performance.tickets">
+                <app-performance-ticket
+                  [disabled]="!myself"
+                  (click)="openPurchaseTicketSection(ticket)"
+                  [ticket]="ticket">
+                </app-performance-ticket>
+              </div>
+            </div>    
+          </div>    
+        </mat-tab>
+
+        <mat-tab class="relative">
+          <div class="flex flex-col p-4" *ngIf="selectedTicket">
+            <div class="text-center relative">
+              <h4 class="opacity-50">CHECKOUT</h4> 
+              <h1 class="mb-0">{{ performance.name }}</h1>  
+              <ui-button (click)="openPerformanceDescriptionSection()" icon="arrow--left" class="absolute left-0 top-0">Back</ui-button>
+            </div>
+
+            <ui-hr></ui-hr>
+
+            <app-payment-checkout #card class="flex justify-center"
+              (onSuccess)="handleCardPaymentSuccess($event)"
+              (onFailure)="handleCardPaymentFailure($event)"
+              (onChange)="cardDetailsAreValid = $event.complete">
+            </app-payment-checkout>
+
+            <br />
+
+            <!-- TODO: Add cases for free/dono tickets -->
+
+            <ui-button [disabled]="!cardDetailsAreValid || card?.loading"
+              class="ml-auto"
+              kind="primary"
+              size="l"
+              icon="purchase"
+              [loading]="card?.loading"
+              (click)="card.confirmPayment()">
+                Pay {{ selectedTicket.amount | currencyPipe: selectedTicket.currency }}
+            </ui-button>
+          </div>
+        </mat-tab>
+
+        <mat-tab>
+          <div class="flex flex-col p-4" *ngIf="stripePaymentIntent">
+            <ng-container *ngIf="stripePaymentIntent.status === 'succeeded'">
+              <h1>Thanks for your order!</h1>
+              <ui-hr></ui-hr>
+  
+              <h3>You're going to watch "<b>{{ performance.name }}</b>"</h3>
+              <br />
+  
+              <p>{{ performance.host.username }} is due to premiere this stream at {{ performance.premiere_date | amFromUnix | amDateFormat}}, you'll be notified by e-mail before it begins.</p>
+              <p>Purchase confirmation will arrive at <b>{{ purchaserEmailAddress }}</b> shortly.</p>
+  
+              <div class="flex ml-auto">
+                <ui-button size="m" kind="primary" class="mr-2" *ngIf="performance.state == 'video.live_stream.active'">Watch Now</ui-button>
+                <ui-button size="m" kind="primary" (click)="closeDialog()" class="mr-2">Watch Later</ui-button>
+                <ui-button size="m" kind="secondary" (click)="closeDialog()">Close</ui-button>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="stripePaymentIntent.status !== 'succeeded'">
+              <h1>Problem occured while purchasing ticket</h1>
+            </ng-container>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+  </div>
+</ui-dialog>
+
+

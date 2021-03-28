@@ -126,7 +126,6 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (this as any)[k] = v ?? (this as any)[k];
     });
-
     return this.save();
   }
 }
