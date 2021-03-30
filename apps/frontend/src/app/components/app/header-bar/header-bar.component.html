@@ -9,7 +9,7 @@
   </div>
  
   <div class="right flex items-center ml-auto p-2 mr-2">
-    <div class="header-buttons flex space-x-2 mr-4">
+    <div class="header-buttons flex space-x-2 mr-4" *ngIf="myself">
       <ui-button routerLink="/categories">Categories</ui-button>
       <ui-button routerLink="/my-stuff">My Stuff</ui-button>
     </div>

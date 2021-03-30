@@ -1,11 +1,11 @@
+import 'reflect-metadata';
 import session from 'express-session';
 import { Environment } from '@core/interfaces';
-import { PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/shared/api';
+import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/shared/api';
 
 import Env from './env';
 import Auth from './common/authorisation';
 import routes from './routes';
-import { pagination } from './common/paginate';
 import { log, stream } from './common/logger';
 
 export interface BackendProviderMap extends ProviderMap {
@@ -78,8 +78,7 @@ Register<BackendProviderMap>({
     body_parser: {
       // stripe hook signature verifier requires raw, un-parsed body
       verify: function (req, _, buf) {
-        const url = req.url;
-        if (url.startsWith('/stripe/hooks') || url.startsWith('/mux/hooks')) {
+        if (req.url.startsWith('/stripe/hooks') || req.url.startsWith('/mux/hooks')) {
           (req as any).rawBody = buf.toString();
         }
       }
@@ -101,7 +100,7 @@ Register<BackendProviderMap>({
   );
 
   // Patch TypeORM with pagination & register API routes
-  app.use(pagination);
+  app.use(patchTypeORM);
 
   return Router(pm, Auth.or(Auth.isSiteAdmin, Auth.isFromService), { redis: pm.redis.connection }, log)(routes);
 });

@@ -1,5 +1,7 @@
 import { CurrencyCode, Environment, NUUID, Primitive } from '@core/interfaces';
 import { nanoid } from 'nanoid';
+import QueryString from 'qs';
+
 /**
  * @description Returns the UNIX timestamp of date in seconds
  * @param date
@@ -37,14 +39,15 @@ export const isEnv = (currentEnv: Environment) => (desiredEnv: Environment | Env
 /**
  * @description Turns an enum into it's value counterparts
  * @param enumme some enum
+ * @param numberEnum if the enum is a number enum
  * @example
  * enum Test { hello = "world" }
  * enumToValues(Test) // ["world"]
  */
-export const enumToValues = <T = string>(enumme: any): T[] => {
+export const enumToValues = <T = string>(enumme: any, numberEnum: boolean = false): T[] => {
   return Object.keys(enumme)
     .map(key => enumme[key])
-    .filter(value => typeof value === 'string') as T[];
+    .filter(value => typeof value === (numberEnum ? 'number' : 'string')) as T[];
 };
 
 /**
@@ -71,3 +74,33 @@ export const timeless = (date: Date): Date => {
 export const addDay = (date: Date, amount: number): Date => {
   return timeless(new Date(new Date(date.getTime() + amount * 60 * 60 * 24 * 1000)));
 };
+
+export interface IQueryParams {
+  per_page?: number;
+  page?: number;
+  filter?: { [index: string]: Primitive | Primitive[] };
+  sort?: { [index: string]: 'ASC' | 'DESC' };
+  [index: string]: any;
+}
+
+/**
+ * @description Construct URL query parameters for backend consumption
+ * @example querize({ filter: { username: "hello", state:[1,2,3]} })
+ *
+ * // returns "?filter[username]=hello&filter[state]=1,2,3"
+ */
+export const querize = (query: IQueryParams) =>
+  query
+    ? QueryString.stringify(query, {
+        arrayFormat: 'comma',
+        addQueryPrefix: true
+      })
+    : '';
+
+
+/**
+ * @description inline object-type cast
+ * @param value object to be cast as T
+ * @see https://stackoverflow.com/a/38029708
+ */
+export function to<T>(value: T): T { return value; }

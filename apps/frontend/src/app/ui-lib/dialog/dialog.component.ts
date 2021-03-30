@@ -12,7 +12,8 @@ export class DialogComponent implements OnInit {
   @Input() buttons;
   @Input() title:string;
   @Input() loading:boolean;
-
+  
+  @Input() small:boolean = false;
   @Input() noPadding:boolean = false;
 
   constructor() { }

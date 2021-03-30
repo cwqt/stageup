@@ -1,4 +1,4 @@
-import { AbstractControl, NgControl } from '@angular/forms';
+import { AbstractControl, FormGroup, NgControl } from '@angular/forms';
 import { CurrencyCode, DottedPaths, Primitive } from '@core/interfaces';
 
 /**
@@ -37,6 +37,7 @@ export interface IUiFormField {
   hint?: string;
   fields?: IUiForm<any>['fields']; // for nested objects
   width?: number;
+	hide?:(f:FormGroup) => boolean;
 
   // ui-input options
   options?:
@@ -44,6 +45,7 @@ export interface IUiFormField {
     | IUiFieldTextOptions
     | IUiFieldMoneyOptions
     | IUIFieldRadioOptions
+		| IUIFieldDateOptions
     | IUiFieldContainerOptions
     | any;
 
@@ -73,6 +75,12 @@ export interface IUiFieldMoneyOptions {
 
 export interface IUiFieldOptions {
   width?: number; //for containers
+}
+
+export interface IUIFieldDateOptions {
+	is_date_range?:boolean;
+	allow_past_dates?:boolean;
+	date_filter?: (d:Date | null) => boolean;
 }
 
 export interface IUiFieldTextOptions extends IUiFieldOptions {

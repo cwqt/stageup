@@ -6,7 +6,7 @@ export interface IEnvelopedData<T, K=null> {
 
 export interface PagingData {
   per_page: any;
-  total: number | any;
+  total: number;
   current_page: number;
   prev_page?: number | null;
   next_page?: number | null;

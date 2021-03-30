@@ -1,6 +1,5 @@
 <!-- TODO: leave this for later when/if we need trees -->
 
-
 <ng-container *ngIf="false">
   <mat-form-field *ngIf="type == 'select'" appearance="fill" >
     <mat-label>{{ label || "Select option"}}</mat-label>

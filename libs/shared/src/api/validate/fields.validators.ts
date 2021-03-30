@@ -24,6 +24,10 @@ export namespace FieldValidators {
     return isString(v).isEmail().withMessage(ErrCode.INVALID_EMAIL).normalizeEmail();
   };
 
+  export const optional:CustomValidator = v => {
+    return v.optional({ checkFalsy: true, nullable: true });
+  }
+
   export const isInt: CustomValidator = (v, message) => {
     return exists(v)
       .isNumeric()

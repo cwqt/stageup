@@ -6,6 +6,8 @@ export * from './common/asset.interface';
 export * from './common/errors.interface';
 export * from './common/subscription.interface';
 export * from './common/environments.interface';
+export * from './common/invoice.interface';
+export * from './common/querying.interface';
 
 export * from './hosts/host.interface';
 export * from './hosts/host-onboarding.interface';
@@ -23,12 +25,8 @@ export * from './users/user.interface';
 export * from './users/person.interface';
 export * from './users/address.interface';
 
-export * from './stripe/index.interface';
-export * from './mux/index.interface';
-export * from './common/invoice.interface';
-
-// export * from './hooks/stripe-hooks.interface';
+export * from './3rd-party/stripe.interface';
+export * from './3rd-party/mux.interface';
 
 export * from './runner/job.interface';
-
 export * from './search/search.interface';

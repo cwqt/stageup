@@ -2,9 +2,11 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { AngularMaterialModule } from "../angular-material.module";
 import { ClickOutsideModule } from "ng-click-outside";
-import { ReactiveFormsModule, FormsModule, NgForm } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { NgxMaskModule } from 'ngx-mask'
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { NgxPopperModule } from "ngx-popper";
+
 
 import { ButtonComponent } from "./button/button.component";
 import { IconComponent } from "./icon/icon.component";
@@ -22,6 +24,12 @@ import { FormBodyComponent } from "./form/form-body/form-body.component";
 import { HrComponent } from './hr/hr.component';
 import { PlaceholderComponent } from "./placeholder/placeholder.component";
 import { DialogComponent } from './dialog/dialog.component';
+import { TableComponent } from './table/table.component';
+import { FilterStringComponent } from './table/filters/filter-string/filter-string.component';
+import { FilterNumberComponent } from './table/filters/filter-number/filter-number.component';
+import { FilterDateComponent } from './table/filters/filter-date/filter-date.component';
+import { FilterEnumComponent } from './table/filters/filter-enum/filter-enum.component';
+import { FilterBooleanComponent } from './table/filters/filter-boolean/filter-boolean.component';
 
 
 const ExportedUiComponents = [
@@ -38,13 +46,19 @@ const ExportedUiComponents = [
   FormComponent,
   HrComponent,
   PlaceholderComponent,
-  DialogComponent
+  DialogComponent,
+  TableComponent
 ];
 
 @NgModule({
   declarations: [
     ...ExportedUiComponents,
-    FormBodyComponent
+    FormBodyComponent,
+    FilterStringComponent,
+    FilterNumberComponent,
+    FilterDateComponent,
+    FilterEnumComponent,
+    FilterBooleanComponent,
      // internal recursive component for forms
   ],
   imports: [
@@ -55,6 +69,7 @@ const ExportedUiComponents = [
     FormsModule,
     HttpClientModule,
     NgxMaskModule.forRoot(),
+    NgxPopperModule.forRoot(),
     NgxMatSelectSearchModule
   ],
   exports: ExportedUiComponents,

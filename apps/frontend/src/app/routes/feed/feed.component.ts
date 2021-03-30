@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IEnvelopedData as IEnv, IPerformanceStub } from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -22,13 +21,12 @@ export class FeedComponent implements OnInit {
 
   constructor(
     private feedService: FeedService,
-    private appService: BaseAppService,
     public dialog: MatDialog,
     private helperService: HelperService
   ) {}
 
-  ngOnInit(): void {
-    this.getFeed();
+  async ngOnInit() {
+    await this.getFeed();
   }
 
   getFeed() {

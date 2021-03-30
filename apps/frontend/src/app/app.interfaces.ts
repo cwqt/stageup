@@ -5,6 +5,7 @@ import { ErrCode, Primitive } from '@core/interfaces';
  * @description Wrapper around requests to do common actions when making requests
  * @param promise Promise that returns a HttpResponse<T>
  * @param c cacheable created from createICacheable
+ * @param transformer Transform returned data before cachize().then()
  * @example return cachize(this.http.get<IUser[]>(`/api/users`), cacheable);
  */
 function cachize<T>(promise:Promise<T>, c:ICacheable<T>):Promise<T>;
@@ -41,11 +42,12 @@ export interface FormErrors {
 
 export const createICacheable = <T = any>(
   initialValue?: any,
-  meta?: Record<string, Primitive>
+  meta?: Record<string, Primitive>,
+  loading: boolean = false
 ): ICacheable<T | null> => {
   return {
     data: initialValue || null,
-    loading: false,
+    loading: loading,
     error: '',
     form_errors: {},
     meta: meta || {}

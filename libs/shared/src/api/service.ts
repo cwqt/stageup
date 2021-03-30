@@ -3,6 +3,7 @@ import http from 'http';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import express from 'express';
+import qs from 'qs';
 import { json, OptionsJson } from 'body-parser';
 import { globalErrorHandler, global404Handler, DataClient } from '@core/shared/api';
 import { Logger } from 'winston';
@@ -21,7 +22,7 @@ export interface IServiceConfig<T extends ProviderMap> {
   options?: {
     body_parser?: OptionsJson;
     cors?: CorsOptions;
-    helmet?:any;
+    helmet?: any;
   };
 }
 
@@ -33,6 +34,12 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
   const app = express();
 
   app.set('trust proxy', 1);
+  app.set('query parser', q =>
+    qs.parse(q, {
+      comma: true
+    })
+  );
+
   app.use(json(config.options?.body_parser || {}));
   app.use(cors(config.options?.cors || {}));
   app.use(helmet(config.options?.helmet || {}));
@@ -42,7 +49,7 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
     try {
       const providers = await DataClient.connect(config.provider_map, config.logger);
       const router = await Router(app, providers);
-      app.use(config.endpoint ? `/${config.endpoint}` : "", router.router);
+      app.use(config.endpoint ? `/${config.endpoint}` : '', router.router);
 
       // Catch 404 errors & provide a top-level error handler
       app.all('*', global404Handler(config.logger));

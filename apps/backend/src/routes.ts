@@ -20,8 +20,7 @@ import {
   ITicketStub,
   IUserStub as IUserS,
   IHostStripeInfo,
-  IPaymentIntentClientSecret as IPaymentICS,
-  IPerformanceStub
+  IPaymentIntentClientSecret as IPaymentICS
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -137,5 +136,4 @@ router.get      <void>                   ("/sendgrid",                          
 // SEARCH ---------------------------------------------------------------------------------------------------------------
 const Search = new SearchController(providerMap, middlewares);
 router.get      <ISearchResponse>        ("/search",                                  Search.search());
-
 }

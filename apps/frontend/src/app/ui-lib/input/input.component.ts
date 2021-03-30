@@ -21,6 +21,7 @@ import { ReplaySubject, Subject } from 'rxjs';
 import {} from '@angular/material/autocomplete';
 import { take, takeUntil } from 'rxjs/operators';
 import { KeyValue } from 'aws-sdk/clients/iot';
+import { MatDateRangeInput, MatDateRangePicker } from '@angular/material/datepicker';
 
 export class IFlatGraphNode {
   key: number | string;
@@ -112,6 +113,12 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
   ngAfterViewInit() {
     if (this.type == 'select') this.setInitialSelectValue();
+		if (this.type == "date" && this.options?.is_date_range) {
+			// Can't bind ngModel to mat-date-picker-input :/
+			this.pickerInput.rangePicker.stateChanges.subscribe(() => {
+				this.value = this.pickerInput.value;
+			})
+		}
   }
 
   // ControlValueAccessor --------------------------------------------------------------------------------
@@ -195,10 +202,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     });
   }
 
-  
   select() { this.input.nativeElement.select(); }
-
-
 
   increment(event) {
     event.preventDefault();
@@ -276,5 +280,6 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   // 24 hours / 15 minutes = 96 options, create an array of 15 minute increments
   timeItems: IUiFieldSelectOptions['values'];
 
-
+  // Date range input ------------------------------------------------------------------------------------------------------
+	@ViewChild(MatDateRangeInput, { static: false }) pickerInput:MatDateRangeInput<Date>
 }

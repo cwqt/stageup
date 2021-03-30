@@ -3,7 +3,7 @@
 <h3 *ngIf="performances.loading">Loading...</h3>
 <h3 *ngIf="performances.data && performances.data.data.length == 0">Ain't no performances in ya DB</h3>
 
-<div class="flex" *ngIf="!performances.loading && performances.data">
+<div class="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2" *ngIf="!performances.loading && performances.data">
   <app-performance-thumb *ngFor="let performance of performances.data.data; let i=index"
     (click)="openDialog(performance)"
     [performance]="performance">

@@ -122,13 +122,24 @@
     </mat-select>
   </mat-form-field>
 
-  <!-- Date picker -->
-  <mat-form-field appearance="fill" *ngIf="type == 'date'">
+  <!-- Date picker, single -->
+  <mat-form-field appearance="fill" *ngIf="type == 'date' && !options?.is_date_range">
     <mat-label>{{ label || 'Choose a date' }}</mat-label>
     <input matInput [matDatepicker]="picker" [(ngModel)]="value">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
+
+	<!-- Date picker, range -->
+	<mat-form-field appearance="fill" *ngIf="type == 'date' && options?.is_date_range">
+		<mat-label>Enter a date range</mat-label>
+		<mat-date-range-input [rangePicker]="picker" #pickerInput>
+			<input matStartDate placeholder="Start date">
+			<input matEndDate placeholder="End date">
+		</mat-date-range-input>
+		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+		<mat-date-range-picker #picker></mat-date-range-picker>
+	</mat-form-field>
 
   <!-- Time picker -->
   <mat-form-field *ngIf="type == 'time'" appearance="fill">

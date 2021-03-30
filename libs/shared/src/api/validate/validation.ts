@@ -35,7 +35,7 @@ type VReqHandlerFunctor = (req: Request) => Promise<IFormErrorField[]>;
 type VArrayReturn = { errors: IFormErrorField[]; message: string };
 
 // Takes either req[location] as starting point or data in the case of nested objects/arrays
-type VReqHandler = <T extends object>(validators: VFieldChainerMap<T>, data?: T) => VReqHandlerFunctor;
+type VReqHandler = <T extends object>(validators: VFieldChainerMap<T>, data?: T | ((v:T) => any)) => VReqHandlerFunctor;
 
 // VFunctor  T       VData<T>
 //   v       v          v

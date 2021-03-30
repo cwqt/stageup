@@ -1,3 +1,4 @@
+import "reflect-metadata";
 export * from './service';
 export * from './logger';
 export * from './data-client';
@@ -8,6 +9,7 @@ export * from './router';
 export * from './authorisation';
 export * from './validate';
 export * from './router';
+export * from './typeorm-patches';
 
 export { default as Auth } from './authorisation';
 export { default as Validators } from './validate'
