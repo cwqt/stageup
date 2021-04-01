@@ -40,7 +40,7 @@ export class AdminOnboardingListComponent implements OnInit {
         {
           label: 'Open',
           icon: 'launch',
-          click: v => this.openOnboarding(v as IHostOnboarding)
+          click: v => this.openOnboarding(v)
         }
       ],
       columns: {
@@ -59,7 +59,7 @@ export class AdminOnboardingListComponent implements OnInit {
               ).values
             )
           },
-          transformer: new OnboardingStatePipe().transform,
+          transformer: v => new OnboardingStatePipe().transform(v.state),
           chip_selector: v => {
             switch (v.state) {
               case HostOnboardingState.AwaitingChanges:
@@ -79,19 +79,17 @@ export class AdminOnboardingListComponent implements OnInit {
         },
         host: {
           label: 'Host',
-          transformer: v => `@${v.username}`,
+          transformer: v => `@${v.host.username}`,
           filter: { type: FilterCode.String, field: 'username' }
         },
         last_submitted: {
           sort: { field: 'last_submitted' },
           filter: { type: FilterCode.Date, field: 'last_submitted' },
           label: 'Last Submitted',
-          transformer: (v: number) => (v ? new Date(v * 1000).toISOString() : 'Never')
+          transformer: v => (v.last_submitted ? new Date(v.last_submitted * 1000).toISOString() : 'Never')
         }
       }
     };
-
-    console.log(this.tableData, enumToValues(HostOnboardingState, true));
   }
 
   openOnboarding(onboarding: IHostOnboarding) {

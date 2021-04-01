@@ -266,8 +266,8 @@ export default class PerformanceController extends BaseController<BackendProvide
           }
         );
 
-        // Return client secret to user, who will send it to purchaseTicket() alongside the CC info
-        // if they wish to actually buy the ticket
+        // Return client secret to user, who will use it to confirmPayment()
+				// with the CC info if they wish to actually buy the ticket
         return {
           client_secret: res.client_secret,
           stripe_account_id: ticket.performance.host.stripe_account_id

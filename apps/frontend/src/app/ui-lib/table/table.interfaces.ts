@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { FilterCode, IEnvelopedData, Primitive } from '@core/interfaces';
 import { IQueryParams } from '@core/shared/helpers';
 import { ChipComponent } from '../chip/chip.component';
@@ -13,6 +14,7 @@ export interface IUiTable<T = any, K = T> {
   selection?: {
     multi: boolean;
     actions: Array<IUiTableAction<K[]>>;
+		footer_message?: (selection:SelectionModel<T>) => { label: string, value: Primitive }
   };
   pagination: {
     page_sizes?: number[];
@@ -28,7 +30,7 @@ export interface IUiTableColumn<K> {
   sort?: IUITableColumnSort;
   filter?: IUiTableColumnFilter;
   chip_selector?: (v: K) => ChipComponent['kind'];
-  transformer?: (v: any) => Primitive;
+  transformer?: (v: K) => Primitive;
 }
 
 export interface IUiTableColumnFilter {
@@ -59,26 +61,26 @@ export interface IUiTableAction<K> {
 /**
 FUNCTIONAL REQUIREMENTS
 Column Types
- [] In a table, the left-most column for tick-boxes (one per each row, and one “select all” tick-box at the top)
- [] In a table, a user should be able to set the values of one (or more) column’s rows to be
+ [x] In a table, the left-most column for tick-boxes (one per each row, and one “select all” tick-box at the top)
+ [x] In a table, a user should be able to set the values of one (or more) column’s rows to be
     “clickable” to open a dialogue
 
- [] In a table, a user should be able to set the values of one (or more) column’s
+ [x] In a table, a user should be able to set the values of one (or more) column’s
     rows to show a static value (ints, strings, dates...)
 
 Actions
- [] Above a table, there should be an “Actions” dropdown
- [] Drop down should display a set of functions associated with that table.
- [] Drop down functions should be applied to which ever (one to many) rows are “ticked”.
+ [x] Above a table, there should be an “Actions” dropdown
+ [x] Drop down should display a set of functions associated with that table.
+ [x] Drop down functions should be applied to which ever (one to many) rows are “ticked”.
  [] Drop down functions may have to change depending on if one or many rows are selected.
     e.g. “Refund Order” vs “Refund Orders”
 
 Filtering
- [] In a table, you should be able to do a keyword search to filter which rows are
+ [x] In a table, you should be able to do a keyword search to filter which rows are
     displayed by the values in that column
 
 Sorting
- [] In a table, a user should be able to click a column heading to sort all rows by that column.
+ [x] In a table, a user should be able to click a column heading to sort all rows by that column.
     Clicking the column again should reverse the sort.
 
 UI

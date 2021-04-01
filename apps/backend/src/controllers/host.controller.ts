@@ -21,7 +21,8 @@ import {
   IHostStub,
   TokenProvisioner,
   hasRequiredHostPermission,
-  IHostStripeInfo
+  IHostStripeInfo,
+  IHostInvoice
 } from '@core/interfaces';
 
 import {
@@ -40,7 +41,8 @@ import {
   Onboarding,
   OnboardingReview,
   Performance,
-  AccessToken
+  AccessToken,
+  Invoice
 } from '@core/shared/api';
 
 import { timestamp } from '@core/shared/helpers';
@@ -341,8 +343,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         );
 
         // Can't leave host as host owner
-        if(userHostInfo.permissions == HostPermission.Owner)
-          throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
+        if (userHostInfo.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
 
         await this.ORM.transaction(async txc => {
           await userHostInfo.host.removeMember(userHostInfo.user, txc);
@@ -718,7 +719,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
-        
+
         const isStripeConnected = host.stripe_account_id
           ? (
               await this.providers.stripe.connection.accounts.retrieve({
@@ -730,6 +731,32 @@ export default class HostController extends BaseController<BackendProviderMap> {
         return {
           is_stripe_connected: isStripeConnected
         };
+      }
+    };
+  }
+
+  readInvoices(): IControllerEndpoint<IEnvelopedData<IHostInvoice[]>> {
+    return {
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        // TODO: support polymorphic purchaseables using concrete table inheritance
+        // for all types of purchaseable items, ....that can be future me's problem
+        return await this.ORM.createQueryBuilder(Invoice, 'invoice')
+          .where('invoice.host__id = :host_id', { host_id: req.params.hid })
+          .leftJoinAndSelect('invoice.ticket', 'ticket')
+          .leftJoinAndSelect('ticket.performance', 'performance')
+          .filter({
+            performance_name: { subject: 'performance.name' },
+            ticket_type: { subject: 'ticket.type' },
+            purchased_at: { subject: 'invoice.purchased_at' },
+            amount: { subject: 'invoice.amount', transformer: v => parseInt(v as string) }
+          })
+          .sort({
+            performance_name: 'performance.name',
+            amount: 'invoice.amount',
+            purchased_at: 'invoice.purchased_at'
+          })
+          .paginate(i => i.toHostInvoice());
       }
     };
   }

@@ -42,7 +42,7 @@ import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-e
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
-
+import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -97,6 +97,7 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: 'payments', component: HostPaymentsComponent },
       { path: 'team', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
+      { path: 'invoices', component: HostInvoicesComponent },
       {
         path: `performances/:${RP.PerformanceId}`,
         component: HostPerformanceComponent,

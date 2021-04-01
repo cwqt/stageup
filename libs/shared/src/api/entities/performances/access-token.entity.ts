@@ -9,7 +9,9 @@ import { Invoice } from '../common/invoice.entity';
 @Entity()
 export class AccessToken extends BaseEntity implements IAccessToken {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column() access_token: string;
   @Column() created_at: number;
@@ -29,21 +31,26 @@ export class AccessToken extends BaseEntity implements IAccessToken {
     this.created_at = timestamp();
 
     // Wanted to do a polymorphic relationship but it isn't supported....so yeah
+    // supertype model
     this.provisioner_id = provisioner._id;
     this.provisioner_type = type;
   }
 
-  sign(key:SigningKey) {
+  sign(key: SigningKey) {
     this.access_token = key.signToken(this.performance);
     return this;
   }
 
-  getProvisionerEntity() {
-    if(this.provisioner_type == TokenProvisioner.Purchase) return Invoice;
-    return User;
+  get provisioner() {
+    switch (this.provisioner_type) {
+      case TokenProvisioner.Purchase:
+        return Invoice;
+      case TokenProvisioner.User:
+        return User;
+    }
   }
 
-  toFull():Required<DtoAccessToken> {
+  toFull(): Required<DtoAccessToken> {
     return {
       _id: this._id,
       access_token: this.access_token, // the token itself to watch said video
@@ -54,6 +61,6 @@ export class AccessToken extends BaseEntity implements IAccessToken {
       performance: this.performance._id,
       user: this.user._id,
       invoice: this.invoice?._id
-    }
+    };
   }
 }

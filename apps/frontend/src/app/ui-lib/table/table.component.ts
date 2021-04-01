@@ -39,6 +39,7 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChildren(PopperContent) poppers: QueryList<PopperContent>;
 
+  footerMessage: ReturnType<IUiTable<T>['selection']['footer_message']>;
   subject: BehaviorSubject<any>;
   dataSource: Observable<any[]> = of([]);
   displayedColumns: string[];
@@ -47,8 +48,6 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
 
   constructor() {}
 
-
-
   async ngOnInit() {
     this.cacheable.loading = true; // prevent ExpressionChangedAfterItHasBeenCheckedError
 
@@ -56,12 +55,13 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
     this.displayedColumns = [
       this.table.selection && '__select',
       ...Object.keys(this.table.columns),
-      this.table.actions && '__actions'
+      this.table.actions?.length > 0 ? '__actions' : undefined
     ].filter(v => v !== undefined);
 
     // Set up selection model
     if (this.table.selection) {
       this.selection = new SelectionModel<T>(this.table.selection.multi, []);
+      if (this.table.selection.footer_message) this.footerMessage = this.table.selection.footer_message(this.selection);
     }
   }
 
@@ -78,13 +78,13 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
         this.selection.clear();
         this.subject.next([]);
 
-				// create base params for the filter
+        // create base params for the filter
         const resolverData: IQueryParams = {
           page: this.paginator.pageIndex ?? 0,
           per_page: this.paginator.pageSize ?? 10
         };
 
-				// add the sort & direction
+        // add the sort & direction
         if (this.sort.active) {
           resolverData.sort = {
             [this.table.columns[this.sort.active].sort.field ||
@@ -92,17 +92,17 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
           };
         }
 
-				// ...and the filters
-				if(Object.keys(this.activeFilters).length) {
-					// map the filters over to the fieldname for api consumption
-					resolverData.filter = Object.keys(this.activeFilters).reduce((acc, curr) => {
-						this.table.columns[curr].filter.field
-							? acc[this.table.columns[curr].filter.field] = this.activeFilters[curr]
-							: acc[curr] = this.activeFilters[curr];
+        // ...and the filters
+        if (Object.keys(this.activeFilters).length) {
+          // map the filters over to the fieldname for api consumption
+          resolverData.filter = Object.keys(this.activeFilters).reduce((acc, curr) => {
+            this.table.columns[curr].filter.field
+              ? (acc[this.table.columns[curr].filter.field] = this.activeFilters[curr])
+              : (acc[curr] = this.activeFilters[curr]);
 
-						return acc;
-					}, {});
-				}
+            return acc;
+          }, {});
+        }
 
         return from(cachize(this.table.resolver(resolverData), this.cacheable));
       }),
@@ -120,7 +120,7 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
       const rowData = { __data: row, __idx: idx };
       for (const column of Object.keys(this.table.columns)) {
         const colData = this.table.columns[column as keyof T];
-        rowData[column] = colData.transformer ? colData.transformer(row[column]) : row[column];
+        rowData[column] = colData.transformer ? colData.transformer(row) : row[column];
       }
 
       rows.push(rowData);
@@ -143,6 +143,7 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
   // Selects all rows if they are not all selected; otherwise clear selection
   masterToggle() {
     this.isAllSelected() ? this.selection.clear() : this.subject.getValue().forEach(row => this.selection.select(row));
+    if (this.table.selection.footer_message) this.footerMessage = this.table.selection.footer_message(this.selection);
   }
 
   public remove(row) {}
@@ -152,10 +153,10 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
   addFilter(column: string, filter: FilterQuery | null) {
     console.log(' filter ', column, filter);
 
-		this.activeFilters[column] = filter;
-		if(filter == null) delete this.activeFilters[column];
-		
-		this.filterChange.emit();
+    this.activeFilters[column] = filter;
+    if (filter == null) delete this.activeFilters[column];
+
+    this.filterChange.emit();
     this.closePoppers();
   }
 
@@ -164,7 +165,14 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
     this.closePoppers();
   }
 
+  selectRow(row) {
+    this.selection.toggle(row);
+    if (this.table.selection.footer_message) this.footerMessage = this.table.selection.footer_message(this.selection);
+  }
+
   closePoppers() {
-    this.poppers.forEach(popper => popper.hide());
+    this.poppers.forEach(popper => {
+      if (popper.ariaHidden == 'false') popper.hide();
+    });
   }
 }

@@ -93,14 +93,16 @@ export const querize = (query: IQueryParams) =>
   query
     ? QueryString.stringify(query, {
         arrayFormat: 'comma',
-        addQueryPrefix: true
+        addQueryPrefix: true,
+        encode: false
       })
     : '';
-
 
 /**
  * @description inline object-type cast
  * @param value object to be cast as T
  * @see https://stackoverflow.com/a/38029708
  */
-export function to<T>(value: T): T { return value; }
+export function to<T>(value: T): T {
+  return value;
+}

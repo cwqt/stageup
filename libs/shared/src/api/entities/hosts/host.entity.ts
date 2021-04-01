@@ -19,6 +19,7 @@ import { Onboarding } from './onboarding.entity';
 import { ContactInfo } from '../users/contact-info.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
 import { ErrorHandler } from '../../errors';
+import { Invoice } from '../common/invoice.entity';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -37,9 +38,11 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column('jsonb') social_info: ISocialInfo;
   @Column('jsonb', { nullable: true }) business_details: IHostBusinessDetails;
 
-  @OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
+	@OneToMany(() => Invoice, invoice => invoice.host) invoices: Invoice[];
+
+	@OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {

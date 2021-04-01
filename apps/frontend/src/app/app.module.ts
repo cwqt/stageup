@@ -25,6 +25,7 @@ import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
+import { PaymentStatusPipe } from './_pipes/payment-status.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
@@ -88,10 +89,10 @@ import { PerformanceBrochureComponent } from './routes/performance/performance-b
 import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { PerformanceThumbComponent } from './components/performance-thumb/performance-thumb.component';
-import { DeleteConfirmationDialogComponent } from './components/dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component'
+import { DeleteConfirmationDialogComponent } from './components/dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { SettingsComponent } from './routes/settings/settings.component';
 import { CreateUpdateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component';
-
+import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -132,6 +133,7 @@ import { CreateUpdateTicketComponent } from './routes/host/host-performance/host
     OnboardingStatePipe,
     ObjectLengthPipe,
     ShortDomainPipe,
+    PaymentStatusPipe,
     OnboardingStepPipe,
     HostPermissionPipe,
     CurrencyCodePipe,
@@ -168,7 +170,8 @@ import { CreateUpdateTicketComponent } from './routes/host/host-performance/host
     BillingSettingsComponent,
     HostSettingsComponent,
     CreateHostComponent,
-    HostOnboardingComponent
+    HostOnboardingComponent,
+    HostInvoicesComponent
   ],
   imports: [
     AngularMaterialModule,

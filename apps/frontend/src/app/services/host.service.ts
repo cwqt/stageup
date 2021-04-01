@@ -11,7 +11,8 @@ import {
   DtoCreatePerformance,
   IHostMemberChangeRequest,
   IEnvelopedData,
-  IHostStripeInfo
+  IHostStripeInfo,
+  IHostInvoice
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -19,7 +20,7 @@ import { HttpClient } from '@angular/common/http';
 import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 import fd from 'form-data';
-import { timestamp } from '@core/shared/helpers';
+import { IQueryParams, querize, timestamp } from '@core/shared/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -180,5 +181,10 @@ export class HostService {
   //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
   changeBanner(hostId: string, data: fd | null) {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/banner`, data).toPromise();
+  }
+
+  // router.get <IE<IHostInvoice[]>> ("/hosts/:hid/invoices", Hosts.readInvoices());
+  readInvoices(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IHostInvoice[]>> {
+    return this.http.get<IEnvelopedData<IHostInvoice[]>>(`/api/hosts/${hostId}/invoices${querize(query)}`).toPromise();
   }
 }

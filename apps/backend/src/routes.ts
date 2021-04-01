@@ -20,7 +20,8 @@ import {
   ITicketStub,
   IUserStub as IUserS,
   IHostStripeInfo,
-  IPaymentIntentClientSecret as IPaymentICS
+  IPaymentIntentClientSecret as IPaymentICS,
+  IHostInvoice
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -88,6 +89,7 @@ router.put      <IHostS>                ("/hosts/:hid/banner",                  
 router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 router.post     <string>                ("/hosts/:hid/stripe/connect",                Hosts.connectStripe());
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
+router.get      <IE<IHostInvoice[]>>    ("/hosts/:hid/invoices",                      Hosts.readInvoices());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providerMap, middlewares);

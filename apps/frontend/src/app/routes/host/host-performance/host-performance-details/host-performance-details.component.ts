@@ -1,6 +1,13 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
-import { DtoAccessToken, IEnvelopedData, IHost, IPerformance, IPerformanceHostInfo, Visibility } from '@core/interfaces';
+import {
+  DtoAccessToken,
+  IEnvelopedData,
+  IHost,
+  IPerformance,
+  IPerformanceHostInfo,
+  Visibility
+} from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { IUiFieldSelectOptions } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
@@ -15,32 +22,33 @@ export class HostPerformanceDetailsComponent implements OnInit {
   // Injected from parent router outlet
   performanceId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
-  performance:ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>>;
-  host:IHost;
+  performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>>;
+  host: IHost;
 
   copyMessage: string = 'Copy';
   visibilityOptions: IUiFieldSelectOptions = {
     multi: false,
     search: false,
-    values: new Map()
-      .set(Visibility.Private, { label: "Private"})
-      .set(Visibility.Public, { label: "Public" })
-    };
+    values: new Map([
+      [Visibility.Private, { label: 'Private' }],
+      [Visibility.Public, { label: 'Public' }]
+    ])
+  };
 
-  get performanceData() { return this.performance.data?.data }
-  get phiData() { return this.performanceHostInfo.data; }
-
-  constructor(
-    private performanceService:PerformanceService,
-    private clipboard: Clipboard
-  ) { }
-
-  ngOnInit(): void {
+  get performanceData() {
+    return this.performance.data?.data;
+  }
+  get phiData() {
+    return this.performanceHostInfo.data;
   }
 
-  updateVisibility(value: IGraphNode) {
+  constructor(private performanceService: PerformanceService, private clipboard: Clipboard) {}
+
+  ngOnInit(): void {}
+
+  updateVisibility(value:Visibility) {
     cachize(
-      this.performanceService.updateVisibility(this.performanceId, value.key as Visibility),
+      this.performanceService.updateVisibility(this.performanceId, value),
       this.performance,
       d => {
         // updateVisibility only returns an IPerformance but we want to keep having an IE<IPerformance, IPerformanceHostInfo>

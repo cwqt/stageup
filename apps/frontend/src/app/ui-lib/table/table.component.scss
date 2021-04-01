@@ -48,7 +48,7 @@ table {
 
 .ngxp__container {
   z-index: 999 !important;
-  position: relative !important;
+  // position: relative !important;
 }
 
 table ::ng-deep {
@@ -90,7 +90,6 @@ popper-content {
   z-index: 999;
 }
 
-
 .ui-table-filter--pointer-events {
   position: relative;
   height: 100%;
@@ -100,7 +99,7 @@ popper-content {
     z-index: 999;
   }
   // don't allow pointer events of popper content to bubble
-  // into mat-select-header, which causes a sort 
+  // into mat-select-header, which causes a sort
   .pointer-event-hack {
     position: absolute;
     top: 0;
@@ -116,4 +115,37 @@ popper-content {
 ::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
   opacity: 0.5 !important;
   transform: translateY(0px) !important;
+}
+
+.ui-table--actions {
+  display: flex;
+  flex-flow: column;
+  ui-button {
+    width: 100%;
+    margin: 0;
+    ::ng-deep button {
+      width: 100%;
+      border: 0;
+      justify-content: flex-start;
+    }
+  }
+}
+
+.ui-table--paginator {
+  position: relative;
+  .paginator-footer-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 24px; //same offset as checkbox
+    font-size: 12px;
+    color: #0000008a;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    b {
+      margin-right: 5px;
+    }
+  }
 }

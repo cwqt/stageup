@@ -1,4 +1,11 @@
-import { CurrencyCode, ErrCode, HostPermission, StripeHook, TokenProvisioner } from '@core/interfaces';
+import {
+  CurrencyCode,
+  ErrCode,
+  HostPermission,
+  StripeHook,
+  TokenProvisioner,
+  PurchaseableEntity
+} from '@core/interfaces';
 import {
   BaseController,
   getCheck,
@@ -66,23 +73,34 @@ export default class StripeController extends BaseController<BackendProviderMap>
     // User purchased a performance, have some metadata stored in the PaymentIntent
     const { user_id, ticket_id } = data.metadata;
     const user = await User.findOne({ _id: user_id });
-    const ticket = await Ticket.findOne(
-      { _id: ticket_id },
-      {
-        relations: {
-          performance: {
-            host_info: {
-              signing_key: true
-            }
+    const ticket = await Ticket.findOne({
+      where: {
+        _id: ticket_id
+      },
+      relations: {
+        performance: {
+          host: true,
+          host_info: {
+            signing_key: true
+          }
+        }
+      },
+      select: {
+        performance: {
+          host: {
+            _id: true
           }
         }
       }
-    );
+    });
 
     await this.ORM.transaction(async txc => {
       // Create a new invoice for the user which provisions an access token for the performance
       ticket.quantity_remaining -= 1;
-      const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data);
+      const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data)
+        .setHost(ticket.performance.host) // should be party to hosts invoices
+        .setTicket(ticket); // purchased a ticket
+
       await txc.save(invoice);
 
       // Create & sign for the user on this performance
