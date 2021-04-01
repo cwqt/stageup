@@ -1,7 +1,7 @@
-<h1>Performances</h1>
+<h1 i18n="@@performances|Feed page title">Performances</h1>
 
-<h3 *ngIf="performances.loading">Loading...</h3>
-<h3 *ngIf="performances.data && performances.data.data.length == 0">Ain't no performances in ya DB</h3>
+<h3 *ngIf="performances.loading" i18n="@@loading">Loading...</h3>
+<h3 *ngIf="performances.data && performances.data.data.length == 0" i18n="@@no-performances-found">No performances found</h3>
 
 <div class="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2" *ngIf="!performances.loading && performances.data">
   <app-performance-thumb *ngFor="let performance of performances.data.data; let i=index"

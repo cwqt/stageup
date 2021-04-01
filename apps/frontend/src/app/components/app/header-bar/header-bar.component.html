@@ -4,20 +4,21 @@
     <img routerLink="/" class="logo ml-2 p-2 max-h-full h-auto object-contain" src="/assets/logomark.svg" alt="">
     <input class="w-full ml-4 p-2 bg-gray-200 rounded focus:bg-gray-100 outline-none focus:ring-2 focus:ring-pink-500"
       type="text"
+      i18n-placeholder="@@header-search-bar"
       placeholder="Search for performances..."
       (keydown.enter)="search(searchBox.value)" #searchBox>
   </div>
  
   <div class="right flex items-center ml-auto p-2 mr-2">
     <div class="header-buttons flex space-x-2 mr-4" *ngIf="myself">
-      <ui-button routerLink="/categories">Categories</ui-button>
-      <ui-button routerLink="/my-stuff">My Stuff</ui-button>
+      <ui-button routerLink="/categories" i18n="@@categories">Categories</ui-button>
+      <ui-button routerLink="/my-stuff" i18n="@@my-stuff">My Stuff</ui-button>
     </div>
 
     <ui-icon *ngIf="myself">notification--new</ui-icon>
 
     <div class="flex" *ngIf="!myself">
-      <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="openLoginDialog()">Log In</ui-button>
+      <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="openLoginDialog()" i18n="@@log">Log In</ui-button>
       <ui-button class="flex-initial mr-4" kind="accent" icon="user" (click)="openRegisterDialog()">Register</ui-button>
     </div>
 
@@ -39,8 +40,8 @@
 
 <popper-content #userDropdownMenu>
   <div class="buttons">
-    <ui-button icon="user" size="l" routerLink="/settings/profile">Profile</ui-button>
-    <ui-button icon="settings" size="l" routerLink="/settings">Settings</ui-button>
-    <ui-button icon="exit" size="l" (click)="userLogout()">Logout</ui-button>  
+    <ui-button icon="user" size="l" routerLink="/settings/profile" i18n>Profile</ui-button>
+    <ui-button icon="settings" size="l" routerLink="/settings" i18n>Settings</ui-button>
+    <ui-button icon="exit" size="l" (click)="userLogout()" i18n>Logout</ui-button>  
   </div>
 </popper-content>

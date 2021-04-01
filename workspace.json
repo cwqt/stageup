@@ -79,6 +79,13 @@
       "root": "apps/frontend",
       "sourceRoot": "apps/frontend/src",
       "prefix": "app",
+      "sourceLocale": "en",
+      "i18n": {
+        "locales": {
+          "nb": "apps/frontend/src/i18n/messages.nb.xlf",
+          "en": "apps/frontend/src/i18n/messages.en.xlf"
+        }
+      },
       "targets": {
         "build": {
           "executor": "@angular-builders/custom-webpack:browser",
@@ -102,9 +109,13 @@
               "node_modules/plyr/dist/plyr.css",
               "apps/frontend/src/assets/fonts/fonts.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "i18nMissingTranslation": "warning",
+            "localize": ["en"]
           },
           "configurations": {
+            "en": { "localize": ["en"]},
+            "nb": { "localize": ["nb"]},
             "development": {
               "fileReplacements": [
                 {
@@ -160,6 +171,8 @@
         "serve": {
           "executor": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
+            "en": { "browserTarget": ["frontend:build:en"]},
+            "nb": { "browserTarget": ["frontend:build:nb"]},
             "development": {
               "browserTarget": "frontend:build:development",
               "proxyConfig": "apps/frontend/proxy.conf.json"
@@ -169,6 +182,28 @@
             },
             "production": {
               "browserTarget": "frontend:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "frontend:build",
+            "outputPath": "apps/frontend/src/i18n"
+          }
+        },
+        "xliffmerge": {
+          "executor": "@ngx-i18nsupport/tooling:xliffmerge",
+          "options": {
+            "xliffmergeOptions": {
+              "i18nFormat": "xlf",
+              "srcDir": "apps/frontend/src/i18n",
+              "genDir": "apps/frontend/src/i18n",
+              "defaultLanguage": "en",
+              "languages": [
+                "en",
+                "nb"
+              ]
             }
           }
         }
