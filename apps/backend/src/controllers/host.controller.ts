@@ -749,6 +749,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             performance_name: { subject: 'performance.name' },
             ticket_type: { subject: 'ticket.type' },
             purchased_at: { subject: 'invoice.purchased_at' },
+            payment_status: { subject: 'invoice.status' },
             amount: { subject: 'invoice.amount', transformer: v => parseInt(v as string) }
           })
           .sort({

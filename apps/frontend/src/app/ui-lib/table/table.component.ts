@@ -75,7 +75,7 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
     this.dataSource = merge(this.sort.sortChange, this.paginator.page, this.filterChange).pipe(
       startWith({}),
       switchMap(() => {
-        this.selection.clear();
+        this.selection?.clear();
         this.subject.next([]);
 
         // create base params for the filter
@@ -130,7 +130,7 @@ export class TableComponent<T> implements OnInit, AfterViewInit {
   }
 
   resetPaging() {
-    this.selection.clear();
+    this.selection?.clear();
   }
 
   // Whether the number of selected elements matches the total number of rows

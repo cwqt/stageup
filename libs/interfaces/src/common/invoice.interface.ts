@@ -14,6 +14,7 @@ export interface IInvoice {
   purchased_at: number;
   amount: number; // in pennies
   currency: CurrencyCode;
+  status: PaymentStatus;
 }
 
 // https://stripe.com/docs/api/orders/list#list_orders-status
@@ -22,15 +23,28 @@ export enum PaymentStatus {
 	Paid = "paid",
 	Fufilled = "fufilled",
 	Refunded = "refunded",
-	RefundDenied = "refund_denied"
+	RefundDenied = "refund_denied",
+  RefundPending = "refund_pending"
 }
 
-export interface IHostInvoice {
-	invoice_id: IInvoice["_id"];
+// Pertains to both hosts & users, should be tied into a Purchaseable supertype
+// when we add patreonage etc.
+export interface DtoInvoice {
+  invoice_id: IInvoice["_id"];
+  invoice_date: number;
+  status: PaymentStatus;
+  amount: number;
+  currency: CurrencyCode;
+}
+
+export interface IHostInvoice extends DtoInvoice {
 	performance: IPerformanceStub;
 	ticket: ITicketStub;
-	invoice_date: number;
-	amount: number;
-	net_amount: number;
-	status: PaymentStatus
+	net_amount: number; // for hosts only
+}
+
+export interface IUserInvoice extends DtoInvoice {
+	performance: IPerformanceStub;
+	ticket: ITicketStub;
+  receipt_url: string;
 }

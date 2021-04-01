@@ -21,7 +21,8 @@ import {
   IUserStub as IUserS,
   IHostStripeInfo,
   IPaymentIntentClientSecret as IPaymentICS,
-  IHostInvoice
+  IHostInvoice,
+  IUserInvoice
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -45,6 +46,7 @@ const Myself = new MyselfController(providerMap, middlewares);
 router.get      <IMyself>               ("/myself",                                   Myself.readMyself());
 router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
 router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
+router.get      <IE<IUserInvoice[]>>    ("/myself/invoices",                          Myself.readInvoices());
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providerMap, middlewares);

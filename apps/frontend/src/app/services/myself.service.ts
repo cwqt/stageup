@@ -7,7 +7,8 @@ import {
   IMyself,
   IPerformance,
   IPerformanceStub,
-  IUserHostInfo
+  IUserHostInfo,
+  IUserInvoice
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -15,6 +16,7 @@ import { HTTP } from '@core/interfaces';
 import { Router } from '@angular/router';
 import { LocalStorageKey } from '../app.interfaces';
 import { UserHostInfo } from '@core/shared/api';
+import { IQueryParams, querize } from '@core/shared/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -94,5 +96,10 @@ export class MyselfService {
     return this.http
       .get<IEnvelopedData<IPerformanceStub[]>>(`/api/myself/purchased-performances${name ? `?name=${name}` : ''}`)
       .toPromise();
+  }
+
+  // router.get <IE<IUserInvoice[]>> ("/myself/invoices", Myself.readInvoices());
+  readInvoices(query: IQueryParams): Promise<IEnvelopedData<IUserInvoice[]>> {
+    return this.http.get<IEnvelopedData<IUserInvoice[]>>(`/api/myself/invoices${querize(query)}`).toPromise();
   }
 }

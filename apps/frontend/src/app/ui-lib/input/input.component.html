@@ -22,7 +22,6 @@
         (ngModelChange)="change.emit($event)"
         (blur)="onTouchedCallback()"
         (focus)="onFocusCallback()"
-        [id]="id || formControlName || ''"
         [disabled]="disabled"
         [placeholder]="placeholder"
         [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : (type == 'phone' ? 'tel' : type)"
@@ -160,7 +159,6 @@
     <label [for]="formControlName">{{ label }}</label>
     <mat-radio-group
       [disabled]="disabled"
-      [id]="formControlName"
       [(ngModel)]="value">
       <mat-radio-button *ngFor="let item of options.values | keyvalue: originalOrder"
         [disabled]="item.value.disabled"

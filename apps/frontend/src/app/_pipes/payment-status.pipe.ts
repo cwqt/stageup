@@ -10,6 +10,7 @@ export class PaymentStatusPipe implements PipeTransform {
       [PaymentStatus.Paid]: 'Paid',
       [PaymentStatus.RefundDenied]: 'Refund Denied',
       [PaymentStatus.Refunded]: 'Refunded',
+      [PaymentStatus.RefundPending]: 'Refund Pending'
     };
 
     return prettyValues[value] || 'Unknown Payment Status';

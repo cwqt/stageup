@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, Column, ManyToOne, BeforeInsert, PrimaryColumn, OneToOne } from 'typeorm';
-import { IInvoice, CurrencyCode, ITicket, PurchaseableEntity, IHostInvoice, PaymentStatus } from '@core/interfaces';
+import { IInvoice, CurrencyCode, ITicket, PurchaseableEntity, IHostInvoice, PaymentStatus, IUserInvoice } from '@core/interfaces';
 import { User } from '../users/user.entity';
 import { Host } from '../hosts/host.entity';
 import { enumToValues, timestamp, uuid } from '@core/shared/helpers';
@@ -16,6 +16,8 @@ export class Invoice extends BaseEntity implements IInvoice {
   @Column() purchased_at: number;
   @Column('bigint', { nullable: true }) amount: number;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
+  @Column('enum', { enum: PaymentStatus }) status: PaymentStatus;
+
   @Column() stripe_charge_id: string;
   @Column() stripe_receipt_url: string;
 
@@ -46,6 +48,19 @@ export class Invoice extends BaseEntity implements IInvoice {
     return this;
   }
 
+  toUserInvoice(): Required<IUserInvoice> {
+    return {
+      invoice_id: this._id,
+      performance: this.ticket.performance.toStub(),
+      ticket: this.ticket.toStub(),
+      amount: this.amount,
+      invoice_date: this.purchased_at,
+      currency: this.currency,
+      receipt_url: this.stripe_receipt_url,
+      status: this.status
+    };
+  }
+  
   toHostInvoice(): Required<IHostInvoice> {
     return {
       invoice_id: this._id,
@@ -54,11 +69,8 @@ export class Invoice extends BaseEntity implements IInvoice {
       amount: this.amount,
       invoice_date: this.purchased_at,
       net_amount: this.amount,
-      status: (() => {
-				// IMPORTANT: handle stripe webhooks for setting this state, purposes of demoing
-        const arr = enumToValues(PaymentStatus);
-        return arr[Math.floor(Math.random() * arr.length)] as PaymentStatus;
-      })()
+      currency: this.currency,
+      status: this.status
     };
   }
 }

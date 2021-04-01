@@ -58,7 +58,7 @@ export class HostInvoicesComponent implements OnInit {
             type: FilterCode.String,
             field: 'performance_name'
           },
-          sort: { field: 'performance_name' },
+          sort: { field: 'performance_name' }
         },
         ticket: {
           label: 'Ticket',
@@ -90,7 +90,7 @@ export class HostInvoicesComponent implements OnInit {
             type: FilterCode.Date,
             field: 'purchased_at'
           },
-          sort: { field: 'purchased_at' },
+          sort: { field: 'purchased_at' }
         },
         amount: {
           label: 'Amount',
@@ -110,6 +110,18 @@ export class HostInvoicesComponent implements OnInit {
         status: {
           label: 'Status',
           transformer: v => new PaymentStatusPipe().transform(v.status),
+          filter: {
+            field: 'payment_status',
+            type: FilterCode.Enum,
+            enum: new Map([
+              [PaymentStatus.Created, { label: 'Created' }],
+              [PaymentStatus.Fufilled, { label: 'Fufilled' }],
+              [PaymentStatus.Paid, { label: 'Paid' }],
+              [PaymentStatus.RefundDenied, { label: 'Refund Denied' }],
+              [PaymentStatus.RefundPending, { label: 'Refund Pending' }],
+              [PaymentStatus.Refunded, { label: 'Refunded' }]
+            ])
+          },
           chip_selector: v => {
             switch (v.status) {
               case PaymentStatus.Created:
@@ -118,6 +130,8 @@ export class HostInvoicesComponent implements OnInit {
                 return 'gray';
               case PaymentStatus.Paid:
                 return 'green';
+              case PaymentStatus.RefundPending:
+                return 'magenta';
               case PaymentStatus.RefundDenied:
                 return 'red';
               case PaymentStatus.Refunded:

@@ -2,7 +2,7 @@
 
   <div class="flex justify-between items-center">
     <h1 *ngIf="table.title">{{ table.title }}</h1>
-    <ui-button kind="primary"
+    <ui-button kind="primary" *ngIf="table.selection"
       [disabled]="selection.selected.length == 0"
       [popper]="actionsMenu"
       [popperHideOnClickOutside]="true"
@@ -13,7 +13,6 @@
         Actions &nbsp; <ui-icon>caret--down</ui-icon>
     </ui-button>
   </div>
-
 
   <div class="ui-table" *ngIf="true">
     <div class="loading-shade" *ngIf="cacheable.loading">
@@ -166,7 +165,7 @@
 
   <!-- Actions popover, here for z-indexing purposes -->
   <popper-content #actionsMenu (click)="closePoppers()">
-    <div class="ui-table--actions">
+    <div class="ui-table--actions" *ngIf="table.selection">
       <ui-button *ngFor="let action of table.selection?.actions"
         (click)="action.click(selection)">
         {{ action.label }}
