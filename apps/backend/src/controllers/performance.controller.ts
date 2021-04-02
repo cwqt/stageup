@@ -15,7 +15,9 @@ import {
   ITicket,
   ITicketStub,
   ErrCode,
-  pick
+  pick,
+  IHost,
+  IUser
 } from '@core/interfaces';
 
 import {
@@ -29,13 +31,16 @@ import {
   User,
   Performance,
   AccessToken,
-  Ticket
+  Ticket,
+  UserHostInfo
 } from '@core/shared/api';
+import { to } from '@core/shared/helpers';
 import { IoT1ClickProjects } from 'aws-sdk';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
 import { BackendProviderMap } from '..';
 
 import AuthStrat from '../common/authorisation';
+import idFinderStrategies from '../common/authorisation/id-finder-strategies';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Queue from '../common/queue';
 
@@ -113,6 +118,10 @@ export default class PerformanceController extends BaseController<BackendProvide
           Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info', 'tickets'] })
         );
 
+        // Hide tickets from users who aren't a member of the host,
+        const [isMemberOfHost] = await AuthStrat.isMemberOfHost(() => performance.host._id)(req, this.providers);
+        if(!isMemberOfHost) performance.tickets = performance.tickets.filter(t => t.is_visible);
+            
         const response: IEnvelopedData<IPerformance, DtoAccessToken> = {
           data: performance.toFull(),
           __client_data: null
@@ -130,8 +139,8 @@ export default class PerformanceController extends BaseController<BackendProvide
             select: {
               user: { _id: true }
             }
-          });
-
+          })
+         
           // Also check if they're a member of the host which created the performance
           // & if so provision a token on-the-fly for them to be able to watch without purchasing
           if (!token) {
@@ -325,15 +334,23 @@ export default class PerformanceController extends BaseController<BackendProvide
           where: {
             deleted_at: null,
             performance: {
-              _id: req.params.pid
-            }
+              _id: req.params.pid,
+            },
           },
           select: {
             performance: { _id: true }
           }
         });
 
-        return (tickets || []).map(t => t.toStub());
+        if(tickets.length == 0) return [];
+        if(!req.session.user?._id) return tickets.filter(t => t.is_visible).map(t => t.toStub());
+
+        // Check user is part of host of which this performance was created by, if not filter hidden tickets
+        const hostId = await idFinderStrategies.findHostIdFromPerformanceId(req, this.providers);
+        const [isMemberOfHost] = await AuthStrat.isMemberOfHost(() => hostId)(req, this.providers);
+        if(!isMemberOfHost) return tickets.filter(t => t.is_visible).map(t => t.toStub());
+
+        return tickets.map(t => t.toStub());
       }
     };
   }

@@ -26,6 +26,7 @@ import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 import { PaymentStatusPipe } from './_pipes/payment-status.pipe';
+import { TicketTypePipe } from './_pipes/ticket-type.pipe'; 
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
@@ -137,6 +138,7 @@ import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices
     OnboardingStepPipe,
     HostPermissionPipe,
     CurrencyCodePipe,
+    TicketTypePipe,
     OnboardingViewIssueMakerComponent,
     PerformanceBrochureComponent,
     UserThumbComponent,

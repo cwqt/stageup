@@ -46,7 +46,8 @@ export class Ticket extends BaseEntity implements ITicket {
       currency: this.currency,
       quantity: this.quantity,
       quantity_remaining: this.quantity_remaining,
-      type: this.type
+      type: this.type,
+      is_visible: this.is_visible
     }
   }
 
@@ -55,7 +56,6 @@ export class Ticket extends BaseEntity implements ITicket {
       ...this.toStub(),
       version: this.version,
       fees: this.fees,
-      is_visible: this.is_visible,
       start_datetime: this.start_datetime,
       end_datetime: this.end_datetime
     }

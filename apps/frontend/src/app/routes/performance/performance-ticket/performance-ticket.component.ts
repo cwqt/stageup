@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { ITicketStub } from '@core/interfaces';
+import { ITicketStub, TicketType } from '@core/interfaces';
+import { ChipComponent } from '../../../ui-lib/chip/chip.component';
 
 @Component({
   selector: 'app-performance-ticket',
@@ -12,6 +13,12 @@ export class PerformanceTicketComponent implements OnInit {
 
   @Output() clicked: EventEmitter<ITicketStub> = new EventEmitter();
 
+
+  ticketChipColor:{[index in TicketType]:ChipComponent['kind']} = {
+    [TicketType.Paid]: "red",
+    [TicketType.Donation]: "blue",
+    [TicketType.Free]: "green"
+  }
 
   constructor() { }
 

@@ -19,12 +19,12 @@ export interface ITicketStub {
   quantity: number;
   quantity_remaining: number;
   type: TicketType;
+  is_visible: boolean;
 }
 
 export interface ITicket extends ITicketStub {
   fees: TicketFees;
   version: number;
-  is_visible: boolean;
   start_datetime: number;
   end_datetime: number;
 }

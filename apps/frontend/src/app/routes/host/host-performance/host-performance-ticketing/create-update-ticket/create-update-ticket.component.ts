@@ -57,7 +57,9 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
 
           // Convert back into pounds from pence
           fields["amount"] = (data.amount / 100) as unknown as string;
-
+          
+          fields["visibility.value"] = !data.is_visible as unknown as string;
+          
           return {
             fields: fields
           };
@@ -184,7 +186,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           fees: v.fees,
           start_datetime: new Date(v.sales_starts.date).getTime() / 1000 + v.sales_starts.time,
           end_datetime: new Date(v.sales_end.date).getTime() / 1000 + v.sales_end.time,
-          is_visible: v.visibility.value
+          is_visible: !v.visibility.value
         })
       }
     };
