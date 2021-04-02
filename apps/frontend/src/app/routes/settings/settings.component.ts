@@ -36,7 +36,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.route.url.subscribe(() => {
-      if (this.route.snapshot.firstChild) {
+      if (this.route.snapshot.firstChild?.url[0]) {
         // Map the selected tab to the URL 
         this.tabGroup.selectedIndex = this.tabs.findIndex(
           i => i.route.split('/').pop() == this.route.snapshot.firstChild.url[0].path

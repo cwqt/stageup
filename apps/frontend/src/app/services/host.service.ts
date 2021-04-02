@@ -12,7 +12,8 @@ import {
   IHostMemberChangeRequest,
   IEnvelopedData,
   IHostStripeInfo,
-  IHostInvoice
+  IHostInvoice,
+  IHostInvoiceCSVJobData
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -186,5 +187,10 @@ export class HostService {
   // router.get <IE<IHostInvoice[]>> ("/hosts/:hid/invoices", Hosts.readInvoices());
   readInvoices(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IHostInvoice[]>> {
     return this.http.get<IEnvelopedData<IHostInvoice[]>>(`/api/hosts/${hostId}/invoices${querize(query)}`).toPromise();
+  }
+
+  // router.post <void> ("/hosts/:hid/invoices/export-csv", Hosts.exportInvoicesToCSV());
+  exportInvoicesToCSV(hostId: string, invoices: Pick<IHostInvoiceCSVJobData, 'invoices'>): Promise<void> {
+    return this.http.post<void>(`/api/hosts/${hostId}/invoices/export-csv`, invoices).toPromise();
   }
 }

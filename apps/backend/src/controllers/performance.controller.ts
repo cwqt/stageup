@@ -61,7 +61,7 @@ export default class PerformanceController extends BaseController<BackendProvide
           await txc.save(performance);
 
           // Push premiere to job queue for automated release
-          Queue.enqueue<IScheduleReleaseJobData>({
+          Queue.enqueue({
             type: JobType.ScheduleRelease,
             data: {
               _id: performance._id

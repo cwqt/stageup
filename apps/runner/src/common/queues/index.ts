@@ -1,8 +1,11 @@
 import Env from '../../env';
 import SendEmailWorker from './workers/send_email.worker';
 import ScheduleReleaseWorker from './workers/schedule_release.worker';
+import HostInvoiceCSVWorker from './workers/host_invoice_csv.worker'
+
 import { log } from '../logger';
-import { RunnerProviderMap } from '../..';import { JobType } from '@core/interfaces';
+import { RunnerProviderMap } from '../..';
+import { JobType } from '@core/interfaces';
 import { Queue, QueueEvents, QueueScheduler, Worker } from 'bullmq';
 
 export interface IQueue {
@@ -15,12 +18,11 @@ export interface IQueue {
 export type QueueMap = { [index in JobType]: IQueue };
 export type WorkerFunction = (providers: RunnerProviderMap) => Worker;
 
-
-
-const create = (pm:RunnerProviderMap): QueueMap => {
+const create = (pm: RunnerProviderMap): QueueMap => {
   const workers: { [index in JobType]: WorkerFunction } = {
     [JobType.SendEmail]: SendEmailWorker,
-    [JobType.ScheduleRelease]: ScheduleReleaseWorker
+    [JobType.ScheduleRelease]: ScheduleReleaseWorker,
+    [JobType.HostInvoiceCSV]: HostInvoiceCSVWorker
   };
 
   return Object.values(JobType).reduce((acc, type) => {
@@ -28,27 +30,30 @@ const create = (pm:RunnerProviderMap): QueueMap => {
       connection: {
         host: Env.REDIS.host,
         port: Env.REDIS.port
-        }
+      }
     });
 
     const events = new QueueEvents(type, {
       connection: {
         host: Env.REDIS.host,
         port: Env.REDIS.port
-        }
+      }
     });
-    
+
     const scheduler = new QueueScheduler(type, {
       connection: {
         host: Env.REDIS.host,
         port: Env.REDIS.port
-        }
+      }
     });
 
     const worker = workers[type](pm);
 
     events.on('completed', job => log.info(`Completed job: ${job.jobId}`));
-    events.on('failed', (job, err) => log.error(`Failed job: ${job.jobId}`, err));
+    events.on('failed', (job, err) => {
+      log.error(`Failed job: ${job.jobId}`, err);
+      console.error(err);
+    });
 
     acc[type] = {
       queue,

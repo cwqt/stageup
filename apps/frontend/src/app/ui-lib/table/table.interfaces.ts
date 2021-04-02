@@ -13,7 +13,7 @@ export interface IUiTable<T = any, K = T> {
   transformer?: (row: T) => K;
   selection?: {
     multi: boolean;
-    actions: Array<IUiTableAction<K[]>>;
+    actions: Array<IUiTableAction<SelectionModel<T>>>;
 		footer_message?: (selection:SelectionModel<T>) => { label: string, value: Primitive }
   };
   pagination: {

@@ -92,6 +92,7 @@ router.post     <void>                  ("/hosts/:hid/performances/:pid/provisio
 router.post     <string>                ("/hosts/:hid/stripe/connect",                Hosts.connectStripe());
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
 router.get      <IE<IHostInvoice[]>>    ("/hosts/:hid/invoices",                      Hosts.readInvoices());
+router.post     <void>                  ("/hosts/:hid/invoices/export-csv",           Hosts.exportInvoicesToCSV());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providerMap, middlewares);

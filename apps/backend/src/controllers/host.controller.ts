@@ -22,7 +22,9 @@ import {
   TokenProvisioner,
   hasRequiredHostPermission,
   IHostStripeInfo,
-  IHostInvoice
+  IHostInvoice,
+  JobType,
+  IHostInvoiceCSVJobData
 } from '@core/interfaces';
 
 import {
@@ -42,7 +44,8 @@ import {
   OnboardingReview,
   Performance,
   AccessToken,
-  Invoice
+  Invoice,
+  array
 } from '@core/shared/api';
 
 import { timestamp } from '@core/shared/helpers';
@@ -54,6 +57,7 @@ import AuthStrat from '../common/authorisation';
 import { log } from '../common/logger';
 import { BackendProviderMap } from '..';
 import { In } from 'typeorm';
+import Queue from '../common/queue';
 
 export default class HostController extends BaseController<BackendProviderMap> {
   createHost(): IControllerEndpoint<IHost> {
@@ -758,6 +762,28 @@ export default class HostController extends BaseController<BackendProviderMap> {
             purchased_at: 'invoice.purchased_at'
           })
           .paginate(i => i.toHostInvoice());
+      }
+    };
+  }
+
+  exportInvoicesToCSV(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        body({
+          invoices: v => v.custom(array({ '*': v => v.isString() }))
+        })
+      ],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const h = await getCheck(Host.findOne({ _id: req.params.hid }));
+        
+        await Queue.enqueue({
+          type: JobType.HostInvoiceCSV,
+          data: {
+            invoices: req.body.invoices,
+            email_address: h.email_address
+          }
+        })
       }
     };
   }

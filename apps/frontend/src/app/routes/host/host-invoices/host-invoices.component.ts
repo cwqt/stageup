@@ -3,8 +3,10 @@ import { capitalize, FilterCode, IEnvelopedData, IHostInvoice, PaymentStatus, Ti
 import { prettifyMoney } from '@core/shared/helpers';
 import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { HostService } from '../../../services/host.service';
+import { ToastService } from '../../../services/toast.service';
 import { TableComponent } from '../../../ui-lib/table/table.component';
 import { IUiTable } from '../../../ui-lib/table/table.interfaces';
+import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PaymentStatusPipe } from '../../../_pipes/payment-status.pipe';
 
 @Component({
@@ -17,11 +19,11 @@ export class HostInvoicesComponent implements OnInit {
   tableData: IUiTable<IHostInvoice>;
   invoices: ICacheable<IEnvelopedData<IHostInvoice[]>> = createICacheable([]);
 
-  constructor(private hostService: HostService) {}
+  constructor(private hostService: HostService, private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.tableData = {
-      title: 'Onboardings',
+      title: 'Invoices',
       resolver: query => this.hostService.readInvoices(this.hostService.hostId, query),
       selection: {
         multi: true,
@@ -41,7 +43,18 @@ export class HostInvoicesComponent implements OnInit {
           },
           {
             label: 'Export as CSV',
-            click: v => v
+            click: async v => {
+              try {
+                await this.hostService.exportInvoicesToCSV(this.hostService.hostId, { invoices: v.selected.map(i => i.invoice_id) });
+                this.toastService.emit(
+                  'Exported CSVs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon',
+                  ThemeKind.Primary,
+                  { duration: 1e9 }
+                );
+              } catch (error) {
+                this.toastService.emit('An error occured while export to CSV', ThemeKind.Danger, { duration: 5000 });
+              }
+            }
           }
         ]
       },

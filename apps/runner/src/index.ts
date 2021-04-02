@@ -1,5 +1,5 @@
 import * as rax from 'retry-axios';
-import { Auth, ProviderMap, Providers, Register, Router } from '@core/shared/api';
+import { Auth, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/shared/api';
 
 import Env from './env';
 import routes from './routes';
@@ -7,6 +7,7 @@ import { log, stream } from './common/logger';
 import Queues from './common/queues';
 import { setQueues, BullMQAdapter, router } from 'bull-board';
 import axios from 'axios';
+import { Environment } from '@core/interfaces';
 
 export const api = axios.create({
   baseURL: Env.API_URL,
@@ -33,10 +34,29 @@ Register<RunnerProviderMap>({
       host: Env.REDIS.host,
       port: Env.REDIS.port
     }),
+    torm: new Providers.Postgres(
+      {
+        host: Env.PG.host,
+        port: Env.PG.port,
+        username: Env.PG.username,
+        password: Env.PG.password,
+        database: Env.PG.database,
+        // Runner should never resync database
+        synchronize: false
+      },
+      PG_MODELS
+    ),
     sendgrid: new Providers.SendGrid({
       username: Env.SENDGRID.username,
       api_key: Env.SENDGRID.api_key,
       enabled: Env.SENDGRID.enabled
+    }),
+    s3: new Providers.S3({
+      s3_access_key_id: Env.AWS.s3_access_key_id,
+      s3_access_secret_key: Env.AWS.s3_access_secret_key,
+      s3_bucket_name: Env.AWS.s3_bucket_name,
+      s3_url: Env.AWS.s3_url,
+      s3_region: Env.AWS.s3_region
     })
   }
 })(async (app, pm) => {
