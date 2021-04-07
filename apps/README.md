@@ -27,7 +27,7 @@ To make life easier we'll be running the databases inside Docker containers, fir
 To pull in the databases Docker images use these commands:
 
 ```sh
-docker run --name su-redis -p 6379:6379 -d redis  
+docker run --name su-redis -p 6379:6379 -d redis:6.0.12
 docker run --name su-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres:11
 ```
 
