@@ -60,8 +60,9 @@ router.put      <IMyself["user"]>       ("/users/:uid",                         
 router.delete   <void>                  ("/users/:uid",                               Users.deleteUser());
 router.get      <IE<IHost, IUHInfo>>    ("/users/:uid/host",                          Users.readUserHost());
 router.put      <IUserS>                ("/users/:uid/avatar",                        Users.changeAvatar());
-// router.put      <void>                  ("/users/forgot-password",                    Users.forgotPassword());
-router.put      <void>                  ("/users/:uid/password",                      Users.resetPassword());
+router.post     <void>                  ("/users/forgot-password",                    Users.forgotPassword());
+router.put      <void>                  ("/users/reset-password",                     Users.resetForgottenPassword());
+//router.put      <void>                  ("/users/:uid/password",                    Users.resetPassword());
 router.get      <IAddress[]>            ("/users/:uid/addresses",                     Users.readAddresses());
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
 router.put      <IAddress>              ("/users/:uid/addresses/:aid",                Users.updateAddress());

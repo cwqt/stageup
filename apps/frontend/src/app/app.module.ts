@@ -36,6 +36,8 @@ import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component'
 import { AppComponent } from './app.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { LoginComponent } from './routes/landing/login/login.component';
+import { ForgotPasswordComponent } from './routes/landing/login/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './routes/landing/login/reset-password/reset-password.component';
 import { UserRegisterComponent } from './routes/landing/user-register/user-register.component';
 import { FirstTimeSetupComponent } from './routes/landing/first-time-setup/first-time-setup.component';
 import { VerifiedComponent } from './components/pages/verified/verified.component';
@@ -106,6 +108,8 @@ import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices
     LandingComponent,
     DeleteConfirmationDialogComponent,
     LoginComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
     ProfileComponent,
     VerifiedComponent,
     SettingsComponent,

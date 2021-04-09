@@ -19,3 +19,4 @@ export { Ticket } from './performances/ticket.entity';
 
 export { Asset } from './common/asset.entity';
 export { Invoice } from './common/invoice.entity';
+export { PasswordReset } from './users/password.entity';

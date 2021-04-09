@@ -9,6 +9,8 @@ import { ProfileComponent } from './routes/profile/profile.component';
 import { TestbedComponent } from './ui-lib/testbed/testbed.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { LoginComponent } from './routes/landing/login/login.component';
+import { ForgotPasswordComponent } from './routes/landing/login/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './routes/landing/login/reset-password/reset-password.component';
 import { FeedComponent } from './routes/feed/feed.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
 import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
@@ -70,7 +72,7 @@ const LOGGED_IN_ROUTES: Routes = [
     component: PerformanceComponent,
     children: [{ path: 'watch', component: PerformanceWatchComponent }]
   },
-  { path: `user/:${RP.UserId}`, component: ProfileComponent },
+  { path: `user/:${RP.UserId}`, component: ProfileComponent}, 
   { path: `verified`, component: VerifiedComponent },
   {
     path: `settings`,
@@ -168,13 +170,20 @@ const LOGGED_IN_ROUTES: Routes = [
                   path: 'register',
                   component: DialogEntryComponent,
                   data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' } } }
-                }
+                },
+
+                { path: `users/forgot-password`, component: ForgotPasswordComponent },
+                { 
+                  path: `users/reset-password`, 
+                  component: DialogEntryComponent,
+                  data: { open_dialog: ResetPasswordComponent }
+                },                
               ]
             },
             {
               path: `search`,
               component: SearchComponent
-            },
+            },            
             {
               matcher: hostMatcher,
               component: HostProfileComponent,

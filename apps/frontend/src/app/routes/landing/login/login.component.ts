@@ -11,6 +11,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { FormGroup } from '@angular/forms';
 import { FormComponent } from '../../../ui-lib/form/form.component';
+import { HelperService } from "../../../services/helper.service";
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-login',
@@ -47,7 +49,8 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
     private baseAppService: BaseAppService,
     private myselfService: MyselfService,
     private authService: AuthenticationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+
   ) {}
 
   ngOnInit(): void {
@@ -99,5 +102,9 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
 
   handleFormChange(event: FormGroup) {
     this.buttons[0].disabled = !event.valid;
+  }
+
+  openPasswordResetDialog() {
+     this.dialog.open(ForgotPasswordComponent, { disableClose: true })
   }
 }

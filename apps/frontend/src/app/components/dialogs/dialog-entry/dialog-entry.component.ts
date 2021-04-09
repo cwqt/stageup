@@ -19,7 +19,6 @@ export class DialogEntryComponent implements OnInit {
   }
 
   openDialog(dialog: any, config?:MatDialogConfig) {
-    console.log(dialog, config)
     this.helperService.showDialog(this.dialog.open(dialog, config || {}), () => {});
   }
 }

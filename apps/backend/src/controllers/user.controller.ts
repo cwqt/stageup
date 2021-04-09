@@ -12,7 +12,8 @@ import {
   HTTP,
   Environment,
   IUserStub,
-  pick
+  pick,
+  IPasswordReset
 } from '@core/interfaces';
 import {
   IControllerEndpoint,
@@ -26,17 +27,23 @@ import {
   ErrorHandler,
   FormErrorResponse,
   getCheck,
+  query,
   Auth,
-  UserHostInfo
+  UserHostInfo,
+  PasswordReset
 } from '@core/shared/api';
 
 import Email = require('../common/email');
 import Env from '../env';
 import AuthStrat from '../common/authorisation';
 
+import jwt = require('jsonwebtoken');
+
 import { EntityManager } from 'typeorm';
 import { BackendProviderMap } from '..';
 import idFinderStrategies from '../common/authorisation/id-finder-strategies';
+import { VoiceId } from 'aws-sdk/clients/polly';
+import { sendEmail } from '../common/email';
 
 export default class UserController extends BaseController<BackendProviderMap> {
   loginUser(): IControllerEndpoint<IUser> {
@@ -247,7 +254,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
           subject: 'Your password was just changed',
           html: `<p>
       Your account password has recently been changed.<br/><br/>
-      If you did not make this change, please change your password assoon as possible. If you have recently changed your password, then please ignore this email.
+      If you did not make this change, please change your password as soon as possible. If you have recently changed your password, then please ignore this email.
       </p>`
         });
       }
@@ -300,4 +307,65 @@ export default class UserController extends BaseController<BackendProviderMap> {
       }
     };
   }
+
+//router.post <void> ("/users/forgot-password", Users.forgotPassword())
+forgotPassword(): IControllerEndpoint<void> {
+  return {
+    validators: [
+      body<{ email_address: string }>({
+        email_address: v => Validators.Fields.email(v)
+      })
+    ],
+    authStrategy: AuthStrat.none,
+    controller: async req => {      
+      const USER_EMAIL_ADDRESS = req.body.email_address; 
+      const user = await getCheck(User.findOne({ email_address: USER_EMAIL_ADDRESS }));  
+      const token = jwt.sign({ email_address: USER_EMAIL_ADDRESS }, Env.PRIVATE_KEY, { expiresIn: '24h'});            
+        
+      Email.sendEmailToResetPassword(user, USER_EMAIL_ADDRESS, encodeURI(token)); 
+
+        const p = new PasswordReset({
+          otp: token,          
+          email_address: USER_EMAIL_ADDRESS,
+          user__id: user._id
+          });
+
+          await p.save();
+      }
+    };
+  }
+  
+//router.put <void> ("/users/reset-password", Users.resetForgottenPassword());
+resetForgottenPassword(): IControllerEndpoint<void> {
+  return {
+    validators: [
+      query<{ otp: string }>({
+        otp: v => v.isString()
+      }),
+
+
+      body<{ new_password: string }>({
+        new_password: v => Validators.Fields.password(v)
+      })
+    ],
+    authStrategy: AuthStrat.none,
+    controller: async req => {
+      const decodedOTP = decodeURI(req.query.otp as string);
+      // Verifiying jwt token
+      const OTP = await new Promise((res, rej) => {
+        jwt.verify(decodedOTP, Env.PRIVATE_KEY, function(err, decoded) {
+          if(err) return rej(err);
+          res(decoded)
+        });
+      })       
+      // get the user from the db using OTP email
+      const user = await getCheck(User.findOne({ email_address: OTP['email_address'] }));      
+      const newPassword = req.body.new_password;     
+      user.setPassword(newPassword);
+      await user.save();
+
+      Email.sendEmailToConfirmPasswordReset(user);
+      }
+    };
+  }  
 }

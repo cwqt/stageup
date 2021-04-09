@@ -29,4 +29,7 @@ export * from './3rd-party/stripe.interface';
 export * from './3rd-party/mux.interface';
 
 export * from './runner/job.interface';
+
 export * from './search/search.interface';
+export * from './users/password.interface';
+
