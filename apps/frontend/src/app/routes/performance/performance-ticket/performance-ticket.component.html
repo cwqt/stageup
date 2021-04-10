@@ -1,20 +1,24 @@
 <div>
-  <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" 
+  <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled"
     size="l"
     (click)="clicked.emit(ticket)">
       <div class="flex">
         <ui-chip [kind]="ticketChipColor[ticket.type]">{{ ticket.type | ticketTypePipe | uppercase}}</ui-chip>
-        <ui-chip kind="gray" class="ml-2" *ngIf="ticket.is_visible == false">HIDDEN</ui-chip>  
+
+        <!-- Only visible to host members -->
+        <ui-chip kind="gray" class="ml-2" *ngIf="ticket.is_visible == false">HIDDEN</ui-chip>
+
         <b class="ml-auto" *ngIf="ticket.type !== 'free'">{{ ticket.amount | currencyPipe: ticket.currency }}</b>
       </div>
-
       <div>
         <span>{{ ticket.name }}</span>
         <span class="opacity-50">
-          {{ ticket.quantity_remaining > 0
-            ? (ticket.quantity_remaining + ' remaining')
-            : 'SOLD OUT'
-          }}
+          <!-- Hidden ticket quantities returned as null, unless remaining == 0, for sold out indicator -->
+          <ng-container *ngIf="ticket.quantity_remaining > 0">
+            {{ ticket.quantity_remaining }} remaining
+          </ng-container>
+
+          <ng-container *ngIf="ticket.quantity_remaining == 0">SOLD OUT</ng-container>
         </span>
       </div>
   </ui-button>

@@ -15,9 +15,7 @@ import {
   ITicket,
   ITicketStub,
   ErrCode,
-  pick,
-  IHost,
-  IUser
+  pick
 } from '@core/interfaces';
 
 import {
@@ -120,8 +118,8 @@ export default class PerformanceController extends BaseController<BackendProvide
 
         // Hide tickets from users who aren't a member of the host,
         const [isMemberOfHost] = await AuthStrat.isMemberOfHost(() => performance.host._id)(req, this.providers);
-        if(!isMemberOfHost) performance.tickets = performance.tickets.filter(t => t.is_visible);
-            
+        if (!isMemberOfHost) performance.tickets = performance.tickets.filter(t => t.is_visible);
+
         const response: IEnvelopedData<IPerformance, DtoAccessToken> = {
           data: performance.toFull(),
           __client_data: null
@@ -139,8 +137,8 @@ export default class PerformanceController extends BaseController<BackendProvide
             select: {
               user: { _id: true }
             }
-          })
-         
+          });
+
           // Also check if they're a member of the host which created the performance
           // & if so provision a token on-the-fly for them to be able to watch without purchasing
           if (!token) {
@@ -276,7 +274,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         );
 
         // Return client secret to user, who will use it to confirmPayment()
-				// with the CC info if they wish to actually buy the ticket
+        // with the CC info if they wish to actually buy the ticket
         return {
           client_secret: res.client_secret,
           stripe_account_id: ticket.performance.host.stripe_account_id
@@ -334,21 +332,21 @@ export default class PerformanceController extends BaseController<BackendProvide
           where: {
             deleted_at: null,
             performance: {
-              _id: req.params.pid,
-            },
+              _id: req.params.pid
+            }
           },
           select: {
             performance: { _id: true }
           }
         });
 
-        if(tickets.length == 0) return [];
-        if(!req.session.user?._id) return tickets.filter(t => t.is_visible).map(t => t.toStub());
+        if (tickets.length == 0) return [];
+        if (!req.session.user?._id) return tickets.filter(t => t.is_visible).map(t => t.toStub());
 
         // Check user is part of host of which this performance was created by, if not filter hidden tickets
         const hostId = await idFinderStrategies.findHostIdFromPerformanceId(req, this.providers);
         const [isMemberOfHost] = await AuthStrat.isMemberOfHost(() => hostId)(req, this.providers);
-        if(!isMemberOfHost) return tickets.filter(t => t.is_visible).map(t => t.toStub());
+        if (!isMemberOfHost) return tickets.filter(t => t.is_visible).map(t => t.toStub());
 
         return tickets.map(t => t.toStub());
       }
@@ -394,7 +392,8 @@ export default class PerformanceController extends BaseController<BackendProvide
             'fees',
             'start_datetime',
             'end_datetime',
-            'is_visible'
+            'is_visible',
+            'hide_ticket_quantity'
           ])
         );
 
@@ -413,12 +412,33 @@ export default class PerformanceController extends BaseController<BackendProvide
             'fees',
             'start_datetime',
             'end_datetime',
-            'is_visible'
+            'is_visible',
+            'hide_ticket_quantity'
           ])
         );
 
         await ticket.softRemove();
         return newTicket.toFull();
+      }
+    };
+  }
+
+  updateTicketQuantityVisiblity(): IControllerEndpoint<void> {
+    return {
+      validators: [body<{ hide_ticket_quantity: boolean }>({ hide_ticket_quantity: v => v.isBoolean() })],
+      authStrategy: AuthStrat.runner(
+        {
+          hid: IdFinderStrat.findHostIdFromPerformanceId
+        },
+        AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
+      ),
+      controller: async req => {
+        await Performance.update(
+          { _id: req.params.pid },
+          {
+            hide_ticket_quantity: req.body.hide_ticket_quantity
+          }
+        );
       }
     };
   }

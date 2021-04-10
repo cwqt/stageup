@@ -18,6 +18,7 @@ export interface IPerformanceStub {
   views: number; // total user view count
   playback_id: string; // address to view
   created_at: number;
+  hide_ticket_quantity: boolean;
 }
 
 export interface IPerformance extends IPerformanceStub {

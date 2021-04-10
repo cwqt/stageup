@@ -14,6 +14,7 @@ export class Ticket extends BaseEntity implements ITicket {
   @Column() quantity: number;
   @Column() quantity_remaining: number;
   @Column() is_visible: boolean;
+  @Column() hide_ticket_quantity: boolean;
   @Column() start_datetime: number;
   @Column() end_datetime: number;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
@@ -36,6 +37,7 @@ export class Ticket extends BaseEntity implements ITicket {
     this.end_datetime = ticket.end_datetime
     this.is_visible = ticket.is_visible;
     this.version = 0;
+    this.hide_ticket_quantity = ticket.hide_ticket_quantity;
   }
 
   toStub():Required<ITicketStub> {
@@ -47,7 +49,8 @@ export class Ticket extends BaseEntity implements ITicket {
       quantity: this.quantity,
       quantity_remaining: this.quantity_remaining,
       type: this.type,
-      is_visible: this.is_visible
+      is_visible: this.is_visible,
+      hide_ticket_quantity: this.hide_ticket_quantity
     }
   }
 

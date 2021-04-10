@@ -16,7 +16,8 @@ import {
   ITicketStub,
   ITicket,
   Idless,
-  DtoCreateTicket
+  DtoCreateTicket,
+  ITicketsQuantityVisibility
 } from '@core/interfaces';
 import { timestamp } from '@core/shared/helpers';
 import { Except } from 'type-fest';
@@ -113,4 +114,10 @@ export default {
     const res = await api.put(`/performances/${performance._id}/tickets/${ticket._id}`, data, env.getOptions());
     return res.data;
   },
+
+  //router.put<void>("/performances/:pid/tickets",Perfs.updateTicketQuantityVisiblity());
+  updateTicketQuantityVisibility: async (performance: IPerformance, hideTicketQuantity:boolean): Promise<void> => {
+    const res = await api.put(`/performances/${performance._id}/tickets/`, {hide_ticket_quantity: hideTicketQuantity}, env.getOptions());
+    return res.data;
+  }
 };

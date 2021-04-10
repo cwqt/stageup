@@ -36,7 +36,8 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
       fees: TicketFees.Absorb,
       start_datetime: timestamp(),
       end_datetime: timestamp() + 1000,
-      is_visible: true
+      is_visible: true,
+      is_quantity_visible: true
     });
 
     expect(ticket._id).toBeTruthy;
@@ -67,7 +68,8 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
       fees: TicketFees.PassOntoPurchaser,
       start_datetime: timestamp(),
       end_datetime: timestamp() + 1000,
-      is_visible: true
+      is_visible: true,
+      is_quantity_visible: true
     });
 
     tickets = await Stories.actions.performances.getTickets(perf);
@@ -81,5 +83,13 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
     await Stories.actions.performances.deleteTicket(perf, ticket);
     tickets = await Stories.actions.performances.getTickets(perf);
     expect(tickets).toHaveLength(1);
+  });
+
+  it('Should toggle the performance visibility and then check the visibility flag has been set', async () => {
+    await Stories.actions.performances.updateTicketQuantityVisibility(perf, true); //Send a true, meaning hide the tickets
+
+    tickets = await Stories.actions.performances.getTickets(perf);
+
+    expect(tickets[0].is_quantity_visible).toBeFalsy();
   });
 });

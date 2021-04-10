@@ -88,7 +88,8 @@ export namespace ObjectValidators {
       fees: v => v.isIn(enumToValues(TicketFees)),
       start_datetime: v => FV.timestamp(v),
       end_datetime: v => FV.timestamp(v),
-      is_visible: v => v.isBoolean()
+      is_visible: v => v.isBoolean(),
+      hide_ticket_quantity: v =>  v.isBoolean()
     }
   }
 

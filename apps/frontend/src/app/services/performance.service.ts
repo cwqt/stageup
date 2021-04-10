@@ -82,6 +82,10 @@ export class PerformanceService {
     return this.http.post<IPaymentIntentClientSecret>(`/api/tickets/${ticket._id}/payment-intent`, null).toPromise();
   }
 
+  updateTicketQuantityVisibility(performanceId: string, hideTicketQuantity: boolean){
+    return this.http.put<void>(`/api/performances/${performanceId}/tickets`, {hide_ticket_quantity: hideTicketQuantity}).toPromise();
+  }
+
   deletePerformance(performanceId: string) {
     return this.http.delete(`/api/performances/${performanceId}`).toPromise();
   }

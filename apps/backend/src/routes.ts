@@ -104,6 +104,7 @@ router.get      <IPHInfo>               ("/performances/:pid/host-info",        
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
+router.put      <void>                  ("/performances/:pid/tickets",                Perfs.updateTicketQuantityVisiblity());
 router.get      <ITicketStub[]>         ("/performances/:pid/tickets",                Perfs.readTickets());
 router.post     <ITicket>               ("/performances/:pid/tickets",                Perfs.createTicket());
 router.get      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.readTicket());

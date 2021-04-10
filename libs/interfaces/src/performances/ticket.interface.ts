@@ -10,7 +10,6 @@ export enum TicketFees {
   PassOntoPurchaser = 'pass_onto_purchaser',
   Absorb = 'absorb'
 }
-
 export interface ITicketStub {
   _id: string;
   name: string;
@@ -20,6 +19,7 @@ export interface ITicketStub {
   quantity_remaining: number;
   type: TicketType;
   is_visible: boolean;
+  hide_ticket_quantity: boolean;
 }
 
 export interface ITicket extends ITicketStub {
@@ -41,5 +41,6 @@ export type DtoCreateTicket = Required<
     | 'start_datetime'
     | 'end_datetime'
     | 'is_visible'
+    | 'hide_ticket_quantity'
   >
 >;

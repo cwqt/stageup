@@ -4,8 +4,7 @@ import {
   IHost,
   IPerformance,
   IPerformanceHostInfo,
-  ITicketStub,
-  ITicket
+  ITicketStub
 } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { Component, OnInit } from '@angular/core';
@@ -15,6 +14,7 @@ import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUpdateTicketComponent } from './create-update-ticket/create-update-ticket.component';
 import { ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-host-performance-ticketing',
@@ -32,6 +32,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
   tickets: ICacheable<ITicketStub[]> = createICacheable([]);
   ticketsDataSrc: MatTableDataSource<ITicketStub>;
   displayedColumns: string[] = ['name', 'quantity', 'amount', 'actions'];
+  hideTicketQuantities: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -44,6 +45,8 @@ export class HostPerformanceTicketingComponent implements OnInit {
     cachize(this.performanceService.readTickets(this.performanceId), this.tickets).then(
       d => (this.ticketsDataSrc.data = d)
     );
+
+    this.hideTicketQuantities = this.performance.data.data.hide_ticket_quantity;
   }
 
   openCreateTicketDialog() {
@@ -96,5 +99,9 @@ export class HostPerformanceTicketingComponent implements OnInit {
         }
       ]
     });
+  }
+
+  onToggleTicketsVisibility(event: MatSlideToggleChange) {
+    this.performanceService.updateTicketQuantityVisibility(this.performanceId, event.checked);
   }
 }

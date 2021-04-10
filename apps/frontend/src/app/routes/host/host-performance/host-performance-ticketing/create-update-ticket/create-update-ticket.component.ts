@@ -186,7 +186,8 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           fees: v.fees,
           start_datetime: new Date(v.sales_starts.date).getTime() / 1000 + v.sales_starts.time,
           end_datetime: new Date(v.sales_end.date).getTime() / 1000 + v.sales_end.time,
-          is_visible: !v.visibility.value
+          is_visible: !v.visibility.value,
+          hide_ticket_quantity: false
         })
       }
     };
