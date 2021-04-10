@@ -106,6 +106,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   public handleUploadImage(): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
+        // this.cancel.emit();
         const inputElement = this.inputElement.nativeElement;
         // Read file again & upload file
         if (typeof FileReader !== 'undefined') {
@@ -124,11 +125,16 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
             this.data
               .fileHandler(formData)
               .then(url => resolve(url))
-              .catch(e => reject(e));
+              .catch(e => {
+                reject(e);
+                this.uploadButton.loading = false;
+                this.clearAvatar();
+              });
           };
           reader.readAsArrayBuffer(inputElement.files[0]);
         }
       } catch (error) {
+        this.selectedImage = this.data.initialImage;
         reject(error);
       }
     });
