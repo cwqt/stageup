@@ -6,6 +6,8 @@ import { IEnvelopedData, IHostStub, IPerformanceStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '../../app.interfaces';
 import { BaseAppService } from '../../services/app.service';
 import { SearchService } from '../../services/search.service';
+import { HelperService } from '../../services/helper.service';
+import { PerformanceBrochureComponent } from '../performance/performance-brochure/performance-brochure.component';
 
 @Component({
   selector: 'app-search',
@@ -25,7 +27,8 @@ export class SearchComponent implements OnInit {
     private baseAppService: BaseAppService,
     private route: ActivatedRoute,
     private searchService: SearchService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private helperService: HelperService
   ) {}
 
   async ngOnInit() {
@@ -65,5 +68,20 @@ export class SearchComponent implements OnInit {
           this.performances.loading = false;    
         })
     }
+  }
+
+  openDialogPerf(performance: IPerformanceStub): void {
+    this.helperService.showDialog(
+      this.dialog.open(PerformanceBrochureComponent, {
+        data: performance,
+        position: { top: "5% "}
+      }),
+      () => {}
+    );
+  }
+
+  openDialogHost(hostname) {
+    console.log(hostname);
+    this.baseAppService.navigateTo(`/@${hostname}`);
   }
 }
