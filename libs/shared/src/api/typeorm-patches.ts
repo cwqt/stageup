@@ -1,5 +1,3 @@
-import { NextFunction, Response, Request } from 'express';
-import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 import {
   BooleanFilter,
   BooleanFilterOperator,
@@ -13,13 +11,13 @@ import {
   NumberFilter,
   NumberFilterOperator,
   NUUID,
-  Operators,
   Primitive,
   StringFilter,
   StringFilterOperator
 } from '@core/interfaces';
 import { timeless, timestamp, to } from '@core/shared/helpers';
-import { uuid } from '@core/shared/helpers';
+import { NextFunction, Request, Response } from 'express';
+import { SelectQueryBuilder } from 'typeorm';
 
 export type EntitySerialiser<T, K> = (e: T) => K;
 export type SortDirection = 'ASC' | 'DESC';
@@ -99,7 +97,7 @@ const OperatorResolver:{[index in FilterCode]} = {
 	}),
 	[FilterCode.Enum]: to<{[index in EnumFilterOperator]: WhereOp<any, EnumFilter[2]>}>({
 		[EnumFilterOperator.Contains]: 						v => [`${v.sub} IN (:...${v.refs[0]})`, { [v.refs[0]]: v.args }] // 1st arg is all args
-	}),	
+	}),
 	[FilterCode.Date]: to<{[index in DateFilterOperator]: WhereOp<any, DateFilter[2]>}>({
 		[DateFilterOperator.Equals]: 							v => [`${v.sub} = :${v.refs[0]}`, { [v.refs[0]]: timestamp(timeless(new Date(v.args[0] * 1000)))}],
 		[DateFilterOperator.After]: 							v => [`${v.sub} > :${v.refs[0]}`, { [v.refs[0]]: timestamp(timeless(new Date(v.args[0] * 1000)))}],

@@ -1,4 +1,15 @@
 import {
+  AssetType,
+  DtoCreatePerformance,
+  Genre,
+  IPerformance,
+  IPerformanceStub,
+  Visibility,
+} from '@core/interfaces';
+import { timestamp, uuid } from '@core/shared/helpers';
+import Mux from '@mux/mux-node';
+import { Except } from 'type-fest';
+import {
   BaseEntity,
   BeforeInsert,
   Column,
@@ -10,26 +21,13 @@ import {
   OneToOne,
   PrimaryColumn
 } from 'typeorm';
-import {
-  CurrencyCode,
-  DtoCreatePerformance,
-  Genre,
-  IPerformance,
-  IPerformanceStub,
-  IRating,
-  PerformanceState,
-  Visibility
-} from '@core/interfaces';
-
-import { PerformanceHostInfo } from './performance-host-info.entity';
+import { AssetGroup } from '../common/asset-group.entity';
+import { Asset } from '../common/asset.entity';
 import { Host } from '../hosts/host.entity';
-import { User } from '../users/user.entity';
-import { timestamp, uuid } from '@core/shared/helpers';
-import Mux from '@mux/mux-node';
 import { Ticket } from './ticket.entity';
 
 @Entity()
-export class Performance extends BaseEntity implements IPerformance {
+export class Performance extends BaseEntity implements Except<IPerformance, 'stream'> {
   @PrimaryColumn() _id: string;
   @BeforeInsert() private beforeInsert() {
     this._id = uuid();
@@ -39,19 +37,17 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column() name: string;
   @Column() description?: string;
   @Column() views: number;
-  @Column() playback_id: string;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
-  @Column('enum', { enum: PerformanceState }) state: PerformanceState;
 
+  @OneToOne(() => Asset) @JoinColumn() stream: Asset<AssetType.LiveStream>;
+  @OneToOne(() => AssetGroup) @JoinColumn() assetGroup: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
-  @ManyToOne(() => User, user => user.performances) creator: User;
-  @OneToOne(() => PerformanceHostInfo) @JoinColumn() host_info: PerformanceHostInfo;
 
-  constructor(data: DtoCreatePerformance, creator: User) {
+  constructor(data: DtoCreatePerformance, host: Host) {
     super();
     this.name = data.name;
     this.description = data.description;
@@ -62,18 +58,17 @@ export class Performance extends BaseEntity implements IPerformance {
     this.created_at = timestamp(new Date());
     this.views = 0;
     this.average_rating = null;
-    this.creator = creator;
-    this.host = creator.host;
-    this.state = PerformanceState.Idle;
+    this.host = host;
   }
 
   async setup(mux: Mux, txc: EntityManager): Promise<Performance> {
-    // Create host info, which includes a signing key, thru atomic trans op
-    const [hostInfo, stream] = await new PerformanceHostInfo().setup(mux, txc);
-    this.host_info = hostInfo;
-    this.playback_id = stream.playback_ids.find(p => p.policy === 'signed').id;
+    this.assetGroup = new AssetGroup();
+    const stream = await new Asset(AssetType.LiveStream).setup(mux, txc);
+    this.stream = stream;
 
-    return this;
+    this.assetGroup.push(stream);
+    await txc.save(this.assetGroup);
+    return txc.save(this);
   }
 
   toStub(): Required<IPerformanceStub> {
@@ -84,8 +79,8 @@ export class Performance extends BaseEntity implements IPerformance {
       average_rating: this.average_rating,
       views: this.views,
       description: this.description,
-      playback_id: this.playback_id,
       created_at: this.created_at,
+      stream: { state: this.stream.meta.state, location: this.stream.location }
     };
   }
 
@@ -94,7 +89,6 @@ export class Performance extends BaseEntity implements IPerformance {
       ...this.toStub(),
       visibility: this.visibility,
       premiere_date: this.premiere_date,
-      state: this.state,
       genre: this.genre,
       tickets: this.tickets?.map(t => t.toStub()) || []
     };

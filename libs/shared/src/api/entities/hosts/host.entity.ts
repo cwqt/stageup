@@ -117,7 +117,6 @@ export class Host extends BaseEntity implements IHostPrivate {
       ...this.toStub(),
       created_at: this.created_at,
       members_info: this.members_info?.map(uhi => uhi.toFull()) || [],
-      performances: this.performances?.map((p: Performance) => p.toStub()) || [],
       is_onboarded: this.is_onboarded,
       social_info: this.social_info
     };
@@ -130,5 +129,5 @@ export class Host extends BaseEntity implements IHostPrivate {
       contact_info: this.contact_info.toFull(),
       business_details: this.business_details,
     };
-  } 
+  }
 }

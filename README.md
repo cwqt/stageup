@@ -8,14 +8,17 @@ Live-streaming & VoD platform for the performance arts.
 
 Refer to [README.md](apps/README.md) for installing Node, Docker & the various databases before following the individual application setups.
 
-* __API__ (`apps/backend`): [README.md](apps/backend/README.md) for setup instructions.
-* __Frontend__ (`apps/frontend`): [README.md](apps/frontend/README.md) for setup instructions.
-* __Queue__ (`apps/runner`): [README.md](apps/runner/README.md) for setup instructions.
-* __Tests__ (`apps/api-tests`): [README.md](apps/api-tests/README.md) for setup instructions.
+For each application, review the setup instructions in each of these files:
+
+* __API__ (`apps/backend`): [README.md](apps/backend/README.md)
+* __Frontend__ (`apps/frontend`): [README.md](apps/frontend/README.md)
+* __Queue__ (`apps/runner`): [README.md](apps/runner/README.md)
+* __Notifications__ (`apps/notifications`) [README.md](apps/notifications/README.md)
+* __Tests__ (`apps/api-tests`): [README.md](apps/api-tests/README.md)
 
 ## Running
 
-All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects.  
+All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects.
 Run `npm install` in the project root to install all required dependencies.
 
 Production builds perform tree-shaking optimization to remove unused libraries, so ensure you use ES6 import syntax.
@@ -46,7 +49,7 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
     backend            # the stageup backend
     runner             # distributed job queue
     api-tests          # integration tests
-          
+
   libs                 # where all shared code live
     interfaces         # typescript interfaces
     ui-lib             # frontend generic angular component library
@@ -54,13 +57,13 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
       api              # shared backend services utilities
         providers      # utils for interacting with data sources
       helpers          # utility functions for backend & frontend
-        
+
   deploy               # info pertaining to deployment
     k8s                # kubernetes files (unused for now)
-        
+
   tools                # non-source code stuff
     generate-uml.ts    # creates a plant-uml diagram of models
-        
+
   .github              # github actions
   .vscode              # editor settings
   nx.json              # nx workspace config

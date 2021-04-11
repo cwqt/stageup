@@ -11,12 +11,12 @@ export { OnboardingReview } from './hosts/onboarding-review.entity';
 export { UserHostInfo } from './hosts/user-host-info.entity';
 
 export { AccessToken } from './performances/access-token.entity';
-export { PerformanceHostInfo } from './performances/performance-host-info.entity';
 export { Performance } from './performances/performance.entity';
 export { SigningKey } from './performances/signing-key.entity';
 export { Ticket } from './performances/ticket.entity';
 // export { Rating } from './performances/rating.entity';
 
 export { Asset } from './common/asset.entity';
+export { AssetGroup } from './common/asset-group.entity';
 export { Invoice } from './common/invoice.entity';
 export { PasswordReset } from './users/password.entity';

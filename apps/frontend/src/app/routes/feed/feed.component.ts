@@ -19,11 +19,7 @@ export class FeedComponent implements OnInit {
     loading: false
   };
 
-  constructor(
-    private feedService: FeedService,
-    public dialog: MatDialog,
-    private helperService: HelperService
-  ) {}
+  constructor(private feedService: FeedService, public dialog: MatDialog, private helperService: HelperService) {}
 
   async ngOnInit() {
     await this.getFeed();
@@ -37,7 +33,8 @@ export class FeedComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
         data: performance,
-        position: { top: "5% "}
+        maxWidth: "1000px",
+        position: { top: '5%' }
       }),
       () => {}
     );

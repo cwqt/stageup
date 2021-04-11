@@ -1,42 +1,39 @@
 import {
+  BASE_AMOUNT_MAP,
+  DtoCreatePerformance,
+  DtoPerformance,
+  ErrCode,
+  HostPermission,
+  HTTP,
   IEnvelopedData,
+  IPaymentIntentClientSecret,
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
-  DtoAccessToken,
-  HTTP,
-  HostPermission,
-  DtoCreatePerformance,
-  Visibility,
-  JobType,
-  IPaymentIntentClientSecret,
-  TokenProvisioner,
   ITicket,
   ITicketStub,
-  ErrCode,
-  BASE_AMOUNT_MAP,
-  pick
+  JobType,
+  pick,
+  TokenProvisioner,
+  Visibility
 } from '@core/interfaces';
-
 import {
+  AccessToken,
+  BaseController,
+  body,
   ErrorHandler,
   getCheck,
-  BaseController,
+  Host,
   IControllerEndpoint,
-  Validators,
-  body,
-  query,
-  User,
   Performance,
-  AccessToken,
-  Ticket
+  query,
+  Ticket,
+  Validators
 } from '@core/shared/api';
 import { getDonoAmount } from '@core/shared/helpers';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
 import { BackendProviderMap } from '..';
-
 import AuthStrat from '../common/authorisation';
-import idFinderStrategies from '../common/authorisation/id-finder-strategies';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Queue from '../common/queue';
 
@@ -47,19 +44,11 @@ export default class PerformanceController extends BaseController<BackendProvide
       validators: [body<DtoCreatePerformance>(Validators.Objects.DtoCreatePerformance())],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const user = await getCheck(
-          User.findOne(
-            {
-              _id: req.session.user._id
-            },
-            { relations: ['host'] }
-          )
-        );
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
         return await this.ORM.transaction(async txc => {
-          const performance = new Performance(req.body, user);
+          const performance = await new Performance(req.body, host).save();
           await performance.setup(this.providers.mux.connection, txc);
-          await txc.save(performance);
 
           // Push premiere to job queue for automated release
           Queue.enqueue({
@@ -100,25 +89,39 @@ export default class PerformanceController extends BaseController<BackendProvide
           .innerJoinAndSelect('p.host', 'host')
           .where('p.name LIKE :name', { name: req.query.search_query ? `%${req.query.search_query as string}%` : '%' })
           .andWhere('p.visibility = :state', { state: Visibility.Public })
+          .leftJoinAndSelect('p.stream', 'stream')
           .paginate(p => p.toStub());
       }
     };
   }
 
-  readPerformance(): IControllerEndpoint<IEnvelopedData<IPerformance, DtoAccessToken>> {
+  readPerformance(): IControllerEndpoint<DtoPerformance> {
     return {
       validators: [],
       authStrategy: AuthStrat.none,
       controller: async req => {
         const performance = await getCheck(
-          Performance.findOne({ _id: req.params.pid }, { relations: ['host', 'host_info', 'tickets'] })
+          Performance.findOne(
+            { _id: req.params.pid },
+            {
+              relations: {
+                host: true,
+                tickets: true,
+                stream: {
+                  // TODO: add bidirectional ref on signing key to avoid this join
+                  // before we've checked that the user needs a token signing on the fly
+                  signing_key: true
+                }
+              }
+            }
+          )
         );
 
         // Hide tickets from users who aren't a member of the host,
         const [isMemberOfHost] = await AuthStrat.isMemberOfHost(() => performance.host._id)(req, this.providers);
         if (!isMemberOfHost) performance.tickets = performance.tickets.filter(t => t.is_visible);
 
-        const response: IEnvelopedData<IPerformance, DtoAccessToken> = {
+        const response: DtoPerformance = {
           data: performance.toFull(),
           __client_data: null
         };
@@ -149,13 +152,19 @@ export default class PerformanceController extends BaseController<BackendProvide
 
             if (isMemberOfHost) {
               token = new AccessToken(passthru.uhi.user, performance, passthru.uhi.user, TokenProvisioner.User).sign(
-                performance.host_info.signing_key
+                performance.stream.signing_key
               );
             }
           }
 
           // return 404 barring the user has a token if the performance is private
           if (!token && performance.visibility == Visibility.Private) throw new ErrorHandler(HTTP.NotFound);
+
+          // set the token
+          response.__client_data = {
+            has_purchased: token.provisioner_type == TokenProvisioner.Purchase,
+            token: token.access_token
+          };
         }
 
         return response;
@@ -168,13 +177,18 @@ export default class PerformanceController extends BaseController<BackendProvide
       validators: [],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const performance = await Performance.findOne({ _id: req.params.pid }, { relations: ['host_info'] });
-        const performanceHostInfo = performance.host_info;
+        const { stream } = await Performance.findOne({ _id: req.params.pid }, { relations: ['stream'] });
 
         // Host_info eager loads signing_key, which is very convenient usually
         // but we do not wanna send keys and such over the wire
-        delete performanceHostInfo.signing_key;
-        return performanceHostInfo as IPerformanceHostInfo;
+        return {
+          stream_key: stream.meta.stream_key,
+          signing_key: {
+            _id: stream.signing_key._id,
+            created_at: stream.signing_key.created_at,
+            mux_key_id: stream.signing_key.mux_key_id
+          }
+        };
       }
     };
   }
@@ -363,7 +377,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         if (!req.session.user?._id) return tickets.filter(t => t.is_visible).map(t => t.toStub());
 
         // Check user is part of host of which this performance was created by, if not filter hidden tickets
-        const hostId = await idFinderStrategies.findHostIdFromPerformanceId(req, this.providers);
+        const hostId = await IdFinderStrat.findHostIdFromPerformanceId(req, this.providers);
         const [isMemberOfHost] = await AuthStrat.isMemberOfHost(() => hostId)(req, this.providers);
         if (!isMemberOfHost) return tickets.filter(t => t.is_visible).map(t => t.toStub());
 
@@ -458,7 +472,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         await this.ORM.createQueryBuilder()
           .update(Ticket)
           .set({ is_quantity_visible: req.body.is_quantity_visible })
-          .where("performance__id = :pid", { pid: req.params.pid })
+          .where('performance__id = :pid', { pid: req.params.pid })
           .execute();
       }
     };

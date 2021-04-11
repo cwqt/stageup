@@ -8,6 +8,7 @@ export * from './common/subscription.interface';
 export * from './common/environments.interface';
 export * from './common/invoice.interface';
 export * from './common/querying.interface';
+export * from './common/sse.interface';
 
 export * from './hosts/host.interface';
 export * from './hosts/host-onboarding.interface';

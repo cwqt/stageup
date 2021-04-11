@@ -66,11 +66,8 @@ export class Ticket extends BaseEntity implements ITicket {
       is_quantity_visible: this.is_quantity_visible,
       quantity_remaining:
         // hide ticket quantities other than those that are sold out
-        (this.quantity_remaining = this.is_quantity_visible == false
-          ? this.quantity_remaining == 0
-            ? 0
-            : null
-          : this.quantity_remaining)
+        (this.quantity_remaining =
+          this.is_quantity_visible == false ? (this.quantity_remaining == 0 ? 0 : null) : this.quantity_remaining)
     };
   }
 

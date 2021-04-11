@@ -2,8 +2,11 @@ import { IHostStub } from '../hosts/host.interface';
 import { ISigningKey } from './signing-key.interface';
 
 import { Genre } from './genres.interface';
-import { DtoAccessToken } from './access-token.interface';
+import { DtoAccessToken, JwtAccessToken } from './access-token.interface';
 import { ITicketStub } from './ticket.interface';
+import { AssetType, IAsset } from '../common/asset.interface';
+import { IEnvelopedData } from '../common/envelope.interface';
+import { LiveStreamState } from '../3rd-party/mux.interface';
 
 export enum Visibility {
   Public = 'public',
@@ -16,17 +19,18 @@ export interface IPerformanceStub {
   description?: string; // description of performance
   average_rating: number; // average rating across all ratings
   views: number; // total user view count
-  playback_id: string; // address to view
   created_at: number;
+  stream: { state: LiveStreamState; location: IAsset<AssetType.LiveStream>['location'] };
 }
 
 export interface IPerformance extends IPerformanceStub {
   visibility: Visibility;
   premiere_date?: number; // when the performance is ready to be streamed
-  state: PerformanceState; // status of stream
   genre: Genre;
   tickets: ITicketStub[];
 }
+
+export type DtoPerformance = IEnvelopedData<IPerformance, { has_purchased: boolean; token: JwtAccessToken }>;
 
 // data transfer object
 export type DtoCreatePerformance = Pick<Required<IPerformance>, 'name' | 'premiere_date' | 'description' | 'genre'>;
@@ -40,14 +44,4 @@ export interface IPerformanceHostInfo {
 export interface IPerformanceUserInfo {
   access_token: DtoAccessToken;
   has_liked?: boolean;
-}
-
-export enum PerformanceState {
-  //https://docs.mux.com/docs/live-streaming
-  Connected = 'video.live_stream.connected',
-  Disconnected = 'video.live_stream.disconnected',
-  Recording = 'video.live_stream.recording',
-  Active = 'video.live_stream.active',
-  Idle = 'video.live_stream.idle',
-  StreamCompleted = 'video.asset.live_stream_completed'
 }

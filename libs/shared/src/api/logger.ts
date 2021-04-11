@@ -1,6 +1,7 @@
 import { createLogger, transports, format } from 'winston';
+import colors = require('colors');
 
-export const apiLogger = (service: string, formatter?:(value:string) => string) => {
+export const apiLogger = (service: string, color?: string, formatter?: (value: string) => string) => {
   const logger = createLogger({
     level: 'silly',
     format: format.json(),
@@ -28,8 +29,8 @@ export const apiLogger = (service: string, formatter?:(value:string) => string) 
         }),
         format.printf(info => {
           const message = info.message
-            ? `[${info.level}]: ${info.message}${info.stack ? '\n' + info.stack : ''}`
-            : '[Winston]: No error message given';
+            ? `${clr(service, color)} [${info.level}]: ${info.message}${info.stack ? '\n' + info.stack : ''}`
+            : `${clr(service, color)} No error message given`;
 
           return formatter ? formatter(message) : message;
         })
@@ -45,3 +46,5 @@ export const apiLogger = (service: string, formatter?:(value:string) => string) 
     }
   };
 };
+
+const clr = (str, color) => colors[color || 'gray'](str + ' '.repeat(8).slice(str.length - 8) + ' |');

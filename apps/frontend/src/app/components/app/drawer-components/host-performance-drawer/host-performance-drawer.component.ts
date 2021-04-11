@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IEnvelopedData, IHostStub, IPerformance, IPerformanceStub, IPerformanceUserInfo } from '@core/interfaces';
+import { DtoPerformance, IHostStub } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { DrawerService } from 'apps/frontend/src/app/services/drawer.service';
@@ -12,16 +12,20 @@ import { DrawerService } from 'apps/frontend/src/app/services/drawer.service';
 export class HostPerformanceDrawerComponent implements OnInit {
   data: {
     host: IHostStub;
-    performance: ICacheable<IEnvelopedData<IPerformance, IPerformanceUserInfo>>;
+    performance: ICacheable<DtoPerformance>;
   };
 
-  constructor(private drawerService: DrawerService, private baseAppService:BaseAppService) {}
+  constructor(private drawerService: DrawerService, private baseAppService: BaseAppService) {}
 
-  get performance() { return this.data?.performance.data?.data }
-  get host() { return this.data?.host }
+  get performance() {
+    return this.data?.performance.data?.data;
+  }
+  get host() {
+    return this.data?.host;
+  }
 
   ngOnInit(): void {
-    this.drawerService.$drawerData.subscribe(d => this.data = d?.data)
+    this.drawerService.$drawerData.subscribe(d => (this.data = d?.data));
   }
 
   gotoPerformancesList() {

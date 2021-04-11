@@ -9,7 +9,8 @@ import {
   IUserHostInfo as IUHInfo,
   IEnvelopedData as IE,
   IMyself,
-  DtoAccessToken as DtoAT,
+  DtoPerformance,
+  JwtAccessToken as JwtAT,
   IHostOnboarding as IHOnboarding,
   IOnboardingStep,
   IAddress,
@@ -47,10 +48,10 @@ router.get      <IMyself>               ("/myself",                             
 router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
 router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
 router.get      <IE<IUserInvoice[]>>    ("/myself/invoices",                          Myself.readInvoices());
+// router.get      <IFeed>                  ("/myself/feed",                             Myself.readFeed());
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providerMap, middlewares);
-// router.get      <void>                  ("/feed",                                     Users.readUserFeed());
 router.post     <IMyself["user"]>       ("/users",                                    Users.createUser());
 router.post     <void>                  ("/users/logout",                             Users.logoutUser());
 router.post     <IUser>                 ("/users/login",                              Users.loginUser());
@@ -67,7 +68,6 @@ router.get      <IAddress[]>            ("/users/:uid/addresses",               
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
 router.put      <IAddress>              ("/users/:uid/addresses/:aid",                Users.updateAddress());
 router.delete   <void>                  ("/users/:uid/addresses/:aid",                Users.deleteAddress());
-// router.get      <IPurchase[]>           ("/users/:uid/purchases",                     Users.getPurchases());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providerMap, middlewares);
@@ -99,7 +99,7 @@ router.post     <void>                  ("/hosts/:hid/invoices/export-csv",     
 const Perfs = new PerfController(providerMap, middlewares);
 router.post     <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance());
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances());
-router.get      <IE<IPerf, DtoAT>>      ("/performances/:pid",                        Perfs.readPerformance());
+router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance());
 router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
@@ -139,6 +139,7 @@ router.post     <void>                   ("/drop",                              
 router.get      <IHost>                  ("/verify-host/:hid",                        Misc.verifyHost());
 router.post     <void>                   ("/accept-invite/:uid",                      Misc.acceptHostInvite());
 router.get      <void>                   ("/sendgrid",                                Misc.testSendGrid());
+router.get      <void>                   ("/utils/performances/:pid/state",           Misc.setPerformanceStreamState())
 
 // SEARCH ---------------------------------------------------------------------------------------------------------------
 const Search = new SearchController(providerMap, middlewares);

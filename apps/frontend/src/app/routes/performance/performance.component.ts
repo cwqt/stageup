@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DtoAccessToken, IEnvelopedData, IPerformance, IPerformanceUserInfo } from '@core/interfaces';
+import { DtoAccessToken, DtoPerformance, IEnvelopedData, IPerformance, IPerformanceUserInfo, JwtAccessToken } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -11,15 +11,13 @@ import { MyselfService } from '../../services/myself.service';
   templateUrl: './performance.component.html',
   styleUrls: ['./performance.component.scss']
 })
-export class PerformanceComponent implements OnInit, OnDestroy {
-  performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>> = createICacheable();
+export class PerformanceComponent implements OnInit {
+  performance: ICacheable<DtoPerformance> = createICacheable();
   userPerformanceInfo: ICacheable<IPerformanceUserInfo> = createICacheable();
 
   hasAccess: boolean;
-  isWatching: boolean;
 
   constructor(
-    private myselfService:MyselfService,
     private performanceService: PerformanceService,
     private route: ActivatedRoute,
     private appService: BaseAppService
@@ -34,16 +32,6 @@ export class PerformanceComponent implements OnInit, OnDestroy {
     await this.getPerformance();
   }
 
-  onRouterOutletActivate(event) {
-    this.isWatching = true;
-    this.myselfService.$currentlyWatching.next(this.performance.data);
-  }
-
-  onRouterOutletDeactivate($event) {
-    this.isWatching = false;
-    this.myselfService.$currentlyWatching.next(null);
-  }
-
   async getPerformance() {
     return cachize(this.performanceService
       .readPerformance(this.appService.getParam(RouteParam.PerformanceId)), this.performance)
@@ -55,9 +43,5 @@ export class PerformanceComponent implements OnInit, OnDestroy {
 
   gotoFeed() {
     this.appService.navigateTo(`/`);
-  }
-
-  ngOnDestroy() {
-    this.myselfService.$currentlyWatching.next(null);
   }
 }

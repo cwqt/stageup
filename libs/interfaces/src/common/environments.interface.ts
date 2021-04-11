@@ -14,6 +14,7 @@ export interface IBackendEnvironment {
 
 export interface IFrontendEnvironment {
   apiUrl:string;
+  sseUrl:string;
   frontendUrl:string;
   environment: Environment;
   stripePublicKey: string;

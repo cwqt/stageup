@@ -3,6 +3,7 @@ import { IPerformanceStub } from '../performances/performance.interface';
 import { IContactInfo } from '../users/person.interface';
 import { IAddress } from '../users/address.interface';
 import { NUUID } from '../common/fp.interface';
+import { Except } from 'type-fest';
 
 
 export interface IHostStub {
@@ -18,7 +19,6 @@ export interface IHostStub {
 export interface IHost extends IHostStub {
   members_info: IUserHostInfo[];
   social_info: ISocialInfo;
-  performances: IPerformanceStub[];
   created_at: number;
   is_onboarded: boolean;
 }

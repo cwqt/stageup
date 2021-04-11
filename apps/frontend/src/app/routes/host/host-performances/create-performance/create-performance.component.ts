@@ -84,7 +84,9 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           name: v.name,
           description: v.description,
           genre: v.genre,
-          premiere_date: new Date(v.date.premiere_date).getTime() / 1000 + v.date.premiere_time
+          premiere_date: v.date.premiere_date
+            ? new Date(v.date.premiere_date).getTime() / 1000 + v.date.premiere_time
+            : null
         })
       }
     };

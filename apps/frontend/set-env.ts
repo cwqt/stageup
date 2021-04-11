@@ -12,6 +12,7 @@ if (environment == 'development' || environment == 'testing') envConfigFile += `
 
 envConfigFile += `export const environment = {
    apiUrl: '${process.env.API_URL}',
+   sseUrl: '${process.env.SSE_URL}',
    frontendUrl: '${process.env.FE_URL}',
    environment: '${environment}',
    stripePublicKey: '${process.env.STRIPE_PUBLIC_KEY}',

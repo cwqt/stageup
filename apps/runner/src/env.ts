@@ -1,7 +1,7 @@
 // https://stackoverflow.com/a/59805161/8526764
 const TRUE_ENV = process.env['NODE' + '_ENV'];
 /* eslint @typescript-eslint/no-var-requires: "off" */
-require('dotenv-flow').config({ node_env: TRUE_ENV });
+require('dotenv-flow').config({ node_env: TRUE_ENV, silent: true });
 
 import { Environment } from '@core/interfaces';
 import {

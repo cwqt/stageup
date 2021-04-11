@@ -1,6 +1,7 @@
 import { IHost, IPerformance, IUser, CurrencyCode, Genre } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
+import { timeout } from '@core/shared/helpers';
 
 jest.setTimeout(30000); // 30 sec timeout to create 5 performancess
 
@@ -31,6 +32,7 @@ describe('As a user, I want to be able to paginate result of a search', () => {
       });
 
       performances.push(perf);
+      await timeout(1000);
     }
   });
 

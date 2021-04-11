@@ -1,13 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import {
-  DtoAccessToken,
-  IEnvelopedData,
-  IHost,
-  IPerformance,
-  IPerformanceHostInfo,
-} from '@core/interfaces';
+import { DtoPerformance, IHost, IPerformanceHostInfo } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -25,19 +19,19 @@ import { SharePerformanceDialogComponent } from './share-performance-dialog/shar
 export class HostPerformanceComponent implements OnInit, OnDestroy {
   host: IHost; // injected from parent router-outlet
   performanceId: string;
-  performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>> = createICacheable();
+  performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
 
   onChildLoaded(component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent) {
     component.performanceId = this.performanceId;
     component.performanceHostInfo = this.performanceHostInfo;
-    component.performance = this.performance
+    component.performance = this.performance;
     component.host = this.host;
-    }
+  }
 
-
-  get performanceData() { return this.performance.data?.data }
-
+  get performanceData() {
+    return this.performance.data?.data;
+  }
 
   constructor(
     private performanceService: PerformanceService,

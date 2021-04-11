@@ -11,6 +11,8 @@ export * from './validate';
 export * from './router';
 export * from './typeorm-patches';
 
+export * from './pubsub';
+
 export { default as Auth } from './authorisation';
 export { default as Validators } from './validate'
 export { default as Router } from './router';
@@ -25,6 +27,8 @@ export { ISendGridProviderConfig } from './data-client/providers/sendgrid.provid
 export { IRedisProviderConfig } from './data-client/providers/redis.provider'
 export { IStoreProviderConfig } from './data-client/providers/store.provider'
 export { IStripeProviderConfig } from './data-client/providers/stripe.provider'
+export { ISSEProviderConfig } from './data-client/providers/sse.provider';
+export { IPubSubProviderConfig } from './data-client/providers/pub-sub.provider';
 
 export * from './entities';
 export const PG_MODELS = require("./entities");

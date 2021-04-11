@@ -1,13 +1,12 @@
-import * as rax from 'retry-axios';
 import { Auth, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/shared/api';
-
-import Env from './env';
-import routes from './routes';
+import axios from 'axios';
+import { BullMQAdapter, router, setQueues } from 'bull-board';
+import * as rax from 'retry-axios';
 import { log, stream } from './common/logger';
 import Queues from './common/queues';
-import { setQueues, BullMQAdapter, router } from 'bull-board';
-import axios from 'axios';
-import { Environment } from '@core/interfaces';
+import Env from './env';
+import routes from './routes';
+
 
 export const api = axios.create({
   baseURL: Env.API_URL,
@@ -20,6 +19,7 @@ rax.attach(api);
 export interface RunnerProviderMap extends ProviderMap {
   redis: InstanceType<typeof Providers.Redis>;
   sendgrid: InstanceType<typeof Providers.SendGrid>;
+  torm: InstanceType<typeof Providers.Postgres>;
 }
 
 Register<RunnerProviderMap>({
@@ -50,13 +50,6 @@ Register<RunnerProviderMap>({
       username: Env.SENDGRID.username,
       api_key: Env.SENDGRID.api_key,
       enabled: Env.SENDGRID.enabled
-    }),
-    s3: new Providers.S3({
-      s3_access_key_id: Env.AWS.s3_access_key_id,
-      s3_access_secret_key: Env.AWS.s3_access_secret_key,
-      s3_bucket_name: Env.AWS.s3_bucket_name,
-      s3_url: Env.AWS.s3_url,
-      s3_region: Env.AWS.s3_region
     })
   }
 })(async (app, pm) => {
@@ -84,8 +77,9 @@ Register<RunnerProviderMap>({
     app.on('close', () => Queues.close(queues));
 
     // Setup bull-board UI
-    setQueues(Object.values(queues).map(q => new BullMQAdapter(q.queue)));
-    app.use('/admin/queues', router);
+    // FIXME: https://github.com/felixmosh/bull-board/issues/120
+    // setQueues(Object.values(queues).map(q => new BullMQAdapter(q.queue)));
+    // app.use('/admin/queues', router);
 
     return Router(pm, Auth.none, { redis: pm.redis.connection }, log)(routes(queues));
   } catch (error) {

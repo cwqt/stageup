@@ -1,44 +1,56 @@
-export enum MUXHook {
-  VideoAssetCreated = 'video.asset.created',
-  VideoAssetReady = 'video.asset.ready',
-  VideoAssetErrored = 'video.asset.errored',
-  VideoAssetUpdated = 'video.asset.updated',
-  VideoAssetDeleted = 'video.asset.deleted',
-
-  StaticRendReady = 'video.asset.static_renditions.ready',
-  StaticRendPreparing = 'video.asset.static_renditions.preparing',
-  StaticRendDeleted = 'video.asset.static_renditions.deleted',
-  StaticRendErrored = 'video.asset.static_renditions.errored',
-
-  MasterReady = 'video.asset.master.ready',
-  MasterPreparing = 'video.asset.master.preparing',
-  MasterDeleted = 'video.asset.master.deleted',
-  MasterErrored = 'video.asset.master.errored',
-
-  TrackCreated = 'video.asset.track.created',
-  TrackReady = 'video.asset.track.ready',
-  TrackErrored = 'video.asset.track.errored',
-  TrackDeleted = 'video.asset.track.deleted',
-
-  UploadAssetCreated = 'video.upload.asset_created',
-  UploadCancelled = 'video.upload.cancelled',
-  UploadCreated = 'video.upload.created',
-  UploadErrored = 'video.upload.errored',
-
-  StreamCompleted = 'video.asset.live_stream_completed',
-  StreamCreated = 'video.live_stream.created',
-  StreamConnected = 'video.live_stream.connected',
-  StreamRecording = 'video.live_stream.recording',
-  StreamActive = 'video.live_stream.active',
-  StreamDisconnected = 'video.live_stream.disconnected',
-  StreamIdle = 'video.live_stream.idle',
-  StreamUpdated = 'video.live_stream.updated',
-  StreamEnabled = 'video.live_stream.enabled',
-  StreamDisabled = 'video.live_stream.deleted',
+export enum VideoAssetState {
+  Created = 'video.asset.created',
+  Ready = 'video.asset.ready',
+  Errored = 'video.asset.errored',
+  Updated = 'video.asset.updated',
+  Deleted = 'video.asset.deleted'
 }
 
-export interface IMUXHookResponse<T=any> {
-  type: MUXHook;
+export enum StaticRendState {
+  Ready = 'video.asset.static_renditions.ready',
+  Preparing = 'video.asset.static_renditions.preparing',
+  Deleted = 'video.asset.static_renditions.deleted',
+  Errored = 'video.asset.static_renditions.errored'
+}
+
+export enum MasterState {
+  Ready = 'video.asset.master.ready',
+  Preparing = 'video.asset.master.preparing',
+  Deleted = 'video.asset.master.deleted',
+  Errored = 'video.asset.master.errored'
+}
+
+export enum TrackState {
+  Created = 'video.asset.track.created',
+  Ready = 'video.asset.track.ready',
+  Errored = 'video.asset.track.errored',
+  Deleted = 'video.asset.track.deleted'
+}
+
+export enum VideoUploadState {
+  AssetCreated = 'video.upload.asset_created',
+  Cancelled = 'video.upload.cancelled',
+  Created = 'video.upload.created',
+  Errored = 'video.upload.errored'
+}
+
+export enum LiveStreamState {
+  Completed = 'video.asset.live_stream_completed',
+  Created = 'video.live_stream.created',
+  Connected = 'video.live_stream.connected',
+  Recording = 'video.live_stream.recording',
+  Active = 'video.live_stream.active',
+  Disconnected = 'video.live_stream.disconnected',
+  Idle = 'video.live_stream.idle',
+  Updated = 'video.live_stream.updated',
+  Enabled = 'video.live_stream.enabled',
+  Disabled = 'video.live_stream.deleted'
+}
+
+export type MuxHook = LiveStreamState | VideoUploadState | TrackState | MasterState | StaticRendState | VideoAssetState;
+
+export interface IMUXHookResponse<T = any> {
+  type: MuxHook;
   created_at: Date;
   object: {
     type: 'asset' | 'track' | 'upload' | 'live' | 'simulcast-target';

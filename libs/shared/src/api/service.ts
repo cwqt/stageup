@@ -27,8 +27,7 @@ export interface IServiceConfig<T extends ProviderMap> {
 }
 
 export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
-  // console.clear();
-  console.log(`\nRegistering service '${config.name}', running in env: \u001B[04m${config.environment}\u001B[0m\n`);
+  config.logger.log("info",`Registering in \u001B[1m${config.environment}\u001B[0m`);
 
   let server: http.Server;
   const app = express();
@@ -45,10 +44,10 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
   app.use(helmet(config.options?.helmet || {}));
   app.use(morgan('tiny', { stream: config.stream }));
 
-  return async (Router: (a: typeof app, providerMap: T) => Promise<AsyncRouter<T>>): Promise<http.Server> => {
+  return async (Router: (a: typeof app, providerMap: T, config?:IServiceConfig<T>) => Promise<AsyncRouter<T>>): Promise<http.Server> => {
     try {
       const providers = await DataClient.connect(config.provider_map, config.logger);
-      const router = await Router(app, providers);
+      const router = await Router(app, providers, config);
       app.use(config.endpoint ? `/${config.endpoint}` : '', router.router);
 
       // Catch 404 errors & provide a top-level error handler
@@ -56,7 +55,7 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
       app.use(globalErrorHandler(config.logger));
 
       server = app.listen(config.port, () =>
-        config.logger.info(`\u001B[1m${config.name} listening on ${config.port}\u001B[0m`)
+        config.logger.info(`\u001B[1m${config.name} listening on ${config.port}\u001B[0m at /${config.endpoint}`)
       );
 
       process.on('SIGTERM', gracefulExit(server, providers, config.logger));
@@ -66,11 +65,12 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
       return server;
     } catch (error) {
       config.logger.error(error);
+      console.error(error);
     }
   };
 };
 
-function gracefulExit<T>(server: http.Server, providerMap: ProviderMap, logger: Logger) {
+function gracefulExit(server: http.Server, providerMap: ProviderMap, logger: Logger) {
   return error => {
     logger.error('Termination requested, closing all connections');
     server.close();

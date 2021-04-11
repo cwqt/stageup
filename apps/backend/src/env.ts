@@ -1,7 +1,7 @@
 // https://stackoverflow.com/a/59805161/8526764
 const TRUE_ENV = process.env['NODE' + '_ENV'];
 /* eslint @typescript-eslint/no-var-requires: "off" */
-require('dotenv-flow').config({ node_env: TRUE_ENV });
+require('dotenv-flow').config({ node_env: TRUE_ENV, silent: true });
 
 import { isEnv } from '@core/shared/helpers';
 import { Environment } from '@core/interfaces';
@@ -13,7 +13,8 @@ import {
   IAWS3ProviderConfig,
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
-  IStripeProviderConfig
+  IStripeProviderConfig,
+  IPubSubProviderConfig
 } from '@core/shared/api';
 
 type Envify<T> = { [index: string]: any };
@@ -38,6 +39,7 @@ interface IEnvironment {
   REDIS: Envify<IRedisProviderConfig>;
   STORE: Envify<IStoreProviderConfig>;
   STRIPE: Envify<IStripeProviderConfig>;
+  PUB_SUB: Envify<IPubSubProviderConfig>;
   INFLUX: Envify<IInfluxProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   isEnv: (env: Environment | Environment[]) => boolean;
@@ -64,7 +66,6 @@ const Env: IEnvironment = {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
     HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE,
-    IMAGE_API_ENDPOINT: process.env.MUX_IMAGE_API_ENDPOINT
   },
   PG: {
     USERNAME: process.env.POSTGRES_USER,
@@ -87,6 +88,10 @@ const Env: IEnvironment = {
     PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
     PRIVATE_KEY: process.env.STRIPE_PRIVATE_KEY,
     HOOK_SIGNATURE: process.env.STRIPE_HOOK_SIGNATURE
+  },
+  PUB_SUB: {
+    PROJECT_ID: process.env.PUB_SUB_PROJECT_ID,
+    PORT: parseInt(process.env.PUB_SUB_PORT)
   },
   AWS: {
     S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,

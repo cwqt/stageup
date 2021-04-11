@@ -100,7 +100,7 @@
               <p>Purchase confirmation will arrive at <b>{{ purchaserEmailAddress }}</b> shortly.</p>
 
               <div class="flex ml-auto">
-                <ui-button size="m" kind="primary" class="mr-2" *ngIf="performance.state == 'video.live_stream.active'">Watch Now</ui-button>
+                <ui-button size="m" kind="primary" class="mr-2" *ngIf="performance.stream.state == 'video.live_stream.active'">Watch Now</ui-button>
                 <ui-button size="m" kind="primary" (click)="closeDialog()" class="mr-2">Watch Later</ui-button>
                 <ui-button size="m" kind="secondary" (click)="closeDialog()">Close</ui-button>
               </div>

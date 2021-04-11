@@ -69,8 +69,7 @@ const LOGGED_IN_ROUTES: Routes = [
   },
   {
     path: `performances/:${RP.PerformanceId}`,
-    component: PerformanceComponent,
-    children: [{ path: 'watch', component: PerformanceWatchComponent }]
+    component: PerformanceComponent
   },
   { path: `user/:${RP.UserId}`, component: ProfileComponent}, 
   { path: `verified`, component: VerifiedComponent },

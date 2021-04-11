@@ -6,6 +6,8 @@ import { enumToValues, timestamp, uuid } from '@core/shared/helpers';
 import Stripe from 'stripe';
 import { Ticket } from '../performances/ticket.entity';
 
+// export type Purchasable = Ticket | Subscription | Whatever;
+
 @Entity()
 export class Invoice extends BaseEntity implements IInvoice {
   @PrimaryColumn() _id: string;
@@ -16,7 +18,7 @@ export class Invoice extends BaseEntity implements IInvoice {
   @Column() purchased_at: number;
   @Column('bigint', { nullable: true }) amount: number;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
-  @Column('enum', { enum: PaymentStatus }) status: PaymentStatus;
+  @Column('enum', { enum: PaymentStatus, nullable: true }) status: PaymentStatus;
 
   @Column() stripe_charge_id: string;
   @Column() stripe_receipt_url: string;
@@ -24,7 +26,10 @@ export class Invoice extends BaseEntity implements IInvoice {
   @ManyToOne(() => User, user => user.invoices) user: User;
   @ManyToOne(() => Host, host => host.invoices) host?: Host; // purchase was related to a host
 
-  @ManyToOne(() => Ticket) ticket: Ticket;
+  // Exclusive Belongs To (AKA Exclusive Arc) polymorphic relation
+  @ManyToOne(() => Ticket)        ticket?: Ticket;
+  // @ManyToOne(() => Subscription)  subscription?: Subscription;
+  // @ManyToOne(() => Patronage)     patronage?: Patronage;
 
   constructor(user: User, amount: number, currency: CurrencyCode, charge: Stripe.Charge) {
     super();
@@ -60,7 +65,7 @@ export class Invoice extends BaseEntity implements IInvoice {
       status: this.status
     };
   }
-  
+
   toHostInvoice(): Required<IHostInvoice> {
     return {
       invoice_id: this._id,

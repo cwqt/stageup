@@ -16,7 +16,7 @@ export const Y = <A extends any[], R>(f: (g: (...a: A) => R) => (...a: A) => R):
   ((m: M<A, R>) => f((...x) => m(m)(...x)))((m: M<A, R>) => f((...x) => m(m)(...x)));
 
 type M<A extends any[], R> = (f: M<A, R>) => (...a: A) => R;
- 
+
 /**
  * @description in-place object array sorter
  */
@@ -40,6 +40,17 @@ export const pick = <T extends object, U extends keyof T>(obj: T, paths: Array<U
   }
   return ret;
 };
+
+
+/**
+// @description Lazy loaded entity
+*/
+export type Lazy<T> = Promise<T> | T;
+
+
+const comp = (g, f) => x => g(f(x)) // "g of f of x"
+const identity = (x) => x
+export const compose = (...all) => all.reduce(comp, identity);
 
 // Typed nested object dot accessor -----------------------------------------------------
 // FIXME: angular 11.1.0 supports ts 4.1 which is whats required for template string types

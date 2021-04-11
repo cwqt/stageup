@@ -31,3 +31,24 @@ export type DtoAccessToken = Except<IAccessToken, "user" | "invoice"> & {
   invoice?: IInvoice["_id"];
   performance: IPerformance["_id"];
 }
+
+export type JwtAccessToken = IAccessToken["access_token"];
+export interface DecodedJwtAccessToken {
+  alg: "RS256";
+  type: "JWT";
+  kid: string;
+
+  exp: number;
+  aud: string;
+  sub: string
+}
+// {
+//   "alg": "RS256",
+//   "typ": "JWT",
+//   "kid": "ZeGL1YwICaTEMDS202Q5TjgNRduQZQaJDwspvJEMHml8"
+// }
+// {
+//   "exp": 1618403585,
+//   "aud": "v",
+//   "sub": "yji4pRyz92kZHygWVkcd01Wk2b2G0238lesEcBS4JGA00E"
+// }

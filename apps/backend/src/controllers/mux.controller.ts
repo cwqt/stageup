@@ -1,38 +1,85 @@
-import { RedisClient } from 'redis';
+import { ErrCode, IMUXHookResponse, LiveStreamState, MuxHook } from '@core/interfaces';
+import {
+  Performance,
+  Asset,
+  BaseArguments,
+  BaseController,
+  getCheck,
+  IControllerEndpoint,
+  TopicType
+} from '@core/shared/api';
+import { timeout } from "@core/shared/helpers"
+import { LiveStream, Webhooks } from '@mux/mux-node';
 import { MD5 } from 'object-hash';
-import { MUXHook, IMUXHookResponse, ErrCode, HTTP } from '@core/interfaces';
-import { AuthStrategy, ErrorHandler, BaseArguments, IControllerEndpoint, BaseController } from '@core/shared/api';
-import { Webhooks, LiveStream } from '@mux/mux-node';
-
-import Env from '../env';
-import { log } from '../common/logger';
-import AuthStrat from '../common/authorisation';
+import { RedisClient } from 'redis';
 import { BackendProviderMap } from '..';
+import { log } from '../common/logger';
+import Env from '../env';
 
 export default class MUXController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
-    [index in MUXHook]?: (data: IMUXHookResponse, pm: BackendProviderMap) => Promise<void>;
+    [index in MuxHook]?: (data: IMUXHookResponse, pm: BackendProviderMap) => Promise<void>;
   };
 
   constructor(...args: BaseArguments<BackendProviderMap>) {
     super(...args);
     this.hookMap = {
-      [MUXHook.StreamCreated]: this.streamCreated,
-      [MUXHook.StreamActive]: this.streamActive,
-      [MUXHook.StreamIdle]: this.StreamIdle
+      [LiveStreamState.Created]: this.streamCreated.bind(this),
+      [LiveStreamState.Idle]: this.streamIdle.bind(this),
+      [LiveStreamState.Active]: this.streamActive.bind(this),
+      [LiveStreamState.Disconnected]: this.streamDisconnected.bind(this),
+      [LiveStreamState.Completed]: this.streamCompleted.bind(this)
     };
   }
 
+  async setPerformanceState(objectId: string, state: LiveStreamState) {
+    const performance = await getCheck(
+      Performance.findOne({
+        where: {
+          stream: {
+            asset_identifier: objectId
+          }
+        },
+        select: {
+          _id: true,
+          stream: {
+            _id: true,
+            asset_identifier: true
+          }
+        }
+      })
+    );
+
+    log.debug(`MUX --> found ${performance._id} ${objectId} ${state}`);
+    await this.providers.pubsub.publish(TopicType.StreamStateChanged, {
+      performance_id: performance._id,
+      state: state
+    });
+  }
+
   async streamCreated(data: IMUXHookResponse<LiveStream>) {
-    console.log(data);
+    // FIXME: race condition occurs where the live stream is created in the Performance.setup()
+    // but the performance isn't actually saved in the database at this point because
+    // the transaction hasn't completed, so put a timeout of 500ms
+    // we'll need to revisit this at some point...
+    await timeout(500);
+    await this.setPerformanceState(data.object.id, LiveStreamState.Idle);
+  }
+
+  async streamIdle(data: IMUXHookResponse<LiveStream>) {
+    await this.setPerformanceState(data.object.id, LiveStreamState.Idle);
   }
 
   async streamActive(data: IMUXHookResponse<LiveStream>) {
-    console.log(data);
+    await this.setPerformanceState(data.object.id, LiveStreamState.Active);
   }
 
-  async StreamIdle(data: IMUXHookResponse<LiveStream>) {
-    console.log(data);
+  async streamDisconnected(data: IMUXHookResponse<LiveStream>) {
+    await this.setPerformanceState(data.object.id, LiveStreamState.Disconnected);
+  }
+
+  async streamCompleted(data: IMUXHookResponse<LiveStream>) {
+    await this.setPerformanceState(data.object.id, LiveStreamState.Completed);
   }
 
   handleHook(): IControllerEndpoint<void> {
@@ -66,21 +113,17 @@ export default class MUXController extends BaseController<BackendProviderMap> {
         // for acknowledged handling, hook then handled by a separate micro-service
         log.http(`Received MUX hook: ${data.type}`);
 
-        try {
-          // Check if hook has already been handled by looking in the Redis store
-          if (
-            data.attempts.length > 0 &&
-            (await this.checkPreviouslyHandledHook(req.body, this.providers.redis.connection))
-          ) {
-            log.info('Duplicate MUX hook');
-            return;
-          }
-
-          await (this.hookMap[data.type] || this.unsupportedHookHandler)(req.body, this.providers);
-          await this.setHookHandled(req.body, this.providers.redis.connection);
-        } catch (error) {
-          throw new ErrorHandler(HTTP.ServerError, error);
+        // Check if hook has already been handled by looking in the Redis store
+        if (
+          data.attempts.length > 0 &&
+          (await this.checkPreviouslyHandledHook(req.body, this.providers.redis.connection))
+        ) {
+          log.info('Duplicate MUX hook');
+          return;
         }
+
+        await (this.hookMap[data.type] || this.unsupportedHookHandler)(req.body, this.providers);
+        await this.setHookHandled(req.body, this.providers.redis.connection);
       }
     };
   }

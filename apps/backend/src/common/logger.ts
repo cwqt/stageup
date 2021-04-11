@@ -6,6 +6,6 @@ import Env from "../env";
 import uwuifier from "uwuify";
 const uwuify = new uwuifier();
 
-const logger = apiLogger("backend", Env.UWU_MODE ? uwuify.uwuify.bind(uwuify) : null);
+const logger = apiLogger("backend", "blue", Env.UWU_MODE ? uwuify.uwuify.bind(uwuify) : null);
 
 export const { log, stream } = logger;

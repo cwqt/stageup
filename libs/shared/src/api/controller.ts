@@ -1,4 +1,4 @@
-import { Request, NextFunction, RequestHandler } from 'express-async-router';
+import { Request, Response, RequestHandler } from 'express-async-router';
 import { IResLocals } from './router';
 import { AuthStrategy } from './authorisation';
 import { Middlewares } from './middleware';
@@ -10,6 +10,7 @@ export interface IControllerEndpoint<T> {
   code?: HTTP;
   validators?: Array<(request: Request) => Promise<IFormErrorField[]>>;
   controller: (request: Request, locals: IResLocals) => Promise<T>;
+  handler?:(res: Response, data: T) => void
   preMiddlewares?: RequestHandler[];
   postMiddlewares?: RequestHandler[];
   authStrategy: AuthStrategy;

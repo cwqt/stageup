@@ -1,17 +1,9 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
-import {
-  DtoAccessToken,
-  IEnvelopedData,
-  IHost,
-  IPerformance,
-  IPerformanceHostInfo,
-  Visibility
-} from '@core/interfaces';
+import { DtoPerformance, IHost, IPerformanceHostInfo, Visibility } from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { IUiFieldSelectOptions } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
-import { IGraphNode } from 'apps/frontend/src/app/ui-lib/input/input.component';
 
 @Component({
   selector: 'app-host-performance-details',
@@ -22,7 +14,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
   // Injected from parent router outlet
   performanceId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
-  performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>>;
+  performance: ICacheable<DtoPerformance>;
   host: IHost;
 
   copyMessage: string = 'Copy';
@@ -46,7 +38,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  updateVisibility(value:Visibility) {
+  updateVisibility(value: Visibility) {
     cachize(
       this.performanceService.updateVisibility(this.performanceId, value),
       this.performance,

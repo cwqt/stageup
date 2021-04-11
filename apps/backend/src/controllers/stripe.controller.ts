@@ -80,7 +80,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
       relations: {
         performance: {
           host: true,
-          host_info: {
+          stream: {
             signing_key: true
           }
         }
@@ -105,7 +105,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
       // Create & sign for the user on this performance
       const token = new AccessToken(user, ticket.performance, invoice, TokenProvisioner.Purchase);
-      await token.sign(ticket.performance.host_info.signing_key);
+      await token.sign(ticket.performance.stream.signing_key);
       await txc.save(token);
 
       // Save the remaining ticket quantity

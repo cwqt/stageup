@@ -17,7 +17,7 @@
             "showCircularDependencies": false,
             "generatePackageJson": true,
             "assets": [],
-            "maxWorkers": 2,
+            "maxWorkers": 1,
             "memoryLimit": 1024
           },
           "configurations": {
@@ -41,7 +41,7 @@
           "configurations": {
             "development": {
               "buildTarget": "backend:build:development",
-              "inspect": true,
+              "inspect": false,
               "port": 7777
             },
             "testing": {
@@ -261,7 +261,7 @@
             "tsConfig": "apps/runner/tsconfig.app.json",
             "showCircularDependencies": false,
             "generatePackageJson": true,
-            "maxWorkers": 2,
+            "maxWorkers": 1,
             "memoryLimit": 1024
           },
           "configurations": {
@@ -282,7 +282,7 @@
           "configurations": {
             "development": {
               "buildTarget": "runner:build",
-              "inspect": true,
+              "inspect": false,
               "port": 7778
             },
             "testing": {
@@ -311,10 +311,75 @@
           }
         }
       }
+    },
+    "notifications": {
+      "root": "apps/notifications",
+      "sourceRoot": "apps/notifications/src",
+      "projectType": "application",
+      "prefix": "notifications",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/notifications",
+            "main": "apps/notifications/src/index.ts",
+            "tsConfig": "apps/notifications/tsconfig.app.json",
+            "showCircularDependencies": false,
+            "generatePackageJson": true,
+            "maxWorkers": 1,
+            "memoryLimit": 1024
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            },
+            "staging": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "configurations": {
+            "development": {
+              "buildTarget": "notifications:build",
+              "inspect": false,
+              "port": 7779
+            },
+            "testing": {
+              "buildTarget": "notifications:build"
+            },
+            "staging": {
+              "buildTarget": "notifications:build:staging"
+            },
+            "production": {
+              "buildTarget": "notifications:build:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/notifications/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/notifications"],
+          "options": {
+            "jestConfig": "apps/notifications/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
     "defaultCollection": "@nrwl/express"
-  },
-  "defaultProject": "runner"
+  }
 }

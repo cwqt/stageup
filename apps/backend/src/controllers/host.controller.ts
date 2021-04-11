@@ -565,6 +565,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         return await this.ORM.createQueryBuilder(Performance, 'hps')
           .innerJoinAndSelect('hps.host', 'host')
           .where('host._id = :id', { id: req.params.hid })
+          .leftJoinAndSelect("hps.stream", "stream")
           .paginate(o => o.toStub());
       }
     };
@@ -661,7 +662,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
         const provisioner = await getCheck(User.findOne({ _id: req.session.user._id }));
         const performance = await getCheck(
-          Performance.findOne({ _id: req.params.pid }, { relations: { host_info: { signing_key: true } } })
+          Performance.findOne({ _id: req.params.pid }, { relations: { stream: { signing_key: true } } })
         );
 
         // Get a list of all users by the passed in array of e-mail addresses
@@ -705,7 +706,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             .filter(u => !existingUserTokens.includes(u._id))
             .map(u =>
               new AccessToken(u, performance, provisioner, TokenProvisioner.User).sign(
-                performance.host_info.signing_key
+                performance.stream.signing_key
               )
             );
 
@@ -776,7 +777,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));
-        
+
         await Queue.enqueue({
           type: JobType.HostInvoiceCSV,
           data: {

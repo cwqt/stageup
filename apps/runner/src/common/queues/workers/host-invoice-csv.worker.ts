@@ -1,12 +1,11 @@
-import { IHostInvoice, IHostInvoiceCSVJobData, IScheduleReleaseJobData, JobType, Visibility } from '@core/interfaces';
+import { IHostInvoiceCSVJobData, JobType } from '@core/interfaces';
+import { Invoice } from '@core/shared/api';
+import { timestamp } from '@core/shared/helpers';
+import { writeToBuffer } from '@fast-csv/format';
+import { RunnerProviderMap } from 'apps/runner/src';
 import Env from 'apps/runner/src/env';
 import { Worker } from 'bullmq';
-import { api, RunnerProviderMap } from 'apps/runner/src';
-import { Invoice } from '@core/shared/api';
-
-import { writeToBuffer } from '@fast-csv/format';
 import { In } from 'typeorm';
-import { timestamp } from '@core/shared/helpers';
 
 export default (pm: RunnerProviderMap) => {
   return new Worker(
@@ -16,27 +15,28 @@ export default (pm: RunnerProviderMap) => {
 
       const invoices = await Invoice.find({
         where: { _id: In(data.invoices) },
-        relations: { ticket: { performance: true } }
+        relations: { ticket: { performance: true } },
+        select: {
+          ticket: {
+            _id: true,
+            type: true,
+            performance: {
+              _id: true,
+              name: true
+            }
+          }
+        }
       });
 
       const csv = [
-        [
-          'invoice_id',
-          'performance_name',
-          'ticket_type',
-          'purchased_at',
-          'amount',
-          'net_amount',
-          'currency',
-          'status'
-        ],
+        ['invoice_id', 'performance_name', 'ticket_type', 'purchased_at', 'amount', 'net_amount', 'currency', 'status'],
         ...invoices.map(i => [
           i._id,
           i.ticket.performance.name,
           i.ticket.type,
           i.purchased_at,
           parseInt(i.amount as any),
-          parseInt(i.amount as any),
+          parseInt(i.amount as any), // IMPORTANT: net_amount use subscription tier from invoice
           i.currency,
           i.status
         ])
@@ -53,8 +53,8 @@ export default (pm: RunnerProviderMap) => {
           {
             content: buffer,
             filename: `stageup-invoice-${timestamp()}`,
-            contentType: "text/csv",
-            contentDisposition: "attachment"
+            contentType: 'text/csv',
+            contentDisposition: 'attachment'
           }
         ]
       });

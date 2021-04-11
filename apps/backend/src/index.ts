@@ -1,12 +1,13 @@
-import 'reflect-metadata';
-import session from 'express-session';
 import { Environment } from '@core/interfaces';
 import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/shared/api';
-
-import Env from './env';
+import { Topic } from '@google-cloud/pubsub';
+import session from 'express-session';
+import 'reflect-metadata';
+import { TopicType } from '../../../libs/shared/src/api/pubsub';
 import Auth from './common/authorisation';
-import routes from './routes';
 import { log, stream } from './common/logger';
+import Env from './env';
+import routes from './routes';
 
 export interface BackendProviderMap extends ProviderMap {
   torm: InstanceType<typeof Providers.Postgres>;
@@ -16,6 +17,7 @@ export interface BackendProviderMap extends ProviderMap {
   stripe: InstanceType<typeof Providers.Stripe>;
   s3: InstanceType<typeof Providers.S3>;
   tunnel?: InstanceType<typeof Providers.LocalTunnel>;
+  pubsub: InstanceType<typeof Providers.PubSub>;
 }
 
 Register<BackendProviderMap>({
@@ -29,7 +31,6 @@ Register<BackendProviderMap>({
     mux: new Providers.Mux({
       access_token: Env.MUX.ACCESS_TOKEN,
       secret_key: Env.MUX.SECRET_KEY,
-      image_api_endpoint: Env.MUX.IMAGE_API_ENDPOINT,
       hook_signature: Env.MUX.HOOK_SIGNATURE
     }),
     torm: new Providers.Postgres(
@@ -66,6 +67,13 @@ Register<BackendProviderMap>({
       s3_url: Env.AWS.S3_URL,
       s3_region: Env.AWS.S3_REGION
     }),
+    pubsub: new Providers.PubSub(
+      {
+        project_id: Env.PUB_SUB.PROJECT_ID,
+        port: Env.PUB_SUB.PORT
+      },
+      log
+    ),
     // Use HTTP tunnelling in development for receiving webhooks
     tunnel: Env.isEnv([Environment.Production, Environment.Staging])
       ? null
@@ -101,6 +109,14 @@ Register<BackendProviderMap>({
 
   // Patch TypeORM with pagination & register API routes
   app.use(patchTypeORM);
+
+
+  // TODO: write some tooling to manage all topics/subscriptions
+  // delete all topics and re-create them from fresh
+  const allTopics = [TopicType.StreamStateChanged];
+  const topics = await pm.pubsub.connection.getTopics();
+  await Promise.all(topics.flat().map((t:Topic) => t.delete()));
+  await Promise.all(allTopics.map(t => pm.pubsub.connection.createTopic(t as string)));
 
   return Router(pm, Auth.or(Auth.isSiteAdmin, Auth.isFromService), { redis: pm.redis.connection }, log)(routes);
 });

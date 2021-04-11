@@ -1,22 +1,14 @@
-import {
-  DonoPeg,
-  DtoAccessToken,
-  IEnvelopedData,
-  IHost,
-  IPerformance,
-  IPerformanceHostInfo,
-  ITicketStub
-} from '@core/interfaces';
-import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
-import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateUpdateTicketComponent } from './create-update-ticket/create-update-ticket.component';
-import { ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatTableDataSource } from '@angular/material/table';
+import { DonoPeg, DtoPerformance, IHost, IPerformanceHostInfo, ITicketStub } from '@core/interfaces';
+import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { HelperService } from 'apps/frontend/src/app/services/helper.service';
+import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { ChipComponent } from 'apps/frontend/src/app/ui-lib/chip/chip.component';
+import { ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { CreateUpdateTicketComponent } from './create-update-ticket/create-update-ticket.component';
 
 @Component({
   selector: 'app-host-performance-ticketing',
@@ -28,7 +20,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
   performanceId: string;
   ticketId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
-  performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>>;
+  performance: ICacheable<DtoPerformance>;
   host: IHost;
 
   tickets: ICacheable<ITicketStub[]> = createICacheable([]);

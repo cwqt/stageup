@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  DtoAccessToken,
   DtoCreateTicket,
+  DtoPerformance,
   IEnvelopedData,
   IPaymentIntentClientSecret,
   IPerformance,
@@ -22,10 +22,8 @@ import { Except } from 'type-fest';
 export class PerformanceService {
   constructor(private http: HttpClient) {}
 
-  readPerformance(performanceId: string): Promise<IEnvelopedData<IPerformance, DtoAccessToken>> {
-    return this.http
-      .get<IEnvelopedData<IPerformance, DtoAccessToken>>(`/api/performances/${performanceId}`)
-      .toPromise();
+  readPerformance(performanceId: string): Promise<DtoPerformance> {
+    return this.http.get<DtoPerformance>(`/api/performances/${performanceId}`).toPromise();
   }
 
   readPerfomances(
@@ -35,7 +33,7 @@ export class PerformanceService {
   ): Promise<IEnvelopedData<IPerformanceStub[], null>> {
     return this.http
       .get<IEnvelopedData<IPerformanceStub[], null>>(
-        `/api/performances/?search_query=${search_query}&page=${page}&perPage=${perPage}`
+        `/api/performances/?search_query=${search_query}&page=${page}&per_page=${perPage}`
       )
       .toPromise();
   }

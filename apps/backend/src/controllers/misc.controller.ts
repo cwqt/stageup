@@ -1,18 +1,21 @@
-import AuthStrat from '../common/authorisation';
+import { Environment, HostInviteState, HostPermission, IHost, LiveStreamState } from '@core/interfaces';
 import {
-  Provider,
-  UserHostInfo,
-  Host,
-  getCheck,
-  HostInvitation,
   BaseController,
+  DataClient,
+  getCheck,
+  Host,
+  HostInvitation,
   IControllerEndpoint,
-  DataClient
+  Performance,
+  TopicType,
+  UserHostInfo
 } from '@core/shared/api';
-import { IHost, Environment, HostInviteState, HostPermission } from '@core/interfaces';
+import { LiveStreams } from '@mux/mux-node';
+import { Like } from 'typeorm';
+import { BackendProviderMap } from '..';
+import AuthStrat from '../common/authorisation';
 import { sendEmail } from '../common/email';
 import Env from '../env';
-import { BackendProviderMap } from '..';
 
 export default class MiscController extends BaseController<BackendProviderMap> {
   ping(): IControllerEndpoint<string> {
@@ -76,6 +79,19 @@ export default class MiscController extends BaseController<BackendProviderMap> {
         host.is_onboarded = true;
         await host.save();
         return host.toFull();
+      }
+    };
+  }
+
+  // http://localhost:3000/utils/performances/yNL3wrYodJH/state?value=video.live_stream.connected
+  setPerformanceStreamState(): IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      controller: async req => {
+        this.providers.pubsub.publish(TopicType.StreamStateChanged, {
+          performance_id: req.params.pid,
+          state: req.query.value as LiveStreamState
+        });
       }
     };
   }

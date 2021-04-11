@@ -113,3 +113,20 @@ export const getDonoAmount = (donoPeg: DonoPeg, currency: CurrencyCode, allowAny
     ? allowAnyQty
     : DONO_PEG_WEIGHT_MAPPING[donoPeg] * BASE_AMOUNT_MAP[currency];
 }
+
+/**
+ * @description Find elements that exist in both a & b
+ * @param inverse Invert the search, to find elements that don't exist in a or b
+ * @returns Intersected elements
+ */
+export function intersect<T=Primitive>(a: T[], b: T[], inverse: boolean=false): T[] {
+  return a.filter(x => b.includes(x) == !inverse);
+}
+
+
+/**
+ * @description Picks at random 1 element from an array
+ * @param arr
+ * @returns
+ */
+export const sample = <T>(arr:T[]):T =>  arr[Math.floor(Math.random() * arr.length)];

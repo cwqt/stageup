@@ -1,33 +1,30 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import {
-  DtoAccessToken,
+  DtoPerformance,
+  HTTP,
   IEnvelopedData,
   IHostStub,
   IMyself,
-  IPerformance,
   IPerformanceStub,
   IUserHostInfo,
   IUserInvoice
 } from '@core/interfaces';
-import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { HTTP } from '@core/interfaces';
-import { Router } from '@angular/router';
-import { LocalStorageKey } from '../app.interfaces';
 import { UserHostInfo } from '@core/shared/api';
 import { IQueryParams, querize } from '@core/shared/helpers';
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { LocalStorageKey } from '../app.interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MyselfService {
   $myself: BehaviorSubject<IMyself | null>;
-  $currentlyWatching: BehaviorSubject<IEnvelopedData<IPerformance, DtoAccessToken> | null>;
 
   constructor(private http: HttpClient, private router: Router) {
     this.$myself = new BehaviorSubject(this.hydrate());
-    this.$currentlyWatching = new BehaviorSubject(null);
   }
 
   store(myself: IMyself | null, rehydrate?: boolean) {

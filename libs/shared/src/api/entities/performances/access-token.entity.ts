@@ -1,5 +1,5 @@
 import { BaseEntity, Entity, Column, BeforeInsert, PrimaryColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
-import { IAccessToken, TokenProvisioner, DtoAccessToken } from '@core/interfaces';
+import { IAccessToken, TokenProvisioner, DtoAccessToken, JwtAccessToken } from '@core/interfaces';
 import { User } from '../users/user.entity';
 import { Performance } from './performance.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
@@ -13,7 +13,7 @@ export class AccessToken extends BaseEntity implements IAccessToken {
     this._id = uuid();
   }
 
-  @Column() access_token: string;
+  @Column("varchar") access_token: JwtAccessToken;
   @Column() created_at: number;
   @Column({ nullable: true }) expires_at: number;
   @Column('enum', { enum: TokenProvisioner }) provisioner_type: TokenProvisioner;
@@ -37,7 +37,7 @@ export class AccessToken extends BaseEntity implements IAccessToken {
   }
 
   sign(key: SigningKey) {
-    this.access_token = key.signToken(this.performance);
+    this.access_token = key.signToken(this.performance.stream);
     return this;
   }
 

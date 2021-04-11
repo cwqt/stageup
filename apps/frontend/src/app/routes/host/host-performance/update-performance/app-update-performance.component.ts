@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { IEnvelopedData, IPerformance, IPerformanceUserInfo } from '@core/interfaces';
+import { DtoPerformance, IPerformance } from '@core/interfaces';
 import { createICacheable, ICacheable } from '../../../../../app/app.interfaces';
 import { PerformanceService } from '../../../../services/performance.service';
 import { IUiForm } from '../../../../ui-lib/form/form.interfaces';
-import { BaseAppService, RouteParam } from '../../../../services/app.service';
 
 @Component({
   selector: 'app-update-performance',
@@ -11,7 +10,7 @@ import { BaseAppService, RouteParam } from '../../../../services/app.service';
   styleUrls: ['./app-update-performance.component.scss']
 })
 export class UpdatePerformanceComponent {
-  @Input() cacheable: ICacheable<IEnvelopedData<IPerformance, IPerformanceUserInfo>>;
+  @Input() cacheable: ICacheable<DtoPerformance>;
   performanceDetailsForm: IUiForm<IPerformance>;
   performanceUpdateCacheable: ICacheable<IPerformance>;
 

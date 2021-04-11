@@ -1,3 +1,5 @@
+import { SetOptional } from "type-fest";
+
 export interface IEnvelopedData<T, K=null> {
   data: T;
   __client_data?: K;
@@ -11,5 +13,3 @@ export interface PagingData {
   prev_page?: number | null;
   next_page?: number | null;
 }
-
-

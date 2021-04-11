@@ -1,6 +1,7 @@
 import {
   DtoCreatePerformance,
   DtoCreateTicket,
+  DtoPerformance,
   Genre,
   IEnvelopedData,
   IHost,
@@ -38,7 +39,7 @@ export default {
   },
 
   // router.get<IE<IPerf, IPUInfo>>("/performances/:pid", Perfs.readPerformance());
-  readPerformance: async (performance: IPerformance): Promise<IEnvelopedData<IPerformance, IPerformanceUserInfo>> => {
+  readPerformance: async (performance: IPerformance): Promise<DtoPerformance> => {
     const res = await api.get(`/performances/${performance._id}`, env.getOptions());
     return res.data;
   },

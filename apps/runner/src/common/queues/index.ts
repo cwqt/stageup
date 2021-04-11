@@ -1,7 +1,7 @@
 import Env from '../../env';
-import SendEmailWorker from './workers/send_email.worker';
-import ScheduleReleaseWorker from './workers/schedule_release.worker';
-import HostInvoiceCSVWorker from './workers/host_invoice_csv.worker'
+import SendEmailWorker from './workers/send-email.worker';
+import ScheduleReleaseWorker from './workers/schedule-release.worker';
+import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker'
 
 import { log } from '../logger';
 import { RunnerProviderMap } from '../..';

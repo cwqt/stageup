@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { IRouterMatcher } from 'express-serve-static-core';
-import { AsyncRouter as ExpressAsyncRouter, AsyncRouterInstance } from 'express-async-router';
+import { AsyncRouter as ExpressAsyncRouter, AsyncRouterInstance, RequestHandler } from 'express-async-router';
 import { HTTP } from '@core/interfaces';
 
 import { Auth, ErrorHandler, handleError } from '@core/shared/api';
@@ -11,6 +11,7 @@ import { Logger } from 'winston';
 import { IMiddlewareConnections, Middlewares } from './middleware';
 import { ProviderMap } from './data-client';
 import { Middleware } from 'express-validator/src/base';
+import { to } from '../helpers';
 
 export default <K extends ProviderMap>(
   providerMap: K,
@@ -67,6 +68,17 @@ export class AsyncRouter<PM extends ProviderMap> {
     endpointFunction<T, PM>(this.router.delete, this.provider_map, this.logger, this.auth)(path, endpoint);
   };
 
+  raw = <T>(path: string, endpoint: IControllerEndpoint<T>) => {
+    endpointFunction<T, PM>(
+      this.router.get,
+      this.provider_map,
+      this.logger,
+      this.auth,
+      HTTP.OK,
+      endpoint.handler
+    )(path, endpoint);
+  };
+
   redirect = (path: string, endpoint: IControllerEndpoint<string>) => {
     endpointFunction<string, PM>(
       this.router.get,
@@ -86,14 +98,14 @@ const endpointFunction = <T, K extends ProviderMap>(
   provider_map: K,
   logger: Logger,
   auth: AuthStrategy,
-  resCode?: HTTP,
+  responseCode?: HTTP,
   lambda?: (res: Response, data: T) => void
 ) => {
   return (path: string, endpoint: IControllerEndpoint<T>) => {
     method(
       path,
       executeAuthenticationStrategy<K>(Auth.or(auth, endpoint.authStrategy), provider_map),
-      endpoint.validators ? validatorMiddleware(endpoint.validators, logger) : (req, res, next) => next(),
+      endpoint.validators ? validatorMiddleware(endpoint.validators, logger) : (_, __, next) => next(),
       ...(endpoint.preMiddlewares || []),
       (req: Request, res: Response, next: NextFunction) => {
         res.locals.page = Number.parseInt(req.query.page as string) || 0;
@@ -102,14 +114,16 @@ const endpointFunction = <T, K extends ProviderMap>(
       },
       async (req: Request, res: Response, next: NextFunction) => {
         try {
-          const returnValue = await endpoint.controller(req, {
-            file: req.file,
-            pagination: {
-              per_page: res.locals.per_page,
-              page: res.locals.page
-            }
-          } as IResLocals);
-          lambda ? lambda(res, returnValue) : res.status(resCode || HTTP.OK).json(returnValue);
+          const returnValue = await endpoint.controller(
+            req,
+            to<IResLocals>({
+              pagination: {
+                per_page: res.locals.per_page,
+                page: res.locals.page
+              }
+            })
+          );
+          lambda ? lambda(res, returnValue) : res.status(responseCode || HTTP.OK).json(returnValue);
         } catch (error: unknown) {
           handleError(req, res, next, error as ErrorHandler | Error, logger);
         }
@@ -120,7 +134,7 @@ const endpointFunction = <T, K extends ProviderMap>(
 };
 
 const executeAuthenticationStrategy = <T extends ProviderMap>(authStrategy: AuthStrategy, pm: T) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, _: Response, next: NextFunction) => {
     try {
       const [isAuthorised, _, reason] = await authStrategy(req, pm);
       if (!isAuthorised) throw new ErrorHandler(HTTP.Unauthorised, reason);

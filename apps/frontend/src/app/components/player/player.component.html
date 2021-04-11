@@ -1,18 +1,14 @@
-<!-- <div plyr plyrTitle="Video 1"
-  [plyrPlaysInline]="true"
-  [plyrSources]="videoSources"
-  (plyrInit)="player = $event"
-  [plyrDriver]=""
-  (plyrPlay)="played($event)">
-</div> -->
-
-<div mat-card-image plyr 
-  [plyrPlaysInline]="true"
-  [plyrCrossOrigin]="true"
-  [plyrDriver]="hlsjsDriver"
-  [plyrOptions]="options"
-  [plyrSources]="videoSources"
-  (plyrInit)="onPlayerInit($event)"
-  (plyrLanguageChange)="onLanguageChanged(hlsjsDriver, player)">
+<div class="relative">
+  <div mat-card-image plyr
+    [plyrCrossOrigin]="true"
+    [plyrDriver]="hlsjsDriver"
+    [plyrOptions]="options"
+    [plyrSources]="streamSources"
+    (plyrError)="onPlayerError.emit($event)"
+    (plyrEnded)="onPlayerEnded.emit($event)"
+    (plyrWaiting)="onPlayerWaiting.emit($event)"
+    (plyrPlay)="_onPlay()"
+    (plyrInit)="_onPlayerInit($event)"
+    (plyrLanguageChange)="_onLanguageChanged(hlsjsDriver, player)">
+  </div>
 </div>
-
