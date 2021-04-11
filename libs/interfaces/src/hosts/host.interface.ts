@@ -12,6 +12,7 @@ export interface IHostStub {
   bio?: string;
   avatar?: string;
   banner?: string;
+  stripe_account_id: string;
 }
 
 export interface IHost extends IHostStub {
@@ -23,7 +24,6 @@ export interface IHost extends IHostStub {
 }
 
 export type IHostPrivate = {
-  stripe_account_id: string;
   email_address: string;
   contact_info: IContactInfo;
   business_details: IHostBusinessDetails;

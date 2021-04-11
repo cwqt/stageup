@@ -7,11 +7,11 @@ import { CurrencyCode, DottedPaths, Primitive } from '@core/interfaces';
 export interface IUiForm<T> {
   fields: { [index: string]: IUiFormField }; // form fields
   submit: IUiFormSubmit<T>; // what to do on submit
-  prefetch?: (mapping?: { [index: string]: string }) => Promise<IUiFormPrefetchData>; //populate form from object
+  prefetch?: (mapping?: { [index: string]: Primitive }) => Promise<IUiFormPrefetchData>; //populate form from object
 }
 
 export interface IUiFormPrefetchData<T = any> {
-  fields: { [index in DottedPaths<T>]: string };
+  fields: { [index in DottedPaths<T>]: Primitive | Date };
   errors?: { [index in DottedPaths<T>]: string[] };
 }
 

@@ -91,7 +91,7 @@
     [class.small]="!label"
     [class.checkbox]="type == 'checkbox'">
     <mat-label *ngIf="label && type !== 'checkbox'">{{ label }}</mat-label>
-    <mat-checkbox matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
+    <mat-checkbox [disabled]="disabled" matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
     <!-- stop formcontrolname throwing errors -->
     <input matInput placeholder="Input" style="display: none" >
   </mat-form-field>

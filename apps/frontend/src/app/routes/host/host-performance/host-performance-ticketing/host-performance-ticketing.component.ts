@@ -1,4 +1,5 @@
 import {
+  DonoPeg,
   DtoAccessToken,
   IEnvelopedData,
   IHost,
@@ -15,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateUpdateTicketComponent } from './create-update-ticket/create-update-ticket.component';
 import { ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { ChipComponent } from 'apps/frontend/src/app/ui-lib/chip/chip.component';
 
 @Component({
   selector: 'app-host-performance-ticketing',
@@ -33,6 +35,14 @@ export class HostPerformanceTicketingComponent implements OnInit {
   ticketsDataSrc: MatTableDataSource<ITicketStub>;
   displayedColumns: string[] = ['name', 'quantity', 'amount', 'actions'];
   hideTicketQuantities: boolean;
+  donoPegChipMap: { [index in DonoPeg]: ChipComponent['kind'] } = {
+    lowest: 'green',
+    low: 'blue',
+    medium: 'purple',
+    high: 'magenta',
+    highest: 'red',
+    allow_any: 'cool-grey'
+  };
 
   constructor(
     private dialog: MatDialog,
@@ -46,7 +56,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
       d => (this.ticketsDataSrc.data = d)
     );
 
-    this.hideTicketQuantities = this.performance.data.data.hide_ticket_quantity;
+    this.hideTicketQuantities = !this.performance.data.data.tickets.every(ticket => ticket.is_quantity_visible);
   }
 
   openCreateTicketDialog() {
@@ -101,7 +111,8 @@ export class HostPerformanceTicketingComponent implements OnInit {
     });
   }
 
-  onToggleTicketsVisibility(event: MatSlideToggleChange) {
-    this.performanceService.updateTicketQuantityVisibility(this.performanceId, event.checked);
+  onToggleTicketsQtyVisibility(event: MatSlideToggleChange) {
+    this.tickets.data.forEach(ticket => (ticket.is_quantity_visible = !event.checked));
+    this.performanceService.bulkUpdateTicketQtyVisibility(this.performanceId, !event.checked);
   }
 }

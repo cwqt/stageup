@@ -1,26 +1,21 @@
-import { api } from '../environment';
-import { environment as env, UserType } from '../environment';
 import {
-  IPerformance,
-  IPerformanceHostInfo,
-  IPerformanceStub,
-  CurrencyCode,
-  IPerformanceUserInfo,
+  DtoCreatePerformance,
+  DtoCreateTicket,
+  Genre,
   IEnvelopedData,
   IHost,
   IHostStub,
-  DtoCreatePerformance,
-  Visibility,
-  Genre,
-  hasRequiredHostPermission,
-  ITicketStub,
+  IPerformance,
+  IPerformanceHostInfo,
+  IPerformanceStub,
+  IPerformanceUserInfo,
   ITicket,
-  Idless,
-  DtoCreateTicket,
-  ITicketsQuantityVisibility
+  ITicketStub,
+  Visibility
 } from '@core/interfaces';
 import { timestamp } from '@core/shared/helpers';
 import { Except } from 'type-fest';
+import { api, environment as env } from '../environment';
 
 export default {
   // router.post<IPerf>("/performances",Perfs.createPerformance());
@@ -110,14 +105,22 @@ export default {
   },
 
   // router.put <ITicket> ("/performances/:pid/tickets/:tid", Perfs.updateTicket());
-  updateTicket: async (performance: IPerformance, ticket: ITicket | ITicketStub, data:Partial<Except<DtoCreateTicket, "type">>): Promise<ITicket> => {
+  updateTicket: async (
+    performance: IPerformance,
+    ticket: ITicket | ITicketStub,
+    data: Partial<Except<DtoCreateTicket, 'type'>>
+  ): Promise<ITicket> => {
     const res = await api.put(`/performances/${performance._id}/tickets/${ticket._id}`, data, env.getOptions());
     return res.data;
   },
 
-  //router.put<void>("/performances/:pid/tickets",Perfs.updateTicketQuantityVisiblity());
-  updateTicketQuantityVisibility: async (performance: IPerformance, hideTicketQuantity:boolean): Promise<void> => {
-    const res = await api.put(`/performances/${performance._id}/tickets/`, {hide_ticket_quantity: hideTicketQuantity}, env.getOptions());
+  //router.put<void>("/performances/:pid/tickets/qty-visibility",Perfs.bulkUpdateTicketQtyVisibility());
+  bulkUpdateTicketQtyVisibility: async (performance: IPerformance, isQtyVisible: boolean): Promise<void> => {
+    const res = await api.put(
+      `/performances/${performance._id}/tickets/qty-visibility"`,
+      { is_quantity_visible: isQtyVisible },
+      env.getOptions()
+    );
     return res.data;
   }
 };

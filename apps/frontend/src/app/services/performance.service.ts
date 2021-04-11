@@ -10,7 +10,9 @@ import {
   IPerformanceStub,
   ITicket,
   ITicketStub,
-  Visibility
+  Visibility,
+  DtoDonationPurchase,
+  DonoPeg
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 
@@ -78,12 +80,15 @@ export class PerformanceService {
   }
 
   // router.post <IPaymentICS> ("/tickets/:tid/payment-intent", Perfs.createPaymentIntent());
-  createPaymentIntent(ticket: ITicketStub): Promise<IPaymentIntentClientSecret> {
-    return this.http.post<IPaymentIntentClientSecret>(`/api/tickets/${ticket._id}/payment-intent`, null).toPromise();
+  createPaymentIntent(ticket: ITicketStub, data?: DtoDonationPurchase): Promise<IPaymentIntentClientSecret> {
+    return this.http.post<IPaymentIntentClientSecret>(`/api/tickets/${ticket._id}/payment-intent`, data).toPromise();
   }
 
-  updateTicketQuantityVisibility(performanceId: string, hideTicketQuantity: boolean){
-    return this.http.put<void>(`/api/performances/${performanceId}/tickets`, {hide_ticket_quantity: hideTicketQuantity}).toPromise();
+  // router.put <void> ("/performances/:pid/tickets/qty-visibility", Perfs.bulkUpdateTicketQtyVisibility());
+  bulkUpdateTicketQtyVisibility(performanceId: string, value: boolean) {
+    return this.http
+      .put<void>(`/api/performances/${performanceId}/tickets/qty-visibility`, { is_quantity_visible: value })
+      .toPromise();
   }
 
   deletePerformance(performanceId: string) {

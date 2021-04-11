@@ -1,3 +1,5 @@
+import { DonoPegWeights } from "../performances/ticket.interface";
+
 export enum CurrencyCode {
   USD = 'USD',
   CAD = 'CAD',
@@ -369,4 +371,15 @@ export enum ISOCountryCode {
   YEM = 'Yemen',
   ZMB = 'Zambia',
   ZWE = 'Zimbabwe',
+}
+
+// TODO: add all base amounts for all currencies (minimum stripe amount for each currency expressed in smallest denomination)
+export const BASE_AMOUNT_MAP:{[code in CurrencyCode]?:number} = {
+  [CurrencyCode.GBP]: 100 //£1
+} as const
+
+
+export const calculateAmountFromCurrency = (currency:CurrencyCode, peg:DonoPegWeights): number => {
+  const baseAmount = BASE_AMOUNT_MAP[currency];
+  return (baseAmount * peg);
 }

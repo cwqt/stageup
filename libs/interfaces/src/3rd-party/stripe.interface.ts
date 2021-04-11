@@ -2,7 +2,6 @@ import { IHostPrivate } from '../hosts/host.interface';
 
 export interface IPaymentIntentClientSecret {
   client_secret: string;
-  stripe_account_id: IHostPrivate["stripe_account_id"];
 }
 
 export interface IPaymentConfirmation {

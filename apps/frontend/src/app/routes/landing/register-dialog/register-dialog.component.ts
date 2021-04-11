@@ -11,29 +11,30 @@ import { BaseAppService } from '../../../services/app.service';
   styleUrls: ['./register-dialog.component.scss']
 })
 export class RegisterDialogComponent implements OnInit, IUiDialogOptions {
-  @ViewChild("stepper") stepper:MatHorizontalStepper;
-  submit:EventEmitter<any> = new EventEmitter();
-  cancel:EventEmitter<any> = new EventEmitter();
+  @ViewChild('stepper') stepper: MatHorizontalStepper;
+  submit: EventEmitter<any> = new EventEmitter();
+  cancel: EventEmitter<any> = new EventEmitter();
   buttons = [];
 
-  userType: "audience" | "business" = "audience";
+  userType: 'audience' | 'business' = 'audience';
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private ref:MatDialogRef<RegisterDialogComponent>, private baseAppService:BaseAppService) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private ref: MatDialogRef<RegisterDialogComponent>,
+    private baseAppService: BaseAppService
+  ) {}
 
   ngOnInit(): void {
     this.userType = this.data.type;
-    console.log(this.userType)
-    console.log(this.ref)
   }
 
-  onUserTypeChanged(event:boolean) {
-    this.userType = event ? "business" : "audience";
+  onUserTypeChanged(event: boolean) {
+    this.userType = event ? 'business' : 'audience';
   }
 
-  cachedUser:IUser;
-  cachedHost:IHost;
-  onUserRegistered(event:IUser) {
-    console.log(event)
+  cachedUser: IUser;
+  cachedHost: IHost;
+  onUserRegistered(event: IUser) {
     this.cachedUser = event;
 
     // state propagation push to next tick
@@ -42,9 +43,7 @@ export class RegisterDialogComponent implements OnInit, IUiDialogOptions {
     }, 1);
   }
 
-  onHostRegistered(event:IHost) {
-    console.log('wwwwwaaaa')
-    console.log(event)
+  onHostRegistered(event: IHost) {
     this.cachedHost = event;
 
     // state propagation push to next tick

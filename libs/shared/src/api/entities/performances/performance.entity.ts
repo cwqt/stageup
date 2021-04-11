@@ -45,7 +45,6 @@ export class Performance extends BaseEntity implements IPerformance {
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceState }) state: PerformanceState;
-  @Column() hide_ticket_quantity: boolean;
 
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
@@ -66,7 +65,6 @@ export class Performance extends BaseEntity implements IPerformance {
     this.creator = creator;
     this.host = creator.host;
     this.state = PerformanceState.Idle;
-    this.hide_ticket_quantity = false;
   }
 
   async setup(mux: Mux, txc: EntityManager): Promise<Performance> {
@@ -88,7 +86,6 @@ export class Performance extends BaseEntity implements IPerformance {
       description: this.description,
       playback_id: this.playback_id,
       created_at: this.created_at,
-      hide_ticket_quantity: this.hide_ticket_quantity
     };
   }
 
@@ -99,23 +96,12 @@ export class Performance extends BaseEntity implements IPerformance {
       premiere_date: this.premiere_date,
       state: this.state,
       genre: this.genre,
-      tickets:
-        this.tickets?.map(t => {
-          const ticket = t.toStub();
-          // hide ticket quantities other than those that are sold out
-          ticket.quantity_remaining = this.hide_ticket_quantity
-            ? ticket.quantity_remaining == 0
-              ? 0
-              : null
-            : ticket.quantity_remaining;
-
-          return ticket;
-        }) || []
+      tickets: this.tickets?.map(t => t.toStub()) || []
     };
   }
 
   async update(
-    updates: Partial<Pick<IPerformance, 'name' | 'description' | 'hide_ticket_quantity'>>
+    updates: Partial<Pick<IPerformance, 'name' | 'description'>>
   ): Promise<Performance> {
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (this as any)[k] = v ?? (this as any)[k];

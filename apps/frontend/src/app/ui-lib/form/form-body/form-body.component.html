@@ -3,14 +3,14 @@
 		[hidden]="field.value.hide ? field.value.hide(fg) : false"
     [ngSwitch]="field.value['type']">
     <div class="form-field-container" *ngSwitchCase="'container'">
-      <h1 *ngIf="field.value.options?.header_level == 1">{{ field.value["label"] }}</h1>
-      <h2 *ngIf="field.value.options?.header_level == 2 || field.value.options?.header_level == null">{{
+      <h1 *ngIf="field.value['options']?.header_level == 1">{{ field.value["label"] }}</h1>
+      <h2 *ngIf="field.value['options']?.header_level == 2 || field.value['options']?.header_level == null">{{
         field.value["label"] }}</h2>
-      <h3 *ngIf="field.value.options?.header_level == 3">{{ field.value["label"] }}</h3>
-      <h4 *ngIf="field.value.options?.header_level == 4">{{ field.value["label"] }}</h4>
-      <h5 *ngIf="field.value.options?.header_level == 5">{{ field.value["label"] }}</h5>
-      <h6 *ngIf="field.value.options?.header_level == 6">{{ field.value["label"] }}</h6>
-      <label class="mb-1 inline-block" *ngIf="field.value.options?.header_level == 0">{{ field.value["label"] }}</label>
+      <h3 *ngIf="field.value['options']?.header_level == 3">{{ field.value["label"] }}</h3>
+      <h4 *ngIf="field.value['options']?.header_level == 4">{{ field.value["label"] }}</h4>
+      <h5 *ngIf="field.value['options']?.header_level == 5">{{ field.value["label"] }}</h5>
+      <h6 *ngIf="field.value['options']?.header_level == 6">{{ field.value["label"] }}</h6>
+      <label class="mb-1 inline-block" *ngIf="field.value['options']?.header_level == 0">{{ field.value["label"] }}</label>
       <p *ngIf="field.value['hint']">{{ field.value["hint"] }}</p>
       <ui-form-body [fields]="field.value['fields']" [fg]="fg.controls[field.key]"></ui-form-body>
     </div>

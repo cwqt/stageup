@@ -129,8 +129,9 @@ export class FormComponent implements OnInit, AfterViewInit {
           const { fields, errors } = data;
 
           // Set form control default value
+          console.log(fields)
           Object.entries(fields).forEach(([f, v]) => this.formGroup.get(f)?.setValue(v));
-  
+
           // Set form control errors by bodging validator to show message
           // if value is the same as it was prefetched
           if(errors) {
@@ -147,13 +148,13 @@ export class FormComponent implements OnInit, AfterViewInit {
                 control.updateValueAndValidity();
                 control.markAsTouched();
               }
-            }); 
+            });
           }
-  
-          this.formGroup.markAllAsTouched();            
+
+          this.formGroup.markAllAsTouched();
         }
       })
-      .catch(e => console.log(e))
+      .catch(e => console.error(e))
   }
 
   getValue() {

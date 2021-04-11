@@ -8,7 +8,7 @@
         <!-- Only visible to host members -->
         <ui-chip kind="gray" class="ml-2" *ngIf="ticket.is_visible == false">HIDDEN</ui-chip>
 
-        <b class="ml-auto" *ngIf="ticket.type !== 'free'">{{ ticket.amount | currencyPipe: ticket.currency }}</b>
+        <b class="ml-auto" *ngIf="ticket.type == 'paid'">{{ ticket.amount | currencyPipe: ticket.currency }}</b>
       </div>
       <div>
         <span>{{ ticket.name }}</span>

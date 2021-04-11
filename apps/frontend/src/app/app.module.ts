@@ -25,6 +25,7 @@ import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
+import { DonoPegPipe } from './_pipes/dono-peg.pipe';
 import { PaymentStatusPipe } from './_pipes/payment-status.pipe';
 import { TicketTypePipe } from './_pipes/ticket-type.pipe'; 
 
@@ -140,6 +141,7 @@ import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices
     ShortDomainPipe,
     PaymentStatusPipe,
     OnboardingStepPipe,
+		DonoPegPipe,
     HostPermissionPipe,
     CurrencyCodePipe,
     TicketTypePipe,

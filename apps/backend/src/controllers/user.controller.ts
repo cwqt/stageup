@@ -308,64 +308,60 @@ export default class UserController extends BaseController<BackendProviderMap> {
     };
   }
 
-//router.post <void> ("/users/forgot-password", Users.forgotPassword())
-forgotPassword(): IControllerEndpoint<void> {
-  return {
-    validators: [
-      body<{ email_address: string }>({
-        email_address: v => Validators.Fields.email(v)
-      })
-    ],
-    authStrategy: AuthStrat.none,
-    controller: async req => {      
-      const USER_EMAIL_ADDRESS = req.body.email_address; 
-      const user = await getCheck(User.findOne({ email_address: USER_EMAIL_ADDRESS }));  
-      const token = jwt.sign({ email_address: USER_EMAIL_ADDRESS }, Env.PRIVATE_KEY, { expiresIn: '24h'});            
-        
-      Email.sendEmailToResetPassword(user, USER_EMAIL_ADDRESS, encodeURI(token)); 
+  //router.post <void> ("/users/forgot-password", Users.forgotPassword())
+  forgotPassword(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        body<{ email_address: string }>({
+          email_address: v => Validators.Fields.email(v)
+        })
+      ],
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+        const emailAddress = req.body.email_address;
+        const user = await getCheck(User.findOne({ email_address: emailAddress }));
+        const token = jwt.sign({ email_address: emailAddress }, Env.PRIVATE_KEY, { expiresIn: '24h' });
+
+        Email.sendEmailToResetPassword(user, emailAddress, encodeURI(token));
 
         const p = new PasswordReset({
-          otp: token,          
-          email_address: USER_EMAIL_ADDRESS,
+          otp: token,
+          email_address: emailAddress,
           user__id: user._id
-          });
+        });
 
-          await p.save();
+        await p.save();
       }
     };
   }
-  
-//router.put <void> ("/users/reset-password", Users.resetForgottenPassword());
-resetForgottenPassword(): IControllerEndpoint<void> {
-  return {
-    validators: [
-      query<{ otp: string }>({
-        otp: v => v.isString()
-      }),
 
-
-      body<{ new_password: string }>({
-        new_password: v => Validators.Fields.password(v)
-      })
-    ],
-    authStrategy: AuthStrat.none,
-    controller: async req => {
-      const decodedOTP = decodeURI(req.query.otp as string);
-      // Verifiying jwt token
-      const OTP = await new Promise((res, rej) => {
-        jwt.verify(decodedOTP, Env.PRIVATE_KEY, function(err, decoded) {
-          if(err) return rej(err);
-          res(decoded)
+  //router.put <void> ("/users/reset-password", Users.resetForgottenPassword());
+  resetForgottenPassword(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        query<{ otp: string }>({
+          otp: v => v.isString()
+        }),
+        body<{ new_password: string }>({
+          new_password: v => Validators.Fields.password(v)
+        })
+      ],
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+        const OTP = await new Promise((res, rej) => {
+          jwt.verify(decodeURI(req.query.otp as string), Env.PRIVATE_KEY, (err, decoded) => {
+            if (err) return rej(err);
+            res(decoded);
+          });
         });
-      })       
-      // get the user from the db using OTP email
-      const user = await getCheck(User.findOne({ email_address: OTP['email_address'] }));      
-      const newPassword = req.body.new_password;     
-      user.setPassword(newPassword);
-      await user.save();
 
-      Email.sendEmailToConfirmPasswordReset(user);
+        const user = await getCheck(User.findOne({ email_address: OTP['email_address'] }));
+
+        user.setPassword(req.body.new_password);
+        await user.save();
+
+        Email.sendEmailToConfirmPasswordReset(user);
       }
     };
-  }  
+  }
 }

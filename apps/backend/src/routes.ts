@@ -5,7 +5,7 @@ import {
   IUser,
   IPerformanceStub as IPerfS,
   IPerformance as IPerf,
-  IPerformanceHostInfo as IPHInfo, 
+  IPerformanceHostInfo as IPHInfo,
   IUserHostInfo as IUHInfo,
   IEnvelopedData as IE,
   IMyself,
@@ -54,14 +54,14 @@ const Users = new UserController(providerMap, middlewares);
 router.post     <IMyself["user"]>       ("/users",                                    Users.createUser());
 router.post     <void>                  ("/users/logout",                             Users.logoutUser());
 router.post     <IUser>                 ("/users/login",                              Users.loginUser());
+router.post     <void>                  ("/users/forgot-password",                    Users.forgotPassword());
+router.put      <void>                  ("/users/reset-password",                     Users.resetForgottenPassword());
 router.get      <IUser>                 ("/users/@:username",                         Users.readUserByUsername()); // order matters
 router.get      <IUser>                 ("/users/:uid",                               Users.readUserById());
 router.put      <IMyself["user"]>       ("/users/:uid",                               Users.updateUser());
 router.delete   <void>                  ("/users/:uid",                               Users.deleteUser());
 router.get      <IE<IHost, IUHInfo>>    ("/users/:uid/host",                          Users.readUserHost());
 router.put      <IUserS>                ("/users/:uid/avatar",                        Users.changeAvatar());
-router.post     <void>                  ("/users/forgot-password",                    Users.forgotPassword());
-router.put      <void>                  ("/users/reset-password",                     Users.resetForgottenPassword());
 //router.put      <void>                  ("/users/:uid/password",                    Users.resetPassword());
 router.get      <IAddress[]>            ("/users/:uid/addresses",                     Users.readAddresses());
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
@@ -76,6 +76,9 @@ router.get      <IHost>                 ("/hosts/@:username",                   
 router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
 router.delete   <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
 // router.put      <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
+router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
+router.put      <IHostS>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());
+router.put      <IHostS>                ("/hosts/:hid/banner",                        Hosts.changeBanner());
 router.get      <IE<IUHInfo[]>>         ("/hosts/:hid/members",                       Hosts.readMembers());
 router.post     <IUHInfo>               ("/hosts/:hid/members",                       Hosts.addMember());
 router.delete   <void>                  ("/hosts/:hid/members/:uid",                  Hosts.removeMember());
@@ -86,9 +89,6 @@ router.get      <IOnboardingStepMap>    ("/hosts/:hid/onboarding/steps",        
 router.get      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 router.redirect                         ("/hosts/:hid/invites/:iid",                  Hosts.handleHostInvite());
-router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
-router.put      <IHostS>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());
-router.put      <IHostS>                ("/hosts/:hid/banner",                        Hosts.changeBanner());
 router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 router.post     <string>                ("/hosts/:hid/stripe/connect",                Hosts.connectStripe());
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
@@ -104,7 +104,7 @@ router.get      <IPHInfo>               ("/performances/:pid/host-info",        
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
-router.put      <void>                  ("/performances/:pid/tickets",                Perfs.updateTicketQuantityVisiblity());
+router.put      <void>                  ("/performances/:pid/tickets/qty-visibility", Perfs.bulkUpdateTicketQtyVisibility());
 router.get      <ITicketStub[]>         ("/performances/:pid/tickets",                Perfs.readTickets());
 router.post     <ITicket>               ("/performances/:pid/tickets",                Perfs.createTicket());
 router.get      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.readTicket());

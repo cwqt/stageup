@@ -9,12 +9,12 @@ import {
   DtoCreatePerformance,
   Visibility,
   JobType,
-  IScheduleReleaseJobData,
   IPaymentIntentClientSecret,
   TokenProvisioner,
   ITicket,
   ITicketStub,
   ErrCode,
+  BASE_AMOUNT_MAP,
   pick
 } from '@core/interfaces';
 
@@ -29,11 +29,9 @@ import {
   User,
   Performance,
   AccessToken,
-  Ticket,
-  UserHostInfo
+  Ticket
 } from '@core/shared/api';
-import { to } from '@core/shared/helpers';
-import { IoT1ClickProjects } from 'aws-sdk';
+import { getDonoAmount } from '@core/shared/helpers';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
 import { BackendProviderMap } from '..';
 
@@ -59,7 +57,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         );
 
         return await this.ORM.transaction(async txc => {
-          const performance = await new Performance(req.body, user);
+          const performance = new Performance(req.body, user);
           await performance.setup(this.providers.mux.connection, txc);
           await txc.save(performance);
 
@@ -227,7 +225,18 @@ export default class PerformanceController extends BaseController<BackendProvide
   createPaymentIntent(): IControllerEndpoint<IPaymentIntentClientSecret> {
     return {
       authStrategy: AuthStrat.isLoggedIn,
+      validators: [
+        body({
+          selected_dono_peg: v =>
+            v.optional({ nullable: true }).isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
+          dono_allow_any_amount: v => v.optional({ nullable: true }).isInt()
+        })
+      ],
       controller: async req => {
+        // Can't have any amount without setting an amount
+        if (req.body.selected_dono_peg == 'allow_any' && req.body.dono_allow_any_amount == null)
+          throw new ErrorHandler(HTTP.BadRequest);
+
         // Stripe uses a PaymentIntent object to represent your **intent** to collect payment from a customer,
         // tracking charge attempts and payment state changes throughout the process.
         const ticket = await getCheck(
@@ -255,11 +264,21 @@ export default class PerformanceController extends BaseController<BackendProvide
         // Can't sell more than there are tickets
         if (ticket.quantity_remaining == 0) throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
 
+        let amount = ticket.amount;
+        if (req.body.selected_dono_peg) {
+          // Don't allow stupid users to throw their life savings away
+          if (req.body.selected_dono_peg == 'allow_any' && amount > BASE_AMOUNT_MAP[ticket.currency] * 200)
+            throw new ErrorHandler(HTTP.BadRequest, ErrCode.TOO_LONG);
+
+          if (req.body.dono_allow_any_amount) amount = req.body.dono_allow_any_amount;
+          else getDonoAmount(req.body.selected_dono_peg, ticket.currency);
+        }
+
         const res = await this.providers.stripe.connection.paymentIntents.create(
           {
             application_fee_amount: ticket.amount * 0.1, // IMPORTANT: have requirements on exact commission pricing
             payment_method_types: ['card'],
-            amount: ticket.amount,
+            amount: amount,
             currency: ticket.currency, // ISO code - https://stripe.com/docs/currencies
             metadata: {
               // Passed through to webhook when charge successful
@@ -276,8 +295,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         // Return client secret to user, who will use it to confirmPayment()
         // with the CC info if they wish to actually buy the ticket
         return {
-          client_secret: res.client_secret,
-          stripe_account_id: ticket.performance.host.stripe_account_id
+          client_secret: res.client_secret
         };
       }
     };
@@ -308,6 +326,7 @@ export default class PerformanceController extends BaseController<BackendProvide
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const ticket = new Ticket(req.body);
+
         const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['tickets'] }));
 
         await this.ORM.transaction(async txc => {
@@ -393,7 +412,8 @@ export default class PerformanceController extends BaseController<BackendProvide
             'start_datetime',
             'end_datetime',
             'is_visible',
-            'hide_ticket_quantity'
+            'dono_pegs',
+            'is_quantity_visible'
           ])
         );
 
@@ -413,7 +433,8 @@ export default class PerformanceController extends BaseController<BackendProvide
             'start_datetime',
             'end_datetime',
             'is_visible',
-            'hide_ticket_quantity'
+            'dono_pegs',
+            'is_quantity_visible'
           ])
         );
 
@@ -423,9 +444,9 @@ export default class PerformanceController extends BaseController<BackendProvide
     };
   }
 
-  updateTicketQuantityVisiblity(): IControllerEndpoint<void> {
+  bulkUpdateTicketQtyVisibility(): IControllerEndpoint<void> {
     return {
-      validators: [body<{ hide_ticket_quantity: boolean }>({ hide_ticket_quantity: v => v.isBoolean() })],
+      validators: [body<Pick<ITicket, 'is_quantity_visible'>>({ is_quantity_visible: v => v.isBoolean() })],
       authStrategy: AuthStrat.runner(
         {
           hid: IdFinderStrat.findHostIdFromPerformanceId
@@ -433,12 +454,12 @@ export default class PerformanceController extends BaseController<BackendProvide
         AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
       ),
       controller: async req => {
-        await Performance.update(
-          { _id: req.params.pid },
-          {
-            hide_ticket_quantity: req.body.hide_ticket_quantity
-          }
-        );
+        // bulk update all performance tickets
+        await this.ORM.createQueryBuilder()
+          .update(Ticket)
+          .set({ is_quantity_visible: req.body.is_quantity_visible })
+          .where("performance__id = :pid", { pid: req.params.pid })
+          .execute();
       }
     };
   }

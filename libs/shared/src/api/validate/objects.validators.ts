@@ -1,23 +1,23 @@
-import { array } from '.';
-import { ValidationChain } from 'express-validator';
 import {
+  DonoPeg,
+  DtoCreatePerformance,
+  DtoCreateTicket,
   ErrCode,
+  Genre,
   IAddress,
   Idless,
-  PersonTitle,
   IHostMemberChangeRequest,
   IPerson,
   IPersonInfo,
   ISocialInfo,
-  DtoCreatePerformance,
-  Genre,
-  DtoCreateTicket,
-  CurrencyCode,
-  TicketType,
-  TicketFees
+  PersonTitle,
+  TicketFees,
+  TicketType
 } from '@core/interfaces';
+import { enumToValues, to } from '@core/shared/helpers';
+import { ValidationChain } from 'express-validator';
+import { array } from '.';
 import { FieldValidators as FV } from './fields.validators';
-import { enumToValues } from '@core/shared/helpers';
 
 export namespace ObjectValidators {
   type ObjectValidator<T> = { [index in keyof T]: (v: ValidationChain) => ValidationChain };
@@ -78,7 +78,7 @@ export namespace ObjectValidators {
     };
   };
 
-  export const DtoCreateTicket = ():ObjectValidator<DtoCreateTicket> => {
+  export const DtoCreateTicket = (): ObjectValidator<DtoCreateTicket> => {
     return {
       name: v => FV.isString(v),
       amount: v => FV.isInt(v),
@@ -89,9 +89,19 @@ export namespace ObjectValidators {
       start_datetime: v => FV.timestamp(v),
       end_datetime: v => FV.timestamp(v),
       is_visible: v => v.isBoolean(),
-      hide_ticket_quantity: v =>  v.isBoolean()
-    }
-  }
+      is_quantity_visible: v => v.isBoolean(),
+      dono_pegs: v =>
+        v
+          .optional({ nullable: true })
+          .isArray()
+          // FIXME: array validator doesn't support primitive arrays
+          // .custom(
+          //   array({
+          //     '*': v => v.isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'])
+          //   })
+          // )
+    };
+  };
 
   export const IHostMemberChangeRequest = (
     value: IHostMemberChangeRequest['value'] = null
@@ -100,5 +110,4 @@ export namespace ObjectValidators {
       value: v => v.optional({ nullable: true }) // TODO: update this validator to check for either typeof HostPermission or number
     };
   };
-
 }

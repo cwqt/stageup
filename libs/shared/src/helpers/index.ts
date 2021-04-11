@@ -1,4 +1,4 @@
-import { CurrencyCode, Environment, NUUID, Primitive } from '@core/interfaces';
+import { BASE_AMOUNT_MAP, CurrencyCode, DonoPeg, DONO_PEG_WEIGHT_MAPPING, Environment, NUUID, Primitive } from '@core/interfaces';
 import { nanoid } from 'nanoid';
 import QueryString from 'qs';
 
@@ -103,6 +103,13 @@ export const querize = (query: IQueryParams) =>
  * @param value object to be cast as T
  * @see https://stackoverflow.com/a/38029708
  */
-export function to<T>(value: T): T {
-  return value;
+export function to<T>(value: T): T { return value; }
+
+/**
+ * @description Calculate the ticket donation amount from the selected peg and currency
+ */
+export const getDonoAmount = (donoPeg: DonoPeg, currency: CurrencyCode, allowAnyQty:number=0) => {
+  return donoPeg == "allow_any"
+    ? allowAnyQty
+    : DONO_PEG_WEIGHT_MAPPING[donoPeg] * BASE_AMOUNT_MAP[currency];
 }

@@ -10,6 +10,31 @@ export enum TicketFees {
   PassOntoPurchaser = 'pass_onto_purchaser',
   Absorb = 'absorb'
 }
+
+export enum DonoPegWeights {
+  Lowest = 2.5,
+  Low = 5.0,
+  Medium = 10,
+  High = 15,
+  Highest = 20
+}
+
+export type DonoPeg = "lowest" | "low" | "medium" | "high" | "highest" | "allow_any";
+
+export const DONO_PEG_WEIGHT_MAPPING: { [index in DonoPeg]: DonoPegWeights } = {
+	lowest: DonoPegWeights.Lowest,
+	low: DonoPegWeights.Low,
+	medium: DonoPegWeights.Medium,
+	high: DonoPegWeights.High,
+	highest: DonoPegWeights.Highest,
+	allow_any: 1
+} as const;
+
+export interface DtoDonationPurchase {
+	selected_dono_peg: DonoPeg;
+	allow_any_amount?: number;
+}
+
 export interface ITicketStub {
   _id: string;
   name: string;
@@ -18,8 +43,9 @@ export interface ITicketStub {
   quantity: number;
   quantity_remaining: number;
   type: TicketType;
+  dono_pegs: DonoPeg[];
   is_visible: boolean;
-  hide_ticket_quantity: boolean;
+  is_quantity_visible: boolean;
 }
 
 export interface ITicket extends ITicketStub {
@@ -41,6 +67,7 @@ export type DtoCreateTicket = Required<
     | 'start_datetime'
     | 'end_datetime'
     | 'is_visible'
-    | 'hide_ticket_quantity'
+    | 'dono_pegs'
+    | 'is_quantity_visible'
   >
 >;

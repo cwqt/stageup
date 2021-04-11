@@ -107,7 +107,8 @@ export class Host extends BaseEntity implements IHostPrivate {
       username: this.username,
       avatar: this.avatar,
       banner: this.banner,
-      bio: this.bio
+      bio: this.bio,
+      stripe_account_id: this.stripe_account_id
     };
   }
 
@@ -128,7 +129,6 @@ export class Host extends BaseEntity implements IHostPrivate {
       email_address: this.email_address,
       contact_info: this.contact_info.toFull(),
       business_details: this.business_details,
-      stripe_account_id: this.stripe_account_id,
     };
   } 
 }
