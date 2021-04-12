@@ -176,7 +176,7 @@ export default class PerformanceController extends BaseController<BackendProvide
       validators: [],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const { stream } = await Performance.findOne({ _id: req.params.pid }, { relations: ['stream'] });
+        const { stream } = await Performance.findOne({ _id: req.params.pid }, { relations: { stream: { signing_key: true }} });
 
         // Host_info eager loads signing_key, which is very convenient usually
         // but we do not wanna send keys and such over the wire
