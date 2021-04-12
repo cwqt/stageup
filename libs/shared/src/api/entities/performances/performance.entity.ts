@@ -42,7 +42,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
 
-  @OneToOne(() => Asset) @JoinColumn() stream: Asset<AssetType.LiveStream>;
+  @OneToOne(() => Asset, { eager: true }) @JoinColumn() stream: Asset<AssetType.LiveStream>;
   @OneToOne(() => AssetGroup) @JoinColumn() assetGroup: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
