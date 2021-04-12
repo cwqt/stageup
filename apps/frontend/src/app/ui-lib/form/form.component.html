@@ -2,7 +2,7 @@
 
 <div class="ui-form" [class.visible]="shouldBeVisible">
   <ui-button type="submit"
-    [class.hidden]="form.submit.isHidden"
+    [class.hidden]="form.submit.is_hidden"
     [disabled]="cacheable.loading"
     [kind]="form.submit.variant"
     (click)="onSubmit()">

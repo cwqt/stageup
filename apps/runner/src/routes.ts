@@ -1,17 +1,16 @@
-import { DataClient, Middlewares, AsyncRouter } from "@core/shared/api";
-import { RunnerDataClient } from "./common/data";
+import { Middlewares, AsyncRouter } from "@core/shared/api";
+import { RunnerProviderMap } from ".";
 import { QueueMap } from './common/queues';
 
 import JobsController from './controllers/jobs.controller';
 import MiscController from './controllers/misc.controller';
 
-export default (queues:QueueMap) => (router:AsyncRouter, client:DataClient<RunnerDataClient>, mws:Middlewares) => {
+export default (queues:QueueMap) => (router:AsyncRouter<RunnerProviderMap>, pm:RunnerProviderMap, mws:Middlewares) => {
   // JOBS ---------------------------------------------------------------------------------------------------------------
-  const Jobs = new JobsController(client, mws);
+  const Jobs = new JobsController(pm, mws);
   router.post <void>    ("/jobs",   Jobs.enqueue(queues));
 
   // MISC ---------------------------------------------------------------------------------------------------------------
-  const Misc = new MiscController(client, mws);
+  const Misc = new MiscController(pm, mws);
   router.get  <string>  ("/ping",   Misc.ping());
 }
-  

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IHostStripeInfo } from '@core/interfaces';
+import { IHostStripeInfo, IHostStub } from '@core/interfaces';
 import { StripeService } from 'ngx-stripe';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { BaseAppService } from '../../../services/app.service';
@@ -17,6 +17,7 @@ export class HostPaymentsComponent implements OnInit {
   stripeInfo: ICacheable<IHostStripeInfo> = createICacheable();
   connect: ICacheable<null> = createICacheable();
   connectSuccess:undefined | boolean;
+  host:IHostStub;
 
   constructor(
     private baseAppService: BaseAppService,
@@ -26,6 +27,7 @@ export class HostPaymentsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.host = this.hostService.currentHostValue;
     await this.baseAppService.componentInitialising(this.route);
 
     // Check for query param, coerce to boolean if exists

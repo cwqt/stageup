@@ -1,4 +1,15 @@
 import {
+  AssetType,
+  DtoCreatePerformance,
+  Genre,
+  IPerformance,
+  IPerformanceStub,
+  Visibility,
+} from '@core/interfaces';
+import { timestamp, uuid } from '@core/shared/helpers';
+import Mux from '@mux/mux-node';
+import { Except } from 'type-fest';
+import {
   BaseEntity,
   BeforeInsert,
   Column,
@@ -10,68 +21,55 @@ import {
   OneToOne,
   PrimaryColumn
 } from 'typeorm';
-import { CurrencyCode, DtoCreatePerformance, Genre, IPerformance, IPerformanceStub, IRating, PerformanceState, Visibility } from '@core/interfaces';
-
-import { PerformanceHostInfo } from './performance-host-info.entity';
+import MuxProvider from '../../data-client/providers/mux.provider';
+import { AssetGroup } from '../common/asset-group.entity';
+import { Asset } from '../common/asset.entity';
 import { Host } from '../hosts/host.entity';
-import { User } from '../users/user.entity';
-import { PerformancePurchase } from '../performances/purchase.entity';
-import { timestamp, uuid } from '@core/shared/helpers';
-import { DataConnections } from '@core/shared/api';
-import Mux from '@mux/mux-node';
+import { Ticket } from './ticket.entity';
 
 @Entity()
-export class Performance extends BaseEntity implements IPerformance {
+export class Performance extends BaseEntity implements Except<IPerformance, 'stream'> {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column() created_at: number;
   @Column() name: string;
   @Column() description?: string;
   @Column() views: number;
-  @Column() price: number;
-  @Column() playback_id: string;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
-  @Column('enum', { enum: PerformanceState }) state: PerformanceState;
-  @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
 
+  @OneToOne(() => Asset, { eager: true }) @JoinColumn() stream: Asset<AssetType.LiveStream>;
+  @OneToOne(() => AssetGroup) @JoinColumn() assetGroup: AssetGroup;
+  @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
-  @ManyToOne(() => User, user => user.performances) creator: User;
-  @OneToOne(() =>  PerformanceHostInfo) @JoinColumn() host_info: PerformanceHostInfo;
-  @OneToMany(() => PerformancePurchase, purchase => purchase.performance) purchases: PerformancePurchase[];
 
-  ratings: IRating[];
-
-  constructor(
-    data: DtoCreatePerformance,
-    creator: User
-  ) {
+  constructor(data: DtoCreatePerformance, host: Host) {
     super();
     this.name = data.name;
     this.description = data.description;
-    this.price = data.price;
-    this.currency = data.currency;
     this.premiere_date = data.premiere_date;
     this.genre = data.genre;
+    this.tickets = [];
 
     this.created_at = timestamp(new Date());
     this.views = 0;
     this.average_rating = null;
-    this.creator = creator;
-    this.host = creator.host;
-    this.state = PerformanceState.Idle;
+    this.host = host;
   }
 
-  async setup(mux:Mux, txc:EntityManager): Promise<Performance> {
-    // Create host info, which includes a signing key, thru atomic trans op
-    const [hostInfo, stream] = await new PerformanceHostInfo().setup(mux, txc);
-    this.host_info = hostInfo;
-    this.playback_id = stream.playback_ids.find(p => p.policy === 'signed').id;
+  async setup(mux: MuxProvider, txc: EntityManager): Promise<Performance> {
+    this.assetGroup = new AssetGroup();
+    const stream = await new Asset(AssetType.LiveStream).setup(mux, txc);
+    this.stream = stream;
 
-    return this;
+    this.assetGroup.push(stream);
+    await txc.save(this.assetGroup);
+    return txc.save(this);
   }
 
   toStub(): Required<IPerformanceStub> {
@@ -82,8 +80,8 @@ export class Performance extends BaseEntity implements IPerformance {
       average_rating: this.average_rating,
       views: this.views,
       description: this.description,
-      playback_id: this.playback_id,
-      created_at: this.created_at
+      created_at: this.created_at,
+      stream: { state: this.stream.meta.state, location: this.stream.location }
     };
   }
 
@@ -92,15 +90,14 @@ export class Performance extends BaseEntity implements IPerformance {
       ...this.toStub(),
       visibility: this.visibility,
       premiere_date: this.premiere_date,
-      ratings: this.ratings,
-      state: this.state,
-      price: this.price,
-      currency: this.currency,
       genre: this.genre,
+      tickets: this.tickets?.map(t => t.toStub()) || []
     };
   }
 
-  async update(updates: Partial<Pick<IPerformance, 'name' | 'description' | 'price'>>): Promise<Performance> {
+  async update(
+    updates: Partial<Pick<IPerformance, 'name' | 'description'>>
+  ): Promise<Performance> {
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (this as any)[k] = v ?? (this as any)[k];
     });

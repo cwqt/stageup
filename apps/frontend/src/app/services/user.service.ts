@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-
-import { IUser, IHost, Primitive, IMyself } from '@core/interfaces';
+import * as fd from 'form-data';
+import { IUser, IHost, Primitive, IMyself, IUserStub, IPasswordReset } from '@core/interfaces';
 import { MyselfService } from './myself.service';
+import { UserHostInfo } from '@core/shared/api';
+import { VolumeId } from 'aws-sdk/clients/storagegateway';
+import { body } from 'express-validator';
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +28,9 @@ export class UserService {
     });
   }
 
-  register(user: Pick<IUser, 'name' | 'username'> & { password: string }): Promise<IUser> {
-    return this.http.post<IUser>('/api/users', user).toPromise();
+  register(user: Pick<IUser, 'name' | 'username'> & { password: string }): Promise<IMyself["user"]> {
+    return this.http.post<IMyself["user"]>('/api/users', user).toPromise();
+
   }
 
   updateUser(userId: string, body: { [index: string]: Primitive }): Promise<IMyself["user"]> {
@@ -50,16 +54,18 @@ export class UserService {
     return this.http.get<IHost>(`/api/users/${userId}/host`).toPromise();
   }
 
-  changeAvatar(userId: string, formData: FormData): Promise<IMyself["user"]> {
+  changeAvatar(userId: string, formData: fd): Promise<IUserStub> {
     return this.http
-      .put<IMyself["user"]>(`/api/users/${userId}/avatar`, formData)
-      .pipe(
-        tap(u => {
-          if (u._id == userId) {
-            this.myselfService.setUser(u);
-          }
-        })
-      )
-      .toPromise();
+      .put<IUserStub>(`/api/users/${userId}/avatar`, formData).toPromise();
+  }
+
+  //router.post <void> ("/users/forgot-password", Users.forgotPassword())
+  forgotPassword( email_address: string ): Promise<void> {
+    return this.http.post<void>(`/api/users/forgot-password`, { email_address: email_address }).toPromise();
+  }
+
+  //router.put <void> ("/users/reset-password", Users.resetForgottenPassword());
+  resetForgottenPassword( otp: string, new_password: string ): Promise<void> {
+    return this.http.put<void>(`/api/users/reset-password?otp=${otp}`, { new_password: new_password }).toPromise();
   }
 }

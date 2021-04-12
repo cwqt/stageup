@@ -1,41 +1,40 @@
 import { IHostStub } from '../hosts/host.interface';
-import { IRating } from './performance-review.interface';
 import { ISigningKey } from './signing-key.interface';
-import { CurrencyCode } from '../common/currency.interface';
+
 import { Genre } from './genres.interface';
-import { IPerformancePurchase } from './performance-purchase.interface';
-import { DtoAccessToken } from './access-token.interface';
+import { DtoAccessToken, JwtAccessToken } from './access-token.interface';
+import { ITicketStub } from './ticket.interface';
+import { AssetType, IAsset } from '../common/asset.interface';
+import { IEnvelopedData } from '../common/envelope.interface';
+import { LiveStreamState } from '../3rd-party/mux.interface';
+import { NUUID } from '../common/fp.interface';
 
 export enum Visibility {
   Public = 'public',
   Private = 'private'
 }
 export interface IPerformanceStub {
-  _id: string;
+  _id: NUUID;
   host: IHostStub; // who created the performance
   name: string; // title of performance
   description?: string; // description of performance
   average_rating: number; // average rating across all ratings
   views: number; // total user view count
-  playback_id: string; // address to view
   created_at: number;
+  stream: { state: LiveStreamState; location: IAsset<AssetType.LiveStream>['location'] };
 }
 
 export interface IPerformance extends IPerformanceStub {
   visibility: Visibility;
   premiere_date?: number; // when the performance is ready to be streamed
-  ratings: IRating[]; // user ratings on performance
-  state: PerformanceState; // status of stream
-  price: number; // cost to purchase (micro-pence)
-  currency: CurrencyCode; // currency of price
   genre: Genre;
+  tickets: ITicketStub[];
 }
 
+export type DtoPerformance = IEnvelopedData<IPerformance, { has_purchased: boolean; token: JwtAccessToken }>;
+
 // data transfer object
-export type DtoCreatePerformance = Pick<
-  Required<IPerformance>,
-  'name' | 'premiere_date' | 'description' | 'genre' | 'price' | 'currency'
->;
+export type DtoCreatePerformance = Pick<Required<IPerformance>, 'name' | 'premiere_date' | 'description' | 'genre'>;
 
 // private to host
 export interface IPerformanceHostInfo {
@@ -46,14 +45,4 @@ export interface IPerformanceHostInfo {
 export interface IPerformanceUserInfo {
   access_token: DtoAccessToken;
   has_liked?: boolean;
-}
-
-export enum PerformanceState {
-  //https://docs.mux.com/docs/live-streaming
-  Connected = 'video.live_stream.connected',
-  Disconnected = 'video.live_stream.disconnected',
-  Recording = 'video.live_stream.recording',
-  Active = 'video.live_stream.active',
-  Idle = 'video.live_stream.idle',
-  StreamCompleted = 'video.asset.live_stream_completed'
 }

@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'shortDomain' })
 export class ShortDomainPipe implements PipeTransform {
-  transform(url: string, args?: any): any {
+  transform(url: string): any {
     if (!url || url.length < 3) return url;
 
     // transform https://github.com/whasda into github.com
@@ -12,7 +12,7 @@ export class ShortDomainPipe implements PipeTransform {
       result = match[1];
       if ((match = result.match(/^[^.]+\.(.+\..+)$/))) result = match[1];
     }
-    
+
     return result;
   }
 }

@@ -17,6 +17,7 @@ import {
 } from '@core/interfaces';
 import { api } from '../environment';
 import { Stories } from '../stories';
+import fd from 'form-data';
 
 export default {
   // Host CRUD --------------------------------------------------------------------------------------------------------------
@@ -43,10 +44,28 @@ export default {
     const res = await api.post<IHost>(`/hosts/${host._id}`, env.getOptions());
     return res.data;
   },
-  
+
   // router.delete <void>("/hosts/:hid",Hosts.deleteHost());
   deleteHost: async (host: IHost) => {
     const res = await api.post<void>(`/hosts/${host._id}`, env.getOptions());
+    return res.data;
+  },
+
+   //router.put<IHostS>("/hosts/:hid/avatar", Hosts.changeAvatar());
+   changeAvatar: async (host: IHost, data: fd): Promise<IHostStub> => {
+    const options = env.getOptions();
+    options.headers["Content-Type"] = data.getHeaders()["content-type"];
+
+    const res = await api.put<IHostStub>(`/hosts/${host._id}/avatar`, data, options);
+    return res.data;
+  },
+
+  //router.put<IHostS>("/hosts/:hid/banner", Hosts.changeBanner());
+  changeBanner: async (host: IHost, data: fd): Promise<IHostStub> => {
+    const options = env.getOptions();
+    options.headers["Content-Type"] = data.getHeaders()["content-type"];
+
+    const res = await api.put<IHostStub>(`/hosts/${host._id}/banner`, data, options);
     return res.data;
   },
 

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { IEnvelopedData, IPerformanceStub } from '@core/interfaces';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { cachize, createICacheable, ICacheable } from '../../app.interfaces';
+import { BaseAppService } from '../../services/app.service';
 import { MyselfService } from '../../services/myself.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class MyStuffComponent implements OnInit {
   myStuff: ICacheable<IEnvelopedData<IPerformanceStub[]>> = createICacheable([]);
   searchTerms = new Subject<string>();
 
-  constructor(private myselfService: MyselfService) {}
+  constructor(private myselfService: MyselfService, private appService:BaseAppService) {}
 
   ngOnInit() {
     this.searchTerms.pipe(
@@ -27,5 +28,9 @@ export class MyStuffComponent implements OnInit {
 
   onChange(event:string) {
     if(event && typeof event == "string") this.searchTerms.next(event);
+  }
+
+  openWatchPerformance(performance:IPerformanceStub) {
+    this.appService.navigateTo(`/performances/${performance._id}`);
   }
 }

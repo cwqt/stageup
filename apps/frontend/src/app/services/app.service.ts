@@ -1,29 +1,23 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subject } from "rxjs";
-import {
-  ParamMap,
-  Data,
-  ActivatedRoute,
-  Router,
-  NavigationExtras,
-} from "@angular/router";
-import { AuthenticationService } from "./authentication.service";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { ParamMap, Data, ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { AuthenticationService } from './authentication.service';
 
 export enum RouteParam {
-  UserId = "userId",
-  HostId = "hostId",
-  PerformanceId = "performanceId",
+  UserId = 'userId',
+  HostId = 'hostId',
+  PerformanceId = 'performanceId'
 }
 
 export enum RouteChange {
-  Login = "login",
-  Logout = "logout",
-  Component = "component",
-  Params = "params",
+  Login = 'login',
+  Logout = 'logout',
+  Component = 'component',
+  Params = 'params'
 }
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class BaseAppService {
   $params: BehaviorSubject<ParamMap>;
@@ -31,7 +25,8 @@ export class BaseAppService {
   $routeData: BehaviorSubject<Data>;
   $componentError: BehaviorSubject<boolean>;
   loggedIn: boolean;
-  // the boolean is whether the component was changed (initialised) - true means it was - false means just route params altered - query param changes are ignored
+  // the boolean is whether the component was changed (initialised)
+  // true means it was - false means just route params altered - query param changes are ignored
   $routeAltered: Subject<RouteChange> = new Subject();
 
   constructor(
@@ -45,9 +40,7 @@ export class BaseAppService {
     this.loggedIn = this.authenticationService.$loggedIn.getValue();
     this.authenticationService.$loggedIn.subscribe((isLoggedIn: boolean) => {
       this.loggedIn = isLoggedIn;
-      this.notifyRouteAltered(
-        isLoggedIn ? RouteChange.Login : RouteChange.Logout
-      );
+      this.notifyRouteAltered(isLoggedIn ? RouteChange.Login : RouteChange.Logout);
     });
 
     //this activatedRoute has no params really as have yet to navigate
@@ -57,10 +50,7 @@ export class BaseAppService {
   }
 
   // blockUntilUserLoaded means the user value will be up to date when this returns - avoiding the need to subscribe async to user permission changes for spaces etc.
-  async componentInitialising(
-    activatedRoute: ActivatedRoute,
-    blockUntilUserLoaded: boolean = false
-  ) {
+  async componentInitialising(activatedRoute: ActivatedRoute, blockUntilUserLoaded: boolean = false) {
     if (this.$componentError.getValue()) this.$componentError.next(false);
     this.$params.next(activatedRoute.snapshot.paramMap);
     this.$queryParams.next(activatedRoute.snapshot.queryParamMap);
@@ -94,9 +84,7 @@ export class BaseAppService {
 
   // updating stored user permissions as space changes
   async paramsUpdated(reInitialised: boolean) {
-    this.notifyRouteAltered(
-      reInitialised ? RouteChange.Component : RouteChange.Params
-    );
+    this.notifyRouteAltered(reInitialised ? RouteChange.Component : RouteChange.Params);
   }
 
   notifyRouteAltered(change: RouteChange) {

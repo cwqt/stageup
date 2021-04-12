@@ -12,7 +12,7 @@ deploy/env/*
 *.env
 .env.*
 !.env.example
-bundle.7z
+bundle.zip
 bundle.7z
 
 environment.*

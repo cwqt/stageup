@@ -3,3 +3,8 @@ video {
     width: 100%    !important;
     height: auto   !important;
 }
+
+// disable progress bar
+::ng-deep .plyr__progress {
+  display: none;
+}

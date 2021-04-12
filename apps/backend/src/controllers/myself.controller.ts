@@ -13,7 +13,8 @@ import {
   Environment,
   IUserStub,
   pick,
-  IPerformanceStub
+  IPerformanceStub,
+  IUserInvoice
 } from '@core/interfaces';
 import {
   IControllerEndpoint,
@@ -115,7 +116,34 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             name: req.query.name ? `%${(req.query.name as string).toLowerCase()}%` : '%'
           })
           .leftJoinAndSelect('performance.host', 'host')
+          .innerJoinAndSelect("performance.stream", "stream")
           .paginate(t => t.performance.toStub());
+      }
+    };
+  }
+
+  readInvoices(): IControllerEndpoint<IEnvelopedData<IUserInvoice[]>> {
+    return {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+        return await this.ORM.createQueryBuilder(Invoice, 'invoice')
+          .where('invoice.user__id = :user_id', { user_id: req.session.user._id })
+          .leftJoinAndSelect('invoice.ticket', 'ticket')
+          .leftJoinAndSelect('ticket.performance', 'performance')
+          .filter({
+            performance_name: { subject: 'performance.name' },
+            ticket_type: { subject: 'ticket.type' },
+            purchased_at: { subject: 'invoice.purchased_at' },
+            payment_status: { subject: 'invoice.status' },
+            amount: { subject: 'invoice.amount', transformer: v => parseInt(v as string) }
+          })
+          .sort({
+            performance_name: 'performance.name',
+            amount: 'invoice.amount',
+            purchased_at: 'invoice.purchased_at'
+          })
+          .innerJoinAndSelect("performance.stream", "stream")
+          .paginate(i => i.toUserInvoice());
       }
     };
   }

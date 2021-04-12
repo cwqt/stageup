@@ -1,3 +1,7 @@
+## [0.0.6](https://github.com/StageUp/core/compare/v0.0.5...v0.0.6) (2021-04-12)
+
+
+
 ## 0.0.3 (2021-02-28)
 * `SU-39 ` [Host Owner] I want to access a streaming key for a performance
 * `SU-120` [Host Owner] I want to update a performance's details
@@ -14,7 +18,7 @@
 * `SU-219` [Host Owner] I want to schedule the release of a performance
 * `SU-229` [Host Editor] - I want to view individual performance page
 * `SU-222` Design issue with login/register page
-* `SU-223` Host Social inputs doesn't accept null values	
+* `SU-223` Host Social inputs doesn't accept null values
 * `SU-225` Frontend global error handler with Toasts
 
 ## 0.0.2 (2021-02-15)

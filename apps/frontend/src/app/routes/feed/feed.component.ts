@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { IEnvelopedData as IEnv, IPerformanceStub } from '@core/interfaces';
-import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 
-import { MatDialog, MatDialogRef, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '../../services/helper.service';
-import { PerformanceDialogComponent } from '../../components/dialogs/performance-dialog/performance-dialog.component';
+import { PerformanceBrochureComponent } from '../performance/performance-brochure/performance-brochure.component';
 
 @Component({
   selector: 'app-feed',
@@ -20,30 +19,22 @@ export class FeedComponent implements OnInit {
     loading: false
   };
 
-  constructor(
-    private feedService: FeedService,
-    private appService: BaseAppService,
-    public dialog: MatDialog,
-    private helperService: HelperService
-  ) {}
+  constructor(private feedService: FeedService, public dialog: MatDialog, private helperService: HelperService) {}
 
-  ngOnInit(): void {
-    this.getFeed();
+  async ngOnInit() {
+    await this.getFeed();
   }
 
   getFeed() {
-    this.performances.loading = true;
-    this.feedService
-      .getFeed()
-      .then(p => (this.performances.data = p))
-      .catch(e => (this.performances.error = e))
-      .finally(() => (this.performances.loading = false));
+    return cachize(this.feedService.getFeed(), this.performances);
   }
 
-  openDialog(performanceIdx: number): void {
+  openDialog(performance: IPerformanceStub): void {
     this.helperService.showDialog(
-      this.dialog.open(PerformanceDialogComponent, {
-        data: this.performances.data.data[performanceIdx]
+      this.dialog.open(PerformanceBrochureComponent, {
+        data: performance,
+        maxWidth: "1000px",
+        position: { top: '5%' }
       }),
       () => {}
     );

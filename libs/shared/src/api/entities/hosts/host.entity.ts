@@ -10,7 +10,7 @@ import {
   PrimaryColumn
 } from 'typeorm';
 
-import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails } from '@core/interfaces';
+import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails, HTTP, ErrCode } from '@core/interfaces';
 
 import { User } from '../users/user.entity';
 import { Performance } from '../performances/performance.entity';
@@ -18,6 +18,8 @@ import { UserHostInfo } from './user-host-info.entity';
 import { Onboarding } from './onboarding.entity';
 import { ContactInfo } from '../users/contact-info.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
+import { ErrorHandler } from '../../errors';
+import { Invoice } from '../common/invoice.entity';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -29,14 +31,18 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column() username: string;
   @Column({ nullable: true }) bio?: string;
   @Column({ nullable: true }) avatar: string;
+  @Column({ nullable: true }) banner: string;
   @Column() is_onboarded: boolean;
   @Column() email_address: string;
+  @Column({ nullable: true }) stripe_account_id: string;
   @Column('jsonb') social_info: ISocialInfo;
   @Column('jsonb', { nullable: true }) business_details: IHostBusinessDetails;
 
-  @OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
+	@OneToMany(() => Invoice, invoice => invoice.host) invoices: Invoice[];
+
+	@OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {
@@ -81,6 +87,10 @@ export class Host extends BaseEntity implements IHostPrivate {
 
   async removeMember(user: User, txc: EntityManager) {
     const uhi = await txc.findOne(UserHostInfo, { user: user, host: this });
+
+    // Can't remove an Owner
+    if (uhi.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+
     this.members_info = this.members_info.splice(
       this.members_info.findIndex(m => m._id === user._id),
       1
@@ -96,7 +106,9 @@ export class Host extends BaseEntity implements IHostPrivate {
       name: this.name,
       username: this.username,
       avatar: this.avatar,
-      bio: this.bio
+      banner: this.banner,
+      bio: this.bio,
+      stripe_account_id: this.stripe_account_id
     };
   }
 
@@ -105,7 +117,6 @@ export class Host extends BaseEntity implements IHostPrivate {
       ...this.toStub(),
       created_at: this.created_at,
       members_info: this.members_info?.map(uhi => uhi.toFull()) || [],
-      performances: this.performances?.map((p: Performance) => p.toStub()) || [],
       is_onboarded: this.is_onboarded,
       social_info: this.social_info
     };
@@ -116,7 +127,7 @@ export class Host extends BaseEntity implements IHostPrivate {
       ...this.toFull(),
       email_address: this.email_address,
       contact_info: this.contact_info.toFull(),
-      business_details: this.business_details
+      business_details: this.business_details,
     };
   }
 }

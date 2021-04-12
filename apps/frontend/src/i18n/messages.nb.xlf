@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template" target-language="nb">
+    <body>
+      <trans-unit id="header-search-bar" datatype="html">
+        <source>Search for performances...</source><target state="translated">Søk etter forestillinger…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="categories" datatype="html">
+        <source>Categories</source><target state="translated">Kategorier</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="my-stuff" datatype="html">
+        <source>My Stuff</source><target state="translated">Mine ting</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="log" datatype="html">
+        <source>Log In</source><target state="translated">Logg Inn</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="994363f08f9fbfa3b3994ff7b35c6904fdff18d8" datatype="html">
+        <source>Profile</source><target state="translated">Profil</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="121cc5391cd2a5115bc2b3160379ee5b36cd7716" datatype="html">
+        <source>Settings</source><target state="translated">Innstillinger</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="bb694b49d408265c91c62799c2b3a7e3151c824d" datatype="html">
+        <source>Logout</source><target state="translated">Logg ut</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="performances|Feed page title" datatype="html">
+        <source>Performances</source><target state="translated">Fremførelser</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loading" datatype="html">
+        <source>Loading...</source><target state="translated">Laster inn …</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="no-performances-found" datatype="html">
+        <source>No performances found</source><target state="translated">Ingen forestillinger funnet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="edit-profile" datatype="html">
+        <source>Edit Profile </source><target state="translated">Endre profil</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host.component.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+      </trans-unit><trans-unit id="login-dialog" datatype="html">
+        <source>Log in</source><target state="translated">Logg Inn</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/login.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

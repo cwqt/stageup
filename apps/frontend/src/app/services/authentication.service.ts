@@ -19,14 +19,15 @@ export class AuthenticationService {
     private myselfService: MyselfService,
     private cookieService: CookieService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
-  checkLoggedIn() {
+  checkLoggedIn(redirect?:boolean) {
     this.$loggedIn.next(
       new LoggedInGuard(this.router, this.myselfService).canActivate(
         this.route.snapshot,
-        this.router.routerState.snapshot
+        this.router.routerState.snapshot,
+        false
       )
     );
     return this.$loggedIn.getValue();
@@ -39,12 +40,14 @@ export class AuthenticationService {
         tap((user) => {
           // Remove last logged in user stored
           this.myselfService.store(null);
+          this.myselfService.getMyself().then(() => this.$loggedIn.next(true))
         })
       )
       .toPromise();
   }
 
   logout() {
+    this.$loggedIn.next(false);
     this.cookieService.set("connect.sid", null);
     this.myselfService.store(null, true);
     this.http.post("/api/users/logout", {});

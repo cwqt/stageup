@@ -27,7 +27,7 @@ export interface IUiDialogOptions {
   buttons: Array<{
     text: string;
     kind: ThemeKind;
-    callback: () => any;
+    callback: (r?:MatDialogRef<any>) => any;
     loading?: boolean;
     disabled?: boolean;
     loadingText?: string;

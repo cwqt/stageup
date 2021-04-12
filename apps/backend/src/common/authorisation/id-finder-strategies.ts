@@ -1,10 +1,10 @@
-import { IdFinderStrategy, Performance } from '@core/shared/api';
+import { IdFinderStrategy, Performance, Ticket } from '@core/shared/api';
 
-const findUserIdFromSession: IdFinderStrategy = async (req, dc) => {
+const findUserIdFromSession: IdFinderStrategy = async (req, pm) => {
   return req.session.user?._id;
 };
 
-const findHostIdFromPerformanceId: IdFinderStrategy = async (req, dc) => {
+const findHostIdFromPerformanceId: IdFinderStrategy = async (req, pm) => {
   const performanceId = req.params.pid;
   const performance = await Performance.findOne({
     relations: ['host'],
@@ -18,7 +18,7 @@ const findHostIdFromPerformanceId: IdFinderStrategy = async (req, dc) => {
       }
     }
   });
-    
+
   return performance?.host?._id;
 };
 

@@ -1,6 +1,7 @@
 // https://stackoverflow.com/a/59805161/8526764
 const TRUE_ENV = process.env['NODE' + '_ENV'];
-require('dotenv-flow').config({ node_env: TRUE_ENV });
+/* eslint @typescript-eslint/no-var-requires: "off" */
+require('dotenv-flow').config({ node_env: TRUE_ENV, silent: true });
 
 import { isEnv } from '@core/shared/helpers';
 import { Environment } from '@core/interfaces';
@@ -12,6 +13,8 @@ import {
   IAWS3ProviderConfig,
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
+  IStripeProviderConfig,
+  IPubSubProviderConfig
 } from '@core/shared/api';
 
 type Envify<T> = { [index: string]: any };
@@ -29,11 +32,14 @@ interface IEnvironment {
   EXPRESS_PORT: number;
   UWU_MODE: boolean;
   INTERNAL_KEY: string;
+  WEBHOOK_URL: string;
   PG: Envify<IPostgresProviderConfig>;
   MUX: Envify<IMuxProviderConfig>;
   AWS: Envify<IAWS3ProviderConfig>;
   REDIS: Envify<IRedisProviderConfig>;
   STORE: Envify<IStoreProviderConfig>;
+  STRIPE: Envify<IStripeProviderConfig>;
+  PUB_SUB: Envify<IPubSubProviderConfig>;
   INFLUX: Envify<IInfluxProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   isEnv: (env: Environment | Environment[]) => boolean;
@@ -51,16 +57,15 @@ const Env: IEnvironment = {
   QUEUE_URL: process.env.QUEUE_URL,
   INTERNAL_KEY: process.env.INTERNAL_KEY,
   EXPRESS_PORT: 3000,
+  WEBHOOK_URL: process.env.WEBHOOK_URL,
   LOCALTUNNEL: {
     PORT: 3000,
-    DOMAIN: process.env.LOCALTUNNEL_URL
   },
   UWU_MODE: process.env.UWU_MODE === 'true',
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
     HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE,
-    IMAGE_API_ENDPOINT: process.env.MUX_IMAGE_API_ENDPOINT
   },
   PG: {
     USERNAME: process.env.POSTGRES_USER,
@@ -79,11 +84,21 @@ const Env: IEnvironment = {
     PORT: 6379,
     TTL: 86400
   },
+  STRIPE: {
+    PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+    PRIVATE_KEY: process.env.STRIPE_PRIVATE_KEY,
+    HOOK_SIGNATURE: process.env.STRIPE_HOOK_SIGNATURE
+  },
+  PUB_SUB: {
+    PROJECT_ID: process.env.PUB_SUB_PROJECT_ID,
+    PORT: parseInt(process.env.PUB_SUB_PORT)
+  },
   AWS: {
-    S3_ACCESS_KEY_ID: process.env.AWS_S3_KEY_ID,
+    S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
     S3_ACCESS_SECRET_KEY: process.env.AWS_S3_ACCESS_SECRET_KEY,
     S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
-    S3_URL: process.env.AWS_S3_URL
+    S3_URL: process.env.AWS_S3_URL,
+    S3_REGION: process.env.AWS_S3_REGION
   },
   INFLUX: {
     HOST: process.env.INFLUX_HOST,

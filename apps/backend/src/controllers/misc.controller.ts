@@ -1,18 +1,23 @@
-import AuthStrat from '../common/authorisation';
+import { Environment, HostInviteState, HostPermission, IHost, LiveStreamState } from '@core/interfaces';
 import {
-  Provider,
-  UserHostInfo,
-  Host,
-  getCheck,
-  HostInvitation,
   BaseController,
-  IControllerEndpoint
+  DataClient,
+  getCheck,
+  Host,
+  HostInvitation,
+  IControllerEndpoint,
+  Performance,
+  TopicType,
+  UserHostInfo
 } from '@core/shared/api';
-import { IHost, Environment, HostInviteState, HostPermission, HTTP, ErrCode } from '@core/interfaces';
+import { LiveStreams } from '@mux/mux-node';
+import { Like } from 'typeorm';
+import { BackendProviderMap } from '..';
+import AuthStrat from '../common/authorisation';
 import { sendEmail } from '../common/email';
 import Env from '../env';
 
-export default class MiscController extends BaseController {
+export default class MiscController extends BaseController<BackendProviderMap> {
   ping(): IControllerEndpoint<string> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
@@ -25,8 +30,8 @@ export default class MiscController extends BaseController {
   dropAllData(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
-      controller: async (req, dc) => {
-        await Provider.drop(dc.providers);
+      controller: async req => {
+        await DataClient.drop(this.providers);
       }
     };
   }
@@ -74,6 +79,19 @@ export default class MiscController extends BaseController {
         host.is_onboarded = true;
         await host.save();
         return host.toFull();
+      }
+    };
+  }
+
+  // http://localhost:3000/utils/performances/yNL3wrYodJH/state?value=video.live_stream.connected
+  setPerformanceStreamState(): IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      controller: async req => {
+        this.providers.pubsub.publish(TopicType.StreamStateChanged, {
+          performance_id: req.params.pid,
+          state: req.query.value as LiveStreamState
+        });
       }
     };
   }

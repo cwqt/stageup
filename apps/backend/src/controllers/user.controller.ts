@@ -10,7 +10,10 @@ import {
   Idless,
   ErrCode,
   HTTP,
-  Environment
+  Environment,
+  IUserStub,
+  pick,
+  IPasswordReset
 } from '@core/interfaces';
 import {
   IControllerEndpoint,
@@ -23,16 +26,26 @@ import {
   params as parameters,
   ErrorHandler,
   FormErrorResponse,
-  getCheck
+  getCheck,
+  query,
+  Auth,
+  UserHostInfo,
+  PasswordReset
 } from '@core/shared/api';
 
 import Email = require('../common/email');
 import Env from '../env';
 import AuthStrat from '../common/authorisation';
 
-import { EntityManager } from 'typeorm';
+import jwt = require('jsonwebtoken');
 
-export default class UserController extends BaseController {
+import { EntityManager } from 'typeorm';
+import { BackendProviderMap } from '..';
+import idFinderStrategies from '../common/authorisation/id-finder-strategies';
+import { VoiceId } from 'aws-sdk/clients/polly';
+import { sendEmail } from '../common/email';
+
+export default class UserController extends BaseController<BackendProviderMap> {
   loginUser(): IControllerEndpoint<IUser> {
     return {
       validators: [
@@ -48,8 +61,6 @@ export default class UserController extends BaseController {
         const password = req.body.password;
 
         const u = await getCheck(User.findOne({ email_address: emailAddress }));
-        if (!u.is_verified) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.NOT_VERIFIED);
-
         const match = await u.verifyPassword(password);
         if (!match) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.INCORRECT);
 
@@ -59,38 +70,6 @@ export default class UserController extends BaseController {
         };
 
         return u.toFull();
-      }
-    };
-  }
-
-  readMyself(): IControllerEndpoint<IMyself> {
-    return {
-      validators: [],
-      preMiddlewares: [],
-      postMiddlewares: [],
-      authStrategy: AuthStrat.isLoggedIn,
-      controller: async req => {
-        const user = await getCheck(User.findOne({ _id: req.session.user._id }));
-        const host: Host = await Host.findOne({
-          relations: {
-            members_info: {
-              user: true
-            }
-          },
-          where: {
-            members_info: {
-              user: {
-                _id: user._id
-              }
-            }
-          }
-        });
-
-        return {
-          user: { ...user.toFull(), email_address: user.email_address },
-          host: host?.toStub(),
-          host_info: host ? host.members_info.find(uhi => uhi.user._id === user._id)?.toFull() : null
-        };
       }
     };
   }
@@ -132,7 +111,7 @@ export default class UserController extends BaseController {
           u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) === 0;
 
           // Verify user if in dev/testing
-          u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging])
+          u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
 
           await txc.save(u);
           return u;
@@ -186,7 +165,7 @@ export default class UserController extends BaseController {
       authStrategy: AuthStrat.none,
       controller: async req => {
         let u = await getCheck(User.findOne({ _id: req.params.uid }));
-        u = await u.update({ name: req.body.name });
+        u = await u.update(pick(req.body, ['name', 'avatar', 'bio']));
         return u.toMyself();
       }
     };
@@ -227,23 +206,26 @@ export default class UserController extends BaseController {
     };
   }
 
-  // updateUserAvatar(): IControllerEndpoint<IUser> {
-  //   return {
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {
-  //       // TODO: assets with s3
-  //       const user = {} as IUser;
-  //       return user;
-  //     }
-  //   };
-  // }
+  changeAvatar(): IControllerEndpoint<IUserStub> {
+    return {
+      validators: [],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      preMiddlewares: [this.mws.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file')],
+      controller: async req => {
+        const user = await getCheck(
+          User.findOne({
+            where: {
+              _id: req.params.uid
+            }
+          })
+        );
 
-  // forgotPassword(): IControllerEndpoint<void> {
-  //   return {
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {}
-  //   };
-  // }
+        user.avatar = await this.providers.s3.upload(req.file, user.avatar);
+        await user.save();
+        return user.toStub();
+      }
+    };
+  }
 
   resetPassword(): IControllerEndpoint<void> {
     return {
@@ -266,32 +248,18 @@ export default class UserController extends BaseController {
         u.setPassword(newPassword);
         await u.save();
 
-        await Email.sendEmail({
+        Email.sendEmail({
           from: Env.EMAIL_ADDRESS,
           to: u.email_address,
           subject: 'Your password was just changed',
           html: `<p>
       Your account password has recently been changed.<br/><br/>
-      If you did not make this change, please change your password assoon as possible. If you have recently changed your password, then please ignore this email.
+      If you did not make this change, please change your password as soon as possible. If you have recently changed your password, then please ignore this email.
       </p>`
         });
       }
     };
   }
-
-  // readUserHostPermissions(): IControllerEndpoint<void> {
-  //   return {
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {}
-  //   };
-  // }
-
-  // readUserFeed(): IControllerEndpoint<void> {
-  //   return {
-  //     authStrategy: AuthStrat.none,
-  //     controller: async req => {}
-  //   };
-  // }
 
   readAddresses(): IControllerEndpoint<IAddress[]> {
     return {
@@ -336,6 +304,63 @@ export default class UserController extends BaseController {
       authStrategy: AuthStrat.isOurself,
       controller: async req => {
         await Address.delete({ _id: req.params.aid });
+      }
+    };
+  }
+
+  //router.post <void> ("/users/forgot-password", Users.forgotPassword())
+  forgotPassword(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        body<{ email_address: string }>({
+          email_address: v => Validators.Fields.email(v)
+        })
+      ],
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+        const emailAddress = req.body.email_address;
+        const user = await getCheck(User.findOne({ email_address: emailAddress }));
+        const token = jwt.sign({ email_address: emailAddress }, Env.PRIVATE_KEY, { expiresIn: '24h' });
+
+        Email.sendEmailToResetPassword(user, emailAddress, encodeURI(token));
+
+        const p = new PasswordReset({
+          otp: token,
+          email_address: emailAddress,
+          user__id: user._id
+        });
+
+        await p.save();
+      }
+    };
+  }
+
+  //router.put <void> ("/users/reset-password", Users.resetForgottenPassword());
+  resetForgottenPassword(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        query<{ otp: string }>({
+          otp: v => v.isString()
+        }),
+        body<{ new_password: string }>({
+          new_password: v => Validators.Fields.password(v)
+        })
+      ],
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+        const OTP = await new Promise((res, rej) => {
+          jwt.verify(decodeURI(req.query.otp as string), Env.PRIVATE_KEY, (err, decoded) => {
+            if (err) return rej(err);
+            res(decoded);
+          });
+        });
+
+        const user = await getCheck(User.findOne({ email_address: OTP['email_address'] }));
+
+        user.setPassword(req.body.new_password);
+        await user.save();
+
+        Email.sendEmailToConfirmPasswordReset(user);
       }
     };
   }

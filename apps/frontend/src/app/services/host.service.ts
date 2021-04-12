@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Host, Injectable } from '@angular/core';
 import {
   HostPermission,
   IHostOnboarding,
@@ -10,13 +10,18 @@ import {
   IPerformance,
   DtoCreatePerformance,
   IHostMemberChangeRequest,
-  IEnvelopedData
+  IEnvelopedData,
+  IHostStripeInfo,
+  IHostInvoice,
+  IHostInvoiceCSVJobData
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
+import fd from 'form-data';
+import { IQueryParams, querize, timestamp } from '@core/shared/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +60,24 @@ export class HostService {
   createHost(data: Pick<IHost, 'name' | 'username'>): Promise<IHost> {
     return this.http
       .post<IHost>('/api/hosts', data)
-      .pipe(tap(d => this.myselfService.setHost(d)))
+      .pipe(
+        tap(d =>
+          this.myselfService.store(
+            {
+              user: this.myselfService.$myself.getValue().user,
+              // propagate both the new host, and the host creators (owner)
+              // permissions to the other services
+              host: d,
+              host_info: {
+                permissions: HostPermission.Owner,
+                joined_at: timestamp(),
+                prefers_dashboard_landing: true
+              }
+            },
+            true
+          )
+        )
+      )
       .toPromise();
   }
 
@@ -119,10 +141,56 @@ export class HostService {
       .toPromise();
   }
 
+  // router.delete   <void> ("/hosts/:hid/members/:uid", Hosts.removeMember());
+  removeMember(hostId: string, userId: string): Promise<void> {
+    return this.http
+      .delete<void>(`/api/hosts/${hostId}/members/${userId}`)
+      .toPromise()
+      .then(() => {
+        this.myselfService.setHost(null);
+        this.myselfService.setUserHostInfo(null);
+      });
+  }
+
   //router.get <void> ("/hosts/:hid/performances/:pid/provision", Hosts.provisionPerformanceAccessTokens());
   provisionPerformanceAccessTokens(hostId: string, performanceId: string, emailAddresses: string[]): Promise<void> {
     return this.http
       .post<void>(`/api/hosts/${hostId}/performances/${performanceId}/provision`, { email_addresses: emailAddresses })
       .toPromise();
+  }
+
+  connectStripe(hostId: string): Promise<string> {
+    return this.http.post<string>(`/api/hosts/${hostId}/stripe/connect`, null).toPromise();
+  }
+
+  //router.put <void> ("/hosts/:hid/members/:mid", Hosts.updateMember());
+  updateMember(hostId: string, userId: string, permissions: HostPermission): Promise<void> {
+    return this.http
+      .put<void>(`/api/hosts/${hostId}/members/${userId}`, { value: permissions })
+      .toPromise();
+  }
+
+  changeAvatar(hostId: string, data: fd | null) {
+    return this.http.put<IHostStub>(`api/hosts/${hostId}/avatar`, data).toPromise();
+  }
+
+  // router.get <IHostStripeInfo> ("/hosts/:hid/stripe/info", Hosts.readStripeInfo());
+  readStripeInfo(hostId: string): Promise<IHostStripeInfo> {
+    return this.http.get<IHostStripeInfo>(`/api/hosts/${hostId}/stripe/info`).toPromise();
+  }
+
+  //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
+  changeBanner(hostId: string, data: fd | null) {
+    return this.http.put<IHostStub>(`api/hosts/${hostId}/banner`, data).toPromise();
+  }
+
+  // router.get <IE<IHostInvoice[]>> ("/hosts/:hid/invoices", Hosts.readInvoices());
+  readInvoices(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IHostInvoice[]>> {
+    return this.http.get<IEnvelopedData<IHostInvoice[]>>(`/api/hosts/${hostId}/invoices${querize(query)}`).toPromise();
+  }
+
+  // router.post <void> ("/hosts/:hid/invoices/export-csv", Hosts.exportInvoicesToCSV());
+  exportInvoicesToCSV(hostId: string, invoices: Pick<IHostInvoiceCSVJobData, 'invoices'>): Promise<void> {
+    return this.http.post<void>(`/api/hosts/${hostId}/invoices/export-csv`, invoices).toPromise();
   }
 }

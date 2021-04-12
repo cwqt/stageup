@@ -49,7 +49,7 @@ export class FirstTimeSetupComponent implements OnInit {
 
   clearAvatar() {
     this.hasSelectedImage = false;
-    this.selectedImage = "/assets/avatar_placeholder.png";
+    this.selectedImage = "/assets/avatar-placeholder.png";
     this.buttonText = "select image";
     this.avatarImageFormGroup.reset();
   }

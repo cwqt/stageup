@@ -1,13 +1,14 @@
 import { Component, ElementRef, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import fd from 'form-data';
 import { ToastService } from '../../../services/toast.service';
+import { HostService } from '../../../services/host.service';
 
 @Component({
   selector: 'app-change-image',
   templateUrl: './change-image.component.html',
-  styleUrls: ['./change-image.component.css']
+  styleUrls: ['./change-image.component.scss']
 })
 export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   submit: EventEmitter<string> = new EventEmitter();
@@ -15,14 +16,18 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
 
   @ViewChild('fileInput') inputElement: ElementRef;
 
-  public buttonText: string;
-  public selectedImage: string;
-  public hasSelectedImage: boolean = false;
-  public errorMessage: string = '';
-  public fileTypeError: boolean;
+  buttonText: string;
+  removeButtonText: string;
+  selectedImage: string;
+  hasSelectedImage: boolean = false;
+  errorMessage: string = '';
+  fileTypeError: boolean;
+  fileToUpload: File = null;
 
-  private allowedFileTypes = ['jpg', 'jpeg', 'png'];
+  private allowedFileTypes = ['jpg', 'jpeg', 'png'] as const;
   private reader: FileReader = new FileReader();
+
+  hostId: string;
 
   buttons: IUiDialogOptions['buttons'] = [
     {
@@ -35,19 +40,23 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
       disabled: true,
       kind: ThemeKind.Primary,
       loading: false,
-      callback: () => this.handleUploadImage()
-        .then(url => this.submit.emit(url))
-        .catch(error => this.toastService.emit(error, ThemeKind.Danger))
+      callback: () =>
+        this.handleUploadImage()
+          .then(url => this.submit.emit(url))
+          .catch(error => this.toastService.emit(error, ThemeKind.Danger))
     }
   ];
 
   constructor(
-    private toastService:ToastService,
+    private toastService: ToastService,
+    private hostService: HostService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<ChangeImageComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { fileHandler: (formData: fd) => Promise<string> }
+    @Inject(MAT_DIALOG_DATA) public data: { initialImage?: string; fileHandler: (formData: fd) => Promise<string> }
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.hostId = this.hostService.currentHostValue._id;
     this.clearAvatar();
   }
 
@@ -57,8 +66,9 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
 
   public clearAvatar() {
     this.hasSelectedImage = false;
-    this.selectedImage = '/assets/avatar_placeholder.png';
+    this.selectedImage = this.data.initialImage ? this.data.initialImage : '/assets/avatar-placeholder.png';
     this.buttonText = 'Select image';
+    this.removeButtonText = 'Remove image';
     this.uploadButton.disabled = true;
   }
 
@@ -96,6 +106,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   public handleUploadImage(): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
+        // this.cancel.emit();
         const inputElement = this.inputElement.nativeElement;
         // Read file again & upload file
         if (typeof FileReader !== 'undefined') {
@@ -110,16 +121,28 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
             );
 
             this.uploadButton.loading = true;
-            this.data.fileHandler(formData)
+            this.data
+              .fileHandler(formData)
               .then(url => resolve(url))
-              .catch(e => reject(e));
+              .catch(e => {
+                reject(e);
+                this.uploadButton.loading = false;
+                this.clearAvatar();
+              });
           };
-
           reader.readAsArrayBuffer(inputElement.files[0]);
         }
       } catch (error) {
+        this.selectedImage = this.data.initialImage;
         reject(error);
       }
     });
+  }
+
+  public deleteAsset(event) {
+    this.dialog.closeAll();
+    // null body taken as delete
+    this.data.fileHandler(null);
+    this.submit.emit(event);
   }
 }

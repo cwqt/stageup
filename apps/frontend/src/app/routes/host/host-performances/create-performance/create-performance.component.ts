@@ -30,8 +30,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     @Inject(MAT_DIALOG_DATA) public data: { host_id: string },
     private ref: MatDialogRef<CreatePerformanceComponent>,
     private hostService: HostService,
-    private toastService:ToastService,
-    private baseAppService:BaseAppService
+    private toastService: ToastService,
+    private baseAppService: BaseAppService
   ) {}
 
   ngOnInit(): void {
@@ -47,25 +47,22 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           label: 'Description',
           validators: [{ type: 'maxlength', value: 100 }]
         },
-        price: {
-          type: 'number',
-          label: 'Price',
-          validators: [{ type: 'maxlength', value: 100 }]
-        },
         genre: {
           type: 'select',
           label: 'Genre',
           validators: [{ type: 'required' }],
           options: {
-            values: Object.entries(GenreMap).map(([key, value]) => {
-              return { key: key, value: value };
-            })
+            values: new Map(
+              Object.entries(GenreMap).map(([key, value]) => {
+                return [key, { label: value }];
+              })
+            )
           }
         },
         date: {
           type: 'container',
           label: 'Premiere date',
-          hint: "Schedule the performance to be released at a certain date & time (optional)",
+          hint: 'Schedule the performance to be released at a certain date & time (optional)',
           fields: {
             premiere_date: {
               type: 'date',
@@ -79,17 +76,17 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
         }
       },
       submit: {
-        isHidden: true,
+        is_hidden: true,
         text: 'Create',
         variant: 'primary',
         handler: async v => this.hostService.createPerformance(this.data.host_id, v),
-        transformer: (v):DtoCreatePerformance => ({
+        transformer: (v): DtoCreatePerformance => ({
           name: v.name,
           description: v.description,
           genre: v.genre,
-          premiere_date: ((new Date(v.date.premiere_date).getTime() / 1000) + v.date.premiere_time),
-          price: v.price,
-          currency: CurrencyCode.GBP
+          premiere_date: v.date.premiere_date
+            ? new Date(v.date.premiere_date).getTime() / 1000 + v.date.premiere_time
+            : null
         })
       }
     };
@@ -110,9 +107,9 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     ];
   }
 
-  handleCreatePerformanceSuccess(event:IPerformance) {
+  handleCreatePerformanceSuccess(event: IPerformance) {
     this.toastService.emit(`Created performance: ${event.name}!`);
-    this.baseAppService.navigateTo(`/host/performances/${event._id}`);
+    this.baseAppService.navigateTo(`/dashboard/performances/${event._id}`);
     this.ref.close(event);
   }
 
@@ -120,7 +117,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     this.ref.close(null);
   }
 
-  handleFormChange(event:FormGroup) {
-    this.buttons[1].disabled = !event.valid
+  handleFormChange(event: FormGroup) {
+    this.buttons[1].disabled = !event.valid;
   }
 }

@@ -38,9 +38,9 @@ export class IconComponent implements OnInit {
     this.renderer.setAttribute(
       this.icon.nativeElement,
       "data-icon",
-      `${iconMap[this.icon.nativeElement.innerText.toLowerCase()]}`
+      `${iconMap[this.icon.nativeElement.textContent.toLowerCase()]}`
     );
-    this.icon.nativeElement.innerHTML = "";
+    this.icon.nativeElement.textContent = "";
 
     let dimension = this.dimensionMap[this.size];
     this.renderer.setStyle(

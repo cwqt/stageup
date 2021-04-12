@@ -1,16 +1,28 @@
-import { Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { capitalize, CurrencyCode, DtoCreateTicket, ITicket, ITicketStub, TicketFees, TicketType } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { FormComponent } from 'apps/frontend/src/app/ui-lib/form/form.component';
-import { IUiForm, IUiFormPrefetchData } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { IUiForm, IUiFormField, IUiFormPrefetchData } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 import flatten from 'flat';
-import { timeless } from '@core/shared/helpers';
+
+import { Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  calculateAmountFromCurrency,
+  capitalize,
+  CurrencyCode,
+  DonoPeg,
+  DonoPegWeights,
+  DtoCreateTicket,
+  ITicket,
+  ITicketStub,
+  TicketFees,
+  TicketType
+} from '@core/interfaces';
+import { prettifyMoney, timeless, to } from '@core/shared/helpers';
 
 @Component({
   selector: 'app-create-update-ticket',
@@ -22,6 +34,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
   submit: EventEmitter<ITicketStub> = new EventEmitter();
   cancel: EventEmitter<void> = new EventEmitter();
   buttons: IUiDialogOptions['buttons'] = [];
+  showDonoPegs: boolean = false;
 
   ticketForm: IUiForm<ITicket>;
   ticket: ICacheable<ITicket> = createICacheable();
@@ -43,20 +56,27 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             this.data.ticketId
           );
 
+          // flatten will make fields for this --> dono.0, dono.1, which we don't want
+          if(data.type !== "dono") delete data.dono_pegs;
+
           const fields = flatten<any, IUiFormPrefetchData['fields']>(data);
 
           const startDate = timeless(new Date(data.start_datetime * 1000));
-          const startTime = data.start_datetime - (startDate.getTime() / 1000);
-          fields["sales_starts.date"] = startDate as unknown as string;
-          fields["sales_starts.time"] = startTime as unknown as string;
+          const startTime = data.start_datetime - startDate.getTime() / 1000;
+          fields['sales_starts.date'] = startDate;
+          fields['sales_starts.time'] = startTime;
 
           const endDate = timeless(new Date(data.end_datetime * 1000));
-          const endTime = data.end_datetime - (endDate.getTime() / 1000);
-          fields["sales_end.date"] = endDate as unknown as string;
-          fields["sales_end.time"] = endTime as unknown as string;
+          const endTime = data.end_datetime - endDate.getTime() / 1000;
+          fields['sales_end.date'] = endDate
+          fields['sales_end.time'] = endTime
 
           // Convert back into pounds from pence
-          fields["amount"] = (data.amount / 100) as unknown as string;
+          fields['amount'] = data.amount / 100;
+          fields['visibility.value'] = !data.is_visible;
+
+          // Set the pegs up
+          if(data.type == "dono") data.dono_pegs.forEach(peg => fields[`dono_pegs.${peg}`] = true);
 
           return {
             fields: fields
@@ -68,7 +88,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           type: 'radio',
           label: 'Ticket type',
           validators: [{ type: 'required' }],
-          disabled: this.data.operation == "update",
+          disabled: this.data.operation == 'update',
           options: {
             values: new Map([
               [TicketType.Paid, { label: 'Paid' }],
@@ -81,6 +101,61 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           type: 'text',
           label: 'Ticket title',
           validators: [{ type: 'required' }]
+        },
+        dono_pegs: {
+          type: 'container',
+          options: {
+            header_level: 0
+          },
+          label: 'Select Donation Amounts:',
+          hide: f => f.getRawValue()['type'] !== TicketType.Donation,
+          fields: to<{ [index in DonoPeg]: IUiFormField }>({
+            lowest: {
+              type: 'checkbox',
+              width: 4,
+              initial: false,
+              label: prettifyMoney(
+                calculateAmountFromCurrency(CurrencyCode.GBP, DonoPegWeights.Lowest),
+                CurrencyCode.GBP
+              )
+            },
+            low: {
+              type: 'checkbox',
+              width: 4,
+              initial: false,
+              label: prettifyMoney(calculateAmountFromCurrency(CurrencyCode.GBP, DonoPegWeights.Low), CurrencyCode.GBP)
+            },
+            medium: {
+              type: 'checkbox',
+              width: 4,
+              initial: false,
+              label: prettifyMoney(
+                calculateAmountFromCurrency(CurrencyCode.GBP, DonoPegWeights.Medium),
+                CurrencyCode.GBP
+              )
+            },
+            high: {
+              type: 'checkbox',
+              width: 4,
+              initial: false,
+              label: prettifyMoney(calculateAmountFromCurrency(CurrencyCode.GBP, DonoPegWeights.High), CurrencyCode.GBP)
+            },
+            highest: {
+              type: 'checkbox',
+              width: 4,
+              initial: false,
+              label: prettifyMoney(
+                calculateAmountFromCurrency(CurrencyCode.GBP, DonoPegWeights.Highest),
+                CurrencyCode.GBP
+              )
+            },
+            allow_any: {
+              type: 'checkbox',
+              width: 4,
+              initial: false,
+              label: 'Allow any amount'
+            }
+          })
         },
         amount: {
           width: 6,
@@ -129,7 +204,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         },
         sales_end: {
           type: 'container',
-          label: 'Sales starts',
+          label: 'Sales end',
           options: {
             header_level: 0
           },
@@ -184,7 +259,12 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           fees: v.fees,
           start_datetime: new Date(v.sales_starts.date).getTime() / 1000 + v.sales_starts.time,
           end_datetime: new Date(v.sales_end.date).getTime() / 1000 + v.sales_end.time,
-          is_visible: v.visibility.value
+          is_visible: !v.visibility.value,
+          is_quantity_visible: true,
+          // filter array into only selected DonoPegs
+          dono_pegs: Object.keys(v.dono_pegs)
+            .filter(peg => v.dono_pegs[peg] == true)
+            .map(peg => peg as DonoPeg),
         })
       }
     };
@@ -217,7 +297,8 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
 
   handleFormChange(event: FormGroup) {
     this.buttons[1].disabled = !event.valid;
-    if (event.value.type == TicketType.Free) {
+
+    if (event.value.type == TicketType.Free || event.value.type == TicketType.Donation) {
       event.controls.amount.disable({ emitEvent: false, onlySelf: true });
     } else {
       event.controls.amount.enable({ emitEvent: false, onlySelf: true });

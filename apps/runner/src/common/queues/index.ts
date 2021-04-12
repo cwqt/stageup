@@ -1,3 +1,10 @@
+import Env from '../../env';
+import SendEmailWorker from './workers/send-email.worker';
+import ScheduleReleaseWorker from './workers/schedule-release.worker';
+import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker'
+
+import { log } from '../logger';
+import { RunnerProviderMap } from '../..';
 import { JobType } from '@core/interfaces';
 import { Queue, QueueEvents, QueueScheduler, Worker } from 'bullmq';
 
@@ -9,46 +16,44 @@ export interface IQueue {
 }
 
 export type QueueMap = { [index in JobType]: IQueue };
-export type WorkerFunction = (providers: DataClient<RunnerDataClient>) => Worker;
+export type WorkerFunction = (providers: RunnerProviderMap) => Worker;
 
-import SendEmailWorker from './workers/send_email.worker';
-import ScheduleReleaseWorker from './workers/schedule_release.worker';
-import { log } from '../logger';
-import { DataClient, ProviderMap } from '@core/shared/api';
-import { RunnerDataClient } from '../data';
-
-const create = (client: DataClient<RunnerDataClient>): QueueMap => {
+const create = (pm: RunnerProviderMap): QueueMap => {
   const workers: { [index in JobType]: WorkerFunction } = {
     [JobType.SendEmail]: SendEmailWorker,
-    [JobType.ScheduleRelease]: ScheduleReleaseWorker
+    [JobType.ScheduleRelease]: ScheduleReleaseWorker,
+    [JobType.HostInvoiceCSV]: HostInvoiceCSVWorker
   };
 
   return Object.values(JobType).reduce((acc, type) => {
     const queue = new Queue(type, {
       connection: {
-        host: 'redis',
-        port: 6379
+        host: Env.REDIS.host,
+        port: Env.REDIS.port
       }
     });
 
     const events = new QueueEvents(type, {
       connection: {
-        host: 'redis',
-        port: 6379
+        host: Env.REDIS.host,
+        port: Env.REDIS.port
       }
     });
-    
+
     const scheduler = new QueueScheduler(type, {
       connection: {
-        host: 'redis',
-        port: 6379
+        host: Env.REDIS.host,
+        port: Env.REDIS.port
       }
     });
 
-    const worker = workers[type](client);
+    const worker = workers[type](pm);
 
     events.on('completed', job => log.info(`Completed job: ${job.jobId}`));
-    events.on('failed', (job, err) => log.error(`Failed job: ${job.jobId}`, err));
+    events.on('failed', (job, err) => {
+      log.error(`Failed job: ${job.jobId}`, err);
+      console.error(err);
+    });
 
     acc[type] = {
       queue,

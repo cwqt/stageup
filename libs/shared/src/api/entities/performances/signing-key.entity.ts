@@ -1,10 +1,12 @@
-import { IPerformance, ISigningKey } from '@core/interfaces';
+import { JwtAccessToken, IMuxAsset, IPerformance, ISigningKey } from '@core/interfaces';
 import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, PrimaryColumn } from 'typeorm';
 
 import Mux, { JWT } from '@mux/mux-node';
 
 import { Performance } from './performance.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
+import { Asset } from '../common/asset.entity';
+import MuxProvider from '../../data-client/providers/mux.provider';
 
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
@@ -20,25 +22,21 @@ export class SigningKey extends BaseEntity implements ISigningKey {
     this.created_at = timestamp();
   }
 
-  async setup(mux:Mux, txc: EntityManager): Promise<SigningKey> {
+  async setup(mux:MuxProvider, txc: EntityManager): Promise<SigningKey> {
     // https://docs.mux.com/reference#url-signing-keys
-    const signingKey = await mux.Video.SigningKeys.create();
+    const { id, private_key } = await mux.connection.Video.SigningKeys.create();
 
-    // Response isn't actually enveloped - great docs :)
-    this.mux_key_id = signingKey.id;
-    this.rsa256_key = signingKey.private_key;
+    this.mux_key_id = id;
+    this.rsa256_key = private_key;
 
-    await txc.save(this);
-    return this;
+    return txc.save(this);
   }
 
-  signToken(performance: Performance | IPerformance): string {
-    return JWT.sign(performance.playback_id, {
+  signToken(asset:Asset<any>): JwtAccessToken {
+    return JWT.sign((asset.meta as IMuxAsset).playback_id, {
       type: 'video',
       keyId: this.mux_key_id,
       keySecret: this.rsa256_key
-      // Expiration: string,
-      // params: any
     });
   }
 }

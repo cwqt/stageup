@@ -1,26 +1,48 @@
 {
-    "customizeUI.activityBar": "bottom",
-    "customizeUI.titleBar": "frameless",
-    "spellright.language": ["en"],
-    "spellright.documentTypes": ["markdown", "latex"],
-    "explorer.autoReveal": true,
-    "editor.wordWrapColumn": 120,
-    "prettier.printWidth": 120,
-    "prettier.singleQuote": true,
-    "prettier.useTabs": false,
-    "prettier.tabWidth": 2,
-    "prettier.semi": true,
-    "prettier.arrowParens": "avoid",
-    "prettier.bracketSpacing": true,
-    "rest-client.environmentVariables": {
-      "local": {
-          "host": "localhost:3000",
-          "username": "siteadmin",
-          "email_address":"siteadmin@stageup.uk",
-          "password":"siteadmin"
-      },
-      "staging": {
-          "host": "stageup.uk",
-      }
+  "customizeUI.activityBar": "bottom",
+  "customizeUI.titleBar": "frameless",
+  "spellright.language": ["en"],
+  "spellright.documentTypes": ["markdown", "latex"],
+  "explorer.autoReveal": true,
+  "editor.wordWrapColumn": 120,
+  "prettier.printWidth": 120,
+  "prettier.singleQuote": true,
+  "prettier.useTabs": false,
+  "prettier.tabWidth": 2,
+  "prettier.semi": true,
+  "prettier.arrowParens": "avoid",
+  "prettier.bracketSpacing": true,
+  "todo-tree.highlights.customHighlight": {
+    "IMPORTANT": {
+      "foreground": "white",
+      "background": "SlateBlue",
+      "iconColour": "SlateBlue",
+      "icon": "star",
+      "gutterIcon": true,
+      "type": "line"
+    },
+    "TODO": {
+      "background": "MediumSeaGreen",
+      "foreground": "white",
+      "iconColour": "MediumSeaGreen",
+      "icon": "check",
+    },
+    "FIXME": {
+      "foreground": "black",
+      "background": "orange",
+      "iconColour": "yellow",
+      "gutterIcon": true
+    }
+  },
+  "rest-client.environmentVariables": {
+    "local": {
+      "host": "localhost:3000",
+      "username": "siteadmin",
+      "email_address": "siteadmin@stageup.uk",
+      "password": "siteadmin"
+    },
+    "staging": {
+      "host": "stageup.uk"
+    }
   }
 }

@@ -1,9 +1,22 @@
+<!-- Host Component - Leave Host -->
 <div class="host-container">
-    <app-create-host *ngIf="!host" [host]="host" [user]="user"></app-create-host>
+  <app-create-host *ngIf="!myself.host" [host]="myself.host" [user]="myself.user"></app-create-host>
 
-    <ng-container *ngIf="host">
-        <h1>Host settings</h1>
-        <mat-divider></mat-divider>
-        <br>    
-    </ng-container>
+  <ng-container *ngIf="myself.host">
+    <h2>Host settings</h2>
+    <ui-hr></ui-hr>
+
+    <div class="mx-4 text-center"><br>
+      <p>Withdraw membership from <b>{{ myself.host.name }}</b>, this action can't be undone.</p>
+      <ui-button [disabled]="myself.host_info.permissions == 'host_owner'"
+        kind="danger"
+        size="l"
+        class="mb-4"
+        (click)="openLeaveHostConfirmationDialog()">Leave Host</ui-button>
+      <br>
+      <mat-error *ngIf="myself.host_info.permissions == 'host_owner'">Can't leave a host if you're the owner, must be deleted</mat-error>
+    </div>
+
+  </ng-container>
+
 </div>

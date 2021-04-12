@@ -11,15 +11,12 @@
 </div>
 
 <div class="performance" *ngIf="perf && !performance.loading">
-    <div class="performance-player">
-        <router-outlet
-            (activate)="onRouterOutletActivate($event)"
-            (deactivate)="onRouterOutletDeactivate($event)">
-        </router-outlet>
+    <div class="performance-player" *ngIf="performance.data.__client_data">
+      <app-performance-watch [performance]="performance.data"></app-performance-watch>
     </div>
 
     <!-- show three image preview images -->
-    <div class="performance-previews" *ngIf="!isWatching">
+    <div class="performance-previews" *ngIf="!performance.data.__client_data">
         <div class="performance-previews__1">
             <img src="https://i.ytimg.com/vi/wypxtfYy6tk/maxresdefault.jpg" alt="">
         </div>
@@ -31,49 +28,17 @@
                 <img src="https://pbs.twimg.com/media/EIul7ONUUAEAWPg.jpg" alt="">
                 <div class="performance-previews__final-overlay">
                     <ui-icon size="l">overflow-menu--horizontal</ui-icon>
-                    <span>3 more</span>    
+                    <span>3 more</span>
                 </div>
-            </div>    
+            </div>
         </div>
     </div>
 
     <div class="performance-body">
-        <div class="performance-body__header">
-            <div class="header-title">
-                <h1 class="header-title__text">{{ perf.name }}</h1>
-                <span class="header-title__host">
+      <h1>{{ perf.name }}</h1>
+      <app-user-thumb [user]="perf.host"></app-user-thumb>
+      <mat-divider></mat-divider>
 
-                    <div class="sidebar-user" matRipple>
-                        <img src="https://media.them.us/photos/5e18fe3b5083d00008cffc47/master/w_1786,h_2500,c_limit/011_GECSxJE.jpg" alt="">
-                        <div class="sidebar-user__details">
-                            <span><b>{{ perf.host.name }}</b></span>
-                            <span>@{{ perf.host.username }}</span>
-                        </div>
-                    </div>
-
-
-                </span>
-            </div>
-            
-            <div class="performance-body__purchase">
-                <ui-button (click)="gotoWatch()" kind="primary" size="l" class="purchase__button"><b>WATCH</b>{{ currencyPrice }}</ui-button>
-            </div>    
-        </div>
-
-        <mat-divider></mat-divider>
-
-        <div class="performance-body__body">
-            <div class="body__description">{{ perf.description }}</div>
-            <div class="body__meta">
-                <h3 class="meta__actors">PERFORMERS</h3>
-                <p>laura les</p>
-                <p>dylan brady</p>
-            </div>
-        </div>
+      <p>{{ perf.description }}</p>
     </div>
-
-    <div class="performance-footer">
-        <div class="performance-footer__ratings"></div>
-    </div>
-
 </div>

@@ -1,26 +1,31 @@
-import { writeFile } from 'fs';
-const targetPath = './src/environments/environment.ts';
-const colors = require('colors');
-require('dotenv').load();
+import { argv } from 'yargs';
+import { writeFile, existsSync, unlinkSync } from 'fs';
+import colors = require("colors");
+require('dotenv-flow').config({ node_env: argv['env'] });
+
+const environment = argv['env'];
+const targetPath = `${__dirname}/src/environments/environment.${environment}.ts`;
 
 // `environment.ts` file structure
-let envConfigFile = `
-export const environment = {
-   frontendUrl: '${process.env.API_BASE_URL}',
+let envConfigFile = '';
+if (environment == 'development' || environment == 'testing') envConfigFile += `import 'zone.js/dist/zone-error';\n`;
+
+envConfigFile += `export const environment = {
    apiUrl: '${process.env.API_URL}',
-   environment: '${process.env.NG_ENV}',
+   sseUrl: '${process.env.SSE_URL}',
+   frontendUrl: '${process.env.FE_URL}',
+   environment: '${environment}',
+   stripePublicKey: '${process.env.STRIPE_PUBLIC_KEY}',
+   appVersion: '${process.env.npm_package_version}'
 };
 `;
 
-if(process.env.NG_ENV == "development") envConfigFile += `import 'zone.js/dist/zone-error';`
-
-console.log(colors.magenta('The file `environment.ts` will be written with the following content: \n'));
+console.log(colors.magenta(`The file 'environment.${environment}.ts' will be written with the following content:\n`));
 console.log(colors.grey(envConfigFile));
 
-writeFile(targetPath, envConfigFile, function (err) {
-  if (err) {
-    throw console.error(err);
-  } else {
-    console.log(colors.magenta(`Angular environment.ts file generated correctly at ${targetPath} \n`));
-  }
+// Remove file if already exists
+if(existsSync(targetPath)) unlinkSync(targetPath);
+
+writeFile(targetPath, envConfigFile, { flag: 'wx' }, err => {
+  if (err) throw err;
 });

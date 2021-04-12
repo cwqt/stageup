@@ -4,6 +4,11 @@ module.exports = {
     mainVersionFile: 'package.json',
     packagesToBump: [],
     packagesToPublish: [],
-    updateDependencies: true // optional, default: true
-  }
+    updateDependencies: true
+  },
+  mergeStrategy: {
+    toReleaseBranch: {
+      next: 'master',
+    },
+  },
 };

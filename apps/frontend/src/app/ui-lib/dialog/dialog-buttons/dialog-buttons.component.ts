@@ -10,6 +10,7 @@ import { IUiDialogOptions } from "../../ui-lib.interfaces";
 export class DialogButtonsComponent implements OnInit {
   @Input() dialogRef:MatDialogRef<any>;
   @Input() buttons:IUiDialogOptions["buttons"];
+  @Input() small?:boolean;
 
   constructor() {}
 

@@ -1,6 +1,5 @@
 <!-- TODO: leave this for later when/if we need trees -->
 
-
 <ng-container *ngIf="false">
   <mat-form-field *ngIf="type == 'select'" appearance="fill" >
     <mat-label>{{ label || "Select option"}}</mat-label>
@@ -16,13 +15,13 @@
                     <ng-template ngPluralCase="=0"></ng-template>
                     <ng-template ngPluralCase="=1">(+1 other)</ng-template>
                     <ng-template ngPluralCase="other">(+{{ checklistSelection.selected.length - 1 }} others)</ng-template>
-                </span>    
+                </span>
             </ng-container>
         </mat-select-trigger>
-  
+
         <!-- make the select actually open -->
         <mat-option style="display: none;" value="always_exist"></mat-option>
-  
+
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
             <mat-tree-node
                 (click)="leafNodeItemSelectionToggle(node)"
@@ -37,7 +36,7 @@
                 </mat-checkbox>
                 <p>{{ node.value }}</p>
             </mat-tree-node>
-  
+
             <mat-tree-node
                 (click)="rootNodeSelectionToggle(node)"
                 class="root-node"

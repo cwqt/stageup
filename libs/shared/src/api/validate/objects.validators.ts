@@ -1,18 +1,22 @@
-import { array } from '.';
-import { ValidationChain } from 'express-validator';
 import {
+  DonoPeg,
+  DtoCreatePerformance,
+  DtoCreateTicket,
   ErrCode,
+  Genre,
   IAddress,
   Idless,
-  PersonTitle,
   IHostMemberChangeRequest,
   IPerson,
   IPersonInfo,
   ISocialInfo,
-  DtoCreatePerformance,
-  Genre,
-  CurrencyCode
+  PersonTitle,
+  TicketFees,
+  TicketType
 } from '@core/interfaces';
+import { enumToValues, to } from '@core/shared/helpers';
+import { ValidationChain } from 'express-validator';
+import { array } from '.';
 import { FieldValidators as FV } from './fields.validators';
 
 export namespace ObjectValidators {
@@ -23,8 +27,6 @@ export namespace ObjectValidators {
       name: v => FV.isString(v),
       description: v => FV.isString(v),
       genre: v => v.isIn(Object.values(Genre)),
-      price: v => v.isInt(),
-      currency: v => v.isIn(Object.values(CurrencyCode)),
       premiere_date: v => v.optional({ nullable: true }).custom(x => FV.timestamp(v))
     };
   };
@@ -73,6 +75,31 @@ export namespace ObjectValidators {
           .optional({ nullable: true, checkFalsy: true })
           .isURL({ host_whitelist: ['instagram.com'] })
           .withMessage(ErrCode.NOT_URL)
+    };
+  };
+
+  export const DtoCreateTicket = (): ObjectValidator<DtoCreateTicket> => {
+    return {
+      name: v => FV.isString(v),
+      amount: v => FV.isInt(v),
+      currency: v => FV.CurrencyCode(v),
+      type: v => v.isIn(enumToValues(TicketType)),
+      quantity: v => v.isInt(),
+      fees: v => v.isIn(enumToValues(TicketFees)),
+      start_datetime: v => FV.timestamp(v),
+      end_datetime: v => FV.timestamp(v),
+      is_visible: v => v.isBoolean(),
+      is_quantity_visible: v => v.isBoolean(),
+      dono_pegs: v =>
+        v
+          .optional({ nullable: true })
+          .isArray()
+          // FIXME: array validator doesn't support primitive arrays
+          // .custom(
+          //   array({
+          //     '*': v => v.isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'])
+          //   })
+          // )
     };
   };
 

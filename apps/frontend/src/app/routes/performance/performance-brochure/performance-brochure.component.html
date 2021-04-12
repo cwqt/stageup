@@ -14,7 +14,6 @@
               <ui-hr></ui-hr>
               <p>{{ data.description }}</p>
             </div>
-        
             <div class="w-1/3 ml-4 text-right">
               <h2>Tickets</h2>
               <p class="text-lg" *ngIf="!myself">
@@ -30,19 +29,25 @@
                   [ticket]="ticket">
                 </app-performance-ticket>
               </div>
-            </div>    
-          </div>    
+            </div>
+          </div>
         </mat-tab>
 
         <mat-tab class="relative">
           <div class="flex flex-col p-4" *ngIf="selectedTicket">
             <div class="text-center relative">
-              <h4 class="opacity-50">CHECKOUT</h4> 
-              <h1 class="mb-0">{{ performance.name }}</h1>  
+              <h4 class="opacity-50">CHECKOUT</h4>
+              <h1 class="mb-0">{{ performance.name }}</h1>
               <ui-button (click)="openPerformanceDescriptionSection()" icon="arrow--left" class="absolute left-0 top-0">Back</ui-button>
             </div>
 
             <ui-hr></ui-hr>
+
+						<ui-form class="w-1/2 place-self-center" #donoPegForm *ngIf="selectedTicket.type == 'dono'"
+							[form]="donoPegSelectForm"
+							[cacheable]="donoPegCacheable"
+              (onChange)="updatePayButtonWithDono($event)" >
+						</ui-form>
 
             <app-payment-checkout #card class="flex justify-center"
               (onSuccess)="handleCardPaymentSuccess($event)"
@@ -52,16 +57,31 @@
 
             <br />
 
-            <!-- TODO: Add cases for free/dono tickets -->
-
-            <ui-button [disabled]="!cardDetailsAreValid || card?.loading"
+            <ui-button
+            [disabled]="
+              !cardDetailsAreValid
+              || card?.loading
+              || (selectedTicket.type == 'dono' && !selectedDonoPeg)"
               class="ml-auto"
               kind="primary"
               size="l"
               icon="purchase"
               [loading]="card?.loading"
-              (click)="card.confirmPayment()">
-                Pay {{ selectedTicket.amount | currencyPipe: selectedTicket.currency }}
+              (click)="card.confirmPayment(selectedTicket, {
+                selected_dono_peg: donoPegForm?.formGroup?.value?.pegs,
+                allow_any_amount: donoPegForm?.formGroup?.value?.allow_any_amount
+              })">
+                <span *ngIf="selectedTicket.type == 'paid'">
+                  Pay {{ selectedTicket.amount | currencyPipe: selectedTicket.currency }}
+                </span>
+
+                <span *ngIf="selectedTicket.type == 'dono'">
+                  {{ !selectedDonoPeg ? "Select an amount" : (selectedTicket.amount | currencyPipe: selectedTicket.currency)}}
+                </span>
+
+                <span *ngIf="selectedTicket.type == 'free'">
+                  FREE
+                </span>
             </ui-button>
           </div>
         </mat-tab>
@@ -71,15 +91,15 @@
             <ng-container *ngIf="stripePaymentIntent.status === 'succeeded'">
               <h1>Thanks for your order!</h1>
               <ui-hr></ui-hr>
-  
+
               <h3>You're going to watch "<b>{{ performance.name }}</b>"</h3>
               <br />
-  
+
               <p>{{ performance.host.username }} is due to premiere this stream at {{ performance.premiere_date | amFromUnix | amDateFormat}}, you'll be notified by e-mail before it begins.</p>
               <p>Purchase confirmation will arrive at <b>{{ purchaserEmailAddress }}</b> shortly.</p>
-  
+
               <div class="flex ml-auto">
-                <ui-button size="m" kind="primary" class="mr-2" *ngIf="performance.state == 'video.live_stream.active'">Watch Now</ui-button>
+                <ui-button size="m" kind="primary" class="mr-2" *ngIf="performance.stream.state == 'video.live_stream.active'">Watch Now</ui-button>
                 <ui-button size="m" kind="primary" (click)="closeDialog()" class="mr-2">Watch Later</ui-button>
                 <ui-button size="m" kind="secondary" (click)="closeDialog()">Close</ui-button>
               </div>
@@ -94,5 +114,3 @@
     </ng-container>
   </div>
 </ui-dialog>
-
-

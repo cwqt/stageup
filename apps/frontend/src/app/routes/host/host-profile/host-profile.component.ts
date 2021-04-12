@@ -1,10 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { BaseAppService, RouteParam } from '../../../services/app.service';
+import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
+import { ChangeImageComponent } from '../../settings/change-image/change-image.component';
+import fd from 'form-data';
+import { MyselfService } from '../../../services/myself.service';
 
 @Component({
   selector: 'app-host-profile',
@@ -14,6 +19,7 @@ import { HostService } from '../../../services/host.service';
 export class HostProfileComponent implements OnInit {
   @Input() hostUsername?: string;
   host: ICacheable<IHost> = createICacheable();
+  isHostView:boolean;
 
   hostPages = {
     index: {
@@ -39,12 +45,16 @@ export class HostProfileComponent implements OnInit {
   };
 
   constructor(
+    private myselfService:MyselfService,
     private baseAppService: BaseAppService,
     private route: ActivatedRoute,
-    private hostService: HostService
+    private hostService: HostService,
+    private helperService: HelperService,
+    public dialog: MatDialog
   ) {}
 
   async ngOnInit() {
+    this.isHostView = this.route.snapshot.data['is_host_view'];
     await this.baseAppService.componentInitialising(this.route);
 
     // If not passed through input, get from route param since this is probably on /@host_username
@@ -56,16 +66,57 @@ export class HostProfileComponent implements OnInit {
 
   openHostPage(endpoint: string) {
     this.baseAppService.navigateTo(
-      `${this.route.snapshot.data['isHostView'] ? '/host' : ''}/@${this.hostUsername}/${endpoint}`
+      `${this.isHostView ? '/dashboard' : ''}/@${this.hostUsername}/${endpoint}`
     );
   }
 
-  handleTabChange(event: MatTabChangeEvent) {
+ handleTabChange(event: MatTabChangeEvent) {
     const pageIndex = Object.keys(this.hostPages)[event.index];
     const page = this.hostPages[pageIndex];
     this.openHostPage(page.url);
   }
 
-  openSocialLink(link: string) { window.open(link, '_blank') }
-  originalOrder() { return 0 }
+  openChangeAvatarDialog() {
+    this.helperService.showDialog(
+      this.dialog.open(ChangeImageComponent, {
+        data: {
+          initialImage: this.host.data.avatar,
+          fileHandler: this.handleUploadHostAvatar.bind(this)
+        }
+      }),
+      (event: IHostStub) => {
+        this.host.data.avatar = event.avatar;
+        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, avatar: this.host.data.avatar })
+      });
+  }
+
+ handleUploadHostAvatar(formData:fd) {
+    return this.hostService.changeAvatar(this.host.data._id, formData);
+  }
+
+  openChangeBannerDialog() {
+    this.helperService.showDialog(
+      this.dialog.open(ChangeImageComponent, {
+        data: {
+          initialImage: this.host.data.banner,
+          fileHandler: this.handleUploadHostBanner.bind(this)
+        }
+      }),
+      (event: IHostStub) => {
+        this.host.data.banner = event.banner;
+        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, banner: event.banner })
+    });
+  }
+
+  handleUploadHostBanner(formData:fd) {
+    return this.hostService.changeBanner(this.host.data._id, formData);
+  }
+
+ openSocialLink(link: string) {
+    window.open(link, '_blank');
+  }
+
+  originalOrder() {
+    return 0;
+  }
 }

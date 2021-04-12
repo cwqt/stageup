@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IHost, IHostStub, IUser } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
@@ -26,6 +26,7 @@ export class CreateHostComponent implements OnInit {
     }
   }
 
+  @Output() hostRegistered:EventEmitter<IHost> = new EventEmitter();
   showForm:boolean = true;
 
   constructor(private hostService:HostService, private appService:BaseAppService) { }
@@ -35,7 +36,7 @@ export class CreateHostComponent implements OnInit {
       fields: {
         username: {
           type: "text",
-          hint: "This will be the name of your host account on Eventi. Your URL will be: https://eventi.com/username",
+          hint: "This will be the name of your host account on StageUp. Your URL will be: https://stageup.uk/@username",
           label: "Host Username",
           validators: [
             { type: "required" },
@@ -73,7 +74,7 @@ export class CreateHostComponent implements OnInit {
   }
 
   handleFormSuccess(host:IHost) {
-    this.appService.navigateTo('/host');
+    this.hostRegistered.emit(host);
   }
 
   handleFormFailure(e:HttpErrorResponse) {

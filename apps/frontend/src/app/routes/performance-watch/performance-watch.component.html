@@ -1,1 +1,39 @@
-<app-player></app-player>
+<div *ngIf="performance" class="relative">
+  <ui-chip class="absolute top-0 right-0 m-4 z-10"
+    [kind]="stateChipColors[currentStreamState]">{{ currentStreamState | uppercase }} </ui-chip>
+
+  <div class="absolute top-0 left-0 right-0 bottom-0 m-auto z-10 w-1/2 h-1/2 flex items-center justify-center"
+    *ngIf="currentStreamState == 'difficulties'">
+      <mat-spinner></mat-spinner>
+  </div>
+
+
+  <div class="absolute z-10 m-4 flex items-center"
+    [class.host-message]="isHostPerformancePreview"
+    [class.user-message]="!isHostPerformancePreview"
+    >
+
+    <div class="bg-gray-700 text-white p-4 shadow-sm rounded-sm my-auto opacity-50 hover:opacity-100 transition duration-150 select-none">
+      <p>
+        {{ isHostPerformancePreview ? "Scheduled to publically premiere in" : "Premiering in" }} <br/>
+        <b><span *ngIf="etaUntilLive">{{ prettyDuration(etaUntilLive) }}</span></b>
+      </p>
+
+      <p class="mb-0" *ngIf="isHostPerformancePreview">You're watching a preview of this performance</p>
+    </div>
+  </div>
+
+  <app-player
+    [performance]="performance"
+    (onPlayerError)="handlePlayerError($event)"
+    (onPlayerReady)="handlePlayerReady($event)">
+  </app-player>
+
+</div>
+<!--
+<div class="flex space-x-4 mt-4">
+  <ui-button (click)="testPushState('active')">Active</ui-button>
+  <ui-button (click)="testPushState('difficulties')">Difficulties</ui-button>
+  <ui-button (click)="testPushState('idle')">Idle</ui-button>
+  <ui-button (click)="testPushState('complete')">Complete</ui-button>
+</div> -->

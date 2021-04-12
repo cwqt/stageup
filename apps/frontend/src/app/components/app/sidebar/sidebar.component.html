@@ -1,46 +1,18 @@
 <div class="sidebar-wrapper">
-  <img src="/assets/logomark.svg" alt="" class="logo">
 
-  <div class="sidebar-main-buttons">
-    <ui-button (click)="gotoRoot()" kind="accent" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <ui-icon size="l">template</ui-icon>
+  <div class="sidebar-main-buttons" [class.sidebar-main-buttons--is-expanded]="isExpanded">
+    <ui-button *ngIf="myself?.host" kind="accent" routerLink="/dashboard" routerLinkActive="active">
+      <img class="rounded-full transform scale-150 w-auto h-auto object-contain my-4 mx-auto"
+        [src]="myself.host.avatar || '/assets/avatar-placeholder.png'" alt="">
     </ui-button>
 
-    <ui-button *ngIf="myself.host" (click)="gotoHost()" kind="accent" routerLink="/host" routerLinkActive="active">
-      <ui-icon size="l">events</ui-icon>
-    </ui-button>
-
-    <ui-button *ngIf="myself.user.is_admin" (click)="gotoAdmin()" routerLink="/admin" kind="accent"
+    <ui-button *ngIf="myself?.user.is_admin" routerLink="/admin" kind="accent"
       routerLinkActive="active">
-      <ui-icon size="l">virtual-private-cloud</ui-icon>
+      <ui-icon>virtual-private-cloud</ui-icon>
     </ui-button>
 
-    <ui-button (click)="gotoSettings()" kind="accent" routerLink="/settings" routerLinkActive="active">
-      <ui-icon size="l">settings</ui-icon>
+    <ui-button *ngIf="myself" kind="accent" routerLink="/settings" routerLinkActive="active">
+      <ui-icon>settings</ui-icon>
     </ui-button>
-
-    <!-- <ui-button (click)="gotoRoot()" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <ui-icon>home</ui-icon> Home
-    </ui-button>
-    <ui-button routerLink="/search" routerLinkActive="active">
-      <ui-icon>search</ui-icon> Search
-    </ui-button>
-    <ui-button routerLink="/library" routerLinkActive="active">
-      <ui-icon>catalog</ui-icon> Your Library
-    </ui-button>
-
-    <ng-container *ngIf="host">
-      <mat-divider></mat-divider>
-
-      <ui-button (click)="gotoHost()" routerLink="/host" routerLinkActive="active">
-        <ui-icon>events</ui-icon> {{ host.name }}
-      </ui-button>
-    </ng-container>
-
-    <ng-container *ngIf="user.is_admin">
-      <ui-button (click)="gotoAdminPanel()" routerLink="/admin" routerLinkActive="active">
-        <ui-icon>dashboard</ui-icon> Admin Panel
-      </ui-button>
-    </ng-container> -->
   </div>
 </div>

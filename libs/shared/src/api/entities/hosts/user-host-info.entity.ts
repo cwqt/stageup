@@ -12,6 +12,7 @@ export class UserHostInfo extends BaseEntity implements IUserHostInfo {
 
   @Column() joined_at: number;
   @Column('enum', { enum: HostPermission }) permissions: HostPermission;
+  @Column({ default: true }) prefers_dashboard_landing: boolean;
 
   @OneToOne(() => User) @JoinColumn() user: User;
   @ManyToOne(() => Host, host => host.members_info) host: Host;
@@ -26,12 +27,13 @@ export class UserHostInfo extends BaseEntity implements IUserHostInfo {
     this.host = host;
   }
 
-  
+
   toFull(): Required<IUserHostInfo> {
     return {
       joined_at: this.joined_at,
       permissions: this.permissions,
-      user: this.user.toStub()
+      user: this.user.toStub(),
+      prefers_dashboard_landing: this.prefers_dashboard_landing
     };
   }
 }

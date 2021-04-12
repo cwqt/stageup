@@ -20,13 +20,10 @@ export const pagination = (req: Request, res: Response, next: NextFunction) => {
   SelectQueryBuilder.prototype.paginate = async function <T, K>(
     serialiser?: EntitySerialiser<T, K>
   ): Promise<IEnvelopedData<T[] | K[], null>> {
-    const locals = res.locals;
-    const current_page = locals.page === 0 ? 1 : locals.page;
-
     return paginate<T, K>(
       this,
-      current_page,
-      locals.per_page,
+      res.locals.page,
+      res.locals.per_page,
       serialiser
     );
   };
@@ -40,7 +37,7 @@ const paginate = async <T, K>(
   per_page: number,
   serialiser?: EntitySerialiser<T, K>
 ): Promise<IEnvelopedData<K[] | T[], null>> => {
-  const skip = (page - 1) * per_page;
+  const skip = page * per_page;
   const count = await builder.getCount();
   const res = (await builder.skip(skip).take(per_page).getMany()) as T[];
 
@@ -48,13 +45,11 @@ const paginate = async <T, K>(
     data: serialiser ? res.map(e => serialiser(e)) : res,
     __client_data: null,
     __paging_data: {
-      from: skip <= count ? skip + 1 : null,
-      to: count > skip + per_page ? skip + per_page : count,
       per_page: per_page,
       total: count,
       current_page: page,
-      prev_page: page > 1 ? page - 1 : null,
-      next_page: count > skip + per_page ? page + 1 : null
+      prev_page: page >= 1 ? page - 1 : null,
+      next_page: count >= skip + per_page ? page + 1 : null
     }
   };
 };

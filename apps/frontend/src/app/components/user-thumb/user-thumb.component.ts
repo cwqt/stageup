@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IUserStub } from '@core/interfaces';
+import { IHostStub, IUserStub } from '@core/interfaces';
 
 @Component({
   selector: 'app-user-thumb',
@@ -7,7 +7,7 @@ import { IUserStub } from '@core/interfaces';
   styleUrls: ['./user-thumb.component.scss']
 })
 export class UserThumbComponent implements OnInit {
-  @Input() user:IUserStub;
+  @Input() user:IUserStub | IHostStub;
   @Input() small:boolean=false;
 
   constructor() { }

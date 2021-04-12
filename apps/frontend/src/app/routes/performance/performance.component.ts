@@ -1,11 +1,10 @@
-import { NumberFormatStyle } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DtoAccessToken, IEnvelopedData, IPerformance, IPerformancePurchase, IPerformanceUserInfo } from '@core/interfaces';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DtoAccessToken, DtoPerformance, IEnvelopedData, IPerformance, IPerformanceUserInfo, JwtAccessToken } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
+import { MyselfService } from '../../services/myself.service';
 
 @Component({
   selector: 'app-performance',
@@ -13,16 +12,13 @@ import { PerformanceService } from 'apps/frontend/src/app/services/performance.s
   styleUrls: ['./performance.component.scss']
 })
 export class PerformanceComponent implements OnInit {
-  performance: ICacheable<IEnvelopedData<IPerformance, DtoAccessToken>> = createICacheable();
+  performance: ICacheable<DtoPerformance> = createICacheable();
   userPerformanceInfo: ICacheable<IPerformanceUserInfo> = createICacheable();
 
-  currencyPrice: string;
   hasAccess: boolean;
-  isWatching: boolean;
 
   constructor(
     private performanceService: PerformanceService,
-    private router: Router,
     private route: ActivatedRoute,
     private appService: BaseAppService
   ) {}
@@ -34,20 +30,6 @@ export class PerformanceComponent implements OnInit {
   async ngOnInit() {
     await this.appService.componentInitialising(this.route);
     await this.getPerformance();
-
-    this.currencyPrice = new Intl.NumberFormat('en-GB', {
-      currency: this.perf.currency,
-      style: 'currency'
-    }).format(this.perf.price);
-  }
-
-  onRouterOutletActivate(event) {
-    this.isWatching = true;
-    //get user token for access
-  }
-
-  onRouterOutletDeactivate($event) {
-    this.isWatching = false;
   }
 
   async getPerformance() {

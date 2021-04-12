@@ -1,63 +1,25 @@
-<div [ngSwitch]="ticket.type">
-  <div *ngSwitchCase="'paid'">
-    <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" 
-      size="l"
-      (click)="clicked.emit(ticket)">
-        <div>
-          <ui-chip kind="magenta">PAID</ui-chip>
-          <b class="ml-4">{{ ticket.amount | currencyPipe: ticket.currency }}</b>
-        </div>
+<div>
+  <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled"
+    size="l"
+    (click)="clicked.emit(ticket)">
+      <div class="flex">
+        <ui-chip [kind]="ticketChipColor[ticket.type]">{{ ticket.type | ticketTypePipe | uppercase}}</ui-chip>
 
-        <div>
-          <span>{{ ticket.name }}</span>
-          <span class="opacity-50">
-            {{ ticket.quantity_remaining > 0
-              ? (ticket.quantity_remaining + ' remaining')
-              : 'SOLD OUT'
-            }}
-          </span>
-        </div>
-    </ui-button>
-  </div>
-  
-  <div *ngSwitchCase="'dono'">
-    <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" 
-      size="l"
-      (click)="clicked.emit(ticket)">
-        <div>
-          <ui-chip kind="blue">DONATION</ui-chip>
-          <b class="ml-4">min. {{ ticket.amount | currencyPipe: ticket.currency }}</b>
-        </div>
+        <!-- Only visible to host members -->
+        <ui-chip kind="gray" class="ml-2" *ngIf="ticket.is_visible == false">HIDDEN</ui-chip>
 
-        <div>
-          <span>{{ ticket.name }}</span>
-          <span class="opacity-50">
-            {{ ticket.quantity_remaining > 0
-              ? (ticket.quantity_remaining + ' remaining')
-              : 'SOLD OUT'
-            }}
-          </span>
-        </div>
-    </ui-button>
-  </div>
-  
-  <div *ngSwitchCase="'free'">
-    <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" 
-      size="l"
-      (click)="clicked.emit(ticket)">
-        <div>
-          <ui-chip kind="green">FREE</ui-chip>
-        </div>
+        <b class="ml-auto" *ngIf="ticket.type == 'paid'">{{ ticket.amount | currencyPipe: ticket.currency }}</b>
+      </div>
+      <div>
+        <span>{{ ticket.name }}</span>
+        <span class="opacity-50">
+          <!-- Hidden ticket quantities returned as null, unless remaining == 0, for sold out indicator -->
+          <ng-container *ngIf="ticket.quantity_remaining > 0">
+            {{ ticket.quantity_remaining }} remaining
+          </ng-container>
 
-        <div>
-          <span>{{ ticket.name }}</span>
-          <span class="opacity-50">
-            {{ ticket.quantity_remaining > 0
-              ? (ticket.quantity_remaining + ' remaining')
-              : 'SOLD OUT'
-            }}
-          </span>
-        </div>
-    </ui-button>
-  </div>
+          <ng-container *ngIf="ticket.quantity_remaining == 0">SOLD OUT</ng-container>
+        </span>
+      </div>
+  </ui-button>
 </div>

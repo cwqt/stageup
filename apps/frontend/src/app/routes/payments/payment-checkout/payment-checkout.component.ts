@@ -10,8 +10,10 @@ import {
 } from '@stripe/stripe-js';
 import { Subscription } from 'rxjs';
 import { MyselfService } from '../../../services/myself.service';
-import { IPaymentIntentClientSecret } from '@core/interfaces';
+import { DonoPeg, IPaymentIntentClientSecret, IHostStub, DtoDonationPurchase, ITicketStub } from '@core/interfaces';
 import { environment } from 'apps/frontend/src/environments/environment';
+import { PerformanceService } from '../../../services/performance.service';
+import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 
 @Component({
   selector: 'app-payment-checkout',
@@ -24,8 +26,9 @@ export class PaymentCheckoutComponent implements OnInit, OnDestroy, AfterViewIni
   @Output() onFailure: EventEmitter<StripeError> = new EventEmitter();
   @Output() onSuccess: EventEmitter<PaymentIntent> = new EventEmitter();
 
-  private paymentIntent: IPaymentIntentClientSecret;
   private subscription: Subscription;
+
+  paymentIntent: ICacheable<IPaymentIntentClientSecret> = createICacheable();
 
   public error: StripeElementChangeEvent['error'];
   public loading: boolean = false;
@@ -41,10 +44,10 @@ export class PaymentCheckoutComponent implements OnInit, OnDestroy, AfterViewIni
     }
   };
 
-
   constructor(
     private stripeFactory: StripeFactoryService,
-    private myselfService: MyselfService
+    private myselfService: MyselfService,
+    private performanceService: PerformanceService
   ) {}
 
   ngOnInit(): void {}
@@ -60,25 +63,28 @@ export class PaymentCheckoutComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   /**
-   * @description Sets the payment intent & creates the CC info element
-   * @param paymentIntent
+   * @description Creates a stripe factory which is consumed by the Stripe card Element
+   * @param stripeAccountId host stripe account id
    */
-  public setPaymentIntent(paymentIntent: IPaymentIntentClientSecret) {
-    this.paymentIntent = paymentIntent;
+  public setStripeElementAccountId(stripeAccountId: string) {
     this.stripe = this.stripeFactory.create(environment.stripePublicKey, {
-      stripeAccount: this.paymentIntent.stripe_account_id
+      stripeAccount: stripeAccountId
     });
   }
 
   /**
    * @description Finishes the transaction using the logged in users entered CC details
    */
-  public async confirmPayment() {
-    const myself = this.myselfService.$myself.getValue();
+  public async confirmPayment(ticket:ITicketStub, dto?: DtoDonationPurchase) {
+		this.loading = true;
+    await cachize(
+      this.performanceService.createPaymentIntent(ticket, dto),
+      this.paymentIntent
+    );
 
-    this.loading = true;
+    const myself = this.myselfService.$myself.getValue();
     return this.stripe
-      .confirmCardPayment(this.paymentIntent.client_secret, {
+      .confirmCardPayment(this.paymentIntent.data.client_secret, {
         payment_method: {
           card: this.card.element,
           billing_details: {

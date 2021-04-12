@@ -1,29 +1,21 @@
 import { api } from '../environment';
-import { environment as env, UserType } from '../environment';
+import { environment as env } from '../environment';
 import {
-  IPerformance,
-  IPerformanceHostInfo,
-  IPerformanceStub,
-  CurrencyCode,
-  IPerformanceUserInfo,
-  IEnvelopedData,
   IHost,
   IHostStub,
-  DtoCreatePerformance,
   IUserStub
 } from '@core/interfaces';
 
 export default {
-  // router.post <void> ("/acceptinvite/:uid", Misc.acceptHostInvite());
+  // router.post <void> ("/accept-invite/:uid", Misc.acceptHostInvite());
   async acceptHostInvite(user:IUserStub):Promise<void> {
-    const res = await api.post(`/acceptinvite/${user._id}`, env.getOptions());
+    const res = await api.post(`/accept-invite/${user._id}`, env.getOptions());
     return res.data;
   },
 
-  // router.get <IHost> ("/verifyhost/:hid", Misc.verifyHost());
+  // router.get <IHost> ("/verify-host/:hid", Misc.verifyHost());
   async verifyHost(host:IHostStub):Promise<IHost> {
-    const res = await api.get(`/verifyhost/${host._id}`, env.getOptions());
+    const res = await api.get(`/verify-host/${host._id}`, env.getOptions());
     return res.data;
   }
-
 }

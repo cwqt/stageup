@@ -1,8 +1,9 @@
+import { IUser, IUserStub, IUserPrivate, IMyself } from '@core/interfaces';
+import { uuid } from '@core/shared/helpers';
 import bcrypt from 'bcrypt';
 import {
   BaseEntity,
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   ManyToOne,
@@ -13,14 +14,12 @@ import {
   PrimaryColumn
 } from 'typeorm';
 import { Except } from 'type-fest';
-import { IUser, IUserStub, IUserPrivate, Environment, IMyself } from '@core/interfaces';
 
 import { Host } from '../hosts/host.entity';
-import { PerformancePurchase } from '../performances/purchase.entity';
 import { Performance } from '../performances/performance.entity';
 import { Person } from './person.entity';
 import { ContactInfo } from './contact-info.entity';
-import { uuid } from '@core/shared/helpers';
+import { Invoice } from '../common/invoice.entity';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
@@ -39,8 +38,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() email_address: string;
 
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
-  @OneToMany(() => PerformancePurchase, purchase => purchase.user) purchases: PerformancePurchase[]; // Many purchases
-  @OneToMany(() => Performance, performance => performance.creator) performances: Performance[];
+  @OneToMany(() => Invoice, invoice => invoice.user) invoices: Invoice[]; // Many purchases
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
 
   @Column() private salt: string;

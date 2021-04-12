@@ -71,7 +71,7 @@ describe('As a user-host, I want to be able to do Member CRUD', () => {
     try {
       await Stories.actions.hosts.removeMember(host, Stories.cachedUsers[UserType.SiteAdmin].user);
     } catch (error) {
-      expect((error as AxiosError<IErrorResponse>).response?.status).toBe(HTTP.Unauthorised);
+      expect((error as AxiosError<IErrorResponse>).response?.status).toBe(HTTP.Forbidden);
     }
   });
 

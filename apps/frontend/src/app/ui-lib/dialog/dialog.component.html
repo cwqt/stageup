@@ -1,16 +1,16 @@
-<div class="ui-dialog">
+<div class="ui-dialog" [class.ui-dialog--small]="small">
   <div class="ui-dialog--spinner" *ngIf="loading">
     <mat-spinner ></mat-spinner>
   </div>
 
-  <div class="ui-dialog--content" [class.p-4]="!noPadding">
+  <div class="ui-dialog--content" [class.no-padding]="noPadding">
     <ng-container *ngIf="title">
       <h1>{{ title }}</h1>
-      <ui-hr></ui-hr>  
+      <ui-hr></ui-hr>
     </ng-container>
-  
-    <ng-content></ng-content>      
+
+    <ng-content></ng-content>
   </div>
 
-  <ui-dialog-buttons [buttons]="buttons"></ui-dialog-buttons>
+  <ui-dialog-buttons [small]="small" [dialogRef]="dialogRef" [buttons]="buttons"></ui-dialog-buttons>
 </div>

@@ -1,8 +1,8 @@
 <div class="ui-dialog-buttons-wrapper">
-  <ui-button *ngFor="let button of buttons; let i = index"
+  <ui-button *ngFor="let button of buttons; let i = index" [class.small]="small"
     [kind]="button.kind"
     [disabled]="button.disabled"
-    [size]="'l'"
+    [size]="small ? 'm' : 'l'"
     (click)="button.callback(dialogRef)">
     {{ button.text }}
   </ui-button>

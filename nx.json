@@ -1,6 +1,6 @@
 {
   "npmScope": "stageup-core",
-  "affected": { "defaultBase": "master" },
+  "affected": { "defaultBase": "dev" },
   "implicitDependencies": {
     "workspace.json": "*",
     "package.json": { "dependencies": "*", "devDependencies": "*" },
@@ -16,9 +16,10 @@
   "projects": {
     "backend": { "tags": [] },
     "frontend": { "tags": [] },
+    "runner": { "tags": [] },
+    "notifications": { "tags": [] },
     "api-tests": { "tags": [] },
     "interfaces": { "tags": [] },
-    "shared": { "tags": [] },
-    "runner": { "tags": [] }
+    "shared": { "tags": [] }
   }
 }

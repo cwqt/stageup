@@ -17,6 +17,7 @@ import usersActions from './actions/users.actions';
 import hostsActions from './actions/hosts.actions';
 import adminActions from './actions/admin.actions';
 import performanceActions from './actions/performances.actions';
+import searchActions from './actions/search.actions';
 
 export const Stories = {
   log: true,
@@ -28,7 +29,8 @@ export const Stories = {
     users: usersActions,
     hosts: hostsActions,
     admin: adminActions,
-    performances: performanceActions
+    performances: performanceActions,
+    search: searchActions
   },
 
   setActiveUser: async (user: CachedUser) => {
@@ -39,4 +41,3 @@ export const Stories = {
     return Stories.activeUser;
   }
 };
-

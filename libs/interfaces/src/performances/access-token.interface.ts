@@ -1,8 +1,8 @@
 import { NUUID } from "../common/fp.interface";
 import { IUser, IUserStub } from "../users/user.interface";
-import { IPerformancePurchase } from "./performance-purchase.interface";
-import { IPerformanceStub } from "./performance.interface";
+import { IPerformance } from "./performance.interface";
 import { Except } from 'type-fest';
+import { IInvoice } from "../common/invoice.interface";
 
 export enum TokenProvisioner {
   User = "user",
@@ -21,12 +21,34 @@ export interface IAccessToken {
 
   // relationships
   user: IUserStub;
-  performance: IPerformanceStub
+  invoice: IInvoice;
   // polymorphic relationship...except typeorm-polymorphic doesnt support 0.3.0
-  provisioner_id: IUser["_id"] | IPerformancePurchase["_id"];
+  provisioner_id: IUser["_id"] | IInvoice["_id"];
 }
 
-export type DtoAccessToken = Except<IAccessToken, "user" | "performance"> & {
-  user: IUser["_id"];
-  performance: IPerformanceStub["_id"];
+export type DtoAccessToken = Except<IAccessToken, "user" | "invoice"> & {
+  user?: IUser["_id"];
+  invoice?: IInvoice["_id"];
+  performance: IPerformance["_id"];
 }
+
+export type JwtAccessToken = IAccessToken["access_token"];
+export interface DecodedJwtAccessToken {
+  alg: "RS256";
+  type: "JWT";
+  kid: string;
+
+  exp: number;
+  aud: string;
+  sub: string
+}
+// {
+//   "alg": "RS256",
+//   "typ": "JWT",
+//   "kid": "ZeGL1YwICaTEMDS202Q5TjgNRduQZQaJDwspvJEMHml8"
+// }
+// {
+//   "exp": 1618403585,
+//   "aud": "v",
+//   "sub": "yji4pRyz92kZHygWVkcd01Wk2b2G0238lesEcBS4JGA00E"
+// }

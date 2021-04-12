@@ -36,11 +36,11 @@ GET http://{{host}}/users/{{userId}} HTTP/1.1
 DELETE http://{{host}}/users/{{userId}} HTTP/1.1
 ### --------------------------------------------------------------------------------------------
 # @name readUserHost
-GET http://{{host}}/users/{{userId}}/host 
+GET http://{{host}}/users/{{userId}}/host
 ### --------------------------------------------------------------------------------------------
 
 ###############################################################################################
-### HOST CONTROLLER 
+### HOST CONTROLLER
 ###############################################################################################
 # router.post   <IHost> ("/hosts", Hosts.createHost())
 # @name createHost
@@ -131,11 +131,11 @@ PUT http://{{host}}/hosts/{{hostId}}/onboarding/{{step}} HTTP/1.1
 Content-Type: application/json
 
 {
-  "0":{ "step": 3, "issues": []}, 
-  "1":{ "step": 3, "issues": []}, 
-  "2":{ "step": 3, "issues": []}, 
-  "3":{ "step": 3, "issues": []}, 
-  "4":{ "step": 3, "issues": []} 
+  "0":{ "step": 3, "issues": []},
+  "1":{ "step": 3, "issues": []},
+  "2":{ "step": 3, "issues": []},
+  "3":{ "step": 3, "issues": []},
+  "4":{ "step": 3, "issues": []}
 }
 
 ### --------------------------------------------------------------------------------------------
@@ -145,11 +145,11 @@ POST http://{{host}}/hosts/{{hostId}}/onboarding/submit HTTP/1.1
 Content-Type: application/json
 
 {
-  "0":{ "step": 3, "issues": []}, 
-  "1":{ "step": 3, "issues": []}, 
-  "2":{ "step": 3, "issues": []}, 
-  "3":{ "step": 3, "issues": []}, 
-  "4":{ "step": 3, "issues": []} 
+  "0":{ "step": 3, "issues": []},
+  "1":{ "step": 3, "issues": []},
+  "2":{ "step": 3, "issues": []},
+  "3":{ "step": 3, "issues": []},
+  "4":{ "step": 3, "issues": []}
 }
 
 ### --------------------------------------------------------------------------------------------
@@ -180,8 +180,6 @@ Content-Type: {{contentType}}
     "name":"New performance name",
     "description":"New performance description",
     "genre": "5",
-    "price":"40",
-    "currency": "GBP",
     "premiere_date": 1613474834
 }
 ###
@@ -195,9 +193,9 @@ GET http://{{host}}/performances HTTP/1.1
 # @name readPerformance
 GET http://{{host}}/performances/{{performanceId}} HTTP/1.1
 ###
-#router.get <IPHInfo>("/performances/:pid/host_info", Perfs.readPerformanceHostInfo());
+#router.get <IPHInfo>("/performances/:pid/host-info", Perfs.readPerformanceHostInfo());
 # @name readPerformanceHostInfo
-GET http://{{host}}/performances/{{performanceId}}/host_info HTTP/1.1
+GET http://{{host}}/performances/{{performanceId}}/host-info HTTP/1.1
 ###
 #router.post  <void>("/performances/:pid/purchase", Perfs.purchase());
 # @name purchasePerformance
@@ -214,7 +212,6 @@ Content-Type: {{contentType}}
 
 {
     "name":"New performance name",
-    "price":"40",
     "description":"New performance description"
 }
 ###
@@ -229,7 +226,7 @@ Content-Type: {{contentType}}
 ###--------------------------------------------------------------------------------------------
 
 ###############################################################################################
-### ADMIN CONTROLLER 
+### ADMIN CONTROLLER
 ###############################################################################################
 # router.get  <IE<IHOnboarding[],void>>(`/admin/onboardings`, Admin.readOnboardingProcesses());
 # @name readOnboardingProcesses
@@ -245,11 +242,11 @@ POST http://{{host}}/admin/onboardings/{{onboardingId}}/review
 Content-Type: application/json
 
 {
-  "0":{ "state": 3, "issues": []}, 
-  "1":{ "state": 3, "issues": []}, 
-  "2":{ "state": 3, "issues": []}, 
-  "3":{ "state": 3, "issues": []}, 
-  "4":{ "state": 3, "issues": []}, 
+  "0":{ "state": 3, "issues": []},
+  "1":{ "state": 3, "issues": []},
+  "2":{ "state": 3, "issues": []},
+  "3":{ "state": 3, "issues": []},
+  "4":{ "state": 3, "issues": []},
 }
 ### --------------------------------------------------------------------------------------------
 # router.post <void> ("/admin/onboardings/:oid/enact", Admin.enactOnboardingProcess());
@@ -258,7 +255,7 @@ POST http://{{host}}/admin/onboardings/{{onboardingId}}/enact
 ### --------------------------------------------------------------------------------------------
 
 ###############################################################################################
-### MISC CONTROLLER 
+### MISC CONTROLLER
 ###############################################################################################
 # router.get <string> ("/ping", Misc.ping());
 # @name ping
@@ -268,7 +265,7 @@ GET http://{{host}}/ping
 # @name dropAllData
 POST http://{{host}}/drop
 ### --------------------------------------------------------------------------------------------
-# router.get <IHost> ("/verifyhost/:hid", Misc.verifyHost());
+# router.get <IHost> ("/verify-host/:hid", Misc.verifyHost());
 # @name verifyHost
-GET http://{{host}}/verifyhost/{{hostId}}
+GET http://{{host}}/verify-host/{{hostId}}
 ### --------------------------------------------------------------------------------------------

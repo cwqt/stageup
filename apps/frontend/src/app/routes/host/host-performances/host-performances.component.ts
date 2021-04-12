@@ -3,12 +3,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { CreatePerformanceComponent } from './create-performance/create-performance.component';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
-import { AfterViewInit, ViewChild } from '@angular/core';
+import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { IEnvelopedData, IPerformanceStub, IPerformance } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
+import { PerformanceService } from '../../../services/performance.service';
 
 @Component({
   selector: 'app-host-performances',
@@ -27,6 +29,7 @@ export class HostPerformancesComponent implements OnInit {
   };
 
   constructor(
+    private performanceService: PerformanceService,
     private hostService: HostService,
     private helperService: HelperService,
     private dialog: MatDialog,
@@ -73,6 +76,28 @@ export class HostPerformancesComponent implements OnInit {
   }
 
   openPerformance(performances: IPerformance) {
-    this.appService.navigateTo(`/host/performances/${performances._id}`);
+    this.appService.navigateTo(`/dashboard/performances/${performances._id}`);
+  }
+
+  deletePerformance(performance: IPerformanceStub) {
+    this.helperService.showConfirmationDialog(this.dialog, {
+      title: `Delete '${performance.name}'`,
+      description: 'Are you sure you want to delete this performance?',
+      buttons: [
+        {
+          text: 'Cancel',
+          kind: ThemeKind.Secondary,
+          callback: r => r.close()
+        },
+        {
+          text: 'Delete',
+          kind: ThemeKind.Primary,
+          callback: r => {
+            this.performanceService.deletePerformance(performance._id);
+            r.close();
+          }
+        }
+      ]
+    });
   }
 }

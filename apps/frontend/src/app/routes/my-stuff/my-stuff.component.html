@@ -2,7 +2,7 @@
 <ui-hr></ui-hr>
 
 <ui-input type="text"
-  (change)="onChange($event)" 
+  (change)="onChange($event)"
   placeholder="Search for purchased performance...">
 </ui-input>
 
@@ -10,6 +10,9 @@
 
 <h3 *ngIf="myStuff.data?.data?.length == 0">No purchases found</h3>
 
-<app-performance-thumb *ngFor="let performance of myStuff.data.data"
-  [performance]="performance">
-</app-performance-thumb>
+<div class="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2" *ngIf="!myStuff.loading && myStuff.data.data">
+  <app-performance-thumb *ngFor="let performance of myStuff.data.data"
+    (click)="openWatchPerformance(performance)"
+    [performance]="performance">
+  </app-performance-thumb>
+</div>

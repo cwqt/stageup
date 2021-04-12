@@ -4,33 +4,25 @@
   width: 100%; //set from parent
   background-color: white;
   height: 100vh;
-  padding-top: 30px;
+  padding-top: calc(56px);
   display: flex;
   flex-flow: column;
   align-items: center;
-  box-shadow: $box-shadow;
-
-  .logo {
-    width: 50%;
-    margin-bottom: $space-lg;
-  }
 }
 
 .sidebar-main-buttons {
-  margin-top: auto;
-  margin-bottom: auto;
   display: flex;
   flex-flow: column;
   justify-content: space-between;
   width: 100%;
   ui-button {
-    margin: 10px 0;
+    // margin: 10px 0;
     width: 100%;
-    height: 75px !important;
+    height: 64px !important;
     ::ng-deep button {
       background: white;
       width: 100%;
-      height: 75px !important;
+      height: 64px !important;
       border: 0px solid transparent;
       border-radius: 0 !important;
       color: $clr-primary !important;
@@ -39,7 +31,7 @@
         color: transparentize($color: $clr-primary, $amount: 0.5);
         display: flex;
         align-items: center;
-        justify-content: center;  
+        justify-content: center;
       }
       &:hover {
         color: $clr-primary;

@@ -1,5 +1,5 @@
 <div class="flex flex-row items-center mb-5">
-  <h1 class="mb-0">Members</h1>
+  <h1 class="mb-0">Team</h1>
   <mat-spinner class="ml-5" [diameter]="50" *ngIf="hostMembers.loading"></mat-spinner>
   <ui-button kind="primary" class="ml-auto" (click)="openAddMembersModal()"><ui-icon>add</ui-icon>Add Member</ui-button>
 </div>
@@ -22,10 +22,14 @@
     <td mat-cell *matCellDef="let uhi">{{ uhi.joined_at | amFromUnix }}</td>
   </ng-container>
 
-  <ng-container matColumnDef="modify">
+  <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let uhi" >
-      <ui-button class="mr-2"><ui-icon>edit</ui-icon></ui-button>
+      <ui-button class="mr-2"
+        *ngIf="uhi.permissions !== 'host_owner' && uhi.permissions !== 'host_pending' && uhi.permissions !== 'host_expired'"
+        (click)="openMemberPermissionsDialog(uhi.user._id)">
+          <ui-icon>edit</ui-icon>
+      </ui-button>
       <ui-button kind="danger"><ui-icon>delete</ui-icon></ui-button>
     </td>
   </ng-container>

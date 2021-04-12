@@ -72,6 +72,6 @@ export class ToastService implements OnDestroy {
 
   private getDuration(configParams?: MatSnackBarConfig): number {
     if (configParams && configParams.duration) return configParams.duration;
-    else return 1000;
+    else return 2500;
   }
 }

@@ -8,6 +8,8 @@ import StoreProvider from './providers/store.provider';
 import SendGridProvider from './providers/sendgrid.provider';
 import StripeProvider from './providers/stripe.provider';
 import S3Provider from './providers/aws-s3.provider';
+import SSEProvider from './providers/sse.provider';
+import PubSubProvider from './providers/pub-sub.provider';
 
 /**
  * DataClient: Object with methods for maintaining all providers
@@ -108,4 +110,6 @@ export namespace Providers {
   export const SendGrid = SendGridProvider;
   export const Stripe = StripeProvider;
   export const S3 = S3Provider;
+  export const SSE = SSEProvider;
+  export const PubSub = PubSubProvider;
 };

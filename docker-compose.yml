@@ -9,9 +9,9 @@ services:
     container_name: api
     env_file:
      - .env.${NODE_ENV:-development}
-    environment: 
+    environment:
       WAIT_HOSTS: postgres:5432, redis:6379
-    build: 
+    build:
       context: .
       dockerfile: ./apps/backend/Dockerfile
     depends_on:
@@ -32,12 +32,11 @@ services:
 
   runner:
     container_name: runner
-    restart: always
     env_file:
      - .env.${NODE_ENV:-development}
-    environment: 
+    environment:
       WAIT_HOSTS: redis:6379, api:3000
-    build: 
+    build:
       context: .
       dockerfile: ./apps/runner/Dockerfile
     depends_on:
@@ -54,13 +53,13 @@ services:
 
   web:
     container_name: nginx
-    build: 
+    build:
       context: .
       dockerfile: ./apps/frontend/Dockerfile
     volumes:
-      - ./dist:/usr/share/nginx/html
-      - ./dist:/var/www/html
+      - ./dist/apps/frontend:/usr/share/nginx/html
       - ./apps/frontend/nginx.conf:/etc/nginx/nginx.conf
+      - ./deploy/security-headers.conf:/etc/nginx/security-headers.conf
     ports:
       - "80:80"
     depends_on:

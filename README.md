@@ -2,20 +2,23 @@
 
 Live-streaming & VoD platform for the performance arts.
 
-![StageUp](https://ftp.cass.si/tb81=00i4.png)
+![StageUp](https://ftp.cass.si/=cl4908w3.png)
 
 ## Installation
 
 Refer to [README.md](apps/README.md) for installing Node, Docker & the various databases before following the individual application setups.
 
-* __API__ (`apps/backend`): [README.md](apps/backend/README.md) for setup instructions.
-* __Frontend__ (`apps/frontend`): [README.md](apps/frontend/README.md) for setup instructions.
-* __Queue__ (`apps/runner`): [README.md](apps/runner/README.md) for setup instructions.
-* __Tests__ (`apps/api-tests`): [README.md](apps/api-tests/README.md) for setup instructions.
+For each application, review the setup instructions in each of these files:
+
+* __API__ (`apps/backend`): [README.md](apps/backend/README.md)
+* __Frontend__ (`apps/frontend`): [README.md](apps/frontend/README.md)
+* __Queue__ (`apps/runner`): [README.md](apps/runner/README.md)
+* __Notifications__ (`apps/notifications`) [README.md](apps/notifications/README.md)
+* __Tests__ (`apps/api-tests`): [README.md](apps/api-tests/README.md)
 
 ## Running
 
-All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects.  
+All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects.
 Run `npm install` in the project root to install all required dependencies.
 
 Production builds perform tree-shaking optimization to remove unused libraries, so ensure you use ES6 import syntax.
@@ -42,13 +45,11 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
 ```sh
   apps
     frontend           # the stageup frontend
+      nginx.conf       # nginx config for frontend server
     backend            # the stageup backend
-      .env.example     # example .env
-      .env.development # also .env.staging, .testing & .production
     runner             # distributed job queue
     api-tests          # integration tests
-      .env.example     # example .env - call actual one just .env
-          
+
   libs                 # where all shared code live
     interfaces         # typescript interfaces
     ui-lib             # frontend generic angular component library
@@ -56,14 +57,13 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
       api              # shared backend services utilities
         providers      # utils for interacting with data sources
       helpers          # utility functions for backend & frontend
-        
-  deploys              # info pertaining to deployment
+
+  deploy               # info pertaining to deployment
     k8s                # kubernetes files (unused for now)
-    docker             # docker-compose (dev, prod)
-    nginx.conf         # nginx config for frontend server
-        
+
   tools                # non-source code stuff
-        
+    generate-uml.ts    # creates a plant-uml diagram of models
+
   .github              # github actions
   .vscode              # editor settings
   nx.json              # nx workspace config
@@ -71,7 +71,10 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
   package.json         # where _all_ packages are listed
   tsconfig.base.json   # base ts config
   workspace.json       # where all apps/libs are defined
+  docker-compose.yml   # local stack deployment
   .env                 # .env for github tokens (deployment only)
+  .env.example         # example .env
+  .env.development     # also .env.staging, .testing & .production
 ```
 
 ## Useful Tools

@@ -4,7 +4,7 @@ import {
   HostPermission,
   IEnvelopedData,
   IHostOnboarding,
-  IOnboardingReview
+  IOnboardingReview,
 } from '@core/interfaces';
 import {
   BaseController,
@@ -16,42 +16,30 @@ import {
   OnboardingReview,
   Onboarding,
   User,
-  UserHostInfo
+  UserHostInfo,
 } from '@core/shared/api';
+import { BackendProviderMap } from '..';
 
 import AuthStrat from '../common/authorisation';
-import Email = require('../common/email');
-import { log } from '../common/logger';
 
-export default class AdminController extends BaseController {
+export default class AdminController extends BaseController<BackendProviderMap> {
   readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
     return {
-      validators: [
-        query<{
-          username: string;
-          submission_date_sort: string;
-          state: HostOnboardingState;
-        }>({
-          username: v => v.optional(true).isString(),
-          submission_date_sort: v => v.optional(true).isIn(['ASC', 'DESC']),
-          state: v => v.optional(true).isIn(Object.values(HostOnboardingState))
-        })
-      ],
-      authStrategy: AuthStrat.isSiteAdmin,
+      // TODO: write generic query / sort validator
+      authStrategy: AuthStrat.none, // AuthStrat.isSiteAdmin,
       controller: async req => {
-        const qb = this.ORM.createQueryBuilder(Onboarding, 'hop')
-          .innerJoinAndSelect('hop.host', 'host') // Pull in host & filter by host
-          .where('host.username LIKE :username', {
-            username: req.body.username ? `%${req.body.username as string}%` : '%'
-          });
-
-        // Not sure about fuzzy matching ints, so don't make a WHERE if none passed
-        if (req.query.state) {
-          qb.andWhere('hop.state = :state', { state: req.query.state });
-        }
-
-        return await qb
-          .orderBy('hop.last_submitted', (req.params.submission_date_sort as 'ASC' | 'DESC') ?? 'ASC')
+        return this.ORM.createQueryBuilder(Onboarding, 'onboarding')
+          .innerJoinAndSelect('onboarding.host', 'host')
+          .filter({
+            username: { subject: 'host.username' },
+            state: { subject: 'onboarding.state', transformer: v => parseInt(v as string) },
+            last_submitted: { subject: 'onboarding.last_submitted', transformer: v => parseInt(v as string) }
+          })
+          .sort({
+            last_submitted: 'onboarding.last_submitted',
+            username: 'host.username',
+            state: 'onboarding.state'
+          })
           .paginate(o => o.toFull());
       }
     };
@@ -81,7 +69,9 @@ export default class AdminController extends BaseController {
         // Controller does not actually submit to the host - that is done by enactOnboardingProcess
         const submission: IOnboardingReview['steps'] = req.body;
         const reviewer = await getCheck(User.findOne({ _id: req.session.user._id }));
-        const onboarding = await getCheck(Onboarding.findOne({ _id: req.params.oid }));
+        const onboarding = await getCheck(
+          Onboarding.findOne({ relations: { host: true }, where: { host: { _id: req.params.hid } } })
+        );
         onboarding.version += 1;
 
         // Create new review & map the states onto the actual step data
@@ -117,10 +107,12 @@ export default class AdminController extends BaseController {
       controller: async req => {
         // Every step is verified when submitted, so enact the onboarding process
         // by which I mean shift the data from Onboarding -> Host & send out invites for added members
-        const onboarding = await getCheck(Onboarding.findOne({ _id: req.params.oid }));
+        const onboarding = await getCheck(
+          Onboarding.findOne({ relations: { host: true }, where: { host: { _id: req.params.hid } } })
+        );
 
         // Check if every step is set to valid, if not set state to HasIssues & request changes via email
-        if (Object.values(onboarding.steps).every(o => o.state === HostOnboardingState.Verified)) {
+        if (Object.values(onboarding.steps).every(o => o.state !== HostOnboardingState.Verified)) {
           onboarding.state = HostOnboardingState.HasIssues;
           // TODO: Send an email requesting changes
           await onboarding.save();
@@ -156,31 +148,6 @@ export default class AdminController extends BaseController {
           // Social Info
           const socialInfoData = onboarding.steps[HostOnboardingStep.SocialPresence].data;
           host.social_info = socialInfoData.social_info;
-
-          // Add Members
-          const addMemberData = onboarding.steps[HostOnboardingStep.AddMembers].data;
-          // These are all just 'add' actions, so send an invitation & add them to the host
-          await Promise.allSettled(
-            addMemberData.members_to_add.map(async member => {
-              try {
-                const potentialMember = await User.findOne({ _id: member.value as string });
-                if (!potentialMember)
-                  log.error(`Found no such user with _id: ${member.value} in onboarding request: ${onboarding._id}`);
-
-                // Don't add the owner if they're already in
-                if (potentialMember._id !== owner.user._id) {
-                  Email.sendUserHostMembershipInvitation(owner.user, potentialMember, host, txc);
-
-                  // Add the member as pending (updated on membership acceptance to Member)
-                  await host.addMember(potentialMember, HostPermission.Pending, txc);
-                }
-              } catch (error) {
-                log.error(error);
-              }
-            })
-          );
-
-          // TODO: Subscription level (needs requirements)
 
           // TODO: Once the onboarding process is complete, we no longer need it & it + it's onboarding issues
           // can be deleted

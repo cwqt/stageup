@@ -1,13 +1,14 @@
 <div class="ui-input-wrapper" [class.ui-input-wrapper--has-icon]="icon">
   <!-- Input -->
   <div
-    (clickOutside)="togglePasswordVisibility(false, $event)"
+    (clickOutside)="togglePasswordVisibility(false, $event); focused = false"
     (click)="input.select()"
     class="form-field"
     [class.form-field--is-active]="focused"
     [class.form-field--is-filled]="value !== ''"
     [class.form-field--is-small]="!label"
     [class.form-field--is-errored]="showError"
+    [class.form-field--is-disabled]="disabled"
     *ngIf="type == 'number' || type == 'text' || type == 'password' || type == 'phone'">
     <div class="form-field__control">
       <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
@@ -18,9 +19,9 @@
         #input
         [(ngModel)]="value"
         [validation]="true"
-        (blur)="onTouched()"
-        (focus)="onFocus()"
-        [id]="id || formControlName || ''"
+        (ngModelChange)="change.emit($event)"
+        (blur)="onTouchedCallback()"
+        (focus)="onFocusCallback()"
         [disabled]="disabled"
         [placeholder]="placeholder"
         [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : (type == 'phone' ? 'tel' : type)"
@@ -35,7 +36,7 @@
         <!-- FIXME: fix ui-icon-button to re-enable this icon to display password -->
         <!-- <div class="form-field__password" *ngIf="type == 'password'">
           <ui-icon-button size="m" (click)="togglePasswordVisibility(false, $event)" *ngIf="passwordVisible"><ui-icon>view--filled</ui-icon></ui-icon-button>
-          <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>  
+          <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>
         </div> -->
       </div>
   </div>
@@ -57,8 +58,8 @@
       <textarea
         #textarea
         [(ngModel)]="value"
-        (blur)="onTouched()"
-        (focus)="onFocus()"
+        (blur)="onTouchedCallback()"
+        (focus)="onFocusCallback()"
         [id]="formControlName || ''"
         [disabled]="disabled"
         [placeholder]="placeholder"
@@ -90,7 +91,7 @@
     [class.small]="!label"
     [class.checkbox]="type == 'checkbox'">
     <mat-label *ngIf="label && type !== 'checkbox'">{{ label }}</mat-label>
-    <mat-checkbox matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
+    <mat-checkbox [disabled]="disabled" matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
     <!-- stop formcontrolname throwing errors -->
     <input matInput placeholder="Input" style="display: none" >
   </mat-form-field>
@@ -100,42 +101,73 @@
     <mat-label>{{ label }}</mat-label>
     <mat-select #singleSelect
       [disabled]="disabled"
-      (blur)="onTouched()"
-      (focus)="onFocus()"
+      (blur)="onTouchedCallback()"
+      (focus)="onFocusCallback()"
       [(ngModel)]="value"
       disableOptionCentering>
       <mat-option *ngIf="options.search">
         <ngx-mat-select-search ngModel
-        (ngModelChange)="filterSelectionItems($event)"
+          (ngModelChange)="filterSelectionItems($event)"
           placeholderLabel="Search"
-          noEntriesFoundLabel="No results"></ngx-mat-select-search>
+          noEntriesFoundLabel="No results">
+        </ngx-mat-select-search>
       </mat-option>
-      <mat-option *ngFor="let item of filteredSelectionItems | async" [value]="item.key" (click)="emitSelectionChange(item)">
-        {{ item.value }}
+      <mat-option *ngFor="let item of filteredSelectionItems | async | keyvalue: originalOrder"
+        [value]="item.key"
+        [disabled]="item.value.disabled"
+        (click)="emitSelectionChange(item.key)">
+        {{ item.value.label }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 
-  <!-- Date picker -->
-  <mat-form-field appearance="fill" *ngIf="type == 'date'">
+  <!-- Date picker, single -->
+  <mat-form-field appearance="fill" *ngIf="type == 'date' && !options?.is_date_range">
     <mat-label>{{ label || 'Choose a date' }}</mat-label>
     <input matInput [matDatepicker]="picker" [(ngModel)]="value">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
+	<!-- Date picker, range -->
+	<mat-form-field appearance="fill" *ngIf="type == 'date' && options?.is_date_range">
+		<mat-label>Enter a date range</mat-label>
+		<mat-date-range-input [rangePicker]="picker" #pickerInput>
+			<input matStartDate placeholder="Start date">
+			<input matEndDate placeholder="End date">
+		</mat-date-range-input>
+		<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+		<mat-date-range-picker #picker></mat-date-range-picker>
+	</mat-form-field>
+
   <!-- Time picker -->
   <mat-form-field *ngIf="type == 'time'" appearance="fill">
     <mat-label>{{ label }}</mat-label>
     <mat-select #singleSelect
-      (blur)="onTouched()"
-      (focus)="onFocus()"
+      (blur)="onTouchedCallback()"
+      (focus)="onFocusCallback()"
       [(ngModel)]="value"
       disableOptionCentering>
-      <mat-option *ngFor="let item of timeItems" [value]="item.key">
-        {{ item.value }}
+      <mat-option *ngFor="let item of timeItems | keyvalue: originalOrder" [value]="item.key">
+        {{ item.value.label }}
       </mat-option>
     </mat-select>
+  </mat-form-field>
+
+  <!-- Radio select -->
+  <mat-form-field class="form-field__radio" *ngIf="type == 'radio'" appearance="none">
+    <label [for]="formControlName">{{ label }}</label>
+    <mat-radio-group
+      [disabled]="disabled"
+      [(ngModel)]="value">
+      <mat-radio-button *ngFor="let item of options.values | keyvalue: originalOrder"
+        [disabled]="item.value.disabled"
+        [value]="item.key">
+        {{ item.value.label }}
+      </mat-radio-button>
+    </mat-radio-group>
+    <!-- stop formcontrolname throwing errors -->
+    <input matInput placeholder="Input" style="display: none" >
   </mat-form-field>
 
   <!-- Hint message -->

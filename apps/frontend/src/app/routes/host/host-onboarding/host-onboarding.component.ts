@@ -8,7 +8,8 @@ import {
   HostOnboardingStep,
   IOnboardingStep,
   ISOCountryCode,
-  PersonTitle
+  PersonTitle,
+  capitalize
 } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
@@ -17,6 +18,7 @@ import phone from 'phone';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { HttpErrorResponse } from '@angular/common/http';
 import { flatten } from 'flat';
+import { enumToValues } from '@core/shared/helpers';
 
 interface IUiStep<T> {
   label: string;
@@ -63,9 +65,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   } = {
     [HostOnboardingStep.ProofOfBusiness]: createICacheable(),
     [HostOnboardingStep.OwnerDetails]: createICacheable(),
-    [HostOnboardingStep.SocialPresence]: createICacheable(),
-    [HostOnboardingStep.AddMembers]: createICacheable(),
-    [HostOnboardingStep.SubscriptionConfiguration]: createICacheable()
+    [HostOnboardingStep.SocialPresence]: createICacheable()
   };
 
   stepStatusUiMap: {
@@ -75,7 +75,8 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     [HostOnboardingState.Enacted]: { color: '', icon: 'checkmark--filled' },
     [HostOnboardingState.HasIssues]: { color: '', icon: 'warning' },
     [HostOnboardingState.PendingVerification]: { color: '', icon: 'pending' },
-    [HostOnboardingState.Verified]: { color: '', icon: 'checkmark--outline' }
+    [HostOnboardingState.Verified]: { color: '', icon: 'checkmark--outline' },
+    [HostOnboardingState.Modified]: { color: '', icon: 'edit' }
   };
 
   stepUiMap: { [index in HostOnboardingStep]?: IUiStep<any> } = {
@@ -116,13 +117,10 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                 label: 'Country',
                 options: {
                   search: true,
-                  values: Object.keys(ISOCountryCode).reduce((acc, curr, idx) => {
-                    acc.push({
-                      key: curr,
-                      value: Object.values(ISOCountryCode)[idx]
-                    });
+                  values: Object.keys(ISOCountryCode).reduce((acc, curr) => {
+                    acc.set(curr, { label: ISOCountryCode[curr] });
                     return acc;
-                  }, [])
+                  }, new Map())
                 },
                 validators: [{ type: 'required' }]
               },
@@ -172,13 +170,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                 type: 'select',
                 label: 'Title',
                 options: {
-                  values: Object.values(PersonTitle).reduce<IUiFieldSelectOptions['values']>((acc, curr) => {
-                    acc.push({
-                      key: curr,
-                      value: curr.charAt(0).toUpperCase() + curr.slice(1)
-                    });
-                    return acc;
-                  }, [])
+                  values: new Map(enumToValues(PersonTitle).map(title => [title, { label: capitalize(title) }]))
                 },
                 validators: [{ type: 'required' }]
               },
@@ -225,34 +217,6 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
         }
       }
     }
-    // TODO: Doesn't seem necessary at this stage to add members
-    // [HostOnboardingStep.AddMembers]: {
-    //   label: "Add Members",
-    //   data: null,
-    //   form: {
-    //     fields: [],
-    //     submit: {
-    //       variant: "primary",
-    //       text: "Next",
-    //       handler: async () => {},
-    //     },
-    //   },
-    // },
-    // TODO: not enough requirements on subscriptions at this stage to comment
-    // [HostOnboardingStep.SubscriptionConfiguration]: {
-    //   label: "Subscription Configuration",
-    //   data: null,
-    //   form: {
-    //     fields: [
-    //       { type: "number", field_name: "tier", label: "Subscription Tier" },
-    //     ],
-    //     submit: {
-    //       variant: "primary",
-    //       text: "Next",
-    //       handler: async () => {},
-    //     },
-    //   },
-    // },
   };
 
   constructor(private hostService: HostService) {}
@@ -273,14 +237,8 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   get ownerDetails() {
     return this.steps[HostOnboardingStep.OwnerDetails];
   }
-  get addMembers() {
-    return this.steps[HostOnboardingStep.AddMembers];
-  }
   get socialPresence() {
     return this.steps[HostOnboardingStep.SocialPresence];
-  }
-  get subscriptionConfig() {
-    return this.steps[HostOnboardingStep.SubscriptionConfiguration];
   }
   get currentState() {
     return this.onboarding.data.state;
@@ -288,7 +246,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
   async prefetchStepData(step: HostOnboardingStep): Promise<IUiFormPrefetchData> {
     // Only perform prefetches if the user has submitted this onboarding before
-    if(this.onboarding.data.state == HostOnboardingState.HasIssues) {
+    if (this.onboarding.data.steps[step] !== HostOnboardingState.AwaitingChanges) {
       const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(this.host._id, step));
 
       return {
@@ -297,7 +255,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
           acc[curr] = stepData.review.issues[curr];
           return acc;
         }, {})
-      };  
+      };
     }
   }
 

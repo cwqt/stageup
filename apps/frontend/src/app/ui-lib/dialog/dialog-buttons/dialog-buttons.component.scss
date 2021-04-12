@@ -1,5 +1,5 @@
 .ui-dialog-buttons-wrapper {
-  min-width: 500px;
+  // min-width: 500px;
   display: flex;
   ui-button {
     width: auto;
@@ -17,9 +17,8 @@
         }
       }
     }
-    &.left {
-    }
-    &.right {
+    &.small {
+      ::ng-deep button { min-height: 48px !important;}
     }
   }
 }

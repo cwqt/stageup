@@ -1,10 +1,21 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IHostStub, IMyself, IUser, IUserHostInfo, IPerformance } from '@core/interfaces';
+import { Router } from '@angular/router';
+import {
+  DtoPerformance,
+  HTTP,
+  IEnvelopedData,
+  IHostStub,
+  IMyself,
+  IPerformanceStub,
+  IUserHostInfo,
+  IUserInvoice
+} from '@core/interfaces';
+import { UserHostInfo } from '@core/shared/api';
+import { IQueryParams, querize } from '@core/shared/helpers';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { HTTP } from '@core/interfaces';
-import { Router } from '@angular/router';
+import { LocalStorageKey } from '../app.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +29,9 @@ export class MyselfService {
 
   store(myself: IMyself | null, rehydrate?: boolean) {
     if (myself == null) {
-      localStorage.removeItem('lastMyself');
+      localStorage.removeItem(LocalStorageKey.Myself);
     } else {
-      localStorage.setItem('lastMyself', JSON.stringify(myself));
+      localStorage.setItem(LocalStorageKey.Myself, JSON.stringify(myself));
     }
 
     if (rehydrate) this.hydrate(myself);
@@ -31,7 +42,7 @@ export class MyselfService {
    * @param myself current user ( and host / host info if part of one)
    */
   hydrate(myself?: IMyself): IMyself | null {
-    const me: IMyself | null = myself || JSON.parse(localStorage.getItem('lastMyself'));
+    const me: IMyself | null = myself || JSON.parse(localStorage.getItem(LocalStorageKey.Myself));
 
     // if this is being called from the constructor $myself doesn't exist yet
     // re-fan myself to subscribers every hydration
@@ -46,14 +57,13 @@ export class MyselfService {
       .pipe(
         tap(
           (myself: IMyself) => {
-            myself.user.avatar = myself.user.avatar || 'assets/avatar_placeholder.png';
+            myself.user.avatar = myself.user.avatar || 'assets/avatar-placeholder.png';
             this.store(this.hydrate(myself));
           },
           (e: HttpErrorResponse) => {
             if (e.status == HTTP.NotFound || e.status == HTTP.Unauthorised) {
               // don't use authService because of circular DI
               this.store(null);
-              this.router.navigate(['/']);
             }
           }
         )
@@ -61,7 +71,7 @@ export class MyselfService {
       .toPromise();
   }
 
-  setUser(user: IMyself["user"]) {
+  setUser(user: IMyself['user']) {
     this.store({ ...this.$myself.value, user: user }, true);
   }
 
@@ -72,5 +82,21 @@ export class MyselfService {
   setUserHostInfo(userHostInfo: IUserHostInfo) {
     this.store({ ...this.$myself.value, host_info: userHostInfo });
   }
-  
+
+  // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
+  updatePreferredLandingPage(data: Pick<UserHostInfo, 'prefers_dashboard_landing'>): Promise<IMyself['host_info']> {
+    return this.http.put<IMyself['host_info']>('/api/myself/landing-page', data).toPromise();
+  }
+
+  // router.get <IE<IPerfS[]>> ("/myself/purchased-performances", Myself.readMyPurchasedPerformances());
+  readMyPurchasedPerformances(name?: string): Promise<IEnvelopedData<IPerformanceStub[]>> {
+    return this.http
+      .get<IEnvelopedData<IPerformanceStub[]>>(`/api/myself/purchased-performances${name ? `?name=${name}` : ''}`)
+      .toPromise();
+  }
+
+  // router.get <IE<IUserInvoice[]>> ("/myself/invoices", Myself.readInvoices());
+  readInvoices(query: IQueryParams): Promise<IEnvelopedData<IUserInvoice[]>> {
+    return this.http.get<IEnvelopedData<IUserInvoice[]>>(`/api/myself/invoices${querize(query)}`).toPromise();
+  }
 }
