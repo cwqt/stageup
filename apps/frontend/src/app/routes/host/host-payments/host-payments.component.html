@@ -6,11 +6,12 @@
 <ng-container *ngIf="stripeInfo.data">
   <p *ngIf="connectSuccess == false">An error occured while connecting Stripe, try again?</p>
 
-  <ng-container *ngIf="stripeInfo.data.is_stripe_connected">
-    <h3>Stripe is connected!</h3>
-  </ng-container>
-  
-  <ng-container *ngIf="stripeInfo.data.is_stripe_connected == false">
+  <p *ngIf="host.stripe_account_id">
+    Connected account ID: <b>{{ host.stripe_account_id }}</b><br />
+    Live charges enabled: <b>{{ stripeInfo.data.is_stripe_connected }}</b>
+  </p>
+
+  <ng-container *ngIf="host.stripe_account_id == null && stripeInfo.data.is_stripe_connected == false">
     <ui-button
       kind="secondary"
       size="l"
@@ -24,4 +25,3 @@
     </ui-button>
   </ng-container>
 </ng-container>
-

@@ -21,6 +21,7 @@ import {
   OneToOne,
   PrimaryColumn
 } from 'typeorm';
+import MuxProvider from '../../data-client/providers/mux.provider';
 import { AssetGroup } from '../common/asset-group.entity';
 import { Asset } from '../common/asset.entity';
 import { Host } from '../hosts/host.entity';
@@ -61,7 +62,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
     this.host = host;
   }
 
-  async setup(mux: Mux, txc: EntityManager): Promise<Performance> {
+  async setup(mux: MuxProvider, txc: EntityManager): Promise<Performance> {
     this.assetGroup = new AssetGroup();
     const stream = await new Asset(AssetType.LiveStream).setup(mux, txc);
     this.stream = stream;

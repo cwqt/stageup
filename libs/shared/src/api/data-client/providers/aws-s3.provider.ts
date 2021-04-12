@@ -40,11 +40,24 @@ export default class S3Provider implements Provider<S3> {
     // !oldUrl && asset --> add file
     // oldUrl && asset --> replace file
     // oldUrl && !asset --> delete file
-    if(oldUrl || (asset == null && oldUrl)) await this.deleteImageFromS3(oldUrl);
+    if(oldUrl || (asset == null && oldUrl)) await this.delete(this.extractKeyFromUrl(oldUrl));
     return asset
       ? (await this.uploadImagetoS3(asset)).Location
       : null;
-  } 
+  }
+
+  public async delete(keyId: string) {
+    try {
+      return await this.connection
+        .deleteObject({
+          Key: keyId,
+          Bucket: this.config.s3_bucket_name
+        })
+        .promise();
+    } catch (error) {
+      throw new Error(`S3 deletion error: ${error.message}`);
+    }
+  }
 
   async disconnect() {
     return;
@@ -93,25 +106,12 @@ export default class S3Provider implements Provider<S3> {
     }
   }
 
-  public async deleteImageFromS3(s3ObjectUrl: string) {
-    try {
-      return await this.connection
-        .deleteObject({
-          Key: this.extractObjectKeyFromUrl(s3ObjectUrl),
-          Bucket: this.config.s3_bucket_name
-        })
-        .promise();
-    } catch (error) {
-      throw new Error(`S3 deletion error: ${error.message}`);
-    }
-  }
-
   private getFileExtension(file: Express.Multer.File): string {
     //e.g. "myfile.jpg" --> "jpg"
     return file.originalname.split(".").pop();
   }
 
-  private extractObjectKeyFromUrl(s3ObjectUrl: string): string {
+  private extractKeyFromUrl(s3ObjectUrl: string): string {
     //Extract the key from the bucket object URL (everything after last slash)
     //e.g https://su-assets.s3.eu-west-2.amazonaws.com/   ce76acbd-cec5-476f-a80d-2a910c86710c.jpg
     return s3ObjectUrl.split("/").pop();

@@ -48,7 +48,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
         return await this.ORM.transaction(async txc => {
           const performance = await new Performance(req.body, host).save();
-          await performance.setup(this.providers.mux.connection, txc);
+          await performance.setup(this.providers.mux, txc);
 
           // Push premiere to job queue for automated release
           Queue.enqueue({
@@ -89,7 +89,6 @@ export default class PerformanceController extends BaseController<BackendProvide
           .innerJoinAndSelect('p.host', 'host')
           .where('p.name LIKE :name', { name: req.query.search_query ? `%${req.query.search_query as string}%` : '%' })
           .andWhere('p.visibility = :state', { state: Visibility.Public })
-          .leftJoinAndSelect('p.stream', 'stream')
           .paginate(p => p.toStub());
       }
     };
@@ -243,7 +242,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         body({
           selected_dono_peg: v =>
             v.optional({ nullable: true }).isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
-          dono_allow_any_amount: v => v.optional({ nullable: true }).isInt()
+            allow_any_amount: v => v.optional({ nullable: true }).isInt()
         })
       ],
       controller: async req => {
@@ -284,8 +283,9 @@ export default class PerformanceController extends BaseController<BackendProvide
           if (req.body.selected_dono_peg == 'allow_any' && amount > BASE_AMOUNT_MAP[ticket.currency] * 200)
             throw new ErrorHandler(HTTP.BadRequest, ErrCode.TOO_LONG);
 
-          if (req.body.dono_allow_any_amount) amount = req.body.dono_allow_any_amount;
-          else getDonoAmount(req.body.selected_dono_peg, ticket.currency);
+          amount = req.body.selected_dono_peg == 'allow_any'
+            ? req.body.allow_any_amount
+            : getDonoAmount(req.body.selected_dono_peg, ticket.currency);
         }
 
         const res = await this.providers.stripe.connection.paymentIntents.create(

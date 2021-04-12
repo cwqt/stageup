@@ -18,8 +18,9 @@ import { MyselfService } from '../../../services/myself.service';
 })
 export class HostProfileComponent implements OnInit {
   @Input() hostUsername?: string;
-  host: ICacheable<IHost> = createICacheable(); 
-    
+  host: ICacheable<IHost> = createICacheable();
+  isHostView:boolean;
+
   hostPages = {
     index: {
       label: 'Feed',
@@ -53,7 +54,8 @@ export class HostProfileComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.baseAppService.componentInitialising(this.route);    
+    this.isHostView = this.route.snapshot.data['is_host_view'];
+    await this.baseAppService.componentInitialising(this.route);
 
     // If not passed through input, get from route param since this is probably on /@host_username
     if (!this.hostUsername) this.hostUsername = this.baseAppService.getParam(RouteParam.HostId).split('@').pop();
@@ -64,9 +66,9 @@ export class HostProfileComponent implements OnInit {
 
   openHostPage(endpoint: string) {
     this.baseAppService.navigateTo(
-      `${this.route.snapshot.data['is_host_view'] ? '/dashboard' : ''}/@${this.hostUsername}/${endpoint}`
+      `${this.isHostView ? '/dashboard' : ''}/@${this.hostUsername}/${endpoint}`
     );
-  }  
+  }
 
  handleTabChange(event: MatTabChangeEvent) {
     const pageIndex = Object.keys(this.hostPages)[event.index];
@@ -109,7 +111,7 @@ export class HostProfileComponent implements OnInit {
   handleUploadHostBanner(formData:fd) {
     return this.hostService.changeBanner(this.host.data._id, formData);
   }
-  
+
  openSocialLink(link: string) {
     window.open(link, '_blank');
   }

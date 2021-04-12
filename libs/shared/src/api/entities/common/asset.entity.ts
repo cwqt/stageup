@@ -15,7 +15,6 @@ import {
   IGIFMeta,
   AssetType,
   IThumbnailMeta,
-  IStaticMeta,
   IMuxAsset,
   ILiveStreamMeta,
   LiveStreamState
@@ -25,6 +24,17 @@ import { Except } from 'type-fest';
 import Mux, { LiveStream } from '@mux/mux-node';
 import { SigningKey } from '../performances/signing-key.entity';
 import { AssetGroup } from './asset-group.entity';
+import MuxProvider from '../../data-client/providers/mux.provider';
+import S3Provider from '../../data-client/providers/aws-s3.provider';
+
+type AssetProvider = {
+  [AssetType.Image]: S3Provider;
+  [AssetType.AnimatedGIF]: MuxProvider;
+  [AssetType.LiveStream]: MuxProvider;
+  [AssetType.Thumbnail]: MuxProvider;
+  [AssetType.Video]: MuxProvider;
+  [AssetType.Storyboard]: MuxProvider;
+};
 
 @Entity()
 export class Asset<T extends AssetType = any> extends BaseEntity implements IAsset {
@@ -53,20 +63,22 @@ export class Asset<T extends AssetType = any> extends BaseEntity implements IAss
    * @param mux
    * @param txc
    */
-  async setup(mux: Mux, txc: EntityManager): Promise<this> {
+  async setup(provider: AssetProvider[T], txc: EntityManager): Promise<this> {
     switch (this.type) {
       case AssetType.LiveStream:
         {
           // https://docs.mux.com/reference#create-a-live-stream
-          const stream: LiveStream = await mux.Video.LiveStreams.create({
-            reconnect_window: 300, // Time to wait for reconnect on signal loss
-            playback_policy: 'signed', // Requires token
-            new_asset_settings: {},
-            passthrough: '', // Arbitrary passthru data inc. in LS object
-            reduced_latency: false, // https://mux.com/blog/reduced-latency-for-mux-live-streaming-now-available/
-            simulcast_targets: [], // For 3rd party re-streaming
-            test: true // No cost during testing/dev
-          });
+          const stream: LiveStream = await (provider as AssetProvider[AssetType.LiveStream]).connection.Video.LiveStreams.create(
+            {
+              reconnect_window: 300, // Time to wait for reconnect on signal loss
+              playback_policy: 'signed', // Requires token
+              new_asset_settings: {},
+              passthrough: '', // Arbitrary passthru data inc. in LS object
+              reduced_latency: false, // https://mux.com/blog/reduced-latency-for-mux-live-streaming-now-available/
+              simulcast_targets: [], // For 3rd party re-streaming
+              test: true // No cost during testing/dev
+            }
+          );
 
           this.asset_identifier = stream.id;
           this.meta = to<ILiveStreamMeta>({
@@ -77,7 +89,7 @@ export class Asset<T extends AssetType = any> extends BaseEntity implements IAss
 
           // Create a signing key associated with this stream
           // so we can sign JWTs for PerformancePurchases on this Perf only
-          const signingKey = await new SigningKey().setup(mux, txc);
+          const signingKey = await new SigningKey().setup(provider as AssetProvider[AssetType.LiveStream], txc);
           this.signing_key = signingKey;
         }
         break;
@@ -127,4 +139,26 @@ export class Asset<T extends AssetType = any> extends BaseEntity implements IAss
 
     return `https://mux.com/${assetMeta.playback_id}/${stitchParameters(parameters)}`;
   };
+
+  /**
+   * @description Deletes the S3/Mux Asset associated with this entity, and itself from Postgres
+   */
+  async delete(provider: AssetProvider[T]) {
+    switch (this.type) {
+      // TODO: add cases for storyboards/gifs etc
+      case AssetType.LiveStream: {
+        await (provider as MuxProvider).connection.Video.LiveStreams.del(this.asset_identifier);
+        break;
+      }
+      case AssetType.Video: {
+        await (provider as MuxProvider).connection.Video.Assets.del(this.asset_identifier);
+        break;
+      }
+      case AssetType.Image: {
+        await (provider as S3Provider).delete(this.asset_identifier);
+      }
+    }
+
+    await this.remove();
+  }
 }

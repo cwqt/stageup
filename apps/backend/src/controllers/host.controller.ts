@@ -565,7 +565,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         return await this.ORM.createQueryBuilder(Performance, 'hps')
           .innerJoinAndSelect('hps.host', 'host')
           .where('host._id = :id', { id: req.params.hid })
-          .leftJoinAndSelect("hps.stream", "stream")
+          .leftJoinAndSelect('hps.stream', 'stream')
           .paginate(o => o.toStub());
       }
     };
@@ -705,9 +705,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           const tokens = users
             .filter(u => !existingUserTokens.includes(u._id))
             .map(u =>
-              new AccessToken(u, performance, provisioner, TokenProvisioner.User).sign(
-                performance.stream.signing_key
-              )
+              new AccessToken(u, performance, provisioner, TokenProvisioner.User).sign(performance.stream.signing_key)
             );
 
           await txc.save(tokens);
@@ -725,16 +723,17 @@ export default class HostController extends BaseController<BackendProviderMap> {
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
-        const isStripeConnected = host.stripe_account_id
-          ? (
-              await this.providers.stripe.connection.accounts.retrieve({
-                stripeAccount: host.stripe_account_id
-              })
-            ).charges_enabled
-          : false;
+        if (!host.stripe_account_id)
+          return {
+            is_stripe_connected: false
+          };
+
+        const stripeData = await this.providers.stripe.connection.accounts.retrieve({
+          stripeAccount: host.stripe_account_id
+        });
 
         return {
-          is_stripe_connected: isStripeConnected
+          is_stripe_connected: stripeData.charges_enabled
         };
       }
     };
@@ -762,6 +761,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             amount: 'invoice.amount',
             purchased_at: 'invoice.purchased_at'
           })
+          .innerJoinAndSelect("performance.stream", "stream")
           .paginate(i => i.toHostInvoice());
       }
     };
@@ -784,7 +784,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             invoices: req.body.invoices,
             email_address: h.email_address
           }
-        })
+        });
       }
     };
   }

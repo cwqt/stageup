@@ -129,7 +129,6 @@ export class FormComponent implements OnInit, AfterViewInit {
           const { fields, errors } = data;
 
           // Set form control default value
-          console.log(fields)
           Object.entries(fields).forEach(([f, v]) => this.formGroup.get(f)?.setValue(v));
 
           // Set form control errors by bodging validator to show message

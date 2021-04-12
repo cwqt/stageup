@@ -12,7 +12,7 @@
 <mat-paginator
   #hostPaginator
   [length]="hostPaginator.length"
-  [pageSizeOptions]="[10, 50, 100]" 
+  [pageSizeOptions]="[10, 50, 100]"
   [showFirstLastButtons]="true"
   (page)="search(hostPaginator.pageIndex, hostPaginator.pageSize, 'hosts')">
 </mat-paginator>
@@ -24,8 +24,8 @@
 
 <div *ngIf="performances.data" class="mb-4 grid grid-cols-2 gap-4 cursor-pointer">
   <div class="flex bg-white shadow-lg rounded-lg overflow-hidden" *ngFor="let results of performances.data.data" (click)="openDialogPerf(results)">
-    <div class="w-1/3 bg-cover" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/38/Two_dancers.jpg')">
-    </div> 
+    <div class="w-1/3 bg-cover" style="background-image: url('/assets/performance-placeholder.jpeg')">
+    </div>
     <div class="w-2/3 p-4">
       <h1 class="text-gray-900 font-bold text-2xl">{{ results?.name }}</h1>
       <p class="mt-2 text-gray-600 text-sm">{{ results?.description }}</p>
@@ -38,16 +38,16 @@
       </div>
       <div class="flex item-center justify-between mt-3">
         <h1 class="text-pink-500 font-bold text-xl">£70</h1>
-        <button class="px-3 py-2 bg-pink-500 text-white text-xs font-bold uppercase rounded">Add to Cart</button>
+        <ui-button kind="primary">Buy</ui-button>
       </div>
-    </div>    
+    </div>
   </div>
 </div>
 
-<mat-paginator 
+<mat-paginator
   #perfPaginator
   [length]="perfPaginator.length"
-  [pageSizeOptions]="[10, 50, 100]" 
-  [showFirstLastButtons]="true"  
+  [pageSizeOptions]="[10, 50, 100]"
+  [showFirstLastButtons]="true"
   (page)="search(perfPaginator.pageIndex, perfPaginator.pageSize, 'performances')">
 </mat-paginator>

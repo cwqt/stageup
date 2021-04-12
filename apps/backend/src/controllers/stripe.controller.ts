@@ -4,7 +4,8 @@ import {
   HostPermission,
   StripeHook,
   TokenProvisioner,
-  PurchaseableEntity
+  PurchaseableEntity,
+  PaymentStatus
 } from '@core/interfaces';
 import {
   BaseController,
@@ -100,6 +101,8 @@ export default class StripeController extends BaseController<BackendProviderMap>
       const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data)
         .setHost(ticket.performance.host) // should be party to hosts invoices
         .setTicket(ticket); // purchased a ticket
+
+      invoice.status = PaymentStatus.Paid;
 
       await txc.save(invoice);
 

@@ -1,16 +1,28 @@
 <div *ngIf="!host.loading && host.data">
   <!-- Banner  -->
 
-  <div class="host-profile-header bg-white rounded shadow-sm">  
-    <div class="banner-picture__container relative overflow-hidden">  
+  <div class="host-profile-header bg-white rounded shadow-sm">
+    <div class="banner-picture__container relative overflow-hidden">
       <img class="object-cover w-full" [src]="host.data.banner || '/assets/banner.jpg'"/>
-      <ui-button class="absolute top-2 left-2" (click)="openChangeBannerDialog()" kind="accent"><ui-icon size="s">paint-brush--alt</ui-icon>Edit</ui-button>          
+      <ui-button *ngIf="isHostView"
+        (click)="openChangeBannerDialog()"
+        class="absolute top-2 left-2"
+        icon="paint-brush--alt"
+        kind="accent">
+            Change banner
+      </ui-button>
     </div>
-    
+
     <!-- Profile Image  -->
-    <div class="profile-picture__container relative pl-4">      
+    <div class="profile-picture__container relative pl-4">
       <img [src]="host.data.avatar || '/assets/avatar-placeholder.png'" class="square absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
-      <ui-button (click)="openChangeAvatarDialog()" class="z-10 absolute top-2 left-2" kind="accent"><ui-icon size="s">paint-brush--alt</ui-icon>Edit</ui-button>
+      <ui-button *ngIf="isHostView"
+        (click)="openChangeAvatarDialog()"
+        icon="paint-brush--alt"
+        class="z-10 absolute top-2 left-2"
+        kind="accent">
+            Edit
+      </ui-button>
     </div>
 
     <!-- Offset by 64 + 4 for abs positioned image -->
@@ -34,7 +46,7 @@
 
         <p *ngIf="host.data.bio">{{ host.data.bio }}</p>
       </div>
-      
+
       <div class="flex">
         <mat-tab-group (selectedTabChange)="handleTabChange($event)" class="flex-shrink">
           <mat-tab
@@ -47,7 +59,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="bg-white">
     <router-outlet></router-outlet>
   </div>

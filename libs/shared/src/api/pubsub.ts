@@ -1,4 +1,4 @@
-import { IPerformance, LiveStreamState } from "@core/interfaces";
+import { IPerformanceStub, LiveStreamState } from "@core/interfaces";
 
 // https://devshawn.com/blog/apache-kafka-topic-naming-conventions/
 export enum TopicType {
@@ -7,7 +7,7 @@ export enum TopicType {
 
 export type TopicDataUnion = {
   [TopicType.StreamStateChanged]: {
-    performance_id: IPerformance["_id"];
+    performance_id: IPerformanceStub["_id"];
     state: LiveStreamState;
   };
 };

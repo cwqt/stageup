@@ -116,6 +116,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             name: req.query.name ? `%${(req.query.name as string).toLowerCase()}%` : '%'
           })
           .leftJoinAndSelect('performance.host', 'host')
+          .innerJoinAndSelect("performance.stream", "stream")
           .paginate(t => t.performance.toStub());
       }
     };
@@ -141,6 +142,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             amount: 'invoice.amount',
             purchased_at: 'invoice.purchased_at'
           })
+          .innerJoinAndSelect("performance.stream", "stream")
           .paginate(i => i.toUserInvoice());
       }
     };

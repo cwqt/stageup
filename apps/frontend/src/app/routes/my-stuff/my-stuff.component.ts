@@ -31,6 +31,6 @@ export class MyStuffComponent implements OnInit {
   }
 
   openWatchPerformance(performance:IPerformanceStub) {
-    this.appService.navigateTo(`/performances/${performance._id}/watch`);
+    this.appService.navigateTo(`/performances/${performance._id}`);
   }
 }

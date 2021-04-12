@@ -7,13 +7,14 @@ import { ITicketStub } from './ticket.interface';
 import { AssetType, IAsset } from '../common/asset.interface';
 import { IEnvelopedData } from '../common/envelope.interface';
 import { LiveStreamState } from '../3rd-party/mux.interface';
+import { NUUID } from '../common/fp.interface';
 
 export enum Visibility {
   Public = 'public',
   Private = 'private'
 }
 export interface IPerformanceStub {
-  _id: string;
+  _id: NUUID;
   host: IHostStub; // who created the performance
   name: string; // title of performance
   description?: string; // description of performance
