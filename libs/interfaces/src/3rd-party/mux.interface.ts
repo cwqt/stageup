@@ -73,3 +73,22 @@ export interface IMUXHookResponse<T = any> {
     webhook_id: number;
   }>;
 }
+
+import { Upload } from '@mux/mux-node';
+import { Except } from 'type-fest';
+export interface ICreateAssetRes { upload_url: Upload["url"] }
+
+export enum AssetOwnerType {
+  Performance,
+  Host,
+  User
+}
+
+export type IMuxPassthroughOwnerInfo = Except<IMuxPassthrough, "asset_id" | "asset_group_id">;
+
+export interface IMuxPassthrough {
+  asset_id: string;
+  asset_group_id: string;
+  asset_owner_type: AssetOwnerType;
+  asset_owner_id: string;
+}

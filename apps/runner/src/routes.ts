@@ -14,4 +14,3 @@ export default (queues:QueueMap) => (router:AsyncRouter<RunnerProviderMap>, pm:R
   const Misc = new MiscController(pm, mws);
   router.get  <string>  ("/ping",   Misc.ping());
 }
-  

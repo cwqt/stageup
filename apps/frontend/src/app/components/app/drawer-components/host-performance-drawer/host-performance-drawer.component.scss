@@ -8,19 +8,24 @@
   margin-bottom: -32px;
 }
 
+// FIXME: remove this pile of shit
 .sidebar-main-buttons {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
   width: 100%;
   ui-button {
-    margin: 10px 0;
+    user-select: none !important;
+    margin: 0px;
     width: 100%;
-    height: 75px !important;
+    height: 48px !important;
     ::ng-deep button {
       background: white;
+      &:hover {
+        background-color: lighten($clr-gray, 7%);
+      }
       width: 100%;
-      height: 75px !important;
+      height: 48px !important;
       border: 0px solid transparent;
       border-radius: 0 !important;
       p {
@@ -30,7 +35,7 @@
       span {
         display: flex;
         align-items: center;
-        justify-content: center;  
+        justify-content: flex-end !important;
       }
     }
     border-left: 2px solid transparent !important;
@@ -38,6 +43,7 @@
     &.active {
       border-right: 2px solid $clr-primary !important;
       ::ng-deep button {
+        background-color: lighten($clr-gray, 10%) !important;
         span {
           opacity: 1;
           ui-icon {

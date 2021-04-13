@@ -45,6 +45,7 @@ import { HostPerformanceDetailsComponent } from './routes/host/host-performance/
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
+import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component'
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -71,7 +72,7 @@ const LOGGED_IN_ROUTES: Routes = [
     path: `performances/:${RP.PerformanceId}`,
     component: PerformanceComponent
   },
-  { path: `user/:${RP.UserId}`, component: ProfileComponent}, 
+  { path: `user/:${RP.UserId}`, component: ProfileComponent},
   { path: `verified`, component: VerifiedComponent },
   {
     path: `settings`,
@@ -105,6 +106,7 @@ const LOGGED_IN_ROUTES: Routes = [
         children: [
           { path: '', component: HostPerformanceDetailsComponent },
           { path: 'ticketing', component: HostPerformanceTicketingComponent },
+          { path: "customise", component: HostPerformanceCustomiseComponent },
           // { path: "analytics", HostPerformanceDetailsComponent },
           { path: '**', component: NotFoundComponent }
         ]
@@ -163,26 +165,26 @@ const LOGGED_IN_ROUTES: Routes = [
                 {
                   path: 'login',
                   component: DialogEntryComponent,
-                  data: { open_dialog: LoginComponent }
+                  data: { open_dialog: LoginComponent, config: { minWidth: "600px" } }
                 },
                 {
                   path: 'register',
                   component: DialogEntryComponent,
-                  data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' } } }
+                  data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' }, minWidth: "600px", maxWidth: "600px" } }
                 },
 
                 { path: `users/forgot-password`, component: ForgotPasswordComponent },
-                { 
-                  path: `users/reset-password`, 
+                {
+                  path: `users/reset-password`,
                   component: DialogEntryComponent,
                   data: { open_dialog: ResetPasswordComponent }
-                },                
+                },
               ]
             },
             {
               path: `search`,
               component: SearchComponent
-            },            
+            },
             {
               matcher: hostMatcher,
               component: HostProfileComponent,

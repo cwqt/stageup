@@ -33,7 +33,7 @@ export class FeedComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
         data: performance,
-        maxWidth: "1000px",
+        width: "800px",
         position: { top: '5%' }
       }),
       () => {}

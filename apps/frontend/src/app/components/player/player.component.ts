@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { DtoAccessToken, DtoPerformance, IEnvelopedData, IPerformance, JwtAccessToken } from '@core/interfaces';
-import { timestamp, timeout } from '@core/shared/helpers';
-import { environment } from 'apps/frontend/src/environments/environment';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AssetType, IAsset, IAssetStub, JwtAccessToken } from '@core/interfaces';
 import { PlyrComponent } from 'ngx-plyr';
+import { timeInterval } from 'rxjs/operators';
 import { HlsjsPlyrDriver } from './hls-plyr-driver';
 
 @Component({
@@ -12,22 +11,24 @@ import { HlsjsPlyrDriver } from './hls-plyr-driver';
 })
 export class PlayerComponent implements OnInit {
   @ViewChild(PlyrComponent) plyr: PlyrComponent;
-  @Input() performance: DtoPerformance;
 
-  @Output() onPlayerReady:EventEmitter<PlayerComponent> = new EventEmitter();
-  @Output() onPlayerError:EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
-  @Output() onPlayerWaiting:EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
-  @Output() onPlayerEnded:EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
+  @Output() onPlayerReady: EventEmitter<PlayerComponent> = new EventEmitter();
+  @Output() onPlayerError: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
+  @Output() onPlayerWaiting: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
+  @Output() onPlayerEnded: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
+
+  asset?:IAssetStub;
+  token?:string;
 
   player: Plyr;
+  poster: string;
+  hlsjsDriver: HlsjsPlyrDriver;
   streamSources: Plyr.Source[] = [];
   options: Plyr.Options = {
     disableContextMenu: true,
     ratio: '16:9',
-    captions: { active: true, update: true, language: 'en' }
+    captions: { active: true, update: true, language: 'en' },
   };
-  hlsjsDriver: HlsjsPlyrDriver;
-  playerMessage: string;
 
   constructor() {}
 
@@ -35,25 +36,31 @@ export class PlayerComponent implements OnInit {
     this.hlsjsDriver = new HlsjsPlyrDriver(false);
   }
 
-  /**
-   * @description Sets up the HLS driver to the video & starts playing
-   */
-  async initialise() {
-    this.streamSources.push({
+  load(asset?:IAssetStub, token?:JwtAccessToken) {
+    this.asset = asset;
+    this.token = token;
+
+    this.setPoster();
+    this.streamSources = [{
+      provider: 'html5',
       type: 'video',
       // Useful sample stream for debugging purposes
       // src: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
-      src: `${this.performance.data.stream.location}?token=${this.performance.__client_data.token}`,
-      provider: 'html5'
-    });
+      src: this.token
+        ? `${this.asset.location}?token=${this.token}`
+        : this.asset.location,
+    }];
 
     this.hlsjsDriver.load(this.streamSources[0].src);
-    this.player.play();
-    console.log("played!")
+    return this.player;
+  }
+
+  setPoster() {
+    const playbackId = this.asset.location.split(".m3u8").shift().split("/").pop();
+    this.poster = `https://image.mux.com/${playbackId}/thumbnail.jpg`;
   }
 
   _onPlay() {
-    this.initialise();
   }
 
   _onPlayerInit(event: Plyr) {

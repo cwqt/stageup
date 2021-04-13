@@ -27,7 +27,7 @@ import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 import { DonoPegPipe } from './_pipes/dono-peg.pipe';
 import { PaymentStatusPipe } from './_pipes/payment-status.pipe';
-import { TicketTypePipe } from './_pipes/ticket-type.pipe'; 
+import { TicketTypePipe } from './_pipes/ticket-type.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
@@ -97,6 +97,8 @@ import { DeleteConfirmationDialogComponent } from './components/dialogs/delete-c
 import { SettingsComponent } from './routes/settings/settings.component';
 import { CreateUpdateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component';
 import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
+import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component';
+import { UploadVideoComponent } from './components/upload-video/upload-video.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -179,7 +181,9 @@ import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices
     HostSettingsComponent,
     CreateHostComponent,
     HostOnboardingComponent,
-    HostInvoicesComponent
+    HostInvoicesComponent,
+    HostPerformanceCustomiseComponent,
+    UploadVideoComponent
   ],
   imports: [
     AngularMaterialModule,

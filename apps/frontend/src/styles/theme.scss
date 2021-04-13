@@ -11,12 +11,14 @@ $my-custom-warn: mat-palette($mat-red);
 
 $my-custom-theme: mat-light-theme($my-custom-primary, $my-custom-accent, $my-custom-warn);
 
-mat-progress-bar {
+.mat-progress-bar {
+  border-radius: 2px;
   .mat-progress-bar-fill::after {
-    background-color: rgba(255, 255, 255);
+    background-color: $clr-primary;
   }
+
   .mat-progress-bar-buffer {
-    background: #0f62fe;
+    background: #E4E8EB;
   }
 }
 

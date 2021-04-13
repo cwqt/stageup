@@ -12,7 +12,9 @@ import {
   ITicketStub,
   Visibility,
   DtoDonationPurchase,
-  DonoPeg
+  DonoPeg,
+  ICreateAssetRes,
+  AssetType
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 
@@ -91,5 +93,11 @@ export class PerformanceService {
 
   deletePerformance(performanceId: string) {
     return this.http.delete(`/api/performances/${performanceId}`).toPromise();
+  }
+
+  // router.post <ICreateAssetRes|void> ("/performances/:pid/assets", Perfs.createAsset());
+  createAsset(performanceId:string):Promise<ICreateAssetRes | void> {
+    // TODO: expand to support static s3 assets, and not just MUX assets
+    return this.http.post<ICreateAssetRes | void>(`/api/performances/${performanceId}/assets?type=${AssetType.Video}`, null).toPromise();
   }
 }

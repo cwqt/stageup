@@ -1,13 +1,14 @@
 import {
+  AssetOwnerType,
   AssetType,
   DtoCreatePerformance,
   Genre,
   IPerformance,
   IPerformanceStub,
-  Visibility,
+  Visibility
 } from '@core/interfaces';
 import { timestamp, uuid } from '@core/shared/helpers';
-import Mux from '@mux/mux-node';
+import { timeStamp } from 'console';
 import { Except } from 'type-fest';
 import {
   BaseEntity,
@@ -28,11 +29,9 @@ import { Host } from '../hosts/host.entity';
 import { Ticket } from './ticket.entity';
 
 @Entity()
-export class Performance extends BaseEntity implements Except<IPerformance, 'stream'> {
+export class Performance extends BaseEntity implements Except<IPerformance, 'stream' | "assets"> {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() {
-    this._id = uuid();
-  }
+
 
   @Column() created_at: number;
   @Column() name: string;
@@ -44,12 +43,13 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
 
   @OneToOne(() => Asset, { eager: true }) @JoinColumn() stream: Asset<AssetType.LiveStream>;
-  @OneToOne(() => AssetGroup) @JoinColumn() assetGroup: AssetGroup;
+  @OneToOne(() => AssetGroup) @JoinColumn() asset_group: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
 
   constructor(data: DtoCreatePerformance, host: Host) {
     super();
+    this._id = uuid();
     this.name = data.name;
     this.description = data.description;
     this.premiere_date = data.premiere_date;
@@ -63,12 +63,18 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
   }
 
   async setup(mux: MuxProvider, txc: EntityManager): Promise<Performance> {
-    this.assetGroup = new AssetGroup();
-    const stream = await new Asset(AssetType.LiveStream).setup(mux, txc);
-    this.stream = stream;
+    this.asset_group = await txc.save(new AssetGroup())
 
-    this.assetGroup.push(stream);
-    await txc.save(this.assetGroup);
+    const asset = new Asset(AssetType.LiveStream, this.asset_group);
+    await asset.setup(mux, txc, null, {
+      asset_owner_id: this._id,
+      asset_owner_type: AssetOwnerType.Performance
+    });
+
+    this.stream = asset;
+    this.asset_group.push(asset);
+
+    await txc.save(this.asset_group);
     return txc.save(this);
   }
 
@@ -91,7 +97,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
       visibility: this.visibility,
       premiere_date: this.premiere_date,
       genre: this.genre,
-      tickets: this.tickets?.map(t => t.toStub()) || []
+      tickets: this.tickets?.map(t => t.toStub()) || [],
+      assets: this.asset_group.assets.map(a => a.toStub())
     };
   }
 

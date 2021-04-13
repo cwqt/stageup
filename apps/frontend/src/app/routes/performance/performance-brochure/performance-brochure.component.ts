@@ -3,8 +3,10 @@ import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import {
+  AssetType,
   BASE_AMOUNT_MAP,
   DonoPeg,
+  IAssetStub,
   IEnvelopedData,
   IMyself,
   IPaymentIntentClientSecret,
@@ -15,6 +17,7 @@ import {
 import { getDonoAmount, prettifyMoney } from '@core/shared/helpers';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
+import { PlayerComponent } from '../../../components/player/player.component';
 import { RegisterDialogComponent } from '../../../routes/landing/register-dialog/register-dialog.component';
 import { HelperService } from '../../../services/helper.service';
 import { MyselfService } from '../../../services/myself.service';
@@ -34,6 +37,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   @ViewChild('tabs') tabs: MatTabGroup;
   @ViewChild('card') card: PaymentCheckoutComponent;
   @ViewChild('donoPegForm') donoPegForm: FormComponent;
+  @ViewChild("trailer") trailerPlayer?:PlayerComponent;
+
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
@@ -50,6 +55,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   donoPegSelectForm: IUiForm<any>;
   donoPegCacheable: ICacheable<null> = createICacheable();
   selectedDonoPeg: DonoPeg;
+  performanceTrailer:IAssetStub<AssetType.Video>;
 
   get performance() {
     return this.performanceCacheable.data?.data;
@@ -66,7 +72,11 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
   async ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
-    cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable);
+    cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable)
+      .then(d => {
+        this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video);
+        return d;
+      });
   }
 
   openPerformanceDescriptionSection() {

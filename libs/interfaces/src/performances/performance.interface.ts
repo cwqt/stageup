@@ -4,7 +4,7 @@ import { ISigningKey } from './signing-key.interface';
 import { Genre } from './genres.interface';
 import { DtoAccessToken, JwtAccessToken } from './access-token.interface';
 import { ITicketStub } from './ticket.interface';
-import { AssetType, IAsset } from '../common/asset.interface';
+import { AssetType, IAsset, IAssetStub } from '../common/asset.interface';
 import { IEnvelopedData } from '../common/envelope.interface';
 import { LiveStreamState } from '../3rd-party/mux.interface';
 import { NUUID } from '../common/fp.interface';
@@ -29,6 +29,7 @@ export interface IPerformance extends IPerformanceStub {
   premiere_date?: number; // when the performance is ready to be streamed
   genre: Genre;
   tickets: ITicketStub[];
+  assets: IAssetStub[];
 }
 
 export type DtoPerformance = IEnvelopedData<IPerformance, { has_purchased: boolean; token: JwtAccessToken }>;

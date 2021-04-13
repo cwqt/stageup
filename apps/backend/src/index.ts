@@ -9,6 +9,7 @@ import { log, stream } from './common/logger';
 import Env from './env';
 import routes from './routes';
 
+
 export interface BackendProviderMap extends ProviderMap {
   torm: InstanceType<typeof Providers.Postgres>;
   mux: InstanceType<typeof Providers.Mux>;
@@ -109,7 +110,6 @@ Register<BackendProviderMap>({
 
   // Patch TypeORM with pagination & register API routes
   app.use(patchTypeORM);
-
 
   // TODO: write some tooling to manage all topics/subscriptions
   // delete all topics and re-create them from fresh
