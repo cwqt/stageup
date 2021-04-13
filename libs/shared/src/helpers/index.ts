@@ -99,7 +99,7 @@ export const querize = (query: IQueryParams) =>
     : '';
 
 /**
- * @description inline object-type cast
+ * @description identify function, for inline object-type casting
  * @param value object to be cast as T
  * @see https://stackoverflow.com/a/38029708
  */

@@ -1,7 +1,7 @@
 import { LiveStreamState, SseEventType } from '@core/interfaces';
 import { AsyncRouter, Auth, ProviderMap, Providers, Register, Router, TopicType } from '@core/shared/api';
 import { timeout, uuid } from '@core/shared/helpers';
-import sse, { ISseHubResponse, ISseMiddlewareOptions, ISseResponse } from '@toverux/expresse';
+import sse, { ISseMiddlewareOptions, ISseResponse } from '@toverux/expresse';
 import { compose } from 'compose-middleware';
 import { Handler, NextFunction, Request } from 'express';
 import { HubManager } from './common/hub-mananger';
@@ -48,8 +48,10 @@ Register<NotificationsProviderMap>({
         return msg.ack();
       }
 
-      // Handle transmitting the state to all clients & closing the hub if stream complete
+      // Submit the event to all connected clients on the hub
       hubs.emit(data.performance_id, { type: SseEventType.StreamStateChanged, data: data.state });
+
+      // Handle transmitting the state to all clients & closing the hub if stream complete
       if (data.state == LiveStreamState.Completed) hubs.destroy(data.performance_id);
 
       log.debug('Active hubs: %o', hubs.getTotalClientCount());
@@ -58,7 +60,7 @@ Register<NotificationsProviderMap>({
   );
 
   /**
-   * @description SSE middleware that configures an Express response for an SSE session, installs `sse.*` functions on the Response object, as well as the `sse.broadcast.*` variants.
+   * @description SSE middleware that configures an Express response for an SSE session, installs `sse.*` functions on the Response object
    */
   function dynamicSseHub(options: Partial<ISseMiddlewareOptions> = {}): Handler {
     function middleware(req: Request, res: ISseResponse, next: NextFunction): void {
@@ -71,13 +73,6 @@ Register<NotificationsProviderMap>({
       // Unregister the user from the hub when its connection gets closed (close=client, finish=server)
       res.once('close', () => hub.unregister(res.sse));
       res.once('finish', () => hub.unregister(res.sse));
-
-      // Hub's functions available on the response
-      (res as ISseHubResponse).sse.broadcast = {
-        data: hub.data.bind(hub),
-        event: hub.event.bind(hub),
-        comment: hub.comment.bind(hub)
-      };
 
       next();
     }

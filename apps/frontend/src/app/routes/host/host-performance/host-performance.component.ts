@@ -7,6 +7,7 @@ import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.s
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { DrawerKey, DrawerService } from '../../../services/drawer.service';
 import { HelperService } from '../../../services/helper.service';
+import { HostPerformanceCustomiseComponent } from './host-performance-customise/host-performance-customise.component';
 import { HostPerformanceDetailsComponent } from './host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { SharePerformanceDialogComponent } from './share-performance-dialog/share-performance-dialog.component';
@@ -22,7 +23,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
 
-  onChildLoaded(component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent) {
+  onChildLoaded(component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent) {
     component.performanceId = this.performanceId;
     component.performanceHostInfo = this.performanceHostInfo;
     component.performance = this.performance;

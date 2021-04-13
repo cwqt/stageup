@@ -10,7 +10,7 @@ import {
   IEnvelopedData as IE,
   IMyself,
   DtoPerformance,
-  JwtAccessToken as JwtAT,
+  ICreateAssetRes,
   IHostOnboarding as IHOnboarding,
   IOnboardingStep,
   IAddress,
@@ -103,6 +103,8 @@ router.get      <DtoPerformance>        ("/performances/:pid",                  
 router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
+router.post     <ICreateAssetRes|void>  ("/performances/:pid/assets",                 Perfs.createAsset());
+// router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
 router.put      <void>                  ("/performances/:pid/tickets/qty-visibility", Perfs.bulkUpdateTicketQtyVisibility());
 router.get      <ITicketStub[]>         ("/performances/:pid/tickets",                Perfs.readTickets());

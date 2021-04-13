@@ -1,6 +1,10 @@
 <ui-dialog [noPadding]="true" [loading]="performanceCacheable.loading || paymentIntent.loading">
-  <div>
-    <img class="object-cover h-96 w-full" src="/assets/banner-placeholder.png" />
+  <div >
+    <app-player #player *ngIf="performanceTrailer"
+      (onPlayerReady)="player.load(performanceTrailer)">
+    </app-player>
+
+    <img *ngIf="!performanceTrailer" class="object-cover h-96 w-full" src="/assets/banner-placeholder.png" />
   </div>
 
   <div class="flex">

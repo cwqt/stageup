@@ -1,4 +1,5 @@
 import {
+  AssetType,
   BASE_AMOUNT_MAP,
   DtoCreatePerformance,
   DtoPerformance,
@@ -15,10 +16,14 @@ import {
   JobType,
   pick,
   TokenProvisioner,
-  Visibility
+  Visibility,
+  ICreateAssetRes,
+  IMuxPassthrough,
+  AssetOwnerType
 } from '@core/interfaces';
 import {
   AccessToken,
+  Asset,
   BaseController,
   body,
   ErrorHandler,
@@ -30,12 +35,13 @@ import {
   Ticket,
   Validators
 } from '@core/shared/api';
-import { getDonoAmount } from '@core/shared/helpers';
+import { getDonoAmount, to } from '@core/shared/helpers';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Queue from '../common/queue';
+import Env from '../env';
 
 export default class PerformanceController extends BaseController<BackendProviderMap> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
@@ -106,6 +112,7 @@ export default class PerformanceController extends BaseController<BackendProvide
               relations: {
                 host: true,
                 tickets: true,
+                asset_group: true,
                 stream: {
                   // TODO: add bidirectional ref on signing key to avoid this join
                   // before we've checked that the user needs a token signing on the fly
@@ -176,7 +183,10 @@ export default class PerformanceController extends BaseController<BackendProvide
       validators: [],
       authStrategy: AuthStrat.none,
       controller: async req => {
-        const { stream } = await Performance.findOne({ _id: req.params.pid }, { relations: ['stream'] });
+        const { stream } = await Performance.findOne(
+          { _id: req.params.pid },
+          { relations: { stream: { signing_key: true } } }
+        );
 
         // Host_info eager loads signing_key, which is very convenient usually
         // but we do not wanna send keys and such over the wire
@@ -211,7 +221,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         )
       ),
       controller: async req => {
-        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
+        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] }));
 
         perf.visibility = req.body.visibility;
         return (await perf.save()).toFull();
@@ -242,7 +252,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         body({
           selected_dono_peg: v =>
             v.optional({ nullable: true }).isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
-            allow_any_amount: v => v.optional({ nullable: true }).isInt()
+          allow_any_amount: v => v.optional({ nullable: true }).isInt()
         })
       ],
       controller: async req => {
@@ -283,9 +293,10 @@ export default class PerformanceController extends BaseController<BackendProvide
           if (req.body.selected_dono_peg == 'allow_any' && amount > BASE_AMOUNT_MAP[ticket.currency] * 200)
             throw new ErrorHandler(HTTP.BadRequest, ErrCode.TOO_LONG);
 
-          amount = req.body.selected_dono_peg == 'allow_any'
-            ? req.body.allow_any_amount
-            : getDonoAmount(req.body.selected_dono_peg, ticket.currency);
+          amount =
+            req.body.selected_dono_peg == 'allow_any'
+              ? req.body.allow_any_amount
+              : getDonoAmount(req.body.selected_dono_peg, ticket.currency);
         }
 
         const res = await this.providers.stripe.connection.paymentIntents.create(
@@ -474,6 +485,66 @@ export default class PerformanceController extends BaseController<BackendProvide
           .set({ is_quantity_visible: req.body.is_quantity_visible })
           .where('performance__id = :pid', { pid: req.params.pid })
           .execute();
+      }
+    };
+  }
+
+  /**
+   * @description For uploading performance pictures/trailers - NOT VoD
+   * VoD must be done one time only, when the performance is created
+   */
+  createAsset(): IControllerEndpoint<ICreateAssetRes | void> {
+    return {
+      authStrategy: AuthStrat.runner(
+        {
+          hid: IdFinderStrat.findHostIdFromPerformanceId
+        },
+        AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
+      ),
+      validators: [
+        query({
+          type: v => v.isIn([AssetType.Image, AssetType.Video])
+        })
+      ],
+      // For AssetType.Image assets later
+      // preMiddlewares: [this.mws.file(2048, ["image/jpeg", "image/jpg", "image/png"]).single("file")],
+      controller: async req => {
+        const performance = await getCheck(
+          Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] })
+        );
+
+        switch (req.query.type) {
+          case AssetType.Video: {
+            return await this.ORM.transaction(async txc => {
+              const asset = new Asset(AssetType.Video, performance.asset_group);
+              const video = await asset.setup(
+                this.providers.mux,
+                txc,
+                {
+                  cors_origin: Env.FE_URL,
+                  new_asset_settings: {
+                    playback_policy: 'public'
+                  }
+                },
+                {
+                  asset_owner_id: performance._id,
+                  asset_owner_type: AssetOwnerType.Performance
+                }
+              );
+
+              performance.asset_group.push(asset);
+              await txc.save(performance.asset_group);
+
+              return to<ICreateAssetRes>({
+                upload_url: video.url
+              });
+            });
+          }
+          case AssetType.Image: {
+            // TODO: implement performance image assets
+            throw new ErrorHandler(HTTP.ServerError, ErrCode.NOT_IMPLEMENTED);
+          }
+        }
       }
     };
   }

@@ -23,6 +23,7 @@ export enum ErrCode {
   NOT_URL       = "NOT_URL",       // not a valid url
   NO_DATA       = "NO_DATA",       // expected input but none given
   NO_SUCH_ROUTE = "NO_SUCH_ROUTE", // no api route at this path
+  NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
 }
 
 export interface IErrorResponse {

@@ -1,4 +1,12 @@
-import { ErrCode, IMUXHookResponse, LiveStreamState, MuxHook } from '@core/interfaces';
+import {
+  AssetType,
+  ErrCode,
+  IMUXHookResponse,
+  IMuxPassthrough,
+  LiveStreamState,
+  MuxHook,
+  VideoAssetState
+} from '@core/interfaces';
 import {
   Performance,
   Asset,
@@ -6,9 +14,10 @@ import {
   BaseController,
   getCheck,
   IControllerEndpoint,
-  TopicType
+  TopicType,
+  AssetGroup
 } from '@core/shared/api';
-import { timeout } from "@core/shared/helpers"
+import { timeout } from '@core/shared/helpers';
 import { LiveStream, Webhooks } from '@mux/mux-node';
 import { MD5 } from 'object-hash';
 import { RedisClient } from 'redis';
@@ -16,9 +25,11 @@ import { BackendProviderMap } from '..';
 import { log } from '../common/logger';
 import Env from '../env';
 
+import { Asset as MuxAsset } from '@mux/mux-node';
+
 export default class MUXController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
-    [index in MuxHook]?: (data: IMUXHookResponse, pm: BackendProviderMap) => Promise<void>;
+    [index in MuxHook]?: (data: IMUXHookResponse) => Promise<void>;
   };
 
   constructor(...args: BaseArguments<BackendProviderMap>) {
@@ -28,8 +39,54 @@ export default class MUXController extends BaseController<BackendProviderMap> {
       [LiveStreamState.Idle]: this.streamIdle.bind(this),
       [LiveStreamState.Active]: this.streamActive.bind(this),
       [LiveStreamState.Disconnected]: this.streamDisconnected.bind(this),
-      [LiveStreamState.Completed]: this.streamCompleted.bind(this)
+      [LiveStreamState.Completed]: this.streamCompleted.bind(this),
+      [VideoAssetState.Created]: this.videoAssetCreated.bind(this),
+      [VideoAssetState.Ready]: this.videoAssetReady.bind(this),
+      [VideoAssetState.Errored]: this.videoAssetErrored.bind(this),
+      [VideoAssetState.Deleted]: this.videoAssetDeleted.bind(this)
     };
+  }
+
+  async videoAssetCreated(data: IMUXHookResponse<MuxAsset>) {
+    // Set the asset identifier to the Asset & not the Direct Upload, now that we have it
+    const passthrough: IMuxPassthrough = JSON.parse(data.data.passthrough);
+
+    console.log(passthrough);
+    const asset = await getCheck(Asset.findOne({ _id: passthrough.asset_id }));
+    asset.asset_identifier = data.object.id;
+    await asset.save();
+  }
+
+  async videoAssetReady(data: IMUXHookResponse<MuxAsset>) {
+    const passthrough: IMuxPassthrough = JSON.parse(data.data.passthrough);
+    const asset = await getCheck(
+      Asset.findOne<Asset<AssetType.Video>>({ _id: passthrough.asset_id })
+    );
+
+    // Now we have a playback Id & can set the source location on the asset
+    const assetInfo = await this.providers.mux.connection.Video.Assets.get(asset.asset_identifier);
+    asset.meta.playback_id = assetInfo.playback_ids.find(p => p.policy == 'public').id;
+    asset.location = asset.getLocation();
+    await asset.save();
+
+    // delete all other videos but this one (not that there should be more than 1), since this is the latest video
+    const group = await AssetGroup.findOne({ _id: passthrough.asset_group_id });
+    await Promise.all(
+      group.assets
+        .filter(a => a.type == AssetType.Video && a._id !== passthrough.asset_id)
+        .map(a => a.delete(this.providers.mux)) // deletes both Asset & Mux Asset
+    );
+  }
+
+  async videoAssetErrored(data: IMUXHookResponse<MuxAsset>) {
+    const passthrough: IMuxPassthrough = JSON.parse(data.data.passthrough);
+    const asset = await getCheck(
+      Asset.findOne<Asset<AssetType.Video>>({ _id: passthrough.asset_id })
+    );
+    await asset.remove();
+  }
+
+  async videoAssetDeleted(data: IMUXHookResponse<MuxAsset>) {
   }
 
   async setPerformanceState(objectId: string, state: LiveStreamState) {
@@ -122,7 +179,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
           return;
         }
 
-        await (this.hookMap[data.type] || this.unsupportedHookHandler)(req.body, this.providers);
+        await (this.hookMap[data.type] || this.unsupportedHookHandler)(req.body);
         await this.setHookHandled(req.body, this.providers.redis.connection);
       }
     };

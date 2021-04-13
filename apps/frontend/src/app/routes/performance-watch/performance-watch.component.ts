@@ -100,7 +100,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
       case LiveStreamState.Recording:
       case LiveStreamState.Active:
         this.currentStreamState = 'active';
-        this.player.initialise();
+        this.player.load().play();
         break;
 
       case LiveStreamState.Disconnected:
