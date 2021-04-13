@@ -1,18 +1,39 @@
 <div class="sidebar-wrapper">
 
   <div class="sidebar-main-buttons" [class.sidebar-main-buttons--is-expanded]="isExpanded">
-    <ui-button *ngIf="myself?.host" kind="accent" routerLink="/dashboard" routerLinkActive="active">
+    <ui-button *ngIf="myself?.host" kind="accent" routerLink="/dashboard" routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{exact: true}">
       <img class="rounded-full transform scale-150 w-auto h-auto object-contain my-4 mx-auto"
         [src]="myself.host.avatar || '/assets/avatar-placeholder.png'" alt="">
     </ui-button>
 
-    <ui-button *ngIf="myself?.user.is_admin" routerLink="/admin" kind="accent"
-      routerLinkActive="active">
+    <ui-button *ngIf="myself?.user.is_admin" matTooltip="Admin" matTooltipPosition="right"  routerLink="/admin" kind="accent" routerLinkActive="active-link">
       <ui-icon>virtual-private-cloud</ui-icon>
     </ui-button>
 
-    <ui-button *ngIf="myself" kind="accent" routerLink="/settings" routerLinkActive="active">
-      <ui-icon>settings</ui-icon>
+
+    <ui-button matTooltip="Performances" matTooltipPosition="right" routerLink="/dashboard/performances" routerLinkActive="active-link">
+      <ui-icon>playlist</ui-icon>
     </ui-button>
+
+    <ui-button matTooltip="Payments" matTooltipPosition="right" routerLink="/dashboard/payments" routerLinkActive="active-link">
+      <ui-icon>money</ui-icon>
+    </ui-button>
+
+    <ui-button matTooltip="Team" matTooltipPosition="right" routerLink="/dashboard/team" routerLinkActive="active-link">
+      <ui-icon>events</ui-icon>
+    </ui-button>
+
+    <ui-button matTooltip="Invoicing" matTooltipPosition="right" routerLink="/dashboard/invoices" routerLinkActive="active-link">
+      <ui-icon>receipt</ui-icon>
+      </ ui-button>
+
+      <ui-button matTooltip="Profile" matTooltipPosition="right" [routerLink]="'/dashboard/@'+ myself.host.username" routerLinkActive="active-link">
+        <ui-icon>user--avatar</ui-icon>
+      </ui-button>
+
+      <ui-button matTooltip="Settings" matTooltipPosition="right" routerLink="/dashboard/settings" routerLinkActive="active-link">
+        <ui-icon>settings</ui-icon>
+        </ ui-button>
   </div>
 </div>

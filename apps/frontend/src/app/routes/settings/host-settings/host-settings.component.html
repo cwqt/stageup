@@ -3,18 +3,18 @@
   <app-create-host *ngIf="!myself.host" [host]="myself.host" [user]="myself.user"></app-create-host>
 
   <ng-container *ngIf="myself.host">
-    <h2>Host settings</h2>
+    <h1>Host settings</h1>
     <ui-hr></ui-hr>
 
-    <div class="mx-4 text-center"><br>
+    <div>
       <p>Withdraw membership from <b>{{ myself.host.name }}</b>, this action can't be undone.</p>
       <ui-button [disabled]="myself.host_info.permissions == 'host_owner'"
         kind="danger"
         size="l"
         class="mb-4"
-        (click)="openLeaveHostConfirmationDialog()">Leave Company</ui-button>
+        (click)="openLeaveHostConfirmationDialog()">Leave Host</ui-button>
       <br>
-      <mat-error *ngIf="myself.host_info.permissions == 'host_owner'">Can't leave a company if you're the owner, must be deleted</mat-error>
+      <mat-error *ngIf="myself.host_info.permissions == 'host_owner'">You can't leave this company because you're the owner, transfer ownership to another member</mat-error>
     </div>
 
   </ng-container>
