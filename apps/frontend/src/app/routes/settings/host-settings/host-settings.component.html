@@ -12,11 +12,11 @@
         kind="danger"
         size="l"
         class="mb-4"
-        (click)="openLeaveHostConfirmationDialog()">Leave Host</ui-button>
-      <br>    
-      <mat-error *ngIf="myself.host_info.permissions == 'host_owner'">Can't leave a host if you're the owner, must be deleted</mat-error>
+        (click)="openLeaveHostConfirmationDialog()">Leave Company</ui-button>
+      <br>
+      <mat-error *ngIf="myself.host_info.permissions == 'host_owner'">Can't leave a company if you're the owner, must be deleted</mat-error>
     </div>
 
   </ng-container>
-  
+
 </div>
