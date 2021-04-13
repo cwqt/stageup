@@ -25,23 +25,25 @@
       height: 64px !important;
       border: 0px solid transparent;
       border-radius: 0 !important;
-      color: $clr-primary !important;
+      // color: $clr-primary !important;
       span {
         // opacity: .5;
         color: transparentize($color: $clr-primary, $amount: 0.5);
         display: flex;
         align-items: center;
-        justify-content: center;  
+        justify-content: center;
       }
+      transition: 0.2s;
       &:hover {
         color: $clr-primary;
       }
     }
     border-left: 2px solid transparent !important;
     border-right: 2px solid transparent !important;
-    &.active {
+    &.active-link {
       border-right: 2px solid $clr-primary !important;
       ::ng-deep button {
+        color: $clr-primary !important;
         span {
           opacity: 1;
           ui-icon {
@@ -51,4 +53,9 @@
       }
     }
   }
+}
+
+::ng-deep .mat-tooltip {
+  margin-left: 5px !important;
+  font-size: 16px !important;
 }

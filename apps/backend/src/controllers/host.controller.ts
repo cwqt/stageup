@@ -743,8 +743,6 @@ export default class HostController extends BaseController<BackendProviderMap> {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        // TODO: support polymorphic purchaseables using concrete table inheritance
-        // for all types of purchaseable items, ....that can be future me's problem
         return await this.ORM.createQueryBuilder(Invoice, 'invoice')
           .where('invoice.host__id = :host_id', { host_id: req.params.hid })
           .leftJoinAndSelect('invoice.ticket', 'ticket')

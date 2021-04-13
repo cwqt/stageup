@@ -32,9 +32,8 @@ app-sidebar {
 }
 
 mat-drawer-container {
+  margin-left: $sidebar-width;
   background-color: transparent;
-  // height: 100vh;
-  // width: 100vw;
   display: flex;
 }
 
@@ -44,10 +43,6 @@ mat-drawer {
   max-width: 20vw;
   box-shadow: $box-shadow;
   border: none;
-}
-
-mat-drawer-content {
-  margin-left: $sidebar-width;
 }
 
 .app-body {

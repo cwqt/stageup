@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IHostStub, IMyself } from '@core/interfaces';
 
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -9,7 +10,7 @@ import { IHostStub, IMyself } from '@core/interfaces';
 export class SidebarComponent implements OnInit {
   @Input() myself:IMyself;
   isExpanded:false;
-  
+
   constructor() { }
 
   get user() { return this.myself.user }
