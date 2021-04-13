@@ -105,7 +105,7 @@ export class FormComponent implements OnInit, AfterViewInit {
     });
 
     setTimeout(() => {
-      this.submissionButton.disabled = true;
+      this.submissionButton.disabled = !this.formGroup.valid;
       if (this.form.prefetch) {
         this.populatePrefetch().finally(() => {
           this.shouldBeVisible = true;
