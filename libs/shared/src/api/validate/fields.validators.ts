@@ -62,6 +62,12 @@ export namespace FieldValidators {
       .withMessage(ErrCode.FORBIDDEN);
   };
 
+  export const bio: CustomValidator = v => {
+    return isString(v)
+      .isLength({max: 512})
+      .withMessage(ErrCode.TOO_LONG);
+  }
+
   export const postcode: CustomValidator = v => {
     return isString(v)
       .isPostalCode('GB') // TODO: make open to all counties

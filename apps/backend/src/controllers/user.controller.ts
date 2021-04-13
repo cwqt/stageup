@@ -163,6 +163,10 @@ export default class UserController extends BaseController<BackendProviderMap> {
   updateUser(): IControllerEndpoint<IMyself['user']> {
     return {
       authStrategy: AuthStrat.none,
+      validators: [body<{ name: string, bio: string }>({
+        name: v => Validators.Fields.username(v),
+        bio: v => Validators.Fields.bio(v)
+      })],
       controller: async req => {
         let u = await getCheck(User.findOne({ _id: req.params.uid }));
         u = await u.update(pick(req.body, ['name', 'avatar', 'bio']));
