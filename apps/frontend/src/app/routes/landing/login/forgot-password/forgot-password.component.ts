@@ -62,6 +62,7 @@ export class ForgotPasswordComponent implements OnInit, IUiDialogOptions {
           label: 'email',
           validators: [
             { type: 'required' }, 
+            { type: 'email'},
             { type: 'maxlength', value: 32 }]
         },        
       },
