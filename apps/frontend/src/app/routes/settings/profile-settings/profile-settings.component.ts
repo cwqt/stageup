@@ -48,7 +48,7 @@ export class ProfileSettingsComponent implements OnInit {
             type: 'custom',
             value: v => isEmail(v.value),
             message: v => 'Must provide a valid e-mail address'
-          },       
+          },
         ]
       },
       bio: {
@@ -56,7 +56,7 @@ export class ProfileSettingsComponent implements OnInit {
         type: 'textarea',
         validators: [{ type: 'maxlength', value: 512, message: v => 'Bio must be no larger than 512 characters' }]
       },
-      
+
     },
     submit: {
       text: 'Update profile',
@@ -84,8 +84,8 @@ export class ProfileSettingsComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(ChangeImageComponent, { data: { fileHandler: this.handleUploadHostAvatar.bind(this) } }),
       (event: IUserStub) => {
-        this.user.avatar = event.avatar;
-        this.myselfService.setUser({ ...this.myselfService.$myself.getValue().user, avatar: event.avatar });
+        this.user.avatar = event.avatar || "/assets/avatar-placeholder.png";
+        this.myselfService.setUser({ ...this.myselfService.$myself.getValue().user, avatar: this.user.avatar });
       }
     );
   }

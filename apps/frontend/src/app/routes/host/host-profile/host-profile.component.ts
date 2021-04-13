@@ -103,8 +103,8 @@ export class HostProfileComponent implements OnInit {
         }
       }),
       (event: IHostStub) => {
-        this.host.data.banner = event.banner;
-        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, banner: event.banner })
+        this.host.data.banner = event.banner || "/assets/banner-placeholder.png";
+        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, banner: this.host.data.banner })
     });
   }
 
