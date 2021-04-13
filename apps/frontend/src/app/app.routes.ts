@@ -207,7 +207,8 @@ const LOGGED_IN_ROUTES: Routes = [
       ],
       {
         onSameUrlNavigation: 'reload',
-        paramsInheritanceStrategy: 'always'
+        paramsInheritanceStrategy: 'always',
+        scrollPositionRestoration: "enabled",
         // enableTracing: true
       }
     )

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { IMyself } from '@core/interfaces';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
@@ -6,7 +6,7 @@ import { DrawerKey, DrawerService, IDrawerData } from 'apps/frontend/src/app/ser
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BaseAppService } from '../../../services/app.service';
-import { Router, NavigationStart, ActivatedRoute } from '@angular/router';
+import { Router, NavigationStart, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, first } from 'rxjs/operators';
 import { HelperService } from '../../../services/helper.service';
 import { UserTypeClarificationComponent } from '../../../routes/landing/user-type-clarification/user-type-clarification.component';
@@ -18,6 +18,7 @@ import { UserTypeClarificationComponent } from '../../../routes/landing/user-typ
 })
 export class AppWrapperComponent implements OnInit, AfterViewInit {
   @ViewChild('drawer') drawer: MatDrawer;
+  @ViewChild("appContainer") appContainer:ElementRef;
 
   myself: IMyself;
   drawerOpenSubject: Subject<boolean>;
@@ -32,6 +33,7 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
     private myselfService: MyselfService,
     private drawerService: DrawerService,
     private dialog: MatDialog,
+    private router: Router,
     private route: ActivatedRoute
   ) {}
 
@@ -59,6 +61,13 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.drawerService.setDrawer(this.drawer);
+
+    // handle scroll to top of scrollable element on router transitions
+    this.router.events.subscribe(evt => {
+      if (!(evt instanceof NavigationEnd)) return;
+      this.appContainer.nativeElement.scrollTo(0,0);
+    });
+
   }
 
   openConfirmationDialog() {

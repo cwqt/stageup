@@ -1,8 +1,7 @@
 <div *ngIf="!host.loading && host.data">
   <!-- Banner  -->
-
   <div class="host-profile-header bg-white rounded shadow-sm">
-    <div class="banner-picture__container relative overflow-hidden">
+    <div class="banner-picture__container relative overflow-hidden rounded">
       <img class="object-cover w-full" [src]="host.data.banner || '/assets/banner.jpg'"/>
       <ui-button *ngIf="isHostView"
         (click)="openChangeBannerDialog()"

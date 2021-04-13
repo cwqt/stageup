@@ -2,3 +2,10 @@
 @import './styles/_overrides';
 @import './styles/theme.scss';
 @import './styles/variables.scss';
+
+// fix empty scrollbar appearing when a dialog is open
+.cdk-global-scrollblock {
+	position: initial;
+	width: initial;
+	overflow: hidden;
+}

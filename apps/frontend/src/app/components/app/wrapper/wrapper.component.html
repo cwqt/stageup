@@ -1,23 +1,25 @@
-<div class="app-container">
-  <app-header-bar [myself]="myself"></app-header-bar>
-  <app-sidebar *ngIf="myself?.user.is_admin || myself?.host"
-    [class.raise-index]="!(drawerOpenSubject | async)"
-    [class.shadow-lg]="drawerOpenSubject | async"
-    [myself]="myself">
-  </app-sidebar>
-    <!-- [class.cancel-events]="drawerOpenSubject | async" -->
+<app-header-bar [myself]="myself"></app-header-bar>
 
-  <mat-drawer-container class="h-full relative">
-    <mat-drawer #drawer mode="side" [ngSwitch]="drawerState.key">
-      <app-host-performance-drawer *ngSwitchCase="drawerKey.HostPerformance"></app-host-performance-drawer>
-    </mat-drawer>
+<div class="app-container" #appContainer>
+  <div class="flex">
+    <app-sidebar *ngIf="myself?.user.is_admin || myself?.host"
+      [class.raise-index]="!(drawerOpenSubject | async)"
+      [class.shadow-lg]="drawerOpenSubject | async"
+      [myself]="myself">
+    </app-sidebar>
 
-    <mat-drawer-content class="w-full h-full">
-      <div class="app-body pt-16 px-8 container w-full">
-        <router-outlet class="w-full"></router-outlet>
-      </div>
+    <mat-drawer-container class="h-full container relative">
+      <mat-drawer #drawer mode="side" [ngSwitch]="drawerState.key">
+        <app-host-performance-drawer *ngSwitchCase="drawerKey.HostPerformance"></app-host-performance-drawer>
+      </mat-drawer>
 
-      <app-footer></app-footer>
-    </mat-drawer-content>
-  </mat-drawer-container>
+      <mat-drawer-content class="w-full h-full">
+        <div class="app-body w-full pl-8 pt-8">
+          <router-outlet></router-outlet>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </div>
+
+  <app-footer></app-footer>
 </div>

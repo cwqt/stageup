@@ -3,14 +3,15 @@
 .sidebar-wrapper {
   width: 100%; //set from parent
   background-color: white;
-  height: 100vh;
-  padding-top: calc(56px);
+  height: 100%;
   display: flex;
   flex-flow: column;
   align-items: center;
 }
 
 .sidebar-main-buttons {
+  position: sticky;
+  top: 0;
   display: flex;
   flex-flow: column;
   justify-content: space-between;

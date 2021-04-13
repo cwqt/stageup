@@ -234,7 +234,7 @@ export default class PerformanceController extends BaseController<BackendProvide
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Editor),
       controller: async req => {
-        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
+        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ["asset_group"]}));
         await perf.update({
           name: req.body.name,
           description: req.body.description

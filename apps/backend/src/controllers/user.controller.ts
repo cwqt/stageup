@@ -164,8 +164,8 @@ export default class UserController extends BaseController<BackendProviderMap> {
     return {
       authStrategy: AuthStrat.none,
       validators: [body<{ name: string, bio: string }>({
-        name: v => Validators.Fields.username(v),
-        bio: v => Validators.Fields.bio(v)
+        name: v => v.optional({ nullable: true }).isLength({ max: 32 }),
+        bio: v => v.optional({ nullable: true }).isLength({ max: 512 })
       })],
       controller: async req => {
         let u = await getCheck(User.findOne({ _id: req.params.uid }));
