@@ -1,5 +1,5 @@
 import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { DtoPerformance, LiveStreamState, SseEventType } from '@core/interfaces';
+import { AssetType, DtoPerformance, LiveStreamState, SseEventType } from '@core/interfaces';
 import { Observable, Subscription } from 'rxjs';
 import { timestamp } from '@core/shared/helpers';
 import { PlayerComponent } from '../../components/player/player.component';
@@ -44,8 +44,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
 
   constructor(private sse: SseService, private myself: MyselfService, private zone: NgZone, private http: HttpClient) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   handlePlayerReady(player: PlayerComponent) {
     this.player = player;
@@ -61,7 +60,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
         currentTime > this.performance.data.premiere_date
       ) {
         // TODO: handle what should happen when a stream is completed
-        if(this.performance.data.stream.state != LiveStreamState.Completed) {
+        if (this.performance.data.stream.state != LiveStreamState.Completed) {
           this.initialiseSSE();
         }
       } else {
@@ -75,13 +74,13 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
         // we are apart of this host & so have permissions to watch previews
         const myself = this.myself.$myself.getValue();
         this.isHostPerformancePreview = myself.host._id == this.performance.data.host._id;
-        if(this.isHostPerformancePreview) this.initialiseSSE();
+        if (this.isHostPerformancePreview) this.initialiseSSE();
       }
     }, 0);
   }
 
-  handlePlayerError(event:Plyr.PlyrEvent) {
-    console.log(event)
+  handlePlayerError(event: Plyr.PlyrEvent) {
+    console.log(event);
   }
 
   initialiseSSE() {
@@ -100,7 +99,12 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
       case LiveStreamState.Recording:
       case LiveStreamState.Active:
         this.currentStreamState = 'active';
-        this.player.load().play();
+        this.player
+          .load(
+            this.performance.data.assets.find(a => a.type == AssetType.LiveStream),
+            this.performance.__client_data.token
+          )
+          .play();
         break;
 
       case LiveStreamState.Disconnected:

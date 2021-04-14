@@ -42,14 +42,14 @@
           <ng-container *ngIf="column.value.sort">
             <th mat-header-cell *matHeaderCellDef mat-sort-header [class.filter--is-active]="activeFilters[column.key]">
               <ng-container *ngTemplateOutlet="header"></ng-container>
-            </th>  
+            </th>
           </ng-container>
           <ng-container *ngIf="!column.value.sort">
             <th mat-header-cell *matHeaderCellDef [class.filter--is-active]="activeFilters[column.key]">
               <ng-container *ngTemplateOutlet="header"></ng-container>
-            </th>  
+            </th>
           </ng-container>
-          
+
           <ng-template #header>
             <div class="mat-header-cell--content">
               <span>{{ column.value.label }}</span>
@@ -69,7 +69,7 @@
                 <ui-icon size="s" *ngIf="!activeFilters[column.key]">filter</ui-icon>
                 <ui-icon size="s" *ngIf="activeFilters[column.key]">filter--edit</ui-icon>
               </ui-button>
-  
+
               <popper-content #filterMenu (click)="$event.stopPropagation()">
                 <div class="ui-table--filter"
                   *ngIf="column.value.filter"
@@ -88,15 +88,15 @@
                       [active]="activeFilters[column.key]"
                       [enum]="column.value.filter.enum">
                     </ui-filter-enum>
-                    
+
                     <ui-filter-boolean *ngSwitchCase="'BOOL'">
                     </ui-filter-boolean>
-                    
+
                     <ui-filter-date *ngSwitchCase="'DATE'"
                       (onChange)="addFilter(column.key, $event)"
                       [active]="activeFilters[column.key]">
                     </ui-filter-date>
-                    
+
                     <ui-filter-number  *ngSwitchCase="'NUM'"
                       (onChange)="addFilter(column.key, $event)"
                       [active]="activeFilters[column.key]">
@@ -139,10 +139,10 @@
                     <ui-button (click)="action.click(element.__data)" *ngFor="let dropdown of action.dropdown">
                       <ui-icon *ngIf="dropdown.icon">{{ dropdown.icon }}</ui-icon>
                       <span *ngIf="dropdown.label">{{ dropdown.label }}</span>
-                    </ui-button>  
+                    </ui-button>
                   </div>
                 </popper-content>
-              </ng-container>  
+              </ng-container>
             </div>
           </td>
         </ng-container>
@@ -152,7 +152,7 @@
 
         <!-- Row shown when there is no data / loading -->
         <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" colspan="5">
+          <td class="mat-cell" [colSpan]="displayedColumns.length">
             {{ cacheable.loading
               ? "Loading data..."
               : 'No data found'
@@ -169,7 +169,7 @@
       <ui-button *ngFor="let action of table.selection?.actions"
         (click)="action.click(selection)">
         {{ action.label }}
-      </ui-button>	
+      </ui-button>
     </div>
   </popper-content>
 
@@ -179,7 +179,7 @@
       [length]="cacheable.data?.__paging_data?.total || 0"
       [pageSizeOptions]="table.pagination.page_sizes">
     </mat-paginator>
-    
+
     <p *ngIf="footerMessage" class="paginator-footer-message">
       <b>{{ footerMessage.label }}</b>
       <span>{{ footerMessage.value }}</span>

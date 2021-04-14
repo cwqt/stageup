@@ -1,10 +1,10 @@
 <ui-dialog [noPadding]="true" [loading]="performanceCacheable.loading || paymentIntent.loading">
-  <div >
+  <div *ngIf="performance">
     <app-player #player *ngIf="performanceTrailer"
       (onPlayerReady)="player.load(performanceTrailer)">
     </app-player>
 
-    <img *ngIf="!performanceTrailer" class="object-cover h-96 w-full" src="/assets/banner-placeholder.png" />
+    <img *ngIf="!performanceTrailer" class="object-cover h-96 w-full" [src]="performance.thumbnail || '/assets/performance-placeholder.jpeg'" />
   </div>
 
   <div class="flex">
@@ -81,7 +81,7 @@
                 </span>
 
                 <span *ngIf="selectedTicket.type == 'dono'">
-                  {{ !selectedDonoPeg ? "Select an amount" : (selectedTicket.amount | currencyPipe: selectedTicket.currency)}}
+                  {{ !selectedDonoPeg ? "Select an amount" : 'Pay ' + (selectedTicket.amount | currencyPipe: selectedTicket.currency)}}
                 </span>
 
                 <span *ngIf="selectedTicket.type == 'free'">
@@ -100,7 +100,7 @@
               <h3>You're going to watch "<b>{{ performance.name }}</b>"</h3>
               <br />
 
-              <p>{{ performance.host.username }} is due to premiere this stream at {{ performance.premiere_date | amFromUnix | amDateFormat}}, you'll be notified by e-mail before it begins.</p>
+              <p>{{ performance.host.username }} is due to premiere this stream at {{ performance.premiere_date | amFromUnix | amDateFormat: 'LLL'}}, you'll be notified by e-mail before it begins.</p>
               <p>Purchase confirmation will arrive at <b>{{ purchaserEmailAddress }}</b> shortly.</p>
 
               <div class="flex ml-auto">

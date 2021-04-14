@@ -9,6 +9,7 @@ import {
 } from '@core/interfaces';
 import { timestamp, uuid } from '@core/shared/helpers';
 import { timeStamp } from 'console';
+import { stringify } from 'qs';
 import { Except } from 'type-fest';
 import {
   BaseEntity,
@@ -32,6 +33,8 @@ import { Ticket } from './ticket.entity';
 export class Performance extends BaseEntity implements Except<IPerformance, 'stream' | "assets"> {
   @PrimaryColumn() _id: string;
 
+
+  @Column("varchar", { nullable: true }) thumbnail:string;
 
   @Column() created_at: number;
   @Column() name: string;
@@ -80,6 +83,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
 
   toStub(): Required<IPerformanceStub> {
     return {
+      thumbnail: this.thumbnail,
+
       _id: this._id,
       host: this.host?.toStub(),
       name: this.name,

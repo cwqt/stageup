@@ -1,4 +1,5 @@
 export enum Genre {
+  Dance,
   Drama,
   Play,
   Comedy,
@@ -30,6 +31,7 @@ export enum Genre {
 }
 
 export const GenreMap: { [index in Genre]: string } = {
+  [Genre.Dance]: "Dance",
   [Genre.Drama]: 'Drama',
   [Genre.Play]: 'Play',
   [Genre.Comedy]: 'Comedy',

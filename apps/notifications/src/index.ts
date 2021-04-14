@@ -32,7 +32,8 @@ Register<NotificationsProviderMap>({
   // FIXME: Backend deletes & re-creates topics on every development change, but in production
   // all the topics are created in advance - wait here so we don't have a race condition where we
   // make a subscription on a topic, which then gets deleted and the whole system dies as a result
-  await timeout(1000);
+  await timeout(10000);
+  await log.info('NOTIFS READY -------------------------------------------------');
 
   // Track connections with clients for SSE
   const hubs = new HubManager(log);

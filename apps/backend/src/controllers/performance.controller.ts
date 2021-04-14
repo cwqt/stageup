@@ -168,8 +168,8 @@ export default class PerformanceController extends BaseController<BackendProvide
 
           // set the token
           response.__client_data = {
-            has_purchased: token.provisioner_type == TokenProvisioner.Purchase,
-            token: token.access_token
+            has_purchased: token?.provisioner_type == TokenProvisioner.Purchase,
+            token: token?.access_token
           };
         }
 
@@ -257,7 +257,7 @@ export default class PerformanceController extends BaseController<BackendProvide
       ],
       controller: async req => {
         // Can't have any amount without setting an amount
-        if (req.body.selected_dono_peg == 'allow_any' && req.body.dono_allow_any_amount == null)
+        if (req.body.selected_dono_peg == 'allow_any' && req.body.allow_any_amount == null)
           throw new ErrorHandler(HTTP.BadRequest);
 
         // Stripe uses a PaymentIntent object to represent your **intent** to collect payment from a customer,

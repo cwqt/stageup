@@ -30,16 +30,18 @@ export default class MuxProvider implements Provider<Mux> {
     console.log("Start MUX .drop(), this may take a while...");
     const empty =  {
       keys: false,
-      streams: false
+      streams: false,
+      assets: false
     }
 
     while(true) {
+      // Signing Keys
       if(empty.keys == false) {
         const signingKeys = await this.connection.Video.SigningKeys.list({ limit: 100 });
         if(signingKeys.length > 0) {
           for(let i=0; i<signingKeys.length; i++) {
             console.log("Deleted Signing Key", i)
-            this.connection.Video.SigningKeys.del(signingKeys[i].id);
+            await this.connection.Video.SigningKeys.del(signingKeys[i].id);
             await timeout(500);
           }
         } else {
@@ -48,11 +50,27 @@ export default class MuxProvider implements Provider<Mux> {
         }
       }
 
+      // Assets
+      if(empty.assets == false) {
+        const assets = await this.connection.Video.Assets.list({ limit: 100 });
+        if(assets.length > 0) {
+          for(let i=0; i<assets.length; i++) {
+            await this.connection.Video.Assets.del(assets[i].id);
+            console.log("Deleted Asset", i)
+            await timeout(500);
+          }
+        } else {
+          console.log("\tDeleted all Assets");
+          empty.assets = true;
+        }
+      }
+
+      // Live streams
       if(empty.streams == false) {
         const liveStreams = await this.connection.Video.LiveStreams.list({ limit: 100 });
         if(liveStreams.length > 0) {
           for(let i=0; i<liveStreams.length; i++) {
-            this.connection.Video.LiveStreams.del(liveStreams[i].id);
+            await this.connection.Video.LiveStreams.del(liveStreams[i].id);
             console.log("Deleted Stream", i)
             await timeout(500);
           }

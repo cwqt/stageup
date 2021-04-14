@@ -22,6 +22,9 @@ export interface IPerformanceStub {
   views: number; // total user view count
   created_at: number;
   stream: { state: LiveStreamState; location: IAsset<AssetType.LiveStream>['location'] };
+
+
+  thumbnail:string;
 }
 
 export interface IPerformance extends IPerformanceStub {

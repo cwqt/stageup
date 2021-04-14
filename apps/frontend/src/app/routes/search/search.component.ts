@@ -65,7 +65,7 @@ export class SearchComponent implements OnInit {
         })
         .finally(() => {
           this.hosts.loading = false;
-          this.performances.loading = false;    
+          this.performances.loading = false;
         })
     }
   }
@@ -74,6 +74,7 @@ export class SearchComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
         data: performance,
+        width: "800px",
         position: { top: "5% "}
       }),
       () => {}

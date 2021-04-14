@@ -9,6 +9,8 @@ import { IUiTable } from '../../../ui-lib/table/table.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PaymentStatusPipe } from '../../../_pipes/payment-status.pipe';
 
+import { unix } from "moment";
+
 @Component({
   selector: 'app-host-invoices',
   templateUrl: './host-invoices.component.html',
@@ -98,7 +100,7 @@ export class HostInvoicesComponent implements OnInit {
         },
         invoice_date: {
           label: 'Invoice Date',
-          transformer: v => new Date(v.invoice_date * 1000).toISOString(),
+          transformer: v => unix(v.invoice_date).format("MMMM Do, YYYY"),
           filter: {
             type: FilterCode.Date,
             field: 'purchased_at'

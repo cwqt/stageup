@@ -2,7 +2,11 @@
 const webpack = require('webpack');
 
 module.exports = {
-  module: { 
+  devServer: {
+    // SET TO FALSE IN PROD
+    disableHostCheck: true
+  },
+  module: {
     rules: [
       {
         test: /tailwind\.scss$/,

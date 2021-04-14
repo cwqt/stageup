@@ -50,8 +50,6 @@ export default class MUXController extends BaseController<BackendProviderMap> {
   async videoAssetCreated(data: IMUXHookResponse<MuxAsset>) {
     // Set the asset identifier to the Asset & not the Direct Upload, now that we have it
     const passthrough: IMuxPassthrough = JSON.parse(data.data.passthrough);
-
-    console.log(passthrough);
     const asset = await getCheck(Asset.findOne({ _id: passthrough.asset_id }));
     asset.asset_identifier = data.object.id;
     await asset.save();
@@ -83,6 +81,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
     const asset = await getCheck(
       Asset.findOne<Asset<AssetType.Video>>({ _id: passthrough.asset_id })
     );
+
     await asset.remove();
   }
 

@@ -11,29 +11,30 @@
       <ui-icon>virtual-private-cloud</ui-icon>
     </ui-button>
 
+    <ng-container *ngIf="myself.host">
+      <ui-button matTooltip="Performances" matTooltipPosition="right" routerLink="/dashboard/performances" routerLinkActive="active-link">
+        <ui-icon>playlist</ui-icon>
+      </ui-button>
 
-    <ui-button matTooltip="Performances" matTooltipPosition="right" routerLink="/dashboard/performances" routerLinkActive="active-link">
-      <ui-icon>playlist</ui-icon>
-    </ui-button>
+      <ui-button matTooltip="Payments" matTooltipPosition="right" routerLink="/dashboard/payments" routerLinkActive="active-link">
+        <ui-icon>money</ui-icon>
+      </ui-button>
 
-    <ui-button matTooltip="Payments" matTooltipPosition="right" routerLink="/dashboard/payments" routerLinkActive="active-link">
-      <ui-icon>money</ui-icon>
-    </ui-button>
+      <ui-button matTooltip="Team" matTooltipPosition="right" routerLink="/dashboard/team" routerLinkActive="active-link">
+        <ui-icon>events</ui-icon>
+      </ui-button>
 
-    <ui-button matTooltip="Team" matTooltipPosition="right" routerLink="/dashboard/team" routerLinkActive="active-link">
-      <ui-icon>events</ui-icon>
-    </ui-button>
+      <ui-button matTooltip="Invoicing" matTooltipPosition="right" routerLink="/dashboard/invoices" routerLinkActive="active-link">
+        <ui-icon>receipt</ui-icon>
+      </ui-button>
 
-    <ui-button matTooltip="Invoicing" matTooltipPosition="right" routerLink="/dashboard/invoices" routerLinkActive="active-link">
-      <ui-icon>receipt</ui-icon>
-      </ ui-button>
-
-      <ui-button *ngIf="myself.host" matTooltip="Profile" matTooltipPosition="right" [routerLink]="'/dashboard/@'+ myself.host.username" routerLinkActive="active-link">
+      <ui-button matTooltip="Profile" matTooltipPosition="right" [routerLink]="'/dashboard/@'+ myself.host.username" routerLinkActive="active-link">
         <ui-icon>user--avatar</ui-icon>
       </ui-button>
 
       <ui-button matTooltip="Settings" matTooltipPosition="right" routerLink="/dashboard/settings" routerLinkActive="active-link">
         <ui-icon>settings</ui-icon>
-        </ ui-button>
+      </ui-button>
+    </ng-container>
   </div>
 </div>

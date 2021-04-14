@@ -149,7 +149,7 @@ const LOGGED_IN_ROUTES: Routes = [
             {
               path: 'register',
               component: DialogEntryComponent,
-              data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'business' } } }
+              data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'business' }, width: "600px" } }
             }
           ]
         },
@@ -165,12 +165,12 @@ const LOGGED_IN_ROUTES: Routes = [
                 {
                   path: 'login',
                   component: DialogEntryComponent,
-                  data: { open_dialog: LoginComponent, config: { minWidth: "600px" } }
+                  data: { open_dialog: LoginComponent, config: { width: "600px" } }
                 },
                 {
                   path: 'register',
                   component: DialogEntryComponent,
-                  data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' }, minWidth: "600px", maxWidth: "600px" } }
+                  data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' }, width: "600px" } }
                 },
 
                 { path: `users/forgot-password`, component: ForgotPasswordComponent },
