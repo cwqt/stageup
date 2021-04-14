@@ -5,13 +5,14 @@
 
     <ul class="onboarding-step-meta">
       <li *ngFor="let field of step.value; let idx = index" class="mb-2" [class.is-admin]="adminView">
-        <div class="flex align-middle">
-          <ui-icon-button class="mr-4" size="m"
+        <div class="flex items-center">
+          <ui-button
+            size="s"
             *ngIf="adminView"
             (click)="addFieldIssue(step.key, idx)"
-            [disabled]="field.valid || isActiveIssueMaker(step.key, idx)">
-              add
-          </ui-icon-button>
+            [disabled]="field.valid || isActiveIssueMaker(step.key, idx)"
+            icon="add">
+          </ui-button>
 
           <mat-checkbox class="mr-4"
             *ngIf="adminView"
@@ -19,7 +20,7 @@
             [checked]="field.issues?.length || field.valid"
             [disabled]="enactOnboarding.loading">
           </mat-checkbox>
-          
+
           <p class="flex-1 flex"
             [class.cursor-pointer]="adminView">
             <b (click)="field.valid = !field.valid">

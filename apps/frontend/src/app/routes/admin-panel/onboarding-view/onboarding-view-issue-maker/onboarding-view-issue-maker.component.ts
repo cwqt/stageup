@@ -37,7 +37,7 @@ export class OnboardingViewIssueMakerComponent implements OnInit, OnChanges {
   }
 
   removeIssue(issueIdx:number) {
-    this.field.issues = this.field.issues.splice(issueIdx, 1);
+    this.field.issues.splice(issueIdx, 1);
     if(this.field.issues.length == 0) this.field.valid = false;
   }
 }

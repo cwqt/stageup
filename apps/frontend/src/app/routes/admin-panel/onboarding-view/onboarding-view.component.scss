@@ -2,10 +2,21 @@
   li {
     overflow: visible;
     &.is-admin {
-      @apply bg-white p-2 rounded shadow-sm;
+      @apply bg-white p-2 rounded shadow-sm mb-2;
       position: relative;
-      padding-left: 40px;
     }
+
+    ui-button {
+      margin-right: 10px;
+      max-height: 32px;
+      width: 32px;
+      ::ng-deep button {
+        height: 32px;
+        width: 32px;
+        min-height: 0;
+      }
+    }
+
     p {
       margin: 0;
       b {
@@ -14,13 +25,5 @@
         display: inline-block;
       }
     }
-
-    ui-icon-button {
-      position: absolute;
-      top: -3px;
-      bottom: 0;
-      margin: auto;
-      left: -5px;
-    }  
   }
 }
