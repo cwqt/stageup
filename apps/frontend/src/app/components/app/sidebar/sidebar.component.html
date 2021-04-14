@@ -28,7 +28,7 @@
       <ui-icon>receipt</ui-icon>
       </ ui-button>
 
-      <ui-button matTooltip="Profile" matTooltipPosition="right" [routerLink]="'/dashboard/@'+ myself.host.username" routerLinkActive="active-link">
+      <ui-button *ngIf="myself.host" matTooltip="Profile" matTooltipPosition="right" [routerLink]="'/dashboard/@'+ myself.host.username" routerLinkActive="active-link">
         <ui-icon>user--avatar</ui-icon>
       </ui-button>
 
