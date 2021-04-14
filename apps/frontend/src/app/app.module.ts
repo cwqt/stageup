@@ -17,6 +17,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import { HttpConfigInterceptor } from './_helpers/http.interceptor';
 import { NgxStripeModule } from 'ngx-stripe';
 import { PlyrModule } from 'ngx-plyr';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
@@ -143,7 +144,7 @@ import { UploadVideoComponent } from './components/upload-video/upload-video.com
     ShortDomainPipe,
     PaymentStatusPipe,
     OnboardingStepPipe,
-		DonoPegPipe,
+    DonoPegPipe,
     HostPermissionPipe,
     CurrencyCodePipe,
     TicketTypePipe,
@@ -203,7 +204,12 @@ import { UploadVideoComponent } from './components/upload-video/upload-video.com
     NgxStripeModule.forRoot(environment.stripePublicKey),
     ClipboardModule,
     NgxPermissionsModule.forRoot(),
-    PlyrModule
+    PlyrModule,
+    LoggerModule.forRoot({
+      serverLoggingUrl: '/api/logs',
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR
+    })
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],

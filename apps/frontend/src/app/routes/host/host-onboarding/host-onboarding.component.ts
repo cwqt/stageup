@@ -13,7 +13,7 @@ import {
 } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { IUiForm, IUiFieldSelectOptions, IUiFormPrefetchData } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { IUiForm, IUiFormPrefetchData } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import phone from 'phone';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { HttpErrorResponse } from '@angular/common/http';

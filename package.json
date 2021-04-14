@@ -77,6 +77,7 @@
     "nanoid": "^3.1.20",
     "ng-click-outside": "^7.0.1",
     "ngx-cookie-service": "^11.0.2",
+    "ngx-logger": "^4.2.1",
     "ngx-mask": "^11.1.4",
     "ngx-mat-select-search": "^3.2.0",
     "ngx-moment": "^5.0.0",

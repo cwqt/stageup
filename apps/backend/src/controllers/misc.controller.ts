@@ -6,18 +6,25 @@ import {
   Host,
   HostInvitation,
   IControllerEndpoint,
-  Performance,
   TopicType,
   UserHostInfo
 } from '@core/shared/api';
-import { LiveStreams } from '@mux/mux-node';
-import { Like } from 'typeorm';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import { sendEmail } from '../common/email';
+import { log } from '../common/logger';
 import Env from '../env';
 
 export default class MiscController extends BaseController<BackendProviderMap> {
+  logFrontendMessage():IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.none,
+      controller: async req => {
+        // TODO: hook up frontend logging messages to some database for user error logging
+      }
+    }
+  }
+
   ping(): IControllerEndpoint<string> {
     return {
       authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),

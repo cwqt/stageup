@@ -12,10 +12,12 @@ import { catchError, map } from 'rxjs/operators';
 import { ThemeKind } from '../ui-lib/ui-lib.interfaces';
 import { IErrorResponse } from '@core/interfaces';
 import { CookieService } from 'ngx-cookie-service';
+import { NGXLogger } from "ngx-logger";
+
 
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
-  constructor(private toastService: ToastService, private cookieService: CookieService) {}
+  constructor(private toastService: ToastService, private cookieService: CookieService, private logger:NGXLogger) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Attach cookie to request
@@ -39,6 +41,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
           ThemeKind.Danger,
           { duration: 10000 }
         );
+
+        this.logger.error(error);
         return throwError(error);
       })
     );

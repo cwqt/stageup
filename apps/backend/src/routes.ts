@@ -136,6 +136,7 @@ router.redirect                          ("/auth/verify-email",                 
 
 // MISC ---------------------------------------------------------------------------------------------------------------
 const Misc = new MiscController(providerMap, middlewares);
+router.post     <void>                   ("/logs",                                    Misc.logFrontendMessage());
 router.get      <string>                 ("/ping",                                    Misc.ping());
 router.post     <void>                   ("/drop",                                    Misc.dropAllData());
 router.get      <IHost>                  ("/verify-host/:hid",                        Misc.verifyHost());
