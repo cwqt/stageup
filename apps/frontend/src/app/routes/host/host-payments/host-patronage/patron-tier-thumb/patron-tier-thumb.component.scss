@@ -1,0 +1,10 @@
+quill-view ::ng-deep * {
+  font-size: 16px !important;
+}
+
+ui-button {
+  width: 100%;
+  ::ng-deep button {
+    width: 100%;
+  }
+}

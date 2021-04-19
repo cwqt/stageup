@@ -1,4 +1,11 @@
-<h1>Payments</h1>
+<div class="flex items-center justify-between">
+  <h1 class="mb-0">Payments</h1>
+
+  <div class="flex space-x-4">
+    <ui-button routerLink="/dashboard/payments/invoices">Invoices</ui-button>
+    <ui-button routerLink="/dashboard/payments/patronage">Patronage</ui-button>
+  </div>
+</div>
 <ui-hr></ui-hr>
 
 <mat-spinner *ngIf="stripeInfo.loading"></mat-spinner>
@@ -13,6 +20,7 @@
 
   <ng-container *ngIf="host.stripe_account_id == null && stripeInfo.data.is_stripe_connected == false">
     <ui-button
+      class="stripe-button"
       kind="secondary"
       size="l"
       (click)="openConnectStripe()"
@@ -24,4 +32,8 @@
       </svg>
     </ui-button>
   </ng-container>
+
+  <ui-hr></ui-hr>
+
+  <router-outlet></router-outlet>
 </ng-container>

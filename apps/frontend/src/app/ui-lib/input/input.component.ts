@@ -1,46 +1,27 @@
 import {
-  Component,
-  Input,
-  Self,
-  Optional,
-  ViewChild,
-  Output,
-  EventEmitter,
-  OnInit,
   AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
   OnDestroy,
-  ElementRef
+  OnInit,
+  Optional,
+  Output,
+  Self,
+  ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Primitive } from '@core/interfaces';
-import { IUiFieldOptions, IUiFieldSelectOptions, IUiFormFieldValidator } from '../form/form.interfaces';
-import { ThemeKind } from '../ui-lib.interfaces';
-import { IUiFormField } from '../form/form.interfaces';
-import { MatSelect } from '@angular/material/select';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import {} from '@angular/material/autocomplete';
+import { MatDateRangeInput } from '@angular/material/datepicker';
+import { MatSelect } from '@angular/material/select';
+import { Primitive } from '@core/interfaces';
+import { ContentChange, QuillModules } from 'ngx-quill';
+import { ReplaySubject, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { KeyValue } from 'aws-sdk/clients/iot';
-import { MatDateRangeInput, MatDateRangePicker } from '@angular/material/datepicker';
+import { IUiFieldSelectOptions, IUiFormField, IUiFormFieldValidator } from '../form/form.interfaces';
+import { ThemeKind } from '../ui-lib.interfaces';
 
-export class IFlatGraphNode {
-  key: number | string;
-  value: Primitive;
-  icon?: string;
-
-  level?: number;
-  expandable?: boolean;
-}
-
-export interface IGraphNode {
-  key: number | string;
-  value: Primitive;
-  icon?: string;
-  children?: IGraphNode[];
-
-  level: number;
-  expandable: boolean;
-}
 
 //https://material-ui.com/components/text-fields/
 @Component({
@@ -49,9 +30,9 @@ export interface IGraphNode {
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
-  @Output() change:EventEmitter<any> = new EventEmitter();
+  @Output() change: EventEmitter<any> = new EventEmitter();
   @Output() selectionChange: EventEmitter<Primitive> = new EventEmitter();
-  
+
   @ViewChild('input') input: ElementRef;
 
   // Interface inputs
@@ -78,6 +59,8 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   focused: boolean = false;
   passwordVisible: boolean = false;
 
+  richTextModules: QuillModules;
+
   constructor(@Self() @Optional() public control: NgControl) {
     this.control && (this.control.valueAccessor = this);
   }
@@ -87,6 +70,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     if (this.initial ?? this.options?.initial) this.value = this.initial ?? this.options?.initial;
     this.placeholder = this.placeholder ?? '';
 
+    if (this.type == 'rich-text') this.initialiseRichText();
     if (this.type == 'select') this.initialiseSelection();
     if (this.type == 'time') {
       this.timeItems = new Map(
@@ -113,12 +97,12 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
   ngAfterViewInit() {
     if (this.type == 'select') this.setInitialSelectValue();
-		if (this.type == "date" && this.options?.is_date_range) {
-			// Can't bind ngModel to mat-date-picker-input :/
-			this.pickerInput.rangePicker.stateChanges.subscribe(() => {
-				this.value = this.pickerInput.value;
-			})
-		}
+    if (this.type == 'date' && this.options?.is_date_range) {
+      // Can't bind ngModel to mat-date-picker-input :/
+      this.pickerInput.rangePicker.stateChanges.subscribe(() => {
+        this.value = this.pickerInput.value;
+      });
+    }
   }
 
   // ControlValueAccessor --------------------------------------------------------------------------------
@@ -134,7 +118,9 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     }
   }
 
-  onFocusCallback = () => { this.focused = true }
+  onFocusCallback = () => {
+    this.focused = true;
+  };
   onChangeCallback = _ => {};
   onTouchedCallback = () => {};
 
@@ -150,7 +136,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   registerOnChange(fn: any): void {
     this.onChangeCallback = fn;
   }
-  
+
   registerOnTouched(fn: any): void {
     this.onTouchedCallback = () => {
       fn();
@@ -202,7 +188,9 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     });
   }
 
-  select() { this.input.nativeElement.select(); }
+  select() {
+    this.input.nativeElement.select();
+  }
 
   increment(event) {
     event.preventDefault();
@@ -274,12 +262,27 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
   originalOrder = (a, b): number => {
     return 0;
-  }
+  };
 
   // Time ------------------------------------------------------------------------------------------------------
   // 24 hours / 15 minutes = 96 options, create an array of 15 minute increments
   timeItems: IUiFieldSelectOptions['values'];
 
   // Date range input ------------------------------------------------------------------------------------------------------
-	@ViewChild(MatDateRangeInput, { static: false }) pickerInput:MatDateRangeInput<Date>
+  @ViewChild(MatDateRangeInput, { static: false }) pickerInput: MatDateRangeInput<Date>;
+
+  // ngx-quill Rich Text --------------------------------------------------------------------------------
+  initialiseRichText() {
+    this.richTextModules = this.options?.modules || {
+      toolbar: [
+        ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean'], // remove formatting button
+      ]
+    };
+  }
+
+  richTextChanged(event:ContentChange) {
+    console.log(event);
+  }
 }

@@ -13,7 +13,6 @@ import { ForgotPasswordComponent } from './routes/landing/login/forgot-password/
 import { ResetPasswordComponent } from './routes/landing/login/reset-password/reset-password.component';
 import { FeedComponent } from './routes/feed/feed.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
-import { PerformanceWatchComponent } from './routes/performance-watch/performance-watch.component';
 import { HostComponent } from './routes/host/host.component';
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
 import { SettingsComponent } from './routes/settings/settings.component';
@@ -45,7 +44,8 @@ import { HostPerformanceDetailsComponent } from './routes/host/host-performance/
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
-import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component'
+import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component';
+import { HostPatronageComponent } from './routes/host/host-payments/host-patronage/host-patronage.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -72,7 +72,7 @@ const LOGGED_IN_ROUTES: Routes = [
     path: `performances/:${RP.PerformanceId}`,
     component: PerformanceComponent
   },
-  { path: `user/:${RP.UserId}`, component: ProfileComponent},
+  { path: `user/:${RP.UserId}`, component: ProfileComponent },
   { path: `verified`, component: VerifiedComponent },
   {
     path: `settings`,
@@ -96,17 +96,23 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: '', component: HostDashboardComponent },
       { path: 'onboarding', component: HostOnboardingComponent },
       { path: 'settings', component: HostSettingsComponent },
-      { path: 'payments', component: HostPaymentsComponent },
+      {
+        path: 'payments',
+        component: HostPaymentsComponent,
+        children: [
+          { path: 'invoices', component: HostInvoicesComponent },
+          { path: 'patronage', component: HostPatronageComponent }
+        ]
+      },
       { path: 'team', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
-      { path: 'invoices', component: HostInvoicesComponent },
       {
         path: `performances/:${RP.PerformanceId}`,
         component: HostPerformanceComponent,
         children: [
           { path: '', component: HostPerformanceDetailsComponent },
           { path: 'ticketing', component: HostPerformanceTicketingComponent },
-          { path: "customise", component: HostPerformanceCustomiseComponent },
+          { path: 'customise', component: HostPerformanceCustomiseComponent },
           // { path: "analytics", HostPerformanceDetailsComponent },
           { path: '**', component: NotFoundComponent }
         ]
@@ -149,7 +155,7 @@ const LOGGED_IN_ROUTES: Routes = [
             {
               path: 'register',
               component: DialogEntryComponent,
-              data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'business' }, width: "600px" } }
+              data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'business' }, width: '600px' } }
             }
           ]
         },
@@ -165,12 +171,12 @@ const LOGGED_IN_ROUTES: Routes = [
                 {
                   path: 'login',
                   component: DialogEntryComponent,
-                  data: { open_dialog: LoginComponent, config: { width: "600px" } }
+                  data: { open_dialog: LoginComponent, config: { width: '600px' } }
                 },
                 {
                   path: 'register',
                   component: DialogEntryComponent,
-                  data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' }, width: "600px" } }
+                  data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' }, width: '600px' } }
                 },
 
                 { path: `users/forgot-password`, component: ForgotPasswordComponent },
@@ -178,7 +184,7 @@ const LOGGED_IN_ROUTES: Routes = [
                   path: `users/reset-password`,
                   component: DialogEntryComponent,
                   data: { open_dialog: ResetPasswordComponent }
-                },
+                }
               ]
             },
             {
@@ -208,7 +214,7 @@ const LOGGED_IN_ROUTES: Routes = [
       {
         onSameUrlNavigation: 'reload',
         paramsInheritanceStrategy: 'always',
-        scrollPositionRestoration: "enabled",
+        scrollPositionRestoration: 'enabled'
         // enableTracing: true
       }
     )

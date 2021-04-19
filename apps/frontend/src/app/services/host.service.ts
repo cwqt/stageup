@@ -13,7 +13,9 @@ import {
   IEnvelopedData,
   IHostStripeInfo,
   IHostInvoice,
-  IHostInvoiceCSVJobData
+  IHostInvoiceCSVJobData,
+  DtoCreatePatreonTier,
+  IPatronTier
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -192,5 +194,20 @@ export class HostService {
   // router.post <void> ("/hosts/:hid/invoices/export-csv", Hosts.exportInvoicesToCSV());
   exportInvoicesToCSV(hostId: string, invoices: Pick<IHostInvoiceCSVJobData, 'invoices'>): Promise<void> {
     return this.http.post<void>(`/api/hosts/${hostId}/invoices/export-csv`, invoices).toPromise();
+  }
+
+  // router.post <IPatreonTier> ("/hosts/:hid/patreon-tiers", Hosts.createPatreonTier());
+  createPatreonTier(hostId: string, data: DtoCreatePatreonTier): Promise<IPatronTier> {
+    return this.http.post<IPatronTier>(`/api/hosts/${hostId}/patreon-tiers`, data).toPromise();
+  }
+
+  // router.get <IPatreonTier[]> ("/hosts/:hid/patreon-tiers", Hosts.readPatreonTiers());
+  readPatreonTiers(hostId: string): Promise<IPatronTier[]> {
+    return this.http.get<IPatronTier[]>(`/api/hosts/${hostId}/patreon-tiers`).toPromise();
+  }
+
+  // router.delete <void> ("/hosts/:hid/patreon-tiers/:tid", Hosts.deletePatreonTier());
+  deletePatreonTier(hostId: string, tierId: string): Promise<void> {
+    return this.http.delete<void>(`/api/hosts/${hostId}/patreon-tiers/${tierId}`).toPromise();
   }
 }

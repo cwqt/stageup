@@ -69,6 +69,19 @@
     </div>
   </div>
 
+  <!-- Rich Text using ngx-quill -->
+  <div class="ui-input--rich-text" *ngIf="type == 'rich-text'">
+    <span>{{ label }} </span>
+    <quill-editor
+      format="json"
+      [modules]="richTextModules"
+      (onBlur)="onTouchedCallback()"
+      (onFocus)="onFocusCallback()"
+      [(ngModel)]="value"
+      (onContentChanged)="richTextChanged($event)">
+    </quill-editor>
+  </div>
+
   <!-- Field length indicators -->
   <!-- <div class="form-field_lengths" *ngIf="maxlength || minlength" >
     {{ maxlength }} / {{ value?.length }} /  {{ minlength }}

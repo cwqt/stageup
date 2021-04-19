@@ -23,7 +23,11 @@ import {
   IHostStripeInfo,
   IPaymentIntentClientSecret as IPaymentICS,
   IHostInvoice,
-  IUserInvoice
+  IUserInvoice,
+  IPatronTier,
+  IPatronTier as IPTier,
+  IHostPatronTier,
+  IHostPatronTier as IHPTier
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -94,6 +98,9 @@ router.post     <string>                ("/hosts/:hid/stripe/connect",          
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
 router.get      <IE<IHostInvoice[]>>    ("/hosts/:hid/invoices",                      Hosts.readInvoices());
 router.post     <void>                  ("/hosts/:hid/invoices/export-csv",           Hosts.exportInvoicesToCSV());
+router.post     <IHostPatronTier>       ("/hosts/:hid/patreon-tiers",                 Hosts.createPatreonTier());
+router.get      <(IHPTier | IPTier)[]>  ("/hosts/:hid/patreon-tiers",                 Hosts.readPatreonTiers());
+router.delete   <void>                  ("/hosts/:hid/patreon-tiers/:tid",            Hosts.deletePatreonTier());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providerMap, middlewares);

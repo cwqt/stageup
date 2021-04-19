@@ -3,8 +3,9 @@ import { IFormErrorField, HTTP, IErrorResponse, ErrCode } from '@core/interfaces
 import { Logger } from 'winston';
 
 /**
- * @description Used for checking if something exists, else throw a not found
+ * @description Used for checking if an entity exists, else throw a NOT_FOUND
  * @param f
+ * @example await getCheck(User.findOne({ name: "hello" }));
  */
 export const getCheck = async <T>(f: Promise<T>, code?: ErrCode): Promise<T> => {
   const v = await f;

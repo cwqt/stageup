@@ -1,5 +1,6 @@
 import {
   DonoPeg,
+  DtoCreatePatreonTier,
   DtoCreatePerformance,
   DtoCreateTicket,
   ErrCode,
@@ -28,6 +29,15 @@ export namespace ObjectValidators {
       description: v => FV.isString(v),
       genre: v => v.isIn(Object.values(Genre)),
       premiere_date: v => v.optional({ nullable: true }).custom(x => FV.timestamp(v))
+    };
+  };
+
+  export const DtoCreatePatreonTier = (): ObjectValidator<DtoCreatePatreonTier> => {
+    return {
+      name: v => FV.isString(v),
+      currency: v => FV.CurrencyCode(v),
+      amount: v => v.isInt(),
+      description: v => FV.isString(v)
     };
   };
 
@@ -90,16 +100,13 @@ export namespace ObjectValidators {
       end_datetime: v => FV.timestamp(v),
       is_visible: v => v.isBoolean(),
       is_quantity_visible: v => v.isBoolean(),
-      dono_pegs: v =>
-        v
-          .optional({ nullable: true })
-          .isArray()
-          // FIXME: array validator doesn't support primitive arrays
-          // .custom(
-          //   array({
-          //     '*': v => v.isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'])
-          //   })
-          // )
+      dono_pegs: v => v.optional({ nullable: true }).isArray()
+      // FIXME: array validator doesn't support primitive arrays
+      // .custom(
+      //   array({
+      //     '*': v => v.isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'])
+      //   })
+      // )
     };
   };
 

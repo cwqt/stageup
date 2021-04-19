@@ -24,7 +24,9 @@ import {
   IHostStripeInfo,
   IHostInvoice,
   JobType,
-  IHostInvoiceCSVJobData
+  IPatronTier,
+  DtoCreatePatreonTier,
+  IHostPatronTier
 } from '@core/interfaces';
 
 import {
@@ -58,6 +60,7 @@ import { log } from '../common/logger';
 import { BackendProviderMap } from '..';
 import { In } from 'typeorm';
 import Queue from '../common/queue';
+import { PatreonTier } from 'libs/shared/src/api/entities/hosts/patreon-tier.entity';
 
 export default class HostController extends BaseController<BackendProviderMap> {
   createHost(): IControllerEndpoint<IHost> {
@@ -759,7 +762,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             amount: 'invoice.amount',
             purchased_at: 'invoice.purchased_at'
           })
-          .innerJoinAndSelect("performance.stream", "stream")
+          .innerJoinAndSelect('performance.stream', 'stream')
           .paginate(i => i.toHostInvoice());
       }
     };
@@ -783,6 +786,50 @@ export default class HostController extends BaseController<BackendProviderMap> {
             email_address: h.email_address
           }
         });
+      }
+    };
+  }
+
+  createPatreonTier(): IControllerEndpoint<IHostPatronTier> {
+    return {
+      validators: [body<DtoCreatePatreonTier>(Validators.Objects.DtoCreatePatreonTier())],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['patreon_tiers'] }));
+        const tier = new PatreonTier(req.body, host);
+
+        await this.ORM.transaction(async txc => {
+          await txc.save(tier);
+          host.patreon_tiers.push(tier);
+          await txc.save(host);
+        });
+
+        return tier.toHost();
+      }
+    };
+  }
+
+  readPatreonTiers(): IControllerEndpoint<Array<IHostPatronTier | IPatronTier>> {
+    return {
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['patreon_tiers'] }));
+        const [isMemberOfHost] = await AuthStrat.hasHostPermission(HostPermission.Admin, () => host._id)(
+          req,
+          this.providers
+        );
+
+        return isMemberOfHost ? host.patreon_tiers.map(t => t.toHost()) : host.patreon_tiers.map(t => t.toFull());
+      }
+    };
+  }
+
+  deletePatreonTier(): IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const tier = await getCheck(PatreonTier.findOne({ _id: req.params.tid }));
+        await tier.softRemove();
       }
     };
   }

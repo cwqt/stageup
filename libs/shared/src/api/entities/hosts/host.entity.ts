@@ -20,6 +20,7 @@ import { ContactInfo } from '../users/contact-info.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
 import { ErrorHandler } from '../../errors';
 import { Invoice } from '../common/invoice.entity';
+import { PatreonTier } from './patreon-tier.entity';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -41,6 +42,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
 	@OneToMany(() => Invoice, invoice => invoice.host) invoices: Invoice[];
+  @OneToMany(() => PatreonTier, tier => tier.host) patreon_tiers: PatreonTier[];
 
 	@OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
@@ -54,6 +56,7 @@ export class Host extends BaseEntity implements IHostPrivate {
     this.is_onboarded = false;
     this.created_at = timestamp();
     this.members_info = [];
+    this.patreon_tiers = [];
     this.social_info = {
       linkedin_url: null,
       facebook_url: null,

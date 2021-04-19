@@ -4,9 +4,9 @@ import { CurrencyCode, DottedPaths, Primitive } from '@core/interfaces';
 /**
  * @param submit, T => submit handler return type
  */
-export interface IUiForm<T> {
-  fields: { [index: string]: IUiFormField }; // form fields
-  submit: IUiFormSubmit<T>; // what to do on submit
+export interface IUiForm<T, DtoCreate=any> {
+  fields: { [index in keyof DtoCreate]?: IUiFormField }; // form fields
+  submit: IUiFormSubmit<T, DtoCreate>; // what to do on submit
   prefetch?: (mapping?: { [index: string]: Primitive }) => Promise<IUiFormPrefetchData>; //populate form from object
 }
 
@@ -21,6 +21,7 @@ export interface IUiFormField {
     | 'text'
     | 'password'
     | 'textarea'
+    | 'rich-text'
     | 'checkbox'
     | 'select'
     | 'money'
@@ -103,12 +104,12 @@ export type CustomUiFieldValidator = (
   formControls?: { [index: string]: AbstractControl }
 ) => boolean;
 
-export interface IUiFormSubmit<T> {
+export interface IUiFormSubmit<T, K> {
   text: string;
   variant: 'primary' | 'secondary';
   size?: 's' | 'm' | 'l';
   is_hidden?: boolean;
   loading_text?: string;
-  handler: (transformedData: any) => Promise<T>;
-  transformer?: (formData: AbstractControl['value']) => any;
+  handler: (transformedData: K) => Promise<T>;
+  transformer?: (formData: AbstractControl['value']) => K;
 }

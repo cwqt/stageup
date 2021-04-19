@@ -1,0 +1,10 @@
+<div class="flex items-center justify-between">
+  <h1 class="mb-0">Patronage</h1>
+  <ui-button (click)="openCreateTierDialog()" icon="add" kind="primary">Create Patronage Tier</ui-button>
+</div>
+
+<ui-hr></ui-hr>
+
+<div class="grid gap-4 grid-cols-3" *ngIf="!tiers.loading">
+  <app-patron-tier-thumb *ngFor="let tier of tiers.data" [tier]="tier"></app-patron-tier-thumb>
+</div>

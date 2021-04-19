@@ -18,6 +18,8 @@ import { HttpConfigInterceptor } from './_helpers/http.interceptor';
 import { NgxStripeModule } from 'ngx-stripe';
 import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { QuillModule } from 'ngx-quill'
+
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
@@ -100,6 +102,9 @@ import { CreateUpdateTicketComponent } from './routes/host/host-performance/host
 import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
 import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component';
 import { UploadVideoComponent } from './components/upload-video/upload-video.component';
+import { HostPatronageComponent } from './routes/host/host-payments/host-patronage/host-patronage.component';
+import { CreateUpdatePatronTierComponent } from './routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component';
+import { PatronTierThumbComponent } from './routes/host/host-payments/host-patronage/patron-tier-thumb/patron-tier-thumb.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -184,7 +189,10 @@ import { UploadVideoComponent } from './components/upload-video/upload-video.com
     HostOnboardingComponent,
     HostInvoicesComponent,
     HostPerformanceCustomiseComponent,
-    UploadVideoComponent
+    UploadVideoComponent,
+    HostPatronageComponent,
+    CreateUpdatePatronTierComponent,
+    PatronTierThumbComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -205,6 +213,7 @@ import { UploadVideoComponent } from './components/upload-video/upload-video.com
     ClipboardModule,
     NgxPermissionsModule.forRoot(),
     PlyrModule,
+    QuillModule.forRoot(),
     LoggerModule.forRoot({
       serverLoggingUrl: '/api/logs',
       level: NgxLoggerLevel.DEBUG,

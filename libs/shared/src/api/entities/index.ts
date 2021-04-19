@@ -9,6 +9,7 @@ export { HostInvitation } from './hosts/host-invitation.entity';
 export { Onboarding } from './hosts/onboarding.entity';
 export { OnboardingReview } from './hosts/onboarding-review.entity';
 export { UserHostInfo } from './hosts/user-host-info.entity';
+export { PatreonTier } from './hosts/patreon-tier.entity';
 
 export { AccessToken } from './performances/access-token.entity';
 export { Performance } from './performances/performance.entity';

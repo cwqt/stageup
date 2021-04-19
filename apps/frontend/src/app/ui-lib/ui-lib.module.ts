@@ -6,6 +6,7 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { NgxMaskModule } from 'ngx-mask'
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxPopperModule } from "ngx-popper";
+import { QuillModule } from 'ngx-quill'
 
 
 import { ButtonComponent } from "./button/button.component";
@@ -70,7 +71,8 @@ const ExportedUiComponents = [
     HttpClientModule,
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    QuillModule.forRoot(),
   ],
   exports: ExportedUiComponents,
   providers: [],

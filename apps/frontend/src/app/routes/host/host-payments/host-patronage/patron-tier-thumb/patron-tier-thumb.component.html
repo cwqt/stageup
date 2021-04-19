@@ -1,0 +1,25 @@
+<div class="patreon-thumb rounded shadow overflow-hidden bg-white relative w-full h-full flex flex-col">
+  <div class="absolute w-full" *ngIf="isHostPatronTier">
+    <div class="flex m-2 justify-between items-center bg-white rounded p-2 shadow">
+      <p class="mb-0">Total patrons: {{ tier["total_patrons"] }}</p>
+      <mat-slide-toggle>Visible</mat-slide-toggle>
+    </div>
+  </div>
+
+  <img src="/assets/performance-placeholder.jpeg" class="w-full h-40 object-cover">
+
+  <p class="text-center pt-2 text-lg"><b>{{ tier.name }}</b></p>
+
+  <h2 class="text-center mb-2">{{ tier.amount | currencyPipe: tier.currency }}</h2>
+  <h5 class="text-center mb-0">PER MONTH</h5>
+
+  <ui-hr class="-mb-4 -mt-1"></ui-hr>
+
+  <quill-view [content]="tier.description" format="object" theme="snow"></quill-view>
+
+  <div class="flex items-center justify-between m-2 space-x-2 mt-auto">
+    <ui-button kind="primary" *ngIf="!isHostPatronTier">Select</ui-button>
+    <ui-button kind="secondary"*ngIf="isHostPatronTier">Edit</ui-button>
+    <ui-button kind="danger" *ngIf="isHostPatronTier">Delete</ui-button>
+  </div>
+</div>
