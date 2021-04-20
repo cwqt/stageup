@@ -1,13 +1,12 @@
-import { Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { capitalize, CurrencyCode, DtoCreatePatreonTier, DtoCreateTicket, IPatronTier, ITicket, ITicketStub } from '@core/interfaces';
+import { capitalize, CurrencyCode, DtoCreatePatreonTier, IPatronTier } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
-import { FormComponent } from 'apps/frontend/src/app/ui-lib/form/form.component';
-import { IUiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
+import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 
 @Component({
@@ -16,12 +15,11 @@ import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib
   styleUrls: ['./create-update-patron-tier.component.scss']
 })
 export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions {
-  @ViewChild('form') form: FormComponent;
-  submit: EventEmitter<ITicketStub> = new EventEmitter();
+  submit: EventEmitter<IPatronTier> = new EventEmitter();
   cancel: EventEmitter<void> = new EventEmitter();
   buttons: IUiDialogOptions['buttons'] = [];
 
-  tierForm: IUiForm<IPatronTier, DtoCreatePatreonTier>;
+  tierForm: UiForm<IPatronTier, DtoCreatePatreonTier>;
   tier: ICacheable<IPatronTier> = createICacheable();
 
   constructor(
@@ -33,88 +31,57 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
   ) {}
 
   ngOnInit(): void {
-    this.tierForm = {
-      // TODO: handle updating the tier
-      // prefetch: async () => {
-      //   if (this.data.operation == 'update') {
-      //     const data = await this.performanceService.readTicket(
-      //       this.baseAppService.getParam(RouteParam.PerformanceId),
-      //       this.data.ticketId
-      //     );
-
-      //     return {
-      //       fields:
-      //     };
-      //   }
-      // },
+    this.tierForm = new UiForm({
       fields: {
-        name: {
-          type: 'text',
+        name: UiField.Text({
           label: 'Tier title',
           validators: [{ type: 'required' }]
-        },
-        description: {
-          type: 'rich-text',
+        }),
+        description: UiField.Richtext({
           label: 'Description',
           validators: [{ type: 'required' }]
-        },
-        amount: {
-          type: 'number',
+        }),
+        amount: UiField.Number({
           label: 'Price',
           disabled: false,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 100 }]
-        }
-      },
-      submit: {
-        is_hidden: true,
-        text: capitalize(this.data.operation),
-        variant: 'primary',
-        handler: async v => this.hostService.createPatreonTier(this.hostService.hostId, v),
-        // TODO: handle updating tier
-        // this.data.operation == 'create'
-        //   ? this.hostService.createPatreonTier(this.baseAppService.getParam(RouteParam.PerformanceId), v)
-        //   : this.hostService.updateTicket(
-        //       this.baseAppService.getParam(RouteParam.PerformanceId),
-        //       this.data.tier._id,
-        //       v
-        //     ),
-        transformer: v => (console.log(v), {
-          name: v.name,
-          currency: CurrencyCode.GBP,
-          amount: v.amount * 100, // TODO: support more than pence
-          description: JSON.parse(v.description).ops
         })
+      },
+      resolvers: {
+        output: async v => this.hostService.createPatreonTier(this.hostService.hostId, this.transform(v))
+      },
+      handlers: {
+        success: async tier => {
+          this.toastService.emit(`${capitalize(this.data.operation)}d patreon tier: ${tier.name}!`);
+          this.submit.emit(tier);
+          this.ref.close(tier);
+        },
+        failure: async () => this.ref.close()
       }
-    };
+    });
 
     this.buttons = [
-      {
-        text: 'Cancel',
+      new UiDialogButton({
+        label: 'Cancel',
         kind: ThemeKind.Secondary,
         disabled: false,
         callback: () => this.ref.close()
-      },
-      {
-        text: capitalize(this.data.operation),
+      }),
+      new UiDialogButton({
+        label: capitalize(this.data.operation),
         kind: ThemeKind.Primary,
         disabled: true,
-        callback: () => this.form.onSubmit()
-      }
+        callback: () => this.tierForm.submit()
+      }).attach(this.tierForm)
     ];
   }
 
-  handleFormSuccess(event: ITicket) {
-    this.toastService.emit(`${capitalize(this.data.operation)}d patreon tier: ${event.name}!`);
-    this.submit.emit(event);
-    this.ref.close(event);
-  }
-
-  handleFormFailure() {
-    this.ref.close(null);
-  }
-
-  handleFormChange(event: FormGroup) {
-
-    this.buttons[1].disabled = !event.valid;
+  transform(v): DtoCreatePatreonTier {
+    return {
+      name: v.name,
+      currency: CurrencyCode.GBP,
+      amount: v.amount * 100, // TODO: support more than pence
+      description: JSON.parse(v.description).ops
+    };
   }
 }

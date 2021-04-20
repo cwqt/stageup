@@ -1,13 +1,1 @@
-<ui-form-body *ngIf="shouldBeVisible" [fg]="formGroup" [fields]="form.fields"></ui-form-body>
-
-<div class="ui-form" [class.visible]="shouldBeVisible">
-  <ui-button type="submit"
-    [class.hidden]="form.submit.is_hidden"
-    [disabled]="cacheable.loading"
-    [kind]="form.submit.variant"
-    (click)="onSubmit()">
-    {{ form.submit.text }}
-  </ui-button>
-
-  <span *ngIf="cacheable.error">{{ cacheable.error }}</span>
-</div>
+<ui-form-body [fg]="form.group" [fields]="form.fields"></ui-form-body>

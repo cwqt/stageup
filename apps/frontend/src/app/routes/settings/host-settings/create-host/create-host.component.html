@@ -6,22 +6,24 @@
     You will have to go through a further onboarding step before being to make your content public to StageUp users.
   </p>
 
-  <ui-form *ngIf="showForm"
-    (onSuccess)="handleFormSuccess($event)"
-    (onFailure)="handleFormFailure($event)"
-    [cacheable]="hostData"
-    [form]="hostForm">
-  </ui-form>
+  <ui-form [form]="hostForm"></ui-form>
 
   <ui-admonition class="pb-2"
-    *ngIf="!showForm && hostData.error"
+    *ngIf="hostForm.cache.error"
     type="failure"
     title="Error when sending form">
-    {{ hostData.error }}
+    {{ hostForm.cache.error }}
   </ui-admonition>
 
-  <br>
-  <p class="pb-0 opacity-50">
+  <ui-button
+    kind="primary"
+    (click)="hostForm.submit()"
+    [disabled]="hostForm.group.disabled"
+    [loading]="hostForm.loading | async">
+    Create Host
+  </ui-button>
+
+  <p class="pb-0 opacity-50 mt-2">
     <small>
       By creating a company account, you agree to the company Terms of Service. For more information about StageUp's privacy practices, see the StageUp Privacy Statement.
     </small>

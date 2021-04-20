@@ -1,9 +1,3 @@
 <ui-dialog [title]="(data.operation | titlecase) + ' patron tier'" [buttons]="buttons" [loading]="tier.loading">
-  <ui-form #form
-    (onChange)="handleFormChange($event)"
-    (onSuccess)="handleFormSuccess($event)"
-    (onFailure)="handleFormFailure()"
-    [form]="tierForm"
-    [cacheable]="tier">
-  </ui-form>
+  <ui-form [form]="tierForm"></ui-form>
 </ui-dialog>

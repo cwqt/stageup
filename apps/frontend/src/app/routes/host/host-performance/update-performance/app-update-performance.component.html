@@ -1,4 +1,7 @@
-<ui-form (onSuccess)="handleSuccessfulUpdate($event)"
-  [form]="performanceDetailsForm"
-  [cacheable]="performanceUpdateCacheable">
-</ui-form>
+<ui-form [form]="performanceDetailsForm"></ui-form>
+<ui-button kind="primary"
+  (click)="performanceDetailsForm.submit()"
+  [loading]="performanceDetailsForm.loading | async"
+  [disabled]="performanceDetailsForm.group.disabled">
+  Update
+</ui-button>

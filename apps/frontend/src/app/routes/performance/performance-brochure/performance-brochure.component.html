@@ -48,10 +48,9 @@
 
             <ui-hr></ui-hr>
 
-						<ui-form class="w-1/2 place-self-center" #donoPegForm *ngIf="selectedTicket.type == 'dono'"
-							[form]="donoPegSelectForm"
-							[cacheable]="donoPegCacheable"
-              (onChange)="updatePayButtonWithDono($event)" >
+						<ui-form class="w-1/2 place-self-center"
+              *ngIf="selectedTicket.type == 'dono'"
+							[form]="donoPegSelectForm">
 						</ui-form>
 
             <app-payment-checkout #card class="flex justify-center"
@@ -73,8 +72,8 @@
               icon="purchase"
               [loading]="card?.loading"
               (click)="card.confirmPayment(selectedTicket, {
-                selected_dono_peg: donoPegForm?.formGroup?.value?.pegs,
-                allow_any_amount: donoPegForm?.formGroup?.value?.allow_any_amount
+                selected_dono_peg: donoPegSelectForm?.group?.value?.pegs,
+                allow_any_amount: donoPegSelectForm?.group?.value?.allow_any_amount
               })">
                 <span *ngIf="selectedTicket.type == 'paid'">
                   Pay {{ selectedTicket.amount | currencyPipe: selectedTicket.currency }}

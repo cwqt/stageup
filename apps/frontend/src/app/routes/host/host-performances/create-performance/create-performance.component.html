@@ -1,9 +1,3 @@
-<ui-dialog title="Create Performance" [buttons]="buttons" [loading]="performance.loading">
-  <ui-form #form
-    (onChange)="handleFormChange($event)"
-    (onSuccess)="handleCreatePerformanceSuccess($event)"
-    (onFailure)="handleCreatePerformanceFailed()"
-    [form]="createPerformanceForm"
-    [cacheable]="performance">
-  </ui-form>
+<ui-dialog title="Create Performance" [buttons]="buttons" [loading]="form.cache.loading">
+  <ui-form [form]="form"></ui-form>
 </ui-dialog>

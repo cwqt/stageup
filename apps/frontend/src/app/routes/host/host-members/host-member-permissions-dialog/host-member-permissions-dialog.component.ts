@@ -3,8 +3,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IUiDialogOptions, ThemeKind } from '../../../../ui-lib/ui-lib.interfaces';
 import { ToastService } from '../../../../services/toast.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { IUiFieldSelectOptions } from '../../../../ui-lib/form/form.interfaces';
 import { IUserHostInfo, HostPermission } from '@core/interfaces';
+import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
+import { IUiFieldTypeOptions, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 
 @Component({
   selector: 'app-host-member-permissions-dialog',
@@ -15,26 +16,9 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
   submit: EventEmitter<string> = new EventEmitter();
   cancel: EventEmitter<string> = new EventEmitter();
 
+  buttons: IUiDialogOptions['buttons'];
   selectedPermission: HostPermission;
-  selectFieldOptions: IUiFieldSelectOptions;
-
-  buttons: IUiDialogOptions['buttons'] = [
-    {
-      text: 'Cancel',
-      kind: ThemeKind.Secondary,
-      callback: () => this.cancel.emit()
-    },
-    {
-      text: 'Update',
-      disabled: true,
-      kind: ThemeKind.Primary,
-      callback: () =>
-        this.hostService
-          .updateMember(this.data.hostId, this.data.uhi.user._id, this.selectedPermission)
-          .then(() => this.submit.emit(this.selectedPermission))
-          .catch(error => this.toastService.emit(error, ThemeKind.Danger))
-    }
-  ];
+  form:UiForm;
 
   constructor(
     private toastService: ToastService,
@@ -54,14 +38,10 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
       [HostPermission.Pending]: 'Pending'
     } as const;
 
-    const options: IUiFieldSelectOptions = {
-      multi: false,
-      search: false,
-      values: new Map<HostPermission, { label: string; disabled?: boolean }>()
-    };
+    const values = new Map<HostPermission, { label: string; disabled?: boolean }>()
 
     // Get a copy of the current option & set it to disabled - since you can't re-update to same permission
-    options.values.set(this.data.uhi.permissions, { label: allOptions[this.data.uhi.permissions], disabled: true });
+    values.set(this.data.uhi.permissions, { label: allOptions[this.data.uhi.permissions], disabled: true });
 
     // Remove all non-chooseable options
     Object.keys(allOptions)
@@ -73,18 +53,42 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
           permission !== this.data.uhi.permissions // or the current users permission
         ); // Put initial value back into options list
       })
-      .forEach(permission => options.values.set(permission, { label: allOptions[permission] }));
+      .forEach((permission:HostPermission) => values.set(permission, { label: allOptions[permission] }));
 
-    // Set ui-select options
-    this.selectFieldOptions = options;
-  }
+    this.form = new UiForm({
+      fields: {
+        permission: UiField.Select({
+            label: "Select Permission",
+            initial: this.data.uhi.permissions,
+            validators: [
+              { type: "custom", value: self => self.value != this.data.uhi.permissions }
+            ],
+            multi_select: false,
+            has_search: false,
+            values: values,
+        })
+      },
+      resolvers: {
+        output: async v => this.hostService.updateMember(this.data.hostId, this.data.uhi.user._id, v.permission)
+      },
+      handlers: {
+        success: async () => this.submit.emit(this.selectedPermission),
+        failure: async err => this.toastService.emit(err, ThemeKind.Danger),
+      }
+    })
 
-  onSelectionChange(event: HostPermission) {
-    this.selectedPermission = event;
-    if (event !== this.data.uhi.permissions) {
-      this.buttons[1].disabled = false;
-    } else {
-      this.buttons[1].disabled = true;
-    }
+    this.buttons = [
+      new UiDialogButton({
+        label: 'Cancel',
+        kind: ThemeKind.Secondary,
+        callback: () => this.cancel.emit()
+      }),
+      new UiDialogButton({
+        label: 'Update',
+        kind: ThemeKind.Primary,
+        disabled: true,
+        callback: () => this.form.submit()
+      }).attach(this.form, true)
+    ];
   }
 }

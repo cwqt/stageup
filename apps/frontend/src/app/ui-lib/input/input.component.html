@@ -1,4 +1,4 @@
-<div class="ui-input-wrapper" [class.ui-input-wrapper--has-icon]="icon">
+<div class="ui-input-wrapper">
   <!-- Input -->
   <div
     (clickOutside)="togglePasswordVisibility(false, $event); focused = false"
@@ -6,30 +6,28 @@
     class="form-field"
     [class.form-field--is-active]="focused"
     [class.form-field--is-filled]="value !== ''"
-    [class.form-field--is-small]="!label"
+    [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError"
-    [class.form-field--is-disabled]="disabled"
-    *ngIf="type == 'number' || type == 'text' || type == 'password' || type == 'phone'">
+    [class.form-field--is-disabled]="control.disabled"
+    *ngIf="data.type == 'number' || data.type == 'text' || data.type == 'password' || data.type == 'phone'">
     <div class="form-field__control">
-      <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
-      <label *ngIf="label"
-        [for]="formControlName || ''"
-        class="form-field__label">{{ label }}<span>{{ required ? "*" : ""}}</span></label>
+      <label *ngIf="data.options.label"
+        class="form-field__label">{{ data.options.label }}
+        <!-- <span>{{ required ? "*" : ""}}</span> -->
+      </label>
       <input
         #input
         [(ngModel)]="value"
         [validation]="true"
-        (ngModelChange)="change.emit($event)"
         (blur)="onTouchedCallback()"
         (focus)="onFocusCallback()"
-        [disabled]="disabled"
-        [placeholder]="placeholder"
-        [type]="type == 'password' ? (passwordVisible ? 'text' : 'password') : (type == 'phone' ? 'tel' : type)"
+        [disabled]="control.disabled"
+        [placeholder]="data.options.placeholder || ''"
+        [type]="data.type == 'password' ? (meta.password.is_visible ? 'text' : 'password') : (data.type == 'phone' ? 'tel' : data.type)"
         [showMaskTyped]="(value !== '' || focused) ? true : false"
-        [mask]="options?.mask ? options.mask.value : (type == 'phone' ? '(0000) 000-000' : '')"
-        [suffix]="(value !== '' || focused) ? (options?.mask ? options.mask.suffix : '') : ''"
-        [prefix]="(value !== '' || focused) ? (options?.mask ? options.mask.prefix : (type == 'phone' ? '+44' : '')) : ''"
-        [required]="required"
+        [mask]="data.options?.mask ? data.options.mask.value : (data.type == 'phone' ? '(0000) 000-000' : '')"
+        [suffix]="(value !== '' || focused) ? (data.options?.mask ? data.options.mask.suffix : '') : ''"
+        [prefix]="(value !== '' || focused) ? (data.options?.mask ? data.options.mask.prefix : (data.type == 'phone' ? '+44' : '')) : ''"
         tabindex="0"
         autocomplete="off"
         class="form-field__input" />
@@ -47,22 +45,20 @@
     class="form-field"
     [class.form-field--is-active]="focused"
     [class.form-field--is-filled]="value !== ''"
-    [class.form-field--is-small]="!label"
+    [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError"
-    *ngIf="type == 'textarea'">
+    *ngIf="data.type == 'textarea'">
     <div class="form-field__control">
-      <ui-icon *ngIf="icon">{{ icon }}</ui-icon>
-      <label *ngIf="label"
-        [for]="formControlName || ''"
-        class="form-field__label">{{ label }}</label>
+      <label *ngIf="data.options.label"
+        class="form-field__label">{{ data.options.label }}</label>
       <textarea
         #textarea
+        [rows]="data.options.rows"
         [(ngModel)]="value"
         (blur)="onTouchedCallback()"
         (focus)="onFocusCallback()"
-        [id]="formControlName || ''"
-        [disabled]="disabled"
-        [placeholder]="placeholder"
+        [disabled]="control.disabled"
+        [placeholder]="data.options.placeholder || ''"
         tabindex="0"
         autocomplete="off"
         class="form-field__textarea"></textarea>
@@ -70,8 +66,8 @@
   </div>
 
   <!-- Rich Text using ngx-quill -->
-  <div class="ui-input--rich-text" *ngIf="type == 'rich-text'">
-    <span>{{ label }} </span>
+  <div class="ui-input--rich-text" *ngIf="data.type == 'rich-text'">
+    <span>{{ data.options.label }}</span>
     <quill-editor
       format="json"
       [modules]="richTextModules"
@@ -96,29 +92,28 @@
 
   <!-- Checkboxes -->
   <mat-form-field
-    *ngIf="type == 'checkbox'"
+    *ngIf="data.type == 'checkbox'"
     class="ui-input"
     appearance="fill"
     [class.errored]="showError"
-    [class.dark]="kind == 'secondary'"
-    [class.small]="!label"
-    [class.checkbox]="type == 'checkbox'">
-    <mat-label *ngIf="label && type !== 'checkbox'">{{ label }}</mat-label>
-    <mat-checkbox [disabled]="disabled" matInput *ngIf="type == 'checkbox'" [(ngModel)]="value">{{label}}</mat-checkbox>
+    [class.small]="!data.options.label"
+    [class.checkbox]="data.type == 'checkbox'">
+    <mat-label *ngIf="data.options.label && data.type !== 'checkbox'">{{ data.options.label }}</mat-label>
+    <mat-checkbox [disabled]="control.disabled" matInput *ngIf="data.type == 'checkbox'" [(ngModel)]="value">{{ data.options.label }}</mat-checkbox>
     <!-- stop formcontrolname throwing errors -->
     <input matInput placeholder="Input" style="display: none" >
   </mat-form-field>
 
   <!-- Select with search -->
-  <mat-form-field *ngIf="type == 'select'" appearance="fill">
-    <mat-label>{{ label }}</mat-label>
+  <mat-form-field *ngIf="data.type == 'select'" appearance="fill">
+    <mat-label>{{ data.options.label }}</mat-label>
     <mat-select #singleSelect
-      [disabled]="disabled"
+      [disabled]="control.disabled"
       (blur)="onTouchedCallback()"
       (focus)="onFocusCallback()"
       [(ngModel)]="value"
       disableOptionCentering>
-      <mat-option *ngIf="options.search">
+      <mat-option *ngIf="data.options.search">
         <ngx-mat-select-search ngModel
           (ngModelChange)="filterSelectionItems($event)"
           placeholderLabel="Search"
@@ -135,15 +130,19 @@
   </mat-form-field>
 
   <!-- Date picker, single -->
-  <mat-form-field appearance="fill" *ngIf="type == 'date' && !options?.is_date_range">
-    <mat-label>{{ label || 'Choose a date' }}</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="value">
+  <mat-form-field appearance="fill" *ngIf="data.type == 'date' && !data.options?.is_date_range">
+    <mat-label>{{ data.options.label || 'Choose a date' }}</mat-label>
+    <input matInput
+      [(ngModel)]="value"
+      [matDatepicker]="picker"
+      [min]="data.options.min_date"
+      [max]="data.options.max_date">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
 	<!-- Date picker, range -->
-	<mat-form-field appearance="fill" *ngIf="type == 'date' && options?.is_date_range">
+	<mat-form-field appearance="fill" *ngIf="data.type == 'date' && data.options?.is_date_range">
 		<mat-label>Enter a date range</mat-label>
 		<mat-date-range-input [rangePicker]="picker" #pickerInput>
 			<input matStartDate placeholder="Start date">
@@ -154,8 +153,8 @@
 	</mat-form-field>
 
   <!-- Time picker -->
-  <mat-form-field *ngIf="type == 'time'" appearance="fill">
-    <mat-label>{{ label }}</mat-label>
+  <mat-form-field *ngIf="data.type == 'time'" appearance="fill">
+    <mat-label>{{ data.options.label }}</mat-label>
     <mat-select #singleSelect
       (blur)="onTouchedCallback()"
       (focus)="onFocusCallback()"
@@ -168,12 +167,12 @@
   </mat-form-field>
 
   <!-- Radio select -->
-  <mat-form-field class="form-field__radio" *ngIf="type == 'radio'" appearance="none">
-    <label [for]="formControlName">{{ label }}</label>
+  <mat-form-field class="form-field__radio" *ngIf="data.type == 'radio'" appearance="none">
+    <label>{{ data.options.label }}</label>
     <mat-radio-group
-      [disabled]="disabled"
+      [disabled]="control.disabled"
       [(ngModel)]="value">
-      <mat-radio-button *ngFor="let item of options.values | keyvalue: originalOrder"
+      <mat-radio-button *ngFor="let item of data.options.values | keyvalue: originalOrder"
         [disabled]="item.value.disabled"
         [value]="item.key">
         {{ item.value.label }}
@@ -184,7 +183,7 @@
   </mat-form-field>
 
   <!-- Hint message -->
-  <span *ngIf="hint" class="form-field__hint">{{ hint }}</span>
+  <span *ngIf="data.options.hint" class="form-field__hint">{{ data.options.hint }}</span>
 
   <!-- Form errors -->
   <div *ngIf="showError" class="form-field__errors">

@@ -4,6 +4,7 @@ import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import fd from 'form-data';
 import { ToastService } from '../../../services/toast.service';
 import { HostService } from '../../../services/host.service';
+import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 
 @Component({
   selector: 'app-change-image',
@@ -30,13 +31,13 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   hostId: string;
 
   buttons: IUiDialogOptions['buttons'] = [
-    {
-      text: 'Cancel',
+    new UiDialogButton({
+      label: 'Cancel',
       kind: ThemeKind.Secondary,
       callback: () => this.cancel.emit()
-    },
-    {
-      text: 'Upload',
+    }),
+    new UiDialogButton({
+      label: 'Upload',
       disabled: true,
       kind: ThemeKind.Primary,
       loading: false,
@@ -44,7 +45,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
         this.handleUploadImage()
           .then(url => this.submit.emit(url))
           .catch(error => this.toastService.emit(error, ThemeKind.Danger))
-    }
+    })
   ];
 
   constructor(
@@ -85,7 +86,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   }
 
   public onAvatarFileSelected() {
-    this.uploadButton.text = 'Upload';
+    this.uploadButton.label = 'Upload';
 
     // Set the preview image to the uploaded file
     const inputElement = this.inputElement.nativeElement;

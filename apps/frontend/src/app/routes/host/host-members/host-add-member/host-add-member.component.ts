@@ -5,6 +5,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { IHostMemberChangeRequest, IUserHostInfo } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 
 export interface Fruit {
   name: string;
@@ -21,18 +22,18 @@ export class HostAddMemberComponent implements OnInit, IUiDialogOptions {
 
   constructor(private hostService: HostService) {}
   buttons = [
-    {
-      text: 'Cancel',
+    new UiDialogButton({
+      label: 'Cancel',
       kind: ThemeKind.Secondary,
       callback: () => this.cancel.emit()
-    },
-    {
-      text: 'Send Requests',
+    }),
+    new UiDialogButton({
+      label: 'Send Requests',
       kind: ThemeKind.Primary,
       loading: false,
       disabled: true,
       callback: () => this.submitMembershipRequests()
-    }
+    })
   ];
 
   addedMembers: ICacheable<IUserHostInfo[]> = createICacheable([]);

@@ -14,6 +14,7 @@ import {
   IHostStripeInfo,
   IHostInvoice,
   IHostInvoiceCSVJobData,
+  IHostPrivate,
   DtoCreatePatreonTier,
   IPatronTier
 } from '@core/interfaces';
@@ -59,7 +60,7 @@ export class HostService {
       .toPromise();
   }
 
-  createHost(data: Pick<IHost, 'name' | 'username'>): Promise<IHost> {
+  createHost(data: Pick<IHostPrivate, 'name' | 'username' | "email_address">): Promise<IHost> {
     return this.http
       .post<IHost>('/api/hosts', data)
       .pipe(

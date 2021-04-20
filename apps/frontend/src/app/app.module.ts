@@ -31,6 +31,7 @@ import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 import { DonoPegPipe } from './_pipes/dono-peg.pipe';
 import { PaymentStatusPipe } from './_pipes/payment-status.pipe';
 import { TicketTypePipe } from './_pipes/ticket-type.pipe';
+import { environment } from '../environments/environment';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
@@ -85,7 +86,6 @@ import { UserTypeClarificationComponent } from './routes/landing/user-type-clari
 import { PaymentSuccessComponent } from './routes/payments/payment-success/payment-success.component';
 import { PaymentCancelComponent } from './routes/payments/payment-cancel/payment-cancel.component';
 import { PaymentCheckoutComponent } from './routes/payments/payment-checkout/payment-checkout.component';
-import { environment } from '../environments/environment';
 import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
@@ -222,7 +222,7 @@ import { PatronTierThumbComponent } from './routes/host/host-payments/host-patro
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],
-  entryComponents: [DeleteConfirmationDialogComponent],
+  // entryComponents: [DeleteConfirmationDialogComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

@@ -141,13 +141,13 @@ const LOGGED_IN_ROUTES: Routes = [
   { path: `admin`, component: AdminPanelComponent },
   { path: `admin/onboardings`, component: AdminOnboardingListComponent },
   { path: `admin/onboardings/:${RP.HostId}`, component: AdminOnboardingViewComponent },
-  { path: `ui`, component: TestbedComponent }
 ];
 
 @NgModule({
   imports: [
     RouterModule.forRoot(
       [
+        { path: `ui`, component: TestbedComponent },
         {
           path: 'host',
           component: HostLandingComponent,

@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { DtoPerformance, IHost, IPerformanceHostInfo, Visibility } from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
-import { IUiFieldSelectOptions } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { IUiFormField, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { PerformanceWatchComponent } from '../../../performance-watch/performance-watch.component';
 
 @Component({
   selector: 'app-host-performance-details',
@@ -18,14 +19,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
   host: IHost;
 
   copyMessage: string = 'Copy';
-  visibilityOptions: IUiFieldSelectOptions = {
-    multi: false,
-    search: false,
-    values: new Map([
-      [Visibility.Private, { label: 'Private' }],
-      [Visibility.Public, { label: 'Public' }]
-    ])
-  };
+  visibilityInput:IUiFormField<"select">;
 
   get performanceData() {
     return this.performance.data?.data;
@@ -34,24 +28,49 @@ export class HostPerformanceDetailsComponent implements OnInit {
     return this.performanceHostInfo.data;
   }
 
+  visibilityForm:UiForm;
+
   constructor(private performanceService: PerformanceService, private clipboard: Clipboard) {}
 
-  ngOnInit(): void {}
-
-  updateVisibility(value: Visibility) {
-    cachize(
-      this.performanceService.updateVisibility(this.performanceId, value),
-      this.performance,
-      d => {
-        // updateVisibility only returns an IPerformance but we want to keep having an IE<IPerformance, IPerformanceHostInfo>
-        return {
-          data: d,
-          __client_data: this.performance.data.__client_data
-        };
+  ngOnInit(): void {
+    this.visibilityForm = new UiForm({
+      fields: {
+        visibility: UiField.Select({
+          label: "Performance Visibility",
+          multi_select: false,
+          has_search: false,
+          initial: this.performanceData.visibility,
+          disabled: !this.host.is_onboarded,
+          values: new Map([
+            [Visibility.Private, { label: 'Private' }],
+            [Visibility.Public, { label: 'Public' }]
+          ])
+        })
       },
-      false
-    );
+      resolvers: {
+        output: v => this.performanceService.updateVisibility(this.performanceId, v.visibility)
+      },
+      handlers: {
+        changes: async () => this.visibilityForm.submit()
+      }
+    })
   }
+
+
+  // updateVisibility(value: Visibility) {
+  //   cachize(
+  //     this.performanceService.updateVisibility(this.performanceId, value),
+  //     this.performance,
+  //     d => {
+  //       // updateVisibility only returns an IPerformance but we want to keep having an IE<IPerformance, IPerformanceHostInfo>
+  //       return {
+  //         data: d,
+  //         __client_data: this.performance.data.__client_data
+  //       };
+  //     },
+  //     false
+  //   );
+  // }
 
   readStreamingKey() {
     return cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);

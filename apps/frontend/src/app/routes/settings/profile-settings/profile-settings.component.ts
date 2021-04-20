@@ -3,7 +3,7 @@ import { IMyself, IUser, IUserStub } from '@core/interfaces';
 import { UserService } from 'apps/frontend/src/app/services/user.service';
 import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { MyselfService } from '../../../services/myself.service';
-import { IUiForm } from '../../../ui-lib/form/form.interfaces';
+import { IUiForm, UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
 import isEmail from 'validator/lib/isEmail';
 import { ChangeImageComponent } from '../change-image/change-image.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -18,52 +18,11 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 })
 export class ProfileSettingsComponent implements OnInit {
   myself: IMyself;
-  get user() { return this.myself.user }
+  get user() {
+    return this.myself.user;
+  }
 
-  userCacheable: ICacheable<IMyself['user']> = createICacheable();
-  profileDetailsForm: IUiForm<IMyself['user']> = {
-    prefetch: async () => {
-      return {
-        fields: {
-          name: this.user.name,
-          email_address: this.user.email_address,
-          bio: this.user.bio
-        }
-      };
-    },
-    fields: {
-      name: {
-        label: 'Name',
-        type: 'text',
-        hint:
-          'Your name may appear around StageUp where you contribute or are mentioned. You can remove it at any time.',
-        validators: [{ type: 'maxlength', value: 32, message: v => 'Username must be under 32 characters'}]
-      },
-      email_address: {
-        label: 'E-mail address',
-        type: 'text',
-        validators: [
-          { type: 'required' },
-          {
-            type: 'custom',
-            value: v => isEmail(v.value),
-            message: v => 'Must provide a valid e-mail address'
-          },
-        ]
-      },
-      bio: {
-        label: 'Bio',
-        type: 'textarea',
-        validators: [{ type: 'maxlength', value: 512, message: v => 'Bio must be no larger than 512 characters' }]
-      },
-
-    },
-    submit: {
-      text: 'Update profile',
-      variant: 'primary',
-      handler: data => this.userService.updateUser(this.user._id, data)
-    }
-  };
+  profileDetailsForm: UiForm<IMyself['user']>;
 
   constructor(
     private userService: UserService,
@@ -74,17 +33,53 @@ export class ProfileSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.myself = this.myselfService.$myself.getValue();
-  }
-
-  handleSuccessfulUpdate(event: IMyself['user']) {
-    this.myselfService.setUser(event);
+    this.profileDetailsForm = new UiForm({
+      fields: {
+        name: UiField.Text({
+          label: 'Name',
+          hint:
+            'Your name may appear around StageUp where you contribute or are mentioned. You can remove it at any time.',
+          validators: [
+            { type: 'maxlength', value: 32, message: () => 'Username must be under 32 characters' }
+          ]
+        }),
+        email_address: UiField.Text({
+          label: 'E-mail address',
+          validators: [
+            { type: 'required' },
+            {
+              type: 'custom',
+              value: v => isEmail(v.value),
+              message: () => 'Must provide a valid e-mail address'
+            }
+          ]
+        }),
+        bio: UiField.Textarea({
+          label: 'Bio',
+          validators: [{ type: 'maxlength', value: 512, message: () => 'Bio must be no larger than 512 characters' }]
+        })
+      },
+      resolvers: {
+        output: data => this.userService.updateUser(this.user._id, data),
+        input: async () => ({
+          fields: {
+            name: this.user.name,
+            email_address: this.user.email_address,
+            bio: this.user.bio
+          }
+        })
+      },
+      handlers: {
+        success: async v => this.myselfService.setUser({ ...v, avatar: v.avatar || '/assets/avatar-placeholder.png' })
+      }
+    });
   }
 
   openChangeAvatarDialog() {
     this.helperService.showDialog(
       this.dialog.open(ChangeImageComponent, { data: { fileHandler: this.handleUploadHostAvatar.bind(this) } }),
       (event: IUserStub) => {
-        this.user.avatar = event.avatar || "/assets/avatar-placeholder.png";
+        this.user.avatar = event.avatar || '/assets/avatar-placeholder.png';
         this.myselfService.setUser({ ...this.myselfService.$myself.getValue().user, avatar: this.user.avatar });
       }
     );

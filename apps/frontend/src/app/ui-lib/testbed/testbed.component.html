@@ -1,5 +1,5 @@
 <div class="container">
-  <ui-table></ui-table>
+  <!-- <ui-table></ui-table> -->
 
 
   <h1 class="text-5xl">UI & Component Library</h1>
@@ -9,7 +9,9 @@
   <ui-hr></ui-hr>
 
   <h1>Form</h1>
-  <ui-form [form]="form" [cacheable]="cacheable"></ui-form>
+  <ui-form [form]="form"></ui-form>
+
+  <ui-button (click)="form.submit()">Submit</ui-button>
 
   <ui-hr></ui-hr>
 
@@ -111,7 +113,7 @@
 
   <h1>Inputs</h1>
 
-  <ui-input [(ngModel)]="textString" icon="favorite" type="text" size="s" placeholder="Small input"></ui-input>
+  <!-- <ui-input [(ngModel)]="textString" icon="favorite" type="text" size="s" placeholder="Small input"></ui-input>
 
   <ui-input [(ngModel)]="textString" icon="favorite--filled" type="password" label="Name please"></ui-input>
   <ui-input [(ngModel)]="numberString" type="number" label="Age please"></ui-input>
@@ -120,7 +122,7 @@
   <ui-input [(ngModel)]="numberString" type="number"></ui-input>
 
   <ui-input [(ngModel)]="textString" type="textarea" label="Text please"></ui-input>
-  <ui-input [(ngModel)]="boolString" type="checkbox" label="Text please"></ui-input>
+  <ui-input [(ngModel)]="boolString" type="checkbox" label="Text please"></ui-input> -->
 
   {{textString}}, {{numberString}}, {{boolString}}
 

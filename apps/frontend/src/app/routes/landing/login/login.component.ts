@@ -5,14 +5,15 @@ import { ICacheable, createICacheable } from 'apps/frontend/src/app/app.interfac
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
-import { IUiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { IUiForm, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { environment as env } from 'apps/frontend/src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { FormGroup } from '@angular/forms';
 import { FormComponent } from '../../../ui-lib/form/form.component';
-import { HelperService } from "../../../services/helper.service";
+import { HelperService } from '../../../services/helper.service';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 
 @Component({
   selector: 'app-login',
@@ -20,9 +21,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, IUiDialogOptions {
-  @ViewChild('form') form: FormComponent;
-
-  loginForm: IUiForm<IUser>;
+  loginForm: UiForm<IUser>;
   user: ICacheable<IUser> = {
     data: null,
     error: '',
@@ -36,63 +35,51 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
-  buttons = [
-    {
-      text: 'Login',
-      kind: ThemeKind.Primary,
-      callback: () => this.authService.login(this.form.getValue()).then(u => this.onLoginSuccess(u)),
-      disabled: true
-    }
-  ];
+  buttons: UiDialogButton[];
 
   constructor(
     private baseAppService: BaseAppService,
     private myselfService: MyselfService,
     private authService: AuthenticationService,
-    private dialog: MatDialog,
-
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.loginForm = {
+    this.loginForm = new UiForm({
       fields: {
-        email_address: {
-          type: 'text',
+        email_address: UiField.Text({
           label: 'E-mail address',
           validators: [{ type: 'required' }, { type: 'email' }]
-        },
-        password: {
-          type: 'password',
+        }),
+        password: UiField.Password({
           label: 'Password',
           validators: [{ type: 'required' }]
-        }
+        })
       },
-      submit: {
-        is_hidden: true,
-        text: 'Sign in',
-        variant: 'primary',
-        handler: async d => this.authService.login(d)
+      resolvers: {
+        output: async v =>
+          this.authService.login({
+            email_address: v.email_address,
+            password: v.password
+          })
+      },
+      handlers: {
+        success: async () => {
+          // get user, host & host info on login & re-direct according to set preferred landing page
+          this.myselfService.getMyself().then(myself => {
+            this.baseAppService.navigateTo(myself.host_info?.prefers_dashboard_landing ? '/dashboard' : '/');
+            this.dialog.closeAll();
+          });
+        }
       }
-    };
-  }
-
-  async adminFastLogin() {
-    const user = await this.authService.login({
-      email_address: 'siteadmin@cass.si',
-      password: 'siteadmin'
     });
 
-    this.onLoginSuccess(user);
-  }
-
-  onLoginSuccess(user: IUser) {
-    // get user, host & host info on login & re-direct according to set preferred landing page
-    this.myselfService.getMyself().then(myself => {
-      this.baseAppService.navigateTo(myself.host_info?.prefers_dashboard_landing 
-                                     ? '/dashboard'
-                                     : '/');
-      this.dialog.closeAll();
-    });
+    this.buttons = [
+      new UiDialogButton({
+        label: 'Login',
+        callback: () => this.loginForm.submit()
+      }).attach(this.loginForm)
+    ];
   }
 
   openRegister() {
@@ -100,11 +87,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
     this.baseAppService.navigateTo(`/register`);
   }
 
-  handleFormChange(event: FormGroup) {
-    this.buttons[0].disabled = !event.valid;
-  }
-
   openPasswordResetDialog() {
-     this.dialog.open(ForgotPasswordComponent, { disableClose: true })
+    this.dialog.open(ForgotPasswordComponent, { disableClose: true });
   }
 }

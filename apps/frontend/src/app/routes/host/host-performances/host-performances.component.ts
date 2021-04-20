@@ -11,6 +11,7 @@ import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PerformanceService } from '../../../services/performance.service';
+import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 
 @Component({
   selector: 'app-host-performances',
@@ -84,19 +85,19 @@ export class HostPerformancesComponent implements OnInit {
       title: `Delete '${performance.name}'`,
       description: 'Are you sure you want to delete this performance?',
       buttons: [
-        {
-          text: 'Cancel',
+        new UiDialogButton({
+          label: 'Cancel',
           kind: ThemeKind.Secondary,
           callback: r => r.close()
-        },
-        {
-          text: 'Delete',
+        }),
+        new UiDialogButton({
+          label: 'Delete',
           kind: ThemeKind.Primary,
           callback: r => {
             this.performanceService.deletePerformance(performance._id);
             r.close();
           }
-        }
+        })
       ]
     });
   }

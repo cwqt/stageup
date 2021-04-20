@@ -4,11 +4,7 @@
     <ui-button kind="secondary" (click)="openRegister()">Register?</ui-button>
   </div>
 
-  <ui-form #form
-    (onChange)="handleFormChange($event)"
-    (onSuccess)="onLoginSuccess($event)"
-    [cacheable]="user"
-    [form]="loginForm">
+  <ui-form [form]="loginForm">
   </ui-form>
 
   <div class="text-right">

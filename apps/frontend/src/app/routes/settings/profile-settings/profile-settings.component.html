@@ -4,16 +4,18 @@
 
     <div class="profile-picture__container">
       <img [src]="user.avatar" alt="">
-      <ui-button (click)="openChangeAvatarDialog()" kind="accent"><ui-icon size="s">paint-brush--alt</ui-icon>Edit</ui-button>    
+      <ui-button (click)="openChangeAvatarDialog()" kind="accent"><ui-icon size="s">paint-brush--alt</ui-icon>Edit</ui-button>
     </div>
 
     <br>
 
-    <ui-form
-      (onSuccess)="handleSuccessfulUpdate($event)"
-      [form]="profileDetailsForm"
-      [cacheable]="userCacheable">
-    </ui-form>
+    <ui-form [form]="profileDetailsForm"></ui-form>
+    <ui-button kind="primary"
+      (click)="profileDetailsForm.submit()"
+      [disabled]="!profileDetailsForm.group.valid"
+      [loading]="profileDetailsForm.loading | async">
+      Update profile
+    </ui-button>
 
     <h2 class="mt-8">Contact Information</h2>
     <ui-hr></ui-hr>

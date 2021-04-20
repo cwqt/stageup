@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import * as fd from 'form-data';
-import { IUser, IHost, Primitive, IMyself, IUserStub, IPasswordReset } from '@core/interfaces';
+import { IUser, IHost, Primitive, IMyself, IUserStub, IPasswordReset, IUserPrivate } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 import { UserHostInfo } from '@core/shared/api';
 import { VolumeId } from 'aws-sdk/clients/storagegateway';
@@ -28,9 +28,8 @@ export class UserService {
     });
   }
 
-  register(user: Pick<IUser, 'name' | 'username'> & { password: string }): Promise<IMyself["user"]> {
+  register(user: Pick<IUserPrivate, 'username' | "email_address"> & { password: string }): Promise<IMyself["user"]> {
     return this.http.post<IMyself["user"]>('/api/users', user).toPromise();
-
   }
 
   updateUser(userId: string, body: { [index: string]: Primitive }): Promise<IMyself["user"]> {

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, VERSION } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormArray } from "@angular/forms";
 import {
+  IUiFieldTypeOptions,
   IUiFormField,
 } from "../form.interfaces";
 
@@ -12,28 +13,27 @@ import {
 })
 export class FormBodyComponent implements OnInit {
   @Input() fg: FormGroup;
+  @Input() options: IUiFieldTypeOptions["container"];
   @Input() fields: IUiFormField[];
 
-  constructor() {
-
-  }
+  constructor() {}
 
   ngOnInit() {
   }
 
   keepOrder = (a, b) => { return a }
 
-  fieldIsRequired(field:IUiFormField):boolean {
-    return field.validators?.find(f => f.type == "required") ? true : false;
-  }
+  // fieldIsRequired(field:IUiFormField):boolean {
+  //   return field.validators?.find(f => f.type == "required") ? true : false;
+  // }
 
-  fieldMaxLength(field:IUiFormField):number {
-    const v = field.validators?.find(f => f.type == "maxlength");
-    return v ? v.value as number : null;
-  }
+  // fieldMaxLength(field:IUiFormField):number {
+  //   const v = field.validators?.find(f => f.type == "maxlength");
+  //   return v ? v.value as number : null;
+  // }
 
-  fieldMinLength(field:IUiFormField):number {
-    const v = field.validators?.find(f => f.type == "minlength");
-    return v ? v.value as number : null;
-  }
+  // fieldMinLength(field:IUiFormField):number {
+  //   const v = field.validators?.find(f => f.type == "minlength");
+  //   return v ? v.value as number : null;
+  // }
 }

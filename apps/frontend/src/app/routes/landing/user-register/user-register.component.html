@@ -4,17 +4,11 @@
     <div class="flex align-middle">
       <span class="my-auto mr-4">
         <mat-label class="labelBeforeSlide">Audience</mat-label>
-        <mat-slide-toggle [checked]="isBusinessRegister" (change)="onToggleChange($event)">Business</mat-slide-toggle> 
+        <mat-slide-toggle [checked]="isBusinessRegister" (change)="onToggleChange($event)">Business</mat-slide-toggle>
       </span>
       <ui-button kind="secondary" (click)="openLogin()">Login?</ui-button>
     </div>
   </div>
 
-  <ui-form #form
-    (onChange)="handleFormChange($event)"
-    (onSuccess)="handleRegisterSuccess($event)"
-    [cacheable]="registerData"
-    [form]="registerForm">
-  </ui-form>
+  <ui-form [form]="registerForm"></ui-form>
 </ui-dialog>
-

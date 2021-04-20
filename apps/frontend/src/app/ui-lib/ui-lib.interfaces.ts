@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { UiDialogButton } from './dialog/dialog-buttons/dialog-buttons.component';
 
 export enum ThemeKind {
   Primary = 'primary',
@@ -24,12 +25,5 @@ export const dimensionClassMap: { [index in ThemeDimension]: string } = {
 export interface IUiDialogOptions {
   submit: EventEmitter<any>;
   cancel: EventEmitter<any>;
-  buttons: Array<{
-    text: string;
-    kind: ThemeKind;
-    callback: (r?:MatDialogRef<any>) => any;
-    loading?: boolean;
-    disabled?: boolean;
-    loadingText?: string;
-  }>;
+  buttons: UiDialogButton[];
 }

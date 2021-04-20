@@ -1,12 +1,8 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { IUser } from '@core/interfaces';
-import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
-import { FormComponent } from 'apps/frontend/src/app/ui-lib/form/form.component';
-import { IUiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
-import { ActivatedRoute } from '@angular/router';
+import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
+import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { ToastService } from '../../../../services/toast.service';
 import { UserService } from '../../../../services/user.service';
 import { IUiDialogOptions, ThemeKind } from '../../../../ui-lib/ui-lib.interfaces';
@@ -16,75 +12,48 @@ import { IUiDialogOptions, ThemeKind } from '../../../../ui-lib/ui-lib.interface
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss']
 })
-
 export class ForgotPasswordComponent implements OnInit, IUiDialogOptions {
-  @ViewChild('form') form: FormComponent;
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
   dialogMessage: string;
-  
-  sendEmailForm: IUiForm<void>;
-  sendEmailData: ICacheable<string> = {
-    data: null,
-    error: '',
-    loading: false,
-    form_errors: {
-      email_address: null
-    }
-  };
-
-  buttons: IUiDialogOptions['buttons'] = [
-    {
-      text: 'Reset Password',
-      kind: ThemeKind.Primary,
-      callback: () => this.handleSendInstructions(),
-      disabled: true      
-    }
-  ];
+  sendEmailForm: UiForm;
+  buttons: IUiDialogOptions['buttons'];
 
   constructor(
     private userService: UserService,
-    private appService: BaseAppService,
-    private dialog: MatDialog,
     public dialogRef: MatDialogRef<IUser>,
-    private toastService: ToastService,
-    private route: ActivatedRoute
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
     this.dialogMessage = '';
-       
-    this.sendEmailForm = {
-      fields: {
-        email: {
-          type: 'text',
-          label: 'email',
-          validators: [
-            { type: 'required' }, 
-            { type: 'email'},
-            { type: 'maxlength', value: 32 }]
-        },        
-      },
-      submit: {
-        is_hidden: true,
-        text: 'Reset Password',
-        variant: 'primary',
-        handler: d => this.handleSendInstructions()
-      }
-    };
-  }
-  
-  handleSendInstructions(): Promise<void> {    
-    this.dialogMessage = 'Password reset link sent successfully.';
-    this.buttons[0].text = 'Send Again';
-    const email_address = this.form.formGroup.value;
-    this.toastService.emit(`Please check your email.`);
-    return this.userService.forgotPassword(email_address.email);  
-  }
 
-  handleFormChange(event: FormGroup) {
-    this.buttons[0].disabled = !event.valid;    
+    this.sendEmailForm = new UiForm({
+      fields: {
+        email: UiField.Text({
+          label: 'email',
+          validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 32 }]
+        })
+      },
+      resolvers: {
+        output: async v => {
+          this.dialogMessage = 'Password reset link sent successfully.';
+          this.buttons[0].label = 'Send Again';
+          this.toastService.emit(`Please check your email.`);
+          return this.userService.forgotPassword(v.email);
+        }
+      }
+    });
+
+    this.buttons = [
+      new UiDialogButton({
+        label: 'Reset Password',
+        kind: ThemeKind.Primary,
+        callback: () => this.sendEmailForm.submit(),
+        disabled: true
+      }).attach(this.sendEmailForm)
+    ];
   }
 
   closeDialog() {

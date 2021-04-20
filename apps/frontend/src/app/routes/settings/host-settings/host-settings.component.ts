@@ -5,6 +5,7 @@ import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { BaseAppService } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
+import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 
 @Component({
@@ -32,13 +33,13 @@ export class HostSettingsComponent implements OnInit {
       title: `Leave '${this.myself.host.name}'`,
       description: 'Are you sure you want to leave this host?',
       buttons: [
-        {
-          text: 'Cancel',
+        new UiDialogButton({
+          label: 'Cancel',
           kind: ThemeKind.Secondary,
           callback: r => r.close()
-        },
-        {
-          text: 'Yes',
+        }),
+        new UiDialogButton({
+          label: 'Yes',
           kind: ThemeKind.Danger,
           callback: r => {
             // TODO: fire off a toast to show that the user was removed from the host
@@ -46,7 +47,7 @@ export class HostSettingsComponent implements OnInit {
             this.baseAppService.navigateTo('/settings')
             r.close();
           }
-        }
+        })
       ]
     });
   }

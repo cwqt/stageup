@@ -7,6 +7,7 @@ import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { ChipComponent } from 'apps/frontend/src/app/ui-lib/chip/chip.component';
+import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 import { CreateUpdateTicketComponent } from './create-update-ticket/create-update-ticket.component';
 
@@ -81,13 +82,13 @@ export class HostPerformanceTicketingComponent implements OnInit {
       title: 'Delete ticket',
       description: `Are you sure you want to delete ${ticket.name}`,
       buttons: [
-        {
-          text: 'Cancel',
+        new UiDialogButton({
+          label: 'Cancel',
           kind: ThemeKind.Secondary,
           callback: r => r.close()
-        },
-        {
-          text: 'Delete',
+        }),
+        new UiDialogButton({
+          label: 'Delete',
           kind: ThemeKind.Danger,
           callback: r => {
             this.performanceService.deleteTicket(this.performanceId, ticket._id);
@@ -98,7 +99,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
             this.ticketsDataSrc = new MatTableDataSource(this.tickets.data);
             r.close();
           }
-        }
+        })
       ]
     });
   }

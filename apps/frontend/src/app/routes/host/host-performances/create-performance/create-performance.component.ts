@@ -4,11 +4,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DtoCreatePerformance, CurrencyCode, GenreMap, IPerformance } from '@core/interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
+import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import {} from 'events';
 import { createICacheable, ICacheable } from '../../../../app.interfaces';
 import { HostService } from '../../../../services/host.service';
 import { FormComponent } from '../../../../ui-lib/form/form.component';
-import { IUiForm } from '../../../../ui-lib/form/form.interfaces';
+import { IUiForm, UiField, UiForm } from '../../../../ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from '../../../../ui-lib/ui-lib.interfaces';
 
 @Component({
@@ -17,14 +18,11 @@ import { IUiDialogOptions, ThemeKind } from '../../../../ui-lib/ui-lib.interface
   styleUrls: ['./create-performance.component.scss']
 })
 export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
-  @ViewChild('form') form: FormComponent;
-
-  createPerformanceForm: IUiForm<IPerformance>;
-  performance: ICacheable<IPerformance> = createICacheable();
+  form: UiForm<IPerformance>;
 
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
-  buttons: IUiDialogOptions['buttons'];
+  buttons: UiDialogButton[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { host_id: string },
@@ -35,89 +33,67 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   ngOnInit(): void {
-    this.createPerformanceForm = {
+    this.form = new UiForm({
       fields: {
-        name: {
-          type: 'text',
+        name: UiField.Text({
           label: 'Performance title',
           validators: [{ type: 'required' }]
-        },
-        description: {
-          type: 'textarea',
+        }),
+        description: UiField.Textarea({
           label: 'Description',
-          validators: [{ type: 'maxlength', value: 100 }]
-        },
-        genre: {
-          type: 'select',
+          validators: [{ type: 'maxlength', value: 512 }]
+        }),
+        genre: UiField.Select({
           label: 'Genre',
           validators: [{ type: 'required' }],
-          options: {
-            values: new Map(
-              Object.entries(GenreMap).map(([key, value]) => {
-                return [key, { label: value }];
-              })
-            )
-          }
-        },
-        date: {
-          type: 'container',
-          label: 'Premiere date',
+          values: new Map(
+            Object.entries(GenreMap).map(([key, value]) => {
+              return [key, { label: value as string }];
+            })
+          )
+        }),
+        date: UiField.Container({
+          label: 'Premiere Date',
+          separator: 'above',
           hint: 'Schedule the performance to be released at a certain date & time (optional)',
           fields: {
-            premiere_date: {
-              type: 'date',
-              label: 'Date'
-            },
-            premiere_time: {
-              type: 'time',
-              label: 'Time'
-            }
+            premiere_date: UiField.Date({ label: 'Date' }),
+            premiere_time: UiField.Time({ label: 'Time' })
           }
-        }
-      },
-      submit: {
-        is_hidden: true,
-        text: 'Create',
-        variant: 'primary',
-        handler: async v => this.hostService.createPerformance(this.data.host_id, v),
-        transformer: (v): DtoCreatePerformance => ({
-          name: v.name,
-          description: v.description,
-          genre: v.genre,
-          premiere_date: v.date.premiere_date
-            ? new Date(v.date.premiere_date).getTime() / 1000 + v.date.premiere_time
-            : null
         })
+      },
+      resolvers: {
+        output: async v =>
+          this.hostService.createPerformance(this.hostService.hostId, {
+            name: v.name,
+            description: v.description,
+            genre: v.genre,
+            premiere_date: v.date.premiere_date
+              ? new Date(v.date.premiere_date).getTime() / 1000 + v.date.premiere_time
+              : null
+          })
+      },
+      handlers: {
+        success: async v => {
+          this.toastService.emit(`Created performance: ${v.name}!`);
+          this.baseAppService.navigateTo(`/dashboard/performances/${v._id}`);
+          this.ref.close(v);
+        },
+        failure: async () => this.ref.close(null)
       }
-    };
+    });
 
     this.buttons = [
-      {
-        text: 'Cancel',
+      new UiDialogButton({
+        label: 'Cancel',
         kind: ThemeKind.Secondary,
-        disabled: false,
         callback: () => this.ref.close()
-      },
-      {
-        text: 'Create',
+      }),
+      new UiDialogButton({
+        label: 'Create',
         kind: ThemeKind.Primary,
-        disabled: true,
-        callback: () => this.form.onSubmit()
-      }
+        callback: () => this.form.submit()
+      }).attach(this.form)
     ];
-  }
-
-  handleCreatePerformanceSuccess(event: IPerformance) {
-    this.toastService.emit(`Created performance: ${event.name}!`);
-    this.baseAppService.navigateTo(`/dashboard/performances/${event._id}`);
-    this.ref.close(event);
-  }
-
-  handleCreatePerformanceFailed() {
-    this.ref.close(null);
-  }
-
-  handleFormChange(event: FormGroup) {
-    this.buttons[1].disabled = !event.valid;
   }
 }

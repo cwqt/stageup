@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { DtoPerformance, IPerformance } from '@core/interfaces';
 import { createICacheable, ICacheable } from '../../../../../app/app.interfaces';
 import { PerformanceService } from '../../../../services/performance.service';
-import { IUiForm } from '../../../../ui-lib/form/form.interfaces';
+import { UiField, UiForm } from '../../../../ui-lib/form/form.interfaces';
 
 @Component({
   selector: 'app-update-performance',
@@ -11,7 +11,7 @@ import { IUiForm } from '../../../../ui-lib/form/form.interfaces';
 })
 export class UpdatePerformanceComponent {
   @Input() cacheable: ICacheable<DtoPerformance>;
-  performanceDetailsForm: IUiForm<IPerformance>;
+  performanceDetailsForm: UiForm<IPerformance>;
   performanceUpdateCacheable: ICacheable<IPerformance>;
 
   constructor(private performanceService: PerformanceService) {}
@@ -23,23 +23,30 @@ export class UpdatePerformanceComponent {
   ngOnInit(): void {
     this.performanceUpdateCacheable = createICacheable(this.performance);
 
-    this.performanceDetailsForm = {
+    this.performanceDetailsForm = new UiForm({
       fields: {
-        name: { label: 'Name', type: 'text', initial: this.performance.name, validators: [{ type: 'required' }] },
-        description: {
+        name: UiField.Text({
+          label: 'Name',
+          initial: this.performance.name,
+          validators: [
+            { type: 'required' }
+          ]
+        }),
+        description: UiField.Textarea({
           label: 'Description',
-          type: 'textarea',
           initial: this.performance.description,
           validators: [{ type: 'maxlength', value: 100 }]
-        }
+        })
       },
-
-      submit: {
-        text: 'Update Details',
-        variant: 'primary',
-        handler: data => this.performanceService.updatePerformance(this.performance._id, data)
+      resolvers: {
+        output: async v => this.performanceService.updatePerformance(this.performance._id, v)
+      },
+      handlers: {
+        success: async (v, f) => {
+          this.cacheable.data.data = {...this.performance, name: f.value.name, description: f.value.description }
+        }
       }
-    };
+    });
   }
 
   handleSuccessfulUpdate(event: IPerformance) {

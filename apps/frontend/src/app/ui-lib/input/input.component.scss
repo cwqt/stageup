@@ -74,7 +74,7 @@ $animation-duration: 0.2s;
   }
 
   &--is-small {
-    max-height: 40px;
+    // max-height: 40px;
     .form-field__control {
       padding: 10px 12px;
     }
@@ -104,7 +104,7 @@ $animation-duration: 0.2s;
 }
 
 .form-field__control {
-  background: #eee;
+  background: #f6f6f6;
   overflow: hidden;
   position: relative;
   width: 100%;

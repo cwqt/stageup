@@ -6,12 +6,13 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { NgxMaskModule } from 'ngx-mask'
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxPopperModule } from "ngx-popper";
+import { HttpClientModule } from "@angular/common/http";
 import { QuillModule } from 'ngx-quill'
 
+import { TestbedComponent } from "./testbed/testbed.component";
 
 import { ButtonComponent } from "./button/button.component";
 import { IconComponent } from "./icon/icon.component";
-import { TestbedComponent } from "./testbed/testbed.component";
 import { IconButtonComponent } from "./icon-button/icon-button.component";
 import { OverflowMenuComponent } from "./overflow-menu/overflow-menu.component";
 import { AdmonitionComponent } from "./admonition/admonition.component";
@@ -20,7 +21,6 @@ import { DialogButtonsComponent } from "./dialog/dialog-buttons/dialog-buttons.c
 import { OverlaySpinnerComponent } from "./overlay-spinner/overlay-spinner.component";
 import { InputComponent } from "./input/input.component";
 import { FormComponent } from "./form/form.component";
-import { HttpClientModule } from "@angular/common/http";
 import { FormBodyComponent } from "./form/form-body/form-body.component";
 import { HrComponent } from './hr/hr.component';
 import { PlaceholderComponent } from "./placeholder/placeholder.component";
@@ -34,9 +34,9 @@ import { FilterBooleanComponent } from './table/filters/filter-boolean/filter-bo
 
 
 const ExportedUiComponents = [
+  TestbedComponent,
   ButtonComponent,
   IconComponent,
-  TestbedComponent,
   IconButtonComponent,
   OverflowMenuComponent,
   AdmonitionComponent,

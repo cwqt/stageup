@@ -1,3 +1,3 @@
 <ui-dialog [buttons]="buttons" class="w-10" [small]="true">
-  <ui-form #ref [form]="form" [cacheable]="cacheable" (onChange)="buttons[0].disabled = !$event.valid"></ui-form>
+  <ui-form [form]="form"></ui-form>
 </ui-dialog>

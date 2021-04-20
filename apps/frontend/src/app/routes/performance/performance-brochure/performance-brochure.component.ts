@@ -23,8 +23,8 @@ import { HelperService } from '../../../services/helper.service';
 import { MyselfService } from '../../../services/myself.service';
 import { PerformanceService } from '../../../services/performance.service';
 import { FormComponent } from '../../../ui-lib/form/form.component';
-import { IUiForm } from '../../../ui-lib/form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
+import { UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
+import { IUiDialogOptions } from '../../../ui-lib/ui-lib.interfaces';
 import { LoginComponent } from '../../landing/login/login.component';
 import { PaymentCheckoutComponent } from '../../payments/payment-checkout/payment-checkout.component';
 
@@ -36,8 +36,7 @@ import { PaymentCheckoutComponent } from '../../payments/payment-checkout/paymen
 export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   @ViewChild('tabs') tabs: MatTabGroup;
   @ViewChild('card') card: PaymentCheckoutComponent;
-  @ViewChild('donoPegForm') donoPegForm: FormComponent;
-  @ViewChild("trailer") trailerPlayer?:PlayerComponent;
+  @ViewChild('trailer') trailerPlayer?: PlayerComponent;
 
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
@@ -52,10 +51,10 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   selectedTicket: ITicketStub;
   buttons = [];
 
-  donoPegSelectForm: IUiForm<any>;
+  donoPegSelectForm: UiForm;
   donoPegCacheable: ICacheable<null> = createICacheable();
   selectedDonoPeg: DonoPeg;
-  performanceTrailer:IAssetStub<AssetType.Video>;
+  performanceTrailer: IAssetStub<AssetType.Video>;
 
   get performance() {
     return this.performanceCacheable.data?.data;
@@ -72,11 +71,10 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
   async ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
-    cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable)
-      .then(d => {
-        this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video);
-        return d;
-      });
+    cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable).then(d => {
+      this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video);
+      return d;
+    });
   }
 
   openPerformanceDescriptionSection() {
@@ -90,46 +88,43 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     this.selectedTicket = selectedTicket;
 
     if (this.selectedTicket.type == 'dono') {
-      this.donoPegSelectForm = {
+      this.donoPegSelectForm = new UiForm({
         fields: {
-          pegs: {
-            type: 'radio',
+          pegs: UiField.Radio({
             label: 'Select a donation amount',
-            options: {
-              values: new Map(
-                selectedTicket.dono_pegs.map(peg => [
-                  peg,
-                  {
-                    label:
-                      peg == 'allow_any'
-                        ? 'Enter an amount'
-                        : prettifyMoney(getDonoAmount(peg, selectedTicket.currency), selectedTicket.currency)
-                  }
-                ])
-              )
-            }
-          }
+            values: new Map(
+              selectedTicket.dono_pegs.map(peg => [
+                peg,
+                {
+                  label:
+                    peg == 'allow_any'
+                      ? 'Enter an amount'
+                      : prettifyMoney(getDonoAmount(peg, selectedTicket.currency), selectedTicket.currency)
+                }
+              ])
+            )
+          })
         },
-        submit: {
-          is_hidden: true,
-          text: '',
-          variant: ThemeKind.Primary,
-          handler: v => v
+        resolvers: {
+          output: async v => v
+        },
+        handlers: {
+          changes: async v => this.updatePayButtonWithDono(v)
         }
-      };
+      });
 
       if (selectedTicket.dono_pegs.includes('allow_any')) {
-        this.donoPegSelectForm.fields.allow_any_amount = {
-          type: 'number',
+        this.donoPegSelectForm.fields.allow_any_amount = UiField.Number({
           label: 'Enter custom amount:',
           hide: v => v.value.pegs !== 'allow_any',
           initial: 0
-        };
+        });
       }
     }
 
     // Push setStripeElementAccountId to next change detection cycle, so that *ngIf=selectedTicket is true
     // & then on the next tick, this.card will be defined
+    console.log(this.performance.host, 'aaaaaa')
     setTimeout(() => {
       this.card.setStripeElementAccountId(this.performance.host.stripe_account_id);
       this.tabs.selectedIndex = 1;

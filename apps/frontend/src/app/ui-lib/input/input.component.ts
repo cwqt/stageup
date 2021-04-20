@@ -2,12 +2,10 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Optional,
-  Output,
   Self,
   ViewChild
 } from '@angular/core';
@@ -19,9 +17,7 @@ import { Primitive } from '@core/interfaces';
 import { ContentChange, QuillModules } from 'ngx-quill';
 import { ReplaySubject, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { IUiFieldSelectOptions, IUiFormField, IUiFormFieldValidator } from '../form/form.interfaces';
-import { ThemeKind } from '../ui-lib.interfaces';
-
+import { IUiFieldOptions, IUiFieldType, IUiFieldTypeOptions, IUiFormField } from '../form/form.interfaces';
 
 //https://material-ui.com/components/text-fields/
 @Component({
@@ -29,35 +25,18 @@ import { ThemeKind } from '../ui-lib.interfaces';
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss']
 })
-export class InputComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
-  @Output() change: EventEmitter<any> = new EventEmitter();
-  @Output() selectionChange: EventEmitter<Primitive> = new EventEmitter();
+export class InputComponent<T extends IUiFieldType> implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
+  @Input() data?: IUiFormField<T>;
 
   @ViewChild('input') input: ElementRef;
 
   // Interface inputs
-  @Input() kind?: ThemeKind = ThemeKind.Accent;
-  @Input() type: IUiFormField['type'];
-  @Input() label?: string = '';
-  @Input() placeholder?: string = '';
-  @Input() initial?: Primitive = '';
-  @Input() hint?: string = '';
-  @Input() disabled: boolean = false;
-  @Input() icon?: string;
-  @Input() id?: string;
+  focused: boolean;
 
-  @Input() options?: IUiFormField['options'];
-
-  @Input() required: boolean = false;
-  @Input() maxlength?: number = null;
-  @Input() minlength?: number = null;
-
-  @Input() formControlName?: string;
-  @Input() validatorFunctions: IUiFormFieldValidator[];
-
-  _state: string = 'hide';
-  focused: boolean = false;
-  passwordVisible: boolean = false;
+  // Meta related stuff here
+  meta: { [index in IUiFieldType]?: any } = {
+    password: { is_visible: false }
+  };
 
   richTextModules: QuillModules;
 
@@ -66,13 +45,9 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   ngOnInit(): void {
-    // Override initial value
-    if (this.initial ?? this.options?.initial) this.value = this.initial ?? this.options?.initial;
-    this.placeholder = this.placeholder ?? '';
-
-    if (this.type == 'rich-text') this.initialiseRichText();
-    if (this.type == 'select') this.initialiseSelection();
-    if (this.type == 'time') {
+    if (this.data.type == 'richtext') this.initialiseRichText();
+    if (this.data.type == 'select') this.initialiseSelection();
+    if (this.data.type == 'time') {
       this.timeItems = new Map(
         new Array(96).fill(undefined).map((_, idx) => {
           // unix timestamp offset of 15 minutes == 900 seconds
@@ -96,8 +71,8 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   ngAfterViewInit() {
-    if (this.type == 'select') this.setInitialSelectValue();
-    if (this.type == 'date' && this.options?.is_date_range) {
+    if (this.data.type == 'select') this.setInitialSelectValue();
+    if (this.data.type == 'date' && this.data.options['is_date_range']) {
       // Can't bind ngModel to mat-date-picker-input :/
       this.pickerInput.rangePicker.stateChanges.subscribe(() => {
         this.value = this.pickerInput.value;
@@ -130,7 +105,8 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     }
 
     this.onChangeCallback(this.value);
-    this.change.emit(this.value);
+    // this.control.
+    // this.change.emit(this.value);
   }
 
   registerOnChange(fn: any): void {
@@ -144,9 +120,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
     };
   }
 
-  setDisabledState?(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
+  setDisabledState?(isDisabled: boolean): void {}
   // -------------------------------------------------------------------------------------------------------
 
   public get invalid(): boolean {
@@ -158,7 +132,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
     const { dirty, touched } = this.control;
     const doShow = this.focused ? false : this.invalid ? touched || dirty : false;
-    this._state = doShow ? 'show' : 'hide';
+    // this._state = doShow ? 'show' : 'hide';
     return doShow;
   }
 
@@ -168,9 +142,9 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
     // Fallback messages if none provided
     const errorMap: { [index: string]: (e: any) => string } = {
-      ['minlength']: e => `${this.label} must be at-least ${errors[e].requiredLength} characters`,
-      ['maxlength']: e => `${this.label} must be less than ${errors[e].requiredLength} characters`,
-      ['required']: e => `${this.label} is required`,
+      ['minlength']: e => `${this.data.options.label} must be at-least ${errors[e].requiredLength} characters`,
+      ['maxlength']: e => `${this.data.options.label} must be less than ${errors[e].requiredLength} characters`,
+      ['required']: e => `${this.data.options.label} is required`,
       ['email']: e => `Must be a valid e-mail address`,
       ['pattern']: e => `Must fufill ReGex`,
       ['custom']: e => this.control.getError(e),
@@ -179,7 +153,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
     // Actual error messages
     return Object.keys(errors || {}).map(e => {
-      const vf = this.validatorFunctions?.find(x => x.type == e);
+      const vf = this.data.options.validators?.find(x => x.type == e);
       return vf?.message
         ? vf.message(this.control) // client side message
         : errorMap[e] //
@@ -203,20 +177,20 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   togglePasswordVisibility(state: boolean, event) {
-    this.passwordVisible = state;
+    // this.passwordVisible = state;
     if (event) event.stopPropagation();
   }
 
   // Select ---------------------------------------------------------------------------------------------------
   @ViewChild('singleSelect', { static: false }) singleSelect: MatSelect;
   private selectOnDestroy = new Subject<void>();
-  public filteredSelectionItems: ReplaySubject<IUiFieldSelectOptions['values']> = new ReplaySubject<
-    IUiFieldSelectOptions['values']
+  public filteredSelectionItems: ReplaySubject<IUiFieldTypeOptions['select']['values']> = new ReplaySubject<
+    IUiFieldTypeOptions['select']['values']
   >(1);
 
   initialiseSelection() {
     // load the initial items list
-    this.filteredSelectionItems.next(this.options.values as IUiFieldSelectOptions['values']);
+    this.filteredSelectionItems.next(this.data.options['values'] as IUiFieldTypeOptions['select']['values']);
   }
 
   ngOnDestroy() {
@@ -235,7 +209,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
       this.singleSelect.compareWith = (a, b) => a && b && a === b;
 
       // Set value equal to compareWith value for initial value to be selected
-      if (this.initial) {
+      if (this.data.options['initial']) {
         setTimeout(() => {
           this.singleSelect.writeValue(this.value);
         }, 0);
@@ -244,7 +218,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   filterSelectionItems(event: string) {
-    const options = this.options as IUiFieldSelectOptions;
+    const options = (this.data.options as unknown) as IUiFieldTypeOptions['select'] & IUiFieldOptions;
     if (!options.values) return;
     if (!event) return this.filteredSelectionItems.next(options.values);
 
@@ -257,7 +231,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
   }
 
   emitSelectionChange(event: Primitive) {
-    this.selectionChange.emit(event);
+    // this.selectionChange.emit(event);
   }
 
   originalOrder = (a, b): number => {
@@ -266,23 +240,23 @@ export class InputComponent implements ControlValueAccessor, OnInit, AfterViewIn
 
   // Time ------------------------------------------------------------------------------------------------------
   // 24 hours / 15 minutes = 96 options, create an array of 15 minute increments
-  timeItems: IUiFieldSelectOptions['values'];
+  timeItems: IUiFieldTypeOptions['select']['values'];
 
   // Date range input ------------------------------------------------------------------------------------------------------
   @ViewChild(MatDateRangeInput, { static: false }) pickerInput: MatDateRangeInput<Date>;
 
   // ngx-quill Rich Text --------------------------------------------------------------------------------
   initialiseRichText() {
-    this.richTextModules = this.options?.modules || {
+    this.richTextModules = this.data.options['modules'] || {
       toolbar: [
         ['bold', 'italic', 'underline', 'strike'], // toggled buttons
         [{ list: 'ordered' }, { list: 'bullet' }],
-        ['clean'], // remove formatting button
+        ['clean'] // remove formatting button
       ]
     };
   }
 
-  richTextChanged(event:ContentChange) {
+  richTextChanged(event: ContentChange) {
     console.log(event);
   }
 }
