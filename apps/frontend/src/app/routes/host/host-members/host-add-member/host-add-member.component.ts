@@ -5,11 +5,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { IHostMemberChangeRequest, IUserHostInfo } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { ToastService } from '../../../../services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-
-export interface Fruit {
-  name: string;
-}
 
 @Component({
   selector: 'app-host-add-member',
@@ -20,7 +17,8 @@ export class HostAddMemberComponent implements OnInit, IUiDialogOptions {
   @Output() cancel = new EventEmitter();
   @Output() submit = new EventEmitter();
 
-  constructor(private hostService: HostService) {}
+  constructor(private hostService: HostService, private toastService: ToastService) {}
+
   buttons = [
     new UiDialogButton({
       label: 'Cancel',
@@ -50,15 +48,18 @@ export class HostAddMemberComponent implements OnInit, IUiDialogOptions {
           .map(e => this.hostService.addMember(this.hostService.hostId, e))
       ),
       this.addedMembers,
-      members =>
-        members
-          // TODO: emit toasts for errors on failed requests
-          // .forEach(c => if(c.status == "rejected") )
+      members => {
+        const rejectedUsers = members.filter(c => c.status == 'rejected');
+        if (rejectedUsers.length > 0) {
+          this.toastService.emit(`One or more users entered are not registered `);
+        }
+
+        return members
           .filter(c => c.status === 'fulfilled')
           .map(m => <PromiseFulfilledResult<IUserHostInfo>>m)
-          .map(m => m.value)
+          .map(m => m.value);
+      }
     );
-
     // Pass up all successful membership requests back to the dialog opener
     this.submit.emit(newUsers);
   }

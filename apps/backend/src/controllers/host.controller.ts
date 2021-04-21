@@ -192,7 +192,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         const invitee = await getCheck(
           User.findOne({ email_address: changeRequest.value as string }, { relations: ['host'] })
         );
-        if (invitee.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+        if (invitee.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);       
 
         // Don't allow duplicate invites to be created for a user for the same host
         if (
