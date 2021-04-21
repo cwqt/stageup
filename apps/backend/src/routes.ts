@@ -27,7 +27,8 @@ import {
   IPatronTier,
   IPatronTier as IPTier,
   IHostPatronTier,
-  IHostPatronTier as IHPTier
+  IHostPatronTier as IHPTier,
+  IPatronSubscription
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -40,6 +41,7 @@ import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
 import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
+import PatronageController from "./controllers/patronage.controller";
 import { BackendProviderMap } from '.';
 
 /**
@@ -67,7 +69,6 @@ router.put      <IMyself["user"]>       ("/users/:uid",                         
 router.delete   <void>                  ("/users/:uid",                               Users.deleteUser());
 router.get      <IE<IHost, IUHInfo>>    ("/users/:uid/host",                          Users.readUserHost());
 router.put      <IUserS>                ("/users/:uid/avatar",                        Users.changeAvatar());
-//router.put      <void>                  ("/users/:uid/password",                    Users.resetPassword());
 router.get      <IAddress[]>            ("/users/:uid/addresses",                     Users.readAddresses());
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
 router.put      <IAddress>              ("/users/:uid/addresses/:aid",                Users.updateAddress());
@@ -98,9 +99,14 @@ router.post     <string>                ("/hosts/:hid/stripe/connect",          
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
 router.get      <IE<IHostInvoice[]>>    ("/hosts/:hid/invoices",                      Hosts.readInvoices());
 router.post     <void>                  ("/hosts/:hid/invoices/export-csv",           Hosts.exportInvoicesToCSV());
-router.post     <IHostPatronTier>       ("/hosts/:hid/patreon-tiers",                 Hosts.createPatreonTier());
-router.get      <(IHPTier | IPTier)[]>  ("/hosts/:hid/patreon-tiers",                 Hosts.readPatreonTiers());
-router.delete   <void>                  ("/hosts/:hid/patreon-tiers/:tid",            Hosts.deletePatreonTier());
+
+// PATRONAGE ----------------------------------------------------------------------------------------------------------
+const Patronage = new PatronageController(providerMap, middlewares);
+router.post     <IHostPatronTier>       ("/hosts/:hid/patron-tiers",                  Patronage.createPatronTier());
+router.get      <(IHPTier | IPTier)[]>  ("/hosts/:hid/patron-tiers",                  Patronage.readPatronTiers());
+router.delete   <void>                  ("/hosts/:hid/patron-tiers/:tid",             Patronage.deletePatronTier());
+router.post     <IPatronSubscription>   ("/hosts/:hid/patron-tiers/:tid/subscribe",   Patronage.subscribeToPatronTier());
+// router.delete   <void>                  ("/hosts/:hid/patron-tiers/:tid/unsubscribe", Patronage.unsubscribeFromPatronTier());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
 const Perfs = new PerfController(providerMap, middlewares);

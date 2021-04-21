@@ -1,7 +1,18 @@
-@import "apps/frontend/src/styles/variables";
+@import 'apps/frontend/src/styles/variables';
 
-::ng-deep .mat-step-header {
-  .mat-step-icon-state-2, .mat-step-icon-state-error {
-    background-color: $clr-warning !important;
+:host {
+  width: 100%;
+}
+
+::ng-deep {
+  .mat-horizontal-content-container {
+    display: none;
+  }
+
+  .mat-step-header {
+    .mat-step-icon-state-2,
+    .mat-step-icon-state-error {
+      background-color: $clr-warning !important;
+    }
   }
 }

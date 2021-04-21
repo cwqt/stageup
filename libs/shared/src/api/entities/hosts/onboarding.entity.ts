@@ -22,10 +22,10 @@ import {
   IOnboardingSocialPresence,
   IOnboardingStep,
   IOnboardingSubscriptionConfiguration,
-  IOnboardingStepMap,
+  IOnboardingStepMap
 } from '@core/interfaces';
 
-import { Host } from '../hosts/host.entity'
+import { Host } from '../hosts/host.entity';
 import { User } from '../users/user.entity';
 import { Validators, object, single, array } from '@core/shared/api';
 import { timestamp, uuid } from '@core/shared/helpers';
@@ -34,7 +34,9 @@ import { OnboardingReview } from './onboarding-review.entity';
 @Entity()
 export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column('enum', { enum: HostOnboardingState }) state: HostOnboardingState;
   @Column() created_at: number;
@@ -43,7 +45,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
   @Column({ nullable: true }) last_submitted: number;
   @Column() version: number;
   @Column('jsonb', { nullable: true }) steps: IOnboardingStepMap;
-  
+
   @OneToMany(() => OnboardingReview, osr => osr.onboarding, { eager: true }) reviews: OnboardingReview[];
   @OneToOne(() => Host, host => host.onboarding_process, { eager: true }) @JoinColumn() host: Host;
   @OneToOne(() => User, { eager: true }) @JoinColumn() last_modified_by: User;
@@ -85,6 +87,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
         state: HostOnboardingState.AwaitingChanges,
         data: {
           social_info: {
+            site_url: null,
             facebook_url: null,
             linkedin_url: null,
             instagram_url: null
@@ -94,7 +97,6 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
     };
   }
 
-  
   toFull(): Required<IHostOnboarding> {
     const lastReview = this.reviews?.find(r => r.onboarding_version == this.version);
 
@@ -161,8 +163,8 @@ const stepValidators: { [index in HostOnboardingStep]: (d: unknown) => Promise<I
   [HostOnboardingStep.ProofOfBusiness]: async (d: IOnboardingProofOfBusiness) => {
     return await object(d, {
       hmrc_company_number: v => v.optional({ checkFalsy: true }).isInt().isLength({ min: 8, max: 8 }),
-      business_contact_number: v => v.isMobilePhone('any'),//TODO: en-GB locale
-      business_address: v => v.custom(single(Validators.Objects.IAddress())),
+      business_contact_number: v => v.isMobilePhone('any'), //TODO: en-GB locale
+      business_address: v => v.custom(single(Validators.Objects.IAddress()))
     });
   },
   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
@@ -171,7 +173,6 @@ const stepValidators: { [index in HostOnboardingStep]: (d: unknown) => Promise<I
     });
   },
   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
-    return object(d, { social_info: v => v.custom(single(Validators.Objects.ISocialInfo()))});
+    return object(d, { social_info: v => v.custom(single(Validators.Objects.ISocialInfo())) });
   }
 };
-

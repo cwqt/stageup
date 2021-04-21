@@ -2,11 +2,11 @@ import { BaseEntity, Entity, Column, ManyToOne, BeforeInsert, PrimaryColumn, One
 import { IInvoice, CurrencyCode, ITicket, PurchaseableEntity, IHostInvoice, PaymentStatus, IUserInvoice } from '@core/interfaces';
 import { User } from '../users/user.entity';
 import { Host } from '../hosts/host.entity';
-import { enumToValues, timestamp, uuid } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/shared/helpers';
 import Stripe from 'stripe';
 import { Ticket } from '../performances/ticket.entity';
+import { PatronSubscription } from '../users/patron-subscription.entity';
 
-// export type Purchasable = Ticket | Subscription | Whatever;
 
 @Entity()
 export class Invoice extends BaseEntity implements IInvoice {
@@ -27,9 +27,8 @@ export class Invoice extends BaseEntity implements IInvoice {
   @ManyToOne(() => Host, host => host.invoices) host?: Host; // purchase was related to a host
 
   // Exclusive Belongs To (AKA Exclusive Arc) polymorphic relation
-  @ManyToOne(() => Ticket)        ticket?: Ticket;
-  // @ManyToOne(() => Subscription)  subscription?: Subscription;
-  // @ManyToOne(() => Patronage)     patronage?: Patronage;
+  @ManyToOne(() => Ticket)              ticket?: Ticket;
+  @ManyToOne(() => PatronSubscription)  patron_subscription?: PatronSubscription;
 
   constructor(user: User, amount: number, currency: CurrencyCode, charge: Stripe.Charge) {
     super();

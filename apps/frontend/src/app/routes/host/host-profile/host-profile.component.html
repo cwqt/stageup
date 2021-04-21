@@ -2,25 +2,20 @@
   <!-- Banner  -->
   <div class="host-profile-header bg-white rounded shadow-sm">
     <div class="banner-picture__container relative overflow-hidden rounded">
-      <img class="object-cover w-full" [src]="host.data.banner || '/assets/banner-placeholder.png'"/>
-      <ui-button *ngIf="isHostView"
-        (click)="openChangeBannerDialog()"
-        class="absolute top-2 left-2"
-        icon="paint-brush--alt"
-        kind="accent">
-            Change banner
+      <img class="object-cover w-full" [src]="host.data.banner || '/assets/banner-placeholder.png'" />
+      <ui-button *ngIf="isHostView" (click)="openChangeBannerDialog()" class="absolute top-2 left-2"
+        icon="paint-brush--alt" kind="accent">
+        Change banner
       </ui-button>
     </div>
 
     <!-- Profile Image  -->
     <div class="profile-picture__container relative pl-4">
-      <img [src]="host.data.avatar || '/assets/avatar-placeholder.png'" class="square absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
-      <ui-button *ngIf="isHostView"
-        (click)="openChangeAvatarDialog()"
-        icon="paint-brush--alt"
-        class="z-10 absolute top-2 left-2"
-        kind="accent">
-            Edit
+      <img [src]="host.data.avatar || '/assets/avatar-placeholder.png'"
+        class="square absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
+      <ui-button *ngIf="isHostView" (click)="openChangeAvatarDialog()" icon="paint-brush--alt"
+        class="z-10 absolute top-2 left-2" kind="accent">
+        Edit
       </ui-button>
     </div>
 
@@ -31,14 +26,22 @@
         <div class="flex align-middle justify-between mb-2">
           <p class="flex-grow mr-2 mb-0 flex items-center">
             <span class="text-lg opacity-75 mr-4">@{{ host.data.username }}</span>
-            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('facebook_url')" *ngIf="host.data.social_info.facebook_url">logo--facebook</ui-icon>
-            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('instagram_url')" *ngIf="host.data.social_info.instagram_url">logo--instagram</ui-icon>
-            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('linkedin_url')" *ngIf="host.data.social_info.linkedin_url">logo--linkedin</ui-icon>
+            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('site_url')"
+              *ngIf="host.data.social_info.site_url">wikis</ui-icon>
+            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('facebook_url')"
+              *ngIf="host.data.social_info.facebook_url">logo--facebook</ui-icon>
+            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('instagram_url')"
+              *ngIf="host.data.social_info.instagram_url">logo--instagram</ui-icon>
+            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('linkedin_url')"
+              *ngIf="host.data.social_info.linkedin_url">logo--linkedin</ui-icon>
           </p>
 
           <div class="flex absolute right-2 top-0 w-auto">
-            <ui-button [transparent]="true" class="flex-1" size="m"><ui-icon size="l">overflow-menu--horizontal</ui-icon></ui-button>
-            <ui-button class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="add" kind="primary">Follow</ui-button>
+            <ui-button [transparent]="true" class="flex-1" size="m">
+              <ui-icon size="l">overflow-menu--horizontal</ui-icon>
+            </ui-button>
+            <ui-button class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="add" kind="primary">Follow
+            </ui-button>
           </div>
 
         </div>
@@ -47,19 +50,15 @@
       </div>
 
       <div class="flex">
-        <mat-tab-group (selectedTabChange)="handleTabChange($event)" class="flex-shrink">
-          <mat-tab
-            *ngFor="let tab of hostPages | keyvalue: originalOrder"
-            (click)="openHostPage(tab.key)"
-            [disabled]="tab.value['url'] == null"
-            [label]="tab.value['label']">
+        <mat-tab-group (selectedTabChange)="openTabLink($event)" class="flex-shrink">
+          <mat-tab *ngFor="let tab of tabs" [disabled]="tab.route == null" [label]="tab.label">
           </mat-tab>
         </mat-tab-group>
       </div>
     </div>
   </div>
 
-  <div class="bg-white">
-    <router-outlet></router-outlet>
+  <div class="bg-white mt-4 rounded p-4 shadow">
+    <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
   </div>
 </div>

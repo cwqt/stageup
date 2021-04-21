@@ -1,4 +1,4 @@
-<ui-dialog class="register-wrapper" [buttons]="buttons">
+<ui-dialog class="register-wrapper" [buttons]="buttons" [loading]="registerForm.loading | async">
   <div class="flex justify-between align-middle mb-4">
     <h2 class="mb-0">Register</h2>
     <div class="flex align-middle">

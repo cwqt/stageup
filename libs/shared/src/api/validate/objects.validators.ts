@@ -1,6 +1,6 @@
 import {
   DonoPeg,
-  DtoCreatePatreonTier,
+  DtoCreatePatronTier,
   DtoCreatePerformance,
   DtoCreateTicket,
   ErrCode,
@@ -32,7 +32,7 @@ export namespace ObjectValidators {
     };
   };
 
-  export const DtoCreatePatreonTier = (): ObjectValidator<DtoCreatePatreonTier> => {
+  export const DtoCreatePatronTier = (): ObjectValidator<DtoCreatePatronTier> => {
     return {
       name: v => FV.isString(v),
       currency: v => FV.CurrencyCode(v),
@@ -70,6 +70,7 @@ export namespace ObjectValidators {
 
   export const ISocialInfo = (): ObjectValidator<ISocialInfo> => {
     return {
+      site_url: v => v.optional({ nullable: true, checkFalsy: true }).isURL().withMessage(ErrCode.NOT_URL),
       linkedin_url: v =>
         v
           .optional({ nullable: true, checkFalsy: true })

@@ -1,6 +1,5 @@
 <div class="flex items-center justify-between">
   <h2 class="mb-0">Patronage</h2>
-  <ui-button (click)="openCreateTierDialog()" icon="add" kind="primary">Create Patronage Tier</ui-button>
 </div>
 
 <ui-hr></ui-hr>
@@ -8,7 +7,8 @@
 <mat-spinner *ngIf="tiers.loading"></mat-spinner>
 
 <div class="grid gap-4 grid-cols-3" *ngIf="!tiers.loading">
-  <app-patron-tier-thumb *ngFor="let tier of tiers.data" [tier]="tier" [host]="host"></app-patron-tier-thumb>
+  <app-patron-tier-thumb *ngFor="let tier of tiers.data" [host]="host" [tier]="tier" [isHostPatronTier]="false">
+  </app-patron-tier-thumb>
 </div>
 
 <h4 *ngIf="!tiers.loading && tiers.data.length == 0">No Patron Tiers</h4>

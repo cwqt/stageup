@@ -5,7 +5,6 @@ import { IAddress } from '../users/address.interface';
 import { NUUID } from '../common/fp.interface';
 import { Except } from 'type-fest';
 
-
 export interface IHostStub {
   _id: NUUID;
   name: string;
@@ -17,7 +16,6 @@ export interface IHostStub {
 }
 
 export interface IHost extends IHostStub {
-  members_info: IUserHostInfo[];
   social_info: ISocialInfo;
   created_at: number;
   is_onboarded: boolean;
@@ -36,18 +34,19 @@ export interface IHostBusinessDetails {
 }
 
 export interface ISocialInfo {
+  site_url: string;
   linkedin_url: string;
   facebook_url: string;
   instagram_url: string;
 }
 
 export enum HostPermission {
-  Owner = "host_owner", // can delete host
-  Admin = "host_admin", // can create / delete performances
-  Editor = "host_editor", // can edit performance information
-  Member = "host_member", // has accepted & can view host
-  Pending = "host_pending", // hasn't accepted invite
-  Expired = "host_expired" // had an invite that they didn't accept in time
+  Owner = 'host_owner', // can delete host
+  Admin = 'host_admin', // can create / delete performances
+  Editor = 'host_editor', // can edit performance information
+  Member = 'host_member', // has accepted & can view host
+  Pending = 'host_pending', // hasn't accepted invite
+  Expired = 'host_expired' // had an invite that they didn't accept in time
 }
 
 const HOST_PERMISSIONS_AS_VALUES = [...Object.values(HostPermission)] as const;
@@ -56,9 +55,9 @@ const HOST_PERMISSIONS_AS_VALUES = [...Object.values(HostPermission)] as const;
  * @param current The current HostPermission
  * @param required The required HostPermission
  */
-export const hasRequiredHostPermission = (current:HostPermission, required:HostPermission): boolean => {
-  return HOST_PERMISSIONS_AS_VALUES.indexOf(current) > HOST_PERMISSIONS_AS_VALUES.indexOf(required)
-}
+export const hasRequiredHostPermission = (current: HostPermission, required: HostPermission): boolean => {
+  return HOST_PERMISSIONS_AS_VALUES.indexOf(current) > HOST_PERMISSIONS_AS_VALUES.indexOf(required);
+};
 
 export interface IHostStripeInfo {
   is_stripe_connected: boolean;

@@ -9,7 +9,7 @@ import {
 } from '@core/interfaces';
 import { AdminService } from 'apps/frontend/src/app/services/admin.service';
 import { flatten } from 'flat';
-import { ICacheable } from '../../../app.interfaces';
+import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HostService } from '../../../services/host.service';
 
@@ -35,16 +35,8 @@ export class OnboardingViewComponent implements OnInit {
   activeIssueMaker: [number, number] = [null, null];
 
   onboardingFields: Record<HostOnboardingStep, IUiStepMapField[]>;
-  onboardingSteps: ICacheable<IOnboardingStepMap> = {
-    data: null,
-    loading: false,
-    error: ''
-  };
-
-  enactOnboarding: ICacheable<void> = {
-    loading: false,
-    error: ''
-  };
+  onboardingSteps: ICacheable<IOnboardingStepMap> = createICacheable();
+  enactOnboarding: ICacheable<void> = createICacheable();
 
   constructor(private hostService: HostService, private adminService: AdminService) {}
 
@@ -62,12 +54,7 @@ export class OnboardingViewComponent implements OnInit {
   }
 
   async getOnboardingSteps() {
-    this.onboardingSteps.loading = true;
-    return this.hostService
-      .readOnboardingSteps(this.hostId)
-      .then(d => (this.onboardingSteps.data = d))
-      .catch((e: HttpErrorResponse) => (this.onboardingSteps.error = e.message))
-      .finally(() => (this.onboardingSteps.loading = false));
+    return cachize(this.hostService.readOnboardingSteps(this.hostId), this.onboardingSteps);
   }
 
   parseOnboardingStepsIntoRows(): Record<HostOnboardingStep, IUiStepMapField[]> {
@@ -94,8 +81,7 @@ export class OnboardingViewComponent implements OnInit {
   }
 
   getAllValidSteps(): HostOnboardingStep[] {
-    return Object.keys(this.onboardingSteps.data)
-      .map(step => Number.parseInt(step)) // as HostOnboardingSteps
+    return Object.keys(this.onboardingSteps.data).map(step => Number.parseInt(step)); // as HostOnboardingSteps
   }
 
   async enactOnboardingProcess() {

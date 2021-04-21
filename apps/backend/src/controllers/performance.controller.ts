@@ -19,7 +19,9 @@ import {
   Visibility,
   ICreateAssetRes,
   IMuxPassthrough,
-  AssetOwnerType
+  AssetOwnerType,
+  IStripeChargePassthrough,
+  PurchaseableEntity
 } from '@core/interfaces';
 import {
   AccessToken,
@@ -37,6 +39,7 @@ import {
 } from '@core/shared/api';
 import { getDonoAmount, to } from '@core/shared/helpers';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
+import Stripe from 'stripe';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
@@ -305,11 +308,12 @@ export default class PerformanceController extends BaseController<BackendProvide
             payment_method_types: ['card'],
             amount: amount,
             currency: ticket.currency, // ISO code - https://stripe.com/docs/currencies
-            metadata: {
+            metadata: to<IStripeChargePassthrough>({
               // Passed through to webhook when charge successful
               user_id: req.session.user._id,
-              ticket_id: ticket._id
-            }
+              purchaseable_id: ticket._id,
+              purchaseable_type: PurchaseableEntity.Ticket
+            })
           },
           {
             // Who the payment is intended to be delivered to

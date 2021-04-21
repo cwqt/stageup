@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { capitalize, CurrencyCode, DtoCreatePatreonTier, IPatronTier } from '@core/interfaces';
+import { capitalize, CurrencyCode, DtoCreatePatronTier, IPatronTier } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
@@ -19,7 +19,7 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
   cancel: EventEmitter<void> = new EventEmitter();
   buttons: IUiDialogOptions['buttons'] = [];
 
-  tierForm: UiForm<IPatronTier, DtoCreatePatreonTier>;
+  tierForm: UiForm<IPatronTier, DtoCreatePatronTier>;
   tier: ICacheable<IPatronTier> = createICacheable();
 
   constructor(
@@ -48,11 +48,11 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
         })
       },
       resolvers: {
-        output: async v => this.hostService.createPatreonTier(this.hostService.hostId, this.transform(v))
+        output: async v => this.hostService.createPatronTier(this.hostService.hostId, this.transform(v))
       },
       handlers: {
         success: async tier => {
-          this.toastService.emit(`${capitalize(this.data.operation)}d patreon tier: ${tier.name}!`);
+          this.toastService.emit(`${capitalize(this.data.operation)}d patron tier: ${tier.name}!`);
           this.submit.emit(tier);
           this.ref.close(tier);
         },
@@ -76,7 +76,7 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
     ];
   }
 
-  transform(v): DtoCreatePatreonTier {
+  transform(v): DtoCreatePatronTier {
     return {
       name: v.name,
       currency: CurrencyCode.GBP,

@@ -25,8 +25,10 @@ import {
   IHostInvoice,
   JobType,
   IPatronTier,
-  DtoCreatePatreonTier,
-  IHostPatronTier
+  DtoCreatePatronTier,
+  IHostPatronTier,
+  IPatronSubscription,
+  Environment
 } from '@core/interfaces';
 
 import {
@@ -47,10 +49,12 @@ import {
   Performance,
   AccessToken,
   Invoice,
-  array
+  array,
+  Auth,
+  PatronSubscription
 } from '@core/shared/api';
 
-import { timestamp } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/shared/helpers';
 
 import Env from '../env';
 import Email = require('../common/email');
@@ -60,7 +64,8 @@ import { log } from '../common/logger';
 import { BackendProviderMap } from '..';
 import { In } from 'typeorm';
 import Queue from '../common/queue';
-import { PatreonTier } from 'libs/shared/src/api/entities/hosts/patreon-tier.entity';
+import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
+import { createTestAccount } from 'nodemailer';
 
 export default class HostController extends BaseController<BackendProviderMap> {
   createHost(): IControllerEndpoint<IHost> {
@@ -580,13 +585,18 @@ export default class HostController extends BaseController<BackendProviderMap> {
       controller: async req => {
         // Creating a Standard Stripe account on behalf of the host to faciliate the following:
         // https://stripe.com/img/docs/connect/direct_charges.svg
-        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+        const host = await getCheck(
+          Host.findOne({ _id: req.params.hid }, { relations: { contact_info: { addresses: true } } })
+        );
+
         if (!host.stripe_account_id) {
           // 2 Create a connected account
           // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-create-account
           const account = await this.providers.stripe.connection.accounts.create({
             // TODO: add details collected in onboarding in the .create options
-            type: 'standard'
+            type: 'standard',
+            email: host.email_address,
+            country: host.contact_info.addresses[0].iso_country_code
           });
 
           host.stripe_account_id = account.id;
@@ -786,50 +796,6 @@ export default class HostController extends BaseController<BackendProviderMap> {
             email_address: h.email_address
           }
         });
-      }
-    };
-  }
-
-  createPatreonTier(): IControllerEndpoint<IHostPatronTier> {
-    return {
-      validators: [body<DtoCreatePatreonTier>(Validators.Objects.DtoCreatePatreonTier())],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async req => {
-        const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['patreon_tiers'] }));
-        const tier = new PatreonTier(req.body, host);
-
-        await this.ORM.transaction(async txc => {
-          await txc.save(tier);
-          host.patreon_tiers.push(tier);
-          await txc.save(host);
-        });
-
-        return tier.toHost();
-      }
-    };
-  }
-
-  readPatreonTiers(): IControllerEndpoint<Array<IHostPatronTier | IPatronTier>> {
-    return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async req => {
-        const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['patreon_tiers'] }));
-        const [isMemberOfHost] = await AuthStrat.hasHostPermission(HostPermission.Admin, () => host._id)(
-          req,
-          this.providers
-        );
-
-        return isMemberOfHost ? host.patreon_tiers.map(t => t.toHost()) : host.patreon_tiers.map(t => t.toFull());
-      }
-    };
-  }
-
-  deletePatreonTier(): IControllerEndpoint<void> {
-    return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async req => {
-        const tier = await getCheck(PatreonTier.findOne({ _id: req.params.tid }));
-        await tier.softRemove();
       }
     };
   }

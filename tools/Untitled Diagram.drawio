@@ -163,7 +163,7 @@
         <mxCell id="pIG1mHE-JtHDSWWCl5V9-59" style="edgeStyle=none;curved=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="pIG1mHE-JtHDSWWCl5V9-47" target="pIG1mHE-JtHDSWWCl5V9-45">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="pIG1mHE-JtHDSWWCl5V9-47" value="Patreonage" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="pIG1mHE-JtHDSWWCl5V9-47" value="Patronage" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="563" y="175" width="90" height="30" as="geometry" />
         </mxCell>
         <mxCell id="pIG1mHE-JtHDSWWCl5V9-54" style="edgeStyle=none;curved=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="pIG1mHE-JtHDSWWCl5V9-48" target="pIG1mHE-JtHDSWWCl5V9-50">

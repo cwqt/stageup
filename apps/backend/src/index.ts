@@ -9,7 +9,6 @@ import { log, stream } from './common/logger';
 import Env from './env';
 import routes from './routes';
 
-
 export interface BackendProviderMap extends ProviderMap {
   torm: InstanceType<typeof Providers.Postgres>;
   mux: InstanceType<typeof Providers.Mux>;
@@ -59,7 +58,8 @@ Register<BackendProviderMap>({
     stripe: new Providers.Stripe({
       public_key: Env.STRIPE.PUBLIC_KEY,
       private_key: Env.STRIPE.PRIVATE_KEY,
-      hook_signature: Env.STRIPE.HOOK_SIGNATURE
+      hook_signature: Env.STRIPE.HOOK_SIGNATURE,
+      client_id: Env.STRIPE.CLIENT_ID
     }),
     s3: new Providers.S3({
       s3_access_key_id: Env.AWS.S3_ACCESS_KEY_ID,
@@ -115,7 +115,7 @@ Register<BackendProviderMap>({
   // delete all topics and re-create them from fresh
   const allTopics = [TopicType.StreamStateChanged];
   const topics = await pm.pubsub.connection.getTopics();
-  await Promise.all(topics.flat().map((t:Topic) => t.delete()));
+  await Promise.all(topics.flat().map((t: Topic) => t.delete()));
   await Promise.all(allTopics.map(t => pm.pubsub.connection.createTopic(t as string)));
 
   return Router(pm, Auth.or(Auth.isSiteAdmin, Auth.isFromService), { redis: pm.redis.connection }, log)(routes);

@@ -1,9 +1,10 @@
-import { IPerformanceStub } from "../performances/performance.interface";
-import { ITicketStub } from "../performances/ticket.interface";
-import { CurrencyCode } from "./currency.interface";
+import { IPerformanceStub } from '../performances/performance.interface';
+import { ITicketStub } from '../performances/ticket.interface';
+import { CurrencyCode } from './currency.interface';
 
 export enum PurchaseableEntity {
-  Ticket = 'ticket'
+  Ticket = 'ticket',
+  PatronTier = 'patron-tier'
 }
 
 // A record of purchase by the user
@@ -19,18 +20,18 @@ export interface IInvoice {
 
 // https://stripe.com/docs/api/orders/list#list_orders-status
 export enum PaymentStatus {
-	Created = "created",
-	Paid = "paid",
-	Fufilled = "fufilled",
-	Refunded = "refunded",
-	RefundDenied = "refund_denied",
-  RefundPending = "refund_pending"
+  Created = 'created',
+  Paid = 'paid',
+  Fufilled = 'fufilled',
+  Refunded = 'refunded',
+  RefundDenied = 'refund_denied',
+  RefundPending = 'refund_pending'
 }
 
 // Pertains to both hosts & users, should be tied into a Purchaseable supertype
-// when we add patreonage etc.
+// when we add patronage etc.
 export interface DtoInvoice {
-  invoice_id: IInvoice["_id"];
+  invoice_id: IInvoice['_id'];
   invoice_date: number;
   status: PaymentStatus;
   amount: number;
@@ -38,13 +39,13 @@ export interface DtoInvoice {
 }
 
 export interface IHostInvoice extends DtoInvoice {
-	performance: IPerformanceStub;
-	ticket: ITicketStub;
-	net_amount: number; // for hosts only
+  performance: IPerformanceStub;
+  ticket: ITicketStub;
+  net_amount: number; // for hosts only
 }
 
 export interface IUserInvoice extends DtoInvoice {
-	performance: IPerformanceStub;
-	ticket: ITicketStub;
+  performance: IPerformanceStub;
+  ticket: ITicketStub;
   receipt_url: string;
 }

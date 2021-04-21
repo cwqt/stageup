@@ -27,9 +27,6 @@ import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboard
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
-import { HostAboutComponent } from './routes/host/host-about/host-about.component';
-import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
-import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
@@ -46,6 +43,9 @@ import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
 import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component';
 import { HostPatronageComponent } from './routes/host/host-payments/host-patronage/host-patronage.component';
+import { HostProfilePatronageComponent } from './routes/host/host-profile/host-profile-patronage/host-profile-patronage.component';
+import { HostProfileAboutComponent } from './routes/host/host-profile/host-profile-about/host-profile-about.component';
+import { HostProfileFeedComponent } from './routes/host/host-profile/host-profile-feed/host-profile-feed.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -122,9 +122,9 @@ const LOGGED_IN_ROUTES: Routes = [
         component: HostProfileComponent,
         data: { is_host_view: true },
         children: [
-          { path: '', component: HostFeedComponent },
-          { path: 'about', component: HostAboutComponent },
-          { path: 'contact', component: HostContactComponent },
+          { path: '', component: HostProfileFeedComponent },
+          { path: "patronage", component: HostProfilePatronageComponent },
+          { path: 'about', component: HostProfileAboutComponent },
           { path: '**', component: NotFoundComponent }
         ]
       }
@@ -196,9 +196,9 @@ const LOGGED_IN_ROUTES: Routes = [
               component: HostProfileComponent,
               data: { is_host_view: false },
               children: [
-                { path: '', component: HostFeedComponent },
-                { path: 'about', component: HostAboutComponent },
-                { path: 'contact', component: HostContactComponent },
+                { path: '', component: HostProfileFeedComponent },
+                { path: "patronage", component: HostProfilePatronageComponent },
+                { path: 'about', component: HostProfileAboutComponent },
                 { path: '**', component: NotFoundComponent }
               ]
             },

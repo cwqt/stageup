@@ -1,1 +1,10 @@
-:host { width: 100% }
+:host {
+  width: 100%;
+  position: relative;
+}
+
+.dashboard-cover {
+  width: 100vw;
+  margin-top: -2rem;
+  margin-left: -2rem;
+}

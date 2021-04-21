@@ -71,9 +71,6 @@ import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/on
 import { OnboardingViewIssueMakerComponent } from './routes/admin-panel/onboarding-view/onboarding-view-issue-maker/onboarding-view-issue-maker.component';
 import { UserThumbComponent } from './components/user-thumb/user-thumb.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
-import { HostContactComponent } from './routes/host/host-contact/host-contact.component';
-import { HostAboutComponent } from './routes/host/host-about/host-about.component';
-import { HostFeedComponent } from './routes/host/host-feed/host-feed.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { HostAddMemberComponent } from './routes/host/host-members/host-add-member/host-add-member.component';
 import { HostMemberPermissionsDialogComponent } from './routes/host/host-members/host-member-permissions-dialog/host-member-permissions-dialog.component';
@@ -105,6 +102,10 @@ import { UploadVideoComponent } from './components/upload-video/upload-video.com
 import { HostPatronageComponent } from './routes/host/host-payments/host-patronage/host-patronage.component';
 import { CreateUpdatePatronTierComponent } from './routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component';
 import { PatronTierThumbComponent } from './routes/host/host-payments/host-patronage/patron-tier-thumb/patron-tier-thumb.component';
+import { HostProfilePatronageComponent } from './routes/host/host-profile/host-profile-patronage/host-profile-patronage.component';
+import { HostProfileAboutComponent } from './routes/host/host-profile/host-profile-about/host-profile-about.component';
+import { HostProfileFeedComponent } from './routes/host/host-profile/host-profile-feed/host-profile-feed.component';
+import { BecomePatronDialogComponent } from './routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -157,9 +158,6 @@ import { PatronTierThumbComponent } from './routes/host/host-payments/host-patro
     PerformanceBrochureComponent,
     UserThumbComponent,
     HostProfileComponent,
-    HostContactComponent,
-    HostAboutComponent,
-    HostFeedComponent,
     HostMembersComponent,
     HostAddMemberComponent,
     HostMemberPermissionsDialogComponent,
@@ -192,7 +190,11 @@ import { PatronTierThumbComponent } from './routes/host/host-payments/host-patro
     UploadVideoComponent,
     HostPatronageComponent,
     CreateUpdatePatronTierComponent,
-    PatronTierThumbComponent
+    PatronTierThumbComponent,
+    HostProfilePatronageComponent,
+    HostProfileAboutComponent,
+    HostProfileFeedComponent,
+    BecomePatronDialogComponent
   ],
   imports: [
     AngularMaterialModule,

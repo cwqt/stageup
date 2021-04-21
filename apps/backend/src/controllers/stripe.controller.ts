@@ -5,7 +5,8 @@ import {
   StripeHook,
   TokenProvisioner,
   PurchaseableEntity,
-  PaymentStatus
+  PaymentStatus,
+  IStripeChargePassthrough
 } from '@core/interfaces';
 import {
   BaseController,
@@ -17,7 +18,8 @@ import {
   Ticket,
   Invoice,
   AccessToken,
-  SigningKey
+  SigningKey,
+  PatronTier
 } from '@core/shared/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
@@ -70,52 +72,66 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
   async handleChargeSuccessful(event: Stripe.Event) {
     const data = event.data.object as Stripe.Charge;
+    const passthrough = data.metadata as IStripeChargePassthrough;
 
-    // User purchased a performance, have some metadata stored in the PaymentIntent
-    const { user_id, ticket_id } = data.metadata;
-    const user = await User.findOne({ _id: user_id });
-    const ticket = await Ticket.findOne({
-      where: {
-        _id: ticket_id
-      },
-      relations: {
-        performance: {
-          host: true,
-          stream: {
-            signing_key: true
-          }
-        }
-      },
-      select: {
-        performance: {
-          host: {
-            _id: true
-          }
-        }
+    switch (passthrough.purchaseable_type) {
+      // Purchased Patron Subscription ---------------------------------------------------------------
+      case PurchaseableEntity.PatronTier: {
+        const user = await User.findOne({ _id: passthrough.user_id });
+        const tier = await PatronTier.findOne({ _id: passthrough.purchaseable_id }, { relations: ['host'] });
+
+        await this.ORM.transaction(async txc => {
+          // TODO make invoice
+        });
       }
-    });
+      // Purchased Ticket ----------------------------------------------------------------------------
+      case PurchaseableEntity.Ticket: {
+        const user = await getCheck(User.findOne({ _id: passthrough.user_id }));
+        const ticket = await getCheck(
+          Ticket.findOne({
+            where: {
+              _id: passthrough.purchaseable_id
+            },
+            relations: {
+              performance: {
+                host: true,
+                stream: {
+                  signing_key: true
+                }
+              }
+            },
+            select: {
+              performance: {
+                host: {
+                  _id: true
+                }
+              }
+            }
+          })
+        );
 
-    await this.ORM.transaction(async txc => {
-      // Create a new invoice for the user which provisions an access token for the performance
-      ticket.quantity_remaining -= 1;
-      const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data)
-        .setHost(ticket.performance.host) // should be party to hosts invoices
-        .setTicket(ticket); // purchased a ticket
+        await this.ORM.transaction(async txc => {
+          // Create a new invoice for the user which provisions an access token for the performance
+          ticket.quantity_remaining -= 1;
+          const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data)
+            .setHost(ticket.performance.host) // should be party to hosts invoices
+            .setTicket(ticket); // purchased a ticket
 
-      invoice.status = PaymentStatus.Paid;
+          invoice.status = PaymentStatus.Paid;
+          await txc.save(invoice);
 
-      await txc.save(invoice);
+          // Create & sign for the user on this performance
+          const token = new AccessToken(user, ticket.performance, invoice, TokenProvisioner.Purchase);
+          await token.sign(ticket.performance.stream.signing_key);
+          await txc.save(token);
 
-      // Create & sign for the user on this performance
-      const token = new AccessToken(user, ticket.performance, invoice, TokenProvisioner.Purchase);
-      await token.sign(ticket.performance.stream.signing_key);
-      await txc.save(token);
+          // Save the remaining ticket quantity
+          await txc.save(ticket);
+        });
 
-      // Save the remaining ticket quantity
-      await txc.save(ticket);
-    });
-
-    Email.sendTicketPurchaseConfirmation(user, ticket, ticket.performance, data.receipt_url);
+        Email.sendTicketPurchaseConfirmation(user, ticket, ticket.performance, data.receipt_url);
+      }
+    }
   }
 
   async handlePaymentIntentCreated(event: Stripe.Event) {

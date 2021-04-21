@@ -1,0 +1,10 @@
+<ui-dialog [buttons]="buttons" [title]="'Subscribe to ' + data.tier.name" [loading]="subscription.loading">
+  <p class="mb-0">Becoming a patron to this tier entitles you to the following:</p>
+
+  <quill-view [content]="data.tier.description" format="object" theme="snow"></quill-view>
+
+  <p>
+    This tier will cost <b>{{ data.tier.amount | currencyPipe: data.tier.currency }}</b>, which will be billed on a
+    monthly basis, starting today.
+  </p>
+</ui-dialog>

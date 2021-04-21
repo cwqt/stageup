@@ -20,6 +20,7 @@ import { Performance } from '../performances/performance.entity';
 import { Person } from './person.entity';
 import { ContactInfo } from './contact-info.entity';
 import { Invoice } from '../common/invoice.entity';
+import { PatronSubscription } from './patron-subscription.entity';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
@@ -36,18 +37,21 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() is_new_user: boolean;
   @Column() is_admin: boolean;
   @Column() email_address: string;
+  @Column() stripe_customer_id: string; // cus_xxx
 
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
   @OneToMany(() => Invoice, invoice => invoice.user) invoices: Invoice[]; // Many purchases
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
+  @OneToMany(() => PatronSubscription, sub => sub.user) patron_subcriptions:PatronSubscription[];
 
   @Column() private salt: string;
   @Column() private pw_hash: string;
 
-  constructor(data: { email_address: string; username: string; password: string }) {
+  constructor(data: { email_address: string; username: string; password: string, stripe_customer_id: string }) {
     super();
     this.username = data.username;
     this.email_address = data.email_address;
+    this.stripe_customer_id = data.stripe_customer_id;
     this.created_at = Math.floor(Date.now() / 1000); // Timestamp in seconds
     this.is_admin = false;
     this.is_new_user = false; // TODO: change to true
@@ -107,7 +111,8 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
       pw_hash: this.pw_hash,
       salt: this.salt,
       email_address: this.email_address,
-      personal_details: this.personal_details
+      personal_details: this.personal_details,
+      stripe_customer_id: this.stripe_customer_id
     };
   }
 

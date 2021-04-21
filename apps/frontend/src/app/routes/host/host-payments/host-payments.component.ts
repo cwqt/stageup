@@ -16,8 +16,8 @@ import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 export class HostPaymentsComponent implements OnInit {
   stripeInfo: ICacheable<IHostStripeInfo> = createICacheable();
   connect: ICacheable<null> = createICacheable();
-  connectSuccess:undefined | boolean;
-  host:IHostStub;
+  connectSuccess: undefined | boolean;
+  host: IHostStub;
 
   constructor(
     private baseAppService: BaseAppService,
@@ -38,7 +38,9 @@ export class HostPaymentsComponent implements OnInit {
     // Emit toast if QP with details of Stripe connect onboarding result
     if (this.connectSuccess !== undefined) {
       this.toastService.emit(
-        this.connectSuccess ? 'Successfully connected Stripe!' : 'Error occured while connecting Stripe, try again later',
+        this.connectSuccess
+          ? 'Successfully connected Stripe!'
+          : 'Error occured while connecting Stripe, try again later',
         this.connectSuccess ? ThemeKind.Primary : ThemeKind.Danger,
         { duration: 5000 }
       );

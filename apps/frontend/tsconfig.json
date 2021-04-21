@@ -11,6 +11,7 @@
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    // "strictTemplates": true
   }
 }

@@ -2,8 +2,8 @@ import { EntityManager } from 'typeorm';
 import { SendMailOptions } from 'nodemailer';
 import dbless from 'dbless-email-verification';
 import { Environment, IUser, JobType } from '@core/interfaces';
-import { prettifyMoney } from '@core/shared/helpers';
-import { Host, User, HostInvitation, Performance, Ticket, PasswordReset } from '@core/shared/api';
+import { prettifyMoney, dateOrdinal } from '@core/shared/helpers';
+import { Host, User, HostInvitation, Performance, Ticket, PasswordReset, PatronTier } from '@core/shared/api';
 
 import Env from '../env';
 import Queue from './queue';
@@ -86,56 +86,96 @@ export const sendTicketPurchaseConfirmation = async (
     subject: `Receipt of purchase of StageUp ticket 🎭`,
     html: `
     <p>
-      You purchased a <b>${ticket.name}</b> ticket to watch <b>${performance.name}</b> for <b>${prettifyMoney(ticket.amount, ticket.currency)}</b>.<br/>
+      You purchased a <b>${ticket.name}</b> ticket to watch <b>${performance.name}</b> for <b>${prettifyMoney(
+      ticket.amount,
+      ticket.currency
+    )}</b>.<br/>
       <br/><a href="${performanceLink}">Click here to watch</a>
       <br/>
-      <br/>Reciept of this purchase: <a href="${receiptUrl}">${receiptUrl}</a> 
+      <br/>Reciept of this purchase: <a href="${receiptUrl}">${receiptUrl}</a>
       <br/>
       <br/>Thanks,<br/>StageUp Team
     </p>`
   });
-}
+};
 
-  export const sendEmailToResetPassword = async (
-    username: User,
-    USER_EMAIL_ADDRESS: PasswordReset['email_address'],
-    URI_ENCODED_OTP: PasswordReset['otp']    
-  ) => {
-    const resetPasswordLink = `http://localhost:4200/users/reset-password?otp=${URI_ENCODED_OTP}`;
-  
-    return sendEmail({
-      from: Env.EMAIL_ADDRESS,
-      to: USER_EMAIL_ADDRESS,
-      subject: 'StageUp Reset Password',
-      html: `<p>
-        Hello <b>${username.username}</b>, <br><br>
+export const sendUserPatronSubscriptionConfirmation = async (user: User, tier: PatronTier) => {
+  return sendEmail({
+    from: Env.EMAIL_ADDRESS,
+    to: user.email_address,
+    subject: `Patron Subscription to ${tier.name}`,
+    html: `
+      <p>
+        Hey there, <br/>
+        Thank you for supporting <b>@${tier.host.username}</b><br/>
+        <br/>
+        Your patron payments of <b>${prettifyMoney(tier.amount, tier.currency)}</b> will be debited on
+        ${dateOrdinal(new Date(), true)} of each month, starting today.<br/>
+        <br/>
+        You can cancel your payment at any time.<br/>
+        By making this payment, you agree to <a href="${Env.FE_URL}/terms-of-service">StageUp's Terms of Use.</a>.
+        <br/>
+        <br/>Thanks,<br/>StageUp Team
+      </p>
+    `
+  });
+};
+
+export const sendHostPatronTierPurchaseConfirmation = async (subscriber: User, tier: PatronTier) => {
+  return sendEmail({
+    from: Env.EMAIL_ADDRESS,
+    to: tier.host.email_address,
+    subject: `New Patron to ${tier.name}`,
+    html: `
+      <p>
+        Hey there, <br/>
+        @${subscriber.username} is now a patron of your company.<br/>
+        <br/>
+        Patron Tier: <b>${tier.name}</b><br/>
+        Amount: <b>${prettifyMoney(tier.amount, tier.currency)}</b>
+        <br/>
+        <br/>Thanks,<br/>StageUp Team
+      </p>
+    `
+  });
+};
+
+export const sendEmailToResetPassword = async (
+  user: User,
+  userEmailAddress: PasswordReset['email_address'],
+  otp: PasswordReset['otp']
+) => {
+  const resetPasswordLink = `http://localhost:4200/users/reset-password?otp=${otp}`;
+
+  return sendEmail({
+    from: Env.EMAIL_ADDRESS,
+    to: userEmailAddress,
+    subject: 'StageUp Reset Password',
+    html: `<p>
+        Hello <b>${user.username}</b>, <br><br>
         You are receiving this because you (or someone else) have requested the reset of the password for your StageUp account.<br><br>
         Please click on the following link to complete the process. This link is valid for the next 24 hours.<br>
         <div>
             <a href="${resetPasswordLink}"target="_blank" rel="noopener" style="background-color:#e0158b;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:38px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">Reset Password</a>
-        </div><br>        
+        </div><br>
         If you did not request this change, please ignore this email and your password will remain unchanged.<br><br>
         Thank you, <br>
         The StageUp Team.
         </p>`
-    });
-  }
+  });
+};
 
-  export const sendEmailToConfirmPasswordReset = async (
-    user: User
-    ) => {      
-    
-    return sendEmail({
-      from: Env.EMAIL_ADDRESS,
-      to: user.email_address,
-      subject: 'Your StageUp password was just changed',
-      html: `<p>
+export const sendEmailToConfirmPasswordReset = async (user: User) => {
+  return sendEmail({
+    from: Env.EMAIL_ADDRESS,
+    to: user.email_address,
+    subject: 'Your StageUp password was just changed',
+    html: `<p>
       Your StageUp account password has recently been changed.<br/><br/>
       If you did not make this change, please login into your account and change your password as soon as possible.<br>
       If you have recently changed your password, then please ignore this email.<br><br>
       Thank you.<br>
       The StageUp Team.
       </p>`
-    });
-  } 
-  
+  });
+};

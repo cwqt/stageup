@@ -1,19 +1,23 @@
 import { StepperSelectionEvent, STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatVerticalStepper } from '@angular/material/stepper';
+import { MatHorizontalStepper, MatVerticalStepper } from '@angular/material/stepper';
 import {
+  capitalize,
   HostOnboardingState,
   HostOnboardingStep,
   IHost,
   IHostOnboarding,
   IOnboardingStep,
-  ISOCountryCode
+  ISOCountryCode,
+  PersonTitle
 } from '@core/interfaces';
-import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { enumToValues } from '@core/shared/helpers';
+import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import isPostalCode from 'validator/es/lib/isPostalCode';
+import { flatten } from 'flat';
 
 interface IUiStep<T> {
   label: string;
@@ -35,26 +39,18 @@ interface IUiStep<T> {
   ]
 })
 export class HostOnboardingComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatHorizontalStepper, { static: false }) stepper: MatHorizontalStepper;
   host: IHost;
-  @ViewChild(MatVerticalStepper, { static: false }) stepper: MatVerticalStepper;
 
   public states: typeof HostOnboardingState = HostOnboardingState;
 
   onReviewStep: boolean = false;
   selectedStep: HostOnboardingStep;
   componentRefreshing: boolean = true;
-  onboarding: ICacheable<IHostOnboarding> = {
-    data: null,
-    loading: false,
-    error: ''
-  };
+  onboarding: ICacheable<IHostOnboarding> = createICacheable();
 
   // For when the user submits for verification
-  submission: ICacheable<null> = {
-    data: null,
-    loading: false,
-    error: ''
-  };
+  submission: ICacheable<null> = createICacheable();
 
   stepData = createICacheable<IOnboardingStep<any>>();
   stepCacheables: {
@@ -76,136 +72,140 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     [HostOnboardingState.Modified]: { color: '', icon: 'edit' }
   };
 
-  stepUiMap: { [index in HostOnboardingStep]?: IUiStep<any> } = {
-    [HostOnboardingStep.ProofOfBusiness]: {
-      label: 'Proof of Business',
-      data: null,
-      form: new UiForm({
-        // prefetch: async () => this.prefetchStepData(HostOnboardingStep.ProofOfBusiness),
-        fields: {
-          hmrc_company_number: UiField.Number({
-            label: 'HMRC Company Number',
-            validators: [
-              { type: 'minlength', value: 8 },
-              { type: 'maxlength', value: 8 }
-            ]
-          }),
-          business_contact_number: UiField.Phone({
-            label: 'Business Contact Number',
-            hint: 'Of the form 1724 123321, no leading zero',
-            validators: [{ type: 'required' }]
-          }),
-          business_address: UiField.Container({
-            label: 'Business Address',
-            fields: {
-              city: UiField.Text({
-                label: 'City',
-                validators: [{ type: 'required' }]
-              }),
-              iso_country_code: UiField.Select({
-                label: 'Country',
-                has_search: true,
-                values: Object.keys(ISOCountryCode).reduce((acc, curr) => {
-                  acc.set(curr, { label: ISOCountryCode[curr] });
-                  return acc;
-                }, new Map()),
-                validators: [{ type: 'required' }]
-              }),
-              postcode: UiField.Text({
-                label: 'Postcode',
-                validators: [
-                  { type: 'required' },
-                  {
-                    type: 'custom',
-                    value: v => isPostalCode(v.value, 'GB'),
-                    message: () => `Not a valid postal code`
-                  }
-                ]
-              }),
-              street_number: UiField.Number({
-                label: 'Street Number',
-                validators: [{ type: 'required' }]
-              }),
-              street_name: UiField.Text({
-                label: 'Street Name',
-                validators: [{ type: 'required' }]
-              })
-            }
-          })
-        },
-        resolvers: {
-          output: async v => this.handleStepCompletion(v, HostOnboardingStep.ProofOfBusiness)
-        }
-      })
-    }
-    // [HostOnboardingStep.OwnerDetails]: {
-    //   label: 'Owner Details',
-    //   data: null,
-    //   form: {
-    //     prefetch: async () => this.prefetchStepData(HostOnboardingStep.OwnerDetails),
-    //     fields: {
-    //       owner_info: {
-    //         type: 'container',
-    //         label: 'Owner Information',
-    //         fields: {
-    //           title: {
-    //             type: 'select',
-    //             label: 'Title',
-    //             options: {
-    //               values: new Map(enumToValues(PersonTitle).map(title => [title, { label: capitalize(title) }]))
-    //             },
-    //             validators: [{ type: 'required' }]
-    //           },
-    //           first_name: {
-    //             type: 'text',
-    //             label: 'First name',
-    //             validators: [{ type: 'required' }]
-    //           },
-    //           last_name: {
-    //             type: 'text',
-    //             label: 'Last name',
-    //             validators: [{ type: 'required' }]
-    //           }
-    //         }
-    //       }
-    //     },
-    //     submit: {
-    //       variant: 'primary',
-    //       text: 'Next',
-    //       handler: async formData => this.handleStepCompletion(formData, HostOnboardingStep.OwnerDetails)
-    //     }
-    //   }
-    // },
-    // [HostOnboardingStep.SocialPresence]: {
-    //   label: 'Social Presence',
-    //   data: null,
-    //   form: {
-    //     prefetch: async () => this.prefetchStepData(HostOnboardingStep.SocialPresence),
-    //     fields: {
-    //       social_info: {
-    //         type: 'container',
-    //         label: 'Social Information',
-    //         fields: {
-    //           linkedin_url: { type: 'text', label: 'LinkedIn' },
-    //           facebook_url: { type: 'text', label: 'Facebook' },
-    //           instagram_url: { type: 'text', label: 'Instagram' }
-    //         }
-    //       }
-    //     },
-    //     submit: {
-    //       variant: 'primary',
-    //       text: 'Next',
-    //       handler: async formData => this.handleStepCompletion(formData, HostOnboardingStep.SocialPresence)
-    //     }
-    //   }
-    // }
-  };
+  stepUiMap: { [index in HostOnboardingStep]?: IUiStep<any> };
 
   constructor(private hostService: HostService) {}
 
   async ngOnInit() {
     this.host = await this.hostService.readHost(this.hostService.currentHostValue._id);
-    this.getOnboarding().then(() => this.switchStep(HostOnboardingStep.ProofOfBusiness));
+    await this.getOnboarding();
+
+    this.stepUiMap = {
+      [HostOnboardingStep.ProofOfBusiness]: {
+        label: 'Proof of Business',
+        data: null,
+        form: new UiForm(
+          {
+            // prefetch: async () => this.prefetchStepData(HostOnboardingStep.ProofOfBusiness),
+            fields: {
+              hmrc_company_number: UiField.Number({
+                label: 'HMRC Company Number',
+                validators: [
+                  { type: 'minlength', value: 8 },
+                  { type: 'maxlength', value: 8 }
+                ]
+              }),
+              business_contact_number: UiField.Phone({
+                label: 'Business Contact Number',
+                hint: 'Of the form 1724 123321, no leading zero',
+                validators: [{ type: 'required' }]
+              }),
+              business_address: UiField.Container({
+                label: 'Business Address',
+                fields: {
+                  city: UiField.Text({
+                    label: 'City',
+                    validators: [{ type: 'required' }]
+                  }),
+                  iso_country_code: UiField.Select({
+                    label: 'Country',
+                    has_search: true,
+                    values: Object.keys(ISOCountryCode).reduce((acc, curr) => {
+                      acc.set(curr, { label: ISOCountryCode[curr] });
+                      return acc;
+                    }, new Map()),
+                    validators: [{ type: 'required' }]
+                  }),
+                  postcode: UiField.Text({
+                    label: 'Postcode',
+                    validators: [
+                      { type: 'required' },
+                      {
+                        type: 'custom',
+                        value: v => isPostalCode(v.value, 'GB'),
+                        message: () => `Not a valid postal code`
+                      }
+                    ]
+                  }),
+                  street_number: UiField.Number({
+                    label: 'Street Number',
+                    validators: [{ type: 'required' }]
+                  }),
+                  street_name: UiField.Text({
+                    label: 'Street Name',
+                    validators: [{ type: 'required' }]
+                  })
+                }
+              })
+            },
+            resolvers: {
+              output: async v => this.handleStepCompletion(v, HostOnboardingStep.ProofOfBusiness),
+              input: async () => this.prefetchStepData(HostOnboardingStep.ProofOfBusiness)
+            }
+          },
+          this.stepCacheables[HostOnboardingStep.ProofOfBusiness]
+        )
+      },
+      [HostOnboardingStep.OwnerDetails]: {
+        label: 'Owner Details',
+        data: null,
+        form: new UiForm(
+          {
+            fields: {
+              owner_info: UiField.Container({
+                label: 'Owner Information',
+                fields: {
+                  title: UiField.Select({
+                    label: 'Title',
+                    values: new Map(enumToValues(PersonTitle).map(title => [title, { label: capitalize(title) }])),
+                    validators: [{ type: 'required' }]
+                  }),
+                  first_name: UiField.Text({
+                    label: 'First name',
+                    validators: [{ type: 'required' }]
+                  }),
+                  last_name: UiField.Text({
+                    label: 'Last name',
+                    validators: [{ type: 'required' }]
+                  })
+                }
+              })
+            },
+            resolvers: {
+              output: async formData => this.handleStepCompletion(formData, HostOnboardingStep.OwnerDetails),
+              input: async () => this.prefetchStepData(HostOnboardingStep.OwnerDetails)
+            }
+          },
+          this.stepCacheables[HostOnboardingStep.OwnerDetails]
+        )
+      },
+      [HostOnboardingStep.SocialPresence]: {
+        label: 'Social Presence',
+        data: null,
+        form: new UiForm(
+          {
+            fields: {
+              social_info: UiField.Container({
+                label: 'Social Information',
+                fields: {
+                  site_url: UiField.Text({ label: 'Website' }),
+                  linkedin_url: UiField.Text({ label: 'LinkedIn' }),
+                  facebook_url: UiField.Text({ label: 'Facebook' }),
+                  instagram_url: UiField.Text({ label: 'Instagram' })
+                }
+              })
+            },
+            resolvers: {
+              output: async formData => this.handleStepCompletion(formData, HostOnboardingStep.SocialPresence),
+              input: async () => this.prefetchStepData(HostOnboardingStep.SocialPresence)
+            }
+          },
+          this.stepCacheables[HostOnboardingStep.SocialPresence]
+        )
+      }
+    };
+
+    this.switchStep(HostOnboardingStep.ProofOfBusiness);
   }
 
   ngAfterViewInit() {}
@@ -226,20 +226,22 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
     return this.onboarding.data.state;
   }
 
-  // async prefetchStepData(step: HostOnboardingStep): Promise<IUiFormPrefetchData> {
-  //   // Only perform prefetches if the user has submitted this onboarding before
-  //   if (this.onboarding.data.steps[step] !== HostOnboardingState.AwaitingChanges) {
-  //     const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(this.host._id, step));
+  async prefetchStepData(step: HostOnboardingStep): Promise<any> {
+    console.log(this.onboarding);
 
-  //     return {
-  //       fields: flatten<any, IUiFormPrefetchData['fields']>(stepData.data),
-  //       errors: Object.keys(stepData.review?.issues || []).reduce((acc, curr) => {
-  //         acc[curr] = stepData.review.issues[curr];
-  //         return acc;
-  //       }, {})
-  //     };
-  //   }
-  // }
+    // Only perform prefetches if the user has submitted this onboarding before
+    if (this.onboarding.data.steps[step] !== HostOnboardingState.AwaitingChanges) {
+      const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(this.host._id, step));
+
+      return {
+        fields: flatten(stepData.data),
+        errors: Object.keys(stepData.review?.issues || []).reduce((acc, curr) => {
+          acc[curr] = stepData.review.issues[curr];
+          return acc;
+        }, {})
+      };
+    }
+  }
 
   switchStep(step: HostOnboardingStep) {
     this.componentRefreshing = true;
@@ -276,7 +278,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   handleStepCompletion(formData: any, step: HostOnboardingStep) {
     return this.hostService
       .updateOnboardingProcessStep(this.host._id, step, formData)
-      .then(() => this.stepper.next())
+      .then(d => (this.stepper.next(), d))
       .finally(() => console.log(this.stepCacheables));
   }
 
@@ -285,29 +287,18 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   handleStepFailure(step: HostOnboardingStep) {}
 
   async readCurrentStep(step: HostOnboardingStep) {
-    this.stepData.loading = true;
-    return this.hostService
-      .readOnboardingProcessStep(this.host._id, step)
-      .then(data => (this.stepData.data = data))
-      .catch((e: HttpErrorResponse) => (this.stepData.error = e.message))
-      .finally(() => (this.stepData.loading = false));
+    return cachize(this.hostService.readOnboardingProcessStep(this.host._id, step), this.stepData);
   }
 
   async getOnboarding() {
-    this.onboarding.loading = true;
-    return this.hostService
-      .readOnboardingProcessStatus(this.host._id)
-      .then(o => (this.onboarding.data = o))
-      .catch((e: HttpErrorResponse) => (this.onboarding.error = e.message))
-      .finally(() => (this.onboarding.loading = false));
+    return cachize(this.hostService.readOnboardingProcessStatus(this.host._id), this.onboarding);
   }
 
   async submitForVerification() {
-    this.submission.loading = true;
-    return this.hostService
-      .submitOnboardingProcess(this.host._id)
-      .then(() => (this.onboarding.data.state = HostOnboardingState.PendingVerification))
-      .catch((e: HttpErrorResponse) => (this.submission.error = e.message))
-      .finally(() => (this.submission.loading = false));
+    return cachize(
+      this.hostService.submitOnboardingProcess(this.host._id),
+      this.onboarding,
+      () => this.onboarding.data
+    ).then(() => (this.onboarding.data.state = HostOnboardingState.PendingVerification));
   }
 }

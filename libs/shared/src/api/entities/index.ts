@@ -2,6 +2,7 @@ export { User } from './users/user.entity';
 export { Person } from './users/person.entity';
 export { Address } from './users/address.entity';
 export { ContactInfo } from './users/contact-info.entity';
+export { PatronSubscription } from './users/patron-subscription.entity';
 // export { BillingInfo } from './users/billing-info.entity';
 
 export { Host } from './hosts/host.entity';
@@ -9,7 +10,7 @@ export { HostInvitation } from './hosts/host-invitation.entity';
 export { Onboarding } from './hosts/onboarding.entity';
 export { OnboardingReview } from './hosts/onboarding-review.entity';
 export { UserHostInfo } from './hosts/user-host-info.entity';
-export { PatreonTier } from './hosts/patreon-tier.entity';
+export { PatronTier } from './hosts/patron-tier.entity';
 
 export { AccessToken } from './performances/access-token.entity';
 export { Performance } from './performances/performance.entity';

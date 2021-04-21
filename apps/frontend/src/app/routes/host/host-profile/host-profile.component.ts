@@ -1,15 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostStub } from '@core/interfaces';
+import fd from 'form-data';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { BaseAppService, RouteParam } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
-import { ChangeImageComponent } from '../../settings/change-image/change-image.component';
-import fd from 'form-data';
 import { MyselfService } from '../../../services/myself.service';
+import { ChangeImageComponent } from '../../settings/change-image/change-image.component';
+import { HostProfileAboutComponent } from './host-profile-about/host-profile-about.component';
+import { HostProfileFeedComponent } from './host-profile-feed/host-profile-feed.component';
+import { HostProfilePatronageComponent } from './host-profile-patronage/host-profile-patronage.component';
 
 @Component({
   selector: 'app-host-profile',
@@ -17,35 +20,14 @@ import { MyselfService } from '../../../services/myself.service';
   styleUrls: ['./host-profile.component.scss']
 })
 export class HostProfileComponent implements OnInit {
+  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   @Input() hostUsername?: string;
   host: ICacheable<IHost> = createICacheable();
-  isHostView:boolean;
-
-  hostPages = {
-    index: {
-      label: 'Feed',
-      icon: '',
-      url: ''
-    },
-    about: {
-      label: 'About',
-      icon: '',
-      url: 'about'
-    },
-    contact: {
-      label: 'Contact',
-      icon: '',
-      url: 'contact'
-    },
-    merch: {
-      label: 'Merch',
-      icon: '',
-      url: null
-    }
-  };
+  isHostView: boolean;
+  tabs: Array<{ label: string; route: string }>;
 
   constructor(
-    private myselfService:MyselfService,
+    private myselfService: MyselfService,
     private baseAppService: BaseAppService,
     private route: ActivatedRoute,
     private hostService: HostService,
@@ -54,6 +36,15 @@ export class HostProfileComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.tabs = [
+      { label: 'Feed', route: '' },
+      { label: 'About', route: 'about' },
+      { label: 'Patronage', route: 'patronage' },
+      { label: 'Contact', route: 'contact' },
+      { label: 'Merch', route: null }
+    ];
+
+    // Change view of component depending on if on /dashboard/@user or /@user
     this.isHostView = this.route.snapshot.data['is_host_view'];
     await this.baseAppService.componentInitialising(this.route);
 
@@ -61,19 +52,31 @@ export class HostProfileComponent implements OnInit {
     if (!this.hostUsername) this.hostUsername = this.baseAppService.getParam(RouteParam.HostId).split('@').pop();
 
     // Get the host by username & populate the ICacheable
-    cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
+    await cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
+
+    // Wait for tabs to be in the DOM before setting tabGroup selectedIndex to route
+    setTimeout(() => {
+      this.route.url.subscribe(() => {
+        if (this.route.snapshot.firstChild?.url[0]) {
+          // Map the selected tab to the URL
+          this.tabGroup.selectedIndex = this.tabs.findIndex(
+            i => i.route.split('/').pop() == this.route.snapshot.firstChild.url[0].path
+          );
+        } else {
+          this.tabGroup.selectedIndex = 0;
+        }
+      });
+    }, 0);
   }
 
-  openHostPage(endpoint: string) {
+  onChildLoaded(component: HostProfileAboutComponent | HostProfileFeedComponent | HostProfilePatronageComponent) {
+    component.host = this.host.data;
+  }
+
+  openTabLink(event: MatTabChangeEvent) {
     this.baseAppService.navigateTo(
-      `${this.isHostView ? '/dashboard' : ''}/@${this.hostUsername}/${endpoint}`
+      `${this.isHostView ? '/dashboard' : ''}/@${this.hostUsername}/${this.tabs[event.index].route}`
     );
-  }
-
- handleTabChange(event: MatTabChangeEvent) {
-    const pageIndex = Object.keys(this.hostPages)[event.index];
-    const page = this.hostPages[pageIndex];
-    this.openHostPage(page.url);
   }
 
   openChangeAvatarDialog() {
@@ -86,11 +89,12 @@ export class HostProfileComponent implements OnInit {
       }),
       (event: IHostStub) => {
         this.host.data.avatar = event.avatar;
-        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, avatar: this.host.data.avatar })
-      });
+        this.myselfService.setHost({ ...this.myselfService.$myself.getValue().host, avatar: this.host.data.avatar });
+      }
+    );
   }
 
- handleUploadHostAvatar(formData:fd) {
+  handleUploadHostAvatar(formData: fd) {
     return this.hostService.changeAvatar(this.host.data._id, formData);
   }
 
@@ -103,17 +107,18 @@ export class HostProfileComponent implements OnInit {
         }
       }),
       (event: IHostStub) => {
-        this.host.data.banner = event.banner || "/assets/banner-placeholder.png";
-        this.myselfService.setHost({...this.myselfService.$myself.getValue().host, banner: this.host.data.banner })
-    });
+        this.host.data.banner = event.banner || '/assets/banner-placeholder.png';
+        this.myselfService.setHost({ ...this.myselfService.$myself.getValue().host, banner: this.host.data.banner });
+      }
+    );
   }
 
-  handleUploadHostBanner(formData:fd) {
+  handleUploadHostBanner(formData: fd) {
     return this.hostService.changeBanner(this.host.data._id, formData);
   }
 
- openSocialLink(link: string) {
-    window.open(link, '_blank');
+  openSocialLink(link: string) {
+    window.open(this.host.data.social_info[link], '_blank');
   }
 
   originalOrder() {

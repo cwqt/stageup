@@ -10,7 +10,16 @@ import {
   PrimaryColumn
 } from 'typeorm';
 
-import { IHostPrivate, IHost, IHostStub, HostPermission, ISocialInfo, IHostBusinessDetails, HTTP, ErrCode } from '@core/interfaces';
+import {
+  IHostPrivate,
+  IHost,
+  IHostStub,
+  HostPermission,
+  ISocialInfo,
+  IHostBusinessDetails,
+  HTTP,
+  ErrCode
+} from '@core/interfaces';
 
 import { User } from '../users/user.entity';
 import { Performance } from '../performances/performance.entity';
@@ -20,12 +29,14 @@ import { ContactInfo } from '../users/contact-info.entity';
 import { timestamp, uuid } from '@core/shared/helpers';
 import { ErrorHandler } from '../../errors';
 import { Invoice } from '../common/invoice.entity';
-import { PatreonTier } from './patreon-tier.entity';
+import { PatronTier } from './patron-tier.entity';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column() created_at: number;
   @Column() name: string;
@@ -41,10 +52,10 @@ export class Host extends BaseEntity implements IHostPrivate {
 
   @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
-	@OneToMany(() => Invoice, invoice => invoice.host) invoices: Invoice[];
-  @OneToMany(() => PatreonTier, tier => tier.host) patreon_tiers: PatreonTier[];
+  @OneToMany(() => Invoice, invoice => invoice.host) invoices: Invoice[];
+  @OneToMany(() => PatronTier, tier => tier.host) patron_tiers: PatronTier[];
 
-	@OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
+  @OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {
@@ -56,8 +67,9 @@ export class Host extends BaseEntity implements IHostPrivate {
     this.is_onboarded = false;
     this.created_at = timestamp();
     this.members_info = [];
-    this.patreon_tiers = [];
+    this.patron_tiers = [];
     this.social_info = {
+      site_url: null,
       linkedin_url: null,
       facebook_url: null,
       instagram_url: null
@@ -115,22 +127,21 @@ export class Host extends BaseEntity implements IHostPrivate {
     };
   }
 
-  toFull():Required<IHost> {
+  toFull(): Required<IHost> {
     return {
       ...this.toStub(),
       created_at: this.created_at,
-      members_info: this.members_info?.map(uhi => uhi.toFull()) || [],
       is_onboarded: this.is_onboarded,
       social_info: this.social_info
     };
   }
 
-  toPrivate():Required<IHostPrivate> {
+  toPrivate(): Required<IHostPrivate> {
     return {
       ...this.toFull(),
       email_address: this.email_address,
       contact_info: this.contact_info.toFull(),
-      business_details: this.business_details,
+      business_details: this.business_details
     };
   }
 }

@@ -1,4 +1,12 @@
-import { BASE_AMOUNT_MAP, CurrencyCode, DonoPeg, DONO_PEG_WEIGHT_MAPPING, Environment, NUUID, Primitive } from '@core/interfaces';
+import {
+  BASE_AMOUNT_MAP,
+  CurrencyCode,
+  DonoPeg,
+  DONO_PEG_WEIGHT_MAPPING,
+  Environment,
+  NUUID,
+  Primitive
+} from '@core/interfaces';
 import { nanoid } from 'nanoid';
 import QueryString from 'qs';
 
@@ -103,30 +111,55 @@ export const querize = (query: IQueryParams) =>
  * @param value object to be cast as T
  * @see https://stackoverflow.com/a/38029708
  */
-export function to<T>(value: T): T { return value; }
+export function to<T>(value: T): T {
+  return value;
+}
 
 /**
  * @description Calculate the ticket donation amount from the selected peg and currency
  */
-export const getDonoAmount = (donoPeg: DonoPeg, currency: CurrencyCode, allowAnyQty:number=0) => {
-  return donoPeg == "allow_any"
-    ? allowAnyQty
-    : DONO_PEG_WEIGHT_MAPPING[donoPeg] * BASE_AMOUNT_MAP[currency];
-}
+export const getDonoAmount = (donoPeg: DonoPeg, currency: CurrencyCode, allowAnyQty: number = 0) => {
+  return donoPeg == 'allow_any' ? allowAnyQty : DONO_PEG_WEIGHT_MAPPING[donoPeg] * BASE_AMOUNT_MAP[currency];
+};
 
 /**
  * @description Find elements that exist in both a & b
  * @param inverse Invert the search, to find elements that don't exist in a or b
  * @returns Intersected elements
  */
-export function intersect<T=Primitive>(a: T[], b: T[], inverse: boolean=false): T[] {
+export function intersect<T = Primitive>(a: T[], b: T[], inverse: boolean = false): T[] {
   return a.filter(x => b.includes(x) == !inverse);
 }
-
 
 /**
  * @description Picks at random 1 element from an array
  * @param arr
  * @returns
  */
-export const sample = <T>(arr:T[]):T =>  arr[Math.floor(Math.random() * arr.length)];
+export const sample = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+/**
+ * @description Return ordinal of a date. 1'st', 2'nd', 3'rd' etc.
+ * @param date
+ * @returns Ordinal: st, nd, rd, th
+ */
+export const dateOrdinal = (date: Date, includeDay: boolean = false): string => {
+  const i = date.getDay();
+
+  const ordinal = (() => {
+    let j = i % 10,
+      k = i % 100;
+    if (j == 1 && k != 11) {
+      return i + 'st';
+    }
+    if (j == 2 && k != 12) {
+      return i + 'nd';
+    }
+    if (j == 3 && k != 13) {
+      return i + 'rd';
+    }
+    return i + 'th';
+  })();
+
+  return includeDay ? `${i}${ordinal}` : ordinal;
+};

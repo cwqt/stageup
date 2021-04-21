@@ -5,6 +5,7 @@ import {
   DtoPerformance,
   HTTP,
   IEnvelopedData,
+  IHost,
   IHostStub,
   IMyself,
   IPerformanceStub,
@@ -75,7 +76,7 @@ export class MyselfService {
     this.store({ ...this.$myself.value, user: user }, true);
   }
 
-  setHost(host: IHostStub) {
+  setHost(host: IHost) {
     this.store({ ...this.$myself.value, host: host }, true);
   }
 

@@ -1,7 +1,6 @@
 @import 'apps/frontend/src/styles/variables';
 $sidebar-width: $space-lg * 3;
 
-
 app-header-bar {
   width: 100vw;
   display: block;
@@ -36,6 +35,7 @@ app-header-bar {
   mat-drawer-container {
     background-color: transparent;
     display: flex;
+    overflow: visible !important;
 
     mat-drawer {
       min-width: 20vw;
@@ -47,8 +47,10 @@ app-header-bar {
 
     mat-drawer-content {
       display: flex;
+      overflow: visible !important;
 
       .app-body {
+        overflow: visible !important;
         height: auto;
         margin-bottom: 20px;
         min-height: calc(100vh - 56px);

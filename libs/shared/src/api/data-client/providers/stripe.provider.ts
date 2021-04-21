@@ -6,6 +6,7 @@ export interface IStripeProviderConfig {
   public_key: string;
   private_key: string;
   hook_signature: string;
+  client_id: string;
 }
 
 export default class StripeProvider implements Provider<Stripe> {

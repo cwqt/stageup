@@ -59,13 +59,13 @@ const Env: IEnvironment = {
   EXPRESS_PORT: 3000,
   WEBHOOK_URL: process.env.WEBHOOK_URL,
   LOCALTUNNEL: {
-    PORT: 3000,
+    PORT: 3000
   },
   UWU_MODE: process.env.UWU_MODE === 'true',
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
-    HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE,
+    HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE
   },
   PG: {
     USERNAME: process.env.POSTGRES_USER,
@@ -87,7 +87,8 @@ const Env: IEnvironment = {
   STRIPE: {
     PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
     PRIVATE_KEY: process.env.STRIPE_PRIVATE_KEY,
-    HOOK_SIGNATURE: process.env.STRIPE_HOOK_SIGNATURE
+    HOOK_SIGNATURE: process.env.STRIPE_HOOK_SIGNATURE,
+    CLIENT_ID: process.env.STRIPE_CLIENT_ID
   },
   PUB_SUB: {
     PROJECT_ID: process.env.PUB_SUB_PROJECT_ID,

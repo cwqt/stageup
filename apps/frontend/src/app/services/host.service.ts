@@ -15,7 +15,7 @@ import {
   IHostInvoice,
   IHostInvoiceCSVJobData,
   IHostPrivate,
-  DtoCreatePatreonTier,
+  DtoCreatePatronTier,
   IPatronTier
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
@@ -30,7 +30,7 @@ import { IQueryParams, querize, timestamp } from '@core/shared/helpers';
   providedIn: 'root'
 })
 export class HostService {
-  private $currentHost: BehaviorSubject<IHostStub> = new BehaviorSubject(null);
+  private $currentHost: BehaviorSubject<IHost> = new BehaviorSubject(null);
   private $currentUserHostInfo: BehaviorSubject<IUserHostInfo> = new BehaviorSubject(null);
 
   public get hostId() {
@@ -60,7 +60,7 @@ export class HostService {
       .toPromise();
   }
 
-  createHost(data: Pick<IHostPrivate, 'name' | 'username' | "email_address">): Promise<IHost> {
+  createHost(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>): Promise<IHost> {
     return this.http
       .post<IHost>('/api/hosts', data)
       .pipe(
@@ -173,7 +173,7 @@ export class HostService {
       .toPromise();
   }
 
-  changeAvatar(hostId: string, data: fd | null) {
+  changeAvatar(hostId: string, data: fd | null): Promise<IHostStub> {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/avatar`, data).toPromise();
   }
 
@@ -182,8 +182,8 @@ export class HostService {
     return this.http.get<IHostStripeInfo>(`/api/hosts/${hostId}/stripe/info`).toPromise();
   }
 
-  //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
-  changeBanner(hostId: string, data: fd | null) {
+  //router.put  <IHostStub> ("/hosts/:hid/banner", Hosts.changeBanner());
+  changeBanner(hostId: string, data: fd | null): Promise<IHostStub> {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/banner`, data).toPromise();
   }
 
@@ -197,18 +197,18 @@ export class HostService {
     return this.http.post<void>(`/api/hosts/${hostId}/invoices/export-csv`, invoices).toPromise();
   }
 
-  // router.post <IPatreonTier> ("/hosts/:hid/patreon-tiers", Hosts.createPatreonTier());
-  createPatreonTier(hostId: string, data: DtoCreatePatreonTier): Promise<IPatronTier> {
-    return this.http.post<IPatronTier>(`/api/hosts/${hostId}/patreon-tiers`, data).toPromise();
+  // router.post <IPatronTier> ("/hosts/:hid/patron-tiers", Hosts.createPatronTier());
+  createPatronTier(hostId: string, data: DtoCreatePatronTier): Promise<IPatronTier> {
+    return this.http.post<IPatronTier>(`/api/hosts/${hostId}/patron-tiers`, data).toPromise();
   }
 
-  // router.get <IPatreonTier[]> ("/hosts/:hid/patreon-tiers", Hosts.readPatreonTiers());
-  readPatreonTiers(hostId: string): Promise<IPatronTier[]> {
-    return this.http.get<IPatronTier[]>(`/api/hosts/${hostId}/patreon-tiers`).toPromise();
+  // router.get <IPatronTier[]> ("/hosts/:hid/patron-tiers", Hosts.readPatronTiers());
+  readPatronTiers(hostId: string): Promise<IPatronTier[]> {
+    return this.http.get<IPatronTier[]>(`/api/hosts/${hostId}/patron-tiers`).toPromise();
   }
 
-  // router.delete <void> ("/hosts/:hid/patreon-tiers/:tid", Hosts.deletePatreonTier());
-  deletePatreonTier(hostId: string, tierId: string): Promise<void> {
-    return this.http.delete<void>(`/api/hosts/${hostId}/patreon-tiers/${tierId}`).toPromise();
+  // router.delete <void> ("/hosts/:hid/patron-tiers/:tid", Hosts.deletePatronTier());
+  deletePatronTier(hostId: string, tierId: string): Promise<void> {
+    return this.http.delete<void>(`/api/hosts/${hostId}/patron-tiers/${tierId}`).toPromise();
   }
 }
