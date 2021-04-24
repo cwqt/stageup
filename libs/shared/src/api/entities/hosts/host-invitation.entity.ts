@@ -1,27 +1,40 @@
-import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn
+} from 'typeorm';
 import { HostInviteState, IHostInvitation } from '@core/interfaces';
 
 import { Host } from './host.entity';
 import { User } from '../users/user.entity';
-import { timestamp, uuid } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/helpers';
 
 @Entity()
 export class HostInvitation extends BaseEntity implements IHostInvitation {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column() created_at: number;
   @Column() expires_at: number;
   @Column('enum', {
     enum: HostInviteState,
     default: HostInviteState.Pending
-  }) state: HostInviteState;
+  })
+  state: HostInviteState;
 
   @ManyToOne(() => User) @JoinColumn() inviter: User;
   @ManyToOne(() => User) @JoinColumn() invitee: User;
   @ManyToOne(() => Host) @JoinColumn() host: Host;
-  
-  constructor(inviter: User, invitee:User, host: Host) {
+
+  constructor(inviter: User, invitee: User, host: Host) {
     super();
 
     this.inviter = inviter;

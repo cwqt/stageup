@@ -4,7 +4,7 @@ import {
   HostPermission,
   IEnvelopedData,
   IHostOnboarding,
-  IOnboardingReview,
+  IOnboardingReview
 } from '@core/interfaces';
 import {
   BaseController,
@@ -16,8 +16,8 @@ import {
   OnboardingReview,
   Onboarding,
   User,
-  UserHostInfo,
-} from '@core/shared/api';
+  UserHostInfo
+} from '@core/api';
 import { BackendProviderMap } from '..';
 
 import AuthStrat from '../common/authorisation';

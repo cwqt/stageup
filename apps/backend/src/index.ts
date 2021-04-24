@@ -1,5 +1,5 @@
 import { Environment } from '@core/interfaces';
-import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/shared/api';
+import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/api';
 import { Topic } from '@google-cloud/pubsub';
 import session from 'express-session';
 import 'reflect-metadata';

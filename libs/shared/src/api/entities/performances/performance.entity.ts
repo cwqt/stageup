@@ -7,7 +7,7 @@ import {
   IPerformanceStub,
   Visibility
 } from '@core/interfaces';
-import { timestamp, uuid } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/helpers';
 import { timeStamp } from 'console';
 import { stringify } from 'qs';
 import { Except } from 'type-fest';
@@ -30,11 +30,10 @@ import { Host } from '../hosts/host.entity';
 import { Ticket } from './ticket.entity';
 
 @Entity()
-export class Performance extends BaseEntity implements Except<IPerformance, 'stream' | "assets"> {
+export class Performance extends BaseEntity implements Except<IPerformance, 'stream' | 'assets'> {
   @PrimaryColumn() _id: string;
 
-
-  @Column("varchar", { nullable: true }) thumbnail:string;
+  @Column('varchar', { nullable: true }) thumbnail: string;
 
   @Column() created_at: number;
   @Column() name: string;
@@ -66,7 +65,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
   }
 
   async setup(mux: MuxProvider, txc: EntityManager): Promise<Performance> {
-    this.asset_group = await txc.save(new AssetGroup())
+    this.asset_group = await txc.save(new AssetGroup());
 
     const asset = new Asset(AssetType.LiveStream, this.asset_group);
     await asset.setup(mux, txc, null, {
@@ -107,9 +106,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
     };
   }
 
-  async update(
-    updates: Partial<Pick<IPerformance, 'name' | 'description'>>
-  ): Promise<Performance> {
+  async update(updates: Partial<Pick<IPerformance, 'name' | 'description'>>): Promise<Performance> {
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (this as any)[k] = v ?? (this as any)[k];
     });

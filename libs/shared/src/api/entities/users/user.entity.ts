@@ -1,5 +1,5 @@
 import { IUser, IUserStub, IUserPrivate, IMyself } from '@core/interfaces';
-import { uuid } from '@core/shared/helpers';
+import { uuid } from '@core/helpers';
 import bcrypt from 'bcrypt';
 import {
   BaseEntity,
@@ -25,7 +25,9 @@ import { PatronSubscription } from './patron-subscription.entity';
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column() created_at: number;
   @Column({ nullable: true }) name: string;
@@ -42,12 +44,12 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
   @OneToMany(() => Invoice, invoice => invoice.user) invoices: Invoice[]; // Many purchases
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
-  @OneToMany(() => PatronSubscription, sub => sub.user) patron_subcriptions:PatronSubscription[];
+  @OneToMany(() => PatronSubscription, sub => sub.user) patron_subcriptions: PatronSubscription[];
 
   @Column() private salt: string;
   @Column() private pw_hash: string;
 
-  constructor(data: { email_address: string; username: string; password: string, stripe_customer_id: string }) {
+  constructor(data: { email_address: string; username: string; password: string; stripe_customer_id: string }) {
     super();
     this.username = data.username;
     this.email_address = data.email_address;
@@ -101,8 +103,8 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     };
   }
 
-  toMyself(): Required<IMyself["user"]> {
-    return {...this.toFull(), email_address: this.email_address }
+  toMyself(): Required<IMyself['user']> {
+    return { ...this.toFull(), email_address: this.email_address };
   }
 
   toPrivate(): Required<IUserPrivate> {

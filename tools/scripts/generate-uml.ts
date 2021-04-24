@@ -1,6 +1,6 @@
 import { EOL } from 'os';
 import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
-import { Provider, PG_MODELS, Providers, apiLogger } from '@core/shared/api';
+import { Provider, PG_MODELS, Providers, apiLogger } from '@core/api';
 
 // FIXME  https://github.com/nrwl/nx/issues/2536
 (async () => {

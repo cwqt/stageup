@@ -11,9 +11,8 @@ import {
   query as queryRunner
 } from 'express-validator';
 
-import { ErrorHandler } from '@core/shared/api';
+import { ErrorHandler } from '@core/api';
 import { Logger } from 'winston';
-
 
 type VData<T> = T & {
   __this?: T; // self-reference
@@ -35,7 +34,10 @@ type VReqHandlerFunctor = (req: Request) => Promise<IFormErrorField[]>;
 type VArrayReturn = { errors: IFormErrorField[]; message: string };
 
 // Takes either req[location] as starting point or data in the case of nested objects/arrays
-type VReqHandler = <T extends object>(validators: VFieldChainerMap<T>, data?: T | ((v:T) => any)) => VReqHandlerFunctor;
+type VReqHandler = <T extends object>(
+  validators: VFieldChainerMap<T>,
+  data?: T | ((v: T) => any)
+) => VReqHandlerFunctor;
 
 // VFunctor  T       VData<T>
 //   v       v          v
@@ -109,11 +111,11 @@ export const runValidator = async <T extends object, U extends keyof T>(
  */
 export const object: VFunctor = async (data, validators, location = null, idx = null): Promise<IFormErrorField[]> => {
   // Match all if only validator is a '*' - for use with unstructured objects where all values are of the same form
-  if(Object.keys(validators).length == 1 && validators["*"]) {
+  if (Object.keys(validators).length == 1 && validators['*']) {
     validators = Object.keys(data).reduce<VFieldChainerMap<any>>((acc, curr) => {
-      (<any>acc)[curr] = validators["*"];
+      (<any>acc)[curr] = validators['*'];
       return acc;
-    }, {})
+    }, {});
   }
 
   const errors: IFormErrorField[] = (
@@ -201,7 +203,7 @@ export const single = <T extends object>(validators: VFieldChainerMap<T>, code?:
  * @description Middleware for validating requests
  * @param validators VReqHandlerFunctor array
  */
-export const validatorMiddleware = (validators: VReqHandlerFunctor[], log:Logger): RequestHandler => {
+export const validatorMiddleware = (validators: VReqHandlerFunctor[], log: Logger): RequestHandler => {
   return async (req, res, next) => {
     const errors: IFormErrorField[] = (await Promise.allSettled(validators.map(async v => v(req))))
       .flat()

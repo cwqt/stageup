@@ -1,10 +1,10 @@
 import { IJob, JobType } from '@core/interfaces';
-import { Auth, BaseController, IControllerEndpoint, body } from '@core/shared/api';
+import { Auth, BaseController, IControllerEndpoint, body } from '@core/api';
 import { RunnerProviderMap } from '..';
 import { QueueMap } from '../common/queues';
 
 export default class JobController extends BaseController<RunnerProviderMap> {
-  enqueue(queues:QueueMap): IControllerEndpoint<void> {
+  enqueue(queues: QueueMap): IControllerEndpoint<void> {
     return {
       validators: [
         body<IJob>({
@@ -14,7 +14,7 @@ export default class JobController extends BaseController<RunnerProviderMap> {
       ],
       authStrategy: Auth.none,
       controller: async req => {
-        const job:IJob = req.body;
+        const job: IJob = req.body;
         queues[job.type].queue.add(job.type, job.data, job.options || {});
 
         return;

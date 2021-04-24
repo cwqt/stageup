@@ -12,7 +12,7 @@ import {
   TicketFees,
   TicketType
 } from '@core/interfaces';
-import { prettifyMoney, timeless, timestamp } from '@core/shared/helpers';
+import { prettifyMoney, timeless, timestamp } from '@core/helpers';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';

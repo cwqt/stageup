@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IHostStub, IPatronTier } from '@core/interfaces';
-import { timeout } from '@core/shared/helpers';
+import { timeout } from '@core/helpers';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';

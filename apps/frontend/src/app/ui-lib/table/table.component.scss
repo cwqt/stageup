@@ -154,3 +154,11 @@ popper-content {
     }
   }
 }
+
+.is-clickable {
+  &:hover {
+    cursor: pointer;
+  }
+  text-decoration: underline;
+  color: lighten(blue, 10%);
+}

@@ -1,4 +1,4 @@
-import { uuid } from '@core/shared/helpers';
+import { uuid } from '@core/helpers';
 import { BaseEntity, BeforeInsert, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { Asset } from './asset.entity';
 

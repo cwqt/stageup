@@ -18,8 +18,7 @@ import { HttpConfigInterceptor } from './_helpers/http.interceptor';
 import { NgxStripeModule } from 'ngx-stripe';
 import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
-import { QuillModule } from 'ngx-quill'
-
+import { QuillModule } from 'ngx-quill';
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
@@ -107,6 +106,8 @@ import { HostProfileAboutComponent } from './routes/host/host-profile/host-profi
 import { HostProfileFeedComponent } from './routes/host/host-profile/host-profile-feed/host-profile-feed.component';
 import { BecomePatronDialogComponent } from './routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component';
 
+import { InvoiceDialogComponent } from './components/dialogs/invoice-dialog/invoice-dialog.component';
+
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
   declarations: [
@@ -188,6 +189,7 @@ import { BecomePatronDialogComponent } from './routes/host/host-profile/host-pro
     HostInvoicesComponent,
     HostPerformanceCustomiseComponent,
     UploadVideoComponent,
+    InvoiceDialogComponent,
     HostPatronageComponent,
     CreateUpdatePatronTierComponent,
     PatronTierThumbComponent,

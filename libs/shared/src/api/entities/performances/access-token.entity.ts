@@ -2,7 +2,7 @@ import { BaseEntity, Entity, Column, BeforeInsert, PrimaryColumn, OneToOne, Join
 import { IAccessToken, TokenProvisioner, DtoAccessToken, JwtAccessToken } from '@core/interfaces';
 import { User } from '../users/user.entity';
 import { Performance } from './performance.entity';
-import { timestamp, uuid } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/helpers';
 import { SigningKey } from './signing-key.entity';
 import { Invoice } from '../common/invoice.entity';
 
@@ -13,7 +13,7 @@ export class AccessToken extends BaseEntity implements IAccessToken {
     this._id = uuid();
   }
 
-  @Column("varchar") access_token: JwtAccessToken;
+  @Column('varchar') access_token: JwtAccessToken;
   @Column() created_at: number;
   @Column({ nullable: true }) expires_at: number;
   @Column('enum', { enum: TokenProvisioner }) provisioner_type: TokenProvisioner;

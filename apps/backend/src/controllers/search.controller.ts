@@ -1,6 +1,6 @@
 import { ISearchResponse } from '@core/interfaces';
 
-import { BaseController, IControllerEndpoint, Performance, Host, query } from '@core/shared/api';
+import { BaseController, IControllerEndpoint, Performance, Host, query } from '@core/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 

@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import express from 'express';
 import qs from 'qs';
 import { json, OptionsJson } from 'body-parser';
-import { globalErrorHandler, global404Handler, DataClient } from '@core/shared/api';
+import { globalErrorHandler, global404Handler, DataClient } from '@core/api';
 import { Logger } from 'winston';
 import { Environment } from '@core/interfaces';
 import { AsyncRouter } from './router';
@@ -27,7 +27,7 @@ export interface IServiceConfig<T extends ProviderMap> {
 }
 
 export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
-  config.logger.log("info",`Registering in \u001B[1m${config.environment}\u001B[0m`);
+  config.logger.log('info', `Registering in \u001B[1m${config.environment}\u001B[0m`);
 
   let server: http.Server;
   const app = express();
@@ -44,7 +44,9 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
   app.use(helmet(config.options?.helmet || {}));
   app.use(morgan('tiny', { stream: config.stream }));
 
-  return async (Router: (a: typeof app, providerMap: T, config?:IServiceConfig<T>) => Promise<AsyncRouter<T>>): Promise<http.Server> => {
+  return async (
+    Router: (a: typeof app, providerMap: T, config?: IServiceConfig<T>) => Promise<AsyncRouter<T>>
+  ): Promise<http.Server> => {
     try {
       const providers = await DataClient.connect(config.provider_map, config.logger);
       const router = await Router(app, providers, config);

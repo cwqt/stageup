@@ -1,12 +1,14 @@
 import { BaseEntity, BeforeInsert, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { IAddress } from '@core/interfaces';
 import { ContactInfo } from './contact-info.entity';
-import { uuid } from '@core/shared/helpers';
+import { uuid } from '@core/helpers';
 
 @Entity()
 export class Address extends BaseEntity implements IAddress {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column() city: string;
   @Column() iso_country_code: string;

@@ -4,14 +4,16 @@ import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, PrimaryColumn 
 import Mux, { JWT } from '@mux/mux-node';
 
 import { Performance } from './performance.entity';
-import { timestamp, uuid } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/helpers';
 import { Asset } from '../common/asset.entity';
 import MuxProvider from '../../data-client/providers/mux.provider';
 
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column() rsa256_key: string;
   @Column() mux_key_id: string;
@@ -22,7 +24,7 @@ export class SigningKey extends BaseEntity implements ISigningKey {
     this.created_at = timestamp();
   }
 
-  async setup(mux:MuxProvider, txc: EntityManager): Promise<SigningKey> {
+  async setup(mux: MuxProvider, txc: EntityManager): Promise<SigningKey> {
     // https://docs.mux.com/reference#url-signing-keys
     const { id, private_key } = await mux.connection.Video.SigningKeys.create();
 
@@ -32,7 +34,7 @@ export class SigningKey extends BaseEntity implements ISigningKey {
     return txc.save(this);
   }
 
-  signToken(asset:Asset<any>): JwtAccessToken {
+  signToken(asset: Asset<any>): JwtAccessToken {
     return JWT.sign((asset.meta as IMuxAsset).playback_id, {
       type: 'video',
       keyId: this.mux_key_id,

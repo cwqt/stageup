@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FilterCode, IEnvelopedData, Primitive } from '@core/interfaces';
-import { IQueryParams } from '@core/shared/helpers';
+import { IQueryParams } from '@core/helpers';
 import { ChipComponent } from '../chip/chip.component';
 import { ThemeKind } from '../ui-lib.interfaces';
 
@@ -14,7 +14,7 @@ export interface IUiTable<T = any, K = T> {
   selection?: {
     multi: boolean;
     actions: Array<IUiTableAction<SelectionModel<T>>>;
-		footer_message?: (selection:SelectionModel<T>) => { label: string, value: Primitive }
+    footer_message?: (selection: SelectionModel<T>) => { label: string; value: Primitive };
   };
   pagination: {
     page_sizes?: number[];
@@ -31,13 +31,14 @@ export interface IUiTableColumn<K> {
   filter?: IUiTableColumnFilter;
   chip_selector?: (v: K) => ChipComponent['kind'];
   transformer?: (v: K) => Primitive;
+  click_handler?: (v: K) => void;
 }
 
 export interface IUiTableColumnFilter {
   type: FilterCode;
   field: string;
 
-  enum?:Map<any, { label: string }>
+  enum?: Map<any, { label: string }>;
 }
 
 export interface IUITableColumnSort {
@@ -84,5 +85,5 @@ Sorting
     Clicking the column again should reverse the sort.
 
 UI
- [x] Whenever a update to the rows is pending, the table just be overlaid with a loading graphic (edited) 
+ [x] Whenever a update to the rows is pending, the table just be overlaid with a loading graphic (edited)
 */

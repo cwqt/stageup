@@ -3,9 +3,9 @@ import { IRouterMatcher } from 'express-serve-static-core';
 import { AsyncRouter as ExpressAsyncRouter, AsyncRouterInstance, RequestHandler } from 'express-async-router';
 import { HTTP } from '@core/interfaces';
 
-import { Auth, ErrorHandler, handleError } from '@core/shared/api';
+import { Auth, ErrorHandler, handleError } from '@core/api';
 import { AuthStrategy } from './authorisation';
-import { IControllerEndpoint } from '@core/shared/api';
+import { IControllerEndpoint } from '@core/api';
 import { validatorMiddleware } from './validate';
 import { Logger } from 'winston';
 import { IMiddlewareConnections, Middlewares } from './middleware';

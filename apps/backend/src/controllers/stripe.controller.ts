@@ -20,7 +20,7 @@ import {
   AccessToken,
   SigningKey,
   PatronTier
-} from '@core/shared/api';
+} from '@core/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import Env from '../env';

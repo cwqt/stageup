@@ -1,6 +1,6 @@
 import { Environment, ErrCode } from '@core/interfaces';
 import Env from '../env';
-import { AuthStrategy, AuthStratReturn } from '@core/shared/api';
+import { AuthStrategy, AuthStratReturn } from '@core/api';
 
 const isEnv = (env: Environment): AuthStrategy => {
   return async (req, providers): Promise<AuthStratReturn> => {
@@ -9,7 +9,7 @@ const isEnv = (env: Environment): AuthStrategy => {
   };
 };
 
-import { Auth } from '@core/shared/api';
+import { Auth } from '@core/api';
 export default {
   isEnv,
   ...Auth

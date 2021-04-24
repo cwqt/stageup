@@ -3,7 +3,7 @@ const TRUE_ENV = process.env['NODE' + '_ENV'];
 /* eslint @typescript-eslint/no-var-requires: "off" */
 require('dotenv-flow').config({ node_env: TRUE_ENV, silent: true });
 
-import { isEnv } from '@core/shared/helpers';
+import { isEnv } from '@core/helpers';
 import { Environment } from '@core/interfaces';
 import {
   IMuxProviderConfig,
@@ -15,7 +15,7 @@ import {
   ILocalTunnelProviderConfig,
   IStripeProviderConfig,
   IPubSubProviderConfig
-} from '@core/shared/api';
+} from '@core/api';
 
 type Envify<T> = { [index: string]: any };
 // type Envify<T> = { [index in keyof T as `${Uppercase<string & index>}`]: T[index] };

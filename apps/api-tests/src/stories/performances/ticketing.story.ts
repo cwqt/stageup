@@ -1,7 +1,7 @@
 import { IHost, IPerformance, ITicket, ITicketStub, TicketFees, TicketType } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { CurrencyCode, Genre } from '@core/interfaces';
-import { timestamp } from '@core/shared/helpers';
+import { timestamp } from '@core/helpers';
 
 describe('As a user-host, I want to CRUD performance tickets', () => {
   let perf: IPerformance;
@@ -99,7 +99,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
       end_datetime: timestamp() + 1000,
       is_visible: true,
       is_quantity_visible: true,
-      dono_pegs: ['lowest', 'medium', "allow_any"]
+      dono_pegs: ['lowest', 'medium', 'allow_any']
     });
 
     expect(ticket.dono_pegs.includes('lowest')).toBeTruthy();

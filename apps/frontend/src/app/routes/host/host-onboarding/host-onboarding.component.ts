@@ -12,7 +12,7 @@ import {
   ISOCountryCode,
   PersonTitle
 } from '@core/interfaces';
-import { enumToValues } from '@core/shared/helpers';
+import { enumToValues } from '@core/helpers';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';

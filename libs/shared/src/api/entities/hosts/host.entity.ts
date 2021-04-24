@@ -26,7 +26,7 @@ import { Performance } from '../performances/performance.entity';
 import { UserHostInfo } from './user-host-info.entity';
 import { Onboarding } from './onboarding.entity';
 import { ContactInfo } from '../users/contact-info.entity';
-import { timestamp, uuid } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/helpers';
 import { ErrorHandler } from '../../errors';
 import { Invoice } from '../common/invoice.entity';
 import { PatronTier } from './patron-tier.entity';
@@ -49,6 +49,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column({ nullable: true }) stripe_account_id: string;
   @Column('jsonb') social_info: ISocialInfo;
   @Column('jsonb', { nullable: true }) business_details: IHostBusinessDetails;
+  @Column({ nullable: true }) charity_no: number;
 
   @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];

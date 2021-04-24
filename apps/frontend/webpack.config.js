@@ -1,10 +1,16 @@
 'use strict';
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
   devServer: {
     // SET TO FALSE IN PROD
     disableHostCheck: true
+  },
+  resolve: {
+    alias: {
+      frontend: path.join(__dirname, 'apps/frontend/src/app')
+    }
   },
   module: {
     rules: [

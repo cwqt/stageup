@@ -15,7 +15,7 @@ import {
   StringFilter,
   StringFilterOperator
 } from '@core/interfaces';
-import { timeless, timestamp, to } from '@core/shared/helpers';
+import { timeless, timestamp, to } from '@core/helpers';
 import { NextFunction, Request, Response } from 'express';
 import { SelectQueryBuilder } from 'typeorm';
 

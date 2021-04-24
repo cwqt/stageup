@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { calculateAmountFromCurrency, CurrencyCode, DonoPeg, DONO_PEG_WEIGHT_MAPPING } from '@core/interfaces';
-import { prettifyMoney } from '@core/shared/helpers';
+import { prettifyMoney } from '@core/helpers';
 
 @Pipe({ name: 'donoPegPipe' })
 export class DonoPegPipe implements PipeTransform {

@@ -16,8 +16,8 @@ import {
   PatronSubscription,
   User,
   Validators
-} from '@core/shared/api';
-import { uuid } from '@core/shared/helpers';
+} from '@core/api';
+import { uuid } from '@core/helpers';
 import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
 import { hostname } from 'os';
 import { BackendProviderMap } from '..';

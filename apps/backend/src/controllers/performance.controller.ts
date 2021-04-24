@@ -36,8 +36,8 @@ import {
   query,
   Ticket,
   Validators
-} from '@core/shared/api';
-import { getDonoAmount, to } from '@core/shared/helpers';
+} from '@core/api';
+import { getDonoAmount, to } from '@core/helpers';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
 import Stripe from 'stripe';
 import { BackendProviderMap } from '..';
@@ -237,7 +237,7 @@ export default class PerformanceController extends BaseController<BackendProvide
       validators: [],
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Editor),
       controller: async req => {
-        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ["asset_group"]}));
+        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] }));
         await perf.update({
           name: req.body.name,
           description: req.body.description

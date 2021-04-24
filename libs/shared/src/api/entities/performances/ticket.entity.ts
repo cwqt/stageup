@@ -9,7 +9,7 @@ import {
   JoinColumn
 } from 'typeorm';
 import { CurrencyCode, ITicket, ITicketStub, TicketType, DtoCreateTicket, TicketFees, DonoPeg } from '@core/interfaces';
-import { uuid } from '@core/shared/helpers';
+import { uuid } from '@core/helpers';
 import { Performance } from './performance.entity';
 import { Except } from 'type-fest';
 @Entity()

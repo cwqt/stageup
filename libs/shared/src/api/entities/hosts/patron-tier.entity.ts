@@ -1,5 +1,5 @@
 import { CurrencyCode, DtoCreatePatronTier, IHostPatronTier, IPatronTier } from '@core/interfaces';
-import { timestamp, uuid } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
 import { BaseEntity, BeforeInsert, Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { PatronSubscription } from '../users/patron-subscription.entity';

@@ -14,7 +14,7 @@ import {
   ITicketStub,
   Visibility
 } from '@core/interfaces';
-import { timestamp } from '@core/shared/helpers';
+import { timestamp } from '@core/helpers';
 import { Except } from 'type-fest';
 import { api, environment as env } from '../environment';
 

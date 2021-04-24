@@ -12,8 +12,8 @@ import {
   IUserHostInfo,
   IUserInvoice
 } from '@core/interfaces';
-import { UserHostInfo } from '@core/shared/api';
-import { IQueryParams, querize } from '@core/shared/helpers';
+import { UserHostInfo } from '@core/api';
+import { IQueryParams, querize } from '@core/helpers';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LocalStorageKey } from '../app.interfaces';

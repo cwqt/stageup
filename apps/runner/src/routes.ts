@@ -1,4 +1,4 @@
-import { Middlewares, AsyncRouter } from "@core/shared/api";
+import { Middlewares, AsyncRouter } from "@core/api";
 import { RunnerProviderMap } from ".";
 import { QueueMap } from './common/queues';
 

@@ -1,0 +1,57 @@
+<ui-dialog [loading]="invoice.loading" class="relative">
+  <div class="relative">
+    <h2>Invoice <span class="opacity-50">#{{ invoice.data?.invoice_id }}</span></h2>
+    <ui-hr></ui-hr>
+
+    <div class="flex items-center absolute top-0 right-0">
+      <ui-button kind="secondary" size="m" class="mr-2">Email Receipt</ui-button>
+      <ui-button kind="secondary" size="m">Print Receipt</ui-button>
+    </div>
+  </div>
+
+  <div class="relative">
+    <ui-chip class="absolute top-0 right-0" *ngIf="!invoice.loading" [kind]="paymentStateKind">
+      {{ invoice.data.status | paymentStatusPipe }}
+    </ui-chip>
+
+    <ul>
+      <li><b>Order ID</b>{{ invoice.data?.invoice_id }}</li>
+      <li><b>Order Date</b>{{ invoice.data?.invoice_date | amFromUnix | amDateFormat:
+        "LLLL"
+        }}</li>
+      <li><b>Address Line 1</b></li>
+      <li><b>Address Line 2</b></li>
+      <li><b>Registered Charity No.</b></li>
+      <li><b>Payment Source</b>{{ invoice.data?.card_type | uppercase }}</li>
+      <li><b>Card Details</b>
+        <span *ngIf="invoice.data?.last_4_digits">
+          **** **** **** {{ invoice.data?.last_4_digits }}
+        </span>
+      </li>
+    </ul>
+  </div>
+
+  <ui-hr></ui-hr>
+
+  <div class="grid grid-cols-2 gap-2">
+    <!-- Customer -->
+    <div *ngIf="isHostInvoice">
+      <p><b>Customer</b></p>
+      <app-user-thumb [user]="hostInvoice.user"></app-user-thumb>
+    </div>
+
+    <!-- Product -->
+    <div>
+      <p><b>Product</b></p>
+      <ul>
+        <li><b>Type</b> Performance Ticket</li>
+        <li><b>Name</b> {{ invoice.data?.performance?.name }}</li>
+        <li><b>Amount</b>{{ invoice.data?.amount | currencyPipe: invoice.data?.ticket?.currency }}</li>
+        <li *ngIf="isHostInvoice"><b>Net Amount</b>{{ hostInvoice?.net_amount | currencyPipe:
+          invoice.data?.ticket?.currency }}</li>
+      </ul>
+    </div>
+
+  </div>
+
+</ui-dialog>

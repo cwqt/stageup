@@ -2,8 +2,8 @@ import { EntityManager } from 'typeorm';
 import { SendMailOptions } from 'nodemailer';
 import dbless from 'dbless-email-verification';
 import { Environment, IUser, JobType } from '@core/interfaces';
-import { prettifyMoney, dateOrdinal } from '@core/shared/helpers';
-import { Host, User, HostInvitation, Performance, Ticket, PasswordReset, PatronTier } from '@core/shared/api';
+import { prettifyMoney, dateOrdinal } from '@core/helpers';
+import { Host, User, HostInvitation, Performance, Ticket, PasswordReset, PatronTier } from '@core/api';
 
 import Env from '../env';
 import Queue from './queue';

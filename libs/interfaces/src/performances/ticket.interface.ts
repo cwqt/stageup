@@ -19,20 +19,20 @@ export enum DonoPegWeights {
   Highest = 20
 }
 
-export type DonoPeg = "lowest" | "low" | "medium" | "high" | "highest" | "allow_any";
+export type DonoPeg = 'lowest' | 'low' | 'medium' | 'high' | 'highest' | 'allow_any';
 
 export const DONO_PEG_WEIGHT_MAPPING: { [index in DonoPeg]: DonoPegWeights } = {
-	lowest: DonoPegWeights.Lowest,
-	low: DonoPegWeights.Low,
-	medium: DonoPegWeights.Medium,
-	high: DonoPegWeights.High,
-	highest: DonoPegWeights.Highest,
-	allow_any: 1
+  lowest: DonoPegWeights.Lowest,
+  low: DonoPegWeights.Low,
+  medium: DonoPegWeights.Medium,
+  high: DonoPegWeights.High,
+  highest: DonoPegWeights.Highest,
+  allow_any: 1
 } as const;
 
 export interface DtoDonationPurchase {
-	selected_dono_peg: DonoPeg;
-	allow_any_amount?: number;
+  selected_dono_peg: DonoPeg;
+  allow_any_amount?: number;
 }
 
 export interface ITicketStub {

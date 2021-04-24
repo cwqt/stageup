@@ -1,5 +1,5 @@
 import { ErrCode, HostPermission, IAddress, Idless, IOnboardingAddMembers } from '@core/interfaces';
-import { Validators, object, single, array } from '@core/shared/api';
+import { Validators, object, single, array } from '@core/api';
 
 describe('Custom validation', () => {
   it('Should return correct results for simple, unnested objects', async () => {
@@ -148,10 +148,10 @@ describe('Custom validation', () => {
     expect(errors).toHaveLength(0);
   });
 
-  it("Should not return errors for IHostMemberChangeRequest Object Validator", async () => {
-    const data:IOnboardingAddMembers = {
-      members_to_add: [ { value: HostPermission.Editor }]
-    }
+  it('Should not return errors for IHostMemberChangeRequest Object Validator', async () => {
+    const data: IOnboardingAddMembers = {
+      members_to_add: [{ value: HostPermission.Editor }]
+    };
 
     const errors = await object(data, {
       members_to_add: v => v.custom(array(Validators.Objects.IHostMemberChangeRequest()))

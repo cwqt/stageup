@@ -22,7 +22,7 @@ import {
   IAssetStub,
   IMuxPassthrough
 } from '@core/interfaces';
-import { stitchParameters, timestamp, to, uuid } from '@core/shared/helpers';
+import { stitchParameters, timestamp, to, uuid } from '@core/helpers';
 import { Except } from 'type-fest';
 import { CreateUploadParams, LiveStream, Upload } from '@mux/mux-node';
 import { SigningKey } from '../performances/signing-key.entity';
@@ -44,7 +44,7 @@ type AssetOptions = {
   [AssetType.Image]: {
     s3_url: string;
   };
-  [AssetType.Video]: CreateUploadParams,
+  [AssetType.Video]: CreateUploadParams;
   [AssetType.AnimatedGIF]: void;
   [AssetType.LiveStream]: void;
   [AssetType.Thumbnail]: void;
@@ -76,7 +76,7 @@ export class Asset<T extends AssetType = any> extends BaseEntity implements IAss
   @OneToOne(() => SigningKey, { nullable: true }) @JoinColumn() signing_key?: SigningKey;
   @ManyToOne(() => AssetGroup, group => group.assets) group: AssetGroup;
 
-  constructor(assetType: T, assetGroup:AssetGroup) {
+  constructor(assetType: T, assetGroup: AssetGroup) {
     super();
     this._id = uuid(); // Set the UUID now so that the passthrough _id matches with this Asset
     this.created_at = timestamp();
@@ -106,7 +106,6 @@ export class Asset<T extends AssetType = any> extends BaseEntity implements IAss
       switch (this.type) {
         // Live Streams ----------------------------------------------------------------------------
         case AssetType.LiveStream: {
-
           // https://docs.mux.com/reference#create-a-live-stream
           const stream: LiveStream = await (provider as AssetProvider[AssetType.LiveStream]).connection.Video.LiveStreams.create(
             {

@@ -1,7 +1,7 @@
 import { IHost, IPerformance, IUser, CurrencyCode, Genre } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
-import { timeout } from '@core/shared/helpers';
+import { timeout } from '@core/helpers';
 
 jest.setTimeout(30000); // 30 sec timeout to create 5 performancess
 

@@ -1,4 +1,4 @@
-import { Auth, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/shared/api';
+import { Auth, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/api';
 import axios from 'axios';
 import { BullMQAdapter, router, setQueues } from 'bull-board';
 import * as rax from 'retry-axios';
@@ -6,7 +6,6 @@ import { log, stream } from './common/logger';
 import Queues from './common/queues';
 import Env from './env';
 import routes from './routes';
-
 
 export const api = axios.create({
   baseURL: Env.API_URL,

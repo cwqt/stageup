@@ -1,6 +1,6 @@
-import { Environment } from "@core/interfaces";
-import { BaseController, IControllerEndpoint } from "@core/shared/api";
-import { RunnerProviderMap } from "..";
+import { Environment } from '@core/interfaces';
+import { BaseController, IControllerEndpoint } from '@core/api';
+import { RunnerProviderMap } from '..';
 import Auth from '../common/authorisation';
 
 export default class MiscController extends BaseController<RunnerProviderMap> {

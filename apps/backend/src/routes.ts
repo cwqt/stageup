@@ -1,4 +1,4 @@
-import { AsyncRouter, Middlewares } from '@core/shared/api';
+import { AsyncRouter, Middlewares } from '@core/api';
 
 import {
   IHost,
@@ -24,10 +24,11 @@ import {
   IPaymentIntentClientSecret as IPaymentICS,
   IHostInvoice,
   IUserInvoice,
-  IPatronTier,
   IPatronTier as IPTier,
   IHostPatronTier,
   IHostPatronTier as IHPTier,
+  IHostInvoiceStub,
+  IUserInvoiceStub,
   IPatronSubscription
 } from '@core/interfaces';
 
@@ -41,8 +42,8 @@ import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
 import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
-import PatronageController from "./controllers/patronage.controller";
 import { BackendProviderMap } from '.';
+import PatronageController from './controllers/patronage.controller';
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
@@ -53,7 +54,8 @@ const Myself = new MyselfController(providerMap, middlewares);
 router.get      <IMyself>               ("/myself",                                   Myself.readMyself());
 router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
 router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
-router.get      <IE<IUserInvoice[]>>    ("/myself/invoices",                          Myself.readInvoices());
+router.get      <IE<IUserInvoiceStub[]>>("/myself/invoices",                          Myself.readInvoices());
+router.get      <IUserInvoice>          ("/myself/invoices/:iid",                     Myself.readInvoice());
 // router.get      <IFeed>                  ("/myself/feed",                             Myself.readFeed());
 
 // USERS --------------------------------------------------------------------------------------------------------------
@@ -97,7 +99,8 @@ router.redirect                         ("/hosts/:hid/invites/:iid",            
 router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 router.post     <string>                ("/hosts/:hid/stripe/connect",                Hosts.connectStripe());
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
-router.get      <IE<IHostInvoice[]>>    ("/hosts/:hid/invoices",                      Hosts.readInvoices());
+router.get      <IE<IHostInvoiceStub[]>>("/hosts/:hid/invoices",                      Hosts.readInvoices());
+router.get      <IHostInvoice>          ("/hosts/:hid/invoices/:iid",                 Hosts.readInvoice());
 router.post     <void>                  ("/hosts/:hid/invoices/export-csv",           Hosts.exportInvoicesToCSV());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
@@ -113,15 +116,15 @@ const Perfs = new PerfController(providerMap, middlewares);
 router.post     <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance());
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances());
 router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance());
-router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
 router.post     <ICreateAssetRes|void>  ("/performances/:pid/assets",                 Perfs.createAsset());
+router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
 // router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
-router.put      <void>                  ("/performances/:pid/tickets/qty-visibility", Perfs.bulkUpdateTicketQtyVisibility());
 router.get      <ITicketStub[]>         ("/performances/:pid/tickets",                Perfs.readTickets());
 router.post     <ITicket>               ("/performances/:pid/tickets",                Perfs.createTicket());
+router.put      <void>                  ("/performances/:pid/tickets/qty-visibility", Perfs.bulkUpdateTicketQtyVisibility());
 router.get      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.readTicket());
 router.put      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.updateTicket());
 router.delete   <void>                  ("/performances/:pid/tickets/:tid",           Perfs.deleteTicket());

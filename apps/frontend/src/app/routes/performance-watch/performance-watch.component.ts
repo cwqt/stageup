@@ -1,7 +1,7 @@
 import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { AssetType, DtoPerformance, LiveStreamState, SseEventType } from '@core/interfaces';
 import { Observable, Subscription } from 'rxjs';
-import { timestamp } from '@core/shared/helpers';
+import { timestamp } from '@core/helpers';
 import { PlayerComponent } from '../../components/player/player.component';
 import { MyselfService } from '../../services/myself.service';
 import { SseService } from '../../services/sse.service';

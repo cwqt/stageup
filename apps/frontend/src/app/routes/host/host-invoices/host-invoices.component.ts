@@ -1,15 +1,34 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { capitalize, FilterCode, IEnvelopedData, IHostInvoice, PaymentStatus, TicketType } from '@core/interfaces';
-import { prettifyMoney } from '@core/shared/helpers';
+import { MatDialog } from '@angular/material/dialog';
+import { capitalize, FilterCode, IEnvelopedData, IHostInvoiceStub, PaymentStatus, TicketType } from '@core/interfaces';
+import { prettifyMoney } from '@core/helpers';
+import { unix } from 'moment';
 import { createICacheable, ICacheable } from '../../../app.interfaces';
+import { InvoiceDialogComponent } from '../../../components/dialogs/invoice-dialog/invoice-dialog.component';
 import { HostService } from '../../../services/host.service';
 import { ToastService } from '../../../services/toast.service';
+import { ChipComponent } from '../../../ui-lib/chip/chip.component';
 import { TableComponent } from '../../../ui-lib/table/table.component';
 import { IUiTable } from '../../../ui-lib/table/table.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PaymentStatusPipe } from '../../../_pipes/payment-status.pipe';
 
-import { unix } from "moment";
+export const PaymentStatusUiChipColorSelector = (status: PaymentStatus): ChipComponent['kind'] => {
+  switch (status) {
+    case PaymentStatus.Created:
+      return 'blue';
+    case PaymentStatus.Fufilled:
+      return 'gray';
+    case PaymentStatus.Paid:
+      return 'green';
+    case PaymentStatus.RefundPending:
+      return 'magenta';
+    case PaymentStatus.RefundDenied:
+      return 'red';
+    case PaymentStatus.Refunded:
+      return 'gray';
+  }
+};
 
 @Component({
   selector: 'app-host-invoices',
@@ -17,11 +36,11 @@ import { unix } from "moment";
   styleUrls: ['./host-invoices.component.scss']
 })
 export class HostInvoicesComponent implements OnInit {
-  @ViewChild('table') table: TableComponent<IHostInvoice>;
-  tableData: IUiTable<IHostInvoice>;
-  invoices: ICacheable<IEnvelopedData<IHostInvoice[]>> = createICacheable([]);
+  @ViewChild('table') table: TableComponent<IHostInvoiceStub>;
+  tableData: IUiTable<IHostInvoiceStub>;
+  invoices: ICacheable<IEnvelopedData<IHostInvoiceStub[]>> = createICacheable([]);
 
-  constructor(private hostService: HostService, private toastService: ToastService) {}
+  constructor(private hostService: HostService, private toastService: ToastService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.tableData = {
@@ -47,7 +66,9 @@ export class HostInvoicesComponent implements OnInit {
             label: 'Export as CSV',
             click: async v => {
               try {
-                await this.hostService.exportInvoicesToCSV(this.hostService.hostId, { invoices: v.selected.map(i => i.invoice_id) });
+                await this.hostService.exportInvoicesToCSV(this.hostService.hostId, {
+                  invoices: v.selected.map(i => i.invoice_id)
+                });
                 this.toastService.emit(
                   'Exported CSVs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon',
                   ThemeKind.Primary,
@@ -64,7 +85,14 @@ export class HostInvoicesComponent implements OnInit {
       pagination: { page_sizes: [5, 10, 25] },
       columns: {
         invoice_id: {
-          label: 'Invoice ID'
+          label: 'Invoice ID',
+          click_handler: invoice => {
+            this.dialog.open(InvoiceDialogComponent, {
+              data: { invoice, is_host_invoice: true },
+              width: '800px',
+              minHeight: '500px'
+            });
+          }
         },
         performance: {
           label: 'Performance',
@@ -100,7 +128,7 @@ export class HostInvoicesComponent implements OnInit {
         },
         invoice_date: {
           label: 'Invoice Date',
-          transformer: v => unix(v.invoice_date).format("MMMM Do, YYYY"),
+          transformer: v => unix(v.invoice_date).format('MMMM Do, YYYY'),
           filter: {
             type: FilterCode.Date,
             field: 'purchased_at'
@@ -137,22 +165,7 @@ export class HostInvoicesComponent implements OnInit {
               [PaymentStatus.Refunded, { label: 'Refunded' }]
             ])
           },
-          chip_selector: v => {
-            switch (v.status) {
-              case PaymentStatus.Created:
-                return 'blue';
-              case PaymentStatus.Fufilled:
-                return 'gray';
-              case PaymentStatus.Paid:
-                return 'green';
-              case PaymentStatus.RefundPending:
-                return 'magenta';
-              case PaymentStatus.RefundDenied:
-                return 'red';
-              case PaymentStatus.Refunded:
-                return 'gray';
-            }
-          }
+          chip_selector: v => PaymentStatusUiChipColorSelector(v.status)
         }
       }
     };

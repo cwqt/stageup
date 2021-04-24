@@ -8,7 +8,7 @@ import {
   IControllerEndpoint,
   TopicType,
   UserHostInfo
-} from '@core/shared/api';
+} from '@core/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import { sendEmail } from '../common/email';
@@ -16,13 +16,13 @@ import { log } from '../common/logger';
 import Env from '../env';
 
 export default class MiscController extends BaseController<BackendProviderMap> {
-  logFrontendMessage():IControllerEndpoint<void> {
+  logFrontendMessage(): IControllerEndpoint<void> {
     return {
       authStrategy: AuthStrat.none,
       controller: async req => {
         // TODO: hook up frontend logging messages to some database for user error logging
       }
-    }
+    };
   }
 
   ping(): IControllerEndpoint<string> {

@@ -1,14 +1,26 @@
-import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn
+} from 'typeorm';
 import { HostPermission, IUserHostInfo } from '@core/interfaces';
 
 import { Host } from './host.entity';
 import { User } from '../users/user.entity';
-import { timestamp, uuid } from '@core/shared/helpers';
+import { timestamp, uuid } from '@core/helpers';
 
 @Entity()
 export class UserHostInfo extends BaseEntity implements IUserHostInfo {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column() joined_at: number;
   @Column('enum', { enum: HostPermission }) permissions: HostPermission;
@@ -27,7 +39,6 @@ export class UserHostInfo extends BaseEntity implements IUserHostInfo {
     this.host = host;
   }
 
-  
   toFull(): Required<IUserHostInfo> {
     return {
       joined_at: this.joined_at,

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IEnvelopedData, IHostOnboarding, IOnboardingReview } from '@core/interfaces';
-import { IQueryParams, querize } from '@core/shared/helpers';
+import { IQueryParams, querize } from '@core/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +9,8 @@ import { IQueryParams, querize } from '@core/shared/helpers';
 export class AdminService {
   constructor(private http: HttpClient) {}
 
-  readOnboardingProcesses(query?:IQueryParams): Promise<IEnvelopedData<IHostOnboarding[]>> {
-    return this.http
-      .get<IEnvelopedData<IHostOnboarding[]>>(`/api/admin/onboardings${querize(query)}`)
-      .toPromise();
+  readOnboardingProcesses(query?: IQueryParams): Promise<IEnvelopedData<IHostOnboarding[]>> {
+    return this.http.get<IEnvelopedData<IHostOnboarding[]>>(`/api/admin/onboardings${querize(query)}`).toPromise();
   }
 
   enactOnboardingProcess(onboardingId: string): Promise<void> {

@@ -4,7 +4,7 @@
 <h3 *ngIf="performances.data && performances.data.data.length == 0" i18n="@@no-performances-found">No performances found</h3>
 
 <div class="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2" *ngIf="!performances.loading && performances.data">
-  <app-performance-thumb *ngFor="let performance of performances.data.data; let i=index" class="relative hover:z-10"
+  <app-performance-thumb *ngFor="let performance of performances.data.data; let i=index" class="relative hover:z-10 m-2"
     (click)="openDialog(performance)"
     [performance]="performance">
   </app-performance-thumb>

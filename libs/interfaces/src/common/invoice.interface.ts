@@ -1,15 +1,22 @@
 import { IPerformanceStub } from '../performances/performance.interface';
 import { ITicketStub } from '../performances/ticket.interface';
+import { IUserStub } from '../users/user.interface';
 import { CurrencyCode } from './currency.interface';
+import { NUUID } from './fp.interface';
 
 export enum PurchaseableEntity {
   Ticket = 'ticket',
   PatronTier = 'patron-tier'
 }
 
+export type PurchaseableData = {
+  [PurchaseableEntity.Ticket]: ITicketStub;
+};
+
 // A record of purchase by the user
 export interface IInvoice {
-  _id: string;
+  _id: NUUID;
+  type: PurchaseableEntity;
   stripe_charge_id: string; // 'ch_xxxx...'
   stripe_receipt_url: string;
   purchased_at: number;
@@ -29,7 +36,7 @@ export enum PaymentStatus {
 }
 
 // Pertains to both hosts & users, should be tied into a Purchaseable supertype
-// when we add patronage etc.
+// when we add patreonage etc.
 export interface DtoInvoice {
   invoice_id: IInvoice['_id'];
   invoice_date: number;
@@ -38,14 +45,29 @@ export interface DtoInvoice {
   currency: CurrencyCode;
 }
 
-export interface IHostInvoice extends DtoInvoice {
+export interface IPaymentSourceDetails {
+  last_4_digits: string;
+  card_type: string;
+}
+
+// Hosts ----------------------------------------------------
+export interface IHostInvoiceStub extends DtoInvoice {
   performance: IPerformanceStub;
   ticket: ITicketStub;
   net_amount: number; // for hosts only
 }
 
-export interface IUserInvoice extends DtoInvoice {
+export interface IHostInvoice extends IHostInvoiceStub, IPaymentSourceDetails {
+  receipt_url: string;
+  user: IUserStub;
+}
+
+// Users ----------------------------------------------------
+export interface IUserInvoiceStub extends DtoInvoice {
   performance: IPerformanceStub;
   ticket: ITicketStub;
+}
+
+export interface IUserInvoice extends IUserInvoiceStub, IPaymentSourceDetails {
   receipt_url: string;
 }

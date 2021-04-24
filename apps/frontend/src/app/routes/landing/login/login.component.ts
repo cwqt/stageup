@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Environment, IUser, IHost } from '@core/interfaces';
-import { Auth, ErrorHandler, handleError } from '@core/shared/api';
+import { Auth, ErrorHandler, handleError } from '@core/api';
 import { ICacheable, createICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';

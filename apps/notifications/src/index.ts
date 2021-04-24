@@ -1,6 +1,6 @@
 import { LiveStreamState, SseEventType } from '@core/interfaces';
-import { AsyncRouter, Auth, ProviderMap, Providers, Register, Router, TopicType } from '@core/shared/api';
-import { timeout, uuid } from '@core/shared/helpers';
+import { AsyncRouter, Auth, ProviderMap, Providers, Register, Router, TopicType } from '@core/api';
+import { timeout, uuid } from '@core/helpers';
 import sse, { ISseMiddlewareOptions, ISseResponse } from '@toverux/expresse';
 import { compose } from 'compose-middleware';
 import { Handler, NextFunction, Request } from 'express';

@@ -15,7 +15,7 @@ import {
   TicketFees,
   TicketType
 } from '@core/interfaces';
-import { enumToValues, to } from '@core/shared/helpers';
+import { enumToValues, to } from '@core/helpers';
 import { ValidationChain } from 'express-validator';
 import { array } from '.';
 import { FieldValidators as FV } from './fields.validators';

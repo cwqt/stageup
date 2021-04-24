@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DateFilter, DateFilterOperator, FilterCode, FilterQuery } from '@core/interfaces';
-import { timestamp } from '@core/shared/helpers';
+import { timestamp } from '@core/helpers';
 import { UiDialogButton } from '../../../dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '../../../form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from '../../../ui-lib.interfaces';

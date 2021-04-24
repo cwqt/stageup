@@ -1,4 +1,4 @@
-import { IdFinderStrategy, Performance, Ticket } from '@core/shared/api';
+import { IdFinderStrategy, Performance, Ticket } from '@core/api';
 
 const findUserIdFromSession: IdFinderStrategy = async (req, pm) => {
   return req.session.user?._id;
@@ -18,7 +18,7 @@ const findHostIdFromPerformanceId: IdFinderStrategy = async (req, pm) => {
       }
     }
   });
-    
+
   return performance?.host?._id;
 };
 

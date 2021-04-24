@@ -31,7 +31,7 @@ import {
   Auth,
   UserHostInfo,
   PasswordReset
-} from '@core/shared/api';
+} from '@core/api';
 
 import Email = require('../common/email');
 import Env from '../env';

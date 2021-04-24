@@ -1,6 +1,6 @@
 import { IHostInvoiceCSVJobData, JobType } from '@core/interfaces';
-import { Invoice } from '@core/shared/api';
-import { timestamp } from '@core/shared/helpers';
+import { Invoice } from '@core/api';
+import { timestamp } from '@core/helpers';
 import { writeToBuffer } from '@fast-csv/format';
 import { RunnerProviderMap } from 'apps/runner/src';
 import Env from 'apps/runner/src/env';

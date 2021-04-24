@@ -1,71 +1,61 @@
 import {
   ErrCode,
+  hasRequiredHostPermission,
+  HostInviteState,
+  HostOnboardingState,
   HostOnboardingStep,
   HostPermission,
+  HTTP,
+  IEnvelopedData,
   IHost,
+  IHostMemberChangeRequest,
   IHostOnboarding,
-  HostOnboardingState,
   IHostPrivate,
+  IHostStripeInfo,
+  IHostStub,
   IOnboardingOwnerDetails,
   IOnboardingProofOfBusiness,
   IOnboardingSocialPresence,
   IOnboardingStep,
-  IUserHostInfo,
-  pick,
-  HTTP,
-  IHostMemberChangeRequest,
   IOnboardingStepMap,
-  IEnvelopedData,
-  HostInviteState,
   IPerformanceStub,
-  IHostStub,
-  TokenProvisioner,
-  hasRequiredHostPermission,
-  IHostStripeInfo,
+  IHostInvoiceStub,
   IHostInvoice,
+  IUserHostInfo,
   JobType,
-  IPatronTier,
-  DtoCreatePatronTier,
-  IHostPatronTier,
-  IPatronSubscription,
-  Environment
+  pick,
+  TokenProvisioner
 } from '@core/interfaces';
-
 import {
-  Validators,
-  body,
-  params as parameters,
-  query,
+  AccessToken,
+  array,
   BaseController,
-  IControllerEndpoint,
+  body,
   ErrorHandler,
   getCheck,
-  User,
   Host,
   HostInvitation,
-  UserHostInfo,
+  IControllerEndpoint,
+  Invoice,
   Onboarding,
   OnboardingReview,
+  params as parameters,
   Performance,
-  AccessToken,
-  Invoice,
-  array,
-  Auth,
-  PatronSubscription
-} from '@core/shared/api';
-
-import { timestamp, uuid } from '@core/shared/helpers';
-
-import Env from '../env';
-import Email = require('../common/email');
-import IdFinderStrat from '../common/authorisation/id-finder-strategies';
-import AuthStrat from '../common/authorisation';
-import { log } from '../common/logger';
-import { BackendProviderMap } from '..';
+  query,
+  User,
+  UserHostInfo,
+  Validators
+} from '@core/api';
+import { timestamp } from '@core/helpers';
 import { In } from 'typeorm';
+import { BackendProviderMap } from '..';
+import AuthStrat from '../common/authorisation';
+import IdFinderStrat from '../common/authorisation/id-finder-strategies';
+import { log } from '../common/logger';
 import Queue from '../common/queue';
-import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
-import { createTestAccount } from 'nodemailer';
+import Env from '../env';
+
+import Email = require('../common/email');
 
 export default class HostController extends BaseController<BackendProviderMap> {
   createHost(): IControllerEndpoint<IHost> {
@@ -197,7 +187,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         const invitee = await getCheck(
           User.findOne({ email_address: changeRequest.value as string }, { relations: ['host'] })
         );
-        if (invitee.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);       
+        if (invitee.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
 
         // Don't allow duplicate invites to be created for a user for the same host
         if (
@@ -752,7 +742,30 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
-  readInvoices(): IControllerEndpoint<IEnvelopedData<IHostInvoice[]>> {
+  readInvoice(): IControllerEndpoint<IHostInvoice> {
+    return {
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const invoice = await Invoice.findOne({
+          where: {
+            _id: req.params.iid
+          },
+          relations: {
+            user: true,
+            ticket: { performance: { host: true } }
+          }
+        });
+
+        const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id, {
+          stripeAccount: invoice.ticket.performance.host.stripe_account_id
+        });
+
+        return invoice.toHostInvoice(charge);
+      }
+    };
+  }
+
+  readInvoices(): IControllerEndpoint<IEnvelopedData<IHostInvoiceStub[]>> {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
@@ -773,7 +786,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             purchased_at: 'invoice.purchased_at'
           })
           .innerJoinAndSelect('performance.stream', 'stream')
-          .paginate(i => i.toHostInvoice());
+          .paginate(i => i.toHostInvoiceStub());
       }
     };
   }

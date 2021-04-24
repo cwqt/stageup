@@ -14,7 +14,8 @@ import {
   IUserStub,
   pick,
   IPerformanceStub,
-  IUserInvoice
+  IUserInvoice,
+  IUserInvoiceStub
 } from '@core/interfaces';
 import {
   IControllerEndpoint,
@@ -33,7 +34,7 @@ import {
   Invoice,
   Ticket,
   AccessToken
-} from '@core/shared/api';
+} from '@core/api';
 
 import Email = require('../common/email');
 import Env from '../env';
@@ -122,7 +123,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     };
   }
 
-  readInvoices(): IControllerEndpoint<IEnvelopedData<IUserInvoice[]>> {
+  readInvoices(): IControllerEndpoint<IEnvelopedData<IUserInvoiceStub[]>> {
     return {
       authStrategy: AuthStrat.isLoggedIn,
       controller: async req => {
@@ -143,7 +144,28 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             purchased_at: 'invoice.purchased_at'
           })
           .innerJoinAndSelect('performance.stream', 'stream')
-          .paginate(i => i.toUserInvoice());
+          .paginate(i => i.toUserInvoiceStub());
+      }
+    };
+  }
+
+  // router.get <IUserInvoice> ("/myself/invoices/:iid", Myself.readInvoice());
+  readInvoice(): IControllerEndpoint<IUserInvoice> {
+    return {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const invoice = await Invoice.findOne({
+          where: {
+            _id: req.params.iid
+          },
+          relations: {
+            user: true,
+            ticket: { performance: { stream: true } }
+          }
+        });
+
+        const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id);
+        return invoice.toHostInvoice(charge);
       }
     };
   }

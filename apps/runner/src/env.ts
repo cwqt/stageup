@@ -4,13 +4,8 @@ const TRUE_ENV = process.env['NODE' + '_ENV'];
 require('dotenv-flow').config({ node_env: TRUE_ENV, silent: true });
 
 import { Environment } from '@core/interfaces';
-import {
-  IAWS3ProviderConfig,
-  IPostgresProviderConfig,
-  IRedisProviderConfig,
-  ISendGridProviderConfig
-} from '@core/shared/api';
-import { isEnv } from '@core/shared/helpers';
+import { IAWS3ProviderConfig, IPostgresProviderConfig, IRedisProviderConfig, ISendGridProviderConfig } from '@core/api';
+import { isEnv } from '@core/helpers';
 
 interface IEnvironment {
   ENVIRONMENT: Environment;

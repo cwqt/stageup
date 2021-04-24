@@ -2,15 +2,10 @@
 
   <div class="flex justify-between items-center">
     <h1 *ngIf="table.title">{{ table.title }}</h1>
-    <ui-button kind="primary" *ngIf="table.selection"
-      [disabled]="selection.selected.length == 0"
-      [popper]="actionsMenu"
-      [popperHideOnClickOutside]="true"
-      [popperTrigger]="'click'"
-      [popperPositionFixed]="true"
-      [popperPreventOverflow]="false"
-      [popperPlacement]="'bottom'">
-        Actions &nbsp; <ui-icon>caret--down</ui-icon>
+    <ui-button kind="primary" *ngIf="table.selection" [disabled]="selection.selected.length == 0" [popper]="actionsMenu"
+      [popperHideOnClickOutside]="true" [popperTrigger]="'click'" [popperPositionFixed]="true"
+      [popperPreventOverflow]="false" [popperPlacement]="'bottom'">
+      Actions &nbsp; <ui-icon>caret--down</ui-icon>
     </ui-button>
   </div>
 
@@ -19,19 +14,18 @@
       <mat-spinner></mat-spinner>
     </div>
 
-    <div class="table-container" >
-      <table [@.disabled]="true" mat-table [dataSource]="dataSource" matSort matSortDisableClear (matSortChange)="resetPaging()">
+    <div class="table-container">
+      <table [@.disabled]="true" mat-table [dataSource]="dataSource" matSort matSortDisableClear
+        (matSortChange)="resetPaging()">
         <!-- Checkbox Column -->
         <ng-container matColumnDef="__select" *ngIf="table.selection">
           <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? masterToggle() : null"
-                          [checked]="selection.hasValue() && isAllSelected()"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
             </mat-checkbox>
           </th>
           <td mat-cell *matCellDef="let row">
-            <mat-checkbox (change)="$event ? selectRow(row) : null"
-                          [checked]="selection.isSelected(row)">
+            <mat-checkbox (change)="$event ? selectRow(row) : null" [checked]="selection.isSelected(row)">
             </mat-checkbox>
           </td>
         </ng-container>
@@ -39,6 +33,7 @@
         <!-- Custom table columns -->
         <ng-container *ngFor="let column of table.columns | keyvalue" [matColumnDef]="column.key">
           <!-- Do this bodge with the two mat-header-cells because you can't have dynamic directives... -->
+
           <ng-container *ngIf="column.value.sort">
             <th mat-header-cell *matHeaderCellDef mat-sort-header [class.filter--is-active]="activeFilters[column.key]">
               <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -53,65 +48,52 @@
           <ng-template #header>
             <div class="mat-header-cell--content">
               <span>{{ column.value.label }}</span>
-              <ui-button
-                *ngIf="column.value.filter"
-                (click)="openFilterPopover($event, column)"
-                [centerRipple]="true"
-                [popper]="filterMenu"
-                [popperHideOnClickOutside]="false"
-                [popperTrigger]="'click'"
-                [popperPositionFixed]="true"
-                [popperPreventOverflow]="false"
-                [popperPlacement]="'bottom'"
-                size="s"
-                class="ml-2 rounded-full overflow-hidden filter"
-                [class.filter--is-active]="activeFilters[column.key]">
+              <ui-button *ngIf="column.value.filter" (click)="openFilterPopover($event, column)" [centerRipple]="true"
+                [popper]="filterMenu" [popperHideOnClickOutside]="false" [popperTrigger]="'click'"
+                [popperPositionFixed]="true" [popperPreventOverflow]="false" [popperPlacement]="'bottom'" size="s"
+                class="ml-2 rounded-full overflow-hidden filter" [class.filter--is-active]="activeFilters[column.key]">
                 <ui-icon size="s" *ngIf="!activeFilters[column.key]">filter</ui-icon>
                 <ui-icon size="s" *ngIf="activeFilters[column.key]">filter--edit</ui-icon>
               </ui-button>
 
               <popper-content #filterMenu (click)="$event.stopPropagation()">
-                <div class="ui-table--filter"
-                  *ngIf="column.value.filter"
-                  (click)="$event.stopPropagation()"
-                  (clickOutside)="closePoppers()"
-                  [exclude]="'.mat-option,popper-content,.mat-datepicker-content'"
-                  [excludeBeforeClick]="true"
-                  [ngSwitch]="column.value.filter.type">
-                    <ui-filter-string *ngSwitchCase="'STR'"
-                      (onChange)="addFilter(column.key, $event)"
-                      [active]="activeFilters[column.key]">
-                    </ui-filter-string>
+                <div class="ui-table--filter" *ngIf="column.value.filter" (click)="$event.stopPropagation()"
+                  (clickOutside)="closePoppers()" [exclude]="'.mat-option,popper-content,.mat-datepicker-content'"
+                  [excludeBeforeClick]="true" [ngSwitch]="column.value.filter.type">
+                  <ui-filter-string *ngSwitchCase="'STR'" (onChange)="addFilter(column.key, $event)"
+                    [active]="activeFilters[column.key]">
+                  </ui-filter-string>
 
-                    <ui-filter-enum *ngSwitchCase="'ENUM'"
-                      (onChange)="addFilter(column.key, $event)"
-                      [active]="activeFilters[column.key]"
-                      [enum]="column.value.filter.enum">
-                    </ui-filter-enum>
+                  <ui-filter-enum *ngSwitchCase="'ENUM'" (onChange)="addFilter(column.key, $event)"
+                    [active]="activeFilters[column.key]" [enum]="column.value.filter.enum">
+                  </ui-filter-enum>
 
-                    <ui-filter-boolean *ngSwitchCase="'BOOL'">
-                    </ui-filter-boolean>
+                  <ui-filter-boolean *ngSwitchCase="'BOOL'">
+                  </ui-filter-boolean>
 
-                    <ui-filter-date *ngSwitchCase="'DATE'"
-                      (onChange)="addFilter(column.key, $event)"
-                      [active]="activeFilters[column.key]">
-                    </ui-filter-date>
+                  <ui-filter-date *ngSwitchCase="'DATE'" (onChange)="addFilter(column.key, $event)"
+                    [active]="activeFilters[column.key]">
+                  </ui-filter-date>
 
-                    <ui-filter-number  *ngSwitchCase="'NUM'"
-                      (onChange)="addFilter(column.key, $event)"
-                      [active]="activeFilters[column.key]">
-                    </ui-filter-number>
+                  <ui-filter-number *ngSwitchCase="'NUM'" (onChange)="addFilter(column.key, $event)"
+                    [active]="activeFilters[column.key]">
+                  </ui-filter-number>
                 </div>
               </popper-content>
             </div>
           </ng-template>
 
-          <td mat-cell *matCellDef="let element">
+          <td (click)="column.value.click_handler && column.value.click_handler(element.__data)" mat-cell
+            *matCellDef="let element">
             <ui-chip *ngIf="column.value.chip_selector; else primitive"
               [kind]="column.value.chip_selector(element.__data)">
               {{ element[column.key] }}
             </ui-chip>
-            <ng-template #primitive> {{ element[column.key] }}</ng-template>
+            <ng-template #primitive>
+              <span [class.is-clickable]="column.value.click_handler">
+                {{ element[column.key] }}
+              </span>
+            </ng-template>
           </td>
         </ng-container>
 
@@ -121,17 +103,12 @@
           <td mat-cell *matCellDef="let element">
             <div class="ui-table--actions">
               <ng-container *ngFor="let action of table.actions">
-                <ui-button
-                  [popper]="dropdownMenu"
-                  [popperHideOnClickOutside]="true"
-                  [popperTrigger]="action.dropdown ? 'click' : 'none'"
-                  [popperPositionFixed]="true"
-                  [popperPreventOverflow]="false"
-                  [popperPlacement]="'bottom'"
-                  [kind]="action.kind || 'accent'"
+                <ui-button [popper]="dropdownMenu" [popperHideOnClickOutside]="true"
+                  [popperTrigger]="action.dropdown ? 'click' : 'none'" [popperPositionFixed]="true"
+                  [popperPreventOverflow]="false" [popperPlacement]="'bottom'" [kind]="action.kind || 'accent'"
                   (click)="action.click(element.__data)">
-                    <ui-icon *ngIf="action.icon" class="mr-2">{{ action.icon }}</ui-icon>
-                    <span *ngIf="action.label">{{ action.label }}</span>
+                  <ui-icon *ngIf="action.icon" class="mr-2">{{ action.icon }}</ui-icon>
+                  <span *ngIf="action.label">{{ action.label }}</span>
                 </ui-button>
 
                 <popper-content #dropdownMenu>
@@ -154,8 +131,8 @@
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" [colSpan]="displayedColumns.length">
             {{ cacheable.loading
-              ? "Loading data..."
-              : 'No data found'
+            ? "Loading data..."
+            : 'No data found'
             }}
           </td>
         </tr>
@@ -166,18 +143,15 @@
   <!-- Actions popover, here for z-indexing purposes -->
   <popper-content #actionsMenu (click)="closePoppers()">
     <div class="ui-table--actions" *ngIf="table.selection">
-      <ui-button *ngFor="let action of table.selection?.actions"
-        (click)="action.click(selection)">
+      <ui-button *ngFor="let action of table.selection?.actions" (click)="action.click(selection)">
         {{ action.label }}
       </ui-button>
     </div>
   </popper-content>
 
   <div class="ui-table--paginator">
-    <mat-paginator *ngIf="table.pagination"
-      [showFirstLastButtons]="table.pagination.show_first_last"
-      [length]="cacheable.data?.__paging_data?.total || 0"
-      [pageSizeOptions]="table.pagination.page_sizes">
+    <mat-paginator *ngIf="table.pagination" [showFirstLastButtons]="table.pagination.show_first_last"
+      [length]="cacheable.data?.__paging_data?.total || 0" [pageSizeOptions]="table.pagination.page_sizes">
     </mat-paginator>
 
     <p *ngIf="footerMessage" class="paginator-footer-message">

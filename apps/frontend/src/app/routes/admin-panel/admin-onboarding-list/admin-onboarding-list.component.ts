@@ -6,7 +6,7 @@ import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { IUiTable } from '../../../ui-lib/table/table.interfaces';
 import { TableComponent } from '../../../ui-lib/table/table.component';
 import { OnboardingStatePipe } from '../../../_pipes/object-state.pipe';
-import { enumToValues } from '@core/shared/helpers';
+import { enumToValues } from '@core/helpers';
 
 @Component({
   selector: 'app-admin-onboarding-list',

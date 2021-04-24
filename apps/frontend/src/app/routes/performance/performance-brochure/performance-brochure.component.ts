@@ -14,7 +14,7 @@ import {
   IPerformanceStub,
   ITicketStub
 } from '@core/interfaces';
-import { getDonoAmount, prettifyMoney } from '@core/shared/helpers';
+import { getDonoAmount, prettifyMoney } from '@core/helpers';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { PlayerComponent } from '../../../components/player/player.component';
@@ -124,7 +124,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
     // Push setStripeElementAccountId to next change detection cycle, so that *ngIf=selectedTicket is true
     // & then on the next tick, this.card will be defined
-    console.log(this.performance.host, 'aaaaaa')
+    console.log(this.performance.host, 'aaaaaa');
     setTimeout(() => {
       this.card.setStripeElementAccountId(this.performance.host.stripe_account_id);
       this.tabs.selectedIndex = 1;

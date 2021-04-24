@@ -1,6 +1,6 @@
 import Env from '../../env';
 import { Environment, ErrCode, HostPermission, IHost, hasRequiredHostPermission } from '@core/interfaces';
-import { Auth, AuthStrategy, AuthStratReturn, MapAccessor, NUUIDMap, User, UserHostInfo, Host } from '@core/shared/api';
+import { Auth, AuthStrategy, AuthStratReturn, MapAccessor, NUUIDMap, User, UserHostInfo, Host } from '@core/api';
 
 const isFromService: AuthStrategy = async (req, providers): Promise<AuthStratReturn> => {
   if (!req.headers.authorization) return [false, {}];
@@ -34,14 +34,14 @@ const isOurself: AuthStrategy = async (req, providers): Promise<AuthStratReturn>
   return [true, { user }];
 };
 
-const isMemberOfAnyHost:AuthStrategy = async (req, providers, map):Promise<AuthStratReturn> => {
+const isMemberOfAnyHost: AuthStrategy = async (req, providers, map): Promise<AuthStratReturn> => {
   const [isAuthorised, _, reason] = await isLoggedIn(req, providers);
   if (!isAuthorised) return [isAuthorised, _, reason];
 
   const user = await User.findOne({
-    relations: ["host"],
+    relations: ['host'],
     where: {
-      _id: req.session.user._id,
+      _id: req.session.user._id
     },
     select: {
       host: {
@@ -50,9 +50,9 @@ const isMemberOfAnyHost:AuthStrategy = async (req, providers, map):Promise<AuthS
     }
   });
 
-  if(!user.host) return [false, {}, ErrCode.NOT_MEMBER];
+  if (!user.host) return [false, {}, ErrCode.NOT_MEMBER];
   return [true, { user }];
-}
+};
 
 const isMemberOfHost = (mapAccessor?: MapAccessor, passedMap?: NUUIDMap): AuthStrategy => {
   return async (req, providers, map): Promise<AuthStratReturn> => {
@@ -89,7 +89,7 @@ const hasHostPermission = (permission: HostPermission, mapAccessor?: MapAccessor
 
     // Highest Perms (Owner)  = "host_owner"
     // Lowest Perfs (Pending) = "host_pending"
-    if(hasRequiredHostPermission(passthru.uhi.permissions, permission)) {
+    if (hasRequiredHostPermission(passthru.uhi.permissions, permission)) {
       return [false, {}, ErrCode.MISSING_PERMS];
     }
 

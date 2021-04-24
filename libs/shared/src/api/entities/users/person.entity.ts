@@ -1,12 +1,24 @@
-import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  Entity,
+  EntityManager,
+  JoinColumn,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn
+} from 'typeorm';
 import { IPersonInfo, PersonTitle } from '@core/interfaces';
 import { ContactInfo } from './contact-info.entity';
-import { uuid } from '@core/shared/helpers';
+import { uuid } from '@core/helpers';
 
 @Entity()
 export class Person extends BaseEntity implements IPersonInfo {
   @PrimaryColumn() _id: string;
-  @BeforeInsert() private beforeInsert() { this._id = uuid() }
+  @BeforeInsert() private beforeInsert() {
+    this._id = uuid();
+  }
 
   @Column({ nullable: true }) first_name: string;
   @Column({ nullable: true }) last_name: string;

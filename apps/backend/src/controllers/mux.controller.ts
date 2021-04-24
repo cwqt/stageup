@@ -16,8 +16,8 @@ import {
   IControllerEndpoint,
   TopicType,
   AssetGroup
-} from '@core/shared/api';
-import { timeout } from '@core/shared/helpers';
+} from '@core/api';
+import { timeout } from '@core/helpers';
 import { LiveStream, Webhooks } from '@mux/mux-node';
 import { MD5 } from 'object-hash';
 import { RedisClient } from 'redis';
@@ -85,8 +85,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
     await asset.remove();
   }
 
-  async videoAssetDeleted(data: IMUXHookResponse<MuxAsset>) {
-  }
+  async videoAssetDeleted(data: IMUXHookResponse<MuxAsset>) {}
 
   async setPerformanceState(objectId: string, state: LiveStreamState) {
     const performance = await getCheck(

@@ -1,11 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { capitalize, FilterCode, IEnvelopedData, IHostInvoice, IUserInvoice, PaymentStatus, TicketType } from '@core/interfaces';
-import { prettifyMoney } from '@core/shared/helpers';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  capitalize,
+  FilterCode,
+  IEnvelopedData,
+  IHostInvoice,
+  IUserInvoice,
+  PaymentStatus,
+  TicketType
+} from '@core/interfaces';
+import { prettifyMoney } from '@core/helpers';
 import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { MyselfService } from '../../../services/myself.service';
 import { TableComponent } from '../../../ui-lib/table/table.component';
 import { IUiTable } from '../../../ui-lib/table/table.interfaces';
 import { PaymentStatusPipe } from '../../../_pipes/payment-status.pipe';
+import { InvoiceDialogComponent } from '@frontend/components/dialogs/invoice-dialog/invoice-dialog.component';
 
 @Component({
   selector: 'app-billing-settings',
@@ -17,7 +27,7 @@ export class BillingSettingsComponent implements OnInit {
   tableData: IUiTable<IUserInvoice>;
   invoices: ICacheable<IEnvelopedData<IUserInvoice[]>> = createICacheable([]);
 
-  constructor(private myselfService:MyselfService) {}
+  constructor(private myselfService: MyselfService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.tableData = {
@@ -26,7 +36,9 @@ export class BillingSettingsComponent implements OnInit {
       pagination: { page_sizes: [10, 25] },
       columns: {
         invoice_id: {
-          label: 'Invoice ID'
+          label: 'Invoice ID',
+          click_handler: invoice =>
+            this.dialog.open(InvoiceDialogComponent, { data: { invoice, is_host_invoice: false } })
         },
         performance: {
           label: 'Performance',
@@ -35,7 +47,7 @@ export class BillingSettingsComponent implements OnInit {
             type: FilterCode.String,
             field: 'performance_name'
           },
-          sort: { field: 'performance_name' },
+          sort: { field: 'performance_name' }
         },
         ticket: {
           label: 'Ticket',
@@ -67,7 +79,7 @@ export class BillingSettingsComponent implements OnInit {
             type: FilterCode.Date,
             field: 'purchased_at'
           },
-          sort: { field: 'purchased_at' },
+          sort: { field: 'purchased_at' }
         },
         amount: {
           label: 'Amount',

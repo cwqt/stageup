@@ -1,4 +1,4 @@
-import { Validators, query, User, BaseController, IControllerEndpoint  } from '@core/shared/api';
+import { Validators, query, User, BaseController, IControllerEndpoint } from '@core/api';
 import { ErrCode } from '@core/interfaces';
 
 import Env from '../env';

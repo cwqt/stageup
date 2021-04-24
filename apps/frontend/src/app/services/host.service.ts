@@ -1,4 +1,4 @@
-import { Host, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HostPermission,
   IHostOnboarding,
@@ -16,7 +16,8 @@ import {
   IHostInvoiceCSVJobData,
   IHostPrivate,
   DtoCreatePatronTier,
-  IPatronTier
+  IPatronTier,
+  IHostInvoiceStub
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -24,7 +25,7 @@ import { HttpClient } from '@angular/common/http';
 import { IHost, IHostStub } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 import fd from 'form-data';
-import { IQueryParams, querize, timestamp } from '@core/shared/helpers';
+import { IQueryParams, querize, timestamp } from '@core/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -187,9 +188,16 @@ export class HostService {
     return this.http.put<IHostStub>(`api/hosts/${hostId}/banner`, data).toPromise();
   }
 
-  // router.get <IE<IHostInvoice[]>> ("/hosts/:hid/invoices", Hosts.readInvoices());
-  readInvoices(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IHostInvoice[]>> {
-    return this.http.get<IEnvelopedData<IHostInvoice[]>>(`/api/hosts/${hostId}/invoices${querize(query)}`).toPromise();
+  // router.get <IE<IHostInvoiceStub[]>> ("/hosts/:hid/invoices", Hosts.readInvoices());
+  readInvoices(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IHostInvoiceStub[]>> {
+    return this.http
+      .get<IEnvelopedData<IHostInvoiceStub[]>>(`/api/hosts/${hostId}/invoices${querize(query)}`)
+      .toPromise();
+  }
+
+  //router.get<IHostInvoice>("/hosts/:hid/invoices/:iid",Hosts.readInvoice());
+  readInvoice(hostId: string, invoiceId: string): Promise<IHostInvoice> {
+    return this.http.get<IHostInvoice>(`api/hosts/${hostId}/invoices/${invoiceId}`).toPromise();
   }
 
   // router.post <void> ("/hosts/:hid/invoices/export-csv", Hosts.exportInvoicesToCSV());

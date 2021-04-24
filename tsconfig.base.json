@@ -19,8 +19,10 @@
     "baseUrl": ".",
     "paths": {
       "@core/interfaces": ["libs/interfaces/src/index.ts"],
-      "@core/shared/helpers": ["libs/shared/src/helpers/index.ts"],
-      "@core/shared/api": ["libs/shared/src/api/index.ts"]
+      "@core/helpers": ["libs/shared/src/helpers/index.ts"],
+      "@core/api": ["libs/shared/src/api/index.ts"],
+      "@frontend/*": ["apps/frontend/src/app/*"],
+      "@backend/*": ["apps/backend/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

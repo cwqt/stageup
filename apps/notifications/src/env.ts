@@ -4,8 +4,8 @@ const TRUE_ENV = process.env['NODE' + '_ENV'];
 require('dotenv-flow').config({ node_env: TRUE_ENV, silent: true });
 
 import { Environment } from '@core/interfaces';
-import { IPubSubProviderConfig } from '@core/shared/api';
-import { isEnv } from '@core/shared/helpers';
+import { IPubSubProviderConfig } from '@core/api';
+import { isEnv } from '@core/helpers';
 
 interface IEnvironment {
   ENVIRONMENT: Environment;
@@ -23,7 +23,7 @@ const Env: IEnvironment = {
   PUB_SUB: {
     project_id: process.env.PUB_SUB_PROJECT_ID,
     port: parseInt(process.env.PUB_SUB_PORT)
-  },
+  }
 };
 
 export default Env;
