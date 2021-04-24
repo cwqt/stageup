@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { timestamp } from '@core/helpers';
 import { ITicketStub, TicketType } from '@core/interfaces';
 import { ChipComponent } from '../../../ui-lib/chip/chip.component';
 
@@ -8,20 +9,15 @@ import { ChipComponent } from '../../../ui-lib/chip/chip.component';
   styleUrls: ['./performance-ticket.component.scss']
 })
 export class PerformanceTicketComponent implements OnInit {
-  @Input() ticket:ITicketStub;
-  @Input() disabled:boolean = false;
+  @Input() ticket: ITicketStub;
+  @Input() disabled: boolean = false;
+  ticketChipColor: { [index in TicketType]: ChipComponent['kind'] } = {
+    [TicketType.Paid]: 'red',
+    [TicketType.Donation]: 'blue',
+    [TicketType.Free]: 'green'
+  };
 
-  @Output() clicked: EventEmitter<ITicketStub> = new EventEmitter();
+  constructor() {}
 
-
-  ticketChipColor:{[index in TicketType]:ChipComponent['kind']} = {
-    [TicketType.Paid]: "red",
-    [TicketType.Donation]: "blue",
-    [TicketType.Free]: "green"
-  }
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }

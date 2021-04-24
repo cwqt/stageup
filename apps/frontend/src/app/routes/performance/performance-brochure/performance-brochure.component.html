@@ -1,10 +1,10 @@
 <ui-dialog [noPadding]="true" [loading]="performanceCacheable.loading || paymentIntent.loading">
   <div *ngIf="performance">
-    <app-player #player *ngIf="performanceTrailer"
-      (onPlayerReady)="player.load(performanceTrailer)">
+    <app-player #player *ngIf="performanceTrailer" (onPlayerReady)="player.load(performanceTrailer)">
     </app-player>
 
-    <img *ngIf="!performanceTrailer" class="object-cover h-96 w-full" [src]="performance.thumbnail || '/assets/performance-placeholder.jpeg'" />
+    <img *ngIf="!performanceTrailer" class="object-cover h-96 w-full"
+      [src]="performance.thumbnail || '/assets/performance-placeholder.jpeg'" />
   </div>
 
   <div class="flex">
@@ -28,9 +28,8 @@
               </p>
 
               <div *ngFor="let ticket of performance.tickets">
-                <app-performance-ticket
-                  [disabled]="!myself"
-                  (click)="openPurchaseTicketSection(ticket)"
+                <!-- Only allow users to open purchase screen if they're logged in -->
+                <app-performance-ticket [disabled]="!myself" (click)="myself && openPurchaseTicketSection(ticket)"
                   [ticket]="ticket">
                 </app-performance-ticket>
               </div>
@@ -43,49 +42,41 @@
             <div class="text-center relative">
               <h4 class="opacity-50">CHECKOUT</h4>
               <h1 class="mb-0">{{ performance.name }}</h1>
-              <ui-button (click)="openPerformanceDescriptionSection()" icon="arrow--left" class="absolute left-0 top-0">Back</ui-button>
+              <ui-button (click)="openPerformanceDescriptionSection()" icon="arrow--left" class="absolute left-0 top-0">
+                Back</ui-button>
             </div>
 
             <ui-hr></ui-hr>
 
-						<ui-form class="w-1/2 place-self-center"
-              *ngIf="selectedTicket.type == 'dono'"
-							[form]="donoPegSelectForm">
-						</ui-form>
+            <ui-form class="w-1/2 place-self-center" *ngIf="selectedTicket.type == 'dono'" [form]="donoPegSelectForm">
+            </ui-form>
 
-            <app-payment-checkout #card class="flex justify-center"
-              (onSuccess)="handleCardPaymentSuccess($event)"
-              (onFailure)="handleCardPaymentFailure($event)"
-              (onChange)="cardDetailsAreValid = $event.complete">
+            <app-payment-checkout #card class="flex justify-center" (onSuccess)="handleCardPaymentSuccess($event)"
+              (onFailure)="handleCardPaymentFailure($event)" (onChange)="cardDetailsAreValid = $event.complete">
             </app-payment-checkout>
 
             <br />
 
-            <ui-button
-            [disabled]="
+            <ui-button [disabled]="
               !cardDetailsAreValid
               || card?.loading
-              || (selectedTicket.type == 'dono' && !selectedDonoPeg)"
-              class="ml-auto"
-              kind="primary"
-              size="l"
-              icon="purchase"
-              [loading]="card?.loading"
-              (click)="card.confirmPayment(selectedTicket, {
+              || (selectedTicket.type == 'dono' && !selectedDonoPeg)" class="ml-auto" kind="primary" size="l"
+              icon="purchase" [loading]="card?.loading" (click)="card.confirmPayment(selectedTicket, {
                 selected_dono_peg: donoPegSelectForm?.group?.value?.pegs,
                 allow_any_amount: donoPegSelectForm?.group?.value?.allow_any_amount
               })">
-                <span *ngIf="selectedTicket.type == 'paid'">
-                  Pay {{ selectedTicket.amount | currencyPipe: selectedTicket.currency }}
-                </span>
+              <span *ngIf="selectedTicket.type == 'paid'">
+                Pay {{ selectedTicket.amount | currencyPipe: selectedTicket.currency }}
+              </span>
 
-                <span *ngIf="selectedTicket.type == 'dono'">
-                  {{ !selectedDonoPeg ? "Select an amount" : 'Pay ' + (selectedTicket.amount | currencyPipe: selectedTicket.currency)}}
-                </span>
+              <span *ngIf="selectedTicket.type == 'dono'">
+                {{ !selectedDonoPeg ? "Select an amount" : 'Pay ' + (selectedTicket.amount | currencyPipe:
+                selectedTicket.currency)}}
+              </span>
 
-                <span *ngIf="selectedTicket.type == 'free'">
-                  FREE
-                </span>
+              <span *ngIf="selectedTicket.type == 'free'">
+                FREE
+              </span>
             </ui-button>
           </div>
         </mat-tab>
@@ -99,11 +90,13 @@
               <h3>You're going to watch "<b>{{ performance.name }}</b>"</h3>
               <br />
 
-              <p>{{ performance.host.username }} is due to premiere this stream at {{ performance.premiere_date | amFromUnix | amDateFormat: 'LLL'}}, you'll be notified by e-mail before it begins.</p>
+              <p>{{ performance.host.username }} is due to premiere this stream at {{ performance.premiere_date |
+                amFromUnix | amDateFormat: 'LLL'}}, you'll be notified by e-mail before it begins.</p>
               <p>Purchase confirmation will arrive at <b>{{ purchaserEmailAddress }}</b> shortly.</p>
 
               <div class="flex ml-auto">
-                <ui-button size="m" kind="primary" class="mr-2" *ngIf="performance.stream.state == 'video.live_stream.active'">Watch Now</ui-button>
+                <ui-button size="m" kind="primary" class="mr-2"
+                  *ngIf="performance.stream.state == 'video.live_stream.active'">Watch Now</ui-button>
                 <ui-button size="m" kind="primary" (click)="closeDialog()" class="mr-2">Watch Later</ui-button>
                 <ui-button size="m" kind="secondary" (click)="closeDialog()">Close</ui-button>
               </div>

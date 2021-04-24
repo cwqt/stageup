@@ -1,4 +1,5 @@
 import {
+  AssetOwnerType,
   AssetType,
   BASE_AMOUNT_MAP,
   DtoCreatePerformance,
@@ -6,22 +7,21 @@ import {
   ErrCode,
   HostPermission,
   HTTP,
+  ICreateAssetRes,
   IEnvelopedData,
   IPaymentIntentClientSecret,
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
+  IStripeChargePassthrough,
   ITicket,
   ITicketStub,
   JobType,
+  NUUID,
   pick,
+  PurchaseableEntity,
   TokenProvisioner,
-  Visibility,
-  ICreateAssetRes,
-  IMuxPassthrough,
-  AssetOwnerType,
-  IStripeChargePassthrough,
-  PurchaseableEntity
+  Visibility
 } from '@core/interfaces';
 import {
   AccessToken,
@@ -37,14 +37,14 @@ import {
   Ticket,
   Validators
 } from '@core/api';
-import { getDonoAmount, to } from '@core/helpers';
+import { getDonoAmount, timestamp, to } from '@core/helpers';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
-import Stripe from 'stripe';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Queue from '../common/queue';
 import Env from '../env';
+import { LessThan, MoreThan } from 'typeorm';
 
 export default class PerformanceController extends BaseController<BackendProviderMap> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
@@ -109,26 +109,27 @@ export default class PerformanceController extends BaseController<BackendProvide
       authStrategy: AuthStrat.none,
       controller: async req => {
         const performance = await getCheck(
-          Performance.findOne(
-            { _id: req.params.pid },
-            {
-              relations: {
-                host: true,
-                tickets: true,
-                asset_group: true,
-                stream: {
-                  // TODO: add bidirectional ref on signing key to avoid this join
-                  // before we've checked that the user needs a token signing on the fly
-                  signing_key: true
-                }
+          Performance.findOne({
+            where: {
+              _id: req.params.pid
+            },
+            relations: {
+              host: true,
+              tickets: true,
+              asset_group: true,
+              stream: {
+                // TODO: add bidirectional ref on signing key to avoid this join
+                // before we've checked that the user needs a token signing on the fly
+                signing_key: true
               }
             }
-          )
+          })
         );
 
-        // Hide tickets from users who aren't a member of the host,
-        const [isMemberOfHost] = await AuthStrat.isMemberOfHost(() => performance.host._id)(req, this.providers);
-        if (!isMemberOfHost) performance.tickets = performance.tickets.filter(t => t.is_visible);
+        const currentTime = timestamp();
+        performance.tickets = performance.tickets.filter(
+          t => t.is_visible && t.start_datetime < currentTime && currentTime < t.end_datetime
+        );
 
         const response: DtoPerformance = {
           data: performance.toFull(),
@@ -369,9 +370,9 @@ export default class PerformanceController extends BaseController<BackendProvide
     };
   }
 
-  readTickets(): IControllerEndpoint<ITicketStub[]> {
+  readTickets(): IControllerEndpoint<IEnvelopedData<ITicketStub[], NUUID[]>> {
     return {
-      authStrategy: AuthStrat.none,
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Editor),
       controller: async req => {
         const tickets = await Ticket.find({
           relations: {
@@ -388,15 +389,13 @@ export default class PerformanceController extends BaseController<BackendProvide
           }
         });
 
-        if (tickets.length == 0) return [];
-        if (!req.session.user?._id) return tickets.filter(t => t.is_visible).map(t => t.toStub());
-
-        // Check user is part of host of which this performance was created by, if not filter hidden tickets
-        const hostId = await IdFinderStrat.findHostIdFromPerformanceId(req, this.providers);
-        const [isMemberOfHost] = await AuthStrat.isMemberOfHost(() => hostId)(req, this.providers);
-        if (!isMemberOfHost) return tickets.filter(t => t.is_visible).map(t => t.toStub());
-
-        return tickets.map(t => t.toStub());
+        const currentTime = timestamp();
+        return {
+          data: tickets.map(t => t.toStub()),
+          __client_data: tickets
+            .filter(t => t.is_visible && t.start_datetime < currentTime && currentTime < t.end_datetime)
+            .map(t => t._id)
+        };
       }
     };
   }

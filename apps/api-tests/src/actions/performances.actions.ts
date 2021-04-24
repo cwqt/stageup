@@ -12,6 +12,7 @@ import {
   IPerformanceUserInfo,
   ITicket,
   ITicketStub,
+  NUUID,
   Visibility
 } from '@core/interfaces';
 import { timestamp } from '@core/helpers';
@@ -93,9 +94,15 @@ export default {
     return res.data;
   },
 
-  // router.get <ITicket[]> ("/performances/:pid/tickets", Perfs.readTickets());
-  readTickets: async (performance: IPerformance): Promise<ITicket[]> => {
+  // router.get <IEnvelopedData<ITicketStub[], NUUID[]>> ("/performances/:pid/tickets", Perfs.readTickets());
+  readTickets: async (performance: IPerformance): Promise<IEnvelopedData<ITicketStub[], NUUID[]>> => {
     const res = await api.get(`/performances/${performance._id}/tickets`, env.getOptions());
+    return res.data;
+  },
+
+  // router.get <ITicket[]> ("/performances/:pid/valid-tickets", Perfs.readTickets());
+  readValidTickets: async (performance: IPerformance): Promise<ITicket[]> => {
+    const res = await api.get(`/performances/${performance._id}/valid-tickets`, env.getOptions());
     return res.data;
   },
 

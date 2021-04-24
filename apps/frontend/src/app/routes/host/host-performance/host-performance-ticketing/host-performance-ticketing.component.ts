@@ -2,7 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatTableDataSource } from '@angular/material/table';
-import { DonoPeg, DtoPerformance, IHost, IPerformanceHostInfo, ITicketStub } from '@core/interfaces';
+import {
+  DonoPeg,
+  DtoPerformance,
+  IEnvelopedData,
+  IHost,
+  IPerformanceHostInfo,
+  ITicketStub,
+  NUUID
+} from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -24,7 +32,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
   performance: ICacheable<DtoPerformance>;
   host: IHost;
 
-  tickets: ICacheable<ITicketStub[]> = createICacheable([]);
+  tickets: ICacheable<IEnvelopedData<ITicketStub[], NUUID[]>> = createICacheable([]);
   ticketsDataSrc: MatTableDataSource<ITicketStub>;
   displayedColumns: string[] = ['name', 'quantity', 'amount', 'actions'];
   hideTicketQuantities: boolean;
@@ -46,7 +54,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
   ngOnInit(): void {
     this.ticketsDataSrc = new MatTableDataSource<ITicketStub>([]);
     cachize(this.performanceService.readTickets(this.performanceId), this.tickets).then(
-      d => (this.ticketsDataSrc.data = d)
+      d => (this.ticketsDataSrc.data = d.data)
     );
 
     this.hideTicketQuantities = !this.performance.data.data.tickets.every(ticket => ticket.is_quantity_visible);
@@ -56,8 +64,8 @@ export class HostPerformanceTicketingComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(CreateUpdateTicketComponent, { data: { operation: 'create' } }),
       (ticket: ITicketStub) => {
-        this.tickets.data.push(ticket);
-        this.ticketsDataSrc = new MatTableDataSource(this.tickets.data);
+        this.tickets.data.data.push(ticket);
+        this.ticketsDataSrc = new MatTableDataSource(this.tickets.data.data);
       }
     );
   }
@@ -67,12 +75,12 @@ export class HostPerformanceTicketingComponent implements OnInit {
       this.dialog.open(CreateUpdateTicketComponent, { data: { operation: 'update', ticketId: ticket._id } }),
       (ticket: ITicketStub) => {
         // Remove old ticket & replace with updated one
-        this.tickets.data.splice(
-          this.tickets.data.findIndex(t => t._id == ticket._id),
+        this.tickets.data.data.splice(
+          this.tickets.data.data.findIndex(t => t._id == ticket._id),
           1,
           ticket
         );
-        this.ticketsDataSrc = new MatTableDataSource(this.tickets.data);
+        this.ticketsDataSrc = new MatTableDataSource(this.tickets.data.data);
       }
     );
   }
@@ -92,11 +100,11 @@ export class HostPerformanceTicketingComponent implements OnInit {
           kind: ThemeKind.Danger,
           callback: r => {
             this.performanceService.deleteTicket(this.performanceId, ticket._id);
-            this.tickets.data.splice(
-              this.tickets.data.findIndex(t => t._id == ticket._id),
+            this.tickets.data.data.splice(
+              this.tickets.data.data.findIndex(t => t._id == ticket._id),
               1
             );
-            this.ticketsDataSrc = new MatTableDataSource(this.tickets.data);
+            this.ticketsDataSrc = new MatTableDataSource(this.tickets.data.data);
             r.close();
           }
         })
@@ -105,7 +113,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
   }
 
   onToggleTicketsQtyVisibility(event: MatSlideToggleChange) {
-    this.tickets.data.forEach(ticket => (ticket.is_quantity_visible = !event.checked));
+    this.tickets.data.data.forEach(ticket => (ticket.is_quantity_visible = !event.checked));
     this.performanceService.bulkUpdateTicketQtyVisibility(this.performanceId, !event.checked);
   }
 }

@@ -1,15 +1,15 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { tap } from "rxjs/operators";
-import { HttpClient } from "@angular/common/http";
-import { CookieService } from "ngx-cookie-service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { LoggedInGuard } from "../_helpers/logged-in.guard";
-import { MyselfService } from "./myself.service";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LoggedInGuard } from '../_helpers/logged-in.guard';
+import { MyselfService } from './myself.service';
 import { IUser } from '@core/interfaces';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class AuthenticationService {
   $loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -19,10 +19,10 @@ export class AuthenticationService {
     private myselfService: MyselfService,
     private cookieService: CookieService,
     private route: ActivatedRoute,
-    private router: Router,
+    private router: Router
   ) {}
 
-  checkLoggedIn(redirect?:boolean) {
+  checkLoggedIn(redirect?: boolean) {
     this.$loggedIn.next(
       new LoggedInGuard(this.router, this.myselfService).canActivate(
         this.route.snapshot,
@@ -35,12 +35,12 @@ export class AuthenticationService {
 
   login(formData: { email_address: string; password: string }): Promise<IUser> {
     return this.http
-      .post<IUser>("/api/users/login", formData, { withCredentials: true })
+      .post<IUser>('/api/users/login', formData, { withCredentials: true })
       .pipe(
-        tap((user) => {
+        tap(user => {
           // Remove last logged in user stored
           this.myselfService.store(null);
-          this.myselfService.getMyself().then(() => this.$loggedIn.next(true))
+          this.myselfService.getMyself().then(() => this.$loggedIn.next(true));
         })
       )
       .toPromise();
@@ -48,9 +48,9 @@ export class AuthenticationService {
 
   logout() {
     this.$loggedIn.next(false);
-    this.cookieService.set("connect.sid", null);
+    this.cookieService.delete('connect.sid');
     this.myselfService.store(null, true);
-    this.http.post("/api/users/logout", {});
-    this.router.navigate(["/"]);
+    this.http.post('/api/users/logout', {});
+    this.router.navigate(['/']);
   }
 }

@@ -113,7 +113,8 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             time: UiField.Time({
               width: 6,
               label: 'Time',
-              validators: [{ type: 'required' }]
+              validators: [{ type: 'required' }],
+              initial: 0
             })
           }
         }),
@@ -130,7 +131,8 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             time: UiField.Time({
               width: 6,
               label: 'Time',
-              validators: [{ type: 'required' }]
+              validators: [{ type: 'required' }],
+              initial: 0
             })
           }
         }),

@@ -189,7 +189,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
     return (control: AbstractControl): { [index: string]: any } | null => {
       if (!control.parent?.controls) return null;
 
-      const isValid = (field["value"] as CustomUiFieldValidator)(
+      const isValid = (field['value'] as CustomUiFieldValidator)(
         control,
         control.parent.controls as { [index: string]: AbstractControl }
       );
@@ -213,7 +213,7 @@ export const UiField: {
   Text: options => ({ type: 'text', options }),
   Date: options => ({ type: 'date', options }),
   Radio: options => ({ type: 'radio', options }),
-  Richtext: options => ({ type: "richtext", options }),
+  Richtext: options => ({ type: 'richtext', options }),
   // Money: options => ({ type: 'money', options }),
   Password: options => ({ type: 'password', options }),
   Phone: options => ({ type: 'phone', options }),
@@ -284,9 +284,7 @@ export type IUiFieldTypeOptions = {
     rows?: number;
     placeholder?: string;
   };
-  richtext: {
-
-  },
+  richtext: {};
   select: {
     initial?: Primitive;
     values: Map<Primitive, { label: string; disabled?: boolean }>;
@@ -320,6 +318,7 @@ export type IUiFieldTypeOptions = {
   };
   time: {
     placeholder?: string;
+    initial?: 0;
   };
   phone: {
     placeholder?: string;
@@ -337,23 +336,30 @@ export interface IUiFieldMaskOptions {
 // Discriminated unions work on non-nested objects :)
 export type IUiFormFieldValidator = {
   message?: (e: NgControl | AbstractControl) => string;
-} & ({
-  type: "required"
-} | {
-  type: "pattern",
-  value: RegExp
-} | {
-  type: "minlength",
-  value: number;
-} | {
-  type: "maxlength"
-  value: number;
-} | {
-  type: "custom",
-  value: CustomUiFieldValidator
-} | {
-  type: "email"
-})
+} & (
+  | {
+      type: 'required';
+    }
+  | {
+      type: 'pattern';
+      value: RegExp;
+    }
+  | {
+      type: 'minlength';
+      value: number;
+    }
+  | {
+      type: 'maxlength';
+      value: number;
+    }
+  | {
+      type: 'custom';
+      value: CustomUiFieldValidator;
+    }
+  | {
+      type: 'email';
+    }
+);
 
 /**
  * @description self; control of this input

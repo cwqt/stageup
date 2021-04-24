@@ -1,13 +1,18 @@
 <div class="flex flex-row items-center mb-5">
-  <h1 class="mb-0">Ticketing</h1>
+  <h2 class="mb-0">Ticketing</h2>
   <mat-spinner class="ml-5" [diameter]="50" *ngIf="tickets.loading"></mat-spinner>
-  <ui-button class="ml-auto" (click)="openCreateTicketDialog()" kind="primary"><ui-icon>add</ui-icon>Create Ticket</ui-button>
+  <ui-button class="ml-auto" (click)="openCreateTicketDialog()" kind="primary">
+    <ui-icon>add</ui-icon>Create Ticket
+  </ui-button>
 </div>
 
 <table mat-table [dataSource]="ticketsDataSrc" class="w-full">
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Name </th>
-    <td mat-cell *matCellDef="let ticket"> {{ ticket.name }} </td>
+    <td mat-cell *matCellDef="let ticket">
+      {{ ticket.name }}
+      <ui-chip *ngIf="!tickets.data.__client_data.includes(ticket._id)">HIDDEN</ui-chip>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="quantity">
@@ -25,9 +30,9 @@
         <span *ngIf="ticket.dono_pegs.length == 0">No donation pegs selected</span>
         <ui-chip *ngFor="let peg of ticket.dono_pegs" [kind]="donoPegChipMap[peg]">
           {{
-            peg == "allow_any"
-              ? 'Allow any'
-              : peg | donoPegPipe: ticket.currency
+          peg == "allow_any"
+          ? 'Allow any'
+          : peg | donoPegPipe: ticket.currency
           }}
         </ui-chip>
       </ng-container>
@@ -45,8 +50,12 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef>Actions</th>
     <td mat-cell *matCellDef="let ticket">
-      <ui-button kind="accent" class="mr-2" (click)="openUpdateTicketDialog(ticket)"><ui-icon>edit</ui-icon></ui-button>
-      <ui-button kind="danger" (click)="openDeleteTicketDialog(ticket)"><ui-icon>delete</ui-icon></ui-button>
+      <ui-button kind="accent" class="mr-2" (click)="openUpdateTicketDialog(ticket)">
+        <ui-icon>edit</ui-icon>
+      </ui-button>
+      <ui-button kind="danger" (click)="openDeleteTicketDialog(ticket)">
+        <ui-icon>delete</ui-icon>
+      </ui-button>
     </td>
   </ng-container>
 
@@ -54,8 +63,6 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<mat-slide-toggle class="mt-4"
-  [checked]="hideTicketQuantities"
-  (change)="onToggleTicketsQtyVisibility($event)">
+<mat-slide-toggle class="mt-4" [checked]="hideTicketQuantities" (change)="onToggleTicketsQtyVisibility($event)">
   Hide all tickets quantity visiblility
 </mat-slide-toggle>

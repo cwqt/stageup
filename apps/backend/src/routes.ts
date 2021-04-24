@@ -18,7 +18,7 @@ import {
   ISearchResponse,
   IHostStub as IHostS,
   ITicket,
-  ITicketStub,
+  ITicketStub as ITcktS,
   IUserStub as IUserS,
   IHostStripeInfo,
   IPaymentIntentClientSecret as IPaymentICS,
@@ -29,7 +29,8 @@ import {
   IHostPatronTier as IHPTier,
   IHostInvoiceStub,
   IUserInvoiceStub,
-  IPatronSubscription
+  IPatronSubscription,
+  NUUID
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -122,7 +123,7 @@ router.post     <ICreateAssetRes|void>  ("/performances/:pid/assets",           
 router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
 // router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
-router.get      <ITicketStub[]>         ("/performances/:pid/tickets",                Perfs.readTickets());
+router.get      <IE<ITcktS[], NUUID[]>> ("/performances/:pid/tickets",                Perfs.readTickets());
 router.post     <ITicket>               ("/performances/:pid/tickets",                Perfs.createTicket());
 router.put      <void>                  ("/performances/:pid/tickets/qty-visibility", Perfs.bulkUpdateTicketQtyVisibility());
 router.get      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.readTicket());

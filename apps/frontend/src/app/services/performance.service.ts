@@ -14,7 +14,8 @@ import {
   DtoDonationPurchase,
   DonoPeg,
   ICreateAssetRes,
-  AssetType
+  AssetType,
+  NUUID
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 
@@ -60,9 +61,11 @@ export class PerformanceService {
     return this.http.post<ITicket>(`/api/performances/${performanceId}/tickets`, data).toPromise();
   }
 
-  // router.get <ITicketStub[]> ("/performances/:pid/tickets", Perfs.readTickets());
-  readTickets(performanceId: string): Promise<ITicketStub[]> {
-    return this.http.get<ITicketStub[]>(`/api/performances/${performanceId}/tickets`).toPromise();
+  // router.get <IEnvelopedData<ITicketStub[], NUUID[]>> ("/performances/:pid/tickets", Perfs.readTickets());
+  readTickets(performanceId: string): Promise<IEnvelopedData<ITicketStub[], NUUID[]>> {
+    return this.http
+      .get<IEnvelopedData<ITicketStub[], NUUID[]>>(`/api/performances/${performanceId}/tickets`)
+      .toPromise();
   }
 
   readTicket(performanceId: string, ticketId: string): Promise<ITicket> {
@@ -96,8 +99,10 @@ export class PerformanceService {
   }
 
   // router.post <ICreateAssetRes|void> ("/performances/:pid/assets", Perfs.createAsset());
-  createAsset(performanceId:string):Promise<ICreateAssetRes | void> {
+  createAsset(performanceId: string): Promise<ICreateAssetRes | void> {
     // TODO: expand to support static s3 assets, and not just MUX assets
-    return this.http.post<ICreateAssetRes | void>(`/api/performances/${performanceId}/assets?type=${AssetType.Video}`, null).toPromise();
+    return this.http
+      .post<ICreateAssetRes | void>(`/api/performances/${performanceId}/assets?type=${AssetType.Video}`, null)
+      .toPromise();
   }
 }

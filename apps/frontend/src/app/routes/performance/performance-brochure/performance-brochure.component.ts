@@ -2,6 +2,7 @@ import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@ang
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
+import { getDonoAmount, prettifyMoney } from '@core/helpers';
 import {
   AssetType,
   BASE_AMOUNT_MAP,
@@ -14,7 +15,6 @@ import {
   IPerformanceStub,
   ITicketStub
 } from '@core/interfaces';
-import { getDonoAmount, prettifyMoney } from '@core/helpers';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { PlayerComponent } from '../../../components/player/player.component';
@@ -22,7 +22,6 @@ import { RegisterDialogComponent } from '../../../routes/landing/register-dialog
 import { HelperService } from '../../../services/helper.service';
 import { MyselfService } from '../../../services/myself.service';
 import { PerformanceService } from '../../../services/performance.service';
-import { FormComponent } from '../../../ui-lib/form/form.component';
 import { UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
 import { IUiDialogOptions } from '../../../ui-lib/ui-lib.interfaces';
 import { LoginComponent } from '../../landing/login/login.component';
@@ -124,7 +123,6 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
     // Push setStripeElementAccountId to next change detection cycle, so that *ngIf=selectedTicket is true
     // & then on the next tick, this.card will be defined
-    console.log(this.performance.host, 'aaaaaa');
     setTimeout(() => {
       this.card.setStripeElementAccountId(this.performance.host.stripe_account_id);
       this.tabs.selectedIndex = 1;
