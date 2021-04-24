@@ -585,27 +585,23 @@ export default class HostController extends BaseController<BackendProviderMap> {
           const account = await this.providers.stripe.connection.accounts.create({
             // TODO: add details collected in onboarding in the .create options
             type: 'standard',
-            email: host.email_address,
-            country: host.contact_info.addresses[0].iso_country_code
+            email: host.email_address
           });
 
           host.stripe_account_id = account.id;
           await host.save();
         }
 
-        // 2.2 Create an account link,
-        // Account Links are the means by which a Connect platform grants a connected account permission
-        // to access Stripe-hosted applications, such as Connect Onboarding
-        // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-create-account-link
-        const link = await this.providers.stripe.connection.accountLinks.create({
-          account: host.stripe_account_id,
-          refresh_url: `${Env.API_URL}/stripe/refresh`,
-          return_url: `${Env.API_URL}/stripe/return`,
-          type: 'account_onboarding'
+        // Complete OAuth Flow to connect the account - use OAuth instead of AccountLinks to allow
+        // use to skip this form in development
+        // https://stripe.com/docs/building-extensions
+        const link = this.providers.stripe.connection.oauth.authorizeUrl({
+          redirect_uri: `${Env.API_URL}/stripe/oauth`,
+          client_id: Env.STRIPE.CLIENT_ID,
+          response_type: 'code'
         });
 
-        // Frontend then consumes this URL & re-directs the user through the Stripe onboarding
-        return link.url;
+        return link;
       }
     };
   }

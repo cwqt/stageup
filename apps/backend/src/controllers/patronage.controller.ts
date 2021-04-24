@@ -19,7 +19,6 @@ import {
 } from '@core/api';
 import { uuid } from '@core/helpers';
 import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
-import { hostname } from 'os';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import Email = require('../common/email');
@@ -34,60 +33,14 @@ export default class PatronageController extends BaseController<BackendProviderM
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         // Direct Charges https://stripe.com/img/docs/billing/subscriptions/subscription_objects_fixed_price.svg
-        const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['patron_tiers'] }));
-        const createTierDto: DtoCreatePatronTier = req.body;
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
-        // Create _id now so that we can reference it in the price passthrough data
-        const tierId = uuid();
+        const tier = await this.ORM.transaction(async txc => {
+          const tier = new PatronTier(req.body, host);
+          return await tier.setup(this.providers.stripe.connection, txc);
+        });
 
-        // Create a product & price, stored on the hosts Connected account
-        const product = await this.providers.stripe.connection.products.create(
-          {
-            name: createTierDto.name,
-            // description: "", // TODO: parse ops as a string // new Quill(createTierDto.description).getText(),
-            metadata: {
-              host_id: host._id,
-              purchaseable_type: PurchaseableEntity.PatronTier,
-              purchasable_id: tierId
-            }
-          },
-          { stripeAccount: host.stripe_account_id }
-        );
-
-        // https://stripe.com/docs/billing/subscriptions/fixed-price
-        const price = await this.providers.stripe.connection.prices.create(
-          {
-            unit_amount: createTierDto.amount,
-            currency: createTierDto.currency,
-            product: product.id,
-            recurring: {
-              interval: 'month'
-            },
-            metadata: {
-              host_id: host._id,
-              purchaseable_type: PurchaseableEntity.PatronTier,
-              purchasable_id: tierId
-            }
-          },
-          { stripeAccount: host.stripe_account_id }
-        );
-
-        try {
-          const tier = await this.ORM.transaction(async txc => {
-            const tier = new PatronTier(req.body, host, price, product);
-            tier._id = tierId;
-            await txc.save(tier);
-
-            host.patron_tiers.push(tier);
-            await txc.save(host);
-            return tier;
-          });
-
-          return tier.toHost();
-        } catch (error) {
-          await this.providers.stripe.connection.products.del(product.id);
-          throw error;
-        }
+        return tier.toHost();
       }
     };
   }

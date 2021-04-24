@@ -2,10 +2,8 @@
 
 <div class="app-container" #appContainer>
   <div class="flex">
-    <app-sidebar *ngIf="myself?.user.is_admin || myself?.host"
-      [class.raise-index]="!(drawerOpenSubject | async)"
-      [class.shadow-lg]="drawerOpenSubject | async"
-      [myself]="myself">
+    <app-sidebar *ngIf="myself?.user.is_admin || myself?.host" [class.raise-index]="!(drawerOpenSubject | async)"
+      [class.shadow-lg]="drawerOpenSubject | async" [myself]="myself">
     </app-sidebar>
 
     <mat-drawer-container class="h-full container relative">
@@ -14,7 +12,7 @@
       </mat-drawer>
 
       <mat-drawer-content class="w-full h-full">
-        <div class="app-body w-full pl-8 pt-8">
+        <div class="app-body w-full px-8 pt-8">
           <router-outlet></router-outlet>
         </div>
       </mat-drawer-content>

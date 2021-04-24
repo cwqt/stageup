@@ -143,8 +143,7 @@ router.post     <void>                   ("/mux/hooks",                         
 // STRIPE -------------------------------------------------------------------------------------------------------------
 const Stripe = new StripeController(providerMap, middlewares);
 router.post     <{ received: boolean }>  ("/stripe/hooks",                            Stripe.handleHook());
-router.redirect                          ("/stripe/return",                           Stripe.handleStripeConnectReturn());
-router.redirect                          ("/stripe/refresh",                          Stripe.handleStripeConnectRefresh());
+router.redirect                          ("/stripe/oauth",                           Stripe.handleStripeConnectReturn());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
 const Auth =  new AuthController(providerMap, middlewares)

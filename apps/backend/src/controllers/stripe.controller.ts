@@ -18,7 +18,6 @@ import {
   Ticket,
   Invoice,
   AccessToken,
-  SigningKey,
   PatronTier
 } from '@core/api';
 import { BackendProviderMap } from '..';
@@ -175,28 +174,31 @@ export default class StripeController extends BaseController<BackendProviderMap>
           stripeAccount: uhi.host.stripe_account_id
         });
 
+        // Make a base patron tier
+        // TODO: should probably emit an event onto the bus & have some µ-service listen for it
+        try {
+          await this.providers.torm.connection.transaction(async txc => {
+            const tier = new PatronTier(
+              {
+                name: 'Example Tier',
+                description: [],
+                amount: 1000, // 10 GBP
+                currency: CurrencyCode.GBP
+              },
+              uhi.host
+            );
+
+            await tier.setup(this.providers.stripe.connection, txc);
+          });
+        } catch (error) {
+          // This failing should not stop the return re-direct, so don't throw
+          log.error(`Failed to setup example tier for user`);
+        }
+
         return `${Env.FE_URL}/dashboard/payments?connect-success=${res.charges_enabled}`;
         // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-accept-payment
         // After Stripe standard account connected, users can create PaymentIntents
         // where which we can take an `application_fee_amount` from the purchase
-      }
-    };
-  }
-
-  handleStripeConnectRefresh(): IControllerEndpoint<string> {
-    return {
-      authStrategy: AuthStrat.none,
-      controller: async req => {
-        // refresh_url
-        //  Your user will be redirected to the refresh_url in these cases:
-        //  * The link is expired (a few minutes went by since the link was created)
-        //  * The link was already visited (the user refreshed the page or clicked back or forward in the browser)
-        //  * Your platform is no longer able to access the account
-        //  * The account has been rejected
-        //  * Your refresh_url should trigger a method on your server to call Account Links again with the
-        // same parameters, and redirect the user to the Connect Onboarding flow to create a seamless experience.
-
-        return `${Env.FE_URL}/dashboard/payments`;
       }
     };
   }
