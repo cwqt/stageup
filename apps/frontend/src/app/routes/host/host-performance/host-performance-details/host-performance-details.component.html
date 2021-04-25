@@ -1,34 +1,29 @@
-<div class="bg-white p-4 rounded shadow-sm">
-  <app-update-performance [cacheable]="performance"></app-update-performance>
-  <br/>
-  <br/>
+<h2>Details</h2>
+<ui-hr></ui-hr>
+<app-update-performance [cacheable]="performance"></app-update-performance>
+<br />
+<br />
 
-  <h2>Modify Visibility</h2>
-  <ui-hr></ui-hr>
+<h2>Modify Visibility</h2>
+<ui-hr></ui-hr>
 
-  <p *ngIf="host.is_onboarded == false">
-    You must first finish the <a routerLink="/dashboard/onboarding">onboarding process</a> before any content can be made Public.
-  </p>
+<p *ngIf="host.is_onboarded == false">
+  You must first finish the <a routerLink="/dashboard/onboarding">onboarding process</a> before any content can be
+  made Public.
+</p>
+<ui-form [form]="visibilityForm"></ui-form>
+<br />
 
-  <ui-form [form]="visibilityForm"></ui-form>
+<h2>Stream Key</h2>
+<ui-hr></ui-hr>
+<p>Use this key in your streaming application to broadcast your performance.</p>
 
+<ui-button (click)="readStreamingKey()" *ngIf="!phiData" [loading]="performanceHostInfo.loading"
+  [disabled]="performanceHostInfo.loading">
+  Show Key
+</ui-button>
 
-  <br />
-
-  <h2>Stream Key</h2>
-  <ui-hr></ui-hr>
-  <p>Use this key in your streaming application to broadcast your performance.</p>
-
-  <ui-button
-    (click)="readStreamingKey()"
-    *ngIf="!phiData"
-    [loading]="performanceHostInfo.loading"
-    [disabled]="performanceHostInfo.loading">
-      Show Key
-  </ui-button>
-
-  <div *ngIf="phiData" class="bg-white p-4 flex align-middle select-all">
-    <pre class="inline h-6 my-auto">{{ phiData.stream_key }}</pre>
-    <ui-button class="ml-auto" (click)="copyStreamKeyToClipboard()">{{ copyMessage }}</ui-button>
-  </div>
+<div *ngIf="phiData" class="p-4 flex align-middle select-all bg-gray-50 rounded">
+  <pre class="inline h-6 my-auto">{{ phiData.stream_key }}</pre>
+  <ui-button class="ml-auto" (click)="copyStreamKeyToClipboard()">{{ copyMessage }}</ui-button>
 </div>

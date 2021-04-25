@@ -7,8 +7,12 @@
     </ui-button>
 
     <div class="h-1/4 flex align-middle justify-center bg-gray-200 relative">
-      <div class="bg-gradient-to-b from-black to-transparent h-full w-full opacity-25 absolute bottom-0 left-0"></div>
-      <img class="host-icon rounded-full bg-white shadow h-32 w-32 mt-auto relative z-10"
+      <img [src]="host.banner || '/assets/performance-placeholder.jpeg'" class="w-full h-full object-cover absolute"
+        alt="">
+      <div class="bg-gradient-to-b from-black to-transparent h-full w-full opacity-75 absolute bottom-0 left-0"></div>
+
+      <img
+        class="host-icon rounded-full object-cover bg-white shadow-lg h-32 w-32 mt-auto relative z-10 overflow-hidden"
         [src]="host.avatar || '/assets/avatar-placeholder.png'" alt="">
     </div>
 

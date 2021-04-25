@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import { UiField } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiStepMapField } from '../onboarding-view.component';
 
 @Component({
@@ -7,37 +17,42 @@ import { IUiStepMapField } from '../onboarding-view.component';
   styleUrls: ['./onboarding-view-issue-maker.component.scss']
 })
 export class OnboardingViewIssueMakerComponent implements OnInit, OnChanges {
-  @Input() field:IUiStepMapField;
-  @Input() isActive:boolean;
+  @Input() field: IUiStepMapField;
+  @Input() isActive: boolean;
 
-  @ViewChild("input") input;
+  @ViewChild('input') input;
+  inputOptions = UiField.Text({
+    placeholder: 'Enter issue text...',
+    validators: [{ type: 'maxlength', value: 256 }]
+  });
 
-  currentIssueText:string = "";
+  currentIssueText: string = '';
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     this.field.issues = [];
   }
 
-  ngOnChanges(changes:SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     // Immediately select the input field when the onboarding view issue maker is active
-    if(changes["isActive"]) {
-      setTimeout(() => { // push to next tick while ngIf is set to active
-        if(changes["isActive"].currentValue) this.input.select();
+    if (changes['isActive']) {
+      setTimeout(() => {
+        // push to next tick while ngIf is set to active
+        if (changes['isActive'].currentValue) this.input.select();
       }, 0);
     }
   }
 
   addIssue() {
     this.field.issues.push(this.currentIssueText);
-    this.currentIssueText = "";
+    this.currentIssueText = '';
     this.field.valid = true;
     this.input.select();
   }
 
-  removeIssue(issueIdx:number) {
+  removeIssue(issueIdx: number) {
     this.field.issues.splice(issueIdx, 1);
-    if(this.field.issues.length == 0) this.field.valid = false;
+    if (this.field.issues.length == 0) this.field.valid = false;
   }
 }

@@ -742,15 +742,15 @@ export default class HostController extends BaseController<BackendProviderMap> {
     return {
       authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const invoice = await Invoice.findOne({
-          where: {
-            _id: req.params.iid
-          },
-          relations: {
-            user: true,
-            ticket: { performance: { host: true } }
-          }
-        });
+        const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+          .where('invoice._id = :invoice_id', { invoice_id: req.params.iid })
+          .innerJoinAndSelect('invoice.ticket', 'ticket')
+          .innerJoinAndSelect('ticket.performance', 'performance')
+          .innerJoinAndSelect('performance.host', 'host')
+          .innerJoinAndSelect('performance.stream', 'stream')
+          .innerJoinAndSelect('invoice.user', 'user')
+          .withDeleted()
+          .getOne();
 
         const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id, {
           stripeAccount: invoice.ticket.performance.host.stripe_account_id
@@ -782,6 +782,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             purchased_at: 'invoice.purchased_at'
           })
           .innerJoinAndSelect('performance.stream', 'stream')
+          // .withDeleted() // tickets & performances can be soft deleted
           .paginate(i => i.toHostInvoiceStub());
       }
     };

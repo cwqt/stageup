@@ -3,12 +3,17 @@
   <div class="flex align-middle">
     <h1 class="flex-1 mb-0">{{ performanceData.name }}</h1>
     <div class="ml-auto my-auto">
-      <ui-button (click)="gotoPerformance()" kind="secondary" class="mr-2"><ui-icon>launch</ui-icon>&nbsp; Preview</ui-button>
-      <ui-button (click)="openSharePerformanceDialog()" kind="primary"><ui-icon>share</ui-icon></ui-button>  
+      <ui-button (click)="gotoPerformance()" kind="secondary" class="mr-2">
+        <ui-icon>launch</ui-icon>&nbsp; Preview
+      </ui-button>
+      <ui-button (click)="openSharePerformanceDialog()" kind="primary">
+        <ui-icon>share</ui-icon>
+      </ui-button>
     </div>
   </div>
   <ui-hr></ui-hr>
-  
-  <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
-</ng-container>
 
+  <div class="bg-white p-4 rounded shadow-sm">
+    <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
+  </div>
+</ng-container>

@@ -39,9 +39,7 @@ export class ProfileSettingsComponent implements OnInit {
           label: 'Name',
           hint:
             'Your name may appear around StageUp where you contribute or are mentioned. You can remove it at any time.',
-          validators: [
-            { type: 'maxlength', value: 32, message: () => 'Username must be under 32 characters' }
-          ]
+          validators: [{ type: 'maxlength', value: 32 }]
         }),
         email_address: UiField.Text({
           label: 'E-mail address',
@@ -56,7 +54,7 @@ export class ProfileSettingsComponent implements OnInit {
         }),
         bio: UiField.Textarea({
           label: 'Bio',
-          validators: [{ type: 'maxlength', value: 512, message: () => 'Bio must be no larger than 512 characters' }]
+          validators: [{ type: 'maxlength', value: 512 }]
         })
       },
       resolvers: {

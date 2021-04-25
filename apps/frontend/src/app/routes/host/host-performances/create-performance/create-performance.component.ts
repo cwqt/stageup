@@ -36,8 +36,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     this.form = new UiForm({
       fields: {
         name: UiField.Text({
-          label: 'Performance title',
-          validators: [{ type: 'required' }]
+          label: 'Performance Title',
+          validators: [{ type: 'required' }, { type: 'maxlength', value: 64 }]
         }),
         description: UiField.Textarea({
           label: 'Description',

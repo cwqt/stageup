@@ -7,21 +7,20 @@
     *ngIf="data.type == 'number' || data.type == 'text' || data.type == 'password' || data.type == 'phone'">
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label">{{ data.options.label }}
-        <!-- <span>{{ required ? "*" : ""}}</span> -->
+        <span *ngIf="focused || value !== ''">{{ required ? "" : "(optional)"}}</span>
       </label>
-      <input #input [(ngModel)]="value" [validation]="true" (blur)="onTouchedCallback()" (focus)="onFocusCallback()"
+      <input #input [(ngModel)]="value" (blur)="onTouchedCallback()" (focus)="onFocusCallback()"
         [disabled]="control.disabled" [placeholder]="data.options.placeholder || ''"
-        [type]="data.type == 'password' ? (meta.password.is_visible ? 'text' : 'password') : (data.type == 'phone' ? 'tel' : data.type)"
-        [showMaskTyped]="(value !== '' || focused) ? true : false"
+        [type]="data.type == 'password' ? (meta.password.is_visible ? 'text' : 'password') : (data.type == 'phone' ? 'tel' : (data.type == 'money' ? 'tel' : data.type))"
         [mask]="data.options?.mask ? data.options.mask.value : (data.type == 'phone' ? '(0000) 000-000' : '')"
         [suffix]="(value !== '' || focused) ? (data.options?.mask ? data.options.mask.suffix : '') : ''"
         [prefix]="(value !== '' || focused) ? (data.options?.mask ? data.options.mask.prefix : (data.type == 'phone' ? '+44' : '')) : ''"
         tabindex="0" autocomplete="off" class="form-field__input" />
       <!-- FIXME: fix ui-icon-button to re-enable this icon to display password -->
       <!-- <div class="form-field__password" *ngIf="type == 'password'">
-          <ui-icon-button size="m" (click)="togglePasswordVisibility(false, $event)" *ngIf="passwordVisible"><ui-icon>view--filled</ui-icon></ui-icon-button>
-          <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>
-        </div> -->
+            <ui-icon-button size="m" (click)="togglePasswordVisibility(false, $event)" *ngIf="passwordVisible"><ui-icon>view--filled</ui-icon></ui-icon-button>
+            <ui-icon-button size="m" (click)="togglePasswordVisibility(true, $event)" *ngIf="!passwordVisible"><ui-icon>view--off--filled</ui-icon></ui-icon-button>
+          </div> -->
     </div>
   </div>
 
@@ -30,32 +29,39 @@
     [class.form-field--is-filled]="value !== ''" [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError" *ngIf="data.type == 'textarea'">
     <div class="form-field__control">
-      <label *ngIf="data.options.label" class="form-field__label">{{ data.options.label }}</label>
+      <label *ngIf="data.options.label" class="form-field__label">{{ data.options.label }}
+        <span *ngIf="focused || value !== ''">{{ required ? "" : "(optional)"}}</span>
+      </label>
       <textarea #textarea [rows]="data.options.rows" [(ngModel)]="value" (blur)="onTouchedCallback()"
         (focus)="onFocusCallback()" [disabled]="control.disabled" [placeholder]="data.options.placeholder || ''"
         tabindex="0" autocomplete="off" class="form-field__textarea"></textarea>
     </div>
   </div>
 
+  <!-- Money -->
+  <div (clickOutside)="togglePasswordVisibility(false, $event); focused = false" (click)="input.select()"
+    class="form-field form-field__money" [class.form-field--is-active]="focused"
+    [class.form-field--is-filled]="value !== ''" [class.form-field--is-small]="!data.options.label"
+    [class.form-field--is-errored]="showError" [class.form-field--is-disabled]="control.disabled"
+    *ngIf="data.type == 'money'">
+    <div class="form-field__control">
+      <label *ngIf="data.options.label" class="form-field__label">{{ data.options.label }}
+        <span *ngIf="focused || value !== ''">{{ required ? "" : "(optional)"}}</span>
+      </label>
+      <input mask="separator.2" [prefix]="data.options.mask.prefix" [placeHolderCharacter]="''" thousandSeparator=","
+        #input [(ngModel)]="value" (blur)="onTouchedCallback()" (focus)="onFocusCallback()"
+        [disabled]="control.disabled" [placeholder]="data.options.placeholder || ''" type="tel" tabindex="0"
+        autocomplete="off" class="form-field__input" />
+    </div>
+  </div>
+
   <!-- Rich Text using ngx-quill -->
   <div class="ui-input--rich-text" *ngIf="data.type == 'richtext'">
     <span>{{ data.options.label }}</span>
-    <quill-editor format="json" [modules]="richTextModules" (onBlur)="onTouchedCallback()" (onFocus)="onFocusCallback()"
-      [(ngModel)]="value" (onContentChanged)="richTextChanged($event)">
+    <quill-editor format="json" [modules]="richTextModules" [disabled]="control.disabled" (onBlur)="onTouchedCallback()"
+      (onFocus)="onFocusCallback()" [(ngModel)]="value" (onContentChanged)="richTextChanged($event)">
     </quill-editor>
   </div>
-
-  <!-- Field length indicators -->
-  <!-- <div class="form-field_lengths" *ngIf="maxlength || minlength" >
-    {{ maxlength }} / {{ value?.length }} /  {{ minlength }}
-  </div> -->
-
-
-  <!-- Number input -->
-  <!-- <div class="ui-input-number-buttons" *ngIf="type == 'number'">
-    <ui-icon-button (click)="increment($event)">caret--up</ui-icon-button>
-    <ui-icon-button (click)="decrement($event)">caret--down</ui-icon-button>
-  </div> -->
 
   <!-- Checkboxes -->
   <mat-form-field *ngIf="data.type == 'checkbox'" class="ui-input" appearance="fill" [class.errored]="showError"
@@ -85,18 +91,19 @@
   </mat-form-field>
 
   <!-- Date picker, single -->
-  <mat-form-field appearance="fill" *ngIf="data.type == 'date' && !data.options?.is_date_range">
+  <mat-form-field class="form-field__date" appearance="fill"
+    *ngIf="data.type == 'date' && !data.options?.is_date_range">
     <mat-label>{{ data.options.label || 'Choose a date' }}</mat-label>
-    <input matInput [(ngModel)]="value" [matDatepicker]="picker" [min]="data.options.min_date"
+    <input matInput [(ngModel)]="value" [matDatepicker]="picker" [min]="data.options.min_date" (click)="picker.open()"
       [max]="data.options.max_date">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
   <!-- Date picker, range -->
-  <mat-form-field appearance="fill" *ngIf="data.type == 'date' && data.options?.is_date_range">
+  <mat-form-field class="form-field__date" appearance="fill" *ngIf="data.type == 'date' && data.options?.is_date_range">
     <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input [rangePicker]="picker" #pickerInput>
+    <mat-date-range-input [rangePicker]="picker" #pickerInput (click)="picker.open()">
       <input matStartDate placeholder="Start date">
       <input matEndDate placeholder="End date">
     </mat-date-range-input>
@@ -128,8 +135,19 @@
     <input matInput placeholder="Input" style="display: none">
   </mat-form-field>
 
-  <!-- Hint message -->
-  <span *ngIf="data.options.hint" class="form-field__hint">{{ data.options.hint }}</span>
+  <div class="form-field__footer">
+    <!-- Hint message -->
+    <span *ngIf="data.options.hint" class="form-field__hint">{{ data.options.hint }}</span>
+
+    <ng-container *ngIf="data.type == 'text' || data.type == 'textarea' || data.type == 'richtext'">
+      <!-- Field length indicators -->
+      <div class="form-field_lengths" *ngIf="meta[data.type].max_length || meta[data.type].min_length">
+        <span *ngIf="meta[data.type].min_length">{{ meta[data.type].min_length }} /</span>
+        {{ value?.length || 0 }}
+        <span *ngIf="meta[data.type].max_length">/ {{ meta[data.type].max_length }}</span>
+      </div>
+    </ng-container>
+  </div>
 
   <!-- Form errors -->
   <div *ngIf="showError" class="form-field__errors">

@@ -62,7 +62,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         }),
         name: UiField.Text({
           label: 'Ticket title',
-          validators: [{ type: 'required' }]
+          validators: [{ type: 'required' }, { type: 'maxlength', value: 64 }]
         }),
         dono_pegs: UiField.Container({
           header_level: 0,
@@ -81,11 +81,12 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             return acc;
           }, {})
         }),
-        amount: UiField.Number({
+        amount: UiField.Money({
           width: 6,
           label: 'Price',
+          currency: CurrencyCode.GBP,
           disabled: false,
-          validators: [{ type: 'maxlength', value: 100 }]
+          validators: [{ type: 'maxlength', value: 100 }, { type: 'required' }]
         }),
         quantity: UiField.Number({
           width: 6,

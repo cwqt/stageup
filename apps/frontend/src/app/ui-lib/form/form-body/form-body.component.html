@@ -1,7 +1,6 @@
 <form [formGroup]="fg" class="grid grid-cols-12 gap-x-3">
   <div [class]="'col-span-'+(field.value.options['width'] || 12)" *ngFor="let field of fields | keyvalue: keepOrder"
-		[hidden]="field.value.options?.hide ? field.value.options?.hide(fg) : false"
-    [ngSwitch]="field.value['type']">
+    [hidden]="field.value.options?.hide ? field.value.options?.hide(fg) : false" [ngSwitch]="field.value['type']">
     <div class="form-field-container" *ngSwitchCase="'container'">
       <h1 *ngIf="field.value['options']?.header_level == 1">
         {{ field.value["options"]["label"] }}
@@ -31,15 +30,16 @@
         {{ field.value["options"]["label"] }}
       </label>
 
-      <p *ngIf="field.value['hint']">{{ field.value["hint"] }}</p>
+      <p class="form-field-container__hint" *ngIf='field.value["options"]["hint"]'>{{ field.value["options"]["hint"] }}
+      </p>
 
-       <!-- Nested form body for containers -->
-      <ui-form-body [options]="field.value" [fields]="field.value['options']['fields']" [fg]="fg.controls[field.key]"></ui-form-body>
+      <div class="spacer"></div>
+      <!-- Nested form body for containers -->
+      <ui-form-body [options]="field.value" [fields]="field.value['options']['fields']" [fg]="fg.controls[field.key]">
+      </ui-form-body>
     </div>
 
-    <ui-input *ngSwitchDefault
-      [data]="field.value"
-      [formControlName]="field.key">
+    <ui-input *ngSwitchDefault [data]="field.value" [formControlName]="field.key">
       {{ field.key }}
     </ui-input>
   </div>

@@ -144,6 +144,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             purchased_at: 'invoice.purchased_at'
           })
           .innerJoinAndSelect('performance.stream', 'stream')
+          .withDeleted() // ticket/performance can be soft removed
           .paginate(i => i.toUserInvoiceStub());
       }
     };
@@ -154,15 +155,15 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     return {
       authStrategy: AuthStrat.isLoggedIn,
       controller: async req => {
-        const invoice = await Invoice.findOne({
-          where: {
-            _id: req.params.iid
-          },
-          relations: {
-            user: true,
-            ticket: { performance: { stream: true } }
-          }
-        });
+        const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+          .where('invoice._id = :invoice_id', { invoice_id: req.params.iid })
+          .innerJoinAndSelect('invoice.ticket', 'ticket')
+          .innerJoinAndSelect('ticket.performance', 'performance')
+          .innerJoinAndSelect('performance.host', 'host')
+          .innerJoinAndSelect('performance.stream', 'stream')
+          .innerJoinAndSelect('invoice.user', 'user')
+          .withDeleted()
+          .getOne();
 
         const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id);
         return invoice.toHostInvoice(charge);

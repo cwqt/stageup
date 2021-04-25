@@ -3,7 +3,7 @@
   <div class="sidebar-main-buttons" [class.sidebar-main-buttons--is-expanded]="isExpanded">
     <ui-button *ngIf="myself?.host" matTooltip="Dashboard" matTooltipPosition="right" kind="accent"
       routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
-      <img class="rounded-full transform scale-150 w-auto h-auto object-contain my-4 mx-auto"
+      <img class="sidebar-host-icon rounded-full object-cover"
         [src]="myself.host.avatar || '/assets/avatar-placeholder.png'" alt="">
     </ui-button>
 

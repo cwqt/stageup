@@ -12,7 +12,7 @@
     <!-- Profile Image  -->
     <div class="profile-picture__container relative pl-4">
       <img [src]="host.data.avatar || '/assets/avatar-placeholder.png'"
-        class="square absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
+        class="square object-cover absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
       <ui-button *ngIf="isHostView" (click)="openChangeAvatarDialog()" icon="paint-brush--alt"
         class="z-10 absolute top-2 left-2" kind="accent">
         Edit

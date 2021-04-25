@@ -26,16 +26,14 @@ export class UpdatePerformanceComponent {
     this.performanceDetailsForm = new UiForm({
       fields: {
         name: UiField.Text({
-          label: 'Name',
+          label: 'Title',
           initial: this.performance.name,
-          validators: [
-            { type: 'required' }
-          ]
+          validators: [{ type: 'required' }, { type: 'maxlength', value: 64 }]
         }),
         description: UiField.Textarea({
           label: 'Description',
           initial: this.performance.description,
-          validators: [{ type: 'maxlength', value: 100 }]
+          validators: [{ type: 'maxlength', value: 512 }]
         })
       },
       resolvers: {
@@ -43,7 +41,7 @@ export class UpdatePerformanceComponent {
       },
       handlers: {
         success: async (v, f) => {
-          this.cacheable.data.data = {...this.performance, name: f.value.name, description: f.value.description }
+          this.cacheable.data.data = { ...this.performance, name: f.value.name, description: f.value.description };
         }
       }
     });

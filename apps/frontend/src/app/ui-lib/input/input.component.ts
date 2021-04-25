@@ -18,6 +18,7 @@ import { ContentChange, QuillModules } from 'ngx-quill';
 import { ReplaySubject, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { IUiFieldOptions, IUiFieldType, IUiFieldTypeOptions, IUiFormField } from '../form/form.interfaces';
+import getSymbolFromCurrency from 'currency-map-symbol';
 
 //https://material-ui.com/components/text-fields/
 @Component({
@@ -32,10 +33,15 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
 
   // Interface inputs
   focused: boolean;
+  required: boolean;
 
   // Meta related stuff here
   meta: { [index in IUiFieldType]?: any } = {
-    password: { is_visible: false }
+    password: { is_visible: false },
+    text: { max_length: null, min_length: null },
+    textarea: { max_length: null, min_length: null },
+    richtext: { max_length: null, min_length: null },
+    money: { mask: { value: null, prefix: null } }
   };
 
   richTextModules: QuillModules;
@@ -45,6 +51,25 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   }
 
   ngOnInit(): void {
+    // Set required label state for all required fields
+    this.required = this.data.options.validators?.find(v => v.type == 'required') ? true : false;
+
+    // Set min/max lengths for all text fields
+    if (this.data.type == 'text' || this.data.type == 'textarea' || this.data.type == 'richtext') {
+      this.meta[this.data.type].max_length =
+        this.data.options.validators.find(v => v.type == 'maxlength')?.['value'] || null;
+
+      this.meta[this.data.type].min_length =
+        this.data.options.validators.find(v => v.type == 'minlength')?.['value'] || null;
+    }
+
+    if (this.data.type == 'money') {
+      this.data.options['mask'] = {
+        prefix: getSymbolFromCurrency(this.data.options['currency']),
+        value: 'separator.2'
+      };
+    }
+
     if (this.data.type == 'richtext') this.initialiseRichText();
     if (this.data.type == 'select') this.initialiseSelection();
     if (this.data.type == 'time') {
@@ -105,8 +130,6 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
     }
 
     this.onChangeCallback(this.value);
-    // this.control.
-    // this.change.emit(this.value);
   }
 
   registerOnChange(fn: any): void {
@@ -130,9 +153,9 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   public get showError(): boolean {
     if (!this.control) return false;
 
+    // return !!(this.control && this.control.invalid && (this.control.dirty || this.control.touched));
     const { dirty, touched } = this.control;
     const doShow = this.focused ? false : this.invalid ? touched || dirty : false;
-    // this._state = doShow ? 'show' : 'hide';
     return doShow;
   }
 

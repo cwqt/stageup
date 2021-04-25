@@ -26,8 +26,7 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
     @Inject(MAT_DIALOG_DATA) public data: { operation: 'create' | 'update'; tier: IPatronTier },
     private ref: MatDialogRef<CreateUpdatePatronTierComponent>,
     private toastService: ToastService,
-    private hostService: HostService,
-    private baseAppService: BaseAppService
+    private hostService: HostService
   ) {}
 
   ngOnInit(): void {
@@ -35,14 +34,15 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
       fields: {
         name: UiField.Text({
           label: 'Tier title',
-          validators: [{ type: 'required' }]
+          validators: [{ type: 'required' }, { type: 'maxlength', value: 32 }]
         }),
         description: UiField.Richtext({
           label: 'Description',
-          validators: [{ type: 'required' }]
+          validators: [{ type: 'required' }, { type: 'maxlength', value: 2048 }]
         }),
-        amount: UiField.Number({
+        amount: UiField.Money({
           label: 'Price',
+          currency: CurrencyCode.GBP,
           disabled: false,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 100 }]
         })

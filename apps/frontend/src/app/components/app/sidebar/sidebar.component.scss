@@ -1,4 +1,10 @@
-@import "apps/frontend/src/styles/variables";
+@import 'apps/frontend/src/styles/variables';
+
+.sidebar-host-icon {
+  width: 36px;
+  height: 36px;
+  max-width: max-content !important;
+}
 
 .sidebar-wrapper {
   width: 100%; //set from parent
@@ -48,7 +54,7 @@
         span {
           opacity: 1;
           ui-icon {
-            color:  $clr-primary;
+            color: $clr-primary;
           }
         }
       }

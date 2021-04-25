@@ -1,22 +1,21 @@
 <!-- Host Component - Leave Host -->
-<div class="host-container">
-  <app-create-host *ngIf="!myself.host" [host]="myself.host" [user]="myself.user"></app-create-host>
+<app-create-host *ngIf="!myself.host" [host]="myself.host" [user]="myself.user"></app-create-host>
 
-  <ng-container *ngIf="myself.host">
-    <h1>Host settings</h1>
+<ng-container *ngIf="myself.host">
+  <h1>Settings</h1>
+  <ui-hr></ui-hr>
+  <div class="bg-white p-4 rounded shadow-sm">
+
+    <h2>Leave Company</h2>
     <ui-hr></ui-hr>
-
     <div>
       <p>Withdraw membership from <b>{{ myself.host.name }}</b>, this action can't be undone.</p>
-      <ui-button [disabled]="myself.host_info.permissions == 'host_owner'"
-        kind="danger"
-        size="l"
-        class="mb-4"
-        (click)="openLeaveHostConfirmationDialog()">Leave Host</ui-button>
+      <ui-button [disabled]="myself.host_info.permissions == 'host_owner'" kind="danger" size="l" class="mb-4"
+        (click)="openLeaveHostConfirmationDialog()">Leave Company</ui-button>
       <br>
-      <mat-error *ngIf="myself.host_info.permissions == 'host_owner'">You can't leave this company because you're the owner, transfer ownership to another member</mat-error>
+      <mat-error *ngIf="myself.host_info.permissions == 'host_owner'">You can't leave this company because you're the
+        owner, please transfer ownership to another member.</mat-error>
     </div>
 
-  </ng-container>
-
-</div>
+  </div>
+</ng-container>

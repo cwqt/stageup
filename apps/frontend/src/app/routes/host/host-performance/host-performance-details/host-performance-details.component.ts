@@ -19,7 +19,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
   host: IHost;
 
   copyMessage: string = 'Copy';
-  visibilityInput:IUiFormField<"select">;
+  visibilityInput: IUiFormField<'select'>;
 
   get performanceData() {
     return this.performance.data?.data;
@@ -28,7 +28,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
     return this.performanceHostInfo.data;
   }
 
-  visibilityForm:UiForm;
+  visibilityForm: UiForm;
 
   constructor(private performanceService: PerformanceService, private clipboard: Clipboard) {}
 
@@ -36,7 +36,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
     this.visibilityForm = new UiForm({
       fields: {
         visibility: UiField.Select({
-          label: "Performance Visibility",
+          label: 'Performance Visibility',
           multi_select: false,
           has_search: false,
           initial: this.performanceData.visibility,
@@ -53,24 +53,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
       handlers: {
         changes: async () => this.visibilityForm.submit()
       }
-    })
+    });
   }
-
-
-  // updateVisibility(value: Visibility) {
-  //   cachize(
-  //     this.performanceService.updateVisibility(this.performanceId, value),
-  //     this.performance,
-  //     d => {
-  //       // updateVisibility only returns an IPerformance but we want to keep having an IE<IPerformance, IPerformanceHostInfo>
-  //       return {
-  //         data: d,
-  //         __client_data: this.performance.data.__client_data
-  //       };
-  //     },
-  //     false
-  //   );
-  // }
 
   readStreamingKey() {
     return cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);

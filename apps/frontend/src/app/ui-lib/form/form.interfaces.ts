@@ -1,6 +1,7 @@
 import { AbstractControl, FormBuilder, FormGroup, NgControl, ValidatorFn, Validators } from '@angular/forms';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 import { Primitive, Y } from '@core/interfaces';
+import { CurrencyCode } from 'aws-sdk/clients/devicefarm';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { createICacheable, ICacheable } from '../../app.interfaces';
 import { displayValidationErrors, handleFormErrors } from '../../_helpers/form-error.handler';
@@ -214,7 +215,7 @@ export const UiField: {
   Date: options => ({ type: 'date', options }),
   Radio: options => ({ type: 'radio', options }),
   Richtext: options => ({ type: 'richtext', options }),
-  // Money: options => ({ type: 'money', options }),
+  Money: options => ({ type: 'money', options }),
   Password: options => ({ type: 'password', options }),
   Phone: options => ({ type: 'phone', options }),
   Textarea: options => ({ type: 'textarea', options }),
@@ -292,10 +293,10 @@ export type IUiFieldTypeOptions = {
     has_search?: boolean;
     placeholder?: string;
   };
-  // money: {
-  //   currency: CurrencyCode;
-  //   placeholder?:string;
-  // };
+  money: {
+    currency: CurrencyCode;
+    placeholder?: string;
+  };
   date: {
     is_date_range?: boolean;
     min_date?: Date;

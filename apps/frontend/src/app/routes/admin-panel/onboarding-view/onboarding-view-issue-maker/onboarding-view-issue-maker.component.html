@@ -10,19 +10,10 @@
 </ul>
 
 <div class="flex align-center mt-2" *ngIf="isActive">
-  <ui-input #input
-    class="flex-1"
-    type="text"
-    placeholder="Enter issue text..."
-    [(ngModel)]="currentIssueText"
-    (keyup.enter)="addIssue()">
+  <ui-input #input class="flex-1" [data]="inputOptions" [(ngModel)]="currentIssueText" (keyup.enter)="addIssue()">
   </ui-input>
 
-  <ui-button
-    kind="primary"
-    class="ml-4 mt-0.5"
-    [disabled]="currentIssueText == ''"
-    (click)="addIssue()">
-      <ui-icon>add</ui-icon>
+  <ui-button kind="primary" class="ml-4 mt-0.5" [disabled]="currentIssueText == ''" (click)="addIssue()">
+    <ui-icon>add</ui-icon>
   </ui-button>
 </div>

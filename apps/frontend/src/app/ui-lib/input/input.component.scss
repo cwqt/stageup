@@ -1,9 +1,10 @@
-@import "apps/frontend/src/styles/variables.scss";
+@import 'apps/frontend/src/styles/variables.scss';
 
 .ui-input-wrapper {
   margin-bottom: 16px;
   &--has-icon {
-    input, textarea {
+    input,
+    textarea {
       padding-left: 38px;
     }
     .form-field__label {
@@ -31,6 +32,9 @@ $animation-duration: 0.2s;
 .form-field {
   display: block;
   &--is-active {
+    input {
+      opacity: 1 !important;
+    }
     .form-field__control {
       &::after {
         border-bottom: 2px solid $primary-color;
@@ -44,7 +48,7 @@ $animation-duration: 0.2s;
   }
 
   &--is-disabled {
-    opacity: .5;
+    opacity: 0.5;
     &:hover {
       cursor: not-allowed !important;
       pointer-events: none !important;
@@ -54,10 +58,12 @@ $animation-duration: 0.2s;
         border-bottom: 2px solid transparent !important;
       }
     }
-
   }
 
   &--is-filled {
+    input {
+      opacity: 1 !important;
+    }
     .form-field__label {
       @include label-active();
     }
@@ -90,9 +96,8 @@ $animation-duration: 0.2s;
   }
 
   span {
-    opacity: .4;
+    opacity: 0.4;
   }
-
 
   font-weight: normal;
   margin: 0;
@@ -114,7 +119,7 @@ $animation-duration: 0.2s;
   &::before {
     border-bottom: 1px solid #999;
     bottom: 0;
-    content: "";
+    content: '';
     display: block;
     left: 0;
     margin: 0 auto;
@@ -127,7 +132,7 @@ $animation-duration: 0.2s;
   &::after {
     border-bottom: 2px solid $primary-color;
     bottom: 0;
-    content: "";
+    content: '';
     display: block;
     left: 0;
     margin: 0 auto;
@@ -226,13 +231,23 @@ mat-form-field ::ng-deep {
   }
 }
 
-.form-field__hint {
-  margin-top: 10px;
-  color: rgba(0, 0, 0, 0.7);
-  font-size: 0.75rem;
-  line-height: 0.9;
-  margin-bottom: 3px;
-  margin-left: 12px;
+.form-field__footer {
+  display: flex;
+  justify-content: space-between;
+
+  .form-field__hint,
+  .form-field_lengths {
+    margin-top: 10px;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 0.75rem;
+    line-height: 0.9;
+    margin-bottom: 3px;
+    margin-left: 12px;
+  }
+
+  .form-field_lengths {
+    margin-left: auto;
+  }
 }
 
 .form-field__errors {
@@ -255,7 +270,6 @@ mat-form-field ::ng-deep {
 
 ui-icon {
   color: rgba(0, 0, 0, 0.7);
-
 }
 
 mat-form-field {
@@ -269,10 +283,10 @@ mat-tree-node {
   height: 3em;
   line-height: 3em;
   overflow: visible;
-  transition: .2s;
+  transition: 0.2s;
   overflow: hidden;
   &:hover {
-      background-color: rgb(245 245 245);
+    background-color: rgb(245 245 245);
   }
   &.root-node:not(:last-child) {
     border-bottom: 1px solid rgba(128, 128, 128, 0.1);
@@ -293,9 +307,10 @@ mat-tree-node {
   }
 }
 
-
 .additional-selection {
-  &::before { content: " "}
+  &::before {
+    content: ' ';
+  }
   opacity: 0.75;
   font-size: 0.75em;
 }
@@ -303,7 +318,6 @@ mat-tree-node {
 ui-icon {
   margin-left: 10px;
 }
-
 
 .form-field__radio {
   label {
@@ -335,5 +349,17 @@ ui-icon {
   }
   quill-editor ::ng-deep * {
     font-size: 16px !important;
+  }
+}
+
+.form-field__date {
+  &:hover {
+    cursor: pointer !important;
+  }
+}
+
+.form-field__money {
+  input {
+    opacity: 0;
   }
 }
