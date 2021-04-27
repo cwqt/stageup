@@ -46,7 +46,7 @@ export const patchTypeORM = (req: Request, res: Response, next: NextFunction) =>
     serialiser?: EntitySerialiser<T, K>,
     paging?: PaginationOptions
   ): Promise<IEnvelopedData<T[] | K[], null>> {
-    return paginate<T, K>(this, paging.page || res.locals.page, paging.per_page || res.locals.per_page, serialiser);
+    return paginate<T, K>(this, paging?.page || res.locals.page, paging?.per_page || res.locals.per_page, serialiser);
   };
 
   SelectQueryBuilder.prototype.filter = function <T>(fm: FilterMap): SelectQueryBuilder<T> {
