@@ -1,13 +1,31 @@
-<h1 i18n="@@performances|Feed page title">Performances</h1>
+<div *ngFor="let carousel of carouselData | keyvalue" class="carousel-container relative">
+  <h2>{{ carousel.key | titlecase }}</h2>
 
-<h3 *ngIf="performances.loading" i18n="@@loading">Loading...</h3>
-<h3 *ngIf="performances.data && performances.data.data.length == 0" i18n="@@no-performances-found">No performances found</h3>
+  <ui-hr></ui-hr>
 
-<div class="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2" *ngIf="!performances.loading && performances.data">
-  <app-performance-thumb *ngFor="let performance of performances.data.data; let i=index" class="relative hover:z-10 m-2"
-    (click)="openDialog(performance)"
-    [performance]="performance">
-  </app-performance-thumb>
+  <mat-spinner *ngIf="carousel.value.loading" i18n="@@loading">Loading...</mat-spinner>
+  <h3 *ngIf="carousel.value.data?.data?.length == 0" i18n="@@no-performances-found">No performances found</h3>
+
+  <div class="relative">
+    <div class="absolute right-0 top-0 bottom-0 my-auto spinner" *ngIf="carousel.value.meta.loading_page">
+      <mat-spinner [diameter]="40"></mat-spinner>
+    </div>
+
+    <carousel
+      *ngIf="!carousel.value.loading"
+      (events)="handleCarouselEvents($event, carousel.key)"
+      [margin]="20"
+      [height]="256"
+      [loading]="carousel.value.meta.loading_page"
+      [id]="carousel.key"
+      [cellsToShow]="currentCellsToShow"
+      [loop]="false"
+    >
+      <div class="carousel-cell overflow-hidden" *ngFor="let performance of carousel.value.data.data; let i = index">
+        <app-performance-thumb [performance]="performance"> </app-performance-thumb>
+      </div>
+    </carousel>
+  </div>
 </div>
 
 <router-outlet></router-outlet>

@@ -19,6 +19,7 @@ import { NgxStripeModule } from 'ngx-stripe';
 import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
+import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/object-state.pipe';
@@ -217,6 +218,7 @@ import { InvoiceDialogComponent } from './components/dialogs/invoice-dialog/invo
     ClipboardModule,
     NgxPermissionsModule.forRoot(),
     PlyrModule,
+    IvyCarouselModule,
     QuillModule.forRoot(),
     LoggerModule.forRoot({
       serverLoggingUrl: '/api/logs',

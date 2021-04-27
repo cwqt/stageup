@@ -1,0 +1,24 @@
+carousel {
+  // fill width of entire page minus 2 * side margins & thin sidebar
+  width: calc(100vw - (5rem + 60px));
+  .carousel-cell:hover {
+    z-index: 10;
+  }
+}
+
+.carousel-container {
+  min-height: 256px;
+  &:not(:first-child) {
+    margin-top: 40px;
+  }
+}
+
+
+.spinner {
+  z-index: 10001;
+  height: 40px;
+  right: -75px !important;
+  ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #fff;
+  }
+}
