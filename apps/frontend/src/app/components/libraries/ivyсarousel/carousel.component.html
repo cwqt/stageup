@@ -38,15 +38,15 @@
   *ngIf="isArrows"
 >
   <div
-    *ngIf="cells.cells?.length > cellsToShow"
+    *ngIf="cellLength >= cellsToShow"
     class="carousel-arrow carousel-arrow-prev"
     [class.carousel-arrow-disabled]="isPrevArrowDisabled()"
     (click)="prev()"
   ></div>
-  <div *ngIf="!loading && cells.cells?.length > cellsToShow"
+  <div
+    *ngIf="!loading && cellLength >= cellsToShow"
     class="carousel-arrow carousel-arrow-next"
     [class.carousel-arrow-disabled]="loading || isNextArrowDisabled()"
     (click)="next()"
-  >
-  </div>
+  ></div>
 </div>

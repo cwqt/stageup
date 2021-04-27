@@ -30,7 +30,8 @@ import {
   IHostInvoiceStub,
   IUserInvoiceStub,
   IPatronSubscription,
-  NUUID
+  NUUID,
+  IFeed
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -57,7 +58,7 @@ router.put      <IMyself["host_info"]>  ("/myself/landing-page",                
 router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
 router.get      <IE<IUserInvoiceStub[]>>("/myself/invoices",                          Myself.readInvoices());
 router.get      <IUserInvoice>          ("/myself/invoices/:iid",                     Myself.readInvoice());
-// router.get      <IFeed>                  ("/myself/feed",                             Myself.readFeed());
+router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providerMap, middlewares);

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { IEnvelopedData as IEnv, IPerformanceStub } from '@core/interfaces';
+import { IEnvelopedData as IEnv, IFeed, IPerformanceStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -9,8 +9,11 @@ import { HelperService } from '../../services/helper.service';
 import { PerformanceBrochureComponent } from '../performance/performance-brochure/performance-brochure.component';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { sample, timeout, timestamp } from '@core/helpers';
+import { ToastService } from '@frontend/services/toast.service';
+import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { NGXLogger } from 'ngx-logger';
 
-type CarouselIdx = 'all';
+type CarouselIdx = keyof IFeed;
 
 @Component({
   selector: 'app-feed',
@@ -30,20 +33,29 @@ export class FeedComponent implements OnInit {
   };
 
   carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[]>> } = {
-    all: createICacheable([], { loading_page: false }),
+    upcoming: createICacheable([], { loading_page: false }),
+    everything: createICacheable([], { loading_page: false })
   };
 
   constructor(
     private feedService: FeedService,
     public dialog: MatDialog,
     private helperService: HelperService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private toastService: ToastService,
+    private logger: NGXLogger
   ) {}
 
   async ngOnInit() {
-    this.getCarouselPage('all');
-    // this.getCarouselPage('hosts');
-    // this.getCarouselPage('genre');
+    try {
+      Object.keys(this.carouselData).forEach(k => (this.carouselData[k].loading = true));
+      const feed = await this.feedService.getFeed();
+      Object.keys(feed).forEach(k => (this.carouselData[k].data = feed[k]));
+    } catch (error) {
+      this.toastService.emit('Error occurred fetching feed', ThemeKind.Danger);
+    } finally {
+      Object.keys(this.carouselData).forEach(k => (this.carouselData[k].loading = false));
+    }
 
     // Change number of cells in a row displayed at any one point depending on screen width
     const breakpoints = Object.keys(this.breakpointCellShownMap);
@@ -61,8 +73,38 @@ export class FeedComponent implements OnInit {
     });
   }
 
-  getCarouselPage(carouselIndex: CarouselIdx) {
-    return cachize(this.feedService.getFeed(), this.carouselData[carouselIndex]);
+  async getNextCarouselPage(carouselIndex: CarouselIdx) {
+    // Already fetching page or no more pages to fetch
+    if (this.carouselData[carouselIndex].meta.loading_page) return;
+    if (!this.carouselData[carouselIndex].data.__paging_data.next_page) {
+      this.logger.info(`No next page for carousel ${carouselIndex}`);
+      return;
+    }
+
+    // Use loading_page over cache.loading to prevent carousel from being destroyed
+    this.carouselData[carouselIndex].meta.loading_page = true;
+    try {
+      await timeout(1000);
+
+      // Get the next page for this carousel by passing the index along to the backend
+      const envelope = (
+        await this.feedService.getFeed({
+          [carouselIndex]: {
+            page: this.carouselData[carouselIndex].data.__paging_data.next_page,
+            per_page: this.carouselData[carouselIndex].data.__paging_data.per_page
+          }
+        })
+      )[carouselIndex];
+
+      // Then join this page onto the current array at the end
+      envelope.data = [...this.carouselData[carouselIndex].data.data, ...envelope.data];
+      this.carouselData[carouselIndex].data = envelope;
+    } catch (error) {
+      this.toastService.emit(`Failed fetching page for ${carouselIndex}`, ThemeKind.Danger);
+      throw error;
+    } finally {
+      this.carouselData[carouselIndex].meta.loading_page = false;
+    }
   }
 
   openDialog(performance: IPerformanceStub): void {
@@ -78,40 +120,26 @@ export class FeedComponent implements OnInit {
 
   async handleCarouselEvents(
     event,
-    carouselIndex: CarouselIdx  // keyof this.carousel
+    carouselIndex: CarouselIdx // keyof this.carousel
   ) {
-    if(event.name == "click") {
+    if (event.name == 'click') {
       // open the brochure
-      if(event.cellIndex >= 0)
-        this.openDialog(this.carouselData[carouselIndex].data.data[event.cellIndex]);
+      if (event.cellIndex >= 0) this.openDialog(this.carouselData[carouselIndex].data.data[event.cellIndex]);
     } else if (event.name == 'next') {
       // get next page in carousel
       const carousel = this.carousels.find(c => ((c.id as unknown) as string) == carouselIndex);
 
-      if (carousel.slide.isLastSlide(carousel.slide.counter + 2)) {
-        if(this.carouselData[carouselIndex].meta.loading_page) return;
-
-        console.log('reached last slide');
-
+      if (carousel.slide.isLastSlide(carousel.slide.counter)) {
         // Fetch the next page & push it onto the carousels data array
-        this.carouselData[carouselIndex].meta.loading_page = true;
-        try {
-          await timeout(1000);
-          const elements = await this.feedService.getFeed();
-          elements.data = elements.data.concat(this.carouselData[carouselIndex].data.data);
-          this.carouselData[carouselIndex].data = elements;
-        } catch (error) {
-          console.error(error);
-        } finally {
-          this.carouselData[carouselIndex].meta.loading_page = false;
-        }
+        this.logger.info(`Reached last page of carousel: ${carouselIndex}`);
+        await this.getNextCarouselPage(carouselIndex);
 
         // Update state of carousel with new pushed elements
         carousel.cellLength = carousel.getCellLength();
-        carousel["ref"].detectChanges();
+        carousel['ref'].detectChanges();
         setTimeout(() => {
           carousel.carousel.lineUpCells();
-        },0)
+        }, 0);
       }
     }
   }

@@ -13,7 +13,8 @@ import {
   ISocialInfo,
   PersonTitle,
   TicketFees,
-  TicketType
+  TicketType,
+  PaginationOptions
 } from '@core/interfaces';
 import { enumToValues, to } from '@core/helpers';
 import { ValidationChain } from 'express-validator';
@@ -118,4 +119,14 @@ export namespace ObjectValidators {
       value: v => v.optional({ nullable: true }) // TODO: update this validator to check for either typeof HostPermission or number
     };
   };
+
+  export const PaginationOptions = (pageLimit:number=50):() => ObjectValidator<PaginationOptions> => {
+    return () => {
+      return {
+        // don't allow pages larger than 50 items, by default
+        per_page: v => v.isInt({ lt: pageLimit }),
+        page: v => FV.isInt(v)
+      }
+    }
+  }
 }

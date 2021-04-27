@@ -222,7 +222,8 @@ import { InvoiceDialogComponent } from './components/dialogs/invoice-dialog/invo
     QuillModule.forRoot(),
     LoggerModule.forRoot({
       serverLoggingUrl: '/api/logs',
-      level: NgxLoggerLevel.DEBUG,
+      colorScheme: ['purple', 'teal', 'gray', 'gray', 'red', 'red', 'red'],
+      level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR
     })
   ],

@@ -1,48 +1,34 @@
 import {
-  HostPermission,
-  IEnvelopedData,
-  IHost,
-  IUser,
-  IUserHostInfo,
-  IMyself,
-  IAddress,
-  IUserPrivate,
-  Idless,
-  ErrCode,
-  HTTP,
-  Environment,
-  IUserStub,
-  pick,
-  IPerformanceStub,
-  IUserInvoice,
-  IUserInvoiceStub
-} from '@core/interfaces';
-import {
-  IControllerEndpoint,
+  AccessToken,
   BaseController,
-  User,
-  Host,
-  Address,
-  Validators,
   body,
-  params as parameters,
-  ErrorHandler,
-  FormErrorResponse,
   getCheck,
-  Auth,
-  UserHostInfo,
+  Host,
+  IControllerEndpoint,
   Invoice,
-  Ticket,
-  AccessToken
+  Performance,
+  query,
+  single,
+  User,
+  UserHostInfo,
+  Validators
 } from '@core/api';
-
-import Email = require('../common/email');
-import Env from '../env';
+import { timestamp } from '@core/helpers';
+import {
+  IEnvelopedData,
+  IFeed,
+  IMyself,
+  IPerformanceStub,
+  IUserHostInfo,
+  IUserInvoice,
+  IUserInvoiceStub,
+  Visibility,
+  PaginationOptions
+} from '@core/interfaces';
+import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 
-import { EntityManager } from 'typeorm';
-import { BackendProviderMap } from '..';
-import idFinderStrategies from '../common/authorisation/id-finder-strategies';
+import Email = require('../common/email');
 
 export default class MyselfController extends BaseController<BackendProviderMap> {
   readMyself(): IControllerEndpoint<IMyself> {
@@ -167,6 +153,49 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
         const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id);
         return invoice.toHostInvoice(charge);
+      }
+    };
+  }
+
+  readFeed(): IControllerEndpoint<IFeed> {
+    return {
+      authStrategy: AuthStrat.none,
+      validators: [
+        query<{ [index in keyof IFeed]: PaginationOptions }>({
+          upcoming: v => v.optional({ nullable: true }).custom(Validators.Objects.PaginationOptions(10)),
+          everything: v => v.optional({ nullable: true }).custom(Validators.Objects.PaginationOptions(10))
+        })
+      ],
+      controller: async req => {
+        const feed: IFeed = {
+          upcoming: null,
+          everything: null
+        };
+
+        // None of the req.query paging options are present, so fetch the first page of every carousel
+        const fetchAll = Object.keys(req.query).every(k => !Object.keys(feed).includes(k));
+
+        if (fetchAll || req.query['upcoming'])
+          feed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
+            .where('p.premiere_date > :currentTime', { currentTime: timestamp() })
+            .andWhere('p.visibility = :state', { state: Visibility.Public })
+            .innerJoinAndSelect('p.host', 'host')
+            .orderBy('p.premiere_date')
+            .paginate(p => p.toStub(), {
+              page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
+              per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
+            });
+
+        if (fetchAll || req.query['everything'])
+          feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
+            .andWhere('p.visibility = :state', { state: Visibility.Public })
+            .innerJoinAndSelect('p.host', 'host')
+            .paginate(p => p.toStub(), {
+              page: req.query.everything ? parseInt((req.query['everything'] as any).page) : 0,
+              per_page: req.query.everything ? parseInt((req.query['everything'] as any).per_page) : 4
+            });
+
+        return feed;
       }
     };
   }

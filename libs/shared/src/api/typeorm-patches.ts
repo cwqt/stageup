@@ -11,6 +11,7 @@ import {
   NumberFilter,
   NumberFilterOperator,
   NUUID,
+  PaginationOptions,
   Primitive,
   StringFilter,
   StringFilterOperator
@@ -29,7 +30,10 @@ declare module 'typeorm' {
 
     // Modified from https://github.com/savannabits/typeorm-pagination
     paginate(): Promise<IEnvelopedData<Entity[], null>>;
-    paginate<K>(serialiser: EntitySerialiser<Entity, K>): Promise<IEnvelopedData<K[], null>>;
+    paginate<K>(
+      serialiser: EntitySerialiser<Entity, K>,
+      paging?: PaginationOptions
+    ): Promise<IEnvelopedData<K[], null>>;
   }
 }
 
@@ -39,9 +43,10 @@ declare module 'typeorm' {
 export const patchTypeORM = (req: Request, res: Response, next: NextFunction) => {
   // Use function instead of => to have this reference in queryBuilder chain
   SelectQueryBuilder.prototype.paginate = async function <T, K>(
-    serialiser?: EntitySerialiser<T, K>
+    serialiser?: EntitySerialiser<T, K>,
+    paging?: PaginationOptions
   ): Promise<IEnvelopedData<T[] | K[], null>> {
-    return paginate<T, K>(this, res.locals.page, res.locals.per_page, serialiser);
+    return paginate<T, K>(this, paging.page || res.locals.page, paging.per_page || res.locals.per_page, serialiser);
   };
 
   SelectQueryBuilder.prototype.filter = function <T>(fm: FilterMap): SelectQueryBuilder<T> {

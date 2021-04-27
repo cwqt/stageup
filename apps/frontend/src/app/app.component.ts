@@ -8,6 +8,7 @@ import { NgxPermissionsService } from 'ngx-permissions';
 import { BaseAppService } from './services/app.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserPermission } from '@core/interfaces';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-root',
@@ -24,20 +25,20 @@ export class AppComponent implements OnInit {
     private toastService: ToastService,
     private baseAppService: BaseAppService,
     private route: ActivatedRoute,
-    private permissionsService: NgxPermissionsService
-  ) {
-    console.log(`Running in: ${environment.environment}`);
-  }
+    private permissionsService: NgxPermissionsService,
+    private logger: NGXLogger
+  ) {}
 
-  
-  async ngOnInit() {  
+  async ngOnInit() {
+    this.logger.debug(`Running in: ${environment.environment}`);
+
     this.loading = true;
     await this.baseAppService.componentInitialising(this.route);
     this.titleService.setTitle(`StageUp - ${environment.appVersion}`);
 
     // Upon start up, check if logged in by re-hydrating stored data (if any exists)
     // and then re-fetch the user incase of any changes & set all permissions
-    if (this.authService.checkLoggedIn(false)) {      
+    if (this.authService.checkLoggedIn(false)) {
       await this.myselfService.getMyself();
       this.toastService.emit(`Welcome back to StageUp! (${environment.appVersion})`);
 
