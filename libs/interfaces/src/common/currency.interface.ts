@@ -1,5 +1,6 @@
-import { DonoPegWeights } from "../performances/ticket.interface";
+import { DonoPegWeights } from '../performances/ticket.interface';
 
+// ISO-4217 Currency Codes
 export enum CurrencyCode {
   USD = 'USD',
   CAD = 'CAD',
@@ -119,11 +120,14 @@ export enum CurrencyCode {
   YER = 'YER',
   ZAR = 'ZAR',
   ZMK = 'ZMK',
-  ZWL = 'ZWL',
+  ZWL = 'ZWL'
 }
 
-//https://gist.github.com/KingDarBoja/cf664cc395c4d95e645fd1f720c13746
+// ISO-3166-Alpha-3
+// https://gist.github.com/KingDarBoja/cf664cc395c4d95e645fd1f720c13746
 export enum ISOCountryCode {
+  GBR = 'United Kingdom',
+  USA = 'United States',
   AFG = 'Afghanistan',
   ALA = 'Aland Islands',
   ALB = 'Albania',
@@ -356,9 +360,7 @@ export enum ISOCountryCode {
   UGA = 'Uganda',
   UKR = 'Ukraine',
   ARE = 'United Arab Emirates',
-  GBR = 'United Kingdom',
   UMI = 'United States Outlying Islands',
-  USA = 'United States',
   URY = 'Uruguay',
   UZB = 'Uzbekistan',
   VUT = 'Vanuatu',
@@ -370,16 +372,15 @@ export enum ISOCountryCode {
   ESH = 'Western Sahara',
   YEM = 'Yemen',
   ZMB = 'Zambia',
-  ZWE = 'Zimbabwe',
+  ZWE = 'Zimbabwe'
 }
 
 // TODO: add all base amounts for all currencies (minimum stripe amount for each currency expressed in smallest denomination)
-export const BASE_AMOUNT_MAP:{[code in CurrencyCode]?:number} = {
+export const BASE_AMOUNT_MAP: { [code in CurrencyCode]?: number } = {
   [CurrencyCode.GBP]: 100 //£1
-} as const
+} as const;
 
-
-export const calculateAmountFromCurrency = (currency:CurrencyCode, peg:DonoPegWeights): number => {
+export const calculateAmountFromCurrency = (currency: CurrencyCode, peg: DonoPegWeights): number => {
   const baseAmount = BASE_AMOUNT_MAP[currency];
-  return (baseAmount * peg);
-}
+  return baseAmount * peg;
+};

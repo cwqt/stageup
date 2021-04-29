@@ -1,5 +1,7 @@
-<div class="relative">
-  <div mat-card-image plyr
+<div class="relative h-full">
+  <div
+    mat-card-image
+    plyr
     [plyrCrossOrigin]="true"
     [plyrDriver]="hlsjsDriver"
     [plyrOptions]="options"
@@ -10,6 +12,6 @@
     (plyrWaiting)="onPlayerWaiting.emit($event)"
     (plyrPlay)="_onPlay()"
     (plyrInit)="_onPlayerInit($event)"
-    (plyrLanguageChange)="_onLanguageChanged(hlsjsDriver, player)">
-  </div>
+    (plyrLanguageChange)="_onLanguageChanged(hlsjsDriver, player)"
+  ></div>
 </div>

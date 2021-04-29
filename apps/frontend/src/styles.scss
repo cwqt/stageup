@@ -8,8 +8,18 @@
 @import '~quill/dist/quill.snow.css';
 
 // fix empty scrollbar appearing when a dialog is open
-.cdk-global-scrollblock {
-  position: initial;
-  width: initial;
-  overflow: hidden;
+// .cdk-global-scrollblock {
+//   position: initial;
+//   width: initial;
+//   overflow: hidden;
+// }
+
+.cdk-global-overlay-wrapper {
+  overflow: auto;
+}
+
+.mat-dialog-container {
+  box-shadow: none;
+  background-color: transparent !important;
+  overflow: visible !important;
 }

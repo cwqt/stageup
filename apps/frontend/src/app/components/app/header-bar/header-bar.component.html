@@ -1,12 +1,14 @@
 <div class="flex justify-between items-stretch h-14 overflow-hidden bg-white shadow w-full">
-
   <div class="center mr-auto search-box flex items-center w-1/3">
-    <img routerLink="/" class="logo ml-2 p-2 max-h-full h-auto object-cover" src="/assets/logomark.svg" alt="">
-    <input class="w-full ml-4 p-2 bg-gray-200 rounded focus:bg-gray-100 outline-none focus:ring-2 focus:ring-pink-500"
+    <img routerLink="/" class="logo ml-2 p-2 max-h-full h-auto object-cover" src="/assets/logo.png" alt="" />
+    <input
+      class="w-full ml-4 p-2 bg-gray-200 rounded focus:bg-gray-100 outline-none focus:ring-2 focus:ring-pink-500"
       type="text"
       i18n-placeholder="@@header-search-bar"
       placeholder="Search for performances..."
-      (keydown.enter)="search(searchBox.value)" #searchBox>
+      (keydown.enter)="search(searchBox.value)"
+      #searchBox
+    />
   </div>
 
   <div class="right flex items-center ml-auto p-2 mr-2">
@@ -18,11 +20,14 @@
     <ui-icon *ngIf="myself">notification--new</ui-icon>
 
     <div class="flex" *ngIf="!myself">
-      <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="openLoginDialog()" i18n="@@log">Log In</ui-button>
+      <ui-button class="flex-initial mr-4" kind="accent" icon="login" (click)="openLoginDialog()" i18n="@@log"
+        >Log In</ui-button
+      >
       <ui-button class="flex-initial mr-4" kind="accent" icon="user" (click)="openRegisterDialog()">Register</ui-button>
     </div>
 
-    <div class="flex items-center cursor-pointer"
+    <div
+      class="flex items-center cursor-pointer"
       *ngIf="myself"
       [popper]="userDropdownMenu"
       [popperShowOnStart]="false"
@@ -30,8 +35,9 @@
       [popperHideOnScroll]="true"
       [popperApplyClass]="'user-dropdown-menu'"
       popperTrigger="click"
-      popperPlacement="bottom">
-      <img class="rounded-full w-10 h-10 mx-4 object-cover" [src]="myself.user.avatar" alt="">
+      popperPlacement="bottom"
+    >
+      <img class="rounded-full w-10 h-10 mx-4 object-cover" [src]="myself.user.avatar" alt="" />
       <span>{{ myself.user.name || myself.user.username }}</span>
       <ui-icon>caret--down</ui-icon>
     </div>

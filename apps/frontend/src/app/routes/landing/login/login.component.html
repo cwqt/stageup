@@ -1,14 +1,25 @@
 <ui-dialog class="login-wrapper" [buttons]="buttons">
   <div class="flex justify-between">
     <h2 class="mb-4" i18n="@@login-dialog">Log in</h2>
-    <ui-button kind="secondary" (click)="openRegister()">Register?</ui-button>
+    <ui-button kind="accent" (click)="openRegister()">Register?</ui-button>
   </div>
 
-  <ui-form [form]="loginForm">
-  </ui-form>
+  <div class="grid grid-cols-3 gap-2 social-login mt-4">
+    <ui-button class="facebook w-full"><img class="w-8 h-8" src="assets/facebook.png" /></ui-button>
+    <ui-button class="google w-full"><img class="w-8 h-8" src="assets/google.png" /></ui-button>
+    <ui-button kind="secondary" class="apple w-full"><img class="w-8 h-8" src="assets/apple.png" /></ui-button>
+  </div>
+
+  <div class="relative py-4">
+    <span class="absolute left-0 right-0 mx-auto my-auto w-20 h-6 top-0 bottom-0 bg-white text-center text-opacity-75"
+      >OR</span
+    >
+    <ui-hr></ui-hr>
+  </div>
+
+  <ui-form [form]="loginForm"> </ui-form>
 
   <div class="text-right">
     <a class="text-black hover:text-pink-600 cursor-pointer" (click)="openPasswordResetDialog()">Forgot Password?</a>
   </div>
-
 </ui-dialog>

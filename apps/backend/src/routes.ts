@@ -31,6 +31,8 @@ import {
   IUserInvoiceStub,
   IPatronSubscription,
   NUUID,
+  IPaymentMethod,
+  IPaymentMethodStub,
   IFeed
 } from '@core/interfaces';
 
@@ -54,11 +56,16 @@ export default (router:AsyncRouter<BackendProviderMap>, providerMap:BackendProvi
 // MYSELF -------------------------------------------------------------------------------------------------------------
 const Myself = new MyselfController(providerMap, middlewares);
 router.get      <IMyself>               ("/myself",                                   Myself.readMyself());
+router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
 router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
 router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
 router.get      <IE<IUserInvoiceStub[]>>("/myself/invoices",                          Myself.readInvoices());
 router.get      <IUserInvoice>          ("/myself/invoices/:iid",                     Myself.readInvoice());
-router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
+router.get      <IPaymentMethodStub[]>  ("/myself/payment-methods",                   Myself.readPaymentMethods());
+router.post     <IPaymentMethod>        ("/myself/payment-methods",                   Myself.addCreatedPaymentMethod());
+router.get      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.readPaymentMethod());
+router.delete   <void>                  ("/myself/payment-methods/:pmid",             Myself.deletePaymentMethod());
+router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.updatePaymentMethod());
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providerMap, middlewares);

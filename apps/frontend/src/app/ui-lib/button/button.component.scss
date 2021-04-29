@@ -1,4 +1,4 @@
-@import "apps/frontend/src/styles/variables";
+@import 'apps/frontend/src/styles/variables';
 
 :host {
   display: inline-block;
@@ -9,14 +9,15 @@
   align-items: center;
   justify-content: center;
   position: relative;
-	outline: 0;
-	overflow: hidden;
-	position: relative;
-	user-select: none;
+  outline: 0;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
   transition: background-color 0.2s;
   border-radius: 4px;
   width: inherit;
-  ui-icon, mat-spinner {
+  .ui-button__icon,
+  mat-spinner {
     margin-right: 10px;
   }
   &--s {
@@ -47,7 +48,7 @@
   }
   &:disabled {
     // background-color: #efefef;
-    opacity: .5;
+    opacity: 0.5;
     &:hover {
       cursor: not-allowed;
       pointer-events: all !important;
@@ -58,59 +59,88 @@
 .ui-button--primary {
   background-color: $clr-primary;
   color: white;
-  &:hover { background-color: $clr-primary-dk; }
-  ::ng-deep .mat-spinner circle { stroke: $clr-base !important; }    
+  &:hover {
+    background-color: $clr-primary-dk;
+  }
+  ::ng-deep .mat-spinner circle {
+    stroke: $clr-base !important;
+  }
 }
 
 .ui-button--secondary {
   background-color: $clr-secondary;
   color: white;
-  &:hover { background-color: $clr-secondary-lt; }
+  &:hover {
+    background-color: $clr-secondary-lt;
+  }
   .ripple {
     background-color: rgba($color: #fff, $alpha: 0.2) !important;
   }
-  ::ng-deep .mat-spinner circle { stroke: $clr-base !important; }    
+  ::ng-deep .mat-spinner circle {
+    stroke: $clr-base !important;
+  }
 }
 
 .ui-button--accent {
   background-color: white;
   color: #000000;
   border: 1px solid #dedede;
-  &:hover { background-color: $clr-base-lt; }
+  &:hover {
+    background-color: $clr-base-lt;
+  }
 }
 
 .ui-button--warning {
   background-color: $clr-warning;
   color: white;
-  &:hover { background-color: darken($clr-warning, 10%); }
-  ::ng-deep .mat-spinner circle { stroke: $clr-base !important; }    
+  &:hover {
+    background-color: darken($clr-warning, 10%);
+  }
+  ::ng-deep .mat-spinner circle {
+    stroke: $clr-base !important;
+  }
 }
 
 .ui-button--danger {
   background-color: lighten($clr-red-drk, 20%);
   color: white;
-  &:hover { background-color: lighten($clr-red-drk, 10%); }
-  ::ng-deep .mat-spinner circle { stroke: $clr-base !important; }    
+  &:hover {
+    background-color: lighten($clr-red-drk, 10%);
+  }
+  ::ng-deep .mat-spinner circle {
+    stroke: $clr-base !important;
+  }
 }
 
 .ripple {
-	background-color: rgba($color: #000000, $alpha: 0.1);
-	width: 1rem;
-	height: 1rem;
-	position: absolute;
-	border-radius: 50%;
-	transform: translateX(-100%) translateY(-100%);
-	// mix-blend-mode: screen;
-	animation: ripple 2000ms ease-out forwards, fade 500ms ease-out forwards;
+  background-color: rgba($color: #000000, $alpha: 0.1);
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  border-radius: 50%;
+  transform: translateX(-100%) translateY(-100%);
+  // mix-blend-mode: screen;
+  animation: ripple 2000ms ease-out forwards, fade 500ms ease-out forwards;
 }
 
 @keyframes ripple {
-	0%   { transform: translate(-100%, -100%); }
-	80%  { transform: translate(-100%, -100%) scale(50); }
-	100% { transform: translate(-100%, -100%) scale(50); opacity: 0; }
+  0% {
+    transform: translate(-100%, -100%);
+  }
+  80% {
+    transform: translate(-100%, -100%) scale(50);
+  }
+  100% {
+    transform: translate(-100%, -100%) scale(50);
+    opacity: 0;
+  }
 }
 
 @keyframes fade {
-	0%   { opacity: 1; }
-	100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

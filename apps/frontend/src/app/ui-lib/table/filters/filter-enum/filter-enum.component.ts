@@ -65,7 +65,6 @@ export class FilterEnumComponent implements OnInit, IUITableFilter {
   }
 
   ngOnChanges(changes) {
-    console.log(changes, this.buttons);
     if (changes.active?.currentValue && this.buttons.length == 1) {
       this.buttons.push(
         new UiDialogButton({

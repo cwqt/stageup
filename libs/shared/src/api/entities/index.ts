@@ -3,6 +3,7 @@ export { Person } from './users/person.entity';
 export { Address } from './users/address.entity';
 export { ContactInfo } from './users/contact-info.entity';
 export { PatronSubscription } from './users/patron-subscription.entity';
+export { PaymentMethod } from './users/payment-method.entity';
 // export { BillingInfo } from './users/billing-info.entity';
 
 export { Host } from './hosts/host.entity';

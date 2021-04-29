@@ -1,0 +1,13 @@
+mat-tab-group ::ng-deep {
+  .mat-tab-header {
+    display: none;
+  }
+}
+
+.section-expand-text {
+  opacity: 0.5;
+  text-decoration: underline;
+  &:hover {
+    cursor: pointer;
+  }
+}

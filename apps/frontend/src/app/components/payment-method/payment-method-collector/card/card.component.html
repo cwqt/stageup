@@ -1,0 +1,25 @@
+<div class="ui-payment-form flex-1 mb-4">
+  <div
+    class="card-container cursor-text"
+    (click)="card.element.focus()"
+    [class.card-container--is-focused]="!errored && focused"
+    [class.card-container--is-errored]="errored"
+    [class.card-container--is-disabled]="disabled"
+  >
+    <div class="card">
+      <ngx-stripe-card
+        #card
+        (blur)="focused = false"
+        (focus)="focused = true"
+        (change)="handleOnChange($event)"
+        [options]="cardOptions"
+        [elementsOptions]="elementsOptions"
+      >
+      </ngx-stripe-card>
+    </div>
+
+    <div class="underline"></div>
+  </div>
+
+  <mat-error class="mt-1" *ngIf="error">{{ error.message }}</mat-error>
+</div>

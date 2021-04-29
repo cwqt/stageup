@@ -9,6 +9,7 @@ import { BaseAppService } from './services/app.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserPermission } from '@core/interfaces';
 import { NGXLogger } from 'ngx-logger';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { NGXLogger } from 'ngx-logger';
 })
 export class AppComponent implements OnInit {
   loading: boolean = true;
+  loadError: string;
 
   constructor(
     private myselfService: MyselfService,
@@ -38,34 +40,39 @@ export class AppComponent implements OnInit {
 
     // Upon start up, check if logged in by re-hydrating stored data (if any exists)
     // and then re-fetch the user incase of any changes & set all permissions
-    if (this.authService.checkLoggedIn(false)) {
-      await this.myselfService.getMyself();
-      this.toastService.emit(`Welcome back to StageUp! (${environment.appVersion})`);
+    try {
+      if (this.authService.checkLoggedIn(false)) {
+        await this.myselfService.getMyself();
+        this.toastService.emit(`Welcome back to StageUp! (${environment.appVersion})`);
 
-      // May be coming in from an e-mail to accept invite /?invite_accepted=...
-      const invite = this.baseAppService.getQueryParam('invite_accepted');
-      if (invite) this.baseAppService.navigateTo(`/dashboard`);
-    }
-
-    // Subscribe to login state & re-set permissions state on changes
-    this.authService.$loggedIn.subscribe(isLoggedIn => {
-      let permissions: string[] = [];
-      if (isLoggedIn) {
-        const myself = this.myselfService.$myself.value;
-        // Set permissions for logged in users
-        if (myself.user.is_admin) permissions.push(UserPermission.SiteAdmin);
-        permissions.push(UserPermission.User);
-
-        if (myself.host_info) permissions.push(myself.host_info.permissions);
-      } else {
-        permissions = [UserPermission.None];
+        // May be coming in from an e-mail to accept invite /?invite_accepted=...
+        const invite = this.baseAppService.getQueryParam('invite_accepted');
+        if (invite) this.baseAppService.navigateTo(`/dashboard`);
       }
 
-      this.permissionsService.loadPermissions(permissions);
-    });
+      // Subscribe to login state & re-set permissions state on changes
+      this.authService.$loggedIn.subscribe(isLoggedIn => {
+        let permissions: string[] = [];
+        if (isLoggedIn) {
+          const myself = this.myselfService.$myself.value;
+          // Set permissions for logged in users
+          if (myself.user.is_admin) permissions.push(UserPermission.SiteAdmin);
+          permissions.push(UserPermission.User);
 
-    setTimeout(() => {
-      this.loading = false;
-    }, 100);
+          if (myself.host_info) permissions.push(myself.host_info.permissions);
+        } else {
+          permissions = [UserPermission.None];
+        }
+
+        this.permissionsService.loadPermissions(permissions);
+      });
+
+      setTimeout(() => {
+        this.loading = false;
+      }, 100);
+    } catch (error) {
+      if (typeof error == 'string') this.loadError = error;
+      else this.loadError = error.message;
+    }
   }
 }

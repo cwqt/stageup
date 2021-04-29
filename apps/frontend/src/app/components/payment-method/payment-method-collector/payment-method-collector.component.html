@@ -1,0 +1,37 @@
+<div class="relative">
+  <div class="flex items-center" [class.mb-2]="smaller">
+    <ui-button (click)="cancelAdd.emit()" [transparent]="true" [size]="smaller ? 's' : 'm'"
+      ><ui-icon>arrow--left</ui-icon></ui-button
+    >
+    <h2 class="mb-0" *ngIf="!smaller">Add new Card</h2>
+    <p class="text-lg mb-0 ml-2" *ngIf="smaller"><b>Add new Card</b></p>
+  </div>
+
+  <ui-hr *ngIf="!smaller"></ui-hr>
+
+  <app-card #card [disabled]="billingDetailsForm.group.disabled"></app-card>
+  <ui-form [form]="billingDetailsForm"></ui-form>
+
+  <div class="flex items-center">
+    <ui-button
+      size="l"
+      icon="add"
+      kind="primary"
+      [disabled]="!(entireFormIsValid | async)"
+      [loading]="createdPaymentMethod.loading"
+      (click)="createPaymentMethod()"
+      >{{ createdPaymentMethod.loading ? 'Creating Card...' : 'Create Card' }}
+    </ui-button>
+
+    <div class="ml-4">
+      <mat-error *ngIf="createdPaymentMethod.error">{{ createdPaymentMethod.error }}</mat-error>
+    </div>
+  </div>
+
+  <div
+    *ngIf="createdPaymentMethod.loading"
+    class="absolute top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-white bg-opacity-50 pointer-events-none"
+  >
+    <mat-spinner></mat-spinner>
+  </div>
+</div>

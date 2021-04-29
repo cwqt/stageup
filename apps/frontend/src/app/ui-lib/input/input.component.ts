@@ -56,6 +56,8 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
 
     // Set min/max lengths for all text fields
     if (this.data.type == 'text' || this.data.type == 'textarea' || this.data.type == 'richtext') {
+      if (!this.data.options.validators) return;
+
       this.meta[this.data.type].max_length =
         this.data.options.validators.find(v => v.type == 'maxlength')?.['value'] || null;
 

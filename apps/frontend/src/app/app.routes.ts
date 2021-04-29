@@ -32,9 +32,6 @@ import { HostPerformanceComponent } from './routes/host/host-performance/host-pe
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
-import { PaymentSuccessComponent } from './routes/payments/payment-success/payment-success.component';
-import { PaymentCancelComponent } from './routes/payments/payment-cancel/payment-cancel.component';
-import { PaymentCheckoutComponent } from './routes/payments/payment-checkout/payment-checkout.component';
 import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
@@ -46,6 +43,7 @@ import { HostPatronageComponent } from './routes/host/host-payments/host-patrona
 import { HostProfilePatronageComponent } from './routes/host/host-profile/host-profile-patronage/host-profile-patronage.component';
 import { HostProfileAboutComponent } from './routes/host/host-profile/host-profile-about/host-profile-about.component';
 import { HostProfileFeedComponent } from './routes/host/host-profile/host-profile-feed/host-profile-feed.component';
+import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -86,6 +84,7 @@ const LOGGED_IN_ROUTES: Routes = [
       },
       { path: 'host', component: HostSettingsComponent },
       { path: 'account', component: AccountSettingsComponent },
+      { path: 'wallet', component: WalletSettingsComponent },
       { path: '**', component: NotFoundComponent }
     ]
   },
@@ -123,24 +122,16 @@ const LOGGED_IN_ROUTES: Routes = [
         data: { is_host_view: true },
         children: [
           { path: '', component: HostProfileFeedComponent },
-          { path: "patronage", component: HostProfilePatronageComponent },
+          { path: 'patronage', component: HostProfilePatronageComponent },
           { path: 'about', component: HostProfileAboutComponent },
           { path: '**', component: NotFoundComponent }
         ]
       }
     ]
   },
-  {
-    path: 'payments',
-    children: [
-      { path: 'checkout', component: PaymentCheckoutComponent },
-      { path: 'success', component: PaymentSuccessComponent },
-      { path: 'cancel', component: PaymentCancelComponent }
-    ]
-  },
   { path: `admin`, component: AdminPanelComponent },
   { path: `admin/onboardings`, component: AdminOnboardingListComponent },
-  { path: `admin/onboardings/:${RP.HostId}`, component: AdminOnboardingViewComponent },
+  { path: `admin/onboardings/:${RP.HostId}`, component: AdminOnboardingViewComponent }
 ];
 
 @NgModule({
@@ -197,7 +188,7 @@ const LOGGED_IN_ROUTES: Routes = [
               data: { is_host_view: false },
               children: [
                 { path: '', component: HostProfileFeedComponent },
-                { path: "patronage", component: HostProfilePatronageComponent },
+                { path: 'patronage', component: HostProfilePatronageComponent },
                 { path: 'about', component: HostProfileAboutComponent },
                 { path: '**', component: NotFoundComponent }
               ]

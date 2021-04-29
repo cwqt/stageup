@@ -1,0 +1,37 @@
+<mat-spinner *ngIf="paymentMethods.loading"></mat-spinner>
+<div *ngIf="!paymentMethods.loading" class="flex flex-col px-2">
+  <mat-tab-group class="h-full">
+    <mat-tab class="px-1">
+      <ng-container *ngFor="let method of paymentMethods.data; let i = index">
+        <!-- Only show the first (default, if any) card when un-expanded in selection mode -->
+        <app-payment-method-thumb
+          class="mb-4"
+          *ngIf="isEditing || selectionListExpanded || i == 0"
+          [selection]="selectionModel"
+          [method]="method"
+          [isEditing]="isEditing"
+          [isExpanded]="selectionListExpanded"
+          (clickedExpandButton)="this.selectionListExpanded = $event"
+          (deletedMethod)="removeMethodFromList($event)"
+        ></app-payment-method-thumb>
+      </ng-container>
+
+      <div
+        *ngIf="isEditing || selectionListExpanded"
+        class="flex mx-1 items-center rounded shadow ring-2 ring-inset ring-transparent cursor-pointer h-16 mb-4 hover:shadow-md"
+        (click)="openCreateNewCardMenu()"
+      >
+        <ui-icon size="l" class="mx-4">add</ui-icon>
+        <span>Add credit or debit card</span>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <app-payment-method-collector
+        [smaller]="smaller"
+        (addedMethod)="addMethodToList($event)"
+        (cancelAdd)="tabs.selectedIndex = 0"
+      ></app-payment-method-collector>
+    </mat-tab>
+  </mat-tab-group>
+</div>

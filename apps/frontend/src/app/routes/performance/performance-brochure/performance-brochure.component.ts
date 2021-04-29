@@ -13,19 +13,20 @@ import {
   IPaymentIntentClientSecret,
   IPerformance,
   IPerformanceStub,
-  ITicketStub
+  ITicketStub,
+  PurchaseableEntity
 } from '@core/interfaces';
+import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
-import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
-import { PlayerComponent } from '../../../components/player/player.component';
-import { RegisterDialogComponent } from '../../../routes/landing/register-dialog/register-dialog.component';
-import { HelperService } from '../../../services/helper.service';
-import { MyselfService } from '../../../services/myself.service';
-import { PerformanceService } from '../../../services/performance.service';
-import { UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
-import { IUiDialogOptions } from '../../../ui-lib/ui-lib.interfaces';
-import { LoginComponent } from '../../landing/login/login.component';
-import { PaymentCheckoutComponent } from '../../payments/payment-checkout/payment-checkout.component';
+import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
+import { PlayerComponent } from '@frontend/components/player/player.component';
+import { RegisterDialogComponent } from '@frontend/routes/landing/register-dialog/register-dialog.component';
+import { HelperService } from '@frontend/services/helper.service';
+import { MyselfService } from '@frontend/services/myself.service';
+import { PerformanceService } from '@frontend/services/performance.service';
+import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
+import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
+import { LoginComponent } from '@frontend/routes/landing/login/login.component';
 
 @Component({
   selector: 'performance-brochure',
@@ -34,21 +35,18 @@ import { PaymentCheckoutComponent } from '../../payments/payment-checkout/paymen
 })
 export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   @ViewChild('tabs') tabs: MatTabGroup;
-  @ViewChild('card') card: PaymentCheckoutComponent;
+  @ViewChild('paymentMethod') paymentMethod: PaymentMethodComponent;
   @ViewChild('trailer') trailerPlayer?: PlayerComponent;
 
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
   performanceCacheable: ICacheable<IEnvelopedData<IPerformance>> = createICacheable();
-  paymentIntent: ICacheable<IPaymentIntentClientSecret> = createICacheable();
+  paymentIntentSecret: ICacheable<IPaymentIntentClientSecret> = createICacheable();
   stripePaymentIntent: PaymentIntent;
 
   myself: IMyself['user'];
-  purchaserEmailAddress: string;
-  cardDetailsAreValid: boolean;
   selectedTicket: ITicketStub;
-  buttons = [];
 
   donoPegSelectForm: UiForm;
   donoPegCacheable: ICacheable<null> = createICacheable();
@@ -70,7 +68,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
   async ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
-    cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable).then(d => {
+    await cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable).then(d => {
       this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video);
       return d;
     });
@@ -78,8 +76,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
   openPerformanceDescriptionSection() {
     this.selectedTicket = null;
-    this.paymentIntent.data = null;
-    this.paymentIntent.error = null;
+    this.paymentIntentSecret.data = null;
+    this.paymentIntentSecret.error = null;
     this.tabs.selectedIndex = 0;
   }
 
@@ -121,12 +119,23 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       }
     }
 
-    // Push setStripeElementAccountId to next change detection cycle, so that *ngIf=selectedTicket is true
-    // & then on the next tick, this.card will be defined
-    setTimeout(() => {
-      this.card.setStripeElementAccountId(this.performance.host.stripe_account_id);
-      this.tabs.selectedIndex = 1;
-    }, 0);
+    this.tabs.selectedIndex = 1;
+  }
+
+  confirmTicketPayment() {
+    this.paymentMethod.confirmPayment(
+      this.performanceService.createTicketPaymentIntent.bind(this.performanceService),
+      {
+        payment_method_id: this.paymentMethod.selectionModel.selected[0]._id,
+        purchaseable_type: PurchaseableEntity.Ticket,
+        purchaseable_id: this.selectedTicket._id,
+        options: {
+          selected_dono_peg: this.donoPegSelectForm?.group?.value?.pegs,
+          allow_any_amount: this.donoPegSelectForm?.group?.value?.allow_any_amount
+        }
+      },
+      this.performance.host.stripe_account_id
+    );
   }
 
   handleCardPaymentSuccess(paymentIntent: PaymentIntent) {
@@ -149,6 +158,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   openRegister() {
     this.helperService.showDialog(this.dialog.open(RegisterDialogComponent), () => {});
   }
+
   openLogin() {
     this.helperService.showDialog(this.dialog.open(LoginComponent), () => {});
   }

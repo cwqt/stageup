@@ -18,7 +18,8 @@ import {
   Ticket,
   Invoice,
   AccessToken,
-  PatronTier
+  PatronTier,
+  PaymentMethod
 } from '@core/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
@@ -27,6 +28,7 @@ import Env from '../env';
 import Stripe from 'stripe';
 import { log } from '../common/logger';
 import Email = require('../common/email');
+import { timestamp } from '@core/helpers';
 
 export default class StripeController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
@@ -73,6 +75,12 @@ export default class StripeController extends BaseController<BackendProviderMap>
     const data = event.data.object as Stripe.Charge;
     const passthrough = data.metadata as IStripeChargePassthrough;
 
+    // Update the last used date of the card
+    const method = await PaymentMethod.findOne({ _id: passthrough.payment_method_id });
+    method.last_used_at = timestamp();
+    await method.save();
+
+    // Handle generating the invoices & such for different types of purchaseables
     switch (passthrough.purchaseable_type) {
       // Purchased Patron Subscription ---------------------------------------------------------------
       case PurchaseableEntity.PatronTier: {
@@ -110,7 +118,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
         );
 
         await this.ORM.transaction(async txc => {
-          // Create a new invoice for the user which provisions an access token for the performance
+          // Create a new invoice for the user which provisions an Access Token for the performance
           ticket.quantity_remaining -= 1;
           const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data)
             .setHost(ticket.performance.host) // should be party to hosts invoices

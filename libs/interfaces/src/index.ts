@@ -26,6 +26,7 @@ export * from './performances/ticket.interface';
 export * from './users/user.interface';
 export * from './users/person.interface';
 export * from './users/address.interface';
+export * from './users/payment-method.interface';
 export * from './users/feed.interface';
 
 export * from './3rd-party/stripe.interface';

@@ -28,7 +28,7 @@ export class FeedComponent implements OnInit {
   breakpointCellShownMap: { [index: string]: number } = {
     [Breakpoints.Small]: 1,
     [Breakpoints.Medium]: 2,
-    [Breakpoints.Large]: 3,
+    [Breakpoints.Large]: 4,
     [Breakpoints.XLarge]: 6
   };
 
@@ -112,7 +112,7 @@ export class FeedComponent implements OnInit {
       this.dialog.open(PerformanceBrochureComponent, {
         data: performance,
         width: '800px',
-        position: { top: '5%' }
+        position: { top: '2%', bottom: '2%' }
       }),
       () => {}
     );

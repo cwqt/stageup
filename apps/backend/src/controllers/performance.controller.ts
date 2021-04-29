@@ -1,7 +1,25 @@
 import {
+  AccessToken,
+  Asset,
+  BaseController,
+  body,
+  ErrorHandler,
+  getCheck,
+  Host,
+  IControllerEndpoint,
+  PaymentMethod,
+  Performance,
+  query,
+  single,
+  Ticket,
+  Validators
+} from '@core/api';
+import { enumToValues, getDonoAmount, timestamp, to } from '@core/helpers';
+import {
   AssetOwnerType,
   AssetType,
   BASE_AMOUNT_MAP,
+  DtoCreatePaymentIntent,
   DtoCreatePerformance,
   DtoPerformance,
   ErrCode,
@@ -23,28 +41,12 @@ import {
   TokenProvisioner,
   Visibility
 } from '@core/interfaces';
-import {
-  AccessToken,
-  Asset,
-  BaseController,
-  body,
-  ErrorHandler,
-  getCheck,
-  Host,
-  IControllerEndpoint,
-  Performance,
-  query,
-  Ticket,
-  Validators
-} from '@core/api';
-import { getDonoAmount, timestamp, to } from '@core/helpers';
 import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Queue from '../common/queue';
 import Env from '../env';
-import { LessThan, MoreThan } from 'typeorm';
 
 export default class PerformanceController extends BaseController<BackendProviderMap> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
@@ -253,19 +255,29 @@ export default class PerformanceController extends BaseController<BackendProvide
     return {
       authStrategy: AuthStrat.isLoggedIn,
       validators: [
-        body({
-          selected_dono_peg: v =>
-            v.optional({ nullable: true }).isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
-          allow_any_amount: v => v.optional({ nullable: true }).isInt()
+        body<DtoCreatePaymentIntent>({
+          payment_method_id: v => v.isString(),
+          purchaseable_type: v => v.isIn(enumToValues(PurchaseableEntity)),
+          purchaseable_id: v => v.isString(),
+          options: v =>
+            v.custom(
+              single<DtoCreatePaymentIntent['options']>({
+                selected_dono_peg: v =>
+                  v.optional({ nullable: true }).isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
+                allow_any_amount: v => v.optional({ nullable: true }).isInt()
+              })
+            )
         })
       ],
       controller: async req => {
-        // Can't have any amount without setting an amount
-        if (req.body.selected_dono_peg == 'allow_any' && req.body.allow_any_amount == null)
+        // TODO: have generic method for buying purchaseables
+        const body: DtoCreatePaymentIntent = req.body;
+
+        // Check that an amount was passed if allow_any donation peg selected
+        if (body.options.selected_dono_peg == 'allow_any' && body.options.allow_any_amount == null)
           throw new ErrorHandler(HTTP.BadRequest);
 
-        // Stripe uses a PaymentIntent object to represent your **intent** to collect payment from a customer,
-        // tracking charge attempts and payment state changes throughout the process.
+        // Find the ticket the User is attempting to buy
         const ticket = await getCheck(
           Ticket.findOne({
             relations: {
@@ -291,33 +303,65 @@ export default class PerformanceController extends BaseController<BackendProvide
         // Can't sell more than there are tickets
         if (ticket.quantity_remaining == 0) throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
 
+        // In the case of a Paid Ticket
         let amount = ticket.amount;
-        if (req.body.selected_dono_peg) {
+
+        // Donation Ticket, set the amount equal to whatever donation peg amount was provided
+        if (body.options.selected_dono_peg) {
           // Don't allow stupid users to throw their life savings away
-          if (req.body.selected_dono_peg == 'allow_any' && amount > BASE_AMOUNT_MAP[ticket.currency] * 200)
+          if (body.options.selected_dono_peg == 'allow_any' && amount > BASE_AMOUNT_MAP[ticket.currency] * 200)
             throw new ErrorHandler(HTTP.BadRequest, ErrCode.TOO_LONG);
 
           amount =
-            req.body.selected_dono_peg == 'allow_any'
-              ? req.body.allow_any_amount
-              : getDonoAmount(req.body.selected_dono_peg, ticket.currency);
+            body.options.selected_dono_peg == 'allow_any'
+              ? body.options.allow_any_amount
+              : getDonoAmount(body.options.selected_dono_peg, ticket.currency);
         }
 
+        // Stripe uses a PaymentIntent object to represent the **intent** to collect payment from a customer,
+        // tracking charge attempts and payment state changes throughout the process.
+        // Find (& check) the PaymentMethod that belongs to the logged-in user making the PaymentIntent
+        const platformPaymentMethod = await getCheck(
+          PaymentMethod.findOne({
+            relations: ['user'],
+            where: {
+              _id: body.payment_method_id,
+              user: {
+                _id: req.session.user._id
+              }
+            }
+          })
+        );
+
+        // Since this product exists on the Hosts Connected Account, we need to clone the customer
+        // and their PaymentMethod over to the hosts Account
+        // https://stripe.com/docs/payments/payment-methods/connect#cloning-payment-methods
+        const method = await this.providers.stripe.connection.paymentMethods.create(
+          {
+            customer: platformPaymentMethod.user.stripe_customer_id,
+            payment_method: platformPaymentMethod.stripe_method_id
+          },
+          { stripeAccount: ticket.performance.host.stripe_account_id }
+        );
+
+        // Create a charge on the card, which the user will then accept locally
         const res = await this.providers.stripe.connection.paymentIntents.create(
           {
             application_fee_amount: ticket.amount * 0.1, // IMPORTANT: have requirements on exact commission pricing
             payment_method_types: ['card'],
+            payment_method: method.id,
             amount: amount,
             currency: ticket.currency, // ISO code - https://stripe.com/docs/currencies
             metadata: to<IStripeChargePassthrough>({
               // Passed through to webhook when charge successful
-              user_id: req.session.user._id,
+              user_id: platformPaymentMethod.user._id,
               purchaseable_id: ticket._id,
-              purchaseable_type: PurchaseableEntity.Ticket
+              purchaseable_type: PurchaseableEntity.Ticket,
+              payment_method_id: platformPaymentMethod._id
             })
           },
           {
-            // Who the payment is intended to be delivered to
+            // The Account on whose behalf we are creating the PaymentIntent
             stripeAccount: ticket.performance.host.stripe_account_id
           }
         );
@@ -325,7 +369,8 @@ export default class PerformanceController extends BaseController<BackendProvide
         // Return client secret to user, who will use it to confirmPayment()
         // with the CC info if they wish to actually buy the ticket
         return {
-          client_secret: res.client_secret
+          client_secret: res.client_secret,
+          stripe_method_id: method.id
         };
       }
     };

@@ -1,27 +1,25 @@
-<button #button
+<button
+  #button
   class="ui-button"
   tabindex="0"
   [disabled]="disabled"
   [class.ui-button--transparent]="transparent"
-  [ngClass]="[
-    'ui-button--' + size,
-    'ui-button--' + kind
-  ]"
-  (click)="onClick($event); animateRipple($event)">
-    <mat-spinner *ngIf="loading" [diameter]="size == 's' ? 15 : 20"></mat-spinner>
-    <ui-icon *ngIf="icon && !loading">{{icon}}</ui-icon>
-    <ng-content></ng-content>
-    <div class="ripples">
-
-      <ng-container *ngFor="let ripple of ripples; let i = index">
-        <span
-          [@toggle]="ripple.show" 
-          (@toggle.done)="rippleEnd(i)"
-          class="ripple"
-          *ngIf="ripple.show"
-          [style]="{'top': ripple.y + 'px', 'left': ripple.x + 'px'}">
-        </span>
-      </ng-container>
-
-    </div>
+  [ngClass]="['ui-button--' + size, 'ui-button--' + kind]"
+  (click)="onClick($event); animateRipple($event)"
+>
+  <mat-spinner *ngIf="loading" [diameter]="size == 's' ? 15 : 20"></mat-spinner>
+  <ui-icon *ngIf="icon && !loading" class="ui-button__icon">{{ icon }}</ui-icon>
+  <ng-content></ng-content>
+  <div class="ripples">
+    <ng-container *ngFor="let ripple of ripples; let i = index">
+      <span
+        [@toggle]="ripple.show"
+        (@toggle.done)="rippleEnd(i)"
+        class="ripple"
+        *ngIf="ripple.show"
+        [style]="{ top: ripple.y + 'px', left: ripple.x + 'px' }"
+      >
+      </span>
+    </ng-container>
+  </div>
 </button>

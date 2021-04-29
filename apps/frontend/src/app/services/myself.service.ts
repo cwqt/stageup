@@ -2,12 +2,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  DtoAddPaymentMethod,
   DtoPerformance,
   HTTP,
   IEnvelopedData,
   IHost,
   IHostStub,
   IMyself,
+  IPaymentMethod,
+  IPaymentMethodStub,
   IPerformanceStub,
   IUserHostInfo,
   IUserInvoice
@@ -99,5 +102,29 @@ export class MyselfService {
   // router.get <IE<IUserInvoice[]>> ("/myself/invoices", Myself.readInvoices());
   readInvoices(query: IQueryParams): Promise<IEnvelopedData<IUserInvoice[]>> {
     return this.http.get<IEnvelopedData<IUserInvoice[]>>(`/api/myself/invoices${querize(query)}`).toPromise();
+  }
+
+  // router.get <IPaymentMethodStub[]>  ("/myself/payment-methods", Myself.readPaymentMethods());
+  readPaymentMethods(): Promise<IPaymentMethodStub[]> {
+    return this.http.get<IPaymentMethodStub[]>('/api/myself/payment-methods').toPromise();
+  }
+
+  addCreatedPaymentMethod(data: DtoAddPaymentMethod): Promise<IPaymentMethod> {
+    return this.http.post<IPaymentMethod>(`/api/myself/payment-methods`, data).toPromise();
+  }
+
+  // router.get <IPaymentMethod> ("/myself/payment-methods/:pmid", Myself.readPaymentMethod());
+  readPaymentMethod(paymentMethodId: IPaymentMethodStub['_id']): Promise<IPaymentMethodStub[]> {
+    return this.http.get<IPaymentMethodStub[]>(`/api/myself/payment-methods/${paymentMethodId}`).toPromise();
+  }
+
+  // router.delete <void> ("/myself/payment-methods/:pmid", Myself.deletePaymentMethod());
+  deletePaymentMethod(paymentMethodId: IPaymentMethodStub['_id']): Promise<void> {
+    return this.http.delete<void>(`/api/myself/payment-methods/${paymentMethodId}`).toPromise();
+  }
+
+  // router.put <IPaymentMethod> ("/myself/payment-methods/:pmid", Myself.updatePaymentMethod());
+  updatePaymentMethod(paymentMethodId: IPaymentMethodStub['_id'], data): Promise<IPaymentMethod> {
+    return this.http.put<IPaymentMethod>(`/api/myself/payment-methods/${paymentMethodId}`, data).toPromise();
   }
 }

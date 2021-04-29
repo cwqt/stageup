@@ -1,4 +1,6 @@
-mat-error.form { display: inline-block !important }
+mat-error.form {
+  display: inline-block !important;
+}
 
 .help {
   color: grey;
@@ -44,11 +46,6 @@ mat-error.form { display: inline-block !important }
     }
   }
 
-  ui-button img {
-    max-height: 20px;
-    margin-right: 10px;
-  }
-
   .content {
     padding: 20px;
     margin: 50px 0;
@@ -76,4 +73,20 @@ mat-error.form { display: inline-block !important }
   bottom: 0px;
   left: 0px;
   width: 100%;
+}
+
+.social-login {
+  .facebook {
+    &::ng-deep button {
+      background-color: #1778f2;
+    }
+    img {
+      filter: invert(1);
+    }
+  }
+  .apple {
+    img {
+      filter: invert(1);
+    }
+  }
 }

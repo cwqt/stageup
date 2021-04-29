@@ -1,0 +1,35 @@
+<div
+  class="flex p-2 px-4 rounded shadow ring-2 ring-inset ring-transparent select-none items-center"
+  (click)="selection?.select(method)"
+  [class.cursor-pointer]="selection"
+  [class.ring-pink-500]="selection?.isSelected(method)"
+>
+  <img class="h-10 my-auto rounded-sm" [src]="'/assets/cards/' + method.brand + '.png'" alt="" />
+
+  <div class="flex flex-col justify-around pl-4">
+    <span class="font-bold"
+      >{{ method.brand | paymentMethodBrandNamePipe }}
+      <span class="font-normal opacity-50 ml-1" *ngIf="method.is_primary">(default)</span>
+    </span>
+    <span class="opacity-50">Ending in {{ method.last4 }}</span>
+  </div>
+
+  <div *ngIf="!isEditing" class="ml-auto">
+    <ui-button
+      *ngIf="!isExpanded && selection.isSelected(method)"
+      [transparent]="true"
+      (click)="clickedExpandButton.emit(!isExpanded)"
+      >Change</ui-button
+    >
+
+    <span *ngIf="isExpanded || !selection.isSelected(method)" class="opacity-50 text-right">
+      Last used<br />
+      {{ method.last_used_at ? (method.last_used_at | amFromUnix | amDateFormat: 'l') : 'Never' }}</span
+    >
+  </div>
+
+  <div class="ml-auto flex space-x-2 my-auto" *ngIf="isEditing">
+    <ui-button (click)="openEditMenu()"><ui-icon>edit</ui-icon></ui-button>
+    <ui-button kind="danger" (click)="openDeleteConfirmation()"><ui-icon>trash-can</ui-icon></ui-button>
+  </div>
+</div>

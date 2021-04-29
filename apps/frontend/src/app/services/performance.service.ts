@@ -15,7 +15,8 @@ import {
   DonoPeg,
   ICreateAssetRes,
   AssetType,
-  NUUID
+  NUUID,
+  DtoCreatePaymentIntent
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 
@@ -83,8 +84,10 @@ export class PerformanceService {
   }
 
   // router.post <IPaymentICS> ("/tickets/:tid/payment-intent", Perfs.createPaymentIntent());
-  createPaymentIntent(ticket: ITicketStub, data?: DtoDonationPurchase): Promise<IPaymentIntentClientSecret> {
-    return this.http.post<IPaymentIntentClientSecret>(`/api/tickets/${ticket._id}/payment-intent`, data).toPromise();
+  createTicketPaymentIntent(data?: DtoCreatePaymentIntent): Promise<IPaymentIntentClientSecret> {
+    return this.http
+      .post<IPaymentIntentClientSecret>(`/api/tickets/${data.purchaseable_id}/payment-intent`, data)
+      .toPromise();
   }
 
   // router.put <void> ("/performances/:pid/tickets/qty-visibility", Perfs.bulkUpdateTicketQtyVisibility());

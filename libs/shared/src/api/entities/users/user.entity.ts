@@ -21,6 +21,7 @@ import { Person } from './person.entity';
 import { ContactInfo } from './contact-info.entity';
 import { Invoice } from '../common/invoice.entity';
 import { PatronSubscription } from './patron-subscription.entity';
+import { PaymentMethod } from './payment-method.entity';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
@@ -41,6 +42,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() email_address: string;
   @Column() stripe_customer_id: string; // cus_xxx
 
+  @OneToMany(() => PaymentMethod, method => method.user) payment_methods: PaymentMethod[];
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
   @OneToMany(() => Invoice, invoice => invoice.user) invoices: Invoice[]; // Many purchases
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy

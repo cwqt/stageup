@@ -1,4 +1,5 @@
 // Modules ----------------------------------------------------------------------------------------------------------------
+import { environment } from '../environments/environment';
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app.routes';
@@ -31,7 +32,7 @@ import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 import { DonoPegPipe } from './_pipes/dono-peg.pipe';
 import { PaymentStatusPipe } from './_pipes/payment-status.pipe';
 import { TicketTypePipe } from './_pipes/ticket-type.pipe';
-import { environment } from '../environments/environment';
+import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
@@ -80,9 +81,6 @@ import { SharePerformanceDialogComponent } from './routes/host/host-performance/
 import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { UserTypeClarificationComponent } from './routes/landing/user-type-clarification/user-type-clarification.component';
-import { PaymentSuccessComponent } from './routes/payments/payment-success/payment-success.component';
-import { PaymentCancelComponent } from './routes/payments/payment-cancel/payment-cancel.component';
-import { PaymentCheckoutComponent } from './routes/payments/payment-checkout/payment-checkout.component';
 import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
@@ -108,6 +106,11 @@ import { HostProfileFeedComponent } from './routes/host/host-profile/host-profil
 import { BecomePatronDialogComponent } from './routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component';
 
 import { InvoiceDialogComponent } from './components/dialogs/invoice-dialog/invoice-dialog.component';
+import { PaymentMethodCollectorComponent } from './components/payment-method/payment-method-collector/payment-method-collector.component';
+import { CardComponent } from './components/payment-method/payment-method-collector/card/card.component';
+import { PaymentMethodComponent } from './components/payment-method/payment-method.component';
+import { PaymentMethodThumbComponent } from './components/payment-method/payment-method-thumb/payment-method-thumb.component';
+import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -152,6 +155,7 @@ import { InvoiceDialogComponent } from './components/dialogs/invoice-dialog/invo
     ShortDomainPipe,
     PaymentStatusPipe,
     OnboardingStepPipe,
+    PaymentMethodBrandName,
     DonoPegPipe,
     HostPermissionPipe,
     CurrencyCodePipe,
@@ -169,9 +173,6 @@ import { InvoiceDialogComponent } from './components/dialogs/invoice-dialog/invo
     ChangeImageComponent,
     SharePerformanceDialogComponent,
     HostLandingComponent,
-    PaymentSuccessComponent,
-    PaymentCancelComponent,
-    PaymentCheckoutComponent,
     HostPaymentsComponent,
     DialogEntryComponent,
     UserRegisterComponent,
@@ -197,7 +198,12 @@ import { InvoiceDialogComponent } from './components/dialogs/invoice-dialog/invo
     HostProfilePatronageComponent,
     HostProfileAboutComponent,
     HostProfileFeedComponent,
-    BecomePatronDialogComponent
+    BecomePatronDialogComponent,
+    PaymentMethodCollectorComponent,
+    CardComponent,
+    PaymentMethodComponent,
+    PaymentMethodThumbComponent,
+    WalletSettingsComponent
   ],
   imports: [
     AngularMaterialModule,

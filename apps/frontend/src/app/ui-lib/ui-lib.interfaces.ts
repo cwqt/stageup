@@ -25,5 +25,5 @@ export const dimensionClassMap: { [index in ThemeDimension]: string } = {
 export interface IUiDialogOptions {
   submit: EventEmitter<any>;
   cancel: EventEmitter<any>;
-  buttons: UiDialogButton[];
+  buttons?: UiDialogButton[];
 }

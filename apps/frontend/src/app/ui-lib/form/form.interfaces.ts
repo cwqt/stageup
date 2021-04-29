@@ -252,6 +252,7 @@ export interface IUiFieldOptions {
   disabled?: boolean;
   width?: number;
   validators?: IUiFormFieldValidator[];
+  hide_footer?: boolean;
   separator?: 'above' | 'below';
 }
 

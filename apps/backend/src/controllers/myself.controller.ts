@@ -6,24 +6,31 @@ import {
   Host,
   IControllerEndpoint,
   Invoice,
-  Performance,
+  Ticket,
+  PaymentMethod,
   query,
   single,
   User,
   UserHostInfo,
-  Validators
+  Performance,
+  Validators,
+  ErrorHandler
 } from '@core/api';
 import { timestamp } from '@core/helpers';
 import {
   IEnvelopedData,
   IFeed,
   IMyself,
+  IPaymentMethod,
   IPerformanceStub,
   IUserHostInfo,
   IUserInvoice,
   IUserInvoiceStub,
   Visibility,
-  PaginationOptions
+  PaginationOptions,
+  IPaymentMethodStub,
+  HTTP,
+  ErrCode
 } from '@core/interfaces';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
@@ -56,6 +63,49 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           host: host?.toFull(),
           host_info: host ? host.members_info.find(uhi => uhi.user._id === user._id)?.toFull() : null
         };
+      }
+    };
+  }
+
+  readFeed(): IControllerEndpoint<IFeed> {
+    return {
+      authStrategy: AuthStrat.none,
+      validators: [
+        query<{ [index in keyof IFeed]: PaginationOptions }>({
+          upcoming: v => v.optional({ nullable: true }).custom(Validators.Objects.PaginationOptions(10)),
+          everything: v => v.optional({ nullable: true }).custom(Validators.Objects.PaginationOptions(10))
+        })
+      ],
+      controller: async req => {
+        const feed: IFeed = {
+          upcoming: null,
+          everything: null
+        };
+
+        // None of the req.query paging options are present, so fetch the first page of every carousel
+        const fetchAll = Object.keys(req.query).every(k => !Object.keys(feed).includes(k));
+
+        if (fetchAll || req.query['upcoming'])
+          feed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
+            .where('p.premiere_date > :currentTime', { currentTime: timestamp() })
+            .andWhere('p.visibility = :state', { state: Visibility.Public })
+            .innerJoinAndSelect('p.host', 'host')
+            .orderBy('p.premiere_date')
+            .paginate(p => p.toStub(), {
+              page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
+              per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
+            });
+
+        if (fetchAll || req.query['everything'])
+          feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
+            .andWhere('p.visibility = :state', { state: Visibility.Public })
+            .innerJoinAndSelect('p.host', 'host')
+            .paginate(p => p.toStub(), {
+              page: req.query.everything ? parseInt((req.query['everything'] as any).page) : 0,
+              per_page: req.query.everything ? parseInt((req.query['everything'] as any).per_page) : 4
+            });
+
+        return feed;
       }
     };
   }
@@ -157,45 +207,98 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     };
   }
 
-  readFeed(): IControllerEndpoint<IFeed> {
+  readPaymentMethods(): IControllerEndpoint<IPaymentMethodStub[]> {
     return {
-      authStrategy: AuthStrat.none,
-      validators: [
-        query<{ [index in keyof IFeed]: PaginationOptions }>({
-          upcoming: v => v.optional({ nullable: true }).custom(Validators.Objects.PaginationOptions(10)),
-          everything: v => v.optional({ nullable: true }).custom(Validators.Objects.PaginationOptions(10))
-        })
-      ],
+      authStrategy: AuthStrat.isLoggedIn,
       controller: async req => {
-        const feed: IFeed = {
-          upcoming: null,
-          everything: null
-        };
+        const user = await getCheck(
+          User.findOne(
+            {
+              _id: req.session.user._id
+            },
+            { relations: { payment_methods: true } }
+          )
+        );
 
-        // None of the req.query paging options are present, so fetch the first page of every carousel
-        const fetchAll = Object.keys(req.query).every(k => !Object.keys(feed).includes(k));
+        return user.payment_methods.map(pm => pm.toStub());
+      }
+    };
+  }
 
-        if (fetchAll || req.query['upcoming'])
-          feed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
-            .where('p.premiere_date > :currentTime', { currentTime: timestamp() })
-            .andWhere('p.visibility = :state', { state: Visibility.Public })
-            .innerJoinAndSelect('p.host', 'host')
-            .orderBy('p.premiere_date')
-            .paginate(p => p.toStub(), {
-              page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
-              per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
-            });
+  /**
+   * @description Frontend will created the PaymentMethod using Stripe Elements, client will then send us a request containing
+   * the new Payment Method Id - now we'll make a copy of that in the DB for faster access
+   */
+  addCreatedPaymentMethod(): IControllerEndpoint<IPaymentMethod> {
+    return {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+        // TODO: set default payment source
 
-        if (fetchAll || req.query['everything'])
-          feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
-            .andWhere('p.visibility = :state', { state: Visibility.Public })
-            .innerJoinAndSelect('p.host', 'host')
-            .paginate(p => p.toStub(), {
-              page: req.query.everything ? parseInt((req.query['everything'] as any).page) : 0,
-              per_page: req.query.everything ? parseInt((req.query['everything'] as any).per_page) : 4
-            });
+        const paymentMethodId = req.body.stripe_method_id;
+        const paymentMethod = await this.providers.stripe.connection.paymentMethods.retrieve(paymentMethodId);
 
-        return feed;
+        // Cross reference with metadata passed when creating PaymentMethod
+        if (paymentMethod.metadata.user_id !== req.session.user._id)
+          throw new ErrorHandler(HTTP.BadRequest, ErrCode.FORBIDDEN);
+
+        const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
+
+        // Attach the PaymentMethod to my Stripe Customers' Account
+        // https://stripe.com/docs/api/payment_methods/attach
+        await this.providers.stripe.connection.paymentMethods.attach(paymentMethod.id, {
+          customer: myself.stripe_customer_id
+        });
+
+        const method = new PaymentMethod(paymentMethod, myself, req.body.is_primary);
+        return (await method.save()).toFull();
+      }
+    };
+  }
+
+  readPaymentMethod(): IControllerEndpoint<IPaymentMethod> {
+    return {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const method = await getCheck(
+          PaymentMethod.findOne({
+            where: {
+              _id: req.params.pmid
+            }
+          })
+        );
+
+        return method.toFull();
+      }
+    };
+  }
+
+  deletePaymentMethod(): IControllerEndpoint<void> {
+    return {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+        // Perform intersection on card ID & User
+        const method = await getCheck(
+          PaymentMethod.findOne({
+            where: {
+              _id: req.params.pid,
+              user: {
+                _id: req.session.user._id
+              }
+            }
+          })
+        );
+
+        await this.ORM.transaction(async txc => await method.delete(this.providers.stripe.connection, txc));
+      }
+    };
+  }
+
+  updatePaymentMethod(): IControllerEndpoint<IPaymentMethod> {
+    return {
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+        return {} as any;
       }
     };
   }

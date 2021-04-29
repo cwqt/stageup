@@ -25,12 +25,11 @@
   .footer-logo {
     height: auto;
     width: 15vw;
-    filter: invert(1);
     padding-bottom: 20px;
   }
   .bottom-content {
     display: flex;
-    opacity: .5;
+    opacity: 0.5;
     margin-top: 20px;
     div {
       width: 200px;
@@ -43,8 +42,8 @@
         color: white;
         line-height: 1.5;
         text-decoration: none;
-        &:hover{
-          opacity: .8;
+        &:hover {
+          opacity: 0.8;
         }
       }
     }
@@ -65,7 +64,6 @@
     align-items: center;
     img {
       max-height: 48px;
-      filter: invert(1);
       margin-right: 20px;
     }
   }
