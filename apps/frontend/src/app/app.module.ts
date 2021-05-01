@@ -111,6 +111,7 @@ import { CardComponent } from './components/payment-method/payment-method-collec
 import { PaymentMethodComponent } from './components/payment-method/payment-method.component';
 import { PaymentMethodThumbComponent } from './components/payment-method/payment-method-thumb/payment-method-thumb.component';
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
+import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -203,7 +204,8 @@ import { WalletSettingsComponent } from './routes/settings/wallet-settings/walle
     CardComponent,
     PaymentMethodComponent,
     PaymentMethodThumbComponent,
-    WalletSettingsComponent
+    WalletSettingsComponent,
+    GenreFeedComponent
   ],
   imports: [
     AngularMaterialModule,

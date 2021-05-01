@@ -1,14 +1,11 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { MatDrawer } from '@angular/material/sidenav';
-import { IMyself } from '@core/interfaces';
-import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
-import { DrawerKey, DrawerService, IDrawerData } from 'apps/frontend/src/app/services/drawer.service';
-import { Subject } from 'rxjs';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BaseAppService } from '../../../services/app.service';
-import { Router, NavigationStart, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { filter, first } from 'rxjs/operators';
-import { HelperService } from '../../../services/helper.service';
+import { MatDrawer } from '@angular/material/sidenav';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { IMyself } from '@core/interfaces';
+import { DrawerKey, DrawerService, IDrawerData } from 'apps/frontend/src/app/services/drawer.service';
+import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
+import { Subject } from 'rxjs';
 import { UserTypeClarificationComponent } from '../../../routes/landing/user-type-clarification/user-type-clarification.component';
 
 @Component({
@@ -18,7 +15,7 @@ import { UserTypeClarificationComponent } from '../../../routes/landing/user-typ
 })
 export class AppWrapperComponent implements OnInit, AfterViewInit {
   @ViewChild('drawer') drawer: MatDrawer;
-  @ViewChild("appContainer") appContainer:ElementRef;
+  @ViewChild('appContainer') appContainer: ElementRef;
 
   myself: IMyself;
   drawerOpenSubject: Subject<boolean>;
@@ -65,9 +62,8 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
     // handle scroll to top of scrollable element on router transitions
     this.router.events.subscribe(evt => {
       if (!(evt instanceof NavigationEnd)) return;
-      this.appContainer.nativeElement.scrollTo(0,0);
+      this.appContainer.nativeElement.scrollTo(0, 0);
     });
-
   }
 
   openConfirmationDialog() {

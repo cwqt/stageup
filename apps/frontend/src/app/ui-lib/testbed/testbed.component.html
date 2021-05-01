@@ -1,10 +1,11 @@
 <div class="container">
-  <!-- <ui-table></ui-table> -->
-
+  <img src="/assets/stageup.svg" class="w-32 mb-8" alt="" />
 
   <h1 class="text-5xl">UI & Component Library</h1>
-  <h5>Contains all the stylings and components to be used throughout the site, check <a
-      href="https://tailwindcss.com/docs">TailwindCSS</a> docs for more info.</h5>
+  <h5>
+    Contains all the stylings and components to be used throughout the site, check
+    <a href="https://tailwindcss.com/docs">TailwindCSS</a> docs for more info.
+  </h5>
 
   <ui-hr></ui-hr>
 
@@ -25,13 +26,15 @@
     </div>
 
     <div class="flex-1">
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
         magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
         consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
         pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
         laborum.
       </p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
         magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
         consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
         pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
@@ -40,46 +43,42 @@
     </div>
   </div>
 
-  <br>
+  <ui-hr></ui-hr>
+
+  <h1>Table</h1>
+  <ui-table [table]="table" [cacheable]="cacheable"></ui-table>
+
+  <ui-hr></ui-hr>
+
+  <br />
   <h1>Accordion</h1>
   <mat-accordion>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>
-          This is the expansion title
-        </mat-panel-title>
-        <mat-panel-description>
-          This is a summary of the content
-        </mat-panel-description>
+        <mat-panel-title> This is the expansion title </mat-panel-title>
+        <mat-panel-description> This is a summary of the content </mat-panel-description>
       </mat-expansion-panel-header>
       This is the primary content of the panel.
     </mat-expansion-panel>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>
-          Self aware panel
-        </mat-panel-title>
-        <mat-panel-description>
-          Currently I am
-        </mat-panel-description>
+        <mat-panel-title> Self aware panel </mat-panel-title>
+        <mat-panel-description> Currently I am </mat-panel-description>
       </mat-expansion-panel-header>
       This is the primary content of the panel.
     </mat-expansion-panel>
     <mat-expansion-panel [disabled]="true">
       <mat-expansion-panel-header>
-        <mat-panel-title>
-          Self aware panel
-        </mat-panel-title>
-        <mat-panel-description>
-          Currently I am
-        </mat-panel-description>
+        <mat-panel-title> Self aware panel </mat-panel-title>
+        <mat-panel-description> Currently I am </mat-panel-description>
       </mat-expansion-panel-header>
       This is the primary content of the panel.
     </mat-expansion-panel>
   </mat-accordion>
 
+  <ui-hr></ui-hr>
 
-  <br>
+  <br />
   <h1>Buttons</h1>
 
   <div class="flex items-center space-x-4 mb-4">
@@ -111,23 +110,6 @@
 
   <ui-hr></ui-hr>
 
-  <h1>Inputs</h1>
-
-  <!-- <ui-input [(ngModel)]="textString" icon="favorite" type="text" size="s" placeholder="Small input"></ui-input>
-
-  <ui-input [(ngModel)]="textString" icon="favorite--filled" type="password" label="Name please"></ui-input>
-  <ui-input [(ngModel)]="numberString" type="number" label="Age please"></ui-input>
-
-  <ui-input [(ngModel)]="textString" type="text"></ui-input>
-  <ui-input [(ngModel)]="numberString" type="number"></ui-input>
-
-  <ui-input [(ngModel)]="textString" type="textarea" label="Text please"></ui-input>
-  <ui-input [(ngModel)]="boolString" type="checkbox" label="Text please"></ui-input> -->
-
-  {{textString}}, {{numberString}}, {{boolString}}
-
-  <br>
-  <br>
   <h1>Chips</h1>
   <ui-chip kind="red">Hello</ui-chip>
   <ui-chip kind="magenta">Hello</ui-chip>
@@ -140,33 +122,26 @@
   <ui-chip kind="cool-grey">Hello</ui-chip>
   <ui-chip kind="warm-grey">Hello</ui-chip>
 
-  <br />
-  <br />
+  <ui-hr></ui-hr>
+
   <h1>Admonition</h1>
   <ui-admonition kind="info" title="During early access, getting a server for a world is complicated">
-    Eventually it will be easy. However, there's an advanced guide for
-    self-hosting on Linux which you can find here
+    Eventually it will be easy. However, there's an advanced guide for self-hosting on Linux which you can find here
   </ui-admonition>
   <br />
   <ui-admonition kind="warning" title="During early access, getting a server for a world is complicated">
-    Eventually it will be easy. However, there's an advanced guide for
-    self-hosting on Linux which you can find here
+    Eventually it will be easy. However, there's an advanced guide for self-hosting on Linux which you can find here
   </ui-admonition>
   <br />
   <ui-admonition kind="bug" title="During early access, getting a server for a world is complicated">
-    Eventually it will be easy. However, there's an advanced guide for
-    self-hosting on Linux which you can find here
+    Eventually it will be easy. However, there's an advanced guide for self-hosting on Linux which you can find here
   </ui-admonition>
   <br />
   <ui-admonition kind="success" title="During early access, getting a server for a world is complicated">
-    Eventually it will be easy. However, there's an advanced guide for
-    self-hosting on Linux which you can find here
+    Eventually it will be easy. However, there's an advanced guide for self-hosting on Linux which you can find here
   </ui-admonition>
   <br />
   <ui-admonition kind="example" title="During early access, getting a server for a world is complicated">
-    Eventually it will be easy. However, there's an advanced guide for
-    self-hosting on Linux which you can find here
+    Eventually it will be easy. However, there's an advanced guide for self-hosting on Linux which you can find here
   </ui-admonition>
-
-
 </div>

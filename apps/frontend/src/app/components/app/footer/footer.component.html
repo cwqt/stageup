@@ -1,10 +1,16 @@
-<div class="footer" *ngIf="!small">
+<div class="footer">
   <div class="bottom">
     <img src="/assets/logo-banner-white.png" class="footer-logo" alt="" />
-    <p>Live streaming & VoD for Performance Arts</p>
+    <p>Live-streaming & VoD platform for the performing arts</p>
 
-    <div class="bottom-content">
-      <div>
+    <div class="bottom-content flex flex-col">
+      <div class="flex space-x-2 my-4">
+        <ui-icon size="l" class="cursor-pointer" *ngFor="let link of socials" (click)="openSocial(link.url)">{{
+          link.icon
+        }}</ui-icon>
+      </div>
+
+      <div class="flex flex-col">
         <a href="https://blog.stageup.uk/">Blog</a>
         <a href="">Contribute</a>
         <a href="">Terms of use</a>
@@ -12,16 +18,5 @@
         <a href="">Documentation</a>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="footer-small" *ngIf="small">
-  <div class="left">
-    <img src="/assets/elogo.jpg" />
-    <span>2020</span>
-  </div>
-
-  <div class="right">
-    <ui-icon-button size="l">logo--twitter</ui-icon-button>
   </div>
 </div>

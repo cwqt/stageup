@@ -125,6 +125,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.streamEvents?.unsubscribe();
+    this.sse.streamEventsSource.close();
     if (this.premiereCountdown) clearTimeout(this.premiereCountdown);
   }
 

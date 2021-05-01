@@ -2,7 +2,7 @@
   class="flex p-2 px-4 rounded shadow ring-2 ring-inset ring-transparent select-none items-center"
   (click)="selection?.select(method)"
   [class.cursor-pointer]="selection"
-  [class.ring-pink-500]="selection?.isSelected(method)"
+  [class.ring-red-400]="selection?.isSelected(method)"
 >
   <img class="h-10 my-auto rounded-sm" [src]="'/assets/cards/' + method.brand + '.png'" alt="" />
 

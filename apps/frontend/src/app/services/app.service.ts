@@ -6,7 +6,8 @@ import { AuthenticationService } from './authentication.service';
 export enum RouteParam {
   UserId = 'userId',
   HostId = 'hostId',
-  PerformanceId = 'performanceId'
+  PerformanceId = 'performanceId',
+  Genre = 'genreType'
 }
 
 export enum RouteChange {
@@ -91,8 +92,8 @@ export class BaseAppService {
     this.$routeAltered.next(change);
   }
 
-  getParam(param: RouteParam) {
-    return this.$params.getValue().get(param.toString());
+  getParam<T = string>(param: RouteParam): T {
+    return (this.$params.getValue().get(param) as unknown) as T;
   }
 
   getQueryParam(paramKey: string) {

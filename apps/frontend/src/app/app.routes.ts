@@ -44,6 +44,7 @@ import { HostProfilePatronageComponent } from './routes/host/host-profile/host-p
 import { HostProfileAboutComponent } from './routes/host/host-profile/host-profile-about/host-profile-about.component';
 import { HostProfileFeedComponent } from './routes/host/host-profile/host-profile-feed/host-profile-feed.component';
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
+import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -169,7 +170,6 @@ const LOGGED_IN_ROUTES: Routes = [
                   component: DialogEntryComponent,
                   data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'audience' }, width: '600px' } }
                 },
-
                 { path: `users/forgot-password`, component: ForgotPasswordComponent },
                 {
                   path: `users/reset-password`,
@@ -177,6 +177,10 @@ const LOGGED_IN_ROUTES: Routes = [
                   data: { open_dialog: ResetPasswordComponent }
                 }
               ]
+            },
+            {
+              path: `genres/:${RP.Genre}`,
+              component: GenreFeedComponent
             },
             {
               path: `search`,

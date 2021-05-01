@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IQueryParams, querize } from '@core/helpers';
 import {
   DtoCreateTicket,
   DtoPerformance,
@@ -30,16 +31,8 @@ export class PerformanceService {
     return this.http.get<DtoPerformance>(`/api/performances/${performanceId}`).toPromise();
   }
 
-  readPerfomances(
-    search_query: string,
-    page: number = 0,
-    perPage: number = 10
-  ): Promise<IEnvelopedData<IPerformanceStub[], null>> {
-    return this.http
-      .get<IEnvelopedData<IPerformanceStub[], null>>(
-        `/api/performances/?search_query=${search_query}&page=${page}&per_page=${perPage}`
-      )
-      .toPromise();
+  readPerfomances(query: IQueryParams): Promise<IEnvelopedData<IPerformanceStub[]>> {
+    return this.http.get<IEnvelopedData<IPerformanceStub[], null>>(`/api/performances${querize(query)}`).toPromise();
   }
 
   readPerformanceHostInfo(performanceId: string): Promise<IPerformanceHostInfo> {

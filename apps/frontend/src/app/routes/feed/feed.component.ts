@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { IEnvelopedData as IEnv, IFeed, IPerformanceStub } from '@core/interfaces';
+import { Genre, IEnvelopedData as IEnv, IFeed, IPerformanceStub, GenreMap } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -12,6 +12,7 @@ import { sample, timeout, timestamp } from '@core/helpers';
 import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
+import { BaseAppService } from '@frontend/services/app.service';
 
 type CarouselIdx = keyof IFeed;
 
@@ -37,13 +38,32 @@ export class FeedComponent implements OnInit {
     everything: createICacheable([], { loading_page: false })
   };
 
+  genres: {
+    [index in Genre]: {
+      label: typeof GenreMap[index];
+      gradient: string;
+      small?: boolean;
+    };
+  } = {
+    [Genre.Dance]: { label: GenreMap[Genre.Dance], gradient: 'linear-gradient(to right, #6a3093, #a044ff)' },
+    [Genre.Classical]: { label: GenreMap[Genre.Classical], gradient: 'linear-gradient(to right, #b24592, #f15f79);' },
+    [Genre.Contemporary]: {
+      label: GenreMap[Genre.Contemporary],
+      gradient: 'linear-gradient(to right, #403a3e, #be5869);',
+      small: true
+    },
+    [Genre.Family]: { label: GenreMap[Genre.Family], gradient: 'linear-gradient(to right, #76b852, #8dc26f);' },
+    [Genre.Theatre]: { label: GenreMap[Genre.Theatre], gradient: 'linear-gradient(to right, #f46b45, #eea849);' }
+  };
+
   constructor(
     private feedService: FeedService,
     public dialog: MatDialog,
     private helperService: HelperService,
     private breakpointObserver: BreakpointObserver,
     private toastService: ToastService,
-    private logger: NGXLogger
+    private logger: NGXLogger,
+    private appService: BaseAppService
   ) {}
 
   async ngOnInit() {
@@ -107,25 +127,11 @@ export class FeedComponent implements OnInit {
     }
   }
 
-  openDialog(performance: IPerformanceStub): void {
-    this.helperService.showDialog(
-      this.dialog.open(PerformanceBrochureComponent, {
-        data: performance,
-        width: '800px',
-        position: { top: '2%', bottom: '2%' }
-      }),
-      () => {}
-    );
-  }
-
   async handleCarouselEvents(
     event,
     carouselIndex: CarouselIdx // keyof this.carousel
   ) {
-    if (event.name == 'click') {
-      // open the brochure
-      if (event.cellIndex >= 0) this.openDialog(this.carouselData[carouselIndex].data.data[event.cellIndex]);
-    } else if (event.name == 'next') {
+    if (event.name == 'next') {
       // get next page in carousel
       const carousel = this.carousels.find(c => ((c.id as unknown) as string) == carouselIndex);
 
@@ -142,5 +148,9 @@ export class FeedComponent implements OnInit {
         }, 0);
       }
     }
+  }
+
+  openGenreFeed(genre: Genre) {
+    this.appService.navigateTo(`/genres/${genre}`);
   }
 }

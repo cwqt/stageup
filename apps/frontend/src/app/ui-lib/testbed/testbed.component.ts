@@ -3,7 +3,9 @@ import { resolve } from 'dns';
 import { createICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { UiField, IUiForm, UiForm } from '../form/form.interfaces';
 import { PerformanceService } from '../../services/performance.service';
-import { CurrencyCode } from '@core/interfaces';
+import { capitalize, CurrencyCode, PersonTitle } from '@core/interfaces';
+import { enumToValues } from '@core/helpers';
+import { IUiTable } from '../table/table.interfaces';
 
 @Component({
   selector: 'ui-testbed',
@@ -17,6 +19,7 @@ export class TestbedComponent implements OnInit {
 
   cacheable = createICacheable();
   form: UiForm;
+  table: IUiTable;
 
   constructor(private performanceService: PerformanceService) {}
 
@@ -47,10 +50,10 @@ export class TestbedComponent implements OnInit {
                 label: 'Select Field',
                 hint: 'This is a piece of hinted text',
                 has_search: true,
-                values: new Map([
-                  ['hello', { label: 'Hello' }],
-                  ['world', { label: 'World' }]
-                ])
+                values: enumToValues(PersonTitle).reduce((acc, curr) => {
+                  acc.set(curr, { label: capitalize(curr) });
+                  return acc;
+                }, new Map())
               }),
               nested_container_field: UiField.Container({
                 fields: {
@@ -81,10 +84,45 @@ export class TestbedComponent implements OnInit {
             hello: f.get('text_field').value,
             world: f.get('container_field.nested_container_field.time_field').value
           })
+        },
+        handlers: {
+          changes: async v => console.log(v)
         }
       },
       this.cacheable
     );
+
+    this.table = {
+      title: 'Table Example',
+      resolver: query =>
+        Promise.resolve({
+          data: [
+            { name: 'Cass', age: 21 },
+            { name: 'Drake', age: 311 },
+            { name: 'Shreya', age: 32 },
+            { name: 'Ben', age: 123 }
+          ]
+        }),
+      selection: {
+        multi: true,
+        actions: [
+          {
+            label: 'Log selected values',
+            click: v => console.log(v)
+          }
+        ]
+      },
+      actions: [],
+      pagination: { page_sizes: [5, 10, 25] },
+      columns: {
+        name: {
+          label: 'Name'
+        },
+        age: {
+          label: 'Age'
+        }
+      }
+    };
   }
 
   handleForm(data: any) {

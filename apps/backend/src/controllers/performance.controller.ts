@@ -87,19 +87,15 @@ export default class PerformanceController extends BaseController<BackendProvide
   //router.get <IE<IPerfS[], null>> ("/performances", Perfs.readPerformances());
   readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[]>> {
     return {
-      validators: [
-        query<{
-          search_query: string;
-        }>({
-          search_query: v => v.optional({ nullable: true }).isString()
-        })
-      ],
+      validators: [],
       authStrategy: AuthStrat.none,
       controller: async req => {
         return await this.ORM.createQueryBuilder(Performance, 'p')
           .innerJoinAndSelect('p.host', 'host')
-          .where('p.name LIKE :name', { name: req.query.search_query ? `%${req.query.search_query as string}%` : '%' })
           .andWhere('p.visibility = :state', { state: Visibility.Public })
+          .filter({
+            genre: { subject: 'p.genre' }
+          })
           .paginate(p => p.toStub());
       }
     };

@@ -24,17 +24,19 @@
   line-height: 1.2;
   .footer-logo {
     height: auto;
-    width: 15vw;
-    padding-bottom: 20px;
+    width: 25vw;
   }
   .bottom-content {
     display: flex;
-    opacity: 0.5;
-    margin-top: 20px;
     div {
       width: 200px;
-      display: flex;
-      flex-flow: column;
+      * {
+        transition: 0.2s;
+        opacity: 0.5;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
       &:last-child {
         width: 300px;
       }
@@ -42,29 +44,7 @@
         color: white;
         line-height: 1.5;
         text-decoration: none;
-        &:hover {
-          opacity: 0.8;
-        }
       }
-    }
-  }
-}
-
-.footer-small {
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  background-color: #262626;
-  padding: 30px 30px;
-
-  .left {
-    display: inline-flex;
-    align-items: center;
-    img {
-      max-height: 48px;
-      margin-right: 20px;
     }
   }
 }

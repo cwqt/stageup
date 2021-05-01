@@ -4,6 +4,7 @@ import {
   DonoPeg,
   DONO_PEG_WEIGHT_MAPPING,
   Environment,
+  FilterQuery,
   NUUID,
   Primitive
 } from '@core/interfaces';
@@ -86,7 +87,7 @@ export const addDay = (date: Date, amount: number): Date => {
 export interface IQueryParams {
   per_page?: number;
   page?: number;
-  filter?: { [index: string]: Primitive | Primitive[] };
+  filter?: { [index: string]: FilterQuery };
   sort?: { [index: string]: 'ASC' | 'DESC' };
   [index: string]: any;
 }

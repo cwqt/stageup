@@ -13,6 +13,31 @@ export type FilterQuery<T extends FilterCode = any, K extends Operators = any, V
   ...V
 ];
 
+export const Filters = {
+  [FilterCode.String]: (operator: StringFilterOperator, value: string): StringFilter => [
+    FilterCode.String,
+    operator,
+    value
+  ],
+  [FilterCode.Number]: (operator: NumberFilterOperator, value: number): NumberFilter => [
+    FilterCode.Number,
+    operator,
+    value
+  ],
+  [FilterCode.Enum]: (operator: EnumFilterOperator, ...args: any[]): EnumFilter => [FilterCode.Enum, operator, ...args],
+  [FilterCode.Date]: (operator: DateFilterOperator, ...args: number[]): DateFilter => [
+    FilterCode.Date,
+    operator,
+    args[0],
+    args[1]
+  ],
+  [FilterCode.Boolean]: (operator: BooleanFilterOperator, value: boolean): BooleanFilter => [
+    FilterCode.Boolean,
+    operator,
+    value
+  ]
+} as const;
+
 export type Operators =
   | StringFilterOperator
   | EnumFilterOperator

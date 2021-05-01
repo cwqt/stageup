@@ -1,0 +1,23 @@
+<div class="flex">
+  <div
+    class="h-64 w-1/5 rounded-lg flex p-4 flex-col overflow-hidden relative shadow"
+    style="background: linear-gradient(to right, #b24592, #f15f79)"
+  ></div>
+
+  <div class="flex ml-4 p-4 pt-8">
+    <h1>{{ genre | titlecase }}</h1>
+  </div>
+</div>
+
+<ui-hr></ui-hr>
+
+<mat-spinner *ngIf="performances.loading"></mat-spinner>
+
+<div class="grid grid-cols-3 gap-4" *ngIf="performances.data?.data">
+  <app-performance-thumb
+    #thumb
+    *ngFor="let performance of performances.data.data"
+    [performance]="performance"
+    (click)="thumb.openBrochure()"
+  ></app-performance-thumb>
+</div>

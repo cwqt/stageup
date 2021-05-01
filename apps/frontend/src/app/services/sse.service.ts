@@ -7,6 +7,8 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class SseService {
+  streamEventsSource: EventSource;
+
   constructor(private zone: NgZone) {}
 
   private createEventObserver<T>(source: EventSource) {
@@ -21,9 +23,8 @@ export class SseService {
   }
 
   getStreamEvents(performanceId: string) {
-    return this.createEventObserver<LiveStreamState>(
-      new EventSource(`${environment.sseUrl}/performances/${performanceId}`)
-    );
+    this.streamEventsSource = new EventSource(`${environment.sseUrl}/performances/${performanceId}`);
+    return this.createEventObserver<LiveStreamState>(this.streamEventsSource);
   }
 
   // For recieving events on myself!

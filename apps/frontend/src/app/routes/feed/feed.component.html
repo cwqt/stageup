@@ -1,3 +1,32 @@
+<!-- Genres -->
+<div class="carousel-container relative">
+  <h2>Genres</h2>
+  <ui-hr></ui-hr>
+
+  <div class="relative">
+    <carousel
+      [margin]="10"
+      [height]="256"
+      [cellsToShow]="currentCellsToShow == 1 ? 1 : currentCellsToShow + 2"
+      [loop]="false"
+    >
+      <div
+        *ngFor="let genre of genres | keyvalue; let i = index"
+        (click)="openGenreFeed(genre.key)"
+        class="carousel-cell overflow-hidden"
+      >
+        <div
+          [style]="'background:' + genre.value.gradient"
+          class="h-64 text-white w-full rounded-lg flex p-4 flex-col overflow-hidden relative cursor-pointer shadow transform hover:scale-105 duration-200 text-right hover:shadow-lg"
+        >
+          <h2 class="truncate mb-0 w-full mt-auto" [class.text-md]="genre.value.small">{{ genre.value.label }}</h2>
+        </div>
+      </div>
+    </carousel>
+  </div>
+</div>
+
+<!-- All other carousels -->
 <div *ngFor="let carousel of carouselData | keyvalue" class="carousel-container relative">
   <h2>{{ carousel.key | titlecase }}</h2>
 
@@ -22,7 +51,8 @@
       [loop]="false"
     >
       <div class="carousel-cell overflow-hidden" *ngFor="let performance of carousel.value.data.data; let i = index">
-        <app-performance-thumb [performance]="performance"> </app-performance-thumb>
+        <app-performance-thumb #thumb [performance]="performance" (click)="thumb.openBrochure()">
+        </app-performance-thumb>
       </div>
     </carousel>
   </div>
