@@ -1,7 +1,8 @@
 import Env from '../../env';
 import SendEmailWorker from './workers/send-email.worker';
 import ScheduleReleaseWorker from './workers/schedule-release.worker';
-import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker'
+import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker';
+import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker'
 
 import { log } from '../logger';
 import { RunnerProviderMap } from '../..';
@@ -22,7 +23,8 @@ const create = (pm: RunnerProviderMap): QueueMap => {
   const workers: { [index in JobType]: WorkerFunction } = {
     [JobType.SendEmail]: SendEmailWorker,
     [JobType.ScheduleRelease]: ScheduleReleaseWorker,
-    [JobType.HostInvoiceCSV]: HostInvoiceCSVWorker
+    [JobType.HostInvoiceCSV]: HostInvoiceCSVWorker,
+    [JobType.HostInvoicePDF]: HostInvoicePDFWorker
   };
 
   return Object.values(JobType).reduce((acc, type) => {

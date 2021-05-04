@@ -78,6 +78,23 @@ export class HostInvoicesComponent implements OnInit {
                 this.toastService.emit('An error occured while export to CSV', ThemeKind.Danger, { duration: 5000 });
               }
             }
+          },
+          {
+            label: 'Export as PDF',
+            click: async v => {
+              try {
+                await this.hostService.exportInvoicesToPDF(this.hostService.hostId, {
+                  invoices: v.selected.map(i => i.invoice_id)
+                });
+                this.toastService.emit(
+                  'Exported PDFs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon',
+                  ThemeKind.Primary,
+                  { duration: 1e9 }
+                );
+              } catch (error) {
+                this.toastService.emit('An error occured while export to PDF', ThemeKind.Danger, { duration: 5000 });
+              }
+            }
           }
         ]
       },

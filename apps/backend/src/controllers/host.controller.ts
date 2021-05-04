@@ -809,4 +809,27 @@ export default class HostController extends BaseController<BackendProviderMap> {
       }
     };
   }
+
+  //router.post <void>  ("/hosts/:hid/invoices/export-pdf", Hosts.exportInvoicesToPDF());
+  exportInvoicesToPDF(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        body({
+          invoices: v => v.custom(array({ '*': v => v.isString() }))
+        })
+      ],
+      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const h = await getCheck(Host.findOne({ _id: req.params.hid }));
+
+        await Queue.enqueue({
+          type: JobType.HostInvoicePDF,
+          data: {
+            invoices: req.body.invoices,
+            email_address: h.email_address
+          }
+        });
+      }
+    };
+  }
 }

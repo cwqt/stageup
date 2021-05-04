@@ -14,6 +14,7 @@ import {
   IHostStripeInfo,
   IHostInvoice,
   IHostInvoiceCSVJobData,
+  IHostInvoicePDFJobData,
   IHostPrivate,
   DtoCreatePatronTier,
   IPatronTier,
@@ -203,6 +204,11 @@ export class HostService {
   // router.post <void> ("/hosts/:hid/invoices/export-csv", Hosts.exportInvoicesToCSV());
   exportInvoicesToCSV(hostId: string, invoices: Pick<IHostInvoiceCSVJobData, 'invoices'>): Promise<void> {
     return this.http.post<void>(`/api/hosts/${hostId}/invoices/export-csv`, invoices).toPromise();
+  }
+
+  //router.post <void> ("/hosts/:hid/invoices/export-pdf", Hosts.exportInvoicesToPDF());
+  exportInvoicesToPDF(hostId: string, invoices: Pick<IHostInvoicePDFJobData, 'invoices'>): Promise<void> {
+    return this.http.post<void>(`/api/hosts/${hostId}/invoices/export-pdf`, invoices).toPromise();
   }
 
   // router.post <IPatronTier> ("/hosts/:hid/patron-tiers", Hosts.createPatronTier());

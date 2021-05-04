@@ -7,7 +7,8 @@ import { SendMailOptions } from 'nodemailer';
 export enum JobType {
   SendEmail = 'send_email',
   ScheduleRelease = 'schedule_release',
-  HostInvoiceCSV = 'host_invoice_csv'
+  HostInvoiceCSV = 'host_invoice_csv',
+  HostInvoicePDF = 'host_invoice_pdf'
 }
 
 export type JobUnion =
@@ -22,9 +23,13 @@ export type JobUnion =
   | {
       type: JobType.HostInvoiceCSV;
       data: IHostInvoiceCSVJobData;
+    }
+  | {
+      type: JobType.HostInvoicePDF;
+      data: IHostInvoicePDFJobData;
     };
-
 export type IJob = JobUnion & { options?: JobsOptions };
 
 export type IScheduleReleaseJobData = Required<Pick<IPerformance, '_id'>>;
 export type IHostInvoiceCSVJobData = { email_address: IHostPrivate['email_address']; invoices: Array<IInvoice['_id']> };
+export type IHostInvoicePDFJobData = { email_address: IHostPrivate['email_address']; invoices: Array<IInvoice['_id']> };
