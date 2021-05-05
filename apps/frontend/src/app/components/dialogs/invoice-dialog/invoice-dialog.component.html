@@ -1,6 +1,8 @@
 <ui-dialog [loading]="invoice.loading" class="relative">
   <div class="relative">
-    <h2>Invoice <span class="opacity-50">#{{ invoice.data?.invoice_id }}</span></h2>
+    <h2>
+      Invoice <span class="opacity-50">#{{ invoice.data?.invoice_id }}</span>
+    </h2>
     <ui-hr></ui-hr>
 
     <div class="flex items-center absolute top-0 right-0">
@@ -16,17 +18,14 @@
 
     <ul>
       <li><b>Order ID</b>{{ invoice.data?.invoice_id }}</li>
-      <li><b>Order Date</b>{{ invoice.data?.invoice_date | amFromUnix | amDateFormat:
-        "LLLL"
-        }}</li>
+      <li><b>Order Date</b>{{ invoice.data?.invoice_date | amFromUnix | amDateFormat: 'LLLL' }}</li>
       <li><b>Address Line 1</b></li>
       <li><b>Address Line 2</b></li>
       <li><b>Registered Charity No.</b></li>
       <li><b>Payment Source</b>{{ invoice.data?.card_type | uppercase }}</li>
-      <li><b>Card Details</b>
-        <span *ngIf="invoice.data?.last_4_digits">
-          **** **** **** {{ invoice.data?.last_4_digits }}
-        </span>
+      <li>
+        <b>Card Details</b>
+        <span *ngIf="invoice.data?.last_4_digits"> **** **** **** {{ invoice.data?.last_4_digits }} </span>
       </li>
     </ul>
   </div>
@@ -47,11 +46,18 @@
         <li><b>Type</b> Performance Ticket</li>
         <li><b>Name</b> {{ invoice.data?.performance?.name }}</li>
         <li><b>Amount</b>{{ invoice.data?.amount | currencyPipe: invoice.data?.ticket?.currency }}</li>
-        <li *ngIf="isHostInvoice"><b>Net Amount</b>{{ hostInvoice?.net_amount | currencyPipe:
-          invoice.data?.ticket?.currency }}</li>
+        <li *ngIf="isHostInvoice">
+          <b>Net Amount</b>{{ hostInvoice?.net_amount | currencyPipe: invoice.data?.ticket?.currency }}
+        </li>
       </ul>
     </div>
 
+  <div class="relative">
+    <ng-container *ngIf="!isHostInvoice">
+      <ng-container *ngIf="invoice.data.status !== refundRequested">
+        <ui-button class="absolute bottom-0 right-0" kind="primary" size="m" (click)="requestRefund()">Request Refund</ui-button> 
+      </ng-container>
+    </ng-container>
   </div>
-
+  </div>
 </ui-dialog>

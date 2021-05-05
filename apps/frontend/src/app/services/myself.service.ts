@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   DtoAddPaymentMethod,
-  DtoPerformance,
   HTTP,
   IEnvelopedData,
   IHost,
@@ -12,6 +11,7 @@ import {
   IPaymentMethod,
   IPaymentMethodStub,
   IPerformanceStub,
+  IRefundRequest,
   IUserHostInfo,
   IUserInvoice
 } from '@core/interfaces';
@@ -99,11 +99,20 @@ export class MyselfService {
       .toPromise();
   }
 
+  //router.get<IUserInvoice>("/myself/invoices/:iid",Myself.readInvoice());
+  readInvoice(invoiceId: string) {
+    return this.http.get<IUserInvoice>(`/api/myself/invoices/${invoiceId}`).toPromise();
+  }
+
   // router.get <IE<IUserInvoice[]>> ("/myself/invoices", Myself.readInvoices());
   readInvoices(query: IQueryParams): Promise<IEnvelopedData<IUserInvoice[]>> {
     return this.http.get<IEnvelopedData<IUserInvoice[]>>(`/api/myself/invoices${querize(query)}`).toPromise();
   }
 
+  //router.post<void>("/myself/invoices/request-refund",Myself.requestInvoiceRefund());
+  requestInvoiceRefund(refundReq: IRefundRequest): Promise<void> {
+    return this.http.post<void>(`/api/myself/invoices/request-refund`, refundReq).toPromise();
+  }
   // router.get <IPaymentMethodStub[]>  ("/myself/payment-methods", Myself.readPaymentMethods());
   readPaymentMethods(): Promise<IPaymentMethodStub[]> {
     return this.http.get<IPaymentMethodStub[]>('/api/myself/payment-methods').toPromise();

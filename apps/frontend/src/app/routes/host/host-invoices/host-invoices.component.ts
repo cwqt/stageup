@@ -12,6 +12,7 @@ import { TableComponent } from '../../../ui-lib/table/table.component';
 import { IUiTable } from '../../../ui-lib/table/table.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PaymentStatusPipe } from '../../../_pipes/payment-status.pipe';
+import { HelperService } from '@frontend/services/helper.service';
 
 export const PaymentStatusUiChipColorSelector = (status: PaymentStatus): ChipComponent['kind'] => {
   switch (status) {
@@ -40,7 +41,12 @@ export class HostInvoicesComponent implements OnInit {
   tableData: IUiTable<IHostInvoiceStub>;
   invoices: ICacheable<IEnvelopedData<IHostInvoiceStub[]>> = createICacheable([]);
 
-  constructor(private hostService: HostService, private toastService: ToastService, public dialog: MatDialog) {}
+  constructor(
+    private hostService: HostService, 
+    private toastService: ToastService, 
+    public dialog: MatDialog,
+    private helperService: HelperService
+    ) {}
 
   ngOnInit(): void {
     this.tableData = {
@@ -104,11 +110,11 @@ export class HostInvoicesComponent implements OnInit {
         invoice_id: {
           label: 'Invoice ID',
           click_handler: invoice => {
-            this.dialog.open(InvoiceDialogComponent, {
+            this.helperService.showDialog(this.dialog.open(InvoiceDialogComponent, {
               data: { invoice, is_host_invoice: true },
               width: '800px',
               minHeight: '500px'
-            });
+            }))
           }
         },
         performance: {

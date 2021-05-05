@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { HostOnboardingStep, TicketType } from '@core/interfaces';
+import { TicketType } from '@core/interfaces';
 
 @Pipe({ name: 'ticketTypePipe' })
 export class TicketTypePipe implements PipeTransform {

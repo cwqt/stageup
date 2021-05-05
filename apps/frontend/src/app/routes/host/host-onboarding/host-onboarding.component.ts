@@ -18,6 +18,7 @@ import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { flatten } from 'flat';
+import { TicketTypePipe } from '@frontend/_pipes/ticket-type.pipe';
 
 interface IUiStep<T> {
   label: string;

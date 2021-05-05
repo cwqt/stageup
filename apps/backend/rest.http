@@ -179,7 +179,7 @@ Content-Type: {{contentType}}
 {
     "name":"New performance name",
     "description":"New performance description",
-    "genre": "5",
+    "genre": "dance",
     "premiere_date": 1613474834
 }
 ###

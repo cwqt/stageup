@@ -13,6 +13,21 @@ export type PurchaseableData = {
   [PurchaseableEntity.Ticket]: ITicketStub;
 };
 
+export enum RefundReason  {
+  Covid = 'covid19',
+  CancelledPostponed = 'cancelled_postponed',
+  Duplicate = 'duplicate',
+  CannotAttend = 'cannot_attend',
+  Dissatisfied = 'dissatisfied',
+  WrongTicket = 'wrong_ticket',
+  Other = 'other_specify'
+}
+export interface IRefundRequest {
+  invoice_id: IInvoice["_id"];
+  reason: RefundReason;
+  reason_detail: string;
+}
+
 // A record of purchase by the user
 export interface IInvoice {
   _id: NUUID;

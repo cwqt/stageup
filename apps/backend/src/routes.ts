@@ -59,8 +59,10 @@ router.get      <IMyself>               ("/myself",                             
 router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
 router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
 router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
-router.get      <IE<IUserInvoiceStub[]>>("/myself/invoices",                          Myself.readInvoices());
 router.get      <IUserInvoice>          ("/myself/invoices/:iid",                     Myself.readInvoice());
+router.get      <IE<IUserInvoiceStub[]>>("/myself/invoices",                          Myself.readInvoices());
+router.post     <void>                  ("/myself/invoices/request-refund",           Myself.requestInvoiceRefund());
+router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
 router.get      <IPaymentMethodStub[]>  ("/myself/payment-methods",                   Myself.readPaymentMethods());
 router.post     <IPaymentMethod>        ("/myself/payment-methods",                   Myself.addCreatedPaymentMethod());
 router.get      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.readPaymentMethod());

@@ -32,6 +32,7 @@ import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 import { DonoPegPipe } from './_pipes/dono-peg.pipe';
 import { PaymentStatusPipe } from './_pipes/payment-status.pipe';
 import { TicketTypePipe } from './_pipes/ticket-type.pipe';
+import { RefundReasonPipe } from './_pipes/refund-reason.pipe';
 import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
@@ -104,8 +105,8 @@ import { HostProfilePatronageComponent } from './routes/host/host-profile/host-p
 import { HostProfileAboutComponent } from './routes/host/host-profile/host-profile-about/host-profile-about.component';
 import { HostProfileFeedComponent } from './routes/host/host-profile/host-profile-feed/host-profile-feed.component';
 import { BecomePatronDialogComponent } from './routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component';
-
 import { InvoiceDialogComponent } from './components/dialogs/invoice-dialog/invoice-dialog.component';
+import { RefundDialogComponent } from './components/dialogs/refund-dialog/refund-dialog.component';
 import { PaymentMethodCollectorComponent } from './components/payment-method/payment-method-collector/payment-method-collector.component';
 import { CardComponent } from './components/payment-method/payment-method-collector/card/card.component';
 import { PaymentMethodComponent } from './components/payment-method/payment-method.component';
@@ -161,6 +162,7 @@ import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.componen
     HostPermissionPipe,
     CurrencyCodePipe,
     TicketTypePipe,
+    RefundReasonPipe,
     OnboardingViewIssueMakerComponent,
     PerformanceBrochureComponent,
     UserThumbComponent,
@@ -200,6 +202,7 @@ import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.componen
     HostProfileAboutComponent,
     HostProfileFeedComponent,
     BecomePatronDialogComponent,
+    RefundDialogComponent,
     PaymentMethodCollectorComponent,
     CardComponent,
     PaymentMethodComponent,

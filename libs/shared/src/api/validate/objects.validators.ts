@@ -14,7 +14,9 @@ import {
   PersonTitle,
   TicketFees,
   TicketType,
-  PaginationOptions
+  PaginationOptions,
+  IRefundRequest,
+  RefundReason
 } from '@core/interfaces';
 import { enumToValues, to } from '@core/helpers';
 import { ValidationChain } from 'express-validator';
@@ -129,4 +131,12 @@ export namespace ObjectValidators {
       }
     }
   }
+
+  export const refundInvoiceRequest = (): ObjectValidator<IRefundRequest> => {
+    return {
+      invoice_id: v => v.isString(),
+      reason: v => v.isIn(enumToValues(RefundReason)),
+      reason_detail: v => v.isString()
+    };
+  };
 }

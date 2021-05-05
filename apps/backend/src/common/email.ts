@@ -3,10 +3,11 @@ import { SendMailOptions } from 'nodemailer';
 import dbless from 'dbless-email-verification';
 import { Environment, IUser, JobType } from '@core/interfaces';
 import { prettifyMoney, dateOrdinal } from '@core/helpers';
-import { Host, User, HostInvitation, Performance, Ticket, PasswordReset, PatronTier } from '@core/api';
+import { Host, User, HostInvitation, Performance, Ticket, PasswordReset, PatronTier, Invoice } from '@core/api';
 
 import Env from '../env';
 import Queue from './queue';
+import moment from 'moment';
 
 const generateEmailHash = (email: string): string => {
   return dbless.generateVerificationHash(email, Env.PRIVATE_KEY, 60);
@@ -179,3 +180,25 @@ export const sendEmailToConfirmPasswordReset = async (user: User) => {
       </p>`
   });
 };
+
+export const sendInvoiceRefundRequestConfirmation = async (invoice: Invoice) => {
+  return sendEmail({
+    from: Env.EMAIL_ADDRESS,
+    to: invoice.user.email_address,
+    subject: `StageUp: Your refund request has been sent to ${invoice.host.name}`,
+    html: `
+    <h3>Hi ${invoice.user.name},</h3>
+    <p>Your refund request for the following invoice has been sent to <strong>${invoice.host.name}</strong>.
+    
+    <ul style="list-style-type:none">
+      <li><strong>Invoice#: </strong>${ invoice._id}</li>
+      <li><strong>Performance: </strong>${ invoice.ticket.performance.name}</li>
+      <li><strong>Purchased on: </strong>${ moment.unix(invoice.purchased_at).format("LLLL") }</li>
+      <li><strong>Amount: </strong>${ prettifyMoney(invoice.amount, invoice.currency) }</li>
+    </ul>
+    <p>We'll let you know when the host has processed your request</p>
+    <p>Kind regards,</p>
+    <p>StageUp Team</p>`
+  });
+};
+

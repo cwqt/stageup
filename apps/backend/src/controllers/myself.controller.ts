@@ -1,3 +1,4 @@
+import Env from '@backend/env';
 import {
   AccessToken,
   BaseController,
@@ -16,7 +17,7 @@ import {
   Validators,
   ErrorHandler
 } from '@core/api';
-import { timestamp } from '@core/helpers';
+import { prettifyMoney, timestamp } from '@core/helpers';
 import {
   IEnvelopedData,
   IFeed,
@@ -28,12 +29,16 @@ import {
   IUserInvoiceStub,
   Visibility,
   PaginationOptions,
+  PaymentStatus,
+  IRefundRequest,
   IPaymentMethodStub,
   HTTP,
-  ErrCode
+  ErrCode,
+  IInvoice
 } from '@core/interfaces';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
+import moment from "moment";
 
 import Email = require('../common/email');
 
@@ -201,8 +206,46 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           .withDeleted()
           .getOne();
 
-        const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id);
+        const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id, { stripeAccount: invoice.ticket.performance.host.stripe_account_id});
         return invoice.toHostInvoice(charge);
+      }
+    };
+  }
+
+  requestInvoiceRefund(): IControllerEndpoint<void> {
+    return {
+      validators: [
+        body<IRefundRequest>(
+          Validators.Objects.refundInvoiceRequest()
+        )
+      ],
+      authStrategy: AuthStrat.isLoggedIn,
+      controller: async req => {
+
+        const refundReq: IRefundRequest = req.body;
+        
+        const invoice = await getCheck(Invoice.findOne({
+          relations: {
+            ticket: {
+              performance: true
+            },
+            user: true, 
+            host: true 
+          },
+          where: {
+            _id: req.body.invoice_id,
+            user: {
+              _id: req.session.user._id
+            }
+          },
+        }));
+        
+        invoice.status = PaymentStatus.RefundPending;
+        invoice.refund_request = refundReq;
+        
+        await invoice.save();
+
+        Email.sendInvoiceRefundRequestConfirmation(invoice);
       }
     };
   }
