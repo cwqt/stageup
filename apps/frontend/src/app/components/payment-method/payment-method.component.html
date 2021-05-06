@@ -17,7 +17,7 @@
       </ng-container>
 
       <div
-        *ngIf="isEditing || selectionListExpanded"
+        *ngIf="isEditing || selectionListExpanded || paymentMethods.data.length == 0"
         class="flex mx-1 items-center rounded shadow ring-2 ring-inset ring-transparent cursor-pointer h-16 mb-4 hover:shadow-md"
         (click)="openCreateNewCardMenu()"
       >

@@ -20,7 +20,6 @@ import { timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
 import { Ticket } from '../performances/ticket.entity';
 import { PatronSubscription } from '../users/patron-subscription.entity';
-import { Except } from 'type-fest';
 
 @Entity()
 export class Invoice extends BaseEntity implements IInvoice {
@@ -34,7 +33,7 @@ export class Invoice extends BaseEntity implements IInvoice {
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
   @Column('enum', { enum: PaymentStatus, nullable: true }) status: PaymentStatus;
   @Column('enum', { enum: PurchaseableEntity, nullable: true }) type: PurchaseableEntity;
-  @Column('json', { nullable: true }) refund_request: Except<IRefundRequest, "invoice_id">;
+  @Column('json', { nullable: true }) refund_request: Omit<IRefundRequest, 'invoice_id'>;
 
   @Column() stripe_charge_id: string;
   @Column() stripe_receipt_url: string;

@@ -1,4 +1,6 @@
-<h3 class="mb-0 flex items-center">Companies <mat-spinner class="ml-2" [diameter]="25" *ngIf="hosts.loading"></mat-spinner></h3>
+<h3 class="mb-0 flex items-center">
+  Companies <mat-spinner class="ml-2" [diameter]="25" *ngIf="hosts.loading"></mat-spinner>
+</h3>
 <ui-hr></ui-hr>
 
 <div *ngIf="hosts.data" class="mb-4 flex items-stretch">
@@ -14,31 +16,39 @@
   [length]="hostPaginator.length"
   [pageSizeOptions]="[10, 50, 100]"
   [showFirstLastButtons]="true"
-  (page)="search(hostPaginator.pageIndex, hostPaginator.pageSize, 'hosts')">
+  (page)="search(hostPaginator.pageIndex, hostPaginator.pageSize, 'hosts')"
+>
 </mat-paginator>
 
-<br>
+<br />
 
-<h3 class="mb-0 flex items-center">Performances <mat-spinner class="ml-2" [diameter]="25" *ngIf="performances.loading"></mat-spinner></h3>
+<h3 class="mb-0 flex items-center">
+  Performances <mat-spinner class="ml-2" [diameter]="25" *ngIf="performances.loading"></mat-spinner>
+</h3>
 <ui-hr></ui-hr>
 
 <div *ngIf="performances.data" class="mb-4 grid grid-cols-2 gap-4 cursor-pointer">
-  <div class="flex bg-white shadow-lg rounded-lg overflow-hidden" *ngFor="let results of performances.data.data" (click)="openDialogPerf(results)">
-    <div class="w-1/3 bg-cover" style="background-image: url('/assets/performance-placeholder.jpeg')">
-    </div>
-    <div class="w-2/3 p-4">
+  <div
+    class="flex bg-white shadow-lg rounded-lg overflow-hidden h-36"
+    *ngFor="let results of performances.data.data"
+    (click)="openDialogPerf(results)"
+  >
+    <img [src]="results.thumbnail || '/assets/performance-placeholder.jpeg'" class="w-1/3 object-cover" alt="" />
+    <!-- <div
+      class="w-1/3 bg-cover"
+      [style]="'background-image: url(\'' + () + '\')'"
+    ></div> -->
+    <div class="w-2/3 p-4 flex flex-col">
       <h1 class="text-gray-900 font-bold text-2xl">{{ results?.name }}</h1>
-      <p class="mt-2 text-gray-600 text-sm">{{ results?.description }}</p>
-      <div class="flex item-center mt-2">
+      <p class="mt-2 text-gray-600 text-sm mb-0">{{ results?.description }}</p>
+      <!-- <div class="flex item-center mt-2">
         <ui-icon>star--filled</ui-icon>
         <ui-icon>star--filled</ui-icon>
         <ui-icon>star--filled</ui-icon>
         <ui-icon>star--filled</ui-icon>
         <ui-icon>star</ui-icon>
-      </div>
-      <div class="flex item-center justify-items-end mt-3">
-        <ui-button kind="primary" class="ml-auto">View</ui-button>
-      </div>
+      </div> -->
+      <ui-button kind="primary" class="ml-auto mt-auto mb-2">View</ui-button>
     </div>
   </div>
 </div>
@@ -48,5 +58,6 @@
   [length]="perfPaginator.length"
   [pageSizeOptions]="[10, 50, 100]"
   [showFirstLastButtons]="true"
-  (page)="search(perfPaginator.pageIndex, perfPaginator.pageSize, 'performances')">
+  (page)="search(perfPaginator.pageIndex, perfPaginator.pageSize, 'performances')"
+>
 </mat-paginator>

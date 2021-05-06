@@ -37,7 +37,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
 
   @Column() created_at: number;
   @Column() name: string;
-  @Column() description?: string;
+  @Column({ nullable: true }) description?: string;
   @Column() views: number;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;

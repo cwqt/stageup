@@ -17,8 +17,8 @@ export class PlayerComponent implements OnInit {
   @Output() onPlayerWaiting: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
   @Output() onPlayerEnded: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
 
-  asset?:IAssetStub;
-  token?:string;
+  asset?: IAssetStub;
+  token?: string;
 
   player: Plyr;
   poster: string;
@@ -27,7 +27,7 @@ export class PlayerComponent implements OnInit {
   options: Plyr.Options = {
     disableContextMenu: true,
     ratio: '16:9',
-    captions: { active: true, update: true, language: 'en' },
+    captions: { active: true, update: true, language: 'en' }
   };
 
   constructor() {}
@@ -36,31 +36,32 @@ export class PlayerComponent implements OnInit {
     this.hlsjsDriver = new HlsjsPlyrDriver(false);
   }
 
-  load(asset?:IAssetStub, token?:JwtAccessToken) {
+  load(asset?: IAssetStub, token?: JwtAccessToken) {
     this.asset = asset;
     this.token = token;
 
     this.setPoster();
-    this.streamSources = [{
-      provider: 'html5',
-      type: 'video',
-      // Useful sample stream for debugging purposes
-      // src: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
-      src: this.token
-        ? `${this.asset.location}?token=${this.token}`
-        : this.asset.location,
-    }];
+    this.streamSources = [
+      {
+        provider: 'html5',
+        type: 'video',
+        // Useful sample stream for debugging purposes
+        // src: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+        src: this.token ? `${this.asset.location}?token=${this.token}` : this.asset.location
+      }
+    ];
 
     this.hlsjsDriver.load(this.streamSources[0].src);
     return this.player;
   }
 
   setPoster() {
-    const playbackId = this.asset.location.split(".m3u8").shift().split("/").pop();
+    const playbackId = this.asset.location.split('.m3u8').shift().split('/').pop();
     this.poster = `https://image.mux.com/${playbackId}/thumbnail.jpg`;
   }
 
   _onPlay() {
+    console.log(this.streamSources);
   }
 
   _onPlayerInit(event: Plyr) {

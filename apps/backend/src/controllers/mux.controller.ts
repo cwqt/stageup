@@ -85,14 +85,14 @@ export default class MUXController extends BaseController<BackendProviderMap> {
     await asset.remove();
   }
 
-  async videoAssetDeleted(data: IMUXHookResponse<MuxAsset>) {}
+  async videoAssetDeleted(passthrough: IMuxPassthrough, data: IMUXHookResponse<MuxAsset>) {}
 
-  async setPerformanceState(objectId: string, state: LiveStreamState) {
+  async setPerformanceState(passthrough: IMuxPassthrough, state: LiveStreamState) {
     const performance = await getCheck(
       Performance.findOne({
         where: {
           stream: {
-            asset_identifier: objectId
+            _id: passthrough.asset_id
           }
         },
         select: {
@@ -105,7 +105,6 @@ export default class MUXController extends BaseController<BackendProviderMap> {
       })
     );
 
-    log.debug(`MUX --> found ${performance._id} ${objectId} ${state}`);
     await this.providers.pubsub.publish(TopicType.StreamStateChanged, {
       performance_id: performance._id,
       state: state
@@ -118,23 +117,23 @@ export default class MUXController extends BaseController<BackendProviderMap> {
     // the transaction hasn't completed, so put a timeout of 500ms
     // we'll need to revisit this at some point...
     await timeout(500);
-    await this.setPerformanceState(data.object.id, LiveStreamState.Idle);
+    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Idle);
   }
 
   async streamIdle(data: IMUXHookResponse<LiveStream>) {
-    await this.setPerformanceState(data.object.id, LiveStreamState.Idle);
+    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Idle);
   }
 
   async streamActive(data: IMUXHookResponse<LiveStream>) {
-    await this.setPerformanceState(data.object.id, LiveStreamState.Active);
+    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Active);
   }
 
   async streamDisconnected(data: IMUXHookResponse<LiveStream>) {
-    await this.setPerformanceState(data.object.id, LiveStreamState.Disconnected);
+    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Disconnected);
   }
 
   async streamCompleted(data: IMUXHookResponse<LiveStream>) {
-    await this.setPerformanceState(data.object.id, LiveStreamState.Completed);
+    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Completed);
   }
 
   handleHook(): IControllerEndpoint<void> {
