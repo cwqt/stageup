@@ -246,6 +246,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
         await invoice.save();
 
         Email.sendInvoiceRefundRequestConfirmation(invoice);
+        Email.sendInvoiceRefundRequestToHost(invoice);
       }
     };
   }

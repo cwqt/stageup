@@ -202,3 +202,26 @@ export const sendInvoiceRefundRequestConfirmation = async (invoice: Invoice) => 
   });
 };
 
+export const sendInvoiceRefundRequestToHost = async (invoice: Invoice) => {
+  return sendEmail({
+    from: Env.EMAIL_ADDRESS,
+    to: invoice.host.email_address,
+    subject: `StageUp: Refund request received for ${invoice.ticket.performance.name} from ${invoice.user.name}`,
+    html: `
+    <h3>Hi ${invoice.host.name},</h3>
+    <p><strong>${invoice.user.name} (${invoice.user.email_address})</strong> has requested a refund on their purchase of <strong>${invoice.ticket.performance.name}</strong>.</p>
+    
+    <h3 style="text-decoration: underline">Refund Details:</h3>
+
+    <ul style="list-style-type:none">
+      <li><strong>Invoice#: </strong>${ invoice._id}</li>
+      <li><strong>Performance: </strong>${ invoice.ticket.performance.name}</li>
+      <li><strong>Purchased on: </strong>${ moment.unix(invoice.purchased_at).format("LLLL") }</li>
+      <li><strong>Amount: </strong>${ prettifyMoney(invoice.amount, invoice.currency) }</li>
+    </ul>
+    <p>To process this request you can visit your <a href="http://localhost:4200/dashboard/payments/invoices">invoice dashboard here</a></p>
+    <p>Kind regards,</p>
+    <p>StageUp Team</p>`
+  });
+};
+
