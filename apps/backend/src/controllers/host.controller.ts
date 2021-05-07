@@ -770,6 +770,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           .leftJoinAndSelect('invoice.ticket', 'ticket')
           .leftJoinAndSelect('ticket.performance', 'performance')
           .filter({
+            invoice_id: { subject: 'invoice._id' },
             performance_name: { subject: 'performance.name' },
             ticket_type: { subject: 'ticket.type' },
             purchased_at: { subject: 'invoice.purchased_at' },

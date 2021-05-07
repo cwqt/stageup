@@ -115,6 +115,10 @@ export class HostInvoicesComponent implements OnInit {
               width: '800px',
               minHeight: '500px'
             }))
+          },
+          filter: {
+            type: FilterCode.String,
+            field: 'invoice_id'
           }
         },
         performance: {
