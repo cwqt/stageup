@@ -113,7 +113,7 @@
             ],
             "scripts": [],
             "i18nMissingTranslation": "warning",
-            "localize": ["en"]
+            "localize": ["nb"]
           },
           "configurations": {
             "en": { "localize": ["en"] },

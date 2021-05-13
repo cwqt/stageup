@@ -58,6 +58,7 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
       const providers = await DataClient.connect(config.providers, config.logger);
       const i18n = config.i18n && (await new i18nProvider(config.i18n).setup(config.logger));
 
+      // Dependency Injection
       Container.set('i18n', i18n);
 
       const router = new AsyncRouter(providers, config.authorisation, config.logger, i18n);

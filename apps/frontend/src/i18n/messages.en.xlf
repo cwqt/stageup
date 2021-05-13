@@ -11,77 +11,329 @@
       </trans-unit>
       <trans-unit id="categories" datatype="html">
         <source>Categories</source><target state="final">Categories</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
       <trans-unit id="my-stuff" datatype="html">
         <source>My Stuff</source><target state="final">My Stuff</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
       <trans-unit id="log" datatype="html">
         <source>Log In</source><target state="final">Log In</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
-          <context context-type="linenumber">21</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
       <trans-unit id="994363f08f9fbfa3b3994ff7b35c6904fdff18d8" datatype="html">
         <source>Profile</source><target state="final">Profile</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit>
       <trans-unit id="121cc5391cd2a5115bc2b3160379ee5b36cd7716" datatype="html">
         <source>Settings</source><target state="final">Settings</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
       <trans-unit id="bb694b49d408265c91c62799c2b3a7e3151c824d" datatype="html">
         <source>Logout</source><target state="final">Logout</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="admin_onboardings_list_onboardings" datatype="html">
+        <source>Onboardings</source><target state="final">Onboardings</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component.ts</context>
+          <context context-type="linenumber">21</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="performances|Feed page title" datatype="html">
-        <source>Performances</source><target state="final">Performances</target>
+      </trans-unit><trans-unit id="admin_onboardings_list_open" datatype="html">
+        <source>Open</source><target state="final">Open</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context>
+          <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit><trans-unit id="admin_onboardings_list_state" datatype="html">
+        <source>State</source><target state="final">State</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit><trans-unit id="admin_onboardings_list_host" datatype="html">
+        <source>Host</source><target state="final">Host</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit><trans-unit id="admin_onboardings_list_last_submitted" datatype="html">
+        <source>Last Submitted</source><target state="final">Last Submitted</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit><trans-unit id="admin_onboardings_list_never" datatype="html">
+        <source>Never</source><target state="final">Never</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit><trans-unit id="admin_panel_title" datatype="html">
+        <source>Admin Panel</source><target state="final">Admin Panel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-panel.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      
       <trans-unit id="loading" datatype="html">
         <source>Loading...</source><target state="final">Loading...</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
       <trans-unit id="no-performances-found" datatype="html">
         <source>No performances found</source><target state="final">No performances found</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="edit-profile" datatype="html">
-        <source>Edit Profile </source><target state="final">Edit Profile </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host.component.html</context>
-          <context context-type="linenumber">21,22</context>
-        </context-group>
-      </trans-unit><trans-unit id="login-dialog" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="login-dialog" datatype="html">
         <source>Log in</source><target state="final">Log in</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/login.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="1604740809794222320" datatype="html">
+        <source>Choose One</source><target state="final">Choose One</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_date_eq" datatype="html">
+        <source>Equals</source><target state="final">Equals</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_date_gt" datatype="html">
+        <source>After</source><target state="final">After</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_date_lt" datatype="html">
+        <source>Before</source><target state="final">Before</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_date_btw" datatype="html">
+        <source>Between</source><target state="final">Between</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="2696274832594537065" datatype="html">
+        <source>Select Date</source><target state="final">Select Date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="5529756500583260525" datatype="html">
+        <source>Start Date Range</source><target state="final">Start Date Range</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit><trans-unit id="7965624512318670844" datatype="html">
+        <source>Set Filter</source><target state="final">Set Filter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-enum/filter-enum.component.ts</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit><trans-unit id="4814285799071780083" datatype="html">
+        <source>Remove</source><target state="final">Remove</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-enum/filter-enum.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit><trans-unit id="number_filter_neq" datatype="html">
+        <source>Does Not Equal</source><target state="final">Does Not Equal</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="number_filter_eq" datatype="html">
+        <source>Equals</source><target state="final">Equals</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="number_filter_gt" datatype="html">
+        <source>Greater Than</source><target state="final">Greater Than</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="number_filter_gte" datatype="html">
+        <source>Greater Than Or Equal</source><target state="final">Greater Than Or Equal</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="number_filter_lt" datatype="html">
+        <source>Less Than</source><target state="final">Less Than</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="number_filter_lte" datatype="html">
+        <source>Less Than Or Equal</source><target state="final">Less Than Or Equal</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="6533918067030990396" datatype="html">
+        <source>Amount</source><target state="final">Amount</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-number/filter-number.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_string_label_eq" datatype="html">
+        <source>Equals</source><target state="final">Equals</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_string_label_neq" datatype="html">
+        <source>Does Not Equal</source><target state="final">Does Not Equal</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_string_label_bw" datatype="html">
+        <source>Begins With</source><target state="final">Begins With</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_string_label_nbw" datatype="html">
+        <source>Does Not Begin With</source><target state="final">Does Not Begin With</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_string_label_ew" datatype="html">
+        <source>Ends With</source><target state="final">Ends With</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_string_label_new" datatype="html">
+        <source>Does Not End With</source><target state="final">Does Not End With</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_string_label_inc" datatype="html">
+        <source>Contains</source><target state="final">Contains</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter_string_label_ninc" datatype="html">
+        <source>Does Not Contain</source><target state="final">Does Not Contain</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit><trans-unit id="6555318547274416232" datatype="html">
+        <source>Value</source><target state="final">Value</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-string/filter-string.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="table_actions" datatype="html">
+        <source>Actions</source><target state="final">Actions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.html</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+      </trans-unit><trans-unit id="fb421f3f9b2c232498e459cfcf9ac4cd706a30e5" datatype="html">
+        <source>Loading data...</source><target state="final">Loading data...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.html</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit><trans-unit id="b57c13a89dc35720f09c6076ab9957a405270fa1" datatype="html">
+        <source>No data found</source><target state="final">No data found</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.html</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+      </trans-unit><trans-unit id="table_items_per_page" datatype="html">
+        <source>Items per page:</source><target state="final">Items per page:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit><trans-unit id="table_next_page" datatype="html">
+        <source>Next page</source><target state="final">Next page</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit><trans-unit id="table_previous_page" datatype="html">
+        <source>Previous page</source><target state="final">Previous page</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="table_first_page" datatype="html">
+        <source>First page</source><target state="final">First page</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit><trans-unit id="table_last_page" datatype="html">
+        <source>Last page</source><target state="final">Last page</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="table_range_zero" datatype="html">
+        <source>0 of <x id="PH" equiv-text="length"/></source><target state="final">0 of <x id="PH" equiv-text="length"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit><trans-unit id="table_range_range" datatype="html">
+        <source><x id="PH" equiv-text="startIndex + 1"/> - <x id="PH_1" equiv-text="endIndex"/> of <x id="PH_2" equiv-text="length"/></source><target state="final"><x id="PH" equiv-text="startIndex + 1"/> - <x id="PH_1" equiv-text="endIndex"/> of <x id="PH_2" equiv-text="length"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit>
     </body>

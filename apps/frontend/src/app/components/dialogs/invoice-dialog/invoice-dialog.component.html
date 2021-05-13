@@ -12,13 +12,18 @@
   </div>
 
   <div class="relative">
-    <ui-chip class="absolute top-0 right-0" *ngIf="!invoice.loading" [kind]="paymentStateKind">
+    <ui-chip class="absolute top-0 right-0" *ngIf="invoice.data?.status" [kind]="paymentStateKind">
       {{ invoice.data.status | paymentStatusPipe }}
     </ui-chip>
 
     <ul>
       <li><b>Order ID</b>{{ invoice.data?.invoice_id }}</li>
-      <li><b>Order Date</b>{{ invoice.data?.invoice_date | amFromUnix | amDateFormat: 'LLLL' }}</li>
+      <li>
+        <b>Order Date</b>
+        <span *ngIf="invoice.data?.invoice_date">
+          {{ invoice.data?.invoice_date | amFromUnix | amDateFormat: 'LLLL' }}</span
+        >
+      </li>
       <li><b>Address Line 1</b></li>
       <li><b>Address Line 2</b></li>
       <li><b>Registered Charity No.</b></li>
@@ -52,12 +57,14 @@
       </ul>
     </div>
 
-  <div class="relative">
-    <ng-container *ngIf="!isHostInvoice">
-      <ng-container *ngIf="invoice.data.status !== refundRequested">
-        <ui-button class="absolute bottom-0 right-0" kind="primary" size="m" (click)="requestRefund()">Request Refund</ui-button> 
+    <div class="relative">
+      <ng-container *ngIf="!isHostInvoice">
+        <ng-container *ngIf="invoice.data?.status !== refundRequested">
+          <ui-button class="absolute bottom-0 right-0" kind="primary" size="m" (click)="requestRefund()"
+            >Request Refund</ui-button
+          >
+        </ng-container>
       </ng-container>
-    </ng-container>
-  </div>
+    </div>
   </div>
 </ui-dialog>

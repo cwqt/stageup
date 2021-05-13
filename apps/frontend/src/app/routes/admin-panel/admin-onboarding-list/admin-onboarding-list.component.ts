@@ -1,12 +1,10 @@
-import { Component, Host, OnInit, ViewChild } from '@angular/core';
-import { FilterCode, HostOnboardingState, IEnvelopedData, IHostOnboarding } from '@core/interfaces';
-import { AdminService } from 'apps/frontend/src/app/services/admin.service';
-import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
-import { IUiTable } from '../../../ui-lib/table/table.interfaces';
-import { TableComponent } from '../../../ui-lib/table/table.component';
-import { OnboardingStatePipe } from '../../../_pipes/object-state.pipe';
+import { Component, OnInit } from '@angular/core';
 import { enumToValues } from '@core/helpers';
+import { FilterCode, HostOnboardingState, IHostOnboarding } from '@core/interfaces';
+import { UiTable } from '@frontend/ui-lib/table/table.class';
+import { AdminService } from 'apps/frontend/src/app/services/admin.service';
+import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { OnboardingStatePipe } from '../../../_pipes/object-state.pipe';
 
 @Component({
   selector: 'app-admin-onboarding-list',
@@ -14,15 +12,13 @@ import { enumToValues } from '@core/helpers';
   styleUrls: ['./admin-onboarding-list.component.scss']
 })
 export class AdminOnboardingListComponent implements OnInit {
-  @ViewChild('table') table: TableComponent<IHostOnboarding>;
-  tableData: IUiTable<IHostOnboarding>;
-  onboardings: ICacheable<IEnvelopedData<IHostOnboarding[]>> = createICacheable([]);
+  table: UiTable<IHostOnboarding>;
 
   constructor(private adminService: AdminService, private appService: BaseAppService) {}
 
   ngOnInit() {
-    this.tableData = {
-      title: 'Onboardings',
+    this.table = new UiTable<IHostOnboarding>({
+      title: $localize`:@@admin_onboardings_list_onboardings:Onboardings`,
       resolver: query => this.adminService.readOnboardingProcesses(query),
       selection: {
         multi: true,
@@ -38,14 +34,14 @@ export class AdminOnboardingListComponent implements OnInit {
       },
       actions: [
         {
-          label: 'Open',
+          label: $localize`:@@admin_onboardings_list_open:Open`,
           icon: 'launch',
           click: v => this.openOnboarding(v)
         }
       ],
       columns: {
         state: {
-          label: 'State',
+          label: $localize`:@@admin_onboardings_list_state:State`,
           filter: {
             type: FilterCode.Enum,
             field: 'state',
@@ -78,18 +74,21 @@ export class AdminOnboardingListComponent implements OnInit {
           }
         },
         host: {
-          label: 'Host',
+          label: $localize`:@@admin_onboardings_list_host:Host`,
           transformer: v => `@${v.host.username}`,
           filter: { type: FilterCode.String, field: 'username' }
         },
         last_submitted: {
           sort: { field: 'last_submitted' },
           filter: { type: FilterCode.Date, field: 'last_submitted' },
-          label: 'Last Submitted',
-          transformer: v => (v.last_submitted ? new Date(v.last_submitted * 1000).toISOString() : 'Never')
+          label: $localize`:@@admin_onboardings_list_last_submitted:Last Submitted`,
+          transformer: v =>
+            v.last_submitted
+              ? new Date(v.last_submitted * 1000).toISOString()
+              : $localize`:@@admin_onboardings_list_never:Never`
         }
       }
-    };
+    });
   }
 
   openOnboarding(onboarding: IHostOnboarding) {

@@ -22,21 +22,22 @@ export class FilterNumberComponent implements OnInit {
     this.form = new UiForm({
       fields: {
         operator: UiField.Select({
-          label: 'Choose One',
+          label: $localize`Choose One`,
           validators: [{ type: 'required' }],
+          // prettier-ignore
           values: new Map([
             // TODO: add between
             // [NumberFilterOperator.Between, { label: 'Between' }],
-            [NumberFilterOperator.DoesNotEqual, { label: 'Does Not Equal' }],
-            [NumberFilterOperator.Equals, { label: 'Equals' }],
-            [NumberFilterOperator.GreaterThan, { label: 'Greater Than' }],
-            [NumberFilterOperator.GreaterThanOrEqual, { label: 'Greater Than Or Equal' }],
-            [NumberFilterOperator.LessThan, { label: 'Less Than' }],
-            [NumberFilterOperator.LessThanOrEqual, { label: 'Less Than Or Equal' }]
+            [NumberFilterOperator.DoesNotEqual,       { label: $localize`:@@number_filter_neq:Does Not Equal` }],
+            [NumberFilterOperator.Equals,             { label: $localize`:@@number_filter_eq:Equals` }],
+            [NumberFilterOperator.GreaterThan,        { label: $localize`:@@number_filter_gt:Greater Than` }],
+            [NumberFilterOperator.GreaterThanOrEqual, { label: $localize`:@@number_filter_gte:Greater Than Or Equal` }],
+            [NumberFilterOperator.LessThan,           { label: $localize`:@@number_filter_lt:Less Than` }],
+            [NumberFilterOperator.LessThanOrEqual,    { label: $localize`:@@number_filter_lte:Less Than Or Equal` }]
           ])
         }),
         value: UiField.Number({
-          label: 'Amount',
+          label: $localize`Amount`,
           validators: [{ type: 'required' }]
         })
       },
@@ -50,7 +51,7 @@ export class FilterNumberComponent implements OnInit {
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Set Filter',
+        label: $localize`Set Filter`,
         kind: ThemeKind.Primary,
         disabled: true,
         callback: () => this.form.submit()
@@ -62,7 +63,7 @@ export class FilterNumberComponent implements OnInit {
     if (changes.active?.currentValue && this.buttons.length == 1) {
       this.buttons.push(
         new UiDialogButton({
-          label: 'Remove',
+          label: $localize`Remove`,
           kind: ThemeKind.Secondary,
           callback: () => {
             this.onChange.emit(null);

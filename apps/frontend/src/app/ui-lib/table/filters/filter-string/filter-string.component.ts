@@ -23,21 +23,22 @@ export class FilterStringComponent implements OnInit, IUITableFilter, OnChanges 
     this.form = new UiForm({
       fields: {
         operator: UiField.Select({
-          label: 'Choose One',
+          label: $localize`Choose One`,
           validators: [{ type: 'required' }],
+          // prettier-ignore
           values: new Map([
-            [StringFilterOperator.Equals, { label: 'Equals' }],
-            [StringFilterOperator.DoesNotEqual, { label: 'Does Not Equal' }],
-            [StringFilterOperator.BeginsWith, { label: 'Begins With' }],
-            [StringFilterOperator.DoesNotBeginWith, { label: 'Does Not Begin With' }],
-            [StringFilterOperator.EndsWith, { label: 'Ends With' }],
-            [StringFilterOperator.DoesNotEndWith, { label: 'Does Not End With' }],
-            [StringFilterOperator.Contains, { label: 'Contains' }],
-            [StringFilterOperator.DoesNotContain, { label: 'Does Not Contain' }]
+            [StringFilterOperator.Equals,           { label: $localize`:@@filter_string_label_eq:Equals` }],
+            [StringFilterOperator.DoesNotEqual,     { label: $localize`:@@filter_string_label_neq:Does Not Equal` }],
+            [StringFilterOperator.BeginsWith,       { label: $localize`:@@filter_string_label_bw:Begins With` }],
+            [StringFilterOperator.DoesNotBeginWith, { label: $localize`:@@filter_string_label_nbw:Does Not Begin With` }],
+            [StringFilterOperator.EndsWith,         { label: $localize`:@@filter_string_label_ew:Ends With` }],
+            [StringFilterOperator.DoesNotEndWith,   { label: $localize`:@@filter_string_label_new:Does Not End With` }],
+            [StringFilterOperator.Contains,         { label: $localize`:@@filter_string_label_inc:Contains` }],
+            [StringFilterOperator.DoesNotContain,   { label: $localize`:@@filter_string_label_ninc:Does Not Contain` }]
           ])
         }),
         value: UiField.Text({
-          label: 'Value',
+          label: $localize`Value`,
           validators: [{ type: 'required' }]
         })
       },
@@ -51,7 +52,7 @@ export class FilterStringComponent implements OnInit, IUITableFilter, OnChanges 
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Set Filter',
+        label: $localize`Set Filter`,
         kind: ThemeKind.Primary,
         callback: () => this.form.submit()
       }).attach(this.form)
@@ -62,7 +63,7 @@ export class FilterStringComponent implements OnInit, IUITableFilter, OnChanges 
     if (changes.active?.currentValue && this.buttons.length == 1) {
       this.buttons.push(
         new UiDialogButton({
-          label: 'Remove',
+          label: $localize`Remove`,
           kind: ThemeKind.Secondary,
           callback: () => {
             this.onChange.emit(null);

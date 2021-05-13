@@ -74,11 +74,6 @@ export class AsyncRouter<PM extends ProviderMap> {
         this.executeAuthenticationStrategy<PM>(Auth.or(this.auth, endpoint.authorisation), this.providers),
         endpoint.validators ? Validator.Middleware(endpoint.validators, this.i18n) : (_, __, next) => next(),
         endpoint.middleware ? endpoint.middleware : (_, __, next) => next(),
-        (req: Request, res: Response, next: NextFunction) => {
-          res.locals.page = Number.parseInt(req.query.page as string) || 0;
-          res.locals.per_page = Number.parseInt(req.query.per_page as string) || 10;
-          next();
-        },
         async (req: Request, res: Response, next: NextFunction) => {
           try {
             const returnValue = await endpoint.controller(req);

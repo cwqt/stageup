@@ -56,7 +56,7 @@ export class FilterEnumComponent implements OnInit, IUITableFilter {
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Set Filter',
+        label: $localize`Set Filter`,
         kind: ThemeKind.Primary,
         disabled: true,
         callback: () => this.form.submit()
@@ -68,7 +68,7 @@ export class FilterEnumComponent implements OnInit, IUITableFilter {
     if (changes.active?.currentValue && this.buttons.length == 1) {
       this.buttons.push(
         new UiDialogButton({
-          label: 'Remove',
+          label: $localize`Remove`,
           kind: ThemeKind.Secondary,
           callback: () => {
             this.onChange.emit(null);

@@ -6,6 +6,7 @@ import { PerformanceService } from '../../services/performance.service';
 import { capitalize, CurrencyCode, PersonTitle } from '@core/interfaces';
 import { enumToValues } from '@core/helpers';
 import { IUiTable } from '../table/table.interfaces';
+import { UiTable } from '../table/table.class';
 
 @Component({
   selector: 'ui-testbed',
@@ -19,7 +20,7 @@ export class TestbedComponent implements OnInit {
 
   cacheable = createICacheable();
   form: UiForm;
-  table: IUiTable;
+  table: UiTable;
 
   constructor(private performanceService: PerformanceService) {}
 
@@ -92,7 +93,7 @@ export class TestbedComponent implements OnInit {
       this.cacheable
     );
 
-    this.table = {
+    this.table = new UiTable({
       title: 'Table Example',
       resolver: query =>
         Promise.resolve({
@@ -122,7 +123,7 @@ export class TestbedComponent implements OnInit {
           label: 'Age'
         }
       }
-    };
+    });
   }
 
   handleForm(data: any) {

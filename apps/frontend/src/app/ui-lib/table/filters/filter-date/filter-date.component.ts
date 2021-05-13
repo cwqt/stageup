@@ -22,21 +22,22 @@ export class FilterDateComponent implements OnInit {
     this.form = new UiForm({
       fields: {
         operator: UiField.Select({
-          label: 'Choose One',
+          label: $localize`Choose One`,
           validators: [{ type: 'required' }],
+          // prettier-ignore
           values: new Map([
-            [DateFilterOperator.Equals, { label: 'Equals' }],
-            [DateFilterOperator.After, { label: 'After' }],
-            [DateFilterOperator.Before, { label: 'Before' }],
-            [DateFilterOperator.Between, { label: 'Between' }]
+            [DateFilterOperator.Equals,   { label: $localize`:@@filter_date_eq:Equals` }],
+            [DateFilterOperator.After,    { label: $localize`:@@filter_date_gt:After` }],
+            [DateFilterOperator.Before,   { label: $localize`:@@filter_date_lt:Before` }],
+            [DateFilterOperator.Between,  { label: $localize`:@@filter_date_btw:Between` }]
           ])
         }),
         date_single: UiField.Date({
-          label: 'Select Date',
+          label: $localize`Select Date`,
           hide: fg => fg.controls['operator'].value == DateFilterOperator.Between
         }),
         date_range: UiField.Date({
-          label: 'Start Date Range',
+          label: $localize`Start Date Range`,
           hide: fg => fg.controls['operator'].value != DateFilterOperator.Between,
           is_date_range: true
         })
@@ -58,7 +59,7 @@ export class FilterDateComponent implements OnInit {
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Set Filter',
+        label: $localize`Set Filter`,
         kind: ThemeKind.Primary,
         disabled: true,
         callback: () => this.form.submit()
@@ -70,7 +71,7 @@ export class FilterDateComponent implements OnInit {
     if (changes.active?.currentValue && this.buttons.length == 1) {
       this.buttons.push(
         new UiDialogButton({
-          label: 'Remove',
+          label: $localize`Remove`,
           kind: ThemeKind.Secondary,
           callback: () => {
             this.onChange.emit(null);

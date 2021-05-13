@@ -13,15 +13,12 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { FilterQuery, IEnvelopedData } from '@core/interfaces';
-import { SortDirection } from '@core/api';
-import { IQueryParams } from '@core/helpers';
+import { FilterQuery } from '@core/interfaces';
 
-import { cachize, ICacheable } from '../../app.interfaces';
-import { IUiTable } from './table.interfaces';
+import { UiTable } from './table.class';
 
 @Component({
   selector: 'ui-table',
@@ -29,148 +26,68 @@ import { IUiTable } from './table.interfaces';
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent<T> implements OnInit, AfterViewInit {
-  @Input() table: IUiTable<T>;
-  @Input() cacheable: ICacheable<IEnvelopedData<T[]>>;
-
-  private filterChange: EventEmitter<void> = new EventEmitter();
+  @Input() table: UiTable<T>;
 
   @ViewChild(MatTable) tableRef: MatTable<T>;
-  @ViewChild(MatPaginator) paginator?: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginatorRef?: MatPaginator;
+  @ViewChild(MatSort) sortRef: MatSort;
   @ViewChildren(PopperContent) poppers: QueryList<PopperContent>;
-
-  footerMessage: ReturnType<IUiTable<T>['selection']['footer_message']>;
-  subject: BehaviorSubject<any>;
-  dataSource: Observable<any[]> = of([]);
-  displayedColumns: string[];
-  selection: SelectionModel<T>;
-  activeFilters: { [column: string]: FilterQuery } = {};
 
   constructor() {}
 
-  async ngOnInit() {
-    this.cacheable.loading = true; // prevent ExpressionChangedAfterItHasBeenCheckedError
+  async ngOnInit() {}
 
-    // Set up all the columns, selection (if any), custom columns & actions (if any)
-    this.displayedColumns = [
-      this.table.selection && '__select',
-      ...Object.keys(this.table.columns),
-      this.table.actions?.length > 0 ? '__actions' : undefined
-    ].filter(v => v !== undefined);
+  async ngAfterViewInit() {
+    if (this.paginatorRef) {
+      const intl = new MatPaginatorIntl();
+      /** A label for the page size selector. */
+      intl.itemsPerPageLabel = $localize`:@@table_items_per_page:Items per page:`;
 
-    // Set up selection model
-    if (this.table.selection) {
-      this.selection = new SelectionModel<T>(this.table.selection.multi, []);
-      if (this.table.selection.footer_message) this.footerMessage = this.table.selection.footer_message(this.selection);
-    }
-  }
+      /** A label for the button that increments the current page. */
+      intl.nextPageLabel = $localize`:@@table_next_page:Next page`;
 
-  ngAfterViewInit() {
-    if (this.table.pagination) {
-      this.table.pagination.page_sizes = this.table.pagination.page_sizes || [10, 25, 50];
-    }
+      /** A label for the button that decrements the current page. */
+      intl.previousPageLabel = $localize`:@@table_previous_page:Previous page`;
 
-    this.subject = new BehaviorSubject([]); // sorts the data source at some point in time
+      /** A label for the button that moves to the first page. */
+      intl.firstPageLabel = $localize`:@@table_first_page:First page`;
 
-    this.dataSource = merge(this.sort.sortChange, this.paginator.page, this.filterChange).pipe(
-      startWith({}),
-      switchMap(() => {
-        this.selection?.clear();
-        this.subject.next([]);
+      /** A label for the button that moves to the last page. */
+      intl.lastPageLabel = $localize`:@@table_last_page:Last page`;
 
-        // create base params for the filter
-        const resolverData: IQueryParams = {
-          page: this.paginator.pageIndex ?? 0,
-          per_page: this.paginator.pageSize ?? 10
-        };
+      /** A label for the range of items within the current page and the length of the whole list. */
+      intl.getRangeLabel = (page: number, pageSize: number, length: number): string => {
+        if (length == 0 || pageSize == 0) return $localize`:@@table_range_zero:0 of ${length}`;
 
-        // add the sort & direction
-        if (this.sort.active) {
-          resolverData.sort = {
-            [this.table.columns[this.sort.active].sort.field ||
-            this.sort.active]: this.sort.direction.toLocaleUpperCase() as SortDirection
-          };
-        }
+        length = Math.max(length, 0);
+        const startIndex = page * pageSize;
 
-        // ...and the filters
-        if (Object.keys(this.activeFilters).length) {
-          // map the filters over to the fieldname for api consumption
-          resolverData.filter = Object.keys(this.activeFilters).reduce((acc, curr) => {
-            this.table.columns[curr].filter.field
-              ? (acc[this.table.columns[curr].filter.field] = this.activeFilters[curr])
-              : (acc[curr] = this.activeFilters[curr]);
+        // If the start index exceeds the list length, do not try and fix the end index to the end.
+        const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+        return $localize`:@@table_range_range:${startIndex + 1} - ${endIndex} of ${length}`;
+      };
 
-            return acc;
-          }, {});
-        }
-
-        return from(cachize(this.table.resolver(resolverData), this.cacheable));
-      }),
-      map(data => {
-        this.subject.next(this.transform(data));
-        return this.subject.getValue();
-      }),
-      catchError(() => of([]))
-    );
-  }
-
-  private transform(data: IEnvelopedData<T[]>) {
-    const rows = [];
-    for (const [idx, row] of (data.data || []).entries()) {
-      const rowData = { __data: row, __idx: idx };
-      for (const column of Object.keys(this.table.columns)) {
-        const colData = this.table.columns[column as keyof T];
-        rowData[column] = colData.transformer ? colData.transformer(row) : row[column];
-      }
-
-      rows.push(rowData);
+      this.paginatorRef._intl = intl;
     }
 
-    return rows;
+    this.table._setup(this.tableRef, this.paginatorRef, this.sortRef);
   }
 
   resetPaging() {
-    this.selection?.clear();
+    this.table.selection?.clear();
   }
 
-  // Whether the number of selected elements matches the total number of rows
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.subject.getValue().length;
-    return numSelected === numRows;
+  setFilter(column: string, filter: FilterQuery | null) {
+    this.table.setFilter(column, filter);
+    this.closeAllPoppers();
   }
 
-  // Selects all rows if they are not all selected; otherwise clear selection
-  masterToggle() {
-    this.isAllSelected() ? this.selection.clear() : this.subject.getValue().forEach(row => this.selection.select(row));
-    if (this.table.selection.footer_message) this.footerMessage = this.table.selection.footer_message(this.selection);
-  }
-
-  public remove(row) {}
-
-  public add(row) {}
-
-  addFilter(column: string, filter: FilterQuery | null) {
-    console.log(' filter ', column, filter);
-
-    this.activeFilters[column] = filter;
-    if (filter == null) delete this.activeFilters[column];
-
-    this.filterChange.emit();
-    this.closePoppers();
-  }
-
-  openFilterPopover(event: MouseEvent, column) {
+  openFilterPopover(event: MouseEvent) {
     event.stopPropagation();
-    this.closePoppers();
+    this.closeAllPoppers();
   }
 
-  selectRow(row) {
-    this.selection.toggle(row);
-    if (this.table.selection.footer_message) this.footerMessage = this.table.selection.footer_message(this.selection);
-  }
-
-  closePoppers() {
+  closeAllPoppers() {
     this.poppers.forEach(popper => {
       if (popper.ariaHidden == 'false') popper.hide();
     });

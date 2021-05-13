@@ -127,6 +127,7 @@ Register<BackendProviderMap>({
   // Patch TypeORM with pagination & register API routes
   app.use(patchTypeORM);
 
+  // Dependency Injection
   const i18n: InstanceType<typeof i18nProvider> = Container.get('i18n');
 
   const queue = new QueueModule(
