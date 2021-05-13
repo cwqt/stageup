@@ -34,6 +34,7 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   // Interface inputs
   focused: boolean;
   required: boolean;
+  optionalTransUnit = $localize`(optional)`;
 
   // Meta related stuff here
   meta: { [index in IUiFieldType]?: any } = {
@@ -41,7 +42,9 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
     text: { max_length: null, min_length: null },
     textarea: { max_length: null, min_length: null },
     richtext: { max_length: null, min_length: null },
-    money: { mask: { value: null, prefix: null } }
+    money: {
+      mask: { value: null, prefix: null }
+    }
   };
 
   richTextModules: QuillModules;
@@ -170,11 +173,12 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
 
     // Fallback messages if none provided
     const errorMap: { [index: string]: (e: any) => string } = {
-      ['minlength']: e => `${this.data.options.label} must be at-least ${errors[e].requiredLength} characters`,
-      ['maxlength']: e => `${this.data.options.label} must be less than ${errors[e].requiredLength} characters`,
-      ['required']: e => `${this.data.options.label} is required`,
-      ['email']: e => `Must be a valid e-mail address`,
-      ['pattern']: e => `Must fufill ReGex`,
+      ['minlength']: e => $localize`${this.data.options.label} must be at-least ${errors[e].requiredLength} characters`,
+      ['maxlength']: e =>
+        $localize`${this.data.options.label} must be less than ${errors[e].requiredLength} characters`,
+      ['required']: e => $localize`${this.data.options.label} is required`,
+      ['email']: e => $localize`Must be a valid e-mail address`,
+      ['pattern']: e => $localize`Must fufill ReGex`,
       ['custom']: e => this.control.getError(e),
       ['backendIssue']: e => this.control.getError('backendIssue')
     };
@@ -186,7 +190,7 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
         ? vf.message(this.control) // client side message
         : errorMap[e] //
         ? errorMap[e](e)
-        : 'Invalid field';
+        : $localize`Invalid field`;
     });
   }
 

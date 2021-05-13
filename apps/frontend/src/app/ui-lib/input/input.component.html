@@ -14,7 +14,7 @@
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label"
         >{{ data.options.label }}
-        <span *ngIf="focused || value !== ''">{{ required ? '' : '(optional)' }}</span>
+        <span *ngIf="focused || value !== ''">{{ required ? '' : optionalTransUnit }}</span>
       </label>
       <input
         #input
@@ -70,7 +70,7 @@
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label"
         >{{ data.options.label }}
-        <span *ngIf="focused || value !== ''">{{ required ? '' : '(optional)' }}</span>
+        <span *ngIf="focused || value !== ''">{{ required ? '' : optionalTransUnit }}</span>
       </label>
       <textarea
         #textarea
@@ -102,7 +102,7 @@
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label"
         >{{ data.options.label }}
-        <span *ngIf="focused || value !== ''">{{ required ? '' : '(optional)' }}</span>
+        <span *ngIf="focused || value !== ''">{{ required ? '' : optionalTransUnit }}</span>
       </label>
       <input
         mask="separator.2"
@@ -170,7 +170,9 @@
         <ngx-mat-select-search
           ngModel
           (ngModelChange)="filterSelectionItems($event)"
+          i18n-placeholderLabel="@@input_select_placeholder"
           placeholderLabel="Search"
+          i18n-noEntrinoEntriesFoundLabel="@@input_select_no_entries"
           noEntriesFoundLabel="No results"
         >
         </ngx-mat-select-search>
@@ -192,7 +194,7 @@
     appearance="fill"
     *ngIf="data.type == 'date' && !data.options?.is_date_range"
   >
-    <mat-label>{{ data.options.label || 'Choose a date' }}</mat-label>
+    <mat-label i18n>{{ data.options.label || 'Choose a date' }}</mat-label>
     <input
       matInput
       [(ngModel)]="value"
@@ -207,10 +209,10 @@
 
   <!-- Date picker, range -->
   <mat-form-field class="form-field__date" appearance="fill" *ngIf="data.type == 'date' && data.options?.is_date_range">
-    <mat-label>Enter a date range</mat-label>
+    <mat-label i18n>Enter a date range</mat-label>
     <mat-date-range-input [rangePicker]="picker" #pickerInput (click)="picker.open()">
-      <input matStartDate placeholder="Start date" />
-      <input matEndDate placeholder="End date" />
+      <input matStartDate i18n-placeholder placeholder="Start date" />
+      <input matEndDate i18n-placeholder placeholder="End date" />
     </mat-date-range-input>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-date-range-picker #picker></mat-date-range-picker>
@@ -235,7 +237,7 @@
   <!-- Datetime picker -->
   <mat-form-field class="form-field__datetime" *ngIf="data.type == 'datetime'" appearance="fill">
     <input matInput [ngxMatDatetimePicker]="picker" [(ngModel)]="value" placeholder="Choose a date" />
-    <mat-label>Enter a date range</mat-label>
+    <mat-label i18n>Enter a date range</mat-label>
 
     <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
     <ngx-mat-datetime-picker #picker> </ngx-mat-datetime-picker>

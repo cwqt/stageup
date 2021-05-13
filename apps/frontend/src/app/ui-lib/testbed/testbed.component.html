@@ -1,18 +1,18 @@
 <div class="container">
   <img src="/assets/stageup.svg" class="w-32 mb-8" alt="" />
 
-  <h1 class="text-5xl">UI & Component Library</h1>
-  <h5>
+  <h1 class="text-5xl" i18n="@@ui_testbed_title">UI & Component Library</h1>
+  <h5 i18n>
     Contains all the stylings and components to be used throughout the site, check
     <a href="https://tailwindcss.com/docs">TailwindCSS</a> docs for more info.
   </h5>
 
   <ui-hr></ui-hr>
 
-  <h1>Form</h1>
+  <h1 i18n>Form</h1>
   <ui-form [form]="form"></ui-form>
 
-  <ui-button (click)="form.submit()">Submit</ui-button>
+  <ui-button (click)="form.submit()" i18n>Submit</ui-button>
 
   <ui-hr></ui-hr>
 
@@ -45,8 +45,17 @@
 
   <ui-hr></ui-hr>
 
-  <h1>Table</h1>
+  <h1 i18n>Table</h1>
   <ui-table [table]="table"></ui-table>
+
+  <ui-hr></ui-hr>
+
+  <h1>Toasts</h1>
+  <div class="flex space-x-2">
+    <ui-button *ngFor="let toast of toasts | keyvalue" (click)="openToast(toast.key)" [kind]="toast.key">{{
+      toast.value
+    }}</ui-button>
+  </div>
 
   <ui-hr></ui-hr>
 

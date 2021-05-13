@@ -2,6 +2,55 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="host_onboarding_state_awaiting_changes" datatype="html">
+        <source>Awaiting Changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host_onboarding_state_pending_verification" datatype="html">
+        <source>Pending Verification</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host_onboarding_state_has_issues" datatype="html">
+        <source>Has Issues</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host_onboarding_state_verified" datatype="html">
+        <source>Verified</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host_onboarding_state" datatype="html">
+        <source>Enacted</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="host_onboarding_state_modified" datatype="html">
+        <source>Modified</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6433435081397514500" datatype="html">
+        <source>Unknown State</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="header-search-bar" datatype="html">
         <source>Search for performances...</source>
         <context-group purpose="location">
@@ -121,6 +170,228 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="input_select_placeholder" datatype="html">
+        <source>Search</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="302efebd7fd8ca4e89f708911fe6ff9392113e4c" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ data.options.label || 'Choose a date' }}"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="77bbe324b08f6636fb50f673cea05313b86fb692" datatype="html">
+        <source>Start date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
+          <context context-type="linenumber">214</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f60960faa2cd3e0db11e48688774d05dfa9d715b" datatype="html">
+        <source>End date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
+          <context context-type="linenumber">215</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1d7ed2343579b6d2528114177b13f59e55b96cef" datatype="html">
+        <source>Enter a date range</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5878305334612867800" datatype="html">
+        <source>(optional)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5248924511731123727" datatype="html">
+        <source><x id="PH" equiv-text="this.data.options.label"/> must be at-least <x id="PH_1" equiv-text="errors[e].requiredLength"/> characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3941996853800677819" datatype="html">
+        <source><x id="PH" equiv-text="this.data.options.label"/> must be less than <x id="PH_1" equiv-text="errors[e].requiredLength"/> characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5899864845007428149" datatype="html">
+        <source><x id="PH" equiv-text="this.data.options.label"/> is required</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="533501120781082256" datatype="html">
+        <source>Must be a valid e-mail address</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6302991645826665916" datatype="html">
+        <source>Must fufill ReGex</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2850016038852010268" datatype="html">
+        <source>Invalid field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ui_testbed_title" datatype="html">
+        <source>UI &amp; Component Library</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e3a7d77d3cc7264d804c40996757038fd5698e33" datatype="html">
+        <source> Contains all the stylings and components to be used throughout the site, check <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"/>TailwindCSS<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> docs for more info. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>
+          <context context-type="linenumber">6,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="010339e6584e1c44f5aa721080c96cf7bb471761" datatype="html">
+        <source>Form</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="71c77bb8cecdf11ec3eead24dd1ba506573fa9cd" datatype="html">
+        <source>Submit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5c8ea0443990792280e53ee2cc87e577940c95cf" datatype="html">
+        <source>Table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_text_field" datatype="html">
+        <source>Text Field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_number_field" datatype="html">
+        <source>Number Field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_textarea_field" datatype="html">
+        <source>Textarea Field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_container_field" datatype="html">
+        <source>Container Field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_checkbox_field" datatype="html">
+        <source>Checkbox Field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_select_field" datatype="html">
+        <source>Select Field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_select_field_hint" datatype="html">
+        <source>This is a piece of hinted text</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_time_field" datatype="html">
+        <source>Time Field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_password_field" datatype="html">
+        <source>Enter your password in this small field</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_radio_field_1" datatype="html">
+        <source>Hello</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_radio_field_2" datatype="html">
+        <source>World</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_table_title" datatype="html">
+        <source>Table Example</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_table_action_log" datatype="html">
+        <source>Log selected values</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_column_name" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="testbed_column_age" datatype="html">
+        <source>Age</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
+          <context context-type="linenumber">122</context>
       <trans-unit id="1604740809794222320" datatype="html">
         <source>Choose One</source>
         <context-group purpose="location">

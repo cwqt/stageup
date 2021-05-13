@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { resolve } from 'dns';
-import { createICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { UiField, IUiForm, UiForm } from '../form/form.interfaces';
-import { PerformanceService } from '../../services/performance.service';
-import { capitalize, CurrencyCode, PersonTitle } from '@core/interfaces';
 import { enumToValues } from '@core/helpers';
-import { IUiTable } from '../table/table.interfaces';
+import { capitalize, PersonTitle } from '@core/interfaces';
+import { ToastService } from '@frontend/services/toast.service';
+import { createICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { UiField, UiForm } from '../form/form.interfaces';
 import { UiTable } from '../table/table.class';
+import { ThemeKind } from '../ui-lib.interfaces';
 
 @Component({
   selector: 'ui-testbed',
@@ -22,34 +21,43 @@ export class TestbedComponent implements OnInit {
   form: UiForm;
   table: UiTable;
 
-  constructor(private performanceService: PerformanceService) {}
+  toasts: { [index in ThemeKind]: `${Capitalize<index>} Toast` } = {
+    [ThemeKind.Accent]: 'Accent Toast',
+    [ThemeKind.Danger]: 'Danger Toast',
+    [ThemeKind.Primary]: 'Primary Toast',
+    [ThemeKind.Secondary]: 'Secondary Toast',
+    [ThemeKind.Warning]: 'Warning Toast'
+  };
+
+  constructor(private toastService: ToastService) {}
 
   ngOnInit(): void {
     this.form = new UiForm<{ hello: string; world: number }, any>(
       {
         fields: {
           text_field: UiField.Text({
-            label: 'Text Field',
+            label: $localize`:@@testbed_text_field:Text Field`,
             width: 6,
-            validators: [{ type: 'maxlength', value: 512 }]
+            validators: [{ type: 'required' }, { type: 'maxlength', value: 512 }]
           }),
           number_field: UiField.Number({
-            label: 'Number Field',
+            label: $localize`:@@testbed_number_field:Number Field`,
             width: 6
           }),
           textarea_field: UiField.Textarea({
-            label: 'Textarea Field',
-            rows: 5
+            label: $localize`:@@testbed_textarea_field:Textarea Field`,
+            rows: 5,
+            validators: [{ type: 'minlength', value: 10 }]
           }),
           container_field: UiField.Container({
-            label: 'Container Field',
+            label: $localize`:@@testbed_container_field:Container Field`,
             fields: {
               checkbox_field: UiField.Checkbox({
-                label: 'Checkbox Field'
+                label: $localize`:@@testbed_checkbox_field:Checkbox Field`
               }),
               select_field: UiField.Select({
-                label: 'Select Field',
-                hint: 'This is a piece of hinted text',
+                label: $localize`:@@testbed_select_field:Select Field`,
+                hint: $localize`:@@testbed_select_field_hint:This is a piece of hinted text`,
                 has_search: true,
                 values: enumToValues(PersonTitle).reduce((acc, curr) => {
                   acc.set(curr, { label: capitalize(curr) });
@@ -59,18 +67,18 @@ export class TestbedComponent implements OnInit {
               nested_container_field: UiField.Container({
                 fields: {
                   // money_field: UiField.Money({ currency: CurrencyCode.GBP }),
-                  time_field: UiField.Time({ label: 'Time Field' })
+                  time_field: UiField.Time({ label: $localize`:@@testbed_time_field:Time Field` })
                 }
               })
             }
           }),
           password_field: UiField.Password({
-            placeholder: 'Enter your password in this small field'
+            placeholder: $localize`:@@testbed_password_field:Enter your password in this small field`
           }),
           radio_field: UiField.Radio({
             values: new Map([
-              ['hello', { label: 'Hello' }],
-              ['world', { label: 'World' }]
+              ['hello', { label: $localize`:@@testbed_radio_field_1:Hello` }],
+              ['world', { label: $localize`:@@testbed_radio_field_2:World` }]
             ])
           }),
           date_field: UiField.Date({
@@ -94,7 +102,7 @@ export class TestbedComponent implements OnInit {
     );
 
     this.table = new UiTable({
-      title: 'Table Example',
+      title: $localize`:@@testbed_table_title:Table Example`,
       resolver: query =>
         Promise.resolve({
           data: [
@@ -108,7 +116,7 @@ export class TestbedComponent implements OnInit {
         multi: true,
         actions: [
           {
-            label: 'Log selected values',
+            label: $localize`:@@testbed_table_action_log:Log selected values`,
             click: v => console.log(v)
           }
         ]
@@ -117,13 +125,17 @@ export class TestbedComponent implements OnInit {
       pagination: { page_sizes: [5, 10, 25] },
       columns: {
         name: {
-          label: 'Name'
+          label: $localize`:@@testbed_column_name:Name`
         },
         age: {
-          label: 'Age'
+          label: $localize`:@@testbed_column_age:Age`
         }
       }
     });
+  }
+
+  openToast(kind: ThemeKind) {
+    this.toastService.emit(`This is a ${this.toasts[kind]}`, kind, { duration: 1000 });
   }
 
   handleForm(data: any) {
