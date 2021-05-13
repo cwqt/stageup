@@ -11,9 +11,9 @@ let envConfigFile = '';
 if (environment == 'development' || environment == 'testing') envConfigFile += `import 'zone.js/dist/zone-error';\n`;
 
 envConfigFile += `export const environment = {
-   apiUrl: '${process.env.EXTERNAL_URL}:3000',
-   sseUrl: '${process.env.EXTERNAL_URL}:3000/sse',
-   frontendUrl: '${process.env.EXTERNAL_URL}:4200',
+   apiUrl: '${process.env.LOAD_BALANCER_URL}:3000',
+   sseUrl: '${process.env.LOAD_BALANCER_URL}:3000/sse',
+   frontendUrl: '${process.env.LOAD_BALANCER_URL}:4200',
    environment: '${environment}',
    stripePublicKey: '${process.env.STRIPE_PUBLIC_KEY}',
    appVersion: '${process.env.npm_package_version}'
