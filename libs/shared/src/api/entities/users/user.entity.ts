@@ -1,4 +1,4 @@
-import { IUser, IUserStub, IUserPrivate, IMyself } from '@core/interfaces';
+import { IUser, IUserStub, IUserPrivate, IMyself, ILocale } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import bcrypt from 'bcrypt';
 import {
@@ -22,6 +22,7 @@ import { ContactInfo } from './contact-info.entity';
 import { Invoice } from '../common/invoice.entity';
 import { PatronSubscription } from './patron-subscription.entity';
 import { PaymentMethod } from './payment-method.entity';
+import { SupportedLocale } from '../../event-bus/contracts';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
@@ -32,15 +33,16 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
 
   @Column() created_at: number;
   @Column({ nullable: true }) name: string;
-  @Column() username: string;
+  @Column({ unique: true }) username: string;
   @Column({ nullable: true }) avatar?: string;
   @Column({ nullable: true }) cover_image?: string;
   @Column({ nullable: true }) bio?: string;
   @Column() is_verified: boolean;
   @Column() is_new_user: boolean;
   @Column() is_admin: boolean;
-  @Column() email_address: string;
+  @Column({ unique: true }) email_address: string;
   @Column() stripe_customer_id: string; // cus_xxx
+  @Column('jsonb', { default: { language: 'en', region: 'GB' } }) locale: ILocale;
 
   @OneToMany(() => PaymentMethod, method => method.user) payment_methods: PaymentMethod[];
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only

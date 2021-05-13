@@ -117,6 +117,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
           initial: 0
         });
       }
+    } else {
+      this.donoPegSelectForm = null;
     }
 
     this.tabs.selectedIndex = 1;
@@ -129,7 +131,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
         payment_method_id: this.paymentMethod.selectionModel.selected[0]._id,
         purchaseable_type: PurchaseableEntity.Ticket,
         purchaseable_id: this.selectedTicket._id,
-        options: {
+        options: this.donoPegSelectForm && {
           selected_dono_peg: this.donoPegSelectForm?.group?.value?.pegs,
           allow_any_amount: this.donoPegSelectForm?.group?.value?.allow_any_amount
         }

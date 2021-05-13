@@ -1,17 +1,16 @@
-import session, { MemoryStore } from 'express-session';
+import session from 'express-session';
 import connectRedis, { RedisStore } from 'connect-redis';
 import { ProviderMap, Provider } from '../';
 export interface IStoreProviderConfig {
   host: string;
   port: number;
   ttl: number;
-  use_memorystore?: boolean;
   redis_key?: string;
 }
 
-export default class StoreProvider implements Provider<RedisStore | MemoryStore> {
+export default class StoreProvider implements Provider<RedisStore> {
   name = 'Store';
-  connection: RedisStore | MemoryStore;
+  connection: RedisStore;
   config: IStoreProviderConfig;
 
   constructor(config: IStoreProviderConfig) {
@@ -19,16 +18,12 @@ export default class StoreProvider implements Provider<RedisStore | MemoryStore>
   }
 
   async connect(providerMap: ProviderMap) {
-    if (this.config.use_memorystore) {
-      this.connection = new MemoryStore();
-    } else {
-      this.connection = new (connectRedis(session))({
-        client: this.config.redis_key ? providerMap[this.config.redis_key].connection : providerMap.redis.connection,
-        host: this.config.host,
-        port: this.config.port,
-        ttl: this.config.ttl
-      });
-    }
+    this.connection = new (connectRedis(session))({
+      client: this.config.redis_key ? providerMap[this.config.redis_key].connection : providerMap.redis.connection,
+      host: this.config.host,
+      port: this.config.port,
+      ttl: this.config.ttl
+    });
 
     return this.connection;
   }

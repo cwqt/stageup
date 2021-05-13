@@ -10,9 +10,6 @@ import {
   BaseController,
   IControllerEndpoint,
   getCheck,
-  body,
-  query,
-  single,
   OnboardingReview,
   Onboarding,
   User,
@@ -21,12 +18,13 @@ import {
 import { BackendProviderMap } from '..';
 
 import AuthStrat from '../common/authorisation';
+import { any, array, enums, object, string } from 'superstruct';
 
 export default class AdminController extends BaseController<BackendProviderMap> {
   readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
     return {
       // TODO: write generic query / sort validator
-      authStrategy: AuthStrat.none, // AuthStrat.isSiteAdmin,
+      authorisation: AuthStrat.none, // AuthStrat.isSiteAdmin,
       controller: async req => {
         return this.ORM.createQueryBuilder(Onboarding, 'onboarding')
           .innerJoinAndSelect('onboarding.host', 'host')
@@ -47,24 +45,16 @@ export default class AdminController extends BaseController<BackendProviderMap> 
 
   reviewOnboardingProcess(): IControllerEndpoint<void> {
     return {
-      validators: [
-        body<IOnboardingReview['steps']>({
-          '*': v =>
-            v.custom(
-              single({
-                state: v => v.isIn([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
-                review_message: v => v.optional(true).isString(),
-                issues: v =>
-                  v.custom(
-                    single({
-                      '*': v => v.isArray()
-                    })
-                  )
-              })
-            )
-        })
-      ],
-      authStrategy: AuthStrat.isSiteAdmin,
+      validators: {
+        body: array(
+          object({
+            state: enums([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
+            review_message: string(),
+            issues: array(any())
+          })
+        )
+      },
+      authorisation: AuthStrat.isSiteAdmin,
       controller: async req => {
         // Controller does not actually submit to the host - that is done by enactOnboardingProcess
         const submission: IOnboardingReview['steps'] = req.body;
@@ -103,7 +93,7 @@ export default class AdminController extends BaseController<BackendProviderMap> 
    */
   enactOnboardingProcess(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.isSiteAdmin,
+      authorisation: AuthStrat.isSiteAdmin,
       controller: async req => {
         // Every step is verified when submitted, so enact the onboarding process
         // by which I mean shift the data from Onboarding -> Host & send out invites for added members

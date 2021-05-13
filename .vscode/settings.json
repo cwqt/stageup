@@ -12,6 +12,14 @@
   "prettier.semi": true,
   "prettier.arrowParens": "avoid",
   "prettier.bracketSpacing": true,
+  "hjson-formatter.options": {
+    "multiline": "no-tabs",
+    "separator": false,
+    "condense": 1,
+    "bracesSameLine": true,
+    "emitRootBraces": true,
+    "space": 2
+  },
   "todo-tree.highlights.customHighlight": {
     "IMPORTANT": {
       "foreground": "white",
@@ -25,7 +33,7 @@
       "background": "MediumSeaGreen",
       "foreground": "white",
       "iconColour": "MediumSeaGreen",
-      "icon": "check",
+      "icon": "check"
     },
     "FIXME": {
       "foreground": "black",

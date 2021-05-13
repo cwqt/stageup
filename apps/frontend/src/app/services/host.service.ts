@@ -13,12 +13,11 @@ import {
   IEnvelopedData,
   IHostStripeInfo,
   IHostInvoice,
-  IHostInvoiceCSVJobData,
-  IHostInvoicePDFJobData,
   IHostPrivate,
   DtoCreatePatronTier,
   IPatronTier,
-  IHostInvoiceStub
+  IHostInvoiceStub,
+  IInvoice
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -202,13 +201,17 @@ export class HostService {
   }
 
   // router.post <void> ("/hosts/:hid/invoices/export-csv", Hosts.exportInvoicesToCSV());
-  exportInvoicesToCSV(hostId: string, invoices: Pick<IHostInvoiceCSVJobData, 'invoices'>): Promise<void> {
-    return this.http.post<void>(`/api/hosts/${hostId}/invoices/export-csv`, invoices).toPromise();
+  exportInvoicesToCSV(hostId: string, invoices: Array<IInvoice['_id']>): Promise<void> {
+    return this.http
+      .post<void>(`/api/hosts/${hostId}/invoices/export-csv`, { invoices: invoices })
+      .toPromise();
   }
 
   //router.post <void> ("/hosts/:hid/invoices/export-pdf", Hosts.exportInvoicesToPDF());
-  exportInvoicesToPDF(hostId: string, invoices: Pick<IHostInvoicePDFJobData, 'invoices'>): Promise<void> {
-    return this.http.post<void>(`/api/hosts/${hostId}/invoices/export-pdf`, invoices).toPromise();
+  exportInvoicesToPDF(hostId: string, invoices: Array<IInvoice['_id']>): Promise<void> {
+    return this.http
+      .post<void>(`/api/hosts/${hostId}/invoices/export-pdf`, { invoices: invoices })
+      .toPromise();
   }
 
   // router.post <IPatronTier> ("/hosts/:hid/patron-tiers", Hosts.createPatronTier());

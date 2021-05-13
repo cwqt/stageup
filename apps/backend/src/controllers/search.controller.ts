@@ -1,18 +1,17 @@
 import { ISearchResponse } from '@core/interfaces';
 
-import { BaseController, IControllerEndpoint, Performance, Host, query } from '@core/api';
+import { BaseController, IControllerEndpoint, Performance, Host } from '@core/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
+import { enums, object, optional } from 'superstruct';
 
 export default class SearchController extends BaseController<BackendProviderMap> {
   search(): IControllerEndpoint<ISearchResponse> {
     return {
-      validators: [
-        query({
-          return_only: v => v.optional({ nullable: true }).isIn(['hosts', 'performances'])
-        })
-      ],
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
+      validators: {
+        query: object({ return_only: optional(enums(['hosts', 'performance'])) })
+      },
       controller: async req => {
         // return both if no query param passed
         const fetchBoth = req.query.return_only == null;

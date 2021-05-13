@@ -6,16 +6,8 @@ import { HTTP } from '@core/interfaces';
 import Multer from 'multer';
 import { RedisClient } from 'redis';
 
-export interface IMiddlewareConnections {
-  redis: RedisClient
-}
-
 export class Middlewares {
-  connections:IMiddlewareConnections;
-
-  constructor(connections: IMiddlewareConnections) {
-    this.connections = connections;
-  }
+  constructor() {}
 
   /**
    * @description File parsing middleware
@@ -44,10 +36,10 @@ export class Middlewares {
    * @param period Plain-english cache duration e.g. "5 minutes"
    * @param cacheFunction Cache only when true, passed req & res objects
    */
-  cacher(period: string, cacheFunction?: (request: Request, res: Response) => boolean): any {
+  cacher(period: string, redis: RedisClient, cacheFunction?: (request: Request, res: Response) => boolean): any {
     return apicache
       .options({
-        redisClient: this.connections.redis
+        redisClient: redis
       })
       .middleware(period, cacheFunction);
   }
@@ -57,10 +49,10 @@ export class Middlewares {
    * @param period Period in seconds that requests are remembered for
    * @param max Max number of requests in period
    */
-  limiter(period: number, max: number): RateLimiter.RateLimit {
+  rateLimit(period: number, max: number, redis: RedisClient): RateLimiter.RateLimit {
     return RateLimiter({
       store: new RedisStore({
-        client: this.connections.redis
+        client: redis
       }),
       windowMs: period * 1000,
       max: max

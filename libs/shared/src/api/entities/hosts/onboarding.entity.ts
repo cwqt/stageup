@@ -27,7 +27,7 @@ import {
 
 import { Host } from '../hosts/host.entity';
 import { User } from '../users/user.entity';
-import { Validators, object, single, array } from '@core/api';
+import { Validators } from '@core/api';
 import { timestamp, uuid } from '@core/helpers';
 import { OnboardingReview } from './onboarding-review.entity';
 
@@ -139,15 +139,15 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
     stepIndex: HostOnboardingStep,
     updates: Partial<T>
   ): Promise<IOnboardingStep<unknown>> {
-    const validationResult = await stepValidators[stepIndex](updates);
-    if (validationResult.length > 0) {
-      this.steps[stepIndex].valid = false;
-      throw validationResult;
-    } else {
-      // Data fully valid, so is the step - as a consequence we can't partially update fields
-      // but i doubt we'll need that since each step is quite small
-      this.steps[stepIndex].valid = true;
-    }
+    // const validationResult = await stepValidators[stepIndex](updates);
+    // if (validationResult.length > 0) {
+    //   this.steps[stepIndex].valid = false;
+    //   throw validationResult;
+    // } else {
+    //   // Data fully valid, so is the step - as a consequence we can't partially update fields
+    //   // but i doubt we'll need that since each step is quite small
+    //   this.steps[stepIndex].valid = true;
+    // }
 
     Object.entries(updates).forEach(([k, v]: [string, unknown]) => {
       (this.steps[stepIndex].data as unknown)[k] = v ?? (this.steps[stepIndex].data as unknown)[k];
@@ -159,20 +159,20 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
   }
 }
 
-const stepValidators: { [index in HostOnboardingStep]: (d: unknown) => Promise<IFormErrorField[]> } = {
-  [HostOnboardingStep.ProofOfBusiness]: async (d: IOnboardingProofOfBusiness) => {
-    return await object(d, {
-      hmrc_company_number: v => v.optional({ checkFalsy: true }).isInt().isLength({ min: 8, max: 8 }),
-      business_contact_number: v => v.isMobilePhone('any'), //TODO: en-GB locale
-      business_address: v => v.custom(single(Validators.Objects.IAddress()))
-    });
-  },
-  [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
-    return object(d, {
-      owner_info: v => v.custom(single(Validators.Objects.IPersonInfo()))
-    });
-  },
-  [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
-    return object(d, { social_info: v => v.custom(single(Validators.Objects.ISocialInfo())) });
-  }
-};
+// const stepValidators: { [index in HostOnboardingStep]: (d: unknown) => Promise<IFormErrorField[]> } = {
+//   [HostOnboardingStep.ProofOfBusiness]: async (d: IOnboardingProofOfBusiness) => {
+//     return await object(d, {
+//       hmrc_company_number: v => v.optional({ checkFalsy: true }).isInt().isLength({ min: 8, max: 8 }),
+//       business_contact_number: v => v.isMobilePhone('any'), //TODO: en-GB locale
+//       business_address: v => v.custom(single(Validators.Objects.IAddress()))
+//     });
+//   },
+//   [HostOnboardingStep.OwnerDetails]: async (d: IOnboardingOwnerDetails) => {
+//     return object(d, {
+//       owner_info: v => v.custom(single(Validators.Objects.IPersonInfo()))
+//     });
+//   },
+//   [HostOnboardingStep.SocialPresence]: async (d: IOnboardingSocialPresence) => {
+//     return object(d, { social_info: v => v.custom(single(Validators.Objects.ISocialInfo())) });
+//   }
+// };

@@ -16,7 +16,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
-import { FilterQuery, IEnvelopedData, IHostInvoice } from '@core/interfaces';
+import { FilterQuery, IEnvelopedData } from '@core/interfaces';
 import { SortDirection } from '@core/api';
 import { IQueryParams } from '@core/helpers';
 

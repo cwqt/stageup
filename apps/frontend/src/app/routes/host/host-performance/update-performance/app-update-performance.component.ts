@@ -30,9 +30,9 @@ export class UpdatePerformanceComponent {
           initial: this.performance.name,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 64 }]
         }),
-        description: UiField.Textarea({
+        description: UiField.Richtext({
           label: 'Description',
-          initial: this.performance.description,
+          // initial: this.performance.description,
           validators: [{ type: 'maxlength', value: 512 }]
         })
       },

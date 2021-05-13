@@ -1,9 +1,9 @@
-import { FieldValidators } from './fields.validators';
-import { ObjectValidators } from './objects.validators';
-
-export { array, object, single, body, query, params, validatorMiddleware } from './validation';
+import { fields } from './fields.validators';
+import { objects } from './objects.validators';
+import { validationMiddleware } from './validation';
 
 export default {
-  Fields: FieldValidators,
-  Objects: ObjectValidators
+  Objects: objects,
+  Fields: fields,
+  Middleware: validationMiddleware
 };

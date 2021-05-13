@@ -1,13 +1,18 @@
+import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register } from '@core/api';
 import { Environment } from '@core/interfaces';
-import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register, Router } from '@core/api';
 import { Topic } from '@google-cloud/pubsub';
 import session from 'express-session';
+import path from 'path';
 import 'reflect-metadata';
-import { TopicType } from '../../../libs/shared/src/api/pubsub';
 import Auth from './common/authorisation';
 import { log, stream } from './common/logger';
 import Env from './env';
 import routes from './routes';
+
+import { QueueModule } from './modules/queue/queue.module';
+import { SSEModule } from './modules/sse/sse.module';
+import { Container } from 'typedi';
+import { i18nProvider } from 'libs/shared/src/api/i18n';
 
 export interface BackendProviderMap extends ProviderMap {
   torm: InstanceType<typeof Providers.Postgres>;
@@ -15,19 +20,30 @@ export interface BackendProviderMap extends ProviderMap {
   redis: InstanceType<typeof Providers.Redis>;
   store: InstanceType<typeof Providers.Store>;
   stripe: InstanceType<typeof Providers.Stripe>;
-  s3: InstanceType<typeof Providers.S3>;
+  blob: InstanceType<typeof Providers.Blob>;
   tunnel?: InstanceType<typeof Providers.LocalTunnel>;
-  pubsub: InstanceType<typeof Providers.PubSub>;
+  email: InstanceType<typeof Providers.Email>;
+  bus: InstanceType<typeof Providers.EventBus>;
+}
+
+export interface BackendModules {
+  sse: SSEModule;
+  queue: QueueModule;
 }
 
 Register<BackendProviderMap>({
   name: 'Backend',
   environment: Env.ENVIRONMENT,
-  port: Env.EXPRESS_PORT,
-  endpoint: Env.API_ENDPOINT,
+  port: Env.BACKEND.PORT,
+  endpoint: Env.BACKEND.ENDPOINT,
   logger: log,
   stream: stream,
-  provider_map: {
+  i18n: {
+    locales: ['en', 'nb'],
+    path: path.join(__dirname, '/i18n')
+  },
+  authorisation: Auth.isSiteAdmin,
+  providers: {
     mux: new Providers.Mux({
       access_token: Env.MUX.ACCESS_TOKEN,
       secret_key: Env.MUX.SECRET_KEY,
@@ -52,8 +68,7 @@ Register<BackendProviderMap>({
     store: new Providers.Store({
       host: Env.STORE.HOST,
       port: Env.STORE.PORT,
-      ttl: Env.STORE.TTL,
-      use_memorystore: Env.STORE.USE_MEMORYSTORE
+      ttl: Env.STORE.TTL
     }),
     stripe: new Providers.Stripe({
       public_key: Env.STRIPE.PUBLIC_KEY,
@@ -61,26 +76,27 @@ Register<BackendProviderMap>({
       hook_signature: Env.STRIPE.HOOK_SIGNATURE,
       client_id: Env.STRIPE.CLIENT_ID
     }),
-    s3: new Providers.S3({
+    email: new Providers.Email(
+      {
+        api_key: Env.EMAIL.API_KEY,
+        enabled: Env.EMAIL.ENABLED
+      },
+      log
+    ),
+    blob: new Providers.Blob({
       s3_access_key_id: Env.AWS.S3_ACCESS_KEY_ID,
       s3_access_secret_key: Env.AWS.S3_ACCESS_SECRET_KEY,
       s3_bucket_name: Env.AWS.S3_BUCKET_NAME,
       s3_url: Env.AWS.S3_URL,
       s3_region: Env.AWS.S3_REGION
     }),
-    pubsub: new Providers.PubSub(
-      {
-        project_id: Env.PUB_SUB.PROJECT_ID,
-        port: Env.PUB_SUB.PORT
-      },
-      log
-    ),
+    bus: new Providers.EventBus({}, log),
     // Use HTTP tunnelling in development for receiving webhooks
     tunnel: Env.isEnv([Environment.Production, Environment.Staging])
       ? null
       : new Providers.LocalTunnel({
           port: Env.LOCALTUNNEL.PORT,
-          domain: new URL(Env.WEBHOOK_URL).hostname.split('.').shift()
+          domain: Env.LOCALTUNNEL.DOMAIN
         })
   },
   options: {
@@ -93,7 +109,7 @@ Register<BackendProviderMap>({
       }
     }
   }
-})(async (app, pm) => {
+})(async (app, providers, router) => {
   // Register session middleware
   app.use(
     session({
@@ -104,19 +120,30 @@ Register<BackendProviderMap>({
         httpOnly: Env.isEnv(Environment.Production),
         secure: Env.isEnv(Environment.Production)
       },
-      store: pm.store.connection
+      store: providers.store.connection
     })
   );
 
   // Patch TypeORM with pagination & register API routes
   app.use(patchTypeORM);
 
-  // TODO: write some tooling to manage all topics/subscriptions
-  // delete all topics and re-create them from fresh
-  const allTopics = [TopicType.StreamStateChanged];
-  const topics = await pm.pubsub.connection.getTopics();
-  await Promise.all(topics.flat().map((t: Topic) => t.delete()));
-  await Promise.all(allTopics.map(t => pm.pubsub.connection.createTopic(t as string)));
+  const i18n: InstanceType<typeof i18nProvider> = Container.get('i18n');
 
-  return Router(pm, Auth.or(Auth.isSiteAdmin, Auth.isFromService), { redis: pm.redis.connection }, log)(routes);
+  const queue = new QueueModule(
+    { redis: { host: providers.redis.config.host, port: providers.redis.config.port } },
+    log
+  );
+
+  router.router.use(
+    '/queue',
+    await queue.register(providers.bus, { i18n: i18n, email: providers.email, orm: providers.torm })
+  );
+
+  const sse = new SSEModule(log);
+  router.router.use(
+    '/sse',
+    await sse.register(providers.bus, { i18n: i18n, email: providers.email, orm: providers.torm })
+  );
+
+  return routes;
 });

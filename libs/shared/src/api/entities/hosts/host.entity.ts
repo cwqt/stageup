@@ -17,8 +17,7 @@ import {
   HostPermission,
   ISocialInfo,
   IHostBusinessDetails,
-  HTTP,
-  ErrCode
+  HTTP
 } from '@core/interfaces';
 
 import { User } from '../users/user.entity';
@@ -105,7 +104,8 @@ export class Host extends BaseEntity implements IHostPrivate {
     const uhi = await txc.findOne(UserHostInfo, { user: user, host: this });
 
     // Can't remove an Owner
-    if (uhi.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+    if (uhi.permissions == HostPermission.Owner)
+      throw new ErrorHandler(HTTP.Unauthorised, '@@error.missing_permissions');
 
     this.members_info = this.members_info.splice(
       this.members_info.findIndex(m => m._id === user._id),

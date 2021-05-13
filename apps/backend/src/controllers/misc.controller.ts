@@ -6,19 +6,17 @@ import {
   Host,
   HostInvitation,
   IControllerEndpoint,
-  TopicType,
+  User,
   UserHostInfo
 } from '@core/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
-import { sendEmail } from '../common/email';
-import { log } from '../common/logger';
 import Env from '../env';
 
 export default class MiscController extends BaseController<BackendProviderMap> {
   logFrontendMessage(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         // TODO: hook up frontend logging messages to some database for user error logging
       }
@@ -27,7 +25,7 @@ export default class MiscController extends BaseController<BackendProviderMap> {
 
   ping(): IControllerEndpoint<string> {
     return {
-      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
       controller: async () => {
         return 'Pong!';
       }
@@ -36,7 +34,7 @@ export default class MiscController extends BaseController<BackendProviderMap> {
 
   dropAllData(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
       controller: async req => {
         await DataClient.drop(this.providers);
       }
@@ -48,7 +46,7 @@ export default class MiscController extends BaseController<BackendProviderMap> {
    * */
   acceptHostInvite(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
       controller: async req => {
         const userId = req.params.uid;
         const invite = await HostInvitation.findOne({
@@ -80,7 +78,7 @@ export default class MiscController extends BaseController<BackendProviderMap> {
 
   verifyHost(): IControllerEndpoint<IHost> {
     return {
-      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
         host.is_onboarded = true;
@@ -93,26 +91,26 @@ export default class MiscController extends BaseController<BackendProviderMap> {
   // http://localhost:3000/utils/performances/yNL3wrYodJH/state?value=video.live_stream.connected
   setPerformanceStreamState(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
       controller: async req => {
-        this.providers.pubsub.publish(TopicType.StreamStateChanged, {
-          performance_id: req.params.pid,
-          state: req.query.value as LiveStreamState
-        });
+        this.providers.bus.publish(
+          'live_stream.state_changed',
+          {
+            performance_id: req.params.pid,
+            state: req.query.value as LiveStreamState
+          },
+          req.locale
+        );
       }
     };
   }
 
-  testSendGrid(): IControllerEndpoint<void> {
+  sendTestEmail(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
       controller: async req => {
-        sendEmail({
-          from: Env.EMAIL_ADDRESS,
-          to: 'm@cass.si',
-          subject: `This is a test email`,
-          html: `<p>This is a test email</p>`
-        });
+        const user = await User.findOne();
+        this.providers.bus.publish('test.send_email', { user_id: user._id }, req.locale);
       }
     };
   }

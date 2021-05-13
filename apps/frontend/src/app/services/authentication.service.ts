@@ -6,7 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggedInGuard } from '../_helpers/logged-in.guard';
 import { MyselfService } from './myself.service';
-import { IUser } from '@core/interfaces';
+import { DtoLogin, IUser } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -33,9 +33,9 @@ export class AuthenticationService {
     return this.$loggedIn.getValue();
   }
 
-  login(formData: { email_address: string; password: string }): Promise<IUser> {
+  login(data: DtoLogin): Promise<IUser> {
     return this.http
-      .post<IUser>('/api/users/login', formData, { withCredentials: true })
+      .post<IUser>('/api/users/login', data, { withCredentials: true })
       .pipe(
         tap(user => {
           // Remove last logged in user stored

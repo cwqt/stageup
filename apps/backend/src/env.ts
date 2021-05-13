@@ -7,31 +7,25 @@ import { isEnv } from '@core/helpers';
 import { Environment } from '@core/interfaces';
 import {
   IMuxProviderConfig,
-  IInfluxProviderConfig,
+  IEmailProviderConfig,
   IPostgresProviderConfig,
   IRedisProviderConfig,
   IAWS3ProviderConfig,
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
-  IStripeProviderConfig,
-  IPubSubProviderConfig
+  IStripeProviderConfig
 } from '@core/api';
 
-type Envify<T> = { [index: string]: any };
-// type Envify<T> = { [index in keyof T as `${Uppercase<string & index>}`]: T[index] };
+type Envify<T> = { [index in keyof T as Uppercase<string & index>]: T[index] };
 
 interface IEnvironment {
+  BACKEND: { PORT: number; ENDPOINT: string; URL: string };
+  FRONTEND: { PORT: number; ENDPOINT: string; URL: string };
   ENVIRONMENT: Environment;
   PRIVATE_KEY: string;
   EMAIL_ADDRESS: string;
   SITE_TITLE: string;
-  API_ENDPOINT: string;
-  API_URL: string;
-  FE_URL: string;
-  QUEUE_URL: string;
-  EXPRESS_PORT: number;
   UWU_MODE: boolean;
-  INTERNAL_KEY: string;
   WEBHOOK_URL: string;
   PG: Envify<IPostgresProviderConfig>;
   MUX: Envify<IMuxProviderConfig>;
@@ -39,8 +33,7 @@ interface IEnvironment {
   REDIS: Envify<IRedisProviderConfig>;
   STORE: Envify<IStoreProviderConfig>;
   STRIPE: Envify<IStripeProviderConfig>;
-  PUB_SUB: Envify<IPubSubProviderConfig>;
-  INFLUX: Envify<IInfluxProviderConfig>;
+  EMAIL: Envify<IEmailProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   isEnv: (env: Environment | Environment[]) => boolean;
 }
@@ -48,18 +41,23 @@ interface IEnvironment {
 const Env: IEnvironment = {
   isEnv: isEnv(TRUE_ENV as Environment),
   SITE_TITLE: 'StageUp',
-  API_ENDPOINT: process.env.API_ENDPOINT || '',
-  API_URL: process.env.API_URL,
-  FE_URL: process.env.FE_URL,
+  BACKEND: {
+    PORT: parseInt(process.env.BACKEND_PORT),
+    ENDPOINT: process.env.BACKEND_ENDPOINT,
+    URL: `${process.env.LOAD_BALANCER_URL}:${process.env.BACKEND_PORT}/${process.env.BACKEND_ENDPOINT}`
+  },
+  FRONTEND: {
+    PORT: parseInt(process.env.FRONTEND_PORT),
+    ENDPOINT: process.env.FRONTEND_ENDPOINT,
+    URL: `${process.env.LOAD_BALANCER_URL}:${process.env.FRONTEND_PORT}/${process.env.FRONTEND_ENDPOINT}`
+  },
   ENVIRONMENT: TRUE_ENV as Environment,
-  PRIVATE_KEY: process.env.PRIVATE_KEY,
+  PRIVATE_KEY: process.env.BACKEND_PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
-  QUEUE_URL: process.env.QUEUE_URL,
-  INTERNAL_KEY: process.env.INTERNAL_KEY,
-  EXPRESS_PORT: 3000,
   WEBHOOK_URL: process.env.WEBHOOK_URL,
   LOCALTUNNEL: {
-    PORT: 3000
+    PORT: parseInt(process.env.BACKEND_PORT),
+    DOMAIN: new URL(process.env.WEBHOOK_URL).hostname.split('.').shift()
   },
   UWU_MODE: process.env.UWU_MODE === 'true',
   MUX: {
@@ -75,14 +73,17 @@ const Env: IEnvironment = {
     PORT: 5432
   },
   REDIS: {
-    HOST: process.env.REDIS_HOST,
+    HOST: process.env.BACKEND_REDIS_HOST,
     PORT: 6379
   },
   STORE: {
-    USE_MEMORYSTORE: process.env.USE_MEMORYSTORE === 'true',
-    HOST: process.env.STORE_HOST,
+    HOST: process.env.BACKEND_STORE_HOST,
     PORT: 6379,
     TTL: 86400
+  },
+  EMAIL: {
+    API_KEY: process.env.QUEUE_SENDGRID_API_KEY,
+    ENABLED: process.env.QUEUE_EMAIL_ENABLED === 'true'
   },
   STRIPE: {
     PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
@@ -90,20 +91,12 @@ const Env: IEnvironment = {
     HOOK_SIGNATURE: process.env.STRIPE_HOOK_SIGNATURE,
     CLIENT_ID: process.env.STRIPE_CLIENT_ID
   },
-  PUB_SUB: {
-    PROJECT_ID: process.env.PUB_SUB_PROJECT_ID,
-    PORT: parseInt(process.env.PUB_SUB_PORT)
-  },
   AWS: {
     S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
     S3_ACCESS_SECRET_KEY: process.env.AWS_S3_ACCESS_SECRET_KEY,
     S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
     S3_URL: process.env.AWS_S3_URL,
     S3_REGION: process.env.AWS_S3_REGION
-  },
-  INFLUX: {
-    HOST: process.env.INFLUX_HOST,
-    DATABASE: process.env.INFLUX_DATABASE
   }
 };
 

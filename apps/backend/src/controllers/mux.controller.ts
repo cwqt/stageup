@@ -1,6 +1,5 @@
 import {
   AssetType,
-  ErrCode,
   IMUXHookResponse,
   IMuxPassthrough,
   LiveStreamState,
@@ -14,10 +13,9 @@ import {
   BaseController,
   getCheck,
   IControllerEndpoint,
-  TopicType,
   AssetGroup
 } from '@core/api';
-import { timeout } from '@core/helpers';
+import { timeout, timestamp, uuid } from '@core/helpers';
 import { LiveStream, Webhooks } from '@mux/mux-node';
 import { MD5 } from 'object-hash';
 import { RedisClient } from 'redis';
@@ -105,10 +103,14 @@ export default class MUXController extends BaseController<BackendProviderMap> {
       })
     );
 
-    await this.providers.pubsub.publish(TopicType.StreamStateChanged, {
-      performance_id: performance._id,
-      state: state
-    });
+    await this.providers.bus.publish(
+      'live_stream.state_changed',
+      {
+        performance_id: performance._id,
+        state: state
+      },
+      { language: 'en', region: 'GB' }
+    );
   }
 
   async streamCreated(data: IMUXHookResponse<LiveStream>) {
@@ -138,7 +140,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
 
   handleHook(): IControllerEndpoint<void> {
     return {
-      authStrategy: async req => {
+      authorisation: async req => {
         try {
           // https://github.com/muxinc/mux-node-sdk#verifying-webhook-signatures
           const isValidHook = Webhooks.verifyHeader(
@@ -147,19 +149,15 @@ export default class MUXController extends BaseController<BackendProviderMap> {
             Env.MUX.HOOK_SIGNATURE
           );
 
-          if (!isValidHook) return [false, {}, ErrCode.INVALID];
+          if (!isValidHook) return [false, {}, '@@error.invalid'];
         } catch (error) {
           log.error(error.message);
-          return [false, {}, ErrCode.UNKNOWN];
+          return [false, {}, '@@error.unknown'];
         }
 
         return [true, {}];
       },
       controller: async req => {
-        if (Env.STORE.USE_MEMORYSTORE == true) {
-          log.error('Cannot handle MUX hook as Redis is disabled in .env');
-        }
-
         // Is a valid hook & we should handle it
         const data: IMUXHookResponse = req.body;
 

@@ -2,23 +2,25 @@ import inquirer from 'inquirer';
 const spawn = require('child_process').spawn;
 
 const logo = `
-             \`.-:\/+osy+
-           mMMMMMNMMMMN
-           hMMMh-.:mMMM-
-           +MMMy.\`.dMMMo
-           .MMMMNmMMMMMd
-            mMMMMMMMMMMM
- .--:\/+osyhdNMMMMMMMMMMm
-\`NMMMMNmNMMNdysssyhmMMM+
- dMMMs.\`-dy-\` .--.\`.yMs
- +MMMh:-:m\`  :mMNNmhd\/
- .MMMMMNMMo\`  -\/oyh\/\`
-  dMMMMMMMMmy+:-\`
-  \/MMMMMMMMMMMMNm+
-   oMMMMMm\/-+yhhs-       StageUp Core v${process.env.npm_package_version}
-    :dMMMNs\/-.\`          https://github.com/StageUp/core
-      :yNMMMMNN+
-         .\/osyy+
+\`...-\/\/\/\/\/\/\/:..\/\/\/\/\/\/\/:-.\`
+......-:\/+++-...::----::\/+\/:\`
+\/-...------:\`\`            .\/+\/.
+\/+--------.       \`.\`\`    .\/ooo\/.
+\/++:------     \`..-\/+++:.\/oooooo+-
+\/+++:----.     ....-:\/\/++ooooooooo-
+\/++++:--:.     \`.----:\/\/\/\/+++oooooo.
+\/+++++::::\`       \`\`.-:\/\/\/\/\/\/++oooo\/
+\/++++++\/::-.\`          \`.:\/\/\/\/++oooo
+\/+++++++\/:----..\`\`        .\/++++oooo
+:++++++++:-----::::-.\`     \`++++oss\/
+\`++++++++\/::::::::::::-     \/+++oss.
+ -+++++++\/\/:.:::::::::-     ++++ss\/      StageUp Core v${process.env.npm_package_version}
+  -+++++\/\/.  \`.-::::-.     -++oos\/       https://github.com/StageUp/core
+   .\/+++\/\`                -++oso-
+     -+o++:-\`         \`.-\/+oso:
+       .:+++++\/\/\/:::\/\/++oso\/-
+          \`.::\/+++++++\/:-\`
+
 `;
 
 console.clear();
@@ -42,29 +44,13 @@ const applications: {
     cmd: {
       // FIXME: use configuration composition https://github.com/nrwl/nx/issues/2839
       // https://ngrefs.com/latest/cli/builder-browser#localize
-      serve: (env, locale) =>
-        `${applications.frontend.cmd['set-env'](env)} && nx serve frontend --configuration=${env}`,
-      build: (env, locale) =>
-        `${applications.frontend.cmd['set-env'](env)} && nx build frontend --configuration=${env}`,
-      ['extract-i18n']: env => `nx run frontend:extract-i18n && nx run frontend:xliffmerge`,
+      serve: env => `${applications.frontend.cmd['set-env'](env)} && nx serve frontend --configuration=${env}`,
+      build: env => `${applications.frontend.cmd['set-env'](env)} && nx build frontend --configuration=${env}`,
+      ['extract-i18n']: () => `nx run frontend:extract-i18n && nx run frontend:xliffmerge`,
       ['set-env']: env => `ts-node ./apps/frontend/set-env.ts --env=${env}`
     },
     environments: ['development', 'staging', 'production'],
     locales: ['en', 'no']
-  },
-  runner: {
-    environments: ['development', 'staging', 'production'],
-    cmd: {
-      serve: env => `cross-env NODE_ENV=${env} nx serve runner --configuration=${env}`,
-      build: env => `cross-env NODE_ENV=${env} nx build runner --configuration=${env} --generatePackageJson`
-    }
-  },
-  notifications: {
-    environments: ['development', 'staging', 'production'],
-    cmd: {
-      serve: env => `cross-env NODE_ENV=${env} nx serve notifications --configuration=${env}`,
-      build: env => `cross-env NODE_ENV=${env} nx build notifications --configuration=${env} --generatePackageJson`
-    }
   },
   ['api-tests']: {
     cmd: {
@@ -75,9 +61,9 @@ const applications: {
   deploy: {
     cmd: {
       build: env =>
-        `${applications.frontend.cmd['set-env'](
+        `npm run xlf-missing && npm run generate:xlf && ${applications.frontend.cmd['set-env'](
           env
-        )} && nx run-many --all --target=build --parallel --configuration=${env}`
+        )} && nx affected:build --all --parallel --configuration=${env}`
     },
     environments: ['staging', 'production']
   }
@@ -85,7 +71,7 @@ const applications: {
 
 (async () => {
   const app = await inquirer.prompt([
-    { type: 'list', name: 'value', message: 'Select application', choices: [...Object.keys(applications), 'stack'] }
+    { type: 'list', name: 'value', message: 'Select application', choices: [...Object.keys(applications)] }
   ]);
 
   const select = async app => {
@@ -117,16 +103,16 @@ const applications: {
     return [action.value, env.value, locale?.value];
   };
 
-  const apps = app.value == "stack" ? ['backend', 'runner', 'notifications'] : [app.value];
+  const apps = [app.value];
 
   const commands = [];
-  for(let i=0; i<apps.length; i++) {
+  for (let i = 0; i < apps.length; i++) {
     const [action, env, locale] = await select(apps[i]);
     commands.push(applications[apps[i]].cmd[action](env, locale).split(' '));
   }
 
   console.clear();
   commands.forEach((command, idx) => {
-    spawn(command.shift(), command, { shell: true, stdio: 'inherit',  });
-  })
+    spawn(command.shift(), command, { shell: true, stdio: 'inherit' });
+  });
 })();

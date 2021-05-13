@@ -232,6 +232,15 @@
     </mat-select>
   </mat-form-field>
 
+  <!-- Datetime picker -->
+  <mat-form-field class="form-field__datetime" *ngIf="data.type == 'datetime'" appearance="fill">
+    <input matInput [ngxMatDatetimePicker]="picker" [(ngModel)]="value" placeholder="Choose a date" />
+    <mat-label>Enter a date range</mat-label>
+
+    <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
+    <ngx-mat-datetime-picker #picker> </ngx-mat-datetime-picker>
+  </mat-form-field>
+
   <!-- Radio select -->
   <mat-form-field class="form-field__radio" *ngIf="data.type == 'radio'" appearance="none">
     <label>{{ data.options.label }}</label>

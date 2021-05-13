@@ -1,4 +1,4 @@
-import { ErrCode, NUUID } from '@core/interfaces';
+import { i18nToken, NUUID } from '@core/interfaces';
 import { Request } from 'express';
 import { ProviderMap } from './data-client';
 
@@ -9,7 +9,7 @@ export type AuthStrategy = <T extends ProviderMap>(
   idMap?: Record<string, NUUID>
 ) => Promise<AuthStratReturn>;
 
-export type AuthStratReturn = [boolean, { [index: string]: any }, ErrCode?];
+export type AuthStratReturn = [boolean, { [index: string]: any }, i18nToken?];
 
 export type NUUIDMap = Record<string, NUUID>;
 export type MapAccessor = (map: NUUIDMap) => NUUID;
@@ -49,7 +49,7 @@ const not = (strategy: AuthStrategy): AuthStrategy => {
 const and = (...args: AuthStrategy[]): AuthStrategy => {
   return async (req, providers, map): Promise<AuthStratReturn> => {
     const isValid = (await Promise.all(args.map(async as => as(req, providers, map)))).every(r => r[0]);
-    return [isValid, {}, ErrCode.MISSING_PERMS];
+    return [isValid, {}, '@@error.missing_permissions'];
   };
 };
 
@@ -60,7 +60,7 @@ const and = (...args: AuthStrategy[]): AuthStrategy => {
 const or = (...args: AuthStrategy[]): AuthStrategy => {
   return async (req, providers, map): Promise<AuthStratReturn> => {
     const isValid = (await Promise.all(args.map(async as => as(req, providers, map)))).some(r => r[0]);
-    return [isValid, {}, ErrCode.MISSING_PERMS];
+    return [isValid, {}, '@@error.missing_permissions'];
   };
 };
 
@@ -71,10 +71,9 @@ const or = (...args: AuthStrategy[]): AuthStrategy => {
 const custom = (f: <T extends ProviderMap>(request?: Request, pm?: T) => boolean): AuthStrategy => {
   return async (req, pm): Promise<AuthStratReturn> => {
     const res = f(req, pm);
-    return [res, {}, res ? ErrCode.MISSING_PERMS : null];
+    return [res, {}, res ? '@@error.missing_permissions' : null];
   };
 };
-
 
 export default {
   none,

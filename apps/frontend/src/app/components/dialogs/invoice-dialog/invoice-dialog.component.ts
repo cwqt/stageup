@@ -3,7 +3,6 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { IHostInvoice, IUserInvoice, DtoInvoice, PaymentStatus } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
-import { PaymentStatusUiChipColorSelector } from '@frontend/routes/host/host-invoices/host-invoices.component';
 import { HostService } from '@frontend/services/host.service';
 import { MyselfService } from '@frontend/services/myself.service';
 import { HelperService } from '@frontend/services/helper.service';
@@ -15,10 +14,10 @@ import { RefundDialogComponent } from '../refund-dialog/refund-dialog.component'
   styleUrls: ['./invoice-dialog.component.scss']
 })
 export class InvoiceDialogComponent implements OnInit {
-  public invoice: ICacheable<IHostInvoice | IUserInvoice> = createICacheable();
   isHostInvoice: boolean;
   paymentStateKind: ChipComponent['kind'];
-  public refundRequested: PaymentStatus = PaymentStatus.RefundPending;
+  invoice: ICacheable<IHostInvoice | IUserInvoice> = createICacheable();
+  refundRequested: PaymentStatus = PaymentStatus.RefundPending;
 
   @Output() submit: EventEmitter<void> = new EventEmitter();
 
@@ -27,24 +26,35 @@ export class InvoiceDialogComponent implements OnInit {
     private myselfService: MyselfService,
     private helperService: HelperService,
     @Inject(MAT_DIALOG_DATA) public data: { invoice: DtoInvoice; is_host_invoice: boolean },
-    private dialog: MatDialog,
-    private ref: MatDialogRef<InvoiceDialogComponent>
+    private dialog: MatDialog
   ) {}
 
   async ngOnInit() {
     this.isHostInvoice = this.data.is_host_invoice;
-    
+
     await cachize(
       this.isHostInvoice
-        ? this.hostService.readInvoice(
-            this.hostService.hostId,
-            this.data.invoice.invoice_id
-          )
+        ? this.hostService.readInvoice(this.hostService.hostId, this.data.invoice.invoice_id)
         : this.myselfService.readInvoice(this.data.invoice.invoice_id),
       this.invoice
     );
 
-    this.paymentStateKind = PaymentStatusUiChipColorSelector(this.invoice.data.status);
+    this.paymentStateKind = (status => {
+      switch (status) {
+        case PaymentStatus.Created:
+          return 'blue';
+        case PaymentStatus.Fufilled:
+          return 'gray';
+        case PaymentStatus.Paid:
+          return 'green';
+        case PaymentStatus.RefundPending:
+          return 'magenta';
+        case PaymentStatus.RefundDenied:
+          return 'red';
+        case PaymentStatus.Refunded:
+          return 'gray';
+      }
+    })(this.invoice.data.status);
   }
 
   get hostInvoice(): IHostInvoice {
@@ -52,11 +62,9 @@ export class InvoiceDialogComponent implements OnInit {
   }
 
   requestRefund() {
-    this.helperService.showDialog(this.dialog.open(RefundDialogComponent, { data: this.invoice.data }), 
-    async () => {
+    this.helperService.showDialog(this.dialog.open(RefundDialogComponent, { data: this.invoice.data }), () => {
+      this.paymentStateKind = 'magenta';
       this.submit.emit();
-      console.log("Refund request successful");
-      this.ref.close();
     });
   }
 }

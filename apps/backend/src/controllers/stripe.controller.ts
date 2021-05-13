@@ -1,6 +1,5 @@
 import {
   CurrencyCode,
-  ErrCode,
   HostPermission,
   StripeHook,
   TokenProvisioner,
@@ -45,7 +44,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
   handleHook(): IControllerEndpoint<{ received: boolean }> {
     return {
-      authStrategy: async req => {
+      authorisation: async req => {
         // index.ts Register has a body_parser option that tacks on the raw body on req
         try {
           this.providers.stripe.connection.webhooks.signature.verifyHeader(
@@ -55,7 +54,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
           );
         } catch (error) {
           log.error(error);
-          return [false, {}, ErrCode.INVALID];
+          return [false, {}, '@@error.invalid'];
         }
 
         return [true, {}];
@@ -117,7 +116,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
           })
         );
 
-        await this.ORM.transaction(async txc => {
+        const invoice = await this.ORM.transaction(async txc => {
           // Create a new invoice for the user which provisions an Access Token for the performance
           ticket.quantity_remaining -= 1;
           const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data)
@@ -134,9 +133,14 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
           // Save the remaining ticket quantity
           await txc.save(ticket);
+          return invoice;
         });
 
-        Email.sendTicketPurchaseConfirmation(user, ticket, ticket.performance, data.receipt_url);
+        this.providers.bus.publish(
+          'ticket.purchased',
+          { purchaser_id: user._id, invoice_id: invoice._id },
+          user.locale
+        );
       }
     }
   }
@@ -151,7 +155,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
   handleStripeConnectReturn(): IControllerEndpoint<string> {
     return {
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-handle-user-returning-to-platform
         // No state is passed through this URL. After a user is redirected to your return_url,
@@ -203,7 +207,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
           log.error(`Failed to setup example tier for user`);
         }
 
-        return `${Env.FE_URL}/dashboard/payments?connect-success=${res.charges_enabled}`;
+        return `${Env.FRONTEND.URL}/${req.locale.language}/dashboard/payments?connect-success=${res.charges_enabled}`;
         // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-accept-payment
         // After Stripe standard account connected, users can create PaymentIntents
         // where which we can take an `application_fee_amount` from the purchase

@@ -8,17 +8,23 @@ import { json, OptionsJson } from 'body-parser';
 import { globalErrorHandler, global404Handler, DataClient } from '@core/api';
 import { Logger } from 'winston';
 import { Environment } from '@core/interfaces';
-import { AsyncRouter } from './router';
+import { AsyncRouter, Routes } from './router';
 import { ProviderMap } from './data-client';
+import { i18nProvider, Ii18nConfig } from './i18n';
+import createLocaleMiddleware from 'express-locale';
+import { AuthStrategy } from './authorisation';
+import { Container, Service, Inject } from 'typedi';
 
 export interface IServiceConfig<T extends ProviderMap> {
   name: string;
   environment: Environment;
   port: number;
-  provider_map: T;
+  providers: T;
   logger: Logger;
   stream: morgan.StreamOptions;
+  authorisation: AuthStrategy;
   endpoint: string;
+  i18n: Ii18nConfig;
   options?: {
     body_parser?: OptionsJson;
     cors?: CorsOptions;
@@ -43,21 +49,28 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
   app.use(cors(config.options?.cors || {}));
   app.use(helmet(config.options?.helmet || {}));
   app.use(morgan('tiny', { stream: config.stream }));
+  if (config.i18n) app.use(createLocaleMiddleware({ priority: ['accept-language', 'default'] }));
 
   return async (
-    Router: (a: typeof app, providerMap: T, config?: IServiceConfig<T>) => Promise<AsyncRouter<T>>
+    setup: (a: typeof app, providers: T, router: AsyncRouter<T>, config: IServiceConfig<T>) => Promise<Routes<T>>
   ): Promise<http.Server> => {
     try {
-      const providers = await DataClient.connect(config.provider_map, config.logger);
-      const router = await Router(app, providers, config);
-      app.use(config.endpoint ? `/${config.endpoint}` : '', router.router);
+      const providers = await DataClient.connect(config.providers, config.logger);
+      const i18n = config.i18n && (await new i18nProvider(config.i18n).setup(config.logger));
+
+      Container.set('i18n', i18n);
+
+      const router = new AsyncRouter(providers, config.authorisation, config.logger, i18n);
+      const routes = await setup(app, providers, router, config);
+
+      app.use(config.endpoint ? `${config.endpoint}` : '/', router.register(routes));
 
       // Catch 404 errors & provide a top-level error handler
-      app.all('*', global404Handler(config.logger));
-      app.use(globalErrorHandler(config.logger));
+      app.all('*', global404Handler(config.logger, i18n));
+      app.use(globalErrorHandler(config.logger, i18n));
 
       server = app.listen(config.port, () =>
-        config.logger.info(`\u001B[1m${config.name} listening on ${config.port}\u001B[0m at /${config.endpoint}`)
+        config.logger.info(`\u001B[1m${config.name} listening on ${config.port}\u001B[0m at ${config.endpoint}`)
       );
 
       process.on('SIGTERM', gracefulExit(server, providers, config.logger));

@@ -46,15 +46,15 @@ import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
 import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
-import { BackendProviderMap } from '.';
+import { BackendModules, BackendProviderMap } from '.';
 import PatronageController from './controllers/patronage.controller';
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
  */
-export default (router:AsyncRouter<BackendProviderMap>, providerMap:BackendProviderMap, middlewares:Middlewares) => {
+export default (router:AsyncRouter<BackendProviderMap>, providers:BackendProviderMap, middlewares:Middlewares) => {
 // MYSELF -------------------------------------------------------------------------------------------------------------
-const Myself = new MyselfController(providerMap, middlewares);
+const Myself = new MyselfController(providers, middlewares);
 router.get      <IMyself>               ("/myself",                                   Myself.readMyself());
 router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
 router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
@@ -70,7 +70,7 @@ router.delete   <void>                  ("/myself/payment-methods/:pmid",       
 router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.updatePaymentMethod());
 
 // USERS --------------------------------------------------------------------------------------------------------------
-const Users = new UserController(providerMap, middlewares);
+const Users = new UserController(providers, middlewares);
 router.post     <IMyself["user"]>       ("/users",                                    Users.createUser());
 router.post     <void>                  ("/users/logout",                             Users.logoutUser());
 router.post     <IUser>                 ("/users/login",                              Users.loginUser());
@@ -88,7 +88,7 @@ router.put      <IAddress>              ("/users/:uid/addresses/:aid",          
 router.delete   <void>                  ("/users/:uid/addresses/:aid",                Users.deleteAddress());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
-const Hosts = new HostController(providerMap, middlewares);
+const Hosts = new HostController(providers, middlewares);
 router.post     <IHost>                 ("/hosts",                                    Hosts.createHost());
 router.get      <IHost>                 ("/hosts/@:username",                         Hosts.readHostByUsername()); // order matters
 router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
@@ -116,7 +116,7 @@ router.post     <void>                  ("/hosts/:hid/invoices/export-csv",     
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
-const Patronage = new PatronageController(providerMap, middlewares);
+const Patronage = new PatronageController(providers, middlewares);
 router.post     <IHostPatronTier>       ("/hosts/:hid/patron-tiers",                  Patronage.createPatronTier());
 router.get      <(IHPTier | IPTier)[]>  ("/hosts/:hid/patron-tiers",                  Patronage.readPatronTiers());
 router.delete   <void>                  ("/hosts/:hid/patron-tiers/:tid",             Patronage.deletePatronTier());
@@ -124,7 +124,7 @@ router.post     <IPatronSubscription>   ("/hosts/:hid/patron-tiers/:tid/subscrib
 // router.delete   <void>                  ("/hosts/:hid/patron-tiers/:tid/unsubscribe", Patronage.unsubscribeFromPatronTier());
 
 // PERFORMANCES -------------------------------------------------------------------------------------------------------
-const Perfs = new PerfController(providerMap, middlewares);
+const Perfs = new PerfController(providers, middlewares);
 router.post     <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance());
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances());
 router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance());
@@ -143,35 +143,35 @@ router.delete   <void>                  ("/performances/:pid/tickets/:tid",     
 router.post     <IPaymentICS>           ("/tickets/:tid/payment-intent",              Perfs.createPaymentIntent());
 
 // ADMIN  -------------------------------------------------------------------------------------------------------------
-const Admin = new AdminController(providerMap, middlewares);
+const Admin = new AdminController(providers, middlewares);
 router.get      <IE<IHOnboarding[]>>     ("/admin/onboardings",                       Admin.readOnboardingProcesses());
 router.post     <void>                   ("/admin/onboardings/:hid/review",           Admin.reviewOnboardingProcess());
 router.post     <void>                   ("/admin/onboardings/:hid/enact",            Admin.enactOnboardingProcess());
 
 // MUX ----------------------------------------------------------------------------------------------------------------
-const MUX = new MUXController(providerMap, middlewares);
+const MUX = new MUXController(providers, middlewares);
 router.post     <void>                   ("/mux/hooks",                               MUX.handleHook());
 
 // STRIPE -------------------------------------------------------------------------------------------------------------
-const Stripe = new StripeController(providerMap, middlewares);
+const Stripe = new StripeController(providers, middlewares);
 router.post     <{ received: boolean }>  ("/stripe/hooks",                            Stripe.handleHook());
 router.redirect                          ("/stripe/oauth",                           Stripe.handleStripeConnectReturn());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
-const Auth =  new AuthController(providerMap, middlewares)
+const Auth =  new AuthController(providers, middlewares)
 router.redirect                          ("/auth/verify-email",                       Auth.verifyUserEmail());
 
 // MISC ---------------------------------------------------------------------------------------------------------------
-const Misc = new MiscController(providerMap, middlewares);
+const Misc = new MiscController(providers, middlewares);
 router.post     <void>                   ("/logs",                                    Misc.logFrontendMessage());
 router.get      <string>                 ("/ping",                                    Misc.ping());
 router.post     <void>                   ("/drop",                                    Misc.dropAllData());
 router.get      <IHost>                  ("/verify-host/:hid",                        Misc.verifyHost());
 router.post     <void>                   ("/accept-invite/:uid",                      Misc.acceptHostInvite());
-router.get      <void>                   ("/sendgrid",                                Misc.testSendGrid());
+router.get      <void>                   ("/utils/send-test-email",                   Misc.sendTestEmail());
 router.get      <void>                   ("/utils/performances/:pid/state",           Misc.setPerformanceStreamState())
 
 // SEARCH ---------------------------------------------------------------------------------------------------------------
-const Search = new SearchController(providerMap, middlewares);
+const Search = new SearchController(providers, middlewares);
 router.get      <ISearchResponse>        ("/search",                                  Search.search());
 }

@@ -5,11 +5,12 @@ import MuxProvider from './providers/mux.provider';
 import PostgresProvider from './providers/postgres.provider';
 import RedisProvider from './providers/redis.provider';
 import StoreProvider from './providers/store.provider';
-import SendGridProvider from './providers/sendgrid.provider';
+import { EmailProvider } from './providers/email.provider';
 import StripeProvider from './providers/stripe.provider';
-import S3Provider from './providers/aws-s3.provider';
+import BlobProvider from './providers/blob.provider';
 import SSEProvider from './providers/sse.provider';
-import PubSubProvider from './providers/pub-sub.provider';
+import EventBusProvider from './providers/event-bus.provider';
+import { i18nProvider } from '../i18n';
 
 /**
  * DataClient: Object with methods for maintaining all providers
@@ -25,13 +26,13 @@ export interface Provider<T = unknown, K = any> {
   name: string;
   connection: T;
   config: K;
-  connect: (providerMap: ProviderMap<T>) => Promise<Provider<T,K>["connection"]>;
+  connect: (providerMap: ProviderMap<T>) => Promise<Provider<T, K>['connection']>;
   disconnect: (...args: unknown[]) => Promise<void>;
   drop?: () => Promise<void>;
   ping?: () => Promise<number>;
 }
 
-export type ProviderMap<T=any> = { [index in keyof T]: Provider<T[index]> };
+export type ProviderMap<T = any> = { [index in keyof T]: Provider<T[index]> };
 
 // Creates the DataClient object from an object of DataProviders
 const connect = async <T extends ProviderMap>(providerMap: T, log: Logger): Promise<T> => {
@@ -101,15 +102,18 @@ const drop = async <T>(providerMap: ProviderMap<T>) => {
 
 export const DataClient = { connect, disconnect, ping, drop };
 export namespace Providers {
+  export const SSE = SSEProvider;
+  export const EventBus = EventBusProvider;
+  export const Email = EmailProvider;
+  export const i18n = i18nProvider;
+  export const Blob = BlobProvider;
+
+  // Non generic providers
   export const Postgres = PostgresProvider;
   export const Mux = MuxProvider;
   export const Redis = RedisProvider;
   export const Influx = InfluxProvider;
   export const LocalTunnel = LocalTunnelProvider;
   export const Store = StoreProvider;
-  export const SendGrid = SendGridProvider;
   export const Stripe = StripeProvider;
-  export const S3 = S3Provider;
-  export const SSE = SSEProvider;
-  export const PubSub = PubSubProvider;
-};
+}

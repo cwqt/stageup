@@ -1,6 +1,7 @@
 FROM nginx
 
-COPY dist/apps/frontend/* /usr/share/nginx/html/
+# copy all locales, en, nb etc into html
+COPY dist/apps/frontend/ /usr/share/nginx/html/
 
 EXPOSE 80
 

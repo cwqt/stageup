@@ -1,12 +1,13 @@
 import { AbstractControl, FormBuilder, FormGroup, NgControl, ValidatorFn, Validators } from '@angular/forms';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
-import { Primitive, Y } from '@core/interfaces';
+import { DottedPaths, Primitive, Y } from '@core/interfaces';
 import { CurrencyCode } from 'aws-sdk/clients/devicefarm';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { createICacheable, ICacheable } from '../../app.interfaces';
-import { displayValidationErrors, handleFormErrors } from '../../_helpers/form-error.handler';
+import { IErrorResponse, IFormErrorField } from '@core/interfaces';
+import { HttpErrorResponse } from '@angular/common/http';
 
-// Reactive Form Builder
+// Reactive Form Builder v2
 
 export interface IUiFormResolver<Output, Input, Fields> {
   input?: () => Promise<{
@@ -30,7 +31,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
   private resolvers: IUiFormResolver<Output, Input, K>;
   private handlers?: {
     success?: (v: Output, f?: FormGroup) => Promise<void>;
-    failure?: (v: any, f?: FormGroup) => Promise<void>;
+    failure?: (v: IErrorResponse, f?: FormGroup) => Promise<void>;
     changes?: (v: FormGroup) => Promise<void>;
   };
 
@@ -45,7 +46,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
       resolvers: IUiFormResolver<Output, Input, K>;
       handlers?: {
         success?: (v: Output, f?: FormGroup) => Promise<void>;
-        failure?: (v: any, f?: FormGroup) => Promise<void>;
+        failure?: (v: IErrorResponse, f?: FormGroup) => Promise<void>;
         changes?: (v: FormGroup) => Promise<void>;
       };
     },
@@ -92,9 +93,33 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
         if (this.handlers?.success) this.handlers.success(value, this.group);
         return value;
       } catch (error) {
-        this.cache = handleFormErrors(this.cache, error.error);
-        displayValidationErrors(this.group, this.cache);
-        if (this.handlers?.failure) this.handlers.failure(error, this.group);
+        if (error instanceof HttpErrorResponse && error.error.status) {
+          const res: IErrorResponse = error.error;
+          // Put the form error message in the Cachable
+          this.cache.error = res.message || null;
+
+          // Map into ICacheable FormError
+          this.cache.form_errors = res.errors.reduce((acc, curr) => {
+            if (!acc[curr.path]) acc[curr.path] = [];
+            acc[curr.path].push([curr.code, curr.message]);
+            return acc;
+          }, {});
+
+          // And then set the errors on the controls
+          Object.entries(this.cache.form_errors).forEach(([path, errors]) => {
+            const control = this.group.get(path);
+            if (control) {
+              // https://github.com/angular/angular/issues/19170#issuecomment-435576250
+              setTimeout(() => {
+                control.markAsDirty();
+                control.markAsTouched();
+                control.setErrors({ backendIssue: errors.reduce((acc, curr) => ((acc += `${curr[1]}\n`), acc), '') });
+              }, 1);
+            }
+          });
+
+          if (this.handlers?.failure) return this.handlers.failure(res, this.group);
+        }
       }
     });
   }
@@ -212,7 +237,6 @@ export const UiField: {
 } = {
   Container: options => ({ type: 'container', options }),
   Text: options => ({ type: 'text', options }),
-  Date: options => ({ type: 'date', options }),
   Radio: options => ({ type: 'radio', options }),
   Richtext: options => ({ type: 'richtext', options }),
   Money: options => ({ type: 'money', options }),
@@ -222,6 +246,8 @@ export const UiField: {
   Select: options => ({ type: 'select', options }),
   Number: options => ({ type: 'number', options }),
   Checkbox: options => ({ type: 'checkbox', options }),
+  Datetime: options => ({ type: 'datetime', options }),
+  Date: options => ({ type: 'date', options }),
   Time: options => ({ type: 'time', options })
 } as const;
 
@@ -254,6 +280,7 @@ export interface IUiFieldOptions {
   validators?: IUiFormFieldValidator[];
   hide_footer?: boolean;
   separator?: 'above' | 'below';
+  maps_to?: string;
 }
 
 export type IUiFieldTypeReturn<K = { [index: string]: IUiFormField['type'] }> = {
@@ -305,6 +332,7 @@ export type IUiFieldTypeOptions = {
     date_highlighter?: MatCalendarCellClassFunction<Date>;
   };
   radio: {
+    initial?: Primitive;
     inline?: boolean;
     values: Map<Primitive, { label: string; disabled?: boolean }>;
   };
@@ -321,6 +349,12 @@ export type IUiFieldTypeOptions = {
   time: {
     placeholder?: string;
     initial?: 0;
+  };
+  datetime: {
+    is_date_range?: boolean;
+    min_date?: Date;
+    max_date?: Date;
+    date_highlighter?: MatCalendarCellClassFunction<Date>;
   };
   phone: {
     placeholder?: string;

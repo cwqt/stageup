@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 networks:
   default:
@@ -8,20 +8,22 @@ services:
   api:
     container_name: api
     env_file:
-     - .env.${NODE_ENV:-development}
-    environment: 
+      - .env.${NODE_ENV:-development}
+    environment:
       WAIT_HOSTS: postgres:5432, redis:6379
-    build: 
+    build:
       context: .
       dockerfile: ./apps/backend/Dockerfile
     depends_on:
       - redis
       - postgres
+      - pubsub
     links:
-     - postgres
-     - redis
+      - postgres
+      - redis
+      - pubsub
     ports:
-      - target: 3000
+      - target: ${API_PORT}
         published: 3000
         protocol: tcp
         mode: ingress
@@ -33,27 +35,50 @@ services:
   runner:
     container_name: runner
     env_file:
-     - .env.${NODE_ENV:-development}
-    environment: 
+      - .env.${NODE_ENV:-development}
+    environment:
       WAIT_HOSTS: redis:6379, api:3000
-    build: 
+    build:
       context: .
       dockerfile: ./apps/runner/Dockerfile
     depends_on:
       - redis
       - api
     links:
-     - redis
+      - redis
     ports:
-      - "3001:3001"
+      - '3001:3001'
     networks:
       default:
         aliases:
           - runner
 
+  notifs:
+    container_name: notifs
+    env_file:
+      - .env.${NODE_ENV:-development}
+    environment:
+      WAIT_HOSTS: pubsub:8085
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+    depends_on:
+      - pubsub
+    links:
+      - pubsub
+    ports:
+      - target: 3002
+        published: 3002
+        protocol: tcp
+        mode: ingress
+    networks:
+      default:
+        aliases:
+          - notifs
+
   web:
     container_name: nginx
-    build: 
+    build:
       context: .
       dockerfile: ./apps/frontend/Dockerfile
     volumes:
@@ -61,7 +86,7 @@ services:
       - ./apps/frontend/nginx.conf:/etc/nginx/nginx.conf
       - ./deploy/security-headers.conf:/etc/nginx/security-headers.conf
     ports:
-      - "80:80"
+      - '80:80'
     depends_on:
       - api
 
@@ -69,21 +94,28 @@ services:
     container_name: psql
     hostname: postgres
     restart: always
-    image: "postgres:11"
+    image: 'postgres:11'
     env_file:
-     - .env.${NODE_ENV:-development}
+      - .env.${NODE_ENV:-development}
     volumes:
       - ./store/postgres:/var/lib/postgresql/data/
     ports:
-      - "5432:5432"
+      - '5432:5432'
     healthcheck:
       test: nc -z localhost 5432
 
   redis:
     container_name: redis
     hostname: redis
-    image: "redis"
+    image: 'redis'
     env_file:
-     - .env.${NODE_ENV:-development}
+      - .env.${NODE_ENV:-development}
     ports:
-      - "6379:6379"
+      - '6379:6379'
+
+  pubsub:
+    container_name: pubsub
+    hostname: pubsub
+    image: 'knarz/pubsub-emulator'
+    ports:
+      - '8085:8085'

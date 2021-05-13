@@ -1,82 +1,27 @@
-import { CurrencyCode, ErrCode } from '@core/interfaces';
+import { CurrencyCode, Genre, GenreMap, NUUID, ISOCountryCode } from '@core/interfaces';
 import { enumToValues } from '@core/helpers';
-import { ValidationChain } from 'express-validator';
+import validator from 'validator';
+import { array, define, enums, number, pattern, refine, size, string } from 'superstruct';
 
-const FORBIDDEN_USERNAMES: string[] = [];
+const FORBIDDEN_USERNAMES: string[] = ['fuck', 'shit', 'crap'];
 const CURRENCY_CODES = enumToValues(CurrencyCode);
 
-export namespace FieldValidators {
-  type CustomValidator = (v: ValidationChain, message?: ErrCode) => ValidationChain;
-
-  export const password: CustomValidator = v => {
-    return isString(v).isLength({ min: 6, max: 32 });
-  };
-
-  export const exists: CustomValidator = v => {
-    return v.exists({ checkNull: false }).withMessage(ErrCode.MISSING_FIELD);
-  };
-
-  export const isString: CustomValidator = (v, message = ErrCode.INVALID) => {
-    return exists(v).trim().notEmpty().isString().withMessage(message);
-  };
-
-  export const email: CustomValidator = v => {
-    return isString(v).isEmail().withMessage(ErrCode.INVALID_EMAIL).normalizeEmail();
-  };
-
-  export const optional: CustomValidator = v => {
-    return v.optional({ checkFalsy: true, nullable: true });
-  };
-
-  export const isInt: CustomValidator = (v, message) => {
-    return exists(v)
-      .isNumeric()
-      .withMessage(message || ErrCode.REGEX_MATCH);
-  };
-
-  /**
-   * @description 10 byte unix timestamp
-   */
-  export const timestamp: CustomValidator = v => {
-    return isInt(v).isLength({ min: 10, max: 10 });
-  };
-
-  export const name: CustomValidator = v => {
-    return isString(v)
-      .isLength({ min: 6 })
-      .withMessage(ErrCode.TOO_SHORT)
-      .isLength({ max: 32 })
-      .withMessage(ErrCode.TOO_LONG);
-  };
-
-  export const username: CustomValidator = v => {
-    return isString(v)
-      .isLength({ min: 6 })
-      .withMessage(ErrCode.TOO_SHORT)
-      .isLength({ max: 32 })
-      .withMessage(ErrCode.TOO_LONG)
-      .matches(/^[a-zA-Z\d]*$/)
-      .withMessage(ErrCode.INVALID)
-      .not()
-      .isIn(FORBIDDEN_USERNAMES)
-      .withMessage(ErrCode.FORBIDDEN);
-  };
-
-  export const bio: CustomValidator = v => {
-    return isString(v).isLength({ max: 512 }).withMessage(ErrCode.TOO_LONG);
-  };
-
-  export const postcode: CustomValidator = v => {
-    return isString(v)
-      .isPostalCode('GB') // TODO: make open to all counties
-      .withMessage(ErrCode.REGEX_MATCH);
-  };
-
-  export const ISOCountry: CustomValidator = v => {
-    return isString(v).isISO31661Alpha3().withMessage(ErrCode.REGEX_MATCH);
-  };
-
-  export const CurrencyCode: CustomValidator = v => {
-    return v.isIn(CURRENCY_CODES);
-  };
+export namespace fields {
+  export const nuuid = size(string(), 11, 11);
+  export const forbidden = refine(
+    string(),
+    'forbidden',
+    value => !validator.isIn(value, FORBIDDEN_USERNAMES) || '@@validation.not_allowed'
+  );
+  export const email = refine(string(), 'email', value => validator.isEmail(value) || '@@validation.not_valid_email');
+  export const password = refine(string(), 'password', value => value.length > 6 || '@@validation.too_short');
+  export const timestamp = refine(number(), 'timestamp', value => Math.ceil(Math.log(value + 1) / Math.LN10) == 10);
+  export const name = size(string(), 6, 32);
+  export const username = pattern(size(forbidden, 6, 32), /^[a-zA-Z\d]*$/);
+  export const bio = size(string(), 0, 512);
+  export const postcode = define<string>('postcode', value => validator.isPostalCode(value as string, 'GB'));
+  export const iso3166 = define<ISOCountryCode>('iso3166', value => validator.isISO31661Alpha2(value as string));
+  export const currency = enums<CurrencyCode>(CURRENCY_CODES as CurrencyCode[]);
+  export const richtext = array();
+  export const genre = enums(enumToValues(Genre) as Genre[]);
 }

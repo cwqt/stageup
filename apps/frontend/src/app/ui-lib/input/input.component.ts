@@ -100,7 +100,7 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   ngAfterViewInit() {
     if (this.data.type == 'select') this.setInitialSelectValue();
     if (this.data.type == 'date' && this.data.options['is_date_range']) {
-      // Can't bind ngModel to mat-date-picker-input :/
+      // Can't bind ngModel to date-range because it uses two input elements
       this.pickerInput.rangePicker.stateChanges.subscribe(() => {
         this.value = this.pickerInput.value;
       });
@@ -115,6 +115,9 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
 
   public set value(v: any) {
     if (v !== this._value) {
+      // HTML number inputs return strings, so do an unary type coercion to number
+      if (this.data.type == 'number') v = +v;
+
       this._value = v;
       this.onChangeCallback(v);
     }

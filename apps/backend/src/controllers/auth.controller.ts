@@ -1,22 +1,22 @@
-import { Validators, query, User, BaseController, IControllerEndpoint } from '@core/api';
-import { ErrCode } from '@core/interfaces';
+import { Validators, User, BaseController, IControllerEndpoint } from '@core/api';
 
 import Env from '../env';
 import AuthStrat from '../common/authorisation';
 import { verifyEmail } from '../common/email';
 import { BackendProviderMap } from '..';
+import { object, string } from 'superstruct';
 
 export default class AuthController extends BaseController<BackendProviderMap> {
   verifyUserEmail(): IControllerEndpoint<string> {
     return {
-      validators: [
-        query<{ email: string; hash: string }>({
-          email: v => Validators.Fields.email(v),
-          hash: v => Validators.Fields.isString(v, ErrCode.MISSING_FIELD)
+      validators: {
+        query: object({
+          email_address: Validators.Fields.email,
+          hash: string()
         })
-      ],
-      preMiddlewares: [this.mws.limiter(3600, 10)],
-      authStrategy: AuthStrat.none,
+      },
+      middleware: this.middleware.rateLimit(3600, 10, this.providers.redis.connection),
+      authorisation: AuthStrat.none,
       controller: async req => {
         const hash = req.query.hash as string;
         const email = req.query.email as string;
@@ -30,7 +30,7 @@ export default class AuthController extends BaseController<BackendProviderMap> {
         await u.save();
 
         // Return redirect address
-        return `${Env.FE_URL}/verified?state=${isVerified ? 'true' : 'false'}`;
+        return `${Env.FRONTEND.URL}/${req.locale.language}/verified?state=${isVerified ? 'true' : 'false'}`;
       }
     };
   }

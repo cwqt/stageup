@@ -18,7 +18,7 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
 
   buttons: IUiDialogOptions['buttons'];
   selectedPermission: HostPermission;
-  form:UiForm;
+  form: UiForm;
 
   constructor(
     private toastService: ToastService,
@@ -38,7 +38,7 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
       [HostPermission.Pending]: 'Pending'
     } as const;
 
-    const values = new Map<HostPermission, { label: string; disabled?: boolean }>()
+    const values = new Map<HostPermission, { label: string; disabled?: boolean }>();
 
     // Get a copy of the current option & set it to disabled - since you can't re-update to same permission
     values.set(this.data.uhi.permissions, { label: allOptions[this.data.uhi.permissions], disabled: true });
@@ -53,19 +53,17 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
           permission !== this.data.uhi.permissions // or the current users permission
         ); // Put initial value back into options list
       })
-      .forEach((permission:HostPermission) => values.set(permission, { label: allOptions[permission] }));
+      .forEach((permission: HostPermission) => values.set(permission, { label: allOptions[permission] }));
 
     this.form = new UiForm({
       fields: {
         permission: UiField.Select({
-            label: "Select Permission",
-            initial: this.data.uhi.permissions,
-            validators: [
-              { type: "custom", value: self => self.value != this.data.uhi.permissions }
-            ],
-            multi_select: false,
-            has_search: false,
-            values: values,
+          label: 'Select Permission',
+          initial: this.data.uhi.permissions,
+          validators: [{ type: 'custom', value: self => self.value != this.data.uhi.permissions }],
+          multi_select: false,
+          has_search: false,
+          values: values
         })
       },
       resolvers: {
@@ -73,9 +71,9 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
       },
       handlers: {
         success: async () => this.submit.emit(this.selectedPermission),
-        failure: async err => this.toastService.emit(err, ThemeKind.Danger),
+        failure: async error => this.toastService.emit(error.message, ThemeKind.Danger)
       }
-    })
+    });
 
     this.buttons = [
       new UiDialogButton({

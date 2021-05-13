@@ -1,22 +1,10 @@
 import Env from '../../env';
-import { Environment, ErrCode, HostPermission, IHost, hasRequiredHostPermission } from '@core/interfaces';
+import { Environment, HostPermission, IHost, hasRequiredHostPermission } from '@core/interfaces';
 import { Auth, AuthStrategy, AuthStratReturn, MapAccessor, NUUIDMap, User, UserHostInfo, Host } from '@core/api';
-
-const isFromService: AuthStrategy = async (req, providers): Promise<AuthStratReturn> => {
-  if (!req.headers.authorization) return [false, {}];
-
-  // Check bearer authentication matches internally known key
-  const auth = Buffer.from(req.headers.authorization.split(' ')[1], 'base64').toString();
-  if (auth != `service:${Env.INTERNAL_KEY}`) {
-    return [false, {}];
-  }
-
-  return [true, {}];
-};
 
 const isLoggedIn: AuthStrategy = async (req, providers): Promise<AuthStratReturn> => {
   if (!req.session.user) {
-    return [false, {}, ErrCode.NO_SESSION];
+    return [false, {}, '@@error.no_session'];
   }
 
   return [true, {}];
@@ -28,7 +16,7 @@ const isOurself: AuthStrategy = async (req, providers): Promise<AuthStratReturn>
 
   const user = await User.findOne({ _id: req.params.uid });
   if (user._id !== req.session.user._id) {
-    return [false, {}, ErrCode.NO_SESSION];
+    return [false, {}, '@@error.no_session'];
   }
 
   return [true, { user }];
@@ -50,7 +38,7 @@ const isMemberOfAnyHost: AuthStrategy = async (req, providers, map): Promise<Aut
     }
   });
 
-  if (!user.host) return [false, {}, ErrCode.NOT_MEMBER];
+  if (!user.host) return [false, {}, '@@error.not_member'];
   return [true, { user }];
 };
 
@@ -74,8 +62,8 @@ const isMemberOfHost = (mapAccessor?: MapAccessor, passedMap?: NUUIDMap): AuthSt
       select: { permissions: true, _id: true, user: { _id: true }, host: { _id: true } }
     });
 
-    if (!uhi) return [false, {}, ErrCode.NOT_MEMBER];
-    if (uhi && uhi.permissions == HostPermission.Expired) return [false, {}, ErrCode.NOT_MEMBER];
+    if (!uhi) return [false, {}, '@@error.not_member'];
+    if (uhi && uhi.permissions == HostPermission.Expired) return [false, {}, '@@error.not_member'];
 
     return [true, { uhi }];
   };
@@ -90,7 +78,7 @@ const hasHostPermission = (permission: HostPermission, mapAccessor?: MapAccessor
     // Highest Perms (Owner)  = "host_owner"
     // Lowest Perfs (Pending) = "host_pending"
     if (hasRequiredHostPermission(passthru.uhi.permissions, permission)) {
-      return [false, {}, ErrCode.MISSING_PERMS];
+      return [false, {}, '@@error.missing_permissions'];
     }
 
     return [true, passthru];
@@ -103,7 +91,7 @@ const hasSpecificHostPermission = (permission: HostPermission): AuthStrategy => 
     if (!isMember) return [false, {}, reason];
 
     if (passthru.uhi.permissions !== permission) {
-      return [false, {}, ErrCode.MISSING_PERMS];
+      return [false, {}, '@@error.missing_permissions'];
     }
 
     return [true, { user: passthru.user }];
@@ -117,7 +105,7 @@ const isSiteAdmin: AuthStrategy = async (req, providers): Promise<AuthStratRetur
   }
 
   if (!req.session.user.is_admin) {
-    return [false, {}, ErrCode.NOT_ADMIN];
+    return [false, {}, '@@error.admin_only'];
   }
 
   return [true, {}];
@@ -126,7 +114,7 @@ const isSiteAdmin: AuthStrategy = async (req, providers): Promise<AuthStratRetur
 const hostIsOnboarded = (mapAccessor?: MapAccessor): AuthStrategy => {
   return async (req, providers, map): Promise<AuthStratReturn> => {
     const hostId: IHost['_id'] = mapAccessor ? await mapAccessor(map) : req.params.hid;
-    if (!hostId) return [false, {}, ErrCode.MISSING_FIELD];
+    if (!hostId) return [false, {}, '@@error.missing_field'];
 
     // Find if the host is onboarded or not
     const host = await Host.findOne(
@@ -140,8 +128,8 @@ const hostIsOnboarded = (mapAccessor?: MapAccessor): AuthStrategy => {
       }
     );
 
-    if (!host) return [false, {}, ErrCode.NOT_FOUND];
-    if (!host.is_onboarded) return [false, {}, ErrCode.NOT_VERIFIED];
+    if (!host) return [false, {}, '@@error.not_found'];
+    if (!host.is_onboarded) return [false, {}, '@@error.not_verified'];
 
     return [true, { host }];
   };
@@ -150,7 +138,7 @@ const hostIsOnboarded = (mapAccessor?: MapAccessor): AuthStrategy => {
 const userEmailIsVerified = (mapAccessor?: MapAccessor): AuthStrategy => {
   return async (req, providers, map): Promise<AuthStratReturn> => {
     const userId = mapAccessor ? await mapAccessor(map) : req.params.uid;
-    if (!userId) return [false, {}, ErrCode.MISSING_FIELD];
+    if (!userId) return [false, {}, '@@error.missing_field'];
 
     const user = await User.findOne(
       {
@@ -158,8 +146,8 @@ const userEmailIsVerified = (mapAccessor?: MapAccessor): AuthStrategy => {
       },
       { select: { is_verified: true } }
     );
-    if (!user) return [false, {}, ErrCode.NOT_FOUND];
-    if (!user.is_verified) return [false, {}, ErrCode.NOT_VERIFIED];
+    if (!user) return [false, {}, '@@error.not_found'];
+    if (!user.is_verified) return [false, {}, '@@error.not_verified'];
 
     return [true, {}];
   };
@@ -167,13 +155,12 @@ const userEmailIsVerified = (mapAccessor?: MapAccessor): AuthStrategy => {
 
 const isEnv = (env: Environment): AuthStrategy => {
   return async (req, providers): Promise<AuthStratReturn> => {
-    if (!Env.isEnv(env)) return [false, {}, ErrCode.UNKNOWN];
+    if (!Env.isEnv(env)) return [false, {}, '@@error.unknown'];
     return [true, {}];
   };
 };
 
 export default {
-  isFromService,
   isEnv,
   isOurself,
   isLoggedIn,

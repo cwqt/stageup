@@ -41,16 +41,17 @@ export const pick = <T extends object, U extends keyof T>(obj: T, paths: Array<U
   return ret;
 };
 
-
 /**
 // @description Lazy loaded entity
 */
 export type Lazy<T> = Promise<T> | T;
 
-
-const comp = (g, f) => x => g(f(x)) // "g of f of x"
-const identity = (x) => x
-export const compose = (...all) => all.reduce(comp, identity);
+// Compose functions
+export const compose = (...all) =>
+  all.reduce(
+    (g, f) => x => g(f(x)),
+    x => x
+  );
 
 // Typed nested object dot accessor -----------------------------------------------------
 // FIXME: angular 11.1.0 supports ts 4.1 which is whats required for template string types
@@ -84,11 +85,3 @@ export type DottedPaths<T> = string;
 
 // export const objectToFlatMap = () => {};
 // export const flatMapToObject = () => {};
-
-
-export type OneKey<K extends string, V = any> = {
-  [P in K]: (Record<P, V> &
-    Partial<Record<Exclude<K, P>, never>>) extends infer O
-    ? { [Q in keyof O]: O[Q] }
-    : never
-}[K];

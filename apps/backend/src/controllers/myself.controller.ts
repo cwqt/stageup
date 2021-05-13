@@ -1,51 +1,41 @@
-import Env from '@backend/env';
 import {
   AccessToken,
   BaseController,
-  body,
+  ErrorHandler,
   getCheck,
   Host,
   IControllerEndpoint,
   Invoice,
-  Ticket,
   PaymentMethod,
-  query,
-  single,
+  Performance,
   User,
   UserHostInfo,
-  Performance,
-  Validators,
-  ErrorHandler
+  Validators
 } from '@core/api';
-import { prettifyMoney, timestamp } from '@core/helpers';
+import { timestamp } from '@core/helpers';
 import {
+  HTTP,
   IEnvelopedData,
   IFeed,
   IMyself,
   IPaymentMethod,
+  IPaymentMethodStub,
   IPerformanceStub,
+  IRefundRequest,
   IUserHostInfo,
   IUserInvoice,
   IUserInvoiceStub,
-  Visibility,
-  PaginationOptions,
   PaymentStatus,
-  IRefundRequest,
-  IPaymentMethodStub,
-  HTTP,
-  ErrCode,
-  IInvoice
+  Visibility
 } from '@core/interfaces';
+import { boolean, enums, object, partial, record } from 'superstruct';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
-import moment from "moment";
-
-import Email = require('../common/email');
 
 export default class MyselfController extends BaseController<BackendProviderMap> {
   readMyself(): IControllerEndpoint<IMyself> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const host: Host = await Host.findOne({
@@ -74,13 +64,15 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
   readFeed(): IControllerEndpoint<IFeed> {
     return {
-      authStrategy: AuthStrat.none,
-      validators: [
-        query<{ [index in keyof IFeed]: PaginationOptions }>({
-          upcoming: v => v.optional({ nullable: true }).custom(Validators.Objects.PaginationOptions(10)),
-          everything: v => v.optional({ nullable: true }).custom(Validators.Objects.PaginationOptions(10))
-        })
-      ],
+      validators: {
+        query: partial(
+          record(
+            enums<keyof IFeed>(['upcoming', 'everything']),
+            Validators.Objects.PaginationOptions(10)
+          )
+        )
+      },
+      authorisation: AuthStrat.none,
       controller: async req => {
         const feed: IFeed = {
           upcoming: null,
@@ -117,12 +109,12 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
   updatePreferredLandingPage(): IControllerEndpoint<IUserHostInfo> {
     return {
-      validators: [
-        body<Pick<IUserHostInfo, 'prefers_dashboard_landing'>>({
-          prefers_dashboard_landing: v => v.isBoolean()
+      validators: {
+        body: object({
+          prefers_dashboard_landing: boolean()
         })
-      ],
-      authStrategy: AuthStrat.isMemberOfAnyHost,
+      },
+      authorisation: AuthStrat.isMemberOfAnyHost,
       controller: async req => {
         const uhi = await getCheck(
           UserHostInfo.findOne({
@@ -149,7 +141,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
   readMyPurchasedPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[]>> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         return await AccessToken.createQueryBuilder('token')
           .where('token.user__id = :uid', { uid: req.session.user._id })
@@ -166,7 +158,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
   readInvoices(): IControllerEndpoint<IEnvelopedData<IUserInvoiceStub[]>> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         return await this.ORM.createQueryBuilder(Invoice, 'invoice')
           .where('invoice.user__id = :user_id', { user_id: req.session.user._id })
@@ -194,7 +186,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
   // router.get <IUserInvoice> ("/myself/invoices/:iid", Myself.readInvoice());
   readInvoice(): IControllerEndpoint<IUserInvoice> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
           .where('invoice._id = :invoice_id', { invoice_id: req.params.iid })
@@ -206,7 +198,9 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           .withDeleted()
           .getOne();
 
-        const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id, { stripeAccount: invoice.ticket.performance.host.stripe_account_id});
+        const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id, {
+          stripeAccount: invoice.ticket.performance.host.stripe_account_id
+        });
         return invoice.toHostInvoice(charge);
       }
     };
@@ -214,46 +208,36 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
   requestInvoiceRefund(): IControllerEndpoint<void> {
     return {
-      validators: [
-        body<IRefundRequest>(
-          Validators.Objects.refundInvoiceRequest()
-        )
-      ],
-      authStrategy: AuthStrat.isLoggedIn,
+      // validators: [body<IRefundRequest>(Validators.Objects.refundInvoiceRequest())],
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-
-        const refundReq: IRefundRequest = req.body;
-        
-        const invoice = await getCheck(Invoice.findOne({
-          relations: {
-            ticket: {
-              performance: true
+        const refund: IRefundRequest = req.body;
+        const invoice = await getCheck(
+          Invoice.findOne({
+            relations: {
+              user: true
             },
-            user: true, 
-            host: true 
-          },
-          where: {
-            _id: req.body.invoice_id,
-            user: {
-              _id: req.session.user._id
+            where: {
+              _id: req.body.invoice_id,
+              user: {
+                _id: req.session.user._id
+              }
             }
-          },
-        }));
-        
-        invoice.status = PaymentStatus.RefundPending;
-        invoice.refund_request = refundReq;
-        
-        await invoice.save();
+          })
+        );
 
-        Email.sendInvoiceRefundRequestConfirmation(invoice);
-        Email.sendInvoiceRefundRequestToHost(invoice);
+        invoice.status = PaymentStatus.RefundPending;
+        invoice.refund_request = refund;
+
+        await invoice.save();
+        this.providers.bus.publish('refund.requested', { invoice_id: invoice._id }, req.locale);
       }
     };
   }
 
   readPaymentMethods(): IControllerEndpoint<IPaymentMethodStub[]> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const user = await getCheck(
           User.findOne(
@@ -275,7 +259,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
    */
   addCreatedPaymentMethod(): IControllerEndpoint<IPaymentMethod> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         // TODO: set default payment source
 
@@ -284,7 +268,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
         // Cross reference with metadata passed when creating PaymentMethod
         if (paymentMethod.metadata.user_id !== req.session.user._id)
-          throw new ErrorHandler(HTTP.BadRequest, ErrCode.FORBIDDEN);
+          throw new ErrorHandler(HTTP.BadRequest, '@@error.forbidden');
 
         const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
 
@@ -302,7 +286,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
   readPaymentMethod(): IControllerEndpoint<IPaymentMethod> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const method = await getCheck(
           PaymentMethod.findOne({
@@ -319,7 +303,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
   deletePaymentMethod(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         // Perform intersection on card ID & User
         const method = await getCheck(
@@ -340,7 +324,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
   updatePaymentMethod(): IControllerEndpoint<IPaymentMethod> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         return {} as any;
       }

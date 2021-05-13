@@ -8,6 +8,11 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { NgxPopperModule } from 'ngx-popper';
 import { HttpClientModule } from '@angular/common/http';
 import { QuillModule } from 'ngx-quill';
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule
+} from '@angular-material-components/datetime-picker';
 
 import { TestbedComponent } from './testbed/testbed.component';
 
@@ -68,6 +73,9 @@ const ExportedUiComponents = [
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    NgxMatDatetimePickerModule,
+    NgxMatNativeDateModule,
+    NgxMatTimepickerModule,
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
     NgxMatSelectSearchModule,

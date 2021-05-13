@@ -1,11 +1,14 @@
 .host-register-wrapper {
+  overflow: visible;
   ::ng-deep {
+    ui-dialog .ui-dialog {
+      margin-bottom: 0 !important;
+    }
     .mat-horizontal-content-container {
-      padding: 0 !important
+      padding: 0 !important;
     }
   }
 }
-
 
 .host-register-dialog {
   &--audience {
@@ -13,7 +16,8 @@
       display: none;
     }
   }
-  &--business {}
+  &--business {
+  }
 }
 
 app-user-register ::ng-deep {

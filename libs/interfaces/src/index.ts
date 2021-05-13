@@ -32,7 +32,8 @@ export * from './users/feed.interface';
 export * from './3rd-party/stripe.interface';
 export * from './3rd-party/mux.interface';
 
-export * from './runner/job.interface';
+export * from './queue/job.interface';
+export * from './i18n/i18n.interface';
 
 export * from './search/search.interface';
 export * from './users/password.interface';

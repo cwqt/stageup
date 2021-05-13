@@ -1,69 +1,60 @@
 import {
+  Address,
+  BaseController,
+  ErrorHandler,
+  getCheck,
+  Host,
+  IControllerEndpoint,
+  PasswordReset,
+  User,
+  Validators
+} from '@core/api';
+import {
+  Environment,
   HostPermission,
+  HTTP,
+  IAddress,
   IEnvelopedData,
   IHost,
+  IMyself,
   IUser,
   IUserHostInfo,
-  IMyself,
-  IAddress,
-  IUserPrivate,
-  Idless,
-  ErrCode,
-  HTTP,
-  Environment,
   IUserStub,
-  pick,
-  IPasswordReset
+  pick
 } from '@core/interfaces';
-import {
-  IControllerEndpoint,
-  BaseController,
-  User,
-  Host,
-  Address,
-  Validators,
-  body,
-  params as parameters,
-  ErrorHandler,
-  FormErrorResponse,
-  getCheck,
-  query,
-  Auth,
-  UserHostInfo,
-  PasswordReset
-} from '@core/api';
-
-import Email = require('../common/email');
-import Env from '../env';
-import AuthStrat from '../common/authorisation';
-
-import jwt = require('jsonwebtoken');
-
+import { fields } from 'libs/shared/src/api/validate/fields.validators';
+import { object, string } from 'superstruct';
 import { EntityManager } from 'typeorm';
 import { BackendProviderMap } from '..';
-import idFinderStrategies from '../common/authorisation/id-finder-strategies';
-import { VoiceId } from 'aws-sdk/clients/polly';
-import { sendEmail } from '../common/email';
+import AuthStrat from '../common/authorisation';
+import Env from '../env';
+
+import jwt = require('jsonwebtoken');
 
 export default class UserController extends BaseController<BackendProviderMap> {
   loginUser(): IControllerEndpoint<IUser> {
     return {
-      validators: [
-        body<Pick<IUserPrivate, 'email_address'> & { password: string }>({
-          email_address: v => Validators.Fields.email(v),
-          password: v => Validators.Fields.password(v)
-        })
-      ],
-      preMiddlewares: [this.mws.limiter(3600, 10)],
-      authStrategy: AuthStrat.none,
+      validators: { body: Validators.Objects.DtoLogin },
+      middleware: this.middleware.rateLimit(3600, 10, this.providers.redis.connection),
+      authorisation: AuthStrat.none,
       controller: async req => {
         const emailAddress = req.body.email_address;
         const password = req.body.password;
 
-        const u = await getCheck(User.findOne({ email_address: emailAddress }));
-        const match = await u.verifyPassword(password);
-        if (!match) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.INCORRECT);
+        const u = await User.findOne({ email_address: emailAddress });
+        // Check user exists
+        if (!u)
+          throw new ErrorHandler(HTTP.NotFound, '@@error.not_found', [
+            { path: 'email_address', code: '@@user.not_found' }
+          ]);
 
+        // & then verify the password is correct
+        if (!(await u.verifyPassword(password)))
+          throw new ErrorHandler(HTTP.Unauthorised, '@@error.incorrect', [
+            { path: 'password', code: '@@login.password_incorrect' }
+          ]);
+
+        // Generate a session token
         req.session.user = {
           _id: u._id,
           is_admin: u.is_admin || false
@@ -76,29 +67,9 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   createUser(): IControllerEndpoint<IMyself['user']> {
     return {
-      validators: [
-        body<Pick<IUserPrivate, 'username' | 'email_address'> & { password: string }>({
-          username: v => Validators.Fields.username(v),
-          email_address: v => Validators.Fields.email(v),
-          password: v => Validators.Fields.password(v)
-        })
-      ],
-      authStrategy: AuthStrat.none,
+      validators: { body: Validators.Objects.DtoCreateUser },
+      authorisation: AuthStrat.none,
       controller: async req => {
-        const preExistingUser = await User.findOne({
-          where: [{ email_address: req.body.email_address }, { username: req.body.username }]
-        });
-
-        // Check if a some fields are already in use by someone else
-        const errors = new FormErrorResponse();
-        if (preExistingUser?.username === req.body.username) errors.push('username', ErrCode.IN_USE, req.body.username);
-        if (preExistingUser?.email_address === req.body.email_address)
-          errors.push('email_address', ErrCode.IN_USE, req.body.email_address);
-        if (errors.errors.length > 0) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE, errors.value);
-
-        // Fire & forget off a verification email
-        Email.sendVerificationEmail(req.body.email_address);
-
         // Create a Stripe Customer, for purposes of managing cards on our Multi-Party platform
         // https://stripe.com/docs/connect/cloning-saved-payment-methods#storing-customers
         const customer = await this.providers.stripe.connection.customers.create({
@@ -124,6 +95,17 @@ export default class UserController extends BaseController<BackendProviderMap> {
           return u;
         });
 
+        this.providers.bus.publish(
+          'user.registered',
+          {
+            _id: user._id,
+            name: user.name,
+            username: user.username,
+            email_address: user.email_address
+          },
+          req.locale
+        );
+
         return user.toMyself();
       }
     };
@@ -131,7 +113,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   logoutUser(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         req.session.destroy(error => {
           if (error) {
@@ -144,12 +126,8 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   readUserByUsername(): IControllerEndpoint<IUser> {
     return {
-      validators: [
-        parameters<Pick<IUserPrivate, 'username'>>({
-          username: v => v.trim().notEmpty()
-        })
-      ],
-      authStrategy: AuthStrat.none,
+      validators: { params: object({ username: fields.username }) },
+      authorisation: AuthStrat.none,
       controller: async req => {
         const u = await getCheck(User.findOne({ username: req.params.username }));
         return u.toFull();
@@ -159,7 +137,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   readUserById(): IControllerEndpoint<IUser> {
     return {
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const u = await getCheck(User.findOne({ _id: req.params.uid }));
         return u.toFull();
@@ -169,13 +147,8 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   updateUser(): IControllerEndpoint<IMyself['user']> {
     return {
-      authStrategy: AuthStrat.none,
-      validators: [
-        body<{ name: string; bio: string }>({
-          name: v => v.optional({ nullable: true }).isLength({ max: 32 }),
-          bio: v => v.optional({ nullable: true }).isLength({ max: 512 })
-        })
-      ],
+      authorisation: AuthStrat.none,
+      validators: { body: Validators.Objects.DtoUpdateUser },
       controller: async req => {
         let u = await getCheck(User.findOne({ _id: req.params.uid }));
         u = await u.update(pick(req.body, ['name', 'avatar', 'bio']));
@@ -186,7 +159,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   deleteUser(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const u = await getCheck(User.findOne({ _id: req.params.uid }));
         await u.remove();
@@ -196,7 +169,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   readUserHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserHostInfo>> {
     return {
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const host = await getCheck(
           Host.findOne({
@@ -221,9 +194,8 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   changeAvatar(): IControllerEndpoint<IUserStub> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      preMiddlewares: [this.mws.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file')],
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      middleware: this.middleware.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file'),
       controller: async req => {
         const user = await getCheck(
           User.findOne({
@@ -233,7 +205,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
           })
         );
 
-        user.avatar = await this.providers.s3.upload(req.file, user.avatar);
+        user.avatar = await this.providers.blob.upload(req.file, user.avatar);
         await user.save();
         return user.toStub();
       }
@@ -242,13 +214,8 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   resetPassword(): IControllerEndpoint<void> {
     return {
-      validators: [
-        body<{ new_password: string; old_password: string }>({
-          new_password: v => Validators.Fields.password(v).withMessage('New password length must be >6 characters'),
-          old_password: v => Validators.Fields.password(v).withMessage('Old password length must be >6 characters')
-        })
-      ],
-      authStrategy: AuthStrat.none,
+      validators: { body: Validators.Objects.DtoResetPassword },
+      authorisation: AuthStrat.none,
       controller: async req => {
         const oldPassword = req.body.old_password;
         const newPassword = req.body.new_password;
@@ -256,27 +223,28 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
         // Check supplied password is valid
         const match = await u.verifyPassword(oldPassword);
-        if (!match) throw new ErrorHandler(HTTP.Unauthorised, ErrCode.INCORRECT);
+        if (!match) throw new ErrorHandler(HTTP.Unauthorised, '@@error.incorrect');
 
         u.setPassword(newPassword);
         await u.save();
 
-        Email.sendEmail({
-          from: Env.EMAIL_ADDRESS,
-          to: u.email_address,
-          subject: 'Your password was just changed',
-          html: `<p>
-      Your account password has recently been changed.<br/><br/>
-      If you did not make this change, please change your password as soon as possible. If you have recently changed your password, then please ignore this email.
-      </p>`
-        });
+        // TODO: add back email
+        //   Email.sendEmail({
+        //     from: Env.EMAIL_ADDRESS,
+        //     to: u.email_address,
+        //     subject: 'Your password was just changed',
+        //     html: `<p>
+        // Your account password has recently been changed.<br/><br/>
+        // If you did not make this change, please change your password as soon as possible. If you have recently changed your password, then please ignore this email.
+        // </p>`
+        //   });
       }
     };
   }
 
   readAddresses(): IControllerEndpoint<IAddress[]> {
     return {
-      authStrategy: AuthStrat.isOurself,
+      authorisation: AuthStrat.isOurself,
       controller: async req => {
         const u = await User.findOne({ _id: req.params.uid }, { relations: ['personal_details'] });
         return (u.personal_details.contact_info.addresses || []).map(a => a.toFull());
@@ -286,8 +254,8 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   createAddress(): IControllerEndpoint<IAddress> {
     return {
-      validators: [body<Idless<IAddress>>(Validators.Objects.IAddress())],
-      authStrategy: AuthStrat.isOurself,
+      validators: { body: Validators.Objects.IAddress },
+      authorisation: AuthStrat.isOurself,
       controller: async req => {
         const user = await getCheck(User.findOne({ _id: req.params.uid }, { relations: ['personal_details'] }));
 
@@ -303,7 +271,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   updateAddress(): IControllerEndpoint<IAddress> {
     return {
-      authStrategy: AuthStrat.isOurself,
+      authorisation: AuthStrat.isOurself,
       controller: async req => {
         const address = await Address.findOne({ _id: req.params.aid });
         // TODO: update method in address model
@@ -314,7 +282,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   deleteAddress(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.isOurself,
+      authorisation: AuthStrat.isOurself,
       controller: async req => {
         await Address.delete({ _id: req.params.aid });
       }
@@ -324,26 +292,24 @@ export default class UserController extends BaseController<BackendProviderMap> {
   //router.post <void> ("/users/forgot-password", Users.forgotPassword())
   forgotPassword(): IControllerEndpoint<void> {
     return {
-      validators: [
-        body<{ email_address: string }>({
-          email_address: v => Validators.Fields.email(v)
+      validators: {
+        body: object({
+          email_address: Validators.Fields.email
         })
-      ],
-      authStrategy: AuthStrat.none,
+      },
+      authorisation: AuthStrat.none,
       controller: async req => {
         const emailAddress = req.body.email_address;
         const user = await getCheck(User.findOne({ email_address: emailAddress }));
         const token = jwt.sign({ email_address: emailAddress }, Env.PRIVATE_KEY, { expiresIn: '24h' });
 
-        Email.sendEmailToResetPassword(user, emailAddress, encodeURI(token));
-
-        const p = new PasswordReset({
+        await PasswordReset.insert({
           otp: token,
           email_address: emailAddress,
           user__id: user._id
         });
 
-        await p.save();
+        this.providers.bus.publish('user.password_reset_requested', { user_id: user._id, otp: token }, req.locale);
       }
     };
   }
@@ -351,29 +317,24 @@ export default class UserController extends BaseController<BackendProviderMap> {
   //router.put <void> ("/users/reset-password", Users.resetForgottenPassword());
   resetForgottenPassword(): IControllerEndpoint<void> {
     return {
-      validators: [
-        query<{ otp: string }>({
-          otp: v => v.isString()
-        }),
-        body<{ new_password: string }>({
-          new_password: v => Validators.Fields.password(v)
-        })
-      ],
-      authStrategy: AuthStrat.none,
+      validators: {
+        query: object({ otp: string() }),
+        body: object({ new_password: string() })
+      },
+      authorisation: AuthStrat.none,
       controller: async req => {
-        const OTP = await new Promise((res, rej) => {
+        const otp = await new Promise((res, rej) => {
           jwt.verify(decodeURI(req.query.otp as string), Env.PRIVATE_KEY, (err, decoded) => {
             if (err) return rej(err);
             res(decoded);
           });
         });
 
-        const user = await getCheck(User.findOne({ email_address: OTP['email_address'] }));
-
+        const user = await getCheck(User.findOne({ email_address: otp['email_address'] }));
         user.setPassword(req.body.new_password);
         await user.save();
 
-        Email.sendEmailToConfirmPasswordReset(user);
+        this.providers.bus.publish('user.password_changed', { user_id: user._id }, req.locale);
       }
     };
   }

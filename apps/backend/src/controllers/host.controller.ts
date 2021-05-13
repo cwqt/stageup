@@ -1,36 +1,6 @@
 import {
-  ErrCode,
-  hasRequiredHostPermission,
-  HostInviteState,
-  HostOnboardingState,
-  HostOnboardingStep,
-  HostPermission,
-  HTTP,
-  IEnvelopedData,
-  IHost,
-  IHostMemberChangeRequest,
-  IHostOnboarding,
-  IHostPrivate,
-  IHostStripeInfo,
-  IHostStub,
-  IOnboardingOwnerDetails,
-  IOnboardingProofOfBusiness,
-  IOnboardingSocialPresence,
-  IOnboardingStep,
-  IOnboardingStepMap,
-  IPerformanceStub,
-  IHostInvoiceStub,
-  IHostInvoice,
-  IUserHostInfo,
-  JobType,
-  pick,
-  TokenProvisioner
-} from '@core/interfaces';
-import {
   AccessToken,
-  array,
   BaseController,
-  body,
   ErrorHandler,
   getCheck,
   Host,
@@ -39,50 +9,64 @@ import {
   Invoice,
   Onboarding,
   OnboardingReview,
-  params as parameters,
   Performance,
-  query,
   User,
   UserHostInfo,
   Validators
 } from '@core/api';
 import { timestamp } from '@core/helpers';
+import {
+  hasRequiredHostPermission,
+  HostInviteState,
+  HostOnboardingState,
+  HostOnboardingStep,
+  HostPermission,
+  HTTP,
+  IEnvelopedData,
+  IHost,
+  IHostInvoice,
+  IHostInvoiceStub,
+  IHostMemberChangeRequest,
+  IHostOnboarding,
+  IHostStripeInfo,
+  IHostStub,
+  IOnboardingOwnerDetails,
+  IOnboardingProofOfBusiness,
+  IOnboardingSocialPresence,
+  IOnboardingStep,
+  IOnboardingStepMap,
+  IPerformanceStub,
+  IUserHostInfo,
+  pick,
+  TokenProvisioner
+} from '@core/interfaces';
+import { array, enums, object } from 'superstruct';
 import { In } from 'typeorm';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import { log } from '../common/logger';
-import Queue from '../common/queue';
 import Env from '../env';
 
 import Email = require('../common/email');
+import { fields } from 'libs/shared/src/api/validate/fields.validators';
 
 export default class HostController extends BaseController<BackendProviderMap> {
   createHost(): IControllerEndpoint<IHost> {
     return {
-      validators: [
-        body<{
-          email_address: IHostPrivate['email_address'];
-          username: IHost['username'];
-          name: IHost['name'];
-        }>({
-          email_address: v => Validators.Fields.email(v),
-          username: v => Validators.Fields.username(v),
-          name: v => Validators.Fields.name(v)
-        })
-      ],
-      authStrategy: AuthStrat.runner(
+      validators: { body: Validators.Objects.DtoCreateHost },
+      authorisation: AuthStrat.runner(
         { uid: IdFinderStrat.findUserIdFromSession },
         AuthStrat.userEmailIsVerified(m => m.uid)
       ),
       controller: async req => {
         // Make sure user is not already part of a host
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (user.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+        if (user.host) throw new ErrorHandler(HTTP.Conflict, '@@error.duplicate');
 
         // Check if the username for a host is already taken
         const h = await Host.findOne({ username: req.body.username });
-        if (h) throw new ErrorHandler(HTTP.Conflict, ErrCode.IN_USE);
+        if (h) throw new ErrorHandler(HTTP.Conflict, '@@error.in_use');
 
         // Create host & add current user (creator) to it through transaction
         // & begin the onboarding process by running .setup()
@@ -107,8 +91,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readHost(): IControllerEndpoint<IHost> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const host = await Host.findOne(
           { _id: req.params.hid },
@@ -128,8 +111,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readHostByUsername(): IControllerEndpoint<IHost> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const host = await getCheck(Host.findOne({ username: req.params.username }));
         return host.toFull();
@@ -139,8 +121,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readMembers(): IControllerEndpoint<IEnvelopedData<IUserHostInfo[], null>> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         return await this.ORM.createQueryBuilder(UserHostInfo, 'uhi')
           .where('uhi.host__id = :host_id', { host_id: req.params.hid })
@@ -152,11 +133,10 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   deleteHost(): IControllerEndpoint<void> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (!user.host) throw new ErrorHandler(HTTP.NotFound, ErrCode.NOT_MEMBER);
+        if (!user.host) throw new ErrorHandler(HTTP.NotFound, '@@error.not_member');
 
         const userHostInfo = await UserHostInfo.findOne({
           relations: ['user', 'host'],
@@ -167,7 +147,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         });
 
         if (userHostInfo.permissions !== HostPermission.Owner)
-          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+          throw new ErrorHandler(HTTP.Unauthorised, '@@error.missing_permissions');
 
         // TODO: transactionally remove performances, signing keys, host infos etc etc.
         await user.host.remove();
@@ -178,8 +158,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
   //router.post<IUserHostInfo>("/hosts/:hid/members", Hosts.addMember());
   addMember(): IControllerEndpoint<IUserHostInfo> {
     return {
-      validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      validators: { body: Validators.Objects.IHostMemberChangeRequest },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const changeRequest: IHostMemberChangeRequest = req.body;
 
@@ -187,7 +167,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         const invitee = await getCheck(
           User.findOne({ email_address: changeRequest.value as string }, { relations: ['host'] })
         );
-        if (invitee.host) throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+        if (invitee.host) throw new ErrorHandler(HTTP.Conflict, '@@error.duplicate');
 
         // Don't allow duplicate invites to be created for a user for the same host
         if (
@@ -202,7 +182,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             }
           })
         )
-          throw new ErrorHandler(HTTP.Conflict, ErrCode.DUPLICATE);
+          throw new ErrorHandler(HTTP.Conflict, '@@error.duplicate');
 
         // Get host & pull in members_info for new member push
         const host = await getCheck(
@@ -229,13 +209,24 @@ export default class HostController extends BaseController<BackendProviderMap> {
         const inviter = await getCheck(User.findOne({ _id: req.session.user._id }));
 
         // Add member to host as 'Pending', create an invitation & submit the invitation e-mail
-        await this.ORM.transaction(async txc => {
+        const invite = await this.ORM.transaction(async txc => {
           await host.addMember(invitee, HostPermission.Pending, txc);
           await txc.save(host);
 
-          // Fire & forget send e-mail, otherwise holds up the thread waiting for a response from sendgrid
-          Email.sendUserHostMembershipInvitation(inviter, invitee, host, txc);
+          const invite = new HostInvitation(inviter, invitee, host);
+          return await txc.save(invite);
         });
+
+        this.providers.bus.publish(
+          'user.invited_to_host',
+          {
+            invite_id: invite._id,
+            host_id: host._id,
+            invitee_id: invitee._id,
+            inviter_id: inviter._id
+          },
+          req.locale
+        );
 
         // Return newly added user UserHostInfo
         return host.members_info.find(uhi => uhi.user?.email_address == changeRequest.value).toFull();
@@ -245,7 +236,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   handleHostInvite(): IControllerEndpoint<string> {
     return {
-      authStrategy: AuthStrat.hasSpecificHostPermission(HostPermission.Pending),
+      authorisation: AuthStrat.hasSpecificHostPermission(HostPermission.Pending),
       controller: async req => {
         const invite = await getCheck(
           HostInvitation.findOne(
@@ -255,7 +246,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         );
 
         // Only accept the request if the logged in user matches the invites' user
-        if (invite.invitee._id !== req.session.user._id) throw new ErrorHandler(HTTP.BadRequest, ErrCode.INVALID);
+        if (invite.invitee._id !== req.session.user._id) throw new ErrorHandler(HTTP.BadRequest, '@@error.invalid');
 
         const uhi = await getCheck(
           UserHostInfo.findOne({
@@ -273,7 +264,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           // TODO: have task runner set to expired
           invite.state = HostInviteState.Expired;
           await invite.save();
-          return `${Env.FE_URL}?invite_state=${HostInviteState.Expired}`;
+          return `${Env.FRONTEND.URL}/${req.locale.language}?invite_state=${HostInviteState.Expired}`;
         }
 
         // Otherwise accept the user into the host
@@ -284,7 +275,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           await Promise.all([txc.save(invite), txc.save(uhi)]);
         });
 
-        return `${Env.FE_URL}?invite_accepted=${HostInviteState.Accepted}`;
+        return `${Env.FRONTEND.URL}/${req.locale.language}?invite_accepted=${HostInviteState.Accepted}`;
       }
     };
   }
@@ -292,8 +283,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
   // router.put <IHost> ("/hosts/:hid/members/:mid", Hosts.updateMember());
   updateMember(): IControllerEndpoint<void> {
     return {
-      validators: [body<IHostMemberChangeRequest>(Validators.Objects.IHostMemberChangeRequest())],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      validators: { body: Validators.Objects.IHostMemberChangeRequest },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const userHostInfo = await getCheck(
           UserHostInfo.findOne({
@@ -307,7 +298,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         // Don't be able to force increase permissions if the user hasn't accepted the invitation
         if (hasRequiredHostPermission(userHostInfo.permissions, HostPermission.Member))
-          throw new ErrorHandler(HTTP.Forbidden, ErrCode.NOT_MEMBER);
+          throw new ErrorHandler(HTTP.Forbidden, '@@error.not_member');
 
         // Don't allow updating to Owner as that is a transfer of host ownership
         const newUserPermission: HostPermission = req.body.value;
@@ -315,7 +306,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         // Don't allow admins to demote an Owner
         if (userHostInfo.permissions == HostPermission.Owner)
-          throw new ErrorHandler(HTTP.Unauthorised, ErrCode.MISSING_PERMS);
+          throw new ErrorHandler(HTTP.Unauthorised, '@@error.missing_permissions');
 
         userHostInfo.permissions = newUserPermission;
         await userHostInfo.save();
@@ -326,8 +317,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
   // router.delete <void>("/hosts/:hid/members/:uid", Hosts.removeMember());
   removeMember(): IControllerEndpoint<void> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const userHostInfo = await getCheck(
           UserHostInfo.findOne({
@@ -345,7 +335,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
         );
 
         // Can't leave host as host owner
-        if (userHostInfo.permissions == HostPermission.Owner) throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
+        if (userHostInfo.permissions == HostPermission.Owner)
+          throw new ErrorHandler(HTTP.Forbidden, '@@error.forbidden');
 
         await this.ORM.transaction(async txc => {
           await userHostInfo.host.removeMember(userHostInfo.user, txc);
@@ -354,35 +345,9 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
-  readUserHostInfo(): IControllerEndpoint<IUserHostInfo> {
-    return {
-      validators: [
-        query<{ user: string }>({
-          user: v => v.exists().toInt()
-        })
-      ],
-      authStrategy: AuthStrat.isLoggedIn,
-      controller: async req => {
-        const uhi = await UserHostInfo.findOne({
-          relations: ['host', 'user'],
-          where: {
-            user: {
-              _id: req.query.user as string
-            },
-            host: {
-              _id: req.params.hid
-            }
-          }
-        });
-
-        return uhi;
-      }
-    };
-  }
-
   readOnboardingProcessStatus(): IControllerEndpoint<IHostOnboarding> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
         const onboarding = await getCheck(
           Onboarding.findOne({
@@ -402,12 +367,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {
-      validators: [
-        parameters<{ step: number }>({
-          step: v => v.exists().toInt().isIn(Object.values(HostOnboardingStep))
-        })
-      ],
-      authStrategy: AuthStrat.none,
+      validators: { params: object({ step: enums(Object.values(HostOnboardingStep) as number[]) }) },
+      authorisation: AuthStrat.none,
       controller: async req => {
         const step = (req.params.step as unknown) as HostOnboardingStep;
         const onboarding = await getCheck(
@@ -442,7 +403,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readOnboardingSteps(): IControllerEndpoint<IOnboardingStepMap> {
     return {
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const onboarding = await getCheck(
           Onboarding.findOne({
@@ -481,14 +442,10 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<unknown>> {
     return {
-      validators: [
-        parameters<{ step: number }>({
-          step: v => v.exists().toInt().isIn(Object.values(HostOnboardingStep))
-        })
-      ],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      validators: { params: object({ step: enums(Object.values(HostOnboardingStep) as number[]) }) },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        if (!req.body) throw new ErrorHandler(HTTP.DataInvalid, ErrCode.NO_DATA);
+        if (!req.body) throw new ErrorHandler(HTTP.DataInvalid, '@@error.missing_body');
         const onboarding = await getCheck(
           Onboarding.findOne({
             where: {
@@ -527,7 +484,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   submitOnboardingProcess(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const onboarding = await getCheck(
           Onboarding.findOne({
@@ -544,7 +501,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             onboarding.state
           )
         )
-          throw new ErrorHandler(HTTP.BadRequest, ErrCode.LOCKED);
+          throw new ErrorHandler(HTTP.BadRequest, '@@error.locked');
 
         // TODO: verify all steps filled out
         // TODO: delete all previous version step reviews
@@ -558,7 +515,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readHostPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Member),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
       controller: async req => {
         return await this.ORM.createQueryBuilder(Performance, 'hps')
           .innerJoinAndSelect('hps.host', 'host')
@@ -571,7 +528,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   connectStripe(): IControllerEndpoint<string> {
     return {
-      authStrategy: AuthStrat.and(AuthStrat.hasHostPermission(HostPermission.Owner), AuthStrat.hostIsOnboarded()),
+      authorisation: AuthStrat.and(AuthStrat.hasHostPermission(HostPermission.Owner), AuthStrat.hostIsOnboarded()),
       controller: async req => {
         // Creating a Standard Stripe account on behalf of the host to faciliate the following:
         // https://stripe.com/img/docs/connect/direct_charges.svg
@@ -596,7 +553,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         // use to skip this form in development
         // https://stripe.com/docs/building-extensions
         const link = this.providers.stripe.connection.oauth.authorizeUrl({
-          redirect_uri: `${Env.API_URL}/stripe/oauth`,
+          redirect_uri: `${Env.BACKEND.URL}/stripe/oauth`,
           client_id: Env.STRIPE.CLIENT_ID,
           response_type: 'code'
         });
@@ -608,9 +565,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   changeAvatar(): IControllerEndpoint<IHostStub> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      preMiddlewares: [this.mws.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file')],
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      middleware: this.middleware.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file'),
       controller: async req => {
         const host = await getCheck(
           Host.findOne({
@@ -620,7 +576,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           })
         );
 
-        host.avatar = await this.providers.s3.upload(req.file, host.avatar);
+        host.avatar = await this.providers.blob.upload(req.file, host.avatar);
         await host.save();
         return host.toStub();
       }
@@ -630,9 +586,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
   //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
   changeBanner(): IControllerEndpoint<IHostStub> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
-      preMiddlewares: [this.mws.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file')],
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      middleware: this.middleware.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file'),
       controller: async req => {
         const host = await getCheck(
           Host.findOne({
@@ -642,7 +597,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           })
         );
 
-        host.banner = await this.providers.s3.upload(req.file, host.banner);
+        host.banner = await this.providers.blob.upload(req.file, host.banner);
         await host.save();
         return host.toStub();
       }
@@ -651,12 +606,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
     return {
-      validators: [
-        body({
-          email_addresses: v => v.isArray()
-        })
-      ],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      validators: { body: object({ email_addresses: array(fields.email) }) },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
         const provisioner = await getCheck(User.findOne({ _id: req.session.user._id }));
@@ -685,8 +636,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           .filter(r => r.status == 'fulfilled' && r.value)
           .map(p => (p as PromiseFulfilledResult<User>).value);
 
-        // Find tokens that already exit for provided users
-        // don't allow more than 1 access token / user
+        // Find tokens that already exit for provided users & don't allow more than 1 access token / user
         const existingUserTokens = (
           await AccessToken.find({
             relations: ['user'],
@@ -710,7 +660,17 @@ export default class HostController extends BaseController<BackendProviderMap> {
           await txc.save(tokens);
 
           // Push e-mails out to everyone
-          users.forEach(user => Email.sendPerformanceAccessTokenProvisioned(user.email_address, performance, host));
+          users.forEach(user => {
+            this.providers.bus.publish(
+              'user.invited_to_private_showing',
+              {
+                performance_id: performance._id,
+                host_id: host._id,
+                user_id: user._id
+              },
+              user.locale
+            );
+          });
         });
       }
     };
@@ -718,7 +678,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readStripeInfo(): IControllerEndpoint<IHostStripeInfo> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Owner),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
@@ -740,7 +700,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readInvoice(): IControllerEndpoint<IHostInvoice> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
           .where('invoice._id = :invoice_id', { invoice_id: req.params.iid })
@@ -763,7 +723,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readInvoices(): IControllerEndpoint<IEnvelopedData<IHostInvoiceStub[]>> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         return await this.ORM.createQueryBuilder(Invoice, 'invoice')
           .where('invoice.host__id = :host_id', { host_id: req.params.hid })
@@ -791,22 +751,19 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   exportInvoicesToCSV(): IControllerEndpoint<void> {
     return {
-      validators: [
-        body({
-          invoices: v => v.custom(array({ '*': v => v.isString() }))
-        })
-      ],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      validators: { body: object({ invoices: array(fields.nuuid) }) },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));
 
-        await Queue.enqueue({
-          type: JobType.HostInvoiceCSV,
-          data: {
-            invoices: req.body.invoices,
-            email_address: h.email_address
-          }
-        });
+        // TODO: Add back CSV
+        // await Queue.enqueue({
+        //   type: JobType.HostInvoiceCSV,
+        //   data: {
+        //     invoices: req.body.invoices,
+        //     email_address: h.email_address
+        //   }
+        // });
       }
     };
   }
@@ -814,22 +771,18 @@ export default class HostController extends BaseController<BackendProviderMap> {
   //router.post <void>  ("/hosts/:hid/invoices/export-pdf", Hosts.exportInvoicesToPDF());
   exportInvoicesToPDF(): IControllerEndpoint<void> {
     return {
-      validators: [
-        body({
-          invoices: v => v.custom(array({ '*': v => v.isString() }))
-        })
-      ],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));
 
-        await Queue.enqueue({
-          type: JobType.HostInvoicePDF,
-          data: {
-            invoices: req.body.invoices,
-            email_address: h.email_address
-          }
-        });
+        // TODO: Add back PDF
+        // await Queue.enqueue({
+        //   type: JobType.HostInvoicePDF,
+        //   data: {
+        //     invoices: req.body.invoices,
+        //     email_address: h.email_address
+        //   }
+        // });
       }
     };
   }

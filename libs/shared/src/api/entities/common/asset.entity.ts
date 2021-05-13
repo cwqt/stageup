@@ -28,11 +28,11 @@ import { CreateUploadParams, LiveStream, Upload } from '@mux/mux-node';
 import { SigningKey } from '../performances/signing-key.entity';
 import { AssetGroup } from './asset-group.entity';
 import MuxProvider from '../../data-client/providers/mux.provider';
-import S3Provider from '../../data-client/providers/aws-s3.provider';
+import BlobProvider from '../../data-client/providers/blob.provider';
 import merge from 'deepmerge';
 
 type AssetProvider = {
-  [AssetType.Image]: S3Provider;
+  [AssetType.Image]: BlobProvider;
   [AssetType.AnimatedGIF]: MuxProvider;
   [AssetType.LiveStream]: MuxProvider;
   [AssetType.Thumbnail]: MuxProvider;
@@ -223,7 +223,7 @@ export class Asset<T extends AssetType = any> extends BaseEntity implements IAss
         break;
       }
       case AssetType.Image: {
-        await (provider as S3Provider).delete(this.asset_identifier);
+        await (provider as BlobProvider).delete(this.asset_identifier);
       }
     }
 

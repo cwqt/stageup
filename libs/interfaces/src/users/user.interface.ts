@@ -1,6 +1,10 @@
 import { HostPermission, IHost, IHostStub } from '../hosts/host.interface';
 import { IPersonInfo } from './person.interface';
 
+export type DtoLogin = Pick<IUserPrivate, 'email_address'> & { password: string };
+export type DtoCreateUser = Pick<IUserPrivate, 'username' | 'email_address'> & { password: string };
+export type DtoUpdateUser = Pick<IUserPrivate, 'email_address' | 'name' | 'bio'>;
+
 export interface IUserStub {
   _id: string;
   name: string;

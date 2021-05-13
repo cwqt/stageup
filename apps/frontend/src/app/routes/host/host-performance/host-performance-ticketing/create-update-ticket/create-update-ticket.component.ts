@@ -54,6 +54,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           label: 'Ticket type',
           validators: [{ type: 'required' }],
           disabled: this.data.operation == 'update',
+          initial: TicketType.Paid,
           values: new Map([
             [TicketType.Paid, { label: 'Paid' }],
             [TicketType.Free, { label: 'Free' }],
@@ -101,41 +102,17 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             [TicketFees.PassOntoPurchaser, { label: 'Pass onto Purchaser' }]
           ])
         }),
-        sales_starts: UiField.Container({
-          header_level: 0,
-          label: 'Sales starts',
-          fields: {
-            date: UiField.Date({
-              width: 6,
-              label: 'Date',
-              min_date: new Date(timestamp() * 1000),
-              validators: [{ type: 'required' }]
-            }),
-            time: UiField.Time({
-              width: 6,
-              label: 'Time',
-              validators: [{ type: 'required' }],
-              initial: 0
-            })
-          }
+        start_datetime: UiField.Datetime({
+          width: 6,
+          label: 'Sales start',
+          min_date: new Date(timestamp() * 1000),
+          validators: [{ type: 'required' }]
         }),
-        sales_end: UiField.Container({
+        end_datetime: UiField.Datetime({
+          width: 6,
           label: 'Sales end',
-          header_level: 0,
-          fields: {
-            date: UiField.Date({
-              width: 6,
-              label: 'Date',
-              min_date: new Date(timestamp() * 1000),
-              validators: [{ type: 'required' }]
-            }),
-            time: UiField.Time({
-              width: 6,
-              label: 'Time',
-              validators: [{ type: 'required' }],
-              initial: 0
-            })
-          }
+          min_date: new Date(timestamp() * 1000),
+          validators: [{ type: 'required' }]
         }),
         visibility: UiField.Container({
           label: 'Ticket Visibility',
@@ -163,13 +140,13 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
 
             const startDate = timeless(new Date(data.start_datetime * 1000));
             const startTime = data.start_datetime - startDate.getTime() / 1000;
-            fields['sales_starts.date'] = startDate;
-            fields['sales_starts.time'] = startTime;
+            fields['start_datetime.date'] = startDate;
+            fields['start_datetime.time'] = startTime;
 
             const endDate = timeless(new Date(data.end_datetime * 1000));
             const endTime = data.end_datetime - endDate.getTime() / 1000;
-            fields['sales_end.date'] = endDate;
-            fields['sales_end.time'] = endTime;
+            fields['end_datetime.date'] = endDate;
+            fields['end_datetime.time'] = endTime;
 
             // Convert back into pounds from pence
             fields['amount'] = data.amount / 100;
@@ -201,8 +178,9 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           this.submit.emit(ticket);
           this.ref.close(ticket);
         },
-        failure: async () => this.ref.close(null),
+        failure: async () => {},
         changes: async f => {
+          console.log(f);
           if (f.value.type == TicketType.Free || f.value.type == TicketType.Donation) {
             f.controls.amount.disable({ emitEvent: false, onlySelf: true });
           } else {
@@ -234,8 +212,8 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       type: v.type,
       quantity: v.quantity,
       fees: v.fees,
-      start_datetime: new Date(v.sales_starts.date).getTime() / 1000 + v.sales_starts.time,
-      end_datetime: new Date(v.sales_end.date).getTime() / 1000 + v.sales_end.time,
+      start_datetime: Math.floor(v.start_datetime.getTime() / 1000),
+      end_datetime: Math.floor(v.end_datetime.getTime() / 1000),
       is_visible: !v.visibility.value,
       is_quantity_visible: true,
       // filter array into only selected DonoPegs

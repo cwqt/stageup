@@ -1,22 +1,12 @@
-import {
-  ErrCode,
-  HTTP,
-  IHost,
-  IPerformance,
-  IUser,
-  CurrencyCode,
-  Genre,
-  Visibility,
-  IMyself
-} from '@core/interfaces';
+import { ErrCode, HTTP, IHost, IPerformance, IUser, CurrencyCode, Genre, Visibility, IMyself } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 
 describe('As a user, I want to be able to do performance CRUD', () => {
   let host: IHost;
   let perf: IPerformance;
-  let owner: IMyself["user"];
-  let editor: IMyself["user"];
+  let owner: IMyself['user'];
+  let editor: IMyself['user'];
 
   it('Should create a performance and get the newly created performance', async () => {
     await Stories.actions.common.setup();
@@ -34,20 +24,20 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Shakespeare',
       description: 'To be or not to be',
-      genre: Genre.BourgeoisTragedy,
+      genre: Genre.Dance,
       premiere_date: null
     });
 
     editor = await Stories.actions.users.createUser(UserType.Editor);
   });
 
-  describe("Should test users trying to view a performane", () => {
-    it("Should allow a host member to view a private performance", async () => {
+  describe('Should test users trying to view a performane', () => {
+    it('Should allow a host member to view a private performance', async () => {
       await Stories.actions.performances.readPerformance(perf);
-    })
+    });
 
-    it("Should NOT allow a user to view a private perfrormance", async () => {
-      await Stories.actions.common.switchActor(UserType.Editor)
+    it('Should NOT allow a user to view a private perfrormance', async () => {
+      await Stories.actions.common.switchActor(UserType.Editor);
       try {
         await Stories.actions.performances.readPerformance(perf);
         throw Error('Should not have thrown this');
@@ -55,8 +45,8 @@ describe('As a user, I want to be able to do performance CRUD', () => {
         expect(error.response.status).toEqual(HTTP.NotFound);
       }
       await Stories.actions.common.switchActor(UserType.Owner);
-    })
-  })
+    });
+  });
 
   describe('Should test performance visibility', () => {
     it('Should assert that the performance is initially set to being Private', async () => {
@@ -90,7 +80,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
         throw Error('Should not have thrown this');
       } catch (error) {
         expect(error.response.status).toEqual(HTTP.Unauthorised);
-        expect(error.response.data.message).toEqual(ErrCode.MISSING_PERMS);
+        expect(error.response.data.message).toEqual('@@error.missing_permissions');
       }
     });
   });

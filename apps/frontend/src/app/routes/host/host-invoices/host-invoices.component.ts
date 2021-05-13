@@ -7,29 +7,11 @@ import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { InvoiceDialogComponent } from '../../../components/dialogs/invoice-dialog/invoice-dialog.component';
 import { HostService } from '../../../services/host.service';
 import { ToastService } from '../../../services/toast.service';
-import { ChipComponent } from '../../../ui-lib/chip/chip.component';
 import { TableComponent } from '../../../ui-lib/table/table.component';
 import { IUiTable } from '../../../ui-lib/table/table.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PaymentStatusPipe } from '../../../_pipes/payment-status.pipe';
 import { HelperService } from '@frontend/services/helper.service';
-
-export const PaymentStatusUiChipColorSelector = (status: PaymentStatus): ChipComponent['kind'] => {
-  switch (status) {
-    case PaymentStatus.Created:
-      return 'blue';
-    case PaymentStatus.Fufilled:
-      return 'gray';
-    case PaymentStatus.Paid:
-      return 'green';
-    case PaymentStatus.RefundPending:
-      return 'magenta';
-    case PaymentStatus.RefundDenied:
-      return 'red';
-    case PaymentStatus.Refunded:
-      return 'gray';
-  }
-};
 
 @Component({
   selector: 'app-host-invoices',
@@ -42,11 +24,11 @@ export class HostInvoicesComponent implements OnInit {
   invoices: ICacheable<IEnvelopedData<IHostInvoiceStub[]>> = createICacheable([]);
 
   constructor(
-    private hostService: HostService, 
-    private toastService: ToastService, 
+    private hostService: HostService,
+    private toastService: ToastService,
     public dialog: MatDialog,
     private helperService: HelperService
-    ) {}
+  ) {}
 
   ngOnInit(): void {
     this.tableData = {
@@ -72,9 +54,10 @@ export class HostInvoicesComponent implements OnInit {
             label: 'Export as CSV',
             click: async v => {
               try {
-                await this.hostService.exportInvoicesToCSV(this.hostService.hostId, {
-                  invoices: v.selected.map(i => i.invoice_id)
-                });
+                await this.hostService.exportInvoicesToCSV(
+                  this.hostService.hostId,
+                  v.selected.map(i => i.invoice_id)
+                );
                 this.toastService.emit(
                   'Exported CSVs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon',
                   ThemeKind.Primary,
@@ -89,9 +72,10 @@ export class HostInvoicesComponent implements OnInit {
             label: 'Export as PDF',
             click: async v => {
               try {
-                await this.hostService.exportInvoicesToPDF(this.hostService.hostId, {
-                  invoices: v.selected.map(i => i.invoice_id)
-                });
+                await this.hostService.exportInvoicesToPDF(
+                  this.hostService.hostId,
+                  v.selected.map(i => i.invoice_id)
+                );
                 this.toastService.emit(
                   'Exported PDFs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon',
                   ThemeKind.Primary,
@@ -192,7 +176,22 @@ export class HostInvoicesComponent implements OnInit {
               [PaymentStatus.Refunded, { label: 'Refunded' }]
             ])
           },
-          chip_selector: v => PaymentStatusUiChipColorSelector(v.status)
+          chip_selector: v => {
+            switch (v.status) {
+              case PaymentStatus.Created:
+                return 'blue';
+              case PaymentStatus.Fufilled:
+                return 'gray';
+              case PaymentStatus.Paid:
+                return 'green';
+              case PaymentStatus.RefundPending:
+                return 'magenta';
+              case PaymentStatus.RefundDenied:
+                return 'red';
+              case PaymentStatus.Refunded:
+                return 'gray';
+            }
+          }
         }
       }
     };

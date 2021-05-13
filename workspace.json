@@ -6,6 +6,11 @@
       "sourceRoot": "apps/backend/src",
       "projectType": "application",
       "prefix": "backend",
+      "i18n": {
+        "sources": ["apps/backend/src/i18n/i18n.hjson", "libs/interfaces/src/i18n/i18n.hjson"],
+        "path": "apps/backend/src/i18n",
+        "locales": ["en", "nb"]
+      },
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
@@ -16,7 +21,7 @@
             "tsConfig": "apps/backend/tsconfig.app.json",
             "showCircularDependencies": false,
             "generatePackageJson": true,
-            "assets": [],
+            "assets": ["apps/backend/src/i18n"],
             "maxWorkers": 1,
             "memoryLimit": 1024
           },
@@ -99,10 +104,7 @@
             "polyfills": "apps/frontend/src/polyfills.ts",
             "tsConfig": "apps/frontend/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/frontend/src/favicon.ico",
-              "apps/frontend/src/assets"
-            ],
+            "assets": ["apps/frontend/src/favicon.ico", "apps/frontend/src/assets"],
             "styles": [
               "apps/frontend/src/tailwind.scss",
               "apps/frontend/src/styles.scss",
@@ -114,8 +116,8 @@
             "localize": ["en"]
           },
           "configurations": {
-            "en": { "localize": ["en"]},
-            "nb": { "localize": ["nb"]},
+            "en": { "localize": ["en"] },
+            "nb": { "localize": ["nb"] },
             "development": {
               "fileReplacements": [
                 {
@@ -171,8 +173,8 @@
         "serve": {
           "executor": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
-            "en": { "browserTarget": ["frontend:build:en"]},
-            "nb": { "browserTarget": ["frontend:build:nb"]},
+            "en": { "browserTarget": ["frontend:build:en"] },
+            "nb": { "browserTarget": ["frontend:build:nb"] },
             "development": {
               "browserTarget": "frontend:build:development",
               "proxyConfig": "apps/frontend/proxy.conf.json"
@@ -210,10 +212,7 @@
               "srcDir": "apps/frontend/src/i18n",
               "genDir": "apps/frontend/src/i18n",
               "defaultLanguage": "en",
-              "languages": [
-                "en",
-                "nb"
-              ]
+              "languages": ["en", "nb"]
             }
           }
         }
@@ -252,138 +251,6 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/shared/**/*.ts"]
-          }
-        }
-      }
-    },
-    "runner": {
-      "root": "apps/runner",
-      "sourceRoot": "apps/runner/src",
-      "projectType": "application",
-      "prefix": "runner",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/runner",
-            "main": "apps/runner/src/index.ts",
-            "tsConfig": "apps/runner/tsconfig.app.json",
-            "showCircularDependencies": false,
-            "generatePackageJson": true,
-            "maxWorkers": 1,
-            "memoryLimit": 1024
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            },
-            "staging": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "configurations": {
-            "development": {
-              "buildTarget": "runner:build",
-              "inspect": false,
-              "port": 7778
-            },
-            "testing": {
-              "buildTarget": "runner:build"
-            },
-            "staging": {
-              "buildTarget": "runner:build:staging"
-            },
-            "production": {
-              "buildTarget": "runner:build:production"
-            }
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/runner/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/runner"],
-          "options": {
-            "jestConfig": "apps/runner/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "notifications": {
-      "root": "apps/notifications",
-      "sourceRoot": "apps/notifications/src",
-      "projectType": "application",
-      "prefix": "notifications",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/notifications",
-            "main": "apps/notifications/src/index.ts",
-            "tsConfig": "apps/notifications/tsconfig.app.json",
-            "showCircularDependencies": false,
-            "generatePackageJson": true,
-            "maxWorkers": 1,
-            "memoryLimit": 1024
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            },
-            "staging": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            }
-          }
-        },
-        "serve": {
-          "executor": "@nrwl/node:execute",
-          "configurations": {
-            "development": {
-              "buildTarget": "notifications:build",
-              "inspect": false,
-              "port": 7779
-            },
-            "testing": {
-              "buildTarget": "notifications:build"
-            },
-            "staging": {
-              "buildTarget": "notifications:build:staging"
-            },
-            "production": {
-              "buildTarget": "notifications:build:production"
-            }
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/notifications/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/notifications"],
-          "options": {
-            "jestConfig": "apps/notifications/jest.config.js",
-            "passWithNoTests": true
           }
         }
       }

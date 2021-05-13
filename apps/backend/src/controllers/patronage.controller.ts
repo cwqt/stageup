@@ -1,23 +1,6 @@
-import {
-  DtoCreatePatronTier,
-  HostPermission,
-  IHostPatronTier,
-  IPatronSubscription,
-  IPatronTier,
-  PurchaseableEntity
-} from '@core/interfaces';
-import {
-  Auth,
-  BaseController,
-  body,
-  getCheck,
-  Host,
-  IControllerEndpoint,
-  PatronSubscription,
-  User,
-  Validators
-} from '@core/api';
+import { BaseController, getCheck, Host, IControllerEndpoint, PatronSubscription, User, Validators } from '@core/api';
 import { uuid } from '@core/helpers';
+import { HostPermission, IHostPatronTier, IPatronSubscription, IPatronTier } from '@core/interfaces';
 import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
@@ -29,8 +12,8 @@ import Email = require('../common/email');
 export default class PatronageController extends BaseController<BackendProviderMap> {
   createPatronTier(): IControllerEndpoint<IHostPatronTier> {
     return {
-      validators: [body<DtoCreatePatronTier>(Validators.Objects.DtoCreatePatronTier())],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      validators: { body: Validators.Objects.DtoCreatePatronTier },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         // Direct Charges https://stripe.com/img/docs/billing/subscriptions/subscription_objects_fixed_price.svg
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
@@ -47,7 +30,7 @@ export default class PatronageController extends BaseController<BackendProviderM
 
   readPatronTiers(): IControllerEndpoint<Array<IHostPatronTier | IPatronTier>> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['patron_tiers'] }));
         const [isMemberOfHost] = await AuthStrat.hasHostPermission(HostPermission.Admin, () => host._id)(
@@ -62,7 +45,7 @@ export default class PatronageController extends BaseController<BackendProviderM
 
   deletePatronTier(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const tier = await getCheck(PatronTier.findOne({ _id: req.params.tid }));
         await tier.softRemove();
@@ -72,14 +55,14 @@ export default class PatronageController extends BaseController<BackendProviderM
 
   unsubscribeFromPatronTier(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {}
     };
   }
 
   subscribeToPatronTier(): IControllerEndpoint<IPatronSubscription> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const tier = await getCheck(
@@ -142,8 +125,9 @@ export default class PatronageController extends BaseController<BackendProviderM
           return sub;
         });
 
-        Email.sendUserPatronSubscriptionConfirmation(user, tier);
-        Email.sendHostPatronTierPurchaseConfirmation(user, tier);
+        // TODO: add back all emails
+        // Email.sendUserPatronSubscriptionConfirmation(user, tier);
+        // Email.sendHostPatronTierPurchaseConfirmation(user, tier);
 
         return patronSubscription.toFull();
       }

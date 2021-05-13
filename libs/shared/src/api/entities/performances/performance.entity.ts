@@ -5,15 +5,13 @@ import {
   Genre,
   IPerformance,
   IPerformanceStub,
+  RichText,
   Visibility
 } from '@core/interfaces';
 import { timestamp, uuid } from '@core/helpers';
-import { timeStamp } from 'console';
-import { stringify } from 'qs';
 import { Except } from 'type-fest';
 import {
   BaseEntity,
-  BeforeInsert,
   Column,
   Entity,
   EntityManager,
@@ -33,14 +31,13 @@ import { Ticket } from './ticket.entity';
 export class Performance extends BaseEntity implements Except<IPerformance, 'stream' | 'assets'> {
   @PrimaryColumn() _id: string;
 
-  @Column('varchar', { nullable: true }) thumbnail: string;
-
   @Column() created_at: number;
   @Column() name: string;
-  @Column({ nullable: true }) description?: string;
   @Column() views: number;
   @Column({ nullable: true }) premiere_date?: number;
   @Column({ nullable: true }) average_rating: number | null;
+  @Column('jsonb', { nullable: true }) description?: RichText;
+  @Column('varchar', { nullable: true }) thumbnail: string;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
 

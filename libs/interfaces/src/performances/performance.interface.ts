@@ -9,22 +9,24 @@ import { IEnvelopedData } from '../common/envelope.interface';
 import { LiveStreamState } from '../3rd-party/mux.interface';
 import { NUUID } from '../common/fp.interface';
 
+export type RichText = any[];
+
 export enum Visibility {
   Public = 'public',
   Private = 'private'
 }
+
 export interface IPerformanceStub {
   _id: NUUID;
   host: IHostStub; // who created the performance
   name: string; // title of performance
-  description?: string; // description of performance
+  description?: RichText; // description of performance
   average_rating: number; // average rating across all ratings
   views: number; // total user view count
   created_at: number;
   stream: { state: LiveStreamState; location: IAsset<AssetType.LiveStream>['location'] };
 
-
-  thumbnail:string;
+  thumbnail: string;
 }
 
 export interface IPerformance extends IPerformanceStub {

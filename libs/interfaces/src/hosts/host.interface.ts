@@ -5,6 +5,8 @@ import { IAddress } from '../users/address.interface';
 import { NUUID } from '../common/fp.interface';
 import { Except } from 'type-fest';
 
+export type DtoCreateHost = Pick<IHostPrivate, 'email_address' | 'username' | 'name'>;
+
 export interface IHostStub {
   _id: NUUID;
   name: string;

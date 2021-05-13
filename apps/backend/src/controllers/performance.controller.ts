@@ -2,15 +2,12 @@ import {
   AccessToken,
   Asset,
   BaseController,
-  body,
   ErrorHandler,
   getCheck,
   Host,
   IControllerEndpoint,
   PaymentMethod,
   Performance,
-  query,
-  single,
   Ticket,
   Validators
 } from '@core/api';
@@ -22,7 +19,6 @@ import {
   DtoCreatePaymentIntent,
   DtoCreatePerformance,
   DtoPerformance,
-  ErrCode,
   HostPermission,
   HTTP,
   ICreateAssetRes,
@@ -41,19 +37,19 @@ import {
   TokenProvisioner,
   Visibility
 } from '@core/interfaces';
-import { ObjectValidators } from 'libs/shared/src/api/validate/objects.validators';
+import { Event } from 'libs/shared/src/api/event-bus/contracts';
+import { boolean, enums, object } from 'superstruct';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
-import Queue from '../common/queue';
 import Env from '../env';
 
 export default class PerformanceController extends BaseController<BackendProviderMap> {
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
-      validators: [body<DtoCreatePerformance>(Validators.Objects.DtoCreatePerformance())],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      validators: { body: Validators.Objects.DtoCreatePerformance },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
@@ -61,24 +57,27 @@ export default class PerformanceController extends BaseController<BackendProvide
           const performance = await new Performance(req.body, host).save();
           await performance.setup(this.providers.mux, txc);
 
+          const p = performance.toFull();
+          this.providers.bus.publish('performance.created', p, req.locale);
+          // TODO : add listener on  queue worker
           // Push premiere to job queue for automated release
-          Queue.enqueue({
-            type: JobType.ScheduleRelease,
-            data: {
-              _id: performance._id
-            },
-            options: {
-              // Use a repeating job with a limit of 1 to activate the scheduler
-              // FIXME: use offset instead maybe?
-              repeat: {
-                cron: '* * * * *',
-                startDate: performance.premiere_date,
-                limit: 1
-              }
-            }
-          });
+          // Queue.enqueue({
+          //   type: JobType.ScheduleRelease,
+          //   data: {
+          //     _id: performance._id
+          //   },
+          //   options: {
+          //     // Use a repeating job with a limit of 1 to activate the scheduler
+          //     // FIXME: use offset instead maybe?
+          //     repeat: {
+          //       cron: '* * * * *',
+          //       startDate: performance.premiere_date,
+          //       limit: 1
+          //     }
+          //   }
+          // });
 
-          return performance.toFull();
+          return p;
         });
       }
     };
@@ -87,8 +86,7 @@ export default class PerformanceController extends BaseController<BackendProvide
   //router.get <IE<IPerfS[], null>> ("/performances", Perfs.readPerformances());
   readPerformances(): IControllerEndpoint<IEnvelopedData<IPerformanceStub[]>> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         return await this.ORM.createQueryBuilder(Performance, 'p')
           .innerJoinAndSelect('p.host', 'host')
@@ -103,8 +101,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   readPerformance(): IControllerEndpoint<DtoPerformance> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const performance = await getCheck(
           Performance.findOne({
@@ -182,8 +179,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   readPerformanceHostInfo(): IControllerEndpoint<IPerformanceHostInfo> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.none,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const { stream } = await Performance.findOne(
           { _id: req.params.pid },
@@ -206,14 +202,12 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   updateVisibility(): IControllerEndpoint<IPerformance> {
     return {
-      validators: [
-        body<{ visibility: Visibility }>({
-          visibility: v => v.isIn(Object.values(Visibility))
-        })
-      ],
+      validators: {
+        body: object({ Visibility: enums(enumToValues(Visibility) as Visibility[]) })
+      },
       // Only Admin/Owner can update visibility, but editors can update other fields
       // Must also be onboarded to be able to change visibility of a performance
-      authStrategy: AuthStrat.runner(
+      authorisation: AuthStrat.runner(
         {
           hid: IdFinderStrat.findHostIdFromPerformanceId
         },
@@ -233,8 +227,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   updatePerformance(): IControllerEndpoint<IPerformance> {
     return {
-      validators: [],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Editor),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
       controller: async req => {
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] }));
         await perf.update({
@@ -249,28 +242,14 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   createPaymentIntent(): IControllerEndpoint<IPaymentIntentClientSecret> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
-      validators: [
-        body<DtoCreatePaymentIntent>({
-          payment_method_id: v => v.isString(),
-          purchaseable_type: v => v.isIn(enumToValues(PurchaseableEntity)),
-          purchaseable_id: v => v.isString(),
-          options: v =>
-            v.custom(
-              single<DtoCreatePaymentIntent['options']>({
-                selected_dono_peg: v =>
-                  v.optional({ nullable: true }).isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
-                allow_any_amount: v => v.optional({ nullable: true }).isInt()
-              })
-            )
-        })
-      ],
+      authorisation: AuthStrat.isLoggedIn,
+      validators: { body: Validators.Objects.DtoCreatePaymentIntent },
       controller: async req => {
         // TODO: have generic method for buying purchaseables
         const body: DtoCreatePaymentIntent = req.body;
 
         // Check that an amount was passed if allow_any donation peg selected
-        if (body.options.selected_dono_peg == 'allow_any' && body.options.allow_any_amount == null)
+        if (body.options?.selected_dono_peg == 'allow_any' && body.options?.allow_any_amount == null)
           throw new ErrorHandler(HTTP.BadRequest);
 
         // Find the ticket the User is attempting to buy
@@ -297,16 +276,16 @@ export default class PerformanceController extends BaseController<BackendProvide
         );
 
         // Can't sell more than there are tickets
-        if (ticket.quantity_remaining == 0) throw new ErrorHandler(HTTP.Forbidden, ErrCode.FORBIDDEN);
+        if (ticket.quantity_remaining == 0) throw new ErrorHandler(HTTP.Forbidden, '@@error.forbidden');
 
         // In the case of a Paid Ticket
         let amount = ticket.amount;
 
         // Donation Ticket, set the amount equal to whatever donation peg amount was provided
-        if (body.options.selected_dono_peg) {
+        if (body.options?.selected_dono_peg) {
           // Don't allow stupid users to throw their life savings away
           if (body.options.selected_dono_peg == 'allow_any' && amount > BASE_AMOUNT_MAP[ticket.currency] * 200)
-            throw new ErrorHandler(HTTP.BadRequest, ErrCode.TOO_LONG);
+            throw new ErrorHandler(HTTP.BadRequest, '@@validation.too_long');
 
           amount =
             body.options.selected_dono_peg == 'allow_any'
@@ -374,11 +353,10 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   deletePerformance(): IControllerEndpoint<void> {
     return {
-      validators: [],
       // By getting the hostId from the performanceId & then checking if the user has the host
       // permission, there is an implicit intersection, because the UHI will not be returned
       // if the user is not part of the host in which the performance belongs to
-      authStrategy: AuthStrat.runner(
+      authorisation: AuthStrat.runner(
         {
           hid: IdFinderStrat.findHostIdFromPerformanceId
         },
@@ -393,8 +371,8 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   createTicket(): IControllerEndpoint<ITicket> {
     return {
-      validators: [body(ObjectValidators.DtoCreateTicket())],
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Admin),
+      validators: { body: Validators.Objects.DtoCreateTicket },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const ticket = new Ticket(req.body);
 
@@ -413,7 +391,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   readTickets(): IControllerEndpoint<IEnvelopedData<ITicketStub[], NUUID[]>> {
     return {
-      authStrategy: AuthStrat.hasHostPermission(HostPermission.Editor),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
       controller: async req => {
         const tickets = await Ticket.find({
           relations: {
@@ -443,7 +421,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   readTicket(): IControllerEndpoint<ITicket> {
     return {
-      authStrategy: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const ticket = await getCheck(
           Ticket.findOne({
@@ -458,7 +436,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   updateTicket(): IControllerEndpoint<ITicket> {
     return {
-      authStrategy: AuthStrat.runner(
+      authorisation: AuthStrat.runner(
         {
           hid: IdFinderStrat.findHostIdFromPerformanceId
         },
@@ -515,8 +493,8 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   bulkUpdateTicketQtyVisibility(): IControllerEndpoint<void> {
     return {
-      validators: [body<Pick<ITicket, 'is_quantity_visible'>>({ is_quantity_visible: v => v.isBoolean() })],
-      authStrategy: AuthStrat.runner(
+      validators: { body: object({ is_quantity_visible: boolean() }) },
+      authorisation: AuthStrat.runner(
         {
           hid: IdFinderStrat.findHostIdFromPerformanceId
         },
@@ -539,19 +517,19 @@ export default class PerformanceController extends BaseController<BackendProvide
    */
   createAsset(): IControllerEndpoint<ICreateAssetRes | void> {
     return {
-      authStrategy: AuthStrat.runner(
+      authorisation: AuthStrat.runner(
         {
           hid: IdFinderStrat.findHostIdFromPerformanceId
         },
         AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
       ),
-      validators: [
-        query({
-          type: v => v.isIn([AssetType.Image, AssetType.Video])
+      validators: {
+        query: object({
+          type: enums([AssetType.Image, AssetType.Video])
         })
-      ],
+      },
       // For AssetType.Image assets later
-      // preMiddlewares: [this.mws.file(2048, ["image/jpeg", "image/jpg", "image/png"]).single("file")],
+      // preMiddlewares: [this.middleware.file(2048, ["image/jpeg", "image/jpg", "image/png"]).single("file")],
       controller: async req => {
         const performance = await getCheck(
           Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] })
@@ -565,7 +543,7 @@ export default class PerformanceController extends BaseController<BackendProvide
                 this.providers.mux,
                 txc,
                 {
-                  cors_origin: Env.FE_URL,
+                  cors_origin: Env.FRONTEND.URL,
                   new_asset_settings: {
                     playback_policy: 'public'
                   }
@@ -586,7 +564,7 @@ export default class PerformanceController extends BaseController<BackendProvide
           }
           case AssetType.Image: {
             // TODO: implement performance image assets
-            throw new ErrorHandler(HTTP.ServerError, ErrCode.NOT_IMPLEMENTED);
+            throw new ErrorHandler(HTTP.ServerError, '@@error.not_implemented');
           }
         }
       }
@@ -595,7 +573,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   deleteTicket(): IControllerEndpoint<void> {
     return {
-      authStrategy: AuthStrat.runner(
+      authorisation: AuthStrat.runner(
         {
           hid: IdFinderStrat.findHostIdFromPerformanceId
         },

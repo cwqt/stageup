@@ -2,8 +2,8 @@ FROM node:alpine
 
 WORKDIR /usr/src/app
 
-COPY dist/apps/backend/package.json ./
-COPY dist/apps/backend/main.js /usr/src/app
+# recursive copy all; main.js, package.json, i18n etc.
+COPY dist/apps/backend/ /usr/src/app/
 
 EXPOSE 3000
 
