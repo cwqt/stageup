@@ -277,9 +277,6 @@
         </context-group>
       </trans-unit><trans-unit id="testbed_column_age" datatype="html">
         <source>Age</source><target state="translated">Alder</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.ts</context>
-          <context context-type="linenumber">122</context>
       <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/components/app/header-bar/header-bar.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="admin_onboardings_list_onboardings" datatype="html">
         <source>Onboardings</source><target state="translated">Ombordstigning</target>
         <context-group purpose="location">
@@ -316,7 +313,9 @@
           <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component.ts</context>
           <context context-type="linenumber">88</context>
         </context-group>
-      </trans-unit><trans-unit id="admin_panel_title" datatype="html">
+      </trans-unit>
+
+      <trans-unit id="admin_panel_title" datatype="html">
         <source>Admin Panel</source><target state="translated">Administrasjonspanel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-panel.component.html</context>
@@ -324,20 +323,7 @@
         </context-group>
       </trans-unit>
 
-      <trans-unit id="loading" datatype="html">
-        <source>Loading...</source><target state="translated">Laster inn …</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
-      <trans-unit id="no-performances-found" datatype="html">
-        <source>No performances found</source><target state="translated">Ingen forestillinger funnet</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="login-dialog" datatype="html">
-        <source>Log in</source><target state="translated">Logg Inn</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/login.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="1604740809794222320" datatype="html">
+      <trans-unit id="1604740809794222320" datatype="html">
         <source>Choose One</source><target state="translated">Valg én</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/filters/filter-date/filter-date.component.ts</context>
