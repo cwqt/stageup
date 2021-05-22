@@ -18,20 +18,13 @@ For each application, review the setup instructions in each of these files:
 * __Notifications__ (`apps/notifications`) [README.md](apps/notifications/README.md)
 * __Tests__ (`apps/api-tests`): [README.md](apps/api-tests/README.md)
 
-## Running
+## Running `npm run start`
 
 All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects.
 Run `npm install` in the project root to install all required dependencies.
 
 Production builds perform tree-shaking optimization to remove unused libraries, so ensure you use ES6 import syntax.
 
-
-| Context   | Development                                                                          | Testing                                                                      | Staging                                                                                                                               | Production                                                                                   |
-|-----------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
-| frontend  | **Local running**, Faster re-building for development purposes<br>`npm run frontend` |                                                                              | **Live environment**, Staging build for live testing / demos<br>`npm run frontend:staging`<br><br>`npm run build:frontend:production` | **Live environment**<br>`npm run frontend:production`<br>`npm run build:frontend:production` |
-| backend   | **Local running**, for development purposes<br>`npm run backend`                     | **Local running**, for api-tests to run against<br>`npm run backend:testing` | **Live environment**, for api-tests to run against<br>`npm run backend:staging`<br>`npm run build:backend:staging`                    | **Live environment**<br>`npm run backend:production`<br>`npm run build:backend:production`   |
-| runner    | **Local running**, for development purposes<br>`npm run runner`                      |                                                                              | **Live environment**, for api-tests to run against<br>`npm run runner:staging`<br>`npm run build:runner:staging`                      | **Live environment**<br>`npm run runner:production`<br>`npm run build:runner:production`     |
-| api-tests | **Local running**, in watch mode for development purposes<br>`npm run api-tests`     |                                                                              |                                                                                                                                       | Running live against staging<br>`npm run build:api-tests`                                    |
 * __Redis__: Start from Docker Desktop
 * __PostgreSQL__: Start from Docker Desktop
 * __api-tests__
