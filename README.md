@@ -6,8 +6,6 @@
 
 Live-streaming & VoD platform for the performance arts.
 
-![StageUp](https://ftp.cass.si/=cl4908w3.png)
-
 ## Installation
 
 Refer to [README.md](apps/README.md) for installing Node, Docker & the various databases before following the individual application setups.
