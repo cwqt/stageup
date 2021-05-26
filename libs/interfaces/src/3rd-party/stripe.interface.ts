@@ -1,12 +1,12 @@
 import { NUUID } from '../common/fp.interface';
-import { PurchaseableEntity } from '../common/invoice.interface';
+import { PurchaseableEntityType } from '../common/invoice.interface';
 import { IHostPrivate } from '../hosts/host.interface';
 import { DonoPeg } from '../performances/ticket.interface';
 import { IPaymentMethod, IPaymentMethodStub } from '../users/payment-method.interface';
 
 export interface DtoCreatePaymentIntent {
   payment_method_id: IPaymentMethodStub['_id'];
-  purchaseable_type: PurchaseableEntity;
+  purchaseable_type: PurchaseableEntityType;
   purchaseable_id: NUUID;
 
   // TODO: better typing on this...for tickets only
@@ -28,12 +28,13 @@ export interface IPaymentConfirmation {
 export enum StripeHook {
   PaymentIntentCreated = 'payment_intent.created',
   PaymentIntentSucceded = 'payment_intent.succeeded',
-  ChargeSucceded = 'charge.succeeded'
+  ChargeSucceded = 'charge.succeeded',
+  InvoicePaymentSucceeded = 'invoice.payment_succeeded'
 }
 
 export interface IStripeChargePassthrough {
   payment_method_id: NUUID;
-  purchaseable_type: PurchaseableEntity;
+  purchaseable_type: PurchaseableEntityType;
   purchaseable_id: NUUID;
   user_id: string;
   [index: string]: string;

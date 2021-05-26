@@ -38,16 +38,19 @@ export class PaymentMethodComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    // Create SelectionModel before blocky request to allow parents to subscribe to changes
+    if (this.isSelecting) this.selectionModel = new SelectionModel(false);
+
     await cachize(this.myselfService.readPaymentMethods(), this.paymentMethods, methods => {
       // Sort cards so default is on top
       return methods.sort(pm => (pm.is_primary ? -1 : 1));
     });
 
     if (this.isSelecting) {
-      this.selectionModel = new SelectionModel(false);
-
       if (this.paymentMethods.data.length) {
-        const primaryMethod = this.paymentMethods.data.find(pm => pm.is_primary);
+        // Select the default card, or the first card if none are the default
+        let primaryMethod = this.paymentMethods.data.find(pm => pm.is_primary) || this.paymentMethods.data[0];
+
         this.selectionModel.select(primaryMethod);
         this.onSelectedMethod.emit(primaryMethod);
       }

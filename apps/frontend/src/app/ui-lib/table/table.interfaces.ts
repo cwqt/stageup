@@ -1,5 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { FilterCode, IEnvelopedData, IHostOnboarding, IUser, IUserStub, Primitive } from '@core/interfaces';
+import {
+  DottedPaths,
+  FilterCode,
+  IEnvelopedData,
+  IHostOnboarding,
+  IUser,
+  IUserStub,
+  Primitive
+} from '@core/interfaces';
 import { IQueryParams } from '@core/helpers';
 import { ChipComponent } from '../chip/chip.component';
 import { ThemeKind } from '../ui-lib.interfaces';
@@ -7,10 +15,9 @@ import { ThemeKind } from '../ui-lib.interfaces';
 export interface IUiTable<Input = any, Transformed = Input> {
   title?: string;
   rows?: Transformed[];
-  columns: { [index in keyof Input]?: IUiTableColumn<Input> };
+  columns: Array<IUiTableColumn<Input>>;
   actions: Array<IUiTableAction<Input>>;
   resolver: (query: IQueryParams) => Promise<IEnvelopedData<Input[]>>;
-  transformer?: (row: Input) => Transformed;
   selection?: {
     multi: boolean;
     actions: Array<IUiTableAction<SelectionModel<IUiTransformedRowMeta<Input>>>>;
@@ -26,17 +33,17 @@ export interface IUiTable<Input = any, Transformed = Input> {
 
 export interface IUiTableColumn<K> {
   label: string;
+  accessor: (v: K) => Primitive; // how to display the column data
   image?: string;
   sort?: IUITableColumnSort;
   filter?: IUiTableColumnFilter;
   chip_selector?: (v: K) => ChipComponent['kind'];
-  transformer?: (v: K) => Primitive;
   click_handler?: (v: K) => void;
 }
 
 export interface IUiTableColumnFilter {
   type: FilterCode;
-  field: string;
+  field: string; // key to use in query param, ?filter[field]=...
   enum?: Map<any, { label: string }>;
 }
 

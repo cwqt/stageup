@@ -39,8 +39,8 @@ export class AdminOnboardingListComponent implements OnInit {
           click: v => this.openOnboarding(v)
         }
       ],
-      columns: {
-        state: {
+      columns: [
+        {
           label: $localize`:@@admin_onboardings_list_state:State`,
           filter: {
             type: FilterCode.Enum,
@@ -55,7 +55,7 @@ export class AdminOnboardingListComponent implements OnInit {
               ).values
             )
           },
-          transformer: v => new OnboardingStatePipe().transform(v.state),
+          accessor: v => new OnboardingStatePipe().transform(v.state),
           chip_selector: v => {
             switch (v.state) {
               case HostOnboardingState.AwaitingChanges:
@@ -73,21 +73,21 @@ export class AdminOnboardingListComponent implements OnInit {
             }
           }
         },
-        host: {
+        {
           label: $localize`:@@admin_onboardings_list_host:Host`,
-          transformer: v => `@${v.host.username}`,
+          accessor: v => `@${v.host.username}`,
           filter: { type: FilterCode.String, field: 'username' }
         },
-        last_submitted: {
+        {
           sort: { field: 'last_submitted' },
           filter: { type: FilterCode.Date, field: 'last_submitted' },
           label: $localize`:@@admin_onboardings_list_last_submitted:Last Submitted`,
-          transformer: v =>
+          accessor: v =>
             v.last_submitted
               ? new Date(v.last_submitted * 1000).toISOString()
               : $localize`:@@admin_onboardings_list_never:Never`
         }
-      }
+      ]
     });
   }
 

@@ -89,9 +89,10 @@ export class HostInvoicesComponent implements OnInit {
         },
         actions: [],
         pagination: { page_sizes: [5, 10, 25] },
-        columns: {
-          invoice_id: {
+        columns: [
+          {
             label: 'Invoice ID',
+            accessor: v => v.invoice_id,
             click_handler: invoice => {
               this.helperService.showDialog(
                 this.dialog.open(InvoiceDialogComponent, {
@@ -106,18 +107,18 @@ export class HostInvoicesComponent implements OnInit {
               field: 'invoice_id'
             }
           },
-          performance: {
+          {
             label: 'Performance',
-            transformer: v => v.performance.name,
+            accessor: v => v.performance.name,
             filter: {
               type: FilterCode.String,
               field: 'performance_name'
             },
             sort: { field: 'performance_name' }
           },
-          ticket: {
+          {
             label: 'Ticket',
-            transformer: v => capitalize(v.ticket.type),
+            accessor: v => capitalize(v.ticket.type),
             filter: {
               type: FilterCode.Enum,
               field: 'ticket_type',
@@ -138,33 +139,33 @@ export class HostInvoicesComponent implements OnInit {
               }
             }
           },
-          invoice_date: {
+          {
             label: 'Invoice Date',
-            transformer: v => unix(v.invoice_date).format('MMMM Do, YYYY'),
+            accessor: v => unix(v.invoice_date).format('MMMM Do, YYYY'),
             filter: {
               type: FilterCode.Date,
               field: 'purchased_at'
             },
             sort: { field: 'purchased_at' }
           },
-          amount: {
+          {
             label: 'Amount',
-            transformer: v => prettifyMoney(v.amount, v.ticket.currency),
+            accessor: v => prettifyMoney(v.amount, v.ticket.currency),
             sort: { field: 'amount' },
             filter: {
               type: FilterCode.Number,
               field: 'amount'
             }
           },
-          net_amount: {
+          {
             label: 'Net Amount',
             // IMPORTANT: Subtracts a random amount off amount for purposes of demo
             // change to actual amount when requirements for tiers/fees are calculated
-            transformer: v => prettifyMoney(v.amount - Math.random() * 1000, v.ticket.currency)
+            accessor: v => prettifyMoney(v.amount - Math.random() * 1000, v.ticket.currency)
           },
-          status: {
+          {
             label: 'Status',
-            transformer: v => new PaymentStatusPipe().transform(v.status),
+            accessor: v => new PaymentStatusPipe().transform(v.status),
             filter: {
               field: 'payment_status',
               type: FilterCode.Enum,
@@ -194,7 +195,7 @@ export class HostInvoicesComponent implements OnInit {
               }
             }
           }
-        }
+        ]
       },
       this.invoices
     );

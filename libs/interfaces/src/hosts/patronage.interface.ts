@@ -1,5 +1,9 @@
 import { CurrencyCode } from '../common/currency.interface';
 import { NUUID } from '../common/fp.interface';
+import { IInvoice, IUserInvoice } from '../common/invoice.interface';
+import { IUser } from '../users/user.interface';
+import { IHostStub } from './host.interface';
+import { DtoInvoice } from '../common/invoice.interface';
 
 export interface IPatronTier {
   _id: NUUID;
@@ -21,11 +25,24 @@ export interface IHostPatronTier extends IPatronTier {
 
 export type DtoCreatePatronTier = Required<Pick<IPatronTier, 'name' | 'description' | 'currency' | 'amount'>>;
 
+// A tracking of a users subscription to a patron tier
+// Logs of renewals tracked through Invoices
 export interface IPatronSubscription {
   _id: NUUID;
   created_at: number;
-  last_renewed: number;
+  last_renewal_date: number;
+  next_renewal_date: number;
   renewal_count: number;
   patron_tier: IPatronTier;
   stripe_subscription_id: string;
+  status: PatronSubscriptionStatus;
+}
+
+export enum PatronSubscriptionStatus {
+  Active = 'active',
+  Cancelled = 'cancelled'
+}
+
+export interface DtoUserPatronageInvoice extends DtoInvoice {
+  subscription: IPatronSubscription;
 }

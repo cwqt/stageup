@@ -1,4 +1,10 @@
-import { CurrencyCode, DtoCreatePatronTier, IHostPatronTier, IPatronTier, PurchaseableEntity } from '@core/interfaces';
+import {
+  CurrencyCode,
+  DtoCreatePatronTier,
+  IHostPatronTier,
+  IPatronTier,
+  PurchaseableEntityType
+} from '@core/interfaces';
 import { timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
 import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
@@ -56,7 +62,7 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
         // description: "",
         metadata: {
           host_id: this.host._id,
-          purchaseable_type: PurchaseableEntity.PatronTier,
+          purchaseable_type: PurchaseableEntityType.PatronTier,
           purchasable_id: this._id
         }
       },
@@ -74,7 +80,7 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
         },
         metadata: {
           host_id: this.host._id,
-          purchaseable_type: PurchaseableEntity.PatronTier,
+          purchaseable_type: PurchaseableEntityType.PatronTier,
           purchasable_id: this._id
         }
       },

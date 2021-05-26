@@ -4,16 +4,16 @@ import { IUserStub } from '../users/user.interface';
 import { CurrencyCode } from './currency.interface';
 import { NUUID } from './fp.interface';
 
-export enum PurchaseableEntity {
+export enum PurchaseableEntityType {
   Ticket = 'ticket',
   PatronTier = 'patron-tier'
 }
 
 export type PurchaseableData = {
-  [PurchaseableEntity.Ticket]: ITicketStub;
+  [PurchaseableEntityType.Ticket]: ITicketStub;
 };
 
-export enum RefundReason  {
+export enum RefundReason {
   Covid = 'covid19',
   CancelledPostponed = 'cancelled_postponed',
   Duplicate = 'duplicate',
@@ -23,7 +23,7 @@ export enum RefundReason  {
   Other = 'other_specify'
 }
 export interface IRefundRequest {
-  invoice_id: IInvoice["_id"];
+  invoice_id: IInvoice['_id'];
   reason: RefundReason;
   reason_detail: string;
 }
@@ -31,7 +31,7 @@ export interface IRefundRequest {
 // A record of purchase by the user
 export interface IInvoice {
   _id: NUUID;
-  type: PurchaseableEntity;
+  type: PurchaseableEntityType;
   stripe_charge_id: string; // 'ch_xxxx...'
   stripe_receipt_url: string;
   purchased_at: number;

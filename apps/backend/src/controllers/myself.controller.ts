@@ -26,6 +26,7 @@ import {
   IUserInvoice,
   IUserInvoiceStub,
   PaymentStatus,
+  DtoUserPatronageInvoice,
   Visibility
 } from '@core/interfaces';
 import { boolean, enums, object, partial, record } from 'superstruct';
@@ -179,6 +180,31 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           .innerJoinAndSelect('performance.stream', 'stream')
           .withDeleted() // ticket/performance can be soft removed
           .paginate(i => i.toUserInvoiceStub());
+      }
+    };
+  }
+
+  readPatronageSubscriptions(): IControllerEndpoint<IEnvelopedData<DtoUserPatronageInvoice[]>> {
+    return {
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        return await this.ORM.createQueryBuilder(Invoice, 'invoice')
+          .where('invoice.user__id = :user_id', { user_id: req.session.user._id })
+          .leftJoinAndSelect('invoice.patron_subscription', 'subscription')
+          .leftJoinAndSelect('subscription.patron_tier', 'tier')
+          // .filter({
+          //   performance_name: { subject: 'tier.name' },
+          //   purchased_at: { subject: 'invoice.purchased_at' },
+          //   payment_status: { subject: 'invoice.status' },
+          //   amount: { subject: 'invoice.amount', transformer: v => parseInt(v as string) }
+          // })
+          // .sort({
+          //   performance_name: 'performance.name',
+          //   amount: 'invoice.amount',
+          //   purchased_at: 'invoice.purchased_at'
+          // })
+          .withDeleted()
+          .paginate(i => i.toUserPatronageStub());
       }
     };
   }

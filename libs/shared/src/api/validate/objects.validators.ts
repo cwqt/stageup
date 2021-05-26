@@ -14,7 +14,7 @@ import {
   Idless,
   IHostMemberChangeRequest,
   PaginationOptions,
-  PurchaseableEntity,
+  PurchaseableEntityType,
   TicketFees,
   TicketType
 } from '@core/interfaces';
@@ -174,9 +174,9 @@ export namespace objects {
 
   export const DtoCreatePaymentIntent: Describe<DtoCreatePaymentIntent> = object({
     payment_method_id: fields.nuuid,
-    purchaseable_type: enums(enumToValues(PurchaseableEntity) as PurchaseableEntity[]),
+    purchaseable_type: enums(enumToValues(PurchaseableEntityType) as PurchaseableEntityType[]),
     purchaseable_id: fields.nuuid,
-    options: nullable(
+    options: optional(
       object({
         selected_dono_peg: enums<DonoPeg>(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
         allow_any_amount: number()

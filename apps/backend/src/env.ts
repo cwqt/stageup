@@ -44,12 +44,12 @@ const Env: IEnvironment = {
   BACKEND: {
     PORT: parseInt(process.env.BACKEND_PORT),
     ENDPOINT: process.env.BACKEND_ENDPOINT,
-    URL: `${process.env.LOAD_BALANCER_URL}:${process.env.BACKEND_PORT}/${process.env.BACKEND_ENDPOINT}`
+    URL: `${process.env.LOAD_BALANCER_URL}:${process.env.BACKEND_PORT}${process.env.BACKEND_ENDPOINT}`
   },
   FRONTEND: {
     PORT: parseInt(process.env.FRONTEND_PORT),
     ENDPOINT: process.env.FRONTEND_ENDPOINT,
-    URL: `${process.env.LOAD_BALANCER_URL}:${process.env.FRONTEND_PORT}/${process.env.FRONTEND_ENDPOINT}`
+    URL: `${process.env.LOAD_BALANCER_URL}:${process.env.FRONTEND_PORT}${process.env.FRONTEND_ENDPOINT}`
   },
   ENVIRONMENT: TRUE_ENV as Environment,
   PRIVATE_KEY: process.env.BACKEND_PRIVATE_KEY,

@@ -45,6 +45,7 @@ import { HostProfileAboutComponent } from './routes/host/host-profile/host-profi
 import { HostProfileFeedComponent } from './routes/host/host-profile/host-profile-feed/host-profile-feed.component';
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
+import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -86,6 +87,7 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: 'host', component: HostSettingsComponent },
       { path: 'account', component: AccountSettingsComponent },
       { path: 'wallet', component: WalletSettingsComponent },
+      { path: 'patronage', component: UserPatronageComponent },
       { path: '**', component: NotFoundComponent }
     ]
   },

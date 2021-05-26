@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IPatronSubscription } from '@core/interfaces';
+import { DtoCreatePaymentIntent, IPatronSubscription } from '@core/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class PatronageService {
   constructor(private http: HttpClient) {}
 
-  // router.post <IPatronSubscription> ("/hosts/:hid/patron-tiers/:tid/subscribe", Patronage.subscribeToPatronTier());
-  subscribeToPatronTier(hostId: string, tierId: string): Promise<IPatronSubscription> {
-    return this.http.post<IPatronSubscription>(`/api/hosts/${hostId}/patron-tiers/${tierId}/subscribe`, {}).toPromise();
+  // router.post <IPatronSubscription> ("/patron-tiers/:tid/subscribe", Patronage.subscribe());
+  subscribe(tierId: string, data: DtoCreatePaymentIntent): Promise<IPatronSubscription> {
+    return this.http.post<IPatronSubscription>(`/api/patron-tiers/${tierId}/subscribe`, data).toPromise();
+  }
+
+  // router.delete <void> ("/patron-tiers/:tid/unsubscribe", Patronage.unsubscribe());
+  unsubscribe(tierId: string): Promise<void> {
+    return this.http.delete<void>(`/api/patron-tiers/${tierId}/unsubscribe`, {}).toPromise();
   }
 }

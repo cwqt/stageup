@@ -1,6 +1,24 @@
-import { BaseController, getCheck, Host, IControllerEndpoint, PatronSubscription, User, Validators } from '@core/api';
-import { uuid } from '@core/helpers';
-import { HostPermission, IHostPatronTier, IPatronSubscription, IPatronTier } from '@core/interfaces';
+import {
+  BaseController,
+  getCheck,
+  Host,
+  IControllerEndpoint,
+  PatronSubscription,
+  PaymentMethod,
+  User,
+  Validators
+} from '@core/api';
+import { timeout, to, uuid } from '@core/helpers';
+import {
+  DtoCreatePaymentIntent,
+  HostPermission,
+  IHostPatronTier,
+  IPatronSubscription,
+  IPatronTier,
+  IPaymentIntentClientSecret,
+  IStripeChargePassthrough,
+  PurchaseableEntityType
+} from '@core/interfaces';
 import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
@@ -53,17 +71,20 @@ export default class PatronageController extends BaseController<BackendProviderM
     };
   }
 
-  unsubscribeFromPatronTier(): IControllerEndpoint<void> {
+  unsubscribe(): IControllerEndpoint<void> {
     return {
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {}
     };
   }
 
-  subscribeToPatronTier(): IControllerEndpoint<IPatronSubscription> {
+  subscribe(): IControllerEndpoint<IPatronSubscription> {
     return {
       authorisation: AuthStrat.isLoggedIn,
+      validators: { body: Validators.Objects.DtoCreatePaymentIntent },
       controller: async req => {
+        // TODO: have generic method for buying purchaseables
+        const body: DtoCreatePaymentIntent = req.body;
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const tier = await getCheck(
           PatronTier.findOne({
@@ -77,36 +98,60 @@ export default class PatronageController extends BaseController<BackendProviderM
         // Create _id now so that we can reference it in the subscription passthrough data
         const patronSubscriptionId = uuid();
 
-        // User is a Customer on our Platform, we need to copy this user into the hosts Connected account
-        // provision one-time token which we can use to copy the Customer over
-        const token = await this.providers.stripe.connection.tokens.create(
+        // Stripe uses a PaymentIntent object to represent the **intent** to collect payment from a customer,
+        // tracking charge attempts and payment state changes throughout the process.
+        // Find (& check) the PaymentMethod that belongs to the logged-in user making the PaymentIntent
+        const platformPaymentMethod = await getCheck(
+          PaymentMethod.findOne({
+            relations: ['user'],
+            where: {
+              _id: body.payment_method_id,
+              user: {
+                _id: req.session.user._id
+              }
+            }
+          })
+        );
+
+        // Clone the PaymentMethod & Customer to the hosts Connect account - then attach them
+        const method = await this.providers.stripe.connection.paymentMethods.create(
           {
-            customer: user.stripe_customer_id
+            customer: platformPaymentMethod.user.stripe_customer_id,
+            payment_method: platformPaymentMethod.stripe_method_id
           },
           { stripeAccount: tier.host.stripe_account_id }
         );
 
         const copiedCustomer = await this.providers.stripe.connection.customers.create(
           {
-            description: `StageUp User ${tier.host._id}`,
-            source: token.id
+            email: user.email_address,
+            name: `StageUp@${user.username}`,
+            description: user._id
           },
           {
             stripeAccount: tier.host.stripe_account_id
           }
         );
 
+        await this.providers.stripe.connection.paymentMethods.attach(
+          method.id,
+          { customer: copiedCustomer.id },
+          { stripeAccount: tier.host.stripe_account_id }
+        );
+
         // https://stripe.com/docs/connect/subscriptions#direct
         // Now we create a subscription on behalf of the hosts' Connected account, for the Product that was created on there
         const stripeSubscription = await this.providers.stripe.connection.subscriptions.create(
           {
-            customer: copiedCustomer.id,
-            metadata: {
-              host_id: tier.host._id,
-              user_id: user._id,
-              patron_tier_id: tier._id,
-              patron_subscription_id: patronSubscriptionId
-            },
+            customer: copiedCustomer.id, // the customer we just cloned
+            default_payment_method: method.id, // the method we just cloned
+            metadata: to<IStripeChargePassthrough>({
+              // Passed through to webhook when charge successful
+              user_id: platformPaymentMethod.user._id,
+              purchaseable_id: tier._id,
+              purchaseable_type: PurchaseableEntityType.PatronTier,
+              payment_method_id: platformPaymentMethod._id
+            }),
             items: [{ price: tier.stripe_price_id }],
             application_fee_percent: 0, // IMPORTANT: may require changes at some point when Drake changes his mind
             expand: ['latest_invoice.payment_intent']
@@ -125,10 +170,7 @@ export default class PatronageController extends BaseController<BackendProviderM
           return sub;
         });
 
-        // TODO: add back all emails
-        // Email.sendUserPatronSubscriptionConfirmation(user, tier);
-        // Email.sendHostPatronTierPurchaseConfirmation(user, tier);
-
+        this.providers.bus.publish('patronage.started', { user_id: user._id, tier_id: tier._id }, req.locale);
         return patronSubscription.toFull();
       }
     };

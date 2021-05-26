@@ -101,7 +101,7 @@ export class TestbedComponent implements OnInit {
       this.cacheable
     );
 
-    this.table = new UiTable({
+    this.table = new UiTable<{ name: string; age: number }>({
       title: $localize`:@@testbed_table_title:Table Example`,
       resolver: query =>
         Promise.resolve({
@@ -123,14 +123,16 @@ export class TestbedComponent implements OnInit {
       },
       actions: [],
       pagination: { page_sizes: [5, 10, 25] },
-      columns: {
-        name: {
-          label: $localize`:@@testbed_column_name:Name`
+      columns: [
+        {
+          label: $localize`:@@testbed_column_name:Name`,
+          accessor: v => v.name
         },
-        age: {
-          label: $localize`:@@testbed_column_age:Age`
+        {
+          label: $localize`:@@testbed_column_age:Age`,
+          accessor: v => v.age
         }
-      }
+      ]
     });
   }
 

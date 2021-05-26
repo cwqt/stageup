@@ -3,7 +3,7 @@ import {
   HostPermission,
   StripeHook,
   TokenProvisioner,
-  PurchaseableEntity,
+  PurchaseableEntityType,
   PaymentStatus,
   IStripeChargePassthrough
 } from '@core/interfaces';
@@ -18,7 +18,8 @@ import {
   Invoice,
   AccessToken,
   PatronTier,
-  PaymentMethod
+  PaymentMethod,
+  PatronSubscription
 } from '@core/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
@@ -31,14 +32,16 @@ import { timestamp } from '@core/helpers';
 
 export default class StripeController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
-    [index in StripeHook]?: (data: Stripe.Event.Data) => Promise<void>;
+    [index in StripeHook]: (data: Stripe.Event.Data) => Promise<void>;
   };
 
   constructor(...args: BaseArguments<BackendProviderMap>) {
     super(...args);
     this.hookMap = {
       [StripeHook.ChargeSucceded]: this.handleChargeSuccessful.bind(this),
-      [StripeHook.PaymentIntentCreated]: this.handlePaymentIntentCreated.bind(this)
+      [StripeHook.PaymentIntentCreated]: this.handlePaymentIntentCreated.bind(this),
+      [StripeHook.PaymentIntentSucceded]: this.handleChargeSuccessful.bind(this),
+      [StripeHook.InvoicePaymentSucceeded]: this.handleInvoicePaymentSuccessful.bind(this)
     };
   }
 
@@ -70,6 +73,42 @@ export default class StripeController extends BaseController<BackendProviderMap>
     };
   }
 
+  async handleInvoicePaymentSuccessful(event: Stripe.Event) {
+    const data = event.data.object as Stripe.Invoice;
+    const purchaseable = await PatronSubscription.findOne(
+      { stripe_subscription_id: data.subscription as string },
+      { relations: { patron_tier: { host: true }, user: true } }
+    );
+
+    const subscription = await this.providers.stripe.connection.subscriptions.retrieve(data.subscription as string, {
+      stripeAccount: purchaseable.patron_tier.host.stripe_account_id
+    });
+
+    const passthrough = subscription.metadata as IStripeChargePassthrough;
+
+    // Update the last used date of the card
+    const method = await PaymentMethod.findOne({ _id: passthrough.payment_method_id });
+    method.last_used_at = timestamp();
+    await method.save();
+
+    // Create the Invoice locally
+    await this.ORM.transaction(async txc => {
+      const charge = await this.providers.stripe.connection.charges.retrieve(data.charge as string, {
+        stripeAccount: purchaseable.patron_tier.host.stripe_account_id
+      });
+
+      const user = await User.findOne({ _id: passthrough.user_id });
+
+      const invoice = new Invoice(user, purchaseable.patron_tier.amount, purchaseable.patron_tier.currency, charge)
+        .setHost(purchaseable.patron_tier.host)
+        .setPurchaseable(purchaseable);
+
+      invoice.status = PaymentStatus.Paid;
+
+      return await txc.save(invoice);
+    });
+  }
+
   async handleChargeSuccessful(event: Stripe.Event) {
     const data = event.data.object as Stripe.Charge;
     const passthrough = data.metadata as IStripeChargePassthrough;
@@ -81,17 +120,8 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
     // Handle generating the invoices & such for different types of purchaseables
     switch (passthrough.purchaseable_type) {
-      // Purchased Patron Subscription ---------------------------------------------------------------
-      case PurchaseableEntity.PatronTier: {
-        const user = await User.findOne({ _id: passthrough.user_id });
-        const tier = await PatronTier.findOne({ _id: passthrough.purchaseable_id }, { relations: ['host'] });
-
-        await this.ORM.transaction(async txc => {
-          // TODO make invoice
-        });
-      }
       // Purchased Ticket ----------------------------------------------------------------------------
-      case PurchaseableEntity.Ticket: {
+      case PurchaseableEntityType.Ticket: {
         const user = await getCheck(User.findOne({ _id: passthrough.user_id }));
         const ticket = await getCheck(
           Ticket.findOne({
@@ -121,7 +151,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
           ticket.quantity_remaining -= 1;
           const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data)
             .setHost(ticket.performance.host) // should be party to hosts invoices
-            .setTicket(ticket); // purchased a ticket
+            .setPurchaseable(ticket); // purchased a ticket
 
           invoice.status = PaymentStatus.Paid;
           await txc.save(invoice);

@@ -14,7 +14,7 @@ import {
   IPerformance,
   IPerformanceStub,
   ITicketStub,
-  PurchaseableEntity
+  PurchaseableEntityType
 } from '@core/interfaces';
 import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
@@ -129,7 +129,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       this.performanceService.createTicketPaymentIntent.bind(this.performanceService),
       {
         payment_method_id: this.paymentMethod.selectionModel.selected[0]._id,
-        purchaseable_type: PurchaseableEntity.Ticket,
+        purchaseable_type: PurchaseableEntityType.Ticket,
         purchaseable_id: this.selectedTicket._id,
         options: this.donoPegSelectForm && {
           selected_dono_peg: this.donoPegSelectForm?.group?.value?.pegs,

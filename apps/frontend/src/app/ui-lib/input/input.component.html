@@ -194,7 +194,7 @@
     appearance="fill"
     *ngIf="data.type == 'date' && !data.options?.is_date_range"
   >
-    <mat-label i18n>{{ data.options.label || 'Choose a date' }}</mat-label>
+    <mat-label i18n>Choose a date</mat-label>
     <input
       matInput
       [(ngModel)]="value"

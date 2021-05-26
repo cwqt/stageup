@@ -34,6 +34,7 @@ import { PaymentStatusPipe } from './_pipes/payment-status.pipe';
 import { TicketTypePipe } from './_pipes/ticket-type.pipe';
 import { RefundReasonPipe } from './_pipes/refund-reason.pipe';
 import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe';
+import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-status.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
@@ -113,6 +114,7 @@ import { PaymentMethodComponent } from './components/payment-method/payment-meth
 import { PaymentMethodThumbComponent } from './components/payment-method/payment-method-thumb/payment-method-thumb.component';
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
+import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -156,6 +158,7 @@ import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.componen
     ObjectLengthPipe,
     ShortDomainPipe,
     PaymentStatusPipe,
+    PatronSubscriptionStatusPipe,
     OnboardingStepPipe,
     PaymentMethodBrandName,
     DonoPegPipe,
@@ -208,7 +211,8 @@ import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.componen
     PaymentMethodComponent,
     PaymentMethodThumbComponent,
     WalletSettingsComponent,
-    GenreFeedComponent
+    GenreFeedComponent,
+    UserPatronageComponent
   ],
   imports: [
     AngularMaterialModule,

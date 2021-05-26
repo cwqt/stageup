@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   DtoAddPaymentMethod,
+  DtoUserPatronageInvoice,
   HTTP,
   IEnvelopedData,
   IHost,
@@ -135,5 +136,12 @@ export class MyselfService {
   // router.put <IPaymentMethod> ("/myself/payment-methods/:pmid", Myself.updatePaymentMethod());
   updatePaymentMethod(paymentMethodId: IPaymentMethodStub['_id'], data): Promise<IPaymentMethod> {
     return this.http.put<IPaymentMethod>(`/api/myself/payment-methods/${paymentMethodId}`, data).toPromise();
+  }
+
+  // router.get <IE<UPatronInvoice[]>> ("/myself/patron-subscriptions", Myself.readPatronageSubscriptions());
+  readPatronageSubscriptions(query: IQueryParams): Promise<IEnvelopedData<DtoUserPatronageInvoice[]>> {
+    return this.http
+      .get<IEnvelopedData<DtoUserPatronageInvoice[]>>(`/api/myself/patron-subscriptions${querize(query)}`)
+      .toPromise();
   }
 }

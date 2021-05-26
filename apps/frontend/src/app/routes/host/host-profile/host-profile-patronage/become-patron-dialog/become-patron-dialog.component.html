@@ -3,8 +3,10 @@
 
   <quill-view [content]="data.tier.description" format="object" theme="snow"></quill-view>
 
-  <p>
-    This tier will cost <b>{{ data.tier.amount | currencyPipe: data.tier.currency }}</b>, which will be billed on a
-    monthly basis, starting today.
+  <p i18n>
+    This tier will cost <b>{{ data.tier.amount | currencyPipe: data.tier.currency }}</b
+    >, which will be billed on a monthly basis, starting today.
   </p>
-</ui-dialog>
+
+  <app-payment-method #paymentMethod [smaller]="true" [isSelecting]="true"></app-payment-method
+></ui-dialog>

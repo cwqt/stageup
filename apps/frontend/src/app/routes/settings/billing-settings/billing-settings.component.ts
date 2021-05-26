@@ -25,24 +25,25 @@ export class BillingSettingsComponent implements OnInit {
         resolver: query => this.myselfService.readInvoices(query),
         actions: [],
         pagination: { page_sizes: [10, 25] },
-        columns: {
-          invoice_id: {
+        columns: [
+          {
             label: 'Invoice ID',
+            accessor: v => v.invoice_id,
             click_handler: invoice =>
               this.dialog.open(InvoiceDialogComponent, { data: { invoice, is_host_invoice: false } })
           },
-          performance: {
+          {
             label: 'Performance',
-            transformer: v => v.performance.name,
+            accessor: v => v.performance.name,
             filter: {
               type: FilterCode.String,
               field: 'performance_name'
             },
             sort: { field: 'performance_name' }
           },
-          ticket: {
+          {
             label: 'Ticket',
-            transformer: v => capitalize(v.ticket.type),
+            accessor: v => capitalize(v.ticket.type),
             filter: {
               type: FilterCode.Enum,
               field: 'ticket_type',
@@ -63,27 +64,27 @@ export class BillingSettingsComponent implements OnInit {
               }
             }
           },
-          invoice_date: {
+          {
             label: 'Invoice Date',
-            transformer: v => new Date(v.invoice_date * 1000).toISOString(),
+            accessor: v => new Date(v.invoice_date * 1000).toISOString(),
             filter: {
               type: FilterCode.Date,
               field: 'purchased_at'
             },
             sort: { field: 'purchased_at' }
           },
-          amount: {
+          {
             label: 'Amount',
-            transformer: v => prettifyMoney(v.amount, v.currency),
+            accessor: v => prettifyMoney(v.amount, v.currency),
             sort: { field: 'amount' },
             filter: {
               type: FilterCode.Number,
               field: 'amount'
             }
           },
-          status: {
+          {
             label: 'Status',
-            transformer: v => new PaymentStatusPipe().transform(v.status),
+            accessor: v => new PaymentStatusPipe().transform(v.status),
             filter: {
               field: 'payment_status',
               type: FilterCode.Enum,
@@ -113,7 +114,7 @@ export class BillingSettingsComponent implements OnInit {
               }
             }
           }
-        }
+        ]
       },
       this.invoices
     );

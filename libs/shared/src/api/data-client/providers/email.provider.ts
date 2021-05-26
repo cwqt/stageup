@@ -36,7 +36,7 @@ export class EmailProvider implements Provider<Mail> {
     options: { from: string; to: string; subject: string; content: string; markdown?: boolean },
     attachments?: Attachment[]
   ) {
-    if (!this.config.enabled) {
+    if (this.config.enabled == false) {
       console.log(marked(options.content));
       this.log.error(`Did not send e-mail because it is disabled: %o`, options);
       return;

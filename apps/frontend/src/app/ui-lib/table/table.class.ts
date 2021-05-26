@@ -144,8 +144,7 @@ export class UiTable<Input = any, Transformed = any> {
     for (const [idx, row] of (data || []).entries()) {
       const rowData = { __data: row, __idx: idx };
       for (const column of Object.keys(this.config.columns)) {
-        const colData = this.config.columns[column as keyof Input];
-        rowData[column] = colData.transformer ? colData.transformer(row) : row[column];
+        rowData[column] = this.config.columns[column].accessor(row);
       }
 
       rows.push(rowData);

@@ -3,7 +3,7 @@ import {
   IInvoice,
   CurrencyCode,
   ITicket,
-  PurchaseableEntity,
+  PurchaseableEntityType,
   PaymentStatus,
   DtoInvoice,
   IUserInvoice,
@@ -12,6 +12,7 @@ import {
   IHostInvoice,
   IPaymentSourceDetails,
   RefundReason,
+  DtoUserPatronageInvoice,
   IRefundRequest
 } from '@core/interfaces';
 import { User } from '../users/user.entity';
@@ -20,6 +21,9 @@ import { timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
 import { Ticket } from '../performances/ticket.entity';
 import { PatronSubscription } from '../users/patron-subscription.entity';
+import { PatronTier } from '@core/api';
+
+export type PurchaseableEntity = PatronSubscription | Ticket;
 
 @Entity()
 export class Invoice extends BaseEntity implements IInvoice {
@@ -32,7 +36,7 @@ export class Invoice extends BaseEntity implements IInvoice {
   @Column('bigint', { nullable: true }) amount: number;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
   @Column('enum', { enum: PaymentStatus, nullable: true }) status: PaymentStatus;
-  @Column('enum', { enum: PurchaseableEntity, nullable: true }) type: PurchaseableEntity;
+  @Column('enum', { enum: PurchaseableEntityType, nullable: true }) type: PurchaseableEntityType;
   @Column('json', { nullable: true }) refund_request: Omit<IRefundRequest, 'invoice_id'>;
 
   @Column() stripe_charge_id: string;
@@ -59,6 +63,18 @@ export class Invoice extends BaseEntity implements IInvoice {
 
   setHost(host: Host) {
     this.host = host;
+    return this;
+  }
+
+  setPurchaseable(entity: PurchaseableEntity) {
+    if (entity instanceof Ticket) {
+      this.ticket = entity;
+      this.type = PurchaseableEntityType.Ticket;
+    } else if (entity instanceof PatronSubscription) {
+      this.patron_subscription = entity;
+      this.type = PurchaseableEntityType.PatronTier;
+    }
+
     return this;
   }
 
@@ -91,6 +107,13 @@ export class Invoice extends BaseEntity implements IInvoice {
       ...this.toInvoiceDto(),
       performance: this.ticket.performance.toStub(),
       ticket: this.ticket.toStub()
+    };
+  }
+
+  toUserPatronageStub(): Required<DtoUserPatronageInvoice> {
+    return {
+      ...this.toInvoiceDto(),
+      subscription: this.patron_subscription.toFull()
     };
   }
 

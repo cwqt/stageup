@@ -33,7 +33,7 @@ import {
   JobType,
   NUUID,
   pick,
-  PurchaseableEntity,
+  PurchaseableEntityType,
   TokenProvisioner,
   Visibility
 } from '@core/interfaces';
@@ -48,7 +48,7 @@ export default class PerformanceController extends BaseController<BackendProvide
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance(): IControllerEndpoint<IPerformance> {
     return {
-      validators: { body: Validators.Objects.DtoCreatePerformance },
+      // validators: { body: Validators.Objects.DtoCreatePerformance },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }));
@@ -331,7 +331,7 @@ export default class PerformanceController extends BaseController<BackendProvide
               // Passed through to webhook when charge successful
               user_id: platformPaymentMethod.user._id,
               purchaseable_id: ticket._id,
-              purchaseable_type: PurchaseableEntity.Ticket,
+              purchaseable_type: PurchaseableEntityType.Ticket,
               payment_method_id: platformPaymentMethod._id
             })
           },
