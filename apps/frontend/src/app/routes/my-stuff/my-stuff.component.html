@@ -1,15 +1,22 @@
-<h1>Purchases library</h1>
-<ui-hr></ui-hr>
+<app-page>
+  <div body>
+    <h1 i18n>Purchases library</h1>
+    <ui-hr></ui-hr>
 
-<mat-spinner *ngIf="myStuff.loading"></mat-spinner>
+    <mat-spinner *ngIf="myStuff.loading"></mat-spinner>
 
-<h3 *ngIf="myStuff.data?.data?.length == 0">No purchases found</h3>
+    <h3 *ngIf="myStuff.data?.data?.length == 0" i18n>No purchases found</h3>
 
-<div class="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2" *ngIf="!myStuff.loading && myStuff.data.data">
-  <app-performance-thumb
-    *ngFor="let performance of myStuff.data.data"
-    (click)="openWatchPerformance(performance)"
-    [performance]="performance"
-  >
-  </app-performance-thumb>
-</div>
+    <div
+      class="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2"
+      *ngIf="!myStuff.loading && myStuff.data.data"
+    >
+      <app-performance-thumb
+        *ngFor="let performance of myStuff.data.data"
+        (click)="openWatchPerformance(performance)"
+        [performance]="performance"
+      >
+      </app-performance-thumb>
+    </div>
+  </div>
+</app-page>

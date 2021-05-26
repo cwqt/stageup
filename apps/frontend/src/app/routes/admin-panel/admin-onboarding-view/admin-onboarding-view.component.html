@@ -1,19 +1,20 @@
-<mat-spinner *ngIf="onboarding.loading"></mat-spinner>
-<ng-container *ngIf="onboarding.data && !onboarding.loading">
-  <div>
-    <h1>{{ onboarding.data.host.name }} <span class="opacity-20">(#{{ onboarding.data.host._id }})</span></h1>
+<ui-dialog>
+  <mat-spinner class="mx-auto" *ngIf="onboarding.loading"></mat-spinner>
+
+  <ng-container *ngIf="onboarding.data && !onboarding.loading">
+    <h1>
+      {{ onboarding.data.host.name }} <span class="opacity-20">(#{{ onboarding.data.host._id }})</span>
+    </h1>
 
     <div class="onboarding-meta">
-      <p><b>Status:</b> {{ onboarding.data.state | onboardingStatePipe }}</p>
-      <p><b>Submitted:</b> {{ onboarding.data.last_submitted | amFromUnix }}</p>
-      <p><b>Last Reviewed:</b> {{ (onboarding.data.last_reviewed | amFromUnix) || "Never" }}</p>
-      <p><b>Last Reviewed By:</b> {{ onboarding.data.last_reviewed_by?.username || "Never" }}</p>
+      <p><b i18n>Status</b>: {{ onboarding.data.state | onboardingStatePipe }}</p>
+      <p><b i18n>Submitted</b>: {{ onboarding.data.last_submitted | amFromUnix }}</p>
+      <p><b i18n>Last Reviewed</b>: {{ (onboarding.data.last_reviewed | amFromUnix) || '-' }}</p>
+      <p><b i18n>Last Reviewed By</b>: {{ onboarding.data.last_reviewed_by?.username || '-' }}</p>
     </div>
-  </div>
 
-  <ui-hr></ui-hr>
+    <ui-hr></ui-hr>
 
-  <div class="bg-white overflow-hidden p-4 rounded shadow-sm">
     <app-onboarding-view [adminView]="true" [hostId]="onboarding.data.host._id"></app-onboarding-view>
-  </div>
-</ng-container>
+  </ng-container>
+</ui-dialog>

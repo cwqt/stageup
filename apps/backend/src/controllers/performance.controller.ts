@@ -6,10 +6,17 @@ import {
   getCheck,
   Host,
   IControllerEndpoint,
+  AssetGroup,
   PaymentMethod,
   Performance,
   Ticket,
-  Validators
+  Validators,
+  User,
+  SigningKey,
+  VideoAsset,
+  transact,
+  LiveStreamAsset,
+  Auth
 } from '@core/api';
 import { enumToValues, getDonoAmount, timestamp, to } from '@core/helpers';
 import {
@@ -17,10 +24,10 @@ import {
   AssetType,
   BASE_AMOUNT_MAP,
   DtoCreatePaymentIntent,
-  DtoCreatePerformance,
   DtoPerformance,
   HostPermission,
   HTTP,
+  DtoCreateAsset,
   ICreateAssetRes,
   IEnvelopedData,
   IPaymentIntentClientSecret,
@@ -30,17 +37,23 @@ import {
   IStripeChargePassthrough,
   ITicket,
   ITicketStub,
-  JobType,
   NUUID,
   pick,
-  PurchaseableEntityType,
+  ISignedToken,
+  PurchaseableType,
   TokenProvisioner,
-  Visibility
+  Visibility,
+  TicketType,
+  DtoCreateTicket,
+  AssetTags,
+  IAsset
 } from '@core/interfaces';
-import { Event } from 'libs/shared/src/api/event-bus/contracts';
-import { boolean, enums, object } from 'superstruct';
+import { SignableAssetType } from 'libs/shared/src/api/entities/performances/signing-key.entity';
+import { array, boolean, enums, object } from 'superstruct';
+import { In } from 'typeorm';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
+import idFinderStrategies from '../common/authorisation/id-finder-strategies';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Env from '../env';
 
@@ -55,28 +68,47 @@ export default class PerformanceController extends BaseController<BackendProvide
 
         return await this.ORM.transaction(async txc => {
           const performance = await new Performance(req.body, host).save();
-          await performance.setup(this.providers.mux, txc);
+          await performance.setup(txc);
+
+          // Temporary single asset per performance; either vod or stream, at-least
+          // until multi-assets stories are completed
+          if (req.body.type == 'vod') {
+            const asset = new VideoAsset(performance.asset_group, ['primary']);
+            await asset.setup(
+              this.providers.mux,
+              {
+                cors_origin: Env.FRONTEND.URL,
+                new_asset_settings: {
+                  playback_policy: 'signed'
+                }
+              },
+              {
+                asset_owner_type: AssetOwnerType.Performance,
+                asset_owner_id: performance._id
+              },
+              txc
+            );
+            performance.asset_group.assets.push(asset);
+            await txc.save(asset);
+          }
+
+          if (req.body.type == 'live') {
+            const asset = new LiveStreamAsset(performance.asset_group, ['primary']);
+            await asset.setup(
+              this.providers.mux,
+              null,
+              {
+                asset_owner_type: AssetOwnerType.Performance,
+                asset_owner_id: performance._id
+              },
+              txc
+            );
+            performance.asset_group.assets.push(asset);
+            await txc.save(asset);
+          }
 
           const p = performance.toFull();
           this.providers.bus.publish('performance.created', p, req.locale);
-          // TODO : add listener on  queue worker
-          // Push premiere to job queue for automated release
-          // Queue.enqueue({
-          //   type: JobType.ScheduleRelease,
-          //   data: {
-          //     _id: performance._id
-          //   },
-          //   options: {
-          //     // Use a repeating job with a limit of 1 to activate the scheduler
-          //     // FIXME: use offset instead maybe?
-          //     repeat: {
-          //       cron: '* * * * *',
-          //       startDate: performance.premiere_date,
-          //       limit: 1
-          //     }
-          //   }
-          // });
-
           return p;
         });
       }
@@ -111,12 +143,7 @@ export default class PerformanceController extends BaseController<BackendProvide
             relations: {
               host: true,
               tickets: true,
-              asset_group: true,
-              stream: {
-                // TODO: add bidirectional ref on signing key to avoid this join
-                // before we've checked that the user needs a token signing on the fly
-                signing_key: true
-              }
+              asset_group: true
             }
           })
         );
@@ -131,47 +158,6 @@ export default class PerformanceController extends BaseController<BackendProvide
           __client_data: null
         };
 
-        // For logged in users, see if current user has access the performance by virtue of owning an Access Token
-        if (req.session.user) {
-          let token: AccessToken = await AccessToken.findOne({
-            relations: ['user'],
-            where: {
-              user: {
-                _id: req.session.user._id
-              }
-            },
-            select: {
-              user: { _id: true }
-            }
-          });
-
-          // Also check if they're a member of the host which created the performance
-          // & if so provision a token on-the-fly for them to be able to watch without purchasing
-          if (!token) {
-            const [isMemberOfHost, passthru] = await AuthStrat.runner(
-              {
-                hid: async () => performance.host._id
-              },
-              AuthStrat.isMemberOfHost(m => m.hid)
-            )(req, this.providers);
-
-            if (isMemberOfHost) {
-              token = new AccessToken(passthru.uhi.user, performance, passthru.uhi.user, TokenProvisioner.User).sign(
-                performance.stream.signing_key
-              );
-            }
-          }
-
-          // return 404 barring the user has a token if the performance is private
-          if (!token && performance.visibility == Visibility.Private) throw new ErrorHandler(HTTP.NotFound);
-
-          // set the token
-          response.__client_data = {
-            has_purchased: token?.provisioner_type == TokenProvisioner.Purchase,
-            token: token?.access_token
-          };
-        }
-
         return response;
       }
     };
@@ -181,19 +167,20 @@ export default class PerformanceController extends BaseController<BackendProvide
     return {
       authorisation: AuthStrat.none,
       controller: async req => {
-        const { stream } = await Performance.findOne(
-          { _id: req.params.pid },
-          { relations: { stream: { signing_key: true } } }
-        );
+        const performance = await Performance.findOne({ _id: req.params.pid });
+
+        // FIXME: check for VoD
+        const stream = performance.asset_group.assets.find(asset => asset.type == AssetType.LiveStream);
+        const sk = await SigningKey.findOne({ _id: stream.signing_key__id });
 
         // Host_info eager loads signing_key, which is very convenient usually
         // but we do not wanna send keys and such over the wire
         return {
           stream_key: stream.meta.stream_key,
           signing_key: {
-            _id: stream.signing_key._id,
-            created_at: stream.signing_key.created_at,
-            mux_key_id: stream.signing_key.mux_key_id
+            _id: sk._id,
+            created_at: sk.created_at,
+            mux_key_id: sk.mux_key_id
           }
         };
       }
@@ -203,7 +190,7 @@ export default class PerformanceController extends BaseController<BackendProvide
   updateVisibility(): IControllerEndpoint<IPerformance> {
     return {
       validators: {
-        body: object({ Visibility: enums(enumToValues(Visibility) as Visibility[]) })
+        body: object({ visibility: enums(enumToValues(Visibility) as Visibility[]) })
       },
       // Only Admin/Owner can update visibility, but editors can update other fields
       // Must also be onboarded to be able to change visibility of a performance
@@ -227,7 +214,10 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   updatePerformance(): IControllerEndpoint<IPerformance> {
     return {
-      authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
+      authorisation: AuthStrat.runner(
+        { hid: IdFinderStrat.findHostIdFromPerformanceId },
+        AuthStrat.hasHostPermission(HostPermission.Editor, map => map.hid)
+      ),
       controller: async req => {
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] }));
         await perf.update({
@@ -245,8 +235,7 @@ export default class PerformanceController extends BaseController<BackendProvide
       authorisation: AuthStrat.isLoggedIn,
       validators: { body: Validators.Objects.DtoCreatePaymentIntent },
       controller: async req => {
-        // TODO: have generic method for buying purchaseables
-        const body: DtoCreatePaymentIntent = req.body;
+        const body: DtoCreatePaymentIntent<PurchaseableType.Ticket> = req.body;
 
         // Check that an amount was passed if allow_any donation peg selected
         if (body.options?.selected_dono_peg == 'allow_any' && body.options?.allow_any_amount == null)
@@ -331,7 +320,7 @@ export default class PerformanceController extends BaseController<BackendProvide
               // Passed through to webhook when charge successful
               user_id: platformPaymentMethod.user._id,
               purchaseable_id: ticket._id,
-              purchaseable_type: PurchaseableEntityType.Ticket,
+              purchaseable_type: PurchaseableType.Ticket,
               payment_method_id: platformPaymentMethod._id
             })
           },
@@ -357,9 +346,7 @@ export default class PerformanceController extends BaseController<BackendProvide
       // permission, there is an implicit intersection, because the UHI will not be returned
       // if the user is not part of the host in which the performance belongs to
       authorisation: AuthStrat.runner(
-        {
-          hid: IdFinderStrat.findHostIdFromPerformanceId
-        },
+        { hid: IdFinderStrat.findHostIdFromPerformanceId },
         AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
       ),
       controller: async req => {
@@ -372,16 +359,30 @@ export default class PerformanceController extends BaseController<BackendProvide
   createTicket(): IControllerEndpoint<ITicket> {
     return {
       validators: { body: Validators.Objects.DtoCreateTicket },
-      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.runner(
+        { hid: IdFinderStrat.findHostIdFromPerformanceId },
+        AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
+      ),
       controller: async req => {
-        const ticket = new Ticket(req.body);
+        const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['host'] }));
+        const body: DtoCreateTicket = req.body;
 
-        const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['tickets'] }));
+        // Must first have a Connected Stripe Account to create paid/dono tickets
+        if (!performance.host.stripe_account_id && body.type != TicketType.Free)
+          throw new ErrorHandler(HTTP.Unauthorised, '@@host.requires_stripe_connected');
 
-        await this.ORM.transaction(async txc => {
-          await txc.save(ticket);
-          performance.tickets.push(ticket);
-          await txc.save(performance);
+        const ticket = await this.ORM.transaction(async txc => {
+          const ticket = new Ticket(body);
+          const claim = await ticket.setup(performance, txc);
+
+          // IMPORTANT for now we will assign all signed assets to this claim
+          const group = await AssetGroup.findOne({ owner__id: req.params.pid }, { relations: ['assets'] });
+          await claim.assign(
+            group.assets.filter(asset => asset.signing_key__id != null),
+            txc
+          );
+
+          return txc.save(ticket);
         });
 
         return ticket.toFull();
@@ -391,7 +392,10 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   readTickets(): IControllerEndpoint<IEnvelopedData<ITicketStub[], NUUID[]>> {
     return {
-      authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
+      authorisation: AuthStrat.runner(
+        { hid: IdFinderStrat.findHostIdFromPerformanceId },
+        AuthStrat.hasHostPermission(HostPermission.Editor, map => map.hid)
+      ),
       controller: async req => {
         const tickets = await Ticket.find({
           relations: {
@@ -437,9 +441,7 @@ export default class PerformanceController extends BaseController<BackendProvide
   updateTicket(): IControllerEndpoint<ITicket> {
     return {
       authorisation: AuthStrat.runner(
-        {
-          hid: IdFinderStrat.findHostIdFromPerformanceId
-        },
+        { hid: IdFinderStrat.findHostIdFromPerformanceId },
         AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
       ),
       controller: async req => {
@@ -511,6 +513,87 @@ export default class PerformanceController extends BaseController<BackendProvide
     };
   }
 
+  generateSignedToken(): IControllerEndpoint<ISignedToken> {
+    return {
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const performance = await getCheck(
+          Performance.findOne({
+            where: {
+              _id: req.params.pid
+            },
+            relations: { tickets: true },
+            select: {
+              tickets: { _id: true }
+            }
+          })
+        );
+
+        // Check the asset actually exists
+        const asset = await getCheck(Asset.findOne({ _id: req.params.aid }));
+
+        // Find all invoices that belongs to a user for all tickets on this performance
+        const invoices = (
+          await User.findOne({
+            where: {
+              _id: req.session.user._id,
+              invoices: {
+                ticket: { _id: In(performance.tickets.map(t => t._id)) }
+              }
+            },
+            relations: {
+              invoices: { ticket: true }
+            },
+            select: {
+              _id: true,
+              invoices: { _id: true, ticket: { _id: true } }
+            }
+          })
+        )?.invoices;
+
+        if (invoices?.length > 0) {
+          // We have an Access Token, provisioned by means of purchase, subscription etc.
+          // check this access token's claim provides access to this asset
+          for await (let invoice of invoices) {
+            const accessToken = await AccessToken.findOne(
+              { provisioner_id: invoice._id },
+              { relations: { claim: true } }
+            );
+            if (!accessToken) continue;
+
+            // Check many-to-many exists between claim & asset to verify this tokens claims allow access
+            if ((await accessToken.claim.verify(asset)) == false) continue;
+
+            // There's a match! Now sign the token & return to the client
+            const sk = await SigningKey.findOne({ _id: asset.signing_key__id });
+            const token = sk.sign(asset as Asset<SignableAssetType>);
+            return token;
+          }
+          // We've exhaused all invoices & still not match, check the other options...
+        }
+
+        // If they haven't purchased a ticket with a valid claim, we should check
+        //  - if they're a member of the host which created the performance,
+        //    so provision a token on-the-fly for them to be able to watch without purchasing
+        const [isMemberOfHost] = await AuthStrat.runner(
+          {
+            hid: async () => performance.host._id
+          },
+          AuthStrat.isMemberOfHost(m => m.hid)
+        )(req, this.providers);
+
+        if (isMemberOfHost) {
+          const sk = await SigningKey.findOne({ _id: asset.signing_key__id });
+          const token = sk.sign(asset as Asset<SignableAssetType>);
+          return token;
+        }
+
+        // No AssetToken & not a member of a host, so user is not allowed!
+        throw new ErrorHandler(HTTP.Forbidden, '@@error.user_has_no_claim');
+      }
+    };
+  }
+
   /**
    * @description For uploading performance pictures/trailers - NOT VoD
    * VoD must be done one time only, when the performance is created
@@ -524,38 +607,40 @@ export default class PerformanceController extends BaseController<BackendProvide
         AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
       ),
       validators: {
-        query: object({
-          type: enums([AssetType.Image, AssetType.Video])
+        body: object({
+          is_signed: boolean(),
+          type: enums([AssetType.Image, AssetType.Video]),
+          tags: array(enums(AssetTags))
         })
       },
       // For AssetType.Image assets later
-      // preMiddlewares: [this.middleware.file(2048, ["image/jpeg", "image/jpg", "image/png"]).single("file")],
       controller: async req => {
+        const body: DtoCreateAsset = req.body;
         const performance = await getCheck(
           Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] })
         );
 
-        switch (req.query.type) {
+        switch (body.type) {
           case AssetType.Video: {
-            return await this.ORM.transaction(async txc => {
-              const asset = new Asset(AssetType.Video, performance.asset_group);
+            return await transact(async txc => {
+              const asset = new VideoAsset(performance.asset_group, body.tags);
               const video = await asset.setup(
                 this.providers.mux,
-                txc,
                 {
                   cors_origin: Env.FRONTEND.URL,
                   new_asset_settings: {
-                    playback_policy: 'public'
+                    playback_policy: body.is_signed ? 'signed' : 'public'
                   }
                 },
                 {
                   asset_owner_id: performance._id,
                   asset_owner_type: AssetOwnerType.Performance
-                }
+                },
+                txc
               );
 
-              performance.asset_group.push(asset);
-              await txc.save(performance.asset_group);
+              asset.group = performance.asset_group;
+              await txc.save(asset);
 
               return to<ICreateAssetRes>({
                 upload_url: video.url
@@ -563,7 +648,7 @@ export default class PerformanceController extends BaseController<BackendProvide
             });
           }
           case AssetType.Image: {
-            // TODO: implement performance image assets
+            // TODO: Implement performance image assets https://alacrityfoundationteam31.atlassian.net/browse/SU-885
             throw new ErrorHandler(HTTP.ServerError, '@@error.not_implemented');
           }
         }
@@ -582,6 +667,33 @@ export default class PerformanceController extends BaseController<BackendProvide
       controller: async req => {
         const ticket = await getCheck(Ticket.findOne({ _id: req.params.tid }));
         await ticket.softRemove();
+      }
+    };
+  }
+
+  readVideoAssetSignedUrl(): IControllerEndpoint<ICreateAssetRes> {
+    return {
+      authorisation: AuthStrat.runner(
+        {
+          hid: idFinderStrategies.findHostIdFromPerformanceId
+        },
+        AuthStrat.and(
+          AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid),
+          AuthStrat.custom(async req => {
+            // Check asset is part of the performances asset group
+            const group = await AssetGroup.findOne({ owner__id: req.params.pid });
+            if (!group) return false;
+
+            return group.assets.map(a => a._id).includes(req.params.aid);
+          })
+        )
+      ),
+      controller: async req => {
+        const asset = await getCheck(VideoAsset.findOne({ _id: req.params.aid }));
+        if (asset.type !== AssetType.Video) throw new ErrorHandler(HTTP.BadRequest, '@@error.not_a_video');
+        return {
+          upload_url: asset.meta.presigned_upload_url
+        };
       }
     };
   }

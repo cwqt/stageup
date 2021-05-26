@@ -1,9 +1,7 @@
 import { CurrencyCode } from '../common/currency.interface';
 import { NUUID } from '../common/fp.interface';
-import { IInvoice, IUserInvoice } from '../common/invoice.interface';
-import { IUser } from '../users/user.interface';
-import { IHostStub } from './host.interface';
 import { DtoInvoice } from '../common/invoice.interface';
+import { RichText } from '../performances/performance.interface';
 
 export interface IPatronTier {
   _id: NUUID;
@@ -12,7 +10,7 @@ export interface IPatronTier {
   cover_image: string;
   currency: CurrencyCode;
   amount: number;
-  description: Array<any>; // ngx-quill items
+  description: RichText; // ngx-quill items
 }
 
 export interface IHostPatronTier extends IPatronTier {

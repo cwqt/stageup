@@ -23,7 +23,9 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
 
-  onChildLoaded(component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent) {
+  onChildLoaded(
+    component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent
+  ) {
     component.performanceId = this.performanceId;
     component.performanceHostInfo = this.performanceHostInfo;
     component.performance = this.performance;
@@ -47,15 +49,8 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     await this.baseAppService.componentInitialising(this.route);
     this.performanceId = this.baseAppService.getParam(RouteParam.PerformanceId);
 
-    // Immediately fetch the performance & open the drawer with it in a loading state
-    // pass by reference the this.performance so the sidebar can await the loading to be completed
+    this.performanceService.$activeHostPerformanceId.next(this.performanceId);
     cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
-    this.drawerService.setDrawerState({
-      key: DrawerKey.HostPerformance,
-      data: { host: this.host, performance: this.performance }
-    });
-
-    this.drawerService.drawer.open();
   }
 
   openSharePerformanceDialog() {
@@ -72,7 +67,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.drawerService.$drawer.value.close();
-    this.drawerService.setDrawerState(this.drawerService.drawerData);
+    this.performanceService.$activeHostPerformanceId.next(null);
   }
 }

@@ -46,8 +46,13 @@ export class TestbedComponent implements OnInit {
           }),
           textarea_field: UiField.Textarea({
             label: $localize`:@@testbed_textarea_field:Textarea Field`,
-            rows: 5,
+            rows: 3,
             validators: [{ type: 'minlength', value: 10 }]
+          }),
+          richtext_field: UiField.Richtext({
+            label: $localize`:@@testbed_rich_field:RichText Field`,
+            validators: [{ type: 'required' }, { type: 'maxlength', value: 512 }],
+            hint: 'Markdown!'
           }),
           container_field: UiField.Container({
             label: $localize`:@@testbed_container_field:Container Field`,

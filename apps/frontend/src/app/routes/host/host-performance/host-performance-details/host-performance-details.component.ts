@@ -1,10 +1,9 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
-import { DtoPerformance, IHost, IPerformanceHostInfo, Visibility } from '@core/interfaces';
+import { DtoPerformance, IAssetStub, IHost, AssetType, IPerformanceHostInfo, Visibility } from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { IUiFormField, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
-import { PerformanceWatchComponent } from '../../../performance-watch/performance-watch.component';
 
 @Component({
   selector: 'app-host-performance-details',
@@ -18,7 +17,11 @@ export class HostPerformanceDetailsComponent implements OnInit {
   performance: ICacheable<DtoPerformance>;
   host: IHost;
 
-  copyMessage: string = 'Copy';
+  // TODO: temporary until multi-asset
+  stream: IAssetStub<AssetType.LiveStream>;
+  vod: IAssetStub<AssetType.Video>;
+
+  copyMessage: string = $localize`Copy`;
   visibilityInput: IUiFormField<'select'>;
 
   get performanceData() {
@@ -33,17 +36,22 @@ export class HostPerformanceDetailsComponent implements OnInit {
   constructor(private performanceService: PerformanceService, private clipboard: Clipboard) {}
 
   ngOnInit(): void {
+    this.stream = this.performance.data.data.assets.find(asset => asset.type == AssetType.LiveStream);
+    this.vod = this.performance.data.data.assets.find(
+      asset => asset.type == AssetType.Video && asset.tags.includes('trailer')
+    );
+
     this.visibilityForm = new UiForm({
       fields: {
         visibility: UiField.Select({
-          label: 'Performance Visibility',
+          label: $localize`Performance Visibility`,
           multi_select: false,
           has_search: false,
           initial: this.performanceData.visibility,
           disabled: !this.host.is_onboarded,
           values: new Map([
-            [Visibility.Private, { label: 'Private' }],
-            [Visibility.Public, { label: 'Public' }]
+            [Visibility.Private, { label: $localize`Private` }],
+            [Visibility.Public, { label: $localize`Public` }]
           ])
         })
       },
@@ -62,9 +70,9 @@ export class HostPerformanceDetailsComponent implements OnInit {
 
   copyStreamKeyToClipboard() {
     this.clipboard.copy(this.performanceHostInfo.data.stream_key);
-    this.copyMessage = 'Copied!';
+    this.copyMessage = $localize`Copied!`;
     setTimeout(() => {
-      this.copyMessage = 'Copy';
+      this.copyMessage = $localize`Copy`;
     }, 2000);
   }
 }

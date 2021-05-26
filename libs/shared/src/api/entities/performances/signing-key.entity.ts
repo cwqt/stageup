@@ -1,12 +1,28 @@
-import { JwtAccessToken, IMuxAsset, IPerformance, ISigningKey } from '@core/interfaces';
-import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, PrimaryColumn } from 'typeorm';
+import { IMuxAsset, IPerformance, ISigningKey, AssetType, ISignedToken } from '@core/interfaces';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  Entity,
+  EntityManager,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn
+} from 'typeorm';
 
-import Mux, { JWT } from '@mux/mux-node';
+import Mux, { JWT, JWTOptions } from '@mux/mux-node';
 
-import { Performance } from './performance.entity';
 import { timestamp, uuid } from '@core/helpers';
 import { Asset } from '../common/asset.entity';
 import MuxProvider from '../../data-client/providers/mux.provider';
+
+export type SignableAssetType =
+  | AssetType.AnimatedGIF
+  | AssetType.LiveStream
+  | AssetType.Storyboard
+  | AssetType.Video
+  | AssetType.Thumbnail;
 
 @Entity()
 export class SigningKey extends BaseEntity implements ISigningKey {
@@ -34,11 +50,25 @@ export class SigningKey extends BaseEntity implements ISigningKey {
     return txc.save(this);
   }
 
-  signToken(asset: Asset<any>): JwtAccessToken {
-    return JWT.sign((asset.meta as IMuxAsset).playback_id, {
-      type: 'video',
+  sign(asset: Asset<SignableAssetType>): ISignedToken {
+    const jwt = JWT.sign((asset.meta as IMuxAsset).playback_id, {
+      type: this.mapAssetTypeToClaimType(asset.type),
       keyId: this.mux_key_id,
       keySecret: this.rsa256_key
     });
+
+    return { asset_id: asset._id, signed_token: jwt };
+  }
+
+  private mapAssetTypeToClaimType(type: SignableAssetType): JWTOptions['type'] {
+    const map: { [index in SignableAssetType]: JWTOptions['type'] } = {
+      [AssetType.LiveStream]: 'video',
+      [AssetType.Video]: 'video',
+      [AssetType.AnimatedGIF]: 'gif',
+      [AssetType.Storyboard]: 'storyboard',
+      [AssetType.Thumbnail]: 'thumbnail'
+    };
+
+    return map[type];
   }
 }

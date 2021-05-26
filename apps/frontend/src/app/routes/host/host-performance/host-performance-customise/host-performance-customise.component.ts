@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AssetType, DtoPerformance, ICreateAssetRes, IHost, IPerformanceHostInfo } from '@core/interfaces';
+import { AssetType, DtoPerformance, IAssetStub, ICreateAssetRes, IHost, IPerformanceHostInfo } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 
@@ -15,15 +15,19 @@ export class HostPerformanceCustomiseComponent implements OnInit {
   performance: ICacheable<DtoPerformance>;
   host: IHost;
 
-  initialSource:string;
+  asset: IAssetStub<AssetType.Video>;
 
-  constructor(private performanceService:PerformanceService) { }
+  constructor(private performanceService: PerformanceService) {}
 
   ngOnInit(): void {
-    this.initialSource = this.performance.data.data.assets.find(a => a.type == AssetType.Video)?.location;
+    this.asset = this.performance.data.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
   }
 
   assetCreator() {
-    return this.performanceService.createAsset(this.performance.data.data._id);
+    return this.performanceService.createAsset(this.performance.data.data._id, {
+      type: AssetType.Video,
+      is_signed: false,
+      tags: ['trailer']
+    });
   }
 }

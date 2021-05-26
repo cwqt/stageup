@@ -19,8 +19,8 @@ export class ContactInfo extends BaseEntity implements IContactInfo {
     this._id = uuid();
   }
 
-  @Column({ nullable: true }) mobile_number: number;
-  @Column({ nullable: true }) landline_number: number;
+  @Column({ nullable: true }) mobile_number: string;
+  @Column({ nullable: true }) landline_number: string;
 
   @OneToMany(() => Address, address => address.contact_info, { cascade: ['remove'], eager: true })
   addresses: Address[];

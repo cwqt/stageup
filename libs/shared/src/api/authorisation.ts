@@ -68,9 +68,9 @@ const or = (...args: AuthStrategy[]): AuthStrategy => {
  * @description Custom AuthStrategy using HOF
  * @param f Custom function which returns true or false to allow/deny access
  */
-const custom = (f: <T extends ProviderMap>(request?: Request, pm?: T) => boolean): AuthStrategy => {
+const custom = (f: <T extends ProviderMap>(request?: Request, pm?: T) => Promise<boolean>): AuthStrategy => {
   return async (req, pm): Promise<AuthStratReturn> => {
-    const res = f(req, pm);
+    const res = await f(req, pm);
     return [res, {}, res ? '@@error.missing_permissions' : null];
   };
 };

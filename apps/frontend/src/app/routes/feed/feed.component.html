@@ -1,61 +1,82 @@
-<!-- Genres -->
-<div class="carousel-container relative">
-  <h2>Genres</h2>
-  <ui-hr></ui-hr>
+<app-page>
+  <div sticky class="sticky-header relative mb-8">
+    <img
+      class="filter grayscale brightness-150 h-96 w-full object-cover"
+      src="https://images.unsplash.com/uploads/1411160110892ab555b6f/80b0d25e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1502&q=80"
+      alt=""
+    />
 
-  <div class="relative">
-    <carousel
-      [margin]="10"
-      [height]="256"
-      [cellsToShow]="currentCellsToShow == 1 ? 1 : currentCellsToShow + 2"
-      [loop]="false"
-    >
-      <div
-        *ngFor="let genre of genres | keyvalue; let i = index"
-        (click)="openGenreFeed(genre.key)"
-        class="carousel-cell overflow-hidden"
+    <div class="sticky-gradient"></div>
+
+    <div class="absolute bottom-10 left-8 w-full">
+      <div class="container mx-auto">
+        <h1 class="text-6xl" i18n>Welcome to StageUp</h1>
+        <p class="text-lg" i18n>Fresh theatre, any time & any place.</p>
+      </div>
+    </div>
+  </div>
+
+  <div body>
+    <h2 i18n>Genres</h2>
+    <ui-hr></ui-hr>
+
+    <div class="relative">
+      <carousel
+        [margin]="10"
+        [height]="256"
+        [cellsToShow]="currentCellsToShow == 1 ? 1 : currentCellsToShow + 2"
+        [loop]="false"
       >
         <div
-          [style]="'background:' + genre.value.gradient"
-          class="h-64 text-white w-full rounded-lg flex p-4 flex-col overflow-hidden relative cursor-pointer shadow transform hover:scale-105 duration-200 text-right hover:shadow-lg"
+          *ngFor="let genre of genres | keyvalue; let i = index"
+          (click)="openGenreFeed(genre.key)"
+          class="carousel-cell overflow-hidden"
         >
-          <h2 class="truncate mb-0 w-full mt-auto" [class.text-md]="genre.value.small">{{ genre.value.label }}</h2>
+          <div
+            [style]="'background:' + genre.value.gradient"
+            class="h-64 text-white w-full rounded-lg flex p-4 flex-col overflow-hidden relative cursor-pointer shadow transform hover:scale-105 duration-200 text-right hover:shadow-lg"
+          >
+            <h2 class="truncate mb-0 w-full mt-auto" [class.text-md]="genre.value.small">{{ genre.value.label }}</h2>
+          </div>
         </div>
-      </div>
-    </carousel>
-  </div>
-</div>
-
-<!-- All other carousels -->
-<div *ngFor="let carousel of carouselData | keyvalue" class="carousel-container relative">
-  <h2>{{ carousel.key | titlecase }}</h2>
-
-  <ui-hr></ui-hr>
-
-  <mat-spinner *ngIf="carousel.value.loading" i18n="@@loading">Loading...</mat-spinner>
-  <h3 *ngIf="carousel.value.data?.data?.length == 0" i18n="@@no-performances-found">No performances found</h3>
-
-  <div class="relative">
-    <div class="absolute right-0 top-0 bottom-0 my-auto spinner" *ngIf="carousel.value.meta.loading_page">
-      <mat-spinner [diameter]="40"></mat-spinner>
+      </carousel>
     </div>
 
-    <carousel
-      *ngIf="!carousel.value.loading"
-      (events)="handleCarouselEvents($event, carousel.key)"
-      [margin]="20"
-      [height]="256"
-      [loading]="carousel.value.meta.loading_page"
-      [id]="carousel.key"
-      [cellsToShow]="currentCellsToShow"
-      [loop]="false"
-    >
-      <div class="carousel-cell overflow-hidden" *ngFor="let performance of carousel.value.data.data; let i = index">
-        <app-performance-thumb #thumb [performance]="performance" (click)="thumb.openBrochure()">
-        </app-performance-thumb>
+    <!-- All other carousels -->
+    <div *ngFor="let carousel of carouselData | keyvalue" class="carousel-container relative">
+      <h2>{{ carousel.key | titlecase }}</h2>
+
+      <ui-hr></ui-hr>
+
+      <mat-spinner *ngIf="carousel.value.loading" i18n="@@loading">Loading...</mat-spinner>
+      <h3 *ngIf="carousel.value.data?.data?.length == 0" i18n="@@no-performances-found">No performances found</h3>
+
+      <div class="relative">
+        <div class="absolute right-0 top-0 bottom-0 my-auto spinner" *ngIf="carousel.value.meta.loading_page">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </div>
+
+        <carousel
+          *ngIf="!carousel.value.loading"
+          (events)="handleCarouselEvents($event, carousel.key)"
+          [margin]="20"
+          [height]="256"
+          [loading]="carousel.value.meta.loading_page"
+          [id]="carousel.key"
+          [cellsToShow]="currentCellsToShow"
+          [loop]="false"
+        >
+          <div
+            class="carousel-cell overflow-hidden"
+            *ngFor="let performance of carousel.value.data.data; let i = index"
+          >
+            <app-performance-thumb #thumb [performance]="performance" (click)="thumb.openBrochure()">
+            </app-performance-thumb>
+          </div>
+        </carousel>
       </div>
-    </carousel>
+    </div>
   </div>
-</div>
+</app-page>
 
 <router-outlet></router-outlet>

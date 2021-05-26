@@ -3,13 +3,13 @@ popper-content ::ng-deep {
     border: 0px !important;
     padding: 0 !important;
     .buttons {
-      width: 200px;
       display: flex;
       flex-flow: column;
       ui-button ::ng-deep {
         button {
           border: 0 !important;
           width: 100%;
+          justify-content: flex-start !important;
         }
       }
     }

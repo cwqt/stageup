@@ -3,9 +3,10 @@ import {
   DtoCreatePatronTier,
   IHostPatronTier,
   IPatronTier,
-  PurchaseableEntityType
+  RichText,
+  PurchaseableType
 } from '@core/interfaces';
-import { timestamp, uuid } from '@core/helpers';
+import { readRichTextContent, timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
 import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { PatronSubscription } from '../users/patron-subscription.entity';
@@ -25,7 +26,7 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
   @Column() amount: number;
   @Column() total_patrons: number; // de-normalised col that gets adjusted on user buying/removing patronage
   @Column() is_visible: boolean;
-  @Column('jsonb', { nullable: true }) description: Array<any>; // quilljs operation array
+  @Column('varchar', { nullable: true }) description: RichText; // quilljs operation array
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
   @Column() stripe_price_id: string; // price_H1y51TElsOZjG or similar
   @Column() stripe_product_id: string; // prod_JKwzPhILewYZAC or similar
@@ -58,11 +59,10 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
     const product = await stripe.products.create(
       {
         name: this.name,
-        // TODO: parse quill ops as a plain string // new Quill(this.description)
-        // description: "",
+        description: readRichTextContent(this.description),
         metadata: {
           host_id: this.host._id,
-          purchaseable_type: PurchaseableEntityType.PatronTier,
+          purchaseable_type: PurchaseableType.PatronTier,
           purchasable_id: this._id
         }
       },
@@ -80,7 +80,7 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
         },
         metadata: {
           host_id: this.host._id,
-          purchaseable_type: PurchaseableEntityType.PatronTier,
+          purchaseable_type: PurchaseableType.PatronTier,
           purchasable_id: this._id
         }
       },

@@ -1,4 +1,4 @@
-import { IAddress } from "./address.interface";
+import { IAddress } from './address.interface';
 
 export type IPerson = IPersonInfo & IContactInfo;
 
@@ -9,12 +9,11 @@ export interface IPersonInfo {
 }
 
 export interface IContactInfo {
-  // https://www.itu.int/rec/T-REC-E.123/en for numbers
-  mobile_number: number;
-  landline_number: number;
+  // e.614 numbers
+  mobile_number: string;
+  landline_number: string;
   addresses: IAddress[];
 }
-
 
 export enum PersonTitle {
   Mr = 'mr',
@@ -23,5 +22,5 @@ export enum PersonTitle {
   Miss = 'miss',
   Master = 'master',
   Dr = 'dr',
-  Professor = 'professor',
+  Professor = 'professor'
 }

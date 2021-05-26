@@ -1,12 +1,13 @@
 import { Environment, IFrontendEnvironment } from '@core/interfaces';
 
-export const environment:IFrontendEnvironment = {
+export const environment: IFrontendEnvironment = {
   environment: Environment.Development,
   apiUrl: 'http://localhost:3000',
-  sseUrl: "http://localhost:3002",
+  sseUrl: 'http://localhost:3002',
   frontendUrl: 'http://localhost:4200',
-  stripePublicKey: "",
-  appVersion: ""
+  stripePublicKey: '',
+  appVersion: '',
+  locale: ''
 };
 
-import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+import 'zone.js/dist/zone-error'; // Included with Angular CLI.

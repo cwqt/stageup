@@ -26,7 +26,7 @@ export class HubManager {
   }
 
   emit<T>(id: string, event: SseEvent<T>) {
-    this.get(id).data(event);
+    this.get(id)?.data(event);
   }
 
   get(id: string) {
@@ -38,8 +38,9 @@ export class HubManager {
    */
   dynamicSseHub(options: Partial<ISseMiddlewareOptions> = {}): Handler {
     return function middleware(req: Request, res: ISseResponse, next: NextFunction): void {
-      if (!this.hubs.get(req.params.pid)) this.hubs.create(req.params.pid);
-      const hub = this.hubs.get(req.params.pid);
+      if (!this.get(req.params.aid)) this.create(req.params.aid);
+
+      const hub = this.get(req.params.aid);
 
       // Register the SSE functions of that client on the hub
       hub.register(res.sse);
@@ -49,7 +50,7 @@ export class HubManager {
       res.once('finish', () => hub.unregister(res.sse));
 
       next();
-    };
+    }.bind(this); // ctx bind to class
   }
 
   getTotalClientCount(): { [index: string]: number } {

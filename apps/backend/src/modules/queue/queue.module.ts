@@ -1,18 +1,17 @@
-import Env from '@backend/env';
-import { AsyncRouter, Auth, Providers } from '@core/api';
+import { AsyncRouter, IControllerEndpoint, Providers } from '@core/api';
 import { to } from '@core/helpers';
-import { JobType, JobTypes, JobData } from '@core/interfaces';
-import { Job, JobsOptions, Queue, QueueEvents, QueueScheduler, Worker } from 'bullmq';
-import { setQueues, BullMQAdapter, router as BullRouter } from 'bull-board';
-import { AsyncRouterInstance } from 'express-async-router';
+import { JobData, JobType, JobTypes } from '@core/interfaces';
+import { BullMQAdapter, router as BullRouter, setQueues } from 'bull-board';
+import { JobsOptions, Queue, QueueEvents, QueueScheduler, Worker } from 'bullmq';
 import { ConnectionOptions } from 'tls';
-import { add, Logger } from 'winston';
+import { Logger } from 'winston';
 import { Module } from '..';
 import { EventHandlers } from './handlers';
 import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker';
 import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
 import SendEmailWorker from './workers/send-email.worker';
-import { threadId } from 'worker_threads';
+import Auth from '../../common/authorisation';
+import Env from '@backend/env';
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 interface IQueue<T extends JobType = any> {
@@ -27,12 +26,15 @@ export type QueueProviders = {
   i18n: InstanceType<typeof Providers.i18n>;
   email: InstanceType<typeof Providers.Email>;
   orm: InstanceType<typeof Providers.Postgres>;
+  stripe: InstanceType<typeof Providers.Stripe>;
 };
 
 export class QueueModule implements Module {
   name = 'Queue';
   log: Logger;
-  router: AsyncRouter<any>;
+  routes: {
+    jobQueueUi: IControllerEndpoint<void>;
+  };
 
   connectionOptions: ConnectionOptions;
   providers: QueueProviders;
@@ -48,10 +50,7 @@ export class QueueModule implements Module {
     this.log = log;
   }
 
-  async register(
-    bus: InstanceType<typeof Providers.EventBus>,
-    providers: QueueProviders
-  ): Promise<AsyncRouterInstance> {
+  async register(bus: InstanceType<typeof Providers.EventBus>, providers: QueueProviders) {
     this.providers = providers;
     this.log.info(`Registering module ${this.name}...`);
 
@@ -110,16 +109,36 @@ export class QueueModule implements Module {
       bus.subscribe('user.password_changed',            handlers.sendPasswordChangedNotificationEmail);
       bus.subscribe('ticket.purchased',                 handlers.sendTicketReceiptEmail);
       bus.subscribe('refund.requested',                 handlers.sendInvoiceRefundRequestConfirmation);
+      bus.subscribe("host.stripe-connected",            handlers.setupDefaultPatronTierForHost);
+      bus.subscribe("host.invoice-export",              async ct => {
+        if(ct.format == "pdf") await this.queues.host_invoice_pdf.add({
+          locale: ct.__meta.locale,
+          sender_email_address: Env.EMAIL_ADDRESS,
+          email_address: ct.email_address, invoice_ids: ct.invoice_ids})
+
+        if(ct.format == "csv") await this.queues.host_invoice_csv.add({
+          locale: ct.__meta.locale,
+          sender_email_address: Env.EMAIL_ADDRESS,
+          email_address: ct.email_address, invoice_ids: ct.invoice_ids})
+      });
+
       bus.subscribe('patronage.started', ct => {
         handlers.sendHostPatronSubscriptionStartedEmail(ct);
         handlers.sendUserPatronSubscriptionStartedReceiptEmail(ct);
       });
     }
 
-    this.router = new AsyncRouter({}, Auth.none, this.log, providers.i18n);
     setQueues(Object.values(this.queues).map(q => new BullMQAdapter(q.queue)));
-    this.router.use('/', BullRouter);
-    return this.router.router;
+
+    this.routes = {
+      jobQueueUi: {
+        authorisation: Auth.isSiteAdmin,
+        controller: async req => {},
+        handler: BullRouter as any
+      }
+    };
+
+    return this;
   }
 
   destroy() {

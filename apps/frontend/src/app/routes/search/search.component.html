@@ -1,63 +1,53 @@
-<h3 class="mb-0 flex items-center">
-  Companies <mat-spinner class="ml-2" [diameter]="25" *ngIf="hosts.loading"></mat-spinner>
-</h3>
-<ui-hr></ui-hr>
+<app-page>
+  <div body>
+    <h2 class="mb-0 flex items-center" i18n>
+      Companies <mat-spinner class="ml-2" [diameter]="25" *ngIf="hosts.loading"></mat-spinner>
+    </h2>
+    <ui-hr></ui-hr>
 
-<div *ngIf="hosts.data" class="mb-4 flex items-stretch">
-  <div class="w-32 mr-4 bg-white px-6 py-8 rounded-lg shadow-lg text-center" *ngFor="let host of hosts.data.data">
-    <img class="w-auto mx-auto rounded-full" [src]="host.avatar || '/assets/avatar-placeholder.png'" />
-    <h2 class="mt-3 text-xl font-medium text-gray-700">{{ host.name }}</h2>
-    <a class="text-pink-500 block mb-5 cursor-pointer" (click)="openDialogHost(host.username)">Info</a>
-  </div>
-</div>
-
-<mat-paginator
-  #hostPaginator
-  [length]="hostPaginator.length"
-  [pageSizeOptions]="[10, 50, 100]"
-  [showFirstLastButtons]="true"
-  (page)="search(hostPaginator.pageIndex, hostPaginator.pageSize, 'hosts')"
->
-</mat-paginator>
-
-<br />
-
-<h3 class="mb-0 flex items-center">
-  Performances <mat-spinner class="ml-2" [diameter]="25" *ngIf="performances.loading"></mat-spinner>
-</h3>
-<ui-hr></ui-hr>
-
-<div *ngIf="performances.data" class="mb-4 grid grid-cols-2 gap-4 cursor-pointer">
-  <div
-    class="flex bg-white shadow-lg rounded-lg overflow-hidden h-36"
-    *ngFor="let results of performances.data.data"
-    (click)="openDialogPerf(results)"
-  >
-    <img [src]="results.thumbnail || '/assets/performance-placeholder.jpeg'" class="w-1/3 object-cover" alt="" />
-    <!-- <div
-      class="w-1/3 bg-cover"
-      [style]="'background-image: url(\'' + () + '\')'"
-    ></div> -->
-    <div class="w-2/3 p-4 flex flex-col">
-      <h1 class="text-gray-900 font-bold text-2xl">{{ results?.name }}</h1>
-      <p class="mt-2 text-gray-600 text-sm mb-0">{{ results?.description }}</p>
-      <!-- <div class="flex item-center mt-2">
-        <ui-icon>star--filled</ui-icon>
-        <ui-icon>star--filled</ui-icon>
-        <ui-icon>star--filled</ui-icon>
-        <ui-icon>star--filled</ui-icon>
-        <ui-icon>star</ui-icon>
-      </div> -->
-      <ui-button kind="primary" class="ml-auto mt-auto mb-2">View</ui-button>
+    <div *ngIf="hosts.data" class="mb-4 flex items-stretch">
+      <div class="w-32 mr-4 bg-white px-6 py-8 rounded-lg shadow-lg text-center" *ngFor="let host of hosts.data.data">
+        <img class="w-auto mx-auto rounded-full" [src]="host.avatar || '/assets/avatar-placeholder.png'" />
+        <h2 class="mt-3 text-xl font-medium text-gray-700">{{ host.name }}</h2>
+        <a class="text-pink-500 block mb-5 cursor-pointer" (click)="openDialogHost(host.username)">Info</a>
+      </div>
     </div>
-  </div>
-</div>
 
-<mat-paginator
-  #perfPaginator
-  [length]="perfPaginator.length"
-  [pageSizeOptions]="[10, 50, 100]"
-  [showFirstLastButtons]="true"
-  (page)="search(perfPaginator.pageIndex, perfPaginator.pageSize, 'performances')"
->
-</mat-paginator>
+    <mat-paginator
+      #hostPaginator
+      [length]="hostPaginator.length"
+      [pageSizeOptions]="[10, 50, 100]"
+      [showFirstLastButtons]="true"
+      (page)="search(hostPaginator.pageIndex, hostPaginator.pageSize, 'hosts')"
+    >
+    </mat-paginator>
+
+    <br />
+
+    <h2 class="mb-0 flex items-center" i18n>Performances</h2>
+    <ui-hr></ui-hr>
+    <div *ngIf="performances.data" class="mb-4 grid grid-cols-2 gap-4 cursor-pointer">
+      <div
+        class="flex bg-white shadow-lg rounded-lg overflow-hidden h-36"
+        *ngFor="let results of performances.data.data"
+        (click)="openDialogPerf(results)"
+      >
+        <img [src]="results.thumbnail || '/assets/performance-placeholder.jpeg'" class="w-1/3 object-cover" alt="" />
+        <div class="w-2/3 p-4 flex flex-col">
+          <h1 class="text-gray-900 font-bold text-2xl">{{ results?.name }}</h1>
+          <p class="mt-2 text-gray-600 text-sm mb-0">{{ results?.description }}</p>
+          <ui-button kind="primary" class="ml-auto mt-auto mb-2" i18n>View</ui-button>
+        </div>
+      </div>
+    </div>
+
+    <mat-paginator
+      #perfPaginator
+      [length]="perfPaginator.length"
+      [pageSizeOptions]="[10, 50, 100]"
+      [showFirstLastButtons]="true"
+      (page)="search(perfPaginator.pageIndex, perfPaginator.pageSize, 'performances')"
+    >
+    </mat-paginator>
+  </div>
+</app-page>

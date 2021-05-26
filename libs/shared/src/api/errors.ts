@@ -27,6 +27,9 @@ export const handleError = (
   i18n?: i18nProvider
 ) => {
   const statusCode: HTTP = error instanceof ErrorHandler ? error.statusCode : HTTP.ServerError;
+
+  console.log(error['errors']);
+
   const response: IErrorResponse =
     error instanceof ErrorHandler && i18n
       ? {

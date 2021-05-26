@@ -23,3 +23,9 @@
   background-color: transparent !important;
   overflow: visible !important;
 }
+
+.dialog-opaque {
+  transition: none;
+  background: rgb(7, 26, 43);
+  background: linear-gradient(169deg, rgba(7, 26, 43, 1) 0%, rgba(3, 21, 37, 1) 78%);
+}

@@ -18,13 +18,10 @@ import { HostPerformancesComponent } from './routes/host/host-performances/host-
 import { SettingsComponent } from './routes/settings/settings.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
-import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
 import { HostSettingsComponent } from './routes/settings/host-settings/host-settings.component';
-import { BillingPaymentComponent } from './routes/settings/billing-settings/billing-payment/billing-payment.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { SearchComponent } from './routes/search/search.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
-import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
@@ -63,6 +60,11 @@ const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
   return null;
 };
 
+export interface SidebarData {
+  icon: string;
+  label: string;
+}
+
 const LOGGED_IN_ROUTES: Routes = [
   {
     path: 'my-stuff',
@@ -80,12 +82,10 @@ const LOGGED_IN_ROUTES: Routes = [
     children: [
       { path: '', component: ProfileSettingsComponent },
       {
-        path: 'billing',
-        component: BillingSettingsComponent,
-        children: [{ path: 'payment', component: BillingPaymentComponent }]
+        path: 'payments',
+        component: BillingSettingsComponent
       },
       { path: 'host', component: HostSettingsComponent },
-      { path: 'account', component: AccountSettingsComponent },
       { path: 'wallet', component: WalletSettingsComponent },
       { path: 'patronage', component: UserPatronageComponent },
       { path: '**', component: NotFoundComponent }
@@ -102,8 +102,14 @@ const LOGGED_IN_ROUTES: Routes = [
         path: 'payments',
         component: HostPaymentsComponent,
         children: [
-          { path: 'invoices', component: HostInvoicesComponent },
-          { path: 'patronage', component: HostPatronageComponent }
+          {
+            path: 'invoices',
+            component: HostInvoicesComponent
+          },
+          {
+            path: 'patronage',
+            component: HostPatronageComponent
+          }
         ]
       },
       { path: 'team', component: HostMembersComponent },
@@ -132,9 +138,17 @@ const LOGGED_IN_ROUTES: Routes = [
       }
     ]
   },
-  { path: `admin`, component: AdminPanelComponent },
-  { path: `admin/onboardings`, component: AdminOnboardingListComponent },
-  { path: `admin/onboardings/:${RP.HostId}`, component: AdminOnboardingViewComponent }
+  {
+    path: `admin`,
+    component: AdminPanelComponent,
+    children: [
+      {
+        path: `onboardings/:${RP.HostId}`,
+        component: DialogEntryComponent,
+        data: { open_dialog: AdminOnboardingViewComponent, config: { width: '600px' } }
+      }
+    ]
+  }
 ];
 
 @NgModule({

@@ -2,6 +2,17 @@
   // Users ------------------------------------------------------------------------------------------------
   "login.password_incorrect": Password is incorrect
   "user.not_found": User does not exist
+  "error.not_a_video": This is not a video!
+
+  // Hosts -----------------------------------------------------------------------------------------------
+  "host.example_patron_tier_name": Example Tier
+  "host.example_patron_tier_description": Example Tier Description
+  "host.requires_stripe_connected": Requires Stripe to be connected to perform this action
+  "onboarding.steps_invalid": Some steps are invalid
+  "onboarding.step_is_invalid": Step is invalid
+
+  // Errors ----------------------------------------------------------------------------------------------
+  "error.user_has_no_claim": You don't have permissions to view this content
 
   // Emails -----------------------------------------------------------------------------------------------
   "email.test.send_email__subject": Testing e-mails!
@@ -47,8 +58,8 @@
 
     @{user_username} is not a patron of your company.
 
-    _ Patron Tier: **{tier_name}**
-    _ Amount: **{amount}**
+    - Patron Tier: **{tier_name}**
+    - Amount: **{amount}**
     '''
   "email.user.password_reset_requested__subject": StageUp Reset Password
   "email.user.password_reset_requested__content":
@@ -73,13 +84,12 @@
   "email.refund_requested__subject": StageUp: Your refund request has been sent to @{host_name}
   "email.refund_requested__content":
     '''
-    Hi **{user_name}**,
     Your refund request for the following invoice has been sent to **{host_name}**.
 
-    _ Invoice #: **{invoice_id}**
-    _ Performance: **{performance_name}**
-    _ Purchased: **{purchase_date}**
-    _ Amount" **{amount}**
+    - Invoice #: **{invoice_id}**
+    - Performance: **{performance_name}**
+    - Purchased: **{purchase_date}**
+    - Amount" **{amount}**
 
     We'll let you know when the host has processed your request
     '''

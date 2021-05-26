@@ -7,19 +7,21 @@ import { HostService } from '@frontend/services/host.service';
 import { MyselfService } from '@frontend/services/myself.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { RefundDialogComponent } from '../refund-dialog/refund-dialog.component';
+import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-invoice-dialog',
   templateUrl: './invoice-dialog.component.html',
   styleUrls: ['./invoice-dialog.component.scss']
 })
-export class InvoiceDialogComponent implements OnInit {
+export class InvoiceDialogComponent implements OnInit, IUiDialogOptions {
   isHostInvoice: boolean;
   paymentStateKind: ChipComponent['kind'];
   invoice: ICacheable<IHostInvoice | IUserInvoice> = createICacheable();
   refundRequested: PaymentStatus = PaymentStatus.RefundPending;
 
   @Output() submit: EventEmitter<void> = new EventEmitter();
+  @Output() cancel: EventEmitter<void> = new EventEmitter();
 
   constructor(
     private hostService: HostService,

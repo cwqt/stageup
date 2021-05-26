@@ -16,7 +16,8 @@ envConfigFile += `export const environment = {
    frontendUrl: '${process.env.LOAD_BALANCER_URL}:4200',
    environment: '${environment}',
    stripePublicKey: '${process.env.STRIPE_PUBLIC_KEY}',
-   appVersion: '${process.env.npm_package_version}'
+   appVersion: '${process.env.npm_package_version}',
+   locale: '${process.env.LOCALE}'
 };
 `;
 

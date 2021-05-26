@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostOnboarding } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
@@ -15,13 +16,15 @@ export class AdminOnboardingViewComponent implements OnInit {
   public onboarding: ICacheable<IHostOnboarding> = createICacheable();
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { route: ActivatedRoute },
     private hostService: HostService,
-    private baseAppService: BaseAppService,
-    private route: ActivatedRoute
+    private baseAppService: BaseAppService
   ) {}
 
   async ngOnInit() {
-    await this.baseAppService.componentInitialising(this.route);
+    // https://github.com/angular/components/issues/13803
+    await this.baseAppService.componentInitialising(this.data.route);
+
     return cachize(
       this.hostService.readOnboardingProcessStatus(this.baseAppService.getParam(RouteParam.HostId)),
       this.onboarding

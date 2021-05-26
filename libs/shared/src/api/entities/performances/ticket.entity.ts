@@ -6,12 +6,16 @@ import {
   BeforeInsert,
   PrimaryColumn,
   DeleteDateColumn,
-  JoinColumn
+  JoinColumn,
+  OneToOne,
+  EntityManager
 } from 'typeorm';
 import { CurrencyCode, ITicket, ITicketStub, TicketType, DtoCreateTicket, TicketFees, DonoPeg } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import { Performance } from './performance.entity';
 import { Except } from 'type-fest';
+import { Claim } from '../common/claim.entity';
+import { transact } from '../../typeorm-patches';
 @Entity()
 export class Ticket extends BaseEntity implements ITicket {
   @PrimaryColumn() _id: string;
@@ -35,6 +39,7 @@ export class Ticket extends BaseEntity implements ITicket {
 
   @DeleteDateColumn({ type: 'timestamptz' }) deleted_at?: Date; // soft delete
   @ManyToOne(() => Performance, perf => perf.tickets) performance: Performance;
+  @OneToOne(() => Claim) @JoinColumn() claim: Claim;
 
   constructor(ticket: DtoCreateTicket) {
     super();
@@ -51,6 +56,15 @@ export class Ticket extends BaseEntity implements ITicket {
     this.version = 0;
     this.dono_pegs = ticket.dono_pegs || [];
     this.is_quantity_visible = ticket.is_quantity_visible;
+  }
+
+  async setup(performance: Performance, txc?: EntityManager) {
+    return transact(async t => {
+      this.performance = performance;
+      const claim = new Claim();
+      this.claim = claim;
+      return await t.save(claim);
+    }, txc);
   }
 
   toStub(): Required<ITicketStub> {

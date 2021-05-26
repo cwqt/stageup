@@ -5,6 +5,7 @@ import IntlMessageFormat from 'intl-messageformat';
 import { Logger } from 'winston';
 import { Service } from 'typedi';
 import path = require('path');
+import colors = require('colors');
 
 export interface Ii18nConfig {
   locales: string[];
@@ -55,9 +56,16 @@ export class i18nProvider {
         parseTrueNumberOnly: false
       });
 
-      xliff.file.body['trans-unit'].forEach(unit => {
-        if (unit.target['@_state'] == 'new') logger.warn(`Un-translated code: ${unit['@_id']}`);
-      });
+      const missingCodes = xliff.file.body['trans-unit'].reduce(
+        (acc, curr) => (curr.target['@_state'] == 'new' && acc.push(curr['@_id']), acc),
+        []
+      );
+
+      if (missingCodes.length > 0) {
+        logger.warn(
+          `Found ${missingCodes.length} missing translations in this locale:\n ${colors.gray(missingCodes.join(', '))}`
+        );
+      }
 
       // Pull out xliff data into code : translation map
       this.locales.set(

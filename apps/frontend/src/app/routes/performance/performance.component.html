@@ -1,44 +1,49 @@
-<mat-spinner *ngIf="performance.loading"></mat-spinner>
+<app-page>
+  <div body>
+    <mat-spinner *ngIf="$loading | async"></mat-spinner>
 
-<div *ngIf="performance.error && !performance.loading">
-  <h1>Performance not found</h1>
-  <h4>This performance either doesn't exist or is set to Private</h4>
-  <br />
-  <ui-button (click)="gotoFeed()" size="l" kind="primary"><ui-icon class="mr-2">undo</ui-icon>Back to Feed?</ui-button>
-
-  <img src="/assets/walrus.png" class="mt-10">
-  <span>You may have this walrus instead</span>
-</div>
-
-<div class="performance" *ngIf="perf && !performance.loading">
-    <div class="performance-player" *ngIf="performance.data.__client_data">
-      <app-performance-watch [performance]="performance.data"></app-performance-watch>
+    <div *ngIf="performance.error && !performance.loading">
+      <h1 i18n>Performance not found</h1>
+      <h4 i18n>This performance either doesn't exist or is set to Private</h4>
+      <br />
+      <ui-button (click)="gotoFeed()" size="l" kind="primary" icon="undo" i18n>Back to Feed?</ui-button>
     </div>
 
-    <!-- show three image preview images -->
-    <div class="performance-previews" *ngIf="!performance.data.__client_data">
-        <div class="performance-previews__1">
-            <img src="https://i.ytimg.com/vi/wypxtfYy6tk/maxresdefault.jpg" alt="">
+    <div class="performance" *ngIf="perf && !performance.loading">
+      <div class="performance-player" *ngIf="performance.data.__client_data">
+        <app-performance-watch [performance]="performance.data"></app-performance-watch>
+      </div>
+
+      <div class="performance" *ngIf="performance.data?.data">
+        <div class="performance-player" *ngIf="primarySignedToken.data.signed_token">
+          <app-performance-watch
+            [performance]="performance.data"
+            [token]="primarySignedToken.data"
+          ></app-performance-watch>
         </div>
-        <div class="performance-previews__right">
-            <div class="performance-previews__2">
-                <img src="https://i.ytimg.com/vi/ebH57w1REgY/maxresdefault.jpg" alt="">
+
+        <!-- show three image preview images -->
+        <div class="performance-previews" *ngIf="!primarySignedToken.data.signed_token">
+          <div class="performance-previews__1">
+            <img src="https://i.ytimg.com/vi/wypxtfYy6tk/maxresdefault.jpg" alt="" />
+          </div>
+          <div class="performance-previews__3">
+            <img src="https://pbs.twimg.com/media/EIul7ONUUAEAWPg.jpg" alt="" />
+            <div class="performance-previews__final-overlay">
+              <ui-icon size="l">overflow-menu--horizontal</ui-icon>
+              <span i18n>3 more</span>
             </div>
-            <div class="performance-previews__3">
-                <img src="https://pbs.twimg.com/media/EIul7ONUUAEAWPg.jpg" alt="">
-                <div class="performance-previews__final-overlay">
-                    <ui-icon size="l">overflow-menu--horizontal</ui-icon>
-                    <span>3 more</span>
-                </div>
-            </div>
+          </div>
         </div>
-    </div>
 
-    <div class="performance-body">
-      <h1>{{ perf.name }}</h1>
-      <app-user-thumb [user]="perf.host"></app-user-thumb>
-      <mat-divider></mat-divider>
+        <div class="performance-body">
+          <h1>{{ perf.name }}</h1>
+          <app-user-thumb [user]="perf.host"></app-user-thumb>
+          <mat-divider></mat-divider>
 
-      <p>{{ perf.description }}</p>
+          <quill-view [content]="perf.description" format="json" theme="snow"></quill-view>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+</app-page>

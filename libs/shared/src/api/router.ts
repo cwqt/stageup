@@ -72,7 +72,7 @@ export class AsyncRouter<PM extends ProviderMap> {
       method(
         path,
         this.executeAuthenticationStrategy<PM>(Auth.or(this.auth, endpoint.authorisation), this.providers),
-        endpoint.validators ? Validator.Middleware(endpoint.validators, this.i18n) : (_, __, next) => next(),
+        endpoint.validators ? Validator.Middleware(endpoint.validators) : (_, __, next) => next(),
         endpoint.middleware ? endpoint.middleware : (_, __, next) => next(),
         async (req: Request, res: Response, next: NextFunction) => {
           try {

@@ -2,7 +2,7 @@ import { IUserHostInfo } from '../users/user.interface';
 import { IPerformanceStub } from '../performances/performance.interface';
 import { IContactInfo } from '../users/person.interface';
 import { IAddress } from '../users/address.interface';
-import { NUUID } from '../common/fp.interface';
+import { Idless, NUUID } from '../common/fp.interface';
 import { Except } from 'type-fest';
 
 export type DtoCreateHost = Pick<IHostPrivate, 'email_address' | 'username' | 'name'>;
@@ -31,8 +31,8 @@ export type IHostPrivate = {
 
 export interface IHostBusinessDetails {
   hmrc_company_number: number;
-  business_contact_number: number;
-  business_address: IAddress;
+  business_contact_number: string; // e.164 format
+  business_address: Idless<IAddress>;
 }
 
 export interface ISocialInfo {

@@ -8,21 +8,19 @@ import {
   User,
   Validators
 } from '@core/api';
-import { timeout, to, uuid } from '@core/helpers';
+import { to, uuid } from '@core/helpers';
 import {
   DtoCreatePaymentIntent,
   HostPermission,
   IHostPatronTier,
   IPatronSubscription,
   IPatronTier,
-  IPaymentIntentClientSecret,
   IStripeChargePassthrough,
-  PurchaseableEntityType
+  PurchaseableType
 } from '@core/interfaces';
 import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
-import Email = require('../common/email');
 
 // Stripe Connected Subscriptions --------------------------------------------------------------
 // https://stripe.com/img/docs/subscriptions/invoice-lifecycle-incomplete-incomplete_expired.svg
@@ -30,7 +28,7 @@ import Email = require('../common/email');
 export default class PatronageController extends BaseController<BackendProviderMap> {
   createPatronTier(): IControllerEndpoint<IHostPatronTier> {
     return {
-      validators: { body: Validators.Objects.DtoCreatePatronTier },
+      // validators: { body: Validators.Objects.DtoCreatePatronTier },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         // Direct Charges https://stripe.com/img/docs/billing/subscriptions/subscription_objects_fixed_price.svg
@@ -83,8 +81,7 @@ export default class PatronageController extends BaseController<BackendProviderM
       authorisation: AuthStrat.isLoggedIn,
       validators: { body: Validators.Objects.DtoCreatePaymentIntent },
       controller: async req => {
-        // TODO: have generic method for buying purchaseables
-        const body: DtoCreatePaymentIntent = req.body;
+        const body: DtoCreatePaymentIntent<PurchaseableType.PatronTier> = req.body;
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
         const tier = await getCheck(
           PatronTier.findOne({
@@ -149,7 +146,7 @@ export default class PatronageController extends BaseController<BackendProviderM
               // Passed through to webhook when charge successful
               user_id: platformPaymentMethod.user._id,
               purchaseable_id: tier._id,
-              purchaseable_type: PurchaseableEntityType.PatronTier,
+              purchaseable_type: PurchaseableType.PatronTier,
               payment_method_id: platformPaymentMethod._id
             }),
             items: [{ price: tier.stripe_price_id }],

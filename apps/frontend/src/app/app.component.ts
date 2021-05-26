@@ -6,10 +6,11 @@ import { MyselfService } from './services/myself.service';
 import { ToastService } from './services/toast.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { BaseAppService } from './services/app.service';
-import { ActivatedRoute } from '@angular/router';
-import { UserPermission } from '@core/interfaces';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { Environment, UserPermission } from '@core/interfaces';
 import { NGXLogger } from 'ngx-logger';
 import { HttpErrorResponse } from '@angular/common/http';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -28,10 +29,20 @@ export class AppComponent implements OnInit {
     private baseAppService: BaseAppService,
     private route: ActivatedRoute,
     private permissionsService: NgxPermissionsService,
-    private logger: NGXLogger
+    private logger: NGXLogger,
+    private router: Router
   ) {}
 
   async ngOnInit() {
+    // Not using nginx in prod which serves many locales, so any links we get in e-mails will result in 404s because
+    // of the locale /en/, /no/, /cy/ not existing on serve server - so re-write them out if the url starts with the current locale
+    if (environment.environment == Environment.Development) {
+      this.router.events.pipe(filter(event => event instanceof NavigationStart)).subscribe((event: NavigationStart) => {
+        if (event.url.startsWith(`/${environment.locale}/`))
+          this.router.navigateByUrl(event.url.replace(`/${environment.locale}/`, '/'));
+      });
+    }
+
     this.logger.debug(`Running in: ${environment.environment}`);
 
     this.loading = true;

@@ -12,19 +12,23 @@ import {
   ITicket,
   ITicketStub,
   Visibility,
-  DtoDonationPurchase,
-  DonoPeg,
+  DtoCreateAsset,
   ICreateAssetRes,
-  AssetType,
   NUUID,
-  DtoCreatePaymentIntent
+  DtoCreatePaymentIntent,
+  PurchaseableType,
+  ISignedToken
 } from '@core/interfaces';
+import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PerformanceService {
+  // fuck you angular router giant piec eof shit !!!!!
+  $activeHostPerformanceId: BehaviorSubject<string> = new BehaviorSubject(null);
+
   constructor(private http: HttpClient) {}
 
   readPerformance(performanceId: string): Promise<DtoPerformance> {
@@ -77,7 +81,9 @@ export class PerformanceService {
   }
 
   // router.post <IPaymentICS> ("/tickets/:tid/payment-intent", Perfs.createPaymentIntent());
-  createTicketPaymentIntent(data?: DtoCreatePaymentIntent): Promise<IPaymentIntentClientSecret> {
+  createTicketPaymentIntent(
+    data?: DtoCreatePaymentIntent<PurchaseableType.Ticket>
+  ): Promise<IPaymentIntentClientSecret> {
     return this.http
       .post<IPaymentIntentClientSecret>(`/api/tickets/${data.purchaseable_id}/payment-intent`, data)
       .toPromise();
@@ -95,10 +101,20 @@ export class PerformanceService {
   }
 
   // router.post <ICreateAssetRes|void> ("/performances/:pid/assets", Perfs.createAsset());
-  createAsset(performanceId: string): Promise<ICreateAssetRes | void> {
-    // TODO: expand to support static s3 assets, and not just MUX assets
+  createAsset(performanceId: string, data: DtoCreateAsset): Promise<ICreateAssetRes> {
+    // FUTURE expand to support static s3 assets, and not just MUX assets
+    return this.http.post<ICreateAssetRes>(`/api/performances/${performanceId}/assets`, data).toPromise();
+  }
+
+  // router.get <ICreateAssetRes> ("/performances/:pid/assets/:aid/signed-url", Perfs.readVideoAssetSignedUrl());
+  readVideoAssetSignedUrl(performanceId: string, assetId: string): Promise<ICreateAssetRes> {
     return this.http
-      .post<ICreateAssetRes | void>(`/api/performances/${performanceId}/assets?type=${AssetType.Video}`, null)
+      .get<ICreateAssetRes>(`/api/performances/${performanceId}/assets/${assetId}/signed-url`)
       .toPromise();
+  }
+
+  // router.get <ISignedToken> ("/performances/:pid/assets/:aid/token", Perfs.generateSignedToken());
+  generateSignedToken(performanceId: string, assetId: string): Promise<ISignedToken> {
+    return this.http.get<ISignedToken>(`/api/performances/${performanceId}/assets/${assetId}/token`).toPromise();
   }
 }

@@ -62,7 +62,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
 
   openCreateTicketDialog() {
     this.helperService.showDialog(
-      this.dialog.open(CreateUpdateTicketComponent, { data: { operation: 'create' } }),
+      this.dialog.open(CreateUpdateTicketComponent, { data: { operation: 'create', host: this.host } }),
       (ticket: ITicketStub) => {
         this.tickets.data.data.push(ticket);
         this.ticketsDataSrc = new MatTableDataSource(this.tickets.data.data);
@@ -72,7 +72,9 @@ export class HostPerformanceTicketingComponent implements OnInit {
 
   openUpdateTicketDialog(ticket: ITicketStub) {
     this.helperService.showDialog(
-      this.dialog.open(CreateUpdateTicketComponent, { data: { operation: 'update', ticketId: ticket._id } }),
+      this.dialog.open(CreateUpdateTicketComponent, {
+        data: { operation: 'update', ticketId: ticket._id, host: this.host }
+      }),
       (ticket: ITicketStub) => {
         // Remove old ticket & replace with updated one
         this.tickets.data.data.splice(

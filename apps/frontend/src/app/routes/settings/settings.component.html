@@ -1,10 +1,11 @@
-<div class="bg-white rounded w-full h-full overflow-hidden">
-  <h1 class="p-4 mb-0">Account & Settings</h1>
-    <mat-tab-group (selectedTabChange)="openTabLink($event)">
-      <mat-tab *ngFor="let tab of tabs" [label]="tab.label"></mat-tab>
-    </mat-tab-group>
-
-    <div class="h-full bg-white p-4">
-      <router-outlet></router-outlet>
+<app-page>
+  <div body>
+    <h1 class="mb-0">Account & Settings</h1>
+    <ui-hr></ui-hr>
+    <div class="bg-white rounded w-full h-full overflow-hidden">
+      <div class="h-full bg-white p-4">
+        <router-outlet></router-outlet>
+      </div>
     </div>
-</div>    
+  </div>
+</app-page>

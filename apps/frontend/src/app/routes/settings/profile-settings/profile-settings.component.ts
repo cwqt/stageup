@@ -5,11 +5,11 @@ import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { MyselfService } from '../../../services/myself.service';
 import { IUiForm, UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
 import isEmail from 'validator/lib/isEmail';
-import { ChangeImageComponent } from '../change-image/change-image.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HelperService } from '../../../services/helper.service';
 import * as fd from 'form-data';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
 
 @Component({
   selector: 'app-profile-settings',
@@ -37,8 +37,7 @@ export class ProfileSettingsComponent implements OnInit {
       fields: {
         name: UiField.Text({
           label: 'Name',
-          hint:
-            'Your name may appear around StageUp where you contribute or are mentioned. You can remove it at any time.',
+          hint: 'Your name may appear around StageUp where you contribute or are mentioned. ',
           validators: [{ type: 'maxlength', value: 32 }]
         }),
         email_address: UiField.Text({

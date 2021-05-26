@@ -3,8 +3,8 @@
     <ui-button (click)="cancelAdd.emit()" [transparent]="true" [size]="smaller ? 's' : 'm'"
       ><ui-icon>arrow--left</ui-icon></ui-button
     >
-    <h2 class="mb-0" *ngIf="!smaller">Add new Card</h2>
-    <p class="text-lg mb-0 ml-2" *ngIf="smaller"><b>Add new Card</b></p>
+    <h3 class="mb-0" *ngIf="!smaller" i18n>Add new Card</h3>
+    <p class="text-lg mb-0 ml-2" *ngIf="smaller" i18n><b>Add new Card</b></p>
   </div>
 
   <ui-hr *ngIf="!smaller"></ui-hr>
@@ -20,7 +20,9 @@
       [disabled]="!(entireFormIsValid | async)"
       [loading]="createdPaymentMethod.loading"
       (click)="createPaymentMethod()"
-      >{{ createdPaymentMethod.loading ? 'Creating Card...' : 'Create Card' }}
+    >
+      <span *ngIf="createdPaymentMethod.loading" i18n>Creating Card...</span>
+      <span *ngIf="!createdPaymentMethod.loading" i18n>Create Card</span>
     </ui-button>
 
     <div class="ml-4">

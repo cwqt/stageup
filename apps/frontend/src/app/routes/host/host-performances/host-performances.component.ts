@@ -12,6 +12,7 @@ import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PerformanceService } from '../../../services/performance.service';
 import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
+import { readRichTextContent } from '@core/helpers';
 
 @Component({
   selector: 'app-host-performances',
@@ -44,7 +45,7 @@ export class HostPerformancesComponent implements OnInit {
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
     this.hostPerformancesDataSrc = new MatTableDataSource<IPerformanceStub>([]);
-    this.getHostPerformancesList();
+    await this.getHostPerformancesList();
   }
 
   ngAfterViewInit() {
@@ -53,10 +54,7 @@ export class HostPerformancesComponent implements OnInit {
 
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
-      this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' }),
-      (perf: IPerformance | null) => {
-        // TODO: push to performances list outside
-      }
+      this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' })
     );
   }
 
@@ -80,18 +78,22 @@ export class HostPerformancesComponent implements OnInit {
     this.appService.navigateTo(`/dashboard/performances/${performances._id}`);
   }
 
+  parse(text: string) {
+    return readRichTextContent(text);
+  }
+
   deletePerformance(performance: IPerformanceStub) {
     this.helperService.showConfirmationDialog(this.dialog, {
-      title: `Delete '${performance.name}'`,
-      description: 'Are you sure you want to delete this performance?',
+      title: $localize`Delete '${performance.name}'`,
+      description: $localize`Are you sure you want to delete this performance?`,
       buttons: [
         new UiDialogButton({
-          label: 'Cancel',
+          label: $localize`Cancel`,
           kind: ThemeKind.Secondary,
           callback: r => r.close()
         }),
         new UiDialogButton({
-          label: 'Delete',
+          label: $localize`Delete`,
           kind: ThemeKind.Primary,
           callback: r => {
             this.performanceService.deletePerformance(performance._id);

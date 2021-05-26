@@ -3,9 +3,10 @@ import {
   HostPermission,
   StripeHook,
   TokenProvisioner,
-  PurchaseableEntityType,
+  PurchaseableType,
   PaymentStatus,
-  IStripeChargePassthrough
+  IStripeChargePassthrough,
+  Environment
 } from '@core/interfaces';
 import {
   BaseController,
@@ -28,19 +29,18 @@ import Env from '../env';
 import Stripe from 'stripe';
 import { log } from '../common/logger';
 import Email = require('../common/email');
-import { timestamp } from '@core/helpers';
+import { parseRichText, stringifyRichText, timestamp } from '@core/helpers';
 
 export default class StripeController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
-    [index in StripeHook]: (data: Stripe.Event.Data) => Promise<void>;
+    [index in StripeHook]?: (data: Stripe.Event.Data) => Promise<void>;
   };
 
   constructor(...args: BaseArguments<BackendProviderMap>) {
     super(...args);
     this.hookMap = {
-      [StripeHook.ChargeSucceded]: this.handleChargeSuccessful.bind(this),
       [StripeHook.PaymentIntentCreated]: this.handlePaymentIntentCreated.bind(this),
-      [StripeHook.PaymentIntentSucceded]: this.handleChargeSuccessful.bind(this),
+      [StripeHook.PaymentIntentSucceded]: this.handlePaymentIntentSuccessful.bind(this),
       [StripeHook.InvoicePaymentSucceeded]: this.handleInvoicePaymentSuccessful.bind(this)
     };
   }
@@ -74,6 +74,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
   }
 
   async handleInvoicePaymentSuccessful(event: Stripe.Event) {
+    // For handling purchases of subscriptions
     const data = event.data.object as Stripe.Invoice;
     const purchaseable = await PatronSubscription.findOne(
       { stripe_subscription_id: data.subscription as string },
@@ -93,25 +94,23 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
     // Create the Invoice locally
     await this.ORM.transaction(async txc => {
-      const charge = await this.providers.stripe.connection.charges.retrieve(data.charge as string, {
+      const intent = await this.providers.stripe.connection.paymentIntents.retrieve(data.payment_intent as string, {
         stripeAccount: purchaseable.patron_tier.host.stripe_account_id
       });
 
       const user = await User.findOne({ _id: passthrough.user_id });
-
-      const invoice = new Invoice(user, purchaseable.patron_tier.amount, purchaseable.patron_tier.currency, charge)
+      const invoice = new Invoice(user, purchaseable.patron_tier.amount, purchaseable.patron_tier.currency, intent)
         .setHost(purchaseable.patron_tier.host)
         .setPurchaseable(purchaseable);
 
       invoice.status = PaymentStatus.Paid;
-
       return await txc.save(invoice);
     });
   }
 
-  async handleChargeSuccessful(event: Stripe.Event) {
-    const data = event.data.object as Stripe.Charge;
-    const passthrough = data.metadata as IStripeChargePassthrough;
+  async handlePaymentIntentSuccessful(event: Stripe.Event) {
+    const intent = event.data.object as Stripe.PaymentIntent;
+    const passthrough = intent.metadata as IStripeChargePassthrough;
 
     // Update the last used date of the card
     const method = await PaymentMethod.findOne({ _id: passthrough.payment_method_id });
@@ -121,7 +120,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
     // Handle generating the invoices & such for different types of purchaseables
     switch (passthrough.purchaseable_type) {
       // Purchased Ticket ----------------------------------------------------------------------------
-      case PurchaseableEntityType.Ticket: {
+      case PurchaseableType.Ticket: {
         const user = await getCheck(User.findOne({ _id: passthrough.user_id }));
         const ticket = await getCheck(
           Ticket.findOne({
@@ -129,11 +128,9 @@ export default class StripeController extends BaseController<BackendProviderMap>
               _id: passthrough.purchaseable_id
             },
             relations: {
+              claim: true,
               performance: {
-                host: true,
-                stream: {
-                  signing_key: true
-                }
+                host: true
               }
             },
             select: {
@@ -149,16 +146,15 @@ export default class StripeController extends BaseController<BackendProviderMap>
         const invoice = await this.ORM.transaction(async txc => {
           // Create a new invoice for the user which provisions an Access Token for the performance
           ticket.quantity_remaining -= 1;
-          const invoice = new Invoice(user, data.amount, data.currency.toUpperCase() as CurrencyCode, data)
+          const invoice = new Invoice(user, intent.amount, intent.currency.toUpperCase() as CurrencyCode, intent)
             .setHost(ticket.performance.host) // should be party to hosts invoices
             .setPurchaseable(ticket); // purchased a ticket
 
           invoice.status = PaymentStatus.Paid;
           await txc.save(invoice);
 
-          // Create & sign for the user on this performance
-          const token = new AccessToken(user, ticket.performance, invoice, TokenProvisioner.Purchase);
-          await token.sign(ticket.performance.stream.signing_key);
+          // Create an AT for the user on this tickets claims
+          const token = new AccessToken(user, ticket.claim, invoice, TokenProvisioner.Purchase);
           await txc.save(token);
 
           // Save the remaining ticket quantity
@@ -176,7 +172,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
   }
 
   async handlePaymentIntentCreated(event: Stripe.Event) {
-    const data = event.data.object as Stripe.Charge;
+    const intent = event.data.object as Stripe.PaymentIntent;
   }
 
   async unsupportedHookHandler(event: Stripe.Event) {
@@ -216,28 +212,18 @@ export default class StripeController extends BaseController<BackendProviderMap>
           stripeAccount: uhi.host.stripe_account_id
         });
 
-        // Make a base patron tier
-        // TODO: should probably emit an event onto the bus & have some µ-service listen for it
-        try {
-          await this.providers.torm.connection.transaction(async txc => {
-            const tier = new PatronTier(
-              {
-                name: 'Example Tier',
-                description: [],
-                amount: 1000, // 10 GBP
-                currency: CurrencyCode.GBP
-              },
-              uhi.host
-            );
+        await this.providers.bus.publish(
+          'host.stripe-connected',
+          {
+            host_id: uhi.host._id
+          },
+          req.locale
+        );
 
-            await tier.setup(this.providers.stripe.connection, txc);
-          });
-        } catch (error) {
-          // This failing should not stop the return re-direct, so don't throw
-          log.error(`Failed to setup example tier for user`);
-        }
-
-        return `${Env.FRONTEND.URL}/${req.locale.language}/dashboard/payments?connect-success=${res.charges_enabled}`;
+        // Live Charges always disabled in development/testing, so just return true
+        return `${Env.FRONTEND.URL}/${req.locale.language}/dashboard/payments?connect-success=${
+          Env.isEnv(Environment.Development) ? true : res.charges_enabled
+        }`;
         // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-accept-payment
         // After Stripe standard account connected, users can create PaymentIntents
         // where which we can take an `application_fee_amount` from the purchase

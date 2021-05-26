@@ -5,6 +5,6 @@ video {
 }
 
 // disable progress bar
-::ng-deep .plyr__progress {
+.is--live-stream::ng-deep .plyr__progress {
   display: none;
 }

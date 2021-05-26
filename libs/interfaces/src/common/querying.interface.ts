@@ -107,19 +107,3 @@ export enum DateFilterOperator {
 
 // where args are UNIX timestamps
 export type DateFilter = FilterQuery<FilterCode.Date, DateFilterOperator, [number, number?]>;
-
-// TODO: All these other options can be done by just adding time onto the args to get the desired offset
-// Tomorrow
-// Today
-// Yesterday
-// Next Week
-// Last Week
-// Next Month
-// This Month
-// Last Month
-// Next Quarter
-// This Quarter
-// Last Quarter
-// Next Year
-// This Year
-// Last Year

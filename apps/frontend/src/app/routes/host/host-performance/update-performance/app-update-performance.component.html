@@ -1,7 +1,10 @@
 <ui-form [form]="performanceDetailsForm"></ui-form>
-<ui-button kind="primary"
+<ui-button
+  kind="primary"
   (click)="performanceDetailsForm.submit()"
   [loading]="performanceDetailsForm.loading | async"
-  [disabled]="performanceDetailsForm.group.disabled">
+  [disabled]="performanceDetailsForm.group.disabled"
+  i18n
+>
   Update
 </ui-button>

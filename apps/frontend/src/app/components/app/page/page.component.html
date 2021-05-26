@@ -1,8 +1,7 @@
-<div class="page-container">
-  <h1>{{ title }}</h1>
+<div class="sticky-header">
+  <ng-content select="[sticky]"></ng-content>
+</div>
 
-  <div class="content-wrapper">
-    <ng-content></ng-content>
-  </div>
-
+<div class="container mx-auto px-4 pt-4">
+  <ng-content select="[body]"></ng-content>
 </div>

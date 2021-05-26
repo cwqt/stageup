@@ -1,27 +1,16 @@
-<app-header-bar [myself]="myself"></app-header-bar>
+<div class="app-container">
+  <app-sidebar *ngIf="myself" [myself]="myself"> </app-sidebar>
 
-<div class="app-container" #appContainer>
-  <div class="flex">
-    <app-sidebar
-      *ngIf="myself?.user.is_admin || myself?.host"
-      [class.raise-index]="!(drawerOpenSubject | async)"
-      [class.shadow-lg]="drawerOpenSubject | async"
-      [myself]="myself"
-    >
-    </app-sidebar>
+  <div class="app-body" #scrollContainer>
+    <svg *ngIf="myself" class="top-rounder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+      <path d="M 0 4 L 0 0 L 4 0 C 1 0 0 1 0 4" fill="#07192c" />
+    </svg>
 
-    <mat-drawer-container class="h-full container relative">
-      <mat-drawer #drawer mode="side" [ngSwitch]="drawerState.key">
-        <app-host-performance-drawer *ngSwitchCase="drawerKey.HostPerformance"></app-host-performance-drawer>
-      </mat-drawer>
+    <app-header-bar class="container mx-auto px-4 py-2 mt-4" [myself]="myself"></app-header-bar>
 
-      <mat-drawer-content class="w-full h-full">
-        <div class="app-body w-full px-8 pt-8">
-          <router-outlet></router-outlet>
-        </div>
-      </mat-drawer-content>
-    </mat-drawer-container>
+    <!-- Pages should use app-page -->
+    <router-outlet></router-outlet>
+
+    <app-footer></app-footer>
   </div>
-
-  <app-footer></app-footer>
 </div>

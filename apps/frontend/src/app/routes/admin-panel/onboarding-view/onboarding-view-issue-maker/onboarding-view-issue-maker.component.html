@@ -1,9 +1,11 @@
 <ul *ngIf="field.issues.length" class="mt-2 list-disc">
-  <li *ngFor="let issue of field.issues; let i = index"
-    class="flex items-center justify-between hover:bg-white rounded">
+  <li
+    *ngFor="let issue of field.issues; let i = index"
+    class="flex items-center justify-between hover:bg-white rounded"
+  >
     <!-- tailwind is being a piece of shit and not putting the list-disc in -->
     <span class="ml-4">&bull;&nbsp; {{ issue }}</span>
-    <button mat-icon-button class="ml-auto" (click)="removeIssue(i)">
+    <button mat-icon-button class="ml-auto flex items-center" (click)="removeIssue(i)">
       <mat-icon>clear</mat-icon>
     </button>
   </li>
@@ -13,7 +15,5 @@
   <ui-input #input class="flex-1" [data]="inputOptions" [(ngModel)]="currentIssueText" (keyup.enter)="addIssue()">
   </ui-input>
 
-  <ui-button kind="primary" class="ml-4 mt-0.5" [disabled]="currentIssueText == ''" (click)="addIssue()">
-    <ui-icon>add</ui-icon>
-  </ui-button>
+  <ui-button kind="primary" icon="add" size="s" [disabled]="currentIssueText == ''" (click)="addIssue()"></ui-button>
 </div>

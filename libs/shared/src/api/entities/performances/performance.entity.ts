@@ -1,14 +1,5 @@
-import {
-  AssetOwnerType,
-  AssetType,
-  DtoCreatePerformance,
-  Genre,
-  IPerformance,
-  IPerformanceStub,
-  RichText,
-  Visibility
-} from '@core/interfaces';
 import { timestamp, uuid } from '@core/helpers';
+import { DtoCreatePerformance, Genre, IPerformance, IPerformanceStub, RichText, Visibility } from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
   BaseEntity,
@@ -21,28 +12,25 @@ import {
   OneToOne,
   PrimaryColumn
 } from 'typeorm';
-import MuxProvider from '../../data-client/providers/mux.provider';
 import { AssetGroup } from '../common/asset-group.entity';
-import { Asset } from '../common/asset.entity';
 import { Host } from '../hosts/host.entity';
 import { Ticket } from './ticket.entity';
 
 @Entity()
-export class Performance extends BaseEntity implements Except<IPerformance, 'stream' | 'assets'> {
+export class Performance extends BaseEntity implements Except<IPerformance, 'assets'> {
   @PrimaryColumn() _id: string;
 
   @Column() created_at: number;
   @Column() name: string;
   @Column() views: number;
-  @Column({ nullable: true }) premiere_date?: number;
+  @Column({ nullable: true }) premiere_datetime?: number;
   @Column({ nullable: true }) average_rating: number | null;
   @Column('jsonb', { nullable: true }) description?: RichText;
   @Column('varchar', { nullable: true }) thumbnail: string;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
 
-  @OneToOne(() => Asset, { eager: true }) @JoinColumn() stream: Asset<AssetType.LiveStream>;
-  @OneToOne(() => AssetGroup) @JoinColumn() asset_group: AssetGroup;
+  @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
 
@@ -51,7 +39,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
     this._id = uuid();
     this.name = data.name;
     this.description = data.description;
-    this.premiere_date = data.premiere_date;
+    this.premiere_datetime = data.premiere_datetime;
     this.genre = data.genre;
     this.tickets = [];
 
@@ -61,26 +49,16 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
     this.host = host;
   }
 
-  async setup(mux: MuxProvider, txc: EntityManager): Promise<Performance> {
-    this.asset_group = await txc.save(new AssetGroup());
+  async setup(txc: EntityManager): Promise<Performance> {
+    const group = new AssetGroup(this._id);
+    await txc.save(group);
 
-    const asset = new Asset(AssetType.LiveStream, this.asset_group);
-    await asset.setup(mux, txc, null, {
-      asset_owner_id: this._id,
-      asset_owner_type: AssetOwnerType.Performance
-    });
-
-    this.stream = asset;
-    this.asset_group.push(asset);
-
-    await txc.save(this.asset_group);
+    this.asset_group = group;
     return txc.save(this);
   }
 
   toStub(): Required<IPerformanceStub> {
     return {
-      thumbnail: this.thumbnail,
-
       _id: this._id,
       host: this.host?.toStub(),
       name: this.name,
@@ -88,7 +66,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
       views: this.views,
       description: this.description,
       created_at: this.created_at,
-      stream: { state: this.stream.meta.state, location: this.stream.location }
+      thumbnail: this.thumbnail,
+      assets: this.asset_group.assets.map(a => a.toStub())
     };
   }
 
@@ -96,10 +75,9 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'str
     return {
       ...this.toStub(),
       visibility: this.visibility,
-      premiere_date: this.premiere_date,
+      premiere_datetime: this.premiere_datetime,
       genre: this.genre,
-      tickets: this.tickets?.map(t => t.toStub()) || [],
-      assets: this.asset_group.assets.map(a => a.toStub())
+      tickets: this.tickets?.map(t => t.toStub()) || []
     };
   }
 

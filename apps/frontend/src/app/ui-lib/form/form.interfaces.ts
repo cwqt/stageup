@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, NgControl, ValidatorFn, Validators } from '@angular/forms';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
-import { IErrorResponse, Primitive, Y } from '@core/interfaces';
+import { IErrorResponse, ParsedRichText, Primitive, RichText, Y } from '@core/interfaces';
 import { CurrencyCode } from 'aws-sdk/clients/devicefarm';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { createICacheable, ICacheable } from '../../app.interfaces';
@@ -10,7 +10,7 @@ import { createICacheable, ICacheable } from '../../app.interfaces';
 
 export interface IUiFormResolver<Output, Input, Fields> {
   input?: () => Promise<{
-    fields?: { [index in keyof Fields]?: Primitive | Date };
+    fields?: { [index in keyof Fields]?: Primitive | Date | RichText };
     errors?: { [index in keyof Fields]?: string[] };
   }>;
   output: (v: { [index in keyof Fields]: any }) => Promise<Output>;
@@ -214,10 +214,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
     return (control: AbstractControl): { [index: string]: any } | null => {
       if (!control.parent?.controls) return null;
 
-      const isValid = (field['value'] as CustomUiFieldValidator)(
-        control,
-        control.parent.controls as { [index: string]: AbstractControl }
-      );
+      const isValid = (field['value'] as CustomUiFieldValidator)(control, this.group);
 
       return isValid
         ? null
@@ -247,7 +244,8 @@ export const UiField: {
   Checkbox: options => ({ type: 'checkbox', options }),
   Datetime: options => ({ type: 'datetime', options }),
   Date: options => ({ type: 'date', options }),
-  Time: options => ({ type: 'time', options })
+  Time: options => ({ type: 'time', options }),
+  Toggle: options => ({ type: 'toggle', options })
 } as const;
 
 export interface IUiFormData {
@@ -306,13 +304,21 @@ export type IUiFieldTypeOptions = {
     initial?: string;
     mask?: IUiFieldMaskOptions;
     placeholder?: string;
+    autocomplete?: 'street-address' | 'locality' | 'region' | 'postal-code' | 'county';
   };
   textarea: {
     initial?: string;
     rows?: number;
     placeholder?: string;
   };
-  richtext: {};
+  richtext: {
+    initial?: RichText;
+  };
+  toggle: {
+    left_label: string;
+    right_label: string;
+    label?: never; // use left/right_label
+  };
   select: {
     initial?: Primitive;
     values: Map<Primitive, { label: string; disabled?: boolean }>;
@@ -399,7 +405,4 @@ export type IUiFormFieldValidator = {
 /**
  * @description self; control of this input
  */
-export type CustomUiFieldValidator = (
-  self: AbstractControl,
-  formControls?: { [index: string]: AbstractControl }
-) => boolean;
+export type CustomUiFieldValidator = (self: AbstractControl, group?: FormGroup) => boolean;

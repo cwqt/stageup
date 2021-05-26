@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IHostStripeInfo, IHostStub } from '@core/interfaces';
+import { IHost, IHostStripeInfo, IHostStub } from '@core/interfaces';
 import { StripeService } from 'ngx-stripe';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
 import { BaseAppService } from '../../../services/app.service';
@@ -17,7 +17,7 @@ export class HostPaymentsComponent implements OnInit {
   stripeInfo: ICacheable<IHostStripeInfo> = createICacheable();
   connect: ICacheable<null> = createICacheable();
   connectSuccess: undefined | boolean;
-  host: IHostStub;
+  host: IHost;
 
   constructor(
     private baseAppService: BaseAppService,

@@ -1,5 +1,6 @@
 import { enumToValues } from '@core/helpers';
 import {
+  AssetType,
   DonoPeg,
   DtoCreateHost,
   DtoCreatePatronTier,
@@ -12,9 +13,12 @@ import {
   DtoUpdateUser,
   IAddress,
   Idless,
+  IHostBusinessDetails,
   IHostMemberChangeRequest,
+  IPersonInfo,
+  ISocialInfo,
   PaginationOptions,
-  PurchaseableEntityType,
+  PurchaseableType,
   TicketFees,
   TicketType
 } from '@core/interfaces';
@@ -24,13 +28,16 @@ import {
   Describe,
   enums,
   integer,
-  nullable,
+  literal,
   number,
   object,
   optional,
+  refine,
   size,
-  string
+  string,
+  union
 } from 'superstruct';
+import { Validators } from '..';
 import { fields } from './fields.validators';
 
 export namespace objects {
@@ -58,9 +65,10 @@ export namespace objects {
 
   export const DtoCreatePerformance: Describe<DtoCreatePerformance> = object({
     name: size(string(), 8, 64),
-    premiere_date: optional(fields.timestamp),
-    description: fields.richtext,
-    genre: fields.genre
+    premiere_datetime: optional(fields.timestamp),
+    description: optional(fields.richtext),
+    genre: fields.genre,
+    type: union([literal('vod'), literal('live')])
   });
 
   export const DtoCreateHost: Describe<DtoCreateHost> = object({
@@ -73,7 +81,7 @@ export namespace objects {
     name: string(),
     currency: fields.currency,
     amount: number(),
-    description: fields.richtext
+    description: optional(fields.richtext)
   });
 
   export const DtoCreateTicket: Describe<DtoCreateTicket> = object({
@@ -87,105 +95,62 @@ export namespace objects {
     end_datetime: fields.timestamp,
     is_visible: boolean(),
     is_quantity_visible: boolean(),
-    dono_pegs: nullable(
+    dono_pegs: optional(
       array(
         enums<DonoPeg>(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'])
       )
     )
   });
 
-  export const IAddress: Describe<Idless<IAddress>> = object({
+  export const IAddress: Describe<Required<Idless<IAddress>>> = object({
     city: string(),
-    iso_country_code: fields.iso3166,
-    postcode: fields.postcode,
-    street_name: string(),
-    street_number: number()
+    country: fields.country,
+    postal_code: fields.postcode,
+    line1: string(),
+    line2: optional(string()),
+    state: optional(string())
   });
 
-  // export const IAddress = (): ObjectValidator<Idless<IAddress>> => {
-  //   return {
-  //     city: v => FV.isString(v, "@@error.invalid"),
-  //     iso_country_code: v => FV.ISOCountry(v),
-  //     postcode: v => FV.postcode(v),
-  //     street_name: v => FV.isString(v, "@@error.invalid"),
-  //     street_number: v => FV.isInt(v, "@@error.invalid")
-  //   };
-  // };
+  export const IHostBusinessDetails: Describe<IHostBusinessDetails> = object({
+    hmrc_company_number: fields.hmrcCompanyNumber,
+    business_address: IAddress,
+    business_contact_number: fields.phone
+  });
 
-  // export const IPersonInfo = (): ObjectValidator<IPersonInfo> => {
-  //   return {
-  //     title: v => FV.isString(v).isIn(Object.values(PersonTitle)),
-  //     first_name: v => FV.isString(v),
-  //     last_name: v => FV.isString(v)
-  //   };
-  // };
+  export const IPersonInfo: Describe<IPersonInfo> = object({
+    title: fields.personTitle,
+    first_name: string(),
+    last_name: string()
+  });
 
-  // export const IPerson = (): ObjectValidator<Idless<IPerson>> => {
-  //   return {
-  //     ...IPersonInfo(),
-  //     mobile_number: v => v.isMobilePhone('en-GB'),
-  //     landline_number: v => v.isMobilePhone('en-GB'),
-  //     addresses: v => v.custom(array(IAddress()))
-  //   };
-  // };
+  export const ISocialInfo: Describe<ISocialInfo> = object({
+    site_url: fields.url,
+    linkedin_url: optional(fields.url),
+    facebook_url: optional(fields.url),
+    instagram_url: optional(fields.url)
+  });
 
-  // export const ISocialInfo = (): ObjectValidator<ISocialInfo> => {
-  //   return {
-  //     site_url: v => v.optional({ nullable: true, checkFalsy: true }).isURL().withMessage(ErrCode.NOT_URL),
-  //     linkedin_url: v =>
-  //       v
-  //         .optional({ nullable: true, checkFalsy: true })
-  //         .isURL({ host_whitelist: ['linkedin.com'] })
-  //         .withMessage(ErrCode.NOT_URL),
-  //     facebook_url: v =>
-  //       v
-  //         .optional({ nullable: true, checkFalsy: true })
-  //         .isURL({ host_whitelist: ['facebook.com'] })
-  //         .withMessage(ErrCode.NOT_URL),
-  //     instagram_url: v =>
-  //       v
-  //         .optional({ nullable: true, checkFalsy: true })
-  //         .isURL({ host_whitelist: ['instagram.com'] })
-  //         .withMessage(ErrCode.NOT_URL)
-  //   };
-  // };
-
-  // export const DtoCreateTicket = (): ObjectValidator<DtoCreateTicket> => {
-  //   return {
-  //     name: v => FV.isString(v),
-  //     amount: v => FV.isInt(v),
-  //     currency: v => FV.CurrencyCode(v),
-  //     type: v => v.isIn(enumToValues(TicketType)),
-  //     quantity: v => v.isInt(),
-  //     fees: v => v.isIn(enumToValues(TicketFees)),
-  //     start_datetime: v => FV.timestamp(v),
-  //     end_datetime: v => FV.timestamp(v),
-  //     is_visible: v => v.isBoolean(),
-  //     is_quantity_visible: v => v.isBoolean(),
-  //     dono_pegs: v => v.optional({ nullable: true }).isArray()
-  //     // FIXME: array validator doesn't support primitive arrays
-  //     // .custom(
-  //     //   array({
-  //     //     '*': v => v.isIn(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'])
-  //     //   })
-  //     // )
-  //   };
-  // };
-
-  export const DtoCreatePaymentIntent: Describe<DtoCreatePaymentIntent> = object({
+  export const DtoCreatePaymentIntent: Describe<DtoCreatePaymentIntent<PurchaseableType>> = object({
     payment_method_id: fields.nuuid,
-    purchaseable_type: enums(enumToValues(PurchaseableEntityType) as PurchaseableEntityType[]),
+    purchaseable_type: enums(enumToValues(PurchaseableType) as PurchaseableType[]),
     purchaseable_id: fields.nuuid,
-    options: optional(
-      object({
-        selected_dono_peg: enums<DonoPeg>(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
-        allow_any_amount: number()
-      })
-    )
+    options: refine(object(), 'purchaseable_options', value => {
+      switch (value.purchasable_type) {
+        case PurchaseableType.PatronTier:
+          return object<DtoCreatePaymentIntent<PurchaseableType.PatronTier>['options']>({}).is(value);
+        case PurchaseableType.Ticket:
+          return optional(
+            object<DtoCreatePaymentIntent<PurchaseableType.PatronTier>['options']>({
+              selected_dono_peg: enums<DonoPeg>(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
+              allow_any_amount: number()
+            })
+          ).is(value);
+      }
+    })
   });
 
   export const IHostMemberChangeRequest: Describe<IHostMemberChangeRequest> = object({
-    value: nullable(string())
+    value: optional(string())
   });
 
   export const PaginationOptions = (pageLimit: number = 50): Describe<PaginationOptions> =>

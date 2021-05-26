@@ -3,3 +3,18 @@ ui-input ::ng-deep {
     margin-bottom: 0 !important;
   }
 }
+
+ui-button {
+  margin-right: 10px;
+  max-height: 32px;
+  width: 32px;
+  ::ng-deep button {
+    height: 32px;
+    width: 32px;
+    min-height: 0;
+    border-radius: 50%;
+    ui-icon {
+      margin-right: 4px;
+    }
+  }
+}

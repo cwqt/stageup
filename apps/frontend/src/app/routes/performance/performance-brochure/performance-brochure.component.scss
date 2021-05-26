@@ -3,3 +3,13 @@
     display: none !important;
   }
 }
+
+quill-view ::ng-deep {
+  * {
+    font-size: 16px !important;
+  }
+  .ql-editor {
+    margin: 0;
+    padding: 0;
+  }
+}

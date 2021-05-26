@@ -50,8 +50,7 @@ export class BaseAppService {
     this.$routeData = new BehaviorSubject(this.route.snapshot.data);
   }
 
-  // blockUntilUserLoaded means the user value will be up to date when this returns - avoiding the need to subscribe async to user permission changes for spaces etc.
-  async componentInitialising(activatedRoute: ActivatedRoute, blockUntilUserLoaded: boolean = false) {
+  async componentInitialising(activatedRoute: ActivatedRoute) {
     if (this.$componentError.getValue()) this.$componentError.next(false);
     this.$params.next(activatedRoute.snapshot.paramMap);
     this.$queryParams.next(activatedRoute.snapshot.queryParamMap);
@@ -61,7 +60,6 @@ export class BaseAppService {
     // don't need to unsubscribe from activate route stuff as auto destroyd by router - it is almost unique in this
     activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
       this.$params.next(paramMap);
-      //  this.paramsUpdated(false);
     });
 
     activatedRoute.queryParamMap.subscribe(async (paramMap: ParamMap) => {
@@ -73,14 +71,7 @@ export class BaseAppService {
     });
 
     //do it sync and wait
-    if (blockUntilUserLoaded) {
-      await this.paramsUpdated(true);
-    } else {
-      // do it in the background async - timout stops it blocking UI thread after component loaded
-      setTimeout(async () => {
-        this.paramsUpdated(true);
-      }, 0);
-    }
+    await this.paramsUpdated(true);
   }
 
   // updating stored user permissions as space changes

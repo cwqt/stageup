@@ -6,7 +6,7 @@ import { ToastService } from '../../services/toast.service';
 import { ThemeKind } from '../../ui-lib/ui-lib.interfaces';
 import { PlayerComponent } from '../player/player.component';
 
-export type UpChunkEvents = 'success' | 'error' | 'progress';
+export type UploadEvent = 'success' | 'error' | 'progress';
 const CHUNK_SIZE = 2048; // upload in 2mb chunks
 
 @Component({
@@ -17,7 +17,7 @@ const CHUNK_SIZE = 2048; // upload in 2mb chunks
 export class UploadVideoComponent implements OnInit {
   @Input() initialSource: string; // url for initial value
   @Input() createAssetResHandler: () => Promise<ICreateAssetRes>;
-  @Output() uploadChange: EventEmitter<UpChunkEvents> = new EventEmitter();
+  @Output() uploadChange: EventEmitter<UploadEvent> = new EventEmitter();
 
   @ViewChild('fileSelector') fileSelector: ElementRef;
   @ViewChild('livePlayer') livePlayer: PlayerComponent;
@@ -26,18 +26,19 @@ export class UploadVideoComponent implements OnInit {
   selectedVideo: File;
   assetCreateReq: ICacheable<ICreateAssetRes> = createICacheable();
   uploadAsset: ICacheable<UpChunk> = createICacheable(null, { upload_percent: 0 });
-  uploadComplete:boolean;
+  uploadComplete: boolean;
 
-  constructor(private toast:ToastService) {}
+  constructor(private toast: ToastService) {}
 
   ngOnInit() {}
 
-  onPlayerReady(player:PlayerComponent) {
-    if(this.initialSource)
+  onPlayerReady(player: PlayerComponent) {
+    if (this.initialSource)
       player.load({
         location: this.initialSource,
-        _id: "",
-        type: AssetType.Video
+        _id: '',
+        type: AssetType.Video,
+        tags: ['trailer']
       });
   }
 
@@ -56,11 +57,10 @@ export class UploadVideoComponent implements OnInit {
     this.uploadAsset.loading = true;
 
     // request the signed one time url to upload the video to MUX
-    await cachize(this.createAssetResHandler(), this.assetCreateReq)
-      .catch(e => {
-        this.uploadAsset.error = e.message;
-        this.uploadAsset.loading = false;
-      })
+    await cachize(this.createAssetResHandler(), this.assetCreateReq).catch(e => {
+      this.uploadAsset.error = e.message;
+      this.uploadAsset.loading = false;
+    });
 
     // start uploading in chunks using upchunk :)
     const upload = createUpload({
@@ -77,7 +77,7 @@ export class UploadVideoComponent implements OnInit {
       this.uploadAsset = createICacheable(null, { upload_percent: 0 });
       this.assetCreateReq = createICacheable();
       this.selectedVideo = null;
-      this.toast.emit("Upload complete! Changes may take a few minutes to propagate...", ThemeKind.Primary)
+      this.toast.emit($localize`Upload complete! Changes may take a few minutes to propagate...`, ThemeKind.Primary);
     });
 
     upload.on('error', event => {

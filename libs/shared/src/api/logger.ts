@@ -29,8 +29,8 @@ export const apiLogger = (service: string, color?: string, formatter?: (value: s
         }),
         format.printf(info => {
           const message = info.message
-            ? `${clr(service, color)} [${info.level}]: ${info.message}${info.stack ? '\n' + info.stack : ''}`
-            : `${clr(service, color)} No error message given`;
+            ? `[${info.level}]: ${info.message}${info.stack ? '\n' + info.stack : ''}`
+            : `No error message given`;
 
           return formatter ? formatter(message) : message;
         })
@@ -46,5 +46,3 @@ export const apiLogger = (service: string, color?: string, formatter?: (value: s
     }
   };
 };
-
-const clr = (str, color) => colors[color || 'gray'](str + ' '.repeat(8).slice(str.length - 8) + ' |');

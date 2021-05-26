@@ -1,5 +1,5 @@
 import { BaseEntity, BeforeInsert, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { IAddress } from '@core/interfaces';
+import { CountryCode, IAddress } from '@core/interfaces';
 import { ContactInfo } from './contact-info.entity';
 import { uuid } from '@core/helpers';
 
@@ -11,30 +11,33 @@ export class Address extends BaseEntity implements IAddress {
   }
 
   @Column() city: string;
-  @Column() iso_country_code: string;
-  @Column() postcode: string;
-  @Column() street_name: string;
-  @Column() street_number: number;
+  @Column('enum', { enum: CountryCode }) country: CountryCode; // iso-3166-alpha3
+  @Column() line1: string;
+  @Column() line2?: string;
+  @Column() postal_code: string;
+  @Column() state?: string;
 
   @ManyToOne(() => ContactInfo, ci => ci.addresses) contact_info: ContactInfo;
 
   constructor(data: Required<IAddress>) {
     super();
     this.city = data.city;
-    this.iso_country_code = data.iso_country_code;
-    this.postcode = data.postcode;
-    this.street_name = data.street_name;
-    this.street_number = data.street_number;
+    this.country = data.country;
+    this.postal_code = data.postal_code;
+    this.line1 = data.line1;
+    this.line2 = data.line2;
+    this.state = data.state;
   }
 
   toFull(): Required<IAddress> {
     return {
       _id: this._id,
       city: this.city,
-      iso_country_code: this.iso_country_code,
-      postcode: this.postcode,
-      street_name: this.street_name,
-      street_number: this.street_number
+      country: this.country,
+      line1: this.line1,
+      line2: this.line2,
+      postal_code: this.postal_code,
+      state: this.state
     };
   }
 }

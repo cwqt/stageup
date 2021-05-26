@@ -1,6 +1,9 @@
 import {
+  IAsset,
   IHost,
   IHostInvitation,
+  IHostOnboarding,
+  IHostPrivate,
   IInvoice,
   ILocale,
   IPatronTier,
@@ -38,6 +41,13 @@ export type EventContract = {
   ['user.password_changed']: {
     user_id: IUser['_id'];
   };
+  // Hosts --------------------------------------------------------------------
+  ['host.stripe-connected']: { host_id: IHost['_id'] };
+  ['host.invoice-export']: {
+    format: 'csv' | 'pdf';
+    invoice_ids: Array<IInvoice['_id']>;
+    email_address: IHostPrivate['email_address'];
+  };
   // Refunds ------------------------------------------------------------------
   ['refund.requested']: { invoice_id: IInvoice['_id'] };
   ['refund.refunded']: {};
@@ -57,7 +67,9 @@ export type EventContract = {
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
   ['performance.created']: IPerformance;
-  ['live_stream.state_changed']: { performance_id: IPerformance['_id']; state: LiveStreamState };
+  ['live_stream.state_changed']: { asset_id: IAsset['_id']; state: LiveStreamState };
+  // Onboardings --------------------------------------------------------------
+  ['onboarding.reviewed']: { onboarding_id: IHostOnboarding['_id'] };
   // Testing ------------------------------------------------------------------
   ['test.send_email']: { user_id: IUser['_id'] };
 };

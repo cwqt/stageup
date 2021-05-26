@@ -2,7 +2,6 @@
   <!-- Input -->
   <div
     (clickOutside)="togglePasswordVisibility(false, $event); focused = false"
-    (click)="input.select()"
     class="form-field"
     [class.form-field--is-active]="focused"
     [class.form-field--is-filled]="value !== ''"
@@ -87,6 +86,14 @@
     </div>
   </div>
 
+  <!-- Toggle Switch -->
+  <div *ngIf="data.type == 'toggle'" class="form-field__toggle">
+    <mat-label class="label-before-slide">{{ data.options.right_label }}</mat-label>
+    <mat-slide-toggle (blur)="onTouchedCallback()" (focus)="onFocusCallback()" [(ngModel)]="value">
+      {{ data.options.left_label }}
+    </mat-slide-toggle>
+  </div>
+
   <!-- Money -->
   <div
     (clickOutside)="togglePasswordVisibility(false, $event); focused = false"
@@ -124,18 +131,31 @@
   </div>
 
   <!-- Rich Text using ngx-quill -->
-  <div class="ui-input--rich-text" *ngIf="data.type == 'richtext'">
-    <span>{{ data.options.label }}</span>
-    <quill-editor
-      format="json"
-      [modules]="richTextModules"
-      [disabled]="control.disabled"
-      (onBlur)="onTouchedCallback()"
-      (onFocus)="onFocusCallback()"
-      [(ngModel)]="value"
-      (onContentChanged)="richTextChanged($event)"
-    >
-    </quill-editor>
+  <div
+    *ngIf="data.type == 'richtext'"
+    class="form-field ui-input--rich-text"
+    [class.form-field--is-active]="focused"
+    [class.form-field--is-filled]="value !== ''"
+    [class.form-field--is-small]="!data.options.label"
+    [class.form-field--is-errored]="showError"
+    [class.form-field--is-disabled]="control.disabled"
+  >
+    <span>{{ data.options.label }} {{ required ? '' : optionalTransUnit }}</span>
+    <div class="form-field__control">
+      <quill-editor
+        #quill
+        format="json"
+        [modules]="richTextModules"
+        [maxLength]="meta.richtext.max_length"
+        [minLength]="meta.richtext.min_length"
+        [disabled]="control.disabled"
+        (onBlur)="onTouchedCallback()"
+        (onFocus)="onFocusCallback()"
+        [(ngModel)]="value"
+        (onContentChanged)="richTextChanged($event)"
+      >
+      </quill-editor>
+    </div>
   </div>
 
   <!-- Checkboxes -->
@@ -199,8 +219,8 @@
       matInput
       [(ngModel)]="value"
       [matDatepicker]="picker"
-      [min]="data.options.min_date"
       (click)="picker.open()"
+      [min]="data.options.min_date"
       [max]="data.options.max_date"
     />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -236,7 +256,14 @@
 
   <!-- Datetime picker -->
   <mat-form-field class="form-field__datetime" *ngIf="data.type == 'datetime'" appearance="fill">
-    <input matInput [ngxMatDatetimePicker]="picker" [(ngModel)]="value" placeholder="Choose a date" />
+    <input
+      matInput
+      [ngxMatDatetimePicker]="picker"
+      [(ngModel)]="value"
+      placeholder="Choose a date"
+      [min]="data.options.min_date"
+      [max]="data.options.max_date"
+    />
     <mat-label i18n>Enter a date range</mat-label>
 
     <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>

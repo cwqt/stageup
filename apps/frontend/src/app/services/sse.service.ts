@@ -23,7 +23,7 @@ export class SseService {
   }
 
   getStreamEvents(performanceId: string) {
-    this.streamEventsSource = new EventSource(`${environment.sseUrl}/performances/${performanceId}`);
+    this.streamEventsSource = new EventSource(`${environment.apiUrl}/sse/performances/${performanceId}`);
     return this.createEventObserver<LiveStreamState>(this.streamEventsSource);
   }
 

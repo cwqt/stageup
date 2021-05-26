@@ -2,7 +2,6 @@
   li {
     overflow: visible;
     &.is-admin {
-      @apply bg-white p-2 rounded shadow-sm mb-2;
       position: relative;
     }
 
@@ -14,6 +13,10 @@
         height: 32px;
         width: 32px;
         min-height: 0;
+        border-radius: 50%;
+        ui-icon {
+          margin-right: 4px;
+        }
       }
     }
 

@@ -22,3 +22,22 @@ carousel {
     stroke: #fff;
   }
 }
+
+.sticky-header {
+  width: calc(100% + 4rem);
+  margin-top: -10rem;
+  margin-left: -2rem;
+  position: relative;
+  color: white;
+
+  .sticky-gradient {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    background: hsla(344, 82%, 61%, 1);
+    background: linear-gradient(315deg, hsla(344, 82%, 61%, 1) 0%, hsla(295, 100%, 84%, 0) 100%);
+  }
+}

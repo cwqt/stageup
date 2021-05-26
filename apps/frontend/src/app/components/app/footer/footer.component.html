@@ -1,21 +1,30 @@
-<div class="footer">
-  <div class="bottom">
-    <img src="/assets/logo-banner-white.png" class="footer-logo" alt="" />
-    <p>Live-streaming & VoD platform for the performing arts</p>
+<svg class="rounder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">
+  <path d="M 0 4 L 0 1 L 0 1 C 0 3 1 4 3 4" fill="#041527" />
+</svg>
 
-    <div class="bottom-content flex flex-col">
+<div class="footer p-8 w-full">
+  <div class="bottom container mx-auto">
+    <div class="flex items-center">
+      <p i18n>
+        Live-streaming & VoD platform for the performing arts. <br />
+        Copyright © 2021 StageUp Ltd. All rights reserved.
+      </p>
+      <img src="/assets/logo.png" class="w-16 ml-auto" alt="" />
+    </div>
+
+    <div class="bottom-contentflex flex-col">
       <div class="flex space-x-2 my-4">
         <ui-icon size="l" class="cursor-pointer" *ngFor="let link of socials" (click)="openSocial(link.url)">{{
           link.icon
         }}</ui-icon>
       </div>
 
-      <div class="flex flex-col">
-        <a href="https://blog.stageup.uk/">Blog</a>
-        <a href="">Contribute</a>
-        <a href="">Terms of use</a>
-        <a href="">Privacy</a>
-        <a href="">Documentation</a>
+      <div class="grid grid-cols-3 grid-gap-4 space-y-2 mt-6">
+        <a href="https://blog.stageup.uk/" i18n>Blog</a>
+        <a href="" i18n>Contribute</a>
+        <a href="" i18n>Terms of use</a>
+        <a href="" i18n>Privacy</a>
+        <a href="" i18n>Documentation</a>
       </div>
     </div>
   </div>

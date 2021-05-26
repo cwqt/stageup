@@ -1,13 +1,13 @@
 <ui-dialog [loading]="invoice.loading" class="relative">
   <div class="relative">
     <h2>
-      Invoice <span class="opacity-50">#{{ invoice.data?.invoice_id }}</span>
+      <span i18n>Invoice</span> <span class="opacity-50">#{{ invoice.data?.invoice_id }}</span>
     </h2>
     <ui-hr></ui-hr>
 
     <div class="flex items-center absolute top-0 right-0">
-      <ui-button kind="secondary" size="m" class="mr-2">Email Receipt</ui-button>
-      <ui-button kind="secondary" size="m">Print Receipt</ui-button>
+      <ui-button kind="secondary" size="m" class="mr-2" i18n>Email Receipt</ui-button>
+      <ui-button kind="secondary" size="m" i18n>Print Receipt</ui-button>
     </div>
   </div>
 
@@ -17,19 +17,19 @@
     </ui-chip>
 
     <ul>
-      <li><b>Order ID</b>{{ invoice.data?.invoice_id }}</li>
+      <li><b i18n>Order ID</b>{{ invoice.data?.invoice_id }}</li>
       <li>
-        <b>Order Date</b>
+        <b i18n>Order Date</b>
         <span *ngIf="invoice.data?.invoice_date">
           {{ invoice.data?.invoice_date | amFromUnix | amDateFormat: 'LLLL' }}</span
         >
       </li>
-      <li><b>Address Line 1</b></li>
-      <li><b>Address Line 2</b></li>
-      <li><b>Registered Charity No.</b></li>
-      <li><b>Payment Source</b>{{ invoice.data?.card_type | uppercase }}</li>
+      <li><b i18n>Address Line 1</b></li>
+      <li><b i18n>Address Line 2</b></li>
+      <li><b i18n>Registered Charity No.</b></li>
+      <li><b i18n>Payment Source</b>{{ invoice.data?.card_type | uppercase }}</li>
       <li>
-        <b>Card Details</b>
+        <b i18n>Card Details</b>
         <span *ngIf="invoice.data?.last_4_digits"> **** **** **** {{ invoice.data?.last_4_digits }} </span>
       </li>
     </ul>
@@ -40,19 +40,19 @@
   <div class="grid grid-cols-2 gap-2">
     <!-- Customer -->
     <div *ngIf="isHostInvoice">
-      <p><b>Customer</b></p>
-      <app-user-thumb [user]="hostInvoice.user"></app-user-thumb>
+      <p><b i18n>Customer</b></p>
+      <app-user-thumb *ngIf="hostInvoice" [user]="hostInvoice.user"></app-user-thumb>
     </div>
 
     <!-- Product -->
     <div>
-      <p><b>Product</b></p>
+      <p><b i18n>Product</b></p>
       <ul>
-        <li><b>Type</b> Performance Ticket</li>
-        <li><b>Name</b> {{ invoice.data?.performance?.name }}</li>
-        <li><b>Amount</b>{{ invoice.data?.amount | currencyPipe: invoice.data?.ticket?.currency }}</li>
+        <li><b i18n>Type</b> Performance Ticket</li>
+        <li><b i18n>Name</b> {{ invoice.data?.performance?.name }}</li>
+        <li><b i18n>Amount</b>{{ invoice.data?.amount | currencyPipe: invoice.data?.ticket?.currency }}</li>
         <li *ngIf="isHostInvoice">
-          <b>Net Amount</b>{{ hostInvoice?.net_amount | currencyPipe: invoice.data?.ticket?.currency }}
+          <b i18n>Net Amount</b>{{ hostInvoice?.net_amount | currencyPipe: invoice.data?.ticket?.currency }}
         </li>
       </ul>
     </div>
@@ -60,7 +60,7 @@
     <div class="relative">
       <ng-container *ngIf="!isHostInvoice">
         <ng-container *ngIf="invoice.data?.status !== refundRequested">
-          <ui-button class="absolute bottom-0 right-0" kind="primary" size="m" (click)="requestRefund()"
+          <ui-button class="absolute bottom-0 right-0" kind="primary" size="m" (click)="requestRefund()" i18n
             >Request Refund</ui-button
           >
         </ng-container>

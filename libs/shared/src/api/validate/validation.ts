@@ -7,14 +7,19 @@ import { ErrorHandler } from '@core/api';
 import { Struct, StructError, create } from 'superstruct';
 import { i18nProvider } from '../i18n';
 
+export const formatError = (error: StructError): IFormErrorField[] => {
+  return error.failures().map(failure => ({
+    path: failure.path.join('.'),
+    value: failure.value,
+    code: failure.message || '@@validation.invalid'
+  }));
+};
+
 /**
  * @description Middleware for validating requests
  * @param validators VReqHandlerFunctor array
  */
-export const validationMiddleware = (
-  validators: { [index in RequestLocation]?: Struct },
-  i18n: i18nProvider
-): RequestHandler => {
+export const validationMiddleware = (validators: { [index in RequestLocation]?: Struct }): RequestHandler => {
   return async (req, res, next) => {
     let errors: IFormErrorField[] = [];
 
@@ -24,14 +29,7 @@ export const validationMiddleware = (
           req[key] = create(req[key], value);
         } catch (error) {
           if (error instanceof StructError) {
-            errors = errors.concat(
-              error.failures().map(failure => ({
-                path: failure.path.join('.'),
-                value: failure.value,
-                code: failure.message || '@@validation.invalid',
-                location: key as RequestLocation
-              }))
-            );
+            errors = errors.concat({ ...formatError(error), location: key as RequestLocation });
           }
         }
       })

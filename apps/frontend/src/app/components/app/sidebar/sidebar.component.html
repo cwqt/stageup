@@ -1,41 +1,100 @@
 <div class="sidebar-wrapper">
+  <img src="/assets/logo-banner-white.png" class="cursor-pointer" routerLink="/" />
 
-  <div class="sidebar-main-buttons" [class.sidebar-main-buttons--is-expanded]="isExpanded">
-    <ui-button *ngIf="myself?.host" matTooltip="Dashboard" matTooltipPosition="right" kind="accent"
-      routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
-      <img class="sidebar-host-icon rounded-full object-cover"
-        [src]="myself.host.avatar || '/assets/avatar-placeholder.png'" alt="">
+  <div class="sidebar-main-buttons">
+    <h4 i18n>Account</h4>
+    <ui-button routerLink="/my-stuff" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+      <ui-icon>screen</ui-icon>
+      <span i18n>My Stuff</span>
     </ui-button>
 
-    <ui-button *ngIf="myself?.user.is_admin" matTooltip="Admin" matTooltipPosition="right" routerLink="/admin"
-      kind="accent" routerLinkActive="active-link">
-      <ui-icon>virtual-private-cloud</ui-icon>
+    <ui-button routerLink="/settings" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+      <ui-icon>settings</ui-icon>
+      <span i18n>Settings</span>
+    </ui-button>
+
+    <ui-button
+      routerLink="/settings/payments"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <ui-icon>wallet</ui-icon>
+      <span i18n>Payments</span>
     </ui-button>
 
     <ng-container *ngIf="myself.host">
-      <ui-button matTooltip="Performances" matTooltipPosition="right" routerLink="/dashboard/performances"
-        routerLinkActive="active-link">
+      <h4 i18n>Host</h4>
+      <ui-button routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+        <ui-icon>workspace</ui-icon>
+        <span i18n>Dashboard</span>
+      </ui-button>
+
+      <ui-button routerLink="/dashboard/performances" routerLinkActive="active-link">
         <ui-icon>playlist</ui-icon>
+        <span i18n>Performances</span>
       </ui-button>
 
-      <ui-button *ngIf="myself?.host?.is_onboarded" matTooltip="Payments" matTooltipPosition="right"
-        routerLink="/dashboard/payments" routerLinkActive="active-link">
-        <ui-icon>money</ui-icon>
+      <div class="flex flex-col ml-8" *ngIf="activeHostPerformanceId">
+        <ui-button
+          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <span i18n>Details</span>
+        </ui-button>
+        <ui-button
+          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/ticketing'"
+          routerLinkActive="active-link"
+        >
+          <span i18n>Ticketing</span>
+        </ui-button>
+        <ui-button
+          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/customise'"
+          routerLinkActive="active-link"
+        >
+          <span i18n>Customise</span>
+        </ui-button>
+        <ui-button
+          [disabled]="true"
+          class="pointer-events-none"
+          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/analytics'"
+          routerLinkActive="active-link"
+        >
+          <span i18n>Analytics</span>
+        </ui-button>
+      </div>
+
+      <ui-button
+        [disabled]="!myself.host.is_onboarded"
+        [class.pointer-events-none]="!myself.host.is_onboarded"
+        routerLink="/dashboard/payments"
+        routerLinkActive="active-link"
+      >
+        <ui-icon>wallet</ui-icon>
+        <span i18n>Payments</span>
       </ui-button>
 
-      <ui-button matTooltip="Team" matTooltipPosition="right" routerLink="/dashboard/team"
-        routerLinkActive="active-link">
+      <ui-button routerLink="/dashboard/team" routerLinkActive="active-link">
         <ui-icon>events</ui-icon>
+        <span i18n>Team</span>
       </ui-button>
 
-      <ui-button matTooltip="Profile" matTooltipPosition="right" [routerLink]="'/dashboard/@'+ myself.host.username"
-        routerLinkActive="active-link">
+      <ui-button [routerLink]="'/dashboard/@' + myself.host.username" routerLinkActive="active-link">
         <ui-icon>user--avatar</ui-icon>
+        <span i18n>Profile</span>
       </ui-button>
 
-      <ui-button matTooltip="Settings" matTooltipPosition="right" routerLink="/dashboard/settings"
-        routerLinkActive="active-link">
+      <ui-button routerLink="/dashboard/settings" routerLinkActive="active-link">
         <ui-icon>settings</ui-icon>
+        <span i18n>Host Settings</span>
+      </ui-button>
+    </ng-container>
+
+    <ng-container *ngIf="myself?.user.is_admin">
+      <h4 i18n>Admin</h4>
+      <ui-button routerLink="/admin" kind="accent" routerLinkActive="active-link">
+        <ui-icon>virtual-private-cloud</ui-icon>
+        <span i18n>Admin Panel</span>
       </ui-button>
     </ng-container>
   </div>

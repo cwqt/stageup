@@ -1,10 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DtoAccessToken, DtoPerformance, IEnvelopedData, IPerformance, IPerformanceUserInfo, JwtAccessToken } from '@core/interfaces';
-import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import {
+  DtoAccessToken,
+  DtoPerformance,
+  IAssetStub,
+  IEnvelopedData,
+  IPerformance,
+  IPerformanceUserInfo,
+  AssetType,
+  ISignedToken
+} from '@core/interfaces';
+import { Cacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
-import { MyselfService } from '../../services/myself.service';
+import { merge, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-performance',
@@ -12,10 +21,10 @@ import { MyselfService } from '../../services/myself.service';
   styleUrls: ['./performance.component.scss']
 })
 export class PerformanceComponent implements OnInit {
-  performance: ICacheable<DtoPerformance> = createICacheable();
-  userPerformanceInfo: ICacheable<IPerformanceUserInfo> = createICacheable();
-
-  hasAccess: boolean;
+  $loading: Observable<boolean>;
+  performance: Cacheable<DtoPerformance> = new Cacheable();
+  primaryAsset: IAssetStub<AssetType.Video | AssetType.LiveStream>;
+  primarySignedToken: Cacheable<ISignedToken> = new Cacheable();
 
   constructor(
     private performanceService: PerformanceService,
@@ -29,12 +38,17 @@ export class PerformanceComponent implements OnInit {
 
   async ngOnInit() {
     await this.appService.componentInitialising(this.route);
-    await this.getPerformance();
-  }
+    this.$loading = merge(this.performance.$loading, this.primarySignedToken.$loading);
 
-  async getPerformance() {
-    return cachize(this.performanceService
-      .readPerformance(this.appService.getParam(RouteParam.PerformanceId)), this.performance)
+    await this.performance.request(
+      this.performanceService.readPerformance(this.appService.getParam(RouteParam.PerformanceId))
+    );
+
+    this.primaryAsset = this.perf.assets.find(asset => asset.tags.includes('primary'));
+    if (this.primaryAsset)
+      await this.primarySignedToken.request(
+        this.performanceService.generateSignedToken(this.performance.data.data._id, this.primaryAsset._id)
+      );
   }
 
   gotoWatch() {

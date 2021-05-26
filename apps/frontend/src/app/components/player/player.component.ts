@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AssetType, IAsset, IAssetStub, JwtAccessToken } from '@core/interfaces';
+import { AssetType, IAsset, IAssetStub, ISignedToken } from '@core/interfaces';
 import { PlyrComponent } from 'ngx-plyr';
 import { timeInterval } from 'rxjs/operators';
 import { HlsjsPlyrDriver } from './hls-plyr-driver';
@@ -18,7 +18,7 @@ export class PlayerComponent implements OnInit {
   @Output() onPlayerEnded: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
 
   asset?: IAssetStub;
-  token?: string;
+  token?: ISignedToken;
 
   player: Plyr;
   poster: string;
@@ -36,7 +36,7 @@ export class PlayerComponent implements OnInit {
     this.hlsjsDriver = new HlsjsPlyrDriver(false);
   }
 
-  load(asset?: IAssetStub, token?: JwtAccessToken) {
+  load(asset?: IAssetStub, token?: ISignedToken) {
     this.asset = asset;
     this.token = token;
 
@@ -47,7 +47,7 @@ export class PlayerComponent implements OnInit {
         type: 'video',
         // Useful sample stream for debugging purposes
         // src: "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
-        src: this.token ? `${this.asset.location}?token=${this.token}` : this.asset.location
+        src: this.token ? `${this.asset.location}?token=${this.token.signed_token}` : this.asset.location
       }
     ];
 

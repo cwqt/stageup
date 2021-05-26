@@ -24,9 +24,9 @@ export default {
   createPerformance: async (host: IHost | IHostStub, data?: DtoCreatePerformance): Promise<IPerformance> => {
     data = data || {
       name: 'performance name',
-      premiere_date: timestamp(),
-      genre: Genre.Allegory,
-      description: 'some performance'
+      premiere_datetime: timestamp(),
+      genre: Genre.Contemporary,
+      description: ['some performance']
     };
 
     const res = await api.post(`/hosts/${host._id}/performances`, data, env.getOptions());

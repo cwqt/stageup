@@ -3,7 +3,7 @@ import {
   IInvoice,
   CurrencyCode,
   ITicket,
-  PurchaseableEntityType,
+  PurchaseableType,
   PaymentStatus,
   DtoInvoice,
   IUserInvoice,
@@ -21,7 +21,7 @@ import { timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
 import { Ticket } from '../performances/ticket.entity';
 import { PatronSubscription } from '../users/patron-subscription.entity';
-import { PatronTier } from '@core/api';
+import { PatronTier, PaymentMethod } from '@core/api';
 
 export type PurchaseableEntity = PatronSubscription | Ticket;
 
@@ -33,13 +33,13 @@ export class Invoice extends BaseEntity implements IInvoice {
   }
 
   @Column() purchased_at: number;
-  @Column('bigint', { nullable: true }) amount: number;
+  @Column('bigint') amount: number;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
-  @Column('enum', { enum: PaymentStatus, nullable: true }) status: PaymentStatus;
-  @Column('enum', { enum: PurchaseableEntityType, nullable: true }) type: PurchaseableEntityType;
+  @Column('enum', { enum: PaymentStatus, default: PaymentStatus.Created }) status: PaymentStatus;
+  @Column('enum', { enum: PurchaseableType, nullable: true }) type: PurchaseableType;
   @Column('json', { nullable: true }) refund_request: Omit<IRefundRequest, 'invoice_id'>;
 
-  @Column() stripe_charge_id: string;
+  @Column() stripe_payment_intent_id: string;
   @Column() stripe_receipt_url: string;
 
   @ManyToOne(() => User, user => user.invoices) user: User;
@@ -49,15 +49,15 @@ export class Invoice extends BaseEntity implements IInvoice {
   @ManyToOne(() => Ticket) ticket?: Ticket;
   @ManyToOne(() => PatronSubscription) patron_subscription?: PatronSubscription;
 
-  constructor(user: User, amount: number, currency: CurrencyCode, charge: Stripe.Charge) {
+  constructor(user: User, amount: number, currency: CurrencyCode, intent: Stripe.PaymentIntent) {
     super();
     this.user = user;
     this.amount = amount;
     this.currency = currency;
-    this.purchased_at = timestamp(new Date());
+    this.purchased_at = timestamp();
 
-    this.stripe_charge_id = charge.id;
-    this.stripe_receipt_url = charge.receipt_url;
+    this.stripe_payment_intent_id = intent.id;
+    this.stripe_receipt_url = intent.charges.data[0].receipt_url;
     return this;
   }
 
@@ -69,24 +69,19 @@ export class Invoice extends BaseEntity implements IInvoice {
   setPurchaseable(entity: PurchaseableEntity) {
     if (entity instanceof Ticket) {
       this.ticket = entity;
-      this.type = PurchaseableEntityType.Ticket;
+      this.type = PurchaseableType.Ticket;
     } else if (entity instanceof PatronSubscription) {
       this.patron_subscription = entity;
-      this.type = PurchaseableEntityType.PatronTier;
+      this.type = PurchaseableType.PatronTier;
     }
 
     return this;
   }
 
-  setTicket(ticket: Ticket) {
-    this.ticket = ticket;
-    return this;
-  }
-
-  toPaymentSourceDetails(charge: Stripe.Charge): Required<IPaymentSourceDetails> {
+  toPaymentSourceDetails(intent: Stripe.PaymentIntent): Required<IPaymentSourceDetails> {
     return {
-      last_4_digits: charge.payment_method_details.card.last4,
-      card_type: charge.payment_method_details.card.network
+      last_4_digits: (intent.payment_method as Stripe.PaymentMethod).card.last4,
+      card_type: (intent.payment_method as Stripe.PaymentMethod).card.brand
     };
   }
 
@@ -117,10 +112,10 @@ export class Invoice extends BaseEntity implements IInvoice {
     };
   }
 
-  toUserInvoice(charge: Stripe.Charge): Required<IUserInvoice> {
+  toUserInvoice(intent: Stripe.PaymentIntent): Required<IUserInvoice> {
     return {
       ...this.toUserInvoiceStub(),
-      ...this.toPaymentSourceDetails(charge),
+      ...this.toPaymentSourceDetails(intent),
       receipt_url: this.stripe_receipt_url
     };
   }
@@ -135,10 +130,10 @@ export class Invoice extends BaseEntity implements IInvoice {
     };
   }
 
-  toHostInvoice(charge: Stripe.Charge): Required<IHostInvoice> {
+  toHostInvoice(intent: Stripe.PaymentIntent): Required<IHostInvoice> {
     return {
       ...this.toHostInvoiceStub(),
-      ...this.toPaymentSourceDetails(charge),
+      ...this.toPaymentSourceDetails(intent),
       user: this.user.toStub(),
       receipt_url: this.stripe_receipt_url
     };

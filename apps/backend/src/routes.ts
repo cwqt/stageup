@@ -34,7 +34,9 @@ import {
   IPaymentMethod,
   IPaymentMethodStub,
   IFeed,
-  DtoUserPatronageInvoice as UPatronInvoice
+  ISignedToken,
+  DtoUserPatronageInvoice as UPatronInvoice,
+  IAsset
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -47,21 +49,26 @@ import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
 import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
-import { BackendProviderMap } from '.';
 import PatronageController from './controllers/patronage.controller';
+
+import { BackendModules, BackendProviderMap } from '.';
+import { Module } from './modules';
+
+type ModuleRoutes<T extends {[i:string]: Partial<Pick<Module, "routes">>}> = {[index in keyof T]:T[index]["routes"]};
 
 /**
  * @description: Create a router, passing in the providers to be accessible to routes
  */
-export default (router:AsyncRouter<BackendProviderMap>, providers:BackendProviderMap, middlewares:Middlewares) => {
+export default ({SSE, Queue}:ModuleRoutes<BackendModules>) => (router:AsyncRouter<BackendProviderMap>, providers:BackendProviderMap, middlewares:Middlewares) => {
 // MYSELF -------------------------------------------------------------------------------------------------------------
 const Myself = new MyselfController(providers, middlewares);
 router.get      <IMyself>               ("/myself",                                   Myself.readMyself());
 router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
 router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
 router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
-router.get      <IUserInvoice>          ("/myself/invoices/:iid",                     Myself.readInvoice());
 router.get      <IE<IUserInvoiceStub[]>>("/myself/invoices",                          Myself.readInvoices());
+router.get      <IUserInvoice>          ("/myself/invoices/:iid",                     Myself.readInvoice());
+router.post     <void>                  ("/myself/invoices/:iid/request-refund",      Myself.requestInvoiceRefund());
 router.post     <void>                  ("/myself/invoices/request-refund",           Myself.requestInvoiceRefund());
 router.get      <IE<UPatronInvoice[]>>  ("/myself/patron-subscriptions",              Myself.readPatronageSubscriptions());
 router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
@@ -78,8 +85,7 @@ router.post     <void>                  ("/users/logout",                       
 router.post     <IUser>                 ("/users/login",                              Users.loginUser());
 router.post     <void>                  ("/users/forgot-password",                    Users.forgotPassword());
 router.put      <void>                  ("/users/reset-password",                     Users.resetForgottenPassword());
-router.get      <IUser>                 ("/users/@:username",                         Users.readUserByUsername()); // order matters
-router.get      <IUser>                 ("/users/:uid",                               Users.readUserById());
+router.get      <IUser>                 ("/users/:uid",                               Users.readUser());
 router.put      <IMyself["user"]>       ("/users/:uid",                               Users.updateUser());
 router.delete   <void>                  ("/users/:uid",                               Users.deleteUser());
 router.get      <IE<IHost, IUHInfo>>    ("/users/:uid/host",                          Users.readUserHost());
@@ -92,7 +98,6 @@ router.delete   <void>                  ("/users/:uid/addresses/:aid",          
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, middlewares);
 router.post     <IHost>                 ("/hosts",                                    Hosts.createHost());
-router.get      <IHost>                 ("/hosts/@:username",                         Hosts.readHostByUsername()); // order matters
 router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
 router.delete   <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
 // router.put      <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
@@ -109,7 +114,7 @@ router.get      <IOnboardingStepMap>    ("/hosts/:hid/onboarding/steps",        
 router.get      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 router.redirect                         ("/hosts/:hid/invites/:iid",                  Hosts.handleHostInvite());
-router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
+// router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 router.post     <string>                ("/hosts/:hid/stripe/connect",                Hosts.connectStripe());
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
 router.get      <IE<IHostInvoiceStub[]>>("/hosts/:hid/invoices",                      Hosts.readInvoices());
@@ -132,7 +137,9 @@ router.get      <IE<IPerfS[]>>          ("/performances",                       
 router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance());
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
-router.post     <ICreateAssetRes|void>  ("/performances/:pid/assets",                 Perfs.createAsset());
+router.post     <ICreateAssetRes | void>("/performances/:pid/assets",                 Perfs.createAsset());
+router.get      <ISignedToken>          ("/performances/:pid/assets/:aid/token",      Perfs.generateSignedToken());
+router.get      <ICreateAssetRes>       ("/performances/:pid/assets/:aid/signed-url", Perfs.readVideoAssetSignedUrl());
 router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
 // router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
@@ -148,7 +155,6 @@ router.post     <IPaymentICS>           ("/tickets/:tid/payment-intent",        
 const Admin = new AdminController(providers, middlewares);
 router.get      <IE<IHOnboarding[]>>     ("/admin/onboardings",                       Admin.readOnboardingProcesses());
 router.post     <void>                   ("/admin/onboardings/:hid/review",           Admin.reviewOnboardingProcess());
-router.post     <void>                   ("/admin/onboardings/:hid/enact",            Admin.enactOnboardingProcess());
 
 // MUX ----------------------------------------------------------------------------------------------------------------
 const MUX = new MUXController(providers, middlewares);
@@ -157,7 +163,7 @@ router.post     <void>                   ("/mux/hooks",                         
 // STRIPE -------------------------------------------------------------------------------------------------------------
 const Stripe = new StripeController(providers, middlewares);
 router.post     <{ received: boolean }>  ("/stripe/hooks",                            Stripe.handleHook());
-router.redirect                          ("/stripe/oauth",                           Stripe.handleStripeConnectReturn());
+router.redirect                          ("/stripe/oauth",                            Stripe.handleStripeConnectReturn());
 
 // AUTH ---------------------------------------------------------------------------------------------------------------
 const Auth =  new AuthController(providers, middlewares)
@@ -171,9 +177,17 @@ router.post     <void>                   ("/drop",                              
 router.get      <IHost>                  ("/verify-host/:hid",                        Misc.verifyHost());
 router.post     <void>                   ("/accept-invite/:uid",                      Misc.acceptHostInvite());
 router.get      <void>                   ("/utils/send-test-email",                   Misc.sendTestEmail());
-router.get      <void>                   ("/utils/performances/:pid/state",           Misc.setPerformanceStreamState())
+router.get      <void>                   ("/utils/assets",                            Misc.readAssets());
+router.get      <void>                   ("/utils/assets/:aid/stream-state",          Misc.setPerformanceStreamState())
 
 // SEARCH ---------------------------------------------------------------------------------------------------------------
 const Search = new SearchController(providers, middlewares);
 router.get      <ISearchResponse>        ("/search",                                  Search.search());
+
+// SSE ----------------------------------------------------------------------------------------------------------------
+router.get                               ("/sse/assets/:aid",                         SSE.performanceStateSSE);
+
+// JOB QUEUE ----------------------------------------------------------------------------------------------------------
+router.use                               ("/admin/queue",                             Queue.jobQueueUi.handler);
+
 }

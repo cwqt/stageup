@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import {
   HostOnboardingState,
   HostOnboardingStep,
@@ -36,7 +36,7 @@ export class OnboardingViewComponent implements OnInit {
 
   onboardingFields: Record<HostOnboardingStep, IUiStepMapField[]>;
   onboardingSteps: ICacheable<IOnboardingStepMap> = createICacheable();
-  enactOnboarding: ICacheable<void> = createICacheable();
+  reviewOnboarding: ICacheable<void> = createICacheable();
 
   constructor(private hostService: HostService, private adminService: AdminService) {}
 
@@ -47,6 +47,10 @@ export class OnboardingViewComponent implements OnInit {
 
   async ngOnInit() {
     // Get the steps & parse into data structure for template to consume
+    this.initialise();
+  }
+
+  async initialise() {
     await this.getOnboardingSteps();
     if (!this.onboardingSteps.error) {
       this.onboardingFields = this.parseOnboardingStepsIntoRows();
@@ -81,11 +85,11 @@ export class OnboardingViewComponent implements OnInit {
   }
 
   getAllValidSteps(): HostOnboardingStep[] {
-    return Object.keys(this.onboardingSteps.data).map(step => Number.parseInt(step)); // as HostOnboardingSteps
+    return Object.keys(this.onboardingSteps.data).map(step => step as HostOnboardingStep);
   }
 
-  async enactOnboardingProcess() {
-    this.enactOnboarding.loading = true;
+  async reviewOnboardingProcess() {
+    this.reviewOnboarding.loading = true;
 
     try {
       // Send the onboarding review & enact
@@ -107,13 +111,11 @@ export class OnboardingViewComponent implements OnInit {
           return map;
         }, {})
       );
-
-      // If all reviews send without fail, enact the onboarding
-      return this.adminService.enactOnboardingProcess(this.hostId);
     } catch (error) {
-      this.enactOnboarding.error = error.message;
+      this.reviewOnboarding.error = error.message;
     } finally {
-      this.enactOnboarding.loading = false;
+      this.reviewOnboarding.loading = false;
+      this.initialise();
     }
   }
 

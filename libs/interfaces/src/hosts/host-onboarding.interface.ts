@@ -21,9 +21,9 @@ import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './
 import { IOnboardingStepReview } from './onboarding-step-review.interface';
 
 export enum HostOnboardingStep {
-  ProofOfBusiness = 0,
-  OwnerDetails = 1,
-  SocialPresence = 2
+  ProofOfBusiness = 'proof_of_business',
+  OwnerDetails = 'owner_details',
+  SocialPresence = 'social_presence'
 }
 
 export enum HostOnboardingState {
@@ -54,11 +54,11 @@ export interface IHostOnboarding {
   steps: { [index in HostOnboardingStep]: HostOnboardingState };
 }
 
-export interface IOnboardingStepMap {
-  [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IOnboardingProofOfBusiness>;
-  [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IOnboardingOwnerDetails>;
-  [HostOnboardingStep.SocialPresence]: IOnboardingStep<IOnboardingSocialPresence>;
-}
+export type IOnboardingStepMap = {
+  [HostOnboardingStep.ProofOfBusiness]: IOnboardingStep<IHostBusinessDetails>;
+  [HostOnboardingStep.OwnerDetails]: IOnboardingStep<IPersonInfo>;
+  [HostOnboardingStep.SocialPresence]: IOnboardingStep<ISocialInfo>;
+};
 
 export interface IOnboardingStep<T = any> {
   state:
@@ -69,16 +69,6 @@ export interface IOnboardingStep<T = any> {
   review?: IOnboardingStepReview<T>;
   valid: boolean; //just if all the data is filled out & correct
   data: T;
-}
-
-export type IOnboardingProofOfBusiness = IHostBusinessDetails;
-
-export interface IOnboardingOwnerDetails {
-  owner_info: IPersonInfo;
-}
-
-export interface IOnboardingSocialPresence {
-  social_info: ISocialInfo;
 }
 
 /**

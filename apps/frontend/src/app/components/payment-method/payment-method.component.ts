@@ -1,7 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
-import { DtoCreatePaymentIntent, IHostPrivate, IPaymentIntentClientSecret, IPaymentMethodStub } from '@core/interfaces';
+import {
+  DtoCreatePaymentIntent,
+  IHostPrivate,
+  IPaymentIntentClientSecret,
+  IPaymentMethodStub,
+  PurchaseableType
+} from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { MyselfService } from '@frontend/services/myself.service';
 import { ToastService } from '@frontend/services/toast.service';
@@ -71,9 +77,9 @@ export class PaymentMethodComponent implements OnInit {
    * @param paymentIntentFn Method that generates a PaymentIntent on the PaymentMethod
    * @param paymentIntentData Data to supply to the paymentIntentFn
    */
-  public async confirmPayment(
-    paymentIntentFn: (data: DtoCreatePaymentIntent) => Promise<IPaymentIntentClientSecret>,
-    paymentIntentData: DtoCreatePaymentIntent,
+  public async confirmPayment<T extends PurchaseableType>(
+    paymentIntentFn: (data: DtoCreatePaymentIntent<T>) => Promise<IPaymentIntentClientSecret>,
+    paymentIntentData: DtoCreatePaymentIntent<T>,
     stripeAccountId: IHostPrivate['stripe_account_id']
   ) {
     this.loading = true;

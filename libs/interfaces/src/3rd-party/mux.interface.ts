@@ -76,7 +76,17 @@ export interface IMUXHookResponse<T = any> {
 
 import { Upload } from '@mux/mux-node';
 import { Except } from 'type-fest';
-export interface ICreateAssetRes { upload_url: Upload["url"] }
+import { AssetTag, AssetType } from '../common/asset.interface';
+
+export interface DtoCreateAsset {
+  is_signed: boolean;
+  type: AssetType;
+  tags: AssetTag[];
+}
+
+export interface ICreateAssetRes {
+  upload_url: Upload['url'];
+}
 
 export enum AssetOwnerType {
   Performance,
@@ -84,7 +94,7 @@ export enum AssetOwnerType {
   User
 }
 
-export type IMuxPassthroughOwnerInfo = Except<IMuxPassthrough, "asset_id" | "asset_group_id">;
+export type IMuxPassthroughOwnerInfo = Except<IMuxPassthrough, 'asset_id' | 'asset_group_id'>;
 
 export interface IMuxPassthrough {
   asset_id: string;

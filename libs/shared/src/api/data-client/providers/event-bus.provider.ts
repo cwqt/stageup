@@ -1,14 +1,13 @@
 import { Logger } from 'winston';
-import { Observable, Subscription as RxSubscription } from 'rxjs';
+import { Subscription as RxSubscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import Rxmq, { Channel } from 'rxmq';
 
 export interface IEventBusConfig {}
 
 import { Provider } from '../';
-import { Contract, ContractMeta, Event, EventContract, SupportedLocale } from '../../event-bus/contracts';
+import { Contract, ContractMeta, Event, EventContract } from '../../event-bus/contracts';
 import { timestamp, uuid } from '@core/helpers';
-import { Locale } from 'express-locale';
 import { ILocale } from '@core/interfaces';
 
 export default class EventBusProvider implements Provider<void> {

@@ -12,11 +12,11 @@ Refer to [README.md](apps/README.md) for installing Node, Docker & the various d
 
 For each application, review the setup instructions in each of these files:
 
-* __API__ (`apps/backend`): [README.md](apps/backend/README.md)
-* __Frontend__ (`apps/frontend`): [README.md](apps/frontend/README.md)
-* __Queue__ (`apps/runner`): [README.md](apps/runner/README.md)
-* __Notifications__ (`apps/notifications`) [README.md](apps/notifications/README.md)
-* __Tests__ (`apps/api-tests`): [README.md](apps/api-tests/README.md)
+- **API** (`apps/backend`): [README.md](apps/backend/README.md)
+- **Frontend** (`apps/frontend`): [README.md](apps/frontend/README.md)
+- **Queue** (`apps/runner`): [README.md](apps/runner/README.md)
+- **Notifications** (`apps/notifications`) [README.md](apps/notifications/README.md)
+- **Tests** (`apps/api-tests`): [README.md](apps/api-tests/README.md)
 
 ## Running `npm run start`
 
@@ -25,9 +25,9 @@ Run `npm install` in the project root to install all required dependencies.
 
 Production builds perform tree-shaking optimization to remove unused libraries, so ensure you use ES6 import syntax.
 
-* __Redis__: Start from Docker Desktop
-* __PostgreSQL__: Start from Docker Desktop
-* __api-tests__
+- **Redis**: Start from Docker Desktop
+- **PostgreSQL**: Start from Docker Desktop
+- **api-tests**
   - Create a new database using TablePlus called `testing` in Postgres
   - Ensure the backend is running in test mode via `npm run backend:testing`
   - For developing a single test use: `npm run api-tests`
@@ -72,9 +72,20 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
   .env.development     # also .env.staging, .testing & .production
 ```
 
+# i18n
+
+- Country codes: ISO-3166-Alpha2 [iso-3166-1](https://www.npmjs.com/package/iso-3166-1)
+- Language codes: ISO 639-1 [iso-939-1](https://www.npmjs.com/package/iso-639-1)
+- Currency codes: ISO-4217
+- Phone Numbers E.164 [formatInternational](https://www.npmjs.com/package/libphonenumber-js)
+- Timestamps: UNIX relative to
+- Stripe: PaymentIntents & PaymentMethods
+
+- https://www.npmjs.com/package/i18n-iso-countries
+
 ## Useful Tools
 
-* __VSCode__: <https://code.visualstudio.com/>
-* __Postman__: <https://www.postman.com/downloads/>
-* __DB Client__: <https://tableplus.com/>
-* __JSONView__: <https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en>
+- **VSCode**: <https://code.visualstudio.com/>
+- **Postman**: <https://www.postman.com/downloads/>
+- **DB Client**: <https://tableplus.com/>
+- **JSONView**: <https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en>

@@ -1,21 +1,32 @@
-<!-- Host Component - Leave Host -->
-<app-create-host *ngIf="!myself.host" [host]="myself.host" [user]="myself.user"></app-create-host>
-
-<ng-container *ngIf="myself.host">
-  <h1>Settings</h1>
-  <ui-hr></ui-hr>
-  <div class="bg-white p-4 rounded shadow-sm">
-
-    <h2>Leave Company</h2>
-    <ui-hr></ui-hr>
-    <div>
-      <p>Withdraw membership from <b>{{ myself.host.name }}</b>, this action can't be undone.</p>
-      <ui-button [disabled]="myself.host_info.permissions == 'host_owner'" kind="danger" size="l" class="mb-4"
-        (click)="openLeaveHostConfirmationDialog()">Leave Company</ui-button>
-      <br>
-      <mat-error *ngIf="myself.host_info.permissions == 'host_owner'">You can't leave this company because you're the
-        owner, please transfer ownership to another member.</mat-error>
-    </div>
-
+<app-page>
+  <div body>
+    <ng-container *ngIf="myself.host">
+      <h1 i18n>Settings</h1>
+      <ui-hr></ui-hr>
+      <div class="bg-white p-4 rounded shadow-sm">
+        <h2 i18n>Leave Company</h2>
+        <ui-hr></ui-hr>
+        <div>
+          <p>
+            Withdraw membership from <b>{{ myself.host.name }}</b
+            >, this action can't be undone.
+          </p>
+          <ui-button
+            [disabled]="myself.host_info.permissions == 'host_owner'"
+            kind="danger"
+            size="l"
+            class="mb-4"
+            (click)="openLeaveHostConfirmationDialog()"
+            >Leave Company</ui-button
+          >
+          <br />
+          <mat-error *ngIf="myself.host_info.permissions == 'host_owner'"
+            ><span i18n
+              >You can't leave this company because you're the owner, please transfer ownership to another member.</span
+            ></mat-error
+          >
+        </div>
+      </div>
+    </ng-container>
   </div>
-</ng-container>
+</app-page>

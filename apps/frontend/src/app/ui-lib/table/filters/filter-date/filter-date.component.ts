@@ -26,6 +26,21 @@ export class FilterDateComponent implements OnInit {
           validators: [{ type: 'required' }],
           // prettier-ignore
           values: new Map([
+            // TODO: All these other options can be done by just adding time onto the args to get the desired offset
+            // Tomorrow
+            // Today
+            // Yesterday
+            // Next Week
+            // Last Week
+            // Next Month
+            // This Month
+            // Last Month
+            // Next Quarter
+            // This Quarter
+            // Last Quarter
+            // Next Year
+            // This Year
+            // Last Year
             [DateFilterOperator.Equals,   { label: $localize`:@@filter_date_eq:Equals` }],
             [DateFilterOperator.After,    { label: $localize`:@@filter_date_gt:After` }],
             [DateFilterOperator.Before,   { label: $localize`:@@filter_date_lt:Before` }],

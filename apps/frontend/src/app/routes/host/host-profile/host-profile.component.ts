@@ -9,7 +9,7 @@ import { BaseAppService, RouteParam } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
 import { MyselfService } from '../../../services/myself.service';
-import { ChangeImageComponent } from '../../settings/change-image/change-image.component';
+import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
 import { HostProfileAboutComponent } from './host-profile-about/host-profile-about.component';
 import { HostProfileFeedComponent } from './host-profile-feed/host-profile-feed.component';
 import { HostProfilePatronageComponent } from './host-profile-patronage/host-profile-patronage.component';

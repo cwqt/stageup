@@ -135,11 +135,13 @@ export default class UserController extends BaseController<BackendProviderMap> {
     };
   }
 
-  readUserById(): IControllerEndpoint<IUser> {
+  readUser(): IControllerEndpoint<IUser> {
     return {
       authorisation: AuthStrat.none,
       controller: async req => {
-        const u = await getCheck(User.findOne({ _id: req.params.uid }));
+        const u = await getCheck(
+          User.findOne(req.params.uid[0] == '@' ? { username: req.params.uid.slice(1) } : { _id: req.params.uid })
+        );
         return u.toFull();
       }
     };
@@ -228,16 +230,13 @@ export default class UserController extends BaseController<BackendProviderMap> {
         u.setPassword(newPassword);
         await u.save();
 
-        // TODO: add back email
-        //   Email.sendEmail({
-        //     from: Env.EMAIL_ADDRESS,
-        //     to: u.email_address,
-        //     subject: 'Your password was just changed',
-        //     html: `<p>
-        // Your account password has recently been changed.<br/><br/>
-        // If you did not make this change, please change your password as soon as possible. If you have recently changed your password, then please ignore this email.
-        // </p>`
-        //   });
+        await this.providers.bus.publish(
+          'user.password_changed',
+          {
+            user_id: u._id
+          },
+          req.locale
+        );
       }
     };
   }
@@ -274,7 +273,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
       authorisation: AuthStrat.isOurself,
       controller: async req => {
         const address = await Address.findOne({ _id: req.params.aid });
-        // TODO: update method in address model
+        // TODO: Update method in address model
         return address.toFull();
       }
     };

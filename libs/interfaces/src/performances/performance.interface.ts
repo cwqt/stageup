@@ -1,15 +1,17 @@
-import { IHostStub } from '../hosts/host.interface';
-import { ISigningKey } from './signing-key.interface';
-
-import { Genre } from './genres.interface';
-import { DtoAccessToken, JwtAccessToken } from './access-token.interface';
-import { ITicketStub } from './ticket.interface';
-import { AssetType, IAsset, IAssetStub } from '../common/asset.interface';
+import { Asset } from '@mux/mux-node';
+import { DeltaOperation } from 'quill';
+import { Except } from 'type-fest';
+import { AssetDto, AssetType, IAssetStub } from '../common/asset.interface';
 import { IEnvelopedData } from '../common/envelope.interface';
-import { LiveStreamState } from '../3rd-party/mux.interface';
 import { NUUID } from '../common/fp.interface';
+import { IHostStub } from '../hosts/host.interface';
+import { DtoAccessToken } from './access-token.interface';
+import { Genre } from './genres.interface';
+import { ISigningKey } from './signing-key.interface';
+import { ITicketStub } from './ticket.interface';
 
-export type RichText = any[];
+export type ParsedRichText = { ops: DeltaOperation[] }; // stringified-json
+export type RichText = string;
 
 export enum Visibility {
   Public = 'public',
@@ -24,23 +26,26 @@ export interface IPerformanceStub {
   average_rating: number; // average rating across all ratings
   views: number; // total user view count
   created_at: number;
-  stream: { state: LiveStreamState; location: IAsset<AssetType.LiveStream>['location'] };
+  assets: IAssetStub[];
 
   thumbnail: string;
 }
 
 export interface IPerformance extends IPerformanceStub {
   visibility: Visibility;
-  premiere_date?: number; // when the performance is ready to be streamed
+  premiere_datetime?: number; // when the performance is ready to be streamed
   genre: Genre;
   tickets: ITicketStub[];
   assets: IAssetStub[];
 }
 
-export type DtoPerformance = IEnvelopedData<IPerformance, { has_purchased: boolean; token: JwtAccessToken }>;
+export type DtoPerformance = IEnvelopedData<Except<IPerformance, 'assets'> & { assets: AssetDto[] }, null>;
 
 // data transfer object
-export type DtoCreatePerformance = Pick<Required<IPerformance>, 'name' | 'premiere_date' | 'description' | 'genre'>;
+export type DtoCreatePerformance = Pick<
+  Required<IPerformance>,
+  'name' | 'premiere_datetime' | 'description' | 'genre'
+> & { type: 'vod' | 'live' };
 
 // private to host
 export interface IPerformanceHostInfo {

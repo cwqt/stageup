@@ -1,10 +1,10 @@
 import { Component, ElementRef, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import fd from 'form-data';
-import { ToastService } from '../../../services/toast.service';
-import { HostService } from '../../../services/host.service';
-import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
+import { ToastService } from '@frontend/services/toast.service';
+import { HostService } from '@frontend/services/host.service';
+import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 
 @Component({
   selector: 'app-change-image',
@@ -32,12 +32,12 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
 
   buttons: IUiDialogOptions['buttons'] = [
     new UiDialogButton({
-      label: 'Cancel',
+      label: $localize`Cancel`,
       kind: ThemeKind.Secondary,
       callback: () => this.cancel.emit()
     }),
     new UiDialogButton({
-      label: 'Upload',
+      label: $localize`Upload`,
       disabled: true,
       kind: ThemeKind.Primary,
       loading: false,
@@ -68,8 +68,8 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   public clearAvatar() {
     this.hasSelectedImage = false;
     this.selectedImage = this.data.initialImage ? this.data.initialImage : '/assets/avatar-placeholder.png';
-    this.buttonText = 'Select image';
-    this.removeButtonText = 'Remove image';
+    this.buttonText = $localize`Select image`;
+    this.removeButtonText = $localize`Remove image`;
     this.uploadButton.disabled = true;
   }
 
@@ -80,13 +80,13 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
       this.uploadButton.disabled = true;
       this.fileTypeError = true;
       this.hasSelectedImage = false;
-      this.buttonText = 'invalid file';
-      this.errorMessage = `file type ${inputElement.files[0].type} not allowed`;
+      this.buttonText = $localize`Invalid file`;
+      this.errorMessage = $localize`File type ${inputElement.files[0].type} not allowed`;
     }
   }
 
   public onAvatarFileSelected() {
-    this.uploadButton.label = 'Upload';
+    this.uploadButton.label = $localize`Upload`;
 
     // Set the preview image to the uploaded file
     const inputElement = this.inputElement.nativeElement;

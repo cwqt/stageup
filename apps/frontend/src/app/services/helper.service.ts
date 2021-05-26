@@ -23,11 +23,11 @@ export class HelperService {
       dialogRef.close();
     };
 
-    dialogRef.componentInstance.submit.subscribe(res => close(() => callback(res)));
-    dialogRef.componentInstance.cancel.subscribe(() => close(cancelCallback));
+    dialogRef.componentInstance?.submit?.subscribe(res => close(() => callback?.(res)));
+    dialogRef.componentInstance?.cancel?.subscribe(() => close(cancelCallback));
     dialogRef.afterClosed().subscribe(result => {
-      dialogRef.componentInstance.submit.unsubscribe();
-      dialogRef.componentInstance.cancel.unsubscribe();
+      dialogRef.componentInstance?.submit?.unsubscribe();
+      dialogRef.componentInstance?.cancel?.unsubscribe();
     });
   }
 }

@@ -26,10 +26,10 @@ export interface BackendProviderMap extends ProviderMap {
   bus: InstanceType<typeof Providers.EventBus>;
 }
 
-export interface BackendModules {
-  sse: SSEModule;
-  queue: QueueModule;
-}
+export type BackendModules = {
+  SSE: SSEModule;
+  Queue: QueueModule;
+};
 
 Register<BackendProviderMap>({
   name: 'Backend',
@@ -130,21 +130,20 @@ Register<BackendProviderMap>({
   // Dependency Injection
   const i18n: InstanceType<typeof i18nProvider> = Container.get('i18n');
 
-  const queue = new QueueModule(
+  // Register all the modules
+  const Queue = await new QueueModule(
     { redis: { host: providers.redis.config.host, port: providers.redis.config.port } },
     log
-  );
+  ).register(providers.bus, { i18n, email: providers.email, orm: providers.torm, stripe: providers.stripe });
 
-  router.router.use(
-    '/queue',
-    await queue.register(providers.bus, { i18n: i18n, email: providers.email, orm: providers.torm })
-  );
+  const SSE = await new SSEModule(log).register(providers.bus, {
+    i18n: i18n,
+    email: providers.email,
+    orm: providers.torm
+  });
 
-  const sse = new SSEModule(log);
-  router.router.use(
-    '/sse',
-    await sse.register(providers.bus, { i18n: i18n, email: providers.email, orm: providers.torm })
-  );
-
-  return routes;
+  return routes({
+    Queue: Queue.routes,
+    SSE: SSE.routes
+  });
 });

@@ -21,6 +21,10 @@
     "space": 2
   },
   "todo-tree.highlights.customHighlight": {
+    "FUTURE": {
+      "foreground": "white",
+      "background": "gray"
+    },
     "IMPORTANT": {
       "foreground": "white",
       "background": "SlateBlue",

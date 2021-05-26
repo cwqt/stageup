@@ -1,53 +1,53 @@
-<div class="pr-8">
-  <div class="h-96 dashboard-cover relative overflow-hidden">
-    <img [src]="host.banner || '/assets/banner-placeholder.png'"
-      class="h-96 w-full object-cover filter blur transform scale-110" alt="">
+<app-page>
+  <div sticky class="relative overflow-hidden rounded-b-xl">
+    <div class="container mx-auto z-10 relative rounded-b-xl overflow-hidden">
+      <img [src]="host.banner || '/assets/banner-placeholder.png'" class="h-96 w-full object-cover" alt="" />
+    </div>
+
+    <img
+      [src]="host.banner || '/assets/banner-placeholder.png'"
+      class="absolute filter blur h-96 w-full transform scale-120"
+      alt=""
+    />
   </div>
 
-  <!-- TODO: populate this with actual data -->
-  <div class="grid grid-cols-4 gap-4 mb-8 -mt-24">
-    <div
-      class="bg-white relative rounded shadow p-4 overflow-hidden flex flex-col transform hover:scale-105 cursor-pointer hover:shadow-lg transition duration-150">
-      <ui-icon class="absolute right-4 top-4">maximize</ui-icon>
-      <h2>Gross Volume</h2>
-      <h3
-        class="mt-auto text-right text-5xl bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-green-600 font-bold">
-        £420.32 <small>(+6.4%)</small></h3>
+  <div body>
+    <!-- TODO: populate this with actual data -->
+    <div class="grid grid-cols-4 gap-4 mb-8 -mt-24 z-20 relative">
+      <div
+        class="bg-white relative rounded shadow p-4 overflow-hidden flex flex-col transform hover:scale-105 cursor-pointer hover:shadow-lg transition duration-150"
+      >
+        <!-- <ui-icon class="absolute right-4 top-4">maximize</ui-icon> -->
+        <h2>Gross Volume</h2>
+        <h3
+          class="mt-auto text-right text-5xl bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-green-600 font-bold"
+        >
+          £0.00 <small>(0%)</small>
+        </h3>
+      </div>
+
+      <div class="bg-white relative rounded shadow p-4 flex flex-col">
+        <!-- <ui-icon class="absolute right-4 top-4">maximize</ui-icon> -->
+        <h2 i18n>Total Patrons</h2>
+        <h3
+          class="mt-auto text-right text-5xl bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-pink-600 font-bold"
+        >
+          0 <br /><small>(0%)</small>
+        </h3>
+      </div>
+
+      <div class="col-span-2 relative bg-white rounded shadow p-4 ring-">
+        <h2 i18n>Upcoming Streams</h2>
+        <p i18n>No upcoming streams.</p>
+      </div>
     </div>
 
-    <div class="bg-white relative rounded shadow p-4 flex flex-col">
-      <ui-icon class="absolute right-4 top-4">maximize</ui-icon>
-      <h2>Total Patrons</h2>
-      <h3
-        class="mt-auto text-right text-5xl bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-pink-600 font-bold">
-        -12 <br /><small>(-4%)</small></h3>
-    </div>
-
-    <div class="col-span-2 relative bg-white rounded shadow p-4 ring-">
-      <h2>Upcoming Streams</h2>
-      <p class="flex p-2 bg-gray-100 rounded shadow-sm justify-between ring-2 ring-pink-500">
-        <b>Moulin Rouge</b>
-        <span>In 4 hours</span>
-      </p>
-
-      <p class="flex p-2 bg-gray-100 rounded shadow-sm justify-between">
-        <b>Hamlet</b>
-        <span>Tomorrow</span>
-      </p>
-
-      <p class="flex p-2 bg-gray-100 rounded shadow-sm justify-between mb-0">
-        <b>Yearly Dance-off</b>
-        <span>Next week</span>
-      </p>
-    </div>
+    <ng-container *ngIf="!host.is_onboarded">
+      <h1 i18n>Onboarding</h1>
+      <ui-hr></ui-hr>
+      <div class="overflow-hidden">
+        <app-host-onboarding></app-host-onboarding>
+      </div>
+    </ng-container>
   </div>
-
-
-  <ng-container *ngIf="!host.is_onboarded">
-    <h1>Onboarding</h1>
-    <ui-hr></ui-hr>
-    <div class="overflow-hidden">
-      <app-host-onboarding></app-host-onboarding>
-    </div>
-  </ng-container>
-</div>
+</app-page>

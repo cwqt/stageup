@@ -1,3 +1,4 @@
+import { IClaim } from '../common/claim.interface';
 import { CurrencyCode } from '../common/currency.interface';
 
 export enum TicketType {

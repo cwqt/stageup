@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IHostStub, IPatronSubscription, IPatronTier, PurchaseableEntityType } from '@core/interfaces';
+import { IHostStub, IPatronSubscription, IPatronTier, PurchaseableType } from '@core/interfaces';
 import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
@@ -49,8 +49,9 @@ export class BecomePatronDialogComponent implements OnInit, AfterViewInit, IUiDi
           cachize(
             this.patronageService.subscribe(this.data.tier._id, {
               payment_method_id: this.paymentMethod.selectionModel.selected[0]._id,
-              purchaseable_type: PurchaseableEntityType.PatronTier,
-              purchaseable_id: this.data.tier._id
+              purchaseable_type: PurchaseableType.PatronTier,
+              purchaseable_id: this.data.tier._id,
+              options: {}
             }),
             this.subscription
           )

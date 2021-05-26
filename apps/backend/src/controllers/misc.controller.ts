@@ -1,11 +1,13 @@
 import { Environment, HostInviteState, HostPermission, IHost, LiveStreamState } from '@core/interfaces';
 import {
+  Asset,
   BaseController,
   DataClient,
   getCheck,
   Host,
   HostInvitation,
   IControllerEndpoint,
+  LiveStreamAsset,
   User,
   UserHostInfo
 } from '@core/api';
@@ -18,7 +20,7 @@ export default class MiscController extends BaseController<BackendProviderMap> {
     return {
       authorisation: AuthStrat.none,
       controller: async req => {
-        // TODO: hook up frontend logging messages to some database for user error logging
+        // FUTURE Hook up frontend logging messages to some database for user error logging
       }
     };
   }
@@ -88,15 +90,19 @@ export default class MiscController extends BaseController<BackendProviderMap> {
     };
   }
 
-  // http://localhost:3000/utils/performances/yNL3wrYodJH/state?value=video.live_stream.connected
+  // http://localhost:3000/utils/assets/yNL3wrYodJH/state?value=video.live_stream.connected
   setPerformanceStreamState(): IControllerEndpoint<void> {
     return {
       authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
       controller: async req => {
+        const asset = await getCheck(LiveStreamAsset.findOne({ _id: req.params.aid }));
+        asset.meta.state = req.query.value as LiveStreamState;
+        await asset.save();
+
         this.providers.bus.publish(
           'live_stream.state_changed',
           {
-            performance_id: req.params.pid,
+            asset_id: req.params.aid,
             state: req.query.value as LiveStreamState
           },
           req.locale
@@ -111,6 +117,16 @@ export default class MiscController extends BaseController<BackendProviderMap> {
       controller: async req => {
         const user = await User.findOne();
         this.providers.bus.publish('test.send_email', { user_id: user._id }, req.locale);
+      }
+    };
+  }
+
+  readAssets(): IControllerEndpoint<void> {
+    return {
+      authorisation: AuthStrat.none,
+      controller: async req => {
+        const assets = await Asset.find({});
+        console.log(assets);
       }
     };
   }

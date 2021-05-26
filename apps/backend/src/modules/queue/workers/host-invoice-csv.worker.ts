@@ -9,7 +9,7 @@ export default ({ email }: { email: InstanceType<typeof Providers.Email> }) => a
   const data: JobData['host_invoice_csv'] = job.data;
 
   const invoices = await Invoice.find({
-    where: { _id: In(data.invoices) },
+    where: { _id: In(data.invoice_ids) },
     relations: { ticket: { performance: true } },
     select: {
       ticket: {

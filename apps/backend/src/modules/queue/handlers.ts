@@ -2,9 +2,11 @@ import Env from '@backend/env';
 import { Contract, Event } from 'libs/shared/src/api/event-bus/contracts';
 import { QueueModule, QueueProviders } from './queue.module';
 import dbless from 'dbless-email-verification';
-import { User, Host, Performance, Invoice, PatronTier } from '@core/api';
-import { dateOrdinal, prettifyMoney } from '@core/helpers';
+import { User, Host, Performance, Invoice, PatronTier, transact } from '@core/api';
+import { dateOrdinal, prettifyMoney, stringifyRichText } from '@core/helpers';
 import moment from 'moment';
+import { CurrencyCode } from '@core/interfaces';
+import { i18nProvider } from 'libs/shared/src/api/i18n';
 
 export const EventHandlers = (queues: QueueModule['queues'], providers: QueueProviders) => ({
   sendTestEmail: async (ct: Contract<'test.send_email'>) => {
@@ -24,7 +26,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
 
   sendUserVerificationEmail: async (ct: Contract<'user.registered'>) => {
     const hash = dbless.generateVerificationHash(ct.email_address, Env.PRIVATE_KEY, 60);
-    const verificationUrl = `${Env.BACKEND.URL}/auth/verify_email?email=${ct.email_address}&hash=${hash}`;
+    const verificationUrl = `${Env.BACKEND.URL}/auth/verify-email?email_address=${ct.email_address}&hash=${hash}`;
 
     queues.send_email.add({
       subject: providers.i18n.translate('@@email.user.registered__subject', ct.__meta.locale),
@@ -92,7 +94,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     queues.send_email.add({
       subject: providers.i18n.translate('@@email.user.invited_to_private_showing__subject', ct.__meta.locale),
       content: providers.i18n.translate('@@email.user.invited_to_private_showing__content', ct.__meta.locale, {
-        watch_url: performanceLink,
+        url: performanceLink,
         receipt_url: invoice.stripe_receipt_url,
         user_name: user.name || user.username,
         ticket_name: invoice.ticket.name,
@@ -176,7 +178,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
   },
 
   sendInvoiceRefundRequestConfirmation: async (ct: Contract<'refund.requested'>) => {
-    // TODO: have different strategies for different types of purchaseables
+    // FUTURE Have different strategies for different types of purchaseables?
     const invoice = await Invoice.findOne(
       { _id: ct.invoice_id },
       { relations: { user: true, ticket: { performance: true }, host: true } }
@@ -196,6 +198,25 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
       to: invoice.user.email_address,
       markdown: true,
       attachments: []
+    });
+  },
+
+  setupDefaultPatronTierForHost: async (ct: Contract<'host.stripe-connected'>) => {
+    await transact(async txc => {
+      const host = await Host.findOne({ _id: ct.host_id });
+      const tier = new PatronTier(
+        {
+          name: providers.i18n.translate('@@host.example_patron_tier_name', ct.__meta.locale),
+          description: stringifyRichText([
+            { insert: providers.i18n.translate(`@@host.example_patron_tier_description`, ct.__meta.locale) }
+          ]),
+          amount: 1000, // 10 GBP
+          currency: CurrencyCode.GBP
+        },
+        host
+      );
+
+      await tier.setup(providers.stripe.connection, txc);
     });
   }
 });

@@ -6,17 +6,18 @@ export enum Environment {
 }
 
 export interface IBackendEnvironment {
-  apiUrl:string;
-  frontendUrl:string;
-  postgresDatabase:string;
+  apiUrl: string;
+  frontendUrl: string;
+  postgresDatabase: string;
   environment: Environment;
 }
 
 export interface IFrontendEnvironment {
-  apiUrl:string;
-  sseUrl:string;
-  frontendUrl:string;
+  apiUrl: string;
+  sseUrl: string;
+  frontendUrl: string;
   environment: Environment;
   stripePublicKey: string;
   appVersion: string;
+  locale: string;
 }

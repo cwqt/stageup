@@ -14,17 +14,9 @@ import { UserTypeClarificationComponent } from '../../../routes/landing/user-typ
   styleUrls: ['./wrapper.component.scss']
 })
 export class AppWrapperComponent implements OnInit, AfterViewInit {
-  @ViewChild('drawer') drawer: MatDrawer;
-  @ViewChild('appContainer') appContainer: ElementRef;
+  @ViewChild('scrollContainer') scrollContainer: ElementRef;
 
   myself: IMyself;
-  drawerOpenSubject: Subject<boolean>;
-  drawerKey = DrawerKey;
-  drawerState: IDrawerData & { is_open: boolean } = {
-    is_open: false,
-    key: null,
-    data: null
-  };
 
   constructor(
     private myselfService: MyselfService,
@@ -42,14 +34,6 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
     this.myselfService.$myself.subscribe(m => {
       this.myself = m;
     });
-
-    this.drawerOpenSubject = this.drawerService.$drawerOpen;
-    this.drawerOpenSubject.subscribe(isOpen => {
-      this.drawerState = {
-        is_open: isOpen,
-        ...this.drawerService.drawerData
-      };
-    });
   }
 
   open() {
@@ -57,19 +41,18 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.drawerService.setDrawer(this.drawer);
-
     // handle scroll to top of scrollable element on router transitions
     this.router.events.subscribe(evt => {
       if (!(evt instanceof NavigationEnd)) return;
-      this.appContainer.nativeElement.scrollTo(0, 0);
+      this.scrollContainer.nativeElement.scrollTo(0, 0);
     });
   }
 
   openConfirmationDialog() {
     if (this.dialog.openDialogs.length == 0) {
       this.dialog.open(UserTypeClarificationComponent, {
-        disableClose: true
+        disableClose: true,
+        backdropClass: 'dialog-opaque'
       });
     }
   }

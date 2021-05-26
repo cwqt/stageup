@@ -13,18 +13,18 @@ import {
   OnboardingReview,
   Onboarding,
   User,
-  UserHostInfo
+  UserHostInfo,
+  transact
 } from '@core/api';
 import { BackendProviderMap } from '..';
 
 import AuthStrat from '../common/authorisation';
-import { any, array, enums, object, string } from 'superstruct';
+import { any, array, enums, number, object, optional, record, string } from 'superstruct';
 
 export default class AdminController extends BaseController<BackendProviderMap> {
   readOnboardingProcesses(): IControllerEndpoint<IEnvelopedData<IHostOnboarding[], null>> {
     return {
-      // TODO: write generic query / sort validator
-      authorisation: AuthStrat.none, // AuthStrat.isSiteAdmin,
+      authorisation: AuthStrat.isSiteAdmin,
       controller: async req => {
         return this.ORM.createQueryBuilder(Onboarding, 'onboarding')
           .innerJoinAndSelect('onboarding.host', 'host')
@@ -43,74 +43,58 @@ export default class AdminController extends BaseController<BackendProviderMap> 
     };
   }
 
+  /**
+   * @description Reviews all data & Merge the Hosts Onboarding Process with the host if all steps valid,
+   * otherwise submit e-mail requesting changes
+   */
   reviewOnboardingProcess(): IControllerEndpoint<void> {
     return {
+      authorisation: AuthStrat.isSiteAdmin,
       validators: {
-        body: array(
+        body: record(
+          enums([
+            HostOnboardingStep.OwnerDetails,
+            HostOnboardingStep.ProofOfBusiness,
+            HostOnboardingStep.SocialPresence
+          ]),
           object({
             state: enums([HostOnboardingState.HasIssues, HostOnboardingState.Verified]),
-            review_message: string(),
-            issues: array(any())
+            review_message: optional(string()),
+            issues: record(string(), array(string()))
           })
         )
       },
-      authorisation: AuthStrat.isSiteAdmin,
       controller: async req => {
-        // Controller does not actually submit to the host - that is done by enactOnboardingProcess
         const submission: IOnboardingReview['steps'] = req.body;
         const reviewer = await getCheck(User.findOne({ _id: req.session.user._id }));
         const onboarding = await getCheck(
           Onboarding.findOne({ relations: { host: true }, where: { host: { _id: req.params.hid } } })
         );
+
         onboarding.version += 1;
 
         // Create new review & map the states onto the actual step data
         const review = new OnboardingReview(onboarding, reviewer, submission);
-        Object.keys(submission)
-          .map(k => Number.parseInt(k))
-          .forEach(k => (onboarding.steps[k].state = submission[k].state));
+        Object.keys(submission).forEach(k => (onboarding.steps[k].state = submission[k].state));
 
         // If any step has issues, set the onboarding to has issues - otherwise all verified & awaiting enaction
         onboarding.state = Object.keys(onboarding.steps).some(
-          s => onboarding.steps[(s as unknown) as HostOnboardingStep].state == HostOnboardingState.HasIssues
+          step => onboarding.steps[step].state == HostOnboardingState.HasIssues
         )
           ? HostOnboardingState.HasIssues
           : HostOnboardingState.Verified;
 
-        await this.ORM.transaction(async txc => {
+        await transact(async txc => {
           await txc.save(review);
           onboarding.reviews.push(review);
-          await txc.save(onboarding);
-          // The admin will then enact to push requested changes (if any) to the Host
-        });
-      }
-    };
-  }
 
-  /**
-   * @description Merge the Hosts Onboarding Process with the host if all steps valid,
-   * otherwise submit e-mail requesting changes
-   */
-  enactOnboardingProcess(): IControllerEndpoint<void> {
-    return {
-      authorisation: AuthStrat.isSiteAdmin,
-      controller: async req => {
-        // Every step is verified when submitted, so enact the onboarding process
-        // by which I mean shift the data from Onboarding -> Host & send out invites for added members
-        const onboarding = await getCheck(
-          Onboarding.findOne({ relations: { host: true }, where: { host: { _id: req.params.hid } } })
-        );
+          // Check if every step is set to valid, if not set state to HasIssues & return early
+          if (Object.values(onboarding.steps).every(o => o.state !== HostOnboardingState.Verified)) {
+            onboarding.state = HostOnboardingState.HasIssues;
+            return await txc.save(onboarding);
+          }
 
-        // Check if every step is set to valid, if not set state to HasIssues & request changes via email
-        if (Object.values(onboarding.steps).every(o => o.state !== HostOnboardingState.Verified)) {
-          onboarding.state = HostOnboardingState.HasIssues;
-          // TODO: Send an email requesting changes
-          await onboarding.save();
-          return;
-        }
-
-        // Steps are all valid, welcome the host onboard....
-        await this.ORM.transaction(async txc => {
+          // Steps are all valid, welcome the host onboard....
           const host = onboarding.host; // Eager loaded
 
           // Proof of Business
@@ -130,21 +114,23 @@ export default class AdminController extends BaseController<BackendProviderMap> 
             }
           });
 
-          owner.user.personal_details.first_name = ownerDetailsData.owner_info.first_name;
-          owner.user.personal_details.last_name = ownerDetailsData.owner_info.last_name;
-          owner.user.personal_details.title = ownerDetailsData.owner_info.title;
+          owner.user.personal_details.first_name = ownerDetailsData.first_name;
+          owner.user.personal_details.last_name = ownerDetailsData.last_name;
+          owner.user.personal_details.title = ownerDetailsData.title;
           await txc.save(owner.user.personal_details);
 
           // Social Info
           const socialInfoData = onboarding.steps[HostOnboardingStep.SocialPresence].data;
-          host.social_info = socialInfoData.social_info;
+          host.social_info = socialInfoData;
 
-          // TODO: Once the onboarding process is complete, we no longer need it & it + it's onboarding issues
-          // can be deleted
           onboarding.state = HostOnboardingState.Enacted;
           host.is_onboarded = true;
-          await txc.save(host);
+
+          await Promise.all([txc.save(host), txc.save(onboarding)]);
         });
+
+        // Listeners should then send e-mails depending on the current state of the onboarding process
+        await this.providers.bus.publish('onboarding.reviewed', { onboarding_id: onboarding._id }, req.locale);
       }
     };
   }

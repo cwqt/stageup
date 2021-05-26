@@ -1,5 +1,4 @@
 import {
-  AccessToken,
   BaseController,
   ErrorHandler,
   getCheck,
@@ -30,26 +29,18 @@ import {
   IHostOnboarding,
   IHostStripeInfo,
   IHostStub,
-  IOnboardingOwnerDetails,
-  IOnboardingProofOfBusiness,
-  IOnboardingSocialPresence,
   IOnboardingStep,
   IOnboardingStepMap,
   IPerformanceStub,
-  IUserHostInfo,
-  pick,
-  TokenProvisioner
+  IUserHostInfo
 } from '@core/interfaces';
-import { array, enums, object } from 'superstruct';
-import { In } from 'typeorm';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { fields } from 'libs/shared/src/api/validate/fields.validators';
+import { array, enums, object, string, StructError } from 'superstruct';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
-import { log } from '../common/logger';
 import Env from '../env';
-
-import Email = require('../common/email');
-import { fields } from 'libs/shared/src/api/validate/fields.validators';
 
 export default class HostController extends BaseController<BackendProviderMap> {
   createHost(): IControllerEndpoint<IHost> {
@@ -94,7 +85,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const host = await Host.findOne(
-          { _id: req.params.hid },
+          req.params.hid[0] == '@' ? { username: req.params.hid.slice(1) } : { _id: req.params.hid },
           {
             relations: {
               members_info: {
@@ -149,8 +140,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
         if (userHostInfo.permissions !== HostPermission.Owner)
           throw new ErrorHandler(HTTP.Unauthorised, '@@error.missing_permissions');
 
-        // TODO: transactionally remove performances, signing keys, host infos etc etc.
-        await user.host.remove();
+        // Transactionally softRemoves everything associated with this host account
+        await user.host.softRemove();
       }
     };
   }
@@ -261,7 +252,6 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         // Ensure the invite has not expired
         if (timestamp() > invite.expires_at) {
-          // TODO: have task runner set to expired
           invite.state = HostInviteState.Expired;
           await invite.save();
           return `${Env.FRONTEND.URL}/${req.locale.language}?invite_state=${HostInviteState.Expired}`;
@@ -367,10 +357,10 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<any>> {
     return {
-      validators: { params: object({ step: enums(Object.values(HostOnboardingStep) as number[]) }) },
+      validators: { params: object({ step: enums(Object.values(HostOnboardingStep)), hid: string() }) },
       authorisation: AuthStrat.none,
       controller: async req => {
-        const step = (req.params.step as unknown) as HostOnboardingStep;
+        const step = req.params.step as HostOnboardingStep;
         const onboarding = await getCheck(
           Onboarding.findOne({
             where: {
@@ -442,7 +432,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   updateOnboardingProcessStep(): IControllerEndpoint<IOnboardingStep<unknown>> {
     return {
-      validators: { params: object({ step: enums(Object.values(HostOnboardingStep) as number[]) }) },
+      validators: { params: object({ step: enums(Object.values(HostOnboardingStep)), hid: string() }) },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         if (!req.body) throw new ErrorHandler(HTTP.DataInvalid, '@@error.missing_body');
@@ -457,22 +447,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
         );
 
         const user = await getCheck(User.findOne({ _id: req.session.user._id }));
-
-        // Pick updateable fields from interface type
-        const u: { [index in HostOnboardingStep]: Function } = {
-          [HostOnboardingStep.ProofOfBusiness]: (d: IOnboardingProofOfBusiness) =>
-            pick(d, ['business_address', 'business_contact_number', 'hmrc_company_number']),
-          [HostOnboardingStep.OwnerDetails]: (d: IOnboardingOwnerDetails) => pick(d, ['owner_info']),
-          [HostOnboardingStep.SocialPresence]: (d: IOnboardingSocialPresence) => pick(d, ['social_info'])
-        };
-
-        const step: HostOnboardingStep = Number.parseInt(req.params.step);
+        const step = req.params.step as HostOnboardingStep;
 
         try {
-          await onboarding.updateStep(step, u[step](req.body));
+          await onboarding.updateStep(step, req.body);
         } catch (error) {
-          log.error(error);
-          throw new ErrorHandler(HTTP.DataInvalid, null, error);
+          if (error instanceof StructError) {
+            throw new ErrorHandler(HTTP.DataInvalid, null, Validators.formatError(error));
+          } else {
+            throw error;
+          }
         }
 
         await onboarding.setLastUpdated(user);
@@ -503,8 +487,21 @@ export default class HostController extends BaseController<BackendProviderMap> {
         )
           throw new ErrorHandler(HTTP.BadRequest, '@@error.locked');
 
-        // TODO: verify all steps filled out
-        // TODO: delete all previous version step reviews
+        // Verifies all steps are atleast valid
+        if (Object.values(onboarding.steps).some((step: IOnboardingStep) => step.valid == false)) {
+          // If not, then return an array listing all invalid steps to the client
+          throw new ErrorHandler(
+            HTTP.BadRequest,
+            '@@onboarding.steps_invalid',
+            Object.keys(onboarding.steps)
+              .filter(step => onboarding.steps[step].valid == false)
+              .map(step => ({
+                path: step,
+                code: '@@onboarding.step_is_invalid'
+              }))
+          );
+        }
+
         onboarding.last_submitted = timestamp();
         onboarding.state = HostOnboardingState.PendingVerification;
         onboarding.version += 1;
@@ -517,10 +514,10 @@ export default class HostController extends BaseController<BackendProviderMap> {
     return {
       authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
       controller: async req => {
-        return await this.ORM.createQueryBuilder(Performance, 'hps')
-          .innerJoinAndSelect('hps.host', 'host')
+        return await this.ORM.createQueryBuilder(Performance, 'performance')
+          .innerJoinAndSelect('performance.host', 'host')
           .where('host._id = :id', { id: req.params.hid })
-          .leftJoinAndSelect('hps.stream', 'stream')
+          .orderBy('performance.created_at', 'DESC')
           .paginate(o => o.toStub());
       }
     };
@@ -533,16 +530,26 @@ export default class HostController extends BaseController<BackendProviderMap> {
         // Creating a Standard Stripe account on behalf of the host to faciliate the following:
         // https://stripe.com/img/docs/connect/direct_charges.svg
         const host = await getCheck(
-          Host.findOne({ _id: req.params.hid }, { relations: { contact_info: { addresses: true } } })
+          Host.findOne({ _id: req.params.hid }, { relations: { contact_info: { addresses: true }, owner: true } })
         );
 
         if (!host.stripe_account_id) {
           // 2 Create a connected account
           // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-create-account
           const account = await this.providers.stripe.connection.accounts.create({
-            // TODO: add details collected in onboarding in the .create options
             type: 'standard',
-            email: host.email_address
+            email: host.email_address,
+            country: host.business_details.business_address.country,
+            business_type: 'company', // FUTURE https://alacrityfoundationteam31.atlassian.net/browse/SU-892
+            business_profile: {
+              name: host.username,
+              url: host.social_info.site_url
+            },
+            company: {
+              name: host.name,
+              phone: host.business_details.business_contact_number,
+              address: host.business_details.business_address
+            }
           });
 
           host.stripe_account_id = account.id;
@@ -604,77 +611,85 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
-  provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
-    return {
-      validators: { body: object({ email_addresses: array(fields.email) }) },
-      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
-      controller: async req => {
-        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
-        const provisioner = await getCheck(User.findOne({ _id: req.session.user._id }));
-        const performance = await getCheck(
-          Performance.findOne({ _id: req.params.pid }, { relations: { stream: { signing_key: true } } })
-        );
+  // FIXME: This is now a whole lot more awkward with Claims, you can't provision a token that will
+  // give permissions in perpetuity for every signed asset on a performance
+  // A possible solution is to create one for every asset existing at the point of it's creation
+  // and then for every asset added / deleted, updating the claim to reflect the changes
+  // See: https://alacrityfoundationteam31.atlassian.net/browse/SU-883
+  // provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
+  //   return {
+  //     validators: { body: object({ email_addresses: array(fields.email) }) },
+  //     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+  //     controller: async req => {
+  //       const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+  //       const provisioner = await getCheck(User.findOne({ _id: req.session.user._id }));
+  //       const performance = await getCheck(Performance.findOne({ _id: req.params.pid }));
 
-        // Get a list of all users by the passed in array of e-mail addresses
-        const users = (
-          await Promise.allSettled(
-            (req.body.email_addresses as string[]).map(email => {
-              return User.findOne(
-                {
-                  email_address: email
-                },
-                {
-                  select: {
-                    _id: true,
-                    email_address: true
-                  }
-                }
-              );
-            })
-          )
-        )
-          .filter(r => r.status == 'fulfilled' && r.value)
-          .map(p => (p as PromiseFulfilledResult<User>).value);
+  //       // Get a list of all users by the passed in array of e-mail addresses
+  //       const users = (
+  //         await Promise.allSettled(
+  //           (req.body.email_addresses as string[]).map(email => {
+  //             return User.findOne(
+  //               {
+  //                 email_address: email
+  //               },
+  //               {
+  //                 select: {
+  //                   _id: true,
+  //                   email_address: true
+  //                 }
+  //               }
+  //             );
+  //           })
+  //         )
+  //       )
+  //         .filter(r => r.status == 'fulfilled' && r.value)
+  //         .map(p => (p as PromiseFulfilledResult<User>).value);
 
-        // Find tokens that already exit for provided users & don't allow more than 1 access token / user
-        const existingUserTokens = (
-          await AccessToken.find({
-            relations: ['user'],
-            where: {
-              user: { _id: In(users.map(u => u._id)) }
-            },
-            select: {
-              user: { _id: true }
-            }
-          })
-        ).map(t => t.user._id);
+  //       // Find tokens that already exit for provided users & don't allow more than 1 access token / user
+  //       const existingUserTokens = (
+  //         await AccessToken.find({
+  //           relations: ['user'],
+  //           where: {
+  //             user: { _id: In(users.map(u => u._id)) }
+  //           },
+  //           select: {
+  //             user: { _id: true }
+  //           }
+  //         })
+  //       ).map(t => t.user._id);
 
-        await this.ORM.transaction(async txc => {
-          // Create all the access tokens & sign them with the performances' signing key
-          const tokens = users
-            .filter(u => !existingUserTokens.includes(u._id))
-            .map(u =>
-              new AccessToken(u, performance, provisioner, TokenProvisioner.User).sign(performance.stream.signing_key)
-            );
+  //       await this.ORM.transaction(async txc => {
 
-          await txc.save(tokens);
+  //         // Create all the access tokens & sign them with the performances' signing key
+  //         const tokens = users
+  //           .filter(u => !existingUserTokens.includes(u._id))
+  //           .map(
+  //             u => {
 
-          // Push e-mails out to everyone
-          users.forEach(user => {
-            this.providers.bus.publish(
-              'user.invited_to_private_showing',
-              {
-                performance_id: performance._id,
-                host_id: host._id,
-                user_id: user._id
-              },
-              user.locale
-            );
-          });
-        });
-      }
-    };
-  }
+  //               const token = new AccessToken(u);
+
+  //             }
+  //           );
+
+  //         await txc.save(tokens);
+
+  //         // Push e-mails out to everyone
+  //         users.forEach(user => {
+  //           this.providers.bus.publish(
+  //             'user.invited_to_private_showing',
+  //             {
+  //               performance_id: performance._id,
+  //               host_id: host._id,
+  //               user_id: user._id
+  //             },
+  //             user.locale
+  //           );
+  //         });
+  //       });
+  //     }
+  //   };
+  // }
 
   readStripeInfo(): IControllerEndpoint<IHostStripeInfo> {
     return {
@@ -707,16 +722,21 @@ export default class HostController extends BaseController<BackendProviderMap> {
           .innerJoinAndSelect('invoice.ticket', 'ticket')
           .innerJoinAndSelect('ticket.performance', 'performance')
           .innerJoinAndSelect('performance.host', 'host')
-          .innerJoinAndSelect('performance.stream', 'stream')
+          .innerJoinAndSelect('performance.asset_group', 'group')
+          .innerJoinAndSelect('group.assets', 'assets')
           .innerJoinAndSelect('invoice.user', 'user')
           .withDeleted()
           .getOne();
 
-        const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id, {
-          stripeAccount: invoice.ticket.performance.host.stripe_account_id
-        });
+        const intent = await this.providers.stripe.connection.paymentIntents.retrieve(
+          invoice.stripe_payment_intent_id,
+          { expand: ['payment_method'] },
+          {
+            stripeAccount: invoice.ticket.performance.host.stripe_account_id
+          }
+        );
 
-        return invoice.toHostInvoice(charge);
+        return invoice.toHostInvoice(intent);
       }
     };
   }
@@ -742,7 +762,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
             amount: 'invoice.amount',
             purchased_at: 'invoice.purchased_at'
           })
-          .innerJoinAndSelect('performance.stream', 'stream')
+          .innerJoinAndSelect('performance.asset_group', 'group')
+          .innerJoinAndSelect('group.assets', 'assets')
           // .withDeleted() // tickets & performances can be soft deleted
           .paginate(i => i.toHostInvoiceStub());
       }
@@ -755,15 +776,11 @@ export default class HostController extends BaseController<BackendProviderMap> {
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));
-
-        // TODO: Add back CSV
-        // await Queue.enqueue({
-        //   type: JobType.HostInvoiceCSV,
-        //   data: {
-        //     invoices: req.body.invoices,
-        //     email_address: h.email_address
-        //   }
-        // });
+        await this.providers.bus.publish(
+          'host.invoice-export',
+          { format: 'csv', invoice_ids: req.body.invoices, email_address: h.email_address },
+          req.locale
+        );
       }
     };
   }
@@ -774,15 +791,11 @@ export default class HostController extends BaseController<BackendProviderMap> {
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));
-
-        // TODO: Add back PDF
-        // await Queue.enqueue({
-        //   type: JobType.HostInvoicePDF,
-        //   data: {
-        //     invoices: req.body.invoices,
-        //     email_address: h.email_address
-        //   }
-        // });
+        await this.providers.bus.publish(
+          'host.invoice-export',
+          { format: 'pdf', invoice_ids: req.body.invoices, email_address: h.email_address },
+          req.locale
+        );
       }
     };
   }

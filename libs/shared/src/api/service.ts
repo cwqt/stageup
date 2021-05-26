@@ -71,7 +71,7 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
       app.use(globalErrorHandler(config.logger, i18n));
 
       server = app.listen(config.port, () =>
-        config.logger.info(`\u001B[1m${config.name} listening on ${config.port}\u001B[0m at ${config.endpoint}`)
+        config.logger.info(`\u001B[1m${config.name} listening on ${config.port}\u001B[0m at ${config.endpoint || '/'}`)
       );
 
       process.on('SIGTERM', gracefulExit(server, providers, config.logger));

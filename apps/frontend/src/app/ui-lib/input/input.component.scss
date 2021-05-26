@@ -154,6 +154,11 @@ $animation-duration: 0.2s;
   }
 }
 
+.form-field__input {
+  position: relative;
+  z-index: 2;
+}
+
 .form-field__input,
 .form-field__textarea {
   appearance: none;
@@ -346,8 +351,37 @@ ui-icon {
     display: block;
     margin-bottom: 5px;
   }
-  quill-editor ::ng-deep * {
-    font-size: 16px !important;
+  .form-field__control {
+    padding-top: 12px !important;
+  }
+
+  quill-editor ::ng-deep {
+    position: relative;
+
+    * {
+      font-size: 16px !important;
+    }
+
+    // placeholder text
+    .ql-editor.ql-blank::before {
+      left: 0 !important;
+      right: 0 !important;
+      font-style: normal !important;
+    }
+    .ql-container,
+    .ql-toolbar {
+      border: 0 !important;
+      background-color: #f6f6f6 !important;
+    }
+    .ql-toolbar {
+      margin-left: -8px !important;
+      padding: 0 !important;
+    }
+    .ql-editor {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      line-height: 1.5;
+    }
   }
 }
 
@@ -360,5 +394,14 @@ ui-icon {
 .form-field__money {
   input {
     opacity: 0;
+  }
+}
+
+.form-field__toggle {
+  mat-label {
+    vertical-align: top;
+    line-height: 24px;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 }

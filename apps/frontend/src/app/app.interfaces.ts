@@ -1,5 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { i18nToken, Primitive } from '@core/interfaces';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Except } from 'type-fest';
 
 /**
  * @description Wrapper around requests to do common actions when making requests
@@ -58,7 +60,37 @@ export const createICacheable = <T = any>(
   };
 };
 
-// Put these enums here to prevent circular dependency
+/**
+ * @description Class-based cachable, now reactive & backwards compatible with ICacheable
+ */
+export class Cacheable<T> implements ICacheable<T> {
+  public $loading: BehaviorSubject<boolean>;
+  public data: T;
+  public formErrors?: { [index: string]: Array<[i18nToken, string]> };
+  public error: string | HttpErrorResponse | null;
+  public meta: { [index: string]: any };
+
+  constructor(cache?: ICacheable<T>) {
+    this.$loading = new BehaviorSubject(cache?.loading || false);
+    this.data = cache?.data || null;
+    this.meta = cache?.meta || {};
+    this.formErrors = cache?.form_errors || {};
+    this.error = cache?.error || '';
+  }
+
+  set loading(value: boolean) {
+    this.$loading.next(value);
+  }
+
+  get loading() {
+    return this.$loading.getValue();
+  }
+
+  async request(p: Promise<T>) {
+    return cachize(p, this);
+  }
+}
+
 export enum LocalStorageKey {
-  Myself = 'myself'
+  Myself = '__myself'
 }

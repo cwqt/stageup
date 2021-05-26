@@ -46,7 +46,7 @@
           "configurations": {
             "development": {
               "buildTarget": "backend:build:development",
-              "inspect": false,
+              "inspect": true,
               "port": 7777
             },
             "testing": {
@@ -113,7 +113,7 @@
             ],
             "scripts": [],
             "i18nMissingTranslation": "warning",
-            "localize": ["nb"]
+            "localize": ["en"]
           },
           "configurations": {
             "en": { "localize": ["en"] },

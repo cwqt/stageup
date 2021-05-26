@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { stringifyRichText } from '@core/helpers';
 import { capitalize, CurrencyCode, DtoCreatePatronTier, IPatronTier } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
@@ -81,7 +82,7 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
       name: v.name,
       currency: CurrencyCode.GBP,
       amount: v.amount * 100, // TODO: support more than pence
-      description: JSON.parse(v.description).ops
+      description: stringifyRichText(v.description)
     };
   }
 }

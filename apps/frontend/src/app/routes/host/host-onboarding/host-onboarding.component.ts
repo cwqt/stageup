@@ -9,16 +9,19 @@ import {
   IHost,
   IHostOnboarding,
   IOnboardingStep,
-  ISOCountryCode,
-  PersonTitle
+  CountryCode,
+  PersonTitle,
+  IOnboardingStepMap
 } from '@core/interfaces';
-import { enumToValues } from '@core/helpers';
+import { enumToValues, to } from '@core/helpers';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { IUiFormField, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { flatten } from 'flat';
 import { TicketTypePipe } from '@frontend/_pipes/ticket-type.pipe';
+import iso3166 from 'i18n-iso-countries';
+import parsePhoneNumberFromString from 'libphonenumber-js';
 
 interface IUiStep<T> {
   label: string;
@@ -26,7 +29,7 @@ interface IUiStep<T> {
   data: IOnboardingStep<T> | null;
 }
 
-// phone(v, ISOCountryCode.GBR)
+// phone(v, CountryCode.GBR)
 
 @Component({
   selector: 'app-host-onboarding',
@@ -83,64 +86,76 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
     this.stepUiMap = {
       [HostOnboardingStep.ProofOfBusiness]: {
-        label: 'Proof of Business',
+        label: $localize`Proof of Business`,
         data: null,
         form: new UiForm(
           {
-            // prefetch: async () => this.prefetchStepData(HostOnboardingStep.ProofOfBusiness),
             fields: {
               hmrc_company_number: UiField.Number({
-                label: 'HMRC Company Number',
+                label: $localize`HMRC Company Number`,
                 validators: [
                   { type: 'minlength', value: 8 },
                   { type: 'maxlength', value: 8 }
                 ]
               }),
               business_contact_number: UiField.Phone({
-                label: 'Business Contact Number',
-                hint: 'Of the form 1724 123321, no leading zero',
+                label: $localize`Business Contact Number`,
+                hint: $localize`Of the form 1724 123321, no leading zero`,
                 validators: [{ type: 'required' }]
               }),
               business_address: UiField.Container({
-                label: 'Business Address',
-                fields: {
+                label: $localize`Business Address`,
+                fields: to<
+                  {
+                    [index in keyof IOnboardingStepMap[HostOnboardingStep.ProofOfBusiness]['data']['business_address']]: IUiFormField;
+                  }
+                >({
                   city: UiField.Text({
-                    label: 'City',
+                    label: $localize`City`,
                     validators: [{ type: 'required' }]
                   }),
-                  iso_country_code: UiField.Select({
-                    label: 'Country',
+                  country: UiField.Select({
+                    label: $localize`Country`,
                     has_search: true,
-                    values: Object.keys(ISOCountryCode).reduce((acc, curr) => {
-                      acc.set(curr, { label: ISOCountryCode[curr] });
+                    values: Object.keys(CountryCode).reduce((acc, curr) => {
+                      acc.set(curr, { label: iso3166.getName(CountryCode[curr], navigator.language) });
                       return acc;
                     }, new Map()),
                     validators: [{ type: 'required' }]
                   }),
-                  postcode: UiField.Text({
-                    label: 'Postcode',
+                  postal_code: UiField.Text({
+                    label: $localize`Postcode`,
                     validators: [
                       { type: 'required' },
                       {
                         type: 'custom',
                         value: v => isPostalCode(v.value, 'GB'),
-                        message: () => `Not a valid postal code`
+                        message: () => $localize`Not a valid postal code`
                       }
                     ]
                   }),
-                  street_number: UiField.Number({
-                    label: 'Street Number',
+                  line1: UiField.Text({
+                    label: $localize`Address Line 1`,
                     validators: [{ type: 'required' }]
                   }),
-                  street_name: UiField.Text({
-                    label: 'Street Name',
-                    validators: [{ type: 'required' }]
+                  line2: UiField.Text({
+                    label: $localize`Address Line 2`,
+                    validators: []
                   })
-                }
+                })
               })
             },
             resolvers: {
-              output: async v => this.handleStepCompletion(v, HostOnboardingStep.ProofOfBusiness),
+              output: async v =>
+                this.handleStepCompletion(
+                  {
+                    ...v,
+                    business_contact_number: parsePhoneNumberFromString(
+                      `+44${v.business_contact_number}`
+                    ).formatInternational()
+                  },
+                  HostOnboardingStep.ProofOfBusiness
+                ),
               input: async () => this.prefetchStepData(HostOnboardingStep.ProofOfBusiness)
             }
           },
@@ -148,28 +163,31 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
         )
       },
       [HostOnboardingStep.OwnerDetails]: {
-        label: 'Owner Details',
+        label: $localize`Owner Details`,
         data: null,
         form: new UiForm(
           {
             fields: {
-              owner_info: UiField.Container({
-                label: 'Owner Information',
-                fields: {
-                  title: UiField.Select({
-                    label: 'Title',
-                    values: new Map(enumToValues(PersonTitle).map(title => [title, { label: capitalize(title) }])),
-                    validators: [{ type: 'required' }]
-                  }),
-                  first_name: UiField.Text({
-                    label: 'First name',
-                    validators: [{ type: 'required' }]
-                  }),
-                  last_name: UiField.Text({
-                    label: 'Last name',
-                    validators: [{ type: 'required' }]
-                  })
-                }
+              title: UiField.Select({
+                label: $localize`Title`,
+                values: new Map<PersonTitle, { label: string }>([
+                  [PersonTitle.Mr, { label: $localize`Mr` }],
+                  [PersonTitle.Miss, { label: $localize`Miss` }],
+                  [PersonTitle.Mrs, { label: $localize`Mrs` }],
+                  [PersonTitle.Ms, { label: $localize`Ms` }],
+                  [PersonTitle.Dr, { label: $localize`Dr` }],
+                  [PersonTitle.Professor, { label: $localize`Professor` }],
+                  [PersonTitle.Master, { label: $localize`Master` }]
+                ]),
+                validators: [{ type: 'required' }]
+              }),
+              first_name: UiField.Text({
+                label: $localize`First name`,
+                validators: [{ type: 'required' }]
+              }),
+              last_name: UiField.Text({
+                label: $localize`Last name`,
+                validators: [{ type: 'required' }]
               })
             },
             resolvers: {
@@ -181,23 +199,22 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
         )
       },
       [HostOnboardingStep.SocialPresence]: {
-        label: 'Social Presence',
+        label: $localize`Social Presence`,
         data: null,
         form: new UiForm(
           {
             fields: {
-              social_info: UiField.Container({
-                label: 'Social Information',
-                fields: {
-                  site_url: UiField.Text({ label: 'Website' }),
-                  linkedin_url: UiField.Text({ label: 'LinkedIn' }),
-                  facebook_url: UiField.Text({ label: 'Facebook' }),
-                  instagram_url: UiField.Text({ label: 'Instagram' })
-                }
-              })
+              site_url: UiField.Text({ label: $localize`Website` }),
+              linkedin_url: UiField.Text({ label: 'LinkedIn' }),
+              facebook_url: UiField.Text({ label: 'Facebook' }),
+              instagram_url: UiField.Text({ label: 'Instagram' })
             },
             resolvers: {
-              output: async formData => this.handleStepCompletion(formData, HostOnboardingStep.SocialPresence),
+              output: async formData =>
+                this.handleStepCompletion(
+                  Object.keys(formData).reduce((acc, curr) => ((acc[curr] = formData[curr] || undefined), acc), {}),
+                  HostOnboardingStep.SocialPresence
+                ),
               input: async () => this.prefetchStepData(HostOnboardingStep.SocialPresence)
             }
           },
@@ -273,7 +290,8 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   handleSelectionChange(event: StepperSelectionEvent) {
     // Review step is the final step after all onboarding stages
     this.onReviewStep = event.selectedIndex == Object.keys(this.stepUiMap).length;
-    if (!this.onReviewStep) this.switchStep(event.selectedIndex);
+    if (!this.onReviewStep)
+      this.switchStep(Object.keys(this.stepCacheables)[event.selectedIndex] as HostOnboardingStep);
   }
 
   handleStepCompletion(formData: any, step: HostOnboardingStep) {

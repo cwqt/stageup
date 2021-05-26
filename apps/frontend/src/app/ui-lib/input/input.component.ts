@@ -14,7 +14,7 @@ import {} from '@angular/material/autocomplete';
 import { MatDateRangeInput } from '@angular/material/datepicker';
 import { MatSelect } from '@angular/material/select';
 import { Primitive } from '@core/interfaces';
-import { ContentChange, QuillModules } from 'ngx-quill';
+import { ContentChange, QuillEditorComponent, QuillModules } from 'ngx-quill';
 import { ReplaySubject, Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { IUiFieldOptions, IUiFieldType, IUiFieldTypeOptions, IUiFormField } from '../form/form.interfaces';
@@ -278,6 +278,8 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   @ViewChild(MatDateRangeInput, { static: false }) pickerInput: MatDateRangeInput<Date>;
 
   // ngx-quill Rich Text --------------------------------------------------------------------------------
+  @ViewChild('quill') quill: QuillEditorComponent;
+
   initialiseRichText() {
     this.richTextModules = this.data.options['modules'] || {
       toolbar: [
@@ -288,7 +290,5 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
     };
   }
 
-  richTextChanged(event: ContentChange) {
-    console.log(event);
-  }
+  richTextChanged(event: ContentChange) {}
 }

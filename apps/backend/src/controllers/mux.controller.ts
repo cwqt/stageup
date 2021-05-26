@@ -13,7 +13,9 @@ import {
   BaseController,
   getCheck,
   IControllerEndpoint,
-  AssetGroup
+  AssetGroup,
+  VideoAsset,
+  LiveStreamAsset
 } from '@core/api';
 import { timeout, timestamp, uuid } from '@core/helpers';
 import { LiveStream, Webhooks } from '@mux/mux-node';
@@ -55,22 +57,24 @@ export default class MUXController extends BaseController<BackendProviderMap> {
 
   async videoAssetReady(data: IMUXHookResponse<MuxAsset>) {
     const passthrough: IMuxPassthrough = JSON.parse(data.data.passthrough);
-    const asset = await getCheck(
-      Asset.findOne<Asset<AssetType.Video>>({ _id: passthrough.asset_id })
-    );
+    const asset = await getCheck(VideoAsset.findOne({ _id: passthrough.asset_id }));
 
     // Now we have a playback Id & can set the source location on the asset
     const assetInfo = await this.providers.mux.connection.Video.Assets.get(asset.asset_identifier);
-    asset.meta.playback_id = assetInfo.playback_ids.find(p => p.policy == 'public').id;
+    asset.meta.playback_id = assetInfo.playback_ids.find(
+      p => p.policy == (asset.signing_key__id ? 'signed' : 'public')
+    ).id;
+
     asset.location = asset.getLocation();
     await asset.save();
 
-    // delete all other videos but this one (not that there should be more than 1), since this is the latest video
+    // delete the last trailer video associated with this group, only one trailer / performances
     const group = await AssetGroup.findOne({ _id: passthrough.asset_group_id });
     await Promise.all(
       group.assets
         .filter(a => a.type == AssetType.Video && a._id !== passthrough.asset_id)
-        .map(a => a.delete(this.providers.mux)) // deletes both Asset & Mux Asset
+        .filter(a => a.tags.includes('trailer'))
+        .map((a: VideoAsset) => a.delete(this.providers.mux)) // deletes both Asset & Mux Asset
     );
   }
 
@@ -86,27 +90,14 @@ export default class MUXController extends BaseController<BackendProviderMap> {
   async videoAssetDeleted(passthrough: IMuxPassthrough, data: IMUXHookResponse<MuxAsset>) {}
 
   async setPerformanceState(passthrough: IMuxPassthrough, state: LiveStreamState) {
-    const performance = await getCheck(
-      Performance.findOne({
-        where: {
-          stream: {
-            _id: passthrough.asset_id
-          }
-        },
-        select: {
-          _id: true,
-          stream: {
-            _id: true,
-            asset_identifier: true
-          }
-        }
-      })
-    );
+    const stream = await getCheck(LiveStreamAsset.findOne({ _id: passthrough.asset_id }));
+    stream.meta.state = state;
+    await stream.save();
 
     await this.providers.bus.publish(
       'live_stream.state_changed',
       {
-        performance_id: performance._id,
+        asset_id: passthrough.asset_id,
         state: state
       },
       { language: 'en', region: 'GB' }
@@ -161,7 +152,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
         // Is a valid hook & we should handle it
         const data: IMUXHookResponse = req.body;
 
-        // TODO: At some point we'll want to add these hooks to a FIFO task queue and just respond with a 200
+        // FUTURE At some point we'll want to add these hooks to a FIFO task queue and just respond with a 200
         // for acknowledged handling, hook then handled by a separate micro-service
         log.http(`Received MUX hook: ${data.type}`);
 

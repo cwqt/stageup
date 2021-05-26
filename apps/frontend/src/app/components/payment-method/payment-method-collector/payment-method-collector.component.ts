@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { IPaymentMethodStub, ISOCountryCode } from '@core/interfaces';
+import { IPaymentMethodStub, CountryCode } from '@core/interfaces';
 import { createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { MyselfService } from '@frontend/services/myself.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
@@ -32,29 +32,29 @@ export class PaymentMethodCollectorComponent implements OnInit, AfterViewInit {
     this.billingDetailsForm = new UiForm({
       fields: {
         city: UiField.Text({
-          label: 'City',
-          hint: 'City/District/Suburb/Town/Village',
+          label: $localize`City`,
+          hint: $localize`City/District/Suburb/Town/Village`,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 128 }],
           hide_footer: this.smaller
         }),
         line1: UiField.Text({
-          label: 'Address Line 1',
-          hint: 'Street address/PO Box/Company name',
+          label: $localize`Address Line 1`,
+          hint: $localize`Street address/PO Box/Company name`,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 128 }],
           hide_footer: this.smaller
         }),
         line2: UiField.Text({
-          label: 'Address Line 2',
-          hint: 'Apartment/Suite/Unit/Building',
+          label: $localize`Address Line 2`,
+          hint: $localize`Apartment/Suite/Unit/Building`,
           validators: [{ type: 'maxlength', value: 128 }],
           hide_footer: this.smaller
         }),
-        // TODO: add different countries when going global
+        // FUTURE Add different countries when going global
         // country: UiField.Select({
         //   label: 'Country',
         //   has_search: true,
         //   // Stripe uses ISO-3166-Alpha-2
-        //   values: Object.keys(ISOCountryCode).reduce((acc, curr) => {
+        //   values: Object.keys(CountryCode).reduce((acc, curr) => {
         //     const d = whereAlpha3(curr);
         //     if (!d) return acc;
         //     acc.set(d.alpha2, { label: d.country });
@@ -63,14 +63,14 @@ export class PaymentMethodCollectorComponent implements OnInit, AfterViewInit {
         //   validators: [{ type: 'required' }]
         // }),
         postal_code: UiField.Text({
-          label: 'Postcode',
+          label: $localize`Postcode`,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 128 }],
           width: 6,
           hide_footer: this.smaller
         }),
         state: UiField.Text({
-          label: 'County',
-          hint: 'State/County/Province/Region',
+          label: $localize`County`,
+          hint: $localize`State/County/Province/Region`,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 128 }],
           width: 6,
           hide_footer: this.smaller
@@ -95,8 +95,11 @@ export class PaymentMethodCollectorComponent implements OnInit, AfterViewInit {
     this.billingDetailsForm.group.disable();
 
     try {
-      // TODO: add different countries when going global
-      const res = await this.card.createPaymentMethod({ ...this.billingDetailsForm.group.value, country: 'GB' });
+      // FUTURE Add different countries when going global
+      const res = await this.card.createPaymentMethod({
+        ...this.billingDetailsForm.group.value,
+        country: CountryCode.GB
+      });
       if (res.error) {
         this.createdPaymentMethod.error = res.error.message;
       } else {

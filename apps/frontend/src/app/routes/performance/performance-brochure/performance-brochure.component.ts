@@ -14,19 +14,18 @@ import {
   IPerformance,
   IPerformanceStub,
   ITicketStub,
-  PurchaseableEntityType
+  PurchaseableType
 } from '@core/interfaces';
-import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
-import { PaymentIntent, StripeError } from '@stripe/stripe-js';
 import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
+import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
 import { PlayerComponent } from '@frontend/components/player/player.component';
-import { RegisterDialogComponent } from '@frontend/routes/landing/register-dialog/register-dialog.component';
+import { BaseAppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { MyselfService } from '@frontend/services/myself.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
-import { LoginComponent } from '@frontend/routes/landing/login/login.component';
+import { PaymentIntent, StripeError } from '@stripe/stripe-js';
 
 @Component({
   selector: 'performance-brochure',
@@ -61,6 +60,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     private myselfService: MyselfService,
     private performanceService: PerformanceService,
     private helperService: HelperService,
+    private appService: BaseAppService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<PerformanceBrochureComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IPerformanceStub
@@ -69,7 +69,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   async ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
     await cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable).then(d => {
-      this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video);
+      this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
       return d;
     });
   }
@@ -129,9 +129,9 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       this.performanceService.createTicketPaymentIntent.bind(this.performanceService),
       {
         payment_method_id: this.paymentMethod.selectionModel.selected[0]._id,
-        purchaseable_type: PurchaseableEntityType.Ticket,
+        purchaseable_type: PurchaseableType.Ticket,
         purchaseable_id: this.selectedTicket._id,
-        options: this.donoPegSelectForm && {
+        options: {
           selected_dono_peg: this.donoPegSelectForm?.group?.value?.pegs,
           allow_any_amount: this.donoPegSelectForm?.group?.value?.allow_any_amount
         }
@@ -158,11 +158,11 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   }
 
   openRegister() {
-    this.helperService.showDialog(this.dialog.open(RegisterDialogComponent), () => {});
+    this.appService.navigateTo(`/register`);
   }
 
   openLogin() {
-    this.helperService.showDialog(this.dialog.open(LoginComponent), () => {});
+    this.appService.navigateTo(`/login`);
   }
 
   updatePayButtonWithDono(event: FormGroup) {

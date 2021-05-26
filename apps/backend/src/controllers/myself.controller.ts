@@ -85,10 +85,10 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
         if (fetchAll || req.query['upcoming'])
           feed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
-            .where('p.premiere_date > :currentTime', { currentTime: timestamp() })
+            .where('p.premiere_datetime > :currentTime', { currentTime: timestamp() })
             .andWhere('p.visibility = :state', { state: Visibility.Public })
             .innerJoinAndSelect('p.host', 'host')
-            .orderBy('p.premiere_date')
+            .orderBy('p.premiere_datetime')
             .paginate(p => p.toStub(), {
               page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
               per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
@@ -144,15 +144,18 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     return {
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        return await AccessToken.createQueryBuilder('token')
-          .where('token.user__id = :uid', { uid: req.session.user._id })
-          .leftJoinAndSelect('token.performance', 'performance')
-          .andWhere('LOWER(performance.name) LIKE :name', {
-            name: req.query.name ? `%${(req.query.name as string).toLowerCase()}%` : '%'
+        return await this.ORM.createQueryBuilder(Invoice, 'invoice')
+          .where('invoice.user__id = :user_id', { user_id: req.session.user._id })
+          .leftJoinAndSelect('invoice.ticket', 'ticket')
+          .leftJoinAndSelect('ticket.performance', 'performance')
+          .filter({
+            performance_name: { subject: 'performance.name' }
           })
-          .leftJoinAndSelect('performance.host', 'host')
-          .innerJoinAndSelect('performance.stream', 'stream')
-          .paginate(t => t.performance.toStub());
+          .innerJoinAndSelect('performance.host', 'host')
+          .innerJoinAndSelect('performance.asset_group', 'group')
+          .innerJoinAndSelect('group.assets', 'assets')
+          .withDeleted() // ticket/performance can be soft removed
+          .paginate(i => i.ticket.performance.toStub());
       }
     };
   }
@@ -177,7 +180,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             amount: 'invoice.amount',
             purchased_at: 'invoice.purchased_at'
           })
-          .innerJoinAndSelect('performance.stream', 'stream')
+          .innerJoinAndSelect('performance.asset_group', 'group')
+          .innerJoinAndSelect('group.assets', 'assets')
           .withDeleted() // ticket/performance can be soft removed
           .paginate(i => i.toUserInvoiceStub());
       }
@@ -219,15 +223,22 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           .innerJoinAndSelect('invoice.ticket', 'ticket')
           .innerJoinAndSelect('ticket.performance', 'performance')
           .innerJoinAndSelect('performance.host', 'host')
-          .innerJoinAndSelect('performance.stream', 'stream')
+          .innerJoinAndSelect('performance.asset_group', 'group')
+          .innerJoinAndSelect('group.assets', 'assets')
           .innerJoinAndSelect('invoice.user', 'user')
           .withDeleted()
           .getOne();
 
-        const charge = await this.providers.stripe.connection.charges.retrieve(invoice.stripe_charge_id, {
-          stripeAccount: invoice.ticket.performance.host.stripe_account_id
-        });
-        return invoice.toHostInvoice(charge);
+        const charge = await this.providers.stripe.connection.paymentIntents.retrieve(
+          invoice.stripe_payment_intent_id,
+          {
+            expand: ['payment_method']
+          },
+          {
+            stripeAccount: invoice.ticket.performance.host.stripe_account_id
+          }
+        );
+        return invoice.toUserInvoice(charge);
       }
     };
   }
@@ -244,7 +255,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
               user: true
             },
             where: {
-              _id: req.body.invoice_id,
+              _id: req.params.invoice_id,
               user: {
                 _id: req.session.user._id
               }
@@ -287,8 +298,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     return {
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        // TODO: set default payment source
-
+        // TODO: Set default payment source: https://alacrityfoundationteam31.atlassian.net/browse/SU-884
         const paymentMethodId = req.body.stripe_method_id;
         const paymentMethod = await this.providers.stripe.connection.paymentMethods.retrieve(paymentMethodId);
 

@@ -1,64 +1,93 @@
-<div *ngIf="!host.loading && host.data">
-  <!-- Banner  -->
-  <div class="host-profile-header bg-white rounded shadow-sm">
-    <div class="banner-picture__container relative overflow-hidden rounded">
-      <img class="object-cover w-full" [src]="host.data.banner || '/assets/banner-placeholder.png'" />
-      <ui-button *ngIf="isHostView" (click)="openChangeBannerDialog()" class="absolute top-2 left-2"
-        icon="paint-brush--alt" kind="accent">
-        Change banner
-      </ui-button>
-    </div>
+<app-page>
+  <div body *ngIf="!host.loading && host.data">
+    <!-- Banner  -->
+    <div class="host-profile-header bg-white rounded shadow-sm">
+      <div class="banner-picture__container relative overflow-hidden rounded">
+        <img class="object-cover w-full" [src]="host.data.banner || '/assets/banner-placeholder.png'" />
+        <ui-button
+          *ngIf="isHostView"
+          (click)="openChangeBannerDialog()"
+          class="absolute top-2 left-2"
+          icon="paint-brush--alt"
+          kind="accent"
+        >
+          <span i18n>Change banner</span>
+        </ui-button>
+      </div>
 
-    <!-- Profile Image  -->
-    <div class="profile-picture__container relative pl-4">
-      <img [src]="host.data.avatar || '/assets/avatar-placeholder.png'"
-        class="square object-cover absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100">
-      <ui-button *ngIf="isHostView" (click)="openChangeAvatarDialog()" icon="paint-brush--alt"
-        class="z-10 absolute top-2 left-2" kind="accent">
-        Edit
-      </ui-button>
-    </div>
+      <!-- Profile Image  -->
+      <div class="profile-picture__container relative pl-4">
+        <img
+          [src]="host.data.avatar || '/assets/avatar-placeholder.png'"
+          class="square object-cover absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100"
+        />
+        <ui-button
+          *ngIf="isHostView"
+          (click)="openChangeAvatarDialog()"
+          icon="paint-brush--alt"
+          class="z-10 absolute top-2 left-2"
+          kind="accent"
+        >
+          <span i18n>Edit</span>
+        </ui-button>
+      </div>
 
-    <!-- Offset by 64 + 4 for abs positioned image -->
-    <div class="ml-8 pl-64 mt-14 p-4 pb-0 relative">
-      <div>
-        <h1 class="text-7xl mb-2">{{ host.data.name }}</h1>
-        <div class="flex align-middle justify-between mb-2">
-          <p class="flex-grow mr-2 mb-0 flex items-center">
-            <span class="text-lg opacity-75 mr-4">@{{ host.data.username }}</span>
-            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('site_url')"
-              *ngIf="host.data.social_info.site_url">wikis</ui-icon>
-            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('facebook_url')"
-              *ngIf="host.data.social_info.facebook_url">logo--facebook</ui-icon>
-            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('instagram_url')"
-              *ngIf="host.data.social_info.instagram_url">logo--instagram</ui-icon>
-            <ui-icon class="cursor-pointer mr-2" (click)="openSocialLink('linkedin_url')"
-              *ngIf="host.data.social_info.linkedin_url">logo--linkedin</ui-icon>
-          </p>
+      <!-- Offset by 64 + 4 for abs positioned image -->
+      <div class="ml-8 pl-64 mt-14 p-4 pb-0 relative">
+        <div>
+          <h1 class="text-7xl mb-2">{{ host.data.name }}</h1>
+          <div class="flex align-middle justify-between mb-2">
+            <p class="flex-grow mr-2 mb-0 flex items-center">
+              <span class="text-lg opacity-75 mr-4">@{{ host.data.username }}</span>
+              <ui-icon
+                class="cursor-pointer mr-2"
+                (click)="openSocialLink('site_url')"
+                *ngIf="host.data.social_info.site_url"
+                >wikis</ui-icon
+              >
+              <ui-icon
+                class="cursor-pointer mr-2"
+                (click)="openSocialLink('facebook_url')"
+                *ngIf="host.data.social_info.facebook_url"
+                >logo--facebook</ui-icon
+              >
+              <ui-icon
+                class="cursor-pointer mr-2"
+                (click)="openSocialLink('instagram_url')"
+                *ngIf="host.data.social_info.instagram_url"
+                >logo--instagram</ui-icon
+              >
+              <ui-icon
+                class="cursor-pointer mr-2"
+                (click)="openSocialLink('linkedin_url')"
+                *ngIf="host.data.social_info.linkedin_url"
+                >logo--linkedin</ui-icon
+              >
+            </p>
 
-          <div class="flex absolute right-2 top-0 w-auto">
-            <ui-button [transparent]="true" class="flex-1" size="m">
-              <ui-icon size="l">overflow-menu--horizontal</ui-icon>
-            </ui-button>
-            <ui-button class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="add" kind="primary">Follow
-            </ui-button>
+            <div class="flex absolute right-2 top-0 w-auto">
+              <ui-button [transparent]="true" class="flex-1" size="m">
+                <ui-icon size="l">overflow-menu--horizontal</ui-icon>
+              </ui-button>
+              <ui-button class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="add" kind="primary"
+                ><span i18n>Follow</span>
+              </ui-button>
+            </div>
           </div>
 
+          <p *ngIf="host.data.bio">{{ host.data.bio }}</p>
         </div>
 
-        <p *ngIf="host.data.bio">{{ host.data.bio }}</p>
-      </div>
-
-      <div class="flex">
-        <mat-tab-group (selectedTabChange)="openTabLink($event)" class="flex-shrink">
-          <mat-tab *ngFor="let tab of tabs" [disabled]="tab.route == null" [label]="tab.label">
-          </mat-tab>
-        </mat-tab-group>
+        <div class="flex">
+          <mat-tab-group (selectedTabChange)="openTabLink($event)" class="flex-shrink">
+            <mat-tab *ngFor="let tab of tabs" [disabled]="tab.route == null" [label]="tab.label"> </mat-tab>
+          </mat-tab-group>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="bg-white mt-4 rounded p-4 shadow">
-    <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
+    <div class="bg-white mt-4 rounded p-4 shadow">
+      <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
+    </div>
   </div>
-</div>
+</app-page>

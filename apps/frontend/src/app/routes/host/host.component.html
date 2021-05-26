@@ -1,17 +1,17 @@
 <div class="flex items-stretch h-full w-full" *ngIf="host.data">
-    <div *ngIf="myself.host_info.permissions == hostPermission.Pending">
-      <h1>Pending acceptance of invitation</h1>
-      <ui-hr></ui-hr>
-      <p>Please check your e-mail for the invitation link to join this company.</p>
-    </div>
+  <div *ngIf="myself.host_info.permissions == hostPermission.Pending">
+    <h1 i18n>Pending acceptance of invitation</h1>
+    <ui-hr></ui-hr>
+    <p i18n>Please check your e-mail for the invitation link to join this company.</p>
+  </div>
 
-    <div *ngIf="myself.host_info.permissions == hostPermission.Expired">
-      <h1>Invitation has expired</h1>
-      <ui-hr></ui-hr>
-      <p>Your invitation has expired, please request another one from a company administrator.</p>
-    </div>
+  <div *ngIf="myself.host_info.permissions == hostPermission.Expired">
+    <h1 i18n>Invitation has expired</h1>
+    <ui-hr></ui-hr>
+    <p i18n>Your invitation has expired, please request another one from a company administrator.</p>
+  </div>
 
-    <ng-container *ngIf="myself.host_info.permissions < hostPermission.Pending && host.data">
-      <router-outlet (activate)="onOutletLoaded($event)"></router-outlet>
-    </ng-container>
+  <ng-container *ngIf="myself.host_info.permissions < hostPermission.Pending && host.data">
+    <router-outlet (activate)="onOutletLoaded($event)"></router-outlet>
+  </ng-container>
 </div>

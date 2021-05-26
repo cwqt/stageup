@@ -44,8 +44,15 @@ const applications: {
     cmd: {
       // FIXME: use configuration composition https://github.com/nrwl/nx/issues/2839
       // https://ngrefs.com/latest/cli/builder-browser#localize
-      serve: env => `${applications.frontend.cmd['set-env'](env)} && nx serve frontend --configuration=${env}`,
-      build: env => `${applications.frontend.cmd['set-env'](env)} && nx build frontend --configuration=${env}`,
+      // Pass locale to process.env for set-env.ts to add
+      serve: (env, locale) =>
+        `cross-env LOCALE=${locale} ${applications.frontend.cmd['set-env'](
+          env
+        )} && nx serve frontend --configuration=${env}`,
+      build: (env, locale) =>
+        `cross-env LOCALE=${locale} ${applications.frontend.cmd['set-env'](
+          env
+        )} && nx build frontend --configuration=${env}`,
       ['extract-i18n']: () => `nx run frontend:extract-i18n && nx run frontend:xliffmerge`,
       ['set-env']: env => `ts-node ./apps/frontend/set-env.ts --env=${env}`
     },

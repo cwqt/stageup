@@ -7,6 +7,7 @@ import {
   DonoPeg,
   DONO_PEG_WEIGHT_MAPPING,
   DtoCreateTicket,
+  IHost,
   ITicket,
   ITicketStub,
   TicketFees,
@@ -32,6 +33,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
   @ViewChild('form') form: FormComponent;
   submit: EventEmitter<ITicketStub> = new EventEmitter();
   cancel: EventEmitter<void> = new EventEmitter();
+  host: IHost;
 
   buttons: UiDialogButton[];
   showDonoPegs: boolean = false;
@@ -40,7 +42,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
   ticket: ICacheable<ITicket> = createICacheable();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { operation: 'create' | 'update'; ticketId?: string },
+    @Inject(MAT_DIALOG_DATA) public data: { operation: 'create' | 'update'; ticketId?: string; host: IHost },
     private ref: MatDialogRef<CreateUpdateTicketComponent>,
     private toastService: ToastService,
     private performanceService: PerformanceService,
@@ -48,26 +50,28 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   ngOnInit(): void {
+    this.host = this.data.host;
+
     this.ticketForm = new UiForm({
       fields: {
         type: UiField.Radio({
-          label: 'Ticket type',
+          label: $localize`Ticket type`,
           validators: [{ type: 'required' }],
           disabled: this.data.operation == 'update',
-          initial: TicketType.Paid,
+          initial: this.host.stripe_account_id ? TicketType.Paid : TicketType.Free,
           values: new Map([
-            [TicketType.Paid, { label: 'Paid' }],
-            [TicketType.Free, { label: 'Free' }],
-            [TicketType.Donation, { label: 'Donation' }]
+            [TicketType.Paid, { label: $localize`Paid`, disabled: !this.host.stripe_account_id }],
+            [TicketType.Free, { label: $localize`Free` }],
+            [TicketType.Donation, { label: $localize`Donation`, disabled: !this.host.stripe_account_id }]
           ])
         }),
         name: UiField.Text({
-          label: 'Ticket title',
+          label: $localize`Ticket title`,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 64 }]
         }),
         dono_pegs: UiField.Container({
           header_level: 0,
-          label: 'Select Donation Amounts:',
+          label: $localize`Select Donation Amounts:`,
           hide: fg => fg.getRawValue()['type'] !== TicketType.Donation,
           fields: Object.entries(DONO_PEG_WEIGHT_MAPPING).reduce((acc, curr) => {
             const [peg, weight] = curr;
@@ -75,7 +79,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
               width: 4,
               label:
                 peg == 'allow_any'
-                  ? 'Allow Any'
+                  ? $localize`Allow Any`
                   : prettifyMoney(calculateAmountFromCurrency(CurrencyCode.GBP, weight), CurrencyCode.GBP)
             });
 
@@ -84,43 +88,43 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         }),
         amount: UiField.Money({
           width: 6,
-          label: 'Price',
+          label: $localize`Price`,
           currency: CurrencyCode.GBP,
           disabled: false,
           validators: [{ type: 'maxlength', value: 100 }, { type: 'required' }]
         }),
         quantity: UiField.Number({
           width: 6,
-          label: 'Quantity',
+          label: $localize`Quantity`,
           validators: [{ type: 'required' }]
         }),
         fees: UiField.Select({
-          label: 'Fees',
+          label: $localize`Fees`,
           validators: [{ type: 'required' }],
           values: new Map([
-            [TicketFees.Absorb, { label: 'Absorb Fees' }],
-            [TicketFees.PassOntoPurchaser, { label: 'Pass onto Purchaser' }]
+            [TicketFees.Absorb, { label: $localize`Absorb Fees` }],
+            [TicketFees.PassOntoPurchaser, { label: $localize`Pass onto Purchaser` }]
           ])
         }),
         start_datetime: UiField.Datetime({
           width: 6,
-          label: 'Sales start',
+          label: $localize`Sales start`,
           min_date: new Date(timestamp() * 1000),
           validators: [{ type: 'required' }]
         }),
         end_datetime: UiField.Datetime({
           width: 6,
-          label: 'Sales end',
+          label: $localize`Sales end`,
           min_date: new Date(timestamp() * 1000),
           validators: [{ type: 'required' }]
         }),
         visibility: UiField.Container({
-          label: 'Ticket Visibility',
+          label: $localize`Ticket Visibility`,
           header_level: 0,
           fields: {
             value: UiField.Checkbox({
               initial: false,
-              label: 'Hide this ticket type'
+              label: $localize`Hide this ticket type`
             })
           }
         })
@@ -174,13 +178,16 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       },
       handlers: {
         success: async ticket => {
-          this.toastService.emit(`${capitalize(this.data.operation)}d ticket: ${ticket.name}!`);
+          this.toastService.emit(
+            this.data.operation == 'update'
+              ? $localize`Updated ticket: ${ticket.name}!`
+              : $localize`Created ticket: ${ticket.name}!`
+          );
           this.submit.emit(ticket);
           this.ref.close(ticket);
         },
         failure: async () => {},
         changes: async f => {
-          console.log(f);
           if (f.value.type == TicketType.Free || f.value.type == TicketType.Donation) {
             f.controls.amount.disable({ emitEvent: false, onlySelf: true });
           } else {
@@ -192,12 +199,12 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Cancel',
+        label: $localize`Cancel`,
         kind: ThemeKind.Secondary,
         callback: () => this.ref.close()
       }),
       new UiDialogButton({
-        label: capitalize(this.data.operation),
+        label: this.data.operation == 'update' ? $localize`Update` : $localize`Create`,
         kind: ThemeKind.Primary,
         callback: () => this.ticketForm.submit()
       }).attach(this.ticketForm)

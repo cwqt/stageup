@@ -6,12 +6,13 @@
     <div class="absolute w-full bottom-0 left-0 mb-2 pr-4 pl-24 text-white flex items-center justify-between">
       @{{ performance.host.username }}
 
+      <!--
       <span *ngIf="isCurrentlyActive" class="flex items-center ml-auto">
         <ui-icon class="pr-2">view</ui-icon>
         {{ performance.views }}
         viewers
       </span>
-    </div>
+    --></div>
 
     <img
       class="w-full h-full object-cover"
@@ -26,7 +27,9 @@
   </div>
 
   <!-- stream status indicator -->
+  <!--
   <span *ngIf="isCurrentlyActive" class="performance-thumb__live absolute top-0 left-0 m-4"> ● LIVE </span>
+  -->
 
   <!-- host avatar -->
   <img

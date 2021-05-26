@@ -6,7 +6,9 @@ import {
   Environment,
   FilterQuery,
   NUUID,
-  Primitive
+  ParsedRichText,
+  Primitive,
+  RichText
 } from '@core/interfaces';
 import { nanoid } from 'nanoid';
 import QueryString from 'qs';
@@ -64,7 +66,7 @@ export const enumToValues = <T = string>(enumme: any, numberEnum: boolean = fals
  * like 1000 USD --> $10.00
  */
 export const prettifyMoney = (amount: number, currency: CurrencyCode) => {
-  // TODO: support locales other than en-GB money formatting
+  // FUTURE support locales other than en-GB money formatting
   return new Intl.NumberFormat('en-GB', { style: 'currency', currency: currency })
     .format(amount / 100) // amount should be stored in pennies
     .toString();
@@ -164,3 +166,8 @@ export const dateOrdinal = (date: Date, includeDay: boolean = false): string => 
 
   return includeDay ? `${i}${ordinal}` : ordinal;
 };
+
+export const parseRichText = (richtext: RichText): ParsedRichText => JSON.parse(richtext);
+export const stringifyRichText = (ops: any[]) => JSON.stringify({ ops: ops });
+export const readRichTextContent = (text: RichText | ParsedRichText) =>
+  (typeof text == 'string' ? parseRichText(text) : text).ops.reduce((acc, curr) => ((acc += curr.insert), acc), '');

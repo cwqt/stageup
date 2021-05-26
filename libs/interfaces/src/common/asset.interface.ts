@@ -19,21 +19,54 @@ export enum AssetType {
 
 export type AssetMetaUnion = {
   // S3 ------------------------
-  [AssetType.Image]: IStaticMeta;
+  [AssetType.Image]: {};
   // MUX -----------------------
-  [AssetType.Thumbnail]: IThumbnailMeta;
-  [AssetType.AnimatedGIF]: IGIFMeta;
-  [AssetType.Storyboard]: IStaticMeta;
-  [AssetType.LiveStream]: ILiveStreamMeta;
-  [AssetType.Video]: IVideoMeta;
+  //https://docs.mux.com/reference#get-thumbnail
+  [AssetType.Thumbnail]: {
+    time: number;
+    width: number;
+    height: number;
+    rotate: number;
+    fit_mode: 'preserve' | 'stretch' | 'crop' | 'smartcrop' | 'pad';
+    flip_v: boolean;
+    flip_h: boolean;
+  } & IMuxAsset;
+  //https://docs.mux.com/reference#animated-gifs
+  [AssetType.AnimatedGIF]: {
+    start: number; // of GIF
+    end: number; // end of GIF, delta t must be <= 10 seconds
+    width: number; // in px
+    height: number; // in px
+    fps: number; // default 15, max 30
+  } & IMuxAsset;
+  [AssetType.Storyboard]: {};
+  [AssetType.LiveStream]: { stream_key: string; state: LiveStreamState } & IMuxAsset;
+  [AssetType.Video]: { presigned_upload_url: string } & IMuxAsset;
 };
 
-// what gets sent to the client in IPerformance
-export interface IAssetStub<T extends keyof AssetMetaUnion = any> {
+export type DtoAssetMeta = {
+  // S3 ------------------------
+  [AssetType.Image]: {};
+  // MUX -----------------------
+  [AssetType.Thumbnail]: {};
+  [AssetType.AnimatedGIF]: {};
+  [AssetType.Storyboard]: {};
+  [AssetType.LiveStream]: { state: LiveStreamState };
+  [AssetType.Video]: {};
+};
+
+export type IAssetStub<T extends keyof AssetMetaUnion = any> = {
   _id: string;
   type: T;
   location: string;
-}
+  tags: AssetTag[];
+};
+
+export const AssetTags = ['primary', 'secondary', 'trailer'] as const;
+export type AssetTag = typeof AssetTags[number];
+
+// what gets sent to the client in IPerformance
+export type AssetDto<T extends keyof AssetMetaUnion = any> = IAssetStub<T> & DtoAssetMeta[T] & { is_signed: boolean };
 
 export interface IAsset<T extends keyof AssetMetaUnion = any> extends IAssetStub<T> {
   asset_identifier: string; // either MUX object_id or S3 key_id
@@ -44,35 +77,3 @@ export interface IAsset<T extends keyof AssetMetaUnion = any> extends IAssetStub
 export interface IMuxAsset {
   playback_id: string;
 }
-
-export interface ILiveStreamMeta extends IMuxAsset {
-  stream_key: string;
-  state: LiveStreamState;
-}
-
-//https://docs.mux.com/reference#animated-gifs
-export interface IGIFMeta extends IMuxAsset {
-  start: number; // of GIF
-  end: number; // end of GIF, delta t must be <= 10 seconds
-  width: number; // in px
-  height: number; // in px
-  fps: number; // default 15, max 30
-}
-
-//https://docs.mux.com/reference#get-thumbnail
-export interface IThumbnailMeta extends IMuxAsset {
-  time: number;
-  width: number;
-  height: number;
-  rotate: number;
-  fit_mode: 'preserve' | 'stretch' | 'crop' | 'smartcrop' | 'pad';
-  flip_v: boolean;
-  flip_h: boolean;
-}
-
-// S3 objects
-export interface IStaticMeta {
-  // key_id: string;
-}
-
-export interface IVideoMeta extends IMuxAsset {}

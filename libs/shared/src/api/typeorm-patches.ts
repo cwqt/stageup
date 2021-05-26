@@ -18,7 +18,7 @@ import {
 } from '@core/interfaces';
 import { timeless, timestamp, to } from '@core/helpers';
 import { NextFunction, Request, Response } from 'express';
-import { SelectQueryBuilder } from 'typeorm';
+import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
 export type EntitySerialiser<T, K> = (e: T) => K;
 export type SortDirection = 'ASC' | 'DESC';
@@ -193,4 +193,43 @@ export const paginate = async <T, K>(
       next_page: count >= skip + perPage ? page + 1 : null
     }
   };
+};
+
+import { getManager } from 'typeorm';
+
+/**
+ * @description Wraps a method around a new entity manager, or uses a persistent transaction
+ * @param f code to run in transaction
+ * @param txc existing transaction
+ * @example
+ *  // Wrap everything in a `transact`, because at any point the transaction may not exist
+ *  const createUser = async (txc?) =>
+ *    transact(t =>
+ *      t.save(new User("Cass"), txc);
+ *
+ *  const createHost = async (txc?) => {
+ *    return transact(t => {
+ *      const user = createUser(t);
+ *      const host = t.save(new Host("Cool Host", user));
+ *      return host;
+ *    }, txc);
+ *  }
+ *
+ * // Will create a transaction since none passed in
+ * const host = await transact(createHost);
+ *
+ */
+export const transact = async <T = void>(f: (t: EntityManager) => Promise<T>, txc?: EntityManager): Promise<T> => {
+  if (!txc) {
+    try {
+      const manager = getManager();
+      return manager.transaction(async txc => {
+        return await f(txc);
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
+  } else {
+    return f(txc);
+  }
 };

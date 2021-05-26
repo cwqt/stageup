@@ -11,19 +11,16 @@ import { HelperService } from '@frontend/services/helper.service';
 })
 export class PerformanceThumbComponent implements OnInit {
   @Input() performance: IPerformanceStub;
-  isCurrentlyActive: boolean;
 
   constructor(private helperService: HelperService, private dialog: MatDialog) {}
 
-  ngOnInit(): void {
-    this.isCurrentlyActive = this.performance.stream.state == LiveStreamState.Active;
-  }
+  ngOnInit(): void {}
 
   openBrochure(): void {
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
         data: this.performance,
-        width: '800px'
+        width: '1000px'
       }),
       () => {}
     );

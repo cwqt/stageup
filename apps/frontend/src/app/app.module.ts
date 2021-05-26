@@ -37,7 +37,6 @@ import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe'
 import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-status.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
-import { AccountSettingsComponent } from './routes/settings/account-settings/account-settings.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
@@ -86,7 +85,7 @@ import { UserTypeClarificationComponent } from './routes/landing/user-type-clari
 import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
-import { ChangeImageComponent } from './routes/settings/change-image/change-image.component';
+import { ChangeImageComponent } from './components/dialogs/change-image/change-image.component';
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 import { PerformanceBrochureComponent } from './routes/performance/performance-brochure/performance-brochure.component';
@@ -116,10 +115,12 @@ import { WalletSettingsComponent } from './routes/settings/wallet-settings/walle
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
 
+import countries from 'i18n-iso-countries';
+countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}.json`));
+
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
   declarations: [
-    AccountSettingsComponent,
     AdminOnboardingListComponent,
     AdminOnboardingViewComponent,
     AdminPanelComponent,
@@ -152,7 +153,6 @@ import { UserPatronageComponent } from './routes/settings/user-patronage/user-pa
     SearchComponent,
     AdminOnboardingListComponent,
     HostDashboardComponent,
-    AdminOnboardingViewComponent,
     OnboardingViewComponent,
     OnboardingStatePipe,
     ObjectLengthPipe,

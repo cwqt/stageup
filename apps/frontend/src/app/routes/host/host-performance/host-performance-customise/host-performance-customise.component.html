@@ -1,4 +1,5 @@
 <h2>Trailer video</h2>
 <ui-hr></ui-hr>
-<app-upload-video [initialSource]="initialSource" [createAssetResHandler]="assetCreator.bind(this)">
+<p i18n>Add a short teaser trailer of your performance to display this performances' brochure.</p>
+<app-upload-video [initialSource]="asset?.location" [createAssetResHandler]="assetCreator.bind(this)">
 </app-upload-video>

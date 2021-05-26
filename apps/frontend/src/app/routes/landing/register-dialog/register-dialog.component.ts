@@ -48,12 +48,8 @@ export class RegisterDialogComponent implements OnInit, IUiDialogOptions {
 
     // state propagation push to next tick
     setTimeout(() => {
-      this.stepper.next();
+      this.baseAppService.navigateTo(`/dashboard`);
+      this.ref.close();
     }, 1);
-  }
-
-  skipOnboarding() {
-    this.baseAppService.navigateTo(`/dashboard`);
-    this.ref.close();
   }
 }

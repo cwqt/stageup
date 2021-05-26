@@ -1,31 +1,42 @@
-<app-player [hidden]="selectedVideo || !initialSource || uploadComplete" #livePlayer
-  (onPlayerReady)="onPlayerReady($event)" class="mb-4 max-h-full w-full">
+<app-player
+  [hidden]="selectedVideo || !initialSource || uploadComplete"
+  #livePlayer
+  (onPlayerReady)="onPlayerReady($event)"
+  class="mb-4 max-h-full w-full"
+>
 </app-player>
 
 <div [hidden]="!selectedVideo && !uploadComplete">
-  <video #localPlayer class="mb-4 max-h-full w-full" controls>
-  </video>
+  <video #localPlayer class="mb-4 max-h-full w-full" controls></video>
 </div>
 
 <div class="justify-items-center mt-2">
   <ng-container *ngIf="!selectedVideo">
-    <input accept="video/*" hidden (change)="onVideoSelected()" #fileSelector type="file" id="file">
-    <ui-button icon="attachment" kind="primary" (click)="fileSelector.click()" class="select-file mb-2">
+    <input accept="video/*" hidden (change)="onVideoSelected()" #fileSelector type="file" id="file" />
+    <ui-button icon="attachment" kind="primary" (click)="fileSelector.click()" class="select-file mb-2" i18n>
       Select Video
     </ui-button>
   </ng-container>
 
   <div class="flex items-center space-x-2">
-    <ui-button *ngIf="selectedVideo" (click)="uploadVideo()" [loading]="uploadAsset.loading"
-      [disabled]="uploadAsset.loading" icon="cloud--upload" class="mr-2" kind="primary">
-      {{
-      uploadAsset.loading
-      ? "Uploading... " + "(" + uploadAsset.meta.upload_percent + "%)"
-      : "Upload"
-      }}
+    <ui-button
+      *ngIf="selectedVideo"
+      (click)="uploadVideo()"
+      [loading]="uploadAsset.loading"
+      [disabled]="uploadAsset.loading"
+      icon="cloud--upload"
+      class="mr-2"
+      kind="primary"
+    >
+      <span *ngIf="uploadAsset.loading">
+        <span i18n>Uploading...</span>
+        ({{ uploadAsset.meta.upload_percent }}%)
+      </span>
+
+      <span *ngIf="!uploadAsset.loading" i18n>Upload</span>
     </ui-button>
 
-    <ui-button *ngIf="selectedVideo" (click)="clearSelection()" [disabled]="uploadAsset.loading" kind="secondary">
+    <ui-button *ngIf="selectedVideo" (click)="clearSelection()" [disabled]="uploadAsset.loading" kind="secondary" i18n>
       Clear
     </ui-button>
   </div>

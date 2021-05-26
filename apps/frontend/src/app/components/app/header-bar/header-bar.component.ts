@@ -1,44 +1,45 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
+import { Component, OnInit, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { IMyself } from '@core/interfaces';
 import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
-import { AuthenticationService } from "apps/frontend/src/app/services/authentication.service";
-import { HelperService } from "../../../services/helper.service";
-import { SearchService } from "../../../services/search.service";
+import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
+import { HelperService } from '../../../services/helper.service';
+import { SearchService } from '../../../services/search.service';
 
 @Component({
-  selector: "app-header-bar",
-  templateUrl: "./header-bar.component.html",
-  styleUrls: ["./header-bar.component.scss"],
+  selector: 'app-header-bar',
+  templateUrl: './header-bar.component.html',
+  styleUrls: ['./header-bar.component.scss']
 })
 export class HeaderBarComponent implements OnInit {
   @Input() myself: IMyself;
 
-  userPopupOpen:boolean = false;
+  userPopupOpen: boolean = false;
 
   constructor(
-    private searchService:SearchService,
-    private baseAppService:BaseAppService,
-    private authService:AuthenticationService
+    private searchService: SearchService,
+    private baseAppService: BaseAppService,
+    private authService: AuthenticationService,
+    private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   gotoCatalog() {
-    this.baseAppService.navigateTo("/catalog");
+    this.baseAppService.navigateTo('/catalog');
   }
 
   gotoRoot() {
-    this.baseAppService.navigateTo("/");
+    this.baseAppService.navigateTo('/');
   }
 
-  search(event:string) {
+  search(event: string) {
     this.searchService.$searchQuery.next(event);
-    this.baseAppService.navigateTo(`/search`, { queryParams: { query: event }});
+    this.baseAppService.navigateTo(`/search`, { queryParams: { query: event } });
   }
 
-  toggleUserPopup(state:boolean) {
+  toggleUserPopup(state: boolean) {
     this.userPopupOpen = state;
   }
 

@@ -13,10 +13,6 @@ export class AdminService {
     return this.http.get<IEnvelopedData<IHostOnboarding[]>>(`/api/admin/onboardings${querize(query)}`).toPromise();
   }
 
-  enactOnboardingProcess(onboardingId: string): Promise<void> {
-    return this.http.post<void>(`/api/admin/onboardings/${onboardingId}/enact`, null).toPromise();
-  }
-
   // router.post <void> (`/admin/onboarding/:oid/review`, Admin.reviewOnboarding());
   reviewOnboarding(onboardingId: string, review: IOnboardingReview['steps']): Promise<void> {
     return this.http.post<void>(`/api/admin/onboardings/${onboardingId}/review`, review).toPromise();

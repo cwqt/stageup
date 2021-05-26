@@ -67,7 +67,7 @@ export class UserRegisterComponent implements OnInit, IUiDialogOptions, OnDestro
             {
               type: 'custom',
               message: () => 'Passwords do not match',
-              value: (t, c) => c['password'].value == t.value
+              value: (self, fg) => (console.log(fg, self), fg.value['password'] == self.value)
             }
           ]
         })

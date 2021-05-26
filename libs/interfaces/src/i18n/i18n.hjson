@@ -26,8 +26,11 @@
 
   // Validation -----------------------------------------------------------------------
   "validation.not_allowed": Value is not allowed
-  "validation.invalid": Value does not pass validator
+  "validation.invalid": Value does is not valid
   "validation.too_long": Value is too long
   "validation.too_short": Value is too short
-  "validation.not_valid_email": Not a valid e_mail address
+  "validation.invalid_email": Not a valid e-mail address
+  "validation.invalid_phone_number": Not a valid phone number
+  "validation.not_hmrc_number": Not a valid HMRC Company number
+  "validation.invalid_url": Not a valid URL
 }

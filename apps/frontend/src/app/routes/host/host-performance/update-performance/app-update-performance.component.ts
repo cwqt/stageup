@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { DtoPerformance, IPerformance } from '@core/interfaces';
+import { parseRichText } from '@core/helpers';
+import { DtoPerformance, IPerformance, RichText } from '@core/interfaces';
 import { createICacheable, ICacheable } from '../../../../../app/app.interfaces';
 import { PerformanceService } from '../../../../services/performance.service';
 import { UiField, UiForm } from '../../../../ui-lib/form/form.interfaces';
@@ -26,13 +27,13 @@ export class UpdatePerformanceComponent {
     this.performanceDetailsForm = new UiForm({
       fields: {
         name: UiField.Text({
-          label: 'Title',
+          label: $localize`Title`,
           initial: this.performance.name,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 64 }]
         }),
         description: UiField.Richtext({
-          label: 'Description',
-          // initial: this.performance.description,
+          label: $localize`Description`,
+          initial: this.performance.description,
           validators: [{ type: 'maxlength', value: 512 }]
         })
       },

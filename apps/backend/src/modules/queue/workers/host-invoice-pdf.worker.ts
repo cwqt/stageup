@@ -20,7 +20,7 @@ export default ({
     // Have to use the QB here because ticket _may_  be softDeleted & can only get deleted relations this way...
     const invoices = await orm.connection
       .createQueryBuilder(Invoice, 'invoice')
-      .where('invoice._id IN (:...invoice_ids)', { invoice_ids: data.invoices })
+      .where('invoice._id IN (:...invoice_ids)', { invoice_ids: data.invoice_ids })
       .innerJoinAndSelect('invoice.ticket', 'ticket')
       .innerJoinAndSelect('ticket.performance', 'performance')
       .withDeleted()

@@ -1,26 +1,13 @@
-.page-container {
-  padding: 20px;
-  margin-top: 50px;
-  width: 60vw;
-  margin: 20px auto;
-  h1:first-of-type {
-    font-weight: bold;
-  }
+:host {
+  display: block;
+  min-height: 100vh;
+}
 
-  .content-wrapper {
-    display: flex;
-  }
-
-  .left {
-    max-width: 20vw;
-    h1 {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-  }
-  .right {
-    margin-top: 7px;
-    margin-left: 50px;
-    flex: 1;
+.sticky-header {
+  width: 100%;
+  margin-top: -10rem;
+  &:empty {
+    // don't display if no child nodes
+    display: none;
   }
 }

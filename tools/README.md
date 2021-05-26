@@ -33,9 +33,6 @@ throw new ErrorHandler(HTTP.NotFound, '@@error.not_found', [
 ]);
 ```
 
-// TODO: make script to find missing & un-used trans-units using
-`grep -r --include="*.ts" --exclude-dir="node_modules" "@@" . `
-
 ## `generate-uml.ts`
 
 Makes a PlantUML diagram from the TypeORM entities.

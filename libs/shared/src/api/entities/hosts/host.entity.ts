@@ -55,6 +55,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @OneToMany(() => Invoice, invoice => invoice.host) invoices: Invoice[];
   @OneToMany(() => PatronTier, tier => tier.host) patron_tiers: PatronTier[];
 
+  @OneToOne(() => User) @JoinColumn() owner: User;
   @OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
 
@@ -77,6 +78,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   }
 
   async setup(creator: User, txc: EntityManager) {
+    this.owner = creator;
     this.onboarding_process = await txc.save(new Onboarding(this, creator));
     this.contact_info = await txc.save(
       ContactInfo,
