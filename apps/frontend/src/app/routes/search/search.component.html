@@ -35,7 +35,13 @@
         <img [src]="results.thumbnail || '/assets/performance-placeholder.jpeg'" class="w-1/3 object-cover" alt="" />
         <div class="w-2/3 p-4 flex flex-col">
           <h1 class="text-gray-900 font-bold text-2xl">{{ results?.name }}</h1>
-          <p class="mt-2 text-gray-600 text-sm mb-0">{{ results?.description }}</p>
+          <quill-view
+            *ngIf="results?.description"
+            [content]="results.description"
+            format="object"
+            theme="snow"
+          ></quill-view>
+
           <ui-button kind="primary" class="ml-auto mt-auto mb-2" i18n>View</ui-button>
         </div>
       </div>

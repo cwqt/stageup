@@ -9,9 +9,9 @@ export default class SearchController extends BaseController<BackendProviderMap>
   search(): IControllerEndpoint<ISearchResponse> {
     return {
       authorisation: AuthStrat.none,
-      validators: {
-        query: object({ return_only: optional(enums(['hosts', 'performance'])) })
-      },
+      // validators: {
+      //   query: object({ return_only: optional(enums(['hosts', 'performance'])) })
+      // },
       controller: async req => {
         // return both if no query param passed
         const fetchBoth = req.query.return_only == null;

@@ -48,6 +48,7 @@ import {
   AssetTags,
   IAsset
 } from '@core/interfaces';
+import { Braket } from 'aws-sdk';
 import { SignableAssetType } from 'libs/shared/src/api/entities/performances/signing-key.entity';
 import { array, boolean, enums, object } from 'superstruct';
 import { In } from 'typeorm';
@@ -620,6 +621,8 @@ export default class PerformanceController extends BaseController<BackendProvide
           Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] })
         );
 
+        console.log(body);
+
         switch (body.type) {
           case AssetType.Video: {
             return await transact(async txc => {
@@ -641,6 +644,8 @@ export default class PerformanceController extends BaseController<BackendProvide
 
               asset.group = performance.asset_group;
               await txc.save(asset);
+
+              console.log(asset);
 
               return to<ICreateAssetRes>({
                 upload_url: video.url

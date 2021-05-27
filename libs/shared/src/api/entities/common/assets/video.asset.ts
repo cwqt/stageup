@@ -48,8 +48,10 @@ export class VideoAsset extends Asset<AssetType.Video> implements AssetMethods<A
   }
 
   async delete(provider: AssetProvider[AssetType.Video]) {
-    await provider.connection.Video.Assets.del(this.asset_identifier);
-    await super.remove();
+    if (this.asset_identifier) {
+      await provider.connection.Video.Assets.del(this.asset_identifier);
+    }
+    await this.remove();
   }
 
   toDto() {

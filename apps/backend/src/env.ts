@@ -100,4 +100,6 @@ const Env: IEnvironment = {
   }
 };
 
+console.log(Env.LOCALTUNNEL);
+
 export default Env;

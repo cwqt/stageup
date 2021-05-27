@@ -61,6 +61,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
 
     // Now we have a playback Id & can set the source location on the asset
     const assetInfo = await this.providers.mux.connection.Video.Assets.get(asset.asset_identifier);
+
     asset.meta.playback_id = assetInfo.playback_ids.find(
       p => p.policy == (asset.signing_key__id ? 'signed' : 'public')
     ).id;
