@@ -83,24 +83,24 @@ const connect = async <T extends ProviderMap>(providerMap: T, log: Logger): Prom
 
 // Closes all the connections from the providers object
 const disconnect = async <T>(providerMap: ProviderMap<T>) => {
-  return Promise.all(Object.keys(providerMap).map(p => providerMap[p].close()));
+  return Promise.all(Object.values(providerMap).map((p: Provider) => p.disconnect()));
 };
 
-// Get a KV of ping response times from providers
-const ping = async <T>(providerMap: ProviderMap<T>): Promise<{ [index in keyof T]: number }> => {
-  return (await Promise.all(Object.keys(providerMap).map(p => providerMap[p].ping && providerMap[p].ping()))).reduce(
-    (acc, curr, idx) => {
-      (acc.data[acc.keys[idx]] = curr), acc;
-    },
-    { keys: Object.keys(providerMap), data: {} }
-  ).data;
-};
+// // Get a KV of ping response times from providers
+// const ping = async <T>(providerMap: ProviderMap<T>): Promise<{ [index in keyof T]: number }> => {
+//   return (await Promise.all(Object.values(providerMap).map((p:Provider) => p.ping?.()))).reduce(
+//     (acc, curr, idx) => {
+//       (acc.data[acc.keys[idx]] = curr), acc;
+//     },
+//     { keys: Object.keys(providerMap), data: {} }
+//   ).data;
+// };
 
 const drop = async <T>(providerMap: ProviderMap<T>) => {
   return Promise.all(Object.keys(providerMap).map(p => providerMap[p].drop && providerMap[p].drop()));
 };
 
-export const DataClient = { connect, disconnect, ping, drop };
+export const DataClient = { connect, disconnect, drop };
 export namespace Providers {
   export const SSE = SSEProvider;
   export const EventBus = EventBusProvider;

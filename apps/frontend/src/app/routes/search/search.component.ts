@@ -33,26 +33,33 @@ export class SearchComponent implements OnInit {
 
   async ngOnInit() {
     await this.baseAppService.componentInitialising(this.route);
-    this.searchQuery = this.baseAppService.getQueryParam('query');
 
-    // Check if when coming in by URL there is a searchQuery, then fan it to subscribers
-    if (!this.searchService.$searchQuery.value && this.searchQuery) this.searchService.$searchQuery.next(this.searchQuery);
-
+    // Listen for change in Observable value for search box / url query param values
     this.searchService.$searchQuery.subscribe(v => {
       this.searchQuery = v;
       this.search(0, 10);
     });
+
+    // Check if when coming in by URL there is a searchQuery, then fan it to subscribers
+    this.searchQuery = this.baseAppService.getQueryParam('query');
+    if (this.searchQuery) this.searchService.$searchQuery.next(this.searchQuery);
   }
 
-  async search(page:number, perPage:number, returnOnly?:"hosts" | "performances") {
-    if(returnOnly == "hosts") {
-      cachize(this.searchService.search(this.searchQuery, page, perPage, "hosts"), this.hosts, d => d.hosts)
-    } else if(returnOnly == "performances") {
-      cachize(this.searchService.search(this.searchQuery, page, perPage, "performances"), this.performances, d => d.performances)
+  async search(page: number, perPage: number, returnOnly?: 'hosts' | 'performances') {
+
+    if (returnOnly == 'hosts') {
+      cachize(this.searchService.search(this.searchQuery, page, perPage, 'hosts'), this.hosts, d => d.hosts);
+    } else if (returnOnly == 'performances') {
+      cachize(
+        this.searchService.search(this.searchQuery, page, perPage, 'performances'),
+        this.performances,
+        d => d.performances
+      );
     } else {
       this.hosts.loading = true;
       this.performances.loading = true;
-      this.searchService.search(this.searchQuery, page, perPage, null)
+      this.searchService
+        .search(this.searchQuery, page, perPage, null)
         .then(d => {
           this.hosts.data = d.hosts;
           this.performances.data = d.performances;
@@ -61,12 +68,12 @@ export class SearchComponent implements OnInit {
         })
         .catch(e => {
           this.performances.error = e;
-          this.hosts.error = e
+          this.hosts.error = e;
         })
         .finally(() => {
           this.hosts.loading = false;
           this.performances.loading = false;
-        })
+        });
     }
   }
 
@@ -74,8 +81,8 @@ export class SearchComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
         data: performance,
-        width: "800px",
-        position: { top: "5% "}
+        width: '800px',
+        position: { top: '5% ' }
       }),
       () => {}
     );

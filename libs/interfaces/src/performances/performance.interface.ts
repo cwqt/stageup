@@ -27,7 +27,6 @@ export interface IPerformanceStub {
   views: number; // total user view count
   created_at: number;
   assets: IAssetStub[];
-
   thumbnail: string;
 }
 

@@ -73,6 +73,12 @@ const applications: {
         )} && nx affected:build --all --parallel --configuration=${env}`
     },
     environments: ['staging', 'production']
+  },
+  seeder: {
+    cmd: {
+      seed: () => `nx run seeder:start`
+    },
+    environments: ['development', 'staging', 'production']
   }
 };
 

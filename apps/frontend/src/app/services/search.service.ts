@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class SearchService {
-  $searchQuery: BehaviorSubject<string> = new BehaviorSubject(null);
+  $searchQuery: BehaviorSubject<string> = new BehaviorSubject('');
 
   constructor(private http: HttpClient) {}
 

@@ -18,6 +18,7 @@
     "frontend": { "tags": [] },
     "api-tests": { "tags": [] },
     "interfaces": { "tags": [] },
-    "shared": { "tags": [] }
+    "shared": { "tags": [] },
+    "seeder": { "tags": [] }
   }
 }
