@@ -83,6 +83,13 @@ export class i18nProvider {
     return this;
   }
 
+  date(date: Date, locale: ILocale): string {
+    return new Intl.DateTimeFormat(`${locale.language}-${locale.region}`, {
+      timeStyle: 'short',
+      dateStyle: 'full'
+    }).format(date);
+  }
+
   translate(code: i18nToken, locale: ILocale, variables?: { [index: string]: Primitive }): string {
     const translation = this.locales.get(locale.language)?.get(code.slice(2));
 

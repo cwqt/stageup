@@ -171,3 +171,5 @@ export const parseRichText = (richtext: RichText): ParsedRichText => JSON.parse(
 export const stringifyRichText = (ops: any[]) => JSON.stringify({ ops: ops });
 export const readRichTextContent = (text: RichText | ParsedRichText) =>
   (typeof text == 'string' ? parseRichText(text) : text).ops.reduce((acc, curr) => ((acc += curr.insert), acc), '');
+
+export const unix = (date: number): Date => new Date(date * 1000);

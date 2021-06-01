@@ -10,11 +10,35 @@
   "host.requires_stripe_connected": Requires Stripe to be connected to perform this action
   "onboarding.steps_invalid": Some steps are invalid
   "onboarding.step_is_invalid": Step is invalid
+  "host.invoice_csv.invoice_id": Invoice ID
+  "host.invoice_csv.performance_name": Performance Title
+  "host.invoice_csv.ticket_type": Ticket Type
+  "host.invoice_csv.purchased_at": Purchased At
+  "host.invoice_csv.amount": Amount
+  "host.invoice_csv.net_amount": Net Amount
+  "host.invoice_csv.currency": Currency
+  "host.invoice_csv.status": Payment Status
+
+  // Payment Status --------------------------------------------------------------------------------------
+  "payment_status.created": Created
+  "payment_status.paid": Paid
+  "payment_status.fufilled": Fufilled
+  "payment_status.refunded": Refunded
+  "payment_status.refund_pending": Refund Pending
+  "payment_status.refund_denied": Refund Denied
+
+  // Ticket Type ----------------------------------------------------------------------------------------
+  "ticket_type.paid": Paid
+  "ticket_type.free": Free
+  "ticket_type.dono": Donation
 
   // Errors ----------------------------------------------------------------------------------------------
   "error.user_has_no_claim": You don't have permissions to view this content
 
   // Emails -----------------------------------------------------------------------------------------------
+  "email.host.invoice_csv__subject": Exported Invoice CSV files
+  "email.host.invoice_csv__content": See attachments for invoice data
+  "email.host.invoice_csv__filename": stageup-invoice
   "email.test.send_email__subject": Testing e-mails!
   "email.test.send_email__content": Hey {username} **How are you? <{url}>**
   "email.user.registered__subject": Verify your StageUp account
@@ -89,7 +113,7 @@
     - Invoice #: **{invoice_id}**
     - Performance: **{performance_name}**
     - Purchased: **{purchase_date}**
-    - Amount" **{amount}**
+    - Amount: **{amount}**
 
     We'll let you know when the host has processed your request
     '''

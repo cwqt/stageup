@@ -12,6 +12,7 @@ import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
 import SendEmailWorker from './workers/send-email.worker';
 import Auth from '../../common/authorisation';
 import Env from '@backend/env';
+import { i18nProvider } from 'libs/shared/src/api/i18n';
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 interface IQueue<T extends JobType = any> {
@@ -74,7 +75,8 @@ export class QueueModule implements Module {
               });
             case 'host_invoice_csv':
               return this.workers['host_invoice_csv']({
-                email: providers.email
+                email: providers.email,
+                i18n: providers.i18n
               });
           }
         })(),

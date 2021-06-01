@@ -17,3 +17,4 @@ bundle.7z
 
 environment.*
 !environment.ts
+google_service_account.json

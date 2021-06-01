@@ -1,9 +1,22 @@
+require('dotenv').config();
 import * as fs from 'fs';
 import Hjson from 'hjson';
 import path from 'path';
 import colors = require('colors');
 import spawn from 'await-spawn';
 import { exec } from 'child_process';
+import xml from 'fast-xml-parser';
+import { readFile } from 'fs';
+import { string } from 'yargs';
+
+import Translate from '@google-cloud/translate';
+import { id } from 'apicache';
+const Translator = new Translate.v2.Translate({
+  projectId: process.env.GCP_PROJECT_ID
+});
+
+import ora from 'ora';
+const spinner = ora();
 
 console.clear();
 
@@ -18,6 +31,18 @@ interface WorkspaceProject {
   };
   prefix: string;
   targets: any;
+}
+
+interface Xliff {
+  file: {
+    body: {
+      ['trans-unit']: Array<{
+        '@_id': string;
+        source: string;
+        target: { ['#text']: string; '@_state': 'new' | 'final' | 'translated' };
+      }>;
+    };
+  };
 }
 
 const XLF_CONFIG_FILENAME = 'xliffmerge.json';
@@ -67,6 +92,8 @@ const XLF_SOURCE_FILENAME = 'messages.source.json';
       try {
         await new Promise<void>((res, rej) => {
           exec(`grep -nr --include="*.ts" --exclude-dir="node_modules" "@@" .`, (err, stdout) => {
+            if (err) rej(err);
+
             const lines = stdout.split('\n');
             // Grep returns something like
             // ./path/index.ts:143: [false, {}, '@@error.not_found'];
@@ -156,6 +183,72 @@ const XLF_SOURCE_FILENAME = 'messages.source.json';
       console.log('Deleting config...');
       await fs.promises.unlink(path.resolve(sourcePath, 'xliffmerge.json'));
       await fs.promises.unlink(path.resolve(sourcePath, XLF_SOURCE_FILENAME));
+
+      // Read the merged XLF file, and translate the missing tokens with Google Translate
+      await (async () => {
+        console.log('Checking for new tokens...');
+        for await (let locale of data.i18n.locales) {
+          const file = await new Promise((res, rej) =>
+            readFile(path.resolve(data.i18n.path, `messages.${locale}.xlf`), { encoding: 'utf-8' }, (err, data) => {
+              if (err) return rej(err);
+              res(data);
+            })
+          );
+
+          // Parse to JSON so we can iterate over all the nodes, for translating
+          const xliff: { xliff: Xliff; [index: string]: any } = await xml.parse(file.toString(), {
+            // Use prefix so the parser knows which fields are XML attributes
+            attributeNamePrefix: '@_',
+            ignoreAttributes: false,
+            ignoreNameSpace: false,
+            allowBooleanAttributes: false,
+            parseNodeValue: true,
+            parseAttributeValue: true,
+            trimValues: true,
+            parseTrueNumberOnly: false
+          });
+
+          // For parsing back into XML from JSON
+          const parser = new xml.j2xParser({ ignoreAttributes: false, attributeNamePrefix: '@_' });
+
+          // Get all nodes whose state is new
+          const untranslatedCodes: Array<{ _id: string; text: string }> = xliff.xliff.file.body['trans-unit'].reduce(
+            (acc, curr) => (
+              curr.target['@_state'] == 'new' && acc.push({ _id: curr['@_id'], text: curr['target']['#text'] }), acc
+            ),
+            []
+          );
+
+          if (untranslatedCodes.length) {
+            console.log(`Translating ${untranslatedCodes.length} new ${locale} tokens...`);
+            spinner.start();
+            for await (let { _id, text } of untranslatedCodes) {
+              spinner.text = `Translating: ${_id}`.gray;
+              // Since we use ICU formatting, we have variables inside e.g. {this_is_a_var}
+              // that may get translated -> {amount} => {beløp}, so we need to replace all these with some substring
+              // that definitely __won't__ get translated - $$TRANS_REPLACE_n
+              const matches = text.match(/\{(.*?)\}/g);
+              matches?.forEach((match, idx) => (text = text.replace(match, `TRANS_REPLACE_${idx}`)));
+
+              // Do the translating!
+              let [translation] = await Translator.translate(text, locale);
+
+              // And now put the match codes back in place within the translated string...
+              matches?.forEach((match, idx) => (translation = translation.replace(`TRANS_REPLACE_${idx}`, match)));
+
+              // Set all the metadata & new value of the trans-unit
+              const unit = xliff.xliff.file.body['trans-unit'].find(unit => unit['@_id'] == _id);
+              unit.target['@_state'] = 'translated';
+              unit.target['#text'] = translation;
+            }
+          }
+
+          spinner.text = 'Saving XML...';
+          fs.writeFileSync(path.resolve(data.i18n.path, `messages.${locale}.xlf`), parser.parse(xliff));
+          spinner.stop();
+        }
+      })();
+
       console.log(colors.green.bold('Done!'));
     } else {
       console.log(colors.gray(`Skipping ${colors.bold(project)}, no 'path' in i18n`));
