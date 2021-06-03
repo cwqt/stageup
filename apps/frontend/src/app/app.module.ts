@@ -116,6 +116,8 @@ import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.componen
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
 
 import countries from 'i18n-iso-countries';
+import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
+import { ContentBoxComponent } from './components/content-box/content-box.component';
 countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}.json`));
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -212,7 +214,9 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}
     PaymentMethodThumbComponent,
     WalletSettingsComponent,
     GenreFeedComponent,
-    UserPatronageComponent
+    UserPatronageComponent,
+    HostPatronageSubscribersComponent,
+    ContentBoxComponent
   ],
   imports: [
     AngularMaterialModule,

@@ -17,7 +17,8 @@ import {
   HostPermission,
   ISocialInfo,
   IHostBusinessDetails,
-  HTTP
+  HTTP,
+  PatronSubscriptionStatus
 } from '@core/interfaces';
 
 import { User } from '../users/user.entity';
@@ -29,6 +30,7 @@ import { timestamp, uuid } from '@core/helpers';
 import { ErrorHandler } from '../../errors';
 import { Invoice } from '../common/invoice.entity';
 import { PatronTier } from './patron-tier.entity';
+import { PatronSubscription } from '@core/api';
 
 @Entity()
 export class Host extends BaseEntity implements IHostPrivate {
@@ -54,6 +56,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
   @OneToMany(() => Invoice, invoice => invoice.host) invoices: Invoice[];
   @OneToMany(() => PatronTier, tier => tier.host) patron_tiers: PatronTier[];
+  @OneToMany(() => PatronSubscription, sub => sub.host) patron_subscribers: PatronSubscription[];
 
   @OneToOne(() => User) @JoinColumn() owner: User;
   @OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;

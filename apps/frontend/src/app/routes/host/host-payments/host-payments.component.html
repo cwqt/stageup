@@ -3,11 +3,6 @@
     <div class="flex flex-row items-center mb-5">
       <h1 class="mb-0" i18n>Payments</h1>
       <mat-spinner class="ml-5" [diameter]="50" *ngIf="stripeInfo.loading"></mat-spinner>
-
-      <div class="flex space-x-4 ml-auto">
-        <ui-button routerLink="/dashboard/payments/invoices" i18n>Invoices</ui-button>
-        <ui-button routerLink="/dashboard/payments/patronage" i18n>Patronage</ui-button>
-      </div>
     </div>
 
     <ui-hr></ui-hr>
@@ -16,7 +11,7 @@
       You cannot collect your Stripe account to StageUp before the onboarding process has been completed.
     </p>
 
-    <div class="bg-white p-4 rounded shadow-sm" *ngIf="host.is_onboarded">
+    <div class="bg-white p-4 rounded shadow-sm mb-4" *ngIf="host.is_onboarded">
       <h2>Stripe</h2>
       <ui-hr></ui-hr>
       <ng-container *ngIf="stripeInfo.data">
@@ -44,8 +39,16 @@
           </ui-button>
         </ng-container>
       </ng-container>
-
-      <router-outlet></router-outlet>
     </div>
+
+    <app-content-box>
+      <app-host-invoices></app-host-invoices>
+    </app-content-box>
+
+    <app-content-box>
+      <app-host-patronage></app-host-patronage>
+      <ui-hr></ui-hr>
+      <app-host-patronage-subscribers></app-host-patronage-subscribers>
+    </app-content-box>
   </div>
 </app-page>

@@ -29,6 +29,7 @@ import {
   enums,
   integer,
   literal,
+  nullable,
   number,
   object,
   optional,
@@ -54,8 +55,8 @@ export namespace objects {
 
   export const DtoUpdateUser: Describe<DtoUpdateUser> = object({
     email_address: fields.email,
-    bio: fields.bio,
-    name: fields.name
+    bio: nullable(fields.bio),
+    name: nullable(fields.name)
   });
 
   export const DtoResetPassword: Describe<DtoResetPassword> = object({

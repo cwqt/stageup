@@ -1,22 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit, Inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { prettifyMoney } from '@core/helpers';
-import {
-  capitalize,
-  DtoUserPatronageInvoice,
-  FilterCode,
-  IEnvelopedData,
-  IUserInvoice,
-  PaymentStatus,
-  PatronSubscriptionStatus,
-  TicketType
-} from '@core/interfaces';
-import { InvoiceDialogComponent } from '@frontend/components/dialogs/invoice-dialog/invoice-dialog.component';
+import { i18n, unix } from '@core/helpers';
+import { DtoUserPatronageSubscription, FilterCode, IEnvelopedData, PatronSubscriptionStatus } from '@core/interfaces';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { PatronSubscriptionStatusPipe } from '@frontend/_pipes/patron-subscription-status.pipe';
 import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { MyselfService } from '../../../services/myself.service';
-import { PaymentStatusPipe } from '../../../_pipes/payment-status.pipe';
 
 @Component({
   selector: 'app-user-patronage',
@@ -24,46 +13,66 @@ import { PaymentStatusPipe } from '../../../_pipes/payment-status.pipe';
   styleUrls: ['./user-patronage.component.scss']
 })
 export class UserPatronageComponent implements OnInit {
-  table: UiTable<DtoUserPatronageInvoice>;
-  invoices: ICacheable<IEnvelopedData<DtoUserPatronageInvoice[]>> = createICacheable([]);
+  table: UiTable<DtoUserPatronageSubscription>;
+  invoices: ICacheable<IEnvelopedData<DtoUserPatronageSubscription[]>> = createICacheable([]);
 
-  constructor(private myselfService: MyselfService, private dialog: MatDialog) {}
+  constructor(
+    @Inject(LOCALE_ID) public locale: string,
+    private myselfService: MyselfService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.table = new UiTable<DtoUserPatronageInvoice>(
+    this.table = new UiTable<DtoUserPatronageSubscription>(
       {
         resolver: query => this.myselfService.readPatronageSubscriptions(query),
         actions: [],
         pagination: { page_sizes: [10, 25] },
         columns: [
           {
-            label: 'Subscription ID',
-            accessor: v => v.subscription._id
-          },
-          {
-            label: 'Patron Since',
-            accessor: v => new Date(v.subscription.created_at * 1000).toISOString(),
+            label: $localize`Subscription ID`,
+            accessor: v => v.subscription._id,
             filter: {
-              type: FilterCode.Date,
-              field: 'purchased_at'
-            },
-            sort: { field: 'purchased_at' }
-          },
-          {
-            label: 'Tier',
-            accessor: v => v.subscription.patron_tier.name
-          },
-          {
-            label: 'Amount',
-            accessor: v => prettifyMoney(v.amount, v.currency),
-            sort: { field: 'amount' },
-            filter: {
-              type: FilterCode.Number,
-              field: 'amount'
+              type: FilterCode.String,
+              field: 'sub_id'
             }
           },
           {
-            label: 'Status',
+            label: $localize`Patron Since`,
+            accessor: v => i18n.date(unix(v.subscription.created_at), this.locale),
+            filter: {
+              type: FilterCode.Date,
+              field: 'patron_created'
+            },
+            sort: { field: 'patron_created' }
+          },
+          {
+            label: $localize`Tier`,
+            accessor: v => v.subscription.patron_tier.name,
+            filter: {
+              type: FilterCode.String,
+              field: 'tier_name'
+            }
+          },
+          {
+            label: $localize`Last Invoice Amount`,
+            accessor: v => i18n.money(v.last_invoice.amount, v.last_invoice.currency),
+            sort: { field: 'invoice_amount' },
+            filter: {
+              type: FilterCode.Number,
+              field: 'invoice_amount'
+            }
+          },
+          {
+            label: $localize`Status`,
+            filter: {
+              type: FilterCode.Enum,
+              field: 'sub_status',
+              enum: new Map([
+                [PatronSubscriptionStatus.Active, { label: $localize`Active` }],
+                [PatronSubscriptionStatus.Cancelled, { label: $localize`Cancelled` }]
+              ])
+            },
             accessor: v => new PatronSubscriptionStatusPipe().transform(v.subscription.status),
             chip_selector: v => {
               switch (v.subscription.status) {

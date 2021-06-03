@@ -1,6 +1,6 @@
 import { ILocale, JobData, JobType } from '@core/interfaces';
 import { Invoice, Providers } from '@core/api';
-import { prettifyMoney, timestamp, unix } from '@core/helpers';
+import { timestamp, unix } from '@core/helpers';
 import { writeToBuffer } from 'fast-csv';
 import { Job } from 'bullmq';
 import { In } from 'typeorm';
@@ -49,8 +49,8 @@ export default ({
       i.ticket.performance.name,
       i18n.translate(`@@ticket_type.${i.ticket.type}`, data.locale),
       i18n.date(unix(i.purchased_at), data.locale),
-      prettifyMoney(i.amount, i.currency),
-      prettifyMoney(i.amount, i.currency), // IMPORTANT: net_amount use subscription tier from invoice
+      i18n.money(i.amount, i.currency),
+      i18n.money(i.amount, i.currency), // IMPORTANT: net_amount use subscription tier from invoice
       i.currency,
       i18n.translate(`@@payment_status.${i.status}`, data.locale)
     ])

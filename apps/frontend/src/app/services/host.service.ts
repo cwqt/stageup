@@ -17,7 +17,8 @@ import {
   DtoCreatePatronTier,
   IPatronTier,
   IHostInvoiceStub,
-  IInvoice
+  IInvoice,
+  DtoHostPatronageSubscription
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -227,5 +228,12 @@ export class HostService {
   // router.delete <void> ("/hosts/:hid/patron-tiers/:tid", Hosts.deletePatronTier());
   deletePatronTier(hostId: string, tierId: string): Promise<void> {
     return this.http.delete<void>(`/api/hosts/${hostId}/patron-tiers/${tierId}`).toPromise();
+  }
+
+  // router.get <IE<HPatronSub[]>> ("/hosts/:hid/patronage/subscribers", Hosts.readPatronageSubscribers());
+  readPatronageSubscribers(hostId: string, query:IQueryParams): Promise<IEnvelopedData<DtoHostPatronageSubscription[]>> {
+    return this.http
+      .get<IEnvelopedData<DtoHostPatronageSubscription[]>>(`/api/hosts/${hostId}/patronage/subscribers${querize(query)}`)
+      .toPromise();
   }
 }

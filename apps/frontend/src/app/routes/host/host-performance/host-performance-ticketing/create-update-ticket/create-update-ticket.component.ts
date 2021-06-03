@@ -13,7 +13,7 @@ import {
   TicketFees,
   TicketType
 } from '@core/interfaces';
-import { prettifyMoney, timeless, timestamp } from '@core/helpers';
+import { i18n, timeless, timestamp } from '@core/helpers';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -80,7 +80,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
               label:
                 peg == 'allow_any'
                   ? $localize`Allow Any`
-                  : prettifyMoney(calculateAmountFromCurrency(CurrencyCode.GBP, weight), CurrencyCode.GBP)
+                  : i18n.money(calculateAmountFromCurrency(CurrencyCode.GBP, weight), CurrencyCode.GBP)
             });
 
             return acc;

@@ -85,9 +85,6 @@ const LOGGED_IN_ROUTES: Routes = [
         path: 'payments',
         component: BillingSettingsComponent
       },
-      { path: 'host', component: HostSettingsComponent },
-      { path: 'wallet', component: WalletSettingsComponent },
-      { path: 'patronage', component: UserPatronageComponent },
       { path: '**', component: NotFoundComponent }
     ]
   },
@@ -100,17 +97,7 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: 'settings', component: HostSettingsComponent },
       {
         path: 'payments',
-        component: HostPaymentsComponent,
-        children: [
-          {
-            path: 'invoices',
-            component: HostInvoicesComponent
-          },
-          {
-            path: 'patronage',
-            component: HostPatronageComponent
-          }
-        ]
+        component: HostPaymentsComponent
       },
       { path: 'team', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },

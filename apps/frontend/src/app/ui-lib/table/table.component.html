@@ -1,11 +1,12 @@
 <ng-container *ngIf="table">
-  <div class="flex justify-between items-center px-4 pt-1">
+  <div class="flex justify-between items-center pt-1">
     <h2 *ngIf="table.config.title">{{ table.config.title }}</h2>
     <ui-button
       kind="primary"
       *ngIf="table.selection"
       [disabled]="table.selection.selected.length == 0"
       [popper]="actionsMenu"
+      [popperDisabled]="table.selection.selected.length == 0"
       [popperHideOnClickOutside]="true"
       [popperTrigger]="'click'"
       [popperPositionFixed]="true"

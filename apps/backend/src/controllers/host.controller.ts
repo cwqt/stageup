@@ -8,6 +8,7 @@ import {
   Invoice,
   Onboarding,
   OnboardingReview,
+  PatronSubscription,
   Performance,
   User,
   UserHostInfo,
@@ -15,6 +16,7 @@ import {
 } from '@core/api';
 import { timestamp } from '@core/helpers';
 import {
+  DtoHostPatronageSubscription,
   hasRequiredHostPermission,
   HostInviteState,
   HostOnboardingState,
@@ -796,6 +798,33 @@ export default class HostController extends BaseController<BackendProviderMap> {
           { format: 'pdf', invoice_ids: req.body.invoices, email_address: h.email_address },
           req.locale
         );
+      }
+    };
+  }
+
+  readPatronageSubscribers(): IControllerEndpoint<IEnvelopedData<DtoHostPatronageSubscription[]>> {
+    return {
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        return await this.ORM.createQueryBuilder(PatronSubscription, 'sub')
+          .where('sub.host__id = :host_id', { host_id: req.params.hid })
+          .leftJoinAndSelect('sub.patron_tier', 'tier')
+          .leftJoinAndSelect('sub.last_invoice', 'invoice')
+          .leftJoinAndSelect('invoice.user', 'user')
+          .filter({
+            sub_id: { subject: 'sub._id' },
+            sub_status: { subject: 'sub.status' },
+            user_username: { subject: 'user.username' },
+            tier_name: { subject: 'tier.name' },
+            patron_created: { subject: 'sub.created_at' },
+            invoice_amount: { subject: 'invoice.amount', transformer: v => parseInt(v as string) }
+          })
+          .sort({
+            invoice_amount: 'invoice.amount',
+            patron_created: 'sub.created_at'
+          })
+          .withDeleted()
+          .paginate(sub => sub.toDtoHostPatronageSubscription());
       }
     };
   }

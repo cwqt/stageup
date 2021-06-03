@@ -48,7 +48,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @ManyToOne(() => Host, host => host.members_info) host: Host; // In one host only
   @OneToMany(() => Invoice, invoice => invoice.user) invoices: Invoice[]; // Many purchases
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
-  @OneToMany(() => PatronSubscription, sub => sub.user) patron_subcriptions: PatronSubscription[];
+  @OneToMany(() => PatronSubscription, sub => sub.user) patron_subscriptions: PatronSubscription[];
 
   @Column() private salt: string;
   @Column() private pw_hash: string;

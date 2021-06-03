@@ -104,7 +104,10 @@ export default class StripeController extends BaseController<BackendProviderMap>
         .setPurchaseable(purchaseable);
 
       invoice.status = PaymentStatus.Paid;
-      return await txc.save(invoice);
+      await txc.save(invoice);
+
+      purchaseable.last_invoice = invoice;
+      await txc.save(purchaseable);
     });
   }
 

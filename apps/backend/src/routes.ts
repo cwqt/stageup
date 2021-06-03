@@ -35,8 +35,8 @@ import {
   IPaymentMethodStub,
   IFeed,
   ISignedToken,
-  DtoUserPatronageInvoice as UPatronInvoice,
-  IAsset
+  DtoUserPatronageSubscription as UPatronSub,
+  DtoHostPatronageSubscription as HPatronSub,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -70,7 +70,7 @@ router.get      <IE<IUserInvoiceStub[]>>("/myself/invoices",                    
 router.get      <IUserInvoice>          ("/myself/invoices/:iid",                     Myself.readInvoice());
 router.post     <void>                  ("/myself/invoices/:iid/request-refund",      Myself.requestInvoiceRefund());
 router.post     <void>                  ("/myself/invoices/request-refund",           Myself.requestInvoiceRefund());
-router.get      <IE<UPatronInvoice[]>>  ("/myself/patron-subscriptions",              Myself.readPatronageSubscriptions());
+router.get      <IE<UPatronSub[]>>      ("/myself/patron-subscriptions",              Myself.readPatronageSubscriptions());
 router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
 router.get      <IPaymentMethodStub[]>  ("/myself/payment-methods",                   Myself.readPaymentMethods());
 router.post     <IPaymentMethod>        ("/myself/payment-methods",                   Myself.addCreatedPaymentMethod());
@@ -121,6 +121,7 @@ router.get      <IE<IHostInvoiceStub[]>>("/hosts/:hid/invoices",                
 router.get      <IHostInvoice>          ("/hosts/:hid/invoices/:iid",                 Hosts.readInvoice());
 router.post     <void>                  ("/hosts/:hid/invoices/export-csv",           Hosts.exportInvoicesToCSV());
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
+router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",         Hosts.readPatronageSubscribers());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
 const Patronage = new PatronageController(providers, middlewares);

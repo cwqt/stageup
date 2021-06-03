@@ -19,6 +19,7 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   loading: boolean = true;
+  showCurtain: boolean = false; // show the bouncing icon for a bit longer while the page content is loading
   loadError: string;
 
   constructor(
@@ -46,6 +47,7 @@ export class AppComponent implements OnInit {
     this.logger.debug(`Running in: ${environment.environment}`);
 
     this.loading = true;
+    this.showCurtain = true;
     await this.baseAppService.componentInitialising(this.route);
     this.titleService.setTitle(`StageUp - ${environment.appVersion}`);
 
@@ -78,9 +80,11 @@ export class AppComponent implements OnInit {
         this.permissionsService.loadPermissions(permissions);
       });
 
+      this.loading = false;
+
       setTimeout(() => {
-        this.loading = false;
-      }, 100);
+        this.showCurtain = false;
+      }, 500);
     } catch (error) {
       if (typeof error == 'string') this.loadError = error;
       else this.loadError = error.message;

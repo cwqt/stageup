@@ -29,7 +29,7 @@ export const validationMiddleware = (validators: { [index in RequestLocation]?: 
           req[key] = create(req[key], value);
         } catch (error) {
           if (error instanceof StructError) {
-            errors = errors.concat({ ...formatError(error), location: key as RequestLocation });
+            errors = formatError(error).map(error => ({ ...error, location: key as RequestLocation }));
           }
         }
       })

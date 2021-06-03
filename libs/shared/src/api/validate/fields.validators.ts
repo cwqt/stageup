@@ -43,9 +43,9 @@ export namespace fields {
   export const email = refine(string(), 'email', value => validator.isEmail(value) || '@@validation.invalid_email');
   export const password = refine(string(), 'password', value => value.length > 6 || '@@validation.too_short');
   export const timestamp = refine(number(), 'timestamp', value => Math.ceil(Math.log(value + 1) / Math.LN10) == 10);
-  export const name = size(string(), 6, 32);
+  export const name = message(size(string(), 6, 32), '@@validation.too_short');
   export const username = pattern(size(forbidden, 6, 32), /^[a-zA-Z\d]*$/);
-  export const bio = size(string(), 0, 512);
+  export const bio = refine(string(), 'bio', value => size(string(), 0, 512).is(value) || '@@validation.too_long');
   export const hmrcCompanyNumber = refine(
     number(),
     'hmrc_company_number',

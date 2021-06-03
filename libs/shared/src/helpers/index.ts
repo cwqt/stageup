@@ -5,11 +5,13 @@ import {
   DONO_PEG_WEIGHT_MAPPING,
   Environment,
   FilterQuery,
+  ILocale,
   NUUID,
   ParsedRichText,
   Primitive,
   RichText
 } from '@core/interfaces';
+import locale from 'express-locale';
 import { nanoid } from 'nanoid';
 import QueryString from 'qs';
 
@@ -59,17 +61,6 @@ export const enumToValues = <T = string>(enumme: any, numberEnum: boolean = fals
   return Object.keys(enumme)
     .map(key => enumme[key])
     .filter(value => typeof value === (numberEnum ? 'number' : 'string')) as T[];
-};
-
-/**
- * @description Takes an amount (in smallest currency denomination) and a currecy code, & returns a formatted string
- * like 1000 USD --> $10.00
- */
-export const prettifyMoney = (amount: number, currency: CurrencyCode) => {
-  // FUTURE support locales other than en-GB money formatting
-  return new Intl.NumberFormat('en-GB', { style: 'currency', currency: currency })
-    .format(amount / 100) // amount should be stored in pennies
-    .toString();
 };
 
 /**
@@ -173,3 +164,29 @@ export const readRichTextContent = (text: RichText | ParsedRichText) =>
   (typeof text == 'string' ? parseRichText(text) : text).ops.reduce((acc, curr) => ((acc += curr.insert), acc), '');
 
 export const unix = (date: number): Date => new Date(date * 1000);
+
+export const i18n = {
+  /**
+   * @description Takes an amount (in smallest currency denomination) and a currecy code, & returns a formatted string
+   * like 1000 USD --> $10.00
+   */
+  money: (amount: number, currency: CurrencyCode) => {
+    // FUTURE support locales other than en-GB money formatting
+    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: currency })
+      .format(amount / 100) // amount should be stored in pennies
+      .toString();
+  },
+
+  /**
+   * @description Format a date nicely using Intl
+   * @param date
+   * @param locale ILocale or LOCALE_ID injection token
+   * @returns
+   */
+  date: (date: Date, locale: ILocale | string): string => {
+    return new Intl.DateTimeFormat(typeof locale == 'string' ? locale : `${locale.language}-${locale.region}`, {
+      timeStyle: 'short',
+      dateStyle: 'full'
+    } as any).format(date);
+  }
+};

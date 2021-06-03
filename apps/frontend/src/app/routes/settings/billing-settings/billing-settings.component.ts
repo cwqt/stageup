@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { prettifyMoney } from '@core/helpers';
+import { i18n } from '@core/helpers';
 import { capitalize, FilterCode, IEnvelopedData, IUserInvoice, PaymentStatus, TicketType } from '@core/interfaces';
 import { InvoiceDialogComponent } from '@frontend/components/dialogs/invoice-dialog/invoice-dialog.component';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
@@ -75,7 +75,7 @@ export class BillingSettingsComponent implements OnInit {
           },
           {
             label: 'Amount',
-            accessor: v => prettifyMoney(v.amount, v.currency),
+            accessor: v => i18n.money(v.amount, v.currency),
             sort: { field: 'amount' },
             filter: {
               type: FilterCode.Number,

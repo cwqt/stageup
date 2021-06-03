@@ -1,4 +1,4 @@
-import { i18nToken, ILocale, Primitive } from '@core/interfaces';
+import { i18nToken, ILocale, Primitive, CurrencyCode } from '@core/interfaces';
 import xml from 'fast-xml-parser';
 import { readFile } from 'fs';
 import IntlMessageFormat from 'intl-messageformat';
@@ -6,6 +6,7 @@ import { Logger } from 'winston';
 import { Service } from 'typedi';
 import path = require('path');
 import colors = require('colors');
+import { i18n } from '@core/helpers';
 
 export interface Ii18nConfig {
   locales: string[];
@@ -83,14 +84,16 @@ export class i18nProvider {
     return this;
   }
 
+  money(amount: number, currency: CurrencyCode) {
+    return i18n.money(amount, currency);
+  }
+
   date(date: Date, locale: ILocale): string {
-    return new Intl.DateTimeFormat(`${locale.language}-${locale.region}`, {
-      timeStyle: 'short',
-      dateStyle: 'full'
-    }).format(date);
+    return i18n.date(date, locale);
   }
 
   translate(code: i18nToken, locale: ILocale, variables?: { [index: string]: Primitive }): string {
+    console.log('i18n code::', code);
     const translation = this.locales.get(locale.language)?.get(code.slice(2));
 
     if (!translation) {

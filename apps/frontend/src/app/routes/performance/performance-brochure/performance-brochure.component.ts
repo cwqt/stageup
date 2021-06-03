@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@ang
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
-import { getDonoAmount, prettifyMoney } from '@core/helpers';
+import { getDonoAmount, i18n } from '@core/helpers';
 import {
   AssetType,
   BASE_AMOUNT_MAP,
@@ -96,7 +96,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
                   label:
                     peg == 'allow_any'
                       ? 'Enter an amount'
-                      : prettifyMoney(getDonoAmount(peg, selectedTicket.currency), selectedTicket.currency)
+                      : i18n.money(getDonoAmount(peg, selectedTicket.currency), selectedTicket.currency)
                 }
               ])
             )

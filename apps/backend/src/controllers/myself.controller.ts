@@ -6,6 +6,7 @@ import {
   Host,
   IControllerEndpoint,
   Invoice,
+  PatronSubscription,
   PaymentMethod,
   Performance,
   User,
@@ -26,7 +27,7 @@ import {
   IUserInvoice,
   IUserInvoiceStub,
   PaymentStatus,
-  DtoUserPatronageInvoice,
+  DtoUserPatronageSubscription,
   Visibility
 } from '@core/interfaces';
 import { boolean, enums, object, partial, record } from 'superstruct';
@@ -188,27 +189,27 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     };
   }
 
-  readPatronageSubscriptions(): IControllerEndpoint<IEnvelopedData<DtoUserPatronageInvoice[]>> {
+  readPatronageSubscriptions(): IControllerEndpoint<IEnvelopedData<DtoUserPatronageSubscription[]>> {
     return {
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        return await this.ORM.createQueryBuilder(Invoice, 'invoice')
-          .where('invoice.user__id = :user_id', { user_id: req.session.user._id })
-          .leftJoinAndSelect('invoice.patron_subscription', 'subscription')
-          .leftJoinAndSelect('subscription.patron_tier', 'tier')
-          // .filter({
-          //   performance_name: { subject: 'tier.name' },
-          //   purchased_at: { subject: 'invoice.purchased_at' },
-          //   payment_status: { subject: 'invoice.status' },
-          //   amount: { subject: 'invoice.amount', transformer: v => parseInt(v as string) }
-          // })
-          // .sort({
-          //   performance_name: 'performance.name',
-          //   amount: 'invoice.amount',
-          //   purchased_at: 'invoice.purchased_at'
-          // })
+        return await this.ORM.createQueryBuilder(PatronSubscription, 'sub')
+          .where('sub.user__id = :user_id', { user_id: req.session.user._id })
+          .leftJoinAndSelect('sub.patron_tier', 'tier')
+          .leftJoinAndSelect('sub.last_invoice', 'invoice')
+          .filter({
+            sub_id: { subject: 'sub._id' },
+            sub_status: { subject: 'sub.status' },
+            tier_name: { subject: 'tier.name' },
+            patron_created: { subject: 'sub.created_at' },
+            invoice_amount: { subject: 'invoice.amount', transformer: v => parseInt(v as string) }
+          })
+          .sort({
+            invoice_amount: 'invoice.amount',
+            patron_created: 'sub.created_at'
+          })
           .withDeleted()
-          .paginate(i => i.toUserPatronageStub());
+          .paginate(sub => sub.toDtoUserPatronageSubscription());
       }
     };
   }

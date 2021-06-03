@@ -12,7 +12,6 @@ import {
   IHostInvoice,
   IPaymentSourceDetails,
   RefundReason,
-  DtoUserPatronageInvoice,
   IRefundRequest
 } from '@core/interfaces';
 import { User } from '../users/user.entity';
@@ -86,7 +85,7 @@ export class Invoice extends BaseEntity implements IInvoice {
   }
 
   // Shared Invoice interface -------------------------------------------------
-  toInvoiceDto(): Required<DtoInvoice> {
+  toDtoInvoice(): Required<DtoInvoice> {
     return {
       invoice_id: this._id,
       invoice_date: this.purchased_at,
@@ -99,16 +98,9 @@ export class Invoice extends BaseEntity implements IInvoice {
   // User Invoice -------------------------------------------------
   toUserInvoiceStub(): Required<IUserInvoiceStub> {
     return {
-      ...this.toInvoiceDto(),
+      ...this.toDtoInvoice(),
       performance: this.ticket.performance.toStub(),
       ticket: this.ticket.toStub()
-    };
-  }
-
-  toUserPatronageStub(): Required<DtoUserPatronageInvoice> {
-    return {
-      ...this.toInvoiceDto(),
-      subscription: this.patron_subscription.toFull()
     };
   }
 
@@ -123,7 +115,7 @@ export class Invoice extends BaseEntity implements IInvoice {
   // Host Invoice -------------------------------------------------
   toHostInvoiceStub(): Required<IHostInvoiceStub> {
     return {
-      ...this.toInvoiceDto(),
+      ...this.toDtoInvoice(),
       performance: this.ticket.performance.toStub(),
       ticket: this.ticket.toStub(),
       net_amount: this.amount

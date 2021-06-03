@@ -1,7 +1,8 @@
 import { CurrencyCode } from '../common/currency.interface';
 import { NUUID } from '../common/fp.interface';
-import { DtoInvoice } from '../common/invoice.interface';
+import { DtoInvoice, IInvoice } from '../common/invoice.interface';
 import { RichText } from '../performances/performance.interface';
+import { IUserStub } from '../users/user.interface';
 
 export interface IPatronTier {
   _id: NUUID;
@@ -41,6 +42,10 @@ export enum PatronSubscriptionStatus {
   Cancelled = 'cancelled'
 }
 
-export interface DtoUserPatronageInvoice extends DtoInvoice {
+export interface DtoPatronageSubscription {
   subscription: IPatronSubscription;
+  last_invoice: DtoInvoice;
 }
+
+export type DtoUserPatronageSubscription = DtoPatronageSubscription;
+export type DtoHostPatronageSubscription = DtoPatronageSubscription & { user: IUserStub };

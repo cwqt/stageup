@@ -1,6 +1,15 @@
-<h2 class="mb-0">Payments</h2>
-<ui-hr></ui-hr>
+<app-content-box>
+  <h2 class="mb-0" i18n>Payments</h2>
+  <ui-hr></ui-hr>
+  <ui-table [table]="table"></ui-table>
+</app-content-box>
 
-<ui-table [table]="table"></ui-table>
+<app-content-box>
+  <app-wallet-settings></app-wallet-settings>
+</app-content-box>
 
-<app-wallet-settings></app-wallet-settings>
+<app-content-box>
+  <h2 class="mb-0" i18n>Subscriptions</h2>
+  <ui-hr></ui-hr>
+  <app-user-patronage></app-user-patronage>
+</app-content-box>

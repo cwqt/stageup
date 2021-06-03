@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { capitalize, FilterCode, IEnvelopedData, IHostInvoiceStub, PaymentStatus, TicketType } from '@core/interfaces';
-import { prettifyMoney } from '@core/helpers';
+import { i18n } from '@core/helpers';
 import { unix } from 'moment';
 import { createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { InvoiceDialogComponent } from '@frontend/components/dialogs/invoice-dialog/invoice-dialog.component';
@@ -150,7 +150,7 @@ export class HostInvoicesComponent implements OnInit {
           },
           {
             label: 'Amount',
-            accessor: v => prettifyMoney(v.amount, v.ticket.currency),
+            accessor: v => i18n.money(v.amount, v.ticket.currency),
             sort: { field: 'amount' },
             filter: {
               type: FilterCode.Number,
@@ -161,7 +161,7 @@ export class HostInvoicesComponent implements OnInit {
             label: 'Net Amount',
             // IMPORTANT: Subtracts a random amount off amount for purposes of demo
             // change to actual amount when requirements for tiers/fees are calculated
-            accessor: v => prettifyMoney(v.amount - Math.random() * 1000, v.ticket.currency)
+            accessor: v => i18n.money(v.amount - Math.random() * 1000, v.ticket.currency)
           },
           {
             label: 'Status',

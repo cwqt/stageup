@@ -158,7 +158,7 @@ export default class PatronageController extends BaseController<BackendProviderM
         );
 
         const patronSubscription = await this.ORM.transaction(async txc => {
-          const sub = new PatronSubscription(stripeSubscription, user, tier);
+          const sub = new PatronSubscription(stripeSubscription, user, tier, tier.host);
           sub._id = patronSubscriptionId;
           await txc.save(sub);
 

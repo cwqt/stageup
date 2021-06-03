@@ -3,7 +3,7 @@ import { Contract, Event } from 'libs/shared/src/api/event-bus/contracts';
 import { QueueModule, QueueProviders } from './queue.module';
 import dbless from 'dbless-email-verification';
 import { User, Host, Performance, Invoice, PatronTier, transact } from '@core/api';
-import { dateOrdinal, prettifyMoney, stringifyRichText } from '@core/helpers';
+import { dateOrdinal, i18n, stringifyRichText } from '@core/helpers';
 import moment from 'moment';
 import { CurrencyCode } from '@core/interfaces';
 import { i18nProvider } from 'libs/shared/src/api/i18n';
@@ -100,7 +100,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         ticket_name: invoice.ticket.name,
         performance_name: invoice.ticket.performance.name,
         host_name: invoice.ticket.performance.host.name || invoice.ticket.performance.host.username,
-        amount: prettifyMoney(invoice.amount, invoice.currency)
+        amount: i18n.money(invoice.amount, invoice.currency)
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
@@ -120,7 +120,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         tier_name: tier.name,
         user_username: user.username,
         host_name: tier.host.name || tier.host.username,
-        amount: prettifyMoney(tier.amount, tier.currency)
+        amount: i18n.money(tier.amount, tier.currency)
       }),
       from: Env.EMAIL_ADDRESS,
       to: tier.host.email_address,
@@ -142,7 +142,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         host_name: tier.host.name || tier.host.username,
         date_ordinal: dateOrdinal(new Date(), true),
         tos_url: `${Env.FRONTEND.URL}/${ct.__meta.locale}}/terms_of_service`,
-        amount: prettifyMoney(tier.amount, tier.currency)
+        amount: i18n.money(tier.amount, tier.currency)
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
@@ -192,7 +192,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         invoice_id: invoice._id,
         performance_name: invoice.ticket.performance.name,
         purchase_date: moment.unix(invoice.purchased_at).format('LLLL'),
-        amount: prettifyMoney(invoice.amount, invoice.currency)
+        amount: i18n.money(invoice.amount, invoice.currency)
       }),
       from: Env.EMAIL_ADDRESS,
       to: invoice.user.email_address,
