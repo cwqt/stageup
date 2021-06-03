@@ -9,8 +9,11 @@ import xml from 'fast-xml-parser';
 import { readFile } from 'fs';
 import { string } from 'yargs';
 
+if (!process.env.GCP_PROJECT_ID) console.log('Missing .env variable GCP_PROJECT_ID'.red), process.exit(0);
+if (!process.env.GOOGLE_APPLICATION_CREDENTIALS)
+  console.log('Missing .env variable GOOGLE_APPLICATION_CREDENTIALS'.red), process.exit(0);
+
 import Translate from '@google-cloud/translate';
-import { id } from 'apicache';
 const Translator = new Translate.v2.Translate({
   projectId: process.env.GCP_PROJECT_ID
 });

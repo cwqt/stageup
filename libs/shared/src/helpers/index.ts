@@ -167,7 +167,7 @@ export const unix = (date: number): Date => new Date(date * 1000);
 
 export const i18n = {
   /**
-   * @description Takes an amount (in smallest currency denomination) and a currecy code, & returns a formatted string
+   * @description Takes an amount (in smallest currency denomination) and a currency code, & returns a formatted string
    * like 1000 USD --> $10.00
    */
   money: (amount: number, currency: CurrencyCode) => {

@@ -18,6 +18,16 @@
   "host.invoice_csv.net_amount": Net Amount
   "host.invoice_csv.currency": Currency
   "host.invoice_csv.status": Payment Status
+  "host.invoice_pdf.invoice_id": Invoice ID
+  "host.invoice_pdf.performance_name": Performance Title
+  "host.invoice_pdf.ticket_type": Ticket Type
+  "host.invoice_pdf.purchased_at": Purchased At
+  "host.invoice_pdf.amount": Amount
+  "host.invoice_pdf.net_amount": Net Amount
+  "host.invoice_pdf.currency": Currency
+  "host.invoice_pdf.status": Payment Status
+  "host.invoice_pdf.created_at": Created At
+  "host.invoice_pdf.total_rows": Total Rows
 
   // Payment Status --------------------------------------------------------------------------------------
   "payment_status.created": Created
@@ -35,10 +45,14 @@
   // Errors ----------------------------------------------------------------------------------------------
   "error.user_has_no_claim": You don't have permissions to view this content
 
-  // Emails -----------------------------------------------------------------------------------------------
+  // Emails ----------------------------------------------------------------------------------------------
+  "email.host.invoice_pdf__subject": Exported Invoice PDF files
+  "email.host.invoice_pdf__content": See attachments for invoice data
+  "email.host.invoice_csv__filename": stageup-invoice
   "email.host.invoice_csv__subject": Exported Invoice CSV files
   "email.host.invoice_csv__content": See attachments for invoice data
   "email.host.invoice_csv__filename": stageup-invoice
+  "email.host.invoice_pdf__filename": stageup-invoice
   "email.test.send_email__subject": Testing e-mails!
   "email.test.send_email__content": Hey {username} **How are you? <{url}>**
   "email.user.registered__subject": Verify your StageUp account

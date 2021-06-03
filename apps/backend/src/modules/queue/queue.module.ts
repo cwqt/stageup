@@ -2,7 +2,7 @@ import { AsyncRouter, IControllerEndpoint, Providers } from '@core/api';
 import { to } from '@core/helpers';
 import { JobData, JobType, JobTypes } from '@core/interfaces';
 import { BullMQAdapter, router as BullRouter, setQueues } from 'bull-board';
-import { JobsOptions, Queue, QueueEvents, QueueScheduler, Worker } from 'bullmq';
+import { Job, JobsOptions, Queue, QueueEvents, QueueScheduler, Worker } from 'bullmq';
 import { ConnectionOptions } from 'tls';
 import { Logger } from 'winston';
 import { Module } from '..';
@@ -28,6 +28,13 @@ export type QueueProviders = {
   email: InstanceType<typeof Providers.Email>;
   orm: InstanceType<typeof Providers.Postgres>;
   stripe: InstanceType<typeof Providers.Stripe>;
+};
+
+const w = worker => {
+  return async (job: Job) => {
+    console.log('Handling job', job.name, job.id);
+    return await worker(job);
+  };
 };
 
 export class QueueModule implements Module {
@@ -65,19 +72,26 @@ export class QueueModule implements Module {
         (() => {
           switch (type) {
             case 'send_email':
-              return this.workers['send_email']({
-                email: providers.email
-              });
+              return w(
+                this.workers['send_email']({
+                  email: providers.email
+                })
+              );
             case 'host_invoice_pdf':
-              return this.workers['host_invoice_pdf']({
-                email: providers.email,
-                orm: providers.orm
-              });
+              return w(
+                this.workers['host_invoice_pdf']({
+                  email: providers.email,
+                  orm: providers.orm,
+                  i18n: providers.i18n
+                })
+              );
             case 'host_invoice_csv':
-              return this.workers['host_invoice_csv']({
-                email: providers.email,
-                i18n: providers.i18n
-              });
+              return w(
+                this.workers['host_invoice_csv']({
+                  email: providers.email,
+                  i18n: providers.i18n
+                })
+              );
           }
         })(),
         { connection: this.connectionOptions }

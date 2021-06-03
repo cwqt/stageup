@@ -108,6 +108,7 @@
     "object-hash": "^2.0.3",
     "pdfmake": "^0.1.71",
     "pg": "^8.5.1",
+    "pg-query-stream": "^4.1.0",
     "phone": "^2.4.20",
     "plyr": "^3.6.4",
     "popper.js": "^1.16.1",
