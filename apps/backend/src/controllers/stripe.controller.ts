@@ -29,7 +29,7 @@ import Env from '../env';
 import Stripe from 'stripe';
 import { log } from '../common/logger';
 import Email = require('../common/email');
-import { parseRichText, stringifyRichText, timestamp } from '@core/helpers';
+import { timestamp } from '@core/helpers';
 
 export default class StripeController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
@@ -41,7 +41,8 @@ export default class StripeController extends BaseController<BackendProviderMap>
     this.hookMap = {
       [StripeHook.PaymentIntentCreated]: this.handlePaymentIntentCreated.bind(this),
       [StripeHook.PaymentIntentSucceded]: this.handlePaymentIntentSuccessful.bind(this),
-      [StripeHook.InvoicePaymentSucceeded]: this.handleInvoicePaymentSuccessful.bind(this)
+      [StripeHook.InvoicePaymentSucceeded]: this.handleInvoicePaymentSuccessful.bind(this),
+      [StripeHook.SubscriptionDeleted]: this.handleSubscriptionDeleted.bind(this)
     };
   }
 
@@ -174,6 +175,21 @@ export default class StripeController extends BaseController<BackendProviderMap>
     }
   }
 
+  async handleSubscriptionDeleted(event: Stripe.Event) {
+    const data = event.data.object as Stripe.Subscription;
+    const sub = await PatronSubscription.findOne({
+      where: { stripe_subscription_id: data.id },
+      relations: { user: true },
+      select: { _id: true, stripe_subscription_id: true, user: { _id: true, locale: true } }
+    });
+
+    await this.providers.bus.publish(
+      'patronage.user_unsubscribed',
+      { sub_id: sub._id, user_id: sub.user._id },
+      sub.user.locale
+    );
+  }
+
   async handlePaymentIntentCreated(event: Stripe.Event) {
     const intent = event.data.object as Stripe.PaymentIntent;
   }
@@ -216,7 +232,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
         });
 
         await this.providers.bus.publish(
-          'host.stripe-connected',
+          'host.stripe_connected',
           {
             host_id: uhi.host._id
           },

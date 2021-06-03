@@ -12,7 +12,6 @@ import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
 import SendEmailWorker from './workers/send-email.worker';
 import Auth from '../../common/authorisation';
 import Env from '@backend/env';
-import { i18nProvider } from 'libs/shared/src/api/i18n';
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 interface IQueue<T extends JobType = any> {
@@ -28,6 +27,7 @@ export type QueueProviders = {
   email: InstanceType<typeof Providers.Email>;
   orm: InstanceType<typeof Providers.Postgres>;
   stripe: InstanceType<typeof Providers.Stripe>;
+  bus: InstanceType<typeof Providers.EventBus>;
 };
 
 const w = worker => {
@@ -117,16 +117,20 @@ export class QueueModule implements Module {
     const handlers = EventHandlers(this.queues, providers);
     // prettier-ignore
     {
-      bus.subscribe("test.send_email",                  handlers.sendTestEmail);
-      bus.subscribe('user.registered',                  handlers.sendUserVerificationEmail);
-      bus.subscribe('user.invited_to_host',             handlers.sendUserHostInviteEmail);
-      bus.subscribe('user.invited_to_private_showing',  handlers.sendUserPrivatePerformanceInviteEmail);
-      bus.subscribe('user.password_reset_requested',    handlers.sendPasswordResetLinkEmail);
-      bus.subscribe('user.password_changed',            handlers.sendPasswordChangedNotificationEmail);
-      bus.subscribe('ticket.purchased',                 handlers.sendTicketReceiptEmail);
-      bus.subscribe('refund.requested',                 handlers.sendInvoiceRefundRequestConfirmation);
-      bus.subscribe("host.stripe-connected",            handlers.setupDefaultPatronTierForHost);
-      bus.subscribe("host.invoice-export",              async ct => {
+      bus.subscribe("test.send_email",                   handlers.sendTestEmail);
+      bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
+      bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
+      bus.subscribe('user.invited_to_private_showing',   handlers.sendUserPrivatePerformanceInviteEmail);
+      bus.subscribe('user.password_reset_requested',     handlers.sendPasswordResetLinkEmail);
+      bus.subscribe('user.password_changed',             handlers.sendPasswordChangedNotificationEmail);
+      bus.subscribe('ticket.purchased',                  handlers.sendTicketReceiptEmail);
+      bus.subscribe('refund.requested',                  handlers.sendInvoiceRefundRequestConfirmation);
+      bus.subscribe('host.stripe_connected',             handlers.setupDefaultPatronTierForHost);
+      bus.subscribe("patronage.tier_deleted",            handlers.unsubscribeAllPatronTierSubscribers);
+      bus.subscribe("patronage.unsubscribe_user",        handlers.unsubscribeFromPatronTier);
+      bus.subscribe("patronage.user_unsubscribed",       handlers.sendUserUnsubscribedConfirmationEmail);
+
+      bus.subscribe("host.invoice_export",              async ct => {
         if(ct.format == "pdf") await this.queues.host_invoice_pdf.add({
           locale: ct.__meta.locale,
           sender_email_address: Env.EMAIL_ADDRESS,

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { IHostStub, IPatronTier } from '@core/interfaces';
-import { timeout } from '@core/helpers';
+import { MatDialog } from '@angular/material/dialog';
+import { IHost, IHostStub, IPatronTier } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
@@ -13,7 +12,7 @@ import { CreateUpdatePatronTierComponent } from './create-update-patron-tier/cre
   styleUrls: ['./host-patronage.component.scss']
 })
 export class HostPatronageComponent implements OnInit {
-  host: IHostStub;
+  host: IHost;
   tiers: ICacheable<IPatronTier[]> = createICacheable([]);
 
   constructor(private hostService: HostService, private helperService: HelperService, private dialog: MatDialog) {}
@@ -33,5 +32,9 @@ export class HostPatronageComponent implements OnInit {
         this.tiers.data.sort((a, b) => (a.amount > b.amount ? 1 : -1));
       }
     );
+  }
+
+  removePatronTier(tier: IPatronTier) {
+    this.tiers.data.splice(this.tiers.data.findIndex(t => t._id == tier._id));
   }
 }

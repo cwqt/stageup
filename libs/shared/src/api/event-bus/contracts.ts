@@ -6,6 +6,7 @@ import {
   IHostPrivate,
   IInvoice,
   ILocale,
+  IPatronSubscription,
   IPatronTier,
   IPerformance,
   ITicket,
@@ -41,9 +42,16 @@ export type EventContract = {
   ['user.password_changed']: {
     user_id: IUser['_id'];
   };
+
+  // ['user.unsubscribe_from_patron_tier']: {
+  //   user_id: IUser['_id'];
+  //   sub_id: IPatronSubscription['_id'];
+  // }; // command!
+  // ['user.unsubscribed_from_patron_tier']: { sub_id: IPatronSubscription['_id'] }; // stripe un-sub complete
+
   // Hosts --------------------------------------------------------------------
-  ['host.stripe-connected']: { host_id: IHost['_id'] };
-  ['host.invoice-export']: {
+  ['host.stripe_connected']: { host_id: IHost['_id'] };
+  ['host.invoice_export']: {
     format: 'csv' | 'pdf';
     invoice_ids: Array<IInvoice['_id']>;
     email_address: IHostPrivate['email_address'];
@@ -57,8 +65,10 @@ export type EventContract = {
     user_id: IUser['_id'];
     tier_id: IPatronTier['_id'];
   };
-  ['patronage.purchased']: {};
-  ['patronage.ended']: {};
+  ['patronage.unsubscribe_user']: { sub_id: IPatronSubscription['_id']; user_id: IUser['_id'] };
+  ['patronage.user_unsubscribed']: { sub_id: IPatronSubscription['_id']; user_id: IUser['_id'] };
+  ['patronage.user_subscribed']: { sub_id: IPatronSubscription['_id']; user_id: IUser['_id'] };
+  ['patronage.tier_deleted']: { tier_id: string };
   // Tickets ------------------------------------------------------------------
   ['ticket.purchased']: {
     purchaser_id: IUser['_id'];

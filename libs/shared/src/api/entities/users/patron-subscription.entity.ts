@@ -1,28 +1,17 @@
+import { Host } from '@core/api';
+import { timestamp, uuid } from '@core/helpers';
 import {
+  DtoHostPatronageSubscription,
   DtoUserPatronageSubscription,
   IPatronSubscription,
   NUUID,
-  PatronSubscriptionStatus,
-  DtoHostPatronageSubscription
+  PatronSubscriptionStatus
 } from '@core/interfaces';
-import { timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
-import {
-  BaseEntity,
-  BeforeInsert,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryColumn,
-  RelationId
-} from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, RelationId } from 'typeorm';
 import { Invoice } from '../common/invoice.entity';
 import { PatronTier } from '../hosts/patron-tier.entity';
 import { User } from './user.entity';
-import { Host } from '@core/api';
 
 @Entity()
 export class PatronSubscription extends BaseEntity implements IPatronSubscription {
@@ -33,6 +22,7 @@ export class PatronSubscription extends BaseEntity implements IPatronSubscriptio
   @Column() next_renewal_date: number;
   @Column() renewal_count: number;
   @Column() stripe_subscription_id: string;
+  @Column({ nullable: true }) cancelled_at: number;
   @Column('enum', { enum: PatronSubscriptionStatus }) status: PatronSubscriptionStatus;
 
   @ManyToOne(() => User, user => user.patron_subscriptions) user: User;

@@ -11,7 +11,7 @@ export class PatronageService {
     return this.http.post<IPatronSubscription>(`/api/patron-tiers/${tierId}/subscribe`, data).toPromise();
   }
 
-  // router.delete <void> ("/patron-tiers/:tid/unsubscribe", Patronage.unsubscribe());
+  // router.delete <void> ("/patron-tiers/:tid/unsubscribe", patronage.unsubscribe_user());
   unsubscribe(tierId: string): Promise<void> {
     return this.http.delete<void>(`/api/patron-tiers/${tierId}/unsubscribe`, {}).toPromise();
   }

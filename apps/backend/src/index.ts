@@ -134,7 +134,13 @@ Register<BackendProviderMap>({
   const Queue = await new QueueModule(
     { redis: { host: providers.redis.config.host, port: providers.redis.config.port } },
     log
-  ).register(providers.bus, { i18n, email: providers.email, orm: providers.torm, stripe: providers.stripe });
+  ).register(providers.bus, {
+    i18n,
+    email: providers.email,
+    orm: providers.torm,
+    stripe: providers.stripe,
+    bus: providers.bus
+  });
 
   const SSE = await new SSEModule(log).register(providers.bus, {
     i18n: i18n,

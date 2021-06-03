@@ -28,6 +28,11 @@ declare module 'typeorm' {
     filter(map: FilterMap): SelectQueryBuilder<Entity>;
     sort(map: Record<string, string>): SelectQueryBuilder<Entity>;
 
+    /**
+     * @description Iterate over a lot of rows by streaming row by row, as opposed to getting all at once & then processing it
+     */
+    iterate(onNext: (row: any) => void, onError?: (error: Error) => void, onComplete?: () => void): Promise<void>;
+
     // Modified from https://github.com/savannabits/typeorm-pagination
     paginate(): Promise<IEnvelopedData<Entity[], null>>;
     paginate<K>(
@@ -58,6 +63,24 @@ export const patchTypeORM = (req: Request, res: Response, next: NextFunction) =>
 
   SelectQueryBuilder.prototype.sort = function <T>(sm: Record<string, string>): SelectQueryBuilder<T> {
     return sort(this, (req.query?.sort || {}) as { [index: string]: any }, sm);
+  };
+
+  SelectQueryBuilder.prototype.iterate = async function <T>(
+    onNext: (row: any) => void,
+    onError?: (error: Error) => void,
+    onComplete?: () => void
+  ): Promise<void> {
+    return new Promise((res, rej) => {
+      const qb: SelectQueryBuilder<T> = this;
+      return qb.stream().then(stream => {
+        return stream
+          .pause()
+          .addListener('data', onNext)
+          .addListener('error', err => (onError?.(err), rej(err)))
+          .addListener('close', () => (onComplete?.(), res()))
+          .resume();
+      });
+    });
   };
 
   next();
@@ -196,6 +219,7 @@ export const paginate = async <T, K>(
 };
 
 import { getManager } from 'typeorm';
+import { ReadStream } from 'fs';
 
 /**
  * @description Wraps a method around a new entity manager, or uses a persistent transaction

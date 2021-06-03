@@ -779,7 +779,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));
         await this.providers.bus.publish(
-          'host.invoice-export',
+          'host.invoice_export',
           { format: 'csv', invoice_ids: req.body.invoices, email_address: h.email_address },
           req.locale
         );
@@ -794,7 +794,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));
         await this.providers.bus.publish(
-          'host.invoice-export',
+          'host.invoice_export',
           { format: 'pdf', invoice_ids: req.body.invoices, email_address: h.email_address },
           req.locale
         );

@@ -2,9 +2,9 @@
   display: flex;
   flex-flow: column;
   border-left: 4px solid lightcoral;
+  background: white;
   border-radius: 4px;
-  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05),
-    0 0 0.05rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05), 0 0 0.05rem rgba(0, 0, 0, 0.1);
 
   .admonition-title {
     padding: 8px 12px;

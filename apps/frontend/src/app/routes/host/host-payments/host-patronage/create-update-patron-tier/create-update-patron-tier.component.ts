@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { stringifyRichText } from '@core/helpers';
-import { capitalize, CurrencyCode, DtoCreatePatronTier, IPatronTier } from '@core/interfaces';
+import { CurrencyCode, DtoCreatePatronTier, IPatronTier } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
@@ -23,6 +22,8 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
   tierForm: UiForm<IPatronTier, DtoCreatePatronTier>;
   tier: ICacheable<IPatronTier> = createICacheable();
 
+  title: string;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { operation: 'create' | 'update'; tier: IPatronTier },
     private ref: MatDialogRef<CreateUpdatePatronTierComponent>,
@@ -31,18 +32,20 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
   ) {}
 
   ngOnInit(): void {
+    this.title = this.data.operation == 'update' ? $localize`Update patron tier` : $localize`Create patron tier`;
+
     this.tierForm = new UiForm({
       fields: {
         name: UiField.Text({
-          label: 'Tier title',
+          label: $localize`Tier title`,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 32 }]
         }),
         description: UiField.Richtext({
-          label: 'Description',
+          label: $localize`Description`,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 2048 }]
         }),
         amount: UiField.Money({
-          label: 'Price',
+          label: $localize`Price`,
           currency: CurrencyCode.GBP,
           disabled: false,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 100 }]
@@ -53,7 +56,11 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
       },
       handlers: {
         success: async tier => {
-          this.toastService.emit(`${capitalize(this.data.operation)}d patron tier: ${tier.name}!`);
+          this.toastService.emit(
+            this.data.operation == 'update'
+              ? $localize`Created patron tier: ${tier.name}!`
+              : $localize`Updated patron tier: ${tier.name}!`
+          );
           this.submit.emit(tier);
           this.ref.close(tier);
         },
@@ -63,13 +70,13 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Cancel',
+        label: $localize`Cancel`,
         kind: ThemeKind.Secondary,
         disabled: false,
         callback: () => this.ref.close()
       }),
       new UiDialogButton({
-        label: capitalize(this.data.operation),
+        label: this.data.operation == 'update' ? $localize`Update` : $localize`Create`,
         kind: ThemeKind.Primary,
         disabled: true,
         callback: () => this.tierForm.submit()
@@ -82,7 +89,7 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
       name: v.name,
       currency: CurrencyCode.GBP,
       amount: v.amount * 100, // TODO: support more than pence
-      description: stringifyRichText(v.description)
+      description: v.description
     };
   }
 }

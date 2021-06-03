@@ -94,7 +94,7 @@
     '''
     Hi **{host_name}**,
 
-    @{user_username} is not a patron of your company.
+    @{user_username} is now a patron of your company.
 
     - Patron Tier: **{tier_name}**
     - Amount: **{amount}**
@@ -130,5 +130,24 @@
     - Amount: **{amount}**
 
     We'll let you know when the host has processed your request
+    '''
+  "email.subscriber_notify_tier_deleted__subject": Notification of Patron Tier removal
+  "email.subscriber_notify_tier_deleted__content":
+    '''
+    Hi **@{user_username}**,
+
+    **@{host_username}** has deleted/removed the **{tier_name}** tier. We have cancelled your current subscription ({sub_id}). It will come into effect immediately. You'll recieve and e-mail shortly confirming the un-subscription.
+
+    Thanks, StageUp
+    '''
+  "email.user_unsubscribed_from_patron_tier__subject": Un-subscribed from patron tier
+  "email.user_unsubscribed_from_patron_tier__content":
+    '''
+    Hi @{user_username},
+
+    This is a receipt of your un-subscription from **@{host_username}**'s patron tier, **{tier_name}**.
+    You'll no longer be charged for this subscription & this subscription will be listed as 'Cancelled' on your account from now on.
+
+    Thanks, StageUp
     '''
 }

@@ -36,23 +36,23 @@ export class ProfileSettingsComponent implements OnInit {
     this.profileDetailsForm = new UiForm({
       fields: {
         name: UiField.Text({
-          label: 'Name',
-          hint: 'Your name may appear around StageUp where you contribute or are mentioned. ',
+          label: $localize`Name`,
+          hint: $localize`Your name may appear around StageUp where you contribute or are mentioned.`,
           validators: [{ type: 'maxlength', value: 32 }]
         }),
         email_address: UiField.Text({
-          label: 'E-mail address',
+          label: $localize`E-mail address`,
           validators: [
             { type: 'required' },
             {
               type: 'custom',
               value: v => isEmail(v.value),
-              message: () => 'Must provide a valid e-mail address'
+              message: () => $localize`Must provide a valid e-mail address`
             }
           ]
         }),
         bio: UiField.Textarea({
-          label: 'Bio',
+          label: $localize`Bio`,
           validators: [{ type: 'maxlength', value: 512 }]
         })
       },

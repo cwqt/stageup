@@ -75,9 +75,9 @@ export class HostPatronageSubscribersComponent implements OnInit {
           accessor: v => i18n.date(unix(v.subscription.created_at), this.locale),
           filter: {
             type: FilterCode.Date,
-            field: 'patron_since'
+            field: 'patron_created'
           },
-          sort: { field: 'patron_since' }
+          sort: { field: 'patron_created' }
         },
         {
           label: $localize`Status`,

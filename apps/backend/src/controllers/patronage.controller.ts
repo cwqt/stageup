@@ -1,5 +1,6 @@
 import {
   BaseController,
+  ErrorHandler,
   getCheck,
   Host,
   IControllerEndpoint,
@@ -12,6 +13,7 @@ import { to, uuid } from '@core/helpers';
 import {
   DtoCreatePaymentIntent,
   HostPermission,
+  HTTP,
   IHostPatronTier,
   IPatronSubscription,
   IPatronTier,
@@ -64,7 +66,13 @@ export default class PatronageController extends BaseController<BackendProviderM
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const tier = await getCheck(PatronTier.findOne({ _id: req.params.tid }));
+        // We may have permission in this hid, but that doesn't neccessarily mean
+        // that we own tier tid... so do this getCheck intersection
+        if (tier.host__id !== req.params.hid) throw new ErrorHandler(HTTP.Unauthorised, '@@error.missing_permissions');
+
+        // Keep it around for invoicing purposes
         await tier.softRemove();
+        await this.providers.bus.publish('patronage.tier_deleted', { tier_id: tier._id }, req.locale);
       }
     };
   }

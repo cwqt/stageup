@@ -1,12 +1,11 @@
 import Env from '@backend/env';
-import { Contract, Event } from 'libs/shared/src/api/event-bus/contracts';
-import { QueueModule, QueueProviders } from './queue.module';
+import { Host, Invoice, PatronSubscription, PatronTier, Performance, transact, User } from '@core/api';
+import { dateOrdinal, i18n, stringifyRichText, timestamp } from '@core/helpers';
+import { CurrencyCode, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
-import { User, Host, Performance, Invoice, PatronTier, transact } from '@core/api';
-import { dateOrdinal, i18n, stringifyRichText } from '@core/helpers';
+import { Contract } from 'libs/shared/src/api/event-bus/contracts';
 import moment from 'moment';
-import { CurrencyCode } from '@core/interfaces';
-import { i18nProvider } from 'libs/shared/src/api/i18n';
+import { QueueModule, QueueProviders } from './queue.module';
 
 export const EventHandlers = (queues: QueueModule['queues'], providers: QueueProviders) => ({
   sendTestEmail: async (ct: Contract<'test.send_email'>) => {
@@ -201,7 +200,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     });
   },
 
-  setupDefaultPatronTierForHost: async (ct: Contract<'host.stripe-connected'>) => {
+  setupDefaultPatronTierForHost: async (ct: Contract<'host.stripe_connected'>) => {
     await transact(async txc => {
       const host = await Host.findOne({ _id: ct.host_id });
       const tier = new PatronTier(
@@ -217,6 +216,97 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
       );
 
       await tier.setup(providers.stripe.connection, txc);
+    });
+  },
+
+  unsubscribeAllPatronTierSubscribers: async (ct: Contract<'patronage.tier_deleted'>) => {
+    // For all active subscribers of this subscription, emit the "user.unsubscribe_from_patron_tier" command
+    // onto the event bus - each one must be processed separately, otherwise we may get 1/2 way through all
+    // subscriptions and crash, leaving the other 1/2 of users subscribed
+    const tier = await PatronTier.findOne({
+      where: { _id: ct.tier_id },
+      relations: ['host'],
+      options: { withDeleted: true }
+    });
+
+    await providers.orm.connection
+      .createQueryBuilder(PatronSubscription, 'sub')
+      .where('sub.patron_tier = :tier_id', { tier_id: ct.tier_id })
+      .andWhere('sub.status = :status', { status: PatronSubscriptionStatus.Active })
+      .innerJoinAndSelect('sub.user', 'user')
+      .withDeleted() // patron tier is soft deleted at this point
+      .iterate(async row => {
+        await providers.bus.publish(
+          'patronage.unsubscribe_user',
+          { sub_id: row.sub__id, user_id: row.user__id },
+          row.user_locale
+        );
+
+        // Notify the user that they have been unsubscribed due to the tier being deleted
+        await queues.send_email.add({
+          from: Env.EMAIL_ADDRESS,
+          to: row.user_email_address,
+          subject: providers.i18n.translate('@@email.subscriber_notify_tier_deleted__subject', row.user_locale),
+          content: providers.i18n.translate('@@email.subscriber_notify_tier_deleted__content', row.user_locale, {
+            // streaming rows delivers them as one big fat flat untyped json object :(
+            sub_id: row.sub__id,
+            user_username: row.user_username,
+            host_username: row.tier_host_username,
+            tier_name: row.tier_name
+          }),
+          markdown: true,
+          attachments: []
+        });
+      });
+  },
+
+  unsubscribeFromPatronTier: async (ct: Contract<'patronage.unsubscribe_user'>) => {
+    const sub = await PatronSubscription.findOne({
+      where: { _id: ct.sub_id },
+      relations: { host: true },
+      select: { _id: true, stripe_subscription_id: true, host: { _id: true, stripe_account_id: true } },
+      options: { withDeleted: true }
+    });
+
+    console.log(sub);
+
+    // Initialise the un-subscription process, Stripe will send a webhook on completion
+    // We then emit and event "user.unsubscribed_from_patron_tier" - and another handler will react to that
+    // setting the nessecary states & adding a job to the queue for an email notification
+    await providers.stripe.connection.subscriptions.del(sub.stripe_subscription_id, {
+      stripeAccount: sub.host.stripe_account_id
+    });
+  },
+
+  sendUserUnsubscribedConfirmationEmail: async (ct: Contract<'patronage.user_unsubscribed'>) => {
+    // Have to use QB for softDeleted relation
+    const sub = await providers.orm.connection
+      .createQueryBuilder(PatronSubscription, 'sub')
+      .where('sub._id = :sub_id', { sub_id: ct.sub_id })
+      .innerJoinAndSelect('sub.host', 'host')
+      .innerJoinAndSelect('sub.patron_tier', 'tier')
+      .innerJoinAndSelect('sub.user', 'user')
+      .withDeleted()
+      .getOne();
+
+    console.log(sub);
+
+    sub.status = PatronSubscriptionStatus.Cancelled;
+    sub.cancelled_at = timestamp();
+    await sub.save();
+
+    // Notify the user that they have been unsubscribed
+    await queues.send_email.add({
+      from: Env.EMAIL_ADDRESS,
+      to: sub.user.email_address,
+      subject: providers.i18n.translate('@@email.user_unsubscribed_from_patron_tier__subject', sub.user.locale),
+      content: providers.i18n.translate('@@email.user_unsubscribed_from_patron_tier__content', sub.user.locale, {
+        user_username: sub.user.username,
+        host_username: sub.host.username,
+        tier_name: sub.patron_tier.name
+      }),
+      markdown: true,
+      attachments: []
     });
   }
 });

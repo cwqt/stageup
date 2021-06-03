@@ -1,35 +1,33 @@
 <div class="profile-container">
-  <h2 i18n>Public Profile</h2>
-  <ui-hr></ui-hr>
+  <app-content-box>
+    <h2 i18n>Public Profile</h2>
+    <ui-hr></ui-hr>
 
-  <div class="flex items-center">
-    <div class="mx-4">
-      <div class="profile-picture__container">
-        <img [src]="user.avatar" alt="" />
-        <ui-button (click)="openChangeAvatarDialog()" kind="accent"><ui-icon size="s">image</ui-icon>Edit</ui-button>
+    <div class="flex items-center">
+      <div class="mx-4">
+        <div class="profile-picture__container">
+          <img [src]="user.avatar" alt="" />
+          <ui-button (click)="openChangeAvatarDialog()" kind="accent" icon="image" i18n>Edit</ui-button>
+        </div>
+      </div>
+
+      <div class="ml-4 flex-1">
+        <ui-form [form]="profileDetailsForm"></ui-form>
+        <ui-button
+          kind="primary"
+          (click)="profileDetailsForm.submit()"
+          [disabled]="!profileDetailsForm.group.valid"
+          [loading]="profileDetailsForm.loading | async"
+          i18n
+        >
+          Update profile
+        </ui-button>
       </div>
     </div>
+  </app-content-box>
 
-    <div class="ml-4 flex-1" i18n>
-      <ui-form [form]="profileDetailsForm"></ui-form>
-      <ui-button
-        kind="primary"
-        (click)="profileDetailsForm.submit()"
-        [disabled]="!profileDetailsForm.group.valid"
-        [loading]="profileDetailsForm.loading | async"
-      >
-        Update profile
-      </ui-button>
-    </div>
-  </div>
-
-  <br />
-
-  <!-- <h2 class="mt-8">Contact Information</h2>
-  <ui-hr></ui-hr> -->
-
-  <ng-container *ngIf="myself.host">
-    <h2 class="mt-8">Company Settings</h2>
+  <app-content-box *ngIf="myself.host">
+    <h2 i18n>Company Settings</h2>
     <ui-hr></ui-hr>
 
     <div class="flex items-center justify-between">
@@ -39,23 +37,23 @@
       </div>
 
       <div>
-        <mat-label class="label-before-slide">Home Screen</mat-label>
-        <mat-slide-toggle [checked]="myself.host_info.prefers_dashboard_landing" (change)="updateLandingPage($event)">
+        <mat-label class="label-before-slide" i18n>Home Screen</mat-label>
+        <mat-slide-toggle
+          [checked]="myself.host_info.prefers_dashboard_landing"
+          (change)="updateLandingPage($event)"
+          i18n
+        >
           Dashboard
         </mat-slide-toggle>
       </div>
     </div>
-  </ng-container>
+  </app-content-box>
 
-  <!-- <h2 class="mt-8">Membership Options</h2>
-  <ui-hr></ui-hr> -->
-
-  <ui-hr></ui-hr>
-  <ui-admonition kind="failure" title="Delete Personal Account" icon="delete">
+  <ui-admonition kind="failure" i18n-title title="Delete Personal Account" icon="delete">
     <p i18n>
       Permanently remove your Personal Account and all of its contents from the StageUp platform. This action is not
       reversible, so please continue with caution.
     </p>
-    <ui-button kind="danger" class="ml-auto">Delete Account</ui-button>
+    <ui-button kind="danger" class="ml-auto" i18n>Delete Account</ui-button>
   </ui-admonition>
 </div>

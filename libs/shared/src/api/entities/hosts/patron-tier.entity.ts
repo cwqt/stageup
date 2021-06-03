@@ -8,7 +8,18 @@ import {
 } from '@core/interfaces';
 import { readRichTextContent, timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
-import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  DeleteDateColumn,
+  Entity,
+  EntityManager,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  RelationId
+} from 'typeorm';
 import { PatronSubscription } from '../users/patron-subscription.entity';
 import { Host } from './host.entity';
 
@@ -31,8 +42,12 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
   @Column() stripe_price_id: string; // price_H1y51TElsOZjG or similar
   @Column() stripe_product_id: string; // prod_JKwzPhILewYZAC or similar
 
+  @RelationId((tier: PatronTier) => tier.host) host__id: string;
   @ManyToOne(() => Host, host => host.patron_tiers) host: Host;
+
   @OneToMany(() => PatronSubscription, sub => sub.patron_tier) subscribers: PatronSubscription[];
+
+  @DeleteDateColumn() deleted_at?: Date;
 
   constructor(data: DtoCreatePatronTier, host: Host) {
     super();
