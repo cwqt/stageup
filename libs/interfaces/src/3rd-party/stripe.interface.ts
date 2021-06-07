@@ -31,6 +31,7 @@ export interface IPaymentConfirmation {
 export enum StripeHook {
   PaymentIntentCreated = 'payment_intent.created',
   PaymentIntentSucceded = 'payment_intent.succeeded',
+  ChargeRefunded = 'charge.refunded',
   InvoicePaymentSucceeded = 'invoice.payment_succeeded',
   SubscriptionDeleted = 'customer.subscription.deleted'
 }

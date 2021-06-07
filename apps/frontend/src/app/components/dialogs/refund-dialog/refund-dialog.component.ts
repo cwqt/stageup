@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { enumToValues } from '@core/helpers';
+import { enumToValues, timestamp } from '@core/helpers';
 import { DtoInvoice, RefundReason } from '@core/interfaces';
 import { MyselfService } from '@frontend/services/myself.service';
 import { ToastService } from '@frontend/services/toast.service';
@@ -44,10 +44,10 @@ export class RefundDialogComponent implements OnInit, IUiDialogOptions {
       },
       resolvers: {
         output: async v =>
-          this.myselfService.requestInvoiceRefund({
-            invoice_id: this.data.invoice_id,
-            reason: v.reason,
-            reason_detail: v.details
+          this.myselfService.requestInvoiceRefund(this.data.invoice_id, {
+            requested_on: timestamp(),
+            request_reason: v.reason,
+            request_detail: v.details
           })
       },
       handlers: {

@@ -92,7 +92,6 @@ import { PerformanceBrochureComponent } from './routes/performance/performance-b
 import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { PerformanceThumbComponent } from './components/performance-thumb/performance-thumb.component';
-import { DeleteConfirmationDialogComponent } from './components/dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { SettingsComponent } from './routes/settings/settings.component';
 import { CreateUpdateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component';
 import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
@@ -114,6 +113,8 @@ import { PaymentMethodThumbComponent } from './components/payment-method/payment
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
+import { ProcessRefundDialogComponent } from './components/dialogs/process-refund-dialog/process-refund-dialog.component';
+import { ConfirmationDialogComponent } from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 import countries from 'i18n-iso-countries';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
@@ -128,7 +129,6 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}
     AdminPanelComponent,
     AppComponent,
     LandingComponent,
-    DeleteConfirmationDialogComponent,
     LoginComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
@@ -214,6 +214,9 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}
     PaymentMethodThumbComponent,
     WalletSettingsComponent,
     GenreFeedComponent,
+    ProcessRefundDialogComponent,
+    UserPatronageComponent,
+    ConfirmationDialogComponent,
     UserPatronageComponent,
     HostPatronageSubscribersComponent,
     ContentBoxComponent

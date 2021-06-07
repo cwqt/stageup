@@ -15,22 +15,24 @@ export class MyStuffComponent implements OnInit {
   myStuff: ICacheable<IEnvelopedData<IPerformanceStub[]>> = createICacheable([]);
   searchTerms = new Subject<string>();
 
-  constructor(private myselfService: MyselfService, private appService:BaseAppService) {}
+  constructor(private myselfService: MyselfService, private appService: BaseAppService) {}
 
   ngOnInit() {
-    this.searchTerms.pipe(
-      debounceTime(300), // wait 300ms after each keystroke before considering the term
-      distinctUntilChanged() // ignore new term if same as previous term,
-    ).subscribe(term => cachize(this.myselfService.readMyPurchasedPerformances(term), this.myStuff));
+    this.searchTerms
+      .pipe(
+        debounceTime(300), // wait 300ms after each keystroke before considering the term
+        distinctUntilChanged() // ignore new term if same as previous term,
+      )
+      .subscribe(term => cachize(this.myselfService.readMyPurchasedPerformances(term), this.myStuff));
 
     this.searchTerms.next('');
   }
 
-  onChange(event:string) {
-    if(event && typeof event == "string") this.searchTerms.next(event);
+  onChange(event: string) {
+    if (event && typeof event == 'string') this.searchTerms.next(event);
   }
 
-  openWatchPerformance(performance:IPerformanceStub) {
+  openWatchPerformance(performance: IPerformanceStub) {
     this.appService.navigateTo(`/performances/${performance._id}`);
   }
 }

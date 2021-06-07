@@ -9,6 +9,7 @@ import {
   IPatronSubscription,
   IPatronTier,
   IPerformance,
+  IRefund,
   ITicket,
   IUser,
   IUserPrivate,
@@ -58,7 +59,8 @@ export type EventContract = {
   };
   // Refunds ------------------------------------------------------------------
   ['refund.requested']: { invoice_id: IInvoice['_id'] };
-  ['refund.refunded']: {};
+  ['refund.refunded']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; refund_id: IRefund['_id'] };
+  ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id'] };
   ['refund.rejected']: {};
   // Patronage ----------------------------------------------------------------
   ['patronage.started']: {
@@ -84,12 +86,13 @@ export type EventContract = {
   ['test.send_email']: { user_id: IUser['_id'] };
 };
 
-export type Event = keyof EventContract;
+export type Event = keyof EventContract; // "user.registered" | "user.password_..."
 export type ContractMeta = {
   locale?: ILocale;
   timestamp: number;
   uuid: string;
 };
+
 export type Contract<T extends Event> = EventContract[T] & {
   __meta: ContractMeta;
 };

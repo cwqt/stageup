@@ -25,3 +25,4 @@ export { AssetGroup } from './common/asset-group.entity';
 export { LiveStreamAsset } from './common/assets/livestream.asset';
 export { VideoAsset } from './common/assets/video.asset';
 export { ImageAsset } from './common/assets/image.asset';
+export { Refund } from './common/refund.entity';

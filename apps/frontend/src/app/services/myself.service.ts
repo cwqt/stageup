@@ -110,9 +110,9 @@ export class MyselfService {
     return this.http.get<IEnvelopedData<IUserInvoice[]>>(`/api/myself/invoices${querize(query)}`).toPromise();
   }
 
-  //router.post<void>("/myself/invoices/request-refund",Myself.requestInvoiceRefund());
-  requestInvoiceRefund(refundReq: IRefundRequest): Promise<void> {
-    return this.http.post<void>(`/api/myself/invoices/request-refund`, refundReq).toPromise();
+  //router.post<void>("/myself/invoices/:iid/request-refund",Myself.requestInvoiceRefund());
+  requestInvoiceRefund(invoiceId: string, refundReq: IRefundRequest): Promise<void> {
+    return this.http.post<void>(`/api/myself/invoices/${invoiceId}/request-refund`, refundReq).toPromise();
   }
   // router.get <IPaymentMethodStub[]>  ("/myself/payment-methods", Myself.readPaymentMethods());
   readPaymentMethods(): Promise<IPaymentMethodStub[]> {

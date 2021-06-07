@@ -1,5 +1,6 @@
 import {
   BASE_AMOUNT_MAP,
+  CardBrand,
   CurrencyCode,
   DonoPeg,
   DONO_PEG_WEIGHT_MAPPING,
@@ -9,6 +10,7 @@ import {
   NUUID,
   ParsedRichText,
   Primitive,
+  RefundReason,
   RichText
 } from '@core/interfaces';
 import locale from 'express-locale';
@@ -188,5 +190,35 @@ export const i18n = {
       timeStyle: 'short',
       dateStyle: 'full'
     } as any).format(date);
+  }
+};
+
+export const pipes = {
+  cardBrand: (brand: CardBrand): string => {
+    const pretty: { [index in CardBrand]: string } = {
+      [CardBrand.Amex]: `American Express`,
+      [CardBrand.Diners]: `Diners`,
+      [CardBrand.Discover]: `Discover`,
+      [CardBrand.JCB]: `JCB`,
+      [CardBrand.Mastercard]: `Mastercard`,
+      [CardBrand.UnionPay]: `UnionPay`,
+      [CardBrand.Visa]: `Visa`,
+      [CardBrand.Unknown]: `Unknown`
+    };
+
+    return pretty[brand];
+  },
+  refundReason: (reason: RefundReason): string => {
+    const pretty: { [index in RefundReason]: string } = {
+      [RefundReason.Covid]: 'COVID-19',
+      [RefundReason.CancelledPostponed]: 'Event was cancelled/postponed',
+      [RefundReason.Duplicate]: 'Duplicate ticket/purchased twice',
+      [RefundReason.WrongTicket]: 'Wrong event purchased',
+      [RefundReason.Dissatisfied]: 'Dissatisfied with event',
+      [RefundReason.CannotAttend]: 'Unable to attend event',
+      [RefundReason.Other]: 'Other, please provide details below...'
+    };
+
+    return pretty[reason];
   }
 };

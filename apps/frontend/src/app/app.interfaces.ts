@@ -70,7 +70,7 @@ export class Cacheable<T> implements ICacheable<T> {
   public error: string | HttpErrorResponse | null;
   public meta: { [index: string]: any };
 
-  constructor(cache?: ICacheable<T>) {
+  constructor(cache?: Partial<ICacheable<T>>) {
     this.$loading = new BehaviorSubject(cache?.loading || false);
     this.data = cache?.data || null;
     this.meta = cache?.meta || {};

@@ -1,10 +1,22 @@
 import Env from '@backend/env';
-import { Host, Invoice, PatronSubscription, PatronTier, Performance, transact, User } from '@core/api';
-import { dateOrdinal, i18n, stringifyRichText, timestamp } from '@core/helpers';
+import { Host, Invoice, PatronSubscription, PatronTier, Performance, Refund, transact, User } from '@core/api';
+import { dateOrdinal, i18n, pipes, stringifyRichText, timestamp } from '@core/helpers';
 import { CurrencyCode, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
+
+// FOR SENDING EMAILS: ----------------------------------------------------------
+// define the event & contract that goes along with it
+// emit the event & contract data on onto the event bus
+// setup a listener in one of the modules for that event
+// write an event handler, that will do something with the event
+//   - for emails, write the email in english in the i18n.hjson file
+//   - reference the i18n token in the providers.i18n.translate
+//   - add all the variables in the .translate that are in the ICU string {username}
+//   - add the email to the send_email queue for the workers to process at some later date (immediately)
+// ------------------------------------------------------------------------------
 import { Contract } from 'libs/shared/src/api/event-bus/contracts';
 import moment from 'moment';
+import logo from './assets/logo';
 import { QueueModule, QueueProviders } from './queue.module';
 
 export const EventHandlers = (queues: QueueModule['queues'], providers: QueueProviders) => ({
@@ -176,6 +188,36 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     });
   },
 
+  sendHostRefundRequestEmail: async (ct: Contract<'refund.requested'>) => {
+    const invoice = await Invoice.findOne(
+      { _id: ct.invoice_id },
+      { relations: { user: true, ticket: { performance: true }, host: true } }
+    );
+
+    queues.send_email.add({
+      subject: providers.i18n.translate('@@email.host_refund_requested_confirmation__subject', ct.__meta.locale, {
+        performance_name: invoice.ticket.performance.name,
+        user_username: invoice.user.username
+      }),
+
+      content: providers.i18n.translate('@@email.host_refund_requested_confirmation__content', ct.__meta.locale, {
+        host_name: invoice.host.username,
+        user_username: invoice.user.username,
+        user_email_address: invoice.user.email_address,
+        invoice_id: invoice._id,
+        performance_name: invoice.ticket.performance.name,
+        purchase_date: moment.unix(invoice.purchased_at).format('LLLL'),
+        amount: i18n.money(invoice.amount, invoice.currency),
+        invoice_dashboard_url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/dashboard/payments/invoices`
+      }),
+
+      from: Env.EMAIL_ADDRESS,
+      to: invoice.host.email_address,
+      markdown: true,
+      attachments: []
+    });
+  },
+
   sendInvoiceRefundRequestConfirmation: async (ct: Contract<'refund.requested'>) => {
     // FUTURE Have different strategies for different types of purchaseables?
     const invoice = await Invoice.findOne(
@@ -188,6 +230,8 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         host_name: invoice.host.username
       }),
       content: providers.i18n.translate('@@email.refund_requested__content', ct.__meta.locale, {
+        user_username: invoice.user.username,
+        host_name: invoice.host.username,
         invoice_id: invoice._id,
         performance_name: invoice.ticket.performance.name,
         purchase_date: moment.unix(invoice.purchased_at).format('LLLL'),
@@ -216,6 +260,148 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
       );
 
       await tier.setup(providers.stripe.connection, txc);
+    });
+  },
+
+  sendHostRefundInitiatedEmail: async (ct: Contract<'refund.initiated'>) => {
+    const invoice = await Invoice.findOne({
+      relations: {
+        ticket: {
+          performance: true
+        },
+        host: true
+      },
+      where: {
+        _id: ct.invoice_id
+      }
+    });
+    const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address', 'username'] });
+
+    queues.send_email.add({
+      subject: providers.i18n.translate('@@email.host.refund_initiated__subject', ct.__meta.locale, {
+        user_username: user.username,
+        performance_name: invoice.ticket.performance.name
+      }),
+      content: providers.i18n.translate('@@email.host.refund_initiated__content', ct.__meta.locale, {
+        host_name: invoice.host.name,
+        performance_name: invoice.ticket.performance.name,
+        invoice_id: invoice._id,
+        invoice_amount: i18n.money(invoice.amount, invoice.currency)
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: user.email_address,
+      markdown: true,
+      attachments: []
+    });
+  },
+
+  sendUserRefundInitiatedEmail: async (ct: Contract<'refund.initiated'>) => {
+    const invoice = await Invoice.findOne({
+      relations: {
+        ticket: {
+          performance: true
+        },
+        host: true,
+        payment_method: true
+      },
+      where: {
+        _id: ct.invoice_id
+      }
+    });
+    const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address'] });
+
+    queues.send_email.add({
+      subject: providers.i18n.translate('@@email.user.refund_initiated__subject', ct.__meta.locale, {
+        host_name: invoice.host.name,
+        performance_name: invoice.ticket.performance.name
+      }),
+      content: providers.i18n.translate('@@email.user.refund_initiated__content', ct.__meta.locale, {
+        user_username: user.username,
+        host_name: invoice.host.name,
+        performance_name: invoice.ticket.performance.name,
+        last_4: invoice.payment_method.last4,
+        card_brand: pipes.cardBrand(invoice.payment_method.brand),
+        invoice_id: invoice._id,
+        invoice_amount: i18n.money(invoice.amount, invoice.currency)
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: user.email_address,
+      markdown: true,
+      attachments: []
+    });
+  },
+
+  sendHostRefundRefundedEmail: async (ct: Contract<'refund.refunded'>) => {
+    const invoice = await Invoice.findOne({
+      where: {
+        _id: ct.invoice_id
+      },
+      relations: {
+        user: true,
+        payment_method: true,
+        ticket: {
+          performance: true
+        },
+        host: true
+      }
+    });
+
+    queues.send_email.add({
+      subject: providers.i18n.translate('@@email.host.refund_refunded__subject', ct.__meta.locale, {
+        invoice_id: invoice._id,
+        user_username: invoice.user.username,
+        performance_name: invoice.ticket.performance.name
+      }),
+      content: providers.i18n.translate('@@email.host.refund_refunded__content', ct.__meta.locale, {
+        host_name: invoice.host.name,
+        user_username: invoice.user.username,
+        performance_name: invoice.ticket.performance.name,
+        invoice_id: invoice._id,
+        invoice_amount: i18n.money(invoice.amount, invoice.currency)
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: invoice.host.email_address,
+      markdown: true,
+      attachments: []
+    });
+  },
+
+  sendUserRefundRefundedEmail: async (ct: Contract<'refund.refunded'>) => {
+    const invoice = await Invoice.findOne({
+      where: {
+        _id: ct.invoice_id
+      },
+      relations: {
+        user: true,
+        payment_method: true,
+        ticket: {
+          performance: true
+        },
+        host: true
+      }
+    });
+
+    const refund = await Refund.findOne({ _id: ct.refund_id });
+
+    queues.send_email.add({
+      subject: providers.i18n.translate('@@email.user.refund_refunded__subject', ct.__meta.locale, {
+        performance_name: invoice.ticket.performance.name
+      }),
+      content: providers.i18n.translate('@@email.user.refund_refunded__content', ct.__meta.locale, {
+        base_64_img: logo,
+        user_username: invoice.user.username,
+        host_name: invoice.host.name,
+        invoice_id: invoice._id,
+        last_4: invoice.payment_method.last4,
+        card_brand: pipes.cardBrand(invoice.payment_method.brand),
+        invoice_amount: i18n.money(invoice.amount, invoice.currency),
+        performance_name: invoice.ticket.performance.name,
+        refund_reason: pipes.refundReason(refund.request_reason)
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: invoice.user.email_address,
+      markdown: true,
+      attachments: []
     });
   },
 

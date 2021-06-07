@@ -73,7 +73,8 @@ export default class UserController extends BaseController<BackendProviderMap> {
         // Create a Stripe Customer, for purposes of managing cards on our Multi-Party platform
         // https://stripe.com/docs/connect/cloning-saved-payment-methods#storing-customers
         const customer = await this.providers.stripe.connection.customers.create({
-          email: req.body.email_address
+          email: req.body.email_address,
+          metadata: { __origin_url: Env.WEBHOOK_URL }
         });
 
         // Save the user through a transaction (creates ContactInfo & Person)

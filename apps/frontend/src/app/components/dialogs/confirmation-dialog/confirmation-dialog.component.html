@@ -1,0 +1,3 @@
+<ui-dialog [title]="data.title" [buttons]="buttons" [loading]="data.loading | async">
+  <p *ngIf="data.description">{{ data.description }}</p>
+</ui-dialog>

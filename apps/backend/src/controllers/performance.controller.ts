@@ -304,7 +304,8 @@ export default class PerformanceController extends BaseController<BackendProvide
         const method = await this.providers.stripe.connection.paymentMethods.create(
           {
             customer: platformPaymentMethod.user.stripe_customer_id,
-            payment_method: platformPaymentMethod.stripe_method_id
+            payment_method: platformPaymentMethod.stripe_method_id,
+            metadata: { __origin_url: Env.WEBHOOK_URL }
           },
           { stripeAccount: ticket.performance.host.stripe_account_id }
         );

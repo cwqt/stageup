@@ -6,6 +6,7 @@ import {
   PurchaseableType,
   PaymentStatus,
   IStripeChargePassthrough,
+  RefundResponseReason,
   Environment
 } from '@core/interfaces';
 import {
@@ -20,15 +21,16 @@ import {
   AccessToken,
   PatronTier,
   PaymentMethod,
+  ErrorHandler,
+  Refund,
   PatronSubscription
 } from '@core/api';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import Env from '../env';
-
 import Stripe from 'stripe';
 import { log } from '../common/logger';
-import Email = require('../common/email');
+import { IsNull } from 'typeorm';
 import { timestamp } from '@core/helpers';
 
 export default class StripeController extends BaseController<BackendProviderMap> {
@@ -42,6 +44,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
       [StripeHook.PaymentIntentCreated]: this.handlePaymentIntentCreated.bind(this),
       [StripeHook.PaymentIntentSucceded]: this.handlePaymentIntentSuccessful.bind(this),
       [StripeHook.InvoicePaymentSucceeded]: this.handleInvoicePaymentSuccessful.bind(this),
+      [StripeHook.ChargeRefunded]: this.handleRefundSuccessful.bind(this),
       [StripeHook.SubscriptionDeleted]: this.handleSubscriptionDeleted.bind(this)
     };
   }
@@ -70,6 +73,13 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
         await (this.hookMap[event.type] || this.unsupportedHookHandler)(event);
         return { received: true };
+        // Check from metadata that this machine sent this request
+        // if ((event.data.object as any)?.metadata?.__origin_url == Env.WEBHOOK_URL) {
+        //   await (this.hookMap[event.type] || this.unsupportedHookHandler)(event);
+        //   return { received: true };
+        // } else {
+        //   // throw new ErrorHandler(HTTP.Conflict, '@@stripe.origin_url_not_matched');
+        // }
       }
     };
   }
@@ -100,7 +110,13 @@ export default class StripeController extends BaseController<BackendProviderMap>
       });
 
       const user = await User.findOne({ _id: passthrough.user_id });
-      const invoice = new Invoice(user, purchaseable.patron_tier.amount, purchaseable.patron_tier.currency, intent)
+      const invoice = new Invoice(
+        user,
+        purchaseable.patron_tier.amount,
+        purchaseable.patron_tier.currency,
+        intent,
+        method
+      )
         .setHost(purchaseable.patron_tier.host)
         .setPurchaseable(purchaseable);
 
@@ -150,7 +166,13 @@ export default class StripeController extends BaseController<BackendProviderMap>
         const invoice = await this.ORM.transaction(async txc => {
           // Create a new invoice for the user which provisions an Access Token for the performance
           ticket.quantity_remaining -= 1;
-          const invoice = new Invoice(user, intent.amount, intent.currency.toUpperCase() as CurrencyCode, intent)
+          const invoice = new Invoice(
+            user,
+            intent.amount,
+            intent.currency.toUpperCase() as CurrencyCode,
+            intent,
+            method
+          )
             .setHost(ticket.performance.host) // should be party to hosts invoices
             .setPurchaseable(ticket); // purchased a ticket
 
@@ -248,5 +270,36 @@ export default class StripeController extends BaseController<BackendProviderMap>
         // where which we can take an `application_fee_amount` from the purchase
       }
     };
+  }
+
+  async handleRefundSuccessful(event: Stripe.Event) {
+    const stripeRefund = event.data.object as Stripe.Refund;
+
+    const invoice = await getCheck(
+      Invoice.findOne({
+        where: {
+          stripe_payment_intent_id: stripeRefund.payment_intent as string,
+          refunds: {
+            responded_on: IsNull()
+          }
+        },
+        relations: ['refunds', 'user']
+      })
+    );
+
+    const currentRefund = invoice.refunds[0];
+    currentRefund.responded_on = timestamp();
+    currentRefund.is_refunded = true;
+    currentRefund.response_reason = RefundResponseReason.Accepted;
+    currentRefund.response_detail = '';
+
+    invoice.status = PaymentStatus.Refunded;
+    await Promise.all([currentRefund.save(), invoice.save()]);
+
+    await this.providers.bus.publish(
+      'refund.refunded',
+      { invoice_id: invoice._id, user_id: invoice.user._id, refund_id: currentRefund._id },
+      invoice.user.locale
+    );
   }
 }

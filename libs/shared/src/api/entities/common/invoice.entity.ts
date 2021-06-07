@@ -1,4 +1,14 @@
-import { BaseEntity, Entity, Column, ManyToOne, BeforeInsert, PrimaryColumn, OneToOne } from 'typeorm';
+import {
+  BaseEntity,
+  Entity,
+  Column,
+  ManyToOne,
+  BeforeInsert,
+  PrimaryColumn,
+  OneToOne,
+  OneToMany,
+  JoinColumn
+} from 'typeorm';
 import {
   IInvoice,
   CurrencyCode,
@@ -20,6 +30,7 @@ import { timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
 import { Ticket } from '../performances/ticket.entity';
 import { PatronSubscription } from '../users/patron-subscription.entity';
+import { Refund } from './refund.entity';
 import { PatronTier, PaymentMethod } from '@core/api';
 
 export type PurchaseableEntity = PatronSubscription | Ticket;
@@ -41,18 +52,21 @@ export class Invoice extends BaseEntity implements IInvoice {
   @Column() stripe_payment_intent_id: string;
   @Column() stripe_receipt_url: string;
 
+  @OneToMany(() => Refund, refund => refund.invoice) refunds: Refund[];
   @ManyToOne(() => User, user => user.invoices) user: User;
   @ManyToOne(() => Host, host => host.invoices) host?: Host; // purchase was related to a host
+  @ManyToOne(() => PaymentMethod) @JoinColumn() payment_method: PaymentMethod;
 
   // Exclusive Belongs To (AKA Exclusive Arc) polymorphic relation
   @ManyToOne(() => Ticket) ticket?: Ticket;
   @ManyToOne(() => PatronSubscription) patron_subscription?: PatronSubscription;
 
-  constructor(user: User, amount: number, currency: CurrencyCode, intent: Stripe.PaymentIntent) {
+  constructor(user: User, amount: number, currency: CurrencyCode, intent: Stripe.PaymentIntent, method: PaymentMethod) {
     super();
     this.user = user;
     this.amount = amount;
     this.currency = currency;
+    this.payment_method = method;
     this.purchased_at = timestamp();
 
     this.stripe_payment_intent_id = intent.id;

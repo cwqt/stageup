@@ -15,6 +15,9 @@ import {
   Idless,
   IHostBusinessDetails,
   IHostMemberChangeRequest,
+  IInvoice,
+  IRefundRequest,
+  RefundReason,
   IPersonInfo,
   ISocialInfo,
   PaginationOptions,
@@ -110,6 +113,12 @@ export namespace objects {
     line1: string(),
     line2: optional(string()),
     state: optional(string())
+  });
+
+  export const RefundInvoiceRequest: Describe<IRefundRequest> = object({
+    requested_on: fields.timestamp,
+    request_reason: enums<RefundReason>(enumToValues(RefundReason)),
+    request_detail: string()
   });
 
   export const IHostBusinessDetails: Describe<IHostBusinessDetails> = object({

@@ -34,11 +34,16 @@ import {
   IOnboardingStep,
   IOnboardingStepMap,
   IPerformanceStub,
-  IUserHostInfo
+  IUserHostInfo,
+  pick,
+  TokenProvisioner,
+  IRefund,
+  PaymentStatus
 } from '@core/interfaces';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
-import { array, enums, object, string, StructError } from 'superstruct';
+import { array, enums, number, object, string, StructError } from 'superstruct';
+import { In } from 'typeorm';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
@@ -768,6 +773,71 @@ export default class HostController extends BaseController<BackendProviderMap> {
           .innerJoinAndSelect('group.assets', 'assets')
           // .withDeleted() // tickets & performances can be soft deleted
           .paginate(i => i.toHostInvoiceStub());
+      }
+    };
+  }
+
+  readInvoiceRefunds(): IControllerEndpoint<IRefund[]> {
+    return {
+      authorisation: AuthStrat.none,
+      controller: async req => {
+        const { refunds } = await getCheck(Invoice.findOne({ _id: req.params.iid }, { relations: ['refunds'] }));
+        return refunds.map(r => r.toFull());
+      }
+    };
+  }
+
+  processRefunds(): IControllerEndpoint<void> {
+    return {
+      validators: {
+        body: object({
+          invoice_ids: array(fields.nuuid)
+        })
+      },
+      authorisation: AuthStrat.isMemberOfHost(),
+      controller: async req => {
+        const invoiceIds: string[] = req.body.invoice_ids;
+        const invoices = await Invoice.find({
+          where: {
+            _id: In(invoiceIds),
+            host: {
+              _id: req.params.hid
+            }
+          },
+          relations: {
+            host: true,
+            user: true
+          },
+          select: {
+            host: { _id: true, stripe_account_id: true }
+          }
+        });
+        // No invoices found for provided ids
+        if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
+        // Refund all invoices in parallel, & wait for them all to finish
+        await Promise.all(
+          // invoices.map evaluates to [Promise<pending>, Promise<pending>, ...]
+          invoices.map(async invoice => {
+            if (invoice.status !== PaymentStatus.RefundRequested)
+              throw new ErrorHandler(HTTP.BadRequest, '@@refunds.refund_already_outstanding');
+
+            this.providers.stripe.connection.refunds.create(
+              {
+                payment_intent: invoice.stripe_payment_intent_id,
+                metadata: { __origin_url: Env.WEBHOOK_URL }
+              },
+              {
+                stripeAccount: invoice.host.stripe_account_id
+              }
+            );
+
+            return await this.providers.bus.publish(
+              'refund.initiated',
+              { invoice_id: invoice._id, user_id: invoice.user._id },
+              req.locale
+            );
+          })
+        );
       }
     };
   }

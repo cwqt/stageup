@@ -3,9 +3,9 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 import { Observable } from 'rxjs';
 import { Except } from 'type-fest';
 import {
-  DeleteConfirmationDialogComponent,
+  ConfirmationDialogComponent,
   IConfirmationDialogData
-} from '../components/dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component';
+} from '../components/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ import {
 export class HelperService {
   constructor() {}
 
-  showConfirmationDialog(dialog: MatDialog, data: IConfirmationDialogData, config: MatDialogConfig<any> = {}) {
-    this.showDialog(dialog.open(DeleteConfirmationDialogComponent, { ...config, data: data }));
+  showConfirmationDialog<T>(dialog: MatDialog, data: IConfirmationDialogData, config: MatDialogConfig<any> = {}, callback?: (result: T) => void, cancelCallback = () => {}) {
+    this.showDialog(dialog.open(ConfirmationDialogComponent, { ...config, data: data }), callback, cancelCallback);
   }
 
   showDialog<T>(dialogRef: MatDialogRef<any>, callback?: (result: T) => void, cancelCallback = () => {}) {

@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { capitalize, FilterCode, IEnvelopedData, IHostInvoiceStub, PaymentStatus, TicketType } from '@core/interfaces';
 import { i18n } from '@core/helpers';
-import { unix } from 'moment';
 import { createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { InvoiceDialogComponent } from '@frontend/components/dialogs/invoice-dialog/invoice-dialog.component';
+import { ProcessRefundDialogComponent } from '@frontend/components/dialogs/process-refund-dialog/process-refund-dialog.component';
+import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
 import { ToastService } from '@frontend/services/toast.service';
+import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { PaymentStatusPipe } from '@frontend/_pipes/payment-status.pipe';
-import { HelperService } from '@frontend/services/helper.service';
-import { UiTable } from '@frontend/ui-lib/table/table.class';
+import { unix } from 'moment';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-host-invoices',
@@ -39,7 +41,24 @@ export class HostInvoicesComponent implements OnInit {
           actions: [
             {
               label: 'Refund selected invoice(s)',
-              click: v => console.log(v.selected[0])
+              click: async v => {
+                if (v.selected.some(i => i['__data'].status == PaymentStatus.Refunded)) {
+                  this.toastService.emit(
+                    $localize`One or more selected invoices have already been refunded`,
+                    ThemeKind.Danger,
+                    {
+                      duration: 5000
+                    }
+                  );
+                  return;
+                }
+
+                v.selected.length > 1
+                  ? console.log('Bulk refund placeholder for task')
+                  : this.helperService.showDialog(
+                      this.dialog.open(ProcessRefundDialogComponent, { data: v.selected[0].__data })
+                    );
+              }
             },
             {
               label: 'Decline refunds',
@@ -174,7 +193,7 @@ export class HostInvoicesComponent implements OnInit {
                 [PaymentStatus.Fufilled, { label: 'Fufilled' }],
                 [PaymentStatus.Paid, { label: 'Paid' }],
                 [PaymentStatus.RefundDenied, { label: 'Refund Denied' }],
-                [PaymentStatus.RefundPending, { label: 'Refund Pending' }],
+                [PaymentStatus.RefundRequested, { label: 'Refund Pending' }],
                 [PaymentStatus.Refunded, { label: 'Refunded' }]
               ])
             },
@@ -186,7 +205,7 @@ export class HostInvoicesComponent implements OnInit {
                   return 'gray';
                 case PaymentStatus.Paid:
                   return 'green';
-                case PaymentStatus.RefundPending:
+                case PaymentStatus.RefundRequested:
                   return 'magenta';
                 case PaymentStatus.RefundDenied:
                   return 'red';

@@ -44,7 +44,113 @@
 
   // Errors ----------------------------------------------------------------------------------------------
   "error.user_has_no_claim": You don't have permissions to view this content
+  
+  // Stripe ----------------------------------------------------------------------------------------------
+  "stripe.origin_url_not_matched": Received response does not match submitter!
 
+  // Refunds ----------------------------------------------------------------------------------------------
+  "refunds.no_invoices_found": Could not find any invoices
+  "refunds.refund_already_outstanding": Cannot refund while one another refund is already outstanding
+
+  // Emails -----------------------------------------------------------------------------------------------
+  "email.user.refund_initiated__content":
+    '''
+    **Hi {user_username},**
+
+     This is a notification to confirm that **{host_name}** has initiated a refund on your order **{invoice_id}** for the amount of **{invoice_amount}** for the performance **{performance_name}**.
+
+    You can view the status of this refund at any time by logging in to your StageUp account and clicking settings -> payments.
+
+    We will automatically credit the funds to your **{card_brand}** ending in **{last_4}**. Please note, the amount may take up to 5 working days to appear in your account.
+
+    **Thanks,**
+
+    **StageUp Team**
+    '''
+  "email.user.refund_initiated__subject": Refund initiated by {host_name} for {performance_name}
+  "email.host.refund_initiated__content":
+    '''
+    **Hi {host_name},**
+
+     You have initiated a refund for your performance "{performance_name}"
+
+    **Invoice#: {invoice_id}**
+
+    **Total Amount: {invoice_amount}**
+
+    We have notified the affected customer that they shall receive the refunded amount in their account within 5 working days
+
+    **Thanks,**
+
+    **StageUp Team**
+
+    Please note, if this request was not initated by you please notify us immediately
+    '''
+  "email.host.refund_initiated__subject": Refund initiated for {user_username}'s purchase of {performance_name}
+  "email.user.refund_refunded__subject": Refund for {performance_name} succesful!
+  "email.user.refund_refunded__content":
+    '''
+    Hi {user_username},
+
+    This is a notification to confirm that {host_name} has successfully refunded your order **{invoice_id}** for **{invoice_amount}** for your purchase of **{performance_name}** due to:
+
+    > {refund_reason}
+
+    The funds have now been credited to **{card_brand}** ending in **{last_4}**.
+
+    You can view a log of this refund within your StageUp account settings
+
+    **Thanks,**
+
+    **StageUp Team**
+    '''
+  "email.host.refund_refunded__subject": Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe
+  "email.host.refund_refunded__content":
+    '''
+    Hi {host_name},
+
+    This is a notification to confirm that your recent refund request for **{user_username}** for **{performance_name}** for the amount of **{invoice_amount}** has succesfully been refunded by Stripe and the user has been notified.
+
+    You can view the status of all your refunds within your account settings
+
+    **Thanks,** 
+    **StageUp Team**
+    '''
+  "email.refund_requested__subject": StageUp: Your refund request has been sent to @{host_name}
+  "email.refund_requested__content":
+    '''
+    Your refund request for the following invoice has been sent to **{host_name}**.
+
+    - Invoice #: **{invoice_id}**
+    - Performance: **{performance_name}**
+    - Purchased: **{purchase_date}**
+    - Amount: **{amount}**
+
+    We'll let you know when the host has processed your request
+
+    **Thanks,**
+
+    **StageUp Team**
+    '''
+  "email.host_refund_requested_confirmation__subject": StageUp: Refund request received for {performance_name} from @{user_username}
+  "email.host_refund_requested_confirmation__content":
+    '''
+    Hi {host_name},
+
+    @{user_username} ({user_email_address}) has requested a refund on their purchase of {performance_name}
+
+    **Refund Details:**
+
+    - **Invoice #:** {invoice_id}
+    - **Performance:** {performance_name}
+    - **Purchased On:** {purchase_date}
+    - **Amount:** {amount}
+
+    To process this request you can visit your [invoice dashboard here]({invoice_dashboard_url}).
+
+    **Thanks,**
+    ************StageUp Team**
+    '''
   // Emails ----------------------------------------------------------------------------------------------
   "email.host.invoice_pdf__subject": Exported Invoice PDF files
   "email.host.invoice_pdf__content": See attachments for invoice data
@@ -118,18 +224,6 @@
     If you did not make this change, please login into your account and change your password as soon as possible.
 
     If you have recently changed your password, then please ignore this email.
-    '''
-  "email.refund_requested__subject": StageUp: Your refund request has been sent to @{host_name}
-  "email.refund_requested__content":
-    '''
-    Your refund request for the following invoice has been sent to **{host_name}**.
-
-    - Invoice #: **{invoice_id}**
-    - Performance: **{performance_name}**
-    - Purchased: **{purchase_date}**
-    - Amount: **{amount}**
-
-    We'll let you know when the host has processed your request
     '''
   "email.subscriber_notify_tier_deleted__subject": Notification of Patron Tier removal
   "email.subscriber_notify_tier_deleted__content":

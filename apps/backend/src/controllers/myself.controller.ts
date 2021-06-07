@@ -9,6 +9,7 @@ import {
   PatronSubscription,
   PaymentMethod,
   Performance,
+  Refund,
   User,
   UserHostInfo,
   Validators
@@ -27,6 +28,7 @@ import {
   IUserInvoice,
   IUserInvoiceStub,
   PaymentStatus,
+  pick,
   DtoUserPatronageSubscription,
   Visibility
 } from '@core/interfaces';
@@ -230,7 +232,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           .withDeleted()
           .getOne();
 
-        const charge = await this.providers.stripe.connection.paymentIntents.retrieve(
+        const intent = await this.providers.stripe.connection.paymentIntents.retrieve(
           invoice.stripe_payment_intent_id,
           {
             expand: ['payment_method']
@@ -239,24 +241,31 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             stripeAccount: invoice.ticket.performance.host.stripe_account_id
           }
         );
-        return invoice.toUserInvoice(charge);
+
+        return invoice.toUserInvoice(intent);
       }
     };
   }
 
   requestInvoiceRefund(): IControllerEndpoint<void> {
     return {
-      // validators: [body<IRefundRequest>(Validators.Objects.refundInvoiceRequest())],
+      validators: { body: Validators.Objects.RefundInvoiceRequest },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        const refund: IRefundRequest = req.body;
+        const refundReq: IRefundRequest = pick(req.body, ['requested_on', 'request_reason', 'request_detail']);
+
         const invoice = await getCheck(
           Invoice.findOne({
             relations: {
-              user: true
+              refunds: true,
+              ticket: {
+                performance: true
+              },
+              user: true,
+              host: true
             },
             where: {
-              _id: req.params.invoice_id,
+              _id: req.params.iid,
               user: {
                 _id: req.session.user._id
               }
@@ -264,11 +273,23 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           })
         );
 
-        invoice.status = PaymentStatus.RefundPending;
-        invoice.refund_request = refund;
+        // Ensure no refund request is currently outstanding before allowing a user
+        // to re-request a refund
+        if (invoice.refunds.some(i => i.responded_on == null))
+          throw new ErrorHandler(HTTP.Forbidden, '@@refunds.refund_already_outstanding');
 
-        await invoice.save();
-        this.providers.bus.publish('refund.requested', { invoice_id: invoice._id }, req.locale);
+        await this.ORM.transaction(async txc => {
+          const refund = new Refund(invoice, refundReq);
+          await txc.save(refund);
+
+          refund.invoice = invoice;
+          invoice.status = PaymentStatus.RefundRequested;
+          await txc.save(invoice);
+
+          return await txc.save(refund);
+        });
+
+        await this.providers.bus.publish('refund.requested', { invoice_id: invoice._id }, req.locale);
       }
     };
   }

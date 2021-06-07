@@ -22,14 +22,13 @@
 //             })
 //           )
 //      });
-    
+
 //     ORM.transaction(async txc => {
 //         const invoice = await txc.save(
 //             new Invoice(user, 12, CurrencyCode.GBP, null)
 //           )
 //      });
 //     });
-  
 
 //   it('Requesta a refund on an invoice', async () => {
 //     await Stories.actions.users.requestInvoiceRefund({
@@ -38,8 +37,7 @@
 //         reason_detail: 'COVID-19'
 //     });
 
-//     expect(invoice.status).toBe(PaymentStatus.RefundPending);
+//     expect(invoice.status).toBe(PaymentStatus.RefundRequested);
 //   });
-    
 
 // });

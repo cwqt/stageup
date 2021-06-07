@@ -17,8 +17,8 @@ import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
 export class InvoiceDialogComponent implements OnInit, IUiDialogOptions {
   isHostInvoice: boolean;
   paymentStateKind: ChipComponent['kind'];
+  public refundRequested: PaymentStatus = PaymentStatus.RefundRequested;
   invoice: ICacheable<IHostInvoice | IUserInvoice> = createICacheable();
-  refundRequested: PaymentStatus = PaymentStatus.RefundPending;
 
   @Output() submit: EventEmitter<void> = new EventEmitter();
   @Output() cancel: EventEmitter<void> = new EventEmitter();
@@ -49,8 +49,8 @@ export class InvoiceDialogComponent implements OnInit, IUiDialogOptions {
           return 'gray';
         case PaymentStatus.Paid:
           return 'green';
-        case PaymentStatus.RefundPending:
-          return 'magenta';
+        case PaymentStatus.RefundRequested:
+          return 'orange';
         case PaymentStatus.RefundDenied:
           return 'red';
         case PaymentStatus.Refunded:
@@ -65,7 +65,7 @@ export class InvoiceDialogComponent implements OnInit, IUiDialogOptions {
 
   requestRefund() {
     this.helperService.showDialog(this.dialog.open(RefundDialogComponent, { data: this.invoice.data }), () => {
-      this.paymentStateKind = 'magenta';
+      this.paymentStateKind = 'orange';
       this.submit.emit();
     });
   }

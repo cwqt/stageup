@@ -1,4 +1,4 @@
-import { AsyncRouter, IControllerEndpoint, Providers } from '@core/api';
+import { IControllerEndpoint, Providers } from '@core/api';
 import { to } from '@core/helpers';
 import { JobData, JobType, JobTypes } from '@core/interfaces';
 import { BullMQAdapter, router as BullRouter, setQueues } from 'bull-board';
@@ -32,8 +32,12 @@ export type QueueProviders = {
 
 const w = worker => {
   return async (job: Job) => {
-    console.log('Handling job', job.name, job.id);
-    return await worker(job);
+    try {
+      console.log('Handling job', job.name, job.id);
+      return await worker(job);
+    } catch (error) {
+      console.log('Job failed', error);
+    }
   };
 };
 
@@ -117,6 +121,22 @@ export class QueueModule implements Module {
     const handlers = EventHandlers(this.queues, providers);
     // prettier-ignore
     {
+      bus.subscribe("refund.refunded", async ct => {
+                                                         handlers.sendUserRefundRefundedEmail(ct);
+                                                         handlers.sendHostRefundRefundedEmail(ct);
+      });
+      bus.subscribe("refund.initiated", async ct => {
+                                                         handlers.sendUserRefundInitiatedEmail(ct);
+                                                         handlers.sendHostRefundInitiatedEmail(ct);
+      });
+      bus.subscribe("test.send_email",                   handlers.sendTestEmail);
+      bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
+      bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
+      // bus.subscribe('user.invited_to_private_showing',  handlers.sendUserPrivatePerformanceInviteEmail);
+      bus.subscribe('user.password_reset_requested',     handlers.sendPasswordResetLinkEmail);
+      bus.subscribe('user.password_changed',             handlers.sendPasswordChangedNotificationEmail);
+      bus.subscribe('ticket.purchased',                  handlers.sendTicketReceiptEmail);
+      bus.subscribe('refund.requested',                  handlers.sendInvoiceRefundRequestConfirmation);
       bus.subscribe("test.send_email",                   handlers.sendTestEmail);
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
@@ -129,7 +149,6 @@ export class QueueModule implements Module {
       bus.subscribe("patronage.tier_deleted",            handlers.unsubscribeAllPatronTierSubscribers);
       bus.subscribe("patronage.unsubscribe_user",        handlers.unsubscribeFromPatronTier);
       bus.subscribe("patronage.user_unsubscribed",       handlers.sendUserUnsubscribedConfirmationEmail);
-
       bus.subscribe("host.invoice_export",              async ct => {
         if(ct.format == "pdf") await this.queues.host_invoice_pdf.add({
           locale: ct.__meta.locale,
@@ -141,10 +160,9 @@ export class QueueModule implements Module {
           sender_email_address: Env.EMAIL_ADDRESS,
           email_address: ct.email_address, invoice_ids: ct.invoice_ids})
       });
-
       bus.subscribe('patronage.started', ct => {
-        handlers.sendHostPatronSubscriptionStartedEmail(ct);
-        handlers.sendUserPatronSubscriptionStartedReceiptEmail(ct);
+                                                        handlers.sendHostPatronSubscriptionStartedEmail(ct);
+                                                        handlers.sendUserPatronSubscriptionStartedReceiptEmail(ct);
       });
     }
 

@@ -23,10 +23,26 @@ export enum RefundReason {
   Other = 'other_specify'
 }
 
+export enum RefundResponseReason {
+  Accepted = 'accepted',
+  OutsidePolicy = 'outside_refund_policy'
+}
+
 export interface IRefundRequest {
-  invoice_id: IInvoice['_id'];
-  reason: RefundReason;
-  reason_detail: string;
+  requested_on: number;
+  request_reason: RefundReason;
+  request_detail: string;
+}
+
+export interface IRefundResponse {
+  responded_on: number;
+  response_reason: RefundResponseReason;
+  response_detail: string;
+}
+
+export interface IRefund extends IRefundRequest, Partial<IRefundResponse> {
+  _id: NUUID;
+  is_refunded: boolean;
 }
 
 // A record of purchase by the user
@@ -48,7 +64,7 @@ export enum PaymentStatus {
   Fufilled = 'fufilled',
   Refunded = 'refunded',
   RefundDenied = 'refund_denied',
-  RefundPending = 'refund_pending'
+  RefundRequested = 'refund_requested'
 }
 
 // Pertains to both hosts & users, should be tied into a Purchaseable supertype

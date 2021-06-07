@@ -17,6 +17,7 @@ import {
   DtoCreatePatronTier,
   IPatronTier,
   IHostInvoiceStub,
+  IRefund,
   IInvoice,
   DtoHostPatronageSubscription
 } from '@core/interfaces';
@@ -201,6 +202,13 @@ export class HostService {
     return this.http.get<IHostInvoice>(`api/hosts/${hostId}/invoices/${invoiceId}`).toPromise();
   }
 
+  //router.post<void>("/hosts/:hid/invoices/process-refunds", Hosts.processRefund());
+  processRefunds(invoiceIds: string[], hostId: string): Promise<void> {
+    return this.http
+      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, { invoice_ids: invoiceIds })
+      .toPromise();
+  }
+
   // router.post <void> ("/hosts/:hid/invoices/export-csv", Hosts.exportInvoicesToCSV());
   exportInvoicesToCSV(hostId: string, invoices: Array<IInvoice['_id']>): Promise<void> {
     return this.http
@@ -230,10 +238,19 @@ export class HostService {
     return this.http.delete<void>(`/api/hosts/${hostId}/patron-tiers/${tierId}`).toPromise();
   }
 
+  // router.get<IRefund[]>('/hosts/:hid/invoices/:iid/refunds',Hosts.readInvoiceRefunds());
+  readInvoiceRefunds(hostId: string, invoiceId: string): Promise<IRefund[]> {
+    return this.http.get<IRefund[]>(`/api/hosts/${hostId}/invoices/${invoiceId}/refunds`).toPromise();
+  }
   // router.get <IE<HPatronSub[]>> ("/hosts/:hid/patronage/subscribers", Hosts.readPatronageSubscribers());
-  readPatronageSubscribers(hostId: string, query:IQueryParams): Promise<IEnvelopedData<DtoHostPatronageSubscription[]>> {
+  readPatronageSubscribers(
+    hostId: string,
+    query: IQueryParams
+  ): Promise<IEnvelopedData<DtoHostPatronageSubscription[]>> {
     return this.http
-      .get<IEnvelopedData<DtoHostPatronageSubscription[]>>(`/api/hosts/${hostId}/patronage/subscribers${querize(query)}`)
+      .get<IEnvelopedData<DtoHostPatronageSubscription[]>>(
+        `/api/hosts/${hostId}/patronage/subscribers${querize(query)}`
+      )
       .toPromise();
   }
 }

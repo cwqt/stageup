@@ -37,6 +37,7 @@ import {
   ISignedToken,
   DtoUserPatronageSubscription as UPatronSub,
   DtoHostPatronageSubscription as HPatronSub,
+  IRefund,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -119,6 +120,8 @@ router.post     <string>                ("/hosts/:hid/stripe/connect",          
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
 router.get      <IE<IHostInvoiceStub[]>>("/hosts/:hid/invoices",                      Hosts.readInvoices());
 router.get      <IHostInvoice>          ("/hosts/:hid/invoices/:iid",                 Hosts.readInvoice());
+router.get      <IRefund[]>             ('/hosts/:hid/invoices/:iid/refunds',         Hosts.readInvoiceRefunds());
+router.post     <void>                  ('/hosts/:hid/invoices/process-refunds',      Hosts.processRefunds());
 router.post     <void>                  ("/hosts/:hid/invoices/export-csv",           Hosts.exportInvoicesToCSV());
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
 router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",         Hosts.readPatronageSubscribers());

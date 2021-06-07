@@ -93,7 +93,7 @@ export class BillingSettingsComponent implements OnInit {
                 [PaymentStatus.Fufilled, { label: 'Fufilled' }],
                 [PaymentStatus.Paid, { label: 'Paid' }],
                 [PaymentStatus.RefundDenied, { label: 'Refund Denied' }],
-                [PaymentStatus.RefundPending, { label: 'Refund Pending' }],
+                [PaymentStatus.RefundRequested, { label: 'Refund Request' }],
                 [PaymentStatus.Refunded, { label: 'Refunded' }]
               ])
             },
@@ -105,8 +105,8 @@ export class BillingSettingsComponent implements OnInit {
                   return 'gray';
                 case PaymentStatus.Paid:
                   return 'green';
-                case PaymentStatus.RefundPending:
-                  return 'magenta';
+                case PaymentStatus.RefundRequested:
+                  return 'orange';
                 case PaymentStatus.RefundDenied:
                   return 'red';
                 case PaymentStatus.Refunded:
