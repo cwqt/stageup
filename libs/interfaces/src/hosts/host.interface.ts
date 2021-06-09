@@ -64,3 +64,10 @@ export const hasRequiredHostPermission = (current: HostPermission, required: Hos
 export interface IHostStripeInfo {
   is_stripe_connected: boolean;
 }
+
+export enum HostType {
+  Individual = 'individual',
+  Company = 'company',
+  NonProfit = 'non_profit',
+  GovernmentEntity = 'gov_entity'
+}

@@ -242,6 +242,7 @@ export class HostService {
   readInvoiceRefunds(hostId: string, invoiceId: string): Promise<IRefund[]> {
     return this.http.get<IRefund[]>(`/api/hosts/${hostId}/invoices/${invoiceId}/refunds`).toPromise();
   }
+
   // router.get <IE<HPatronSub[]>> ("/hosts/:hid/patronage/subscribers", Hosts.readPatronageSubscribers());
   readPatronageSubscribers(
     hostId: string,
@@ -252,5 +253,10 @@ export class HostService {
         `/api/hosts/${hostId}/patronage/subscribers${querize(query)}`
       )
       .toPromise();
+  }
+
+  //router.get <IHostPrivate> ("/hosts/:hid/details", Hosts.readDetails());
+  readDetails(hostId: string): Promise<IHostPrivate> {
+    return this.http.get<IHostPrivate>(`/api/hosts/${hostId}/details`).toPromise();
   }
 }

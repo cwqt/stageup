@@ -38,7 +38,8 @@ import {
   pick,
   TokenProvisioner,
   IRefund,
-  PaymentStatus
+  PaymentStatus,
+  IHostPrivate
 } from '@core/interfaces';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
@@ -149,6 +150,19 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         // Transactionally softRemoves everything associated with this host account
         await user.host.softRemove();
+      }
+    };
+  }
+
+  readDetails(): IControllerEndpoint<IHostPrivate> {
+    return {
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
+      controller: async req => {
+        const host = await getCheck(
+          Host.findOne({ _id: req.params.hid }, { relations: { contact_info: { addresses: true } } })
+        );
+
+        return host.toPrivate();
       }
     };
   }

@@ -10,7 +10,7 @@ import { createICacheable, ICacheable } from '../../app.interfaces';
 
 export interface IUiFormResolver<Output, Input, Fields> {
   input?: () => Promise<{
-    fields?: { [index in keyof Fields]?: Primitive | Date | RichText };
+    fields?: { [index in keyof Fields]?: Primitive | Date | RichText | Object };
     errors?: { [index in keyof Fields]?: string[] };
   }>;
   output: (v: { [index in keyof Fields]: any }) => Promise<Output>;
@@ -285,7 +285,7 @@ export type IUiFieldTypeReturn<K = { [index: string]: IUiFormField['type'] }> = 
   text: string;
   textarea: string;
   select: Primitive;
-  // money: number;
+  money: number;
   date: Date;
   radio: Primitive;
   number: number;

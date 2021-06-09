@@ -38,6 +38,7 @@ import {
   DtoUserPatronageSubscription as UPatronSub,
   DtoHostPatronageSubscription as HPatronSub,
   IRefund,
+  IHostPrivate,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -101,6 +102,7 @@ const Hosts = new HostController(providers, middlewares);
 router.post     <IHost>                 ("/hosts",                                    Hosts.createHost());
 router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
 router.delete   <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
+router.get      <IHostPrivate>          ("/hosts/:hid/details",                       Hosts.readDetails());
 // router.put      <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
 router.put      <IHostS>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());

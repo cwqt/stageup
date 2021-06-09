@@ -65,8 +65,8 @@ import { UpdatePerformanceComponent } from './routes/host/host-performance/updat
 import { PlayerComponent } from './components/player/player.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
-import { HostSettingsComponent } from './routes/settings/host-settings/host-settings.component';
-import { CreateHostComponent } from './routes/settings/host-settings/create-host/create-host.component';
+import { HostSettingsComponent } from './routes/host/host-settings/host-settings.component';
+import { CreateHostComponent } from './routes/host/host-settings/create-host/create-host.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { SearchComponent } from './routes/search/search.component';
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';

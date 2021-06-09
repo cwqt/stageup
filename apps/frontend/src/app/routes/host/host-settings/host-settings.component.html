@@ -1,8 +1,14 @@
 <app-page>
   <div body>
+    <h1 i18n>Settings</h1>
+    <ui-hr></ui-hr>
     <ng-container *ngIf="myself.host">
-      <h1 i18n>Settings</h1>
-      <ui-hr></ui-hr>
+      <app-content-box *ngIf="myself.host.is_onboarded">
+        <h2 i18n>Account</h2>
+        <ui-hr></ui-hr>
+        <ui-form [form]="hostDetailsForm" *ngIf="!(hostDetailsForm.loading | async)"></ui-form>
+      </app-content-box>
+
       <div class="bg-white p-4 rounded shadow-sm">
         <h2 i18n>Leave Company</h2>
         <ui-hr></ui-hr>

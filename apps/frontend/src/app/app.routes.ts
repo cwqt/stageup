@@ -18,7 +18,7 @@ import { HostPerformancesComponent } from './routes/host/host-performances/host-
 import { SettingsComponent } from './routes/settings/settings.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
-import { HostSettingsComponent } from './routes/settings/host-settings/host-settings.component';
+import { HostSettingsComponent } from './routes/host/host-settings/host-settings.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { SearchComponent } from './routes/search/search.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
