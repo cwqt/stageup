@@ -14,8 +14,6 @@ For each application, review the setup instructions in each of these files:
 
 - **API** (`apps/backend`): [README.md](apps/backend/README.md)
 - **Frontend** (`apps/frontend`): [README.md](apps/frontend/README.md)
-- **Queue** (`apps/runner`): [README.md](apps/runner/README.md)
-- **Notifications** (`apps/notifications`) [README.md](apps/notifications/README.md)
 - **Tests** (`apps/api-tests`): [README.md](apps/api-tests/README.md)
 
 ## Running `npm run start`
@@ -42,7 +40,7 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
     frontend           # the stageup frontend
       nginx.conf       # nginx config for frontend server
     backend            # the stageup backend
-    runner             # distributed job queue
+      modules          # event driven stuff, queue & notifs
     api-tests          # integration tests
 
   libs                 # where all shared code live
