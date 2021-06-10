@@ -67,6 +67,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       description: this.description,
       created_at: this.created_at,
       thumbnail: this.thumbnail,
+      premiere_datetime: this.premiere_datetime,
       assets: this.asset_group.assets.map(a => a.toStub())
     };
   }
@@ -75,7 +76,6 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     return {
       ...this.toStub(),
       visibility: this.visibility,
-      premiere_datetime: this.premiere_datetime,
       genre: this.genre,
       tickets: this.tickets?.map(t => t.toStub()) || []
     };

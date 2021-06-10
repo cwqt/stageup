@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IFormErrorField, HTTP, IErrorResponse, i18nToken } from '@core/interfaces';
+import { IFormErrorField, HTTP, IErrorResponse, i18nToken, i18nTokenMap } from '@core/interfaces';
 import { Logger } from 'winston';
 import { i18nProvider } from './i18n';
 import colors = require('colors');
@@ -24,7 +24,7 @@ export const handleError = (
   next: NextFunction,
   error: ErrorHandler | Error,
   log: Logger,
-  i18n?: i18nProvider
+  i18n?: i18nProvider<any>
 ) => {
   const statusCode: HTTP = error instanceof ErrorHandler ? error.statusCode : HTTP.ServerError;
 
@@ -66,10 +66,10 @@ export class ErrorHandler extends Error {
   statusCode: HTTP;
   errors: IFormErrorField[];
 
-  constructor(statusCode: HTTP, message?: i18nToken, errors?: IFormErrorField[]) {
+  constructor(statusCode: HTTP, message?: string, errors?: IFormErrorField[]) {
     super();
     this.statusCode = statusCode;
-    this.message = message || '@@error.invalid';
+    this.message = message;
     this.errors = errors || [];
   }
 }

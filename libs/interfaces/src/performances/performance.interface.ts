@@ -24,6 +24,7 @@ export interface IPerformanceStub {
   name: string; // title of performance
   description?: RichText; // description of performance
   average_rating: number; // average rating across all ratings
+  premiere_datetime?: number; // when the performance is ready to be streamed
   views: number; // total user view count
   created_at: number;
   assets: IAssetStub[];
@@ -32,7 +33,6 @@ export interface IPerformanceStub {
 
 export interface IPerformance extends IPerformanceStub {
   visibility: Visibility;
-  premiere_datetime?: number; // when the performance is ready to be streamed
   genre: Genre;
   tickets: ITicketStub[];
   assets: IAssetStub[];

@@ -25,6 +25,7 @@ import {
   IHostInvoice,
   IUserInvoice,
   IPatronTier as IPTier,
+  IDeleteHostAssertion as IDelHostAssert,
   IHostPatronTier,
   IHostPatronTier as IHPTier,
   IHostInvoiceStub,
@@ -35,6 +36,7 @@ import {
   IPaymentMethodStub,
   IFeed,
   ISignedToken,
+  IPasswordConfirmationResponse as IPasswordConfirmRes,
   DtoUserPatronageSubscription as UPatronSub,
   DtoHostPatronageSubscription as HPatronSub,
   IRefund,
@@ -66,6 +68,7 @@ export default ({SSE, Queue}:ModuleRoutes<BackendModules>) => (router:AsyncRoute
 const Myself = new MyselfController(providers, middlewares);
 router.get      <IMyself>               ("/myself",                                   Myself.readMyself());
 router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
+router.post     <IPasswordConfirmRes>   ("/myself/confirm-password",                  Myself.confirmPassword());
 router.put      <IMyself["host_info"]>  ("/myself/landing-page",                      Myself.updatePreferredLandingPage());
 router.get      <IE<IPerfS[]>>          ("/myself/purchased-performances",            Myself.readMyPurchasedPerformances());
 router.get      <IE<IUserInvoiceStub[]>>("/myself/invoices",                          Myself.readInvoices());
@@ -91,7 +94,7 @@ router.get      <IUser>                 ("/users/:uid",                         
 router.put      <IMyself["user"]>       ("/users/:uid",                               Users.updateUser());
 router.delete   <void>                  ("/users/:uid",                               Users.deleteUser());
 router.get      <IE<IHost, IUHInfo>>    ("/users/:uid/host",                          Users.readUserHost());
-router.put      <IUserS>                ("/users/:uid/avatar",                        Users.changeAvatar());
+router.put      <string>                ("/users/:uid/avatar",                        Users.changeAvatar());
 router.get      <IAddress[]>            ("/users/:uid/addresses",                     Users.readAddresses());
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
 router.put      <IAddress>              ("/users/:uid/addresses/:aid",                Users.updateAddress());
@@ -101,12 +104,12 @@ router.delete   <void>                  ("/users/:uid/addresses/:aid",          
 const Hosts = new HostController(providers, middlewares);
 router.post     <IHost>                 ("/hosts",                                    Hosts.createHost());
 router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
-router.delete   <void>                  ("/hosts/:hid",                               Hosts.deleteHost());
+router.delete   <IDelHostAssert | void> ("/hosts/:hid",                               Hosts.deleteHost());
 router.get      <IHostPrivate>          ("/hosts/:hid/details",                       Hosts.readDetails());
 // router.put      <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
-router.put      <IHostS>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());
-router.put      <IHostS>                ("/hosts/:hid/banner",                        Hosts.changeBanner());
+router.put      <string>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());
+router.put      <string>                ("/hosts/:hid/banner",                        Hosts.changeBanner());
 router.get      <IE<IUHInfo[]>>         ("/hosts/:hid/members",                       Hosts.readMembers());
 router.post     <IUHInfo>               ("/hosts/:hid/members",                       Hosts.addMember());
 router.delete   <void>                  ("/hosts/:hid/members/:uid",                  Hosts.removeMember());

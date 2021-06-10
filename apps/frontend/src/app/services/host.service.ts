@@ -19,7 +19,9 @@ import {
   IHostInvoiceStub,
   IRefund,
   IInvoice,
-  DtoHostPatronageSubscription
+  DtoHostPatronageSubscription,
+  IDeleteHostAssertion,
+  IDeleteHostReason
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -176,8 +178,8 @@ export class HostService {
       .toPromise();
   }
 
-  changeAvatar(hostId: string, data: fd | null): Promise<IHostStub> {
-    return this.http.put<IHostStub>(`api/hosts/${hostId}/avatar`, data).toPromise();
+  changeAvatar(hostId: string, data: FormData | null): Promise<string> {
+    return this.http.put<string>(`api/hosts/${hostId}/avatar`, data).toPromise();
   }
 
   // router.get <IHostStripeInfo> ("/hosts/:hid/stripe/info", Hosts.readStripeInfo());
@@ -186,8 +188,8 @@ export class HostService {
   }
 
   //router.put  <IHostStub> ("/hosts/:hid/banner", Hosts.changeBanner());
-  changeBanner(hostId: string, data: fd | null): Promise<IHostStub> {
-    return this.http.put<IHostStub>(`api/hosts/${hostId}/banner`, data).toPromise();
+  changeBanner(hostId: string, data: FormData | null): Promise<string> {
+    return this.http.put<string>(`api/hosts/${hostId}/banner`, data).toPromise();
   }
 
   // router.get <IE<IHostInvoiceStub[]>> ("/hosts/:hid/invoices", Hosts.readInvoices());
@@ -252,6 +254,19 @@ export class HostService {
       .get<IEnvelopedData<DtoHostPatronageSubscription[]>>(
         `/api/hosts/${hostId}/patronage/subscribers${querize(query)}`
       )
+      .toPromise();
+  }
+
+  // router.delete <IDelHostAssert | void> ("/hosts/:hid", Hosts.deleteHost());
+  deleteHost(
+    hostId: string,
+    reason?: IDeleteHostReason,
+    assertOnly: boolean = false
+  ): Promise<IDeleteHostAssertion | void> {
+    return this.http
+      .request<IDeleteHostAssertion | void>('delete', `/api/hosts/${hostId}?assert_only=${assertOnly}`, {
+        body: reason
+      })
       .toPromise();
   }
 

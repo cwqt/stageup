@@ -18,7 +18,7 @@ import { i18nToken } from '../i18n/i18n.interface';
 // }
 
 export type ErrorMessage = {
-  code: i18nToken;
+  code: i18nToken | any;
   message?: string;
 };
 

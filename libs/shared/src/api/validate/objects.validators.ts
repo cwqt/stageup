@@ -22,8 +22,10 @@ import {
   ISocialInfo,
   PaginationOptions,
   PurchaseableType,
+  IDeleteHostReason,
   TicketFees,
-  TicketType
+  TicketType,
+  DeleteHostReason
 } from '@core/interfaces';
 import {
   array,
@@ -41,7 +43,6 @@ import {
   string,
   union
 } from 'superstruct';
-import { Validators } from '..';
 import { fields } from './fields.validators';
 
 export namespace objects {
@@ -168,4 +169,9 @@ export namespace objects {
       per_page: size(integer(), 1, pageLimit),
       page: integer()
     });
+
+  export const IDeleteHostReason: Describe<IDeleteHostReason> = object({
+    reasons: array(enums<DeleteHostReason>(enumToValues(DeleteHostReason))),
+    explanation: optional(string())
+  });
 }

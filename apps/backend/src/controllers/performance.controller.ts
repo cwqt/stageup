@@ -1,8 +1,8 @@
+import { ErrorHandler } from '@backend/common/error';
 import {
   AccessToken,
   Asset,
   BaseController,
-  ErrorHandler,
   getCheck,
   Host,
   IControllerEndpoint,

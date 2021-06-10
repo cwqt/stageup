@@ -1,11 +1,12 @@
+import { ErrorHandler } from '@backend/common/error';
 import {
   BaseController,
-  ErrorHandler,
   getCheck,
   Host,
   HostInvitation,
   IControllerEndpoint,
   Invoice,
+  LiveStreamAsset,
   Onboarding,
   OnboardingReview,
   PatronSubscription,
@@ -16,6 +17,7 @@ import {
 } from '@core/api';
 import { timestamp } from '@core/helpers';
 import {
+  AssetType,
   DtoHostPatronageSubscription,
   hasRequiredHostPermission,
   HostInviteState,
@@ -23,27 +25,26 @@ import {
   HostOnboardingStep,
   HostPermission,
   HTTP,
+  IDeleteHostAssertion,
+  IDeleteHostReason,
   IEnvelopedData,
   IHost,
   IHostInvoice,
   IHostInvoiceStub,
   IHostMemberChangeRequest,
   IHostOnboarding,
+  IHostPrivate,
   IHostStripeInfo,
-  IHostStub,
   IOnboardingStep,
   IOnboardingStepMap,
   IPerformanceStub,
-  IUserHostInfo,
-  pick,
-  TokenProvisioner,
   IRefund,
-  PaymentStatus,
-  IHostPrivate
+  IUserHostInfo,
+  LiveStreamState,
+  PaymentStatus
 } from '@core/interfaces';
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
-import { array, enums, number, object, string, StructError } from 'superstruct';
+import { array, boolean, coerce, enums, object, string, StructError } from 'superstruct';
 import { In } from 'typeorm';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
@@ -130,26 +131,53 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
-  deleteHost(): IControllerEndpoint<void> {
+  deleteHost(): IControllerEndpoint<IDeleteHostAssertion | void> {
     return {
-      authorisation: AuthStrat.none,
+      // We can choose to assert only - i.e. check that it's possible to delete
+      validators: { query: object({ assert_only: coerce(boolean(), string(), v => v == 'true') }) },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Owner),
       controller: async req => {
-        const user = await User.findOne({ _id: req.session.user._id }, { relations: ['host'] });
-        if (!user.host) throw new ErrorHandler(HTTP.NotFound, '@@error.not_member');
+        const host = await getCheck(
+          Host.findOne({
+            where: { _id: req.params.hid },
+            relations: { performances: true },
+            select: { performances: true, _id: true, locale: true }
+          })
+        );
 
-        const userHostInfo = await UserHostInfo.findOne({
-          relations: ['user', 'host'],
-          where: {
-            user: { _id: user._id },
-            host: { _id: user.host._id }
-          }
-        });
+        // First assert the following before being able to delete:
+        //  * There are no currently live performances
+        const duePerformances = host.performances.filter(p => p.premiere_datetime && p.premiere_datetime > timestamp());
 
-        if (userHostInfo.permissions !== HostPermission.Owner)
-          throw new ErrorHandler(HTTP.Unauthorised, '@@error.missing_permissions');
+        //  * There are no performances that are due to be premiered in the future
+        const presentlyLivePerformances = host.performances.filter(p =>
+          p.asset_group.assets.some(
+            a => a.type == AssetType.LiveStream && (a as LiveStreamAsset).meta.state == LiveStreamState.Active
+          )
+        );
 
-        // Transactionally softRemoves everything associated with this host account
-        await user.host.softRemove();
+        // Validator coerces this value to a boolean :)
+        if (req.query.assert_only) {
+          // If any of the above checks have more than one performance in them, then they need to deal with it
+          return {
+            can_delete: ![duePerformances, presentlyLivePerformances].some(arr => arr.length > 0),
+            due_performances: duePerformances.map(p => p.toStub()),
+            live_performances: presentlyLivePerformances.map(p => p.toStub())
+          };
+        } else {
+          // Expecting a DtoDeleteHostReason with the req.body, so validate it
+          const [error] = Validators.Objects.IDeleteHostReason.validate(req.body);
+          if (error) throw new ErrorHandler(HTTP.BadRequest, '@@validation.invalid', Validators.formatError(error));
+
+          // Set the reason for leaving & soft delete the entity
+          const reason: IDeleteHostReason = req.body;
+          host.delete_reason = reason;
+          await host.save();
+
+          // Transactionally softRemoves everything associated with this host account
+          await host.softRemove();
+          await this.providers.bus.publish('host.deleted', { host_id: host._id }, host.locale);
+        }
       }
     };
   }
@@ -591,7 +619,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
-  changeAvatar(): IControllerEndpoint<IHostStub> {
+  changeAvatar(): IControllerEndpoint<string> {
     return {
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       middleware: this.middleware.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file'),
@@ -606,13 +634,13 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         host.avatar = await this.providers.blob.upload(req.file, host.avatar);
         await host.save();
-        return host.toStub();
+        return host.avatar;
       }
     };
   }
 
-  //router.put  <IHostS> ("/hosts/:hid/banner", Hosts.changeBanner());
-  changeBanner(): IControllerEndpoint<IHostStub> {
+  //router.put  <string> ("/hosts/:hid/banner", Hosts.changeBanner());
+  changeBanner(): IControllerEndpoint<string> {
     return {
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       middleware: this.middleware.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file'),
@@ -627,7 +655,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         host.banner = await this.providers.blob.upload(req.file, host.banner);
         await host.save();
-        return host.toStub();
+        return host.banner;
       }
     };
   }

@@ -3,9 +3,15 @@ import { IPerformanceStub } from '../performances/performance.interface';
 import { IContactInfo } from '../users/person.interface';
 import { IAddress } from '../users/address.interface';
 import { Idless, NUUID } from '../common/fp.interface';
-import { Except } from 'type-fest';
 
 export type DtoCreateHost = Pick<IHostPrivate, 'email_address' | 'username' | 'name'>;
+
+export enum HostType {
+  Individual = 'individual',
+  Company = 'company',
+  NonProfit = 'non_profit',
+  GovernmentEntity = 'gov_entity'
+}
 
 export interface IHostStub {
   _id: NUUID;
@@ -65,9 +71,21 @@ export interface IHostStripeInfo {
   is_stripe_connected: boolean;
 }
 
-export enum HostType {
-  Individual = 'individual',
-  Company = 'company',
-  NonProfit = 'non_profit',
-  GovernmentEntity = 'gov_entity'
+export interface IDeleteHostAssertion {
+  can_delete: boolean;
+  due_performances?: IPerformanceStub[];
+  live_performances?: IPerformanceStub[];
+}
+
+export enum DeleteHostReason {
+  UnpleasantExperience = 'unpleasant_experience',
+  DissatisfactoryUX = 'dissatisfactory_ux',
+  UnhappyWithComission = 'unhappy_w_comission',
+  SUDidNotAddressBusinessIssue = 'stageup_not_address_business_issue',
+  DidNotWantToOfferDigitalPerfs = 'not_want_issue_digital_perfs'
+}
+
+export interface IDeleteHostReason {
+  reasons: DeleteHostReason[];
+  explanation: string;
 }

@@ -1,7 +1,7 @@
+import { ErrorHandler } from '@backend/common/error';
 import {
   Address,
   BaseController,
-  ErrorHandler,
   getCheck,
   Host,
   IControllerEndpoint,
@@ -195,7 +195,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
     };
   }
 
-  changeAvatar(): IControllerEndpoint<IUserStub> {
+  changeAvatar(): IControllerEndpoint<string> {
     return {
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       middleware: this.middleware.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file'),
@@ -210,7 +210,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
         user.avatar = await this.providers.blob.upload(req.file, user.avatar);
         await user.save();
-        return user.toStub();
+        return user.avatar;
       }
     };
   }

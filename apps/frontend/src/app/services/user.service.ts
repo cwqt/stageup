@@ -53,8 +53,8 @@ export class UserService {
     return this.http.get<IHost>(`/api/users/${userId}/host`).toPromise();
   }
 
-  changeAvatar(userId: string, formData: fd): Promise<IUserStub> {
-    return this.http.put<IUserStub>(`/api/users/${userId}/avatar`, formData).toPromise();
+  changeAvatar(userId: string, fd: FormData): Promise<string> {
+    return this.http.put<string>(`/api/users/${userId}/avatar`, fd).toPromise();
   }
 
   //router.post <void> ("/users/forgot-password", Users.forgotPassword())

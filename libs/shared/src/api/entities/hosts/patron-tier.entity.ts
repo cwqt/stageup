@@ -6,7 +6,7 @@ import {
   RichText,
   PurchaseableType
 } from '@core/interfaces';
-import { readRichTextContent, timestamp, uuid } from '@core/helpers';
+import { richtext, timestamp, uuid } from '@core/helpers';
 import Stripe from 'stripe';
 import {
   BaseEntity,
@@ -74,7 +74,7 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
     const product = await stripe.products.create(
       {
         name: this.name,
-        description: readRichTextContent(this.description),
+        description: richtext.read(this.description),
         metadata: {
           host_id: this.host._id,
           purchaseable_type: PurchaseableType.PatronTier,

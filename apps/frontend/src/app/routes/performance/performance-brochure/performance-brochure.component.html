@@ -1,5 +1,5 @@
 <ui-dialog [noPadding]="true" [loading]="performanceCacheable.loading || paymentMethod?.loading">
-  <div *ngIf="performance">
+  <div *ngIf="performance" class="flex-1">
     <app-player #player *ngIf="performanceTrailer" (onPlayerReady)="player.load(performanceTrailer)"> </app-player>
 
     <img

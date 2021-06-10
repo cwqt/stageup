@@ -189,7 +189,7 @@ const XLF_SOURCE_FILENAME = 'messages.source.json';
 
       // Read the merged XLF file, and translate the missing tokens with Google Translate
       await (async () => {
-        console.log('Checking for new tokens...');
+        console.log('Checking for new tokens to auto-translate...');
         for await (let locale of data.i18n.locales) {
           const file = await new Promise((res, rej) =>
             readFile(path.resolve(data.i18n.path, `messages.${locale}.xlf`), { encoding: 'utf-8' }, (err, data) => {
@@ -252,12 +252,36 @@ const XLF_SOURCE_FILENAME = 'messages.source.json';
         }
       })();
 
+      // Auto-generate a string union types file for use in the code so we're not shooting blind
+      console.log('Generating token union types file...');
+      const types = generateTokenUnionFile(tokens);
+      fs.writeFileSync(path.resolve(sourcePath, 'i18n-tokens.autogen.ts'), types, { flag: 'w' });
+
       console.log(colors.green.bold('Done!'));
     } else {
       console.log(colors.gray(`Skipping ${colors.bold(project)}, no 'path' in i18n`));
     }
   }
 })();
+
+const generateTokenUnionFile = (tokens: { [code: string]: string }): string => {
+  // Want something like
+  // ["@@some.token"]: "arg1" | "arg2" | "argn";
+  const tsMap = Object.entries(tokens).reduce((acc, [token, str]) => {
+    const matches = str.match(/\{(.*?)\}/g);
+    acc.push(`["@@${token}"]: ${matches?.map(m => `"${m.slice(1, -1)}"`).join(' | ') || 'never'}`);
+    return acc;
+  }, []);
+
+  return `// AUTO GENERATED FILE, CHANGES WILL BE LOST -------------------
+// to regenerate run:
+//   npm run generate:xlf
+// -------------------------------------------------------------
+export type AUTOGEN_i18n_TOKEN_MAP = {
+${tsMap.map(t => `  ${t}`).join(',\n')}
+}
+`;
+};
 
 const createSourceXlfTransUnit = ([id, message]: [string, string]): string => {
   // <trans-unit id="header-search-bar" datatype="html">

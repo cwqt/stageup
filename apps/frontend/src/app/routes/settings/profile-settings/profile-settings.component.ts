@@ -7,7 +7,6 @@ import { IUiForm, UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
 import isEmail from 'validator/lib/isEmail';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HelperService } from '../../../services/helper.service';
-import * as fd from 'form-data';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
 
@@ -74,16 +73,16 @@ export class ProfileSettingsComponent implements OnInit {
 
   openChangeAvatarDialog() {
     this.helperService.showDialog(
-      this.dialog.open(ChangeImageComponent, { data: { fileHandler: this.handleUploadHostAvatar.bind(this) } }),
-      (event: IUserStub) => {
-        this.user.avatar = event.avatar || '/assets/avatar-placeholder.png';
+      this.dialog.open(ChangeImageComponent, {
+        data: {
+          fileHandler: async (fd: FormData) => this.userService.changeAvatar(this.user._id, fd)
+        }
+      }),
+      url => {
+        this.user.avatar = url || '/assets/avatar-placeholder.png';
         this.myselfService.setUser({ ...this.myselfService.$myself.getValue().user, avatar: this.user.avatar });
       }
     );
-  }
-
-  handleUploadHostAvatar(formData: fd) {
-    return this.userService.changeAvatar(this.user._id, formData);
   }
 
   updateLandingPage(event: MatSlideToggleChange) {

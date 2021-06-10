@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { parseRichText } from '@core/helpers';
 import { DtoPerformance, IPerformance, RichText } from '@core/interfaces';
 import { createICacheable, ICacheable } from '../../../../../app/app.interfaces';
 import { PerformanceService } from '../../../../services/performance.service';

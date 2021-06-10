@@ -170,7 +170,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
   /**
    * @description populate a form with requested values before user input
    */
-  async populatePrefetch() {
+  private async populatePrefetch() {
     return this.wrap(async () => {
       return this.resolvers
         .input()

@@ -84,18 +84,14 @@ export class HostProfileComponent implements OnInit {
       this.dialog.open(ChangeImageComponent, {
         data: {
           initialImage: this.host.data.avatar,
-          fileHandler: this.handleUploadHostAvatar.bind(this)
+          fileHandler: async (fd: FormData) => this.hostService.changeAvatar(this.host.data._id, fd)
         }
       }),
-      (event: IHostStub) => {
-        this.host.data.avatar = event.avatar;
+      url => {
+        this.host.data.avatar = url;
         this.myselfService.setHost({ ...this.myselfService.$myself.getValue().host, avatar: this.host.data.avatar });
       }
     );
-  }
-
-  handleUploadHostAvatar(formData: fd) {
-    return this.hostService.changeAvatar(this.host.data._id, formData);
   }
 
   openChangeBannerDialog() {
@@ -103,18 +99,14 @@ export class HostProfileComponent implements OnInit {
       this.dialog.open(ChangeImageComponent, {
         data: {
           initialImage: this.host.data.banner,
-          fileHandler: this.handleUploadHostBanner.bind(this)
+          fileHandler: async (fd: FormData) => this.hostService.changeBanner(this.host.data._id, fd)
         }
       }),
-      (event: IHostStub) => {
-        this.host.data.banner = event.banner || '/assets/banner-placeholder.png';
+      url => {
+        this.host.data.banner = url || '/assets/banner-placeholder.png';
         this.myselfService.setHost({ ...this.myselfService.$myself.getValue().host, banner: this.host.data.banner });
       }
     );
-  }
-
-  handleUploadHostBanner(formData: fd) {
-    return this.hostService.changeBanner(this.host.data._id, formData);
   }
 
   openSocialLink(link: string) {

@@ -405,3 +405,9 @@ ui-icon {
     margin-bottom: 0.5rem;
   }
 }
+
+// prevent form fields from being limited to 180px wide
+// https://stackoverflow.com/a/57978961
+::ng-deep .mat-form-field-infix {
+  width: auto !important;
+}

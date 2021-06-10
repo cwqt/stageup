@@ -1,6 +1,6 @@
 import Env from '@backend/env';
 import { Host, Invoice, PatronSubscription, PatronTier, Performance, Refund, transact, User } from '@core/api';
-import { dateOrdinal, i18n, pipes, stringifyRichText, timestamp } from '@core/helpers';
+import { dateOrdinal, i18n, pipes, richtext, timestamp } from '@core/helpers';
 import { CurrencyCode, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
 
@@ -104,14 +104,13 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
 
     queues.send_email.add({
       subject: providers.i18n.translate('@@email.user.invited_to_private_showing__subject', ct.__meta.locale),
-      content: providers.i18n.translate('@@email.user.invited_to_private_showing__content', ct.__meta.locale, {
-        url: performanceLink,
+      content: providers.i18n.translate('@@email.ticket.purchased__content', ct.__meta.locale, {
         receipt_url: invoice.stripe_receipt_url,
         user_name: user.name || user.username,
         ticket_name: invoice.ticket.name,
         performance_name: invoice.ticket.performance.name,
-        host_name: invoice.ticket.performance.host.name || invoice.ticket.performance.host.username,
-        amount: i18n.money(invoice.amount, invoice.currency)
+        amount: i18n.money(invoice.amount, invoice.currency),
+        watch_url: performanceLink
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
@@ -230,8 +229,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         host_name: invoice.host.username
       }),
       content: providers.i18n.translate('@@email.refund_requested__content', ct.__meta.locale, {
-        user_username: invoice.user.username,
-        host_name: invoice.host.username,
+        host_name: invoice.host.name,
         invoice_id: invoice._id,
         performance_name: invoice.ticket.performance.name,
         purchase_date: moment.unix(invoice.purchased_at).format('LLLL'),
@@ -250,9 +248,9 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
       const tier = new PatronTier(
         {
           name: providers.i18n.translate('@@host.example_patron_tier_name', ct.__meta.locale),
-          description: stringifyRichText([
-            { insert: providers.i18n.translate(`@@host.example_patron_tier_description`, ct.__meta.locale) }
-          ]),
+          description: richtext.read(
+            richtext.create(providers.i18n.translate(`@@host.example_patron_tier_description`, ct.__meta.locale))
+          ),
           amount: 1000, // 10 GBP
           currency: CurrencyCode.GBP
         },
@@ -356,7 +354,6 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         host_name: invoice.host.name,
         user_username: invoice.user.username,
         performance_name: invoice.ticket.performance.name,
-        invoice_id: invoice._id,
         invoice_amount: i18n.money(invoice.amount, invoice.currency)
       }),
       from: Env.EMAIL_ADDRESS,
@@ -388,7 +385,6 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         performance_name: invoice.ticket.performance.name
       }),
       content: providers.i18n.translate('@@email.user.refund_refunded__content', ct.__meta.locale, {
-        base_64_img: logo,
         user_username: invoice.user.username,
         host_name: invoice.host.name,
         invoice_id: invoice._id,

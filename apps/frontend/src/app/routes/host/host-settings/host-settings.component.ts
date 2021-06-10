@@ -12,6 +12,7 @@ import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import iso3166 from 'i18n-iso-countries';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { HostDeleteDialogComponent } from '../host-delete-dialog/host-delete-dialog.component';
 
 @Component({
   selector: 'app-host-settings',
@@ -117,10 +118,14 @@ export class HostSettingsComponent implements OnInit {
     });
   }
 
+  openDeleteHostDialog() {
+    this.helperService.showDialog(this.dialog.open(HostDeleteDialogComponent, { width: '500px' }));
+  }
+
   openLeaveHostConfirmationDialog() {
     this.helperService.showConfirmationDialog(this.dialog, {
       title: $localize`Leave '${this.myself.host.name}'`,
-      description: $localize`Are you sure you want to leave this host?`,
+      description: $localize`Are you sure you want to leave this company?`,
       buttons: [
         new UiDialogButton({
           label: $localize`Cancel`,
@@ -128,7 +133,7 @@ export class HostSettingsComponent implements OnInit {
           callback: r => r.close()
         }),
         new UiDialogButton({
-          label: $localize`Yes`,
+          label: $localize`Leave Company`,
           kind: ThemeKind.Danger,
           callback: r => {
             this.hostService

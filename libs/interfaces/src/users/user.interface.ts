@@ -49,3 +49,7 @@ export enum UserPermission {
   User = 'user',
   None = 'none' // allow non-users to browse
 }
+
+export interface IPasswordConfirmationResponse {
+  is_valid: boolean;
+}

@@ -9,17 +9,15 @@ import { UiDialogButton } from './dialog-buttons/dialog-buttons.component';
   styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent implements OnInit {
-  @Input() dialogRef:MatDialogRef<any>;
-  @Input() buttons:UiDialogButton[];
-  @Input() title:string;
-  @Input() loading:boolean;
+  @Input() dialogRef: MatDialogRef<any>;
+  @Input() buttons: UiDialogButton[];
+  @Input() title: string;
+  @Input() loading: boolean;
 
-  @Input() small:boolean = false;
-  @Input() noPadding:boolean = false;
+  @Input() small: boolean = false;
+  @Input() noPadding: boolean = false;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

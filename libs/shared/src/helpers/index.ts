@@ -160,10 +160,28 @@ export const dateOrdinal = (date: Date, includeDay: boolean = false): string => 
   return includeDay ? `${i}${ordinal}` : ordinal;
 };
 
-export const parseRichText = (richtext: RichText): ParsedRichText => JSON.parse(richtext);
-export const stringifyRichText = (ops: any[]) => JSON.stringify({ ops: ops });
-export const readRichTextContent = (text: RichText | ParsedRichText) =>
-  (typeof text == 'string' ? parseRichText(text) : text).ops.reduce((acc, curr) => ((acc += curr.insert), acc), '');
+/**
+ * @description tooling for manipulating QuillJS rich text
+ */
+export const richtext = {
+  /**
+   * @description Create a simple plain text Rich string
+   */
+  create: (content: string): ParsedRichText => ({ ops: [{ insert: [content] }] }),
+  /**
+   * @description Convert RichText to ParsedRichText (consumed by QuillJS)
+   */
+  parse: (richtext: RichText): ParsedRichText => JSON.parse(richtext),
+  /**
+   * @description Convert QuillJS DeltaOperations to a RichText string (for storing in DB)
+   */
+  stringify: (ops: any[]) => JSON.stringify({ ops: ops }),
+  /**
+   * @description Convert all DeltaOps into a plain, format-less string
+   */
+  read: (text: RichText | ParsedRichText) =>
+    (typeof text == 'string' ? richtext.parse(text) : text).ops.reduce((acc, curr) => ((acc += curr.insert), acc), '')
+};
 
 export const unix = (date: number): Date => new Date(date * 1000);
 

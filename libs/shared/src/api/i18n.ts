@@ -1,4 +1,4 @@
-import { i18nToken, ILocale, Primitive, CurrencyCode } from '@core/interfaces';
+import { i18nToken, ILocale, Primitive, CurrencyCode, i18nTokenMap } from '@core/interfaces';
 import xml from 'fast-xml-parser';
 import { readFile } from 'fs';
 import IntlMessageFormat from 'intl-messageformat';
@@ -26,7 +26,7 @@ interface Xliff {
 }
 
 @Service({ id: 'i18n' })
-export class i18nProvider {
+export class i18nProvider<TokenMap extends i18nTokenMap> {
   config: Ii18nConfig;
   locales: Map<string, Map<string, string>>; // locale : ( code : icu message )
 
@@ -92,7 +92,11 @@ export class i18nProvider {
     return i18n.date(date, locale);
   }
 
-  translate(code: i18nToken, locale: ILocale, variables?: { [index: string]: Primitive }): string {
+  translate<T extends Extract<keyof TokenMap, string>>(
+    code: T,
+    locale: ILocale,
+    variables?: { [index in TokenMap[T]]: Primitive }
+  ): string {
     console.log('i18n code::', code);
     const translation = this.locales.get(locale.language)?.get(code.slice(2));
 

@@ -18,7 +18,8 @@ import {
   ISocialInfo,
   IHostBusinessDetails,
   HTTP,
-  PatronSubscriptionStatus
+  IDeleteHostReason,
+  ILocale
 } from '@core/interfaces';
 
 import { User } from '../users/user.entity';
@@ -50,16 +51,17 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column({ nullable: true }) stripe_account_id: string;
   @Column('jsonb') social_info: ISocialInfo;
   @Column('jsonb', { nullable: true }) business_details: IHostBusinessDetails;
-  @Column({ nullable: true }) charity_no: number;
+  @Column('jsonb', { default: { language: 'en', region: 'GB' } }) locale: ILocale;
+  @Column('jsonb', { nullable: true }) delete_reason?: IDeleteHostReason;
 
-  @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
-  @OneToMany(() => Performance, performance => performance.host) performances: Performance[];
   @OneToMany(() => Invoice, invoice => invoice.host) invoices: Invoice[];
-  @OneToMany(() => PatronTier, tier => tier.host) patron_tiers: PatronTier[];
+  @OneToMany(() => PatronTier, tier => tier.host, { cascade: ['soft-remove'] }) patron_tiers: PatronTier[];
   @OneToMany(() => PatronSubscription, sub => sub.host) patron_subscribers: PatronSubscription[];
+  @OneToMany(() => UserHostInfo, uhi => uhi.host) members_info: UserHostInfo[];
+  @OneToMany(() => Performance, perf => perf.host, { cascade: ['soft-remove'] }) performances: Performance[];
 
   @OneToOne(() => User) @JoinColumn() owner: User;
-  @OneToOne(() => ContactInfo, { cascade: ['remove'] }) @JoinColumn() contact_info: ContactInfo;
+  @OneToOne(() => ContactInfo, { cascade: ['soft-remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {

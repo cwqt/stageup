@@ -12,6 +12,8 @@ import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
 import SendEmailWorker from './workers/send-email.worker';
 import Auth from '../../common/authorisation';
 import Env from '@backend/env';
+import { i18nProvider } from 'libs/shared/src/api/i18n';
+import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 interface IQueue<T extends JobType = any> {
@@ -23,7 +25,7 @@ interface IQueue<T extends JobType = any> {
 }
 
 export type QueueProviders = {
-  i18n: InstanceType<typeof Providers.i18n>;
+  i18n: i18nProvider<AUTOGEN_i18n_TOKEN_MAP>;
   email: InstanceType<typeof Providers.Email>;
   orm: InstanceType<typeof Providers.Postgres>;
   stripe: InstanceType<typeof Providers.Stripe>;

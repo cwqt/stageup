@@ -12,7 +12,7 @@ import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PerformanceService } from '../../../services/performance.service';
 import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { readRichTextContent } from '@core/helpers';
+import { richtext } from '@core/helpers';
 
 @Component({
   selector: 'app-host-performances',
@@ -79,7 +79,7 @@ export class HostPerformancesComponent implements OnInit {
   }
 
   parse(text: string) {
-    return readRichTextContent(text);
+    return richtext.read(text);
   }
 
   deletePerformance(performance: IPerformanceStub) {

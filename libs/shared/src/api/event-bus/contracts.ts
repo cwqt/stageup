@@ -57,6 +57,7 @@ export type EventContract = {
     invoice_ids: Array<IInvoice['_id']>;
     email_address: IHostPrivate['email_address'];
   };
+  ['host.deleted']: { host_id: string };
   // Refunds ------------------------------------------------------------------
   ['refund.requested']: { invoice_id: IInvoice['_id'] };
   ['refund.refunded']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; refund_id: IRefund['_id'] };

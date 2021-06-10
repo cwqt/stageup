@@ -35,6 +35,7 @@ import { TicketTypePipe } from './_pipes/ticket-type.pipe';
 import { RefundReasonPipe } from './_pipes/refund-reason.pipe';
 import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe';
 import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-status.pipe';
+import { DeleteHostReasonPipe } from './_pipes/delete-host-reason.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -118,7 +119,10 @@ import { ConfirmationDialogComponent } from './components/dialogs/confirmation-d
 
 import countries from 'i18n-iso-countries';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
-import { ContentBoxComponent } from './components/content-box/content-box.component';
+import { ContentBoxComponent } from './components/app/content-box/content-box.component';
+import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host-delete-dialog.component';
+import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
+
 countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}.json`));
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -157,6 +161,7 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}
     HostDashboardComponent,
     OnboardingViewComponent,
     OnboardingStatePipe,
+    DeleteHostReasonPipe,
     ObjectLengthPipe,
     ShortDomainPipe,
     PaymentStatusPipe,
@@ -219,7 +224,9 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}
     ConfirmationDialogComponent,
     UserPatronageComponent,
     HostPatronageSubscribersComponent,
-    ContentBoxComponent
+    ContentBoxComponent,
+    HostDeleteDialogComponent,
+    ConfirmPasswordDialogComponent
   ],
   imports: [
     AngularMaterialModule,

@@ -1,0 +1,82 @@
+<ui-dialog [noPadding]="true" [loading]="$loading | async">
+  <mat-tab-group class="h-full w-full" dynamicHeight #tabs>
+    <mat-tab class="flex">
+      <div class="m-4">
+        <h2 i18n>Are you sure you want to delete your Company Account?</h2>
+        <ui-hr></ui-hr>
+
+        <mat-error class="mb-2 inline-block" i18n>Deleting your account will perform the following:</mat-error>
+        <ol class="list-decimal list-inside">
+          <li i18n>All your private and public performances will be deleted</li>
+          <li i18n>All related assets (trailers, thumbnails, tickets, brochures etc.) will be deleted</li>
+          <li i18n>All your patrons will be removed</li>
+          <li i18n>Your profile page will be deleted</li>
+        </ol>
+
+        <br />
+        <p i18n>Recovery of your account is <b>not possible</b>!</p>
+      </div>
+      <ui-dialog-buttons
+        class="mt-auto"
+        [dialogRef]="dialogRef"
+        [buttons]="deleteConfirmationButtons"
+      ></ui-dialog-buttons>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-container *ngIf="assertCanDeleteHostReq.data">
+        <ng-container *ngIf="assertCanDeleteHostReq.data.can_delete">
+          <div class="m-4">
+            <h2 class="mb-0" i18n>Reason for leaving</h2>
+            <ui-hr></ui-hr>
+            <ui-form [form]="reasonForLeavingForm"></ui-form>
+          </div>
+          <ui-dialog-buttons
+            class="mt-auto"
+            [dialogRef]="dialogRef"
+            [buttons]="leavingReasonButtons"
+          ></ui-dialog-buttons>
+        </ng-container>
+
+        <ng-container *ngIf="!assertCanDeleteHostReq.data.can_delete">
+          <div class="m-4">
+            <h2 i18n>Cannot delete account</h2>
+            <ui-hr></ui-hr>
+            <ng-container *ngIf="assertCanDeleteHostReq.data.due_performances.length > 0">
+              <p class="mb-0" i18n>
+                The following performances are due to be performed, you must delete them before you can delete your
+                account
+              </p>
+              <ul class="list-disc list-inside mb-4">
+                <li *ngFor="let perf of assertCanDeleteHostReq.data.due_performances">
+                  <b>{{ perf.name }}</b
+                  >, (<a (click)="closeDialog()" [routerLink]="['/dashboard/performances', perf._id]">{{ perf._id }}</a
+                  >),
+                  <span i18n>due to premiere at {{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}</span>
+                </li>
+              </ul>
+            </ng-container>
+
+            <ng-container *ngIf="assertCanDeleteHostReq.data.live_performances.length > 0">
+              <p class="mb-0" i18n>
+                The following performances are currently live, you must stop streaming them before you can delete your
+                account
+              </p>
+              <ul class="list-disc list-inside">
+                <li *ngFor="let perf of assertCanDeleteHostReq.data.live_performances">
+                  <b>{{ perf.name }}</b> (<a
+                    (click)="closeDialog()"
+                    [routerLink]="['/dashboard/performances', perf._id]"
+                    >{{ perf._id }}</a
+                  >)
+                </li>
+              </ul>
+            </ng-container>
+
+            <p class="pt-4 mb-0" i18n>Come back when the above issues have been resolved.</p>
+          </div>
+        </ng-container>
+      </ng-container>
+    </mat-tab>
+  </mat-tab-group>
+</ui-dialog>

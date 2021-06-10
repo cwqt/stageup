@@ -1,7 +1,7 @@
+import { ErrorHandler } from '@backend/common/error';
 import {
   AccessToken,
   BaseController,
-  ErrorHandler,
   getCheck,
   Host,
   IControllerEndpoint,
@@ -30,9 +30,10 @@ import {
   PaymentStatus,
   pick,
   DtoUserPatronageSubscription,
-  Visibility
+  Visibility,
+  IPasswordConfirmationResponse
 } from '@core/interfaces';
-import { boolean, enums, object, partial, record } from 'superstruct';
+import { boolean, enums, object, partial, record, string } from 'superstruct';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 
@@ -62,6 +63,18 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           host: host?.toFull(),
           host_info: host ? host.members_info.find(uhi => uhi.user._id === user._id)?.toFull() : null
         };
+      }
+    };
+  }
+
+  confirmPassword(): IControllerEndpoint<IPasswordConfirmationResponse> {
+    return {
+      validators: { body: object({ password: string() }) },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const user = await getCheck(User.findOne({ _id: req.session.user._id }));
+        const isValid = await user.verifyPassword(req.body.password);
+        return { is_valid: isValid };
       }
     };
   }

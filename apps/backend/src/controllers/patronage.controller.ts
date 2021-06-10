@@ -1,6 +1,6 @@
+import { ErrorHandler } from '@backend/common/error';
 import {
   BaseController,
-  ErrorHandler,
   getCheck,
   Host,
   IControllerEndpoint,

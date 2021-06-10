@@ -9,6 +9,7 @@ import {
   IHost,
   IHostStub,
   IMyself,
+  IPasswordConfirmationResponse,
   IPaymentMethod,
   IPaymentMethodStub,
   IPerformanceStub,
@@ -142,6 +143,13 @@ export class MyselfService {
   readPatronageSubscriptions(query: IQueryParams): Promise<IEnvelopedData<DtoUserPatronageSubscription[]>> {
     return this.http
       .get<IEnvelopedData<DtoUserPatronageSubscription[]>>(`/api/myself/patron-subscriptions${querize(query)}`)
+      .toPromise();
+  }
+
+  // router.post <IPasswordConfirmRes> ("/myself/confirm-password", Myself.confirmPassword());
+  confirmPassword(password: string): Promise<IPasswordConfirmationResponse> {
+    return this.http
+      .post<IPasswordConfirmationResponse>(`/api/myself/confirm-password`, { password: password })
       .toPromise();
   }
 }

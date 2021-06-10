@@ -1,6 +1,7 @@
 :host {
   width: 100%;
-  height: auto;
+  height: 100%;
+  display: flex;
 }
 
 .ui-dialog {
@@ -11,6 +12,8 @@
   overflow: hidden;
   border-radius: 4px;
   margin-bottom: 2%;
+  display: flex;
+  flex-flow: column;
 
   .ui-dialog--spinner {
     position: absolute;
@@ -29,6 +32,9 @@
   }
 
   .ui-dialog--content {
+    display: flex;
+    flex-flow: column;
+    flex: 1; // fill remaining width
     padding: 1rem;
     &.no-padding {
       padding: 0;

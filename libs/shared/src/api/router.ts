@@ -18,9 +18,9 @@ export class AsyncRouter<PM extends ProviderMap> {
   providers: PM;
   auth: AuthStrategy;
   logger: Logger;
-  i18n?: i18nProvider;
+  i18n?: i18nProvider<any>;
 
-  constructor(providers: PM, auth: AuthStrategy, logger: Logger, i18n: i18nProvider) {
+  constructor(providers: PM, auth: AuthStrategy, logger: Logger, i18n: i18nProvider<any>) {
     this.router = ExpressAsyncRouter();
     this.providers = providers;
     this.auth = auth;
