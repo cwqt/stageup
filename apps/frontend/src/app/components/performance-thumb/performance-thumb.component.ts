@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { IPerformanceStub, LiveStreamState } from '@core/interfaces';
 import { PerformanceBrochureComponent } from '@frontend/routes/performance/performance-brochure/performance-brochure.component';
 import { HelperService } from '@frontend/services/helper.service';
-
 @Component({
   selector: 'app-performance-thumb',
   templateUrl: './performance-thumb.component.html',

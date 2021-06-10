@@ -44,7 +44,7 @@
 
     <!-- All other carousels -->
     <div *ngFor="let carousel of carouselData | keyvalue" class="carousel-container relative">
-      <h2>{{ carousel.key | titlecase }}</h2>
+      <h2>{{ (prettyKeys[carousel.key] || carousel.key) | titlecase }}</h2>
 
       <ui-hr></ui-hr>
 
@@ -66,13 +66,24 @@
           [cellsToShow]="currentCellsToShow"
           [loop]="false"
         >
+        <ng-container *ngIf="carousel.key !== 'hosts'">
           <div
-            class="carousel-cell overflow-hidden"
-            *ngFor="let performance of carousel.value.data.data; let i = index"
-          >
-            <app-performance-thumb #thumb [performance]="performance" (click)="thumb.openBrochure()">
-            </app-performance-thumb>
-          </div>
+          class="carousel-cell overflow-hidden"
+          *ngFor="let performance of carousel.value.data.data; let i = index"
+        >
+          <app-performance-thumb #thumb [performance]="performance" (click)="thumb.openBrochure()">
+          </app-performance-thumb>
+        </div>
+        </ng-container>
+        <ng-container *ngIf="carousel.key === 'hosts'">
+          <div
+          class="carousel-cell overflow-hidden"
+          *ngFor="let host of carousel.value.data.data; let i = index"
+        >
+          <app-host-thumb #thumb [host]="host" (click)="thumb.openHostPage()">
+          </app-host-thumb>
+        </div>
+        </ng-container>  
         </carousel>
       </div>
     </div>

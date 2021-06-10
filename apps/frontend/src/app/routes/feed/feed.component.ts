@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { Genre, IEnvelopedData as IEnv, IFeed, IPerformanceStub, GenreMap } from '@core/interfaces';
+import { Genre, IEnvelopedData as IEnv, IFeed, IPerformanceStub, GenreMap, IHostStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -33,10 +33,13 @@ export class FeedComponent implements OnInit {
     [Breakpoints.XLarge]: 6
   };
 
-  carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[]>> } = {
+  carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
     upcoming: createICacheable([], { loading_page: false }),
-    everything: createICacheable([], { loading_page: false })
+    everything: createICacheable([], { loading_page: false }),
+    hosts: createICacheable([], { loading_page: false })
   };
+
+  prettyKeys: { [index in CarouselIdx]?: string } = { hosts: $localize`Performing Arts Companies` };
 
   genres: {
     [index in Genre]: {
@@ -72,7 +75,7 @@ export class FeedComponent implements OnInit {
       const feed = await this.feedService.getFeed();
       Object.keys(feed).forEach(k => (this.carouselData[k].data = feed[k]));
     } catch (error) {
-      this.toastService.emit('Error occurred fetching feed', ThemeKind.Danger);
+      this.toastService.emit($localize`Error occurred fetching feed`, ThemeKind.Danger);
     } finally {
       Object.keys(this.carouselData).forEach(k => (this.carouselData[k].loading = false));
     }
@@ -120,7 +123,7 @@ export class FeedComponent implements OnInit {
       envelope.data = [...this.carouselData[carouselIndex].data.data, ...envelope.data];
       this.carouselData[carouselIndex].data = envelope;
     } catch (error) {
-      this.toastService.emit(`Failed fetching page for ${carouselIndex}`, ThemeKind.Danger);
+      this.toastService.emit($localize`Failed fetching page for ${carouselIndex}`, ThemeKind.Danger);
       throw error;
     } finally {
       this.carouselData[carouselIndex].meta.loading_page = false;
@@ -137,7 +140,7 @@ export class FeedComponent implements OnInit {
 
       if (carousel.slide.isLastSlide(carousel.slide.counter)) {
         // Fetch the next page & push it onto the carousels data array
-        this.logger.info(`Reached last page of carousel: ${carouselIndex}`);
+        this.logger.info('Reached last page of carousel: ${carouselIndex}');
         await this.getNextCarouselPage(carouselIndex);
 
         // Update state of carousel with new pushed elements

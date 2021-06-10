@@ -93,7 +93,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
       controller: async req => {
         const feed: IFeed = {
           upcoming: null,
-          everything: null
+          everything: null,
+          hosts: null
         };
 
         // None of the req.query paging options are present, so fetch the first page of every carousel
@@ -118,6 +119,12 @@ export default class MyselfController extends BaseController<BackendProviderMap>
               page: req.query.everything ? parseInt((req.query['everything'] as any).page) : 0,
               per_page: req.query.everything ? parseInt((req.query['everything'] as any).per_page) : 4
             });
+
+        if (fetchAll || req.query['hosts'])
+          feed.hosts = await this.ORM.createQueryBuilder(Host, 'h').paginate(p => p.toStub(), {
+            page: req.query.hosts ? parseInt((req.query['hosts'] as any).page) : 0,
+            per_page: req.query.hosts ? parseInt((req.query['hosts'] as any).per_page) : 4
+          });
 
         return feed;
       }

@@ -1,6 +1,6 @@
 import { Stories, CachedUser } from '../stories';
 import { environment as env, UserType } from '../environment';
-import { IMyself, IUser, IAddress, IUserStub, Primitive, IUserHostInfo, IRefundRequest } from '@core/interfaces';
+import { IMyself, IUser, IAddress, IUserStub, Primitive, IUserHostInfo, IRefundRequest, IFeed } from '@core/interfaces';
 import { api } from '../environment';
 import userAddressesActions from './user-addresses.actions';
 import fd from 'form-data';
@@ -13,9 +13,9 @@ export default {
     return res.data;
   },
 
-  createUser: async (user: UserType, force: boolean = false): Promise<IMyself["user"]> => {
+  createUser: async (user: UserType, force: boolean = false): Promise<IMyself['user']> => {
     if (force || !Stories.cachedUsers[user]) {
-      const res = await api.post<IMyself["user"]>(`/users`, env.userCreationData[user], env.getOptions());
+      const res = await api.post<IMyself['user']>(`/users`, env.userCreationData[user], env.getOptions());
       Stories.cachedUsers[user] = new CachedUser(res.data);
       return res.data;
     } else {
@@ -59,23 +59,31 @@ export default {
   },
 
   //router.put<IUserS>("/hosts/:uid/avatar", Users.changeAvatar());
-  changeAvatar: async (user: IUser, data: fd): Promise<IUserStub> => { 
+  changeAvatar: async (user: IUser, data: fd): Promise<IUserStub> => {
     const options = env.getOptions();
-    options.headers["Content-Type"] = data.getHeaders()["content-type"];
+    options.headers['Content-Type'] = data.getHeaders()['content-type'];
 
     const res = await api.put<IUserStub>(`/users/${user._id}/avatar`, data, options);
     return res.data;
   },
 
   //router.put  <IMyself["user"]> ("/users/:uid", Users.updateUser());
-  updateUser: async (user: IUser, data: { [index: string]: Primitive }): Promise<IMyself['user']> => {   
+  updateUser: async (user: IUser, data: { [index: string]: Primitive }): Promise<IMyself['user']> => {
     const res = await api.put<IMyself['user']>(`/users/${user._id}`, data, env.getOptions());
     return res.data;
   },
-  
+
   // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
-  updatePreferredLandingPage: async (data: Pick<IUserHostInfo, "prefers_dashboard_landing">): Promise<IMyself["host_info"]> => {   
-    const res = await api.put<IMyself["host_info"]>(`/myself/landing-page`, data, env.getOptions());
+  updatePreferredLandingPage: async (
+    data: Pick<IUserHostInfo, 'prefers_dashboard_landing'>
+  ): Promise<IMyself['host_info']> => {
+    const res = await api.put<IMyself['host_info']>(`/myself/landing-page`, data, env.getOptions());
+    return res.data;
+  },
+
+  //router.get<IFeed>("/myself/feed",Myself.readFeed());
+  readFeed: async (): Promise<IFeed> => {
+    const res = await api.get<IFeed>(`/myself/feed`, env.getOptions());
     return res.data;
   },
 

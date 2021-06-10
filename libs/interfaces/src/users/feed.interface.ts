@@ -7,5 +7,5 @@ export interface IFeed {
   upcoming: IEnvelopedData<IPerformanceStub[]>;
   // personalised /// etc...
   // promoted: IEnvelopedData<IPerformanceStub[]>
-  // hosts: IEnvelopedData<IHostStub[]>
+  hosts: IEnvelopedData<IHostStub[]>;
 }

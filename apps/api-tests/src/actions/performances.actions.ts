@@ -26,7 +26,7 @@ export default {
       name: 'performance name',
       premiere_datetime: timestamp(),
       genre: Genre.Contemporary,
-      description: ['some performance']
+      description: 'some performance'
     };
 
     const res = await api.post(`/hosts/${host._id}/performances`, data, env.getOptions());

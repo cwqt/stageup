@@ -119,6 +119,8 @@ import { ConfirmationDialogComponent } from './components/dialogs/confirmation-d
 
 import countries from 'i18n-iso-countries';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
+import { Carousel } from './components/libraries/ivyсarousel/carousel';
+import { HostThumbComponent } from './components/host-thumb/host-thumb.component';
 import { ContentBoxComponent } from './components/app/content-box/content-box.component';
 import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host-delete-dialog.component';
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
@@ -225,6 +227,7 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}
     UserPatronageComponent,
     HostPatronageSubscribersComponent,
     ContentBoxComponent,
+    HostThumbComponent,
     HostDeleteDialogComponent,
     ConfirmPasswordDialogComponent
   ],

@@ -1,10 +1,12 @@
+
+
 <div
   class="h-64 rounded-lg overflow-hidden relative cursor-pointer shadow transform hover:scale-105 duration-200 hover:shadow-lg"
 >
   <!-- thumb footer -->
   <div class="h-52 relative">
     <div class="absolute w-full bottom-0 left-0 mb-2 pr-4 pl-24 text-white flex items-center justify-between">
-      @{{ performance.host.username }}
+      @{{ host.username }}
 
       <!--
       <span *ngIf="isCurrentlyActive" class="flex items-center ml-auto">
@@ -16,26 +18,20 @@
 
     <img
       class="w-full h-full object-cover"
-      [src]="performance.thumbnail || '/assets/performance-placeholder.jpeg'"
+      [src]="host.banner || '/assets/host-placeholder.jpeg'"
       alt=""
     />
   </div>
 
   <!-- thumb image overlay -->
   <div class="h-11 pl-24 bg-white flex items-center">
-    <p class="mb-0 text-lg truncate pr-2">{{ performance.name }}</p>
+    <p class="mb-0 text-lg truncate pr-2">{{ host.name }}</p>
   </div>
-
-  <!-- stream status indicator -->
-  <!--
-  <span *ngIf="isCurrentlyActive" class="performance-thumb__live absolute top-0 left-0 m-4"> ● LIVE </span>
-  -->
 
   <!-- host avatar -->
   <img
     class="w-16 h-16 object-cover bg-white rounded-full absolute left-0 bottom-0 m-4 shadow"
-    [src]="performance.host.avatar || '/assets/avatar-placeholder.png'"
+    [src]="host.avatar || '/assets/avatar-placeholder.png'"
     alt=""
   />
 </div>
-

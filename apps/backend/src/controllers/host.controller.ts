@@ -91,7 +91,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readHost(): IControllerEndpoint<IHost> {
     return {
-      authorisation: AuthStrat.isLoggedIn,
+      authorisation: AuthStrat.none,
       controller: async req => {
         const host = await Host.findOne(
           req.params.hid[0] == '@' ? { username: req.params.hid.slice(1) } : { _id: req.params.hid },
