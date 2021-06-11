@@ -137,15 +137,9 @@ export class HostService {
   }
 
   //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
-  readHostPerformances(
-    hostId: string,
-    page: number = 0,
-    perPage: number = 10
-  ): Promise<IEnvelopedData<IPerformanceStub[], null>> {
+  readHostPerformances(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IPerformanceStub[], null>> {
     return this.http
-      .get<IEnvelopedData<IPerformanceStub[], null>>(
-        `/api/hosts/${hostId}/performances?page=${page}&per_page=${perPage}`
-      )
+      .get<IEnvelopedData<IPerformanceStub[], null>>(`/api/hosts/${hostId}/performances${querize(query)}`)
       .toPromise();
   }
 

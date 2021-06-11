@@ -46,7 +46,8 @@ import {
   TicketType,
   DtoCreateTicket,
   AssetTags,
-  IAsset
+  IAsset,
+  PerformanceStatus
 } from '@core/interfaces';
 import { Braket } from 'aws-sdk';
 import { SignableAssetType } from 'libs/shared/src/api/entities/performances/signing-key.entity';
@@ -353,7 +354,8 @@ export default class PerformanceController extends BaseController<BackendProvide
       ),
       controller: async req => {
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
-        await perf.remove();
+        perf.status = PerformanceStatus.Deleted;
+        await perf.softRemove();
       }
     };
   }

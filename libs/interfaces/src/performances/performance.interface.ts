@@ -1,7 +1,6 @@
-import { Asset } from '@mux/mux-node';
 import { DeltaOperation } from 'quill';
 import { Except } from 'type-fest';
-import { AssetDto, AssetType, IAssetStub } from '../common/asset.interface';
+import { AssetDto, IAssetStub } from '../common/asset.interface';
 import { IEnvelopedData } from '../common/envelope.interface';
 import { NUUID } from '../common/fp.interface';
 import { IHostStub } from '../hosts/host.interface';
@@ -18,6 +17,15 @@ export enum Visibility {
   Private = 'private'
 }
 
+export enum PerformanceStatus {
+  Complete = 'complete',
+  Live = 'live',
+  Scheduled = 'scheduled',
+  Deleted = 'deleted',
+  Cancelled = 'cancelled',
+  PendingSchedule = 'pending_schedule'
+}
+
 export interface IPerformanceStub {
   _id: NUUID;
   host: IHostStub; // who created the performance
@@ -29,6 +37,7 @@ export interface IPerformanceStub {
   created_at: number;
   assets: IAssetStub[];
   thumbnail: string;
+  status: PerformanceStatus;
 }
 
 export interface IPerformance extends IPerformanceStub {

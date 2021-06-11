@@ -36,6 +36,7 @@ import { RefundReasonPipe } from './_pipes/refund-reason.pipe';
 import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe';
 import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-status.pipe';
 import { DeleteHostReasonPipe } from './_pipes/delete-host-reason.pipe';
+import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -171,6 +172,7 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
     PaymentMethodBrandName,
     DonoPegPipe,
     HostPermissionPipe,
+    PerformanceStatusPipe,
     CurrencyCodePipe,
     TicketTypePipe,
     RefundReasonPipe,

@@ -2,7 +2,7 @@
   <div body>
     <div class="flex flex-row items-center mb-5">
       <h1 class="mb-0" i18n>Performances</h1>
-      <mat-spinner class="ml-5" [diameter]="50" *ngIf="performances.loading"></mat-spinner>
+      <mat-spinner class="ml-5" [diameter]="50" *ngIf="table.cache.loading"></mat-spinner>
 
       <ui-button class="ml-auto" (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>
         Create Performance
@@ -11,35 +11,6 @@
 
     <ui-hr></ui-hr>
 
-    <div class="bg-white rounded shadow-sm overflow-hidden">
-      <table mat-table [dataSource]="hostPerformancesDataSrc" class="w-full">
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef i18n>Title</th>
-          <td mat-cell *matCellDef="let performance">{{ performance.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="desc">
-          <th mat-header-cell *matHeaderCellDef i18n>Description</th>
-          <td mat-cell *matCellDef="let performance">{{ parse(performance.description) }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="creation">
-          <th mat-header-cell *matHeaderCellDef i18n>Created</th>
-          <td mat-cell *matCellDef="let performance">{{ performance.created_at | amFromUnix | amTimeAgo }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="performance_page">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let performance">
-            <ui-button kind="accent" class="mr-2" (click)="openPerformance(performance)" i18n>Open</ui-button>
-            <ui-button kind="danger" (click)="deletePerformance(performance)" i18n>Delete</ui-button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 50, 100]" showFirstLastButtons></mat-paginator>
-    </div>
+    <ui-table [table]="table"></ui-table>
   </div>
 </app-page>

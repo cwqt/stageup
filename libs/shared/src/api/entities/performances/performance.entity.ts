@@ -1,5 +1,13 @@
 import { timestamp, uuid } from '@core/helpers';
-import { DtoCreatePerformance, Genre, IPerformance, IPerformanceStub, RichText, Visibility } from '@core/interfaces';
+import {
+  DtoCreatePerformance,
+  Genre,
+  IPerformance,
+  IPerformanceStub,
+  PerformanceStatus,
+  RichText,
+  Visibility
+} from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
   BaseEntity,
@@ -29,6 +37,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('varchar', { nullable: true }) thumbnail: string;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
+  @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.PendingSchedule }) status: PerformanceStatus;
 
   @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
@@ -43,6 +52,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this.genre = data.genre;
     this.tickets = [];
 
+    // Defaults
+    this.status = PerformanceStatus.PendingSchedule;
     this.created_at = timestamp(new Date());
     this.views = 0;
     this.average_rating = null;
@@ -68,7 +79,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       created_at: this.created_at,
       thumbnail: this.thumbnail,
       premiere_datetime: this.premiere_datetime,
-      assets: this.asset_group.assets.map(a => a.toStub())
+      assets: this.asset_group.assets.map(a => a.toStub()),
+      status: this.status
     };
   }
 

@@ -38,14 +38,6 @@ table {
   width: 100%;
 }
 
-.ui-table--actions {
-  display: flex;
-  align-items: center;
-  ui-button {
-    margin-right: 5px;
-  }
-}
-
 .ui-table--dropdown {
   display: flex;
   flex-flow: column;
@@ -124,13 +116,10 @@ popper-content {
 
 .ui-table--actions {
   display: flex;
-  flex-flow: column;
   ui-button {
-    width: 100%;
     margin: 0;
     ::ng-deep button {
       width: 100%;
-      border: 0;
       justify-content: flex-start;
     }
   }

@@ -1,9 +1,11 @@
 import {
+  AssetOwnerType,
   AssetType,
   IMUXHookResponse,
   IMuxPassthrough,
   LiveStreamState,
   MuxHook,
+  PerformanceStatus,
   VideoAssetState
 } from '@core/interfaces';
 import {
@@ -90,7 +92,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
 
   async videoAssetDeleted(passthrough: IMuxPassthrough, data: IMUXHookResponse<MuxAsset>) {}
 
-  async setPerformanceState(passthrough: IMuxPassthrough, state: LiveStreamState) {
+  async setLiveStreamAssetState(passthrough: IMuxPassthrough, state: LiveStreamState) {
     const stream = await getCheck(LiveStreamAsset.findOne({ _id: passthrough.asset_id }));
     stream.meta.state = state;
     await stream.save();
@@ -111,23 +113,37 @@ export default class MUXController extends BaseController<BackendProviderMap> {
     // the transaction hasn't completed, so put a timeout of 500ms
     // we'll need to revisit this at some point...
     await timeout(500);
-    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Idle);
+    await this.setLiveStreamAssetState(JSON.parse(data.data.passthrough), LiveStreamState.Idle);
   }
 
   async streamIdle(data: IMUXHookResponse<LiveStream>) {
-    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Idle);
+    await this.setLiveStreamAssetState(JSON.parse(data.data.passthrough), LiveStreamState.Idle);
   }
 
   async streamActive(data: IMUXHookResponse<LiveStream>) {
-    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Active);
+    const passthrough: IMuxPassthrough = JSON.parse(data.data.passthrough);
+    if (passthrough.asset_owner_type == AssetOwnerType.Performance) {
+      const performance = await Performance.findOne({ _id: passthrough.asset_owner_id });
+      performance.status = PerformanceStatus.Live;
+      await performance.save();
+    }
+
+    await this.setLiveStreamAssetState(passthrough, LiveStreamState.Active);
   }
 
   async streamDisconnected(data: IMUXHookResponse<LiveStream>) {
-    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Disconnected);
+    const passthrough: IMuxPassthrough = JSON.parse(data.data.passthrough);
+    if (passthrough.asset_owner_type == AssetOwnerType.Performance) {
+      const performance = await Performance.findOne({ _id: passthrough.asset_owner_id });
+      performance.status = PerformanceStatus.Complete;
+      await performance.save();
+    }
+
+    await this.setLiveStreamAssetState(JSON.parse(data.data.passthrough), LiveStreamState.Disconnected);
   }
 
   async streamCompleted(data: IMUXHookResponse<LiveStream>) {
-    await this.setPerformanceState(JSON.parse(data.data.passthrough), LiveStreamState.Completed);
+    await this.setLiveStreamAssetState(JSON.parse(data.data.passthrough), LiveStreamState.Completed);
   }
 
   handleHook(): IControllerEndpoint<void> {

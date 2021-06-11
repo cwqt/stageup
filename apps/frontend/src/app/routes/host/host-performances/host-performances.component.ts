@@ -6,13 +6,17 @@ import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { IEnvelopedData, IPerformanceStub, IPerformance } from '@core/interfaces';
+import { IEnvelopedData, IPerformanceStub, IPerformance, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PerformanceService } from '../../../services/performance.service';
 import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { richtext } from '@core/helpers';
+import { i18n, richtext, unix } from '@core/helpers';
+import { UiTable } from '@frontend/ui-lib/table/table.class';
+import { environment } from 'apps/frontend/src/environments/environment';
+import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
+import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
 
 @Component({
   selector: 'app-host-performances',
@@ -21,14 +25,9 @@ import { richtext } from '@core/helpers';
 })
 export class HostPerformancesComponent implements OnInit {
   hostId: string;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  hostPerformancesDataSrc: MatTableDataSource<IPerformanceStub>;
-  displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
-  performances: ICacheable<IEnvelopedData<IPerformanceStub[], null>> = {
-    data: null,
-    loading: false,
-    error: ''
-  };
+  table: UiTable<IPerformanceStub>;
+
+  // displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
 
   constructor(
     private performanceService: PerformanceService,
@@ -38,44 +37,58 @@ export class HostPerformancesComponent implements OnInit {
     private appService: BaseAppService
   ) {}
 
-  get pager(): MatPaginator {
-    return this.hostPerformancesDataSrc.paginator;
-  }
-
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
-    this.hostPerformancesDataSrc = new MatTableDataSource<IPerformanceStub>([]);
-    await this.getHostPerformancesList();
+    const statusPipe = new PerformanceStatusPipe();
+    this.table = new UiTable<IPerformanceStub>({
+      resolver: query => this.hostService.readHostPerformances(this.hostId, query),
+      columns: [
+        {
+          label: $localize`Name`,
+          accessor: p => p.name
+        },
+        {
+          label: $localize`Description`,
+          accessor: p => richtext.read(p.description)
+        },
+        {
+          label: $localize`Created At`,
+          accessor: p => i18n.date(unix(p.created_at), environment.locale)
+        },
+        {
+          label: $localize`Status`,
+          accessor: p => statusPipe.transform(p.status),
+          chip_selector: p => {
+            const colours: { [index in PerformanceStatus]: ChipComponent['kind'] } = {
+              [PerformanceStatus.Complete]: 'purple',
+              [PerformanceStatus.Cancelled]: 'gray',
+              [PerformanceStatus.Deleted]: 'gray',
+              [PerformanceStatus.Live]: 'red',
+              [PerformanceStatus.PendingSchedule]: 'blue',
+              [PerformanceStatus.Scheduled]: 'green'
+            };
+
+            return colours[p.status];
+          }
+        }
+      ],
+      actions: [
+        {
+          label: $localize`Edit`,
+          click: p => this.appService.navigateTo(`/dashboard/performances/${p._id}`),
+          icon: 'maximize'
+        }
+      ],
+      pagination: {}
+    });
   }
 
-  ngAfterViewInit() {
-    this.hostPerformancesDataSrc.paginator = this.paginator;
-  }
+  ngAfterViewInit() {}
 
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
       this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' })
     );
-  }
-
-  async getHostPerformancesList() {
-    this.performances.loading = true;
-    return this.hostService
-      .readHostPerformances(this.hostId, this.pager?.pageIndex, this.pager?.pageSize)
-      .then(hd => {
-        this.performances.data = hd;
-        this.hostPerformancesDataSrc.data = hd.data;
-        if (this.pager) {
-          this.pager.length = hd.__paging_data.total;
-        }
-      })
-
-      .catch(e => (this.performances.error = e))
-      .finally(() => (this.performances.loading = false));
-  }
-
-  openPerformance(performances: IPerformance) {
-    this.appService.navigateTo(`/dashboard/performances/${performances._id}`);
   }
 
   parse(text: string) {
