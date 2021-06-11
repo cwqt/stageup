@@ -47,7 +47,6 @@ import { LoginComponent } from './routes/landing/login/login.component';
 import { ForgotPasswordComponent } from './routes/landing/login/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './routes/landing/login/reset-password/reset-password.component';
 import { UserRegisterComponent } from './routes/landing/user-register/user-register.component';
-import { FirstTimeSetupComponent } from './routes/landing/first-time-setup/first-time-setup.component';
 import { VerifiedComponent } from './components/pages/verified/verified.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
@@ -67,7 +66,7 @@ import { PlayerComponent } from './components/player/player.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
 import { HostSettingsComponent } from './routes/host/host-settings/host-settings.component';
-import { CreateHostComponent } from './routes/host/host-settings/create-host/create-host.component';
+import { CreateHostComponent } from './routes/host/create-host/create-host.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { SearchComponent } from './routes/search/search.component';
 import { OnboardingViewComponent } from './routes/admin-panel/onboarding-view/onboarding-view.component';
@@ -116,16 +115,17 @@ import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.componen
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
 import { ProcessRefundDialogComponent } from './components/dialogs/process-refund-dialog/process-refund-dialog.component';
 import { ConfirmationDialogComponent } from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
-
-import countries from 'i18n-iso-countries';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
-import { Carousel } from './components/libraries/ivyсarousel/carousel';
 import { HostThumbComponent } from './components/host-thumb/host-thumb.component';
 import { ContentBoxComponent } from './components/app/content-box/content-box.component';
 import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host-delete-dialog.component';
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 
-countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}.json`));
+import countries from 'i18n-iso-countries';
+// No cy support for this library, but I have opened a PR with its addition
+// https://github.com/michaelwittig/node-i18n-iso-countries/pull/246
+const locale = environment.locale == 'cy' ? 'en' : environment.locale;
+countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -141,7 +141,6 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${environment.locale}
     ProfileComponent,
     VerifiedComponent,
     SettingsComponent,
-    FirstTimeSetupComponent,
     HeaderBarComponent,
     AppWrapperComponent,
     NotFoundComponent,

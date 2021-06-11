@@ -27,13 +27,13 @@ export class BillingSettingsComponent implements OnInit {
         pagination: { page_sizes: [10, 25] },
         columns: [
           {
-            label: 'Invoice ID',
+            label: $localize`Invoice ID`,
             accessor: v => v.invoice_id,
             click_handler: invoice =>
               this.dialog.open(InvoiceDialogComponent, { data: { invoice, is_host_invoice: false } })
           },
           {
-            label: 'Performance',
+            label: $localize`Performance`,
             accessor: v => v.performance.name,
             filter: {
               type: FilterCode.String,
@@ -42,7 +42,7 @@ export class BillingSettingsComponent implements OnInit {
             sort: { field: 'performance_name' }
           },
           {
-            label: 'Ticket',
+            label: $localize`Ticket`,
             accessor: v => capitalize(v.ticket.type),
             filter: {
               type: FilterCode.Enum,
@@ -65,7 +65,7 @@ export class BillingSettingsComponent implements OnInit {
             }
           },
           {
-            label: 'Invoice Date',
+            label: $localize`Invoice Date`,
             accessor: v => new Date(v.invoice_date * 1000).toISOString(),
             filter: {
               type: FilterCode.Date,
@@ -74,7 +74,7 @@ export class BillingSettingsComponent implements OnInit {
             sort: { field: 'purchased_at' }
           },
           {
-            label: 'Amount',
+            label: $localize`Amount`,
             accessor: v => i18n.money(v.amount, v.currency),
             sort: { field: 'amount' },
             filter: {
@@ -83,18 +83,18 @@ export class BillingSettingsComponent implements OnInit {
             }
           },
           {
-            label: 'Status',
+            label: $localize`Status`,
             accessor: v => new PaymentStatusPipe().transform(v.status),
             filter: {
               field: 'payment_status',
               type: FilterCode.Enum,
               enum: new Map([
-                [PaymentStatus.Created, { label: 'Created' }],
-                [PaymentStatus.Fufilled, { label: 'Fufilled' }],
-                [PaymentStatus.Paid, { label: 'Paid' }],
-                [PaymentStatus.RefundDenied, { label: 'Refund Denied' }],
-                [PaymentStatus.RefundRequested, { label: 'Refund Request' }],
-                [PaymentStatus.Refunded, { label: 'Refunded' }]
+                [PaymentStatus.Created, { label: $localize`Created` }],
+                [PaymentStatus.Fufilled, { label: $localize`Fufilled` }],
+                [PaymentStatus.Paid, { label: $localize`Paid` }],
+                [PaymentStatus.RefundDenied, { label: $localize`Refund Denied` }],
+                [PaymentStatus.RefundRequested, { label: $localize`Refund Request` }],
+                [PaymentStatus.Refunded, { label: $localize`Refunded` }]
               ])
             },
             chip_selector: v => {

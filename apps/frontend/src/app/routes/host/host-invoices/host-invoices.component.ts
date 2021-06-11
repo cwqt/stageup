@@ -33,14 +33,14 @@ export class HostInvoicesComponent implements OnInit {
   ngOnInit(): void {
     this.table = new UiTable<IHostInvoiceStub>(
       {
-        title: 'Invoices',
+        title: $localize`Invoices`,
         resolver: query => this.hostService.readInvoices(this.hostService.hostId, query),
         selection: {
           multi: true,
-          footer_message: v => ({ label: 'Rows Selected:', value: v.selected.length }),
+          footer_message: v => ({ label: $localize`Rows Selected:`, value: v.selected.length }),
           actions: [
             {
-              label: 'Refund selected invoice(s)',
+              label: $localize`Refund selected invoice(s)`,
               click: async v => {
                 if (v.selected.some(i => i['__data'].status == PaymentStatus.Refunded)) {
                   this.toastService.emit(
@@ -54,22 +54,22 @@ export class HostInvoicesComponent implements OnInit {
                 }
 
                 v.selected.length > 1
-                  ? console.log('Bulk refund placeholder for task')
+                  ? console.log('Bulk refund placeholder for task') // TODO: bulk refund
                   : this.helperService.showDialog(
                       this.dialog.open(ProcessRefundDialogComponent, { data: v.selected[0].__data })
                     );
               }
             },
             {
-              label: 'Decline refunds',
+              label: $localize`Decline refunds`,
               click: v => v
             },
             {
-              label: 'Download invoice(s)',
+              label: $localize`Download invoice(s)`,
               click: v => v
             },
             {
-              label: 'Export as CSV',
+              label: $localize`Export as CSV`,
               click: async v => {
                 try {
                   await this.hostService.exportInvoicesToCSV(
@@ -77,17 +77,19 @@ export class HostInvoicesComponent implements OnInit {
                     v.selected.map(i => i.__data.invoice_id)
                   );
                   this.toastService.emit(
-                    'Exported CSVs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon',
+                    $localize`Exported CSVs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account shortly`,
                     ThemeKind.Primary,
                     { duration: 1e9 }
                   );
                 } catch (error) {
-                  this.toastService.emit('An error occured while export to CSV', ThemeKind.Danger, { duration: 5000 });
+                  this.toastService.emit($localize`An error occured while exporting to CSV`, ThemeKind.Danger, {
+                    duration: 5000
+                  });
                 }
               }
             },
             {
-              label: 'Export as PDF',
+              label: $localize`Export as PDF`,
               click: async v => {
                 try {
                   await this.hostService.exportInvoicesToPDF(
@@ -95,12 +97,14 @@ export class HostInvoicesComponent implements OnInit {
                     v.selected.map(i => i.__data.invoice_id)
                   );
                   this.toastService.emit(
-                    'Exported PDFs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon',
+                    $localize`Exported PDFs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon`,
                     ThemeKind.Primary,
                     { duration: 1e9 }
                   );
                 } catch (error) {
-                  this.toastService.emit('An error occured while export to PDF', ThemeKind.Danger, { duration: 5000 });
+                  this.toastService.emit($localize`An error occured while exporting to PDF`, ThemeKind.Danger, {
+                    duration: 5000
+                  });
                 }
               }
             }
@@ -110,7 +114,7 @@ export class HostInvoicesComponent implements OnInit {
         pagination: { page_sizes: [5, 10, 25] },
         columns: [
           {
-            label: 'Invoice ID',
+            label: $localize`Invoice ID`,
             accessor: v => v.invoice_id,
             click_handler: invoice => {
               this.helperService.showDialog(
@@ -127,7 +131,7 @@ export class HostInvoicesComponent implements OnInit {
             }
           },
           {
-            label: 'Performance',
+            label: $localize`Performance`,
             accessor: v => v.performance.name,
             filter: {
               type: FilterCode.String,
@@ -136,7 +140,7 @@ export class HostInvoicesComponent implements OnInit {
             sort: { field: 'performance_name' }
           },
           {
-            label: 'Ticket',
+            label: $localize`Ticket`,
             accessor: v => capitalize(v.ticket.type),
             filter: {
               type: FilterCode.Enum,
@@ -159,7 +163,7 @@ export class HostInvoicesComponent implements OnInit {
             }
           },
           {
-            label: 'Invoice Date',
+            label: $localize`Invoice Date`,
             accessor: v => unix(v.invoice_date).format('MMMM Do, YYYY'),
             filter: {
               type: FilterCode.Date,
@@ -168,7 +172,7 @@ export class HostInvoicesComponent implements OnInit {
             sort: { field: 'purchased_at' }
           },
           {
-            label: 'Amount',
+            label: $localize`Amount`,
             accessor: v => i18n.money(v.amount, v.ticket.currency),
             sort: { field: 'amount' },
             filter: {
@@ -177,13 +181,13 @@ export class HostInvoicesComponent implements OnInit {
             }
           },
           {
-            label: 'Net Amount',
+            label: $localize`Net Amount`,
             // IMPORTANT: Subtracts a random amount off amount for purposes of demo
             // change to actual amount when requirements for tiers/fees are calculated
             accessor: v => i18n.money(v.amount - Math.random() * 1000, v.ticket.currency)
           },
           {
-            label: 'Status',
+            label: $localize`Status`,
             accessor: v => new PaymentStatusPipe().transform(v.status),
             filter: {
               field: 'payment_status',

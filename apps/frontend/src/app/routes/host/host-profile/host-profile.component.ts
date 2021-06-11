@@ -37,11 +37,11 @@ export class HostProfileComponent implements OnInit {
 
   async ngOnInit() {
     this.tabs = [
-      { label: 'Feed', route: '' },
-      { label: 'About', route: 'about' },
-      { label: 'Patronage', route: 'patronage' },
-      { label: 'Contact', route: 'contact' },
-      { label: 'Merch', route: null }
+      { label: $localize`Feed`, route: '' },
+      { label: $localize`About`, route: 'about' },
+      { label: $localize`Patronage`, route: 'patronage' },
+      { label: $localize`Contact`, route: 'contact' },
+      { label: $localize`Merch`, route: null }
     ];
 
     // Change view of component depending on if on /dashboard/@user or /@user

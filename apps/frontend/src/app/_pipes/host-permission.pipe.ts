@@ -5,14 +5,14 @@ import { HostPermission } from '@core/interfaces';
 export class HostPermissionPipe implements PipeTransform {
   transform(value: any): string {
     const prettyValues: { [index in HostPermission]: string } = {
-      [HostPermission.Owner]: 'Owner',
-      [HostPermission.Admin]: 'Admin',
-      [HostPermission.Editor]: 'Editor',
-      [HostPermission.Member]: 'Member',
-      [HostPermission.Pending]: 'Pending',
-      [HostPermission.Expired]: 'Expired'
+      [HostPermission.Owner]: $localize`Owner`,
+      [HostPermission.Admin]: $localize`Admin`,
+      [HostPermission.Editor]: $localize`Editor`,
+      [HostPermission.Member]: $localize`Member`,
+      [HostPermission.Pending]: $localize`Pending`,
+      [HostPermission.Expired]: $localize`Expired`
     };
 
-    return prettyValues[value] || 'Unknown Step';
+    return prettyValues[value] || $localize`Unknown Step`;
   }
 }

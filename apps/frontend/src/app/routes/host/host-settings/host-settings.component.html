@@ -13,7 +13,7 @@
         <h2 i18n>Leave Company</h2>
         <ui-hr></ui-hr>
         <div>
-          <p>
+          <p i18n>
             Withdraw membership from <b>{{ myself.host.name }}</b
             >, this action can't be undone.
           </p>
@@ -23,6 +23,7 @@
             size="l"
             class="mb-4"
             (click)="openLeaveHostConfirmationDialog()"
+            i18n
             >Leave Company</ui-button
           >
           <br />

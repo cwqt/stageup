@@ -25,6 +25,8 @@ export class BecomePatronDialogComponent implements OnInit, AfterViewInit, IUiDi
   submit: EventEmitter<void> = new EventEmitter();
   cancel: EventEmitter<void> = new EventEmitter();
 
+  subscribeTo: string = $localize`Subscribe to`;
+
   private _unsubscribe = new Subject<void>();
 
   constructor(
@@ -37,12 +39,12 @@ export class BecomePatronDialogComponent implements OnInit, AfterViewInit, IUiDi
   ngOnInit(): void {
     this.buttons = [
       new UiDialogButton({
-        label: 'Cancel',
+        label: $localize`Cancel`,
         kind: ThemeKind.Secondary,
         callback: () => this.cancel.emit()
       }),
       new UiDialogButton({
-        label: 'Become a Patron',
+        label: $localize`Become a Patron`,
         kind: ThemeKind.Primary,
         disabled: true,
         callback: () =>
@@ -56,10 +58,10 @@ export class BecomePatronDialogComponent implements OnInit, AfterViewInit, IUiDi
             this.subscription
           )
             .then(() => {
-              this.toastService.emit(`Successfully subscribed to ${this.data.tier.name}!`, ThemeKind.Accent);
+              this.toastService.emit($localize`Successfully subscribed to ${this.data.tier.name}!`, ThemeKind.Accent);
             })
             .catch(err => {
-              this.toastService.emit(`Failed to subscribe to tier, please try again later`, ThemeKind.Danger);
+              this.toastService.emit($localize`Failed to subscribe to tier, please try again later`, ThemeKind.Danger);
             })
             .finally(() => {
               this.ref.close();

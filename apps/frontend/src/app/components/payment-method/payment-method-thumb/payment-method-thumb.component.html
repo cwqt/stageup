@@ -9,9 +9,9 @@
   <div class="flex flex-col justify-around pl-4">
     <span class="font-bold"
       >{{ method.brand | paymentMethodBrandNamePipe }}
-      <span class="font-normal opacity-50 ml-1" *ngIf="method.is_primary">(default)</span>
+      <span class="font-normal opacity-50 ml-1" *ngIf="method.is_primary" i18n>(default)</span>
     </span>
-    <span class="opacity-50">Ending in {{ method.last4 }}</span>
+    <span class="opacity-50" i18n>Ending in {{ method.last4 }}</span>
   </div>
 
   <div *ngIf="!isEditing" class="ml-auto">
@@ -19,11 +19,12 @@
       *ngIf="!isExpanded && selection.isSelected(method)"
       [transparent]="true"
       (click)="clickedExpandButton.emit(!isExpanded)"
+      i18n
       >Change</ui-button
     >
 
     <span *ngIf="isExpanded || !selection.isSelected(method)" class="opacity-50 text-right">
-      Last used<br />
+      <span i18n>Last used</span><br />
       {{ method.last_used_at ? (method.last_used_at | amFromUnix | amDateFormat: 'l') : 'Never' }}</span
     >
   </div>

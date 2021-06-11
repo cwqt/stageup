@@ -5,14 +5,14 @@ import { HostOnboardingStep, PaymentStatus } from '@core/interfaces';
 export class PaymentStatusPipe implements PipeTransform {
   transform(value: any): string {
     const prettyValues: { [index in PaymentStatus]: string } = {
-      [PaymentStatus.Created]: 'Created',
-      [PaymentStatus.Fufilled]: 'Fufilled',
-      [PaymentStatus.Paid]: 'Paid',
-      [PaymentStatus.RefundDenied]: 'Refund Denied',
-      [PaymentStatus.Refunded]: 'Refunded',
-      [PaymentStatus.RefundRequested]: 'Refund Requested'
+      [PaymentStatus.Created]: $localize`Created`,
+      [PaymentStatus.Fufilled]: $localize`Fufilled`,
+      [PaymentStatus.Paid]: $localize`Paid`,
+      [PaymentStatus.RefundDenied]: $localize`Refund Denied`,
+      [PaymentStatus.Refunded]: $localize`Refunded`,
+      [PaymentStatus.RefundRequested]: $localize`Refund Requested`
     };
 
-    return prettyValues[value] || 'Unknown Payment Status';
+    return prettyValues[value] || $localize`Unknown Payment Status`;
   }
 }

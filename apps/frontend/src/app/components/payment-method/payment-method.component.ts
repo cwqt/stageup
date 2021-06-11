@@ -113,7 +113,7 @@ export class PaymentMethodComponent implements OnInit {
   addMethodToList(event: IPaymentMethodStub) {
     this.paymentMethods.data.push(event);
     this.tabs.selectedIndex = 0;
-    this.toastService.emit('Added card!', ThemeKind.Accent);
+    this.toastService.emit($localize`Added card!`, ThemeKind.Accent);
 
     // Select the card if the user just added it
     if (this.isSelecting) this.selectionModel.select(event);

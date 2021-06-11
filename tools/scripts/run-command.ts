@@ -57,7 +57,7 @@ const applications: {
       ['set-env']: env => `ts-node ./apps/frontend/set-env.ts --env=${env}`
     },
     environments: ['development', 'staging', 'production'],
-    locales: ['en', 'no']
+    locales: ['en', 'nb', 'cy']
   },
   ['api-tests']: {
     cmd: {

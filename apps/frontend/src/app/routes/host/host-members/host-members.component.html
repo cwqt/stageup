@@ -13,7 +13,7 @@
     <div class="bg-white rounded shadow-sm overflow-hidden">
       <table mat-table [dataSource]="hostMembersDataSrc" class="w-full">
         <ng-container matColumnDef="user">
-          <th mat-header-cell *matHeaderCellDef>User</th>
+          <th mat-header-cell *matHeaderCellDef i18n>User</th>
           <td mat-cell *matCellDef="let uhi">
             <app-user-thumb [user]="uhi.user" [small]="true"></app-user-thumb>
           </td>

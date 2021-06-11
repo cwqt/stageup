@@ -9,7 +9,7 @@
       "i18n": {
         "sources": ["apps/backend/src/i18n/i18n.hjson", "libs/interfaces/src/i18n/i18n.hjson"],
         "path": "apps/backend/src/i18n",
-        "locales": ["en", "nb"]
+        "locales": ["en", "nb", "cy"]
       },
       "targets": {
         "build": {
@@ -86,9 +86,12 @@
       "prefix": "app",
       "sourceLocale": "en",
       "i18n": {
+        "preRun": "nx run frontend:extract-i18n && nx run frontend:xliffmerge",
+        "path": "apps/frontend/src/i18n",
         "locales": {
           "nb": "apps/frontend/src/i18n/messages.nb.xlf",
-          "en": "apps/frontend/src/i18n/messages.en.xlf"
+          "en": "apps/frontend/src/i18n/messages.en.xlf",
+          "cy": "apps/frontend/src/i18n/messages.cy.xlf"
         }
       },
       "targets": {
@@ -113,11 +116,12 @@
             ],
             "scripts": [],
             "i18nMissingTranslation": "warning",
-            "localize": ["en"]
+            "localize": ["cy"]
           },
           "configurations": {
             "en": { "localize": ["en"] },
             "nb": { "localize": ["nb"] },
+            "cy": { "localize": ["cy"] },
             "development": {
               "fileReplacements": [
                 {
@@ -175,6 +179,7 @@
           "configurations": {
             "en": { "browserTarget": ["frontend:build:en"] },
             "nb": { "browserTarget": ["frontend:build:nb"] },
+            "cy": { "browserTarget": ["frontend:build:cy"] },
             "development": {
               "browserTarget": "frontend:build:development",
               "proxyConfig": "apps/frontend/proxy.conf.json"
@@ -212,7 +217,9 @@
               "srcDir": "apps/frontend/src/i18n",
               "genDir": "apps/frontend/src/i18n",
               "defaultLanguage": "en",
-              "languages": ["en", "nb"]
+              "languages": ["en", "nb", "cy"],
+              "removeUnusedIds": false,
+              "beautifyOutput": true
             }
           }
         }

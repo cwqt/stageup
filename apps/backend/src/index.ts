@@ -39,7 +39,7 @@ Register<BackendProviderMap>({
   logger: log,
   stream: stream,
   i18n: {
-    locales: ['en', 'nb'],
+    locales: ['en', 'nb', 'cy'],
     path: path.join(__dirname, '/i18n')
   },
   authorisation: Auth.isSiteAdmin,

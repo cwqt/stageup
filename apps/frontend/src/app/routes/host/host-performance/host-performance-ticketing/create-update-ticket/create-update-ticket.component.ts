@@ -40,6 +40,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
 
   ticketForm: UiForm<ITicket, DtoCreateTicket>;
   ticket: ICacheable<ITicket> = createICacheable();
+  dialogTitle: string;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { operation: 'create' | 'update'; ticketId?: string; host: IHost },
@@ -51,6 +52,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
 
   ngOnInit(): void {
     this.host = this.data.host;
+    this.dialogTitle = this.data.operation == 'update' ? $localize`Update ticket` : $localize`Create ticket`;
 
     this.ticketForm = new UiForm({
       fields: {

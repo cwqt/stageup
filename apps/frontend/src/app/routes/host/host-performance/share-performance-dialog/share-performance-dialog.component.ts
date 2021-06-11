@@ -19,12 +19,12 @@ export class SharePerformanceDialogComponent implements OnInit, IUiDialogOptions
   @Output() cancel: EventEmitter<void> = new EventEmitter();
   buttons: IUiDialogOptions['buttons'] = [
     new UiDialogButton({
-      label: 'Cancel',
+      label: $localize`Cancel`,
       kind: ThemeKind.Secondary,
       callback: () => this.cancel.emit()
     }),
     new UiDialogButton({
-      label: 'Send Requests',
+      label: $localize`Send Requests`,
       kind: ThemeKind.Primary,
       loading: false,
       disabled: true,
@@ -52,7 +52,7 @@ export class SharePerformanceDialogComponent implements OnInit, IUiDialogOptions
         this.addedEmailAddresses
       ),
       this.shareCacheable
-    ).then(() => this.toastService.emit(`Shared performance with ${this.addedEmailAddresses.length} users`));
+    ).then(() => this.toastService.emit($localize`Shared performance with ${this.addedEmailAddresses.length} users`));
 
     this.submit.emit();
   }

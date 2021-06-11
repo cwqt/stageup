@@ -39,7 +39,11 @@ export class FeedComponent implements OnInit {
     hosts: createICacheable([], { loading_page: false })
   };
 
-  prettyKeys: { [index in CarouselIdx]?: string } = { hosts: $localize`Performing Arts Companies` };
+  prettyKeys: { [index in CarouselIdx]: string } = {
+    hosts: $localize`Performing Arts Companies`,
+    upcoming: $localize`Upcoming`,
+    everything: $localize`Everything`
+  };
 
   genres: {
     [index in Genre]: {
@@ -48,15 +52,15 @@ export class FeedComponent implements OnInit {
       small?: boolean;
     };
   } = {
-    [Genre.Dance]: { label: GenreMap[Genre.Dance], gradient: 'linear-gradient(to right, #6a3093, #a044ff)' },
-    [Genre.Classical]: { label: GenreMap[Genre.Classical], gradient: 'linear-gradient(to right, #b24592, #f15f79);' },
+    [Genre.Dance]: { label: $localize`Dance`, gradient: 'linear-gradient(to right, #6a3093, #a044ff)' },
+    [Genre.Classical]: { label: $localize`Classical`, gradient: 'linear-gradient(to right, #b24592, #f15f79);' },
     [Genre.Contemporary]: {
-      label: GenreMap[Genre.Contemporary],
+      label: $localize`Contemp.`,
       gradient: 'linear-gradient(to right, #403a3e, #be5869);',
       small: true
     },
-    [Genre.Family]: { label: GenreMap[Genre.Family], gradient: 'linear-gradient(to right, #76b852, #8dc26f);' },
-    [Genre.Theatre]: { label: GenreMap[Genre.Theatre], gradient: 'linear-gradient(to right, #f46b45, #eea849);' }
+    [Genre.Family]: { label: $localize`Family`, gradient: 'linear-gradient(to right, #76b852, #8dc26f);' },
+    [Genre.Theatre]: { label: $localize`Theatre`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' }
   };
 
   constructor(

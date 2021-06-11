@@ -39,8 +39,8 @@ export class HostPaymentsComponent implements OnInit {
     if (this.connectSuccess !== undefined) {
       this.toastService.emit(
         this.connectSuccess
-          ? 'Successfully connected Stripe!'
-          : 'Error occured while connecting Stripe, try again later',
+          ? $localize`Successfully connected Stripe!`
+          : $localize`Error occured while connecting Stripe, try again later`,
         this.connectSuccess ? ThemeKind.Primary : ThemeKind.Danger,
         { duration: 5000 }
       );

@@ -18,7 +18,7 @@ export class HostPatronageSubscribersComponent implements OnInit {
 
   ngOnInit(): void {
     this.table = new UiTable<DtoHostPatronageSubscription>({
-      title: 'Subscribers',
+      title: $localize`Subscribers`,
       resolver: query => this.hostService.readPatronageSubscribers(this.hostService.hostId, query),
       selection: {
         multi: true,

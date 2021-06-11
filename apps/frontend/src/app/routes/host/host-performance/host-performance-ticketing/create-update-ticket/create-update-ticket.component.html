@@ -1,8 +1,4 @@
-<ui-dialog
-  [title]="(data.operation | titlecase) + ' ticket'"
-  [buttons]="buttons"
-  [loading]="ticketForm.loading | async"
->
+<ui-dialog [title]="dialogTitle" [buttons]="buttons" [loading]="ticketForm.loading | async">
   <mat-error class="mb-2" *ngIf="!host.stripe_account_id" i18n
     >Stripe Account must be connected before being able to create a Paid/Donation Ticket</mat-error
   >

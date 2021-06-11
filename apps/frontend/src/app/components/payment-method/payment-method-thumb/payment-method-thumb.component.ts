@@ -41,25 +41,25 @@ export class PaymentMethodThumbComponent implements OnInit {
 
     this.helperService.showConfirmationDialog(this.dialog, {
       loading: loading.asObservable(),
-      title: `Delete Payment Method`,
-      description: `This will permanently remove the card ending in ${this.method.last4} from your account.`,
+      title: $localize`Delete Payment Method`,
+      description: $localize`This will permanently remove the card ending in ${this.method.last4} from your account.`,
       buttons: [
         new UiDialogButton({
-          label: 'Cancel',
+          label: $localize`Cancel`,
           kind: ThemeKind.Secondary,
           callback: ref => ref.close()
         }),
         new UiDialogButton({
-          label: 'Delete',
+          label: $localize`Delete`,
           kind: ThemeKind.Danger,
           callback: async ref => {
             try {
               loading.next(true);
               await this.myselfService.deletePaymentMethod(this.method._id);
-              this.toastService.emit('Deleted card', ThemeKind.Accent);
+              this.toastService.emit($localize`Deleted card`, ThemeKind.Accent);
               this.deletedMethod.emit(this.method);
             } catch (error) {
-              this.toastService.emit('Failed to delete the card', ThemeKind.Danger);
+              this.toastService.emit($localize`Failed to delete the card`, ThemeKind.Danger);
             } finally {
               loading.next(false);
               ref.close();

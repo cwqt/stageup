@@ -21,12 +21,12 @@ export class HostAddMemberComponent implements OnInit, IUiDialogOptions {
 
   buttons = [
     new UiDialogButton({
-      label: 'Cancel',
+      label: $localize`Cancel`,
       kind: ThemeKind.Secondary,
       callback: () => this.cancel.emit()
     }),
     new UiDialogButton({
-      label: 'Send Requests',
+      label: $localize`Send Requests`,
       kind: ThemeKind.Primary,
       loading: false,
       disabled: true,
@@ -51,7 +51,7 @@ export class HostAddMemberComponent implements OnInit, IUiDialogOptions {
       members => {
         const rejectedUsers = members.filter(c => c.status == 'rejected');
         if (rejectedUsers.length > 0) {
-          this.toastService.emit(`One or more users entered are not registered `);
+          this.toastService.emit($localize`One or more users entered are not registered `);
         }
 
         return members

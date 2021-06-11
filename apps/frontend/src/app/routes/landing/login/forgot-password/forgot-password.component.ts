@@ -38,9 +38,9 @@ export class ForgotPasswordComponent implements OnInit, IUiDialogOptions {
       },
       resolvers: {
         output: async v => {
-          this.dialogMessage = 'Password reset link sent successfully.';
-          this.buttons[0].label = 'Send Again';
-          this.toastService.emit(`Please check your email.`);
+          this.dialogMessage = $localize`Password reset link sent successfully.`;
+          this.buttons[0].label = $localize`Send Again`;
+          this.toastService.emit($localize`Please check your email.`);
           return this.userService.forgotPassword(v.email);
         }
       }
@@ -48,7 +48,7 @@ export class ForgotPasswordComponent implements OnInit, IUiDialogOptions {
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Reset Password',
+        label: $localize`Reset Password`,
         kind: ThemeKind.Primary,
         callback: () => this.sendEmailForm.submit(),
         disabled: true

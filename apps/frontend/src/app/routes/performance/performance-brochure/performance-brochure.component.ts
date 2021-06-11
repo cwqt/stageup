@@ -88,14 +88,14 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       this.donoPegSelectForm = new UiForm({
         fields: {
           pegs: UiField.Radio({
-            label: 'Select a donation amount',
+            label: $localize`Select a donation amount`,
             values: new Map(
               selectedTicket.dono_pegs.map(peg => [
                 peg,
                 {
                   label:
                     peg == 'allow_any'
-                      ? 'Enter an amount'
+                      ? $localize`Enter an amount`
                       : i18n.money(getDonoAmount(peg, selectedTicket.currency), selectedTicket.currency)
                 }
               ])
@@ -112,7 +112,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
       if (selectedTicket.dono_pegs.includes('allow_any')) {
         this.donoPegSelectForm.fields.allow_any_amount = UiField.Number({
-          label: 'Enter custom amount:',
+          label: $localize`Enter custom amount:`,
           hide: v => v.value.pegs !== 'allow_any',
           initial: 0
         });

@@ -1,20 +1,20 @@
-<ui-dialog [buttons]="buttons" title="Add new Members" [loading]="addedMembers.loading">
-  <p>Add e-mail addresses of StageUp users to be invited to your company as members.</p>
+<ui-dialog [buttons]="buttons" i18n-title title="Add new Members" [loading]="addedMembers.loading">
+  <p i18n>Add e-mail addresses of StageUp users to be invited to your company as members.</p>
 
   <mat-form-field class="py-2">
-    <mat-label>Member e-mail addresses</mat-label>
+    <mat-label i81n>Member e-mail addresses</mat-label>
     <mat-chip-list #chipList>
-      <mat-chip *ngFor="let req of addedChangeRequests" class="block"
-        [removable]="true"
-        (removed)="remove(req)">
+      <mat-chip *ngFor="let req of addedChangeRequests" class="block" [removable]="true" (removed)="remove(req)">
         {{ req.value }}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
-      <input placeholder="Add e-mail address"
+      <input
+        placeholder="Add e-mail address"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
         [matChipInputAddOnBlur]="true"
-        (matChipInputTokenEnd)="add($event)">
+        (matChipInputTokenEnd)="add($event)"
+      />
     </mat-chip-list>
   </mat-form-field>
 </ui-dialog>

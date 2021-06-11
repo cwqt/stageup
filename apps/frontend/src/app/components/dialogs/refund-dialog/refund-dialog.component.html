@@ -1,5 +1,6 @@
 <ui-dialog [buttons]="buttons" title="Request refund">
-    <h2>Invoice: <span class="opacity-50">#{{ data.invoice_id }}</span></h2>
-    <ui-form [form]="form"></ui-form>
+  <h2>
+    <span i18n>Invoice</span>: <span class="opacity-50">#{{ data.invoice_id }}</span>
+  </h2>
+  <ui-form [form]="form"></ui-form>
 </ui-dialog>
-

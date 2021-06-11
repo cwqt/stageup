@@ -5,11 +5,11 @@ import { TicketType } from '@core/interfaces';
 export class TicketTypePipe implements PipeTransform {
   transform(value: any): string {
     const prettyValues: { [index in TicketType]: string } = {
-      [TicketType.Paid]: 'Paid',
-      [TicketType.Free]: 'Free',
-      [TicketType.Donation]: 'Donation',
+      [TicketType.Paid]: $localize`Paid`,
+      [TicketType.Free]: $localize`Free`,
+      [TicketType.Donation]: $localize`Donation`
     };
 
-    return prettyValues[value] || 'Unknown Ticket Type';
+    return prettyValues[value] || $localize`Unknown Ticket Type`;
   }
 }

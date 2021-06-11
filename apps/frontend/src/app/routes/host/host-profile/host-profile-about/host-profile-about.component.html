@@ -1,9 +1,9 @@
-<h2>About {{ host.name }}</h2>
+<h2 i18n>About {{ host.name }}</h2>
 <ui-hr></ui-hr>
 
 <ng-container *ngIf="host.bio; else elseTemplate">
   <quill-view [content]="host.bio" format="object" theme="snow"></quill-view>
 </ng-container>
 <ng-template #elseTemplate>
-  <p class="mb-0">No description.</p>
+  <p class="mb-0" i18n>No description</p>
 </ng-template>

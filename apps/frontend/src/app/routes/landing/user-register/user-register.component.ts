@@ -38,7 +38,7 @@ export class UserRegisterComponent implements OnInit, IUiDialogOptions, OnDestro
     this.registerForm = new UiForm({
       fields: {
         username: UiField.Text({
-          label: 'Username',
+          label: $localize`Username`,
           validators: [
             { type: 'required' },
             { type: 'minlength', value: 4 },
@@ -46,27 +46,27 @@ export class UserRegisterComponent implements OnInit, IUiDialogOptions, OnDestro
             {
               type: 'pattern',
               value: /^[a-zA-Z0-9]*$/,
-              message: () => 'Must be alphanumeric with no spaces'
+              message: () => $localize`Must be alphanumeric with no spaces`
             }
           ]
         }),
         email_address: UiField.Text({
-          label: 'E-mail address',
+          label: $localize`E-mail address`,
           validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 32 }]
         }),
         password: UiField.Password({
-          label: 'Password',
+          label: $localize`Password`,
           validators: [{ type: 'required' }, { type: 'minlength', value: 8 }, { type: 'maxlength', value: 16 }]
         }),
         password_match: UiField.Password({
-          label: 'Repeat password',
+          label: $localize`Repeat password`,
           validators: [
             { type: 'required' },
             { type: 'minlength', value: 8 },
             { type: 'maxlength', value: 16 },
             {
               type: 'custom',
-              message: () => 'Passwords do not match',
+              message: () => $localize`Passwords do not match`,
               value: (self, fg) => (console.log(fg, self), fg.value['password'] == self.value)
             }
           ]
@@ -103,7 +103,7 @@ export class UserRegisterComponent implements OnInit, IUiDialogOptions, OnDestro
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Register',
+        label: $localize`Register`,
         callback: () => this.registerForm.submit()
       }).attach(this.registerForm)
     ];

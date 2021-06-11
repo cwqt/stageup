@@ -58,7 +58,7 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
     this.form = new UiForm({
       fields: {
         permission: UiField.Select({
-          label: 'Select Permission',
+          label: $localize`Select Permission`,
           initial: this.data.uhi.permissions,
           validators: [{ type: 'custom', value: self => self.value != this.data.uhi.permissions }],
           multi_select: false,
@@ -77,12 +77,12 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Cancel',
+        label: $localize`Cancel`,
         kind: ThemeKind.Secondary,
         callback: () => this.cancel.emit()
       }),
       new UiDialogButton({
-        label: 'Update',
+        label: $localize`Update`,
         kind: ThemeKind.Primary,
         disabled: true,
         callback: () => this.form.submit()

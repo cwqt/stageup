@@ -22,7 +22,7 @@ export class OnboardingViewIssueMakerComponent implements OnInit, OnChanges {
 
   @ViewChild('input') input;
   inputOptions = UiField.Text({
-    placeholder: 'Enter issue text...',
+    placeholder: $localize`Enter issue text...`,
     validators: [{ type: 'maxlength', value: 256 }]
   });
 

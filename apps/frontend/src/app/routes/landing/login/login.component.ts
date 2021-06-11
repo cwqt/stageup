@@ -48,11 +48,11 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
     this.loginForm = new UiForm({
       fields: {
         email_address: UiField.Text({
-          label: 'E-mail address',
+          label: $localize`E-mail address`,
           validators: [{ type: 'required' }, { type: 'email' }]
         }),
         password: UiField.Password({
-          label: 'Password',
+          label: $localize`Password`,
           validators: [{ type: 'required' }]
         })
       },
@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Login',
+        label: $localize`Login`,
         callback: () => this.loginForm.submit()
       }).attach(this.loginForm)
     ];

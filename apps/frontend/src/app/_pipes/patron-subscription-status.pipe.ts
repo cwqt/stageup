@@ -5,10 +5,10 @@ import { PatronSubscriptionStatus, PaymentStatus } from '@core/interfaces';
 export class PatronSubscriptionStatusPipe implements PipeTransform {
   transform(value: any): string {
     const prettyValues: { [index in PatronSubscriptionStatus]: string } = {
-      [PatronSubscriptionStatus.Active]: 'Active',
-      [PatronSubscriptionStatus.Cancelled]: 'Cancelled'
+      [PatronSubscriptionStatus.Active]: $localize`Active`,
+      [PatronSubscriptionStatus.Cancelled]: $localize`Cancelled`
     };
 
-    return prettyValues[value] || 'Unknown Status';
+    return prettyValues[value] || $localize`Unknown Status`;
   }
 }

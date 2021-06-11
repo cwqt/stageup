@@ -8,21 +8,16 @@ import { BaseAppService } from '../../../services/app.service';
   styleUrls: ['./verified.component.scss']
 })
 export class VerifiedComponent implements OnInit {
-
   public state: string;
 
-  constructor(
-    private route: ActivatedRoute,
-    private baseAppService: BaseAppService
-    ) { }
+  constructor(private route: ActivatedRoute, private baseAppService: BaseAppService) {}
 
-  async ngOnInit(){
+  async ngOnInit() {
     await this.baseAppService.componentInitialising(this.route);
-    this.state =  this.baseAppService.getQueryParam("state");
+    this.state = this.baseAppService.getQueryParam('state');
   }
 
-  gotoSupportForm(){
+  gotoSupportForm() {
     //support form stub
   }
-
 }

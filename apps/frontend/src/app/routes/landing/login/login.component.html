@@ -1,7 +1,7 @@
 <ui-dialog class="login-wrapper" [buttons]="buttons">
   <div class="flex justify-between">
-    <h2 class="mb-4" i18n="@@login-dialog">Log in</h2>
-    <ui-button kind="accent" (click)="openRegister()">Register?</ui-button>
+    <h2 class="mb-4" i18n>Log in</h2>
+    <ui-button kind="accent" (click)="openRegister()" i18n>Register?</ui-button>
   </div>
 
   <div class="grid grid-cols-3 gap-2 social-login mt-4">
@@ -11,7 +11,9 @@
   </div>
 
   <div class="relative py-4">
-    <span class="absolute left-0 right-0 mx-auto my-auto w-20 h-6 top-0 bottom-0 bg-white text-center text-opacity-75"
+    <span
+      class="absolute left-0 right-0 mx-auto my-auto w-20 h-6 top-0 bottom-0 bg-white text-center text-opacity-75 uppercase"
+      i18n
       >OR</span
     >
     <ui-hr></ui-hr>
@@ -20,6 +22,8 @@
   <ui-form [form]="loginForm"> </ui-form>
 
   <div class="text-right">
-    <a class="text-black hover:text-pink-600 cursor-pointer" (click)="openPasswordResetDialog()">Forgot Password?</a>
+    <a class="text-black hover:text-pink-600 cursor-pointer" (click)="openPasswordResetDialog()" i18n
+      >Forgot Password?</a
+    >
   </div>
 </ui-dialog>

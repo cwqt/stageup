@@ -46,11 +46,11 @@ export class ResetPasswordComponent implements OnInit, IUiDialogOptions {
     this.resetPasswordForm = new UiForm({
       fields: {
         password: UiField.Password({
-          label: 'New password',
+          label: $localize`New password`,
           validators: [{ type: 'required' }, { type: 'minlength', value: 8 }, { type: 'maxlength', value: 16 }]
         }),
         password_match: UiField.Password({
-          label: 'Confirm new password',
+          label: $localize`Confirm new password`,
           validators: [
             { type: 'required' },
             { type: 'minlength', value: 8 },
@@ -68,7 +68,7 @@ export class ResetPasswordComponent implements OnInit, IUiDialogOptions {
       },
       handlers: {
         success: async () => {
-          this.toastService.emit(`Password changed successfully.`);
+          this.toastService.emit($localize`Password changed successfully.`);
           this.appService.navigateTo('/login');
           this.dialog.closeAll();
         }
@@ -77,7 +77,7 @@ export class ResetPasswordComponent implements OnInit, IUiDialogOptions {
 
     this.buttons = [
       new UiDialogButton({
-        label: 'Reset Password',
+        label: $localize`Reset Password`,
         kind: ThemeKind.Primary,
         callback: () => this.resetPasswordForm.submit()
       }).attach(this.resetPasswordForm)
