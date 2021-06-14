@@ -116,7 +116,7 @@
             ],
             "scripts": [],
             "i18nMissingTranslation": "warning",
-            "localize": ["cy"]
+            "localize": ["en"]
           },
           "configurations": {
             "en": { "localize": ["en"] },

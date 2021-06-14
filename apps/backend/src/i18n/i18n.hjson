@@ -44,7 +44,8 @@
 
   // Errors ----------------------------------------------------------------------------------------------
   "error.user_has_no_claim": You don't have permissions to view this content
-  
+  "error.too_many_thumbnails": You have too many thumbnails, try deleting some before uploading new ones
+
   // Stripe ----------------------------------------------------------------------------------------------
   "stripe.origin_url_not_matched": Received response does not match submitter!
 
@@ -113,7 +114,7 @@
 
     You can view the status of all your refunds within your account settings
 
-    **Thanks,** 
+    **Thanks,**
     **StageUp Team**
     '''
   "email.refund_requested__subject": StageUp: Your refund request has been sent to @{host_name}

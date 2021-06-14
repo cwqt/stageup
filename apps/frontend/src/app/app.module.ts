@@ -1,5 +1,12 @@
-// Modules ----------------------------------------------------------------------------------------------------------------
 import { environment } from '../environments/environment';
+
+import countries from 'i18n-iso-countries';
+// No cy support for this library, but I have opened a PR with its addition
+// https://github.com/michaelwittig/node-i18n-iso-countries/pull/246
+const locale = environment.locale == 'cy' ? 'en' : environment.locale;
+countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
+
+// Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app.routes';
@@ -37,6 +44,7 @@ import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe'
 import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-status.pipe';
 import { DeleteHostReasonPipe } from './_pipes/delete-host-reason.pipe';
 import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
+import { TimesPipe } from './_pipes/times.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -121,13 +129,9 @@ import { HostThumbComponent } from './components/host-thumb/host-thumb.component
 import { ContentBoxComponent } from './components/app/content-box/content-box.component';
 import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host-delete-dialog.component';
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
+import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
 
-import countries from 'i18n-iso-countries';
-// No cy support for this library, but I have opened a PR with its addition
-// https://github.com/michaelwittig/node-i18n-iso-countries/pull/246
-const locale = environment.locale == 'cy' ? 'en' : environment.locale;
-countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -155,6 +159,7 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
     HostComponent,
     HostPerformancesComponent,
     CreatePerformanceComponent,
+    HostPerformanceThumbnailsComponent,
     UpdatePerformanceComponent,
     PlayerComponent,
     ProfileComponent,
@@ -163,6 +168,7 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
     AdminOnboardingListComponent,
     HostDashboardComponent,
     OnboardingViewComponent,
+    TimesPipe,
     OnboardingStatePipe,
     DeleteHostReasonPipe,
     ObjectLengthPipe,
@@ -232,6 +238,7 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
     HostThumbComponent,
     HostDeleteDialogComponent,
     ConfirmPasswordDialogComponent,
+    HostPerformanceThumbnailsComponent,
     SocialSharingComponent
   ],
   imports: [

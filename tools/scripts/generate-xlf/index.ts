@@ -36,7 +36,7 @@ if (!process.env.GOOGLE_APPLICATION_CREDENTIALS)
     const { path } = data.i18n;
 
     console.log(`\n${project} with locales: ${colors.bold(locales.join(', '))}`);
-    await executePrerunFunction?.(data.i18n.preRun);
+    data.i18n.preRun && (await executePrerunFunction(data.i18n.preRun));
 
     // prettier-ignore
     if (data.i18n.sources) {

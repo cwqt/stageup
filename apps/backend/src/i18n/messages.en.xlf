@@ -145,6 +145,10 @@
         <source>You don't have permissions to view this content</source>
         <target state="final">You don't have permissions to view this content</target>
       </trans-unit>
+      <trans-unit id="error.too_many_thumbnails" datatype="html">
+        <source>You have too many thumbnails, try deleting some before uploading new ones</source>
+        <target state="final">You have too many thumbnails, try deleting some before uploading new ones</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="final">Received response does not match submitter!</target>
@@ -264,7 +268,7 @@ This is a notification to confirm that your recent refund request for **{user_us
 
 You can view the status of all your refunds within your account settings
 
-**Thanks,** 
+**Thanks,**
 **StageUp Team**</source>
         <target state="final">Hi {host_name},
 
@@ -272,7 +276,7 @@ This is a notification to confirm that your recent refund request for **{user_us
 
 You can view the status of all your refunds within your account settings
 
-**Thanks,** 
+**Thanks,**
 **StageUp Team**</target>
       </trans-unit>
       <trans-unit id="email.refund_requested__subject" datatype="html">

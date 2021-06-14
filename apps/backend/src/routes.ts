@@ -41,6 +41,8 @@ import {
   DtoHostPatronageSubscription as HPatronSub,
   IRefund,
   IHostPrivate,
+  IAssetStub,
+  AssetDto,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -146,11 +148,12 @@ router.get      <IE<IPerfS[]>>          ("/performances",                       
 router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance());
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
+router.post     <AssetDto | void>       ("/performances/:pid/thumbnails",             Perfs.changeThumbnails());
 router.post     <ICreateAssetRes | void>("/performances/:pid/assets",                 Perfs.createAsset());
+router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
 router.get      <ISignedToken>          ("/performances/:pid/assets/:aid/token",      Perfs.generateSignedToken());
 router.get      <ICreateAssetRes>       ("/performances/:pid/assets/:aid/signed-url", Perfs.readVideoAssetSignedUrl());
 router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
-// router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
 router.put      <IPerf>                 ("/performances/:pid/visibility",             Perfs.updateVisibility());
 router.get      <IE<ITcktS[], NUUID[]>> ("/performances/:pid/tickets",                Perfs.readTickets());
 router.post     <ITicket>               ("/performances/:pid/tickets",                Perfs.createTicket());

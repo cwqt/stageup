@@ -16,7 +16,7 @@ export { default as Validators } from './validate';
 export { default as Register } from './service';
 
 export { IMuxProviderConfig } from './data-client/providers/mux.provider';
-export { IAWS3ProviderConfig, S3Return } from './data-client/providers/blob.provider';
+export { IAWS3ProviderConfig, BlobUploadResponse } from './data-client/providers/blob.provider';
 export { IInfluxProviderConfig } from './data-client/providers/influx.provider';
 export { ILocalTunnelProviderConfig } from './data-client/providers/localtunnel.provider';
 export { IPostgresProviderConfig } from './data-client/providers/postgres.provider';

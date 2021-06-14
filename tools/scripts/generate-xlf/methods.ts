@@ -271,7 +271,7 @@ export const translateUntranslatedTransUnits = async (sourcePath: string, locale
   }
 
   spinner.text = 'Translating new un-translated tokens...'.gray;
-  spinner.prefixText = '';
+  spinner.prefixText = null;
   spinner.succeed();
   spinner.stop();
 };

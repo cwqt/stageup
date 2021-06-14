@@ -1,15 +1,16 @@
 import { Asset } from '../asset.entity';
 import { SigningKey } from '../../performances/signing-key.entity';
 import { AssetGroup } from '../asset-group.entity';
-import { AssetType, IMuxPassthroughOwnerInfo, LiveStreamState } from '@core/interfaces';
+import { AssetTag, AssetType, IMuxPassthroughOwnerInfo, LiveStreamState } from '@core/interfaces';
 import { ChildEntity, EntityManager } from 'typeorm';
 import { AssetMethods, AssetOptions, AssetProvider } from '.';
 import { LiveStream, Upload } from '@mux/mux-node';
 
 @ChildEntity(AssetType.Image)
 export class ImageAsset extends Asset<AssetType.Image> implements AssetMethods<AssetType.Image> {
-  constructor(group: AssetGroup) {
-    super(AssetType.Image, group);
+  constructor(group: AssetGroup, tags: AssetTag[]) {
+    super(AssetType.Image, group, tags);
+    this.meta = {};
   }
 
   async setup(
@@ -18,12 +19,14 @@ export class ImageAsset extends Asset<AssetType.Image> implements AssetMethods<A
     owner: IMuxPassthroughOwnerInfo,
     txc: EntityManager
   ) {
+    const res = await provider.upload(options.file);
+    this.asset_identifier = res.asset_identifier;
     this.location = this.getLocation(options);
-    return null;
+    return res;
   }
 
   getLocation(options: AssetOptions[AssetType.Image]) {
-    return `http://${options.s3_url}.com/${this.asset_identifier}`;
+    return `${options.s3_url}/${this.asset_identifier}`;
   }
 
   async delete(provider: AssetProvider[AssetType.Image]) {

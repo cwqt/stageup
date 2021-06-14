@@ -4,6 +4,10 @@
 // We'll also have a type for S3 bucket items: images etc.
 // for S3 asset_id = S3 key id
 
+export const MAX_IMAGE_SIZE = 2048 as const; // 2meg
+export const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'] as const;
+export const ACCEPTED_VIDEO_MIME_TYPES = ['video/mp4'] as const;
+
 import { LiveStreamState } from '../3rd-party/mux.interface';
 
 export enum AssetType {
@@ -62,7 +66,7 @@ export type IAssetStub<T extends keyof AssetMetaUnion = any> = {
   tags: AssetTag[];
 };
 
-export const AssetTags = ['primary', 'secondary', 'trailer'] as const;
+export const AssetTags = ['primary', 'secondary', 'trailer', 'thumbnail'];
 export type AssetTag = typeof AssetTags[number];
 
 // what gets sent to the client in IPerformance

@@ -14,13 +14,13 @@ export class Middlewares {
    * @param maxFileSize Max file size in kB
    * @param acceptedTypes Accepted file MIME types
    */
-  file(maxFileSize: number, acceptedTypes: string[]) {
+  file(maxFileSize: number, acceptedTypes: Readonly<string[]>) {
     return Multer({
       storage: Multer.memoryStorage(),
       limits: {
         fileSize: maxFileSize * 1024
       },
-      fileFilter: (request: Request, file: Express.Multer.File, cb: Multer.FileFilterCallback) => {
+      fileFilter: (req: Request, file: Express.Multer.File, cb: Multer.FileFilterCallback) => {
         if (![...acceptedTypes, 'image/gif'].includes(file.mimetype)) {
           cb(new Error('File type not allowed'));
           return;
@@ -36,7 +36,7 @@ export class Middlewares {
    * @param period Plain-english cache duration e.g. "5 minutes"
    * @param cacheFunction Cache only when true, passed req & res objects
    */
-  cacher(period: string, redis: RedisClient, cacheFunction?: (request: Request, res: Response) => boolean): any {
+  cache(period: string, redis: RedisClient, cacheFunction?: (request: Request, res: Response) => boolean): any {
     return apicache
       .options({
         redisClient: redis

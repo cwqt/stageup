@@ -17,7 +17,9 @@ import {
   NUUID,
   DtoCreatePaymentIntent,
   PurchaseableType,
-  ISignedToken
+  ISignedToken,
+  IAssetStub,
+  AssetDto
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
@@ -116,5 +118,15 @@ export class PerformanceService {
   // router.get <ISignedToken> ("/performances/:pid/assets/:aid/token", Perfs.generateSignedToken());
   generateSignedToken(performanceId: string, assetId: string): Promise<ISignedToken> {
     return this.http.get<ISignedToken>(`/api/performances/${performanceId}/assets/${assetId}/token`).toPromise();
+  }
+
+  // router.post <AssetDto> ("/performances/:pid/thumbnails", Perfs.changeThumbnails());
+  changeThumbnails(performanceId: string, fd: FormData, replaces?: string): Promise<AssetDto | void> {
+    return this.http
+      .post<AssetDto | void>(
+        `/api/performances/${performanceId}/thumbnails${replaces ? `?replaces=${replaces}` : ''}`,
+        fd
+      )
+      .toPromise();
   }
 }

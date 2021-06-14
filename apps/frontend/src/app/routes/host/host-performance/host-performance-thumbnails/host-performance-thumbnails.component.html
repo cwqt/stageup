@@ -1,0 +1,10 @@
+<div class="grid grid-cols-5 gap-2">
+  <div
+    *ngFor="let index of THUMBNAIL_LIMIT | times"
+    class="flex items-center justify-center bg-gray-100 border border-gray-100 rounded h-48 cursor-pointer overflow-hidden"
+    (click)="changeThumbnail(index)"
+  >
+    <ui-icon *ngIf="!thumbnails[index]">image</ui-icon>
+    <img class="w-full h-48 object-cover" *ngIf="thumbnails[index]" [src]="thumbnails[index].location" alt="" />
+  </div>
+</div>

@@ -1,7 +1,12 @@
 <h2 i18n>Details</h2>
 <ui-hr></ui-hr>
 <app-update-performance [cacheable]="performance"></app-update-performance>
-<br />
+<br /><br />
+
+<h2 i18n>Thumbnails</h2>
+<ui-hr></ui-hr>
+<p i18n>Add some images to display in the performance brochure.</p>
+<app-host-performance-thumbnails [performance]="performance.data"></app-host-performance-thumbnails>
 <br />
 
 <h2 i18n>Modify Visibility</h2>

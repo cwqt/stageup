@@ -2,61 +2,61 @@ import { ErrorHandler } from '@backend/common/error';
 import {
   AccessToken,
   Asset,
+  AssetGroup,
   BaseController,
   getCheck,
   Host,
   IControllerEndpoint,
-  AssetGroup,
+  ImageAsset,
+  LiveStreamAsset,
   PaymentMethod,
   Performance,
-  Ticket,
-  Validators,
-  User,
   SigningKey,
-  VideoAsset,
+  Ticket,
   transact,
-  LiveStreamAsset,
-  Auth
+  User,
+  Validators,
+  VideoAsset
 } from '@core/api';
 import { enumToValues, getDonoAmount, timestamp, to } from '@core/helpers';
 import {
+  ACCEPTED_IMAGE_MIME_TYPES,
+  AssetDto,
   AssetOwnerType,
+  AssetTags,
   AssetType,
   BASE_AMOUNT_MAP,
+  DtoCreateAsset,
   DtoCreatePaymentIntent,
+  DtoCreateTicket,
   DtoPerformance,
   HostPermission,
   HTTP,
-  DtoCreateAsset,
+  IAssetStub,
   ICreateAssetRes,
   IEnvelopedData,
   IPaymentIntentClientSecret,
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
+  ISignedToken,
   IStripeChargePassthrough,
   ITicket,
   ITicketStub,
   NUUID,
+  PerformanceStatus,
   pick,
-  ISignedToken,
   PurchaseableType,
-  TokenProvisioner,
-  Visibility,
   TicketType,
-  DtoCreateTicket,
-  AssetTags,
-  IAsset,
-  PerformanceStatus
+  Visibility
 } from '@core/interfaces';
-import { Braket } from 'aws-sdk';
 import { SignableAssetType } from 'libs/shared/src/api/entities/performances/signing-key.entity';
-import { array, boolean, enums, object } from 'superstruct';
+import { fields } from 'libs/shared/src/api/validate/fields.validators';
+import { array, boolean, enums, object, optional } from 'superstruct';
 import { In } from 'typeorm';
 import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
-import idFinderStrategies from '../common/authorisation/id-finder-strategies';
-import IdFinderStrat from '../common/authorisation/id-finder-strategies';
+import { default as IdFinderStrat } from '../common/authorisation/id-finder-strategies';
 import Env from '../env';
 
 export default class PerformanceController extends BaseController<BackendProviderMap> {
@@ -626,8 +626,6 @@ export default class PerformanceController extends BaseController<BackendProvide
           Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] })
         );
 
-        console.log(body);
-
         switch (body.type) {
           case AssetType.Video: {
             return await transact(async txc => {
@@ -649,8 +647,6 @@ export default class PerformanceController extends BaseController<BackendProvide
 
               asset.group = performance.asset_group;
               await txc.save(asset);
-
-              console.log(asset);
 
               return to<ICreateAssetRes>({
                 upload_url: video.url
@@ -684,16 +680,13 @@ export default class PerformanceController extends BaseController<BackendProvide
   readVideoAssetSignedUrl(): IControllerEndpoint<ICreateAssetRes> {
     return {
       authorisation: AuthStrat.runner(
-        {
-          hid: idFinderStrategies.findHostIdFromPerformanceId
-        },
+        { hid: IdFinderStrat.findHostIdFromPerformanceId },
         AuthStrat.and(
           AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid),
           AuthStrat.custom(async req => {
             // Check asset is part of the performances asset group
             const group = await AssetGroup.findOne({ owner__id: req.params.pid });
             if (!group) return false;
-
             return group.assets.map(a => a._id).includes(req.params.aid);
           })
         )
@@ -704,6 +697,80 @@ export default class PerformanceController extends BaseController<BackendProvide
         return {
           upload_url: asset.meta.presigned_upload_url
         };
+      }
+    };
+  }
+
+  changeThumbnails(): IControllerEndpoint<AssetDto | void> {
+    return {
+      validators: { query: object({ replaces: optional(fields.nuuid) }) },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
+      middleware: this.middleware.file(2048, ACCEPTED_IMAGE_MIME_TYPES).single('file'),
+      controller: async req => {
+        const performance = await getCheck(Performance.findOne({ where: { _id: req.params.pid } }));
+
+        // Only allow up to 5 thumbnails at any one time
+        if (
+          performance.asset_group.assets.filter(a => a.type == AssetType.Image && a.tags.includes('thumbnail'))
+            .length == 5
+        )
+          throw new ErrorHandler(HTTP.Forbidden, '@@error.too_many_thumbnails');
+
+        // Delete whatever file this is supposed to be replacing
+        if (req.query.replaces) {
+          // Delete the thumbnail this one is replacing
+          const asset = performance.asset_group.assets.find(
+            a => a.type == AssetType.Image && a._id == req.query.replaces
+          ) as ImageAsset;
+          await asset?.delete(this.providers.blob);
+        }
+
+        // Check that there is a file...
+        if (!req.file) return;
+
+        const asset = await transact(async txc => {
+          const asset = new ImageAsset(performance.asset_group, ['secondary', 'thumbnail']);
+          await asset.setup(
+            this.providers.blob,
+            { file: req.file, s3_url: Env.AWS.S3_URL },
+            {
+              asset_owner_type: AssetOwnerType.Performance,
+              asset_owner_id: performance._id
+            },
+            txc
+          );
+          return await txc.save(asset);
+        });
+
+        return asset.toDto();
+      }
+    };
+  }
+
+  deleteAsset(): IControllerEndpoint<void> {
+    return {
+      authorisation: AuthStrat.runner(
+        { hid: IdFinderStrat.findHostIdFromPerformanceId },
+        AuthStrat.and(
+          AuthStrat.hasHostPermission(HostPermission.Editor, map => map.hid),
+          AuthStrat.custom(async req => {
+            // Check asset is part of the performances asset group
+            const group = await AssetGroup.findOne({ owner__id: req.params.pid });
+            if (!group) return false;
+            return group.assets.map(a => a._id).includes(req.params.aid);
+          })
+        )
+      ),
+      controller: async req => {
+        const asset = await getCheck(Asset.findOne({ _id: req.params.aid }));
+        switch (asset.type) {
+          case AssetType.LiveStream:
+            return await (asset as LiveStreamAsset).delete(this.providers.mux);
+          case AssetType.Video:
+            return await (asset as VideoAsset).delete(this.providers.mux);
+          case AssetType.Image:
+            return await (asset as ImageAsset).delete(this.providers.blob);
+        }
       }
     };
   }

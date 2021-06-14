@@ -632,7 +632,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           })
         );
 
-        host.avatar = await this.providers.blob.upload(req.file, host.avatar);
+        host.avatar = (await this.providers.blob.upload(req.file, host.avatar)).location;
         await host.save();
         return host.avatar;
       }
@@ -653,7 +653,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           })
         );
 
-        host.banner = await this.providers.blob.upload(req.file, host.banner);
+        host.banner = (await this.providers.blob.upload(req.file, host.banner)).location;
         await host.save();
         return host.banner;
       }

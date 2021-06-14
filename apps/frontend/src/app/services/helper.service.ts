@@ -14,7 +14,13 @@ type EventEmitterType<T> = T extends EventEmitter<infer U> ? U : never;
 export class HelperService {
   constructor() {}
 
-  showConfirmationDialog<T>(dialog: MatDialog, data: IConfirmationDialogData, config: MatDialogConfig<any> = {}, callback?: (result: T) => void, cancelCallback = () => {}) {
+  showConfirmationDialog<T>(
+    dialog: MatDialog,
+    data: IConfirmationDialogData,
+    config: MatDialogConfig<any> = {},
+    callback?: (result: T) => void,
+    cancelCallback = () => {}
+  ) {
     this.showDialog(dialog.open(ConfirmationDialogComponent, { ...config, data: data }), callback, cancelCallback);
   }
 
@@ -24,7 +30,7 @@ export class HelperService {
     onCancel?: (result: EventEmitterType<T['cancel']>) => void
   ) {
     const close = fn => {
-      fn();
+      fn?.();
       dialogRef.close();
     };
 

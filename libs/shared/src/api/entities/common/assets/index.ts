@@ -1,7 +1,7 @@
 import { AssetDto, AssetType, IMuxPassthroughOwnerInfo } from '@core/interfaces';
 import { CreateUploadParams, LiveStream, Upload } from '@mux/mux-node';
 import { EntityManager } from 'typeorm';
-import BlobProvider from '../../../data-client/providers/blob.provider';
+import BlobProvider, { BlobUploadResponse } from '../../../data-client/providers/blob.provider';
 import MuxProvider from '../../../data-client/providers/mux.provider';
 
 export type AssetProvider = {
@@ -15,6 +15,7 @@ export type AssetProvider = {
 
 export type AssetOptions = {
   [AssetType.Image]: {
+    file: Express.Multer.File; // data of the image
     s3_url: string;
   };
   [AssetType.Video]: CreateUploadParams;
@@ -27,7 +28,7 @@ export type AssetOptions = {
 export type AssetObject = {
   [AssetType.Video]: Upload;
   [AssetType.LiveStream]: LiveStream;
-  [AssetType.Image]: null;
+  [AssetType.Image]: BlobUploadResponse;
   [AssetType.AnimatedGIF]: null;
   [AssetType.Thumbnail]: null;
   [AssetType.Storyboard]: null;

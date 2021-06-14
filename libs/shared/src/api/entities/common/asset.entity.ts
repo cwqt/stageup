@@ -34,7 +34,10 @@ export abstract class Asset<T extends AssetType = any> extends BaseEntity implem
   @Column() asset_identifier: string;
   @Column('enum', { enum: AssetType }) type: T;
   @Column('jsonb') meta: AssetMetaUnion[T];
-  @Column('enum', { array: true, enum: AssetTags, default: [] }) tags: AssetTag[];
+
+  // Setting this column to an enum causes some issues :/
+  // QueryFailedError: cannot alter array type asset_tags_enum[]
+  @Column('varchar', { array: true, default: '{}' }) tags: AssetTag[];
 
   @RelationId((asset: Asset) => asset.signing_key) signing_key__id?: string;
   @OneToOne(() => SigningKey, { nullable: true }) @JoinColumn() signing_key?: SigningKey;

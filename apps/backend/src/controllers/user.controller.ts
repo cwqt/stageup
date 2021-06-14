@@ -208,7 +208,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
           })
         );
 
-        user.avatar = await this.providers.blob.upload(req.file, user.avatar);
+        user.avatar = (await this.providers.blob.upload(req.file, user.avatar)).location;
         await user.save();
         return user.avatar;
       }

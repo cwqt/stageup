@@ -10,10 +10,9 @@ export interface IAWS3ProviderConfig {
   s3_region: string;
 }
 
-export interface S3Return {
-  Location: string;
-  ETag: string;
-  Bucket: string;
+export interface BlobUploadResponse {
+  location: string; // url
+  asset_identifier: string; // asset id
 }
 
 export default class BlobProvider implements Provider<S3> {
@@ -36,12 +35,12 @@ export default class BlobProvider implements Provider<S3> {
     return this.connection;
   }
 
-  public async upload(asset: Express.Multer.File | null, oldUrl?: string) {
+  public async upload(asset: Express.Multer.File | null, oldUrl?: string): Promise<BlobUploadResponse> {
     // !oldUrl && asset --> add file
     // oldUrl && asset --> replace file
     // oldUrl && !asset --> delete file
     if (oldUrl || (asset == null && oldUrl)) await this.delete(this.extractKeyFromUrl(oldUrl));
-    return asset ? (await this.uploadImagetoS3(asset)).Location : null;
+    return asset ? await this.uploadImagetoS3(asset) : null;
   }
 
   public async delete(keyId: string) {
@@ -86,11 +85,11 @@ export default class BlobProvider implements Provider<S3> {
     }
   }
 
-  private async uploadImagetoS3(file: Express.Multer.File): Promise<S3Return> {
+  private async uploadImagetoS3(file: Express.Multer.File): Promise<BlobUploadResponse> {
     try {
       if (!file) throw new Error('No available file to upload');
 
-      return await this.connection
+      const asset = await this.connection
         .upload({
           Body: file.buffer,
           ContentType: file.mimetype,
@@ -99,6 +98,11 @@ export default class BlobProvider implements Provider<S3> {
           ACL: 'public-read'
         })
         .promise();
+
+      return {
+        location: asset.Location,
+        asset_identifier: asset.Key
+      };
     } catch (error) {
       throw new Error(`S3 upload error: ${error.message}`);
     }
