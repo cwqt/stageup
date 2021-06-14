@@ -18,6 +18,8 @@ import { interval } from 'rxjs';
 import { ChipComponent } from '../../ui-lib/chip/chip.component';
 import { HttpClient } from '@angular/common/http';
 import { PerformanceService } from '@frontend/services/performance.service';
+import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
+import { environment } from 'apps/frontend/src/environments/environment';
 
 const moment = require('moment');
 const momentDurationFormatSetup = require('moment-duration-format');
@@ -38,6 +40,8 @@ type NarrowState =
 export class PerformanceWatchComponent implements OnInit, OnDestroy {
   @Input() token: ISignedToken;
   @Input() performance: DtoPerformance;
+
+  performanceSharingUrl: SocialSharingComponent['url'];
 
   primaryAsset: AssetDto<AssetType.LiveStream | AssetType.Video>;
   player?: PlayerComponent;
@@ -101,6 +105,8 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
         this.player.load(this.primaryAsset, this.token).play();
       }
     }, 0);
+
+    this.performanceSharingUrl = `${environment.frontendUrl}/${environment.locale}/performances/${this.performance.data._id}`;
   }
 
   handlePlayerError(event: Plyr.PlyrEvent) {

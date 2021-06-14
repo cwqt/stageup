@@ -75,8 +75,10 @@ export class FeedComponent implements OnInit {
 
   async ngOnInit() {
     try {
+      // Set all carousels to loading
       Object.keys(this.carouselData).forEach(k => (this.carouselData[k].loading = true));
       const feed = await this.feedService.getFeed();
+      // Add all feed data their first page
       Object.keys(feed).forEach(k => (this.carouselData[k].data = feed[k]));
     } catch (error) {
       this.toastService.emit($localize`Error occurred fetching feed`, ThemeKind.Danger);

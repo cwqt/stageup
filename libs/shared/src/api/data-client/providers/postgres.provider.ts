@@ -32,7 +32,7 @@ export default class PostgresProvider implements Provider<Connection> {
       database: this.config.database,
       entities: this.models,
       synchronize: this.config.synchronize,
-      logging: false,
+      logging: false, // print all sql queries
       namingStrategy: new SnakeNamingStrategy()
     });
 

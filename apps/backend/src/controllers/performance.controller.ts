@@ -526,9 +526,10 @@ export default class PerformanceController extends BaseController<BackendProvide
             where: {
               _id: req.params.pid
             },
-            relations: { tickets: true },
+            relations: { tickets: true, host: true },
             select: {
-              tickets: { _id: true }
+              tickets: { _id: true },
+              host: { _id: true }
             }
           })
         );
@@ -537,23 +538,26 @@ export default class PerformanceController extends BaseController<BackendProvide
         const asset = await getCheck(Asset.findOne({ _id: req.params.aid }));
 
         // Find all invoices that belongs to a user for all tickets on this performance
-        const invoices = (
-          await User.findOne({
-            where: {
-              _id: req.session.user._id,
-              invoices: {
-                ticket: { _id: In(performance.tickets.map(t => t._id)) }
+        const invoices =
+          // Only search if there are tickets...otherwise typeORM throws a fit with the In() operator being empty
+          performance.tickets.length &&
+          (
+            await User.findOne({
+              where: {
+                _id: req.session.user._id,
+                invoices: {
+                  ticket: { _id: In(performance.tickets.map(t => t._id)) }
+                }
+              },
+              relations: {
+                invoices: { ticket: true }
+              },
+              select: {
+                _id: true,
+                invoices: { _id: true, ticket: { _id: true } }
               }
-            },
-            relations: {
-              invoices: { ticket: true }
-            },
-            select: {
-              _id: true,
-              invoices: { _id: true, ticket: { _id: true } }
-            }
-          })
-        )?.invoices;
+            })
+          )?.invoices;
 
         if (invoices?.length > 0) {
           // We have an Access Token, provisioned by means of purchase, subscription etc.
@@ -580,9 +584,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         //  - if they're a member of the host which created the performance,
         //    so provision a token on-the-fly for them to be able to watch without purchasing
         const [isMemberOfHost] = await AuthStrat.runner(
-          {
-            hid: async () => performance.host._id
-          },
+          { hid: async () => performance.host._id },
           AuthStrat.isMemberOfHost(m => m.hid)
         )(req, this.providers);
 

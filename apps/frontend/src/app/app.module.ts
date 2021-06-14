@@ -121,6 +121,7 @@ import { HostThumbComponent } from './components/host-thumb/host-thumb.component
 import { ContentBoxComponent } from './components/app/content-box/content-box.component';
 import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host-delete-dialog.component';
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
+import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
 
 import countries from 'i18n-iso-countries';
 // No cy support for this library, but I have opened a PR with its addition
@@ -230,7 +231,8 @@ countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
     ContentBoxComponent,
     HostThumbComponent,
     HostDeleteDialogComponent,
-    ConfirmPasswordDialogComponent
+    ConfirmPasswordDialogComponent,
+    SocialSharingComponent
   ],
   imports: [
     AngularMaterialModule,

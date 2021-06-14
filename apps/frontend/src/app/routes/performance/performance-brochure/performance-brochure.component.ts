@@ -19,6 +19,7 @@ import {
 import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
 import { PlayerComponent } from '@frontend/components/player/player.component';
+import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
 import { BaseAppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { MyselfService } from '@frontend/services/myself.service';
@@ -26,6 +27,7 @@ import { PerformanceService } from '@frontend/services/performance.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
+import { environment } from 'apps/frontend/src/environments/environment';
 
 @Component({
   selector: 'performance-brochure',
@@ -52,6 +54,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   selectedDonoPeg: DonoPeg;
   performanceTrailer: IAssetStub<AssetType.Video>;
 
+  performanceSharingUrl: SocialSharingComponent['url'];
+
   get performance() {
     return this.performanceCacheable.data?.data;
   }
@@ -72,6 +76,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
       return d;
     });
+
+    this.performanceSharingUrl = `${environment.frontendUrl}/${environment.locale}/performances/${this.performance._id}`;
   }
 
   openPerformanceDescriptionSection() {

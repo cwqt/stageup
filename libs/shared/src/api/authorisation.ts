@@ -14,9 +14,9 @@ export type AuthStratReturn = [boolean, { [index: string]: any }, i18nToken?];
 export type NUUIDMap = Record<string, NUUID>;
 export type MapAccessor = (map: NUUIDMap) => NUUID;
 
-const runner = (idMap: { [index: string]: IdFinderStrategy }, authStrat: AuthStrategy): AuthStrategy => {
+const runner = (idMap: { [index: string]: IdFinderStrategy }, strategy: AuthStrategy): AuthStrategy => {
   return async (req, providers) => {
-    return authStrat(
+    return strategy(
       req,
       providers,
       (await Promise.all(Object.values(idMap).map(f => f(req, providers)))).reduce(

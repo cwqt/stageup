@@ -31,7 +31,9 @@
     </div>
   </ng-container>
 
-  <app-player (onPlayerError)="handlePlayerError($event)" (onPlayerReady)="handlePlayerReady($event)"> </app-player>
+  <app-social-sharing class="absolute top-4 right-4 z-10" [url]="performanceSharingUrl"></app-social-sharing>
+
+  <app-player (onPlayerError)="handlePlayerError($event)" (onPlayerReady)="handlePlayerReady($event)"></app-player>
 </div>
 
 <!--
