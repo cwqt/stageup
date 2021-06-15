@@ -4,7 +4,7 @@
     (clickOutside)="togglePasswordVisibility(false, $event); focused = false"
     class="form-field"
     [class.form-field--is-active]="focused"
-    [class.form-field--is-filled]="value !== ''"
+    [class.form-field--is-filled]="value != undefined"
     [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError"
     [class.form-field--is-disabled]="control.disabled"
@@ -13,7 +13,7 @@
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label"
         >{{ data.options.label }}
-        <span *ngIf="focused || value !== ''">{{ required ? '' : optionalTransUnit }}</span>
+        <span *ngIf="focused || value != undefined">{{ required ? '' : optionalTransUnit }}</span>
       </label>
       <input
         #input
@@ -34,9 +34,9 @@
             : data.type
         "
         [mask]="data.options?.mask ? data.options.mask.value : data.type == 'phone' ? '(0000) 000-000' : ''"
-        [suffix]="value !== '' || focused ? (data.options?.mask ? data.options.mask.suffix : '') : ''"
+        [suffix]="value != undefined || focused ? (data.options?.mask ? data.options.mask.suffix : '') : ''"
         [prefix]="
-          value !== '' || focused
+          value != undefined || focused
             ? data.options?.mask
               ? data.options.mask.prefix
               : data.type == 'phone'
@@ -61,7 +61,7 @@
     (click)="textarea.select()"
     class="form-field"
     [class.form-field--is-active]="focused"
-    [class.form-field--is-filled]="value !== ''"
+    [class.form-field--is-filled]="value != undefined"
     [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError"
     *ngIf="data.type == 'textarea'"
@@ -69,7 +69,7 @@
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label"
         >{{ data.options.label }}
-        <span *ngIf="focused || value !== ''">{{ required ? '' : optionalTransUnit }}</span>
+        <span *ngIf="focused || value != undefined">{{ required ? '' : optionalTransUnit }}</span>
       </label>
       <textarea
         #textarea
@@ -100,7 +100,7 @@
     (click)="input.select()"
     class="form-field form-field__money"
     [class.form-field--is-active]="focused"
-    [class.form-field--is-filled]="value !== ''"
+    [class.form-field--is-filled]="value != undefined"
     [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError"
     [class.form-field--is-disabled]="control.disabled"
@@ -109,7 +109,7 @@
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label"
         >{{ data.options.label }}
-        <span *ngIf="focused || value !== ''">{{ required ? '' : optionalTransUnit }}</span>
+        <span *ngIf="focused || value != undefined">{{ required ? '' : optionalTransUnit }}</span>
       </label>
       <input
         mask="separator.2"
@@ -135,7 +135,7 @@
     *ngIf="data.type == 'richtext'"
     class="form-field ui-input--rich-text"
     [class.form-field--is-active]="focused"
-    [class.form-field--is-filled]="value !== ''"
+    [class.form-field--is-filled]="value != undefined"
     [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError"
     [class.form-field--is-disabled]="control.disabled"
@@ -167,7 +167,7 @@
     [class.small]="!data.options.label"
     [class.checkbox]="data.type == 'checkbox'"
   >
-    <mat-label *ngIf="data.options.label && data.type !== 'checkbox'">{{ data.options.label }}</mat-label>
+    <mat-label *ngIf="data.options.label && data.type != 'checkbox'">{{ data.options.label }}</mat-label>
     <mat-checkbox [disabled]="control.disabled" matInput *ngIf="data.type == 'checkbox'" [(ngModel)]="value">{{
       data.options.label
     }}</mat-checkbox>

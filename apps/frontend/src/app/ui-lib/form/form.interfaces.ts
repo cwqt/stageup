@@ -8,6 +8,11 @@ import { createICacheable, ICacheable } from '../../app.interfaces';
 
 // Reactive Form Builder v2
 
+// TODO: return type inference of IUiFormField... hrs wasted: 1.5
+// type ValueMap<Type extends IUiFormField<any>> = Type extends IUiFormField<'container'>
+//   ? { [index in keyof Type['options']['fields']]: ValueMap<Type['options']['fields'][index]> }
+//   : IUiFieldTypeReturn<Type['options']['fields']>[Type['type']];
+
 export interface IUiFormResolver<Output, Input, Fields> {
   input?: () => Promise<{
     fields?: { [index in keyof Fields]?: Primitive | Date | RichText | Object };
@@ -79,6 +84,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
       return await fn();
     } catch (error) {
     } finally {
+      // TODO: persist initial disable state
       this.group.enable();
       this.cache.loading = false;
       this.$loading.next(false);
@@ -92,6 +98,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
         if (this.handlers?.success) this.handlers.success(value, this.group);
         return value;
       } catch (error) {
+        console.error(error);
         if (error instanceof HttpErrorResponse && error.error.status) {
           const res: IErrorResponse = error.error;
           // Put the form error message in the Cachable
@@ -139,7 +146,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
           } else {
             acc[field_name] = [
               {
-                value: field.options.initial ?? '',
+                value: field.options.initial,
                 disabled: field.options.disabled || false
               },
               field.options.validators?.map((v: IUiFormFieldValidator) => {
@@ -180,8 +187,8 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
           if (data) {
             const { fields, errors } = data;
 
-            // Set form control default value
-            Object.entries(fields).forEach(([f, v]) => this.group.get(f)?.setValue(v));
+            // Partial update fields of form
+            Object.entries(fields).forEach(([f, v]) => this.group.get(f)?.patchValue(v));
 
             // Set form control errors by bodging validator to show message
             // if value is the same as it was prefetched

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CountryCode, IMyself } from '@core/interfaces';
+import { CountryCode, DtoUpdateHost, IHostBusinessDetails, IHostPrivate, IMyself } from '@core/interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { BaseAppService } from '@frontend/services/app.service';
@@ -13,6 +13,7 @@ import isPostalCode from 'validator/es/lib/isPostalCode';
 import iso3166 from 'i18n-iso-countries';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { HostDeleteDialogComponent } from '../host-delete-dialog/host-delete-dialog.component';
+import { to } from '@core/helpers';
 import { regexes } from '@core/helpers';
 
 @Component({
@@ -22,7 +23,8 @@ import { regexes } from '@core/helpers';
 })
 export class HostSettingsComponent implements OnInit {
   myself: IMyself;
-  hostDetailsForm: UiForm;
+  host: IHostPrivate;
+  hostDetailsForm: UiForm<DtoUpdateHost, IHostPrivate>;
 
   constructor(
     private dialog: MatDialog,
@@ -74,6 +76,13 @@ export class HostSettingsComponent implements OnInit {
         business_address: UiField.Container({
           label: $localize`Business Address`,
           fields: {
+            line1: UiField.Text({
+              label: $localize`Address Line 1`,
+              validators: [{ type: 'required' }]
+            }),
+            line2: UiField.Text({
+              label: $localize`Address Line 2`
+            }),
             city: UiField.Text({
               label: $localize`City`,
               validators: [{ type: 'required' }]
@@ -93,30 +102,27 @@ export class HostSettingsComponent implements OnInit {
                 { type: 'required' },
                 {
                   type: 'custom',
-                  value: v => isPostalCode(v.value, 'GB'),
+                  value: v => isPostalCode(v.value || '', 'GB'),
                   message: () => $localize`Not a valid postal code`
                 }
               ]
-            }),
-            line1: UiField.Text({
-              label: $localize`Address Line 1`,
-              validators: [{ type: 'required' }]
-            }),
-            line2: UiField.Text({
-              label: $localize`Address Line 2`
             })
           }
         })
       },
       resolvers: {
         input: async () => {
-          const host = await this.hostService.readDetails(this.myself.host._id);
+          this.host = await this.hostService.readDetails(this.myself.host._id);
+          const host = this.host;
+
           return {
             fields: {
               name: host.name,
-              business_contact_number: parseInt(
-                parsePhoneNumberFromString(host.business_details?.business_contact_number).nationalNumber as string
-              ),
+              business_contact_number:
+                host.business_details?.business_contact_number &&
+                parseInt(
+                  parsePhoneNumberFromString(host.business_details?.business_contact_number).nationalNumber as string
+                ),
               email_address: host.email_address,
               hmrc_company_number: host.business_details?.hmrc_company_number,
               vat_number: host.business_details?.vat_number,
@@ -125,7 +131,26 @@ export class HostSettingsComponent implements OnInit {
             }
           };
         },
-        output: async v => {}
+        output: async v => {
+          const res = await this.hostService.updateHost(this.host._id, {
+            name: v.name,
+            email_address: v.email_address,
+            business_details: to<IHostBusinessDetails>({
+              hmrc_company_number: v.hmrc_company_number,
+              business_contact_number: parsePhoneNumberFromString(
+                `+44${v.business_contact_number}`
+              ).formatInternational(),
+              business_address: v.business_address
+            }),
+            // turn nullish into undefined
+            social_info: Object.keys(this.host.social_info).reduce<any>(
+              (acc, curr) => ((acc[curr] = this.host.social_info[curr] || undefined), acc),
+              {}
+            ),
+            username: this.host.username
+          });
+          return res;
+        }
       }
     });
   }

@@ -26,7 +26,6 @@ import { User } from '../users/user.entity';
 import { Performance } from '../performances/performance.entity';
 import { UserHostInfo } from './user-host-info.entity';
 import { Onboarding } from './onboarding.entity';
-import { ContactInfo } from '../users/contact-info.entity';
 import { timestamp, uuid } from '@core/helpers';
 import { ErrorHandler } from '../../errors';
 import { Invoice } from '../common/invoice.entity';
@@ -61,7 +60,6 @@ export class Host extends BaseEntity implements IHostPrivate {
   @OneToMany(() => Performance, perf => perf.host, { cascade: ['soft-remove'] }) performances: Performance[];
 
   @OneToOne(() => User) @JoinColumn() owner: User;
-  @OneToOne(() => ContactInfo, { cascade: ['soft-remove'] }) @JoinColumn() contact_info: ContactInfo;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {
@@ -85,14 +83,6 @@ export class Host extends BaseEntity implements IHostPrivate {
   async setup(creator: User, txc: EntityManager) {
     this.owner = creator;
     this.onboarding_process = await txc.save(new Onboarding(this, creator));
-    this.contact_info = await txc.save(
-      ContactInfo,
-      new ContactInfo({
-        mobile_number: null,
-        landline_number: null,
-        addresses: []
-      })
-    );
 
     return this;
   }
@@ -148,7 +138,6 @@ export class Host extends BaseEntity implements IHostPrivate {
     return {
       ...this.toFull(),
       email_address: this.email_address,
-      contact_info: this.contact_info.toFull(),
       business_details: this.business_details
     };
   }

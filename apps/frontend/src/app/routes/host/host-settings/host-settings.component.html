@@ -6,7 +6,15 @@
       <app-content-box *ngIf="myself.host.is_onboarded">
         <h2 i18n>Account</h2>
         <ui-hr></ui-hr>
-        <ui-form [form]="hostDetailsForm" *ngIf="!(hostDetailsForm.loading | async)"></ui-form>
+        <ui-form [form]="hostDetailsForm"></ui-form>
+        <ui-button
+          (click)="hostDetailsForm.submit()"
+          [disabled]="!hostDetailsForm.group.valid"
+          [loading]="hostDetailsForm.loading | async"
+          kind="primary"
+          i18n
+          >Update</ui-button
+        >
       </app-content-box>
 
       <div class="bg-white p-4 rounded shadow-sm">

@@ -37,7 +37,7 @@
     <ui-hr></ui-hr>
   </div>
 
-  <div class="flex align-center" *ngIf="adminView">
+  <div class="flex align-center items-center" *ngIf="adminView">
     <ui-button
       kind="primary"
       size="l"
@@ -50,5 +50,7 @@
     </ui-button>
 
     <p class="ml-4 my-auto" i18n>{{ getUncheckedCount() }} steps unchecked</p>
+
+    <ui-button class="ml-auto" (click)="checkAll()" i18n>Check all</ui-button>
   </div>
 </ng-container>

@@ -1,4 +1,4 @@
-<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0"?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="en">
     <body>
       <trans-unit id="671563746945050371" datatype="html">
@@ -399,10 +399,10 @@
       </trans-unit>
       <trans-unit id="e8dbe96a1c60d51b74540085aebc58c4efb05aef" datatype="html">
         <source>
-Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </source>
         <target state="final">
-Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/footer/footer.component.html</context>
@@ -779,10 +779,10 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
       </trans-unit>
       <trans-unit id="6704172320602149660" datatype="html">
         <source>
-File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"></x>
+File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"/>
         </source>
         <target state="final">
-File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"></x>
+File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/change-image/change-image.component.ts</context>
@@ -991,14 +991,14 @@ File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"
       </trans-unit>
       <trans-unit id="bd6458adaf50efc183bc8dcb6db419d8fd69fd6a" datatype="html">
         <source>
-Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"></x>
-          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"/>
+          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"/>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
         </source>
         <target state="final">
-Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"></x>
-          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"/>
+          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"/>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refund-dialog/process-refund-dialog.component.html</context>
@@ -1007,10 +1007,10 @@ Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;
       </trans-unit>
       <trans-unit id="0267803b05ef78e907e934a94905f76aa8fa1724" datatype="html">
         <source>
-Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"></x>
+Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"/>
         </source>
         <target state="final">
-Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"></x>
+Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refund-dialog/process-refund-dialog.component.html</context>
@@ -1027,10 +1027,10 @@ Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | curr
       </trans-unit>
       <trans-unit id="badb211eb1b9591a00079bbcc8152917ecc444f6" datatype="html">
         <source>
-Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"></x>
+Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"/>
         </source>
         <target state="final">
-Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"></x>
+Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refund-dialog/process-refund-dialog.component.html</context>
@@ -1183,12 +1183,12 @@ Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.userna
       </trans-unit>
       <trans-unit id="e1de2b08e3d110ac228e3206f6914c48a855d8ab" datatype="html">
         <source>
-Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
         </source>
         <target state="final">
-Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-collector/payment-method-collector.component.html</context>
@@ -1325,10 +1325,10 @@ Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></
       </trans-unit>
       <trans-unit id="bed4a50045306fae0a3062590d76342fd3b2c317" datatype="html">
         <source>
-Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
+Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"/>
         </source>
         <target state="final">
-Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
+Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-thumb/payment-method-thumb.component.html</context>
@@ -1361,10 +1361,10 @@ Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
       </trans-unit>
       <trans-unit id="789417527951964163" datatype="html">
         <source>
-This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"></x>
+This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"/>
         </source>
         <target state="final">
-This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"></x>
+This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-thumb/payment-method-thumb.component.ts</context>
@@ -1557,10 +1557,10 @@ This will permanently remove the card ending infrom your account.          <x id
       </trans-unit>
       <trans-unit id="7cdd682f86ea11c29a5a871ba3a36f807e027b61" datatype="html">
         <source>
-steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"></x>
+steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"/>
         </source>
         <target state="final">
-steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"></x>
+steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/onboarding-view/onboarding-view.component.html</context>
@@ -1681,10 +1681,10 @@ steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount(
       </trans-unit>
       <trans-unit id="8310453679481646898" datatype="html">
         <source>
-Failed fetching page for          <x id="PH" equiv-text="carouselIndex"></x>
+Failed fetching page for          <x id="PH" equiv-text="carouselIndex"/>
         </source>
         <target state="final">
-Failed fetching page for          <x id="PH" equiv-text="carouselIndex"></x>
+Failed fetching page for          <x id="PH" equiv-text="carouselIndex"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
@@ -1701,10 +1701,10 @@ Failed fetching page for          <x id="PH" equiv-text="carouselIndex"></x>
       </trans-unit>
       <trans-unit id="412dcf0b21727619653e364da5fa707ada4524b6" datatype="html">
         <source>
-Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </source>
         <target state="final">
-Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/create-host/create-host.component.html</context>
@@ -1873,12 +1873,12 @@ Creating a company account gives you permissions to start streams &amp; manage t
       </trans-unit>
       <trans-unit id="6d95403ebc7e349ea9981a740c796597f84f87cd" datatype="html">
         <source>
-Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
         </source>
         <target state="final">
-Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.html</context>
@@ -1911,10 +1911,10 @@ Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype=
       </trans-unit>
       <trans-unit id="f8fb864e4cf94310247ed9c634576cadd0476015" datatype="html">
         <source>
-due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>
         </source>
         <target state="final">
-due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.html</context>
@@ -2291,10 +2291,10 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
       </trans-unit>
       <trans-unit id="66f25fb64ed29a8bb0fe2a04b86d1b19806814f1" datatype="html">
         <source>
-Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"></x>
+Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"/>
         </source>
         <target state="final">
-Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"></x>
+Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
@@ -2303,10 +2303,10 @@ Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.
       </trans-unit>
       <trans-unit id="2c18dd23b5d5f06c98c25b8401cb263195070d79" datatype="html">
         <source>
-Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"></x>
+Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"/>
         </source>
         <target state="final">
-Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"></x>
+Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
@@ -2323,10 +2323,10 @@ Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.
       </trans-unit>
       <trans-unit id="fd7eed48845c9e4b90fb822e8a3ab04dfb14bf40" datatype="html">
         <source>
-Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </source>
         <target state="final">
-Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
@@ -2579,10 +2579,10 @@ Our team is currently in the process of reviewing your information, once complet
       </trans-unit>
       <trans-unit id="2366969524418235378" datatype="html">
         <source>
-Created patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+Created patron tier:!          <x id="PH" equiv-text="tier.name"/>
         </source>
         <target state="final">
-Created patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+Created patron tier:!          <x id="PH" equiv-text="tier.name"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component.ts</context>
@@ -2591,10 +2591,10 @@ Created patron tier:!          <x id="PH" equiv-text="tier.name"></x>
       </trans-unit>
       <trans-unit id="6630852968132665662" datatype="html">
         <source>
-Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+Updated patron tier:!          <x id="PH" equiv-text="tier.name"/>
         </source>
         <target state="final">
-Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+Updated patron tier:!          <x id="PH" equiv-text="tier.name"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component.ts</context>
@@ -2776,13 +2776,13 @@ Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
       <trans-unit id="1707617220912072818" datatype="html">
         <source>
 Are you sure you want to delete?
- This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"></x>
-          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"></x>
+ This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"/>
+          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"/>
         </source>
         <target state="final">
 Are you sure you want to delete?
- This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"></x>
-          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"></x>
+ This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"/>
+          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/patron-tier-thumb/patron-tier-thumb.component.ts</context>
@@ -2943,12 +2943,12 @@ You must first finish theonboarding processbefore any content can be made Public
       </trans-unit>
       <trans-unit id="9d1caa8ee71cbe0e1b2252aba15fe1e40234dda7" datatype="html">
         <source>
-You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"></x>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"/>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
         </source>
         <target state="final">
-You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"></x>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"/>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-details/host-performance-details.component.html</context>
@@ -3169,10 +3169,10 @@ You must first finish theonboarding processbefore any content can be made Public
       </trans-unit>
       <trans-unit id="3219384879221660068" datatype="html">
         <source>
-Updated ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+Updated ticket:!          <x id="PH" equiv-text="ticket.name"/>
         </source>
         <target state="final">
-Updated ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+Updated ticket:!          <x id="PH" equiv-text="ticket.name"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component.ts</context>
@@ -3181,10 +3181,10 @@ Updated ticket:!          <x id="PH" equiv-text="ticket.name"></x>
       </trans-unit>
       <trans-unit id="7535830281602803549" datatype="html">
         <source>
-Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+Created ticket:!          <x id="PH" equiv-text="ticket.name"/>
         </source>
         <target state="final">
-Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+Created ticket:!          <x id="PH" equiv-text="ticket.name"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component.ts</context>
@@ -3293,10 +3293,10 @@ Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
       </trans-unit>
       <trans-unit id="764261934249188522" datatype="html">
         <source>
-Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"></x>
+Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"/>
         </source>
         <target state="final">
-Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"></x>
+Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/share-performance-dialog/share-performance-dialog.component.ts</context>
@@ -3401,10 +3401,10 @@ Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddr
       </trans-unit>
       <trans-unit id="5954536472139700300" datatype="html">
         <source>
-Created performance:!          <x id="PH" equiv-text="v.name"></x>
+Created performance:!          <x id="PH" equiv-text="v.name"/>
         </source>
         <target state="final">
-Created performance:!          <x id="PH" equiv-text="v.name"></x>
+Created performance:!          <x id="PH" equiv-text="v.name"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/create-performance/create-performance.component.ts</context>
@@ -3453,10 +3453,10 @@ Created performance:!          <x id="PH" equiv-text="v.name"></x>
       </trans-unit>
       <trans-unit id="6012665925966754126" datatype="html">
         <source>
-Delete ''          <x id="PH" equiv-text="performance.name"></x>
+Delete ''          <x id="PH" equiv-text="performance.name"/>
         </source>
         <target state="final">
-Delete ''          <x id="PH" equiv-text="performance.name"></x>
+Delete ''          <x id="PH" equiv-text="performance.name"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
@@ -3473,10 +3473,10 @@ Delete ''          <x id="PH" equiv-text="performance.name"></x>
       </trans-unit>
       <trans-unit id="db248d938d590a75ecff36d583a847ffb78ea19d" datatype="html">
         <source>
-About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
+About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"/>
         </source>
         <target state="final">
-About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
+About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-about/host-profile-about.component.html</context>
@@ -3517,14 +3517,14 @@ About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
       </trans-unit>
       <trans-unit id="f67300f7c4acfe40151c11939c010c59380693a1" datatype="html">
         <source>
-This tier will cost, which will be billed on a monthly basis, starting today.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"></x>
+This tier will cost, which will be billed on a monthly basis, starting today.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"/>
         </source>
         <target state="final">
-This tier will cost, which will be billed on a monthly basis, starting today.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"></x>
+This tier will cost, which will be billed on a monthly basis, starting today.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component.html</context>
@@ -3549,10 +3549,10 @@ This tier will cost, which will be billed on a monthly basis, starting today.   
       </trans-unit>
       <trans-unit id="4000130407873529598" datatype="html">
         <source>
-Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"></x>
+Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"/>
         </source>
         <target state="final">
-Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"></x>
+Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component.ts</context>
@@ -3637,14 +3637,14 @@ Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"
       </trans-unit>
       <trans-unit id="90e07f530fda246e3a626f6e1eeaf1e136d9a06c" datatype="html">
         <source>
-Withdraw membership from, this action can't be undone.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"></x>
+Withdraw membership from, this action can't be undone.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"/>
         </source>
-        <target state="final">
-Withdraw membership from, this action can't be undone.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"></x>
+        <target state="translated">
+Withdraw membership from <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"/>, this action can't be undone.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
@@ -3693,10 +3693,10 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
       </trans-unit>
       <trans-unit id="2542084650036617104" datatype="html">
         <source>
-Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
+Leave ''          <x id="PH" equiv-text="this.myself.host.name"/>
         </source>
         <target state="final">
-Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
+Leave ''          <x id="PH" equiv-text="this.myself.host.name"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
@@ -3833,14 +3833,14 @@ Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
       </trans-unit>
       <trans-unit id="10d7c651f99db367507b882f5da548b1295c5ec4" datatype="html">
         <source>
-Welcome, you're ready to start browsing, for your information here are a few links to aid you along:          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ userNameFormGroup.get('name').value }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b       >"></x>
+Welcome, you're ready to start browsing, for your information here are a few links to aid you along:          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ userNameFormGroup.get('name').value }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b       >"/>
         </source>
         <target state="final">
-Welcome, you're ready to start browsing, for your information here are a few links to aid you along:          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ userNameFormGroup.get('name').value }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b       >"></x>
+Welcome, you're ready to start browsing, for your information here are a few links to aid you along:          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ userNameFormGroup.get('name').value }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b       >"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/first-time-setup/first-time-setup.component.html</context>
@@ -3857,14 +3857,14 @@ Welcome, you're ready to start browsing, for your information here are a few lin
       </trans-unit>
       <trans-unit id="758217b3298b0d2af065f71b2d69325d1d0933d8" datatype="html">
         <source>
-Watch live productions fromanywhere in the world, from the comfort of your home.A bespoke service tailored to the next generation of performance arts.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"></x>
-          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
-          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Watch live productions fromanywhere in the world, from the comfort of your home.A bespoke service tailored to the next generation of performance arts.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"/>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
+          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </source>
         <target state="final">
-Watch live productions fromanywhere in the world, from the comfort of your home.A bespoke service tailored to the next generation of performance arts.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"></x>
-          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
-          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Watch live productions fromanywhere in the world, from the comfort of your home.A bespoke service tailored to the next generation of performance arts.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"/>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
+          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/host-landing/host-landing.component.html</context>
@@ -3873,10 +3873,10 @@ Watch live productions fromanywhere in the world, from the comfort of your home.
       </trans-unit>
       <trans-unit id="c3402591d05cd5658c0f57060c5bbb292c785866" datatype="html">
         <source>
-Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </source>
         <target state="final">
-Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/forgot-password/forgot-password.component.html</context>
@@ -4073,10 +4073,10 @@ Enter your email and we will send you instructions togenerate a new password.   
       </trans-unit>
       <trans-unit id="05b447a05742fda6bf1d6cac270fbf6fc9dee161" datatype="html">
         <source>
-The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </source>
         <target state="final">
-The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/user-type-clarification/user-type-clarification.component.html</context>
@@ -4149,16 +4149,16 @@ The all-in-one platform for consuming &amp; creating performing arts content!Ple
       </trans-unit>
       <trans-unit id="6cef9a1687b166af08d5f0649e0e99384e9a922f" datatype="html">
         <source>
-You mustregisterorlog inbefore being able to purchase this performance.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"></x>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
-          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"></x>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+You mustregisterorlog inbefore being able to purchase this performance.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"/>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
+          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"/>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
         </source>
         <target state="final">
-You mustregisterorlog inbefore being able to purchase this performance.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"></x>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
-          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"></x>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+You mustregisterorlog inbefore being able to purchase this performance.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"/>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
+          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"/>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
@@ -4207,14 +4207,14 @@ You mustregisterorlog inbefore being able to purchase this performance.         
       </trans-unit>
       <trans-unit id="c985fad22a5979147f1056e02795065945b302b3" datatype="html">
         <source>
-You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"></x>
+You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"/>
         </source>
         <target state="final">
-You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"></x>
+You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
@@ -4223,16 +4223,16 @@ You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text
       </trans-unit>
       <trans-unit id="6c54aaca3b5e8aedc8194d1a03a07dccec525069" datatype="html">
         <source>
-@is due to premiere this stream at, you'll be notified by e-mail before it begins.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
-          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+@is due to premiere this stream at, you'll be notified by e-mail before it begins.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
+          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>
         </source>
         <target state="final">
-@is due to premiere this stream at, you'll be notified by e-mail before it begins.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
-          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+@is due to premiere this stream at, you'll be notified by e-mail before it begins.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
+          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
@@ -4241,14 +4241,14 @@ You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text
       </trans-unit>
       <trans-unit id="e3ba37467fdfa9fa70189fdf3b7cb01eadeb65c0" datatype="html">
         <source>
-Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
         </source>
         <target state="final">
-Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
-          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"></x>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
+          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"/>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
@@ -4305,10 +4305,10 @@ Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ct
       </trans-unit>
       <trans-unit id="be451c2a6269405f9e6b1bf8e365a9cb56478bd3" datatype="html">
         <source>
-remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"></x>
+remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"/>
         </source>
         <target state="final">
-remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"></x>
+remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-ticket/performance-ticket.component.html</context>
@@ -4357,12 +4357,12 @@ remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remainin
       </trans-unit>
       <trans-unit id="8d43f19426a35c5b34219af066c0196dbb792299" datatype="html">
         <source>
-Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"></x>
-          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"></x>
+Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"/>
+          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"/>
         </source>
         <target state="final">
-Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"></x>
-          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"></x>
+Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"/>
+          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/search/search.component.html</context>
@@ -4619,12 +4619,12 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
       </trans-unit>
       <trans-unit id="5248924511731123727" datatype="html">
         <source>
-must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"></x>
-          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"/>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"/>
         </source>
         <target state="final">
-must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"></x>
-          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"/>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
@@ -4633,12 +4633,12 @@ must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.lab
       </trans-unit>
       <trans-unit id="3941996853800677819" datatype="html">
         <source>
-must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"></x>
-          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"/>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"/>
         </source>
         <target state="final">
-must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"></x>
-          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"/>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
@@ -4647,10 +4647,10 @@ must be less thancharacters          <x id="PH" equiv-text="this.data.options.la
       </trans-unit>
       <trans-unit id="5899864845007428149" datatype="html">
         <source>
-is required          <x id="PH" equiv-text="this.data.options.label"></x>
+is required          <x id="PH" equiv-text="this.data.options.label"/>
         </source>
         <target state="final">
-is required          <x id="PH" equiv-text="this.data.options.label"></x>
+is required          <x id="PH" equiv-text="this.data.options.label"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
@@ -5007,10 +5007,10 @@ is required          <x id="PH" equiv-text="this.data.options.label"></x>
       </trans-unit>
       <trans-unit id="table_range_zero" datatype="html">
         <source>
-0 of          <x id="PH" equiv-text="length"></x>
+0 of          <x id="PH" equiv-text="length"/>
         </source>
         <target state="final">
-0 of          <x id="PH" equiv-text="length"></x>
+0 of          <x id="PH" equiv-text="length"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
@@ -5019,14 +5019,14 @@ is required          <x id="PH" equiv-text="this.data.options.label"></x>
       </trans-unit>
       <trans-unit id="table_range_range" datatype="html">
         <source>
--of          <x id="PH" equiv-text="startIndex + 1"></x>
-          <x id="PH_1" equiv-text="endIndex"></x>
-          <x id="PH_2" equiv-text="length"></x>
+-of          <x id="PH" equiv-text="startIndex + 1"/>
+          <x id="PH_1" equiv-text="endIndex"/>
+          <x id="PH_2" equiv-text="length"/>
         </source>
         <target state="final">
--of          <x id="PH" equiv-text="startIndex + 1"></x>
-          <x id="PH_1" equiv-text="endIndex"></x>
-          <x id="PH_2" equiv-text="length"></x>
+-of          <x id="PH" equiv-text="startIndex + 1"/>
+          <x id="PH_1" equiv-text="endIndex"/>
+          <x id="PH_2" equiv-text="length"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
@@ -5043,12 +5043,12 @@ is required          <x id="PH" equiv-text="this.data.options.label"></x>
       </trans-unit>
       <trans-unit id="e3a7d77d3cc7264d804c40996757038fd5698e33" datatype="html">
         <source>
-Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"></x>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"/>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
         </source>
         <target state="final">
-Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"></x>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"/>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>

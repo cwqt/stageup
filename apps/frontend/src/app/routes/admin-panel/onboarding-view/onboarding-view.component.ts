@@ -140,4 +140,12 @@ export class OnboardingViewComponent implements OnInit {
 
     return unchecked;
   }
+
+  checkAll() {
+    Object.keys(this.onboardingFields).forEach(k => {
+      Object.keys(this.onboardingFields[k]).forEach(f => {
+        this.onboardingFields[k][f].valid = !this.onboardingFields[k][f].valid;
+      });
+    });
+  }
 }

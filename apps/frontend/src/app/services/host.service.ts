@@ -21,7 +21,8 @@ import {
   IInvoice,
   DtoHostPatronageSubscription,
   IDeleteHostAssertion,
-  IDeleteHostReason
+  IDeleteHostReason,
+  DtoUpdateHost
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -91,6 +92,11 @@ export class HostService {
 
   readHost(hostId: string): Promise<IHost> {
     return this.http.get<IHost>(`/api/hosts/${hostId}`).toPromise();
+  }
+
+  // router.put <IHostPrivate> ("/hosts/:hid", Hosts.updateHost());
+  updateHost(hostId: string, body: DtoUpdateHost): Promise<IHostPrivate> {
+    return this.http.put<IHostPrivate>(`/api/hosts/${hostId}`, body).toPromise();
   }
 
   // router.get <IHOnboarding> ("/hosts/:hid/onboarding/status", Hosts.readOnboardingProcessStatus());

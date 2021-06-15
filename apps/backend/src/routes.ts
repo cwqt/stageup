@@ -108,8 +108,8 @@ const Hosts = new HostController(providers, middlewares);
 router.post     <IHost>                 ("/hosts",                                    Hosts.createHost());
 router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
 router.delete   <IDelHostAssert | void> ("/hosts/:hid",                               Hosts.deleteHost());
+router.put      <IHostPrivate>          ("/hosts/:hid",                               Hosts.updateHost());
 router.get      <IHostPrivate>          ("/hosts/:hid/details",                       Hosts.readDetails());
-// router.put      <IHost>                 ("/hosts/:hid",                               Hosts.updateHost());
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
 router.put      <string>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());
 router.put      <string>                ("/hosts/:hid/banner",                        Hosts.changeBanner());

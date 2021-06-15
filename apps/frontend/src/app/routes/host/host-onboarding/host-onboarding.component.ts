@@ -138,7 +138,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                       { type: 'required' },
                       {
                         type: 'custom',
-                        value: v => isPostalCode(v.value, 'GB'),
+                        value: v => isPostalCode(v.value || '', 'GB'),
                         message: () => $localize`Not a valid postal code`
                       }
                     ]

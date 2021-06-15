@@ -25,9 +25,12 @@ import {
   IDeleteHostReason,
   TicketFees,
   TicketType,
-  DeleteHostReason
+  DeleteHostReason,
+  DtoUpdateHost,
+  IContactInfo
 } from '@core/interfaces';
 import {
+  any,
   array,
   boolean,
   Describe,
@@ -174,5 +177,13 @@ export namespace objects {
   export const IDeleteHostReason: Describe<IDeleteHostReason> = object({
     reasons: array(enums<DeleteHostReason>(enumToValues(DeleteHostReason))),
     explanation: optional(string())
+  });
+
+  export const DtoUpdateHost: Describe<DtoUpdateHost> = object({
+    email_address: fields.email,
+    username: fields.username,
+    name: fields.name,
+    business_details: IHostBusinessDetails,
+    social_info: ISocialInfo
   });
 }

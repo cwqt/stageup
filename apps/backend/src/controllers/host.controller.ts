@@ -19,6 +19,7 @@ import { timestamp } from '@core/helpers';
 import {
   AssetType,
   DtoHostPatronageSubscription,
+  DtoUpdateHost,
   hasRequiredHostPermission,
   HostInviteState,
   HostOnboardingState,
@@ -43,6 +44,7 @@ import {
   LiveStreamState,
   PaymentStatus
 } from '@core/interfaces';
+import deepmerge from 'deepmerge';
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
 import { array, boolean, coerce, enums, object, string, StructError } from 'superstruct';
 import { In } from 'typeorm';
@@ -109,12 +111,35 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
-  readHostByUsername(): IControllerEndpoint<IHost> {
+  updateHost(): IControllerEndpoint<IHostPrivate> {
     return {
-      authorisation: AuthStrat.none,
+      validators: { body: Validators.Objects.DtoUpdateHost },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const host = await getCheck(Host.findOne({ username: req.params.username }));
-        return host.toFull();
+        let host = await getCheck(Host.findOne({ _id: req.params.hid }));
+
+        // already validated entire body is there
+        const dto: DtoUpdateHost = req.body;
+        host.business_details = {
+          hmrc_company_number: dto.business_details.hmrc_company_number,
+          business_contact_number: dto.business_details.business_contact_number,
+          business_address: {
+            city: dto.business_details.business_address.city,
+            country: dto.business_details.business_address.country,
+            line1: dto.business_details.business_address.line1,
+            postal_code: dto.business_details.business_address.postal_code,
+            line2: dto.business_details.business_address.line2 || null,
+            state: dto.business_details.business_address.state || null
+          }
+        };
+
+        host.email_address = dto.email_address;
+        host.name = dto.name;
+        host.username = dto.username;
+        host.social_info = dto.social_info;
+        host.bio = dto.bio;
+
+        return (await host.save()).toPrivate();
       }
     };
   }
@@ -186,9 +211,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
     return {
       authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
       controller: async req => {
-        const host = await getCheck(
-          Host.findOne({ _id: req.params.hid }, { relations: { contact_info: { addresses: true } } })
-        );
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
         return host.toPrivate();
       }
@@ -578,9 +601,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       controller: async req => {
         // Creating a Standard Stripe account on behalf of the host to faciliate the following:
         // https://stripe.com/img/docs/connect/direct_charges.svg
-        const host = await getCheck(
-          Host.findOne({ _id: req.params.hid }, { relations: { contact_info: { addresses: true }, owner: true } })
-        );
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: { owner: true } }));
 
         if (!host.stripe_account_id) {
           // 2 Create a connected account

@@ -111,7 +111,7 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   }
 
   public set value(v: any) {
-    if (v !== this._value) {
+    if (v != this._value) {
       // HTML number inputs return strings, so do an unary type coercion to number
       if (this.data.type == 'number') v = +v;
 
@@ -125,7 +125,7 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   onTouchedCallback = () => {};
 
   writeValue(value: any): void {
-    if (value !== this._value) {
+    if (value != this._value) {
       this._value = value;
     }
 

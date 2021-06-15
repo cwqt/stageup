@@ -30,7 +30,7 @@
   <ng-container [ngTemplateOutlet]="selectType" *ngIf="stepper.selectedIndex == 0"></ng-container>
 
   <ng-template #selectType>
-    <div class="flex items-center justify-center mt-8 space-x-6">
+    <div class="flex items-center justify-center space-x-6">
       <ui-button icon="video" size="l" kind="primary" (click)="setType('live')" i18n>Go Live</ui-button>
       <ui-button icon="upload" size="l" kind="primary" (click)="setType('vod')" i18n>On Demand</ui-button>
     </div>

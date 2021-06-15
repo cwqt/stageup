@@ -3,6 +3,7 @@ import { IPerformanceStub } from '../performances/performance.interface';
 import { IContactInfo } from '../users/person.interface';
 import { IAddress } from '../users/address.interface';
 import { Idless, NUUID } from '../common/fp.interface';
+import { Except } from 'type-fest';
 
 export type DtoCreateHost = Pick<IHostPrivate, 'email_address' | 'username' | 'name'>;
 
@@ -29,11 +30,15 @@ export interface IHost extends IHostStub {
   is_onboarded: boolean;
 }
 
-export type IHostPrivate = {
+export interface IHostPrivate extends IHost {
   email_address: string;
-  contact_info: IContactInfo;
   business_details: IHostBusinessDetails;
-} & IHost;
+}
+
+export type DtoUpdateHost = Except<
+  IHostPrivate,
+  '_id' | 'banner' | 'avatar' | 'created_at' | 'is_onboarded' | 'stripe_account_id'
+>;
 
 export interface IHostBusinessDetails {
   hmrc_company_number: number;
