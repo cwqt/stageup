@@ -137,6 +137,7 @@ export class HostSettingsComponent implements OnInit {
             email_address: v.email_address,
             business_details: to<IHostBusinessDetails>({
               hmrc_company_number: v.hmrc_company_number,
+              vat_number: v.vat_number,
               business_contact_number: parsePhoneNumberFromString(
                 `+44${v.business_contact_number}`
               ).formatInternational(),

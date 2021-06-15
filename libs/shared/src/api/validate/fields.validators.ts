@@ -40,11 +40,11 @@ export namespace fields {
       '@@validation.invalid_phone_number'
     );
   });
+  export const username = pattern(size(forbidden, 6, 32), /^[a-zA-Z\d]*$/);
   export const email = refine(string(), 'email', value => validator.isEmail(value) || '@@validation.invalid_email');
   export const password = refine(string(), 'password', value => value.length > 6 || '@@validation.too_short');
   export const timestamp = refine(number(), 'timestamp', value => Math.ceil(Math.log(value + 1) / Math.LN10) == 10);
   export const name = message(size(string(), 6, 32), '@@validation.too_short');
-  export const username = pattern(size(forbidden, 6, 32), /^[a-zA-Z\d]*$/);
   export const bio = refine(string(), 'bio', value => size(string(), 0, 512).is(value) || '@@validation.too_long');
   export const hmrcCompanyNumber = refine(
     number(),
@@ -52,7 +52,11 @@ export namespace fields {
     // 8 CHARACTERS, not == 8 in VALUE
     value => size(string(), 8, 8).is(value.toString()) || '@@validation.not_hmrc_number'
   );
-  export const vatNumber = pattern(string(), regexes.vat);
+  export const vatNumber = refine(
+    string(),
+    'vat_number',
+    value => pattern(string(), regexes.vat).is(value) || '@@validation.invalid'
+  );
   export const postcode = define<string>('postcode', value => validator.isPostalCode(value as string, 'GB'));
   export const country = define<CountryCode>('iso3166', value => validator.isISO31661Alpha2(value as string));
   export const currency = enums<CurrencyCode>(CURRENCY_CODES as CurrencyCode[]);

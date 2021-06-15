@@ -123,6 +123,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
         host.business_details = {
           hmrc_company_number: dto.business_details.hmrc_company_number,
           business_contact_number: dto.business_details.business_contact_number,
+          vat_number: dto.business_details.vat_number,
           business_address: {
             city: dto.business_details.business_address.city,
             country: dto.business_details.business_address.country,
