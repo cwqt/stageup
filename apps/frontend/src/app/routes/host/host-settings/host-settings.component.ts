@@ -13,6 +13,7 @@ import isPostalCode from 'validator/es/lib/isPostalCode';
 import iso3166 from 'i18n-iso-countries';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { HostDeleteDialogComponent } from '../host-delete-dialog/host-delete-dialog.component';
+import { regexes } from '@core/helpers';
 
 @Component({
   selector: 'app-host-settings',
@@ -57,7 +58,18 @@ export class HostSettingsComponent implements OnInit {
             { type: 'maxlength', value: 8 }
           ]
         }),
-        vat_number: UiField.Number({ label: $localize`VAT Number`, width: 6, disabled: true }),
+        vat_number: UiField.Text({
+          label: $localize`VAT Number`,
+          hint: $localize`This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789`,
+          width: 6,
+          validators: [
+            {
+              type: 'pattern',
+              value: regexes.vat,
+              message: () => $localize`Number must be 9 or 12 digits with or without GB at the start`
+            }
+          ]
+        }),
         business_type: UiField.Select({ label: $localize`Business Type`, values: new Map([]), width: 6 }),
         business_address: UiField.Container({
           label: $localize`Business Address`,
@@ -107,7 +119,7 @@ export class HostSettingsComponent implements OnInit {
               ),
               email_address: host.email_address,
               hmrc_company_number: host.business_details?.hmrc_company_number,
-              vat_number: null,
+              vat_number: host.business_details?.vat_number,
               business_type: null,
               business_address: host.business_details?.business_address
             }

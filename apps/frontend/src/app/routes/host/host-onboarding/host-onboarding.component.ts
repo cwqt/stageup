@@ -1,9 +1,8 @@
 import { StepperSelectionEvent, STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatHorizontalStepper, MatVerticalStepper } from '@angular/material/stepper';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 import {
-  capitalize,
   HostOnboardingState,
   HostOnboardingStep,
   IHost,
@@ -13,13 +12,12 @@ import {
   PersonTitle,
   IOnboardingStepMap
 } from '@core/interfaces';
-import { enumToValues, to } from '@core/helpers';
+import { regexes, to } from '@core/helpers';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { IUiFormField, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import { flatten } from 'flat';
-import { TicketTypePipe } from '@frontend/_pipes/ticket-type.pipe';
 import iso3166 from 'i18n-iso-countries';
 import parsePhoneNumberFromString from 'libphonenumber-js';
 
@@ -102,6 +100,17 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                 label: $localize`Business Contact Number`,
                 hint: $localize`Of the form 1724 123321, no leading zero`,
                 validators: [{ type: 'required' }]
+              }),
+              vat_number: UiField.Text({
+                label: $localize`VAT Number`,
+                hint: $localize`This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789`,
+                validators: [
+                  {
+                    type: 'pattern',
+                    value: regexes.vat,
+                    message: () => $localize`Number must be 9 or 12 digits with or without GB at the start`
+                  }
+                ]
               }),
               business_address: UiField.Container({
                 label: $localize`Business Address`,
@@ -245,8 +254,6 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
   }
 
   async prefetchStepData(step: HostOnboardingStep): Promise<any> {
-    console.log(this.onboarding);
-
     // Only perform prefetches if the user has submitted this onboarding before
     if (this.onboarding.data.steps[step] !== HostOnboardingState.AwaitingChanges) {
       const stepData = this.stepData?.data || (await this.hostService.readOnboardingProcessStep(this.host._id, step));

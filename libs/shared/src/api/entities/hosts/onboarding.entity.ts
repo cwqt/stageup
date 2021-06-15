@@ -51,7 +51,8 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
         data: {
           hmrc_company_number: null,
           business_contact_number: null,
-          business_address: null
+          business_address: null,
+          vat_number: null
         }
       },
       [HostOnboardingStep.OwnerDetails]: {

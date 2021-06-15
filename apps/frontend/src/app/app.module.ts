@@ -30,7 +30,7 @@ import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
-import { OnboardingStatePipe } from './_pipes/object-state.pipe';
+import { OnboardingStatePipe } from './_pipes/onboarding-state.pipe';
 import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
@@ -131,7 +131,6 @@ import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
-
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({

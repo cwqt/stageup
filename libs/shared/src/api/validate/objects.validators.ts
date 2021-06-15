@@ -125,7 +125,8 @@ export namespace objects {
   export const IHostBusinessDetails: Describe<IHostBusinessDetails> = object({
     hmrc_company_number: fields.hmrcCompanyNumber,
     business_address: IAddress,
-    business_contact_number: fields.phone
+    business_contact_number: fields.phone,
+    vat_number: fields.vatNumber
   });
 
   export const IPersonInfo: Describe<IPersonInfo> = object({

@@ -1,6 +1,8 @@
 // step 1 register host
 // step 2 upload proof of business
 //        - hmrc reg no
+//        - business type
+//        - VAT number
 //        - billing address (stripe)
 //          - active card check
 // step 3 social presence

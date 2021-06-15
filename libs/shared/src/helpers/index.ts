@@ -211,6 +211,12 @@ export const i18n = {
   }
 };
 
+/**
+ * @description Pipes for pretty printing the:
+ * - Card brand
+ * - Refund Reason
+ * from their respective enums
+ */
 export const pipes = {
   cardBrand: (brand: CardBrand): string => {
     const pretty: { [index in CardBrand]: string } = {
@@ -240,3 +246,8 @@ export const pipes = {
     return pretty[reason];
   }
 };
+
+/**
+ * @description Regexes for usage in validators in the front/back-end
+ */
+export const regexes = { vat: /(GB)?(\d{12}|\d{9})/g };

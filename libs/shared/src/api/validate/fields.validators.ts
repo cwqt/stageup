@@ -1,5 +1,5 @@
 import { CurrencyCode, Genre, GenreMap, NUUID, CountryCode, PersonTitle } from '@core/interfaces';
-import { enumToValues } from '@core/helpers';
+import { enumToValues, regexes } from '@core/helpers';
 import validator from 'validator';
 import {
   array,
@@ -52,6 +52,7 @@ export namespace fields {
     // 8 CHARACTERS, not == 8 in VALUE
     value => size(string(), 8, 8).is(value.toString()) || '@@validation.not_hmrc_number'
   );
+  export const vatNumber = pattern(string(), regexes.vat);
   export const postcode = define<string>('postcode', value => validator.isPostalCode(value as string, 'GB'));
   export const country = define<CountryCode>('iso3166', value => validator.isISO31661Alpha2(value as string));
   export const currency = enums<CurrencyCode>(CURRENCY_CODES as CurrencyCode[]);
