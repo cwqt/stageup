@@ -398,11 +398,11 @@ ui-icon {
 }
 
 .form-field__toggle {
+  display: flex;
   mat-label {
     vertical-align: top;
     line-height: 24px;
     margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
   }
 }
 

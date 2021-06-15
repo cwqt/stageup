@@ -43,6 +43,7 @@ import {
   IHostPrivate,
   IAssetStub,
   AssetDto,
+  IPerformance,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -148,6 +149,7 @@ router.get      <IE<IPerfS[]>>          ("/performances",                       
 router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance());
 router.delete   <void>                  ("/performances/:pid",                        Perfs.deletePerformance());
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance());
+router.put      <IPerformance>          ("/performances/:pid/publicity-period",       Perfs.updatePublicityPeriod());
 router.post     <AssetDto | void>       ("/performances/:pid/thumbnails",             Perfs.changeThumbnails());
 router.post     <ICreateAssetRes | void>("/performances/:pid/assets",                 Perfs.createAsset());
 router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());

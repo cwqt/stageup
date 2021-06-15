@@ -230,12 +230,36 @@
   <!-- Date picker, range -->
   <mat-form-field class="form-field__date" appearance="fill" *ngIf="data.type == 'date' && data.options?.is_date_range">
     <mat-label i18n>Enter a date range</mat-label>
-    <mat-date-range-input [rangePicker]="picker" #pickerInput (click)="picker.open()">
-      <input matStartDate i18n-placeholder placeholder="Start date" />
-      <input matEndDate i18n-placeholder placeholder="End date" />
+    <mat-date-range-input
+      [rangePicker]="picker"
+      #pickerInput
+      [min]="data.options.min_date"
+      [max]="data.options.max_date"
+      (click)="picker.open()"
+      (dateChange)="handleStartDateRangeChange($event)"
+    >
+      <input
+        [value]="value['start']"
+        matStartDate
+        i18n-placeholder
+        placeholder="Start date"
+        (dateChange)="handleStartDateRangeChange($event)"
+      />
+      <input
+        [value]="value['end']"
+        matEndDate
+        i18n-placeholder
+        placeholder="End date"
+        (dateChange)="handleEndDateRangeChange($event)"
+      />
     </mat-date-range-input>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
+    <mat-date-range-picker #picker>
+      <mat-date-range-picker-actions *ngIf="data.options?.actions">
+        <button mat-button matDateRangePickerCancel i18n>Cancel</button>
+        <button mat-raised-button color="primary" matDateRangePickerApply i18n>Apply</button>
+      </mat-date-range-picker-actions>
+    </mat-date-range-picker>
   </mat-form-field>
 
   <!-- Time picker -->

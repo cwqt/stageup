@@ -149,6 +149,10 @@
         <source>You have too many thumbnails, try deleting some before uploading new ones</source>
         <target state="needs-translation">Du har for mange miniatyrbilder, prøv å slette noen før du laster opp nye</target>
       </trans-unit>
+      <trans-unit id="error.publicity_period_outside_ticket_period" datatype="html">
+        <source>Cannot set performance publicity period outside one of the tickets selling period</source>
+        <target state="needs-translation">Kan ikke angi reklameperiode for ytelse utenfor en av selgerperioden for billetter</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="needs-translation">Mottatt svar samsvarer ikke med innsenderen!</target>

@@ -774,4 +774,34 @@ export default class PerformanceController extends BaseController<BackendProvide
       }
     };
   }
+
+  updatePublicityPeriod(): IControllerEndpoint<IPerformance> {
+    return {
+      validators: { body: object({ start: fields.timestamp, end: fields.timestamp }) },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
+      controller: async req => {
+        const performance = await getCheck(
+          Performance.findOne({ where: { _id: req.params.pid }, relations: { tickets: true } })
+        );
+
+        const period: IPerformance['publicity_period'] = req.body;
+
+        // https://alacrityfoundationteam31.atlassian.net/browse/SU-901
+        // The schedule for a performance should never be set before the dates set for selling tickets.
+        // It could either coincide with the ticket schedule or start after the ticket period is over.
+        if (performance.tickets.some(ticket => ticket.start_datetime < period.start))
+          throw new ErrorHandler(HTTP.BadRequest, '@@error.publicity_period_outside_ticket_period');
+
+        performance.publicity_period = req.body;
+        await performance.save();
+        await this.providers.bus.publish(
+          'performance.publicity_period_changed',
+          { performance_id: performance._id },
+          req.locale
+        );
+
+        return performance.toFull();
+      }
+    };
+  }
 }

@@ -149,6 +149,10 @@
         <source>You have too many thumbnails, try deleting some before uploading new ones</source>
         <target state="needs-translation">Mae gennych ormod o fawd, ceisiwch ddileu rhai cyn uwchlwytho rhai newydd</target>
       </trans-unit>
+      <trans-unit id="error.publicity_period_outside_ticket_period" datatype="html">
+        <source>Cannot set performance publicity period outside one of the tickets selling period</source>
+        <target state="needs-translation">Ni all osod cyfnod cyhoeddusrwydd perfformiad y tu allan i un o'r cyfnod gwerthu tocynnau</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="needs-translation">Nid yw'r ymateb a dderbynnir yn cyfateb i'r cyflwynydd!</target>

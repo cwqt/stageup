@@ -7,8 +7,7 @@ export const environment: IFrontendEnvironment = {
   frontendUrl: 'http://localhost:4200',
   stripePublicKey: '',
   appVersion: '',
-  locale: '',
-  facebookAppId: 0
+  locale: ''
 };
 
 import 'zone.js/dist/zone-error'; // Included with Angular CLI.

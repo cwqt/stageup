@@ -129,4 +129,9 @@ export class PerformanceService {
       )
       .toPromise();
   }
+
+  // router.put <IPerformance> ("/performances/:pid/publicity-period", Perfs.updatePublicityPeriod());
+  updatePublicityPeriod(performanceId: string, period: IPerformance['publicity_period']): Promise<IPerformance> {
+    return this.http.put<IPerformance>(`/api/performances/${performanceId}/publicity-period`, period).toPromise();
+  }
 }

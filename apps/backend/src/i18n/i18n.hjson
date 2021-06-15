@@ -45,6 +45,7 @@
   // Errors ----------------------------------------------------------------------------------------------
   "error.user_has_no_claim": You don't have permissions to view this content
   "error.too_many_thumbnails": You have too many thumbnails, try deleting some before uploading new ones
+  "error.publicity_period_outside_ticket_period": Cannot set performance publicity period outside one of the tickets selling period
 
   // Stripe ----------------------------------------------------------------------------------------------
   "stripe.origin_url_not_matched": Received response does not match submitter!

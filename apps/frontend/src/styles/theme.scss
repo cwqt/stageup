@@ -1,6 +1,5 @@
 @import '~@angular/material/theming';
-@import "apps/frontend/src/styles/variables";
-
+@import 'apps/frontend/src/styles/variables';
 
 @include mat-core();
 
@@ -11,6 +10,14 @@ $my-custom-warn: mat-palette($mat-red);
 
 $my-custom-theme: mat-light-theme($my-custom-primary, $my-custom-accent, $my-custom-warn);
 
+.mat-flat-button.mat-primary,
+.mat-raised-button.mat-primary,
+.mat-fab.mat-primary,
+.mat-mini-fab.mat-primary {
+  background-color: #ef4571 !important;
+  color: white !important;
+}
+
 .mat-progress-bar {
   border-radius: 2px;
   .mat-progress-bar-fill::after {
@@ -18,7 +25,7 @@ $my-custom-theme: mat-light-theme($my-custom-primary, $my-custom-accent, $my-cus
   }
 
   .mat-progress-bar-buffer {
-    background: #E4E8EB;
+    background: #e4e8eb;
   }
 }
 
@@ -135,11 +142,9 @@ mat-vertical-stepper {
   }
 }
 
-
 .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
   background-color: $clr-primary !important;
 }
-
 
 @mixin ui-toast-maker($border, $bg, $color) {
   border-left: 6px solid $border !important;
@@ -163,24 +168,21 @@ mat-vertical-stepper {
 
 .ui-toast {
   &--accent {
-    @include ui-toast-maker($clr-success, #fff, #333333 )
+    @include ui-toast-maker($clr-success, #fff, #333333);
   }
   &--primary {
-    @include ui-toast-maker($clr-primary, #fff, #333333 )
+    @include ui-toast-maker($clr-primary, #fff, #333333);
   }
   &--secondary {
-    @include ui-toast-maker($clr-secondary, $clr-secondary, #f3f3f3)
+    @include ui-toast-maker($clr-secondary, $clr-secondary, #f3f3f3);
   }
   &--warning {
-    @include ui-toast-maker($clr-warning, #fff, #333333 )
+    @include ui-toast-maker($clr-warning, #fff, #333333);
   }
   &--danger {
     @include ui-toast-maker(lighten($clr-red-drk, 20%), lighten($clr-red-drk, 10%), #fff);
   }
 }
-
-
-
 
 // mat-tab-group {
 //   .mat-tab-label {

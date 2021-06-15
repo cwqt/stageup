@@ -315,6 +315,7 @@ export type IUiFieldTypeOptions = {
     initial?: RichText;
   };
   toggle: {
+    initial: boolean;
     left_label: string;
     right_label: string;
     label?: never; // use left/right_label
@@ -331,9 +332,11 @@ export type IUiFieldTypeOptions = {
     placeholder?: string;
   };
   date: {
+    initial?: Date | { start: Date; end: Date };
     is_date_range?: boolean;
     min_date?: Date;
     max_date?: Date;
+    actions?: boolean; // apply/cancel buttons
     date_highlighter?: MatCalendarCellClassFunction<Date>;
   };
   radio: {

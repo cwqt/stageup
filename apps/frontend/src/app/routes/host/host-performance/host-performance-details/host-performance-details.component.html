@@ -1,22 +1,33 @@
-<h2 i18n>Details</h2>
-<ui-hr></ui-hr>
-<app-update-performance [cacheable]="performance"></app-update-performance>
-<br /><br />
-
-<h2 i18n>Thumbnails</h2>
-<ui-hr></ui-hr>
-<p i18n>Add some images to display in the performance brochure.</p>
 <app-host-performance-thumbnails [performance]="performance.data"></app-host-performance-thumbnails>
 <br />
+<app-update-performance [cacheable]="performance"></app-update-performance>
 
-<h2 i18n>Modify Visibility</h2>
 <ui-hr></ui-hr>
 
-<p *ngIf="host.is_onboarded == false" i18n>
-  You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made Public.
-</p>
-<ui-form [form]="visibilityForm"></ui-form>
-<br />
+<div class="flex items-center justify-between">
+  <div class="mr-4">
+    <b i18n>Publicity Period</b>
+    <p i18n>
+      Set a date period in which the performance is publically visible<br />
+      across the platform
+    </p>
+  </div>
+  <ui-form class="flex-1" [form]="publicityPeriodForm"></ui-form>
+</div>
+
+<div class="flex items-center justify-between">
+  <div class="mr-4">
+    <b i18n>Visibility</b>
+    <p i18n>
+      <ng-container *ngIf="host.is_onboarded == false">
+        You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made
+        Public<br />
+      </ng-container>
+      Set whether a performance is visible across the platform
+    </p>
+  </div>
+  <ui-form [form]="visibilityForm"></ui-form>
+</div>
 
 <ng-container *ngIf="stream">
   <h2 i18n>Stream Key</h2>

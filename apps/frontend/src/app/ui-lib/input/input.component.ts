@@ -102,12 +102,6 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
 
   ngAfterViewInit() {
     if (this.data.type == 'select') this.setInitialSelectValue();
-    if (this.data.type == 'date' && this.data.options['is_date_range']) {
-      // Can't bind ngModel to date-range because it uses two input elements
-      this.pickerInput.rangePicker.stateChanges.subscribe(() => {
-        this.value = this.pickerInput.value;
-      });
-    }
   }
 
   // ControlValueAccessor --------------------------------------------------------------------------------
@@ -126,9 +120,7 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
     }
   }
 
-  onFocusCallback = () => {
-    this.focused = true;
-  };
+  onFocusCallback = () => (this.focused = true);
   onChangeCallback = _ => {};
   onTouchedCallback = () => {};
 
@@ -276,6 +268,12 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
 
   // Date range input ------------------------------------------------------------------------------------------------------
   @ViewChild(MatDateRangeInput, { static: false }) pickerInput: MatDateRangeInput<Date>;
+  handleEndDateRangeChange(event) {
+    this.value = { ...this.value, end: event.value };
+  }
+  handleStartDateRangeChange(event) {
+    this.value = { ...this.value, start: event.value };
+  }
 
   // ngx-quill Rich Text --------------------------------------------------------------------------------
   @ViewChild('quill') quill: QuillEditorComponent;

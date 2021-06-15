@@ -40,6 +40,7 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@ticket_type.dono"]: never,
   ["@@error.user_has_no_claim"]: never,
   ["@@error.too_many_thumbnails"]: never,
+  ["@@error.publicity_period_outside_ticket_period"]: never,
   ["@@stripe.origin_url_not_matched"]: never,
   ["@@refunds.no_invoices_found"]: never,
   ["@@refunds.refund_already_outstanding"]: never,

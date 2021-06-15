@@ -45,6 +45,7 @@ export interface IPerformance extends IPerformanceStub {
   genre: Genre;
   tickets: ITicketStub[];
   assets: IAssetStub[];
+  publicity_period: { start: number; end: number }; // unix timestamps
 }
 
 export type DtoPerformance = IEnvelopedData<Except<IPerformance, 'assets'> & { assets: AssetDto[] }, null>;

@@ -38,6 +38,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.PendingSchedule }) status: PerformanceStatus;
+  @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
 
   @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
@@ -58,6 +59,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this.views = 0;
     this.average_rating = null;
     this.host = host;
+    this.publicity_period = { start: null, end: null };
   }
 
   async setup(txc: EntityManager): Promise<Performance> {
@@ -89,7 +91,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       ...this.toStub(),
       visibility: this.visibility,
       genre: this.genre,
-      tickets: this.tickets?.map(t => t.toStub()) || []
+      tickets: this.tickets?.map(t => t.toStub()) || [],
+      publicity_period: this.publicity_period
     };
   }
 

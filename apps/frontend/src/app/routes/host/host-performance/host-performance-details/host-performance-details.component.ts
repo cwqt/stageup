@@ -1,5 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
+import { timestamp, unix } from '@core/helpers';
 import { DtoPerformance, IAssetStub, IHost, AssetType, IPerformanceHostInfo, Visibility } from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -32,6 +33,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
   }
 
   visibilityForm: UiForm;
+  publicityPeriodForm: UiForm;
 
   constructor(private performanceService: PerformanceService, private clipboard: Clipboard) {}
 
@@ -41,22 +43,52 @@ export class HostPerformanceDetailsComponent implements OnInit {
       asset => asset.type == AssetType.Video && asset.tags.includes('trailer')
     );
 
+    this.publicityPeriodForm = new UiForm({
+      fields: {
+        period: UiField.Date({
+          initial: {
+            start: this.performanceData.publicity_period.start
+              ? unix(this.performanceData.publicity_period.start)
+              : undefined,
+            end: this.performanceData.publicity_period.end ? unix(this.performanceData.publicity_period.end) : undefined
+          },
+          is_date_range: true,
+          actions: true,
+          min_date: new Date(),
+          label: $localize`Publicity Period`
+        })
+      },
+      handlers: {
+        changes: async v => {
+          if (v.value['period'].start && v.value['period'].end) {
+            this.publicityPeriodForm.submit();
+          }
+        }
+      },
+      resolvers: {
+        output: async v =>
+          this.performanceService.updatePublicityPeriod(this.performanceId, {
+            start: timestamp(v.period.start),
+            end: timestamp(v.period.end)
+          })
+      }
+    });
+
     this.visibilityForm = new UiForm({
       fields: {
-        visibility: UiField.Select({
-          label: $localize`Performance Visibility`,
-          multi_select: false,
-          has_search: false,
-          initial: this.performanceData.visibility,
-          disabled: !this.host.is_onboarded,
-          values: new Map([
-            [Visibility.Private, { label: $localize`Private` }],
-            [Visibility.Public, { label: $localize`Public` }]
-          ])
+        visibility: UiField.Toggle({
+          initial: this.performanceData.visibility == Visibility.Public,
+          left_label: $localize`Public`,
+          right_label: $localize`Private`,
+          disabled: !this.host.is_onboarded
         })
       },
       resolvers: {
-        output: v => this.performanceService.updateVisibility(this.performanceId, v.visibility)
+        output: v =>
+          this.performanceService.updateVisibility(
+            this.performanceId,
+            v.visibility ? Visibility.Public : Visibility.Private
+          )
       },
       handlers: {
         changes: async () => this.visibilityForm.submit()
