@@ -131,6 +131,7 @@ import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
+import { PerformanceDeleteComponent } from './routes/performance/performance-delete/performance-delete.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -238,7 +239,8 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     HostDeleteDialogComponent,
     ConfirmPasswordDialogComponent,
     HostPerformanceThumbnailsComponent,
-    SocialSharingComponent
+    SocialSharingComponent,
+    PerformanceDeleteComponent
   ],
   imports: [
     AngularMaterialModule,
