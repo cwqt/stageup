@@ -219,7 +219,6 @@ export const paginate = async <T, K>(
 };
 
 import { getManager } from 'typeorm';
-import { ReadStream } from 'fs';
 
 /**
  * @description Wraps a method around a new entity manager, or uses a persistent transaction

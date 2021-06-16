@@ -72,6 +72,7 @@ export type EventContract = {
   ['patronage.user_unsubscribed']: { sub_id: IPatronSubscription['_id']; user_id: IUser['_id'] };
   ['patronage.user_subscribed']: { sub_id: IPatronSubscription['_id']; user_id: IUser['_id'] };
   ['patronage.tier_deleted']: { tier_id: string };
+  ['patronage.tier_amount_changed']: { old_tier_id: string; new_tier_id: string };
   // Tickets ------------------------------------------------------------------
   ['ticket.purchased']: {
     purchaser_id: IUser['_id'];

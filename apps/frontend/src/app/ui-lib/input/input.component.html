@@ -233,20 +233,20 @@
     <mat-date-range-input
       [rangePicker]="picker"
       #pickerInput
-      [min]="data.options.min_date"
-      [max]="data.options.max_date"
+      [min]="data.options?.min_date"
+      [max]="data.options?.max_date"
       (click)="picker.open()"
       (dateChange)="handleStartDateRangeChange($event)"
     >
       <input
-        [value]="value['start']"
+        [value]="value && value['start']"
         matStartDate
         i18n-placeholder
         placeholder="Start date"
         (dateChange)="handleStartDateRangeChange($event)"
       />
       <input
-        [value]="value['end']"
+        [value]="value && value['end']"
         matEndDate
         i18n-placeholder
         placeholder="End date"

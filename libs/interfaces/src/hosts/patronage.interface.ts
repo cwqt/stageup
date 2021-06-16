@@ -23,6 +23,7 @@ export interface IHostPatronTier extends IPatronTier {
 }
 
 export type DtoCreatePatronTier = Required<Pick<IPatronTier, 'name' | 'description' | 'currency' | 'amount'>>;
+export type DtoUpdatePatronTier = Required<Pick<IHostPatronTier, 'name' | 'amount' | 'is_visible' | 'description'>>;
 
 // A tracking of a users subscription to a patron tier
 // Logs of renewals tracked through Invoices

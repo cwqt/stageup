@@ -8,6 +8,8 @@ import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { Cacheable } from '@frontend/app.interfaces';
 import { HostService } from '@frontend/services/host.service';
 import { ToastService } from '@frontend/services/toast.service';
+import { CreateUpdatePatronTierComponent } from '../create-update-patron-tier/create-update-patron-tier.component';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 function isHostPatronTier(patron: IPatronTier | IHostPatronTier): patron is IHostPatronTier {
   return (patron as IHostPatronTier).total_patrons !== undefined;
@@ -24,6 +26,7 @@ export class PatronTierThumbComponent implements OnInit {
   @Input() isHostPatronTier?: boolean;
 
   @Output() deleted: EventEmitter<void> = new EventEmitter();
+  @Output() updated: EventEmitter<IHostPatronTier> = new EventEmitter();
 
   deleteTierRequest = new Cacheable();
 
@@ -40,10 +43,27 @@ export class PatronTierThumbComponent implements OnInit {
     }
   }
 
+  updateVisibility(event: MatSlideToggleChange) {
+    // hijack updatePatronTier to toggle visibility, keeping all values except
+    // visibility the same
+    this.hostService.updatePatronTier(this.host._id, this.tier._id, {
+      name: this.tier.name,
+      description: this.tier.description,
+      amount: this.tier.amount,
+      is_visible: event.checked
+    });
+  }
+
   openBecomePatronDialog() {
     this.helperService.showDialog(
-      this.dialog.open(BecomePatronDialogComponent, { data: { tier: this.tier, host: this.host }, minWidth: '600px' }),
-      () => {}
+      this.dialog.open(BecomePatronDialogComponent, { data: { tier: this.tier, host: this.host }, minWidth: '600px' })
+    );
+  }
+
+  openEditPatronTierDialog() {
+    this.helperService.showDialog(
+      this.dialog.open(CreateUpdatePatronTierComponent, { data: { tier: this.tier, operation: 'update' } }),
+      tier => this.updated.emit(tier)
     );
   }
 

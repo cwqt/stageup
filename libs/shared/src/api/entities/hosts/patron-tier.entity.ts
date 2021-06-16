@@ -51,6 +51,7 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
 
   constructor(data: DtoCreatePatronTier, host: Host) {
     super();
+    this._id = uuid();
     this.name = data.name;
     this.description = data.description;
     this.amount = data.amount;
@@ -67,9 +68,6 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
    * @description Creates the Patron Tiers' Subscription & Price in Stripe & saves to DB
    */
   async setup(stripe: Stripe, txc: EntityManager): Promise<PatronTier> {
-    // Create _id now so that we can reference it in the price passthrough data
-    this._id = uuid();
-
     // Create a product & price, stored on the hosts Connected account
     const product = await stripe.products.create(
       {
@@ -84,12 +82,18 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
       { stripeAccount: this.host.stripe_account_id }
     );
 
+    this.stripe_product_id = product.id;
+    await this.createStripePrice(stripe);
+    return txc.save(this);
+  }
+
+  async createStripePrice(stripe: Stripe): Promise<Stripe.Price> {
     // https://stripe.com/docs/billing/subscriptions/fixed-price
     const price = await stripe.prices.create(
       {
         unit_amount: this.amount,
         currency: this.currency,
-        product: product.id,
+        product: this.stripe_product_id,
         recurring: {
           interval: 'month'
         },
@@ -103,9 +107,7 @@ export class PatronTier extends BaseEntity implements IHostPatronTier {
     );
 
     this.stripe_price_id = price.id;
-    this.stripe_product_id = product.id;
-
-    return txc.save(this);
+    return price;
   }
 
   toFull(): Required<IPatronTier> {

@@ -138,6 +138,7 @@ router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",   
 const Patronage = new PatronageController(providers, middlewares);
 router.post     <IHostPatronTier>       ("/hosts/:hid/patron-tiers",                  Patronage.createPatronTier());
 router.get      <(IHPTier | IPTier)[]>  ("/hosts/:hid/patron-tiers",                  Patronage.readPatronTiers());
+router.put      <IHostPatronTier>       ("/hosts/:hid/patron-tiers/:tid",             Patronage.updatePatronTier());
 router.delete   <void>                  ("/hosts/:hid/patron-tiers/:tid",             Patronage.deletePatronTier());
 router.post     <IPatronSubscription>   ("/patron-tiers/:tid/subscribe",              Patronage.subscribe());
 router.delete   <void>                  ("/patron-tiers/:tid/unsubscribe",            Patronage.unsubscribe());

@@ -222,7 +222,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
   handleStripeConnectReturn(): IControllerEndpoint<string> {
     return {
-      authorisation: AuthStrat.none,
+      authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         // https://stripe.com/docs/connect/enable-payment-acceptance-guide#web-handle-user-returning-to-platform
         // No state is passed through this URL. After a user is redirected to your return_url,

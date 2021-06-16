@@ -22,7 +22,9 @@ import {
   DtoHostPatronageSubscription,
   IDeleteHostAssertion,
   IDeleteHostReason,
-  DtoUpdateHost
+  DtoUpdateHost,
+  IHostPatronTier,
+  DtoUpdatePatronTier
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -225,14 +227,19 @@ export class HostService {
       .toPromise();
   }
 
-  // router.post <IPatronTier> ("/hosts/:hid/patron-tiers", Hosts.createPatronTier());
-  createPatronTier(hostId: string, data: DtoCreatePatronTier): Promise<IPatronTier> {
-    return this.http.post<IPatronTier>(`/api/hosts/${hostId}/patron-tiers`, data).toPromise();
+  // router.post <IHostPatronTier> ("/hosts/:hid/patron-tiers", Hosts.createPatronTier());
+  createPatronTier(hostId: string, data: DtoCreatePatronTier): Promise<IHostPatronTier> {
+    return this.http.post<IHostPatronTier>(`/api/hosts/${hostId}/patron-tiers`, data).toPromise();
   }
 
   // router.get <IPatronTier[]> ("/hosts/:hid/patron-tiers", Hosts.readPatronTiers());
   readPatronTiers(hostId: string): Promise<IPatronTier[]> {
     return this.http.get<IPatronTier[]>(`/api/hosts/${hostId}/patron-tiers`).toPromise();
+  }
+
+  // router.put <IHostPatronTier> ("/hosts/:hid/patron-tiers/:tid", Patronage.updatePatronTier());
+  updatePatronTier(hostId: string, tierId: string, update: DtoUpdatePatronTier): Promise<IHostPatronTier> {
+    return this.http.put<IHostPatronTier>(`/api/hosts/${hostId}/patron-tiers/${tierId}`, update).toPromise();
   }
 
   // router.delete <void> ("/hosts/:hid/patron-tiers/:tid", Hosts.deletePatronTier());

@@ -835,7 +835,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           })
           .innerJoinAndSelect('performance.asset_group', 'group')
           .innerJoinAndSelect('group.assets', 'assets')
-          // .withDeleted() // tickets & performances can be soft deleted
+          .withDeleted() // tickets & performances & patronages can be soft deleted
           .paginate(i => i.toHostInvoiceStub());
       }
     };
@@ -957,7 +957,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             invoice_amount: 'invoice.amount',
             patron_created: 'sub.created_at'
           })
-          .withDeleted()
+          .withDeleted() // tickets & performances & patronages can be soft deleted
           .paginate(sub => sub.toDtoHostPatronageSubscription());
       }
     };

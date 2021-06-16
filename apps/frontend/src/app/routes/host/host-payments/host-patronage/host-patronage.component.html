@@ -15,7 +15,8 @@
       *ngFor="let tier of tiers.data"
       [tier]="tier"
       [host]="host"
-      (deleted)="removePatronTier(tier)"
+      (updated)="updateTier(tier, $event)"
+      (deleted)="removeTier(tier)"
     ></app-patron-tier-thumb>
   </div>
 

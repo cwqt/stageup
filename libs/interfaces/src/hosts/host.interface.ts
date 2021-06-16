@@ -41,10 +41,10 @@ export type DtoUpdateHost = Except<
 >;
 
 export interface IHostBusinessDetails {
-  hmrc_company_number: number;
+  vat_number?: string; // e.g GB123456789 or GB123456789102
+  hmrc_company_number?: number;
   business_contact_number: string; // e.164 format
   business_address: Idless<IAddress>;
-  vat_number: string; // e.g GB123456789 or GB123456789102
 }
 
 export interface ISocialInfo {

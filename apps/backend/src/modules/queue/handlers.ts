@@ -1,6 +1,6 @@
 import Env from '@backend/env';
 import { Host, Invoice, PatronSubscription, PatronTier, Performance, Refund, transact, User } from '@core/api';
-import { dateOrdinal, i18n, pipes, richtext, timestamp } from '@core/helpers';
+import { dateOrdinal, i18n, pipes, richtext, timestamp, timeout } from '@core/helpers';
 import { CurrencyCode, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
 
@@ -16,7 +16,6 @@ import dbless from 'dbless-email-verification';
 // ------------------------------------------------------------------------------
 import { Contract } from 'libs/shared/src/api/event-bus/contracts';
 import moment from 'moment';
-import logo from './assets/logo';
 import { QueueModule, QueueProviders } from './queue.module';
 
 export const EventHandlers = (queues: QueueModule['queues'], providers: QueueProviders) => ({
@@ -490,5 +489,44 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
       markdown: true,
       attachments: []
     });
+  },
+
+  transferAllTierSubscribersToNewTier: async (ct: Contract<'patronage.tier_amount_changed'>) => {
+    // for each existing subscriber to the old tier, we need to move them over to the new tier which has the new price
+    const tier = await PatronTier.findOne({ _id: ct.new_tier_id });
+    const host = await Host.findOne({ _id: tier.host__id });
+
+    await providers.orm.connection
+      .createQueryBuilder(PatronSubscription, 'sub')
+      .where('sub.patron_tier = :tier_id', { tier_id: ct.old_tier_id })
+      .andWhere('sub.status = :status', { status: PatronSubscriptionStatus.Active })
+      .innerJoinAndSelect('sub.user', 'user')
+      .withDeleted() // patron tier is soft deleted at this point
+      .iterate(async row => {
+        const stripeSubscriptionId = row.sub_stripe_subscription_id;
+
+        const subscription = await providers.stripe.connection.subscriptions.retrieve(stripeSubscriptionId, {
+          stripeAccount: host.stripe_account_id
+        });
+
+        // https://stripe.com/docs/billing/subscriptions/upgrade-downgrade#changing
+        await providers.stripe.connection.subscriptions.update(
+          stripeSubscriptionId,
+          {
+            cancel_at_period_end: false,
+            proration_behavior: 'create_prorations',
+            items: [
+              {
+                id: subscription.items.data[0].id,
+                price: tier.stripe_price_id
+              }
+            ]
+          },
+          { stripeAccount: host.stripe_account_id }
+        );
+
+        // update relation of present subscription tier
+        await PatronSubscription.update({ _id: row.sub__id }, { patron_tier: tier });
+      });
   }
 });

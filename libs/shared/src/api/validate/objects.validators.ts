@@ -27,7 +27,8 @@ import {
   TicketType,
   DeleteHostReason,
   DtoUpdateHost,
-  IContactInfo
+  IContactInfo,
+  DtoUpdatePatronTier
 } from '@core/interfaces';
 import {
   any,
@@ -126,10 +127,10 @@ export namespace objects {
   });
 
   export const IHostBusinessDetails: Describe<IHostBusinessDetails> = object({
-    hmrc_company_number: fields.hmrcCompanyNumber,
+    hmrc_company_number: optional(fields.hmrcCompanyNumber),
+    vat_number: optional(fields.vatNumber),
     business_address: IAddress,
-    business_contact_number: fields.phone,
-    vat_number: fields.vatNumber
+    business_contact_number: fields.phone
   });
 
   export const IPersonInfo: Describe<IPersonInfo> = object({
@@ -139,7 +140,7 @@ export namespace objects {
   });
 
   export const ISocialInfo: Describe<ISocialInfo> = object({
-    site_url: fields.url,
+    site_url: optional(fields.url),
     linkedin_url: optional(fields.url),
     facebook_url: optional(fields.url),
     instagram_url: optional(fields.url)
@@ -186,5 +187,12 @@ export namespace objects {
     vat_number: fields.vatNumber,
     business_details: IHostBusinessDetails,
     social_info: ISocialInfo
+  });
+
+  export const DtoUpdatePatronTier: Describe<DtoUpdatePatronTier> = object({
+    name: string(),
+    description: fields.richtext,
+    amount: number(),
+    is_visible: boolean()
   });
 }

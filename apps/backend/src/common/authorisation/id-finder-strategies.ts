@@ -1,4 +1,4 @@
-import { IdFinderStrategy, Performance, Ticket } from '@core/api';
+import { IdFinderStrategy, PatronTier, Performance, Ticket } from '@core/api';
 
 const findUserIdFromSession: IdFinderStrategy = async (req, pm) => {
   return req.session.user?._id;
@@ -22,7 +22,14 @@ const findHostIdFromPerformanceId: IdFinderStrategy = async (req, pm) => {
   return performance?.host?._id;
 };
 
+const findHostIdFromPatronTierId: IdFinderStrategy = async (req, pm) => {
+  const tierId = req.params.tid;
+  const tier = await PatronTier.findOne({ where: { _id: tierId } });
+  return tier?.host__id;
+};
+
 export default {
   findUserIdFromSession,
-  findHostIdFromPerformanceId
+  findHostIdFromPerformanceId,
+  findHostIdFromPatronTierId
 };

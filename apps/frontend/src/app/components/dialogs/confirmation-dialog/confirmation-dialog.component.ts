@@ -21,6 +21,7 @@ export class ConfirmationDialogComponent implements OnInit, IUiDialogOptions {
   buttons: IUiDialogOptions['buttons'];
 
   constructor(
+    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IConfirmationDialogData
   ) {}
 

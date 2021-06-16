@@ -1,3 +1,4 @@
+import idFinderStrategies from '@backend/common/authorisation/id-finder-strategies';
 import { ErrorHandler } from '@backend/common/error';
 import {
   BaseController,
@@ -6,18 +7,22 @@ import {
   IControllerEndpoint,
   PatronSubscription,
   PaymentMethod,
+  Ticket,
+  transact,
   User,
   Validators
 } from '@core/api';
 import { to, uuid } from '@core/helpers';
 import {
   DtoCreatePaymentIntent,
+  DtoUpdatePatronTier,
   HostPermission,
   HTTP,
   IHostPatronTier,
   IPatronSubscription,
   IPatronTier,
   IStripeChargePassthrough,
+  pick,
   PurchaseableType
 } from '@core/interfaces';
 import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
@@ -48,7 +53,7 @@ export default class PatronageController extends BaseController<BackendProviderM
 
   readPatronTiers(): IControllerEndpoint<Array<IHostPatronTier | IPatronTier>> {
     return {
-      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.none,
       controller: async req => {
         const host = await getCheck(Host.findOne({ _id: req.params.hid }, { relations: ['patron_tiers'] }));
         const [isMemberOfHost] = await AuthStrat.hasHostPermission(HostPermission.Admin, () => host._id)(
@@ -56,22 +61,102 @@ export default class PatronageController extends BaseController<BackendProviderM
           this.providers
         );
 
-        return isMemberOfHost ? host.patron_tiers.map(t => t.toHost()) : host.patron_tiers.map(t => t.toFull());
+        return isMemberOfHost
+          ? host.patron_tiers.map(t => t.toHost())
+          : host.patron_tiers.filter(t => t.is_visible).map(t => t.toFull());
+      }
+    };
+  }
+
+  updatePatronTier(): IControllerEndpoint<IHostPatronTier> {
+    return {
+      validators: { body: Validators.Objects.DtoUpdatePatronTier },
+      authorisation: AuthStrat.runner(
+        { hid: idFinderStrategies.findHostIdFromPatronTierId },
+        AuthStrat.hasHostPermission(HostPermission.Editor, m => m.hid)
+      ),
+      controller: async req => {
+        const update: DtoUpdatePatronTier = req.body;
+        const oldTier = await getCheck(
+          PatronTier.findOne({ where: { _id: req.params.tid }, relations: { host: true } })
+        );
+
+        if (oldTier.amount !== update.amount) {
+          try {
+            const newTier = await transact(async txc => {
+              // If Prices change things get more complex because of Stripe intentionally making them immutable
+              // so we create a completely new tier with a new Price & move all existing subscribers over to the new tiers' Price
+              // https://stripe.com/docs/billing/subscriptions/upgrade-downgrade
+              const newTier = new PatronTier(
+                {
+                  name: update.name,
+                  description: update.description,
+                  currency: oldTier.currency,
+                  amount: update.amount
+                },
+                oldTier.host
+              );
+
+              newTier.total_patrons = oldTier.total_patrons;
+              newTier.is_visible = oldTier.is_visible;
+              newTier.version = oldTier.version + 1;
+
+              // Keep the same product_id, just changing the Price
+              newTier.stripe_product_id = oldTier.stripe_product_id;
+              await newTier.createStripePrice(this.providers.stripe.connection);
+
+              // Soft remove the old tier for invoicing purposes & set old Price to in-active
+              await txc.softRemove(oldTier);
+              await this.providers.stripe.connection.prices.update(
+                oldTier.stripe_price_id,
+                { active: false },
+                { stripeAccount: oldTier.host.stripe_account_id }
+              );
+
+              // Save new tier
+              await txc.save(newTier);
+              return newTier.toHost();
+            });
+
+            // Commit the transaction _then_ publish the event
+            // This event will shift all exisiting subscribers over by updating the price
+            await this.providers.bus.publish(
+              'patronage.tier_amount_changed',
+              { old_tier_id: oldTier._id, new_tier_id: newTier._id },
+              req.locale
+            );
+
+            return newTier;
+          } catch (error) {}
+        } else {
+          // Updating non-important fields doesn't warrant a complete clone
+          oldTier.name = update.name;
+          oldTier.description = update.description;
+          oldTier.is_visible = update.is_visible;
+          await oldTier.save();
+          return oldTier.toHost();
+        }
       }
     };
   }
 
   deletePatronTier(): IControllerEndpoint<void> {
     return {
-      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      authorisation: AuthStrat.runner(
+        { hid: idFinderStrategies.findHostIdFromPatronTierId },
+        AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
+      ),
       controller: async req => {
-        const tier = await getCheck(PatronTier.findOne({ _id: req.params.tid }));
-        // We may have permission in this hid, but that doesn't neccessarily mean
-        // that we own tier tid... so do this getCheck intersection
-        if (tier.host__id !== req.params.hid) throw new ErrorHandler(HTTP.Unauthorised, '@@error.missing_permissions');
+        const tier = await getCheck(PatronTier.findOne({ _id: req.params.tid }, { relations: { host: true } }));
 
         // Keep it around for invoicing purposes
         await tier.softRemove();
+        // Cannot remove Stripe products if they have associated Prices, so set it to in-active
+        await this.providers.stripe.connection.products.update(
+          tier.stripe_product_id,
+          { active: false },
+          { stripeAccount: tier.host.stripe_account_id }
+        );
         await this.providers.bus.publish('patronage.tier_deleted', { tier_id: tier._id }, req.locale);
       }
     };

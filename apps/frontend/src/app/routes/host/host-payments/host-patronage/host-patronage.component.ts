@@ -27,14 +27,24 @@ export class HostPatronageComponent implements OnInit {
   openCreateTierDialog() {
     this.helperService.showDialog(
       this.dialog.open(CreateUpdatePatronTierComponent, { data: { operation: 'create' }, width: '600px' }),
-      (tier: IPatronTier) => {
-        this.tiers.data.push(tier);
-        this.tiers.data.sort((a, b) => (a.amount > b.amount ? 1 : -1));
-      }
+      (tier: IPatronTier) => this.addTier(tier)
     );
   }
 
-  removePatronTier(tier: IPatronTier) {
-    this.tiers.data.splice(this.tiers.data.findIndex(t => t._id == tier._id));
+  addTier(tier: IPatronTier) {
+    this.tiers.data.push(tier);
+    this.tiers.data.sort((a, b) => (a.amount > b.amount ? 1 : -1));
+  }
+
+  removeTier(tier: IPatronTier) {
+    this.tiers.data.splice(
+      this.tiers.data.findIndex(t => t._id == tier._id),
+      1
+    );
+  }
+
+  updateTier(oldTier: IPatronTier, newTier: IPatronTier) {
+    this.removeTier(oldTier);
+    this.addTier(newTier);
   }
 }

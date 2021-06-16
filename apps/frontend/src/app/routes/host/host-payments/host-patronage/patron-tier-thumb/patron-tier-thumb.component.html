@@ -1,8 +1,13 @@
 <div class="patron-thumb rounded shadow overflow-hidden bg-white relative w-full h-full flex flex-col">
+  <!-- strict eq check since members receive IHostPatronTier -->
+  <ui-chip *ngIf="!isHostPatronTier && tier['is_visible'] === false" class="left-2 top-2 absolute">HIDDEN</ui-chip>
+
   <div class="absolute w-full" *ngIf="isHostPatronTier">
     <div class="flex m-2 justify-between items-center bg-white rounded p-2 shadow">
       <p class="mb-0"><span i18n>Total patrons</span>: {{ tier['total_patrons'] }}</p>
-      <mat-slide-toggle i18n>Visible</mat-slide-toggle>
+      <mat-slide-toggle [checked]="tier['is_visible']" (change)="updateVisibility($event)" i18n
+        >Visible</mat-slide-toggle
+      >
     </div>
   </div>
 
@@ -21,7 +26,7 @@
 
   <div class="flex items-center justify-between m-2 space-x-2 mt-auto">
     <ui-button kind="primary" *ngIf="!isHostPatronTier" (click)="openBecomePatronDialog()" i18n>Select</ui-button>
-    <ui-button kind="secondary" *ngIf="isHostPatronTier" i18n>Edit</ui-button>
+    <ui-button kind="secondary" *ngIf="isHostPatronTier" (click)="openEditPatronTierDialog()" i18n>Edit</ui-button>
     <ui-button kind="danger" *ngIf="isHostPatronTier" (click)="openDeleteTierConfirmationDialog()" i18n
       >Delete</ui-button
     >

@@ -1,6 +1,13 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CurrencyCode, DtoCreatePatronTier, IPatronTier } from '@core/interfaces';
+import {
+  BASE_AMOUNT_MAP,
+  CurrencyCode,
+  DtoCreatePatronTier,
+  DtoUpdatePatronTier,
+  IHostPatronTier,
+  pick
+} from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
@@ -14,17 +21,17 @@ import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib
   styleUrls: ['./create-update-patron-tier.component.scss']
 })
 export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions {
-  submit: EventEmitter<IPatronTier> = new EventEmitter();
+  submit: EventEmitter<IHostPatronTier> = new EventEmitter();
   cancel: EventEmitter<void> = new EventEmitter();
   buttons: IUiDialogOptions['buttons'] = [];
 
-  tierForm: UiForm<IPatronTier, DtoCreatePatronTier>;
-  tier: ICacheable<IPatronTier> = createICacheable();
+  tierForm: UiForm<IHostPatronTier, DtoCreatePatronTier>;
+  tier: ICacheable<IHostPatronTier> = createICacheable();
 
   title: string;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { operation: 'create' | 'update'; tier: IPatronTier },
+    @Inject(MAT_DIALOG_DATA) public data: { operation: 'create' | 'update'; tier: IHostPatronTier },
     private ref: MatDialogRef<CreateUpdatePatronTierComponent>,
     private toastService: ToastService,
     private hostService: HostService
@@ -51,14 +58,25 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
         })
       },
       resolvers: {
-        output: async v => this.hostService.createPatronTier(this.hostService.hostId, this.transform(v))
+        input: async () =>
+          this.data.operation == 'update' && {
+            fields: {
+              name: this.data.tier?.name,
+              description: this.data.tier?.description || undefined,
+              amount: this.data.tier && this.data.tier.amount / BASE_AMOUNT_MAP[this.data.tier.currency]
+            }
+          },
+        output: async v =>
+          this.data.operation == 'update'
+            ? this.hostService.updatePatronTier(this.hostService.hostId, this.data.tier._id, this.updateTransform(v))
+            : this.hostService.createPatronTier(this.hostService.hostId, this.createTransform(v))
       },
       handlers: {
         success: async tier => {
           this.toastService.emit(
             this.data.operation == 'update'
-              ? $localize`Created patron tier: ${tier.name}!`
-              : $localize`Updated patron tier: ${tier.name}!`
+              ? $localize`Updated patron tier: ${tier.name}!`
+              : $localize`Created patron tier: ${tier.name}!`
           );
           this.submit.emit(tier);
           this.ref.close(tier);
@@ -83,7 +101,16 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
     ];
   }
 
-  transform(v): DtoCreatePatronTier {
+  updateTransform(v): DtoUpdatePatronTier {
+    return {
+      name: v.name,
+      amount: v.amount * 100,
+      description: v.description,
+      is_visible: this.data.tier.is_visible // value set from outside this form
+    };
+  }
+
+  createTransform(v): DtoCreatePatronTier {
     return {
       name: v.name,
       currency: CurrencyCode.GBP,

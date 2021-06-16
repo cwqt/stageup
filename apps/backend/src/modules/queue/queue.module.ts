@@ -125,12 +125,10 @@ export class QueueModule implements Module {
     {
       bus.subscribe("refund.refunded", async ct => {
                                                          handlers.sendUserRefundRefundedEmail(ct);
-                                                         handlers.sendHostRefundRefundedEmail(ct);
-      });
+                                                         handlers.sendHostRefundRefundedEmail(ct)});
       bus.subscribe("refund.initiated", async ct => {
                                                          handlers.sendUserRefundInitiatedEmail(ct);
-                                                         handlers.sendHostRefundInitiatedEmail(ct);
-      });
+                                                         handlers.sendHostRefundInitiatedEmail(ct)});
       bus.subscribe("test.send_email",                   handlers.sendTestEmail);
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
@@ -151,6 +149,7 @@ export class QueueModule implements Module {
       bus.subscribe("patronage.tier_deleted",            handlers.unsubscribeAllPatronTierSubscribers);
       bus.subscribe("patronage.unsubscribe_user",        handlers.unsubscribeFromPatronTier);
       bus.subscribe("patronage.user_unsubscribed",       handlers.sendUserUnsubscribedConfirmationEmail);
+      bus.subscribe("patronage.tier_amount_changed",     handlers.transferAllTierSubscribersToNewTier);
       bus.subscribe("host.invoice_export",              async ct => {
         if(ct.format == "pdf") await this.queues.host_invoice_pdf.add({
           locale: ct.__meta.locale,
@@ -164,8 +163,7 @@ export class QueueModule implements Module {
       });
       bus.subscribe('patronage.started', ct => {
                                                         handlers.sendHostPatronSubscriptionStartedEmail(ct);
-                                                        handlers.sendUserPatronSubscriptionStartedReceiptEmail(ct);
-      });
+                                                        handlers.sendUserPatronSubscriptionStartedReceiptEmail(ct)});
     }
 
     setQueues(Object.values(this.queues).map(q => new BullMQAdapter(q.queue)));
