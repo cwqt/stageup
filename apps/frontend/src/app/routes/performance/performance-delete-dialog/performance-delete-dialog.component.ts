@@ -8,11 +8,11 @@ import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-bu
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
-  selector: 'app-performance-delete',
-  templateUrl: './performance-delete.component.html',
-  styleUrls: ['./performance-delete.component.css']
+  selector: 'app-performance-delete-dialog',
+  templateUrl: './performance-delete-dialog.component.html',
+  styleUrls: ['./performance-delete-dialog.component.css']
 })
-export class PerformanceDeleteComponent implements OnInit, IUiDialogOptions {
+export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOptions {
   submit: EventEmitter<any>;
   cancel: EventEmitter<any>;
   buttons?: UiDialogButton[];
@@ -20,7 +20,7 @@ export class PerformanceDeleteComponent implements OnInit, IUiDialogOptions {
   constructor(
     private toastService: ToastService,
     private myselfService: MyselfService,
-    private ref: MatDialogRef<PerformanceDeleteComponent>,
+    private ref: MatDialogRef<PerformanceDeleteDialogComponent>,
     private helperService: HelperService,
     @Inject(MAT_DIALOG_DATA) public data: DtoPerformance
   ) {}
