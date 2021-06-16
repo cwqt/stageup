@@ -1,6 +1,6 @@
 
 <ui-dialog [buttons]="buttons" title="Delete Performance">
     <h2>
-      <span i18n>Your performance is scheduled to premiere in</span>: <span class="opacity-50">#{{ data.invoice_id }}</span>
+      <span i18n>Your performance is scheduled to premiere in {{data.data.premiere_datetime | amFromUnix | amTimeAgo}}</span>
     </h2>
 </ui-dialog>

@@ -6,5 +6,5 @@ export interface IReasonSubmitDialog {
   reasons: Map<string, string>;
   further_info: string;
   further_info_label: string;
-  data: DtoInvoice | DtoPerformance;
+  callback: () => {};
 }
