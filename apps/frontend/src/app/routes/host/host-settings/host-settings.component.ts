@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CountryCode, DtoUpdateHost, IHostBusinessDetails, IHostPrivate, IMyself } from '@core/interfaces';
+import {
+  BusinessType,
+  CountryCode,
+  DtoUpdateHost,
+  IHostBusinessDetails,
+  IHostPrivate,
+  IMyself
+} from '@core/interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { BaseAppService } from '@frontend/services/app.service';
@@ -72,7 +79,17 @@ export class HostSettingsComponent implements OnInit {
             }
           ]
         }),
-        business_type: UiField.Select({ label: $localize`Business Type`, values: new Map([]), width: 6 }),
+        business_type: UiField.Select({
+          label: $localize`Business Type`,
+          values: new Map<BusinessType, { label: string }>([
+            [BusinessType.Company, { label: $localize`Company` }],
+            [BusinessType.GovernmentEntity, { label: $localize`Government Entity` }],
+            [BusinessType.Individual, { label: $localize`Individual` }],
+            [BusinessType.NonProfit, { label: $localize`Non-profit` }]
+          ]),
+          width: 6,
+          disabled: true
+        }),
         business_address: UiField.Container({
           label: $localize`Business Address`,
           fields: {
@@ -126,7 +143,7 @@ export class HostSettingsComponent implements OnInit {
               email_address: host.email_address,
               hmrc_company_number: host.business_details?.hmrc_company_number,
               vat_number: host.business_details?.vat_number,
-              business_type: null,
+              business_type: host.business_details.business_type,
               business_address: host.business_details?.business_address
             }
           };
@@ -138,6 +155,7 @@ export class HostSettingsComponent implements OnInit {
             business_details: to<IHostBusinessDetails>({
               hmrc_company_number: v.hmrc_company_number,
               vat_number: v.vat_number,
+              business_type: v.business_type,
               business_contact_number: parsePhoneNumberFromString(
                 `+44${v.business_contact_number}`
               ).formatInternational(),

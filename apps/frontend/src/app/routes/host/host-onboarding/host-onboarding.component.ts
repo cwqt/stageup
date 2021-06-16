@@ -10,7 +10,8 @@ import {
   IOnboardingStep,
   CountryCode,
   PersonTitle,
-  IOnboardingStepMap
+  IOnboardingStepMap,
+  BusinessType
 } from '@core/interfaces';
 import { regexes, to } from '@core/helpers';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
@@ -101,6 +102,17 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                 hint: $localize`Of the form 1724 123321, no leading zero`,
                 validators: [{ type: 'required' }]
               }),
+              business_type: UiField.Select({
+                label: $localize`Business Type`,
+                values: new Map<BusinessType, { label: string }>([
+                  [BusinessType.Company, { label: $localize`Company` }],
+                  [BusinessType.GovernmentEntity, { label: $localize`Government Entity` }],
+                  [BusinessType.Individual, { label: $localize`Individual` }],
+                  [BusinessType.NonProfit, { label: $localize`Non-profit` }]
+                ]),
+                validators: [{ type: 'required' }],
+                width: 6
+              }),
               vat_number: UiField.Text({
                 label: $localize`VAT Number`,
                 hint: $localize`This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789`,
@@ -110,7 +122,8 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                     value: regexes.vat,
                     message: () => $localize`Number must be 9 or 12 digits with or without GB at the start`
                   }
-                ]
+                ],
+                width: 6
               }),
               business_address: UiField.Container({
                 label: $localize`Business Address`,
