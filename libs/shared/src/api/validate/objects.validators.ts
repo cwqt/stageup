@@ -26,6 +26,7 @@ import {
   TicketFees,
   TicketType,
   DeleteHostReason,
+  BusinessType,
   DtoUpdateHost,
   IContactInfo,
   DtoUpdatePatronTier
@@ -130,7 +131,8 @@ export namespace objects {
     hmrc_company_number: optional(fields.hmrcCompanyNumber),
     vat_number: optional(fields.vatNumber),
     business_address: IAddress,
-    business_contact_number: fields.phone
+    business_contact_number: fields.phone,
+    business_type: fields.businessType
   });
 
   export const IPersonInfo: Describe<IPersonInfo> = object({

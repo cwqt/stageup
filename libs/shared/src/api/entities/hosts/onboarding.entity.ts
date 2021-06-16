@@ -52,6 +52,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
           hmrc_company_number: null,
           business_contact_number: null,
           business_address: null,
+          business_type: null,
           vat_number: null
         }
       },

@@ -101,7 +101,7 @@
         <source>Awaiting Changes</source>
         <target state="needs-translation">Venter på endringer</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/onboarding-state.pipe.ts</context>
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
@@ -109,7 +109,7 @@
         <source>Pending Verification</source>
         <target state="needs-translation">Venter på bekreftelse</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/onboarding-state.pipe.ts</context>
           <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
@@ -117,7 +117,7 @@
         <source>Has Issues</source>
         <target state="needs-translation">Har problemer</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/onboarding-state.pipe.ts</context>
           <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
@@ -125,7 +125,7 @@
         <source>Verified</source>
         <target state="needs-translation">Bekreftet</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/onboarding-state.pipe.ts</context>
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
@@ -133,7 +133,7 @@
         <source>Enacted</source>
         <target state="needs-translation">Lovfestet</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/onboarding-state.pipe.ts</context>
           <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
@@ -141,7 +141,7 @@
         <source>Modified</source>
         <target state="needs-translation">Modifisert</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/onboarding-state.pipe.ts</context>
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
@@ -149,7 +149,7 @@
         <source>Unknown State</source>
         <target state="needs-translation">Ukjent stat</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/_pipes/object-state.pipe.ts</context>
+          <context context-type="sourcefile">apps/frontend/src/app/_pipes/onboarding-state.pipe.ts</context>
           <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
@@ -162,7 +162,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3647914214639404913" datatype="html">
@@ -174,7 +174,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">188</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3769868024967739310" datatype="html">
@@ -186,7 +186,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8204176479746810612" datatype="html">
@@ -738,7 +738,7 @@ Live-streaming og amp; VoD-plattform for scenekunst. Copyright © 2021 StageUp L
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6932865105766151309" datatype="html">
@@ -1220,11 +1220,11 @@ Legg til nytt kort          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3900973269747328092" datatype="html">
@@ -1244,11 +1244,11 @@ Legg til nytt kort          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9152239466994048368" datatype="html">
@@ -1268,11 +1268,11 @@ Legg til nytt kort          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2524452943996127527" datatype="html">
@@ -1292,11 +1292,11 @@ Legg til nytt kort          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3394206503815564138" datatype="html">
@@ -1567,6 +1567,14 @@ trinn ukontrollert          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCou
           <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="6353ed97f441d0366287cdb21a5df721285df793" datatype="html">
+        <source>Check all</source>
+        <target state="needs-translation">Sjekk alt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/onboarding-view/onboarding-view.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="01c7b1ab52113107dce565e7e009a5b2afd6282f" datatype="html">
         <source>Welcome to StageUp</source>
         <target state="needs-translation">Velkommen til StageUp</target>
@@ -1772,7 +1780,7 @@ Creating a company account gives you permissions to start streams &amp; manage t
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7958310305025725897" datatype="html">
@@ -2362,11 +2370,11 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">HMRC Firmanummer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="458537271622473293" datatype="html">
@@ -2374,11 +2382,11 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Bedriftskontaktnummer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">101</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5980633567524214484" datatype="html">
@@ -2386,11 +2394,11 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Av skjemaet 1724 123321, ingen ledende null</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2651572224940085362" datatype="html">
@@ -2398,11 +2406,11 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Forretningsadresse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">129</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="516176798986294299" datatype="html">
@@ -2410,11 +2418,11 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Land</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6763533414436592129" datatype="html">
@@ -2422,11 +2430,11 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Ikke et gyldig postnummer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5701618810648052610" datatype="html">
@@ -2434,7 +2442,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Tittel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/update-performance/app-update-performance.component.ts</context>
@@ -2446,7 +2454,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">MR</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9150055758879543882" datatype="html">
@@ -2454,7 +2462,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Gå glipp av</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6596832884812875220" datatype="html">
@@ -2462,7 +2470,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Fru</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7437237689758241140" datatype="html">
@@ -2470,7 +2478,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Ms</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1931106069119599587" datatype="html">
@@ -2478,7 +2486,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Dr.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1951990390156602647" datatype="html">
@@ -2486,7 +2494,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Professor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">201</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8083897527920072255" datatype="html">
@@ -2494,7 +2502,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Herre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">202</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5342432350421167093" datatype="html">
@@ -2502,7 +2510,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Fornavn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">207</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3586674587150281199" datatype="html">
@@ -2510,7 +2518,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Etternavn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">211</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5481284030283031915" datatype="html">
@@ -2518,7 +2526,7 @@ Teamet vårt er for øyeblikket i ferd med å gjennomgå informasjonen din, når
         <target state="needs-translation">Nettsted</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7746461358973988084" datatype="html">
@@ -3623,16 +3631,24 @@ Abonner på!          <x id="PH" equiv-text="this.data.tier.name"></x>
           <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="047f50bc5b5d17b5bec0196355953e1a5c590ddb" datatype="html">
+        <source>Update</source>
+        <target state="needs-translation">Oppdater</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="64be9b7c45180e6c491da56532f87f4eb3500bd6" datatype="html">
         <source>Leave Company</source>
         <target state="needs-translation">Gå ut av selskapet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="90e07f530fda246e3a626f6e1eeaf1e136d9a06c" datatype="html">
@@ -3648,7 +3664,7 @@ Trekk medlemskapet fra, denne handlingen kan ikke angres.          <x id="START_
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
-          <context context-type="linenumber">17,19</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d916d8a9354a6f2119460ff3ce6f3725d3aecfe3" datatype="html">
@@ -3656,7 +3672,7 @@ Trekk medlemskapet fra, denne handlingen kan ikke angres.          <x id="START_
         <target state="needs-translation">Du kan ikke forlate dette selskapet fordi du er eieren. Vennligst overfør eierskapet til et annet medlem.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6533549486509702315" datatype="html">
@@ -3664,7 +3680,7 @@ Trekk medlemskapet fra, denne handlingen kan ikke angres.          <x id="START_
         <target state="needs-translation">Firmaets e-postadresse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8001731341167448537" datatype="html">
@@ -3672,23 +3688,103 @@ Trekk medlemskapet fra, denne handlingen kan ikke angres.          <x id="START_
         <target state="needs-translation">Vi bruker denne e-posten til å sende varsler og oppdateringer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7457588667876942577" datatype="html">
         <source>VAT Number</source>
         <target state="needs-translation">MVA-nummer</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="304992313093218309" datatype="html">
+        <source>This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789</source>
+        <target state="needs-translation">Dette er 9 eller 12 tall, noen ganger med ‘GB’ i starten, som 123456789 eller GB123456789</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7185949621526158605" datatype="html">
+        <source>Number must be 9 or 12 digits with or without GB at the start</source>
+        <target state="needs-translation">Antallet må være 9 eller 12 sifre med eller uten GB i starten</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2128629015726973593" datatype="html">
         <source>Business Type</source>
         <target state="needs-translation">Bedriftstype</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1826215573205981970" datatype="html">
+        <source>Company</source>
+        <target state="needs-translation">Selskap</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6170653297072473854" datatype="html">
+        <source>Government Entity</source>
+        <target state="needs-translation">Statlig enhet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4828292291881548814" datatype="html">
+        <source>Individual</source>
+        <target state="needs-translation">Individuell</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="874041683144360828" datatype="html">
+        <source>Nonprofit</source>
+        <target state="needs-translation">Ideell organisasjon</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2542084650036617104" datatype="html">
@@ -3700,7 +3796,7 @@ Permisjon ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8696509214436479036" datatype="html">
@@ -3708,7 +3804,7 @@ Permisjon ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         <target state="needs-translation">Er du sikker på at du vil forlate dette selskapet?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7489917179635795879" datatype="html">
@@ -3716,7 +3812,7 @@ Permisjon ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         <target state="needs-translation">Gå ut av selskapet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">192</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6873982912779936167" datatype="html">
@@ -3724,7 +3820,7 @@ Permisjon ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         <target state="needs-translation">Vellykket forlot selskapet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7866081016755839002" datatype="html">
@@ -3732,7 +3828,7 @@ Permisjon ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         <target state="needs-translation">Det oppstod en feil under forsøk på å dra, prøv igjen senere</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="da09217876333a82d36ae035c7e0017407f29fc2" datatype="html">
@@ -4628,7 +4724,7 @@ må være minst tegn          <x id="PH" equiv-text="this.data.options.label"></
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3941996853800677819" datatype="html">
@@ -4642,7 +4738,7 @@ må være mindre enn tegn          <x id="PH" equiv-text="this.data.options.labe
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5899864845007428149" datatype="html">
@@ -4654,7 +4750,7 @@ kreves          <x id="PH" equiv-text="this.data.options.label"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="533501120781082256" datatype="html">
@@ -4662,7 +4758,7 @@ kreves          <x id="PH" equiv-text="this.data.options.label"></x>
         <target state="needs-translation">Må være en gyldig e-postadresse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">172</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6302991645826665916" datatype="html">
@@ -4670,7 +4766,7 @@ kreves          <x id="PH" equiv-text="this.data.options.label"></x>
         <target state="needs-translation">Må fylle ReGex</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2850016038852010268" datatype="html">
@@ -4678,7 +4774,7 @@ kreves          <x id="PH" equiv-text="this.data.options.label"></x>
         <target state="needs-translation">Ugyldig felt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1604740809794222320" datatype="html">

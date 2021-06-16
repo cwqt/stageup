@@ -7,7 +7,7 @@ import { Except } from 'type-fest';
 
 export type DtoCreateHost = Pick<IHostPrivate, 'email_address' | 'username' | 'name'>;
 
-export enum HostType {
+export enum BusinessType {
   Individual = 'individual',
   Company = 'company',
   NonProfit = 'non_profit',
@@ -41,10 +41,11 @@ export type DtoUpdateHost = Except<
 >;
 
 export interface IHostBusinessDetails {
-  vat_number?: string; // e.g GB123456789 or GB123456789102
   hmrc_company_number?: number;
   business_contact_number: string; // e.164 format
   business_address: Idless<IAddress>;
+  business_type: BusinessType;
+  vat_number?: string; // e.g GB123456789 or GB123456789102
 }
 
 export interface ISocialInfo {
