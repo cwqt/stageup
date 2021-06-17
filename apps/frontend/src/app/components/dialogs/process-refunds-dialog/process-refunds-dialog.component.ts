@@ -30,7 +30,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
     private toastService: ToastService,
     private hostService: HostService,
     private helperService: HelperService,
-    @Inject(MAT_DIALOG_DATA) public data: IHostInvoiceStub,
+    @Inject(MAT_DIALOG_DATA) public data: IHostInvoiceStub[],
     private ref: MatDialogRef<ProcessRefundsDialogComponent>,
     private dialog: MatDialog
   ) {}
