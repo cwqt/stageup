@@ -10,7 +10,7 @@ import {
   NUUID,
   ParsedRichText,
   Primitive,
-  RefundReason,
+  RefundRequestReason,
   RichText
 } from '@core/interfaces';
 import locale from 'express-locale';
@@ -232,15 +232,15 @@ export const pipes = {
 
     return pretty[brand];
   },
-  refundReason: (reason: RefundReason): string => {
-    const pretty: { [index in RefundReason]: string } = {
-      [RefundReason.Covid]: 'COVID-19',
-      [RefundReason.CancelledPostponed]: 'Event was cancelled/postponed',
-      [RefundReason.Duplicate]: 'Duplicate ticket/purchased twice',
-      [RefundReason.WrongTicket]: 'Wrong event purchased',
-      [RefundReason.Dissatisfied]: 'Dissatisfied with event',
-      [RefundReason.CannotAttend]: 'Unable to attend event',
-      [RefundReason.Other]: 'Other, please provide details below...'
+  refundReason: (reason: RefundRequestReason): string => {
+    const pretty: { [index in RefundRequestReason]: string } = {
+      [RefundRequestReason.Covid]: 'COVID-19',
+      [RefundRequestReason.CancelledPostponed]: 'Event was cancelled/postponed',
+      [RefundRequestReason.Duplicate]: 'Duplicate ticket/purchased twice',
+      [RefundRequestReason.WrongTicket]: 'Wrong event purchased',
+      [RefundRequestReason.Dissatisfied]: 'Dissatisfied with event',
+      [RefundRequestReason.CannotAttend]: 'Unable to attend event',
+      [RefundRequestReason.Other]: 'Other, please provide details below...'
     };
 
     return pretty[reason];

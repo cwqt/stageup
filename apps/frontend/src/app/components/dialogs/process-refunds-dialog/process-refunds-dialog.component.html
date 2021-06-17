@@ -11,8 +11,8 @@
 </ng-container>
 </ui-dialog>
 <ui-dialog *ngIf="multipleRefunds" [buttons]="buttons" title="Bulk refund request" [loading]="$loading | async">
-    <ng-container *ngIf="invoice.data">
-    <h4 i18n>Invoice Number: <span class="opacity-50">#{{ invoice.data.invoice_id }}</span></h4>
+    <ng-container *ngIf="data">
+    <h4 i18n>Number of invoices: <span class="opacity-50">{{ data.length }}</span></h4>
     <h5 i18n>Amount: {{ invoice.data.amount | currencyPipe: invoice.data.currency }}</h5>
     <h5 i18n>Contact Details:</h5>
     <h5 i18n>Username: {{ invoice.data.user.username }} </h5>
