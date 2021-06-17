@@ -4,7 +4,7 @@ import { capitalize, FilterCode, IEnvelopedData, IHostInvoiceStub, PaymentStatus
 import { i18n } from '@core/helpers';
 import { createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { InvoiceDialogComponent } from '@frontend/components/dialogs/invoice-dialog/invoice-dialog.component';
-import { ProcessRefundDialogComponent } from '@frontend/components/dialogs/process-refund-dialog/process-refund-dialog.component';
+import { ProcessRefundsDialogComponent } from '@frontend/components/dialogs/process-refunds-dialog/process-refunds-dialog.component';
 import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
 import { ToastService } from '@frontend/services/toast.service';
@@ -56,7 +56,7 @@ export class HostInvoicesComponent implements OnInit {
                 v.selected.length > 1
                   ? console.log('Bulk refund placeholder for task') // TODO: bulk refund
                   : this.helperService.showDialog(
-                      this.dialog.open(ProcessRefundDialogComponent, { data: v.selected[0].__data })
+                      this.dialog.open(ProcessRefundsDialogComponent, { data: v.selected[0].__data })
                     );
               }
             },

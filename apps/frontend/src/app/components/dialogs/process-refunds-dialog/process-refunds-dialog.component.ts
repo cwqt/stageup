@@ -11,11 +11,11 @@ import { merge, Observable } from 'rxjs';
 import { IConfirmationDialogData } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
-  selector: 'app-process-refund-dialog',
-  templateUrl: './process-refund-dialog.component.html',
-  styleUrls: ['./process-refund-dialog.component.css']
+  selector: 'app-process-refunds-dialog',
+  templateUrl: './process-refunds-dialog.component.html',
+  styleUrls: ['./process-refunds-dialog.component.css']
 })
-export class ProcessRefundDialogComponent implements OnInit, IUiDialogOptions {
+export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
   submit: EventEmitter<string> = new EventEmitter();
   cancel: EventEmitter<string> = new EventEmitter();
   buttons?: UiDialogButton[];
@@ -31,7 +31,7 @@ export class ProcessRefundDialogComponent implements OnInit, IUiDialogOptions {
     private hostService: HostService,
     private helperService: HelperService,
     @Inject(MAT_DIALOG_DATA) public data: IHostInvoiceStub,
-    private ref: MatDialogRef<ProcessRefundDialogComponent>,
+    private ref: MatDialogRef<ProcessRefundsDialogComponent>,
     private dialog: MatDialog
   ) {}
 
@@ -45,7 +45,7 @@ export class ProcessRefundDialogComponent implements OnInit, IUiDialogOptions {
 
     let confirmDialogData: IConfirmationDialogData = {
       title: $localize`Confirm refund`,
-      description: $localize`Are you sure you want to refund this invoice?`,
+      description: $localize`Are you sure you want to refund this(these) invoice(s)?`,
       buttons: [
         new UiDialogButton({
           label: $localize`Cancel`,
@@ -61,10 +61,10 @@ export class ProcessRefundDialogComponent implements OnInit, IUiDialogOptions {
               this.refundRequest
             )
               .then(() => {
-                this.toastService.emit($localize`Refund successfully processed`);
+                this.toastService.emit($localize`Refund(s) successfully processed`);
                 this.dialog.closeAll();
               })
-              .catch(() => this.toastService.emit($localize`Error processing refund`))
+              .catch(() => this.toastService.emit($localize`Error processing refund(s)`))
         })
       ]
     };
