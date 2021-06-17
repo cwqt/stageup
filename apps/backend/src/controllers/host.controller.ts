@@ -861,6 +861,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
       authorisation: AuthStrat.isMemberOfHost(),
       controller: async req => {
         const invoiceIds: string[] = req.body.invoice_ids;
+
+        console.log(invoiceIds);
         const invoices = await Invoice.find({
           where: {
             _id: In(invoiceIds),

@@ -21,6 +21,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
   buttons?: UiDialogButton[];
   public invoice: Cacheable<IHostInvoice> = new Cacheable();
   public refunds: Cacheable<IRefund[]> = new Cacheable({ data: [] });
+  public multipleRefunds: boolean;
   refundRequest: Cacheable<void> = new Cacheable();
 
   // Top level loading state for all requests - made via merge()
@@ -37,10 +38,11 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
 
   async ngOnInit(): Promise<void> {
     this.$loading = merge(this.refunds.$loading, this.invoice.$loading);
+    this.data.length > 1 ? (this.multipleRefunds = true) : (this.multipleRefunds = false);
 
     await Promise.all([
-      this.refunds.request(this.hostService.readInvoiceRefunds(this.hostService.hostId, this.data.invoice_id)),
-      this.invoice.request(this.hostService.readInvoice(this.hostService.hostId, this.data.invoice_id))
+      // this.refunds.request(this.hostService.readInvoiceRefunds(this.hostService.hostId, this.data.invoice_id)),
+      // this.invoice.request(this.hostService.readInvoice(this.hostService.hostId, this.data.invoice_id))
     ]);
 
     let confirmDialogData: IConfirmationDialogData = {
@@ -57,7 +59,10 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
           kind: ThemeKind.Primary,
           callback: () =>
             cachize(
-              this.hostService.processRefunds([this.invoice.data.invoice_id], this.hostService.hostId),
+              this.hostService.processRefunds(
+                this.data.map(invoice => invoice.invoice_id),
+                this.hostService.hostId
+              ),
               this.refundRequest
             )
               .then(() => {

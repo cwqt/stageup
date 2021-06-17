@@ -53,13 +53,11 @@ export class HostInvoicesComponent implements OnInit {
                   return;
                 }
 
-                v.selected.length > 1
-                  ? console.log('Bulk refund placeholder for task') // TODO: bulk refund
-                  : this.helperService.showDialog(
-                      this.dialog.open(ProcessRefundsDialogComponent, {
-                        data: v.selected.map(invoice => invoice.__data)
-                      })
-                    );
+                this.helperService.showDialog(
+                  this.dialog.open(ProcessRefundsDialogComponent, {
+                    data: v.selected.map(invoice => invoice.__data)
+                  })
+                );
 
                 console.log(
                   'invoices array ',
