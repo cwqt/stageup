@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { enumToValues } from '@core/helpers';
-import { IHostInvoice, IHostInvoiceStub, IRefund, RefundRequestReason } from '@core/interfaces';
+import { BulkRefundReason, IHostInvoice, IHostInvoiceStub, IRefund, RefundRequestReason } from '@core/interfaces';
 import { Cacheable, cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
@@ -46,7 +46,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
       fields: {
         reason: UiField.Select({
           label: 'Select a reason for the refunds',
-          values: enumToValues(RefundRequestReason).reduce((acc, curr) => {
+          values: enumToValues(BulkRefundReason).reduce((acc, curr) => {
             acc.set(curr, { label: refundReasonPipe.transform(curr) });
             return acc;
           }, new Map()),
@@ -72,13 +72,13 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
       }
     });
 
+    if (this.data.length > 1) this.multipleRefunds = true;
+    else
+      await Promise.all([
+        this.refunds.request(this.hostService.readInvoiceRefunds(this.hostService.hostId, this.data[0].invoice_id)),
+        this.invoice.request(this.hostService.readInvoice(this.hostService.hostId, this.data[0].invoice_id))
+      ]);
     this.$loading = merge(this.refunds.$loading, this.invoice.$loading);
-    this.data.length > 1 ? (this.multipleRefunds = true) : (this.multipleRefunds = false);
-
-    await Promise.all([
-      // this.refunds.request(this.hostService.readInvoiceRefunds(this.hostService.hostId, this.data.invoice_id)),
-      // this.invoice.request(this.hostService.readInvoice(this.hostService.hostId, this.data.invoice_id))
-    ]);
 
     let confirmDialogData: IConfirmationDialogData = {
       title: $localize`Confirm refund`,
