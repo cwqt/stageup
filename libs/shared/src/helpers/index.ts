@@ -1,5 +1,6 @@
 import {
   BASE_AMOUNT_MAP,
+  BulkRefundReason,
   CardBrand,
   CurrencyCode,
   DonoPeg,
@@ -233,7 +234,7 @@ export const pipes = {
     return pretty[brand];
   },
   refundReason: (reason: RefundRequestReason): string => {
-    const pretty: { [index in RefundRequestReason]: string } = {
+    const pretty: { [index in RefundRequestReason & BulkRefundReason]: string } = {
       [RefundRequestReason.Covid]: 'COVID-19',
       [RefundRequestReason.CancelledPostponed]: 'Event was cancelled/postponed',
       [RefundRequestReason.Duplicate]: 'Duplicate ticket/purchased twice',

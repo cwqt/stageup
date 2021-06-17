@@ -17,7 +17,7 @@ import {
   IHostMemberChangeRequest,
   IInvoice,
   IRefundRequest,
-  RefundReason,
+  RefundRequestReason,
   IPersonInfo,
   ISocialInfo,
   PaginationOptions,
@@ -122,7 +122,7 @@ export namespace objects {
 
   export const RefundInvoiceRequest: Describe<IRefundRequest> = object({
     requested_on: fields.timestamp,
-    request_reason: enums<RefundReason>(enumToValues(RefundReason)),
+    request_reason: enums<RefundRequestReason>(enumToValues(RefundRequestReason)),
     request_detail: string()
   });
 

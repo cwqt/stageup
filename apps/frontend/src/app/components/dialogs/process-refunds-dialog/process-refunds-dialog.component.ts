@@ -1,13 +1,15 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { enumToValues } from '@core/helpers';
 import { IHostInvoice, IHostInvoiceStub, IRefund, RefundRequestReason } from '@core/interfaces';
 import { Cacheable, cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { UiForm } from '@frontend/ui-lib/form/form.interfaces';
+import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { RefundReasonPipe } from '@frontend/_pipes/refund-reason.pipe';
 import { merge, Observable } from 'rxjs';
 import { IConfirmationDialogData } from '../confirmation-dialog/confirmation-dialog.component';
 
@@ -39,12 +41,13 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    const refundReasonPipe = new RefundReasonPipe();
     this.bulkRefundForm = new UiForm({
       fields: {
         reason: UiField.Select({
           label: 'Select a reason for the refunds',
           values: enumToValues(RefundRequestReason).reduce((acc, curr) => {
-            acc.set(curr, { label: this.refundReasonPipe.transform(curr) });
+            acc.set(curr, { label: refundReasonPipe.transform(curr) });
             return acc;
           }, new Map()),
           validators: [{ type: 'required' }]
@@ -54,17 +57,12 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
         })
       },
       resolvers: {
-        output: async v =>
-          this.myselfService.requestInvoiceRefund(this.data.invoice_id, {
-            requested_on: timestamp(),
-            request_reason: v.reason,
-            request_detail: v.details
-          })
+        output: async v => {}
       },
       handlers: {
         success: async () => {
           this.submit.emit();
-          this.toastService.emit(`Refund requested for inv: ${this.data.invoice_id}`);
+          this.toastService.emit(`Bulk refunds actioned`);
           this.ref.close();
         },
         failure: async err => {
