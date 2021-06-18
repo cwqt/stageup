@@ -328,6 +328,8 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     });
   },
 
+  sendHostBulkRefundInitiatedEmail: async (ct: Contract<'refund.bulk.initiated'>) => {},
+
   sendHostRefundRefundedEmail: async (ct: Contract<'refund.refunded'>) => {
     const invoice = await Invoice.findOne({
       where: {
