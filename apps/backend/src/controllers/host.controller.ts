@@ -897,11 +897,19 @@ export default class HostController extends BaseController<BackendProviderMap> {
               }
             );
 
-            return await this.providers.bus.publish(
-              'refund.initiated',
-              { invoice_id: invoice._id, user_id: invoice.user._id },
-              req.locale
-            );
+            if (invoiceIds.length > 1) {
+              return await this.providers.bus.publish(
+                'refund.bulk.initiated',
+                { invoice_id: invoice._id, user_id: invoice.user._id, refund_quantity: null },
+                req.locale
+              );
+            } else {
+              return await this.providers.bus.publish(
+                'refund.initiated',
+                { invoice_id: invoice._id, user_id: invoice.user._id },
+                req.locale
+              );
+            }
           })
         );
       }

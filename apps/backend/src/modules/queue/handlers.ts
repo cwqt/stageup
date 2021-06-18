@@ -328,7 +328,19 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     });
   },
 
-  sendHostBulkRefundInitiatedEmail: async (ct: Contract<'refund.bulk.initiated'>) => {},
+  sendHostBulkRefundInitiatedEmail: async (ct: Contract<'refund.bulk.initiated'>) => {
+    const invoice = await Invoice.findOne({
+      relations: {
+        ticket: {
+          performance: true
+        },
+        host: true
+      },
+      where: {
+        _id: ct.invoice_id
+      }
+    });
+  },
 
   sendHostRefundRefundedEmail: async (ct: Contract<'refund.refunded'>) => {
     const invoice = await Invoice.findOne({
