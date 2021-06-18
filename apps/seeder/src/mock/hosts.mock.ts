@@ -13,7 +13,8 @@ export type SeederHostName =
   | 'NTCardiff'
   | 'RTheatre'
   | 'SwanseaGrand'
-  | 'WalesMilleniumCentre';
+  | 'WalesMilleniumCentre'
+  | 'ABArts';
 
 export default to<
   Array<Except<DtoCreateHost, 'username'> & { avatar: string; banner: string; username: SeederHostName }>
@@ -108,5 +109,12 @@ export default to<
       'https://cf.bstatic.com/xdata/images/explorer_landmark/1680x560/14534.jpg?k=f45b029d43c83be13bcb135db7a83cbbc5b30a82294b3bd4eb52b630adbf2205&o=',
     email_address: 'wmc@stageup.uk',
     name: 'Wales Millenium Centre'
+  },
+  {
+    username: 'ABArts',
+    avatar: 'https://www.aberystwythartscentre.co.uk/sites/aberarts/themes/aberarts/images/home-building.jpg',
+    banner: 'https://www.aberystwythartscentre.co.uk/sites/aberarts/themes/aberarts/images/home-building.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Aberystwyth Arts Centre'
   }
 ]);

@@ -1,5 +1,5 @@
 import { uuid } from '@core/helpers';
-import { IRefund, IRefundRequest, RefundResponseReason, RefundRequestReason } from '@core/interfaces';
+import { IRefund, IRefundRequest, RefundResponseReason, RefundRequestReason, BulkRefundReason } from '@core/interfaces';
 import { BaseEntity, Entity, Column, ManyToOne, BeforeInsert, PrimaryColumn, OneToOne } from 'typeorm';
 import { Invoice } from './invoice.entity';
 
@@ -21,6 +21,10 @@ export class Refund extends BaseEntity implements IRefund {
   @Column({ nullable: true }) responded_on?: number;
   @Column('enum', { enum: RefundResponseReason, nullable: true }) response_reason?: RefundResponseReason;
   @Column({ nullable: true }) response_detail?: string;
+
+  // Bulk Refunds
+  @Column({ nullable: true }) bulk_refund_reason?: BulkRefundReason;
+  @Column({ nullable: true }) bulk_refund_details?: string;
 
   @ManyToOne(() => Invoice, invoice => invoice.refunds) invoice: Invoice;
 
