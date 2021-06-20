@@ -14,7 +14,30 @@ export type SeederHostName =
   | 'RTheatre'
   | 'SwanseaGrand'
   | 'WalesMilleniumCentre'
-  | 'ABArts';
+  | 'AberAC'
+  | 'ArtisCC'
+  | 'ACGofalCelf'
+  | 'ArtsConnection'
+  | 'BalletCymru'
+  | 'BBCNOW'
+  | 'BlackwoodMI'
+  | 'CGWMC'
+  | 'CUC'
+  | 'Chapter'
+  | 'CMW'
+  | 'CwmniTheatr'
+  | 'CFW'
+  | 'DiB'
+  | 'DisabilityArtsCymru'
+  | 'GCC'
+  | 'Head4Arts'
+  | 'HijinxTheatre'
+  | 'JukeboxCollective'
+  | 'LiteratureWales'
+  | 'LiveMusicNowWales'
+  | 'MidWalesOpera'
+  | 'MusicTheatreWales'
+  | 'NDCW';
 
 export default to<
   Array<Except<DtoCreateHost, 'username'> & { avatar: string; banner: string; username: SeederHostName }>
@@ -111,10 +134,189 @@ export default to<
     name: 'Wales Millenium Centre'
   },
   {
-    username: 'ABArts',
+    username: 'AberAC',
     avatar: 'https://www.aberystwythartscentre.co.uk/sites/aberarts/themes/aberarts/images/home-building.jpg',
     banner: 'https://www.aberystwythartscentre.co.uk/sites/aberarts/themes/aberarts/images/home-building.jpg',
     email_address: 'company@stageup.uk',
     name: 'Aberystwyth Arts Centre'
+  },
+  {
+    username: 'ArtisCC',
+    avatar: 'https://arts.wales/sites/default/files/2019-12/Artis%20logo.jpg',
+    banner:
+      'https://artiscommunity.org.uk/wp-content/uploads/2020/11/Artis-Christmas-graphic-with-logo-banner-1024x375.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Artis Community Cymuned'
+  },
+  {
+    username: 'ACGofalCelf',
+    avatar: 'https://wwamh.org.uk/media/2021/05/Arts-Care-Gofal-Celf-Blog.jpg',
+    banner:
+      'https://lh3.googleusercontent.com/proxy/UCeIT9d8x-S-xyy_D9hlr7o-KntekazpWtnBjhgaVRHpKGKjyjrTMf8DeWvxrdPbX-gy3rDEd9A8GllIkUOs5YeLi-ee',
+    email_address: 'company@stageup.uk',
+    name: 'Arts Care Gofal Celf'
+  },
+  {
+    username: 'ArtsConnection',
+    avatar:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.18169-9/425569_10150604301272917_915168081_n.jpg?_nc_cat=110&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=4lGVU0HiI7gAX8CgJYO&tn=vJE2wuorLQhE0ltm&_nc_ht=scontent-man2-1.xx&oh=fc9b0e51269cbb1fe7a797ba472a25c9&oe=60D0347B',
+    banner: 'https://artsconnection.org.uk/artscon/wp-content/uploads/2011/10/sign.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Arts Connection - Cyswllt Celf'
+  },
+  {
+    username: 'BalletCymru',
+    avatar:
+      'https://media-exp3.licdn.com/dms/image/C4E0BAQFrUFwYOGovXg/company-logo_200_200/0/1618991570463?e=2159024400&v=beta&t=JUAQ8EgmBxKmbW9-vdUK65zmACCGhJ5s9yZ4OQqVxbY',
+    banner:
+      'https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/Ballet_Cymru_%28Logo%29_2014.svg/176px-Ballet_Cymru_%28Logo%29_2014.svg.png',
+    email_address: 'company@stageup.uk',
+    name: 'Ballet Cymru'
+  },
+  {
+    username: 'BBCNOW',
+    avatar:
+      'https://www.google.com/url?sa=i&url=https%3A%2F%2Fm.facebook.com%2Fbbcnationalorchestraofwales%2F&psig=AOvVaw1E_ZhYCUMUV9T9i5DmnKJ8&ust=1624013298167000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjgqpC_nvECFQAAAAAdAAAAABAJ',
+    banner: 'https://ichef.bbci.co.uk/images/ic/976x549_b/p01mv3db.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'BBC National Orchestra of Wales'
+  },
+  {
+    username: 'BlackwoodMI',
+    avatar:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t31.18172-8/12095141_10153727442573680_2338717650292681529_o.jpg?_nc_cat=109&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=DizE8tpvi9AAX_5qROW&_nc_ht=scontent-man2-1.xx&oh=df1f3b8e577430f98aa5302a3280a193&oe=60F0A908',
+    banner: 'https://dgm-cover.azureedge.net/1080/tnkx.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Blackwood Miners' Institute`
+  },
+  {
+    username: 'CGWMC',
+    avatar: 'https://img.endole.co.uk/?t=081926887a0acaf85e26185ab6dbbf88&l=',
+    banner: 'https://apollofundraising.com/wp-content/uploads/2017/04/CGWM.png',
+    email_address: 'company@stageup.uk',
+    name: 'Canolfan Gerdd William Mathias Cyf'
+  },
+  {
+    username: 'CUC',
+    avatar: 'https://www.ucheldre.org/img/ucheldre_logo-noborder-w60.gif',
+    banner: 'https://www.ucheldre.org/img/img_3996-ed-w400.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Canolfan Ucheldre Centre'
+  },
+  {
+    username: 'Chapter',
+    avatar:
+      'https://www.google.com/url?sa=i&url=http%3A%2F%2Fmanutd.ru%2Fredire%2F%3Fgo%3Dart.schattenbank.info%2Flists%2Fc%2Fchapter-one-logo%2F&psig=AOvVaw3Tt81cYbt0-innChmZnd0Y&ust=1624014851536000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLjW2pfFnvECFQAAAAAdAAAAABAJ',
+    banner: 'https://www.herald.wales/wp-content/uploads/2021/03/Carrie-Mae-Weems-Artes-Mundi-Lightbox-scaled.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Chapter Cardiff Ltd.'
+  },
+  {
+    username: 'CMW',
+    avatar: 'https://api.globaldatabase.com/logo/chapter.org/',
+    banner:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t31.18172-8/s1080x2048/327180_10151217691499796_1723977759_o.jpg?_nc_cat=111&ccb=1-3&_nc_sid=e3f864&_nc_ohc=u-EpBdzA9-kAX-OyhcN&_nc_ht=scontent-man2-1.xx&tp=7&oh=98306c3414090235f8ac47d6b7a1e8ac&oe=60F04E77',
+    email_address: 'company@stageup.uk',
+    name: 'Community Music Wales'
+  },
+  {
+    username: 'CwmniTheatr',
+    avatar: 'https://aradgoch.cymru/wp-content/uploads/2019/06/arad_goch_logo.png',
+    banner:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/67791140_2400175166938519_2682979204097638400_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=e3f864&_nc_ohc=B9GFhgqgzhQAX9ZADPw&_nc_ht=scontent-man2-1.xx&oh=dfb8607bf61a7037e324dd484d1916d8&oe=60CFEEA8',
+    email_address: 'company@stageup.uk',
+    name: 'CwmniTheatr'
+  },
+  {
+    username: 'CFW',
+    avatar: 'https://img.endole.co.uk/?t=c987254eb1d2f414444e44cf5595d83e&l=',
+    banner:
+      'https://lh3.googleusercontent.com/proxy/Chr81EXORSZXG4_Ofy3laP66sMqGaGAeMMX0NEZEzmpUWh_eEllNq3V250fZ5ovS_hxATUEjdwrlJXiZC5eD-Gnu8AqkN0qL4YG6fIRNkcP2A3KzaoDKc_LpimjYn8bck66AK_LtJwcvn6E',
+    email_address: 'company@stageup.uk',
+    name: `Cwmni'r Frân Wen`
+  },
+  {
+    username: 'DiB',
+    avatar: 'https://pbs.twimg.com/profile_images/667067401767374849/QJ9aLu72_400x400.jpg',
+    banner: 'http://dawnsibawb.org/images/sub-banner02.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Dawns i Bawb`
+  },
+  {
+    username: 'DisabilityArtsCymru',
+    avatar: 'https://charityjobfinder.co.uk/wp-content/uploads/2018/10/Disability-Arts-Cymru-300x300.png',
+    banner:
+      'https://images.squarespace-cdn.com/content/6027a7fc2fb17600e9e59d61/1617809218519-PO571SWS3QGX3HSNFHUQ/DAC_Logo_1200.png?format=1500w&content-type=image%2Fpng',
+    email_address: 'company@stageup.uk',
+    name: `Disability Arts Cymru`
+  },
+  {
+    username: 'GCC',
+    avatar:
+      'https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1454418321/kmuruujeef9spexi9usn.png',
+    banner: 'https://www.galericaernarfon.com/images/gofod-creu-bwtwm.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Galeri Caernarfon Cyf`
+  },
+  {
+    username: 'Head4Arts',
+    avatar:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/108029830_3141737289241255_2440058805882552489_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=W8OwMBukd8QAX_z_TiU&_nc_ht=scontent-man2-1.xx&oh=d8c485f50ac56a8c9b3a92aa0ad38e82&oe=60D03B0F',
+    banner: 'https://www.hayfestival.com/images/slides/event-slide.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Head4Arts`
+  },
+  {
+    username: 'HijinxTheatre',
+    avatar:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKBf2MTOYKpUVxn8gCdH67IdIAVkVll42-jJinhaEzMUt5VwOTf060Rl3nMJQ-NcFvcIk&usqp=CAU',
+    banner:
+      'data:image/png;base64,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',
+    email_address: 'company@stageup.uk',
+    name: `Hijinx Theatre`
+  },
+  {
+    username: 'JukeboxCollective',
+    avatar: 'https://pbs.twimg.com/profile_images/1217190542607560706/SS0ahgQa_400x400.jpg',
+    banner: 'https://www.onedanceuk.org/wp-content/uploads/2020/04/jukebox-collective.png',
+    email_address: 'company@stageup.uk',
+    name: `Jukebox Collective`
+  },
+  {
+    username: 'LiteratureWales',
+    avatar: 'https://pbs.twimg.com/profile_images/1402594095369961473/eM3fnSK5.jpg',
+    banner: 'https://www.literaturewales.org/wp-content/uploads/2020/05/Untitled-design.png',
+    email_address: 'company@stageup.uk',
+    name: `Literature Wales`
+  },
+  {
+    username: 'LiveMusicNowWales',
+    avatar:
+      'data:image/png;base64,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',
+    banner: 'https://cdn.buildresources.co.uk/sites/802/images/Wales_cover_image(1).png',
+    email_address: 'company@stageup.uk',
+    name: `Live Music Now Wales`
+  },
+  {
+    username: 'MidWalesOpera',
+    avatar: 'https://static.truelinked.com/companies/501d195a-cdb2-4653-86ba-745b7acadc39/mid-wales-opera-medium.png',
+    banner: 'https://ensemble.cymru/wp-content/uploads/2017/08/Mid-Wales-Opera-Logo-1024x111.png',
+    email_address: 'company@stageup.uk',
+    name: `Mid Wales Opera`
+  },
+  {
+    username: 'MusicTheatreWales',
+    avatar: 'https://yt3.ggpht.com/ytc/AAUvwng1gkr7vYwggQB5S7hfJmsmGkZ6LC-X8ZJc6dIo=s900-c-k-c0x00ffffff-no-rj',
+    banner: 'https://www.musictheatre.wales/assets/images/our-story/200225_0017-Denis-and-Katya.adj.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Music Theatre Wales`
+  },
+  {
+    username: 'NDCW',
+    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR9QksJTRzbIfyNpSTn-BxeBKQBRuTnP_CUw&usqp=CAU',
+    banner:
+      'https://ndcwales.co.uk/sites/default/files/styles/banner/public/2018-07/Untitled-design-%2838%29.jpg?h=a18411ca&itok=jFq3BhUF',
+    email_address: 'company@stageup.uk',
+    name: `National Dance Company Wales`
   }
 ]);

@@ -16,6 +16,7 @@ import dbless from 'dbless-email-verification';
 // ------------------------------------------------------------------------------
 import { Contract } from 'libs/shared/src/api/event-bus/contracts';
 import moment from 'moment';
+import { In } from 'typeorm';
 import { QueueModule, QueueProviders } from './queue.module';
 
 export const EventHandlers = (queues: QueueModule['queues'], providers: QueueProviders) => ({
@@ -329,7 +330,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
   },
 
   sendHostBulkRefundInitiatedEmail: async (ct: Contract<'refund.bulk.initiated'>) => {
-    const invoice = await Invoice.findOne({
+    const invoices = await Invoice.find({
       relations: {
         ticket: {
           performance: true
@@ -337,8 +338,26 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         host: true
       },
       where: {
-        _id: ct.invoice_id
+        _id: In(ct.invoice_ids)
       }
+    });
+
+    const invoicesTotal = invoices.map(invoice => invoice.amount).reduce((acc, curr) => acc + curr);
+
+    console.log(invoicesTotal);
+    queues.send_email.add({
+      subject: providers.i18n.translate('@@email.host.refund_bulk_initiated_subject', ct.__meta.locale, {
+        refund_quantity: ct.refund_quantity
+      }),
+      content: providers.i18n.translate('@@email.host.refund_bulk_initiated_content', ct.__meta.locale, {
+        host_name: invoices[0].host.name,
+        refund_quantity: ct.refund_quantity,
+        invoices_total: invoicesTotal
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: invoices[0].host.email_address,
+      markdown: true,
+      attachments: []
     });
   },
 

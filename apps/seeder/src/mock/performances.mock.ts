@@ -233,8 +233,237 @@ export default to<Array<SeedMockPerformance>>([
     The Wood was recorded on stage as live at the Torch Theatre, Milford Haven, under Covid-19 guidelines during lockdown 2021."`,
     genre: Genre.Theatre,
     type: 'live',
-    hostusername: 'ABArts',
+    hostusername: 'AberAC',
     thumbnail:
       'https://www.aberystwythartscentre.co.uk/sites/aberarts/files/styles/large/public/thumbnails/wood%20thumbnail_0.jpg?itok=wLABPZu4'
+  },
+  {
+    name: 'The Killer Question',
+    premiere_datetime: 1630346400,
+    description: `The Silence Of The Lambs meets Last Of The Summer Wine in dark comedy thriller THE KILLER QUESTION...
+
+    Former game show champion Walter Crump lives for murder (it was even his specialist subject on the nerve shredding, general knowledge quiz show The Chair). But did his obsession with death ultimately lead to his own? That’s certainly what Inspector Black believes, and now it is Crump’s dopey widow Margaret who finds herself in the chair – accused of her husband’s murder. But as shocking details emerge about the events leading up to Walter’s final head to head, it quickly transpires that what started out as an open and shut case has turned into another game altogether: the cat and mouse variety, with more than one deadly twist in the tale.
+    
+    Will Inspector Black solve the mystery? Will Margaret be home in time for Country File? Who will prove to be the ultimate victim of The Chair? And, just as important, which actor will play which character…the audience decides!
+    `,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'AberAC',
+    thumbnail:
+      'https://www.aberystwythartscentre.co.uk/sites/aberarts/files/styles/large/public/thumbnails/Killer%20Question%20thumbnail.jpg?itok=ZCstzck7'
+  },
+  {
+    name: 'CreativeConversations',
+    premiere_datetime: 1630346400,
+    description: `"Creative Conversations are 4 quarterly events (Inspired by Creative Cardiff’s Show & Tell Events), hosted by Artis Community. We started the events in 2019, and will continue throughout 2020, at Clwb Y Bont.
+
+    The aim of these events is to give the Creative Community of Pontypridd the opportunity to:
+    
+    - Hear from 3 Artists/ Organisations to have 10 -15 minutes to share and talk about their work, ambitions, and to hear about their current & future projects
+    - Meet other artists, network and make connections
+    - Have an informal creative space to meet
+    - To Facilitate Conversations to highlight what we as a Creative Community need, and want to make happen in the community."`,
+    genre: Genre.Networking,
+    type: 'live',
+    hostusername: 'ArtisCC',
+    thumbnail: 'https://artiscommunity.org.uk/wp-content/uploads/2020/03/IMG-4792.jpg'
+  },
+  {
+    name: 'Giselle',
+    premiere_datetime: 1630346400,
+    description: `"Brand new touring production for 2020.
+
+    Critics’ Circle Award winning company, Ballet Cymru, present an extraordinary new ballet based on the eternal story of Giselle, the young girl who falls in love with the wrong person and pays a terrible price.
+    
+    Ballet Cymru have put their own unique stamp on this tale of love and loss, bringing relevance, poignancy and grittiness to this most romantic of ballets.
+    
+    Featuring a new score by acclaimed composer and harpist Catrin Finch whose spellbinding music is interwoven with mesmerizing movement by Ballet Cymru Artistic Director Darius James OBE and Assistant Artistic Director Amy Doughty.
+    
+    Don’t miss this once only opportunity to relish some of the best dance in Wales, made in Wales.
+    
+    Ballet Cymru is an international touring ballet company for Wales, committed to inclusion and innovation in dance and classical ballet, and to the highest standard of collaboration. The company produce original professional dance performances based in the ballet technique which tour nationally and internationally. Its extensive Access and Outreach programme is committed to breaking down barriers to accessing the arts."`,
+    genre: Genre.Ballet,
+    type: 'live',
+    hostusername: 'BalletCymru',
+    thumbnail: 'https://www.courtyard.org.uk/wp-content/uploads/2020/03/Giselle-1024x600.jpg'
+  },
+  {
+    name: `A Midsummer Night's Dream`,
+    premiere_datetime: 1630346400,
+    description: `"Nominated Best Dance Production 2013 at the Theatre Critics of Wales Awards.
+
+    An outstanding adaptation of Shakespeare’s timeless play that features breathtaking choreography danced by some of the finest dancers around. This vibrant and dramatic production features Mendelssohn’s joyous music, choreography by the company’s Artistic Director Darius James and critically acclaimed costumes by Welsh Designer Yvonne Greenleaf.
+    
+    The Queen of the Fairies Titania, and Puck the mischievous messenger, inhabit the supernatural fairy kingdom. Bottom and his boot wearing “Rude Mechanicals” present their famous play Pyramus and Thisbe. And finally the lovers, caught in a thrilling web of mistaken identity and confusion finally find their way through the Athenian forest to an unforgettable and joyous reconciliation.
+    "`,
+    genre: Genre.Classical,
+    type: 'live',
+    hostusername: 'BalletCymru',
+    thumbnail: 'https://welshballet.co.uk/content/uploads/2014/10/midsummer-header1-600x400.jpg'
+  },
+  {
+    name: `Digital Concerts: Mozart`,
+    premiere_datetime: 1630346400,
+    description: `Matthew Featherstone and Catrin Finch perform Mozart's Concerto for Flute and Harp with BBC NOW and conductor Chloé van Soeterstède.`,
+    genre: Genre.Classical,
+    type: 'live',
+    hostusername: 'BBCNOW',
+    thumbnail: 'https://ichef.bbci.co.uk/images/ic/416x234/p09js0mn.jpg'
+  },
+  {
+    name: `"Digital Concerts: Matthew Taylor"`,
+    premiere_datetime: 1630346400,
+    description: `"BBC NOW perform the world premiere of Matthew Taylor's Symphony No."`,
+    genre: Genre.Classical,
+    type: 'live',
+    hostusername: 'BBCNOW',
+    thumbnail: 'https://ichef.bbci.co.uk/images/ic/496x279/p09l37xz.jpg'
+  },
+  {
+    name: `Island in the Stream`,
+    premiere_datetime: 1630346400,
+    description: `"The Music of Dolly Parton & Kenny Rogers
+
+    Enjoy the songs of the Queen and King of country music - Dolly Parton and Kenny Rogers.
+    
+    Leave your 9 to 5 worries at the door and get ready for a night in the company of Country Music Royalty!
+    
+    This thigh-slapping stage show brings together the beloved glamour and personality of Dolly, along with Kenny’s charisma and energy with hit after hit including: Jolene, Ruby, 9 to 5, Lucille, Here You Come Again, The Gambler, I Will Always Love You, Coward of the County, plus the smash hit Islands in the Stream.
+    
+    Enjoy a superb score and supreme musicianship as we bring the house down with the ultimate tribute to two country music legends.
+    
+    This is a tribute show and is no way affiliated with any original artists/estates/management companies or similar shows."`,
+    genre: Genre.Country,
+    type: 'live',
+    hostusername: 'BlackwoodMI',
+    thumbnail:
+      'https://blackwoodminersinstitute.com/sites/default/files/styles/landscape/public/2020-04/portrait-with-photo-ISLANDS-IN-THE-STREAM.jpg?h=9b95f836&itok=nJodB8Qs'
+  },
+  {
+    name: `Dead Ringer for Love - Meatloaf & Cher`,
+    premiere_datetime: 1630346400,
+    description: `"This high energy tribute to two of music’s most formidable stars is sure to make your ‘Rock ‘N’ Roll Dreams Come Through’ as we ‘Turn Back Time’ to bring you a celebration of the work of Meatloaf and Cher.
+
+    Let a full live band take you on a journey spanning the careers of two of the eras most globally renowned stars. Combining the epic, operatic goth anthems of Meatloaf and the iconic show-stopping dance hits from the Goddess of Pop, Dead Ringer for Love will have you revelling in power ballads such as I’d Do Anything For Love (But I Won’t Do That) and Two Out of Three Ain’t Bad and dancing to feel-good sensations including If I Could Turn Back Time, Strong Enough and Bat Out of Hell."`,
+    genre: Genre.Music,
+    type: 'live',
+    hostusername: 'BlackwoodMI',
+    thumbnail:
+      'https://blackwoodminersinstitute.com/sites/default/files/styles/landscape/public/2020-03/Dead-Ringer---Portrait.jpg?h=f1eec285&itok=JrpmGdxv'
+  },
+  {
+    name: `Jonas Kaufmann: My Vienna`,
+    premiere_datetime: 1630346400,
+    description: `Jonas Kaufmann My Vienna is a deeply personal tribute by the star tenor to the world-famous melodies from the birthplace of waltz and operetta. Filmed live in the magical setting of the Wiener Konzerthaus, the concert features popular Viennese music from Die Fledermaus and Wienerblut by Johann Strauss and Franz Lehår's the Merry Widow, plus many of the classic songs inspired by the city of Vienna. Jonas Kaufmann performs with the Prague Philharmonia orchestra under the baton of Maestro Jochen Rieder and is joined by the internationally acclaimed soprano Rachel Willis-Sørensen.`,
+    genre: Genre.Orchestra,
+    type: 'live',
+    hostusername: 'CUC',
+    thumbnail: 'http://www.ucheldre.org/upload/jkaufmannwiencopy.jpg'
+  },
+  {
+    name: `Tempted`,
+    premiere_datetime: 1630346400,
+    description: `"Tempted is a forum theatre production that discusses sexual exploitation of young people – reflecting young people’s concerns and status. Produced in collaboration with Dyfed-Powys Police and crime commissioner. Tempted is currently nominated for two Arts & Business Cymru awards.
+
+    “…fast paced, energetic and thoroughly engaging. A sensitive performance, based a very serious and current issue with teenagers… Our pupils (and staff) talked about this performance for the rest of the day! Please come back next year!” – Athro / Teacher"`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'CwmniTheatr',
+    thumbnail: 'https://pbs.twimg.com/media/EEkoEWOWkAA29nI?format=jpg&name=4096x4096'
+  },
+  {
+    name: `Faust + Greta`,
+    premiere_datetime: 1630346400,
+    description: `"Greta is out with friends when she meets the chancer Faust. But with darker forces at play, a bit of harmless flirting leads to an irreversible journey of destruction.
+
+    Faust + Greta is a tragic and twisted love story that sees the original German tale re-imagined in an amped-up, contemporary Wales. Devised and performed by an ensemble of young people coming out of lockdown, this digital theatrical experience is about the human obsession with wanting more, seizing power and pushing boundaries to extremes.
+    
+    Inspired by T. Gwynn Jones’s Welsh translation of Goethe’s classic, Faust + Greta will embrace social distancing limitations to offer a completely new, experimental, and unexpected theatrical experience.
+    
+    Staged in an empty theatre, a dark and devious world, and new experiences beckon. How far can we tempt you?"`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'CFW',
+    thumbnail: 'http://www.franwen.com/wp-content/uploads/2020/08/DelweddYnUnig.jpg'
+  },
+  {
+    name: `"The Rheingans Sisters"`,
+    premiere_datetime: 1630346400,
+    description: `"The Rheingans Sisters make playful, powerful and richly connecting music that is wholly contemporary while deeply anchored in folk traditions. The award-winning multi-instrumentalists, composers and folk scholars are nominated for 'Best Duo/Group' at 2019 BBC Radio 2 Folk Awards. 
+
+    Over the last five years, three critically acclaimed albums and a BBC Radio 2 Folk Award win for 'Best Original Track' in 2016, audiences across the UK, Europe and Australia have been utterly captivated by their very special live performances. Drawing on their pan-European musical scholarship and their spirited mission to make connections between the music of different geographical roots, they have developed a rich artistic approach to the deconstruction and reimagining of traditional music alongside their own beguiling compositions.
+    
+    Performing live, the sisters are inimitable; full-hearted performers and spontaneous, on-stage improvisors, with the adventurous use of fiddles, voices, banjo, bansitar, tambourin à cordes, spoken word, dancing feet and percussion.
+    
+    A unique and unmissable act on the folk and world music stage today, Rowan and Anna play a plethora of instruments in their live shows, many of them handmade by their luthier father Helmut Rheingans who is based in their native Peak District home.
+    
+    The Rheingans Sisters released their much anticipated fourth album 'Receiver' in 2020 on the Bendigedig Label. "`,
+    genre: Genre.Music,
+    type: 'live',
+    hostusername: 'GCC',
+    thumbnail:
+      'https://d235gwso45fsgz.cloudfront.net/as-assets/variants/o76dxtqn1deb716maxylmaim5pz4/d82b4c5034021c15162868846a860fc142237fb62f146ef228d6181ef8a17941'
+  },
+  {
+    name: `Calan`,
+    premiere_datetime: 1630346400,
+    description: `They breathe fire into the old traditions with their evocative rhythms and lively routines before slowing down with some of the most beautiful songs as they explore the magic and myths of Wales. They have successfully introduced traditional Welsh music to a new wave of music lovers, in Wales, Europe, North America and beyond.`,
+    genre: Genre.Music,
+    type: 'live',
+    hostusername: 'GCC',
+    thumbnail:
+      'https://d235gwso45fsgz.cloudfront.net/as-assets/variants/t7n9XzriKZRmXKWVG56nv6JU/d82b4c5034021c15162868846a860fc142237fb62f146ef228d6181ef8a17941'
+  },
+  {
+    name: `Meet Fred`,
+    premiere_datetime: 1630346400,
+    description: `"Meet Fred, the two foot tall cloth puppet that fights prejudice every day.
+
+    He just wants to be a regular guy, part of the real world, to get a job and meet a girl, but when threatened with losing his PLA (Puppetry Living Allowance), Fred’s life begins to spiral out of his control. Contains strong language and puppet nudity."`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'HijinxTheatre',
+    thumbnail:
+      'https://images.squarespace-cdn.com/content/v1/5321daaae4b0740a41873481/1536915320470-P67OJ2OD34H6BTFY00BC/ke17ZwdGBToddI8pDm48kDdnEN61tOLS9SG2TKMzcSpZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZamWLI2zvYWH8K3-s_4yszcp2ryTI0HqTOaaUohrI8PIQIeWurnuV3SleL-V7wOOKtkVkwN6WiQ6GXNm2XliR9kKMshLAGzx4R3EDFOm1kBS/FredBanner.jpg'
+  },
+  {
+    name: `Sounds of Summer`,
+    premiere_datetime: 1630346400,
+    description: `An eclectic mix of joyful, entertaining and uplifting musical treats, from the world of song, opera and cabaret, and much else besides!`,
+    genre: Genre.Opera,
+    type: 'live',
+    hostusername: 'MidWalesOpera',
+    thumbnail: 'https://www.midwalesopera.co.uk/files/assets/uploads/2021/05/sounds-of-summer-logo.jpg'
+  },
+  {
+    name: `Y Tŵr`,
+    premiere_datetime: 1630346400,
+    description: `"In our new creative collaboration with Theatr Genedlaethol Cymru, composer Guto Puw and singer-songwriter-playwright Gwyneth Glyn breathe new life into Gwenlyn Parry’s disturbing and provocative play.
+
+    The result is an intense and intimate story of love and life based on the work of one of Wales’ most important playwrights, reimagined in new form as a touching and lyrical Welsh language chamber opera."`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'MusicTheatreWales',
+    thumbnail: 'https://www.musictheatre.wales/assets/images/productions/y-twr/YTwr_1200x800.jpg'
+  },
+  {
+    name: `A Mighty Wind`,
+    premiere_datetime: 1630346400,
+    description: `NDCWales presents A Mighty Wind, by Jeroen Verbruggen, one of Europe’s most exciting choreographers. This high energy, vibrant piece captures the intensity of nature’s elements during a storm, set against the power generated by an alternative rock music concert.`,
+    genre: Genre.Dance,
+    type: 'live',
+    hostusername: 'NDCW',
+    thumbnail:
+      'https://ndcwales.co.uk/sites/default/files/styles/banner/public/2018-07/Untitled-design-%2851%29.jpg?h=e7856751&itok=b6IMtGqj'
+  },
+  {
+    name: `Afterimage`,
+    premiere_datetime: 1630346400,
+    description: `Afterimage is a dance of fleeting images; that uses mirrors to create a unique and beautiful experience of appearance and disappearance. Afterimage shows the audience a series of scenes to evoke a personal response from each person without providing a single narrative.`,
+    genre: Genre.Dance,
+    type: 'live',
+    hostusername: 'NDCW',
+    thumbnail:
+      'https://ndcwales.co.uk/sites/default/files/styles/banner/public/2018-11/Untitled%20design%20%2846%29.jpg?itok=-KR29oQW'
   }
 ]);

@@ -48,6 +48,8 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@email.user.refund_initiated__subject"]: "host_name" | "performance_name",
   ["@@email.host.refund_initiated__content"]: "host_name" | "performance_name" | "invoice_id" | "invoice_amount",
   ["@@email.host.refund_initiated__subject"]: "user_username" | "performance_name",
+  ["@@email.host.refund_bulk_initiated_subject"]: "refund_quantity",
+  ["@@email.host.refund_bulk_initiated_content"]: "host_name" | "refund_quantity" | "invoices_total",
   ["@@email.user.refund_refunded__subject"]: "performance_name",
   ["@@email.user.refund_refunded__content"]: "user_username" | "host_name" | "invoice_id" | "invoice_amount" | "performance_name" | "refund_reason" | "card_brand" | "last_4",
   ["@@email.host.refund_refunded__subject"]: "user_username" | "performance_name" | "invoice_id",

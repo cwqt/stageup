@@ -129,6 +129,9 @@ export class QueueModule implements Module {
       bus.subscribe("refund.initiated", async ct => {
                                                          handlers.sendUserRefundInitiatedEmail(ct);
                                                          handlers.sendHostRefundInitiatedEmail(ct)});
+      bus.subscribe("refund.bulk.initiated", async ct => {
+                                                         handlers.sendHostBulkRefundInitiatedEmail(ct)
+      });                                            
       bus.subscribe("test.send_email",                   handlers.sendTestEmail);
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
