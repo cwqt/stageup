@@ -581,5 +581,91 @@ export default to<Array<SeedMockPerformance>>([
     hostusername: 'TheatrMlwdan',
     thumbnail:
       'https://ents24.imgix.net/image/000/398/826/a4ae8f7355ad364f53934a2802270e365a50eb04.jpg?auto=format&fit=crop&crop=faces&w=800&h=600'
+  },
+  {
+    name: `Arandora Star`,
+    premiere_datetime: 1630346400,
+    description: `"By Mali Tudno Jones and Geinor Styles
+
+    In partnership with Swansea Museum, National Waterfront Museum and Technocamps
+    
+    Lina dreams of singing at La Scala. 
+    Then Italy enters the war in the summer of 1940, Italian families, living in Wales, are torn apart as men taken from their homes are branded, enemy aliens. 
+    
+    Lina watches in horror as her father dragged from their little cafe in Swansea and imprisoned. 
+    Forced out of their home, by people they knew as friends, Lina and her mother face an uncertain and lonely future.
+    
+    Then news arrives that on the 2nd of July 1940 mistaken for a troopship, The Arandora Star it's torpedoed by a German U-boat off the coast of Ireland and sinks with 446 Italian men's lives lost. 
+    
+    There is no news of Lina's father, whether he survived or drowned. 
+    In her new home, far away from Swansea, Lina clings to the dream of her family's reunion one day.
+    
+    Our play tells the emotional story of Lina as she struggles with the loss of her father, Guido. How, she and her mother, Carmela survive in a time of war and prejudice.
+     
+    The Arandora Star is a true story and will explore the life of Italians living and working in Wales during World War 2 and follows Lina's quest for her father and the truth. 
+    
+    This play highlights the issues of immigration and integration. "`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'TheatrNaNÓg',
+    thumbnail:
+      'https://lh3.googleusercontent.com/proxy/SkWC95pKVGUn5udqBIzahmZ425F2idTLO8cQQ3XzBMTiaqJd6x6yLZYbC7NoQmPmgCoL09Fdn00pKQuNrmY6SeMKEhglRGt_yd_UwdDpOLU2mo1tVoBLgkvamCRo6rVvBoESEDJeCfjX_Vy4JrXWVmKXzXHv-A2T-zdoJIT65oi5YQtl-gmV2E4DLRFx'
+  },
+  {
+    name: `The Ghost Stories of E R Benson`,
+    premiere_datetime: 1630346400,
+    description: `"Directed by Gareth Armstrong
+    Music by Simon Slater
+    
+    This is a spine-tingling evening of three tales of the supernatural from E.F. Benson’s brilliant collection of ghost stories, Night Terrors. With masterful storytelling  the award-winning actor Gerard Logan, Night Terrors will transport you to a darker, more sinister world of the unexpected and the unexplainable.
+    
+    The three stories ('The Dance', 'In The Tube' and 'The Confession of Charles Linkworth'), are dramatic, haunting and hugely memorable.
+    
+    Gerard Logan won The Stage Best Solo Performer of the 2011 Edinburgh Festival Award for his acclaimed performance in Gareth Armstrong’s production of Shakespeare’s The Rape of Lucrece. He won the Best Actor award at the 2014 Buxton Fringe Festival, and was nominated for the Michael MacLiammoir Award for Best Male Performance at the 2016 International Dublin Gay Theatre Festival for his performance in Wilde Without the Boy.
+    
+    Gareth Armstrong has developed and directed many successful solo shows, including his own award-winning Shylock.
+    
+    Night Terrors is also underscored by a beautiful, original and specially-commissioned score by the award-winning RSC composer, Simon Slater."`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'TorchTheatre',
+    thumbnail: 'https://www.everymantheatre.org.uk/media/fjtnyakc/nightterrorsgraph.jpg'
+  },
+  {
+    name: `Past the Stars`,
+    premiere_datetime: 1630346400,
+    description: `"Featuring pieces by Sir Harrison Birtwistle and Param Vir, Birmingham Contemporary Music Group is delighted to return to Town Hall, Birmingham, for a full-scale 15-piece performance, Past the Stars.
+
+    Past the Stars is a collection of pieces that encompasses everything contemporary music should be: expressive, unexpected, and thought provoking. From Birtwistle’s powerful play on rhythm within Cantus Iambeus,, through Param Vir’s poetic Wheeling Past the Stars, and to the dramatic storytelling piece Hayagriva, each composition takes you on a new emotive journey. Past the Stars is inspired by language and spirituality and elevated by the skill and passion of BCMG’s 15-piece ensemble.
+    
+    This thought-provoking evening of contemporary music will also feature performances by musicians from BCMG’s NEXT programme. These early-career musicians have been coached by BCMG players in some of the most inspiring and challenging works written in the last 70 years. Past the Stars will be their first public performance of 2021.  
+    
+    After preparing through multiple lockdowns for the opportunity to perform music as a full ensemble, Birmingham Contemporary Music Group’s patience and efforts have been rewarded.
+    
+    There will be no interval during this performance."`,
+    genre: Genre.Music,
+    type: 'live',
+    hostusername: 'BCG',
+    thumbnail:
+      'https://www.bcmg.org.uk/handlers/getimage.ashx?idmf=3b7fa01d-cc85-457f-a886-4da1b292152e&w=1440&h=575&f=1'
+  },
+  {
+    name: `Southbank Sinfonia`,
+    premiere_datetime: 1630346400,
+    description: `"Joined by the fabulous Chloé van Soeterstède, our fellowship will take you on a musical journey of devotion through the guise of three powerful pieces of classical music.
+
+    Laden with rich hymn melodies, Elfrida Andrée's Overture in D is powerful in all the right places. From big swooping themes, to the Mendelssohn-like orchestration and melodic development, this overture was a triumph for the 19th century organist.
+    
+    Modlitwa ('Song') has received a number of different orchestrations between father-daughter super team Andrzej and Roxanna Panufnik. The original, a vocal piece with piano accompaniment, turned into a chamber work for strings after Roxanna was asked to take the piece on again some years after her father's death. The music is based on a prayer, and this can be heard through the intricate orchestration and subtle dissonances throughout.
+    
+    Felix Mendelssohn's mighty Fifth Symphony, also known as 'The Reformation', was composed for the 300th anniversary of the Presentation of the Augsburg Confession. A key document in the Protestant Reformation, Mendelssohn channels this theme within the music by using popular hymn structures and traditional Church harmonies. The symphony was not published until 1868, 21 years after Mendelssohn's death. His devoted sister, Fanny, chose to subtitle it 'The Reformation Symphony'.
+    
+    Described as ""intuitive"", ""expressive"", and bearing a ""positive presence"", we are absolutely thrilled to be welcome Chloé van Soeterstède back to conduct Southbank Sinfonia. 
+    "`,
+    genre: Genre.Music,
+    type: 'live',
+    hostusername: 'SJSS',
+    thumbnail:
+      'https://www.sjss.org.uk/sites/www.sjss.org.uk/files/styles/imager_js_scale_1280/public/25.06.21_-_southbank_sinfonia_rush_hour_7_bradley.marcus-1320x900_-_web_3.jpg'
   }
 ]);
