@@ -465,5 +465,65 @@ export default to<Array<SeedMockPerformance>>([
     hostusername: 'NDCW',
     thumbnail:
       'https://ndcwales.co.uk/sites/default/files/styles/banner/public/2018-11/Untitled%20design%20%2846%29.jpg?itok=-KR29oQW'
+  },
+  {
+    name: `Possible`,
+    premiere_datetime: 1630346400,
+    description: `"Shôn’s new show was going to be all about love. But what do you do when you’re writing a show all about love, and everything goes dark? You find a new story. A story with scones after midnight, estate agents, Gandhi-inspired motivational texts, mothers, fathers, families, and Grandmaster Flash.
+
+    Possible is a playful and profound piece of storytelling that blurs reality with live music and surreal, cinematic visuals. Funny and endearingly honest, it’s a show about love, resilience and finding the courage to explore the past, in order to shape the future."`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'NationalTheatreWales',
+    thumbnail: 'https://cdn.nationaltheatrewales.org/wp-content/uploads/2021/05/possible-licketco-crop-1024x576.jpg'
+  },
+  {
+    name: `Alice's Adventures in Wonderland`,
+    premiere_datetime: 1630346400,
+    description: `"The classic tale of Alice’s Adventures in Wonderland comes to life in this quirky and delightful family opera. Follow Alice down the rabbit hole on her adventures where she encounters a whole host of peculiar characters including a relaxed caterpillar, happy cat, depressive hare, mad hatter and sleepy dormouse. Find out why all is not well in Wonderland and why the Queen of Hearts is so cross.
+
+    Will Todd’s score, performed by a small orchestra, is an eclectic mix of jazz, musical and opera and perfectly accompanies the witty libretto to create a fun and engaging story that remains true to the original book."`,
+    genre: Genre.Opera,
+    type: 'live',
+    hostusername: 'WNO',
+    thumbnail: 'https://www.visitcardiff.com/app/uploads/2021/06/alice-in-wonderland-1.jpg'
+  },
+  {
+    name: `Madam Butterfly Puccini`,
+    premiere_datetime: 1630346400,
+    description: `"On the surface a dream-like wedding for a groom and his young, beautiful bride - but behind the façade is a cruel reality. Abandoned and betrayed, Butterfly finds her world crashing around her as her one chance for freedom becomes her prison.  Her desperation and pain escalate as she fights for survival with devastating consequences.
+
+    Madam Butterfly is a powerful story of unrequited love, human pain and suffering which is magnificently intensified by Puccini’s glorious music, promising a night of drama and emotion. Inspired by Puccini’s fantasy landscape of exotic pleasures, Lindy Hume’s new production interprets Butterfly’s famous story through a dystopian prism."`,
+    genre: Genre.Opera,
+    type: 'live',
+    hostusername: 'WNO',
+    thumbnail: 'https://i.ytimg.com/vi/1QNXjSyWbQI/maxresdefault.jpg'
+  },
+  {
+    name: `Would you sing it out loud?`,
+    premiere_datetime: 1630346400,
+    description: `"with Simon Armitage, Taylor Edmonds & Owen Sheers.
+
+    Join us for Everything Change’s closing event, in which the current Poet Laureate of the United Kingdom, Simon Armitage, will be joined by Taylor Edmonds, the recently appointed Poet in Residence for the Future Generations Commissioner for Wales. Simon will read from his climate-related work and discuss the response of poets to the climate crisis, as well as his creation of The Laurel Prize for eco-poetry. He will then hand over to Taylor to introduce her new role — the first of its kind anywhere in the world — and close Everything Change with readings of her own poems, which imagine some tools to make our planet’s future a brighter one for all.
+    
+    This event will be introduced and moderated by Owen Sheers, Professor in Creativity at Swansea University."`,
+    genre: Genre.Poetry,
+    type: 'live',
+    hostusername: 'TaliesinAC',
+    thumbnail:
+      'https://www.taliesinartscentre.co.uk/getfile/NewWebsiteSept2020/Events/2021/EVERYTHING%20CHANGE%20BANNERS%20AND%20THUMBNAILS/everthing-change-outtro.jpg'
+  },
+  {
+    name: `Gair o Gariad`,
+    premiere_datetime: 1630346400,
+    description: `"Theatr Bara Caws are thrilled to invite you to a virtual performance of Gair o Gariad.
+
+    Gair o Gariad is a Welsh language adaptation of Uninvited Guests’ Love Letters Straight From Your Heart, and each time Bara Caws have presented the stage version our audiences have been enthralled. In these challenging times we’d like to give you the opportunity to meet in a unique way when meeting face-to-face is impossible.
+    
+    Actors: Carwyn Jones and Lleuwen Steffan"`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'TheatreBaraCaws',
+    thumbnail: 'https://arts.wales/system/files/user_img/DSC_9202.jpg'
   }
 ]);

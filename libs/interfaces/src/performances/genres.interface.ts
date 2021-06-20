@@ -9,7 +9,8 @@ export enum Genre {
   Country = 'country',
   Music = 'music',
   Orchestra = 'orchestra',
-  Opera = 'opera'
+  Opera = 'opera',
+  Poetry = 'poetry'
 }
 
 export const GenreMap: { [index in Genre]: string } = {
@@ -23,5 +24,6 @@ export const GenreMap: { [index in Genre]: string } = {
   [Genre.Country]: 'Country Music',
   [Genre.Music]: 'Music',
   [Genre.Orchestra]: 'Orchestral',
-  [Genre.Opera]: 'Opera'
+  [Genre.Opera]: 'Opera',
+  [Genre.Poetry]: 'Poetry'
 };
