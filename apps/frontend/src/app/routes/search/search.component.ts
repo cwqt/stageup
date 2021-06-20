@@ -46,7 +46,6 @@ export class SearchComponent implements OnInit {
   }
 
   async search(page: number, perPage: number, returnOnly?: 'hosts' | 'performances') {
-
     if (returnOnly == 'hosts') {
       cachize(this.searchService.search(this.searchQuery, page, perPage, 'hosts'), this.hosts, d => d.hosts);
     } else if (returnOnly == 'performances') {
@@ -89,7 +88,6 @@ export class SearchComponent implements OnInit {
   }
 
   openDialogHost(hostname) {
-    console.log(hostname);
     this.baseAppService.navigateTo(`/@${hostname}`);
   }
 }

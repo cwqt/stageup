@@ -525,5 +525,61 @@ export default to<Array<SeedMockPerformance>>([
     type: 'live',
     hostusername: 'TheatreBaraCaws',
     thumbnail: 'https://arts.wales/system/files/user_img/DSC_9202.jpg'
+  },
+  {
+    name: `Blindness`,
+    premiere_datetime: 1630346400,
+    description: `"Juliet Stevenson voices the Storyteller/Doctor’s wife in this gripping story of the rise and, ultimately, profoundly hopeful end of an unimaginable global pandemic.
+
+    As the lights change at a major crossroads in a city in the heart of Europe a car grinds to a halt. Its driver can drive no more. Suddenly, without warning or cause, he has gone blind. Within hours it is clear that this is a blindness like no other. This blindness is infectious. Within days an epidemic of blindness has spread through the city. The government tries to quarantine the contagion by herding the newly blind people into an empty asylum. But their attempts are futile. The city is in panic.
+    
+    Award-winning playwright Simon Stephens has adapted Nobel Prize-winner José Saramago’s dystopian novel Blindness as a sound installation, directed by Walter Meierjohann with immersive binaural sound design by Ben and Max Ringham.
+    "`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'TheatrClwyd',
+    thumbnail:
+      'https://d236ott6dc2ku1.cloudfront.net/_imager/files/Events/2021/860559/Blindness-at-the-Donmar-Warehouse.-Photo-by-Helen-Maybanks-02_71cf85432501894f00c5c4081aaf6408.jpg'
+  },
+  {
+    name: `Fausta + Greta`,
+    premiere_datetime: 1630346400,
+    description: `"One night out. One chance meeting. A love story doomed from the start.
+
+    Greta is out with friends when she meets the chancer Faust. But with darker forces at play, a bit of harmless flirting leads to an irreversible journey of destruction.
+    
+    Faust + Greta is a tragic and twisted love story that sees the original German tale re-imagined in an amped-up, contemporary Wales. Devised and performed by an ensemble of young people coming out of lockdown, this digital theatrical experience is about the human obsession with wanting more, seizing power and pushing boundaries to extremes.
+    
+    Inspired by T. Gwynn Jones’s Welsh translation of Goethe’s classic, Faust + Greta will embrace social distancing limitations to offer a completely new, experimental, and unexpected theatrical experience. Staged in an empty theatre, a dark and devious world, and new experiences beckon. How far can we tempt you?"`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'TGC',
+    thumbnail:
+      'https://lh3.googleusercontent.com/proxy/2IG016hUBLeSLDgg6w7OzNmle1mHybVugE702fAbXA9sCpGrOzXox9Ya7DBFhI2oyOVQM0rHZ0_xZaJZ5SCughdGIiLPavcEmsBy8Z88wKbFk8vy-eLLJLv-r4coWt8'
+  },
+  {
+    name: `Llygoden yr Eira`,
+    premiere_datetime: 1630346400,
+    description: `"Winter has arrived and the woods are covered white. A child wraps up warm and runs outside to play in a sparkling new world.
+
+    But what’s hiding under the snow? A little mouse, fast asleep. Sliding, tumbling and laughing, the two new friends explore the winter wonderland together.
+    
+    Filled with play, puppetry and music, the enchanting and mischievous Llygoden yr Eira returns to venues across Wales this winter.  So come and keep warm in the winter freeze and join us on an adventure in a magical forest.
+    "`,
+    genre: Genre.Theatre,
+    type: 'live',
+    hostusername: 'TheatrIoio',
+    thumbnail:
+      'https://images.squarespace-cdn.com/content/5704e2440442621c34c21a87/1571922597688-T6QQOS24V9USEAEJZIBW/llygodenyreiraRehearsalskirstenmcternan211.jpg?format=1500w&content-type=image%2Fjpeg'
+  },
+  {
+    name: `The Snow Queen`,
+    premiere_datetime: 1630346400,
+    description: `Join Ballet Theatre UK in their beautiful re-telling of Hans Christian Andersen’s classic fairy tale ballet, The Snow Queen. This spectacular production follows the story of Gerda and her quest to find her friend Kay, whom the Snow Queen has placed under an evil spell. Gerda’s fantastic adventure takes her on a journey across the frozen north where she encounters a band of gypsys, enchanted reindeer, and a mysterious and reclusive Lapland woman. Gerda is told by the mysterious woman to continue travelling north, where she will find Kay and the Snow Queen’s Palace of Ice. Only Gerda’s love for Kay can release him from the spell and break the Snow Queen’s curse of eternal winter. Ballet Theatre UK's renowned company of international dancers, beautiful costumes and glittering stage sets combine to create a magnificent spectacle, all set to a glorious and magical score.    `,
+    genre: Genre.Ballet,
+    type: 'live',
+    hostusername: 'TheatrMlwdan',
+    thumbnail:
+      'https://ents24.imgix.net/image/000/398/826/a4ae8f7355ad364f53934a2802270e365a50eb04.jpg?auto=format&fit=crop&crop=faces&w=800&h=600'
   }
 ]);
