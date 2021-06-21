@@ -52,7 +52,7 @@
 
   // Refunds ----------------------------------------------------------------------------------------------
   "refunds.no_invoices_found": Could not find any invoices
-  "refunds.refund_already_outstanding": Cannot refund while one another refund is already outstanding
+  "refunds.refund_already_outstanding": Cannot refund while another refund is already outstanding
 
   // Emails -----------------------------------------------------------------------------------------------
   "email.user.refund_initiated__content":

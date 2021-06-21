@@ -83,8 +83,8 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
     let confirmDialogData: IConfirmationDialogData = {
       title: $localize`Confirm refund`,
       description: this.multipleRefunds
-        ? $localize`Are you sure you want to refund this invoices?`
-        : $localize`Are you sure you want to refund ${this.data.length} invoices?`,
+        ? $localize`Are you sure you want to refund ${this.data.length} invoices?`
+        : $localize`Are you sure you want to refund this invoice?`,
       buttons: [
         new UiDialogButton({
           label: $localize`Cancel`,

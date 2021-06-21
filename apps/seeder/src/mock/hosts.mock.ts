@@ -62,13 +62,21 @@ export type SeederHostName =
 export default to<
   Array<Except<DtoCreateHost, 'username'> & { avatar: string; banner: string; username: SeederHostName }>
 >([
+  // {
+  //   username: 'RDance',
+  //   avatar: 'https://pbs.twimg.com/profile_images/1377222510786322436/WxktRD67_400x400.jpg',
+  //   banner:
+  //     'https://cavc.imgix.net/-/media/subject-areas/art-design-and-multimedia/dance/289_sian_trenberth_photography_da19-08.ashx?h=800&la=en&mw=1200&w=1200&auto=format&fit=crop&crop=faces&hash=B8E5927885876212E00A39A53BC4F6DE97CD4EE0',
+  //   email_address: 'rd@stageup.uk',
+  //   name: 'Rubicon Dance'
+  // },
   {
-    username: 'RDance',
-    avatar: 'https://pbs.twimg.com/profile_images/1377222510786322436/WxktRD67_400x400.jpg',
-    banner:
-      'https://cavc.imgix.net/-/media/subject-areas/art-design-and-multimedia/dance/289_sian_trenberth_photography_da19-08.ashx?h=800&la=en&mw=1200&w=1200&auto=format&fit=crop&crop=faces&hash=B8E5927885876212E00A39A53BC4F6DE97CD4EE0',
-    email_address: 'rd@stageup.uk',
-    name: 'Rubicon Dance'
+    username: 'TorchTheatre',
+    avatar:
+      'https://media-exp3.licdn.com/dms/image/C510BAQHF0mlUi2SeWA/company-logo_200_200/0/1519886097924?e=2159024400&v=beta&t=xUhgzEof9MyFCeS4Sn7zk9EUsHieAV5Jo4PGJmdattM',
+    banner: 'https://www.torchtheatre.co.uk/media/405964/torch-theatre-header-01.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Torch Theatre`
   },
   {
     username: 'RSCompany',
@@ -195,8 +203,7 @@ export default to<
   },
   {
     username: 'BBCNOW',
-    avatar:
-      'https://www.google.com/url?sa=i&url=https%3A%2F%2Fm.facebook.com%2Fbbcnationalorchestraofwales%2F&psig=AOvVaw1E_ZhYCUMUV9T9i5DmnKJ8&ust=1624013298167000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIjgqpC_nvECFQAAAAAdAAAAABAJ',
+    avatar: 'https://pbs.twimg.com/profile_images/1346069147382394885/fCBDqkAQ_400x400.jpg',
     banner: 'https://ichef.bbci.co.uk/images/ic/976x549_b/p01mv3db.jpg',
     email_address: 'company@stageup.uk',
     name: 'BBC National Orchestra of Wales'
@@ -225,8 +232,7 @@ export default to<
   },
   {
     username: 'Chapter',
-    avatar:
-      'https://www.google.com/url?sa=i&url=http%3A%2F%2Fmanutd.ru%2Fredire%2F%3Fgo%3Dart.schattenbank.info%2Flists%2Fc%2Fchapter-one-logo%2F&psig=AOvVaw3Tt81cYbt0-innChmZnd0Y&ust=1624014851536000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLjW2pfFnvECFQAAAAAdAAAAABAJ',
+    avatar: 'https://cornwallfilmfestival.com/wp-content/uploads/2018/01/CHAPTER-Logo_large-1.jpg',
     banner: 'https://www.herald.wales/wp-content/uploads/2021/03/Carrie-Mae-Weems-Artes-Mundi-Lightbox-scaled.jpg',
     email_address: 'company@stageup.uk',
     name: 'Chapter Cardiff Ltd.'
@@ -251,7 +257,7 @@ export default to<
     username: 'CFW',
     avatar: 'https://img.endole.co.uk/?t=c987254eb1d2f414444e44cf5595d83e&l=',
     banner:
-      'https://lh3.googleusercontent.com/proxy/Chr81EXORSZXG4_Ofy3laP66sMqGaGAeMMX0NEZEzmpUWh_eEllNq3V250fZ5ovS_hxATUEjdwrlJXiZC5eD-Gnu8AqkN0qL4YG6fIRNkcP2A3KzaoDKc_LpimjYn8bck66AK_LtJwcvn6E',
+      'https://lh3.googleusercontent.com/proxy/1clYf5t8SFK4RWR5TClV5Zw24S5OTkTNjKSJdFMtd0Fy1sHeKgApIKNxmEk08dG6HaMQmb1LoBYV4UPyq--34T7p57YQws26IEyUOWwE1ZRGq-gwGObz05SjoH0Tq4FGjTS0hf0_vHdaVbg',
     email_address: 'company@stageup.uk',
     name: `Cwmni'r Frân Wen`
   },
@@ -462,7 +468,7 @@ export default to<
   {
     username: 'TorchTheatre',
     avatar:
-      'https://scontent-lcy1-1.xx.fbcdn.net/v/t1.6435-9/160080430_3655637974533805_8171666130438517712_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=-ZLCeV8WzycAX8RtdWk&_nc_oc=AQm_O88hqgFNAvjTFVc3PBiIku0ITzCsknsWEeXf-tUGMhsN3wu9kKHhOLJDUCGT3KU&tn=vJE2wuorLQhE0ltm&_nc_ht=scontent-lcy1-1.xx&oh=141317a90ca464c04dc84b8f62935f8d&oe=60D00144',
+      'https://media-exp3.licdn.com/dms/image/C510BAQHF0mlUi2SeWA/company-logo_200_200/0/1519886097924?e=2159024400&v=beta&t=xUhgzEof9MyFCeS4Sn7zk9EUsHieAV5Jo4PGJmdattM',
     banner: 'https://www.torchtheatre.co.uk/media/405964/torch-theatre-header-01.jpg',
     email_address: 'company@stageup.uk',
     name: `Torch Theatre`

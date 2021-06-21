@@ -286,7 +286,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
         relations: ['refunds', 'user']
       })
     );
-
+    console.log('in hook invoices: ', invoice);
     const currentRefund = invoice.refunds[0];
     currentRefund.responded_on = timestamp();
     currentRefund.is_refunded = true;

@@ -878,15 +878,13 @@ export default class HostController extends BaseController<BackendProviderMap> {
             host: { _id: true, stripe_account_id: true }
           }
         });
+        console.log('Invoices: ', invoices);
         // No invoices found for provided ids
         if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
         // Refund all invoices in parallel, & wait for them all to finish
         await Promise.all(
           // invoices.map evaluates to [Promise<pending>, Promise<pending>, ...]
           invoices.map(async invoice => {
-            if (invoice.status !== PaymentStatus.RefundRequested)
-              throw new ErrorHandler(HTTP.BadRequest, '@@refunds.refund_already_outstanding');
-
             this.providers.stripe.connection.refunds.create(
               {
                 payment_intent: invoice.stripe_payment_intent_id,
