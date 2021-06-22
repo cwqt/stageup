@@ -100,11 +100,11 @@ export class Seeder {
 
     host.onboarding_process = await new Onboarding(host, host.owner).save();
 
-    host.contact_info = await new ContactInfo({
-      mobile_number: faker.phone.phoneNumber(),
-      landline_number: faker.phone.phoneNumber(),
-      addresses: []
-    }).save();
+    // host.contact_info = await new ContactInfo({
+    //   mobile_number: faker.phone.phoneNumber(),
+    //   landline_number: faker.phone.phoneNumber(),
+    //   addresses: []
+    // }).save();
 
     host.is_onboarded = true;
     host.stripe_account_id = 'acct_1Iimp3FMVjDWWJf3';

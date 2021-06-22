@@ -68,7 +68,9 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   }
 
   deletePerformance() {
-    this.dialog.open(PerformanceDeleteDialogComponent);
+    this.dialog.open(PerformanceDeleteDialogComponent, {
+      data: this.performance
+    });
   }
 
   ngOnDestroy() {
