@@ -162,7 +162,7 @@
         <target state="needs-translation">Fant ingen fakturaer</target>
       </trans-unit>
       <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while one another refund is already outstanding</source>
+        <source>Cannot refund while another refund is already outstanding</source>
         <target state="needs-translation">Kan ikke tilbakebetale mens hverandre er allerede utestående</target>
       </trans-unit>
       <trans-unit id="email.user.refund_initiated__content" datatype="html">

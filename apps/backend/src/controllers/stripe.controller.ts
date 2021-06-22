@@ -274,7 +274,8 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
   async handleRefundSuccessful(event: Stripe.Event) {
     const stripeRefund = event.data.object as Stripe.Refund;
-
+    console.log('In Hook Invoice');
+    console.log('Stripe refund: ', stripeRefund);
     const invoice = await getCheck(
       Invoice.findOne({
         where: {

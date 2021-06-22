@@ -162,8 +162,8 @@
         <target state="final">Could not find any invoices</target>
       </trans-unit>
       <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while one another refund is already outstanding</source>
-        <target state="final">Cannot refund while one another refund is already outstanding</target>
+        <source>Cannot refund while another refund is already outstanding</source>
+        <target state="final">Cannot refund while another refund is already outstanding</target>
       </trans-unit>
       <trans-unit id="email.user.refund_initiated__content" datatype="html">
         <source>**Hi {user_username},**

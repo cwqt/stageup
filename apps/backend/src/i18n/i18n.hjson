@@ -95,7 +95,7 @@
 
     **Hi {host_name},**
 
-    You have initiated a refunds for {refund_quantity} invoices
+    You have initiated refunds for {refund_quantity} invoices
 
     **Total value: **{invoices_total}**
 

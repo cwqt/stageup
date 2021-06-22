@@ -610,11 +610,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.ts</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-thumb/payment-method-thumb.component.ts</context>
@@ -941,39 +941,46 @@
           <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6911455890708830787" datatype="html">
-        <source>Are you sure you want to refund this(these) invoice(s)?</source>
+      <trans-unit id="6841105399543650135" datatype="html">
+        <source>Are you sure you want to refund <x id="PH" equiv-text="this.data.length"/> invoices?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="544531793535669413" datatype="html">
+        <source>Are you sure you want to refund this invoice?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.ts</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2807800733729323332" datatype="html">
         <source>Yes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.ts</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7861325611814148563" datatype="html">
         <source>Refund(s) successfully processed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">106</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2105224377426299228" datatype="html">
         <source>Error processing refund(s)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.ts</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6173625528214823462" datatype="html">
         <source>Refund</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.ts</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">121</context>
         </context-group>
       </trans-unit>
       <trans-unit id="23e45a7cbdcf2c1a3dd8e3e7f70a40b80934de46" datatype="html">
@@ -1471,18 +1478,75 @@
           <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="528969175268522167" datatype="html">
+        <source>Ballet</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="516176798986294299" datatype="html">
+        <source>Country</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="855872803871324523" datatype="html">
+        <source>Music</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4399347141966423692" datatype="html">
+        <source>Networking</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1986541165454650090" datatype="html">
+        <source>Opera</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8850247088873647746" datatype="html">
+        <source>Poetry</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3941368840685111729" datatype="html">
+        <source>Orchestra</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="6812421003865396273" datatype="html">
         <source>Error occurred fetching feed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8310453679481646898" datatype="html">
         <source>Failed fetching page for <x id="PH" equiv-text="carouselIndex"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="744e2a11590d55bbde4873e47b31f711d766ebbc" datatype="html">
@@ -2128,17 +2192,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">77</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="516176798986294299" datatype="html">
-        <source>Country</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-          <context context-type="linenumber">127</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6763533414436592129" datatype="html">
