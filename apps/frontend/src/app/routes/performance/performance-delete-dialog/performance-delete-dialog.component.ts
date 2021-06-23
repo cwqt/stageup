@@ -26,6 +26,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
   ) {}
 
   ngOnInit(): void {
+    console.log(this.data.data);
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel Performance`,
