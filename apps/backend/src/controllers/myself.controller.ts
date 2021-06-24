@@ -31,7 +31,8 @@ import {
   pick,
   DtoUserPatronageSubscription,
   Visibility,
-  IPasswordConfirmationResponse
+  IPasswordConfirmationResponse,
+  LocaleOptions
 } from '@core/interfaces';
 import { boolean, enums, object, partial, record, string } from 'superstruct';
 import { BackendProviderMap } from '..';
@@ -408,4 +409,29 @@ export default class MyselfController extends BaseController<BackendProviderMap>
       }
     };
   }
+
+
+  updateLocale(): IControllerEndpoint<string> {
+    return {
+      // Check the locale exists in our currently available options
+      validators: {
+        body: object({
+          locale: enums(Object.values(LocaleOptions))
+        })
+      },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        // Check the user exists with the session id
+        const myself = await getCheck(User.findOne({ _id: req.session.user._id}));
+        // Get the language and region from the request
+        const [language, region] = req.body.locale.split('-');
+        // Update their data and save
+        myself.locale = {language, region};
+        await myself.save();
+        // Return the language so it can be fed into the URLs
+        return myself.locale.language;
+      }
+    };
+  }
+
 }

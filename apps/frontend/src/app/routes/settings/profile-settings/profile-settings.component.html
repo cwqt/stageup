@@ -26,6 +26,17 @@
     </div>
   </app-content-box>
 
+  <!-- LANGUAGE SELECTION BOX -->
+  <app-content-box>
+    <h2 i18n>Site Settings</h2>
+    <ui-hr></ui-hr>
+    <div class="flex items-center">
+      <div class="ml-4 flex-1">
+        <ui-form [form]="languageSelectForm"></ui-form>
+      </div>
+    </div>
+  </app-content-box>
+
   <app-content-box *ngIf="myself.host">
     <h2 i18n>Company Settings</h2>
     <ui-hr></ui-hr>

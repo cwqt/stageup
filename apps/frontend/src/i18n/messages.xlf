@@ -3017,7 +3017,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7293347258713947796" datatype="html">
@@ -3378,14 +3378,14 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2454050363478003966" datatype="html">
         <source>Login</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/login.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
       <trans-unit id="34557152cff7bc7db72a2a8706794d7fba4bac86" datatype="html">
@@ -3718,81 +3718,116 @@
           <context context-type="linenumber">23,24</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="0f8f8ef331819fe2a720258683ee8a1231c1c3f3" datatype="html">
+        <source>Site Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="65f4bb3e2293edb35b01d0ac95beefbf966640a9" datatype="html">
         <source>Company Settings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6939be49e828db4ca91cb665b7d7b899b4dd0b36" datatype="html">
         <source>Default Homepage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="df9657bbe6b3c9353fa35b00e2543661023359dc" datatype="html">
         <source>Change which landing screen you'd prefer to land on when logging in on StageUp.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="899d530c038ca9efcadfe0bbf37c8a4c4714743e" datatype="html">
         <source>Home Screen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c61e2b275f33957d56a70b5e35fe4f7a11545a06" datatype="html">
         <source> Dashboard </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">46,47</context>
+          <context context-type="linenumber">57,58</context>
         </context-group>
       </trans-unit>
       <trans-unit id="53b0f5f5bbac15220df819509cb121c0738c41c5" datatype="html">
         <source>Delete Personal Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="de0e16ef7114acd87438a19f0359c98241ecbdf7" datatype="html">
         <source> Permanently remove your Personal Account and all of its contents from the StageUp platform. This action is not reversible, so please continue with caution. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">54,56</context>
+          <context context-type="linenumber">65,67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="66b777a6c0fdac1cc5538f2cbd28b38c71783abb" datatype="html">
         <source>Delete Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7467294076993460424" datatype="html">
         <source>Your name may appear around StageUp where you contribute or are mentioned.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4222149582871653761" datatype="html">
         <source>Must provide a valid e-mail address</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6769219112239702582" datatype="html">
         <source>Bio</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2826581353496868063" datatype="html">
+        <source>Language</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5866254605255506989" datatype="html">
+        <source>English</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3683417119663608678" datatype="html">
+        <source>Welsh</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3586701851625152417" datatype="html">
+        <source>Norwegian (Bokmål)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5ad279d6e9f56b32c2902b3caf41db4b7fc599b2" datatype="html">

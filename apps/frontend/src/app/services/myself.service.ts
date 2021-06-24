@@ -94,6 +94,11 @@ export class MyselfService {
     return this.http.put<IMyself['host_info']>('/api/myself/landing-page', data).toPromise();
   }
 
+  updateLocale(body: {locale: LocaleOptions}): Promise<string>{
+    return this.http.put<string>('/api/myself/locale', body).toPromise();
+  }
+
+
   // router.get <IE<IPerfS[]>> ("/myself/purchased-performances", Myself.readMyPurchasedPerformances());
   readMyPurchasedPerformances(name?: string): Promise<IEnvelopedData<IPerformanceStub[]>> {
     return this.http

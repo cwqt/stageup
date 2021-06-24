@@ -1,3 +1,4 @@
+import { ILocale } from './../i18n/i18n.interface';
 import { HostPermission, IHost, IHostStub } from '../hosts/host.interface';
 import { IPersonInfo } from './person.interface';
 
@@ -16,10 +17,19 @@ export interface IUser extends IUserStub {
   created_at: number;
   cover_image?: string; //s3 bucket url
   bio?: string;
+  locale?: ILocale;
   is_verified: boolean; //has completed email verification
   is_new_user: boolean; //gone through first time setup
   is_admin?: boolean; //site admin global perms
 }
+
+ // Language and region in single enum of strings ('language/REGION')
+export enum LocaleOptions {
+  English = 'en-GB',
+  Welsh = 'cy-GB',
+  Norwegian = 'nb-NO',
+}
+  
 
 export interface IUserPrivate extends IUser {
   email_address: string;

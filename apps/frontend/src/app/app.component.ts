@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   loading: boolean = true;
   showCurtain: boolean = false; // show the bouncing icon for a bit longer while the page content is loading
   loadError: string;
+  localeRedirect: string;
 
   constructor(
     private myselfService: MyselfService,
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit {
     // of the locale /en/, /no/, /cy/ not existing on serve server - so re-write them out if the url starts with the current locale
     if (environment.environment == Environment.Development) {
       this.router.events.pipe(filter(event => event instanceof NavigationStart)).subscribe((event: NavigationStart) => {
+        // TODO: Additional check to see if the url starts with the users preferred language choice (in their profile settings)
         if (event.url.startsWith(`/${environment.locale}/`))
           this.router.navigateByUrl(event.url.replace(`/${environment.locale}/`, '/'));
       });
@@ -73,6 +75,8 @@ export class AppComponent implements OnInit {
           permissions.push(UserPermission.User);
 
           if (myself.host_info) permissions.push(myself.host_info.permissions);
+          // If user is logged in, we will redirect to their preferred language choice when they navigate to the site.
+          if (myself.user.locale) this.localeRedirect = `${myself.user.locale.language}/${this.baseAppService.getUrl()}`; 
         } else {
           permissions = [UserPermission.None];
         }
@@ -81,6 +85,8 @@ export class AppComponent implements OnInit {
       });
 
       this.loading = false;
+    
+      if(this.localeRedirect) this.baseAppService.navigateTo(this.localeRedirect);
 
       setTimeout(() => {
         this.showCurtain = false;
