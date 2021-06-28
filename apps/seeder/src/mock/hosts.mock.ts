@@ -490,15 +490,6 @@ export default to<
     name: `Ty Cerdd - Music Centre Wales`
   },
   {
-    username: 'BCG',
-    avatar:
-      'https://scontent-lhr8-2.xx.fbcdn.net/v/t1.6435-9/62652966_10158567001753135_3642355824350724096_n.png?_nc_cat=102&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=By6cDEJdx2YAX9Ut18H&_nc_ht=scontent-lhr8-2.xx&oh=e0531fe080da3f95b30431205a235a8f&oe=60D1C0A7',
-    banner:
-      'https://scontent-lhr8-1.xx.fbcdn.net/v/t1.6435-9/176389101_10160935487548135_7266910953792583617_n.jpg?_nc_cat=103&ccb=1-3&_nc_sid=e3f864&_nc_ohc=bm1BbL0XZlIAX9MWtBM&_nc_ht=scontent-lhr8-1.xx&oh=27fb17aa646240c190c64106407fb8d1&oe=60D1B0E3',
-    email_address: 'company@stageup.uk',
-    name: `Birmingham Contemporary Music Group`
-  },
-  {
     username: 'SJSS',
     avatar:
       'https://scontent-lhr8-1.xx.fbcdn.net/v/t31.18172-8/10631078_10152668830179557_5899394516670305912_o.jpg?_nc_cat=108&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=17hlVOF4rBEAX-MmHgj&_nc_ht=scontent-lhr8-1.xx&oh=0318cdb2849743ccd62952e651fe2829&oe=60F2E985',
