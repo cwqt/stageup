@@ -145,7 +145,10 @@ export namespace objects {
     site_url: optional(fields.url),
     linkedin_url: optional(fields.url),
     facebook_url: optional(fields.url),
-    instagram_url: optional(fields.url)
+    instagram_url: optional(fields.url),
+    pinterest_url: optional(fields.url),
+    youtube_url: optional(fields.url),
+    twitter_url: optional(fields.url)
   });
 
   export const DtoCreatePaymentIntent: Describe<DtoCreatePaymentIntent<PurchaseableType>> = object({

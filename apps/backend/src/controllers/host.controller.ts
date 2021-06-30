@@ -135,6 +135,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
           }
         };
 
+        host.social_info = {
+          site_url: dto.social_info.site_url,
+          facebook_url: dto.social_info.facebook_url,
+          instagram_url: dto.social_info.instagram_url,
+          twitter_url: dto.social_info.twitter_url,
+          pinterest_url: dto.social_info.pinterest_url,
+          linkedin_url: dto.social_info.linkedin_url,
+          youtube_url: dto.social_info.youtube_url
+        };
+
         host.email_address = dto.email_address;
         host.name = dto.name;
         host.username = dto.username;

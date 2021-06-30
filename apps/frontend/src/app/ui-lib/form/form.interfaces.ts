@@ -311,6 +311,7 @@ export type IUiFieldTypeOptions = {
     initial?: string;
     mask?: IUiFieldMaskOptions;
     placeholder?: string;
+    icon_code?: string;
     autocomplete?: 'street-address' | 'locality' | 'region' | 'postal-code' | 'county';
   };
   textarea: {

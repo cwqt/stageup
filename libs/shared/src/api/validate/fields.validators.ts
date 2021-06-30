@@ -58,7 +58,7 @@ export namespace fields {
   export const vatNumber = refine(
     string(),
     'vat_number',
-    value => pattern(string(), regexes.vat).is(value) || '@@validation.invalid'
+    value => pattern(string(), regexes.vat).is(value) || '@@validation.invalid_vat_number'
   );
   export const postcode = define<string>('postcode', value => validator.isPostalCode(value as string, 'GB'));
   export const country = define<CountryCode>('iso3166', value => validator.isISO31661Alpha2(value as string));

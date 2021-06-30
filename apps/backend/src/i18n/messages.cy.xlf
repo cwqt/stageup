@@ -645,9 +645,37 @@ Diolch, StageUp</target>
         <source>Not a valid HMRC Company number</source>
         <target state="needs-translation">Ddim yn rhif Cwmni Cyllid a Thollau EM dilys</target>
       </trans-unit>
+      <trans-unit id="validation.invalid_vat_number" datatype="html">
+        <source>Not a valid VAT number</source>
+        <target state="needs-translation">Ddim yn rhif TAW dilys</target>
+      </trans-unit>
       <trans-unit id="validation.invalid_url" datatype="html">
         <source>Not a valid URL</source>
         <target state="needs-translation">Ddim yn URL dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_facebook_url" datatype="html">
+        <source>Not a valid Facebook URL</source>
+        <target state="needs-translation">Ddim yn URL dilys ar Facebook</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_instagram_url" datatype="html">
+        <source>Not a valid Instagram URL</source>
+        <target state="needs-translation">Ddim yn URL Instagram dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_linkedin_url" datatype="html">
+        <source>Not a valid LinkedIn URL</source>
+        <target state="needs-translation">Ddim yn URL LinkedIn dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_twitter_url" datatype="html">
+        <source>Not a valid Twitter URL</source>
+        <target state="needs-translation">Ddim yn URL Twitter dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_pinterest_url" datatype="html">
+        <source>Not a valid Pinterest URL</source>
+        <target state="needs-translation">Ddim yn URL Pinterest dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_youtube_url" datatype="html">
+        <source>Not a valid Youtube URL</source>
+        <target state="needs-translation">Ddim yn URL dilys Youtube</target>
       </trans-unit>
     </body>
   </file>

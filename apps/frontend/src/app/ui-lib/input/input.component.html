@@ -8,8 +8,10 @@
     [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError"
     [class.form-field--is-disabled]="control.disabled"
+    [class.form-field--has-icon]="data.options.icon_code"
     *ngIf="data.type == 'number' || data.type == 'text' || data.type == 'password' || data.type == 'phone'"
   >
+      <ui-icon *ngIf="data.options.icon_code" class="" size="l">{{ data.options.icon_code }}</ui-icon>
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label"
         >{{ data.options.label }}
