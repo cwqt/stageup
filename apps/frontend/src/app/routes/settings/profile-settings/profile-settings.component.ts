@@ -1,5 +1,6 @@
+import { BaseAppService } from './../../../services/app.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { IMyself, IUser, IUserStub } from '@core/interfaces';
+import { IMyself, IUser, IUserStub, LocaleOptions } from '@core/interfaces';
 import { UserService } from 'apps/frontend/src/app/services/user.service';
 import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { MyselfService } from '../../../services/myself.service';
@@ -9,6 +10,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HelperService } from '../../../services/helper.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
+
 
 @Component({
   selector: 'app-profile-settings',
@@ -22,11 +24,14 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   profileDetailsForm: UiForm<IMyself['user']>;
+  languageSelectForm: UiForm;
+
 
   constructor(
     private userService: UserService,
     private myselfService: MyselfService,
     private helperService: HelperService,
+    private baseAppService: BaseAppService,
     public dialog: MatDialog
   ) {}
 
@@ -67,6 +72,31 @@ export class ProfileSettingsComponent implements OnInit {
       },
       handlers: {
         success: async v => this.myselfService.setUser({ ...v, avatar: v.avatar || '/assets/avatar-placeholder.png' })
+      }
+    });
+
+    this.languageSelectForm = new UiForm({
+      fields: {
+        locale: UiField.Select({
+          label: $localize`Language`,
+          // The form expects locale values as single string (e.g. 'en-GB')
+          initial: `${this.user.locale.language}/${this.user.locale.region}`, 
+          values: new Map<LocaleOptions, { label: string }>([
+            [LocaleOptions.English, { label: $localize`English` }],
+            [LocaleOptions.Welsh, { label: $localize`Welsh` }],
+            [LocaleOptions.Norwegian, { label: $localize`Norwegian (Bokmål)` }],
+          ]),
+        }),
+      },
+      resolvers: {
+        output: v => this.myselfService.updateLocale(v),  
+      }, 
+      handlers: {
+        changes: async () => this.languageSelectForm.submit(),
+        // On success, we want to reload the current page with the language prefixed (e.g. '/cy/settings')
+        success: async (v) => {
+          this.baseAppService.navigateTo(`/${v}${this.baseAppService.getUrl()}`);
+        }
       }
     });
   }

@@ -52,6 +52,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
           hmrc_company_number: null,
           business_contact_number: null,
           business_address: null,
+          business_type: null,
           vat_number: null
         }
       },
@@ -71,7 +72,10 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
           site_url: null,
           facebook_url: null,
           linkedin_url: null,
-          instagram_url: null
+          instagram_url: null,
+          twitter_url: null,
+          pinterest_url: null,
+          youtube_url: null
         }
       }
     };

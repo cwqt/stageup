@@ -114,5 +114,12 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@validation.invalid_email"]: never,
   ["@@validation.invalid_phone_number"]: never,
   ["@@validation.not_hmrc_number"]: never,
-  ["@@validation.invalid_url"]: never
+  ["@@validation.invalid_vat_number"]: never,
+  ["@@validation.invalid_url"]: never,
+  ["@@validation.invalid_facebook_url"]: never,
+  ["@@validation.invalid_instagram_url"]: never,
+  ["@@validation.invalid_linkedin_url"]: never,
+  ["@@validation.invalid_twitter_url"]: never,
+  ["@@validation.invalid_pinterest_url"]: never,
+  ["@@validation.invalid_youtube_url"]: never
 }

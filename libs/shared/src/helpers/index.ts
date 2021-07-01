@@ -254,4 +254,7 @@ export const pipes = {
 /**
  * @description Regexes for usage in validators in the front/back-end
  */
-export const regexes = { vat: /(GB)?(\d{12}|\d{9})/g };
+export const regexes = {
+  url: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})\/?/g,
+  vat: /(GB)?(\d{12}|\d{9})/g
+};

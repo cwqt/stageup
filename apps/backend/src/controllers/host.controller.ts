@@ -124,6 +124,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           hmrc_company_number: dto.business_details.hmrc_company_number,
           business_contact_number: dto.business_details.business_contact_number,
           vat_number: dto.business_details.vat_number,
+          business_type: dto.business_details.business_type,
           business_address: {
             city: dto.business_details.business_address.city,
             country: dto.business_details.business_address.country,
@@ -132,6 +133,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
             line2: dto.business_details.business_address.line2 || null,
             state: dto.business_details.business_address.state || null
           }
+        };
+
+        host.social_info = {
+          site_url: dto.social_info.site_url,
+          facebook_url: dto.social_info.facebook_url,
+          instagram_url: dto.social_info.instagram_url,
+          twitter_url: dto.social_info.twitter_url,
+          pinterest_url: dto.social_info.pinterest_url,
+          linkedin_url: dto.social_info.linkedin_url,
+          youtube_url: dto.social_info.youtube_url
         };
 
         host.email_address = dto.email_address;

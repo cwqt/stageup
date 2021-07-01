@@ -32,5 +32,12 @@
   "validation.invalid_email": Not a valid e-mail address
   "validation.invalid_phone_number": Not a valid phone number
   "validation.not_hmrc_number": Not a valid HMRC Company number
+  "validation.invalid_vat_number": Not a valid VAT number
   "validation.invalid_url": Not a valid URL
+  "validation.invalid_facebook_url": Not a valid Facebook URL
+  "validation.invalid_instagram_url": Not a valid Instagram URL
+  "validation.invalid_linkedin_url": Not a valid LinkedIn URL
+  "validation.invalid_twitter_url": Not a valid Twitter URL
+  "validation.invalid_pinterest_url": Not a valid Pinterest URL
+  "validation.invalid_youtube_url": Not a valid Youtube URL
 }

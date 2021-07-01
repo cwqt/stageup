@@ -1,4 +1,4 @@
-import { CurrencyCode, Genre, GenreMap, NUUID, CountryCode, PersonTitle } from '@core/interfaces';
+import { CurrencyCode, Genre, GenreMap, NUUID, CountryCode, PersonTitle, BusinessType } from '@core/interfaces';
 import { enumToValues, regexes } from '@core/helpers';
 import validator from 'validator';
 import {
@@ -9,6 +9,7 @@ import {
   enums,
   instance,
   is,
+  map,
   number,
   pattern,
   refine,
@@ -21,6 +22,7 @@ import { parsePhoneNumberFromString, PhoneNumber } from 'libphonenumber-js';
 
 const FORBIDDEN_USERNAMES: string[] = ['fuck', 'shit', 'crap'];
 const CURRENCY_CODES = enumToValues(CurrencyCode);
+const BUSINESS_TYPE = enumToValues(BusinessType);
 
 type Phone = `+${number}`;
 
@@ -52,10 +54,11 @@ export namespace fields {
     // 8 CHARACTERS, not == 8 in VALUE
     value => size(string(), 8, 8).is(value.toString()) || '@@validation.not_hmrc_number'
   );
+  export const businessType = enums<BusinessType>(BUSINESS_TYPE as BusinessType[]);
   export const vatNumber = refine(
     string(),
     'vat_number',
-    value => pattern(string(), regexes.vat).is(value) || '@@validation.invalid'
+    value => pattern(string(), regexes.vat).is(value) || '@@validation.invalid_vat_number'
   );
   export const postcode = define<string>('postcode', value => validator.isPostalCode(value as string, 'GB'));
   export const country = define<CountryCode>('iso3166', value => validator.isISO31661Alpha2(value as string));

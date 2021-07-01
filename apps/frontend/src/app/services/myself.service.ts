@@ -15,7 +15,8 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
-  IUserInvoice
+  IUserInvoice,
+  LocaleOptions
 } from '@core/interfaces';
 import { UserHostInfo } from '@core/api';
 import { IQueryParams, querize } from '@core/helpers';
@@ -92,6 +93,10 @@ export class MyselfService {
   // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
   updatePreferredLandingPage(data: Pick<UserHostInfo, 'prefers_dashboard_landing'>): Promise<IMyself['host_info']> {
     return this.http.put<IMyself['host_info']>('/api/myself/landing-page', data).toPromise();
+  }
+
+  updateLocale(body: { locale: LocaleOptions }): Promise<string> {
+    return this.http.put<string>('/api/myself/locale', body).toPromise();
   }
 
   // router.get <IE<IPerfS[]>> ("/myself/purchased-performances", Myself.readMyPurchasedPerformances());

@@ -39,32 +39,52 @@
           <div class="flex align-middle justify-between mb-2">
             <p class="flex-grow mr-2 mb-0 flex items-center">
               <span class="text-lg opacity-75 mr-4">@{{ host.data.username }}</span>
+            </p>
+
+            <div class="flex relative md:absolute right-64">
               <ui-icon
-                class="cursor-pointer mr-2"
+                class="cursor-pointer mr-4 hover:text-red-700"
+                size="l"
                 (click)="openSocialLink('site_url')"
                 *ngIf="host.data.social_info.site_url"
                 >wikis</ui-icon
               >
               <ui-icon
-                class="cursor-pointer mr-2"
+                class="cursor-pointer mr-4 hover:text-red-700"
+                size="l"
                 (click)="openSocialLink('facebook_url')"
                 *ngIf="host.data.social_info.facebook_url"
                 >logo--facebook</ui-icon
               >
               <ui-icon
-                class="cursor-pointer mr-2"
+                class="cursor-pointer mr-4 hover:text-red-700"
+                size="l"
                 (click)="openSocialLink('instagram_url')"
                 *ngIf="host.data.social_info.instagram_url"
                 >logo--instagram</ui-icon
               >
               <ui-icon
-                class="cursor-pointer mr-2"
+                class="cursor-pointer mr-4 hover:text-red-700"
+                size="l"
+                (click)="openSocialLink('twitter_url')"
+                *ngIf="host.data.social_info.twitter_url"
+                >logo--twitter</ui-icon
+              >
+              <ui-icon
+                class="cursor-pointer mr-4 hover:text-red-700"
+                size="l"
+                (click)="openSocialLink('pinterest_url')"
+                *ngIf="host.data.social_info.pinterest_url"
+                >logo--pinterest</ui-icon
+              >
+              <ui-icon
+                class="cursor-pointer mr-4 hover:text-red-700"
+                size="l"
                 (click)="openSocialLink('linkedin_url')"
                 *ngIf="host.data.social_info.linkedin_url"
                 >logo--linkedin</ui-icon
               >
-            </p>
-
+            </div>
             <div class="flex absolute right-2 top-0 w-auto">
               <ui-button [transparent]="true" class="flex-1" size="m">
                 <ui-icon size="l">overflow-menu--horizontal</ui-icon>

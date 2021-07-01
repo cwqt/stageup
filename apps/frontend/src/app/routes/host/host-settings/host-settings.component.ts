@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CountryCode, DtoUpdateHost, IHostBusinessDetails, IHostPrivate, IMyself } from '@core/interfaces';
+import {
+  BusinessType,
+  CountryCode,
+  DtoUpdateHost,
+  IHostBusinessDetails,
+  IHostPrivate,
+  IMyself
+} from '@core/interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { BaseAppService } from '@frontend/services/app.service';
@@ -72,7 +79,17 @@ export class HostSettingsComponent implements OnInit {
             }
           ]
         }),
-        business_type: UiField.Select({ label: $localize`Business Type`, values: new Map([]), width: 6 }),
+        business_type: UiField.Select({
+          label: $localize`Business Type`,
+          values: new Map<BusinessType, { label: string }>([
+            [BusinessType.Company, { label: $localize`Company` }],
+            [BusinessType.GovernmentEntity, { label: $localize`Government Entity` }],
+            [BusinessType.Individual, { label: $localize`Individual` }],
+            [BusinessType.NonProfit, { label: $localize`Non-profit` }]
+          ]),
+          width: 6,
+          disabled: true
+        }),
         business_address: UiField.Container({
           label: $localize`Business Address`,
           fields: {
@@ -108,13 +125,41 @@ export class HostSettingsComponent implements OnInit {
               ]
             })
           }
+        }),
+        social_info: UiField.Container({
+          label: $localize`Social Media`,
+          fields: {
+            site_url: UiField.Text({
+              label: $localize`Website`,
+              icon_code: 'wikis'
+            }),
+            instagram_url: UiField.Text({
+              label: $localize`Instagram`,
+              icon_code: 'logo--instagram'
+            }),
+            facebook_url: UiField.Text({
+              label: $localize`Facebook`,
+              icon_code: 'logo--facebook'
+            }),
+            twitter_url: UiField.Text({
+              label: $localize`Twitter`,
+              icon_code: 'logo--twitter'
+            }),
+            linkedin_url: UiField.Text({
+              label: $localize`LinkedIn`,
+              icon_code: 'logo--linkedin'
+            }),
+            pinterest_url: UiField.Text({
+              label: $localize`Pinterest`,
+              icon_code: 'logo--pinterest'
+            })
+          }
         })
       },
       resolvers: {
         input: async () => {
           this.host = await this.hostService.readDetails(this.myself.host._id);
           const host = this.host;
-
           return {
             fields: {
               name: host.name,
@@ -126,30 +171,34 @@ export class HostSettingsComponent implements OnInit {
               email_address: host.email_address,
               hmrc_company_number: host.business_details?.hmrc_company_number,
               vat_number: host.business_details?.vat_number,
-              business_type: null,
-              business_address: host.business_details?.business_address
+              business_type: host.business_details.business_type,
+              business_address: host.business_details?.business_address,
+              social_info: host.social_info
             }
           };
         },
         output: async v => {
+          console.log(v);
           const res = await this.hostService.updateHost(this.host._id, {
             name: v.name,
             email_address: v.email_address,
             business_details: to<IHostBusinessDetails>({
               hmrc_company_number: v.hmrc_company_number,
               vat_number: v.vat_number,
+              business_type: v.business_type,
               business_contact_number: parsePhoneNumberFromString(
                 `+44${v.business_contact_number}`
               ).formatInternational(),
               business_address: v.business_address
             }),
             // turn nullish into undefined
-            social_info: Object.keys(this.host.social_info).reduce<any>(
-              (acc, curr) => ((acc[curr] = this.host.social_info[curr] || undefined), acc),
+            social_info: Object.keys(v.social_info).reduce<any>(
+              (acc, curr) => ((acc[curr] = v.social_info[curr] || undefined), acc),
               {}
             ),
             username: this.host.username
           });
+
           return res;
         }
       }

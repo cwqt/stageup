@@ -119,9 +119,9 @@
             "localize": ["en"]
           },
           "configurations": {
-            "en": { "localize": ["en"] },
-            "nb": { "localize": ["nb"] },
-            "cy": { "localize": ["cy"] },
+            "en": { "localize": ["en"]},
+            "nb": { "localize": ["nb"], "baseHref": "/nb/" },
+            "cy": { "localize": ["cy"], "baseHref": "/cy/" },
             "development": {
               "fileReplacements": [
                 {

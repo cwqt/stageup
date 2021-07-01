@@ -85,6 +85,7 @@ router.post     <IPaymentMethod>        ("/myself/payment-methods",             
 router.get      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.readPaymentMethod());
 router.delete   <void>                  ("/myself/payment-methods/:pmid",             Myself.deletePaymentMethod());
 router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.updatePaymentMethod());
+router.put      <string>                ("/myself/locale",                            Myself.updateLocale());
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providers, middlewares);

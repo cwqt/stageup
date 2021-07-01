@@ -23,7 +23,11 @@ module.exports = isProd => ({
     }
   },
   darkMode: false, // or 'media' or 'class'
-  theme: {},
+  theme: {
+    backgroundColor: theme => ({
+      ...theme('colors'),
+      'primary': '#ef4571',
+  })},
   variants: {},
   plugins: [require('tailwindcss-aspect-ratio')]
 });

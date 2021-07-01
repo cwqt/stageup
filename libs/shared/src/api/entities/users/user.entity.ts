@@ -102,7 +102,8 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
       is_verified: this.is_verified,
       is_admin: this.is_admin,
       cover_image: this.cover_image,
-      bio: this.bio
+      bio: this.bio,
+      locale: this.locale
       // Purchases: []
     };
   }

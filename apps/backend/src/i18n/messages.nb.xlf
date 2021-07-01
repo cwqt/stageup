@@ -677,9 +677,37 @@ Takk, StageUp</target>
         <source>Not a valid HMRC Company number</source>
         <target state="needs-translation">Ikke et gyldig HMRC-firmanummer</target>
       </trans-unit>
+      <trans-unit id="validation.invalid_vat_number" datatype="html">
+        <source>Not a valid VAT number</source>
+        <target state="needs-translation">Ikke et gyldig momsnummer</target>
+      </trans-unit>
       <trans-unit id="validation.invalid_url" datatype="html">
         <source>Not a valid URL</source>
         <target state="needs-translation">Ikke en gyldig URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_facebook_url" datatype="html">
+        <source>Not a valid Facebook URL</source>
+        <target state="needs-translation">Ikke en gyldig URL på Facebook</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_instagram_url" datatype="html">
+        <source>Not a valid Instagram URL</source>
+        <target state="needs-translation">Ikke en gyldig URL på Instagram</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_linkedin_url" datatype="html">
+        <source>Not a valid LinkedIn URL</source>
+        <target state="needs-translation">Ikke en gyldig LinkedIn URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_twitter_url" datatype="html">
+        <source>Not a valid Twitter URL</source>
+        <target state="needs-translation">Ikke en gyldig Twitter-URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_pinterest_url" datatype="html">
+        <source>Not a valid Pinterest URL</source>
+        <target state="needs-translation">Ikke en gyldig Pinterest-URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_youtube_url" datatype="html">
+        <source>Not a valid Youtube URL</source>
+        <target state="needs-translation">Ikke en gyldig URL på YouTube</target>
       </trans-unit>
     </body>
   </file>

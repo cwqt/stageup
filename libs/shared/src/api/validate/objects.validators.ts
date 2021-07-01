@@ -26,6 +26,7 @@ import {
   TicketFees,
   TicketType,
   DeleteHostReason,
+  BusinessType,
   DtoUpdateHost,
   IContactInfo,
   DtoUpdatePatronTier
@@ -130,7 +131,8 @@ export namespace objects {
     hmrc_company_number: optional(fields.hmrcCompanyNumber),
     vat_number: optional(fields.vatNumber),
     business_address: IAddress,
-    business_contact_number: fields.phone
+    business_contact_number: fields.phone,
+    business_type: fields.businessType
   });
 
   export const IPersonInfo: Describe<IPersonInfo> = object({
@@ -143,7 +145,10 @@ export namespace objects {
     site_url: optional(fields.url),
     linkedin_url: optional(fields.url),
     facebook_url: optional(fields.url),
-    instagram_url: optional(fields.url)
+    instagram_url: optional(fields.url),
+    pinterest_url: optional(fields.url),
+    youtube_url: optional(fields.url),
+    twitter_url: optional(fields.url)
   });
 
   export const DtoCreatePaymentIntent: Describe<DtoCreatePaymentIntent<PurchaseableType>> = object({

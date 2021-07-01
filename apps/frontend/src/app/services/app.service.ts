@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LocaleOptions } from '@core/interfaces';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ParamMap, Data, ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
@@ -97,5 +98,16 @@ export class BaseAppService {
 
   navigateTo(url: string, extras?: NavigationExtras): Promise<boolean> {
     return this.router.navigate([url], extras);
+  }
+
+  // Gets the URL, and trims the locale if there is one
+  getUrl(): string {
+    // Get the current route and split to array (e.g. form will be ['', 'nb', 'settings'])
+    const currentRouteArray = this.router.url.split('/');
+    // Check if the current URL has any locale prefixes
+    const urlHasPrefix = Object.values(LocaleOptions).find(locale => {
+      return locale.split('/')[0] === currentRouteArray[1]
+    })
+    return urlHasPrefix ? "/" + currentRouteArray.slice(2).join('/') : this.router.url;
   }
 }

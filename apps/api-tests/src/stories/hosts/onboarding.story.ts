@@ -7,6 +7,7 @@
 // done
 
 import {
+  BusinessType,
   CountryCode,
   HostOnboardingState,
   HostOnboardingStep,
@@ -70,12 +71,14 @@ describe('As Client, I want to register a Host & be onboarded', () => {
         },
         business_contact_number: '+44 323 223 4234',
         hmrc_company_number: 11940210,
-        vat_number: 'GB123456789'
+        vat_number: 'GB123456789',
+        business_type: BusinessType.GovernmentEntity
       }
     );
     expect(proofOfBusiness.data.business_address.city).toBe('Cardiff');
     expect(proofOfBusiness.data.business_address.country).toBe(CountryCode.GB);
     expect(proofOfBusiness.data.vat_number).toBe('GB123456789');
+    expect(proofOfBusiness.data.business_type).toBe(BusinessType.GovernmentEntity);
   });
 
   it('Should update the Owner Details step', async () => {
