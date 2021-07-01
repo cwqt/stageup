@@ -274,8 +274,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
   async handleRefundSuccessful(event: Stripe.Event) {
     const stripeRefund = event.data.object as Stripe.Refund;
-    console.log('In Hook Invoice');
-    console.log('Stripe refund: ', stripeRefund);
+
     const invoice = await getCheck(
       Invoice.findOne({
         where: {
@@ -287,7 +286,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
         relations: ['refunds', 'user']
       })
     );
-    console.log('in hook invoices: ', invoice);
+
     const currentRefund = invoice.refunds[0];
     currentRefund.responded_on = timestamp();
     currentRefund.is_refunded = true;

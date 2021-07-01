@@ -58,11 +58,6 @@ export class HostInvoicesComponent implements OnInit {
                     data: v.selected.map(invoice => invoice.__data)
                   })
                 );
-
-                console.log(
-                  'invoices array ',
-                  v.selected.map(invoice => invoice.__data)
-                );
               }
             },
             {
