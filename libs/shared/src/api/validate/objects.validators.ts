@@ -29,7 +29,9 @@ import {
   BusinessType,
   DtoUpdateHost,
   IContactInfo,
-  DtoUpdatePatronTier
+  DtoUpdatePatronTier,
+  IBulkRefund,
+  BulkRefundReason
 } from '@core/interfaces';
 import {
   any,
@@ -125,6 +127,11 @@ export namespace objects {
     requested_on: fields.timestamp,
     request_reason: enums<RefundRequestReason>(enumToValues(RefundRequestReason)),
     request_detail: string()
+  });
+
+  export const BulkInvoiceRefund: Describe<IBulkRefund> = object({
+    bulk_refund_reason: enums<BulkRefundReason>(enumToValues(BulkRefundReason)),
+    bulk_refund_detail: string()
   });
 
   export const IHostBusinessDetails: Describe<IHostBusinessDetails> = object({
