@@ -236,7 +236,7 @@ Please note, if this request was not initated by you please notify us immediatel
       <trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
         <source>**Hi {host_name},**
 
-You have initiated a refunds for {refund_quantity} invoices
+You have initiated refunds for {refund_quantity} invoices
 
 **Total value: **{invoices_total}**
 
@@ -249,7 +249,7 @@ We have notified the affected customers that they shall receive the refunded amo
 Please note, if this request was not initated by you please notify us immediately"</source>
         <target state="final">**Hi {host_name},**
 
-You have initiated a refunds for {refund_quantity} invoices
+You have initiated refunds for {refund_quantity} invoices
 
 **Total value: **{invoices_total}**
 

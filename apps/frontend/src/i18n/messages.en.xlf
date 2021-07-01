@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="en">
     <body>
@@ -165,12 +161,9 @@
           <context context-type="linenumber">8</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">87</context>
-=======
           <context context-type="linenumber">88</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3647914214639404913" datatype="html">
@@ -181,12 +174,9 @@
           <context context-type="linenumber">9</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">175</context>
-=======
           <context context-type="linenumber">188</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3769868024967739310" datatype="html">
@@ -197,12 +187,9 @@
           <context context-type="linenumber">10</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">211</context>
-=======
           <context context-type="linenumber">224</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="8204176479746810612" datatype="html">
@@ -414,17 +401,18 @@
         </context-group>
       </trans-unit>
       <trans-unit id="e8dbe96a1c60d51b74540085aebc58c4efb05aef" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <source>
 Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="final">
 Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
-=======
-        <source> Live-streaming &amp; VoD platform for the performing arts. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> Copyright © 2021 StageUp Ltd. All rights reserved. </source>
-        <target state="final"> Live-streaming &amp; VoD platform for the performing arts. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> Copyright © 2021 StageUp Ltd. All rights reserved. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/footer/footer.component.html</context>
           <context context-type="linenumber">9,11</context>
@@ -759,11 +747,7 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">169</context>
-=======
-          <context context-type="linenumber">260</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">218</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6932865105766151309" datatype="html">
@@ -803,17 +787,18 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
         </context-group>
       </trans-unit>
       <trans-unit id="6704172320602149660" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"></x>
+        </source>
         <source>
 File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"></x>
         </source>
         <target state="final">
 File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"></x>
         </target>
-=======
-        <source>File type <x id="PH" equiv-text="inputElement.files[0].type"/> not allowed</source>
-        <target state="final">File type <x id="PH" equiv-text="inputElement.files[0].type"/> not allowed</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/change-image/change-image.component.ts</context>
           <context context-type="linenumber">84</context>
@@ -1020,7 +1005,11 @@ File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"
         </context-group>
       </trans-unit>
       <trans-unit id="bd6458adaf50efc183bc8dcb6db419d8fd69fd6a" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"></x>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+        </source>
         <source>
 Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"></x>
           <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"></x>
@@ -1031,27 +1020,29 @@ Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;
           <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"></x>
           <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
         </target>
-=======
-        <source>Invoice Number: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"/>#<x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source>
-        <target state="final">Invoice Number: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"/>#<x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"></x>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="0267803b05ef78e907e934a94905f76aa8fa1724" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"></x>
+        </source>
         <source>
 Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"></x>
         </source>
         <target state="final">
 Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"></x>
         </target>
-=======
-        <source>Amount: <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"/></source>
-        <target state="final">Amount: <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.html</context>
           <context context-type="linenumber">4</context>
@@ -1066,17 +1057,18 @@ Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | curr
         </context-group>
       </trans-unit>
       <trans-unit id="badb211eb1b9591a00079bbcc8152917ecc444f6" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"></x>
+        </source>
         <source>
 Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"></x>
         </source>
         <target state="final">
 Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"></x>
         </target>
-=======
-        <source>Username: <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"/> </source>
-        <target state="final">Username: <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"/> </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.html</context>
           <context context-type="linenumber">6</context>
@@ -1279,7 +1271,10 @@ Are you sure you want to refundinvoices?          <x id="PH" equiv-text="this.da
         </context-group>
       </trans-unit>
       <trans-unit id="e1de2b08e3d110ac228e3206f6914c48a855d8ab" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </source>
         <source>
 Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
@@ -1288,10 +1283,10 @@ Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></
 Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
         </target>
-=======
-        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>Add new Card<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/></source>
-        <target state="final"><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>Add new Card<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-collector/payment-method-collector.component.html</context>
           <context context-type="linenumber">7</context>
@@ -1322,19 +1317,11 @@ Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">123</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">87</context>
-=======
           <context context-type="linenumber">136</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">104</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3900973269747328092" datatype="html">
@@ -1354,19 +1341,11 @@ Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">147</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">80</context>
-=======
           <context context-type="linenumber">160</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">97</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="9152239466994048368" datatype="html">
@@ -1386,19 +1365,11 @@ Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">151</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">84</context>
-=======
           <context context-type="linenumber">164</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">101</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="2524452943996127527" datatype="html">
@@ -1418,19 +1389,11 @@ Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">136</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">100</context>
-=======
           <context context-type="linenumber">149</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">117</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3394206503815564138" datatype="html">
@@ -1458,17 +1421,18 @@ Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></
         </context-group>
       </trans-unit>
       <trans-unit id="bed4a50045306fae0a3062590d76342fd3b2c317" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
+        </source>
         <source>
 Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
         </source>
         <target state="final">
 Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
         </target>
-=======
-        <source>Ending in <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"/></source>
-        <target state="final">Ending in <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-thumb/payment-method-thumb.component.html</context>
           <context context-type="linenumber">14</context>
@@ -1499,17 +1463,18 @@ Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
         </context-group>
       </trans-unit>
       <trans-unit id="789417527951964163" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"></x>
+        </source>
         <source>
 This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"></x>
         </source>
         <target state="final">
 This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"></x>
         </target>
-=======
-        <source>This will permanently remove the card ending in <x id="PH" equiv-text="this.method.last4"/> from your account.</source>
-        <target state="final">This will permanently remove the card ending in <x id="PH" equiv-text="this.method.last4"/> from your account.</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-thumb/payment-method-thumb.component.ts</context>
           <context context-type="linenumber">45</context>
@@ -1700,17 +1665,18 @@ This will permanently remove the card ending infrom your account.          <x id
         </context-group>
       </trans-unit>
       <trans-unit id="7cdd682f86ea11c29a5a871ba3a36f807e027b61" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"></x>
+        </source>
         <source>
 steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"></x>
         </source>
         <target state="final">
 steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"></x>
         </target>
-=======
-        <source><x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"/> steps unchecked</source>
-        <target state="final"><x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"/> steps unchecked</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/onboarding-view/onboarding-view.component.html</context>
           <context context-type="linenumber">52</context>
@@ -1865,17 +1831,18 @@ Failed fetching page for          <x id="PH" equiv-text="carouselIndex"></x>
         </context-group>
       </trans-unit>
       <trans-unit id="412dcf0b21727619653e364da5fa707ada4524b6" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <source>
 Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="final">
 Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
-=======
-        <source> Creating a company account gives you permissions to start streams &amp; manage ticketing.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> You will have to go through a further onboarding step before being to make your content public to StageUp users. </source>
-        <target state="final"> Creating a company account gives you permissions to start streams &amp; manage ticketing.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> You will have to go through a further onboarding step before being to make your content public to StageUp users. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/create-host/create-host.component.html</context>
           <context context-type="linenumber">5,7</context>
@@ -1941,12 +1908,9 @@ Creating a company account gives you permissions to start streams &amp; manage t
           <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">43</context>
-=======
           <context context-type="linenumber">50</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7958310305025725897" datatype="html">
@@ -2046,7 +2010,10 @@ Creating a company account gives you permissions to start streams &amp; manage t
         </context-group>
       </trans-unit>
       <trans-unit id="6d95403ebc7e349ea9981a740c796597f84f87cd" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </source>
         <source>
 Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
@@ -2055,10 +2022,10 @@ Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype=
 Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
         </target>
-=======
-        <source>Recovery of your account is <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>not possible<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>!</source>
-        <target state="final">Recovery of your account is <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>not possible<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>!</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.html</context>
           <context context-type="linenumber">17</context>
@@ -2089,17 +2056,18 @@ Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype=
         </context-group>
       </trans-unit>
       <trans-unit id="f8fb864e4cf94310247ed9c634576cadd0476015" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+        </source>
         <source>
 due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
         </source>
         <target state="final">
 due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
         </target>
-=======
-        <source>due to premiere at <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/></source>
-        <target state="final">due to premiere at <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.html</context>
           <context context-type="linenumber">55</context>
@@ -2202,7 +2170,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Decline refunds</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1780946063005668371" datatype="html">
@@ -2210,7 +2178,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Download invoice(s)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6825329815737519497" datatype="html">
@@ -2218,7 +2186,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Export as CSV</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component.ts</context>
@@ -2232,7 +2200,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
  An e-mail with your attachments will arrive at the e-mail listed on this company account shortly</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2082828105416395424" datatype="html">
@@ -2240,7 +2208,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">An error occured while exporting to CSV</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8644253508133206821" datatype="html">
@@ -2248,7 +2216,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Export as PDF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component.ts</context>
@@ -2262,7 +2230,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
  An e-mail with your attachments will arrive at the e-mail listed on this company account soon</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2815740745940703886" datatype="html">
@@ -2270,7 +2238,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">An error occured while exporting to PDF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="848325271509990598" datatype="html">
@@ -2278,7 +2246,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Invoice ID</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2290,7 +2258,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Performance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2302,7 +2270,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Ticket</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2314,7 +2282,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Invoice Date</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2326,7 +2294,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Amount</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component.ts</context>
@@ -2346,7 +2314,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Net Amount</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5611592591303869712" datatype="html">
@@ -2354,7 +2322,7 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         <target state="final">Status</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component.ts</context>
@@ -2474,34 +2442,36 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
         </context-group>
       </trans-unit>
       <trans-unit id="66f25fb64ed29a8bb0fe2a04b86d1b19806814f1" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"></x>
+        </source>
         <source>
 Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"></x>
         </source>
         <target state="final">
 Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"></x>
         </target>
-=======
-        <source>Last reviewed by: <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"/></source>
-        <target state="final">Last reviewed by: <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2c18dd23b5d5f06c98c25b8401cb263195070d79" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"></x>
+        </source>
         <source>
 Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"></x>
         </source>
         <target state="final">
 Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"></x>
         </target>
-=======
-        <source>Last reviewed at: <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"/></source>
-        <target state="final">Last reviewed at: <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
           <context context-type="linenumber">43</context>
@@ -2516,17 +2486,18 @@ Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.
         </context-group>
       </trans-unit>
       <trans-unit id="fd7eed48845c9e4b90fb822e8a3ab04dfb14bf40" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <source>
 Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="final">
 Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
-=======
-        <source> Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> This process typically takes around a day. </source>
-        <target state="final"> Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> This process typically takes around a day. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
           <context context-type="linenumber">68,72</context>
@@ -2561,19 +2532,11 @@ Our team is currently in the process of reviewing your information, once complet
         <target state="final">HMRC Company Number</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">93</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">55</context>
-=======
           <context context-type="linenumber">94</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">62</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="458537271622473293" datatype="html">
@@ -2581,19 +2544,11 @@ Our team is currently in the process of reviewing your information, once complet
         <target state="final">Business Contact Number</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">100</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">50</context>
-=======
           <context context-type="linenumber">101</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">57</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="5980633567524214484" datatype="html">
@@ -2601,19 +2556,11 @@ Our team is currently in the process of reviewing your information, once complet
         <target state="final">Of the form 1724 123321, no leading zero</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">101</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">51</context>
-=======
           <context context-type="linenumber">102</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">58</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="2651572224940085362" datatype="html">
@@ -2621,19 +2568,11 @@ Our team is currently in the process of reviewing your information, once complet
         <target state="final">Business Address</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">116</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">77</context>
-=======
           <context context-type="linenumber">129</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">94</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="516176798986294299" datatype="html">
@@ -2645,12 +2584,11 @@ Our team is currently in the process of reviewing your information, once complet
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="855872803871324523" datatype="html">
@@ -2691,13 +2629,6 @@ Our team is currently in the process of reviewing your information, once complet
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
           <context context-type="linenumber">70</context>
-=======
-          <context context-type="linenumber">140</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">108</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="6763533414436592129" datatype="html">
@@ -2705,31 +2636,20 @@ Our team is currently in the process of reviewing your information, once complet
         <target state="final">Not a valid postal code</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">142</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">106</context>
-=======
           <context context-type="linenumber">155</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">123</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="5701618810648052610" datatype="html">
         <source>Title</source>
         <target state="final">Title</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">181</context>
-=======
           <context context-type="linenumber">194</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/update-performance/app-update-performance.component.ts</context>
@@ -2740,124 +2660,94 @@ Our team is currently in the process of reviewing your information, once complet
         <source>Mr</source>
         <target state="final">Mr</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">183</context>
-=======
           <context context-type="linenumber">196</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="9150055758879543882" datatype="html">
         <source>Miss</source>
         <target state="final">Miss</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">184</context>
-=======
           <context context-type="linenumber">197</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="6596832884812875220" datatype="html">
         <source>Mrs</source>
         <target state="final">Mrs</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">185</context>
-=======
           <context context-type="linenumber">198</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7437237689758241140" datatype="html">
         <source>Ms</source>
         <target state="final">Ms</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">186</context>
-=======
           <context context-type="linenumber">199</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="1931106069119599587" datatype="html">
         <source>Dr</source>
         <target state="final">Dr</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">187</context>
-=======
           <context context-type="linenumber">200</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="1951990390156602647" datatype="html">
         <source>Professor</source>
         <target state="final">Professor</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">188</context>
-=======
           <context context-type="linenumber">201</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="8083897527920072255" datatype="html">
         <source>Master</source>
         <target state="final">Master</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">189</context>
-=======
           <context context-type="linenumber">202</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="5342432350421167093" datatype="html">
         <source>First name</source>
         <target state="final">First name</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">194</context>
-=======
           <context context-type="linenumber">207</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3586674587150281199" datatype="html">
         <source>Last name</source>
         <target state="final">Last name</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">198</context>
-=======
           <context context-type="linenumber">211</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="5481284030283031915" datatype="html">
         <source>Website</source>
         <target state="final">Website</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">216</context>
-=======
           <context context-type="linenumber">229</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">133</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7746461358973988084" datatype="html">
@@ -2917,34 +2807,36 @@ Our team is currently in the process of reviewing your information, once complet
         </context-group>
       </trans-unit>
       <trans-unit id="2366969524418235378" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Created patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+        </source>
         <source>
 Created patron tier:!          <x id="PH" equiv-text="tier.name"></x>
         </source>
         <target state="final">
 Created patron tier:!          <x id="PH" equiv-text="tier.name"></x>
         </target>
-=======
-        <source>Created patron tier: <x id="PH" equiv-text="tier.name"/>!</source>
-        <target state="final">Created patron tier: <x id="PH" equiv-text="tier.name"/>!</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Created patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component.ts</context>
           <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6630852968132665662" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+        </source>
         <source>
 Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
         </source>
         <target state="final">
 Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
         </target>
-=======
-        <source>Updated patron tier: <x id="PH" equiv-text="tier.name"/>!</source>
-        <target state="final">Updated patron tier: <x id="PH" equiv-text="tier.name"/>!</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component.ts</context>
           <context context-type="linenumber">78</context>
@@ -3123,7 +3015,11 @@ Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
         </context-group>
       </trans-unit>
       <trans-unit id="1707617220912072818" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Are you sure you want to delete?
+ This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"></x>
+          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"></x>
+        </source>
         <source>
 Are you sure you want to delete?
  This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"></x>
@@ -3134,12 +3030,11 @@ Are you sure you want to delete?
  This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"></x>
           <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"></x>
         </target>
-=======
-        <source>Are you sure you want to delete <x id="PH" equiv-text="this.tier.name"/>?
- This action will unsubscribe all <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"/> patrons</source>
-        <target state="final">Are you sure you want to delete <x id="PH" equiv-text="this.tier.name"/>?
- This action will unsubscribe all <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"/> patrons</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Are you sure you want to delete?
+ This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"></x>
+          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/patron-tier-thumb/patron-tier-thumb.component.ts</context>
           <context context-type="linenumber">73</context>
@@ -3298,7 +3193,10 @@ You must first finish theonboarding processbefore any content can be made Public
         </context-group>
       </trans-unit>
       <trans-unit id="9d1caa8ee71cbe0e1b2252aba15fe1e40234dda7" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </source>
         <source>
 You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"></x>
           <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
@@ -3307,12 +3205,10 @@ You must first finish theonboarding processbefore any content can be made Public
 You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"></x>
           <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
         </target>
-=======
-        <source> You must first finish the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"/>onboarding process<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> before any content can be made Public.
-</source>
-        <target state="final"> You must first finish the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"/>onboarding process<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> before any content can be made Public.
-</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-details/host-performance-details.component.html</context>
           <context context-type="linenumber">16</context>
@@ -3531,34 +3427,36 @@ You must first finish theonboarding processbefore any content can be made Public
         </context-group>
       </trans-unit>
       <trans-unit id="3219384879221660068" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Updated ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+        </source>
         <source>
 Updated ticket:!          <x id="PH" equiv-text="ticket.name"></x>
         </source>
         <target state="final">
 Updated ticket:!          <x id="PH" equiv-text="ticket.name"></x>
         </target>
-=======
-        <source>Updated ticket: <x id="PH" equiv-text="ticket.name"/>!</source>
-        <target state="final">Updated ticket: <x id="PH" equiv-text="ticket.name"/>!</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Updated ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component.ts</context>
           <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7535830281602803549" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+        </source>
         <source>
 Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
         </source>
         <target state="final">
 Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
         </target>
-=======
-        <source>Created ticket: <x id="PH" equiv-text="ticket.name"/>!</source>
-        <target state="final">Created ticket: <x id="PH" equiv-text="ticket.name"/>!</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component.ts</context>
           <context context-type="linenumber">186</context>
@@ -3665,17 +3563,18 @@ Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
         </context-group>
       </trans-unit>
       <trans-unit id="764261934249188522" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"></x>
+        </source>
         <source>
 Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"></x>
         </source>
         <target state="final">
 Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"></x>
         </target>
-=======
-        <source>Shared performance with <x id="PH" equiv-text="this.addedEmailAddresses.length"/> users</source>
-        <target state="final">Shared performance with <x id="PH" equiv-text="this.addedEmailAddresses.length"/> users</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/share-performance-dialog/share-performance-dialog.component.ts</context>
           <context context-type="linenumber">55</context>
@@ -3778,17 +3677,18 @@ Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddr
         </context-group>
       </trans-unit>
       <trans-unit id="5954536472139700300" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Created performance:!          <x id="PH" equiv-text="v.name"></x>
+        </source>
         <source>
 Created performance:!          <x id="PH" equiv-text="v.name"></x>
         </source>
         <target state="final">
 Created performance:!          <x id="PH" equiv-text="v.name"></x>
         </target>
-=======
-        <source>Created performance: <x id="PH" equiv-text="v.name"/>!</source>
-        <target state="final">Created performance: <x id="PH" equiv-text="v.name"/>!</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Created performance:!          <x id="PH" equiv-text="v.name"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/create-performance/create-performance.component.ts</context>
           <context context-type="linenumber">95</context>
@@ -3855,17 +3755,18 @@ Delete ''          <x id="PH" equiv-text="performance.name"></x>
         </context-group>
       </trans-unit>
       <trans-unit id="db248d938d590a75ecff36d583a847ffb78ea19d" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
+        </source>
         <source>
 About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
         </source>
         <target state="final">
 About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
         </target>
-=======
-        <source>About <x id="INTERPOLATION" equiv-text="{{ host.name }}"/></source>
-        <target state="final">About <x id="INTERPOLATION" equiv-text="{{ host.name }}"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-about/host-profile-about.component.html</context>
           <context context-type="linenumber">1</context>
@@ -3904,7 +3805,11 @@ About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
         </context-group>
       </trans-unit>
       <trans-unit id="f67300f7c4acfe40151c11939c010c59380693a1" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+This tier will cost, which will be billed on a monthly basis, starting today.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"></x>
+        </source>
         <source>
 This tier will cost, which will be billed on a monthly basis, starting today.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"></x>
@@ -3915,12 +3820,11 @@ This tier will cost, which will be billed on a monthly basis, starting today.   
           <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"></x>
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"></x>
         </target>
-=======
-        <source> This tier will cost <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-    >"/>, which will be billed on a monthly basis, starting today. </source>
-        <target state="final"> This tier will cost <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-    >"/>, which will be billed on a monthly basis, starting today. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+This tier will cost, which will be billed on a monthly basis, starting today.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component.html</context>
           <context context-type="linenumber">7,9</context>
@@ -3943,17 +3847,18 @@ This tier will cost, which will be billed on a monthly basis, starting today.   
         </context-group>
       </trans-unit>
       <trans-unit id="4000130407873529598" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"></x>
+        </source>
         <source>
 Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"></x>
         </source>
         <target state="final">
 Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"></x>
         </target>
-=======
-        <source>Successfully subscribed to <x id="PH" equiv-text="this.data.tier.name"/>!</source>
-        <target state="final">Successfully subscribed to <x id="PH" equiv-text="this.data.tier.name"/>!</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component.ts</context>
           <context context-type="linenumber">61</context>
@@ -4044,7 +3949,11 @@ Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"
         </context-group>
       </trans-unit>
       <trans-unit id="90e07f530fda246e3a626f6e1eeaf1e136d9a06c" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Withdraw membership from, this action can't be undone.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"></x>
+        </source>
         <source>
 Withdraw membership from, this action can't be undone.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"></x>
@@ -4055,12 +3964,11 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
           <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"></x>
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"></x>
         </target>
-=======
-        <source> Withdraw membership from <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-            >"/>, this action can't be undone. </source>
-        <target state="final"> Withdraw membership from <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-            >"/>, this action can't be undone. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Withdraw membership from, this action can't be undone.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
           <context context-type="linenumber">25</context>
@@ -4078,22 +3986,17 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <source>Company e-mail address</source>
         <target state="final">Company e-mail address</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">45</context>
-=======
           <context context-type="linenumber">52</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="8001731341167448537" datatype="html">
         <source>We'll use this e-mail to send notifications and updates</source>
         <target state="final">We'll use this e-mail to send notifications and updates</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">46</context>
-=======
           <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
@@ -4118,7 +4021,7 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <target state="final">Instagram</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3904765192936839024" datatype="html">
@@ -4138,7 +4041,7 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <target state="final">Facebook</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="314453050938313155" datatype="html">
@@ -4154,7 +4057,7 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <target state="final">Twitter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4440081753597585133" datatype="html">
@@ -4162,7 +4065,7 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <target state="final">LinkedIn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7016218350870170625" datatype="html">
@@ -4178,16 +4081,15 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <target state="final">Pinterest</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4407039394995040947" datatype="html">
         <source>Invalid Pinterest URL</source>
         <target state="final">Invalid Pinterest URL</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">194</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7457588667876942577" datatype="html">
@@ -4195,19 +4097,11 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <target state="final">VAT Number</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">105</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">64</context>
-=======
           <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">71</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="304992313093218309" datatype="html">
@@ -4215,19 +4109,11 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <target state="final">This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">106</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">65</context>
-=======
           <context context-type="linenumber">118</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">72</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7185949621526158605" datatype="html">
@@ -4235,15 +4121,11 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
         <target state="final">Number must be 9 or 12 digits with or without GB at the start</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">71</context>
-=======
-          <context context-type="linenumber">123</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2128629015726973593" datatype="html">
@@ -4254,10 +4136,8 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
           <context context-type="linenumber">106</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">75</context>
-=======
           <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
@@ -4317,9 +4197,8 @@ Withdraw membership from, this action can't be undone.          <x id="START_BOL
           <context context-type="linenumber">111</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">88</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="2542084650036617104" datatype="html">
@@ -4331,11 +4210,7 @@ Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">165</context>
-=======
-          <context context-type="linenumber">256</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8696509214436479036" datatype="html">
@@ -4343,11 +4218,7 @@ Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         <target state="final">Are you sure you want to leave this company?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">166</context>
-=======
-          <context context-type="linenumber">257</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7489917179635795879" datatype="html">
@@ -4355,11 +4226,7 @@ Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         <target state="final">Leave Company</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">174</context>
-=======
-          <context context-type="linenumber">265</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">223</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6873982912779936167" datatype="html">
@@ -4367,11 +4234,7 @@ Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         <target state="final">Successfully left company</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">179</context>
-=======
-          <context context-type="linenumber">270</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7866081016755839002" datatype="html">
@@ -4379,11 +4242,7 @@ Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         <target state="final">An error occured while trying to leave, try again later</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">182</context>
-=======
-          <context context-type="linenumber">273</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="da09217876333a82d36ae035c7e0017407f29fc2" datatype="html">
@@ -4507,7 +4366,11 @@ Welcome, you're ready to start browsing, for your information here are a few lin
         </context-group>
       </trans-unit>
       <trans-unit id="758217b3298b0d2af065f71b2d69325d1d0933d8" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Watch live productions fromanywhere in the world, from the comfort of your home.A bespoke service tailored to the next generation of performance arts.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"></x>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <source>
 Watch live productions fromanywhere in the world, from the comfort of your home.A bespoke service tailored to the next generation of performance arts.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"></x>
           <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
@@ -4518,27 +4381,29 @@ Watch live productions fromanywhere in the world, from the comfort of your home.
           <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
           <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
-=======
-        <source> Watch live productions from <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"/> anywhere in the world <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>, from the comfort of your home.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> A bespoke service tailored to the next generation of performance arts. </source>
-        <target state="final"> Watch live productions from <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"/> anywhere in the world <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>, from the comfort of your home.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> A bespoke service tailored to the next generation of performance arts. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Watch live productions fromanywhere in the world, from the comfort of your home.A bespoke service tailored to the next generation of performance arts.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"></x>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/host-landing/host-landing.component.html</context>
           <context context-type="linenumber">17,20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c3402591d05cd5658c0f57060c5bbb292c785866" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <source>
 Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="final">
 Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
-=======
-        <source> Enter your email and we will send you instructions to <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> generate a new password. </source>
-        <target state="final"> Enter your email and we will send you instructions to <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> generate a new password. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/forgot-password/forgot-password.component.html</context>
           <context context-type="linenumber">5,7</context>
@@ -4633,7 +4498,7 @@ Enter your email and we will send you instructions togenerate a new password.   
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2454050363478003966" datatype="html">
@@ -4641,7 +4506,7 @@ Enter your email and we will send you instructions togenerate a new password.   
         <target state="final">Login</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/login.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="34557152cff7bc7db72a2a8706794d7fba4bac86" datatype="html">
@@ -4733,17 +4598,18 @@ Enter your email and we will send you instructions togenerate a new password.   
         </context-group>
       </trans-unit>
       <trans-unit id="05b447a05742fda6bf1d6cac270fbf6fc9dee161" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <source>
 The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="final">
 The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
-=======
-        <source> The all-in-one platform for consuming &amp; creating performing arts content!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>Please select the option for which best suits your intended useage of StageUp. </source>
-        <target state="final"> The all-in-one platform for consuming &amp; creating performing arts content!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>Please select the option for which best suits your intended useage of StageUp. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/user-type-clarification/user-type-clarification.component.html</context>
           <context context-type="linenumber">5,7</context>
@@ -4814,7 +4680,12 @@ The all-in-one platform for consuming &amp; creating performing arts content!Ple
         </context-group>
       </trans-unit>
       <trans-unit id="6cef9a1687b166af08d5f0649e0e99384e9a922f" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+You mustregisterorlog inbefore being able to purchase this performance.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </source>
         <source>
 You mustregisterorlog inbefore being able to purchase this performance.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"></x>
           <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
@@ -4827,10 +4698,12 @@ You mustregisterorlog inbefore being able to purchase this performance.         
           <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"></x>
           <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
         </target>
-=======
-        <source> You must <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"/>register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> or <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"/>log in<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> before being able to purchase this performance. </source>
-        <target state="final"> You must <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"/>register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> or <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"/>log in<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> before being able to purchase this performance. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+You mustregisterorlog inbefore being able to purchase this performance.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
           <context context-type="linenumber">29</context>
@@ -4877,7 +4750,11 @@ You mustregisterorlog inbefore being able to purchase this performance.         
         </context-group>
       </trans-unit>
       <trans-unit id="c985fad22a5979147f1056e02795065945b302b3" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"></x>
+        </source>
         <source>
 You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="INTERPOLATION" equiv-text="{{ performance.name }}"></x>
@@ -4888,19 +4765,23 @@ You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text
           <x id="INTERPOLATION" equiv-text="{{ performance.name }}"></x>
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"></x>
         </target>
-=======
-        <source> You're going to watch "<x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ performance.name }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-                >"/>" </source>
-        <target state="final"> You're going to watch "<x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ performance.name }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-                >"/>" </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
           <context context-type="linenumber">115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6c54aaca3b5e8aedc8194d1a03a07dccec525069" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+@is due to premiere this stream at, you'll be notified by e-mail before it begins.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+        </source>
         <source>
 @is due to premiere this stream at, you'll be notified by e-mail before it begins.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"></x>
@@ -4913,17 +4794,23 @@ You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
           <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
         </target>
-=======
-        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>@<x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> is due to premiere this stream at <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>, you'll be notified by e-mail before it begins. </source>
-        <target state="final"><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>@<x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> is due to premiere this stream at <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>, you'll be notified by e-mail before it begins. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+@is due to premiere this stream at, you'll be notified by e-mail before it begins.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
           <context context-type="linenumber">121</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e3ba37467fdfa9fa70189fdf3b7cb01eadeb65c0" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </source>
         <source>
 Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
           <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"></x>
@@ -4934,10 +4821,11 @@ Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ct
           <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"></x>
           <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
         </target>
-=======
-        <source> Purchase confirmation will arrive at <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> shortly. </source>
-        <target state="final"> Purchase confirmation will arrive at <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> shortly. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
           <context context-type="linenumber">126</context>
@@ -4992,17 +4880,18 @@ Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ct
         </context-group>
       </trans-unit>
       <trans-unit id="be451c2a6269405f9e6b1bf8e365a9cb56478bd3" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"></x>
+        </source>
         <source>
 remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"></x>
         </source>
         <target state="final">
 remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"></x>
         </target>
-=======
-        <source> <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"/> remaining </source>
-        <target state="final"> <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"/> remaining </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-ticket/performance-ticket.component.html</context>
           <context context-type="linenumber">12,14</context>
@@ -5049,7 +4938,10 @@ remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remainin
         </context-group>
       </trans-unit>
       <trans-unit id="8d43f19426a35c5b34219af066c0196dbb792299" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"></x>
+          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"></x>
+        </source>
         <source>
 Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"></x>
           <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"></x>
@@ -5058,10 +4950,10 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
 Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"></x>
           <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"></x>
         </target>
-=======
-        <source> Companies <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"/><x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"/></source>
-        <target state="final"> Companies <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"/><x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"></x>
+          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/search/search.component.html</context>
           <context context-type="linenumber">4</context>
@@ -5188,7 +5080,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7293347258713947796" datatype="html">
@@ -5212,7 +5104,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Your name may appear around StageUp where you contribute or are mentioned.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4222149582871653761" datatype="html">
@@ -5220,7 +5112,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Must provide a valid e-mail address</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6769219112239702582" datatype="html">
@@ -5228,7 +5120,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Bio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2826581353496868063" datatype="html">
@@ -5236,7 +5128,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Language</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5866254605255506989" datatype="html">
@@ -5244,7 +5136,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">English</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3683417119663608678" datatype="html">
@@ -5252,7 +5144,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Welsh</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3586701851625152417" datatype="html">
@@ -5260,7 +5152,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Norwegian (Bokmål)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5ad279d6e9f56b32c2902b3caf41db4b7fc599b2" datatype="html">
@@ -5292,7 +5184,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Search</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3317b8688eb2cfabc4021cd7b2926b32f3864ad2" datatype="html">
@@ -5300,7 +5192,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Choose a date</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">249</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1d7ed2343579b6d2528114177b13f59e55b96cef" datatype="html">
@@ -5308,11 +5200,11 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Enter a date range</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">264</context>
+          <context context-type="linenumber">234</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">323</context>
+          <context context-type="linenumber">293</context>
         </context-group>
       </trans-unit>
       <trans-unit id="77bbe324b08f6636fb50f673cea05313b86fb692" datatype="html">
@@ -5320,7 +5212,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Start date</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">277</context>
+          <context context-type="linenumber">247</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f60960faa2cd3e0db11e48688774d05dfa9d715b" datatype="html">
@@ -5328,7 +5220,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">End date</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">254</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
@@ -5336,7 +5228,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Cancel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c2d0ac9f528bbd5f53fd34269fde8b59e029621b" datatype="html">
@@ -5344,7 +5236,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Apply</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">292</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5878305334612867800" datatype="html">
@@ -5356,7 +5248,10 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         </context-group>
       </trans-unit>
       <trans-unit id="5248924511731123727" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"></x>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+        </source>
         <source>
 must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"></x>
           <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
@@ -5365,17 +5260,20 @@ must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.lab
 must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"></x>
           <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
         </target>
-=======
-        <source><x id="PH" equiv-text="this.data.options.label"/> must be at-least <x id="PH_1" equiv-text="errors[e].requiredLength"/> characters</source>
-        <target state="final"><x id="PH" equiv-text="this.data.options.label"/> must be at-least <x id="PH_1" equiv-text="errors[e].requiredLength"/> characters</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"></x>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
           <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3941996853800677819" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"></x>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+        </source>
         <source>
 must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"></x>
           <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
@@ -5384,10 +5282,10 @@ must be less thancharacters          <x id="PH" equiv-text="this.data.options.la
 must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"></x>
           <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
         </target>
-=======
-        <source><x id="PH" equiv-text="this.data.options.label"/> must be less than <x id="PH_1" equiv-text="errors[e].requiredLength"/> characters</source>
-        <target state="final"><x id="PH" equiv-text="this.data.options.label"/> must be less than <x id="PH_1" equiv-text="errors[e].requiredLength"/> characters</target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"></x>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
           <context context-type="linenumber">170</context>
@@ -5766,7 +5664,11 @@ is required          <x id="PH" equiv-text="this.data.options.label"></x>
         </context-group>
       </trans-unit>
       <trans-unit id="table_range_range" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+-of          <x id="PH" equiv-text="startIndex + 1"></x>
+          <x id="PH_1" equiv-text="endIndex"></x>
+          <x id="PH_2" equiv-text="length"></x>
+        </source>
         <source>
 -of          <x id="PH" equiv-text="startIndex + 1"></x>
           <x id="PH_1" equiv-text="endIndex"></x>
@@ -5777,10 +5679,11 @@ is required          <x id="PH" equiv-text="this.data.options.label"></x>
           <x id="PH_1" equiv-text="endIndex"></x>
           <x id="PH_2" equiv-text="length"></x>
         </target>
-=======
-        <source><x id="PH" equiv-text="startIndex + 1"/> - <x id="PH_1" equiv-text="endIndex"/> of <x id="PH_2" equiv-text="length"/></source>
-        <target state="final"><x id="PH" equiv-text="startIndex + 1"/> - <x id="PH_1" equiv-text="endIndex"/> of <x id="PH_2" equiv-text="length"/></target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+-of          <x id="PH" equiv-text="startIndex + 1"></x>
+          <x id="PH_1" equiv-text="endIndex"></x>
+          <x id="PH_2" equiv-text="length"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
           <context context-type="linenumber">67</context>
@@ -5795,7 +5698,10 @@ is required          <x id="PH" equiv-text="this.data.options.label"></x>
         </context-group>
       </trans-unit>
       <trans-unit id="e3a7d77d3cc7264d804c40996757038fd5698e33" datatype="html">
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5        <source>
+Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </source>
         <source>
 Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"></x>
           <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
@@ -5804,10 +5710,10 @@ Contains all the stylings and components to be used throughout the site, checkTa
 Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"></x>
           <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
         </target>
-=======
-        <source> Contains all the stylings and components to be used throughout the site, check <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"/>TailwindCSS<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> docs for more info. </source>
-        <target state="final"> Contains all the stylings and components to be used throughout the site, check <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"/>TailwindCSS<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> docs for more info. </target>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+        <target state="final">
+Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>
           <context context-type="linenumber">6,8</context>

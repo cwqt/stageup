@@ -236,7 +236,7 @@ Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith<
       <trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
         <source>**Hi {host_name},**
 
-You have initiated a refunds for {refund_quantity} invoices
+You have initiated refunds for {refund_quantity} invoices
 
 **Total value: **{invoices_total}**
 

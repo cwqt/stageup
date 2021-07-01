@@ -1,4 +1,3 @@
-
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="cy">
     <body>
@@ -162,12 +161,9 @@
           <context context-type="linenumber">8</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">87</context>
-=======
           <context context-type="linenumber">88</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3647914214639404913" datatype="html">
@@ -178,12 +174,9 @@
           <context context-type="linenumber">9</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">175</context>
-=======
           <context context-type="linenumber">188</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3769868024967739310" datatype="html">
@@ -194,12 +187,9 @@
           <context context-type="linenumber">10</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">211</context>
-=======
           <context context-type="linenumber">224</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="8204176479746810612" datatype="html">
@@ -411,9 +401,11 @@
         </context-group>
       </trans-unit>
       <trans-unit id="e8dbe96a1c60d51b74540085aebc58c4efb05aef" datatype="html">
-        <source> Live-streaming &amp; VoD platform for the performing arts. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> Copyright © 2021 StageUp Ltd. All rights reserved. </source>
+        <source>
+Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <target state="needs-translation">
-Ffrydio byw &amp; amp; Llwyfan VoD ar gyfer y celfyddydau perfformio.Copyright © 2021 StageUp Ltd. Cedwir pob hawl.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
+Ffrydio byw &amp; amp; Llwyfan VoD ar gyfer y celfyddydau perfformio.Copyright © 2021 StageUp Ltd. Cedwir pob hawl.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/footer/footer.component.html</context>
@@ -749,11 +741,7 @@ Ffrydio byw &amp; amp; Llwyfan VoD ar gyfer y celfyddydau perfformio.Copyright �
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">169</context>
-=======
-          <context context-type="linenumber">260</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">218</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6932865105766151309" datatype="html">
@@ -793,9 +781,11 @@ Ffrydio byw &amp; amp; Llwyfan VoD ar gyfer y celfyddydau perfformio.Copyright �
         </context-group>
       </trans-unit>
       <trans-unit id="6704172320602149660" datatype="html">
-        <source>File type <x id="PH" equiv-text="inputElement.files[0].type"/> not allowed</source>
+        <source>
+File typenot allowed          <x id="PH" equiv-text="inputElement.files[0].type"></x>
+        </source>
         <target state="needs-translation">
-Caniateir typenot ffeil          <x id="PH" equiv-text="inputElement.files[0].type"/>
+Caniateir typenot ffeil          <x id="PH" equiv-text="inputElement.files[0].type"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/change-image/change-image.component.ts</context>
@@ -1003,11 +993,15 @@ Caniateir typenot ffeil          <x id="PH" equiv-text="inputElement.files[0].ty
         </context-group>
       </trans-unit>
       <trans-unit id="bd6458adaf50efc183bc8dcb6db419d8fd69fd6a" datatype="html">
-        <source>Invoice Number: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"/>#<x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/></source>
+        <source>
+Invoice Number:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"></x>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+        </source>
         <target state="needs-translation">
-Rhif anfoneb:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"/>
-          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"/>
-          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
+Rhif anfoneb:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;opacity-50&quot;>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ invoice.data.invoice_id }}"></x>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.html</context>
@@ -1015,9 +1009,11 @@ Rhif anfoneb:#          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;sp
         </context-group>
       </trans-unit>
       <trans-unit id="0267803b05ef78e907e934a94905f76aa8fa1724" datatype="html">
-        <source>Amount: <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"/></source>
+        <source>
+Amount:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"></x>
+        </source>
         <target state="needs-translation">
-Swm:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"/>
+Swm:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currencyPipe: invoice.data.currency }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.html</context>
@@ -1033,9 +1029,11 @@ Swm:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.amount | currenc
         </context-group>
       </trans-unit>
       <trans-unit id="badb211eb1b9591a00079bbcc8152917ecc444f6" datatype="html">
-        <source>Username: <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"/> </source>
+        <source>
+Username:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"></x>
+        </source>
         <target state="needs-translation">
-Enw defnyddiwr:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"/>
+Enw defnyddiwr:          <x id="INTERPOLATION" equiv-text="{{ invoice.data.user.username }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/dialogs/process-refunds-dialog/process-refunds-dialog.component.html</context>
@@ -1239,10 +1237,13 @@ Ydych chi'n siŵr eich bod chi am ad-daliadau?          <x id="PH" equiv-text="t
         </context-group>
       </trans-unit>
       <trans-unit id="e1de2b08e3d110ac228e3206f6914c48a855d8ab" datatype="html">
-        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>Add new Card<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/></source>
+        <source>
+Add new Card          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </source>
         <target state="needs-translation">
-Ychwanegu Cerdyn newydd          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
+Ychwanegu Cerdyn newydd          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-collector/payment-method-collector.component.html</context>
@@ -1274,19 +1275,11 @@ Ychwanegu Cerdyn newydd          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text=
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">123</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">87</context>
-=======
           <context context-type="linenumber">136</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">104</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3900973269747328092" datatype="html">
@@ -1306,19 +1299,11 @@ Ychwanegu Cerdyn newydd          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text=
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">147</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">80</context>
-=======
           <context context-type="linenumber">160</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">97</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="9152239466994048368" datatype="html">
@@ -1338,19 +1323,11 @@ Ychwanegu Cerdyn newydd          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text=
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">151</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">84</context>
-=======
           <context context-type="linenumber">164</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">101</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="2524452943996127527" datatype="html">
@@ -1370,19 +1347,11 @@ Ychwanegu Cerdyn newydd          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text=
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">136</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">100</context>
-=======
           <context context-type="linenumber">149</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">117</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3394206503815564138" datatype="html">
@@ -1410,9 +1379,11 @@ Ychwanegu Cerdyn newydd          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text=
         </context-group>
       </trans-unit>
       <trans-unit id="bed4a50045306fae0a3062590d76342fd3b2c317" datatype="html">
-        <source>Ending in <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"/></source>
+        <source>
+Ending in          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
+        </source>
         <target state="needs-translation">
-Yn dod i ben          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"/>
+Yn dod i ben          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-thumb/payment-method-thumb.component.html</context>
@@ -1444,9 +1415,11 @@ Yn dod i ben          <x id="INTERPOLATION" equiv-text="{{ method.last4 }}"/>
         </context-group>
       </trans-unit>
       <trans-unit id="789417527951964163" datatype="html">
-        <source>This will permanently remove the card ending in <x id="PH" equiv-text="this.method.last4"/> from your account.</source>
+        <source>
+This will permanently remove the card ending infrom your account.          <x id="PH" equiv-text="this.method.last4"></x>
+        </source>
         <target state="needs-translation">
-Bydd hyn yn cael gwared ar y cerdyn sy'n dod i ben yn barhaol o'ch cyfrif yn barhaol.          <x id="PH" equiv-text="this.method.last4"/>
+Bydd hyn yn cael gwared ar y cerdyn sy'n dod i ben yn barhaol o'ch cyfrif yn barhaol.          <x id="PH" equiv-text="this.method.last4"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/payment-method/payment-method-thumb/payment-method-thumb.component.ts</context>
@@ -1638,9 +1611,11 @@ Bydd hyn yn cael gwared ar y cerdyn sy'n dod i ben yn barhaol o'ch cyfrif yn bar
         </context-group>
       </trans-unit>
       <trans-unit id="7cdd682f86ea11c29a5a871ba3a36f807e027b61" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"/> steps unchecked</source>
+        <source>
+steps unchecked          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"></x>
+        </source>
         <target state="needs-translation">
-camau heb eu gwirio          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"/>
+camau heb eu gwirio          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCount() }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/onboarding-view/onboarding-view.component.html</context>
@@ -1777,10 +1752,10 @@ camau heb eu gwirio          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCo
       </trans-unit>
       <trans-unit id="8310453679481646898" datatype="html">
         <source>
-Failed fetching page for          <x id="PH" equiv-text="carouselIndex"/>
+Failed fetching page for          <x id="PH" equiv-text="carouselIndex"></x>
         </source>
         <target state="needs-translation">
-Methwyd tudalen nôl ar gyfer          <x id="PH" equiv-text="carouselIndex"/>
+Methwyd tudalen nôl ar gyfer          <x id="PH" equiv-text="carouselIndex"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
@@ -1796,9 +1771,11 @@ Methwyd tudalen nôl ar gyfer          <x id="PH" equiv-text="carouselIndex"/>
         </context-group>
       </trans-unit>
       <trans-unit id="412dcf0b21727619653e364da5fa707ada4524b6" datatype="html">
-        <source> Creating a company account gives you permissions to start streams &amp; manage ticketing.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> You will have to go through a further onboarding step before being to make your content public to StageUp users. </source>
+        <source>
+Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <target state="needs-translation">
-Mae creu cyfrif cwmni yn rhoi caniatâd i chi gychwyn ffrydiau &amp; amp; rheoli tocynnau. Bydd yn rhaid i chi fynd trwy gam pellach cyn bod i wneud eich cynnwys yn gyhoeddus i ddefnyddwyr StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
+Mae creu cyfrif cwmni yn rhoi caniatâd i chi gychwyn ffrydiau &amp; amp; rheoli tocynnau. Bydd yn rhaid i chi fynd trwy gam pellach cyn bod i wneud eich cynnwys yn gyhoeddus i ddefnyddwyr StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/create-host/create-host.component.html</context>
@@ -1865,12 +1842,9 @@ Mae creu cyfrif cwmni yn rhoi caniatâd i chi gychwyn ffrydiau &amp; amp; rheoli
           <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">43</context>
-=======
           <context context-type="linenumber">50</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7958310305025725897" datatype="html">
@@ -1970,10 +1944,13 @@ Mae creu cyfrif cwmni yn rhoi caniatâd i chi gychwyn ffrydiau &amp; amp; rheoli
         </context-group>
       </trans-unit>
       <trans-unit id="6d95403ebc7e349ea9981a740c796597f84f87cd" datatype="html">
-        <source>Recovery of your account is <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>not possible<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>!</source>
+        <source>
+Recovery of your account isnot possible!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </source>
         <target state="needs-translation">
-Nid yw adfer eich cyfrif yn bosibl!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
+Nid yw adfer eich cyfrif yn bosibl!          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.html</context>
@@ -2005,9 +1982,11 @@ Nid yw adfer eich cyfrif yn bosibl!          <x id="START_BOLD_TEXT" ctype="x-b"
         </context-group>
       </trans-unit>
       <trans-unit id="f8fb864e4cf94310247ed9c634576cadd0476015" datatype="html">
-        <source>due to premiere at <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/></source>
+        <source>
+due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+        </source>
         <target state="needs-translation">
-oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>
+oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.html</context>
@@ -2111,7 +2090,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Dirywiad ad-daliadau</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1780946063005668371" datatype="html">
@@ -2119,7 +2098,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Dadlwythwch anfoneb (au)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6825329815737519497" datatype="html">
@@ -2127,7 +2106,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Allforio fel CSV</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component.ts</context>
@@ -2141,7 +2120,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
  Bydd e-bost gyda'ch atodiadau yn cyrraedd yr e-bost a restrir ar y cyfrif cwmni hwn yn fuan</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2082828105416395424" datatype="html">
@@ -2149,7 +2128,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Digwyddodd gwall wrth allforio i CSV</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8644253508133206821" datatype="html">
@@ -2157,7 +2136,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Allforio fel PDF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component.ts</context>
@@ -2171,7 +2150,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
  Bydd e-bost gyda'ch atodiadau yn cyrraedd yr e-bost a restrir ar y cyfrif cwmni hwn yn fuan</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2815740745940703886" datatype="html">
@@ -2179,7 +2158,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Digwyddodd gwall wrth allforio i PDF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="848325271509990598" datatype="html">
@@ -2187,7 +2166,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">ID yr anfoneb</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2199,7 +2178,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Perfformiad</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">134</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2211,7 +2190,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Tocyn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2223,7 +2202,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Dyddiad yr Anfoneb</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2235,7 +2214,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Swm</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component.ts</context>
@@ -2255,7 +2234,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Swm Net</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5611592591303869712" datatype="html">
@@ -2263,7 +2242,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         <target state="needs-translation">Statws</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component.ts</context>
@@ -2383,9 +2362,11 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
         </context-group>
       </trans-unit>
       <trans-unit id="66f25fb64ed29a8bb0fe2a04b86d1b19806814f1" datatype="html">
-        <source>Last reviewed by: <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"/></source>
+        <source>
+Last reviewed by:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"></x>
+        </source>
         <target state="needs-translation">
-Adolygwyd ddiwethaf gan:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"/>
+Adolygwyd ddiwethaf gan:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed_by.username }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
@@ -2393,9 +2374,11 @@ Adolygwyd ddiwethaf gan:          <x id="INTERPOLATION" equiv-text="{{ onboardin
         </context-group>
       </trans-unit>
       <trans-unit id="2c18dd23b5d5f06c98c25b8401cb263195070d79" datatype="html">
-        <source>Last reviewed at: <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"/></source>
+        <source>
+Last reviewed at:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"></x>
+        </source>
         <target state="needs-translation">
-Adolygwyd ddiwethaf yn:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"/>
+Adolygwyd ddiwethaf yn:          <x id="INTERPOLATION" equiv-text="{{ onboarding.data.last_reviewed | amFromUnix }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
@@ -2411,9 +2394,11 @@ Adolygwyd ddiwethaf yn:          <x id="INTERPOLATION" equiv-text="{{ onboarding
         </context-group>
       </trans-unit>
       <trans-unit id="fd7eed48845c9e4b90fb822e8a3ab04dfb14bf40" datatype="html">
-        <source> Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes. <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> This process typically takes around a day. </source>
+        <source>
+Our team is currently in the process of reviewing your information, once completed we will notify you via e-mail for changes.This process typically takes around a day.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <target state="needs-translation">
-Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblhau byddwn yn eich hysbysu trwy e-bost am newidiadau. Mae'r broses hon fel arfer yn cymryd tua diwrnod.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
+Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblhau byddwn yn eich hysbysu trwy e-bost am newidiadau. Mae'r broses hon fel arfer yn cymryd tua diwrnod.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
@@ -2449,19 +2434,11 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         <target state="needs-translation">Rhif Cwmni Cyllid a Thollau EM</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">93</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">55</context>
-=======
           <context context-type="linenumber">94</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">62</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="458537271622473293" datatype="html">
@@ -2469,19 +2446,11 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         <target state="needs-translation">Rhif Cyswllt Busnes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">100</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">50</context>
-=======
           <context context-type="linenumber">101</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">57</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="5980633567524214484" datatype="html">
@@ -2489,19 +2458,11 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         <target state="needs-translation">O'r ffurflen 1724 123321, dim sero blaenllaw</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">101</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">51</context>
-=======
           <context context-type="linenumber">102</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">58</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="2651572224940085362" datatype="html">
@@ -2509,19 +2470,11 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         <target state="needs-translation">Cyfeiriad Busnes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">116</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">77</context>
-=======
           <context context-type="linenumber">129</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">94</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="516176798986294299" datatype="html">
@@ -2533,12 +2486,11 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="855872803871324523" datatype="html">
@@ -2579,13 +2531,6 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.ts</context>
           <context context-type="linenumber">70</context>
-=======
-          <context context-type="linenumber">140</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">108</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="6763533414436592129" datatype="html">
@@ -2593,31 +2538,20 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         <target state="needs-translation">Ddim yn god post dilys</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">142</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">106</context>
-=======
           <context context-type="linenumber">155</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">123</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="5701618810648052610" datatype="html">
         <source>Title</source>
         <target state="needs-translation">Teitl</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">181</context>
-=======
           <context context-type="linenumber">194</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/update-performance/app-update-performance.component.ts</context>
@@ -2628,124 +2562,94 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         <source>Mr</source>
         <target state="needs-translation">Dywedodd Mr.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">183</context>
-=======
           <context context-type="linenumber">196</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="9150055758879543882" datatype="html">
         <source>Miss</source>
         <target state="needs-translation">Miss</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">184</context>
-=======
           <context context-type="linenumber">197</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="6596832884812875220" datatype="html">
         <source>Mrs</source>
         <target state="needs-translation">Mrs</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">185</context>
-=======
           <context context-type="linenumber">198</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7437237689758241140" datatype="html">
         <source>Ms</source>
         <target state="needs-translation">Ms</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">186</context>
-=======
           <context context-type="linenumber">199</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="1931106069119599587" datatype="html">
         <source>Dr</source>
         <target state="needs-translation">Dr.</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">187</context>
-=======
           <context context-type="linenumber">200</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="1951990390156602647" datatype="html">
         <source>Professor</source>
         <target state="needs-translation">Athro</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">188</context>
-=======
           <context context-type="linenumber">201</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="8083897527920072255" datatype="html">
         <source>Master</source>
         <target state="needs-translation">Meistr</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">189</context>
-=======
           <context context-type="linenumber">202</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="5342432350421167093" datatype="html">
         <source>First name</source>
         <target state="needs-translation">Enw cyntaf</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">194</context>
-=======
           <context context-type="linenumber">207</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="3586674587150281199" datatype="html">
         <source>Last name</source>
         <target state="needs-translation">Enw olaf</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">198</context>
-=======
           <context context-type="linenumber">211</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="5481284030283031915" datatype="html">
         <source>Website</source>
         <target state="needs-translation">Gwefan</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
           <context context-type="linenumber">216</context>
-=======
           <context context-type="linenumber">229</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">133</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7746461358973988084" datatype="html">
@@ -2805,9 +2709,11 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
         </context-group>
       </trans-unit>
       <trans-unit id="2366969524418235378" datatype="html">
-        <source>Created patron tier: <x id="PH" equiv-text="tier.name"/>!</source>
+        <source>
+Created patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+        </source>
         <target state="needs-translation">
-Haen noddwr wedi'i greu :!          <x id="PH" equiv-text="tier.name"/>
+Haen noddwr wedi'i greu :!          <x id="PH" equiv-text="tier.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component.ts</context>
@@ -2815,9 +2721,11 @@ Haen noddwr wedi'i greu :!          <x id="PH" equiv-text="tier.name"/>
         </context-group>
       </trans-unit>
       <trans-unit id="6630852968132665662" datatype="html">
-        <source>Updated patron tier: <x id="PH" equiv-text="tier.name"/>!</source>
+        <source>
+Updated patron tier:!          <x id="PH" equiv-text="tier.name"></x>
+        </source>
         <target state="needs-translation">
-Haen noddwr wedi'i diweddaru :!          <x id="PH" equiv-text="tier.name"/>
+Haen noddwr wedi'i diweddaru :!          <x id="PH" equiv-text="tier.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component.ts</context>
@@ -2997,12 +2905,15 @@ Haen noddwr wedi'i diweddaru :!          <x id="PH" equiv-text="tier.name"/>
         </context-group>
       </trans-unit>
       <trans-unit id="1707617220912072818" datatype="html">
-        <source>Are you sure you want to delete <x id="PH" equiv-text="this.tier.name"/>?
- This action will unsubscribe all <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"/> patrons</source>
+        <source>
+Are you sure you want to delete?
+ This action will unsubscribe allpatrons          <x id="PH" equiv-text="this.tier.name"></x>
+          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"></x>
+        </source>
         <target state="needs-translation">
 Ydych chi'n siŵr eich bod chi am ddileu?
- Bydd y weithred hon yn dad-danysgrifio allpatrons          <x id="PH" equiv-text="this.tier.name"/>
-          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"/>
+ Bydd y weithred hon yn dad-danysgrifio allpatrons          <x id="PH" equiv-text="this.tier.name"></x>
+          <x id="PH_1" equiv-text="this.tier as IHostPatronTier).total_patrons"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-payments/host-patronage/patron-tier-thumb/patron-tier-thumb.component.ts</context>
@@ -3162,11 +3073,13 @@ Yn gyntaf rhaid i chi orffen y broses fyrddio cyn y gellir gwneud unrhyw gynnwys
         </context-group>
       </trans-unit>
       <trans-unit id="9d1caa8ee71cbe0e1b2252aba15fe1e40234dda7" datatype="html">
-        <source> You must first finish the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"/>onboarding process<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> before any content can be made Public.
-</source>
+        <source>
+You must first finish theonboarding processbefore any content can be made Public.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </source>
         <target state="needs-translation">
-Yn gyntaf rhaid i chi orffen y broses fyrddio cyn y gellir cyhoeddi unrhyw gynnwys.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"/>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
+Yn gyntaf rhaid i chi orffen y broses fyrddio cyn y gellir cyhoeddi unrhyw gynnwys.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a routerLink=&quot;/dashboard&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-details/host-performance-details.component.html</context>
@@ -3386,9 +3299,11 @@ Yn gyntaf rhaid i chi orffen y broses fyrddio cyn y gellir cyhoeddi unrhyw gynnw
         </context-group>
       </trans-unit>
       <trans-unit id="3219384879221660068" datatype="html">
-        <source>Updated ticket: <x id="PH" equiv-text="ticket.name"/>!</source>
+        <source>
+Updated ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+        </source>
         <target state="needs-translation">
-Tocyn wedi'i ddiweddaru :!          <x id="PH" equiv-text="ticket.name"/>
+Tocyn wedi'i ddiweddaru :!          <x id="PH" equiv-text="ticket.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component.ts</context>
@@ -3396,9 +3311,11 @@ Tocyn wedi'i ddiweddaru :!          <x id="PH" equiv-text="ticket.name"/>
         </context-group>
       </trans-unit>
       <trans-unit id="7535830281602803549" datatype="html">
-        <source>Created ticket: <x id="PH" equiv-text="ticket.name"/>!</source>
+        <source>
+Created ticket:!          <x id="PH" equiv-text="ticket.name"></x>
+        </source>
         <target state="needs-translation">
-Tocyn wedi'i greu :!          <x id="PH" equiv-text="ticket.name"/>
+Tocyn wedi'i greu :!          <x id="PH" equiv-text="ticket.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component.ts</context>
@@ -3506,9 +3423,11 @@ Tocyn wedi'i greu :!          <x id="PH" equiv-text="ticket.name"/>
         </context-group>
       </trans-unit>
       <trans-unit id="764261934249188522" datatype="html">
-        <source>Shared performance with <x id="PH" equiv-text="this.addedEmailAddresses.length"/> users</source>
+        <source>
+Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddresses.length"></x>
+        </source>
         <target state="needs-translation">
-Rhannu perfformiad          <x id="PH" equiv-text="this.addedEmailAddresses.length"/>
+Rhannu perfformiad          <x id="PH" equiv-text="this.addedEmailAddresses.length"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/share-performance-dialog/share-performance-dialog.component.ts</context>
@@ -3612,9 +3531,11 @@ Rhannu perfformiad          <x id="PH" equiv-text="this.addedEmailAddresses.leng
         </context-group>
       </trans-unit>
       <trans-unit id="5954536472139700300" datatype="html">
-        <source>Created performance: <x id="PH" equiv-text="v.name"/>!</source>
+        <source>
+Created performance:!          <x id="PH" equiv-text="v.name"></x>
+        </source>
         <target state="needs-translation">
-Perfformiad wedi'i greu :!          <x id="PH" equiv-text="v.name"/>
+Perfformiad wedi'i greu :!          <x id="PH" equiv-text="v.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/create-performance/create-performance.component.ts</context>
@@ -3663,10 +3584,10 @@ Perfformiad wedi'i greu :!          <x id="PH" equiv-text="v.name"/>
       </trans-unit>
       <trans-unit id="6012665925966754126" datatype="html">
         <source>
-Delete ''          <x id="PH" equiv-text="performance.name"/>
+Delete ''          <x id="PH" equiv-text="performance.name"></x>
         </source>
         <target state="needs-translation">
-Dileu ''          <x id="PH" equiv-text="performance.name"/>
+Dileu ''          <x id="PH" equiv-text="performance.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
@@ -3682,9 +3603,11 @@ Dileu ''          <x id="PH" equiv-text="performance.name"/>
         </context-group>
       </trans-unit>
       <trans-unit id="db248d938d590a75ecff36d583a847ffb78ea19d" datatype="html">
-        <source>About <x id="INTERPOLATION" equiv-text="{{ host.name }}"/></source>
+        <source>
+About          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
+        </source>
         <target state="needs-translation">
-Am          <x id="INTERPOLATION" equiv-text="{{ host.name }}"/>
+Am          <x id="INTERPOLATION" equiv-text="{{ host.name }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-about/host-profile-about.component.html</context>
@@ -3724,12 +3647,15 @@ Am          <x id="INTERPOLATION" equiv-text="{{ host.name }}"/>
         </context-group>
       </trans-unit>
       <trans-unit id="f67300f7c4acfe40151c11939c010c59380693a1" datatype="html">
-        <source> This tier will cost <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-    >"/>, which will be billed on a monthly basis, starting today. </source>
+        <source>
+This tier will cost, which will be billed on a monthly basis, starting today.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"></x>
+        </source>
         <target state="needs-translation">
-Bydd yr haen hon yn costio, a fydd yn cael ei bilio bob mis, gan ddechrau heddiw.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"/>
+Bydd yr haen hon yn costio, a fydd yn cael ei bilio bob mis, gan ddechrau heddiw.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ data.tier.amount | currencyPipe: data.tier.currency }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b     >"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component.html</context>
@@ -3753,9 +3679,11 @@ Bydd yr haen hon yn costio, a fydd yn cael ei bilio bob mis, gan ddechrau heddiw
         </context-group>
       </trans-unit>
       <trans-unit id="4000130407873529598" datatype="html">
-        <source>Successfully subscribed to <x id="PH" equiv-text="this.data.tier.name"/>!</source>
+        <source>
+Successfully subscribed to!          <x id="PH" equiv-text="this.data.tier.name"></x>
+        </source>
         <target state="needs-translation">
-Tanysgrifiwyd yn llwyddiannus!          <x id="PH" equiv-text="this.data.tier.name"/>
+Tanysgrifiwyd yn llwyddiannus!          <x id="PH" equiv-text="this.data.tier.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component.ts</context>
@@ -3847,12 +3775,15 @@ Tanysgrifiwyd yn llwyddiannus!          <x id="PH" equiv-text="this.data.tier.na
         </context-group>
       </trans-unit>
       <trans-unit id="90e07f530fda246e3a626f6e1eeaf1e136d9a06c" datatype="html">
-        <source> Withdraw membership from <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-            >"/>, this action can't be undone. </source>
+        <source>
+Withdraw membership from, this action can't be undone.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"></x>
+        </source>
         <target state="needs-translation">
-Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"/>
+Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ myself.host.name }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b             >"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
@@ -3871,22 +3802,17 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <source>Company e-mail address</source>
         <target state="needs-translation">Cyfeiriad e-bost y cwmni</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">45</context>
-=======
           <context context-type="linenumber">52</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="8001731341167448537" datatype="html">
         <source>We'll use this e-mail to send notifications and updates</source>
         <target state="needs-translation">Byddwn yn defnyddio'r e-bost hwn i anfon hysbysiadau a diweddariadau</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">46</context>
-=======
           <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
@@ -3911,7 +3837,7 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <target state="needs-translation">Instagram</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3904765192936839024" datatype="html">
@@ -3931,7 +3857,7 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <target state="needs-translation">Facebook</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="314453050938313155" datatype="html">
@@ -3947,7 +3873,7 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <target state="needs-translation">Twitter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4440081753597585133" datatype="html">
@@ -3955,7 +3881,7 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <target state="needs-translation">LinkedIn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7016218350870170625" datatype="html">
@@ -3971,16 +3897,15 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <target state="needs-translation">Pinterest</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">188</context>
+          <context context-type="linenumber">153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4407039394995040947" datatype="html">
         <source>Invalid Pinterest URL</source>
         <target state="needs-translation">URL Pinterest annilys</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">194</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7457588667876942577" datatype="html">
@@ -3988,19 +3913,11 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <target state="needs-translation">Rhif TAW</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">105</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">64</context>
-=======
           <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">71</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="304992313093218309" datatype="html">
@@ -4008,19 +3925,11 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <target state="needs-translation">Rhifau 9 neu 12 yw hwn, weithiau gyda ‘GB’ ar y dechrau, fel 123456789 neu GB123456789</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">106</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">65</context>
-=======
           <context context-type="linenumber">118</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">72</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="7185949621526158605" datatype="html">
@@ -4028,15 +3937,11 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
         <target state="needs-translation">Rhaid i'r nifer fod yn 9 neu 12 digid gyda neu heb Brydain Fawr ar y dechrau</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">123</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">71</context>
-=======
-          <context context-type="linenumber">123</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2128629015726973593" datatype="html">
@@ -4047,10 +3952,8 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
           <context context-type="linenumber">106</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD=======          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">75</context>
-=======
           <context context-type="linenumber">83</context>
         </context-group>
       </trans-unit>
@@ -4110,25 +4013,20 @@ Tynnu aelodaeth yn ôl, ni ellir dadwneud y weithred hon.          <x id="START_
           <context context-type="linenumber">111</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
+>>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">88</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
         </context-group>
       </trans-unit>
       <trans-unit id="2542084650036617104" datatype="html">
         <source>
-Leave ''          <x id="PH" equiv-text="this.myself.host.name"/>
+Leave ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         </source>
         <target state="needs-translation">
-Gadewch ''          <x id="PH" equiv-text="this.myself.host.name"/>
+Gadewch ''          <x id="PH" equiv-text="this.myself.host.name"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">165</context>
-=======
-          <context context-type="linenumber">256</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8696509214436479036" datatype="html">
@@ -4136,11 +4034,7 @@ Gadewch ''          <x id="PH" equiv-text="this.myself.host.name"/>
         <target state="needs-translation">Ydych chi'n siŵr eich bod chi am adael y cwmni hwn?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">166</context>
-=======
-          <context context-type="linenumber">257</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7489917179635795879" datatype="html">
@@ -4148,11 +4042,7 @@ Gadewch ''          <x id="PH" equiv-text="this.myself.host.name"/>
         <target state="needs-translation">Gadael Cwmni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">174</context>
-=======
-          <context context-type="linenumber">265</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">223</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6873982912779936167" datatype="html">
@@ -4160,11 +4050,7 @@ Gadewch ''          <x id="PH" equiv-text="this.myself.host.name"/>
         <target state="needs-translation">Gadawodd y cwmni yn llwyddiannus</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">179</context>
-=======
-          <context context-type="linenumber">270</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7866081016755839002" datatype="html">
@@ -4172,11 +4058,7 @@ Gadewch ''          <x id="PH" equiv-text="this.myself.host.name"/>
         <target state="needs-translation">Digwyddodd gwall wrth geisio gadael, ceisiwch eto yn nes ymlaen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">182</context>
-=======
-          <context context-type="linenumber">273</context>
->>>>>>> a3933a50abcba68ee9aa6a59f95d10f8c0e559d5
+          <context context-type="linenumber">231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="da09217876333a82d36ae035c7e0017407f29fc2" datatype="html">
@@ -4277,14 +4159,14 @@ Gadewch ''          <x id="PH" equiv-text="this.myself.host.name"/>
       </trans-unit>
       <trans-unit id="10d7c651f99db367507b882f5da548b1295c5ec4" datatype="html">
         <source>
-Welcome, you're ready to start browsing, for your information here are a few links to aid you along:          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="INTERPOLATION" equiv-text="{{ userNameFormGroup.get('name').value }}"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b       >"/>
+Welcome, you're ready to start browsing, for your information here are a few links to aid you along:          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ userNameFormGroup.get('name').value }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b       >"></x>
         </source>
         <target state="needs-translation">
-Croeso, rydych chi'n barod i ddechrau pori, am eich gwybodaeth dyma ychydig o ddolenni i'ch cynorthwyo chi:          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="INTERPOLATION" equiv-text="{{ userNameFormGroup.get('name').value }}"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b       >"/>
+Croeso, rydych chi'n barod i ddechrau pori, am eich gwybodaeth dyma ychydig o ddolenni i'ch cynorthwyo chi:          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ userNameFormGroup.get('name').value }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b       >"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/first-time-setup/first-time-setup.component.html</context>
@@ -4300,11 +4182,15 @@ Croeso, rydych chi'n barod i ddechrau pori, am eich gwybodaeth dyma ychydig o dd
         </context-group>
       </trans-unit>
       <trans-unit id="758217b3298b0d2af065f71b2d69325d1d0933d8" datatype="html">
-        <source> Watch live productions from <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"/> anywhere in the world <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>, from the comfort of your home.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> A bespoke service tailored to the next generation of performance arts. </source>
+        <source>
+Watch live productions fromanywhere in the world, from the comfort of your home.A bespoke service tailored to the next generation of performance arts.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"></x>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <target state="needs-translation">
-Gwyliwch gynyrchiadau byw o unrhyw le yn y byd, o gysur eich cartref. Gwasanaeth pwrpasol wedi'i deilwra i'r genhedlaeth nesaf o gelf perfformio.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"/>
-          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
-          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
+Gwyliwch gynyrchiadau byw o unrhyw le yn y byd, o gysur eich cartref. Gwasanaeth pwrpasol wedi'i deilwra i'r genhedlaeth nesaf o gelf perfformio.          <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;highlight-dark&quot;>"></x>
+          <x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"></x>
+          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/host-landing/host-landing.component.html</context>
@@ -4312,9 +4198,11 @@ Gwyliwch gynyrchiadau byw o unrhyw le yn y byd, o gysur eich cartref. Gwasanaeth
         </context-group>
       </trans-unit>
       <trans-unit id="c3402591d05cd5658c0f57060c5bbb292c785866" datatype="html">
-        <source> Enter your email and we will send you instructions to <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/> generate a new password. </source>
+        <source>
+Enter your email and we will send you instructions togenerate a new password.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <target state="needs-translation">
-Rhowch eich e-bost a byddwn yn anfon cyfarwyddiadau atoch i godi cyfrinair newydd.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
+Rhowch eich e-bost a byddwn yn anfon cyfarwyddiadau atoch i godi cyfrinair newydd.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/forgot-password/forgot-password.component.html</context>
@@ -4410,7 +4298,7 @@ Rhowch eich e-bost a byddwn yn anfon cyfarwyddiadau atoch i godi cyfrinair newyd
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2454050363478003966" datatype="html">
@@ -4418,7 +4306,7 @@ Rhowch eich e-bost a byddwn yn anfon cyfarwyddiadau atoch i godi cyfrinair newyd
         <target state="needs-translation">Mewngofnodi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/login/login.component.ts</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="34557152cff7bc7db72a2a8706794d7fba4bac86" datatype="html">
@@ -4510,9 +4398,11 @@ Rhowch eich e-bost a byddwn yn anfon cyfarwyddiadau atoch i godi cyfrinair newyd
         </context-group>
       </trans-unit>
       <trans-unit id="05b447a05742fda6bf1d6cac270fbf6fc9dee161" datatype="html">
-        <source> The all-in-one platform for consuming &amp; creating performing arts content!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>Please select the option for which best suits your intended useage of StageUp. </source>
+        <source>
+The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+        </source>
         <target state="needs-translation">
-Y platfform popeth-mewn-un ar gyfer bwyta &amp; amp; creu cynnwys celfyddydau perfformio! Dewiswch yr opsiwn sy'n gweddu orau i'r defnydd a fwriadwyd gennych o StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"/>
+Y platfform popeth-mewn-un ar gyfer bwyta &amp; amp; creu cynnwys celfyddydau perfformio! Dewiswch yr opsiwn sy'n gweddu orau i'r defnydd a fwriadwyd gennych o StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/user-type-clarification/user-type-clarification.component.html</context>
@@ -4584,12 +4474,17 @@ Y platfform popeth-mewn-un ar gyfer bwyta &amp; amp; creu cynnwys celfyddydau pe
         </context-group>
       </trans-unit>
       <trans-unit id="6cef9a1687b166af08d5f0649e0e99384e9a922f" datatype="html">
-        <source> You must <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"/>register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> or <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"/>log in<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> before being able to purchase this performance. </source>
+        <source>
+You mustregisterorlog inbefore being able to purchase this performance.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </source>
         <target state="needs-translation">
-Rhaid i chi rag-gofrestru'r gallu i brynu'r perfformiad hwn.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"/>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
-          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"/>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
+Rhaid i chi rag-gofrestru'r gallu i brynu'r perfformiad hwn.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openRegister()&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+          <x id="START_LINK_1" equiv-text="&lt;a class=&quot;cursor-pointer&quot; (click)=&quot;openLogin()&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
@@ -4637,12 +4532,15 @@ Rhaid i chi rag-gofrestru'r gallu i brynu'r perfformiad hwn.          <x id="STA
         </context-group>
       </trans-unit>
       <trans-unit id="c985fad22a5979147f1056e02795065945b302b3" datatype="html">
-        <source> You're going to watch "<x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ performance.name }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b
-                >"/>" </source>
+        <source>
+You're going to watch ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"></x>
+        </source>
         <target state="needs-translation">
-Rydych chi'n mynd i wylio ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"/>
+Rydych chi'n mynd i wylio ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ performance.name }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b                 >"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
@@ -4650,12 +4548,17 @@ Rydych chi'n mynd i wylio ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-
         </context-group>
       </trans-unit>
       <trans-unit id="6c54aaca3b5e8aedc8194d1a03a07dccec525069" datatype="html">
-        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>@<x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> is due to premiere this stream at <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>, you'll be notified by e-mail before it begins. </source>
+        <source>
+@is due to premiere this stream at, you'll be notified by e-mail before it begins.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
+        </source>
         <target state="needs-translation">
-@is oherwydd première y ffrwd hon yn, fe'ch hysbysir trwy e-bost cyn iddo ddechrau.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
-          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>
+@is oherwydd première y ffrwd hon yn, fe'ch hysbysir trwy e-bost cyn iddo ddechrau.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+          <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
@@ -4663,11 +4566,15 @@ Rydych chi'n mynd i wylio ""          <x id="START_BOLD_TEXT" ctype="x-b" equiv-
         </context-group>
       </trans-unit>
       <trans-unit id="e3ba37467fdfa9fa70189fdf3b7cb01eadeb65c0" datatype="html">
-        <source> Purchase confirmation will arrive at <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/><x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> shortly. </source>
+        <source>
+Purchase confirmation will arrive atshortly.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </source>
         <target state="needs-translation">
-Bydd cadarnhad prynu yn cyrraedd yn ddidrafferth.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>
-          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"/>
-          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/>
+Bydd cadarnhad prynu yn cyrraedd yn ddidrafferth.          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ myself.email_address }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
@@ -4723,9 +4630,11 @@ Bydd cadarnhad prynu yn cyrraedd yn ddidrafferth.          <x id="START_BOLD_TEX
         </context-group>
       </trans-unit>
       <trans-unit id="be451c2a6269405f9e6b1bf8e365a9cb56478bd3" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"/> remaining </source>
+        <source>
+remaining          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"></x>
+        </source>
         <target state="needs-translation">
-ar ôl          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"/>
+ar ôl          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }}"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-ticket/performance-ticket.component.html</context>
@@ -4773,10 +4682,13 @@ ar ôl          <x id="INTERPOLATION" equiv-text="{{ ticket.quantity_remaining }
         </context-group>
       </trans-unit>
       <trans-unit id="8d43f19426a35c5b34219af066c0196dbb792299" datatype="html">
-        <source> Companies <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"/><x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"/></source>
+        <source>
+Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"></x>
+          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"></x>
+        </source>
         <target state="needs-translation">
-Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"/>
-          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"/>
+Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;mat-spinner class=&quot;ml-2&quot; [diameter]=&quot;25&quot; *ngIf=&quot;hosts.loading&quot;>"></x>
+          <x id="CLOSE_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text="&lt;/mat-spinner>"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/search/search.component.html</context>
@@ -4825,7 +4737,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
       </trans-unit>
       <trans-unit id="0f8f8ef331819fe2a720258683ee8a1231c1c3f3" datatype="html">
         <source>Site Settings</source>
-        <target state="new">Gosodiadau Gwefa</target>
+        <target state="needs-translation">Gosodiadau Gwefa</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
           <context context-type="linenumber">31</context>
@@ -4904,7 +4816,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7293347258713947796" datatype="html">
@@ -4928,7 +4840,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Efallai y bydd eich enw yn ymddangos o gwmpas StageUp lle rydych chi'n cyfrannu neu'n cael eich crybwyll.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4222149582871653761" datatype="html">
@@ -4936,7 +4848,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Rhaid darparu cyfeiriad e-bost dilys</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6769219112239702582" datatype="html">
@@ -4944,39 +4856,39 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Oedd</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2826581353496868063" datatype="html">
         <source>Language</source>
-        <target state="new">Iaith</target>
+        <target state="needs-translation">Iaith</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5866254605255506989" datatype="html">
         <source>English</source>
-        <target state="new">Saesneg</target>
+        <target state="needs-translation">Saesneg</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3683417119663608678" datatype="html">
         <source>Welsh</source>
-        <target state="new">Cymraeg</target>
+        <target state="needs-translation">Cymraeg</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3586701851625152417" datatype="html">
         <source>Norwegian (Bokmål)</source>
-        <target state="new">Norwyeg (Bokmål)</target>
+        <target state="needs-translation">Norwyeg (Bokmål)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5ad279d6e9f56b32c2902b3caf41db4b7fc599b2" datatype="html">
@@ -5008,7 +4920,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Chwilio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3317b8688eb2cfabc4021cd7b2926b32f3864ad2" datatype="html">
@@ -5016,7 +4928,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Dewiswch ddyddiad</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">249</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1d7ed2343579b6d2528114177b13f59e55b96cef" datatype="html">
@@ -5024,11 +4936,11 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Rhowch ystod dyddiad</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">264</context>
+          <context context-type="linenumber">234</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">323</context>
+          <context context-type="linenumber">293</context>
         </context-group>
       </trans-unit>
       <trans-unit id="77bbe324b08f6636fb50f673cea05313b86fb692" datatype="html">
@@ -5036,7 +4948,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Dyddiad cychwyn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">277</context>
+          <context context-type="linenumber">247</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f60960faa2cd3e0db11e48688774d05dfa9d715b" datatype="html">
@@ -5044,7 +4956,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Dyddiad Gorffen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">254</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
@@ -5052,7 +4964,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Canslo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c2d0ac9f528bbd5f53fd34269fde8b59e029621b" datatype="html">
@@ -5060,7 +4972,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         <target state="needs-translation">Ymgeisiwch</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.html</context>
-          <context context-type="linenumber">292</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5878305334612867800" datatype="html">
@@ -5072,10 +4984,13 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
         </context-group>
       </trans-unit>
       <trans-unit id="5248924511731123727" datatype="html">
-        <source><x id="PH" equiv-text="this.data.options.label"/> must be at-least <x id="PH_1" equiv-text="errors[e].requiredLength"/> characters</source>
+        <source>
+must be at-leastcharacters          <x id="PH" equiv-text="this.data.options.label"></x>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+        </source>
         <target state="needs-translation">
-rhaid iddynt fod yn gymeriadau o leiaf          <x id="PH" equiv-text="this.data.options.label"/>
-          <x id="PH_1" equiv-text="errors[e].requiredLength"/>
+rhaid iddynt fod yn gymeriadau o leiaf          <x id="PH" equiv-text="this.data.options.label"></x>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
@@ -5083,10 +4998,13 @@ rhaid iddynt fod yn gymeriadau o leiaf          <x id="PH" equiv-text="this.data
         </context-group>
       </trans-unit>
       <trans-unit id="3941996853800677819" datatype="html">
-        <source><x id="PH" equiv-text="this.data.options.label"/> must be less than <x id="PH_1" equiv-text="errors[e].requiredLength"/> characters</source>
+        <source>
+must be less thancharacters          <x id="PH" equiv-text="this.data.options.label"></x>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
+        </source>
         <target state="needs-translation">
-rhaid iddynt fod yn llai na chymeriadau          <x id="PH" equiv-text="this.data.options.label"/>
-          <x id="PH_1" equiv-text="errors[e].requiredLength"/>
+rhaid iddynt fod yn llai na chymeriadau          <x id="PH" equiv-text="this.data.options.label"></x>
+          <x id="PH_1" equiv-text="errors[e].requiredLength"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
@@ -5095,10 +5013,10 @@ rhaid iddynt fod yn llai na chymeriadau          <x id="PH" equiv-text="this.dat
       </trans-unit>
       <trans-unit id="5899864845007428149" datatype="html">
         <source>
-is required          <x id="PH" equiv-text="this.data.options.label"/>
+is required          <x id="PH" equiv-text="this.data.options.label"></x>
         </source>
         <target state="needs-translation">
-yn ofynnol          <x id="PH" equiv-text="this.data.options.label"/>
+yn ofynnol          <x id="PH" equiv-text="this.data.options.label"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/input/input.component.ts</context>
@@ -5455,10 +5373,10 @@ yn ofynnol          <x id="PH" equiv-text="this.data.options.label"/>
       </trans-unit>
       <trans-unit id="table_range_zero" datatype="html">
         <source>
-0 of          <x id="PH" equiv-text="length"/>
+0 of          <x id="PH" equiv-text="length"></x>
         </source>
         <target state="needs-translation">
-0 o          <x id="PH" equiv-text="length"/>
+0 o          <x id="PH" equiv-text="length"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
@@ -5466,11 +5384,15 @@ yn ofynnol          <x id="PH" equiv-text="this.data.options.label"/>
         </context-group>
       </trans-unit>
       <trans-unit id="table_range_range" datatype="html">
-        <source><x id="PH" equiv-text="startIndex + 1"/> - <x id="PH_1" equiv-text="endIndex"/> of <x id="PH_2" equiv-text="length"/></source>
+        <source>
+-of          <x id="PH" equiv-text="startIndex + 1"></x>
+          <x id="PH_1" equiv-text="endIndex"></x>
+          <x id="PH_2" equiv-text="length"></x>
+        </source>
         <target state="needs-translation">
--of          <x id="PH" equiv-text="startIndex + 1"/>
-          <x id="PH_1" equiv-text="endIndex"/>
-          <x id="PH_2" equiv-text="length"/>
+-of          <x id="PH" equiv-text="startIndex + 1"></x>
+          <x id="PH_1" equiv-text="endIndex"></x>
+          <x id="PH_2" equiv-text="length"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/table/table.component.ts</context>
@@ -5486,10 +5408,13 @@ yn ofynnol          <x id="PH" equiv-text="this.data.options.label"/>
         </context-group>
       </trans-unit>
       <trans-unit id="e3a7d77d3cc7264d804c40996757038fd5698e33" datatype="html">
-        <source> Contains all the stylings and components to be used throughout the site, check <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"/>TailwindCSS<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> docs for more info. </source>
+        <source>
+Contains all the stylings and components to be used throughout the site, checkTailwindCSSdocs for more info.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
+        </source>
         <target state="needs-translation">
-Yn cynnwys yr holl steiliau a chydrannau i'w defnyddio trwy'r wefan, checkTailwindCSSdocs i gael mwy o wybodaeth.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"/>
-          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
+Yn cynnwys yr holl steiliau a chydrannau i'w defnyddio trwy'r wefan, checkTailwindCSSdocs i gael mwy o wybodaeth.          <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://tailwindcss.com/docs&quot;>"></x>
+          <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>

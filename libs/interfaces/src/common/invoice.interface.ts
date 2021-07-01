@@ -40,6 +40,11 @@ export interface IRefundRequest {
   request_detail: string;
 }
 
+export interface IBulkRefund {
+  bulk_refund_reason: BulkRefundReason;
+  bulk_refund_detail: string;
+}
+
 export interface IRefundResponse {
   responded_on: number;
   response_reason: RefundResponseReason;
