@@ -867,7 +867,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
     return {
       validators: {
         body: object({
-          invoice_ids: array(fields.nuuid)
+          invoice_ids: array(fields.nuuid),
+          host_id: fields.nuuid
         })
       },
       authorisation: AuthStrat.isMemberOfHost(),
@@ -896,11 +897,15 @@ export default class HostController extends BaseController<BackendProviderMap> {
         if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
 
         //Create an entry in the refund table for bulk refunds where a request was not made
-        invoices.map(invoice => {
-          let refundPresent = invoice.refunds.find(refund => {
-            refund.invoice._id == invoice._id;
-          });
-        });
+        // invoices.map(invoice => {
+        //   let refundPresent = invoice.refunds.find(refund => {
+        //     refund.invoice._id == invoice._id;
+        //   });
+
+        //   !refundPresent ? await new Refund(invoice, null, {
+
+        //   })
+        // });
 
         // Refund all invoices in parallel, & wait for them all to finish
         await Promise.all(

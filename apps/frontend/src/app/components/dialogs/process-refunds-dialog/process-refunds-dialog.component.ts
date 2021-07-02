@@ -27,7 +27,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
   public multipleRefunds: boolean;
   public bulkRefundForm: UiForm;
   refundRequest: Cacheable<void> = new Cacheable();
-
+  bulkRefund;
   // Top level loading state for all requests - made via merge()
   $loading: Observable<boolean>;
 
@@ -57,7 +57,9 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
         })
       },
       resolvers: {
-        output: async v => {}
+        output: async v => {
+          console.log(v);
+        }
       },
       handlers: {
         success: async () => {

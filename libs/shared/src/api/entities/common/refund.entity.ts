@@ -56,7 +56,9 @@ export class Refund extends BaseEntity implements IRefund {
       is_refunded: this.is_refunded,
       responded_on: this.responded_on,
       response_reason: this.response_reason,
-      response_detail: this.response_detail
+      response_detail: this.response_detail,
+      bulk_refund_reason: this.bulk_refund_reason,
+      bulk_refund_detail: this.bulk_refund_detail
     };
   }
 }

@@ -51,7 +51,7 @@ export interface IRefundResponse {
   response_detail: string;
 }
 
-export interface IRefund extends IRefundRequest, Partial<IRefundResponse> {
+export interface IRefund extends IRefundRequest, Partial<IRefundResponse>, Partial<IBulkRefund> {
   _id: NUUID;
   is_refunded: boolean;
 }

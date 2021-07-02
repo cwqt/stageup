@@ -129,7 +129,7 @@ export namespace objects {
     request_detail: string()
   });
 
-  export const BulkInvoiceRefund: Describe<IBulkRefund> = object({
+  export const IBulkRefund: Describe<IBulkRefund> = object({
     bulk_refund_reason: enums<BulkRefundReason>(enumToValues(BulkRefundReason)),
     bulk_refund_detail: string()
   });
