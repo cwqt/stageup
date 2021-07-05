@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Slash Command Dispatch
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  slashCommandDispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slash Command Dispatch
+        uses: ./
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          commands: |
+            deploy
+          permission: none
+          issue-type: pull_request
