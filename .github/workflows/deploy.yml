@@ -29,6 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          ref: ${{ github.event.client_payload.pull_request.head.ref }}
           fetch-depth: 0
 
       - run: git fetch origin $BRANCH_NAME
@@ -56,6 +57,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.client_payload.pull_request.head.ref }}
 
       - name: Add service account key for generate:xlf
         run: echo ${{ secrets.XLF_GCP_SA_KEY }} | base64 -d > translate.service_account.json
@@ -92,6 +95,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.client_payload.pull_request.head.ref }}
 
       - name: Add service account key for generate:xlf
         run: echo ${{ secrets.XLF_GCP_SA_KEY }} | base64 -d > translate.service_account.json
@@ -140,6 +145,8 @@ jobs:
       TF_WORKSPACE: feat
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.client_payload.pull_request.head.ref }}
 
       # have a service account on the file system to be used by the tf script
       # select existing workspace or make a new one in the case of first time run
@@ -172,7 +179,7 @@ jobs:
           ignoreStatusCodes: true # will fire this on every PR run
           timeout: 10000 # serverless cold starts can take a while
 
-  # deploy the new infrastructure once both images built
+  # update /deploy message with update
   comment:
     name: Comment
     runs-on: ubuntu-latest
@@ -183,18 +190,12 @@ jobs:
         id: body
         with:
           cond: ${{ needs.deploy.result == 'success' }}
-          if_true: "Deployed! [https://${{ env.BRANCH_NAME }}.stageup.uk/en](https://${{ env.BRANCH_NAME }}.stageup.uk/en) :sparkles:"
+          if_true: "Deployed! [https://${{ env.BRANCH_NAME }}.stageup.uk/en](https://${{ env.BRANCH_NAME }}.stageup.uk/en) (${{ github.event.client_payload.pull_request.head.sha }}) :sparkles:"
           if_false: "Deployment failed, check job status for reason :whale:"
-
-      - name: Find deploy comment
-        uses: peter-evans/find-comment@v1
-        id: fc
-        with:
-          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
 
       - name: Update comment if exists
         if: steps.fc.outputs.comment-id != ''
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: ${{ steps.body.outputs.value }}
