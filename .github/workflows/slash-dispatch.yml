@@ -11,8 +11,9 @@ jobs:
       - name: Slash Command Dispatch
         uses: ./
         with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          token: ${{ secrets.SLASH_DISPATCH_PAT }}
+          reaction-token: ${{ secrets.SLASH_DISPATCH_PAT }}
           commands: |
             deploy
           permission: none
-          issue-type: pull_request
+          issue-type: pull-request
