@@ -15,6 +15,7 @@ For each application, review the setup instructions in each of these files:
 - **API** (`apps/backend`): [README.md](apps/backend/README.md)
 - **Frontend** (`apps/frontend`): [README.md](apps/frontend/README.md)
 - **Tests** (`apps/api-tests`): [README.md](apps/api-tests/README.md)
+- **Terraform** (`terraform`): [README.md](terraform/README.md)
 
 ## Running `npm run start`
 
