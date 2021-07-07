@@ -45,7 +45,7 @@
     <!-- All other carousels -->
     <ng-container *ngFor="let carousel of carouselData | keyvalue">
       <!-- Only display 'My Follows' if there are performances -->
-      <div *ngIf="carousel.value.data.data && carousel.value.data.data.length > 0" class="carousel-container relative">
+      <div *ngIf="carousel.value.data?.data?.length > 0" class="carousel-container relative">
         <h2>{{ prettyKeys[carousel.key] | titlecase }}</h2>
   
         <ui-hr></ui-hr>
