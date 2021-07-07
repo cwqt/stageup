@@ -1,8 +1,8 @@
 import { BaseAppService } from './../../../services/app.service';
-import { Component, Input, OnInit } from '@angular/core';
-import { IMyself, IUser, IUserStub, LocaleOptions } from '@core/interfaces';
+import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
+import { ILocale, IMyself, IUser, IUserStub } from '@core/interfaces';
 import { UserService } from 'apps/frontend/src/app/services/user.service';
-import { createICacheable, ICacheable } from '../../../app.interfaces';
+import { createICacheable, ICacheable, SUPPORTED_LOCALES } from '../../../app.interfaces';
 import { MyselfService } from '../../../services/myself.service';
 import { IUiForm, UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
 import isEmail from 'validator/lib/isEmail';
@@ -10,7 +10,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HelperService } from '../../../services/helper.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
-
+import languages from '@cospired/i18n-iso-languages';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile-settings',
@@ -19,23 +20,23 @@ import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/
 })
 export class ProfileSettingsComponent implements OnInit {
   myself: IMyself;
-  get user() {
-    return this.myself.user;
-  }
 
   profileDetailsForm: UiForm<IMyself['user']>;
-  languageSelectForm: UiForm;
-
+  languageSelectForm: UiForm<ILocale>;
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private userService: UserService,
     private myselfService: MyselfService,
     private helperService: HelperService,
     private baseAppService: BaseAppService,
+    private route: ActivatedRoute,
     public dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.baseAppService.componentInitialising(this.route);
+
     this.myself = this.myselfService.$myself.getValue();
     this.profileDetailsForm = new UiForm({
       fields: {
@@ -61,12 +62,12 @@ export class ProfileSettingsComponent implements OnInit {
         })
       },
       resolvers: {
-        output: data => this.userService.updateUser(this.user._id, data),
+        output: data => this.userService.updateUser(this.myself.user._id, data),
         input: async () => ({
           fields: {
-            name: this.user.name,
-            email_address: this.user.email_address,
-            bio: this.user.bio
+            name: this.myself.user.name,
+            email_address: this.myself.user.email_address,
+            bio: this.myself.user.bio
           }
         })
       },
@@ -79,23 +80,30 @@ export class ProfileSettingsComponent implements OnInit {
       fields: {
         locale: UiField.Select({
           label: $localize`Language`,
-          // The form expects locale values as single string (e.g. 'en-GB')
-          initial: `${this.user.locale.language}/${this.user.locale.region}`, 
-          values: new Map<LocaleOptions, { label: string }>([
-            [LocaleOptions.English, { label: $localize`English` }],
-            [LocaleOptions.Welsh, { label: $localize`Welsh` }],
-            [LocaleOptions.Norwegian, { label: $localize`Norwegian (Bokmål)` }],
-          ]),
-        }),
+          // must use a string for the key of the selection ui
+          initial: `${this.myself.user.locale.language}-${this.myself.user.locale.region}`,
+          values: new Map<string, { label: string }>(
+            SUPPORTED_LOCALES.map(locale => [
+              `${locale.language}-${locale.region}`,
+              { label: languages.getName(locale.language, this.locale) }
+            ])
+          )
+        })
       },
       resolvers: {
-        output: v => this.myselfService.updateLocale(v),  
-      }, 
+        output: async v => {
+          const [language, region] = v.locale.split('-');
+          const locale = SUPPORTED_LOCALES.find(locale => locale.language == language && locale.region == region);
+          return await this.myselfService.updateLocale(locale);
+        }
+      },
       handlers: {
-        changes: async () => this.languageSelectForm.submit(),
+        changes: async () => {
+          this.languageSelectForm.submit();
+        },
         // On success, we want to reload the current page with the language prefixed (e.g. '/cy/settings')
-        success: async (v) => {
-          this.baseAppService.navigateTo(`/${v}${this.baseAppService.getUrl()}`);
+        success: async v => {
+          this.baseAppService.navigateTo(`/${v.language}/${this.baseAppService.getUrl()}`);
         }
       }
     });
@@ -105,12 +113,12 @@ export class ProfileSettingsComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(ChangeImageComponent, {
         data: {
-          fileHandler: async (fd: FormData) => this.userService.changeAvatar(this.user._id, fd)
+          fileHandler: async (fd: FormData) => this.userService.changeAvatar(this.myself.user._id, fd)
         }
       }),
       url => {
-        this.user.avatar = url || '/assets/avatar-placeholder.png';
-        this.myselfService.setUser({ ...this.myselfService.$myself.getValue().user, avatar: this.user.avatar });
+        this.myself.user.avatar = url || '/assets/avatar-placeholder.png';
+        this.myselfService.setUser({ ...this.myselfService.$myself.getValue().user, avatar: this.myself.user.avatar });
       }
     );
   }

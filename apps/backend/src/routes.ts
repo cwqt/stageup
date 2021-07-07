@@ -44,6 +44,7 @@ import {
   IAssetStub,
   AssetDto,
   IPerformance,
+  ILocale,
   IFollower,
   IFollowing,
   IUserFollow
@@ -61,8 +62,9 @@ import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
 import PatronageController from './controllers/patronage.controller';
 
-import { BackendModules, BackendProviderMap } from '.';
+import { BackendModules } from '.';
 import { Module } from './modules';
+import { BackendProviderMap } from './common/providers';
 
 type ModuleRoutes<T extends {[i:string]: Partial<Pick<Module, "routes">>}> = {[index in keyof T]:T[index]["routes"]};
 
@@ -88,10 +90,9 @@ router.post     <IPaymentMethod>        ("/myself/payment-methods",             
 router.get      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.readPaymentMethod());
 router.delete   <void>                  ("/myself/payment-methods/:pmid",             Myself.deletePaymentMethod());
 router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.updatePaymentMethod());
-router.put      <string>                ("/myself/locale",                            Myself.updateLocale());
+router.put      <ILocale>               ("/myself/locale",                            Myself.updateLocale());
 router.post     <IFollowing>            ("/myself/follow-host/:hid",                  Myself.addFollow());
 router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow());
-
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providers, middlewares);

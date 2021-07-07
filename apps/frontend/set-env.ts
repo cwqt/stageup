@@ -8,16 +8,18 @@ const targetPath = `${__dirname}/src/environments/environment.${environment}.ts`
 
 // `environment.ts` file structure
 let envConfigFile = '';
-if (environment == 'development' || environment == 'testing') envConfigFile += `import 'zone.js/dist/zone-error';\n`;
+if (environment == 'development' || environment == 'testing') envConfigFile += `import 'zone.js/plugins/zone-error';\n`;
+
+// Add extension in dev only for port re-directs
+const extension = (url: string, port: number) =>
+  `${url}${!url.includes('ngrok') && environment == 'development' ? `:${port}` : ''}`;
 
 envConfigFile += `export const environment = {
-   apiUrl: '${process.env.LOAD_BALANCER_URL}:3000',
-   sseUrl: '${process.env.LOAD_BALANCER_URL}:3000/sse',
-   frontendUrl: '${process.env.LOAD_BALANCER_URL}:4200',
-   environment: '${environment}',
-   stripePublicKey: '${process.env.STRIPE_PUBLIC_KEY}',
-   appVersion: '${process.env.npm_package_version}',
-   locale: '${process.env.LOCALE}'
+  environment: '${environment}',
+  is_deployed: ${argv?.['is-deployed'] || false},
+  frontend_url: '${extension(process.env.LOAD_BALANCER_URL, 4200)}',
+  app_version: '${process.env.npm_package_version}',
+  stripe_public_key: '${process.env.STRIPE_PUBLIC_KEY}',
 };
 `;
 

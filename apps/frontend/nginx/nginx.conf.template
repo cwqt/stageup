@@ -12,23 +12,19 @@ http {
   include /etc/nginx/mime.types;
   default_type application/octet-stream;
 
-  upstream api {
-    server api:3000;
-  }
-
-  upstream sse {
-    server notifs:3002;
-  }
-
   log_format main '$remote_addr - $remote_user [$time_local] "$request" '
   '$status $body_bytes_sent "$http_referer" '
   '"$http_user_agent" "$http_x_forwarded_for"';
 
   access_log /var/log/nginx/access.log main;
-
   sendfile on;
-
   keepalive_timeout 65;
+
+  map $http_accept_language $accept_language {
+    ~*^en en;
+    ~*^nb nb;
+    ~*^cy cy;
+  }
 
   gzip on;
   gzip_types application/javascript;
@@ -36,29 +32,31 @@ http {
 
   server {
     listen 80;
+
     server_name localhost;
-
-    location /api/ {
-      proxy_pass http://api;
-    }
-
-    location /sse/ {
-      proxy_pass http://sse;
-    }
-
-    location /nb/ {
-      alias /var/www/dist/nb/;
-      try_files $uri$args $uri$args/ /nb/index.html;
-    }
-
-    location /en/ {
-      alias /var/www/dist/en/;
-      try_files $uri$args $uri$args/ /en/index.html;
-    }
-
     root /usr/share/nginx/html;
-
     server_tokens off;
+
+    # anything beyond /api/... gets sent to node
+    location /api/ {
+      # wait 5 mins before giving up
+      proxy_read_timeout 5m;
+      # trailing slash is important! will re-write /api to /
+      proxy_pass https://${API_HOST}/;
+    }
+
+    # Fallback to default language if no preference defined by browser
+    if ($accept_language ~ "^$") {
+      set $accept_language "en";
+    }
+
+    # Redirect "/" to Angular app in browser's preferred language
+    rewrite ^/$ /$accept_language permanent;
+
+    # Everything under the Angular app is always redirected to Angular in the correct language
+    location ~ ^/(en|nb|cy) {
+      try_files $uri /$1/index.html?$args;
+    }
 
     location ~ /index.html|.*\.json$ {
       expires -1;
@@ -68,13 +66,6 @@ http {
 
     location ~ .*\.css$|.*\.js$ {
       add_header Cache-Control 'max-age=31449600'; # one year
-      include /etc/nginx/security-headers.conf;
-    }
-
-    location / {
-      try_files $uri$args $uri$args/ /index.html;
-
-      add_header Cache-Control 'max-age=86400'; # one day
       include /etc/nginx/security-headers.conf;
     }
 

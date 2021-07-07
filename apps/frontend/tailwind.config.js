@@ -1,10 +1,16 @@
 // safelist array not currently supported, hack in a file with all safelisted classes
 // for the tailwind/jit compiler to keep them in https://github.com/tailwindlabs/tailwindcss-jit/issues/32
-module.exports = isProd => ({
+
+/**
+ * @param {boolean} production
+ */
+module.exports = production => ({
   prefix: '',
+  // jit not playing ball presently :/
+  // mode: 'jit',
   purge: {
-    enabled: isProd,
-    content: ['**/*.html', '**/*.ts', './apps/frontend/safelist.txt'],
+    enabled: production,
+    content: ['**/*.html', '**/*.ts', './apps/frontend/tailwind-safelist.txt'],
     options: {
       safelist: [
         'col-span-1',

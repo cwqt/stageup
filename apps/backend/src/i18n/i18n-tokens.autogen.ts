@@ -102,7 +102,6 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@error.not_verified"]: never,
   ["@@error.forbidden"]: never,
   ["@@error.not_implemented"]: never,
-  ["@@error.not_such_route"]: never,
   ["@@error.incorrect"]: never,
   ["@@error.missing_body"]: never,
   ["@@error.locked"]: never,

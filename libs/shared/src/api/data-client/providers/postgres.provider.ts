@@ -1,6 +1,7 @@
 import { Connection, Entity, createConnection } from 'typeorm';
 import { Provider } from '../';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 export interface IPostgresProviderConfig {
   host: string;
@@ -9,6 +10,7 @@ export interface IPostgresProviderConfig {
   password: string;
   database: string;
   synchronize?: boolean;
+  extra?: any;
 }
 
 export default class PostgresProvider implements Provider<Connection> {
@@ -23,7 +25,7 @@ export default class PostgresProvider implements Provider<Connection> {
   }
 
   async connect() {
-    this.connection = await createConnection({
+    const config: PostgresConnectionOptions = {
       type: 'postgres',
       host: this.config.host,
       port: this.config.port,
@@ -33,8 +35,11 @@ export default class PostgresProvider implements Provider<Connection> {
       entities: this.models,
       synchronize: this.config.synchronize,
       logging: false, // print all sql queries
-      namingStrategy: new SnakeNamingStrategy()
-    });
+      namingStrategy: new SnakeNamingStrategy(),
+      extra: this.config.extra || {}
+    };
+
+    this.connection = await createConnection(config);
 
     return this.connection;
   }

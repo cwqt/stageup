@@ -5,7 +5,7 @@ import { Provider } from '../';
 export interface IMuxProviderConfig {
   access_token: string;
   secret_key: string;
-  hook_signature: string;
+  webhook_signature: string;
 }
 
 export default class MuxProvider implements Provider<Mux> {

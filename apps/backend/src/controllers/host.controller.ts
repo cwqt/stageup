@@ -51,7 +51,7 @@ import deepmerge from 'deepmerge';
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
 import { array, boolean, coerce, enums, object, string, StructError } from 'superstruct';
 import { In } from 'typeorm';
-import { BackendProviderMap } from '..';
+import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Env from '../env';
@@ -911,8 +911,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
             this.providers.stripe.connection.refunds.create(
               {
-                payment_intent: invoice.stripe_payment_intent_id,
-                metadata: { __origin_url: Env.WEBHOOK_URL }
+                payment_intent: invoice.stripe_payment_intent_id
               },
               {
                 stripeAccount: invoice.host.stripe_account_id

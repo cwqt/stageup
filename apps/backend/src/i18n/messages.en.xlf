@@ -554,8 +554,8 @@ Thanks, StageUp</target>
         <target state="final">Not found</target>
       </trans-unit>
       <trans-unit id="error.no_such_route" datatype="html">
-        <source>Route not found</source>
-        <target state="final">Route not found</target>
+        <source>No such route</source>
+        <target state="final">No such route</target>
       </trans-unit>
       <trans-unit id="error.not_member" datatype="html">
         <source>Not a member of company</source>
@@ -604,10 +604,6 @@ Thanks, StageUp</target>
       <trans-unit id="error.not_implemented" datatype="html">
         <source>Method is not implemented</source>
         <target state="final">Method is not implemented</target>
-      </trans-unit>
-      <trans-unit id="error.not_such_route" datatype="html">
-        <source>No such route</source>
-        <target state="final">No such route</target>
       </trans-unit>
       <trans-unit id="error.incorrect" datatype="html">
         <source>Value is incorrect</source>

@@ -28,13 +28,6 @@ export interface IUser extends IUserStub {
   is_admin?: boolean; //site admin global perms
 }
 
-// Language and region in single enum of strings ('language/REGION')
-export enum LocaleOptions {
-  English = 'en-GB',
-  Welsh = 'cy-GB',
-  Norwegian = 'nb-NO'
-}
-
 export interface IUserPrivate extends IUser {
   email_address: string;
   salt?: string; //salt

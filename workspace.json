@@ -1,6 +1,24 @@
 {
   "version": 2,
   "projects": {
+    "api-tests": {
+      "root": "apps/api-tests",
+      "sourceRoot": "apps/api-tests/src",
+      "projectType": "application",
+      "prefix": "api-tests",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/api-tests"],
+          "options": {
+            "passWithNoTests": true,
+            "runInBand": true,
+            "jestConfig": "apps/api-tests/jest.config.js",
+            "tsConfig": "apps/api-tests/tsconfig.spec.json"
+          }
+        }
+      }
+    },
     "backend": {
       "root": "apps/backend",
       "sourceRoot": "apps/backend/src",
@@ -12,6 +30,13 @@
         "locales": ["en", "nb", "cy"]
       },
       "targets": {
+        "generate-xlf": {
+          "executor": "@nrwl/workspace:run-commands",
+          "color": true,
+          "options": {
+            "command": "npm run generate:xlf -- --project=backend"
+          }
+        },
         "build": {
           "executor": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
@@ -83,10 +108,9 @@
       "projectType": "application",
       "root": "apps/frontend",
       "sourceRoot": "apps/frontend/src",
-      "prefix": "app",
+      "prefix": "frontend",
       "sourceLocale": "en",
       "i18n": {
-        "preRun": "nx run frontend:extract-i18n && nx run frontend:xliffmerge",
         "path": "apps/frontend/src/i18n",
         "locales": {
           "nb": "apps/frontend/src/i18n/messages.nb.xlf",
@@ -95,6 +119,25 @@
         }
       },
       "targets": {
+        "generate-xlf": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "parallel": false,
+            "color": true,
+            "commands": [
+              "nx run frontend:extract-i18n",
+              "nx run frontend:xliffmerge",
+              "npm run generate:xlf -- --project=frontend"
+            ]
+          }
+        },
+        "prepare": {
+          "executor": "@nrwl/workspace:run-commands",
+          "color": true,
+          "options": {
+            "command": "npx ts-node ./apps/frontend/set-env.ts --env={args.env} --is-deployed=${args.is_deployed}"
+          }
+        },
         "build": {
           "executor": "@angular-builders/custom-webpack:browser",
           "options": {
@@ -116,12 +159,20 @@
             ],
             "scripts": [],
             "i18nMissingTranslation": "warning",
-            "localize": ["en"]
+            "localize": ["en", "nb", "cy"]
           },
           "configurations": {
-            "en": { "localize": ["en"]},
-            "nb": { "localize": ["nb"], "baseHref": "/nb/" },
-            "cy": { "localize": ["cy"], "baseHref": "/cy/" },
+            "en": {
+              "localize": ["en"]
+            },
+            "nb": {
+              "localize": ["nb"],
+              "baseHref": "/nb/"
+            },
+            "cy": {
+              "localize": ["cy"],
+              "baseHref": "/cy/"
+            },
             "development": {
               "fileReplacements": [
                 {
@@ -177,18 +228,15 @@
         "serve": {
           "executor": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
-            "en": { "browserTarget": ["frontend:build:en"] },
-            "nb": { "browserTarget": ["frontend:build:nb"] },
-            "cy": { "browserTarget": ["frontend:build:cy"] },
             "development": {
-              "browserTarget": "frontend:build:development",
+              "browserTarget": "frontend:build:development,en",
               "proxyConfig": "apps/frontend/proxy.conf.json"
             },
             "staging": {
-              "browserTarget": "frontend:build:staging"
+              "browserTarget": "frontend:build:staging,en"
             },
             "production": {
-              "browserTarget": "frontend:build:production"
+              "browserTarget": "frontend:build:production,en"
             }
           }
         },
@@ -203,7 +251,7 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "executor": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "frontend:build",
             "outputPath": "apps/frontend/src/i18n"
@@ -230,37 +278,6 @@
       "sourceRoot": "libs/interfaces/src",
       "projectType": "library",
       "targets": {}
-    },
-    "api-tests": {
-      "root": "apps/api-tests",
-      "sourceRoot": "apps/api-tests/src",
-      "projectType": "application",
-      "prefix": "api-tests",
-      "targets": {
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/api-tests"],
-          "options": {
-            "passWithNoTests": true,
-            "runInBand": true,
-            "jestConfig": "apps/api-tests/jest.config.js",
-            "tsConfig": "apps/api-tests/tsconfig.spec.json"
-          }
-        }
-      }
-    },
-    "shared": {
-      "root": "libs/shared",
-      "sourceRoot": "libs/shared/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/shared/**/*.ts"]
-          }
-        }
-      }
     },
     "seeder": {
       "root": "apps/seeder",
@@ -294,9 +311,23 @@
           }
         }
       }
+    },
+    "shared": {
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/shared/**/*.ts"]
+          }
+        }
+      }
     }
   },
   "cli": {
     "defaultCollection": "@nrwl/express"
-  }
+  },
+  "defaultProject": "register"
 }

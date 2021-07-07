@@ -25,13 +25,13 @@ import {
   Refund,
   PatronSubscription
 } from '@core/api';
-import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import Env from '../env';
 import Stripe from 'stripe';
 import { log } from '../common/logger';
 import { IsNull } from 'typeorm';
 import { timestamp } from '@core/helpers';
+import { BackendProviderMap } from '@backend/common/providers';
 
 export default class StripeController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
@@ -57,7 +57,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
           this.providers.stripe.connection.webhooks.signature.verifyHeader(
             (req as any).rawBody,
             req.headers['stripe-signature'] as string,
-            this.providers.stripe.config.hook_signature
+            this.providers.stripe.config.webhook_signature
           );
         } catch (error) {
           log.error(error);
@@ -73,6 +73,8 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
         await (this.hookMap[event.type] || this.unsupportedHookHandler)(event);
         return { received: true };
+        // FIXME: Figure out some way of handling webhooks from other peoples machines coming to ours
+        // idempotency keys?
         // Check from metadata that this machine sent this request
         // if ((event.data.object as any)?.metadata?.__origin_url == Env.WEBHOOK_URL) {
         //   await (this.hookMap[event.type] || this.unsupportedHookHandler)(event);

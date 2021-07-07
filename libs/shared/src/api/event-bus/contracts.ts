@@ -18,9 +18,6 @@ import {
 } from '@core/interfaces';
 import { PasswordReset } from '../entities';
 
-//ISO 639_1 _ ISO 3166_1 Alpha_2
-export type SupportedLocale = 'en_GB' | 'nb_NO' | 'cy_GB';
-
 export type EventContract = {
   // Users --------------------------------------------------------------------
   ['user.registered']: IUserStub & { email_address: IUserPrivate['email_address'] };

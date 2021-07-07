@@ -8,11 +8,6 @@
       <span i18n>My Stuff</span>
     </ui-button>
 
-    <ui-button routerLink="/settings" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
-      <ui-icon>settings</ui-icon>
-      <span i18n>Settings</span>
-    </ui-button>
-
     <ui-button
       routerLink="/settings/payments"
       routerLinkActive="active-link"
@@ -20,6 +15,11 @@
     >
       <ui-icon>wallet</ui-icon>
       <span i18n>Payments</span>
+    </ui-button>
+
+    <ui-button routerLink="/settings" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+      <ui-icon>settings</ui-icon>
+      <span i18n>Settings</span>
     </ui-button>
 
     <ng-container *ngIf="myself.host">

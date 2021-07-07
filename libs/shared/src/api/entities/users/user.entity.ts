@@ -16,13 +16,11 @@ import {
 import { Except } from 'type-fest';
 
 import { Host } from '../hosts/host.entity';
-import { Performance } from '../performances/performance.entity';
 import { Person } from './person.entity';
 import { ContactInfo } from './contact-info.entity';
 import { Invoice } from '../common/invoice.entity';
 import { PatronSubscription } from './patron-subscription.entity';
 import { PaymentMethod } from './payment-method.entity';
-import { SupportedLocale } from '../../event-bus/contracts';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {

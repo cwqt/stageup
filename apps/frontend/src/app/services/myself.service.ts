@@ -8,7 +8,7 @@ import {
   IEnvelopedData,
   IFollowing,
   IHost,
-  IHostStub,
+  ILocale,
   IMyself,
   IPasswordConfirmationResponse,
   IPaymentMethod,
@@ -16,8 +16,7 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
-  IUserInvoice,
-  LocaleOptions
+  IUserInvoice
 } from '@core/interfaces';
 import { UserHostInfo } from '@core/api';
 import { IQueryParams, querize } from '@core/helpers';
@@ -100,8 +99,8 @@ export class MyselfService {
     return this.http.put<IMyself['host_info']>('/api/myself/landing-page', data).toPromise();
   }
 
-  updateLocale(body: { locale: LocaleOptions }): Promise<string> {
-    return this.http.put<string>('/api/myself/locale', body).toPromise();
+  updateLocale(body: ILocale): Promise<ILocale> {
+    return this.http.put<ILocale>('/api/myself/locale', body).toPromise();
   }
 
   // router.get <IE<IPerfS[]>> ("/myself/purchased-performances", Myself.readMyPurchasedPerformances());

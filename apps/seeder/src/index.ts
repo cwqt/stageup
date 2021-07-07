@@ -30,7 +30,7 @@ console.clear();
       stripe: new Providers.Stripe({
         public_key: process.env.STRIPE_PUBLIC_KEY,
         private_key: process.env.STRIPE_PRIVATE_KEY,
-        hook_signature: process.env.STRIPE_HOOK_SIGNATURE,
+        webhook_signature: process.env.STRIPE_WEBHOOK_SIGNATURE,
         client_id: process.env.STRIPE_CLIENT_ID
       })
     },

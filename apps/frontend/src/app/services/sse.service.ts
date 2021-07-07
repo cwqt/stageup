@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { LiveStreamState, SseEvent } from '@core/interfaces';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +22,7 @@ export class SseService {
   }
 
   getStreamEvents(performanceId: string) {
-    this.streamEventsSource = new EventSource(`${environment.apiUrl}/sse/performances/${performanceId}`);
+    this.streamEventsSource = new EventSource(`/api/sse/performances/${performanceId}`);
     return this.createEventObserver<LiveStreamState>(this.streamEventsSource);
   }
 

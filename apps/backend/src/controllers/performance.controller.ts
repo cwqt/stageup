@@ -54,7 +54,7 @@ import { SignableAssetType } from 'libs/shared/src/api/entities/performances/sig
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
 import { array, boolean, enums, object, optional } from 'superstruct';
 import { In } from 'typeorm';
-import { BackendProviderMap } from '..';
+import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import { default as IdFinderStrat } from '../common/authorisation/id-finder-strategies';
 import Env from '../env';
@@ -305,8 +305,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         const method = await this.providers.stripe.connection.paymentMethods.create(
           {
             customer: platformPaymentMethod.user.stripe_customer_id,
-            payment_method: platformPaymentMethod.stripe_method_id,
-            metadata: { __origin_url: Env.WEBHOOK_URL }
+            payment_method: platformPaymentMethod.stripe_method_id
           },
           { stripeAccount: ticket.performance.host.stripe_account_id }
         );

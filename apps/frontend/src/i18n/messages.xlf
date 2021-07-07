@@ -658,7 +658,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component.ts</context>
@@ -1205,7 +1205,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5068642311562648552" datatype="html">
@@ -1904,7 +1904,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/billing-settings/billing-settings.component.ts</context>
@@ -2329,7 +2329,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8894377483833272091" datatype="html">
@@ -3024,7 +3024,7 @@
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
@@ -3035,28 +3035,28 @@
         <source>Created At</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7585826646011739428" datatype="html">
         <source>Edit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6012665925966754126" datatype="html">
         <source>Delete '<x id="PH" equiv-text="performance.name"/>'</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2810439383095106733" datatype="html">
         <source>Are you sure you want to delete this performance?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
       <trans-unit id="db248d938d590a75ecff36d583a847ffb78ea19d" datatype="html">
@@ -3677,21 +3677,21 @@
         <source>Select a donation amount</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9044145864502055118" datatype="html">
         <source>Enter an amount</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.ts</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6141247255243198062" datatype="html">
         <source>Enter custom amount:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.ts</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
       <trans-unit id="be451c2a6269405f9e6b1bf8e365a9cb56478bd3" datatype="html">

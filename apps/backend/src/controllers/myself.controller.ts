@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@backend/common/error';
+import { SUPPORTED_LOCALES } from '@backend/common/locales';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
-  AccessToken,
   BaseController,
   Follow,
   getCheck,
@@ -17,11 +18,14 @@ import {
 } from '@core/api';
 import { timestamp } from '@core/helpers';
 import {
+  DtoUserPatronageSubscription,
   HTTP,
   IEnvelopedData,
   IFeed,
+  ILocale,
   IFollowing,
   IMyself,
+  IPasswordConfirmationResponse,
   IPaymentMethod,
   IPaymentMethodStub,
   IPerformanceStub,
@@ -31,13 +35,9 @@ import {
   IUserInvoiceStub,
   PaymentStatus,
   pick,
-  DtoUserPatronageSubscription,
-  Visibility,
-  IPasswordConfirmationResponse,
-  LocaleOptions
+  Visibility
 } from '@core/interfaces';
 import { boolean, enums, object, partial, record, string } from 'superstruct';
-import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 
 export default class MyselfController extends BaseController<BackendProviderMap> {
@@ -432,29 +432,25 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     };
   }
 
-
-  updateLocale(): IControllerEndpoint<string> {
+  updateLocale(): IControllerEndpoint<ILocale> {
     return {
       // Check the locale exists in our currently available options
       validators: {
         body: object({
-          locale: enums(Object.values(LocaleOptions))
+          language: enums(SUPPORTED_LOCALES.map(l => l.language)),
+          region: enums(SUPPORTED_LOCALES.map(l => l.region))
         })
       },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        // Check the user exists with the session id
-        const myself = await getCheck(User.findOne({ _id: req.session.user._id}));
-        // Get the language and region from the request
-        const [language, region] = req.body.locale.split('-');
-        // Update their data and save
-        myself.locale = {language, region};
+        const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
+        myself.locale = req.body;
         await myself.save();
-        // Return the language so it can be fed into the URLs
-        return myself.locale.language;
+        return myself.locale;
       }
     };
   }
+
 
   // Adds a follow to the database with the current users ID (Follower) and the provided host ID (Followee?)
   addFollow(): IControllerEndpoint<IFollowing> {
