@@ -2,6 +2,7 @@ import { ErrorHandler } from '@backend/common/error';
 import {
   Address,
   BaseController,
+  Follow,
   getCheck,
   Host,
   IControllerEndpoint,
@@ -15,6 +16,7 @@ import {
   HTTP,
   IAddress,
   IEnvelopedData,
+  IFollowing,
   IHost,
   IMyself,
   IUser,
@@ -335,6 +337,18 @@ export default class UserController extends BaseController<BackendProviderMap> {
         await user.save();
 
         this.providers.bus.publish('user.password_changed', { user_id: user._id }, req.locale);
+      }
+    };
+  }
+
+  readUserFollows(): IControllerEndpoint<IEnvelopedData<IFollowing[]>> {
+    return {
+      validators: { params: object({ uid: string() })},
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        return await this.ORM.createQueryBuilder(Follow, "follow")
+          .where("follow.user__id = :uid", { uid: req.params.uid })
+          .paginate(follow => follow.toFollowing())
       }
     };
   }

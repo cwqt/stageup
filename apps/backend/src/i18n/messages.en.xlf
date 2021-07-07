@@ -153,6 +153,10 @@
         <source>Cannot set performance publicity period outside one of the tickets selling period</source>
         <target state="final">Cannot set performance publicity period outside one of the tickets selling period</target>
       </trans-unit>
+      <trans-unit id="error.already_following" datatype="html">
+        <source>You are already following this host</source>
+        <target state="final">You are already following this host</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="final">Received response does not match submitter!</target>

@@ -11,7 +11,9 @@ import {
   CountryCode,
   PersonTitle,
   IOnboardingStepMap,
-  BusinessType
+  BusinessType,
+  IEnvelopedData,
+  IUserFollow
 } from '@core/interfaces';
 import { regexes, to } from '@core/helpers';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
@@ -77,10 +79,13 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
   stepUiMap: { [index in HostOnboardingStep]?: IUiStep<any> };
 
+  hostEnvelope: IEnvelopedData<IHost, IUserFollow>;
+
   constructor(private hostService: HostService) {}
 
   async ngOnInit() {
-    this.host = await this.hostService.readHost(this.hostService.currentHostValue._id);
+    this.hostEnvelope = await this.hostService.readHost(this.hostService.currentHostValue._id);
+    this.host = this.hostEnvelope.data;
     await this.getOnboarding();
 
     this.stepUiMap = {

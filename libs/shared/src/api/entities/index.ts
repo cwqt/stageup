@@ -5,6 +5,7 @@ export { ContactInfo } from './users/contact-info.entity';
 export { PatronSubscription } from './users/patron-subscription.entity';
 export { PaymentMethod } from './users/payment-method.entity';
 export { PasswordReset } from './users/password.entity';
+export { Follow } from './users/follows.entity'
 
 export { Host } from './hosts/host.entity';
 export { HostInvitation } from './hosts/host-invitation.entity';
