@@ -24,7 +24,8 @@ import {
   IDeleteHostReason,
   DtoUpdateHost,
   IHostPatronTier,
-  DtoUpdatePatronTier
+  DtoUpdatePatronTier,
+  IBulkRefund
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -207,9 +208,9 @@ export class HostService {
   }
 
   //router.post<void>("/hosts/:hid/invoices/process-refunds", Hosts.processRefund());
-  processRefunds(invoiceIds: string[], hostId: string): Promise<void> {
+  processRefunds(invoiceIds: string[], hostId: string, bulkRefund?: IBulkRefund): Promise<void> {
     return this.http
-      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, { invoice_ids: invoiceIds })
+      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, { invoice_ids: invoiceIds, bulk_refund: bulkRefund })
       .toPromise();
   }
 

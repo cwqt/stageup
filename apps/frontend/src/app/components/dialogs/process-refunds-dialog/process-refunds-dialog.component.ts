@@ -58,6 +58,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
       },
       resolvers: {
         output: async v => {
+          console.log('Test Test');
           console.log(v);
         }
       },
@@ -96,7 +97,8 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
         new UiDialogButton({
           label: $localize`Yes`,
           kind: ThemeKind.Primary,
-          callback: () =>
+          callback: () => {
+            this.bulkRefundForm.submit();
             cachize(
               this.hostService.processRefunds(
                 this.data.map(invoice => invoice.invoice_id),
@@ -108,7 +110,8 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
                 this.toastService.emit($localize`Refund(s) successfully processed`);
                 this.dialog.closeAll();
               })
-              .catch(() => this.toastService.emit($localize`Error processing refund(s)`))
+              .catch(() => this.toastService.emit($localize`Error processing refund(s)`));
+          }
         })
       ]
     };

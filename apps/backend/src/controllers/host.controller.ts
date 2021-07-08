@@ -867,8 +867,8 @@ export default class HostController extends BaseController<BackendProviderMap> {
     return {
       validators: {
         body: object({
-          invoice_ids: array(fields.nuuid),
-          host_id: fields.nuuid
+          invoice_ids: array(fields.nuuid)
+          // host_id: fields.nuuid
         })
       },
       authorisation: AuthStrat.isMemberOfHost(),
