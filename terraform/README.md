@@ -1,4 +1,4 @@
-# IaC
+# IaC - [Notion](https://www.notion.so/Deployment-Documentation-91363ce9292e4b009413e44bb1c8d86b)
 
 Contains all Terraform related code for setting up entire infrastructure to run this mono-repo.
 
