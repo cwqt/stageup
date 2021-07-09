@@ -84,9 +84,12 @@ resource "google_sql_user" "pg_admin" {
 # in feat, rather than making an entirely new instance we make a schema in the db for the
 # deploy branch to make use of, cheaper & faster to instantiate in a CI build
 resource "google_sql_database" "feat_database" {
-  count    = var.core == "feat" ? 1 : 0
-  name     = local.postgres_name
-  instance = data.google_sql_database_instance.postgres.name
+  count      = var.core == "feat" ? 1 : 0
+  name       = local.postgres_name
+  instance   = data.google_sql_database_instance.postgres.name
+  
+  # delete the admin before the db
+  depends_on = [google_sql_user.pg_admin]
 }
 
 # need redis please
