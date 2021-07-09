@@ -5,7 +5,6 @@ Include brief bullet pointed list of changes & include changes in `.env` (if any
 - I did `x, y and z`
 - `ENV_KEY` → `NEW_ENV_KEY`
 
-
 ## Screenshots
 
 - **Frontend**: Video of frontend if new component added / existing component modified
