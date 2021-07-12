@@ -8,7 +8,7 @@ const targetPath = `${__dirname}/src/environments/environment.${environment}.ts`
 
 // `environment.ts` file structure
 let envConfigFile = '';
-if (environment == 'development' || environment == 'testing') envConfigFile += `import 'zone.js/plugins/zone-error';\n`;
+if (environment == 'development' || environment == 'testing') envConfigFile += `import 'zone.js/dist/zone-error';\n`;
 
 // Add extension in dev only for port re-directs
 const extension = (url: string, port: number) =>
