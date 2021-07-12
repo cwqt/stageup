@@ -8,4 +8,4 @@ export const environment: IFrontendEnvironment = {
   app_version: ''
 };
 
-import 'zone.js/plugins/zone-error'; // Included with Angular CLI.
+import 'zone.js/dist/zone-error'; // Included with Angular CLI.
