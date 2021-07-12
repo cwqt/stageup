@@ -43,29 +43,37 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
     backend            # the stageup backend
       modules          # event driven stuff, queue & notifs
     api-tests          # integration tests
+    reverse-proxy      # nginx reverse proxy for blog/wordpress/prod app
+    seeder             # database seeder
 
   libs                 # where all shared code live
     interfaces         # typescript interfaces
     ui-lib             # frontend generic angular component library
     shared
       api              # shared backend services utilities
-        providers      # utils for interacting with data sources
+        data-client    # utils for interacting with data sources
+        entities       # typeorm schema
+        event-bus      # event types & contracts
       helpers          # utility functions for backend & frontend
 
-  deploy               # info pertaining to deployment
-    k8s                # kubernetes files (unused for now)
-
+  terraform            # IaC automated deployment
+    modules            # Terraform Modules, backend, redis etc.
+    core               # non-ephemeral infrastructure
+    
   tools                # non-source code stuff
+    generate-xlf       # XLF translation script 
     generate-uml.ts    # creates a plant-uml diagram of models
 
   .github              # github actions
   .vscode              # editor settings
+  
   nx.json              # nx workspace config
-  ship.config.js       # ship.js release tool config
   package.json         # where _all_ packages are listed
   tsconfig.base.json   # base ts config
   workspace.json       # where all apps/libs are defined
   docker-compose.yml   # local stack deployment
+  ship.config.js       # ship.js automated versioning & release config
+  
   .env                 # .env for github tokens (deployment only)
   .env.example         # example .env
   .env.development     # also .env.staging, .testing & .production
