@@ -1,6 +1,5 @@
 require('dotenv').config();
 import * as fs from 'fs';
-import ora from 'ora';
 import path from 'path';
 import { WorkspaceProject } from './interfaces';
 import {
@@ -44,15 +43,15 @@ if (!process.env.GOOGLE_APPLICATION_CREDENTIALS)
     console.log(`Generating xlf's for ${project.prefix.bold} with locales: ${colors.bold(locales.join(', '))}`);
 
     // prettier-ignore
-    if (project.i18n.sources) {
-    const tokens = await s(extractTokensFromSources(project.i18n.sources), 'Extracting i18n tokens from .hjson files');
-    await s(findMissingTokens(tokens),                                     'Checking for missing tokens in the code');
-    await s(writeSourceXlfFile(sourcePath, tokens),                        'Writing a source .xlf translation file');
-    await s(writeXliffMergeConfig(sourcePath, locales),                    'Generating config file for xliff-merge');
-    await s(writeLocaleXlfFiles(sourcePath),                               'Merging old locale .xlf files with new tokens');
-    await s(cleanupXlfGeneration(sourcePath),                              'Cleanup config/source files for .xlf generation');
-    await s(writeICUVarTypesFile(sourcePath, tokens),                      'Create a types file for all ICU expressions & their variables');
-  }
+    if (project.i18n.sources) { // only apps with .hjson files
+      const tokens = await s(extractTokensFromSources(project.i18n.sources), 'Extracting i18n tokens from .hjson files');
+      await s(findMissingTokens(sourcePath, tokens),                         'Checking for missing tokens in the code');
+      await s(writeSourceXlfFile(sourcePath, tokens),                        'Writing a source .xlf translation file');
+      await s(writeXliffMergeConfig(sourcePath, locales),                    'Generating config file for xliff-merge');
+      await s(writeLocaleXlfFiles(sourcePath),                               'Merging old locale .xlf files with new tokens');
+      await s(cleanupXlfGeneration(sourcePath),                              'Cleanup config/source files for .xlf generation');
+      await s(writeICUVarTypesFile(sourcePath, tokens),                      'Create a types file for all ICU expressions & their variables');
+    }
 
     await s(fixCharacterEntityProblems(sourcePath), 'Fixing broken character entities');
     await translateUntranslatedTransUnits(project.i18n.path, locales);

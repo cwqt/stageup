@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "projects": {
+    "test": {
+      "root": "tools/generate-xlf/tests",
+      "sourceRoot": "tools/generate-xlf/tests/assets",
+      "projectType": "application",
+      "prefix": "backend",
+      "i18n": {
+        "sources": ["tools/generate-xlf/tests/assets/i18.test.hjson"],
+        "path": "tools/generate-xlf/tests/assets/i18n",
+        "locales": ["en", "nb", "cy"]
+      }
+    }
+  }
+}
