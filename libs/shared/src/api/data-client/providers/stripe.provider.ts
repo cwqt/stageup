@@ -5,7 +5,7 @@ import Stripe from 'stripe';
 export interface IStripeProviderConfig {
   public_key: string;
   private_key: string;
-  hook_signature: string;
+  webhook_signature: string;
   client_id: string;
 }
 

@@ -6,8 +6,9 @@ import {
   DtoUserPatronageSubscription,
   HTTP,
   IEnvelopedData,
+  IFollowing,
   IHost,
-  IHostStub,
+  ILocale,
   IMyself,
   IPasswordConfirmationResponse,
   IPaymentMethod,
@@ -15,8 +16,7 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
-  IUserInvoice,
-  LocaleOptions
+  IUserInvoice
 } from '@core/interfaces';
 import { UserHostInfo } from '@core/api';
 import { IQueryParams, querize } from '@core/helpers';
@@ -90,13 +90,17 @@ export class MyselfService {
     this.store({ ...this.$myself.value, host_info: userHostInfo });
   }
 
+  setFollowing(following: IFollowing[]) {
+    this.store({ ...this.$myself.value, following }, true);
+  }
+
   // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
   updatePreferredLandingPage(data: Pick<UserHostInfo, 'prefers_dashboard_landing'>): Promise<IMyself['host_info']> {
     return this.http.put<IMyself['host_info']>('/api/myself/landing-page', data).toPromise();
   }
 
-  updateLocale(body: { locale: LocaleOptions }): Promise<string> {
-    return this.http.put<string>('/api/myself/locale', body).toPromise();
+  updateLocale(body: ILocale): Promise<ILocale> {
+    return this.http.put<ILocale>('/api/myself/locale', body).toPromise();
   }
 
   // router.get <IE<IPerfS[]>> ("/myself/purchased-performances", Myself.readMyPurchasedPerformances());
@@ -156,5 +160,19 @@ export class MyselfService {
     return this.http
       .post<IPasswordConfirmationResponse>(`/api/myself/confirm-password`, { password: password })
       .toPromise();
+  }
+
+  //router.post <IFollowing> ("/myself/follow-host/:hid", Myself.addFollow());
+  followHost(hostId: string): Promise<IFollowing> {
+    return this.http
+    .post<IFollowing>(`/api/myself/follow-host/${hostId}`, {})
+    .toPromise()
+  }
+
+  //router.delete <void> ("/myself/unfollow-host/hid", Myself.deleteFollow());
+  unfollowHost(hostId: string): Promise<void> {
+    return this.http
+    .delete<void>(`/api/myself/unfollow-host/${hostId}`)
+    .toPromise();
   }
 }

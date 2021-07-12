@@ -4,7 +4,7 @@
   "error.missing_translation": Missing translation
   "error.missing_permissions": Insufficent privileges
   "error.not_found": Not found
-  "error.no_such_route": Route not found
+  "error.no_such_route": No such route
   "error.not_member": Not a member of company
   "error.duplicate": Duplicate value found
   "error.in_use": Value is already in use
@@ -18,7 +18,6 @@
   "error.forbidden": This action is forbidden
   "error.not_implemented": Method is not implemented
   "error.unknown": An unknown error occured
-  "error.not_such_route": No such route
   "error.incorrect": Value is incorrect
   "error.missing_body": Missing body data
   "error.locked": Data is locked

@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import * as fd from 'form-data';
-import { IUser, IHost, Primitive, IMyself, IUserStub, IPasswordReset, IUserPrivate } from '@core/interfaces';
+import { IEnvelopedData, IUser, IHost, IFollowing, Primitive, IMyself, IUserStub, IPasswordReset, IUserPrivate } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 import { UserHostInfo } from '@core/api';
 import { VolumeId } from 'aws-sdk/clients/storagegateway';
@@ -69,5 +69,14 @@ export class UserService {
     return this.http
       .put<void>(`/api/users/reset-password?otp=${otp}`, { new_password: new_password })
       .toPromise();
+  }
+
+  // Not currently being used (as current user's followers are retrieved in Myself Service).
+  // Left for now in case in future it will be useful to view other peoeple's followers
+  //router.get <IEnvelopedData<IFollowing[]>> ("/users/:uid/following", Users.readUserFollows());
+  readUserFollows(userId: string): Promise<IEnvelopedData<IFollowing[]>> {
+    return this.http
+    .get<IEnvelopedData<IFollowing[]>>(`/api/users/${userId}/following`)
+    .toPromise();
   }
 }

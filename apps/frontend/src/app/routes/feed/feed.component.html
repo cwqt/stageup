@@ -43,46 +43,49 @@
     </div>
 
     <!-- All other carousels -->
-    <div *ngFor="let carousel of carouselData | keyvalue" class="carousel-container relative">
-      <h2>{{ prettyKeys[carousel.key] | titlecase }}</h2>
-
-      <ui-hr></ui-hr>
-
-      <mat-spinner *ngIf="carousel.value.loading" i18n>Loading...</mat-spinner>
-      <h3 *ngIf="carousel.value.data?.data?.length == 0" i18n>No performances found</h3>
-
-      <div class="relative">
-        <div class="absolute right-0 top-0 bottom-0 my-auto spinner" *ngIf="carousel.value.meta.loading_page">
-          <mat-spinner [diameter]="40"></mat-spinner>
+    <ng-container *ngFor="let carousel of carouselData | keyvalue">
+      <!-- Only display 'My Follows' if there are performances -->
+      <div *ngIf="carousel.value.data?.data?.length > 0" class="carousel-container relative">
+        <h2>{{ prettyKeys[carousel.key] | titlecase }}</h2>
+  
+        <ui-hr></ui-hr>
+  
+        <mat-spinner *ngIf="carousel.value.loading" i18n>Loading...</mat-spinner>
+        <h3 *ngIf="carousel.value.data?.data?.length == 0" i18n>No performances found</h3>
+  
+        <div class="relative">
+          <div class="absolute right-0 top-0 bottom-0 my-auto spinner" *ngIf="carousel.value.meta.loading_page">
+            <mat-spinner [diameter]="40"></mat-spinner>
+          </div>
+  
+          <carousel
+            *ngIf="!carousel.value.loading"
+            (events)="handleCarouselEvents($event, carousel.key)"
+            [margin]="20"
+            [height]="256"
+            [loading]="carousel.value.meta.loading_page"
+            [id]="carousel.key"
+            [cellsToShow]="currentCellsToShow"
+            [loop]="false"
+          >
+            <ng-container *ngIf="carousel.key !== 'hosts'">
+              <div
+                class="carousel-cell overflow-hidden"
+                *ngFor="let performance of carousel.value.data.data; let i = index"
+              >
+                <app-performance-thumb #thumb [performance]="performance" (click)="thumb.openBrochure()">
+                </app-performance-thumb>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="carousel.key === 'hosts'">
+              <div class="carousel-cell overflow-hidden" *ngFor="let host of carousel.value.data.data; let i = index">
+                <app-host-thumb #thumb [host]="host" (click)="thumb.openHostPage()"> </app-host-thumb>
+              </div>
+            </ng-container>
+          </carousel>
         </div>
-
-        <carousel
-          *ngIf="!carousel.value.loading"
-          (events)="handleCarouselEvents($event, carousel.key)"
-          [margin]="20"
-          [height]="256"
-          [loading]="carousel.value.meta.loading_page"
-          [id]="carousel.key"
-          [cellsToShow]="currentCellsToShow"
-          [loop]="false"
-        >
-          <ng-container *ngIf="carousel.key !== 'hosts'">
-            <div
-              class="carousel-cell overflow-hidden"
-              *ngFor="let performance of carousel.value.data.data; let i = index"
-            >
-              <app-performance-thumb #thumb [performance]="performance" (click)="thumb.openBrochure()">
-              </app-performance-thumb>
-            </div>
-          </ng-container>
-          <ng-container *ngIf="carousel.key === 'hosts'">
-            <div class="carousel-cell overflow-hidden" *ngFor="let host of carousel.value.data.data; let i = index">
-              <app-host-thumb #thumb [host]="host" (click)="thumb.openHostPage()"> </app-host-thumb>
-            </div>
-          </ng-container>
-        </carousel>
       </div>
-    </div>
+    </ng-container>
   </div>
 </app-page>
 

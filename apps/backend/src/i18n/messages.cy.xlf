@@ -153,6 +153,10 @@
         <source>Cannot set performance publicity period outside one of the tickets selling period</source>
         <target state="needs-translation">Ni all osod cyfnod cyhoeddusrwydd perfformiad y tu allan i un o'r cyfnod gwerthu tocynnau</target>
       </trans-unit>
+      <trans-unit id="error.already_following" datatype="html">
+        <source>You are already following this host</source>
+        <target state="needs-translation">Rydych chi eisoes yn dilyn y gwesteiwr hwn</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="needs-translation">Nid yw'r ymateb a dderbynnir yn cyfateb i'r cyflwynydd!</target>
@@ -411,7 +415,7 @@ I brosesu'r cais hwn gallwch ymweld â'ch [dangosfwrdd anfoneb yma] ({invoice_da
       </trans-unit>
       <trans-unit id="email.test.send_email__content" datatype="html">
         <source>Hey {username} **How are you? &lt;{url}>**</source>
-        <target state="needs-translation">Hei {username} ** Sut wyt ti? &amp; lt; {url}> **</target>
+        <target state="needs-translation">Hei {username} ** Sut wyt ti? &lt; {url}> **</target>
       </trans-unit>
       <trans-unit id="email.user.registered__subject" datatype="html">
         <source>Verify your StageUp account</source>
@@ -419,7 +423,7 @@ I brosesu'r cais hwn gallwch ymweld â'ch [dangosfwrdd anfoneb yma] ({invoice_da
       </trans-unit>
       <trans-unit id="email.user.registered__content" datatype="html">
         <source>Click the link to verify: &lt;{url}></source>
-        <target state="needs-translation">Cliciwch y ddolen i wirio: &amp; lt; {url}></target>
+        <target state="needs-translation">Cliciwch y ddolen i wirio: &lt; {url}></target>
       </trans-unit>
       <trans-unit id="email.user.invited_to_host__subject" datatype="html">
         <source>You have been invited to join {host_name} by {inviter_name}</source>
@@ -429,7 +433,7 @@ I brosesu'r cais hwn gallwch ymweld â'ch [dangosfwrdd anfoneb yma] ({invoice_da
         <source>Hi {user_name},
 Click the link to accept the invitation: &lt;{url}>, this invite will expire in **24 hours**.</source>
         <target state="needs-translation">Helo {user_name},
-Cliciwch y ddolen i dderbyn y gwahoddiad: &amp; lt; {url}>, bydd y gwahoddiad hwn yn dod i ben mewn ** 24 awr **.</target>
+Cliciwch y ddolen i dderbyn y gwahoddiad: &lt; {url}>, bydd y gwahoddiad hwn yn dod i ben mewn ** 24 awr **.</target>
       </trans-unit>
       <trans-unit id="email.user.invited_to_private_showing__subject" datatype="html">
         <source>You have been invited to watch a private performance</source>
@@ -439,7 +443,7 @@ Cliciwch y ddolen i dderbyn y gwahoddiad: &amp; lt; {url}>, bydd y gwahoddiad hw
         <source>Hi {user_name},
 Click the link to watch **{performance_name}** by **{host_name}** on StageUp now: &lt;{url}>></source>
         <target state="needs-translation">Helo {user_name},
-Cliciwch y ddolen i wylio ** {performance_name} ** gan ** {host_name} ** ar StageUp nawr: &amp; lt; {url} >></target>
+Cliciwch y ddolen i wylio ** {performance_name} ** gan ** {host_name} ** ar StageUp nawr: &lt; {url} >></target>
       </trans-unit>
       <trans-unit id="email.ticket.purchased__subject" datatype="html">
         <source>Receipt of purchase of StageUp ticket</source>
@@ -452,8 +456,8 @@ Click here to watch: &lt;{watch_url}>
 Receipt of this purchase: &lt;{receipt_url}></source>
         <target state="needs-translation">Helo {user_name},
 Fe wnaethoch chi brynu {ticket_name} i wylio {performance_name} ar gyfer {amount}.
-Cliciwch yma i wylio: &amp; lt; {watch_url}>
-Derbyn y pryniant hwn: &amp; lt; {receipt_url}></target>
+Cliciwch yma i wylio: &lt; {watch_url}>
+Derbyn y pryniant hwn: &lt; {receipt_url}></target>
       </trans-unit>
       <trans-unit id="email.user.patronage_started__subject" datatype="html">
         <source>Patron Subscription to {tier_name}</source>
@@ -513,7 +517,7 @@ Rydych chi'n derbyn hwn oherwydd eich bod chi (neu rywun arall) wedi gofyn am ai
 
 Cliciwch ar y ddolen ganlynol i gwblhau'r broses. Mae'r ddolen hon yn ddilys am y 24 awr nesaf.
 
-&amp; lt; {password_reset_url}>
+&lt; {password_reset_url}>
 
 Os na ofynasoch am y newid hwn, anwybyddwch yr e-bost hwn a bydd eich cyfrinair yn aros yr un fath.</target>
       </trans-unit>
@@ -561,7 +565,7 @@ Thanks, StageUp</source>
         <target state="needs-translation">Helo @ {user_username},
 
 Dyma dderbynneb o'ch tanysgrifiad gan haen noddwr ** @ {host_username} **, ** {tier_name} **.
-Ni chodir tâl arnoch mwyach am y tanysgrifiad hwn &amp; amp; bydd y tanysgrifiad hwn yn cael ei restru fel 'Canslo' ar eich cyfrif o hyn ymlaen.
+Ni chodir tâl arnoch mwyach am y tanysgrifiad hwn &amp; bydd y tanysgrifiad hwn yn cael ei restru fel 'Canslo' ar eich cyfrif o hyn ymlaen.
 
 Diolch, StageUp</target>
       </trans-unit>
@@ -582,7 +586,7 @@ Diolch, StageUp</target>
         <target state="needs-translation">Heb ei ddarganfod</target>
       </trans-unit>
       <trans-unit id="error.no_such_route" datatype="html">
-        <source>Route not found</source>
+        <source>No such route</source>
         <target state="needs-translation">Ni ddaethpwyd o hyd i'r llwybr</target>
       </trans-unit>
       <trans-unit id="error.not_member" datatype="html">
@@ -632,10 +636,6 @@ Diolch, StageUp</target>
       <trans-unit id="error.not_implemented" datatype="html">
         <source>Method is not implemented</source>
         <target state="needs-translation">Ni weithredir y dull</target>
-      </trans-unit>
-      <trans-unit id="error.not_such_route" datatype="html">
-        <source>No such route</source>
-        <target state="needs-translation">Dim llwybr o'r fath</target>
       </trans-unit>
       <trans-unit id="error.incorrect" datatype="html">
         <source>Value is incorrect</source>

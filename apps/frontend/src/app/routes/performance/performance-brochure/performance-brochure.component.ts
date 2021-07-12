@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -61,6 +61,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   }
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private myselfService: MyselfService,
     private performanceService: PerformanceService,
     private helperService: HelperService,
@@ -77,7 +78,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       return d;
     });
 
-    this.performanceSharingUrl = `${environment.frontendUrl}/${environment.locale}/performances/${this.performance._id}`;
+    this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
   }
 
   openPerformanceDescriptionSection() {

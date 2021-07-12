@@ -1,11 +1,19 @@
-# Description
+## Description
 
-Include brief bullet pointed list of changes.
+Include brief bullet pointed list of changes & include changes in `.env` (if any):
 
-* Change 1
+- I did `x, y and z`
+- `ENV_KEY` → `NEW_ENV_KEY`
 
+## Screenshots
 
-# Screenshots
+- **Frontend**: Video of frontend if new component added / existing component modified
+- **Backend**: Screenshot of integration test passing if new route added / existing route modified
 
-* Include screenshot of integration test passing if new route added / existing route modified
-* Include screenshot of frontend if new component added / existing component modified
+## Deploy
+
+When PR complete & ready for review by a PM, make a commit with the body `/deploy` to create a temporary deployment of this branch at `https://su-xxx.stageup.uk`.
+
+```shell
+git commit --allow-empty -m "/deploy"
+```

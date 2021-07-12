@@ -1,11 +1,5 @@
 import { environment } from '../environments/environment';
 
-import countries from 'i18n-iso-countries';
-// No cy support for this library, but I have opened a PR with its addition
-// https://github.com/michaelwittig/node-i18n-iso-countries/pull/246
-const locale = environment.locale == 'cy' ? 'en' : environment.locale;
-countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
-
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -255,7 +249,7 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     ClipboardModule,
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
-    NgxStripeModule.forRoot(environment.stripePublicKey),
+    NgxStripeModule.forRoot(environment.stripe_public_key),
     ClipboardModule,
     NgxPermissionsModule.forRoot(),
     PlyrModule,
@@ -270,7 +264,6 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],
-  // entryComponents: [DeleteConfirmationDialogComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

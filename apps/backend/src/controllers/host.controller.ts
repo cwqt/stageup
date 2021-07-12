@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@backend/common/error';
 import {
   BaseController,
+  Follow,
   getCheck,
   Host,
   HostInvitation,
@@ -30,6 +31,7 @@ import {
   IDeleteHostAssertion,
   IDeleteHostReason,
   IEnvelopedData,
+  IFollower,
   IHost,
   IHostInvoice,
   IHostInvoiceStub,
@@ -41,6 +43,7 @@ import {
   IOnboardingStepMap,
   IPerformanceStub,
   IRefund,
+  IUserFollow,
   IUserHostInfo,
   LiveStreamState,
   PaymentStatus
@@ -49,7 +52,7 @@ import deepmerge from 'deepmerge';
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
 import { array, boolean, coerce, enums, object, string, StructError } from 'superstruct';
 import { In } from 'typeorm';
-import { BackendProviderMap } from '..';
+import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Env from '../env';
@@ -92,7 +95,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
-  readHost(): IControllerEndpoint<IHost> {
+  readHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserFollow>> {
     return {
       authorisation: AuthStrat.none,
       controller: async req => {
@@ -107,7 +110,17 @@ export default class HostController extends BaseController<BackendProviderMap> {
           }
         );
 
-        return host.toFull();
+        // if req.session.user._id && userHasFollow then envelope.__client_data.is_following = true
+        const isFollowing = req.session.user && await this.ORM.createQueryBuilder(Follow, 'follow')
+          .where("follow.user__id = :uid", { uid: req.session.user._id })
+          .andWhere("follow.host__id = :hid", { hid: host._id })
+          .getOne();
+
+        const envelope = {
+          data: host.toFull(),
+          __client_data: { is_following: isFollowing ? true : false }
+        }
+        return envelope
       }
     };
   }
@@ -913,8 +926,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           invoices.map(async invoice => {
             this.providers.stripe.connection.refunds.create(
               {
-                payment_intent: invoice.stripe_payment_intent_id,
-                metadata: { __origin_url: Env.WEBHOOK_URL }
+                payment_intent: invoice.stripe_payment_intent_id
               },
               {
                 stripeAccount: invoice.host.stripe_account_id
@@ -993,6 +1005,18 @@ export default class HostController extends BaseController<BackendProviderMap> {
           })
           .withDeleted() // tickets & performances & patronages can be soft deleted
           .paginate(sub => sub.toDtoHostPatronageSubscription());
+      }
+    };
+  }
+
+  readHostFollowers(): IControllerEndpoint<IEnvelopedData<IFollower[]>> {
+    return {
+      validators: { params: object({ hid: string() })},
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        return await this.ORM.createQueryBuilder(Follow, "follow")
+          .where("follow.host__id = :hid", { hid: req.params.hid })
+          .paginate(follow => follow.toFollower())
       }
     };
   }

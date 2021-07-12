@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { LocaleOptions } from '@core/interfaces';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ParamMap, Data, ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
+import { intersect } from '@core/helpers';
+import { SUPPORTED_LOCALES } from '@frontend/app.interfaces';
 
 export enum RouteParam {
   UserId = 'userId',
@@ -100,14 +101,22 @@ export class BaseAppService {
     return this.router.navigate([url], extras);
   }
 
-  // Gets the URL, and trims the locale if there is one
+  /**
+   * @description Gets the current URL, removing supported locales (if any)
+   * */
   getUrl(): string {
-    // Get the current route and split to array (e.g. form will be ['', 'nb', 'settings'])
-    const currentRouteArray = this.router.url.split('/');
+    // Get the current route and split to array (e.g. router.url will be ['', 'nb', 'settings'])
+    const currentRouteArray = this.router.url.split('/').filter(v => v);
+
     // Check if the current URL has any locale prefixes
-    const urlHasPrefix = Object.values(LocaleOptions).find(locale => {
-      return locale.split('/')[0] === currentRouteArray[1]
-    })
-    return urlHasPrefix ? "/" + currentRouteArray.slice(2).join('/') : this.router.url;
+    const hasLocalePrefix =
+      intersect(
+        SUPPORTED_LOCALES.map(l => l.language),
+        [currentRouteArray[0]]
+      ).length == 1;
+
+    console.log(currentRouteArray, hasLocalePrefix);
+
+    return hasLocalePrefix ? '/' + currentRouteArray.slice(1).join('/') : this.router.url;
   }
 }

@@ -169,7 +169,7 @@ export class QueueModule implements Module {
                                                         handlers.sendUserPatronSubscriptionStartedReceiptEmail(ct)});
     }
 
-    setQueues(Object.values(this.queues).map(q => new BullMQAdapter(q.queue)));
+    setQueues(Object.values(this.queues).map(q => new BullMQAdapter(q.queue)) as any);
 
     this.routes = {
       jobQueueUi: {

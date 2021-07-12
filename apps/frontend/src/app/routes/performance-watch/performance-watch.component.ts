@@ -1,25 +1,15 @@
-import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
-import {
-  AssetType,
-  DtoPerformance,
-  IAsset,
-  IAssetStub,
-  ISignedToken,
-  LiveStreamState,
-  SseEventType,
-  AssetDto
-} from '@core/interfaces';
-import { Observable, Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Component, Inject, Input, LOCALE_ID, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { timestamp } from '@core/helpers';
+import { AssetDto, AssetType, DtoPerformance, ISignedToken, LiveStreamState } from '@core/interfaces';
+import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
+import { PerformanceService } from '@frontend/services/performance.service';
+import { environment } from 'apps/frontend/src/environments/environment';
+import { interval, Subscription } from 'rxjs';
 import { PlayerComponent } from '../../components/player/player.component';
 import { MyselfService } from '../../services/myself.service';
 import { SseService } from '../../services/sse.service';
-import { interval } from 'rxjs';
 import { ChipComponent } from '../../ui-lib/chip/chip.component';
-import { HttpClient } from '@angular/common/http';
-import { PerformanceService } from '@frontend/services/performance.service';
-import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
-import { environment } from 'apps/frontend/src/environments/environment';
 
 const moment = require('moment');
 const momentDurationFormatSetup = require('moment-duration-format');
@@ -58,6 +48,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
   };
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private sse: SseService,
     private myself: MyselfService,
     private performanceService: PerformanceService,
@@ -106,7 +97,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
       }
     }, 0);
 
-    this.performanceSharingUrl = `${environment.frontendUrl}/${environment.locale}/performances/${this.performance.data._id}`;
+    this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance.data._id}`;
   }
 
   handlePlayerError(event: Plyr.PlyrEvent) {

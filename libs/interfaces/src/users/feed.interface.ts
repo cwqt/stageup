@@ -8,4 +8,5 @@ export interface IFeed {
   // personalised /// etc...
   // promoted: IEnvelopedData<IPerformanceStub[]>
   hosts: IEnvelopedData<IHostStub[]>;
+  follows?: IEnvelopedData<IPerformanceStub[]>;
 }

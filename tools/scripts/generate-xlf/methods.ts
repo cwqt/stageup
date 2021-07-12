@@ -115,7 +115,7 @@ export const findMissingTokens = async (tokens: { [code: string]: string }) => {
           }
 
           console.log(`${missing.size} tokens are missing from the i18n.hjson files!`);
-          process.exit(0);
+          process.exit(1); // failure code 1
         }
       });
     });
@@ -158,7 +158,7 @@ export const writeLocaleXlfFiles = async (sourcePath: string) => {
   } catch (e) {
     console.log(e.stderr.toString());
     console.log(e.stdout.toString());
-    process.exit(0);
+    process.exit(1);
   }
 };
 
@@ -182,11 +182,6 @@ ${tsMap.map(t => `  ${t}`).join(',\n')}
 `;
 
   fs.writeFileSync(path.resolve(sourcePath, 'i18n-tokens.autogen.ts'), types, { flag: 'w' });
-};
-
-export const executePrerunFunction = async (command: string) => {
-  const parts = command.split(' ');
-  await spawn(parts.shift(), parts, { shell: true, stdio: 'inherit' });
 };
 
 export const fixCharacterEntityProblems = async (sourcePath: string) => {

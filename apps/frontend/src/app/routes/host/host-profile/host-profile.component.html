@@ -1,9 +1,9 @@
 <app-page>
-  <div body *ngIf="!host.loading && host.data">
+  <div body *ngIf="host.data && !host.loading && host.data.data">
     <!-- Banner  -->
     <div class="host-profile-header bg-white rounded shadow-sm">
       <div class="banner-picture__container relative overflow-hidden rounded">
-        <img class="object-cover w-full" [src]="host.data.banner || '/assets/banner-placeholder.png'" />
+        <img class="object-cover w-full" [src]="host.data.data.banner || '/assets/banner-placeholder.png'" />
         <ui-button
           *ngIf="isHostView"
           (click)="openChangeBannerDialog()"
@@ -18,7 +18,7 @@
       <!-- Profile Image  -->
       <div class="profile-picture__container relative pl-4">
         <img
-          [src]="host.data.avatar || '/assets/avatar-placeholder.png'"
+          [src]="host.data.data.avatar || '/assets/avatar-placeholder.png'"
           class="square object-cover absolute shadow-lg rounded-full w-64 h-64 z-10 bg-gray-100"
         />
         <ui-button
@@ -35,53 +35,52 @@
       <!-- Offset by 64 + 4 for abs positioned image -->
       <div class="ml-8 pl-64 mt-14 p-4 pb-0 relative">
         <div>
-          <h1 class="text-7xl mb-2">{{ host.data.name }}</h1>
+          <h1 class="text-7xl mb-2">{{ host.data.data.name }}</h1>
           <div class="flex align-middle justify-between mb-2">
             <p class="flex-grow mr-2 mb-0 flex items-center">
-              <span class="text-lg opacity-75 mr-4">@{{ host.data.username }}</span>
+              <span class="text-lg opacity-75 mr-4">@{{ host.data.data.username }}</span>
             </p>
-
             <div class="flex relative md:absolute right-64">
               <ui-icon
                 class="cursor-pointer mr-4 hover:text-red-700"
                 size="l"
                 (click)="openSocialLink('site_url')"
-                *ngIf="host.data.social_info.site_url"
+                *ngIf="host.data.data.social_info.site_url"
                 >wikis</ui-icon
               >
               <ui-icon
                 class="cursor-pointer mr-4 hover:text-red-700"
                 size="l"
                 (click)="openSocialLink('facebook_url')"
-                *ngIf="host.data.social_info.facebook_url"
+                *ngIf="host.data.data.social_info.facebook_url"
                 >logo--facebook</ui-icon
               >
               <ui-icon
                 class="cursor-pointer mr-4 hover:text-red-700"
                 size="l"
                 (click)="openSocialLink('instagram_url')"
-                *ngIf="host.data.social_info.instagram_url"
+                *ngIf="host.data.data.social_info.instagram_url"
                 >logo--instagram</ui-icon
               >
               <ui-icon
                 class="cursor-pointer mr-4 hover:text-red-700"
                 size="l"
                 (click)="openSocialLink('twitter_url')"
-                *ngIf="host.data.social_info.twitter_url"
+                *ngIf="host.data.data.social_info.twitter_url"
                 >logo--twitter</ui-icon
               >
               <ui-icon
                 class="cursor-pointer mr-4 hover:text-red-700"
                 size="l"
                 (click)="openSocialLink('pinterest_url')"
-                *ngIf="host.data.social_info.pinterest_url"
+                *ngIf="host.data.data.social_info.pinterest_url"
                 >logo--pinterest</ui-icon
               >
               <ui-icon
                 class="cursor-pointer mr-4 hover:text-red-700"
                 size="l"
                 (click)="openSocialLink('linkedin_url')"
-                *ngIf="host.data.social_info.linkedin_url"
+                *ngIf="host.data.data.social_info.linkedin_url"
                 >logo--linkedin</ui-icon
               >
             </div>
@@ -89,13 +88,14 @@
               <ui-button [transparent]="true" class="flex-1" size="m">
                 <ui-icon size="l">overflow-menu--horizontal</ui-icon>
               </ui-button>
-              <ui-button class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="add" kind="primary"
-                ><span i18n>Follow</span>
+              <ui-button (click)="followEvent()" class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="{{!userFollowing ? 'add' : ''}}" kind="primary">
+                <span i18n *ngIf="!userFollowing">Follow</span>
+                <span i18n *ngIf="userFollowing">Unfollow</span>
               </ui-button>
             </div>
           </div>
 
-          <p *ngIf="host.data.bio">{{ host.data.bio }}</p>
+          <p *ngIf="host.data.data.bio">{{ host.data.data.bio }}</p>
         </div>
 
         <div class="flex">

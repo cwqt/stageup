@@ -56,7 +56,7 @@ export const handleError = (
 };
 
 export const global404Handler = (logger, i18n?) => (req: Request, res: Response, next: NextFunction) =>
-  handleError(req, res, next, new ErrorHandler(HTTP.NotFound, '@@error.not_such_route'), logger, i18n);
+  handleError(req, res, next, new ErrorHandler(HTTP.NotFound, '@@error.no_such_route'), logger, i18n);
 
 export const globalErrorHandler = (logger, i18n?) => (err: any, req: Request, res: Response, next: NextFunction) => {
   handleError(req, res, next, err, logger, i18n);

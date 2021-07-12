@@ -51,7 +51,7 @@ export class UiForm<Output = any, Input = any, K = { [index: string]: IUiFormFie
       handlers?: {
         success?: (v: Output, f?: FormGroup) => Promise<void>;
         failure?: (v: IErrorResponse, f?: FormGroup) => Promise<void>;
-        changes?: (v: FormGroup) => Promise<void>;
+        changes?: (f: FormGroup) => Promise<void>;
       };
     },
     cache?: ICacheable<Output>

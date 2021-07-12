@@ -44,6 +44,10 @@ import {
   IAssetStub,
   AssetDto,
   IPerformance,
+  ILocale,
+  IFollower,
+  IFollowing,
+  IUserFollow
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -58,8 +62,9 @@ import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
 import PatronageController from './controllers/patronage.controller';
 
-import { BackendModules, BackendProviderMap } from '.';
+import { BackendModules } from '.';
 import { Module } from './modules';
+import { BackendProviderMap } from './common/providers';
 
 type ModuleRoutes<T extends {[i:string]: Partial<Pick<Module, "routes">>}> = {[index in keyof T]:T[index]["routes"]};
 
@@ -85,7 +90,9 @@ router.post     <IPaymentMethod>        ("/myself/payment-methods",             
 router.get      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.readPaymentMethod());
 router.delete   <void>                  ("/myself/payment-methods/:pmid",             Myself.deletePaymentMethod());
 router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.updatePaymentMethod());
-router.put      <string>                ("/myself/locale",                            Myself.updateLocale());
+router.put      <ILocale>               ("/myself/locale",                            Myself.updateLocale());
+router.post     <IFollowing>            ("/myself/follow-host/:hid",                  Myself.addFollow());
+router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow());
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providers, middlewares);
@@ -103,11 +110,12 @@ router.get      <IAddress[]>            ("/users/:uid/addresses",               
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
 router.put      <IAddress>              ("/users/:uid/addresses/:aid",                Users.updateAddress());
 router.delete   <void>                  ("/users/:uid/addresses/:aid",                Users.deleteAddress());
+router.get      <IE<IFollowing[]>>     ("/users/:uid/following",                     Users.readUserFollows());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, middlewares);
 router.post     <IHost>                 ("/hosts",                                    Hosts.createHost());
-router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
+router.get      <IE<IHost, IUserFollow>>("/hosts/:hid",                               Hosts.readHost())
 router.delete   <IDelHostAssert | void> ("/hosts/:hid",                               Hosts.deleteHost());
 router.put      <IHostPrivate>          ("/hosts/:hid",                               Hosts.updateHost());
 router.get      <IHostPrivate>          ("/hosts/:hid/details",                       Hosts.readDetails());
@@ -134,6 +142,7 @@ router.post     <void>                  ('/hosts/:hid/invoices/process-refunds',
 router.post     <void>                  ("/hosts/:hid/invoices/export-csv",           Hosts.exportInvoicesToCSV());
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
 router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",         Hosts.readPatronageSubscribers());
+router.get      <IE<IFollower[]>>       ("/hosts/:hid/followers",                     Hosts.readHostFollowers());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
 const Patronage = new PatronageController(providers, middlewares);

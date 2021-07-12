@@ -87,7 +87,7 @@ export class PaymentMethodComponent implements OnInit {
     const intent = await cachize(paymentIntentFn(paymentIntentData), this.paymentIntent);
 
     // PaymentIntent is on the hosts Stripe Account
-    const stripe = this.stripeFactory.create(environment.stripePublicKey, {
+    const stripe = this.stripeFactory.create(environment.stripe_public_key, {
       stripeAccount: stripeAccountId
     });
 

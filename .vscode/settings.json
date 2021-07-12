@@ -56,5 +56,6 @@
     "staging": {
       "host": "stageup.uk"
     }
-  }
+  },
+  "slackpresence.enabled": false
 }

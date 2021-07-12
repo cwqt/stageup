@@ -6,12 +6,7 @@
   "ignorePatterns": ["**/*", "routes.ts"],
   "parser": "@typescript-eslint/parser",
   "plugins": ["@nrwl/nx", "unicorn", "@typescript-eslint", "import"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "prettier/@typescript-eslint"
-  ],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -76,7 +71,10 @@
             "enforceBuildableLibDependency": true,
             "allow": [],
             "depConstraints": [
-              { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
+              {
+                "sourceTag": "*",
+                "onlyDependOnLibsWithTags": ["*"]
+              }
             ]
           }
         ]
@@ -85,15 +83,17 @@
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nrwl/nx/typescript"],
-      "parserOptions": { "project": "./tsconfig.*?.json" },
+      "parserOptions": {
+        "project": "./tsconfig.*?.json"
+      },
       "rules": {
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/no-confusing-void-expression": "off",
         "@typescript-eslint/no-implicit-any-catch": "off",
         "@typescript-eslint/no-unused-expressions": "off",
-        "@typescript-eslint/no-throw-literal":"off",
-        "@typescript-eslint/restrict-template-expressions":"off",
+        "@typescript-eslint/no-throw-literal": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
         "@typescript-eslint/no-namespace": "off"
       }
     },

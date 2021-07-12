@@ -35,6 +35,11 @@ export interface IHostPrivate extends IHost {
   business_details: IHostBusinessDetails;
 }
 
+// True if the current user is following the particular host
+export interface IUserFollow {
+  is_following: boolean;
+}
+
 export type DtoUpdateHost = Except<
   IHostPrivate,
   '_id' | 'banner' | 'avatar' | 'created_at' | 'is_onboarded' | 'stripe_account_id'

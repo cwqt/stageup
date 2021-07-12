@@ -1,0 +1,254 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Deploy branch
+
+#  event that fires every time a PR is created, synchronised with the source branch
+# (a new commit is pushed), or reopened.
+on: ["pull_request"]
+
+env:
+  TERM: xterm-256color
+  FORCE_COLOR: true
+  BRANCH_NAME: ${{ github.head_ref }}
+  BEFORE_SHA: ${{ github.event.before }}
+  PRESENT_SHA: ${{ github.event.pull_request.head.sha }}
+  NX_BRANCH: ${{ github.event.pull_request.head.ref }}
+  NX_RUN_GROUP: ${{ github.run_id }}
+  GCP_PROJECT_ID: core-314910
+
+jobs:
+  # pull_request doesn't have the last commit, so we need to fetch it
+  ctx:
+    name: Check for valid commit context
+    runs-on: ubuntu-latest
+    outputs:
+      body: ${{ steps.ctx.outputs.body }} # commit message, should be /deploy to deploy
+      branch: ${{ steps.ctx.outputs.branch }} # branch name in lower-case
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Get last commit body & lower-case branch name
+        id: ctx
+        run: |
+          echo "::set-output name=body::$(git log --format=%B -n 1 $PRESENT_SHA)"
+          echo "::set-output name=branch::${BRANCH_NAME,,}"
+
+      # set workspace https://support.hashicorp.com/hc/en-us/articles/360043550953-Selecting-a-workspace-when-running-Terraform-in-automation
+      - run: |
+          echo "Branch: ${BRANCH_NAME}"
+          echo "Commit body: ${{ steps.ctx.outputs.body }}"
+
+  # entry-point for whole workflow, if this skips then the rest do also
+  do_deploy:
+    needs: [ctx]
+    name: Start deployment process
+    runs-on: ubuntu-latest
+    if: contains(needs.ctx.outputs.body, '/deploy') && startsWith(needs.ctx.outputs.branch, 'su-')
+    steps:
+      - run: echo "Deploy conditions met, starting deploy"
+      - name: Find past deployment comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Deployment log
+
+      - name: Create deployment log comment if none exists
+        uses: peter-evans/create-or-update-comment@v1
+        if: steps.fc.outputs.comment-id == ''
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: "## Deployment log"
+          reactions: ${{ steps.emoji.outputs.value }}
+
+  # cache all node_modules that are used in mono-repo apps
+  install_deps:
+    needs: [do_deploy]
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.x
+
+      - name: Hit cache for dependencies (if exists)
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install development dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install --ignore-scripts
+
+  # create the node docker image using cloud build, which pushes to cloud registry
+  create_backend_image:
+    needs: [install_deps, ctx]
+    name: Build backend image
+    runs-on: ubuntu-latest
+    if: needs.install_deps.result == 'success'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Add service account key for generate:xlf
+        run: echo ${{ secrets.XLF_GCP_SA_KEY }} | base64 -d > translate.service_account.json
+
+      - name: Get cached dependencies
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Build backend dist
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: translate.service_account.json
+        run: |
+          npm run generate:xlf --project=backend
+          npm run start backend:build:production
+
+      - uses: StageUp/docker-cloud-build@1.0.3
+        with:
+          gcp-project-id: ${{ secrets.GCP_PROJECT_ID }}
+          gcp-service-account-key: ${{ secrets.CLOUD_BUILD_GCP_SA_KEY }}
+          gcp-gcr-region: eu.gcr.io
+          image-sources: dist,apps/backend/Dockerfile
+          image-name: core-backend # core-backend:ft-30cb3dc
+          image-tag-format: ft-$SHA
+          image-tag-additional-tags: ft-${{ needs.ctx.outputs.branch }}-latest
+          github-disabled: true
+
+  # create the angular docker image using cloud build, which pushes to cloud registry
+  create_frontend_image:
+    needs: [install_deps, ctx]
+    name: Build frontend image
+    runs-on: ubuntu-latest
+    if: needs.install_deps.result == 'success'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Add service account key for generate:xlf
+        run: echo ${{ secrets.XLF_GCP_SA_KEY }} | base64 -d > translate.service_account.json
+
+      - name: Get cached dependencies
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Build dist
+        env:
+          STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+          LOAD_BALANCER_URL: https://${{ env.BRANCH_NAME }}.${{ secrets.LOAD_BALANCER_URL }}
+          GOOGLE_APPLICATION_CREDENTIALS: translate.service_account.json
+        run: |
+          npm run generate:xlf --project=frontend
+          npm run start frontend:build:production -- --is-deployed
+
+      # move all nginx configurations into dist for Dockerfile to use
+      - run: mv apps/frontend/nginx dist/apps/frontend
+
+      - uses: StageUp/docker-cloud-build@1.0.3
+        with:
+          gcp-project-id: ${{ secrets.GCP_PROJECT_ID }}
+          gcp-service-account-key: ${{ secrets.CLOUD_BUILD_GCP_SA_KEY }}
+          gcp-gcr-region: eu.gcr.io
+          image-sources: dist,apps/frontend/Dockerfile
+          image-name: core-frontend # core-frontend:ft-30cb3dc
+          image-tag-format: ft-$SHA
+          image-tag-additional-tags: ft-${{ needs.ctx.outputs.branch }}-latest
+          github-disabled: true
+
+  # deploy the new infrastructure once both images built to the su-xxx workspace using feat core
+  tf_deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [create_frontend_image, create_backend_image, ctx]
+    if: |
+      needs.do_deploy.result == 'success' && always() &&
+      (needs.create_frontend_image.result == 'success' || needs.create_frontend_image.result == 'skipped') &&
+      (needs.create_backend_image.result == 'success' || needs.create_backend_image.result == 'skipped')
+    steps:
+      - uses: actions/checkout@v2
+
+      # have a service account on the file system to be used by the tf script
+      # select existing workspace or make a new one in the case of first time run
+      # https://github.com/hashicorp/terraform/issues/21393#issuecomment-498472958
+      - name: Setup Terraform workspace
+        working-directory: terraform
+        # literal block scalar because these are separate commands
+        run: |
+          echo ${{ secrets.TF_GCP_SA_KEY }} | base64 -d > terraform.service_account.json
+          terraform init -input=false
+          terraform workspace select ${{ needs.ctx.outputs.branch }} || terraform workspace new ${{ needs.ctx.outputs.branch }}
+          terraform workspace show
+
+      # infra a go-go
+      - name: Create infrastructure
+        working-directory: terraform
+        # folded block scalar because this is one big long command
+        run: >
+          terraform apply
+          -var 'core=feat'
+          -var 'gcp_project_id=core-314910'
+          -var 'sql_password=helloworld'
+          -var 'stripe_api_token=${{ secrets.STRIPE_TEST_SECRET_KEY }}'
+          -input=false
+          -auto-approve
+
+      # setup the webhook fan-out for this deploy branch
+      - uses: fjogeleit/http-request-action@master
+        id: webhook-post
+        continue-on-error: true # want this to fail so we can check for duplicates later
+        with:
+          # forward it to nginx/api which will proxy the request to the backend
+          url: "https://webhooks.stageup.uk/endpoints?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api&api_key=${{ secrets.SU_WEBHOOKS_API_KEY }}"
+          method: 'POST'
+          timeout: 10000 # serverless cold starts can take a while
+
+      - name: Check for duplicate URL response
+        # will be some other error - not duplicate
+        if: steps.webhook-post.result == 'failure' && contains(steps.webhook-post.outputs.response, 'already exists') == false
+        run: |
+          echo ${{ steps.webhook-post.outputs.response }}
+          exit 1
+
+  # deploy the new infrastructure once both images built
+  comment:
+    name: Update deployment status log
+    runs-on: ubuntu-latest
+    needs: [do_deploy, tf_deploy, ctx]
+    if: needs.do_deploy.result == 'success' && always() # run regardless of if deploy failed
+    env:
+      TF_WORKSPACE: ${{ needs.ctx.outputs.branch }}
+    steps:
+      - name: Parse short sha
+        uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+
+      - uses: haya14busa/action-cond@v1
+        id: body
+        with:
+          cond: ${{ needs.tf_deploy.result == 'success' }}
+          if_true: "[`${{ steps.short-sha.outputs.sha }}`](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) **SUCCESS** [https://${{ env.TF_WORKSPACE }}.stageup.uk/en](https://${{ env.TF_WORKSPACE }}.stageup.uk/en) :sparkles:"
+          if_false: "[`${{ steps.short-sha.outputs.sha }}`](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) **FAILURE** check job status for reason :whale:"
+
+      - name: Find deploy log comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Deployment log
+
+      - name: Update log comment
+        if: steps.fc.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body: ${{ steps.body.outputs.value }}

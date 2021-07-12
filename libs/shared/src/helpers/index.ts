@@ -59,6 +59,7 @@ export const isEnv = (currentEnv: Environment) => (desiredEnv: Environment | Env
  * @example
  * enum Test { hello = "world" }
  * enumToValues(Test) // ["world"]
+ * @see https://www.typescriptlang.org/play?ts=4.0.5#code/KYOwrgtgBAsgngUXNA3gWAFBSgCWAG3wHsAaTbAOQEMJhMBfTTAYyJAGcj9gA6YgcwAUAeQBGAK2DMALjwDWwOO0HwkkAJTqA3EwysOXXgMEAiALQWT23fs7c+RIWMkyeANyr4wwZauSatIA
  */
 export const enumToValues = <T = string>(enumme: any, numberEnum: boolean = false): T[] => {
   return Object.keys(enumme)
@@ -187,6 +188,11 @@ export const richtext = {
 export const unix = (date: number): Date => new Date(date * 1000);
 
 export const i18n = {
+  /**
+   * @description Take a locale & return a formatted code like en-GB or nb-NO
+   */
+  code: (locale: ILocale): string => `${locale.language}-${locale.region}`,
+
   /**
    * @description Takes an amount (in smallest currency denomination) and a currency code, & returns a formatted string
    * like 1000 USD --> $10.00
