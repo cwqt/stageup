@@ -22,6 +22,22 @@ import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
+// https://github.com/scttcper/ngx-chartjs
+import { ChartjsModule } from '@ctrl/ngx-chartjs';
+import {
+  LineController,
+  LineElement,
+  PointElement,
+  Chart,
+  CategoryScale,
+  LinearScale,
+  Filler,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+// What you register will depend on what chart you are using and features used.
+Chart.register(LineController, LineElement, Filler, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/onboarding-state.pipe';
@@ -125,6 +141,7 @@ import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
+import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -232,7 +249,8 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     HostDeleteDialogComponent,
     ConfirmPasswordDialogComponent,
     HostPerformanceThumbnailsComponent,
-    SocialSharingComponent
+    SocialSharingComponent,
+    HostAnalyticsComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -254,6 +272,7 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     NgxPermissionsModule.forRoot(),
     PlyrModule,
     IvyCarouselModule,
+    ChartjsModule,
     QuillModule.forRoot(),
     LoggerModule.forRoot({
       serverLoggingUrl: '/api/logs',

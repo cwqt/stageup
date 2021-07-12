@@ -514,11 +514,11 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
         <target state="final">Settings</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
@@ -530,7 +530,7 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
         <target state="final">Payments</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
@@ -567,6 +567,10 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
           <context context-type="linenumber">34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.html</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.html</context>
@@ -612,13 +616,21 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="764a8a101f8ee5a4b98844e93406182fb078507b" datatype="html">
         <source>Team</source>
         <target state="final">Team</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-members/host-members.component.html</context>
@@ -630,7 +642,7 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
         <target state="final">Profile</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="408cb6073e60c5d966296a3207fc596adca75e01" datatype="html">
@@ -638,7 +650,7 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
         <target state="final">Admin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9aa65a4064ef7d2460d8bf67daf5cedbdc523e79" datatype="html">
@@ -646,7 +658,7 @@ Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 Stag
         <target state="final">Admin Panel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-panel.component.html</context>
@@ -1799,6 +1811,62 @@ Creating a company account gives you permissions to start streams &amp; manage t
           <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="a7b51451435780f48c513eb6b9a1b73b36b4b534" datatype="html">
+        <source>
+snapshot of all your performances          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ selectedPeriod | titlecase }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </source>
+        <target state="final">
+snapshot of all your performances          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ selectedPeriod | titlecase }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7992e890ce10ecc9b67cb6a5892ebec38ecde200" datatype="html">
+        <source>Filter by columns for aggregated analytics</source>
+        <target state="final">Filter by columns for aggregated analytics</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="928838138686087140" datatype="html">
+        <source>Weekly</source>
+        <target state="final">Weekly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6762743264882388498" datatype="html">
+        <source>Monthly</source>
+        <target state="final">Monthly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6942253714523157846" datatype="html">
+        <source>Quarterly</source>
+        <target state="final">Quarterly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8036977202721714375" datatype="html">
+        <source>Yearly</source>
+        <target state="final">Yearly</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="113cf9ccacf3fe78c60e709198cbaaac303adf19" datatype="html">
         <source>Gross Volume</source>
         <target state="final">Gross Volume</target>
@@ -2120,6 +2188,10 @@ due to premiere at          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_d
       <trans-unit id="1322586333669103999" datatype="html">
         <source>Performance</source>
         <target state="final">Performance</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
           <context context-type="linenumber">134</context>
@@ -3407,8 +3479,52 @@ Shared performance withusers          <x id="PH" equiv-text="this.addedEmailAddr
         <source>Premiere Date</source>
         <target state="final">Premiere Date</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/create-performance/create-performance.component.ts</context>
           <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1801879966570931927" datatype="html">
+        <source>Expiry Date</source>
+        <target state="final">Expiry Date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7074172189520259197" datatype="html">
+        <source>Tickets sold</source>
+        <target state="final">Tickets sold</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1836325341458112664" datatype="html">
+        <source>Revenue</source>
+        <target state="final">Revenue</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5008300410131148411" datatype="html">
+        <source>Average Watch %</source>
+        <target state="final">Average Watch %</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5311446193854495953" datatype="html">
+        <source>Trailer Views</source>
+        <target state="final">Trailer Views</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5741432696781943689" datatype="html">
@@ -4200,7 +4316,7 @@ Enter your email and we will send you instructions togenerate a new password.   
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2454050363478003966" datatype="html">
@@ -4645,12 +4761,28 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
           <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="fbba0769051f847cffe17611f8da5d5945e62b21" datatype="html">
+        <source>Preferred Language</source>
+        <target state="final">Preferred Language</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9155c8272e40cbbef21f314596d035c0ed762fad" datatype="html">
+        <source>Set the language you'd prefer to view StageUp in, applies to any communications from us you may also recieve.</source>
+        <target state="final">Set the language you'd prefer to view StageUp in, applies to any communications from us you may also recieve.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
+          <context context-type="linenumber">38,39</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="65f4bb3e2293edb35b01d0ac95beefbf966640a9" datatype="html">
         <source>Company Settings</source>
         <target state="final">Company Settings</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6939be49e828db4ca91cb665b7d7b899b4dd0b36" datatype="html">
@@ -4658,7 +4790,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Default Homepage</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="df9657bbe6b3c9353fa35b00e2543661023359dc" datatype="html">
@@ -4666,7 +4798,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Change which landing screen you'd prefer to land on when logging in on StageUp.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="899d530c038ca9efcadfe0bbf37c8a4c4714743e" datatype="html">
@@ -4674,7 +4806,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Home Screen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c61e2b275f33957d56a70b5e35fe4f7a11545a06" datatype="html">
@@ -4682,7 +4814,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Dashboard</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="53b0f5f5bbac15220df819509cb121c0738c41c5" datatype="html">
@@ -4690,7 +4822,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Delete Personal Account</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="de0e16ef7114acd87438a19f0359c98241ecbdf7" datatype="html">
@@ -4698,7 +4830,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Permanently remove your Personal Account and all of its contents from the StageUp platform. This action is not reversible, so please continue with caution.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="66b777a6c0fdac1cc5538f2cbd28b38c71783abb" datatype="html">
@@ -4706,7 +4838,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Delete Account</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8953033926734869941" datatype="html">
@@ -4718,7 +4850,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7293347258713947796" datatype="html">
@@ -4742,7 +4874,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Your name may appear around StageUp where you contribute or are mentioned.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4222149582871653761" datatype="html">
@@ -4750,7 +4882,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Must provide a valid e-mail address</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6769219112239702582" datatype="html">
@@ -4758,7 +4890,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Bio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2826581353496868063" datatype="html">
@@ -4766,7 +4898,7 @@ Companies          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="final">Language</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5866254605255506989" datatype="html">
