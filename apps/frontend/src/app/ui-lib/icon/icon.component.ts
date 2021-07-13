@@ -15,7 +15,7 @@ import { Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'ui-icon',
   templateUrl: './icon.component.html',
-  styleUrls: ['./icon.component.scss', './style.css']
+  styleUrls: ['./icon.component.scss', './icon-map.css']
 })
 export class IconComponent implements OnInit {
   @ViewChild('icon') private icon: ElementRef;

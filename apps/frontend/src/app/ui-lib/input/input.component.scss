@@ -419,3 +419,18 @@ ui-icon {
 ::ng-deep .mat-form-field-infix {
   width: auto !important;
 }
+
+// form-field--no-label
+.form-field--no-label {
+  ::ng-deep {
+    .mat-select-arrow-wrapper {
+      padding-top: 16px !important;
+    }
+    .mat-form-field-infix {
+      padding-top: 0 !important;
+    }
+    .mat-form-field-flex {
+      padding-top: 0 !important;
+    }
+  }
+}

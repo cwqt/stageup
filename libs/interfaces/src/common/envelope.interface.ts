@@ -4,8 +4,8 @@ export interface IEnvelopedData<T, K=null> {
   __client_data?: K;
   __paging_data?: PagingData;
 }
-
-export interface PaginationOptions { page: number; per_page: number; }
+// The url request sends data in string format
+export interface PaginationOptions { page: number | string; per_page: number | string; }
 
 export interface PagingData {
   per_page: any;

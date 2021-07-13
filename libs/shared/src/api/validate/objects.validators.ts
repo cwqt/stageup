@@ -188,10 +188,16 @@ export namespace objects {
     value: optional(string())
   });
 
+  // Updated, since the received data in the request is a 'string'.
   export const PaginationOptions = (pageLimit: number = 50): Describe<PaginationOptions> =>
     object({
-      per_page: size(integer(), 1, pageLimit),
-      page: integer()
+      per_page: refine(string(), 'per_page', value => {
+        const num = parseInt(value);
+        return !isNaN(num) && num >= 1 && num <= pageLimit;
+      }),
+      page: refine(string(), 'page', value => {
+        return !isNaN(parseInt(value));
+      })
     });
 
   export const IDeleteHostReason: Describe<IDeleteHostReason> = object({

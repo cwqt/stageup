@@ -37,7 +37,7 @@ import {
   pick,
   Visibility
 } from '@core/interfaces';
-import { boolean, enums, object, partial, record, string } from 'superstruct';
+import { boolean, enums, object, record, string } from 'superstruct';
 import AuthStrat from '../common/authorisation';
 
 export default class MyselfController extends BaseController<BackendProviderMap> {
@@ -85,11 +85,9 @@ export default class MyselfController extends BaseController<BackendProviderMap>
   readFeed(): IControllerEndpoint<IFeed> {
     return {
       validators: {
-        query: partial(
-          record(
-            enums<keyof IFeed>(['upcoming', 'everything', 'follows']),
-            Validators.Objects.PaginationOptions(10)
-          )
+        query: record(
+          enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts']),
+          Validators.Objects.PaginationOptions(10)
         )
       },
       authorisation: AuthStrat.none,

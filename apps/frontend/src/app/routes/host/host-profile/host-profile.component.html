@@ -88,10 +88,7 @@
               <ui-button [transparent]="true" class="flex-1" size="m">
                 <ui-icon size="l">overflow-menu--horizontal</ui-icon>
               </ui-button>
-              <ui-button (click)="followEvent()" class="flex-grow rounded-full overflow-hidden mr-2 my-auto" icon="{{!userFollowing ? 'add' : ''}}" kind="primary">
-                <span i18n *ngIf="!userFollowing">Follow</span>
-                <span i18n *ngIf="userFollowing">Unfollow</span>
-              </ui-button>
+              <app-follow-button [userFollowing]="userFollowing" [hostId]="host.data.data._id"></app-follow-button>
             </div>
           </div>
 

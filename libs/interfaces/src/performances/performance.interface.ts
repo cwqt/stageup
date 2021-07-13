@@ -1,3 +1,4 @@
+import { IUserFollow } from './../hosts/host.interface';
 import { DeltaOperation } from 'quill';
 import { Except } from 'type-fest';
 import { AssetDto, IAssetStub } from '../common/asset.interface';
@@ -48,7 +49,7 @@ export interface IPerformance extends IPerformanceStub {
   publicity_period: { start: number; end: number }; // unix timestamps
 }
 
-export type DtoPerformance = IEnvelopedData<Except<IPerformance, 'assets'> & { assets: AssetDto[] }, null>;
+export type DtoPerformance = IEnvelopedData<Except<IPerformance, 'assets'> & { assets: AssetDto[] }, IUserFollow>;
 
 // data transfer object
 export type DtoCreatePerformance = Pick<

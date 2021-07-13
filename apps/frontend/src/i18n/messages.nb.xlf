@@ -509,6 +509,22 @@ Live-streaming og amp; VoD-plattform for scenekunst. Copyright © 2021 StageUp L
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="121cc5391cd2a5115bc2b3160379ee5b36cd7716" datatype="html">
+        <source>Settings</source>
+        <target state="needs-translation">Innstillinger</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="c281c9511379a759506f70bea74d08cb9236ab78" datatype="html">
         <source>Payments</source>
         <target state="needs-translation">Betalinger</target>
@@ -569,6 +585,10 @@ Live-streaming og amp; VoD-plattform for scenekunst. Copyright © 2021 StageUp L
           <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
@@ -612,13 +632,21 @@ Live-streaming og amp; VoD-plattform for scenekunst. Copyright © 2021 StageUp L
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="764a8a101f8ee5a4b98844e93406182fb078507b" datatype="html">
         <source>Team</source>
         <target state="needs-translation">Team</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-members/host-members.component.html</context>
@@ -630,7 +658,7 @@ Live-streaming og amp; VoD-plattform for scenekunst. Copyright © 2021 StageUp L
         <target state="needs-translation">Profil</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="408cb6073e60c5d966296a3207fc596adca75e01" datatype="html">
@@ -638,7 +666,7 @@ Live-streaming og amp; VoD-plattform for scenekunst. Copyright © 2021 StageUp L
         <target state="needs-translation">Administrator</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9aa65a4064ef7d2460d8bf67daf5cedbdc523e79" datatype="html">
@@ -646,7 +674,7 @@ Live-streaming og amp; VoD-plattform for scenekunst. Copyright © 2021 StageUp L
         <target state="needs-translation">Administrasjonspanel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/sidebar/sidebar.component.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/admin-panel/admin-panel.component.html</context>
@@ -1891,6 +1919,62 @@ Creating a company account gives you permissions to start streams &amp; manage t
           <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="a7b51451435780f48c513eb6b9a1b73b36b4b534" datatype="html">
+        <source>
+snapshot of all your performances          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ selectedPeriod | titlecase }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </source>
+        <target state="needs-translation">
+øyeblikksbilde av alle forestillingene dine          <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"></x>
+          <x id="INTERPOLATION" equiv-text="{{ selectedPeriod | titlecase }}"></x>
+          <x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"></x>
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.html</context>
+          <context context-type="linenumber">7,8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7992e890ce10ecc9b67cb6a5892ebec38ecde200" datatype="html">
+        <source>Filter by columns for aggregated analytics</source>
+        <target state="needs-translation">Filtrer etter kolonner for aggregerte analyser</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="928838138686087140" datatype="html">
+        <source>Weekly</source>
+        <target state="needs-translation">Ukentlig</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6762743264882388498" datatype="html">
+        <source>Monthly</source>
+        <target state="needs-translation">Månedlig</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6942253714523157846" datatype="html">
+        <source>Quarterly</source>
+        <target state="needs-translation">Kvartalsvis</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8036977202721714375" datatype="html">
+        <source>Yearly</source>
+        <target state="needs-translation">Årlig</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="113cf9ccacf3fe78c60e709198cbaaac303adf19" datatype="html">
         <source>Gross Volume</source>
         <target state="needs-translation">Bruttovolum</target>
@@ -2212,6 +2296,10 @@ grunnet premiere kl          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_
       <trans-unit id="1322586333669103999" datatype="html">
         <source>Performance</source>
         <target state="needs-translation">Opptreden</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-invoices/host-invoices.component.ts</context>
           <context context-type="linenumber">134</context>
@@ -3553,8 +3641,52 @@ Delt ytelse med brukere          <x id="PH" equiv-text="this.addedEmailAddresses
         <source>Premiere Date</source>
         <target state="needs-translation">Premiere Dato</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/create-performance/create-performance.component.ts</context>
           <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1801879966570931927" datatype="html">
+        <source>Expiry Date</source>
+        <target state="needs-translation">Utløpsdato</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7074172189520259197" datatype="html">
+        <source>Tickets sold</source>
+        <target state="needs-translation">Billetter solgt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1836325341458112664" datatype="html">
+        <source>Revenue</source>
+        <target state="needs-translation">Inntekter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">187</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5008300410131148411" datatype="html">
+        <source>Average Watch %</source>
+        <target state="needs-translation">Gjennomsnittlig se%</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">191</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5311446193854495953" datatype="html">
+        <source>Trailer Views</source>
+        <target state="needs-translation">Trailer Visninger</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-analytics/host-analytics.component.ts</context>
+          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5741432696781943689" datatype="html">
@@ -4600,7 +4732,7 @@ Bedrifter          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="needs-translation">Dashbord</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">65,66</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="53b0f5f5bbac15220df819509cb121c0738c41c5" datatype="html">
@@ -4616,7 +4748,7 @@ Bedrifter          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <target state="needs-translation">Fjern din personlige konto og alt innholdet permanent fra StageUp-plattformen. Denne handlingen er ikke reversibel, så fortsett med forsiktighet.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
-          <context context-type="linenumber">73,75</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="66b777a6c0fdac1cc5538f2cbd28b38c71783abb" datatype="html">
@@ -4625,6 +4757,34 @@ Bedrifter          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.html</context>
           <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8953033926734869941" datatype="html">
+        <source>Name</source>
+        <target state="needs-translation">Navn</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7293347258713947796" datatype="html">
+        <source>Created At</source>
+        <target state="needs-translation">Laget kl</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7585826646011739428" datatype="html">
+        <source>Edit</source>
+        <target state="needs-translation">Redigere</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/host-performances.component.ts</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7467294076993460424" datatype="html">
@@ -4657,6 +4817,30 @@ Bedrifter          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
           <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5866254605255506989" datatype="html">
+        <source>English</source>
+        <target state="needs-translation">Engelsk</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3683417119663608678" datatype="html">
+        <source>Welsh</source>
+        <target state="needs-translation">Walisisk</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3586701851625152417" datatype="html">
+        <source>Norwegian (Bokmål)</source>
+        <target state="needs-translation">Norsk (bokmål)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/frontend/src/app/routes/settings/profile-settings/profile-settings.component.ts</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5ad279d6e9f56b32c2902b3caf41db4b7fc599b2" datatype="html">

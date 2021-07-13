@@ -1,17 +1,16 @@
-import { BaseAppService } from './../../../services/app.service';
-import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
-import { ILocale, IMyself, IUser, IUserStub } from '@core/interfaces';
-import { UserService } from 'apps/frontend/src/app/services/user.service';
-import { createICacheable, ICacheable, SUPPORTED_LOCALES } from '../../../app.interfaces';
-import { MyselfService } from '../../../services/myself.service';
-import { IUiForm, UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
-import isEmail from 'validator/lib/isEmail';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { HelperService } from '../../../services/helper.service';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
-import languages from '@cospired/i18n-iso-languages';
 import { ActivatedRoute } from '@angular/router';
+import { ILocale, IMyself } from '@core/interfaces';
+import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
+import { UserService } from 'apps/frontend/src/app/services/user.service';
+import isEmail from 'validator/lib/isEmail';
+import { SUPPORTED_LOCALES, SUPPORTED_LOCALE_CODES } from '../../../app.interfaces';
+import { HelperService } from '../../../services/helper.service';
+import { MyselfService } from '../../../services/myself.service';
+import { UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
+import { BaseAppService } from './../../../services/app.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -82,19 +81,17 @@ export class ProfileSettingsComponent implements OnInit {
           label: $localize`Language`,
           // must use a string for the key of the selection ui
           initial: `${this.myself.user.locale.language}-${this.myself.user.locale.region}`,
-          values: new Map<string, { label: string }>(
-            SUPPORTED_LOCALES.map(locale => [
-              `${locale.language}-${locale.region}`,
-              { label: languages.getName(locale.language, this.locale) }
-            ])
-          )
+          values: new Map<SUPPORTED_LOCALE_CODES, { label: string }>([
+            ['en-GB', { label: 'English' }],
+            ['cy-GB', { label: 'Cymraeg' }],
+            ['nb-NO', { label: 'Norsk (Bokmål)' }]
+          ])
         })
       },
       resolvers: {
         output: async v => {
-          const [language, region] = v.locale.split('-');
-          const locale = SUPPORTED_LOCALES.find(locale => locale.language == language && locale.region == region);
-          return await this.myselfService.updateLocale(locale);
+          const { language, region } = SUPPORTED_LOCALES.find(locale => v.locale == locale.code);
+          return await this.myselfService.updateLocale({ language, region });
         }
       },
       handlers: {

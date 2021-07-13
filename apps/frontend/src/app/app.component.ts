@@ -12,7 +12,6 @@ import { NGXLogger } from 'ngx-logger';
 import { filter } from 'rxjs/operators';
 import { LOCALE_ID, Inject } from '@angular/core';
 import countries from 'i18n-iso-countries';
-import languages from '@cospired/i18n-iso-languages';
 import { SUPPORTED_LOCALES } from './app.interfaces';
 import { intersect } from '@core/helpers';
 
@@ -68,8 +67,6 @@ export class AppComponent implements OnInit {
 
     // Dynamic require of current LOCALE_ID set from angular
     countries.registerLocale(require(`i18n-iso-countries/langs/${this.locale}.json`));
-    // TODO: needs Welsh https://alacrityfoundationteam31.atlassian.net/browse/SU-946
-    languages.registerLocale(require(`@cospired/i18n-iso-languages/langs/en.json`));
 
     await this.baseAppService.componentInitialising(this.route);
 
