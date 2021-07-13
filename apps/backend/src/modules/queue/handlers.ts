@@ -409,7 +409,8 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         ticket: {
           performance: true
         },
-        host: true
+        host: true,
+        user: true
       },
       where: {
         _id: In(ct.invoice_ids)
