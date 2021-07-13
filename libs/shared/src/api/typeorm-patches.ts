@@ -54,7 +54,7 @@ export const patchTypeORM = (req: Request, res: Response, next: NextFunction) =>
     const page = paging?.page ?? (parseInt(req.query.page as string) || 0);
     const perPage = paging?.per_page ?? (parseInt(req.query.per_page as string) || 10);
 
-    return paginate<T, K>(this, page, perPage, serialiser);
+    return paginate<T, K>(this, page as any, perPage as any, serialiser);
   };
 
   SelectQueryBuilder.prototype.filter = function <T>(fm: FilterMap): SelectQueryBuilder<T> {
