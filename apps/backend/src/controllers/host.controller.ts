@@ -919,7 +919,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             refund.invoice._id == invoice._id;
           });
 
-          !refundPresent ? new Refund(invoice, null, bulkRefundData) : console.log('Do nothing');
+          if (!refundPresent) new Refund(invoice, null, bulkRefundData);
 
           invoice.save();
         });

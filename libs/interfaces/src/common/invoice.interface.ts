@@ -45,6 +45,11 @@ export interface IBulkRefund {
   bulk_refund_detail: string;
 }
 
+export interface IProcessRefunds extends IBulkRefund {
+  invoice_ids: string[];
+  host_id: string;
+}
+
 export interface IRefundResponse {
   responded_on: number;
   response_reason: RefundResponseReason;

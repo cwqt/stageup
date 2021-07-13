@@ -35,7 +35,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
   public bulkRefundForm: UiForm;
   public bulkRefundData: IBulkRefund;
   refundRequest: Cacheable<void> = new Cacheable();
-  bulkRefund;
+
   // Top level loading state for all requests - made via merge()
   $loading: Observable<boolean>;
 
@@ -108,7 +108,8 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
           label: $localize`Yes`,
           kind: ThemeKind.Primary,
           callback: () => {
-            this.multipleRefunds ? this.bulkRefundForm.submit() : null;
+            if (this.multipleRefunds) this.bulkRefundForm.submit();
+
             cachize(
               this.hostService.processRefunds(
                 this.data.map(invoice => invoice.invoice_id),
