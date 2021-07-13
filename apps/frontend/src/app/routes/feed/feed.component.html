@@ -73,7 +73,12 @@
                 class="carousel-cell overflow-hidden"
                 *ngFor="let performance of carousel.value.data.data; let i = index"
               >
-                <app-performance-thumb #thumb [performance]="performance" (click)="thumb.openBrochure()">
+                <app-performance-thumb
+                  #thumb
+                  [performance]="performance"
+                  (click)="thumb.openBrochure()"
+                  (onFollowEvent)="refreshFeed($event)"
+                >
                 </app-performance-thumb>
               </div>
             </ng-container>
