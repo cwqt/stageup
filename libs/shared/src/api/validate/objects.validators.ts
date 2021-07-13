@@ -137,9 +137,8 @@ export namespace objects {
 
   export const processRefunds: Describe<IProcessRefunds> = object({
     invoice_ids: array(fields.nuuid),
-    host_id: string(),
-    bulk_refund_reason: enums<BulkRefundReason>(enumToValues(BulkRefundReason)),
-    bulk_refund_detail: string()
+    bulk_refund_reason: optional(enums<BulkRefundReason>(enumToValues(BulkRefundReason))),
+    bulk_refund_detail: optional(string())
   });
 
   export const IHostBusinessDetails: Describe<IHostBusinessDetails> = object({

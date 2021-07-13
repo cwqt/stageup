@@ -212,7 +212,11 @@ export class HostService {
   //router.post<void>("/hosts/:hid/invoices/process-refunds", Hosts.processRefund());
   processRefunds(invoiceIds: string[], hostId: string, bulkRefund?: IBulkRefund): Promise<void> {
     return this.http
-      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, { invoice_ids: invoiceIds, bulk_refund: bulkRefund })
+      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, {
+        invoice_ids: invoiceIds,
+        bulk_refund_reason: bulkRefund.bulk_refund_reason,
+        bulk_refund_detail: bulkRefund.bulk_refund_detail
+      })
       .toPromise();
   }
 
@@ -285,11 +289,8 @@ export class HostService {
     return this.http.get<IHostPrivate>(`/api/hosts/${hostId}/details`).toPromise();
   }
 
-
   //router.get <IEnvelopedData<IFollower[], null>> ("/hosts/:hid/followers", Hosts.readHostFollowers());
   readHostFollowers(hostId: string): Promise<IEnvelopedData<IFollower[]>> {
-    return this.http
-    .get<IEnvelopedData<IFollower[]>>(`/api/hosts/${hostId}/followers`)
-    .toPromise();
+    return this.http.get<IEnvelopedData<IFollower[]>>(`/api/hosts/${hostId}/followers`).toPromise();
   }
 }

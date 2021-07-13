@@ -882,17 +882,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
   processRefunds(): IControllerEndpoint<void> {
     return {
       validators: {
-        body: object({
-          invoice_ids: array(fields.nuuid)
-          // host_id: fields.nuuid
-        })
+        body: Validators.Objects.processRefunds
       },
       authorisation: AuthStrat.isMemberOfHost(),
       controller: async req => {
         const invoiceIds: string[] = req.body.invoice_ids;
-        const bulkRefundData: IBulkRefund = req.body.bulk_refund;
+        let bulkRefundData: IBulkRefund = {
+          bulk_refund_reason: req.body.bulk_refund_reason,
+          bulk_refund_detail: req.body.bulk_refund_detail
+        };
 
-        console.log(invoiceIds);
         const invoices = await Invoice.find({
           where: {
             _id: In(invoiceIds),
@@ -919,7 +918,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             refund.invoice._id == invoice._id;
           });
 
-          if (!refundPresent) new Refund(invoice, null, bulkRefundData);
+          if (refundPresent === undefined) new Refund(invoice, null, bulkRefundData).save();
 
           invoice.save();
         });
@@ -938,11 +937,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             );
 
             if (invoiceIds.length > 1) {
-              return await this.providers.bus.publish(
-                'refund.bulk.initiated',
-                { invoice_ids: invoiceIds, refund_quantity: null },
-                req.locale
-              );
+              return await this.providers.bus.publish('refund.bulk.initiated', { invoice_ids: invoiceIds }, req.locale);
             } else {
               return await this.providers.bus.publish(
                 'refund.initiated',

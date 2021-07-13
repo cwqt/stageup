@@ -47,7 +47,6 @@ export interface IBulkRefund {
 
 export interface IProcessRefunds extends IBulkRefund {
   invoice_ids: string[];
-  host_id: string;
 }
 
 export interface IRefundResponse {

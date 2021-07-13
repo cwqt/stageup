@@ -20,9 +20,9 @@ export class Refund extends BaseEntity implements IRefund {
   @Column() is_refunded: boolean;
 
   // Request
-  @Column() requested_on: number;
-  @Column('enum', { enum: RefundRequestReason }) request_reason: RefundRequestReason;
-  @Column() request_detail: string;
+  @Column({ nullable: true }) requested_on: number;
+  @Column('enum', { enum: RefundRequestReason, nullable: true }) request_reason: RefundRequestReason;
+  @Column({ nullable: true }) request_detail: string;
 
   // Response
   @Column({ nullable: true }) responded_on?: number;
@@ -39,11 +39,17 @@ export class Refund extends BaseEntity implements IRefund {
     super();
     this.invoice = invoice;
 
-    this.requested_on = request.requested_on;
-    this.request_detail = request.request_detail;
-    this.request_reason = request.request_reason;
-    this.bulk_refund_reason = bulkRefund.bulk_refund_reason;
-    this.bulk_refund_detail = bulkRefund.bulk_refund_detail;
+    if (request) {
+      this.requested_on = request.requested_on;
+      this.request_detail = request.request_detail;
+      this.request_reason = request.request_reason;
+    }
+
+    if (bulkRefund) {
+      this.bulk_refund_reason = bulkRefund.bulk_refund_reason;
+      this.bulk_refund_detail = bulkRefund.bulk_refund_detail;
+    }
+
     this.is_refunded = false;
   }
 

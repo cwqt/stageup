@@ -109,7 +109,8 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
           kind: ThemeKind.Primary,
           callback: () => {
             if (this.multipleRefunds) this.bulkRefundForm.submit();
-
+            console.log('host id:', this.hostService.hostId);
+            console.log('bulk refund data:', this.bulkRefundData);
             cachize(
               this.hostService.processRefunds(
                 this.data.map(invoice => invoice.invoice_id),

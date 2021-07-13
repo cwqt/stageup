@@ -293,8 +293,8 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     });
   },
 
-  sendUserRefundInitiatedEmail: async (ct: Contract<'refund.initiated'>) => {
-    const invoice = await Invoice.findOne({
+  sendUserRefundInitiatedEmail: async (ct: Contract<'refund.initiated'> & Contract<'refund.bulk.initiated'>) => {
+    const invoices = await Invoice.find({
       relations: {
         ticket: {
           performance: true
@@ -303,29 +303,30 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         payment_method: true
       },
       where: {
-        _id: ct.invoice_id
+        _id: ct.invoice_id ? ct.invoice_id : In(ct.invoice_ids)
       }
     });
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address'] });
-
-    queues.send_email.add({
-      subject: providers.i18n.translate('@@email.user.refund_initiated__subject', ct.__meta.locale, {
-        host_name: invoice.host.name,
-        performance_name: invoice.ticket.performance.name
-      }),
-      content: providers.i18n.translate('@@email.user.refund_initiated__content', ct.__meta.locale, {
-        user_username: user.username,
-        host_name: invoice.host.name,
-        performance_name: invoice.ticket.performance.name,
-        last_4: invoice.payment_method.last4,
-        card_brand: pipes.cardBrand(invoice.payment_method.brand),
-        invoice_id: invoice._id,
-        invoice_amount: i18n.money(invoice.amount, invoice.currency)
-      }),
-      from: Env.EMAIL_ADDRESS,
-      to: user.email_address,
-      markdown: true,
-      attachments: []
+    invoices.map(invoice => {
+      queues.send_email.add({
+        subject: providers.i18n.translate('@@email.user.refund_initiated__subject', ct.__meta.locale, {
+          host_name: invoice.host.name,
+          performance_name: invoice.ticket.performance.name
+        }),
+        content: providers.i18n.translate('@@email.user.refund_initiated__content', ct.__meta.locale, {
+          user_username: user.username,
+          host_name: invoice.host.name,
+          performance_name: invoice.ticket.performance.name,
+          last_4: invoice.payment_method.last4,
+          card_brand: pipes.cardBrand(invoice.payment_method.brand),
+          invoice_id: invoice._id,
+          invoice_amount: i18n.money(invoice.amount, invoice.currency)
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: user.email_address,
+        markdown: true,
+        attachments: []
+      });
     });
   },
 
@@ -344,7 +345,6 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
 
     const invoicesTotal = invoices.map(invoice => invoice.amount).reduce((acc, curr) => acc + curr);
 
-    console.log(invoicesTotal);
     queues.send_email.add({
       subject: providers.i18n.translate('@@email.host.refund_bulk_initiated_subject', ct.__meta.locale, {
         refund_quantity: ct.refund_quantity
