@@ -273,6 +273,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         _id: ct.invoice_id
       }
     });
+
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address', 'username'] });
 
     queues.send_email.add({
@@ -293,7 +294,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     });
   },
 
-  sendUserRefundInitiatedEmail: async (ct: Contract<'refund.initiated'> & Contract<'refund.bulk.initiated'>) => {
+  sendUserRefundInitiatedEmail: async (ct: Contract<'refund.initiated'>) => {
     const invoices = await Invoice.find({
       relations: {
         ticket: {
@@ -303,7 +304,7 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         payment_method: true
       },
       where: {
-        _id: ct.invoice_id ? ct.invoice_id : In(ct.invoice_ids)
+        _id: ct.invoice_id
       }
     });
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address'] });
@@ -327,37 +328,6 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         markdown: true,
         attachments: []
       });
-    });
-  },
-
-  sendHostBulkRefundInitiatedEmail: async (ct: Contract<'refund.bulk.initiated'>) => {
-    const invoices = await Invoice.find({
-      relations: {
-        ticket: {
-          performance: true
-        },
-        host: true
-      },
-      where: {
-        _id: In(ct.invoice_ids)
-      }
-    });
-
-    const invoicesTotal = invoices.map(invoice => invoice.amount).reduce((acc, curr) => acc + curr);
-
-    queues.send_email.add({
-      subject: providers.i18n.translate('@@email.host.refund_bulk_initiated_subject', ct.__meta.locale, {
-        refund_quantity: ct.refund_quantity
-      }),
-      content: providers.i18n.translate('@@email.host.refund_bulk_initiated_content', ct.__meta.locale, {
-        host_name: invoices[0].host.name,
-        refund_quantity: ct.refund_quantity,
-        invoices_total: invoicesTotal
-      }),
-      from: Env.EMAIL_ADDRESS,
-      to: invoices[0].host.email_address,
-      markdown: true,
-      attachments: []
     });
   },
 
@@ -430,6 +400,49 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
       to: invoice.user.email_address,
       markdown: true,
       attachments: []
+    });
+  },
+
+  processBulkRefunds: async (ct: Contract<'refund.bulk'>) => {
+    const invoices = await Invoice.find({
+      relations: {
+        ticket: {
+          performance: true
+        },
+        host: true
+      },
+      where: {
+        _id: In(ct.invoice_ids)
+      }
+    });
+
+    const refundQuantity = invoices.length;
+
+    const invoicesTotal = invoices.reduce((acc, curr) => ((acc += curr.amount), acc), 0);
+
+    //Send bulk refund initiation email to host
+    queues.send_email.add({
+      subject: providers.i18n.translate('@@email.host.refund_bulk_initiated_subject', ct.__meta.locale, {
+        refund_quantity: refundQuantity
+      }),
+      content: providers.i18n.translate('@@email.host.refund_bulk_initiated_content', ct.__meta.locale, {
+        host_name: invoices[0].host.name,
+        refund_quantity: refundQuantity,
+        invoices_total: invoicesTotal
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: invoices[0].host.email_address,
+      markdown: true,
+      attachments: []
+    });
+
+    //Initiate individual refund jobs
+    invoices.map(async invoice => {
+      await providers.bus.publish(
+        'refund.initiated',
+        { invoice_id: invoice._id, user_id: invoice.user._id },
+        ct.__meta.locale
+      );
     });
   },
 

@@ -902,7 +902,9 @@ export default class HostController extends BaseController<BackendProviderMap> {
           relations: {
             host: true,
             user: true,
-            refunds: true
+            refunds: {
+              invoice: true
+            }
           },
           select: {
             host: { _id: true, stripe_account_id: true }
@@ -914,9 +916,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         // Create an entry in the refund table for bulk refunds where a request was not made
         invoices.map(invoice => {
-          let refundPresent = invoice.refunds.find(refund => {
-            refund.invoice._id == invoice._id;
-          });
+          let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
 
           if (refundPresent === undefined) new Refund(invoice, null, bulkRefundData).save();
 
@@ -937,7 +937,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             );
 
             if (invoiceIds.length > 1) {
-              return await this.providers.bus.publish('refund.bulk.initiated', { invoice_ids: invoiceIds }, req.locale);
+              return await this.providers.bus.publish('refund.bulk', { invoice_ids: invoiceIds }, req.locale);
             } else {
               return await this.providers.bus.publish(
                 'refund.initiated',

@@ -288,13 +288,13 @@ export default class StripeController extends BaseController<BackendProviderMap>
         relations: ['refunds', 'user']
       })
     );
-    console.log('Invoice', invoice);
+
     const currentRefund = invoice.refunds[0];
     currentRefund.responded_on = timestamp();
     currentRefund.is_refunded = true;
     currentRefund.response_reason = RefundResponseReason.Accepted;
     currentRefund.response_detail = '';
-    console.log('Current Refund', currentRefund);
+
     invoice.status = PaymentStatus.Refunded;
     await Promise.all([currentRefund.save(), invoice.save()]);
 
