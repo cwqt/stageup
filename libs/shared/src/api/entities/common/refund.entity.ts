@@ -43,7 +43,7 @@ export class Refund extends BaseEntity implements IRefund {
     this.request_detail = request.request_detail;
     this.request_reason = request.request_reason;
     this.bulk_refund_reason = bulkRefund.bulk_refund_reason;
-    this.bulk_refund_detail = this.bulk_refund_detail;
+    this.bulk_refund_detail = bulkRefund.bulk_refund_detail;
     this.is_refunded = false;
   }
 

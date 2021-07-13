@@ -1,7 +1,14 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { enumToValues } from '@core/helpers';
-import { BulkRefundReason, IHostInvoice, IHostInvoiceStub, IRefund, RefundRequestReason } from '@core/interfaces';
+import {
+  BulkRefundReason,
+  IBulkRefund,
+  IHostInvoice,
+  IHostInvoiceStub,
+  IRefund,
+  RefundRequestReason
+} from '@core/interfaces';
 import { Cacheable, cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
@@ -26,6 +33,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
   public refunds: Cacheable<IRefund[]> = new Cacheable({ data: [] });
   public multipleRefunds: boolean;
   public bulkRefundForm: UiForm;
+  public bulkRefundData: IBulkRefund;
   refundRequest: Cacheable<void> = new Cacheable();
   bulkRefund;
   // Top level loading state for all requests - made via merge()
@@ -42,9 +50,11 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
 
   async ngOnInit(): Promise<void> {
     const refundReasonPipe = new RefundReasonPipe();
+
+    //Form to be used for bulk refunds (>1 invoice selected)
     this.bulkRefundForm = new UiForm({
       fields: {
-        reason: UiField.Select({
+        bulk_refund_reason: UiField.Select({
           label: 'Select a reason for the refunds',
           values: enumToValues(BulkRefundReason).reduce((acc, curr) => {
             acc.set(curr, { label: refundReasonPipe.transform(curr) });
@@ -52,14 +62,14 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
           }, new Map()),
           validators: [{ type: 'required' }]
         }),
-        details: UiField.Textarea({
+        bulk_refund_detail: UiField.Textarea({
           label: 'Please provide details below'
         })
       },
       resolvers: {
         output: async v => {
-          console.log('Test Test');
-          console.log(v);
+          //Store the field data on submission as confirmationDialogData does the actual API call
+          this.bulkRefundData = v;
         }
       },
       handlers: {
@@ -98,11 +108,12 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
           label: $localize`Yes`,
           kind: ThemeKind.Primary,
           callback: () => {
-            this.bulkRefundForm.submit();
+            this.multipleRefunds ? this.bulkRefundForm.submit() : null;
             cachize(
               this.hostService.processRefunds(
                 this.data.map(invoice => invoice.invoice_id),
-                this.hostService.hostId
+                this.hostService.hostId,
+                this.bulkRefundData
               ),
               this.refundRequest
             )

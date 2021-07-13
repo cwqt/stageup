@@ -28,6 +28,7 @@ import {
   HostOnboardingStep,
   HostPermission,
   HTTP,
+  IBulkRefund,
   IDeleteHostAssertion,
   IDeleteHostReason,
   IEnvelopedData,
@@ -111,16 +112,18 @@ export default class HostController extends BaseController<BackendProviderMap> {
         );
 
         // if req.session.user._id && userHasFollow then envelope.__client_data.is_following = true
-        const isFollowing = req.session.user && await this.ORM.createQueryBuilder(Follow, 'follow')
-          .where("follow.user__id = :uid", { uid: req.session.user._id })
-          .andWhere("follow.host__id = :hid", { hid: host._id })
-          .getOne();
+        const isFollowing =
+          req.session.user &&
+          (await this.ORM.createQueryBuilder(Follow, 'follow')
+            .where('follow.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('follow.host__id = :hid', { hid: host._id })
+            .getOne());
 
         const envelope = {
           data: host.toFull(),
           __client_data: { is_following: isFollowing ? true : false }
-        }
-        return envelope
+        };
+        return envelope;
       }
     };
   }
@@ -887,6 +890,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       authorisation: AuthStrat.isMemberOfHost(),
       controller: async req => {
         const invoiceIds: string[] = req.body.invoice_ids;
+        const bulkRefundData: IBulkRefund = req.body.bulk_refund;
 
         console.log(invoiceIds);
         const invoices = await Invoice.find({
@@ -909,16 +913,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
         // No invoices found for provided ids
         if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
 
-        //Create an entry in the refund table for bulk refunds where a request was not made
-        // invoices.map(invoice => {
-        //   let refundPresent = invoice.refunds.find(refund => {
-        //     refund.invoice._id == invoice._id;
-        //   });
+        // Create an entry in the refund table for bulk refunds where a request was not made
+        invoices.map(invoice => {
+          let refundPresent = invoice.refunds.find(refund => {
+            refund.invoice._id == invoice._id;
+          });
 
-        //   !refundPresent ? await new Refund(invoice, null, {
+          !refundPresent ? new Refund(invoice, null, bulkRefundData) : console.log('Do nothing');
 
-        //   })
-        // });
+          invoice.save();
+        });
 
         // Refund all invoices in parallel, & wait for them all to finish
         await Promise.all(
@@ -1011,12 +1015,12 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readHostFollowers(): IControllerEndpoint<IEnvelopedData<IFollower[]>> {
     return {
-      validators: { params: object({ hid: string() })},
+      validators: { params: object({ hid: string() }) },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        return await this.ORM.createQueryBuilder(Follow, "follow")
-          .where("follow.host__id = :hid", { hid: req.params.hid })
-          .paginate(follow => follow.toFollower())
+        return await this.ORM.createQueryBuilder(Follow, 'follow')
+          .where('follow.host__id = :hid', { hid: req.params.hid })
+          .paginate(follow => follow.toFollower());
       }
     };
   }
