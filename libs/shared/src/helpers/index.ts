@@ -35,6 +35,16 @@ export const timeout = (duration: number = 1000) => new Promise(resolve => setTi
 export const uuid = () => nanoid(11) as NUUID;
 
 /**
+ * @description Return a random integer between min & max (inclusive)
+ */
+export const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+/**
+ * @description Turn a UNIX timestamp (in seconds) into a Date
+ */
+export const unix = (date: number): Date => new Date(date * 1000);
+
+/**
  * @description Join kv's and uri escape
  */
 export const stitchParameters = (input: { [index: string]: Primitive }): string => {
@@ -183,8 +193,6 @@ export const richtext = {
   read: (text: RichText | ParsedRichText) =>
     (typeof text == 'string' ? richtext.parse(text) : text).ops.reduce((acc, curr) => ((acc += curr.insert), acc), '')
 };
-
-export const unix = (date: number): Date => new Date(date * 1000);
 
 export const i18n = {
   /**

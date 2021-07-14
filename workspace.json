@@ -324,6 +324,24 @@
           }
         }
       }
+    },
+    "generate-xlf": {
+      "root": "tools/generate-xlf",
+      "sourceRoot": "tools/generate-xlf/src",
+      "projectType": "application",
+      "prefix": "generate-xlf",
+      "targets": {
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/tools/generate-xlf"],
+          "options": {
+            "passWithNoTests": true,
+            "runInBand": true,
+            "jestConfig": "tools/generate-xlf/jest.config.js",
+            "tsConfig": "tools/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {

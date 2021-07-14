@@ -41,13 +41,13 @@ import {
   DtoHostPatronageSubscription as HPatronSub,
   IRefund,
   IHostPrivate,
-  IAssetStub,
   AssetDto,
   IPerformance,
   ILocale,
   IFollower,
   IFollowing,
-  IUserFollow
+  IUserFollow,
+  DtoPerformanceAnalytics as DtoPerfAnalytics
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -110,7 +110,7 @@ router.get      <IAddress[]>            ("/users/:uid/addresses",               
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
 router.put      <IAddress>              ("/users/:uid/addresses/:aid",                Users.updateAddress());
 router.delete   <void>                  ("/users/:uid/addresses/:aid",                Users.deleteAddress());
-router.get      <IE<IFollowing[]>>     ("/users/:uid/following",                     Users.readUserFollows());
+router.get      <IE<IFollowing[]>>      ("/users/:uid/following",                     Users.readUserFollows());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, middlewares);
@@ -143,6 +143,7 @@ router.post     <void>                  ("/hosts/:hid/invoices/export-csv",     
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
 router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",         Hosts.readPatronageSubscribers());
 router.get      <IE<IFollower[]>>       ("/hosts/:hid/followers",                     Hosts.readHostFollowers());
+router.get      <IE<DtoPerfAnalytics[]>>("/hosts/:hid/analytics/performances",        Hosts.readPerformancesAnalytics());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
 const Patronage = new PatronageController(providers, middlewares);

@@ -6,11 +6,20 @@ import { SendMailOptions } from 'nodemailer';
 import { Attachment } from 'nodemailer/lib/mailer';
 import { ILocale } from '../i18n/i18n.interface';
 
-export const JobTypes = ['send_email', 'schedule_performance_release', 'host_invoice_csv', 'host_invoice_pdf'] as const;
+export const JobTypes = [
+  'send_email',
+  'schedule_performance_release',
+  'host_invoice_csv',
+  'host_invoice_pdf',
+  'collect_analytics'
+] as const;
 
 export type JobType = typeof JobTypes[number];
 
 export type JobData = {
+  ['collect_analytics']: {
+    performance_id: IPerformance['_id'];
+  };
   ['send_email']: {
     from: string;
     to: string;

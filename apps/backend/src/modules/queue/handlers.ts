@@ -528,5 +528,15 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
         // update relation of present subscription tier
         await PatronSubscription.update({ _id: row.sub__id }, { patron_tier: tier });
       });
+  },
+
+  createAnalyticsCollectionJob: async (ct: Contract<'performance.created'>) => {
+    // Collect analytics for this performance once per week at 0:00
+    await queues.collect_analytics.add(
+      { performance_id: ct._id },
+      {
+        repeat: { every: 86400000 } // 7 days in milliseconds
+      }
+    );
   }
 });

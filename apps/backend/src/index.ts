@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register } from '@core/api';
+import { patchTypeORM, PerformanceAnalytics, PG_MODELS, ProviderMap, Providers, Register } from '@core/api';
 import { Environment, ILocale } from '@core/interfaces';
 import { i18nProvider } from 'libs/shared/src/api/i18n';
 import { Container } from 'typedi';
@@ -13,6 +13,7 @@ import Env from './env';
 import routes from './routes';
 import providers, { BackendProviderMap } from './common/providers';
 import { SUPPORTED_LOCALES } from './common/locales';
+import { random, timeout } from '@core/helpers';
 
 export type BackendModules = {
   SSE: SSEModule;
@@ -79,6 +80,34 @@ Register<BackendProviderMap>({
     email: providers.email,
     orm: providers.torm
   });
+
+  // await PerformanceAnalytics.clear();
+  // await Queue.queues.collect_analytics.queue.obliterate();
+  // Queue.queues.collect_analytics.add(
+  //   { performance_id: 'qRjKzCjGbPd' },
+  //   {
+  //     repeat: { every: 86400000, immediately: true } // 7 days in milliseconds
+  //   }
+  // );
+
+  // await timeout(1000);
+  // const anal = await (await PerformanceAnalytics.find({ relations: { performance: true } })).pop();
+  // console.log(anal);
+
+  // for (let i = 1; i < 28; i++) {
+  //   const offset = i * 604800; //  1 week in seconds
+  //   const newAnal = new PerformanceAnalytics(anal.performance, {
+  //     period_start: anal.period_start - offset,
+  //     period_end: anal.period_end - offset
+  //   });
+  //   newAnal.metrics = { ...anal.metrics };
+  //   newAnal.metrics.total_ticket_sales = 28 + (i / 2) * Math.cos(((2 * Math.PI) / 2) * i);
+  //   newAnal.metrics.total_revenue = anal.metrics.total_revenue + 10000 / i;
+
+  //   newAnal.collection_started_at = anal.collection_started_at;
+  //   newAnal.collection_ended_at = anal.collection_ended_at;
+  //   await newAnal.save();
+  // }
 
   return routes({
     Queue: Queue.routes,

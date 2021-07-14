@@ -1,0 +1,9 @@
+{
+  "1": Hello World!
+  "2": This is a {variable} and {another}
+  "3": _*One*_ & two; three four! __Punctuation__ on the floor...
+  "4": File type {inputElement.files[0].type} not allowed
+
+  // ----------------------------------------------------------------
+  "not_missing": Placeholder for missing-tokens.ts test
+}

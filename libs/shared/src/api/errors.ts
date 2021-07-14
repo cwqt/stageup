@@ -28,7 +28,7 @@ export const handleError = (
 ) => {
   const statusCode: HTTP = error instanceof ErrorHandler ? error.statusCode : HTTP.ServerError;
 
-  console.log(error['errors']);
+  console.log(error);
 
   const response: IErrorResponse =
     error instanceof ErrorHandler && i18n
