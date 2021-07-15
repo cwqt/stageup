@@ -642,7 +642,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             type: 'standard',
             email: host.email_address,
             country: host.business_details.business_address.country,
-            business_type: 'company', // FUTURE https://alacrityfoundationteam31.atlassian.net/browse/SU-892
+            business_type: host.business_details.business_type, // FUTURE https://alacrityfoundationteam31.atlassian.net/browse/SU-892
             business_profile: {
               name: host.username,
               url: host.social_info.site_url
