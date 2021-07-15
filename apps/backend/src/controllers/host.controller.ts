@@ -907,7 +907,9 @@ export default class HostController extends BaseController<BackendProviderMap> {
             }
           },
           select: {
-            host: { _id: true, stripe_account_id: true }
+            host: { _id: true, stripe_account_id: true },
+            refunds: true,
+            user: true
           }
         });
 
@@ -915,13 +917,15 @@ export default class HostController extends BaseController<BackendProviderMap> {
         if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
 
         // Create an entry in the refund table for bulk refunds where a request was not made
-        invoices.map(invoice => {
-          let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
+        await Promise.all(
+          invoices.map(async invoice => {
+            let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
 
-          if (refundPresent === undefined) new Refund(invoice, null, bulkRefundData).save();
+            if (refundPresent === undefined) await new Refund(invoice, null, bulkRefundData).save();
 
-          invoice.save();
-        });
+            return invoice.save();
+          })
+        );
 
         // Refund all invoices in parallel, & wait for them all to finish
         await Promise.all(

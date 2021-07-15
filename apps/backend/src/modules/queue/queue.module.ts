@@ -14,6 +14,8 @@ import Auth from '../../common/authorisation';
 import Env from '@backend/env';
 import { i18nProvider } from 'libs/shared/src/api/i18n';
 import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
+import { Contract, Event } from 'libs/shared/src/api/event-bus/contracts';
+
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 interface IQueue<T extends JobType = any> {
@@ -120,22 +122,15 @@ export class QueueModule implements Module {
       return acc;
     }, {} as any);
 
+    const combine = <T extends Event>(fns: Array<(ct: Contract<T>) => Promise<void>>) => (ct: Contract<T>) =>
+      Promise.all(fns.map(f => f(ct)));
+
     const handlers = EventHandlers(this.queues, providers);
     // prettier-ignore
     {
-      bus.subscribe("refund.refunded", async ct => {
-                                                         handlers.sendUserRefundRefundedEmail(ct);
-                                                         handlers.sendHostRefundRefundedEmail(ct)});
-      bus.subscribe("refund.initiated", async ct => {
-                                                         handlers.sendUserRefundInitiatedEmail(ct);
-                                                         handlers.sendHostRefundInitiatedEmail(ct)});
-      bus.subscribe("refund.bulk", async ct => {
-                                                         handlers.processBulkRefunds(ct)
-      })                      
-      // bus.subscribe("refund.bulk.initiated", async ct => {
-      //                                                    handlers.sendHostBulkRefundInitiatedEmail(ct)
-      //                                                    handlers.sendUserRefundInitiatedEmail(ct)
-      // });                                            
+      bus.subscribe("refund.refunded", async ct => { combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail])});
+      bus.subscribe("refund.initiated", async ct => { combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail])});
+      bus.subscribe("refund.refunded", combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail]))                                           
       bus.subscribe("test.send_email",                   handlers.sendTestEmail);
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);

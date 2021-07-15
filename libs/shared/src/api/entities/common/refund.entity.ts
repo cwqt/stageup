@@ -33,7 +33,7 @@ export class Refund extends BaseEntity implements IRefund {
   @Column('enum', { enum: BulkRefundReason, nullable: true }) bulk_refund_reason?: BulkRefundReason;
   @Column({ nullable: true }) bulk_refund_detail?: string;
 
-  @ManyToOne(() => Invoice, invoice => invoice.refunds) invoice: Invoice;
+  @ManyToOne(() => Invoice, invoice => invoice.refunds, { cascade: true, nullable: false }) invoice: Invoice;
 
   constructor(invoice: Invoice, request?: IRefundRequest, bulkRefund?: IBulkRefund) {
     super();
