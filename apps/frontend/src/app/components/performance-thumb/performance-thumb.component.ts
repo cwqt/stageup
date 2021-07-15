@@ -10,15 +10,19 @@ import { HelperService } from '@frontend/services/helper.service';
 })
 export class PerformanceThumbComponent implements OnInit {
   @Input() performance: IPerformanceStub;
+  @Output() onFollowEvent = new EventEmitter();
 
   constructor(private helperService: HelperService, private dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
   openBrochure(): void {
+    // Send both the performance stub and an 'output' event emitter to the performance brochure component.
+    // When a user clicks to 'follow' or 'unfollow' a host it will trigger the emitter and refresh the 'My Follows' feed.
+    const envelope = { performance: this.performance, onFollowEvent: this.onFollowEvent };
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
-        data: this.performance,
+        data: envelope,
         width: '1000px'
       }),
       () => {}

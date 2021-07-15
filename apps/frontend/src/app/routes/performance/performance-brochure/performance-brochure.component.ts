@@ -9,6 +9,7 @@ import {
   DonoPeg,
   IAssetStub,
   IEnvelopedData,
+  IFollowing,
   IMyself,
   IPaymentIntentClientSecret,
   IPerformance,
@@ -55,6 +56,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   performanceTrailer: IAssetStub<AssetType.Video>;
 
   performanceSharingUrl: SocialSharingComponent['url'];
+  userFollowing: boolean;
 
   get performance() {
     return this.performanceCacheable.data?.data;
@@ -68,15 +70,18 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     private appService: BaseAppService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<PerformanceBrochureComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IPerformanceStub
+    @Inject(MAT_DIALOG_DATA) public data: { performance: IPerformanceStub; onFollowEvent: EventEmitter<string> }
   ) {}
 
   async ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
-    await cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable).then(d => {
-      this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
-      return d;
-    });
+    await cachize(this.performanceService.readPerformance(this.data.performance._id), this.performanceCacheable).then(
+      d => {
+        this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
+        this.userFollowing = d.__client_data?.is_following;
+        return d;
+      }
+    );
 
     this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
   }

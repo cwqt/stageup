@@ -4,6 +4,7 @@ import {
   Asset,
   AssetGroup,
   BaseController,
+  Follow,
   getCheck,
   Host,
   IControllerEndpoint,
@@ -155,9 +156,16 @@ export default class PerformanceController extends BaseController<BackendProvide
           t => t.is_visible && t.start_datetime < currentTime && currentTime < t.end_datetime
         );
 
+        const isFollowing =
+          req.session.user &&
+          (await this.ORM.createQueryBuilder(Follow, 'follow')
+            .where('follow.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('follow.host__id = :hid', { hid: performance.host._id })
+            .getOne());
+
         const response: DtoPerformance = {
           data: performance.toFull(),
-          __client_data: null
+          __client_data: { is_following: isFollowing ? true : false }
         };
 
         return response;

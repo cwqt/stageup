@@ -35,6 +35,7 @@ import {
   any,
   array,
   boolean,
+  coerce,
   Describe,
   enums,
   integer,
@@ -174,11 +175,20 @@ export namespace objects {
     value: optional(string())
   });
 
+  // Updated, since the received data in the request is a 'string'.
   export const PaginationOptions = (pageLimit: number = 50): Describe<PaginationOptions> =>
     object({
-      per_page: size(integer(), 1, pageLimit),
-      page: integer()
-    });
+      per_page: refine(union([number(), string()]), 'per_page', value => {
+        const num = typeof value == 'number' ? value : parseInt(value);
+        return !isNaN(num) && num >= 1 && num <= pageLimit;
+      }),
+      page: refine(union([number(), string()]), 'page', value => {
+        const num = typeof value == 'number' ? value : parseInt(value);
+        return !isNaN(num);
+      })
+    }) as any; // cast to any because of issues with qs parsing query string parameters
+  // as strings & not inferring number, should be either string | number - but the type
+  // should only be numbers
 
   export const IDeleteHostReason: Describe<IDeleteHostReason> = object({
     reasons: array(enums<DeleteHostReason>(enumToValues(DeleteHostReason))),

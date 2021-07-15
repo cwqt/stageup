@@ -14,6 +14,7 @@ import { IUiTable, IUiTransformedRowMeta } from './table.interfaces';
 export class UiTable<Input = any, Transformed = any> {
   private $loading: BehaviorSubject<boolean>;
   private filterChange: EventEmitter<{ action: 'add' | 'remove' | 'update'; column: string }> = new EventEmitter();
+  private refresher: EventEmitter<void> = new EventEmitter();
 
   // Public to templates
   _dataSource: MatTableDataSource<any>;
@@ -33,6 +34,10 @@ export class UiTable<Input = any, Transformed = any> {
   public selection: SelectionModel<IUiTransformedRowMeta<Input>>;
   public loading: Observable<boolean>;
   public error: string;
+
+  // Event Handlers for .resolve()
+  public resolutionError = new EventEmitter();
+  public resolutionSuccess = new EventEmitter<Input[]>();
 
   constructor(config: IUiTable<Input, Transformed>, cache?: ICacheable<IEnvelopedData<Input[]>>) {
     this.config = config;
@@ -66,15 +71,22 @@ export class UiTable<Input = any, Transformed = any> {
     this._dataSource = new MatTableDataSource([]);
   }
 
+  // re-evaluate current state & refresh data from resolver
+  refresh() {
+    this.refresher.emit();
+  }
+
   async resolve(query: IQueryParams) {
     this.$loading.next(true);
     try {
       const data = await this.config.resolver(query);
       this.cache.data = data;
+      this.resolutionSuccess.emit(data.data);
       return data;
     } catch (error) {
       this.error = error;
       this.cache.error = error;
+      this.resolutionError.emit(error);
       throw error;
     } finally {
       this.$loading.next(false);
@@ -95,7 +107,7 @@ export class UiTable<Input = any, Transformed = any> {
     this.$loading.next(true);
 
     // Listen for all these events, refreshing the data as needed
-    merge(this.ui.sort.sortChange, this.ui.paginator.page, this.filterChange)
+    merge(this.ui.sort.sortChange, this.ui.paginator.page, this.filterChange, this.refresher)
       .pipe(startWith({})) // make the initial request
       .subscribe(async () => {
         // Setup the query options with pagination...

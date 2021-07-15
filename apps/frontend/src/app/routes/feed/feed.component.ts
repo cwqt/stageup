@@ -37,14 +37,14 @@ export class FeedComponent implements OnInit {
     upcoming: createICacheable([], { loading_page: false }),
     everything: createICacheable([], { loading_page: false }),
     hosts: createICacheable([], { loading_page: false }),
-    follows: createICacheable([], { loading_page: false }),
+    follows: createICacheable([], { loading_page: false })
   };
 
   prettyKeys: { [index in CarouselIdx]: string } = {
     hosts: $localize`Performing Arts Companies`,
     upcoming: $localize`Upcoming`,
     everything: $localize`Everything`,
-    follows: $localize`My Follows`,
+    follows: $localize`My Follows`
   };
 
   genres: {
@@ -163,5 +163,20 @@ export class FeedComponent implements OnInit {
 
   openGenreFeed(genre: Genre) {
     this.appService.navigateTo(`/genres/${genre}`);
+  }
+
+  // Refresh the feed of the given carousel index
+  async refreshFeed(carouselIndex: CarouselIdx = 'follows') {
+    // Since we are refreshing, start at page 0
+    await cachize(
+      this.feedService.getFeed({
+        [carouselIndex]: {
+          page: 0,
+          per_page: 4 // The default, as per inside myself.controller
+        }
+      }),
+      this.carouselData[carouselIndex]
+    );
+    this.carouselData[carouselIndex].data = this.carouselData[carouselIndex].data[carouselIndex];
   }
 }

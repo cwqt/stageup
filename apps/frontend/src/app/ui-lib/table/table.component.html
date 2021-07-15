@@ -133,22 +133,31 @@
             </div>
           </ng-template>
 
+          <!-- Table Cell for rows column data -->
           <td
             (click)="column.value.click_handler && column.value.click_handler(element.__data)"
             mat-cell
             *matCellDef="let element"
           >
-            <ui-chip
-              *ngIf="column.value.chip_selector; else primitive"
-              [kind]="column.value.chip_selector(element.__data)"
-            >
-              {{ element[column.key] }}
-            </ui-chip>
-            <ng-template #primitive>
-              <span [class.is-clickable]="column.value.click_handler">
+            <div class="flex items-center space-x-2" [class.py-2]="column.value.image">
+              <img
+                class="w-12 h-12 rounded-full object-cover overflow-hidden"
+                [src]="column.value.image(element.__data)"
+                alt=""
+                *ngIf="column.value.image"
+              />
+              <ui-chip
+                *ngIf="column.value.chip_selector; else primitive"
+                [kind]="column.value.chip_selector(element.__data)"
+              >
                 {{ element[column.key] }}
-              </span>
-            </ng-template>
+              </ui-chip>
+              <ng-template #primitive>
+                <span [class.is-clickable]="column.value.click_handler">
+                  {{ element[column.key] }}
+                </span>
+              </ng-template>
+            </div>
           </td>
         </ng-container>
 

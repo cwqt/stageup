@@ -9,11 +9,13 @@ import { Module } from '..';
 import { EventHandlers } from './handlers';
 import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker';
 import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
+import CollectAnalyticsWorker from './workers/collect-analytics.worker';
 import SendEmailWorker from './workers/send-email.worker';
 import Auth from '../../common/authorisation';
 import Env from '@backend/env';
 import { i18nProvider } from 'libs/shared/src/api/i18n';
 import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
+import { Contract, Event } from 'libs/shared/src/api/event-bus/contracts';
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 interface IQueue<T extends JobType = any> {
@@ -56,7 +58,8 @@ export class QueueModule implements Module {
   workers = {
     ['send_email']: SendEmailWorker,
     ['host_invoice_csv']: HostInvoiceCSVWorker,
-    ['host_invoice_pdf']: HostInvoicePDFWorker
+    ['host_invoice_pdf']: HostInvoicePDFWorker,
+    ['collect_analytics']: CollectAnalyticsWorker
   };
 
   constructor(config: { redis: { host: string; port: number } }, log: Logger) {
@@ -77,6 +80,8 @@ export class QueueModule implements Module {
         type,
         (() => {
           switch (type) {
+            case 'collect_analytics':
+              return w(this.workers['collect_analytics']({ orm: providers.orm }));
             case 'send_email':
               return w(
                 this.workers['send_email']({
@@ -121,14 +126,17 @@ export class QueueModule implements Module {
     }, {} as any);
 
     const handlers = EventHandlers(this.queues, providers);
+
+    const combine = <T extends Event>(fns: Array<(ct: Contract<T>) => Promise<void>>) => (ct: Contract<T>) =>
+      Promise.all(fns.map(f => f(ct)));
+
     // prettier-ignore
     {
-      bus.subscribe("refund.refunded", async ct => {
-                                                         handlers.sendUserRefundRefundedEmail(ct);
-                                                         handlers.sendHostRefundRefundedEmail(ct)});
-      bus.subscribe("refund.initiated", async ct => {
-                                                         handlers.sendUserRefundInitiatedEmail(ct);
-                                                         handlers.sendHostRefundInitiatedEmail(ct)});
+      bus.subscribe("refund.refunded", combine([         handlers.sendUserRefundRefundedEmail,
+                                                         handlers.sendHostRefundRefundedEmail]))
+      bus.subscribe("refund.initiated", combine([        handlers.sendUserRefundInitiatedEmail,
+                                                         handlers.sendHostRefundInitiatedEmail]))
+      bus.subscribe("performance.created",               handlers.createAnalyticsCollectionJob);
       bus.subscribe("test.send_email",                   handlers.sendTestEmail);
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);

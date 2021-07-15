@@ -37,3 +37,6 @@ export * from './i18n/i18n.interface';
 
 export * from './search/search.interface';
 export * from './users/password.interface';
+
+export * from './analytics/aggregation';
+export * from './analytics/performance.analytics';

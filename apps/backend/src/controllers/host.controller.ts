@@ -12,11 +12,12 @@ import {
   OnboardingReview,
   PatronSubscription,
   Performance,
+  PerformanceAnalytics,
   User,
   UserHostInfo,
   Validators
 } from '@core/api';
-import { timestamp } from '@core/helpers';
+import { timestamp, unix } from '@core/helpers';
 import {
   AssetType,
   DtoHostPatronageSubscription,
@@ -45,11 +46,15 @@ import {
   IUserFollow,
   IUserHostInfo,
   LiveStreamState,
-  PaymentStatus
+  PaymentStatus,
+  DtoPerformanceAnalytics,
+  IPerformanceAnalyticsMetrics,
+  AnalyticsTimePeriods,
+  AnalyticsTimePeriod
 } from '@core/interfaces';
 import deepmerge from 'deepmerge';
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
-import { array, boolean, coerce, enums, object, string, StructError } from 'superstruct';
+import { array, assign, boolean, coerce, enums, intersection, object, string, StructError } from 'superstruct';
 import { In } from 'typeorm';
 import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
@@ -110,16 +115,18 @@ export default class HostController extends BaseController<BackendProviderMap> {
         );
 
         // if req.session.user._id && userHasFollow then envelope.__client_data.is_following = true
-        const isFollowing = req.session.user && await this.ORM.createQueryBuilder(Follow, 'follow')
-          .where("follow.user__id = :uid", { uid: req.session.user._id })
-          .andWhere("follow.host__id = :hid", { hid: host._id })
-          .getOne();
+        const isFollowing =
+          req.session.user &&
+          (await this.ORM.createQueryBuilder(Follow, 'follow')
+            .where('follow.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('follow.host__id = :hid', { hid: host._id })
+            .getOne());
 
         const envelope = {
           data: host.toFull(),
           __client_data: { is_following: isFollowing ? true : false }
-        }
-        return envelope
+        };
+        return envelope;
       }
     };
   }
@@ -635,7 +642,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             type: 'standard',
             email: host.email_address,
             country: host.business_details.business_address.country,
-            business_type: 'company', // FUTURE https://alacrityfoundationteam31.atlassian.net/browse/SU-892
+            business_type: host.business_details.business_type, // FUTURE https://alacrityfoundationteam31.atlassian.net/browse/SU-892
             business_profile: {
               name: host.username,
               url: host.social_info.site_url
@@ -988,12 +995,65 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   readHostFollowers(): IControllerEndpoint<IEnvelopedData<IFollower[]>> {
     return {
-      validators: { params: object({ hid: string() })},
+      validators: { params: object({ hid: string() }) },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        return await this.ORM.createQueryBuilder(Follow, "follow")
-          .where("follow.host__id = :hid", { hid: req.params.hid })
-          .paginate(follow => follow.toFollower())
+        return await this.ORM.createQueryBuilder(Follow, 'follow')
+          .where('follow.host__id = :hid', { hid: req.params.hid })
+          .paginate(follow => follow.toFollower());
+      }
+    };
+  }
+
+  readPerformancesAnalytics(): IControllerEndpoint<IEnvelopedData<DtoPerformanceAnalytics[]>> {
+    return {
+      validators: {
+        query: assign(
+          object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) }),
+          Validators.Objects.PaginationOptions(10)
+        )
+      },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        // Number of weekly aggregations to offset from present date
+        const periodWeekOffsetMap: { [index in AnalyticsTimePeriod]: number } = {
+          WEEKLY: 1,
+          MONTHLY: 4, // 4 aggregation periods in a month
+          QUARTERLY: 14, // 14 in a quarter... etc.
+          YEARLY: 52
+        };
+
+        // Get paginated list of performances, will then append analytics onto the stubs for DtoPerformanceAnalytics type
+        const performances = await this.ORM.createQueryBuilder(Performance, 'performance')
+          .innerJoinAndSelect('performance.host', 'host')
+          .where('host._id = :id', { id: req.params.hid })
+          .orderBy('performance.created_at', 'DESC')
+          .paginate(o => o.toStub());
+
+        const dtos: DtoPerformanceAnalytics[] = [];
+        for await (let performance of performances.data) {
+          // Get weekly aggregations sorted by period_end (when collected)
+          const periods = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
+            .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
+            .orderBy('analytics.period_end', 'DESC')
+            // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
+            .limit(periodWeekOffsetMap[req.query.period as AnalyticsTimePeriod] * 2)
+            .getMany();
+
+          // Cut the array of weekly periods in half - latest & previous period
+          const half = Math.ceil(periods.length / 2);
+          const [latest, previous] = [periods.slice(0, half), periods.slice(half, periods.length)];
+
+          dtos.push({
+            ...performance,
+            analytics: {
+              latest_period: latest.map(a => a.toDto()),
+              previous_period: previous.map(a => a.toDto())
+            }
+          });
+        }
+
+        return { data: dtos, __paging_data: performances.__paging_data };
       }
     };
   }
