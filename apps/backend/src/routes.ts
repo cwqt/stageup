@@ -84,7 +84,6 @@ router.get      <IUserInvoice>          ("/myself/invoices/:iid",               
 router.post     <void>                  ("/myself/invoices/:iid/request-refund",      Myself.requestInvoiceRefund());
 router.post     <void>                  ("/myself/invoices/request-refund",           Myself.requestInvoiceRefund());
 router.get      <IE<UPatronSub[]>>      ("/myself/patron-subscriptions",              Myself.readPatronageSubscriptions());
-router.get      <IFeed>                 ("/myself/feed",                              Myself.readFeed());
 router.get      <IPaymentMethodStub[]>  ("/myself/payment-methods",                   Myself.readPaymentMethods());
 router.post     <IPaymentMethod>        ("/myself/payment-methods",                   Myself.addCreatedPaymentMethod());
 router.get      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.readPaymentMethod());

@@ -37,14 +37,16 @@ export class FeedComponent implements OnInit {
     upcoming: createICacheable([], { loading_page: false }),
     everything: createICacheable([], { loading_page: false }),
     hosts: createICacheable([], { loading_page: false }),
-    follows: createICacheable([], { loading_page: false })
+    follows: createICacheable([], { loading_page: false }),
+    trending: createICacheable([], { loading_page: false })
   };
 
   prettyKeys: { [index in CarouselIdx]: string } = {
     hosts: $localize`Performing Arts Companies`,
     upcoming: $localize`Upcoming`,
     everything: $localize`Everything`,
-    follows: $localize`My Follows`
+    follows: $localize`My Follows`,
+    trending: $localize`Trending`
   };
 
   genres: {
