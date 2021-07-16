@@ -1,0 +1,6 @@
+
+<img i18n-alt alt="An image showing the StageUp company logo" src="/assets/logo-banner.png" class="w-1/3"/>
+<h3 class="text-center mt-32" i18n>You are now leaving Stageup.uk. Click the link to continue to:</h3>
+<a class="mt-48" href="{{ this.redirectData.redirect_to }}" target="_blank" (click)="returnToCaller()" >{{ this.redirectData.redirect_to }}</a>
+<ui-form class="mt-56" [form]="rememberChoiceForm"></ui-form>
+

@@ -9,6 +9,8 @@ export * from './common/environments.interface';
 export * from './common/invoice.interface';
 export * from './common/querying.interface';
 export * from './common/sse.interface';
+export * from './sharing/redirect.interface';
+export * from './sharing/sharing.interface';
 
 export * from './hosts/host.interface';
 export * from './hosts/host-onboarding.interface';

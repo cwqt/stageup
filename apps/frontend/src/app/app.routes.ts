@@ -4,6 +4,7 @@ import { AppWrapperComponent } from './components/app/wrapper/wrapper.component'
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { VerifiedComponent } from './components/pages/verified/verified.component';
+import { RedirectComponent } from './components/redirect/redirect.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { FeedComponent } from './routes/feed/feed.component';
@@ -150,6 +151,10 @@ const LOGGED_IN_ROUTES: Routes = [
               data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'business' }, width: '600px' } }
             }
           ]
+        },
+        {
+          path: `redirect`,
+          component: RedirectComponent
         },
         {
           path: '',
