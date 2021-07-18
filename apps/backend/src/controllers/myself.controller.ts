@@ -37,6 +37,7 @@ import {
   pick,
   Visibility
 } from '@core/interfaces';
+import { startOfWeek, getUnixTime } from 'date-fns';
 import { boolean, enums, object, record, string } from 'superstruct';
 import AuthStrat from '../common/authorisation';
 
@@ -86,7 +87,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     return {
       validators: {
         query: record(
-          enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts']),
+          enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts', 'trending']),
           Validators.Objects.PaginationOptions(10)
         )
       },
@@ -96,7 +97,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           upcoming: null,
           everything: null,
           hosts: null,
-          follows: null
+          follows: null,
+          trending: null
         };
 
         // None of the req.query paging options are present, so fetch the first page of every carousel
@@ -146,6 +148,33 @@ export default class MyselfController extends BaseController<BackendProviderMap>
                 per_page: req.query.follows ? parseInt((req.query['follows'] as any).per_page) : 4
               });
           }
+        }
+
+        if (fetchAll || req.query['trending']) {
+          const ticketSales = await this.ORM.createQueryBuilder()
+            .select(['invoice._id', 'ticket._id'])
+            .where('invoice.purchased_at >= :curdate', { curdate: getUnixTime(startOfWeek(new Date())) })
+            .from(Invoice, 'invoice')
+            .innerJoin('invoice.ticket', 'ticket')
+            // .groupBy('ticket._id')
+            // .innerJoin('i.ticket', 'ticket')
+            // .innerJoin('ticket.performance', 'performance')
+            // .addSelect('i.ticket')
+
+            // .addSelect('COUNT(i.ticket)', 'ticketCount')
+            // .groupBy('i._id')
+            // .orderBy('ticketCount')
+            .getMany();
+
+          console.log(ticketSales);
+          // //Use list of ordered performance ids obtained from invoice table
+          // feed.trending = await this.ORM.createQueryBuilder(Performance, 'p')
+          // .innerJoin()
+
+          // .paginate(p => p.toStub(), {
+          //   page: req.query.follows ? parseInt((req.query['trending'] as any).page) : 0,
+          //   per_page: req.query.follows ? parseInt((req.query['trending'] as any).per_page) : 4
+          // });
         }
         return feed;
       }
