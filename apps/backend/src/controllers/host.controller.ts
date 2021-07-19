@@ -921,9 +921,13 @@ export default class HostController extends BaseController<BackendProviderMap> {
           invoices.map(async invoice => {
             let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
 
-            if (refundPresent === undefined) await new Refund(invoice, null, bulkRefundData).save();
-
-            return invoice.save();
+            if (refundPresent === undefined) {
+              await this.ORM.transaction(async txc => {
+                const refund = await new Refund(invoice, null, bulkRefundData);
+                refund.invoice = invoice;
+                await txc.save(refund);
+              });
+            }
           })
         );
 
