@@ -13,6 +13,8 @@ export interface IPostgresProviderConfig {
   extra?: any;
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class PostgresProvider implements Provider<Connection> {
   name = 'Postgres';
   connection: Connection;

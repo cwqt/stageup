@@ -10,8 +10,12 @@
         <target state="final">User does not exist</target>
       </trans-unit>
       <trans-unit id="error.not_a_video" datatype="html">
-        <source>This is not a video!</source>
-        <target state="final">This is not a video!</target>
+        <source>This is not a video</source>
+        <target state="final">This is not a video</target>
+      </trans-unit>
+      <trans-unit id="error.email_already_in_use" datatype="html">
+        <source>E-mail address is already in use</source>
+        <target state="final">E-mail address is already in use</target>
       </trans-unit>
       <trans-unit id="host.example_patron_tier_name" datatype="html">
         <source>Example Tier</source>
@@ -156,6 +160,14 @@
       <trans-unit id="error.already_following" datatype="html">
         <source>You are already following this host</source>
         <target state="final">You are already following this host</target>
+      </trans-unit>
+      <trans-unit id="error.invalid_rating" datatype="html">
+        <source>The provided rate value is invalid</source>
+        <target state="final">The provided rate value is invalid</target>
+      </trans-unit>
+      <trans-unit id="error.no_rating_exists" datatype="html">
+        <source>Could not find existing rating</source>
+        <target state="final">Could not find existing rating</target>
       </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>

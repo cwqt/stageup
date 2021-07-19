@@ -9,6 +9,9 @@ export * from './common/environments.interface';
 export * from './common/invoice.interface';
 export * from './common/querying.interface';
 export * from './common/sse.interface';
+export * from './common/consent.interface';
+export * from './sharing/redirect.interface';
+export * from './sharing/sharing.interface';
 
 export * from './hosts/host.interface';
 export * from './hosts/host-onboarding.interface';
@@ -38,5 +41,6 @@ export * from './i18n/i18n.interface';
 export * from './search/search.interface';
 export * from './users/password.interface';
 
-export * from './analytics/aggregation';
-export * from './analytics/performance.analytics';
+export * from './analytics/chunk-analytics.interface';
+export * from './analytics/performance-analytics.interface';
+export * from './analytics/host-analytics.interface';

@@ -6,6 +6,8 @@ export interface ILocalTunnelProviderConfig {
   domain: string;
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class LocalTunnelProvider implements Provider<Tunnel> {
   name = 'LocalTunnel';
   connection: Tunnel;
@@ -16,6 +18,7 @@ export default class LocalTunnelProvider implements Provider<Tunnel> {
   }
 
   async connect() {
+    return;
     this.connection = await localtunnel({
       port: this.config.port,
       subdomain: this.config.domain

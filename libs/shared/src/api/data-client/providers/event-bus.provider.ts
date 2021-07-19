@@ -55,4 +55,10 @@ export default class EventBusProvider implements Provider<void> {
 
   async disconnect() {}
   async drop() {}
+
+  async register(handlers: { [index in Event]?: (contract: Contract<index>) => Promise<void> }) {
+    for (let [event, handler] of Object.entries(handlers)) {
+      this.subscribe(event as Event, handler);
+    }
+  }
 }

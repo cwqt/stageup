@@ -1,0 +1,7 @@
+<div (click)="likeEvent()" class="relative flex items-center">
+  <ui-chip class="top-left" kind="{{ userLiked ? 'red' : 'gray' }}">{{ countToDisplay }}</ui-chip>
+  <div class="cursor-pointer">
+    <ui-icon *ngIf="!userLiked" size="l" class="grey">thumbs-up</ui-icon>
+    <ui-icon *ngIf="userLiked" size="l" class="pink">thumbs-up--filled</ui-icon>
+  </div>
+</div>

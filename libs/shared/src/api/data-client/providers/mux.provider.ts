@@ -1,5 +1,6 @@
 import { timeout } from '@core/helpers';
 import Mux from '@mux/mux-node';
+import { Service } from 'typedi';
 import { Provider } from '../';
 
 export interface IMuxProviderConfig {
@@ -8,6 +9,7 @@ export interface IMuxProviderConfig {
   webhook_signature: string;
 }
 
+@Service()
 export default class MuxProvider implements Provider<Mux> {
   name = 'Mux';
   connection: Mux;

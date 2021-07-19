@@ -47,6 +47,8 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
     complete: 'blue'
   };
 
+  rating: number; // user rating (if they have)
+
   constructor(
     @Inject(LOCALE_ID) public locale: string,
     private sse: SseService,
@@ -57,14 +59,15 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.primaryAsset = this.performance.data.assets.find(asset => asset._id == this.token.asset_id);
+    this.rating = this.performance.__client_data?.rating;
+    this.primaryAsset = this.performance.data.assets.find(asset => asset._id == this.token?.asset_id);
   }
 
   handlePlayerReady(player: PlayerComponent) {
     this.player = player;
 
     setTimeout(() => {
-      if (this.primaryAsset.type == AssetType.LiveStream) {
+      if (this.primaryAsset?.type == AssetType.LiveStream) {
         const stream = this.primaryAsset as AssetDto<AssetType.LiveStream>;
         // after the player has initialised we can perform actions on the initial state of the video
         this.enactUponStreamState(stream.state);
@@ -92,7 +95,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
           this.isHostPerformancePreview = myself.host._id == this.performance.data.host._id;
           if (this.isHostPerformancePreview) this.initialiseSSE();
         }
-      } else if (this.primaryAsset.type == AssetType.Video) {
+      } else if (this.primaryAsset?.type == AssetType.Video) {
         this.player.load(this.primaryAsset, this.token).play();
       }
     }, 0);
@@ -159,5 +162,16 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
     };
 
     await this.http.get(`/api/utils/performances/${this.performance.data._id}/state?value=${map[state]}`).toPromise();
+  }
+
+  // If user clicks on the same rating, it will remove it. Else it adds/updates it
+  onRatingChanged(rateValue: number): void {
+    if (this.rating === rateValue) {
+      this.rating = null;
+      this.performanceService.deleteRating(this.performance.data._id);
+    } else {
+      this.rating = rateValue;
+      this.performanceService.setRating(this.performance.data._id, rateValue);
+    }
   }
 }

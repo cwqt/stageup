@@ -43,6 +43,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
+  @Output() onLikeEvent = new EventEmitter();
+
   performanceCacheable: ICacheable<IEnvelopedData<IPerformance>> = createICacheable();
   paymentIntentSecret: ICacheable<IPaymentIntentClientSecret> = createICacheable();
   stripePaymentIntent: PaymentIntent;
@@ -57,6 +59,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
   performanceSharingUrl: SocialSharingComponent['url'];
   userFollowing: boolean;
+
+  userLiked: boolean;
 
   get performance() {
     return this.performanceCacheable.data?.data;
@@ -79,6 +83,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       d => {
         this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
         this.userFollowing = d.__client_data?.is_following;
+        this.userLiked = d.__client_data?.is_liking;
         return d;
       }
     );
@@ -188,5 +193,9 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     } else {
       this.selectedTicket.amount = getDonoAmount(this.selectedDonoPeg, this.selectedTicket.currency);
     }
+  }
+
+  likeEvent(value: boolean) {
+    this.onLikeEvent.emit(value);
   }
 }
