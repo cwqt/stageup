@@ -931,30 +931,15 @@ export default class HostController extends BaseController<BackendProviderMap> {
           })
         );
 
-        // Refund all invoices in parallel, & wait for them all to finish
-        await Promise.all(
-          // invoices.map evaluates to [Promise<pending>, Promise<pending>, ...]
-          invoices.map(async invoice => {
-            this.providers.stripe.connection.refunds.create(
-              {
-                payment_intent: invoice.stripe_payment_intent_id
-              },
-              {
-                stripeAccount: invoice.host.stripe_account_id
-              }
-            );
-
-            if (invoiceIds.length > 1) {
-              return await this.providers.bus.publish('refund.bulk', { invoice_ids: invoiceIds }, req.locale);
-            } else {
-              return await this.providers.bus.publish(
-                'refund.initiated',
-                { invoice_id: invoice._id, user_id: invoice.user._id },
-                req.locale
-              );
-            }
-          })
-        );
+        if (invoiceIds.length > 1) {
+          return await this.providers.bus.publish('refund.bulk', { invoice_ids: invoiceIds }, req.locale);
+        } else {
+          return await this.providers.bus.publish(
+            'refund.initiated',
+            { invoice_id: invoices[0]._id, user_id: invoices[0].user._id },
+            req.locale
+          );
+        }
       }
     };
   }

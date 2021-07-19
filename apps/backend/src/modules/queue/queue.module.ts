@@ -123,14 +123,14 @@ export class QueueModule implements Module {
     }, {} as any);
 
     const combine = <T extends Event>(fns: Array<(ct: Contract<T>) => Promise<void>>) => (ct: Contract<T>) =>
-      Promise.all(fns.map(f => f(ct)));
+      Promise.allSettled(fns.map(f => f(ct)));
 
     const handlers = EventHandlers(this.queues, providers);
     // prettier-ignore
     {
-      bus.subscribe("refund.refunded", async ct => { combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail])});
-      bus.subscribe("refund.initiated", async ct => { combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail])});
-      bus.subscribe("refund.refunded", combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail]))                                           
+      bus.subscribe("refund.initiated",        combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail, handlers.requestStripeRefund]));
+      bus.subscribe("refund.refunded",         combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail])) 
+      bus.subscribe("refund.bulk",           async ct => handlers.processBulkRefunds(ct));                                    
       bus.subscribe("test.send_email",                   handlers.sendTestEmail);
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);

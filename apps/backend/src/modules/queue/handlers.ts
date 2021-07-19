@@ -1,7 +1,17 @@
 import Env from '@backend/env';
-import { Host, Invoice, PatronSubscription, PatronTier, Performance, Refund, transact, User } from '@core/api';
+import {
+  ErrorHandler,
+  Host,
+  Invoice,
+  PatronSubscription,
+  PatronTier,
+  Performance,
+  Refund,
+  transact,
+  User
+} from '@core/api';
 import { dateOrdinal, i18n, pipes, richtext, timestamp, timeout } from '@core/helpers';
-import { CurrencyCode, PatronSubscriptionStatus } from '@core/interfaces';
+import { CurrencyCode, HTTP, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
 
 // FOR SENDING EMAILS: ----------------------------------------------------------
@@ -402,6 +412,23 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     });
   },
 
+  requestStripeRefund: async (ct: Contract<'refund.initiated'>) => {
+    const invoice = await Invoice.findOne({
+      where: {
+        _id: ct.invoice_id
+      }
+    });
+
+    providers.stripe.connection.refunds.create(
+      {
+        payment_intent: invoice.stripe_payment_intent_id
+      },
+      {
+        stripeAccount: invoice.host.stripe_account_id
+      }
+    );
+  },
+
   processBulkRefunds: async (ct: Contract<'refund.bulk'>) => {
     const invoices = await Invoice.find({
       relations: {
@@ -418,7 +445,15 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
 
     const refundQuantity = invoices.length;
 
-    const invoicesTotal = invoices.reduce((acc, curr) => ((acc += curr.amount), acc), 0);
+    //Check all invoices are the same currency, error if not
+
+    if (!invoices.every(i => i.currency === invoices[0].currency))
+      throw new ErrorHandler(HTTP.Forbidden, 'All refunds must be in the same currency');
+
+    const invoicesTotal = i18n.money(
+      invoices.reduce((acc, curr) => ((acc += +curr.amount), acc), 0),
+      invoices[0].currency
+    );
 
     //Send bulk refund initiation email to host
     queues.send_email.add({
@@ -437,13 +472,16 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
     });
 
     //Initiate individual refund jobs
-    invoices.map(async invoice => {
-      await providers.bus.publish(
-        'refund.initiated',
-        { invoice_id: invoice._id, user_id: invoice.user._id },
-        ct.__meta.locale
-      );
-    });
+
+    await Promise.all(
+      invoices.map(async invoice => {
+        await providers.bus.publish(
+          'refund.initiated',
+          { invoice_id: invoice._id, user_id: invoice.user._id },
+          ct.__meta.locale
+        );
+      })
+    );
   },
 
   unsubscribeAllPatronTierSubscribers: async (ct: Contract<'patronage.tier_deleted'>) => {
