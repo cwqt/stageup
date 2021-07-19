@@ -44,23 +44,26 @@ export interface IConsentable<T extends ConsentableType> {
 
 
 // INTERFACES RELATING TO USERS GIVING/DENYING CONSENT
+export const PersonConsentTypes = ['host_marketing', 'su_marketing', 'cookies', 'upload_consent'] as const;
+export type PersonConsentType = typeof PersonConsentTypes[number];
+
 // Universal personl/consent interface
-export interface IPersonConsent {
+export interface IPersonConsent<T extends PersonConsentType> {
     _id: NUUID;
-    type: string;
+    type: T;
     consent_given: boolean;
     user__id?: NUUID;
     host__id?: NUUID;
     performance__id?: NUUID;
     ip_address?: string;
-    terms_and_conditions_id?: NUUID;
-    privacy_policy_id?: NUUID;
-    cookies_id?: NUUID;
-    uploaders_terms_and_conditions_id?: NUUID;
+    terms_and_conditions__id?: NUUID;
+    privacy_policy__id?: NUUID;
+    cookies__id?: NUUID;
+    uploaders_terms_and_conditions__id?: NUUID;
 }
 
 // Specific types for the 4 different types of consent
-export type HostMarketingConsent = Pick<IPersonConsent, "_id" | "consent_given" | "host__id" | "user__id" | "terms_and_conditions_id" | "privacy_policy_id">;
-export type SuMarketingConsent = Omit<HostMarketingConsent, "host__id">;
-export type UserCookieConsent = Pick<IPersonConsent, "_id" | "consent_given" | "ip_address" | "cookies_id">;
-export type PerformanceUploadConsent = Pick<IPersonConsent, "_id" | "consent_given" | "performance__id" | "uploaders_terms_and_conditions_id">;
+export type HostMarketingConsent = Pick<IPersonConsent<'host_marketing'>, "_id" | "consent_given" | "host__id" | "user__id" | "terms_and_conditions__id" | "privacy_policy__id">;
+export type SuMarketingConsent = Pick<IPersonConsent<'su_marketing'>,  "_id" | "consent_given" | "user__id" | "terms_and_conditions__id" | "privacy_policy__id">;
+export type UserCookieConsent = Pick<IPersonConsent<'cookies'>, "_id" | "consent_given" | "ip_address" | "cookies__id">;
+export type PerformanceUploadConsent = Pick<IPersonConsent<'upload_consent'>, "_id" | "consent_given" | "performance__id" | "uploaders_terms_and_conditions__id">;
