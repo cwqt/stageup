@@ -18,7 +18,6 @@ export default class LocalTunnelProvider implements Provider<Tunnel> {
   }
 
   async connect() {
-    return;
     this.connection = await localtunnel({
       port: this.config.port,
       subdomain: this.config.domain
