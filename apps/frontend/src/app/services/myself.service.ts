@@ -8,6 +8,8 @@ import {
   IEnvelopedData,
   IFollowing,
   IHost,
+  IHostStub,
+  ILike,
   ILocale,
   IMyself,
   IPasswordConfirmationResponse,
@@ -16,7 +18,8 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
-  IUserInvoice
+  IUserInvoice,
+  NUUID
 } from '@core/interfaces';
 import { UserHostInfo } from '@core/api';
 import { IQueryParams, querize } from '@core/helpers';
@@ -164,15 +167,11 @@ export class MyselfService {
 
   //router.post <IFollowing> ("/myself/follow-host/:hid", Myself.addFollow());
   followHost(hostId: string): Promise<IFollowing> {
-    return this.http
-    .post<IFollowing>(`/api/myself/follow-host/${hostId}`, {})
-    .toPromise()
+    return this.http.post<IFollowing>(`/api/myself/follow-host/${hostId}`, {}).toPromise();
   }
 
   //router.delete <void> ("/myself/unfollow-host/hid", Myself.deleteFollow());
   unfollowHost(hostId: string): Promise<void> {
-    return this.http
-    .delete<void>(`/api/myself/unfollow-host/${hostId}`)
-    .toPromise();
+    return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
   }
 }

@@ -10,6 +10,8 @@
   "error.too_many_thumbnails": You have too many thumbnails, try deleting some before uploading new ones
   "error.publicity_period_outside_ticket_period": Cannot set performance publicity period outside one of the tickets selling period
   "error.already_following": You are already following this host
+  "error.invalid_rating": The provided rate value is invalid
+  "error.no_rating_exists": Could not find existing rating
 
   // Onboarding ------------------------------------------------------------------------------------------
   "onboarding.steps_invalid": Some steps are invalid

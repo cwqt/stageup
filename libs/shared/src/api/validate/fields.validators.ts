@@ -67,4 +67,5 @@ export namespace fields {
   export const genre = enums(enumToValues(Genre) as Genre[]);
   export const personTitle = enums<PersonTitle>(enumToValues(PersonTitle));
   export const url = refine(string(), 'url', value => validator.isURL(value) || '@@validation.invalid_url');
+  export const rating = size(number(), 0, 1);
 }

@@ -6,9 +6,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '../../services/helper.service';
-import { PerformanceBrochureComponent } from '../performance/performance-brochure/performance-brochure.component';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
-import { sample, timeout, timestamp } from '@core/helpers';
+import { timeout } from '@core/helpers';
 import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
@@ -178,5 +177,15 @@ export class FeedComponent implements OnInit {
       this.carouselData[carouselIndex]
     );
     this.carouselData[carouselIndex].data = this.carouselData[carouselIndex].data[carouselIndex];
+  }
+
+  // Function that syncs the like in other feeds when a user likes a thumbnail in a particular feed
+  syncLikes($event) {
+    // Nested forEach used because of type conflict when using flatMap function. Using typeguard to differentiate performance/hosts could be another option in future.
+    Object.values(this.carouselData).forEach(feed => {
+      feed.data?.data?.forEach(performance => {
+        if (performance._id === $event.performance) performance.client_likes = $event.value;
+      });
+    });
   }
 }

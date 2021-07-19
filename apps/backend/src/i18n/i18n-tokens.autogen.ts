@@ -11,6 +11,8 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@error.too_many_thumbnails"]: never,
   ["@@error.publicity_period_outside_ticket_period"]: never,
   ["@@error.already_following"]: never,
+  ["@@error.invalid_rating"]: never,
+  ["@@error.no_rating_exists"]: never,
   ["@@onboarding.steps_invalid"]: never,
   ["@@onboarding.step_is_invalid"]: never,
   ["@@host.example_patron_tier_name"]: never,

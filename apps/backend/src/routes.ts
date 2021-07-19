@@ -23,6 +23,7 @@ import {
   IHostStripeInfo,
   IPaymentIntentClientSecret as IPaymentICS,
   IHostInvoice,
+  ILike, 
   IUserInvoice,
   IPatronTier as IPTier,
   IDeleteHostAssertion as IDelHostAssert,
@@ -179,6 +180,9 @@ router.get      <ITicket>               ("/performances/:pid/tickets/:tid",     
 router.put      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.updateTicket());
 router.delete   <void>                  ("/performances/:pid/tickets/:tid",           Perfs.deleteTicket());
 router.post     <IPaymentICS>           ("/tickets/:tid/payment-intent",              Perfs.createPaymentIntent());
+router.post     <void>                  ("/performances/:pid/rate",                   Perfs.setRating());
+router.delete   <void>                  ("/performances/:pid/rate",                   Perfs.deleteRating());
+router.post     <void>                  ("/performances/:pid/toggle-like",            Perfs.toggleLike());
 
 // ADMIN  -------------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, middlewares);

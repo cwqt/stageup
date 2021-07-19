@@ -5,6 +5,7 @@ export { ContactInfo } from './users/contact-info.entity';
 export { PatronSubscription } from './users/patron-subscription.entity';
 export { PaymentMethod } from './users/payment-method.entity';
 export { PasswordReset } from './users/password.entity';
+export { Like } from './users/like.entity';
 export { Follow } from './users/follows.entity';
 
 export { Host } from './hosts/host.entity';
@@ -20,6 +21,8 @@ export { Performance } from './performances/performance.entity';
 export { SigningKey } from './performances/signing-key.entity';
 export { Claim, ClaimAssetPivot } from './common/claim.entity';
 export { Ticket } from './performances/ticket.entity';
+export { Rating } from './performances/rating.entity';
+
 
 export { Asset } from './common/asset.entity';
 export { AssetGroup } from './common/asset-group.entity';

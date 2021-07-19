@@ -10,10 +10,6 @@
     </div>
 
     <div class="performance" *ngIf="perf && !performance.loading">
-      <div class="performance-player" *ngIf="performance.data.__client_data">
-        <app-performance-watch [performance]="performance.data"></app-performance-watch>
-      </div>
-
       <div class="performance" *ngIf="performance.data?.data">
         <div class="performance-player" *ngIf="primarySignedToken.data.signed_token">
           <app-performance-watch

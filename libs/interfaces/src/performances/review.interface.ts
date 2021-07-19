@@ -1,9 +1,10 @@
-import { IUserStub } from '../users/user.interface';
+import { NUUID } from '@core/interfaces';
 
 export interface IRating {
   _id: string;
   created_at: number;
-  rating: 1 | 2 | 3 | 4 | 5; // 1-5 star rating system
+  rating: number;
   comment?: string; // user review
-  user: IUserStub; // who made the review
+  user__id: NUUID; // who made the review
+  performance__id: NUUID; // the performance being rated
 }

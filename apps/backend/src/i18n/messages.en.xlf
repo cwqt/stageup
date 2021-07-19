@@ -161,6 +161,14 @@
         <source>You are already following this host</source>
         <target state="final">You are already following this host</target>
       </trans-unit>
+      <trans-unit id="error.invalid_rating" datatype="html">
+        <source>The provided rate value is invalid</source>
+        <target state="final">The provided rate value is invalid</target>
+      </trans-unit>
+      <trans-unit id="error.no_rating_exists" datatype="html">
+        <source>Could not find existing rating</source>
+        <target state="final">Could not find existing rating</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="final">Received response does not match submitter!</target>
