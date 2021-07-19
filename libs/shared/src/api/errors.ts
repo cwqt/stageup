@@ -28,7 +28,7 @@ export const handleError = (
 ) => {
   const statusCode: HTTP = error instanceof ErrorHandler ? error.statusCode : HTTP.ServerError;
 
-  console.log(error);
+  if (statusCode !== HTTP.NotFound) console.log(error);
 
   const response: IErrorResponse =
     error instanceof ErrorHandler && i18n
@@ -49,8 +49,7 @@ export const handleError = (
         };
 
   log.error(`(${statusCode}) ${colors.bold(error.message)}`);
-  if (response.errors) log.error(JSON.stringify(response.errors, null, 2));
-  if (statusCode !== HTTP.NotFound) console.log(error.stack);
+  if (response.errors?.length > 0) log.error(JSON.stringify(response.errors, null, 2));
 
   res.status(statusCode).json(response);
 };

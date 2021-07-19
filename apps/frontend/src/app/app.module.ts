@@ -144,6 +144,7 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
 import { RedirectComponent } from './components/redirect/redirect.component';
 import { FollowButtonComponent } from './components/follow-button/follow-button.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
+import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -254,7 +255,8 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
     SocialSharingComponent,
     RedirectComponent,
     FollowButtonComponent,
-    HostAnalyticsComponent
+    HostAnalyticsComponent,
+    HostAnalyticsHeaderItemComponent
   ],
   imports: [
     AngularMaterialModule,

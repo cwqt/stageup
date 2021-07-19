@@ -4,6 +4,7 @@ import {
   Follow,
   getCheck,
   Host,
+  HostAnalytics,
   HostInvitation,
   IControllerEndpoint,
   Invoice,
@@ -50,7 +51,9 @@ import {
   DtoPerformanceAnalytics,
   IPerformanceAnalyticsMetrics,
   AnalyticsTimePeriods,
-  AnalyticsTimePeriod
+  AnalyticsTimePeriod,
+  DtoHostAnalytics,
+  Analytics
 } from '@core/interfaces';
 import deepmerge from 'deepmerge';
 import { fields } from 'libs/shared/src/api/validate/fields.validators';
@@ -80,7 +83,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         // Create host & add current user (creator) to it through transaction
         // & begin the onboarding process by running .setup()
-        return this.ORM.transaction(async txc => {
+        const host = await this.ORM.transaction(async txc => {
           const host = await txc.save(
             new Host({
               username: req.body.username,
@@ -93,8 +96,11 @@ export default class HostController extends BaseController<BackendProviderMap> {
           await host.setup(user, txc);
           await host.addMember(user, HostPermission.Owner, txc);
 
-          return (await txc.save(host)).toFull();
+          return await txc.save(host);
         });
+
+        await this.providers.bus.publish('host.created', { host_id: host._id }, req.locale);
+        return host.toFull();
       }
     };
   }
@@ -1005,6 +1011,31 @@ export default class HostController extends BaseController<BackendProviderMap> {
     };
   }
 
+  readHostAnalytics(): IControllerEndpoint<DtoHostAnalytics> {
+    return {
+      validators: {
+        query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
+      },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+
+        // Get all the recorded analytics chunks for this host
+        const chunks = await this.ORM.createQueryBuilder(HostAnalytics, 'host_analytics')
+          .where('host_analytics.host__id = :id', { id: req.params.hid })
+          .orderBy('host_analytics.period_ended_at', 'DESC')
+          .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
+          .getMany();
+
+        // Only a single host, this one!
+        return {
+          ...host.toStub(),
+          chunks: chunks.map(chunk => chunk.toDto())
+        };
+      }
+    };
+  }
+
   readPerformancesAnalytics(): IControllerEndpoint<IEnvelopedData<DtoPerformanceAnalytics[]>> {
     return {
       validators: {
@@ -1015,14 +1046,6 @@ export default class HostController extends BaseController<BackendProviderMap> {
       },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        // Number of weekly aggregations to offset from present date
-        const periodWeekOffsetMap: { [index in AnalyticsTimePeriod]: number } = {
-          WEEKLY: 1,
-          MONTHLY: 4, // 4 aggregation periods in a month
-          QUARTERLY: 14, // 14 in a quarter... etc.
-          YEARLY: 52
-        };
-
         // Get paginated list of performances, will then append analytics onto the stubs for DtoPerformanceAnalytics type
         const performances = await this.ORM.createQueryBuilder(Performance, 'performance')
           .innerJoinAndSelect('performance.host', 'host')
@@ -1033,23 +1056,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
         const dtos: DtoPerformanceAnalytics[] = [];
         for await (let performance of performances.data) {
           // Get weekly aggregations sorted by period_end (when collected)
-          const periods = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
+          const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
             .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
-            .orderBy('analytics.period_end', 'DESC')
+            .orderBy('analytics.period_ended_at', 'DESC')
             // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
-            .limit(periodWeekOffsetMap[req.query.period as AnalyticsTimePeriod] * 2)
+            .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
             .getMany();
-
-          // Cut the array of weekly periods in half - latest & previous period
-          const half = Math.ceil(periods.length / 2);
-          const [latest, previous] = [periods.slice(0, half), periods.slice(half, periods.length)];
 
           dtos.push({
             ...performance,
-            analytics: {
-              latest_period: latest.map(a => a.toDto()),
-              previous_period: previous.map(a => a.toDto())
-            }
+            chunks: chunks.map(chunk => chunk.toDto())
           });
         }
 

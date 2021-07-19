@@ -28,7 +28,8 @@ import {
   IHostPatronTier,
   DtoUpdatePatronTier,
   DtoPerformanceAnalytics,
-  AnalyticsTimePeriod
+  AnalyticsTimePeriod,
+  DtoHostAnalytics
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -302,5 +303,10 @@ export class HostService {
         `/api/hosts/${hostId}/analytics/performances${querize({ ...query, period })}`
       )
       .toPromise();
+  }
+
+  // router.get <DtoHostAnalytics>  ("/hosts/:hid/analytics", Hosts.readHostAnalytics());
+  readHostAnalytics(hostId: string, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> {
+    return this.http.get<DtoHostAnalytics>(`/api/hosts/${hostId}/analytics?period=${period}`).toPromise();
   }
 }

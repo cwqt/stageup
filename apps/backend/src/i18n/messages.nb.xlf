@@ -10,8 +10,12 @@
         <target state="needs-translation">Bruker finnes ikke</target>
       </trans-unit>
       <trans-unit id="error.not_a_video" datatype="html">
-        <source>This is not a video!</source>
+        <source>This is not a video</source>
         <target state="needs-translation">Dette er ikke en video!</target>
+      </trans-unit>
+      <trans-unit id="error.email_already_in_use" datatype="html">
+        <source>E-mail address is already in use</source>
+        <target state="needs-translation">E-postadressen er allerede i bruk</target>
       </trans-unit>
       <trans-unit id="host.example_patron_tier_name" datatype="html">
         <source>Example Tier</source>

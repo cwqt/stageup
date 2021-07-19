@@ -7,7 +7,7 @@
     "nx": "node --max_old_space_size=8096 ./node_modules/@nrwl/cli/bin/nx",
     "start": "ts-node --project tools/tsconfig.tools.json tools/misc-scripts/run-command",
     "generate:uml": "ts-node --project tools/tsconfig.tools.json tools/misc-scripts/generate-uml",
-    "generate:xlf": "ts-node --project tools/tsconfig.tools.json tools/generate-xlf",
+    "generate:xlf": "ts-node --project tools/tsconfig.tools.json tools/generate-xlf/src",
     "lint": "nx workspace-lint && nx lint",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",

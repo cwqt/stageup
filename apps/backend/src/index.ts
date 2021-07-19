@@ -1,19 +1,19 @@
-import 'reflect-metadata';
-import { patchTypeORM, PerformanceAnalytics, PG_MODELS, ProviderMap, Providers, Register } from '@core/api';
-import { Environment, ILocale } from '@core/interfaces';
+import { HostAnalytics, patchTypeORM, PerformanceAnalytics, Register } from '@core/api';
+import { timeout, timestamp } from '@core/helpers';
+import { Environment } from '@core/interfaces';
+import session from 'express-session';
 import { i18nProvider } from 'libs/shared/src/api/i18n';
+import path from 'path';
+import 'reflect-metadata';
 import { Container } from 'typedi';
+import Auth from './common/authorisation';
+import { SUPPORTED_LOCALES } from './common/locales';
 import { log as logger, stream } from './common/logger';
+import providers, { BackendProviderMap, PROVIDERS as token } from './common/providers';
+import Env from './env';
 import { QueueModule } from './modules/queue/queue.module';
 import { SSEModule } from './modules/sse/sse.module';
-import session from 'express-session';
-import path from 'path';
-import Auth from './common/authorisation';
-import Env from './env';
 import routes from './routes';
-import providers, { BackendProviderMap } from './common/providers';
-import { SUPPORTED_LOCALES } from './common/locales';
-import { random, timeout } from '@core/helpers';
 
 export type BackendModules = {
   SSE: SSEModule;
@@ -25,7 +25,7 @@ Register<BackendProviderMap>({
   port: Env.BACKEND.PORT,
   logging: { logger, stream },
   endpoint: Env.BACKEND.ENDPOINT,
-  providers: providers,
+  providers: { providers, token },
   environment: Env.ENVIRONMENT,
   authorisation: Auth.isSiteAdmin,
   i18n: {
@@ -81,33 +81,13 @@ Register<BackendProviderMap>({
     orm: providers.torm
   });
 
-  // await PerformanceAnalytics.clear();
-  // await Queue.queues.collect_analytics.queue.obliterate();
-  // Queue.queues.collect_analytics.add(
-  //   { performance_id: 'qRjKzCjGbPd' },
-  //   {
-  //     repeat: { every: 86400000, immediately: true } // 7 days in milliseconds
-  //   }
-  // );
-
-  // await timeout(1000);
-  // const anal = await (await PerformanceAnalytics.find({ relations: { performance: true } })).pop();
-  // console.log(anal);
-
-  // for (let i = 1; i < 28; i++) {
-  //   const offset = i * 604800; //  1 week in seconds
-  //   const newAnal = new PerformanceAnalytics(anal.performance, {
-  //     period_start: anal.period_start - offset,
-  //     period_end: anal.period_end - offset
-  //   });
-  //   newAnal.metrics = { ...anal.metrics };
-  //   newAnal.metrics.total_ticket_sales = 28 + (i / 2) * Math.cos(((2 * Math.PI) / 2) * i);
-  //   newAnal.metrics.total_revenue = anal.metrics.total_revenue + 10000 / i;
-
-  //   newAnal.collection_started_at = anal.collection_started_at;
-  //   newAnal.collection_ended_at = anal.collection_ended_at;
-  //   await newAnal.save();
-  // }
+  await Queue.queues.collect_host_analytics.queue.obliterate();
+  Queue.queues.collect_host_analytics.add(
+    { host_id: '8hQiDn7GYqE' },
+    {
+      repeat: { every: 86400000000, immediately: true } // 7 days in milliseconds
+    }
+  );
 
   return routes({
     Queue: Queue.routes,

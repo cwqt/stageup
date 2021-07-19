@@ -342,12 +342,12 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   readUserFollows(): IControllerEndpoint<IEnvelopedData<IFollowing[]>> {
     return {
-      validators: { params: object({ uid: string() })},
+      validators: { params: object({ uid: string() }) },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        return await this.ORM.createQueryBuilder(Follow, "follow")
-          .where("follow.user__id = :uid", { uid: req.params.uid })
-          .paginate(follow => follow.toFollowing())
+        return await this.ORM.createQueryBuilder(Follow, 'follow')
+          .where('follow.user__id = :uid', { uid: req.params.uid })
+          .paginate(follow => follow.toFollowing());
       }
     };
   }

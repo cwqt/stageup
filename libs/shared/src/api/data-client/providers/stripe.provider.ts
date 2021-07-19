@@ -9,6 +9,8 @@ export interface IStripeProviderConfig {
   client_id: string;
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class StripeProvider implements Provider<Stripe> {
   name = 'Stripe';
   connection: Stripe;

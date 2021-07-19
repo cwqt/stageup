@@ -40,5 +40,6 @@ export * from './i18n/i18n.interface';
 export * from './search/search.interface';
 export * from './users/password.interface';
 
-export * from './analytics/aggregation';
-export * from './analytics/performance.analytics';
+export * from './analytics/chunk-analytics.interface';
+export * from './analytics/performance-analytics.interface';
+export * from './analytics/host-analytics.interface';

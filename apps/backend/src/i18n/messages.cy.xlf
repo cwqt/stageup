@@ -10,8 +10,12 @@
         <target state="needs-translation">Nid yw'r defnyddiwr yn bodoli</target>
       </trans-unit>
       <trans-unit id="error.not_a_video" datatype="html">
-        <source>This is not a video!</source>
+        <source>This is not a video</source>
         <target state="needs-translation">Nid fideo mo hwn!</target>
+      </trans-unit>
+      <trans-unit id="error.email_already_in_use" datatype="html">
+        <source>E-mail address is already in use</source>
+        <target state="needs-translation">Mae cyfeiriad e-bost eisoes yn cael ei ddefnyddio</target>
       </trans-unit>
       <trans-unit id="host.example_patron_tier_name" datatype="html">
         <source>Example Tier</source>

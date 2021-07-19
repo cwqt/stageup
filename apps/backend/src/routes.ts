@@ -1,4 +1,4 @@
-import { AsyncRouter, Middlewares } from '@core/api';
+import { AsyncRouter, Middlewares, Providers } from '@core/api';
 
 import {
   IHost,
@@ -47,7 +47,8 @@ import {
   IFollower,
   IFollowing,
   IUserFollow,
-  DtoPerformanceAnalytics as DtoPerfAnalytics
+  DtoPerformanceAnalytics as DtoPerfAnalytics,
+  DtoHostAnalytics
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -65,6 +66,7 @@ import PatronageController from './controllers/patronage.controller';
 import { BackendModules } from '.';
 import { Module } from './modules';
 import { BackendProviderMap } from './common/providers';
+
 
 type ModuleRoutes<T extends {[i:string]: Partial<Pick<Module, "routes">>}> = {[index in keyof T]:T[index]["routes"]};
 
@@ -143,6 +145,7 @@ router.post     <void>                  ("/hosts/:hid/invoices/export-csv",     
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
 router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",         Hosts.readPatronageSubscribers());
 router.get      <IE<IFollower[]>>       ("/hosts/:hid/followers",                     Hosts.readHostFollowers());
+router.get      <DtoHostAnalytics>      ("/hosts/:hid/analytics",                     Hosts.readHostAnalytics());
 router.get      <IE<DtoPerfAnalytics[]>>("/hosts/:hid/analytics/performances",        Hosts.readPerformancesAnalytics());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------

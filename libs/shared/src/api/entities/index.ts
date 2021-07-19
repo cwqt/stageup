@@ -28,4 +28,6 @@ export { VideoAsset } from './common/assets/video.asset';
 export { ImageAsset } from './common/assets/image.asset';
 export { Refund } from './common/refund.entity';
 
-export { AnalyticsAggregation, PerformanceAnalytics } from './analytics/aggregation.entity';
+export { AnalyticsChunk } from './analytics/chunk-analytics.entity';
+export { HostAnalytics } from './analytics/host-analytics.entity';
+export { PerformanceAnalytics } from './analytics/performance-analytics.entity';

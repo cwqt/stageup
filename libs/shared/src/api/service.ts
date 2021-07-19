@@ -8,7 +8,7 @@ import helmet from 'helmet';
 import http from 'http';
 import morgan from 'morgan';
 import qs from 'qs';
-import { Container } from 'typedi';
+import { Container, Token } from 'typedi';
 import { Logger } from 'winston';
 import { AuthStrategy } from './authorisation';
 import { ProviderMap } from './data-client';
@@ -19,7 +19,7 @@ export interface IServiceConfig<T extends ProviderMap> {
   name: string;
   environment: Environment;
   port: number;
-  providers: T;
+  providers: { providers: T; token: Token<T> };
   logging: { logger: Logger; stream: morgan.StreamOptions };
   authorisation: AuthStrategy;
   endpoint: string;
@@ -32,7 +32,7 @@ export interface IServiceConfig<T extends ProviderMap> {
 }
 
 export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
-  config.logging.logger.log('info', `Registering in \u001B[1m${config.environment}\u001B[0m`);
+  config.logging.logger.log('info', `Application running in \u001B[1m${config.environment}\u001B[0m`);
 
   let server: http.Server;
   const app = express();
@@ -54,11 +54,12 @@ export default <T extends ProviderMap>(config: IServiceConfig<T>) => {
     setup: (a: typeof app, providers: T, router: AsyncRouter<T>, config: IServiceConfig<T>) => Promise<Routes<T> | void>
   ): Promise<http.Server> => {
     try {
-      const providers = await DataClient.connect(config.providers, config.logging.logger);
+      const providers = await DataClient.connect(config.providers.providers, config.logging.logger);
       const i18n = config.i18n && (await new i18nProvider(config.i18n).setup(config.logging.logger));
 
       // Dependency Injection
       Container.set('i18n', i18n);
+      Container.set(config.providers.token, providers);
 
       const router = new AsyncRouter(providers, config.authorisation, config.logging.logger, i18n);
       const routes = await setup(app, providers, router, config);
