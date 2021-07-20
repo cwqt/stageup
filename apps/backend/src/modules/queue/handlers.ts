@@ -453,6 +453,7 @@ export class EventHandlers {
     //Check all invoices are the same currency, error if not
 
     if (!invoices.every(i => i.currency === invoices[0].currency))
+      //TODO remove this error when multi currency implemented
       throw new ErrorHandler(HTTP.Forbidden, 'All refunds must be in the same currency');
 
     const invoicesTotal = i18n.money(
@@ -471,7 +472,7 @@ export class EventHandlers {
         invoices_total: invoicesTotal
       }),
       from: Env.EMAIL_ADDRESS,
-      to: invoices[0].host.email_address,
+      to: invoices[0].host.email_address, //TODO need to change this when we go multi currency
       markdown: true,
       attachments: []
     });
