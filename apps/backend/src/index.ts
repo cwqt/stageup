@@ -81,14 +81,6 @@ Register<BackendProviderMap>({
     orm: providers.torm
   });
 
-  await Queue.queues.collect_host_analytics.queue.obliterate();
-  Queue.queues.collect_host_analytics.add(
-    { host_id: '8hQiDn7GYqE' },
-    {
-      repeat: { every: 86400000000, immediately: true } // 7 days in milliseconds
-    }
-  );
-
   return routes({
     Queue: Queue.routes,
     SSE: SSE.routes

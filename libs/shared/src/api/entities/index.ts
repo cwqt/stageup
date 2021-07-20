@@ -23,7 +23,6 @@ export { Claim, ClaimAssetPivot } from './common/claim.entity';
 export { Ticket } from './performances/ticket.entity';
 export { Rating } from './performances/rating.entity';
 
-
 export { Asset } from './common/asset.entity';
 export { AssetGroup } from './common/asset-group.entity';
 export { LiveStreamAsset } from './common/assets/livestream.asset';
@@ -35,5 +34,6 @@ export { AnalyticsChunk } from './analytics/chunk-analytics.entity';
 export { HostAnalytics } from './analytics/host-analytics.entity';
 export { PerformanceAnalytics } from './analytics/performance-analytics.entity';
 
-export { Consent } from './common/consent.entity';
-export { PersonConsent } from './common/person-consent.entity';
+export { Consentable } from './common/gdpr/consentable.entity';
+export { UserConsent } from './common/gdpr/user-consent.entity';
+export * from './common/gdpr/user-consents.entity';

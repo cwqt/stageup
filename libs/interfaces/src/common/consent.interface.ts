@@ -1,32 +1,12 @@
-import {
-    NUUID
-} from '@core/interfaces';
+import { NUUID } from '@core/interfaces';
+import { IHostStub } from '../hosts/host.interface';
+import { IUser, IUserStub } from '../users/user.interface';
 
 // There will need to be tables for legal documents that users have agreed to on StageUp.
-
-// Privacy Policy Table
-//  privacy_policy_id
-//  document
-//  date_added
-//  date_superseded
-
-// General Terms & Conditions Table
-//  general_terms_and_conditions_id
-//  document
-//  date_added
-//  date_superseded
-
-// Uploaders Terms & Conditions Table
-//  uploaders_terms_and_conditions_id
-//  document
-//  date_added
-//  date_superseded
-
-// Cookies Table
-//  cookies_id
-//  cookies_document
-//  date_added
-//  date_superseded
+//    Privacy Policy Table
+//    General Terms & Conditions Table
+//    Uploaders Terms & Conditions Table
+//    Cookies Table
 
 // Starting to prefer this method of creating enums of 'enum' keyword due to how easily it lends itself
 // to iterating over - no need for enumToValues(enum)
@@ -42,28 +22,39 @@ export interface IConsentable<T extends ConsentableType> {
   version: number; // incremented on succession
 }
 
-
 // INTERFACES RELATING TO USERS GIVING/DENYING CONSENT
-export const PersonConsentTypes = ['host_marketing', 'su_marketing', 'cookies', 'upload_consent'] as const;
-export type PersonConsentType = typeof PersonConsentTypes[number];
+export const UserConsentTypes = ['host_marketing', 'stageup_marketing', 'cookies', 'upload_consent'] as const;
+export type UserConsentType = typeof UserConsentTypes[number];
 
 // Universal personl/consent interface
-export interface IPersonConsent<T extends PersonConsentType> {
-    _id: NUUID;
-    type: T;
-    consent_given: boolean;
-    user__id?: NUUID;
-    host__id?: NUUID;
-    performance__id?: NUUID;
-    ip_address?: string;
-    terms_and_conditions__id?: NUUID;
-    privacy_policy__id?: NUUID;
-    cookies__id?: NUUID;
-    uploaders_terms_and_conditions__id?: NUUID;
+export interface IUserConsent<T extends UserConsentType> {
+  _id: NUUID;
+  type: T;
+  user: IUserStub;
 }
 
-// Specific types for the 4 different types of consent
-export type HostMarketingConsent = Pick<IPersonConsent<'host_marketing'>, "_id" | "consent_given" | "host__id" | "user__id" | "terms_and_conditions__id" | "privacy_policy__id">;
-export type SuMarketingConsent = Pick<IPersonConsent<'su_marketing'>,  "_id" | "consent_given" | "user__id" | "terms_and_conditions__id" | "privacy_policy__id">;
-export type UserCookieConsent = Pick<IPersonConsent<'cookies'>, "_id" | "consent_given" | "ip_address" | "cookies__id">;
-export type PerformanceUploadConsent = Pick<IPersonConsent<'upload_consent'>, "_id" | "consent_given" | "performance__id" | "uploaders_terms_and_conditions__id">;
+// mapped types ftw
+export type UserConsentData = {
+  host_marketing: {
+    host: IHostStub;
+    soft_opt_in: boolean;
+    terms_and_conditions: IConsentable<'general_toc'>;
+    privacy_policy: IConsentable<'privacy_policy'>;
+  };
+  stageup_marketing: {};
+  cookies: {
+    ip_address: string;
+  };
+  upload_consent: {
+    terms_and_conditions: IConsentable<'uploaders_toc'>;
+  };
+};
+
+// utility type for below
+type ConsentMixin<T extends UserConsentType> = IUserConsent<T> & UserConsentData[T];
+
+// Different types for each
+export type IUserHostMarketingConsent = ConsentMixin<'host_marketing'>;
+export type IUserStageUpMarketingConsent = ConsentMixin<'stageup_marketing'>;
+export type IUserCookiesConsent = ConsentMixin<'cookies'>;
+export type IUserPerformanceUploadConsent = ConsentMixin<'upload_consent'>;
