@@ -424,9 +424,6 @@ export class EventHandlers {
       .leftJoinAndSelect('i.host', 'host')
       .getOne();
 
-    // const invoice = await Invoice.findOne({ _id: ct.invoice_id }, { relations: { host: true } });
-
-    console.log('inoice: ', invoice);
     this.providers.stripe.connection.refunds.create(
       {
         payment_intent: invoice.stripe_payment_intent_id
