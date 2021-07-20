@@ -6,6 +6,7 @@ import {
   IBulkRefund,
   IHostInvoice,
   IHostInvoiceStub,
+  IPasswordConfirmationResponse,
   IRefund,
   RefundRequestReason
 } from '@core/interfaces';
@@ -18,6 +19,7 @@ import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { RefundReasonPipe } from '@frontend/_pipes/refund-reason.pipe';
 import { merge, Observable } from 'rxjs';
+import { ConfirmPasswordDialogComponent } from '../confirm-password-dialog/confirm-password-dialog.component';
 import { IConfirmationDialogData } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
@@ -109,21 +111,27 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
           kind: ThemeKind.Primary,
           callback: () => {
             if (this.multipleRefunds) this.bulkRefundForm.submit();
-            console.log('host id:', this.hostService.hostId);
-            console.log('bulk refund data:', this.bulkRefundData);
-            cachize(
-              this.hostService.processRefunds(
-                this.data.map(invoice => invoice.invoice_id),
-                this.hostService.hostId,
-                this.bulkRefundData
-              ),
-              this.refundRequest
-            )
-              .then(() => {
-                this.toastService.emit($localize`Refund(s) successfully processed`);
-                this.dialog.closeAll();
-              })
-              .catch(() => this.toastService.emit($localize`Error processing refund(s)`));
+
+            this.helperService.showDialog(
+              this.dialog.open(ConfirmPasswordDialogComponent),
+              (res: IPasswordConfirmationResponse) => {
+                if (res.is_valid) {
+                  cachize(
+                    this.hostService.processRefunds(
+                      this.data.map(invoice => invoice.invoice_id),
+                      this.hostService.hostId,
+                      this.bulkRefundData
+                    ),
+                    this.refundRequest
+                  )
+                    .then(() => {
+                      this.toastService.emit($localize`Refund(s) successfully processed`);
+                      this.dialog.closeAll();
+                    })
+                    .catch(() => this.toastService.emit($localize`Error processing refund(s)`));
+                }
+              }
+            );
           }
         })
       ]
