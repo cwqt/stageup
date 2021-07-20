@@ -413,12 +413,16 @@ export const EventHandlers = (queues: QueueModule['queues'], providers: QueuePro
   },
 
   requestStripeRefund: async (ct: Contract<'refund.initiated'>) => {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      }
-    });
+    console.log('in requeststriperefund');
+    const invoice = await providers.orm.connection
+      .createQueryBuilder(Invoice, 'i')
+      .where('i._id = :_id', { _id: ct.invoice_id })
+      .leftJoinAndSelect('i.host', 'host')
+      .getOne();
 
+    // const invoice = await Invoice.findOne({ _id: ct.invoice_id }, { relations: { host: true } });
+
+    console.log('inoice: ', invoice);
     providers.stripe.connection.refunds.create(
       {
         payment_intent: invoice.stripe_payment_intent_id
