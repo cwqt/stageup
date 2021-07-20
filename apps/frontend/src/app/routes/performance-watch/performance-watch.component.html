@@ -1,5 +1,5 @@
 <div *ngIf="performance" class="relative mt-8">
-  <ng-container *ngIf="primaryAsset.type == 'live-stream'">
+  <ng-container *ngIf="primaryAsset?.type == 'live-stream'">
     <ui-chip class="absolute top-0 right-0 m-4 z-10" [kind]="stateChipColors[currentStreamState]"
       >{{ currentStreamState | uppercase }}
     </ui-chip>
@@ -30,8 +30,12 @@
       </div>
     </div>
   </ng-container>
-
-  <app-social-sharing class="absolute top-4 right-4 z-10" [url]="performanceSharingUrl"></app-social-sharing>
+  <div class="absolute top-4 right-4 z-10">
+    <div class="mb-3">
+      <app-rate-performance [rating]="rating" [starCount]="3" (ratingUpdated)="onRatingChanged($event)"></app-rate-performance>
+    </div>
+    <app-social-sharing class="inline-flex justify-end min-w-full" [url]="performanceSharingUrl"></app-social-sharing>
+  </div>
 
   <app-player (onPlayerError)="handlePlayerError($event)" (onPlayerReady)="handlePlayerReady($event)"></app-player>
 </div>

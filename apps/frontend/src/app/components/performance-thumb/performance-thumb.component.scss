@@ -5,3 +5,11 @@
   position: absolute;
   padding: 2px 8px;
 }
+
+.like-background {
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: ease all 0.2s;
+  &:hover {
+    background-color: rgba(0, 0, 0, 1);
+  }
+}

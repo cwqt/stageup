@@ -5,7 +5,8 @@ export { ContactInfo } from './users/contact-info.entity';
 export { PatronSubscription } from './users/patron-subscription.entity';
 export { PaymentMethod } from './users/payment-method.entity';
 export { PasswordReset } from './users/password.entity';
-export { Follow } from './users/follows.entity'
+export { Like } from './users/like.entity';
+export { Follow } from './users/follows.entity';
 
 export { Host } from './hosts/host.entity';
 export { HostInvitation } from './hosts/host-invitation.entity';
@@ -20,6 +21,8 @@ export { Performance } from './performances/performance.entity';
 export { SigningKey } from './performances/signing-key.entity';
 export { Claim, ClaimAssetPivot } from './common/claim.entity';
 export { Ticket } from './performances/ticket.entity';
+export { Rating } from './performances/rating.entity';
+
 
 export { Asset } from './common/asset.entity';
 export { AssetGroup } from './common/asset-group.entity';
@@ -27,3 +30,7 @@ export { LiveStreamAsset } from './common/assets/livestream.asset';
 export { VideoAsset } from './common/assets/video.asset';
 export { ImageAsset } from './common/assets/image.asset';
 export { Refund } from './common/refund.entity';
+
+export { AnalyticsChunk } from './analytics/chunk-analytics.entity';
+export { HostAnalytics } from './analytics/host-analytics.entity';
+export { PerformanceAnalytics } from './analytics/performance-analytics.entity';

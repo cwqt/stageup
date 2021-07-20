@@ -9,7 +9,8 @@ export enum RouteParam {
   UserId = 'userId',
   HostId = 'hostId',
   PerformanceId = 'performanceId',
-  Genre = 'genreType'
+  Genre = 'genreType',
+  ExternalUrl = 'externalUrl'
 }
 
 export enum RouteChange {

@@ -1,0 +1,16 @@
+@import 'apps/frontend/src/styles/variables';
+
+.top-left {
+  position: absolute;
+  -webkit-transform: translate(-60%, -65%);
+  transform: translate(-60%, -65%);
+  z-index: -1;
+}
+
+.grey {
+  color: $clr-base-dk;
+}
+
+.pink {
+  color: $clr-primary;
+}

@@ -11,7 +11,7 @@ export enum BusinessType {
   Individual = 'individual',
   Company = 'company',
   NonProfit = 'non_profit',
-  GovernmentEntity = 'gov_entity'
+  GovernmentEntity = 'government_entity'
 }
 
 export interface IHostStub {

@@ -1,16 +1,28 @@
 import { IPerformance } from '../performances/performance.interface';
 import { Job, JobsOptions } from 'bullmq';
 import { IInvoice } from '../common/invoice.interface';
-import { IHostPrivate } from '../hosts/host.interface';
-import { SendMailOptions } from 'nodemailer';
+import { IHost, IHostPrivate } from '../hosts/host.interface';
 import { Attachment } from 'nodemailer/lib/mailer';
 import { ILocale } from '../i18n/i18n.interface';
 
-export const JobTypes = ['send_email', 'schedule_performance_release', 'host_invoice_csv', 'host_invoice_pdf'] as const;
+export const JobTypes = [
+  'send_email',
+  'schedule_performance_release',
+  'host_invoice_csv',
+  'host_invoice_pdf',
+  'collect_performance_analytics',
+  'collect_host_analytics'
+] as const;
 
 export type JobType = typeof JobTypes[number];
 
 export type JobData = {
+  ['collect_performance_analytics']: {
+    performance_id: IPerformance['_id'];
+  };
+  ['collect_host_analytics']: {
+    host_id: IHost['_id'];
+  };
   ['send_email']: {
     from: string;
     to: string;

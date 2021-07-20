@@ -5,6 +5,7 @@ module.exports = {
     '<rootDir>/libs/models',
     '<rootDir>/libs/helpers',
     '<rootDir>/apps/runner',
-    '<rootDir>/apps/webhooks'
+    '<rootDir>/apps/webhooks',
+    '<rootDir>/tools/scripts/generate-xlf/tests'
   ]
 };

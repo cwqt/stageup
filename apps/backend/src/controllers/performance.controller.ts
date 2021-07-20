@@ -9,9 +9,11 @@ import {
   Host,
   IControllerEndpoint,
   ImageAsset,
+  Like,
   LiveStreamAsset,
   PaymentMethod,
   Performance,
+  Rating,
   SigningKey,
   Ticket,
   transact,
@@ -44,6 +46,7 @@ import {
   IStripeChargePassthrough,
   ITicket,
   ITicketStub,
+  LikeLocation,
   NUUID,
   PerformanceStatus,
   pick,
@@ -156,16 +159,32 @@ export default class PerformanceController extends BaseController<BackendProvide
           t => t.is_visible && t.start_datetime < currentTime && currentTime < t.end_datetime
         );
 
+        const isLiking =
+          req.session.user &&
+          (await this.ORM.createQueryBuilder(Like, 'like')
+            .where('like.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('like.performance__id = :pid', { pid: performance._id })
+            .getOne());
         const isFollowing =
           req.session.user &&
           (await this.ORM.createQueryBuilder(Follow, 'follow')
             .where('follow.user__id = :uid', { uid: req.session.user._id })
             .andWhere('follow.host__id = :hid', { hid: performance.host._id })
             .getOne());
+        const existingRating =
+          req.session.user &&
+          (await this.ORM.createQueryBuilder(Rating, 'rating')
+            .where('rating.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('rating.performance__id = :pid', { pid: performance._id })
+            .getOne());
 
         const response: DtoPerformance = {
           data: performance.toFull(),
-          __client_data: { is_following: isFollowing ? true : false }
+          __client_data: {
+            is_liking: isLiking ? true : false,
+            is_following: isFollowing ? true : false,
+            rating: existingRating ? existingRating.rating : null
+          }
         };
 
         return response;
@@ -808,6 +827,118 @@ export default class PerformanceController extends BaseController<BackendProvide
         );
 
         return performance.toFull();
+      }
+    };
+  }
+
+  setRating(): IControllerEndpoint<void> {
+    return {
+      validators: { body: object({ rate_value: fields.rating }), params: object({ pid: fields.nuuid }) },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        if (0 <= req.body.rating && req.body.rating <= 1)
+          throw new ErrorHandler(HTTP.BadRequest, '@@error.invalid_rating');
+        // Check current user exists with the session ID
+        const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
+        // Check performance exists with performance ID
+        const performance = await getCheck(Performance.findOne({ where: { _id: req.params.pid } }));
+        // Check if user has already rated this performance.
+        const existingRating = await this.ORM.createQueryBuilder(Rating, 'rating')
+          .where('rating.user__id = :uid', { uid: req.session.user._id })
+          .andWhere('rating.performance__id = :hid', { hid: req.params.pid })
+          .getOne();
+        // If they have rated, update the existing rating
+        if (existingRating) {
+          await this.ORM.transaction(async txc => {
+            // Update the performance rating_total. The rating_count does not change.
+            performance.rating_total = performance.rating_total - existingRating.rating + req.body.rate_value.toFixed(4);
+            await txc.save(performance);
+            // Update the rating
+            existingRating.rating = req.body.rate_value.toFixed(4);
+            await txc.save(existingRating);
+          });
+        } else {
+          // Create new rating and update total count/rating
+          await this.ORM.transaction(async txc => {
+            // Update the rating_total. Increment the rating count.
+            performance.rating_total = performance.rating_total + req.body.rate_value.toFixed(4);
+            performance.rating_count++;
+            await txc.save(performance);
+            // Create new rating
+            const newRating = new Rating(myself, performance, req.body.rate_value.toFixed(4));
+            await txc.save(newRating);
+          });
+        }
+      }
+    };
+  }
+
+  deleteRating(): IControllerEndpoint<void> {
+    return {
+      validators: { params: object({ pid: fields.nuuid }) },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const existingRating = await getCheck(
+          this.ORM.createQueryBuilder(Rating, 'rating')
+            .where('rating.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('rating.performance__id = :pid', { pid: req.params.pid })
+            .getOne()
+        );
+        if(!existingRating) throw new ErrorHandler(HTTP.BadRequest, "@@error.no_rating_exists");
+        // Check performance exists with performance ID
+        const performance = await getCheck(Performance.findOne({ where: { _id: req.params.pid } }));
+        // Create new rating and update total count/rating
+        await this.ORM.transaction(async txc => {
+          // Update the performance rating_total. Increment the rating count.
+          performance.rating_total = performance.rating_total - existingRating.rating;
+          performance.rating_count--;
+          await txc.save(performance);
+
+          await txc.remove(existingRating);
+        });
+      }
+    };
+  }
+
+  // Adds a like from database with the current users ID, the provided performance ID and the location of where the user liked the performance
+  toggleLike(): IControllerEndpoint<void> {
+    return {
+      // Check the location has been passed in the body and that it matches one of the locations from where a user can like.
+      validators: {
+        body: object({
+          location: enums(Object.values(LikeLocation))
+        })
+      },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        // Check current user exists with the session id
+        const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
+        // Check performance exists with the provided id
+        const performance = await getCheck(Performance.findOne({ _id: req.params.pid }));
+        // Check to make sure we don't add duplicate likes
+        const existingLike = await this.ORM.createQueryBuilder(Like, 'like')
+          .where('like.user__id = :uid', { uid: req.session.user._id })
+          .andWhere('like.performance__id = :pid', { pid: req.params.pid })
+          .getOne();
+        // If like exists, we delete. Else we add.
+        if (existingLike) {
+          // Delete the like and decrement the count in a single transaction
+          await this.ORM.transaction(async txc => {
+            await txc.remove(existingLike);
+            // Decrement the like count. Check to ensure it doesn't go negative.
+            performance.like_count = performance.like_count - 1 < 0 ? 0 : performance.like_count - 1;
+            await txc.save(performance);
+          });
+        } else {
+          // Insert the like and increment the count in a single transaction
+          await this.ORM.transaction(async txc => {
+            const like = new Like(myself, performance, req.body.location);
+            await txc.save(like);
+
+            performance.like_count++;
+            await txc.save(performance);
+          });
+        }
       }
     };
   }

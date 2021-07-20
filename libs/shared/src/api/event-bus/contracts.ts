@@ -48,6 +48,7 @@ export type EventContract = {
   // ['user.unsubscribed_from_patron_tier']: { sub_id: IPatronSubscription['_id'] }; // stripe un-sub complete
 
   // Hosts --------------------------------------------------------------------
+  ['host.created']: { host_id: IHost['_id'] };
   ['host.stripe_connected']: { host_id: IHost['_id'] };
   ['host.invoice_export']: {
     format: 'csv' | 'pdf';
@@ -97,3 +98,10 @@ export type ContractMeta = {
 export type Contract<T extends Event> = EventContract[T] & {
   __meta: ContractMeta;
 };
+
+/**
+ * @description Have multiple event handlers on a single event
+ * @example bus.subscribe("some.event", combine([handler1, handler2]));
+ */
+export const combine = <T extends Event>(fns: Array<(ct: Contract<T>) => Promise<void>>) => (ct: Contract<T>) =>
+  Promise.allSettled(fns.map(f => f(ct)));

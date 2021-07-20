@@ -1,4 +1,4 @@
-import { AsyncRouter, Middlewares } from '@core/api';
+import { AsyncRouter, Middlewares, Providers } from '@core/api';
 
 import {
   IHost,
@@ -23,6 +23,7 @@ import {
   IHostStripeInfo,
   IPaymentIntentClientSecret as IPaymentICS,
   IHostInvoice,
+  ILike, 
   IUserInvoice,
   IPatronTier as IPTier,
   IDeleteHostAssertion as IDelHostAssert,
@@ -41,13 +42,14 @@ import {
   DtoHostPatronageSubscription as HPatronSub,
   IRefund,
   IHostPrivate,
-  IAssetStub,
   AssetDto,
   IPerformance,
   ILocale,
   IFollower,
   IFollowing,
-  IUserFollow
+  IUserFollow,
+  DtoPerformanceAnalytics as DtoPerfAnalytics,
+  DtoHostAnalytics
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -65,6 +67,7 @@ import PatronageController from './controllers/patronage.controller';
 import { BackendModules } from '.';
 import { Module } from './modules';
 import { BackendProviderMap } from './common/providers';
+
 
 type ModuleRoutes<T extends {[i:string]: Partial<Pick<Module, "routes">>}> = {[index in keyof T]:T[index]["routes"]};
 
@@ -110,7 +113,7 @@ router.get      <IAddress[]>            ("/users/:uid/addresses",               
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
 router.put      <IAddress>              ("/users/:uid/addresses/:aid",                Users.updateAddress());
 router.delete   <void>                  ("/users/:uid/addresses/:aid",                Users.deleteAddress());
-router.get      <IE<IFollowing[]>>     ("/users/:uid/following",                     Users.readUserFollows());
+router.get      <IE<IFollowing[]>>      ("/users/:uid/following",                     Users.readUserFollows());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, middlewares);
@@ -143,6 +146,8 @@ router.post     <void>                  ("/hosts/:hid/invoices/export-csv",     
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
 router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",         Hosts.readPatronageSubscribers());
 router.get      <IE<IFollower[]>>       ("/hosts/:hid/followers",                     Hosts.readHostFollowers());
+router.get      <DtoHostAnalytics>      ("/hosts/:hid/analytics",                     Hosts.readHostAnalytics());
+router.get      <IE<DtoPerfAnalytics[]>>("/hosts/:hid/analytics/performances",        Hosts.readPerformancesAnalytics());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
 const Patronage = new PatronageController(providers, middlewares);
@@ -175,6 +180,9 @@ router.get      <ITicket>               ("/performances/:pid/tickets/:tid",     
 router.put      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.updateTicket());
 router.delete   <void>                  ("/performances/:pid/tickets/:tid",           Perfs.deleteTicket());
 router.post     <IPaymentICS>           ("/tickets/:tid/payment-intent",              Perfs.createPaymentIntent());
+router.post     <void>                  ("/performances/:pid/rate",                   Perfs.setRating());
+router.delete   <void>                  ("/performances/:pid/rate",                   Perfs.deleteRating());
+router.post     <void>                  ("/performances/:pid/toggle-like",            Perfs.toggleLike());
 
 // ADMIN  -------------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, middlewares);

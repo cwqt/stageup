@@ -66,58 +66,63 @@ export const extractTokensFromSources = async (sources: string[]): Promise<{ [in
   return tokens;
 };
 
-export const findMissingTokens = async (tokens: { [code: string]: string }) => {
+export const findMissingTokens = async (
+  sourcePath: string,
+  tokens: { [code: string]: string }
+): Promise<Map<string, string[]>> => {
   // Check for missing tokens across all projects using grep
   // grep -nr --include="*.ts" --exclude-dir="node_modules" "@@" .
   try {
-    await new Promise<void>((res, rej) => {
-      exec(`grep -nr --include="*.ts" --exclude-dir="node_modules" "@@" .`, (err, stdout) => {
-        if (err) rej(err);
+    return await new Promise((res, rej) => {
+      exec(
+        `grep -nr --include="*.ts" --exclude-dir="node_modules" "@@" ${path.resolve(sourcePath)}`,
+        (err, stdout, stderr) => {
+          if (err) console.error(stderr, stdout), rej(err);
+          const lines = stdout.split('\n');
 
-        const lines = stdout.split('\n');
-        // Grep returns something like
-        // ./path/index.ts:143: [false, {}, '@@error.not_found'];
-        // [code, line]
-        const matches: Array<[string, string]> = lines
-          .reduce((acc, line) => {
-            const code = line.match(/"@@(.*?)"|'@@(.*?)'/g);
-            if (code?.length) {
-              // match from start of string up until the .ts:line_number_indicator
-              // remove all special chars, except alphanumber & periods, underscores & hyphens
-              acc = acc.concat(
-                code.map(code => [code.replace(/[^0-9a-z\.\_\-]/gi, ''), line.match(/^.*\.ts:\d*(?=:)/g)?.[0]])
-              );
+          // Grep returns something like
+          // ./path/index.ts:143: [false, {}, '@@error.not_found'];
+          // [code, line]
+          const matches: Array<[string, string]> = lines
+            .reduce((acc, line) => {
+              const code = line.match(/"@@(.*?)"|'@@(.*?)'/g);
+              if (code?.length) {
+                // match from start of string up until the .ts:line_number_indicator
+                // remove all special chars, except alphanumber & periods, underscores & hyphens
+                acc = acc.concat(
+                  code.map(code => [code.replace(/[^0-9a-z\.\_\-]/gi, ''), line.match(/^.*\.ts:\d*(?=:)/g)?.[0]])
+                );
+              }
+
+              return acc;
+            }, [])
+            .filter(v => !v.includes('i18n-tokens.autogen.ts'));
+
+          const missing: Map<string, string[]> = new Map();
+          matches.forEach(([code, lines]) => {
+            if (!tokens[code]) {
+              if (!missing.get(code)) {
+                missing.set(code, [lines]);
+              } else {
+                missing.set(code, [...missing.get(code), lines]);
+              }
+            }
+          });
+
+          if (missing.size == 0) {
+            return res(missing);
+          } else {
+            for (let [code, lines] of missing.entries()) {
+              console.log(`${colors.red.bold(code)} missing in ${lines.length} file(s)`);
+              lines.forEach(line => console.log(colors.gray(`  | ${line}`)));
+              console.log('');
             }
 
-            return acc;
-          }, [])
-          // Remove all the found values from this file
-          .filter(([code, line]) => !line.includes('generate-xlf'));
-
-        const missing: Map<string, string[]> = new Map();
-        matches.forEach(([code, lines]) => {
-          if (!tokens[code]) {
-            if (!missing.get(code)) {
-              missing.set(code, [lines]);
-            } else {
-              missing.set(code, [...missing.get(code), lines]);
-            }
+            console.log(`${missing.size} tokens are missing from the i18n.hjson files!`);
+            return res(missing);
           }
-        });
-
-        if (missing.size == 0) {
-          return res();
-        } else {
-          for (let [code, lines] of missing.entries()) {
-            console.log(`${colors.red.bold(code)} missing in ${lines.length} file(s)`);
-            lines.forEach(line => console.log(colors.gray(`  | ${line}`)));
-            console.log('');
-          }
-
-          console.log(`${missing.size} tokens are missing from the i18n.hjson files!`);
-          process.exit(1); // failure code 1
         }
-      });
+      );
     });
   } catch (error) {
     console.log(error);
@@ -198,14 +203,36 @@ export const fixCharacterEntityProblems = async (sourcePath: string) => {
   }
 };
 
+export const translateICUString = async (
+  input: string,
+  locale: string,
+  Translator: InstanceType<typeof Translate['v2']['Translate']>
+): Promise<string> => {
+  // Since we use ICU formatting, we have variables inside e.g. {this_is_a_var}
+  // that may get translated -> {amount} => {beløp}, so we need to replace all these with some substring
+  // that definitely __won't__ get translated - $$TRANS_REPLACE_n
+  const variables = input.match(/\{(.*?)\}/g);
+  variables?.forEach((match, idx) => (input = input.replace(match, `TRANS_REPLACE_${idx}`)));
+
+  // Do the translating!
+  let [translation] = await Translator.translate(input, locale);
+
+  // And now put the match codes back in place within the translated string...
+  variables?.forEach((match, idx) => (translation = translation.replace(`TRANS_REPLACE_${idx}`, match)));
+  return translation;
+};
+
 export const translateUntranslatedTransUnits = async (sourcePath: string, locales: string[]) => {
   const spinner = ora();
   spinner.text = 'Translating new un-translated tokens...'.gray;
   spinner.start();
+
+  // Setup the translator before the locale loop
   const Translator = new Translate.v2.Translate({
     projectId: process.env.GCP_PROJECT_ID
   });
 
+  // Begin translation each trans unit of each locale
   for await (let locale of locales) {
     const file = await readFile(path.resolve(sourcePath, `messages.${locale}.xlf`));
 
@@ -241,18 +268,7 @@ export const translateUntranslatedTransUnits = async (sourcePath: string, locale
 
       for await (let { _id, text } of untranslatedCodes) {
         spinner.text = `Translating: ${_id}`.gray;
-        // Since we use ICU formatting, we have variables inside e.g. {this_is_a_var}
-        // that may get translated -> {amount} => {beløp}, so we need to replace all these with some substring
-        // that definitely __won't__ get translated - $$TRANS_REPLACE_n
-        const matches = text.match(/\{(.*?)\}/g);
-        matches?.forEach((match, idx) => (text = text.replace(match, `TRANS_REPLACE_${idx}`)));
-
-        // Do the translating!
-        let [translation] = await Translator.translate(text, locale);
-        // let translation = 'fuck you';
-
-        // And now put the match codes back in place within the translated string...
-        matches?.forEach((match, idx) => (translation = translation.replace(`TRANS_REPLACE_${idx}`, match)));
+        const translation = await translateICUString(text, locale, Translator);
 
         // Set all the metadata & new value of the trans-unit
         const unit = xliff.xliff.file.body['trans-unit'].find(unit => unit['@_id'] == _id);

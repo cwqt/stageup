@@ -27,7 +27,10 @@ import {
   DtoUpdateHost,
   IHostPatronTier,
   DtoUpdatePatronTier,
-  IBulkRefund
+  IBulkRefund,
+  DtoPerformanceAnalytics,
+  AnalyticsTimePeriod,
+  DtoHostAnalytics
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -292,5 +295,23 @@ export class HostService {
   //router.get <IEnvelopedData<IFollower[], null>> ("/hosts/:hid/followers", Hosts.readHostFollowers());
   readHostFollowers(hostId: string): Promise<IEnvelopedData<IFollower[]>> {
     return this.http.get<IEnvelopedData<IFollower[]>>(`/api/hosts/${hostId}/followers`).toPromise();
+  }
+
+  // router.get <IE<DtoPerfAnalytics[]>>("/hosts/:hid/analytics/performances", Hosts.readPerformancesAnalytics());
+  readPerformancesAnalytics(
+    hostId: string,
+    period: AnalyticsTimePeriod = 'WEEKLY',
+    query: IQueryParams
+  ): Promise<IEnvelopedData<DtoPerformanceAnalytics[]>> {
+    return this.http
+      .get<IEnvelopedData<DtoPerformanceAnalytics[]>>(
+        `/api/hosts/${hostId}/analytics/performances${querize({ ...query, period })}`
+      )
+      .toPromise();
+  }
+
+  // router.get <DtoHostAnalytics>  ("/hosts/:hid/analytics", Hosts.readHostAnalytics());
+  readHostAnalytics(hostId: string, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> {
+    return this.http.get<DtoHostAnalytics>(`/api/hosts/${hostId}/analytics?period=${period}`).toPromise();
   }
 }

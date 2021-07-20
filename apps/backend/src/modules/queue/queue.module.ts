@@ -1,21 +1,22 @@
+import Env from '@backend/env';
+import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
 import { IControllerEndpoint, Providers } from '@core/api';
 import { to } from '@core/helpers';
 import { JobData, JobType, JobTypes } from '@core/interfaces';
 import { BullMQAdapter, router as BullRouter, setQueues } from 'bull-board';
 import { Job, JobsOptions, Queue, QueueEvents, QueueScheduler, Worker } from 'bullmq';
+import { combine } from 'libs/shared/src/api/event-bus/contracts';
+import { i18nProvider } from 'libs/shared/src/api/i18n';
 import { ConnectionOptions } from 'tls';
 import { Logger } from 'winston';
 import { Module } from '..';
+import Auth from '../../common/authorisation';
 import { EventHandlers } from './handlers';
+import CollectHostAnalytics from './workers/analytics/host-analytics.worker';
+import CollectPerformanceAnalytics from './workers/analytics/performance-analytics.worker';
 import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker';
 import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
 import SendEmailWorker from './workers/send-email.worker';
-import Auth from '../../common/authorisation';
-import Env from '@backend/env';
-import { i18nProvider } from 'libs/shared/src/api/i18n';
-import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
-import { Contract, Event } from 'libs/shared/src/api/event-bus/contracts';
-
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 interface IQueue<T extends JobType = any> {
@@ -58,7 +59,9 @@ export class QueueModule implements Module {
   workers = {
     ['send_email']: SendEmailWorker,
     ['host_invoice_csv']: HostInvoiceCSVWorker,
-    ['host_invoice_pdf']: HostInvoicePDFWorker
+    ['host_invoice_pdf']: HostInvoicePDFWorker,
+    ['collect_performance_analytics']: CollectPerformanceAnalytics,
+    ['collect_host_analytics']: CollectHostAnalytics
   };
 
   constructor(config: { redis: { host: string; port: number } }, log: Logger) {
@@ -79,6 +82,10 @@ export class QueueModule implements Module {
         type,
         (() => {
           switch (type) {
+            case 'collect_performance_analytics':
+              return w(this.workers['collect_performance_analytics']({ orm: providers.orm }));
+            case 'collect_host_analytics':
+              return w(this.workers['collect_host_analytics']({ orm: providers.orm }));
             case 'send_email':
               return w(
                 this.workers['send_email']({
@@ -122,36 +129,14 @@ export class QueueModule implements Module {
       return acc;
     }, {} as any);
 
-    const combine = <T extends Event>(fns: Array<(ct: Contract<T>) => Promise<void>>) => (ct: Contract<T>) =>
-      Promise.allSettled(fns.map(f => f(ct)));
+    const handlers = new EventHandlers(this.queues, providers);
 
-    const handlers = EventHandlers(this.queues, providers);
     // prettier-ignore
     {
-      bus.subscribe("refund.initiated",        combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail, handlers.requestStripeRefund]));
-      bus.subscribe("refund.refunded",         combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail])) 
-      bus.subscribe("refund.bulk",           async ct => handlers.processBulkRefunds(ct));                                    
-      bus.subscribe("test.send_email",                   handlers.sendTestEmail);
-      bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
-      bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
-      // bus.subscribe('user.invited_to_private_showing',  handlers.sendUserPrivatePerformanceInviteEmail);
-      bus.subscribe('user.password_reset_requested',     handlers.sendPasswordResetLinkEmail);
-      bus.subscribe('user.password_changed',             handlers.sendPasswordChangedNotificationEmail);
-      bus.subscribe('ticket.purchased',                  handlers.sendTicketReceiptEmail);
-      bus.subscribe('refund.requested',                  handlers.sendInvoiceRefundRequestConfirmation);
-      bus.subscribe("test.send_email",                   handlers.sendTestEmail);
-      bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
-      bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
-      bus.subscribe('user.invited_to_private_showing',   handlers.sendUserPrivatePerformanceInviteEmail);
-      bus.subscribe('user.password_reset_requested',     handlers.sendPasswordResetLinkEmail);
-      bus.subscribe('user.password_changed',             handlers.sendPasswordChangedNotificationEmail);
-      bus.subscribe('ticket.purchased',                  handlers.sendTicketReceiptEmail);
-      bus.subscribe('refund.requested',                  handlers.sendInvoiceRefundRequestConfirmation);
+
+      bus.subscribe("performance.created",               handlers.createPerformanceAnalyticsCollectionJob);
+      bus.subscribe("host.created",                      handlers.createHostAnalyticsCollectionJob)
       bus.subscribe('host.stripe_connected',             handlers.setupDefaultPatronTierForHost);
-      bus.subscribe("patronage.tier_deleted",            handlers.unsubscribeAllPatronTierSubscribers);
-      bus.subscribe("patronage.unsubscribe_user",        handlers.unsubscribeFromPatronTier);
-      bus.subscribe("patronage.user_unsubscribed",       handlers.sendUserUnsubscribedConfirmationEmail);
-      bus.subscribe("patronage.tier_amount_changed",     handlers.transferAllTierSubscribersToNewTier);
       bus.subscribe("host.invoice_export",              async ct => {
         if(ct.format == "pdf") await this.queues.host_invoice_pdf.add({
           locale: ct.__meta.locale,
@@ -163,6 +148,29 @@ export class QueueModule implements Module {
           sender_email_address: Env.EMAIL_ADDRESS,
           email_address: ct.email_address, invoice_ids: ct.invoice_ids})
       });
+
+      bus.subscribe('refund.requested',                  handlers.sendInvoiceRefundRequestConfirmation);
+      bus.subscribe("refund.initiated",        combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail, handlers.requestStripeRefund]));
+      bus.subscribe("refund.refunded",         combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail])) 
+      bus.subscribe("refund.bulk",           async ct => handlers.processBulkRefunds(ct));                                    
+      bus.subscribe("test.send_email",                   handlers.sendTestEmail); 
+      bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
+      bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
+      // bus.subscribe('user.invited_to_private_showing',  handlers.sendUserPrivatePerformanceInviteEmail);
+      bus.subscribe('user.password_reset_requested',     handlers.sendPasswordResetLinkEmail);
+      bus.subscribe('user.password_changed',             handlers.sendPasswordChangedNotificationEmail);
+      bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
+      bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
+      bus.subscribe('user.invited_to_private_showing',   handlers.sendUserPrivatePerformanceInviteEmail);
+      bus.subscribe('user.password_reset_requested',     handlers.sendPasswordResetLinkEmail);
+      bus.subscribe('user.password_changed',             handlers.sendPasswordChangedNotificationEmail);
+
+      bus.subscribe('ticket.purchased',                  handlers.sendTicketReceiptEmail);
+
+      bus.subscribe("patronage.tier_deleted",            handlers.unsubscribeAllPatronTierSubscribers);
+      bus.subscribe("patronage.unsubscribe_user",        handlers.unsubscribeFromPatronTier);
+      bus.subscribe("patronage.user_unsubscribed",       handlers.sendUserUnsubscribedConfirmationEmail);
+      bus.subscribe("patronage.tier_amount_changed",     handlers.transferAllTierSubscribersToNewTier);
       bus.subscribe('patronage.started', ct => {
                                                         handlers.sendHostPatronSubscriptionStartedEmail(ct);
                                                         handlers.sendUserPatronSubscriptionStartedReceiptEmail(ct)});

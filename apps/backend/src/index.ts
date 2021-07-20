@@ -1,18 +1,19 @@
-import 'reflect-metadata';
-import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register } from '@core/api';
-import { Environment, ILocale } from '@core/interfaces';
+import { HostAnalytics, patchTypeORM, PerformanceAnalytics, Register } from '@core/api';
+import { timeout, timestamp } from '@core/helpers';
+import { Environment } from '@core/interfaces';
+import session from 'express-session';
 import { i18nProvider } from 'libs/shared/src/api/i18n';
+import path from 'path';
+import 'reflect-metadata';
 import { Container } from 'typedi';
+import Auth from './common/authorisation';
+import { SUPPORTED_LOCALES } from './common/locales';
 import { log as logger, stream } from './common/logger';
+import providers, { BackendProviderMap, PROVIDERS as token } from './common/providers';
+import Env from './env';
 import { QueueModule } from './modules/queue/queue.module';
 import { SSEModule } from './modules/sse/sse.module';
-import session from 'express-session';
-import path from 'path';
-import Auth from './common/authorisation';
-import Env from './env';
 import routes from './routes';
-import providers, { BackendProviderMap } from './common/providers';
-import { SUPPORTED_LOCALES } from './common/locales';
 
 export type BackendModules = {
   SSE: SSEModule;
@@ -24,7 +25,7 @@ Register<BackendProviderMap>({
   port: Env.BACKEND.PORT,
   logging: { logger, stream },
   endpoint: Env.BACKEND.ENDPOINT,
-  providers: providers,
+  providers: { providers, token },
   environment: Env.ENVIRONMENT,
   authorisation: Auth.isSiteAdmin,
   i18n: {

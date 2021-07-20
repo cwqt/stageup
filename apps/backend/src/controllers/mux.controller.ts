@@ -166,10 +166,11 @@ export default class MUXController extends BaseController<BackendProviderMap> {
         return [true, {}];
       },
       controller: async req => {
+        // Only continue if this webhook was meant for us
+        if (Env.IS_LOCAL && req.headers['x-forwarded-host'] != Env.LOCALTUNNEL.DOMAIN) return;
+
         // Is a valid hook & we should handle it
         const data: IMUXHookResponse = req.body;
-
-        console.log(data, req.headers);
 
         // FUTURE At some point we'll want to add these hooks to a FIFO task queue and just respond with a 200
         // for acknowledged handling, hook then handled by a separate micro-service

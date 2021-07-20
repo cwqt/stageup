@@ -85,9 +85,8 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
 - Language codes: ISO 639-1 [iso-939-1](https://www.npmjs.com/package/iso-639-1)
 - Currency codes: ISO-4217
 - Phone Numbers E.164 [formatInternational](https://www.npmjs.com/package/libphonenumber-js)
-- Timestamps: UNIX relative to
+- Timestamps: UNIX relative to UTC
 - Stripe: PaymentIntents & PaymentMethods
-
 - https://www.npmjs.com/package/i18n-iso-countries
 
 ## Useful Tools

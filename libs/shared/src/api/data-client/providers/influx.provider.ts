@@ -6,6 +6,8 @@ export interface IInfluxProviderConfig {
   database: string;
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class InfluxProvider implements Provider<InfluxDB> {
   name = 'Influx';
   connection: InfluxDB;
@@ -26,7 +28,7 @@ export default class InfluxProvider implements Provider<InfluxDB> {
         if (pong.length > 0) {
           resolve(influx);
         } else {
-          reject("Could not connect to InfluxDB");
+          reject('Could not connect to InfluxDB');
         }
       });
     });

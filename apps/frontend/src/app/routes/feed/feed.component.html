@@ -47,17 +47,17 @@
       <!-- Only display 'My Follows' if there are performances -->
       <div *ngIf="carousel.value.data?.data?.length > 0" class="carousel-container relative">
         <h2>{{ prettyKeys[carousel.key] | titlecase }}</h2>
-  
+
         <ui-hr></ui-hr>
-  
+
         <mat-spinner *ngIf="carousel.value.loading" i18n>Loading...</mat-spinner>
         <h3 *ngIf="carousel.value.data?.data?.length == 0" i18n>No performances found</h3>
-  
+
         <div class="relative">
           <div class="absolute right-0 top-0 bottom-0 my-auto spinner" *ngIf="carousel.value.meta.loading_page">
             <mat-spinner [diameter]="40"></mat-spinner>
           </div>
-  
+
           <carousel
             *ngIf="!carousel.value.loading"
             (events)="handleCarouselEvents($event, carousel.key)"
@@ -76,8 +76,10 @@
                 <app-performance-thumb
                   #thumb
                   [performance]="performance"
+                  [userLiked]="performance.client_likes"
                   (click)="thumb.openBrochure()"
                   (onFollowEvent)="refreshFeed($event)"
+                  (onLikeEvent)="syncLikes($event)"
                 >
                 </app-performance-thumb>
               </div>

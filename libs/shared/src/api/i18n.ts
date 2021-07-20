@@ -101,7 +101,6 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
     locale: ILocale,
     variables?: { [index in TokenMap[T]]: Primitive }
   ): string {
-    console.log('i18n code::', code);
     const translation = this.locales.get(locale.language)?.get(code.slice(2));
 
     if (!translation) {

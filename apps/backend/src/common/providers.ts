@@ -1,9 +1,13 @@
 import Env from '@backend/env';
 import { PG_MODELS, Providers } from '@core/api';
 import { Environment } from '@core/interfaces';
+import { Token } from 'typedi';
 import { log } from './logger';
 
-const PROVIDERS = {
+// Dependency Injection across the applications' modules
+export const PROVIDERS = new Token<BackendProviderMap>('PROVIDERS');
+
+const PROVIDER_MAP = {
   mux: new Providers.Mux({
     access_token: Env.MUX.ACCESS_TOKEN,
     secret_key: Env.MUX.SECRET_KEY,
@@ -63,9 +67,9 @@ const PROVIDERS = {
 
 // Some providers may not exist at this point (e.g. LocalTunnel only in dev)
 // so filter out the undefined providers
-export default Object.keys(PROVIDERS).reduce(
-  (acc, curr) => (PROVIDERS[curr] ? ((acc[curr] = PROVIDERS[curr]), acc) : acc),
+export default Object.keys(PROVIDER_MAP).reduce(
+  (acc, curr) => (PROVIDER_MAP[curr] ? ((acc[curr] = PROVIDER_MAP[curr]), acc) : acc),
   {}
 );
 
-export type BackendProviderMap = Partial<typeof PROVIDERS>;
+export type BackendProviderMap = Partial<typeof PROVIDER_MAP>;

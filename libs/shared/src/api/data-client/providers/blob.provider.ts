@@ -15,6 +15,8 @@ export interface BlobUploadResponse {
   asset_identifier: string; // asset id
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class BlobProvider implements Provider<S3> {
   name = 'AWS S3';
   connection: S3;
