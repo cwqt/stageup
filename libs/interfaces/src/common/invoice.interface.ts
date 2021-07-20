@@ -24,9 +24,9 @@ export enum RefundRequestReason {
 }
 
 export enum BulkRefundReason {
-  dateMoved = 'rescheduled_postponed',
-  cancelled = 'cancelled',
-  overcharged = 'buyer_overcharged'
+  DateMoved = 'rescheduled_postponed',
+  Cancelled = 'cancelled',
+  Overcharged = 'buyer_overcharged'
 }
 
 export enum RefundResponseReason {

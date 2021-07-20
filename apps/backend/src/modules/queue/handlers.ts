@@ -416,7 +416,7 @@ export class EventHandlers {
     });
   };
 
-  requestStripeRefund = async (ct: Contract<'refund.initiated'>) => {
+  enactStripeRefund = async (ct: Contract<'refund.initiated'>) => {
     console.log('in requeststriperefund');
     const invoice = await this.providers.orm.connection
       .createQueryBuilder(Invoice, 'i')
@@ -424,7 +424,7 @@ export class EventHandlers {
       .leftJoinAndSelect('i.host', 'host')
       .getOne();
 
-    this.providers.stripe.connection.refunds.create(
+    await this.providers.stripe.connection.refunds.create(
       {
         payment_intent: invoice.stripe_payment_intent_id
       },

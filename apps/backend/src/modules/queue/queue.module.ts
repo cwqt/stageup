@@ -150,9 +150,9 @@ export class QueueModule implements Module {
       });
 
       bus.subscribe('refund.requested',                  handlers.sendInvoiceRefundRequestConfirmation);
-      bus.subscribe("refund.initiated",        combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail, handlers.requestStripeRefund]));
+      bus.subscribe("refund.initiated",        combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail, handlers.enactStripeRefund]));
       bus.subscribe("refund.refunded",         combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail])) 
-      bus.subscribe("refund.bulk",           async ct => handlers.processBulkRefunds(ct));                                    
+      bus.subscribe("refund.bulk",                       handlers.processBulkRefunds);                                    
       bus.subscribe("test.send_email",                   handlers.sendTestEmail); 
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);

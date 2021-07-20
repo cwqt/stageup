@@ -136,7 +136,7 @@ export namespace objects {
     bulk_refund_detail: optional(string())
   });
 
-  export const processRefunds: Describe<IProcessRefunds> = object({
+  export const IProcessRefunds: Describe<IProcessRefunds> = object({
     invoice_ids: array(fields.nuuid),
     bulk_refund_reason: optional(enums<BulkRefundReason>(enumToValues(BulkRefundReason))),
     bulk_refund_detail: optional(string())
