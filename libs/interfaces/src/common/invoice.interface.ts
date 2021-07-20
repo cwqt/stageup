@@ -13,7 +13,7 @@ export type PurchaseableData = {
   [PurchaseableType.Ticket]: ITicketStub;
 };
 
-export enum RefundReason {
+export enum RefundRequestReason {
   Covid = 'covid19',
   CancelledPostponed = 'cancelled_postponed',
   Duplicate = 'duplicate',
@@ -23,6 +23,12 @@ export enum RefundReason {
   Other = 'other_specify'
 }
 
+export enum BulkRefundReason {
+  DateMoved = 'rescheduled_postponed',
+  Cancelled = 'cancelled',
+  Overcharged = 'buyer_overcharged'
+}
+
 export enum RefundResponseReason {
   Accepted = 'accepted',
   OutsidePolicy = 'outside_refund_policy'
@@ -30,8 +36,17 @@ export enum RefundResponseReason {
 
 export interface IRefundRequest {
   requested_on: number;
-  request_reason: RefundReason;
+  request_reason: RefundRequestReason;
   request_detail: string;
+}
+
+export interface IBulkRefund {
+  bulk_refund_reason: BulkRefundReason;
+  bulk_refund_detail: string;
+}
+
+export interface IProcessRefunds extends IBulkRefund {
+  invoice_ids: string[];
 }
 
 export interface IRefundResponse {
@@ -40,7 +55,7 @@ export interface IRefundResponse {
   response_detail: string;
 }
 
-export interface IRefund extends IRefundRequest, Partial<IRefundResponse> {
+export interface IRefund extends IRefundRequest, Partial<IRefundResponse>, Partial<IBulkRefund> {
   _id: NUUID;
   is_refunded: boolean;
 }

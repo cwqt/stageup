@@ -27,6 +27,7 @@ import {
   DtoUpdateHost,
   IHostPatronTier,
   DtoUpdatePatronTier,
+  IBulkRefund,
   DtoPerformanceAnalytics,
   AnalyticsTimePeriod,
   DtoHostAnalytics
@@ -212,9 +213,13 @@ export class HostService {
   }
 
   //router.post<void>("/hosts/:hid/invoices/process-refunds", Hosts.processRefund());
-  processRefunds(invoiceIds: string[], hostId: string): Promise<void> {
+  processRefunds(invoiceIds: string[], hostId: string, bulkRefund?: IBulkRefund): Promise<void> {
     return this.http
-      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, { invoice_ids: invoiceIds })
+      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, {
+        invoice_ids: invoiceIds,
+        bulk_refund_reason: bulkRefund.bulk_refund_reason,
+        bulk_refund_detail: bulkRefund.bulk_refund_detail
+      })
       .toPromise();
   }
 

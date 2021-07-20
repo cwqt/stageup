@@ -13,18 +13,70 @@ export type SeederHostName =
   | 'NTCardiff'
   | 'RTheatre'
   | 'SwanseaGrand'
-  | 'WalesMilleniumCentre';
+  | 'WalesMilleniumCentre'
+  | 'AberAC'
+  | 'ArtisCC'
+  | 'ACGofalCelf'
+  | 'ArtsConnection'
+  | 'BalletCymru'
+  | 'BBCNOW'
+  | 'BlackwoodMI'
+  | 'CGWMC'
+  | 'CUC'
+  | 'Chapter'
+  | 'CMW'
+  | 'CwmniTheatr'
+  | 'CFW'
+  | 'DiB'
+  | 'DisabilityArtsCymru'
+  | 'GCC'
+  | 'Head4Arts'
+  | 'HijinxTheatre'
+  | 'JukeboxCollective'
+  | 'LiteratureWales'
+  | 'LiveMusicNowWales'
+  | 'MidWalesOpera'
+  | 'MusicTheatreWales'
+  | 'NDCW'
+  | 'NationalTheatreWales'
+  | 'NationalYouthArtsWales'
+  | 'NEWDance'
+  | 'NoFitStateCircus'
+  | 'WNO'
+  | 'Impelo'
+  | 'ShermanTheatre'
+  | 'SinfoniaC'
+  | 'TaliesinAC'
+  | 'TheatreBaraCaws'
+  | 'TheatrClwyd'
+  | 'TGC'
+  | 'TheatrIoio'
+  | 'TheatrMlwdan'
+  | 'TheatrNaNÓg'
+  | 'TorchTheatre'
+  | 'Trac'
+  | 'TyCerdd'
+  | 'BCG'
+  | 'SJSS';
 
 export default to<
   Array<Except<DtoCreateHost, 'username'> & { avatar: string; banner: string; username: SeederHostName }>
 >([
+  // {
+  //   username: 'RDance',
+  //   avatar: 'https://pbs.twimg.com/profile_images/1377222510786322436/WxktRD67_400x400.jpg',
+  //   banner:
+  //     'https://cavc.imgix.net/-/media/subject-areas/art-design-and-multimedia/dance/289_sian_trenberth_photography_da19-08.ashx?h=800&la=en&mw=1200&w=1200&auto=format&fit=crop&crop=faces&hash=B8E5927885876212E00A39A53BC4F6DE97CD4EE0',
+  //   email_address: 'rd@stageup.uk',
+  //   name: 'Rubicon Dance'
+  // },
   {
-    username: 'RDance',
-    avatar: 'https://pbs.twimg.com/profile_images/1377222510786322436/WxktRD67_400x400.jpg',
-    banner:
-      'https://cavc.imgix.net/-/media/subject-areas/art-design-and-multimedia/dance/289_sian_trenberth_photography_da19-08.ashx?h=800&la=en&mw=1200&w=1200&auto=format&fit=crop&crop=faces&hash=B8E5927885876212E00A39A53BC4F6DE97CD4EE0',
-    email_address: 'rd@stageup.uk',
-    name: 'Rubicon Dance'
+    username: 'TorchTheatre',
+    avatar:
+      'https://media-exp3.licdn.com/dms/image/C510BAQHF0mlUi2SeWA/company-logo_200_200/0/1519886097924?e=2159024400&v=beta&t=xUhgzEof9MyFCeS4Sn7zk9EUsHieAV5Jo4PGJmdattM',
+    banner: 'https://www.torchtheatre.co.uk/media/405964/torch-theatre-header-01.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Torch Theatre`
   },
   {
     username: 'RSCompany',
@@ -108,5 +160,342 @@ export default to<
       'https://cf.bstatic.com/xdata/images/explorer_landmark/1680x560/14534.jpg?k=f45b029d43c83be13bcb135db7a83cbbc5b30a82294b3bd4eb52b630adbf2205&o=',
     email_address: 'wmc@stageup.uk',
     name: 'Wales Millenium Centre'
+  },
+  {
+    username: 'AberAC',
+    avatar: 'https://www.aberystwythartscentre.co.uk/sites/aberarts/themes/aberarts/images/home-building.jpg',
+    banner: 'https://www.aberystwythartscentre.co.uk/sites/aberarts/themes/aberarts/images/home-building.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Aberystwyth Arts Centre'
+  },
+  {
+    username: 'ArtisCC',
+    avatar: 'https://arts.wales/sites/default/files/2019-12/Artis%20logo.jpg',
+    banner:
+      'https://artiscommunity.org.uk/wp-content/uploads/2020/11/Artis-Christmas-graphic-with-logo-banner-1024x375.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Artis Community Cymuned'
+  },
+  {
+    username: 'ACGofalCelf',
+    avatar: 'https://wwamh.org.uk/media/2021/05/Arts-Care-Gofal-Celf-Blog.jpg',
+    banner:
+      'https://lh3.googleusercontent.com/proxy/UCeIT9d8x-S-xyy_D9hlr7o-KntekazpWtnBjhgaVRHpKGKjyjrTMf8DeWvxrdPbX-gy3rDEd9A8GllIkUOs5YeLi-ee',
+    email_address: 'company@stageup.uk',
+    name: 'Arts Care Gofal Celf'
+  },
+  {
+    username: 'ArtsConnection',
+    avatar:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.18169-9/425569_10150604301272917_915168081_n.jpg?_nc_cat=110&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=4lGVU0HiI7gAX8CgJYO&tn=vJE2wuorLQhE0ltm&_nc_ht=scontent-man2-1.xx&oh=fc9b0e51269cbb1fe7a797ba472a25c9&oe=60D0347B',
+    banner: 'https://artsconnection.org.uk/artscon/wp-content/uploads/2011/10/sign.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Arts Connection - Cyswllt Celf'
+  },
+  {
+    username: 'BalletCymru',
+    avatar:
+      'https://media-exp3.licdn.com/dms/image/C4E0BAQFrUFwYOGovXg/company-logo_200_200/0/1618991570463?e=2159024400&v=beta&t=JUAQ8EgmBxKmbW9-vdUK65zmACCGhJ5s9yZ4OQqVxbY',
+    banner:
+      'https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/Ballet_Cymru_%28Logo%29_2014.svg/176px-Ballet_Cymru_%28Logo%29_2014.svg.png',
+    email_address: 'company@stageup.uk',
+    name: 'Ballet Cymru'
+  },
+  {
+    username: 'BBCNOW',
+    avatar: 'https://pbs.twimg.com/profile_images/1346069147382394885/fCBDqkAQ_400x400.jpg',
+    banner: 'https://ichef.bbci.co.uk/images/ic/976x549_b/p01mv3db.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'BBC National Orchestra of Wales'
+  },
+  {
+    username: 'BlackwoodMI',
+    avatar:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t31.18172-8/12095141_10153727442573680_2338717650292681529_o.jpg?_nc_cat=109&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=DizE8tpvi9AAX_5qROW&_nc_ht=scontent-man2-1.xx&oh=df1f3b8e577430f98aa5302a3280a193&oe=60F0A908',
+    banner: 'https://dgm-cover.azureedge.net/1080/tnkx.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Blackwood Miners' Institute`
+  },
+  {
+    username: 'CGWMC',
+    avatar: 'https://img.endole.co.uk/?t=081926887a0acaf85e26185ab6dbbf88&l=',
+    banner: 'https://apollofundraising.com/wp-content/uploads/2017/04/CGWM.png',
+    email_address: 'company@stageup.uk',
+    name: 'Canolfan Gerdd William Mathias Cyf'
+  },
+  {
+    username: 'CUC',
+    avatar: 'https://www.ucheldre.org/img/ucheldre_logo-noborder-w60.gif',
+    banner: 'https://www.ucheldre.org/img/img_3996-ed-w400.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Canolfan Ucheldre Centre'
+  },
+  {
+    username: 'Chapter',
+    avatar: 'https://cornwallfilmfestival.com/wp-content/uploads/2018/01/CHAPTER-Logo_large-1.jpg',
+    banner: 'https://www.herald.wales/wp-content/uploads/2021/03/Carrie-Mae-Weems-Artes-Mundi-Lightbox-scaled.jpg',
+    email_address: 'company@stageup.uk',
+    name: 'Chapter Cardiff Ltd.'
+  },
+  {
+    username: 'CMW',
+    avatar: 'https://api.globaldatabase.com/logo/chapter.org/',
+    banner:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t31.18172-8/s1080x2048/327180_10151217691499796_1723977759_o.jpg?_nc_cat=111&ccb=1-3&_nc_sid=e3f864&_nc_ohc=u-EpBdzA9-kAX-OyhcN&_nc_ht=scontent-man2-1.xx&tp=7&oh=98306c3414090235f8ac47d6b7a1e8ac&oe=60F04E77',
+    email_address: 'company@stageup.uk',
+    name: 'Community Music Wales'
+  },
+  {
+    username: 'CwmniTheatr',
+    avatar: 'https://aradgoch.cymru/wp-content/uploads/2019/06/arad_goch_logo.png',
+    banner:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/67791140_2400175166938519_2682979204097638400_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=e3f864&_nc_ohc=B9GFhgqgzhQAX9ZADPw&_nc_ht=scontent-man2-1.xx&oh=dfb8607bf61a7037e324dd484d1916d8&oe=60CFEEA8',
+    email_address: 'company@stageup.uk',
+    name: 'CwmniTheatr'
+  },
+  {
+    username: 'CFW',
+    avatar: 'https://img.endole.co.uk/?t=c987254eb1d2f414444e44cf5595d83e&l=',
+    banner:
+      'https://lh3.googleusercontent.com/proxy/1clYf5t8SFK4RWR5TClV5Zw24S5OTkTNjKSJdFMtd0Fy1sHeKgApIKNxmEk08dG6HaMQmb1LoBYV4UPyq--34T7p57YQws26IEyUOWwE1ZRGq-gwGObz05SjoH0Tq4FGjTS0hf0_vHdaVbg',
+    email_address: 'company@stageup.uk',
+    name: `Cwmni'r Frân Wen`
+  },
+  {
+    username: 'DiB',
+    avatar: 'https://pbs.twimg.com/profile_images/667067401767374849/QJ9aLu72_400x400.jpg',
+    banner: 'http://dawnsibawb.org/images/sub-banner02.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Dawns i Bawb`
+  },
+  {
+    username: 'DisabilityArtsCymru',
+    avatar: 'https://charityjobfinder.co.uk/wp-content/uploads/2018/10/Disability-Arts-Cymru-300x300.png',
+    banner:
+      'https://images.squarespace-cdn.com/content/6027a7fc2fb17600e9e59d61/1617809218519-PO571SWS3QGX3HSNFHUQ/DAC_Logo_1200.png?format=1500w&content-type=image%2Fpng',
+    email_address: 'company@stageup.uk',
+    name: `Disability Arts Cymru`
+  },
+  {
+    username: 'GCC',
+    avatar:
+      'https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/v1454418321/kmuruujeef9spexi9usn.png',
+    banner: 'https://www.galericaernarfon.com/images/gofod-creu-bwtwm.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Galeri Caernarfon Cyf`
+  },
+  {
+    username: 'Head4Arts',
+    avatar:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/108029830_3141737289241255_2440058805882552489_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=W8OwMBukd8QAX_z_TiU&_nc_ht=scontent-man2-1.xx&oh=d8c485f50ac56a8c9b3a92aa0ad38e82&oe=60D03B0F',
+    banner: 'https://www.hayfestival.com/images/slides/event-slide.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Head4Arts`
+  },
+  {
+    username: 'HijinxTheatre',
+    avatar:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKBf2MTOYKpUVxn8gCdH67IdIAVkVll42-jJinhaEzMUt5VwOTf060Rl3nMJQ-NcFvcIk&usqp=CAU',
+    banner:
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAwFBMVEX///8hHR23ICUAAAAgHR2ZmJgeGhuwr6+yAAAZFBUQCQt8e3sLAAKFg4TKycnl5eUuKytKR0jEw8OQj4+WlJVUUlK2Fx20AA3T0tO1DBS0BxHWlpe2FhwIAAD09PT58fHpycnCU1bv2dq5LDDFX2Hcp6jTjY7Lc3Xc3Nzera305OTaoKHHaGrOfoC1tLSnpqZzcnK+REfju7y8Oj7ATVC4JSpoZmY9OzszMDHs0dK7NjrQg4TLdnjmwcHIa21eXFwRmCkSAAAJYUlEQVR4nO2cCXuiPBDHo2HdkdrD1oWiKF61rVat9tpur+//rd5w5QDaWhXQl/k9zz5VgpD8ncxMJriEIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIAiCIIXgeXnt0nXy7siOMJ4sAEwPgGfSz7s/+dPtQdMoBxg9Qv41L/LuU76MF8AEsSDQBJiRQNm0lnn3K0cmriJlq0UCTSymkqsP9ArrWIYQWsfAe2FfsrnkHbPNgrqVRdN3Igt3wnjiMOu4sYNp1M27e3nQs4IJ8+JPmHJzQogTupZCivJiBoM3l6TvKWFOusErX5Rx3l3Mmi4fPIu9154+9+UJeQuVKtv2IO8+Zo3F7cEYkBfLCz9suvS8QGSbMJgO4SXvTmZLi9tD2X4Nws4ImDuxzebd6PXCcaaDos0e4TbK5rX3zh4tgLmTl7fWiMXhJTDTsW/y7maWXJiSJkvixl+zB++soQcAk9YDFM/N3hlCE3hmMwbKU+d+THpg9i6WD80wrx3l3dHsGEtTh2VqfXh1lmOAJYHFzQiEDRnlvHuaHdfSsJvAMrXJA9wbbKa89+wgjzUsq2kuoDgp/jSMxE24u3DYuscqG/fWkLlYb05ZAIvepHV9MYTrvLuaGT3fnZgDFnMXQ/ctjKaDpWs/rh6tZ+KMhmbTMqxp3l3NDN9MrAnpDsF8IUZz0BqZ9pDcwN3oud8dsdhjebIVKBr7LtZ4vwObxRaHGcn9oAksyIz7SxZ6pBz3Pu+uZkYQdgxmCwZcOzcW9MwWcx2TSzClKO0XIwsCD8V2s9ciIzCmDnGGDgG7rFJETV5bC3DGS7ZMngI4DpSjmgzz7mpm/GMWAvAwGAJctpgXeX9jFjIgzzFN3GpkQbi07WG3T16vHdIfk3sw7tjw30nLimrilt4KQst88P4+vwzgkoDlisHWNj0jqkmBCpDPcD/utkZllr+yVTGYbnWNDX8Y1yTvnmaIaQA0vZniror/LdwXy6C0JLuT4qRs0oKnDP03GFm+SZhRTQo0dYhUnge2yBl5NSUSD8UPefczU7g7tchidO9nIjFN9nRVPDtrcA6PY80dqbnxS2oIDYVJMXx3zaR5oVaa3La77MaxVZ5oLYCeJTSf8uY27cgNU7++yBbDfriBsVKkLZf3uBp7REsBNLH9T7Wkec21htow8MtHL4HJgBNN2WBvn0M5DjWpVBLbD/RQst9qgz9TWGSZNH1f6+98ccz9TevX1sS3D5ayTb3F8IAQZVFsvqff97RYXxOv+srsxAx8LZElgf21ko00IeOBCc6bN4fYakd6pMDYX1/isoImro/VkjQhZATBQzjmBWk1uZHc7WvE8Qk00daxE8aYmJ4UzK+8+v7EhvK+P+K3ydzxGI8sMG3ok6Ft2BbAsJteZzPC00TbQBNG/+Lyzi3GLm5a3ZS6mSm+nWjf+ZMvNfm/sfHc+R+CmsRZTROtkJpoaCccpomWx9zpHM0bZ2eN+VHn+3Oz5uf+ZH5wyPGPdMSRg6vYSY2Eq87+UEprul5jf04aSi3rTLr84YHU1LmVGg5vjzYc+Bes4WP/tnWfdik4MqPBEZ2GXS2FJ9Gn2DV/67QaZEXujWv0UValzi+m07r8sVvRUKPnG436a9bQZMY/chIeOqmEZ4Wa/A5PqtYjVzx+ouHZoS46nUsn/K2Grfqt/MF5OzxeoVebjfprjmn4da2syRFfInFN/oTD4JqcfqbJnPIhh6K4Ue1A7lKoWUWpdz7xD9LTjcf9FavYiZaoSWktTT54rVMT06ekinIail6q/pF6ws2EHm5h4F+w0tzR1tJEcz+nKZqc1kKz47LwgUpx7VAUiflmAZ+xJV0SKhUkTea/4szFaH9uJ1rETo7qkifxbim/k+dJXUyTwHNccUkq1XQVkTQpVdpJiM6tNXc0ocktVTxJlbIwwv7xA/qj6FWHVkI3F8S2KtcvXf+qavING/uTc/lOVfroZWtXB8J0qBSRxcm+VHWuXQb5dJImWvxQVBPt55oQKi5M63z80uhl1/mLyjeWHIzki9Miookm+h1RZvO4I+6kpCMi3anJHfvQww7QDr9YqRrPALfPsRIbk9lSLBbftZqE8hxN9RTcg1Sf+MRRE5a0+NKfJMfKRE201TTx5VW7wPPTtmw+cqQRnUgzpeckaxK3GW0VO9FWtBO1C3zwairPMt5oR5Q5lx5SLK4JdP5qw1i8iiadz5YBjzX1e6k9kkyQNGmcxWnUP8nZtO1pQtrB5IhlYyfK0qj6d+ujT0bksaXE9s/XgGv5k0RN/lY+aTiW895s/Kt/W/+OP6g9bjR3tISh17mi0bvPJG9HU6wiqaxRP9m2PxGrm/hjQWLho6e8GJZYX5Nv6yd+MWAjTebCTrKbOqs+V5CynYSVpUiDyPu1DF3sTs+djlpayCoUp61JdO4k5bGuJlqSJk9yKGYrsYxSNk8T7aeaBKb+vSbaD+wkNndu26UI6ZdOPFa0Ey37uSP8K59BlVomfnZn/UnoXzV5XRzbGEmFVZ/dUteA2pY1iedsnba0oTHjhfy0S/Ye27QTbYt2om7mHLQ16V3arLGHnlJ+ojQI/+r/DECSKP5LiW2zM/5EWQjxndVwM0ekKtUTkjZb00TbSBM1P5FKbGGvxG8l9I+NB/0Nu2En6twR/lXKSKRC/i+SLhtooqUVi6VdwJk46yNceaVelV1bk5Xy2LU0kTbLlc2cUnha2kvk3bMT4V8jmznHnzVsm/R8rOZb06o+Now7kn9tR8xBqNVOdTdwhd+++dQSnnqgsbO4JnzTpqIHRzqf3inc3dJY7uGXYL1FZqyyJu27pLpEln4jmeTOj0Qzn8Sl+Efi+zu6OCno/oE4og52Lhoeryh/U6Pqdo/8g03WOCNpMWuIZ03Okn5LK5obwdh+J3xE2EkQEuaxk66kS53Ja/5j+R7Sa/Yu0hvlAZmE3u4WMU0QaYdm17+9zJDc5w4+Fp0PPEhW2nl3ZWfQ+aI19fXZvlAPI3GpnfbybOc59kLqaYkvzrIqrO8w55TW61TamKqkX+/Zdc5ppao8IZLVptQOcy493emZSfIyslAoTwHLC8ACE7GTxP9op2iodpLFE867j9i+dB+gL3xq4sHtpKLTp8JnJj6uJpWqTilN81ec+wXL2Wjl42yGJiI4qs+wNIAgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCIIgCLKL/AdCi72QKYoD5wAAAABJRU5ErkJggg==',
+    email_address: 'company@stageup.uk',
+    name: `Hijinx Theatre`
+  },
+  {
+    username: 'JukeboxCollective',
+    avatar: 'https://pbs.twimg.com/profile_images/1217190542607560706/SS0ahgQa_400x400.jpg',
+    banner: 'https://www.onedanceuk.org/wp-content/uploads/2020/04/jukebox-collective.png',
+    email_address: 'company@stageup.uk',
+    name: `Jukebox Collective`
+  },
+  {
+    username: 'LiteratureWales',
+    avatar: 'https://pbs.twimg.com/profile_images/1402594095369961473/eM3fnSK5.jpg',
+    banner: 'https://www.literaturewales.org/wp-content/uploads/2020/05/Untitled-design.png',
+    email_address: 'company@stageup.uk',
+    name: `Literature Wales`
+  },
+  {
+    username: 'LiveMusicNowWales',
+    avatar:
+      'data:image/png;base64,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',
+    banner: 'https://cdn.buildresources.co.uk/sites/802/images/Wales_cover_image(1).png',
+    email_address: 'company@stageup.uk',
+    name: `Live Music Now Wales`
+  },
+  {
+    username: 'MidWalesOpera',
+    avatar: 'https://static.truelinked.com/companies/501d195a-cdb2-4653-86ba-745b7acadc39/mid-wales-opera-medium.png',
+    banner: 'https://ensemble.cymru/wp-content/uploads/2017/08/Mid-Wales-Opera-Logo-1024x111.png',
+    email_address: 'company@stageup.uk',
+    name: `Mid Wales Opera`
+  },
+  {
+    username: 'MusicTheatreWales',
+    avatar: 'https://yt3.ggpht.com/ytc/AAUvwng1gkr7vYwggQB5S7hfJmsmGkZ6LC-X8ZJc6dIo=s900-c-k-c0x00ffffff-no-rj',
+    banner: 'https://www.musictheatre.wales/assets/images/our-story/200225_0017-Denis-and-Katya.adj.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Music Theatre Wales`
+  },
+  {
+    username: 'NDCW',
+    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR9QksJTRzbIfyNpSTn-BxeBKQBRuTnP_CUw&usqp=CAU',
+    banner:
+      'https://ndcwales.co.uk/sites/default/files/styles/banner/public/2018-07/Untitled-design-%2838%29.jpg?h=a18411ca&itok=jFq3BhUF',
+    email_address: 'company@stageup.uk',
+    name: `National Dance Company Wales`
+  },
+  {
+    username: 'NationalTheatreWales',
+    avatar:
+      'data:image/png;base64,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',
+    banner: 'https://cdn.nationaltheatrewales.org/wp-content/uploads/2018/03/meet-our-stuff.jpg',
+    email_address: 'company@stageup.uk',
+    name: `National Theatre Wales`
+  },
+  {
+    username: 'NationalYouthArtsWales',
+    avatar:
+      'data:image/jpeg;base64,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',
+    banner:
+      'https://images.squarespace-cdn.com/content/v1/5c6e81b70b77bdcc4f1a07ee/1568022132278-XFGBPOVD30P3Y2X84PY4/ke17ZwdGBToddI8pDm48kN5aurNfI4l_SD4RZWeP6HEUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYy7Mythp_T-mtop-vrsUOmeInPi9iDjx9w8K4ZfjXt2dqoIMjszPLQOhapJYdnG7byN8k22i_ISw3ZZyqjMBtV7CjLISwBs8eEdxAxTptZAUg/Headings4.png?format=1000w',
+    email_address: 'company@stageup.uk',
+    name: `National Youth Arts Wales`
+  },
+  {
+    username: 'NEWDance',
+    avatar: 'https://international-eisteddfod.co.uk/wp-content/uploads/2019/04/newdancelogo_blue-600x459.png',
+    banner:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t31.18172-8/p960x960/14107766_1791850767700352_8621204332016200550_o.jpg?_nc_cat=107&ccb=1-3&_nc_sid=e3f864&_nc_ohc=86loyGTuGHMAX-hvvGW&_nc_ht=scontent-man2-1.xx&tp=6&oh=af1784d5783b73abf7d3ae8d080a9e10&oe=60EFFACF',
+    email_address: 'company@stageup.uk',
+    name: `NEW Dance`
+  },
+  {
+    username: 'NoFitStateCircus',
+    avatar: 'https://pbs.twimg.com/profile_images/1313035458184708096/a5sJi5vX.jpg',
+    banner: 'https://www.nofitstate.org/files/cache/63e21ff240db3a252cedae6ad58979e4_f41.jpg',
+    email_address: 'company@stageup.uk',
+    name: `NoFit State Circus`
+  },
+  {
+    username: 'WNO',
+    avatar: 'https://api.globaldatabase.com/logo/wno.org.uk/',
+    banner: 'https://s3-eu-west-1.amazonaws.com/wno/SEO/_facebook/open-graph.png',
+    email_address: 'company@stageup.uk',
+    name: `Welsh National Opera`
+  },
+  {
+    username: 'Impelo',
+    avatar:
+      'https://www.civilsociety.co.uk/uploads/assets/e7f9bcd9-3ef9-4935-be77fb6c030239fd/opengraphimage_83f4e8796336604b59d7216d0ecd81a5/impelo.jpg',
+    banner:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/196585942_3939636062801148_7382652784329788962_n.jpg?_nc_cat=102&ccb=1-3&_nc_sid=e3f864&_nc_ohc=eVwokYeNn-sAX-9PNnJ&_nc_ht=scontent-man2-1.xx&oh=f4167562aaf45548573461bec71002d5&oe=60CFCD0F',
+    email_address: 'company@stageup.uk',
+    name: `Powys Dance / Impelo`
+  },
+  {
+    username: 'ShermanTheatre',
+    avatar: 'https://www.uktw.co.uk/images/resources/Sherman-Theatre.png',
+    banner: 'https://www.uktw.co.uk/images/resources/Sherman-Theatre.png',
+    email_address: 'company@stageup.uk',
+    name: `Sherman Theatre`
+  },
+  {
+    username: 'SinfoniaC',
+    avatar:
+      'data:image/png;base64,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',
+    banner: 'https://sinfonia.cymru/wp-content/uploads/2020/07/Sinfonia-Cymru-Full-Colour-Base-logo.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Sinfonia Cymru`
+  },
+  {
+    username: 'TaliesinAC',
+    avatar: 'https://www.taliesinartscentre.co.uk/getfile/design/social.png',
+    banner:
+      'data:image/jpeg;base64,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',
+    email_address: 'company@stageup.uk',
+    name: `Taliesin Arts Centre`
+  },
+  {
+    username: 'TheatreBaraCaws',
+    avatar: 'http://theatrbaracaws.com/wp-content/uploads/2016/05/logo_baracaws_temp.png',
+    banner:
+      'data:image/jpeg;base64,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',
+    email_address: 'company@stageup.uk',
+    name: `Theatr Bara Caws`
+  },
+  {
+    username: 'TheatrClwyd',
+    avatar: 'https://pbs.twimg.com/profile_images/1268132675082223618/COLsB-kb_400x400.jpg',
+    banner:
+      'https://media-exp1.licdn.com/dms/image/C4E1BAQEubNHVN7FpNQ/company-background_10000/0/1596206984678?e=2159024400&v=beta&t=Mp9-L5Hna5NFq0WSxSv7G2jD7hFQdIDks-_RkgEUeyE',
+    email_address: 'company@stageup.uk',
+    name: `Theatr Clwyd`
+  },
+  {
+    username: 'TGC',
+    avatar: 'https://pbs.twimg.com/profile_images/1267766045915348998/PWBsnDqU.jpg',
+    banner:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/195371596_10158461561127055_2983826567913882061_n.jpg?_nc_cat=105&ccb=1-3&_nc_sid=e3f864&_nc_ohc=ODnaoQCyDhsAX_GMzBz&_nc_ht=scontent-man2-1.xx&oh=5b345a7eb411d3aa1aa6c53e124341f7&oe=60D10011',
+    email_address: 'company@stageup.uk',
+    name: `Theatr Genedlaethol Cymru`
+  },
+  {
+    username: 'TheatrIoio',
+    avatar: 'https://arts.wales/sites/default/files/2019-07/-jZKG9Uk.jpg',
+    banner:
+      'https://images.squarespace-cdn.com/content/v1/5704e2440442621c34c21a87/1589877180430-Z3M51CVCFDJU6EFFJJ07/ke17ZwdGBToddI8pDm48kFmfxoboNKufWj-55Bgmc-J7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0iXS6XmVv7bUJ418E8Yoc1hjuviiiZmrL38w1ymUdqq4JaGeFUxjM-HeS7Oc-SSFcg/ioloschoolsriverfront2018kirstenmcternan375.jpg?format=1000w',
+    email_address: 'company@stageup.uk',
+    name: `Theatr Iolo`
+  },
+  {
+    username: 'TheatrMlwdan',
+    avatar:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/76685737_3159336837426865_6529762140159475712_n.jpg?_nc_cat=109&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=yjGlnG4JUokAX-L2OzU&_nc_ht=scontent-man2-1.xx&oh=ac9a369023c22d119e2ba23a5ef31711&oe=60D07523',
+    banner:
+      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/p960x960/188514375_4725051354188731_2728837062003708939_n.jpg?_nc_cat=108&ccb=1-3&_nc_sid=e3f864&_nc_ohc=0kvA-JixQjoAX8hGZ0q&_nc_ht=scontent-man2-1.xx&tp=6&oh=dc1811e5917f3d562e33cd17db14a5b3&oe=60CFA93D',
+    email_address: 'company@stageup.uk',
+    name: `Theatr Mwldan`
+  },
+  {
+    username: 'TheatrNaNÓg',
+    avatar: 'https://pbs.twimg.com/profile_images/815365749489463297/631pqCtz_400x400.jpg',
+    banner:
+      'https://lh3.googleusercontent.com/proxy/oZfrkzulRzeBF2pZFZwKIzLIrcYzIWj4ZY-uFWzFCDMJWX1_J-pIyhyPMK_OFaPWkl5YGuG3QExXSbywQ2JAZKZ8XWllG3DUVnalQ6vA4U9rZcSapInh8i8qfy_uVshbO1E',
+    email_address: 'company@stageup.uk',
+    name: `Theatr na nÓg`
+  },
+  {
+    username: 'TorchTheatre',
+    avatar:
+      'https://media-exp3.licdn.com/dms/image/C510BAQHF0mlUi2SeWA/company-logo_200_200/0/1519886097924?e=2159024400&v=beta&t=xUhgzEof9MyFCeS4Sn7zk9EUsHieAV5Jo4PGJmdattM',
+    banner: 'https://www.torchtheatre.co.uk/media/405964/torch-theatre-header-01.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Torch Theatre`
+  },
+  {
+    username: 'Trac',
+    avatar:
+      'data:image/jpeg;base64,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',
+    banner: 'https://trac.cymru/wp-content/uploads/header.png',
+    email_address: 'company@stageup.uk',
+    name: `trac - Music Traditions Wales`
+  },
+  {
+    username: 'TyCerdd',
+    avatar: 'https://i1.sndcdn.com/avatars-A2DPAVkVh5aWJr1H-ZdTcLQ-t500x500.jpg',
+    banner:
+      'data:image/png;base64,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',
+    email_address: 'company@stageup.uk',
+    name: `Ty Cerdd - Music Centre Wales`
+  },
+  {
+    username: 'SJSS',
+    avatar:
+      'https://scontent-lhr8-1.xx.fbcdn.net/v/t31.18172-8/10631078_10152668830179557_5899394516670305912_o.jpg?_nc_cat=108&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=17hlVOF4rBEAX-MmHgj&_nc_ht=scontent-lhr8-1.xx&oh=0318cdb2849743ccd62952e651fe2829&oe=60F2E985',
+    banner:
+      'https://scontent-lhr8-1.xx.fbcdn.net/v/t1.6435-9/62205930_10157221423994557_6967708264431616_n.jpg?_nc_cat=110&ccb=1-3&_nc_sid=e3f864&_nc_ohc=hMHJHJCVEWkAX97Bsgh&_nc_ht=scontent-lhr8-1.xx&oh=edfb8447109bf3d79b5bb274e4b9c2f9&oe=60D3436B',
+    email_address: 'company@stageup.uk',
+    name: `St John Smiths Square`
   }
 ]);

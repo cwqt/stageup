@@ -17,7 +17,7 @@ import {
   IHostMemberChangeRequest,
   IInvoice,
   IRefundRequest,
-  RefundReason,
+  RefundRequestReason,
   IPersonInfo,
   ISocialInfo,
   PaginationOptions,
@@ -29,7 +29,10 @@ import {
   BusinessType,
   DtoUpdateHost,
   IContactInfo,
-  DtoUpdatePatronTier
+  DtoUpdatePatronTier,
+  IBulkRefund,
+  BulkRefundReason,
+  IProcessRefunds
 } from '@core/interfaces';
 import {
   any,
@@ -124,8 +127,19 @@ export namespace objects {
 
   export const RefundInvoiceRequest: Describe<IRefundRequest> = object({
     requested_on: fields.timestamp,
-    request_reason: enums<RefundReason>(enumToValues(RefundReason)),
+    request_reason: enums<RefundRequestReason>(enumToValues(RefundRequestReason)),
     request_detail: string()
+  });
+
+  export const IBulkRefund: Describe<IBulkRefund> = object({
+    bulk_refund_reason: optional(enums<BulkRefundReason>(enumToValues(BulkRefundReason))),
+    bulk_refund_detail: optional(string())
+  });
+
+  export const IProcessRefunds: Describe<IProcessRefunds> = object({
+    invoice_ids: array(fields.nuuid),
+    bulk_refund_reason: optional(enums<BulkRefundReason>(enumToValues(BulkRefundReason))),
+    bulk_refund_detail: optional(string())
   });
 
   export const IHostBusinessDetails: Describe<IHostBusinessDetails> = object({

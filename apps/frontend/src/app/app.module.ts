@@ -132,7 +132,7 @@ import { PaymentMethodThumbComponent } from './components/payment-method/payment
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
-import { ProcessRefundDialogComponent } from './components/dialogs/process-refund-dialog/process-refund-dialog.component';
+import { ProcessRefundsDialogComponent } from './components/dialogs/process-refunds-dialog/process-refunds-dialog.component';
 import { ConfirmationDialogComponent } from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
 import { HostThumbComponent } from './components/host-thumb/host-thumb.component';
@@ -244,7 +244,7 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
     PaymentMethodThumbComponent,
     WalletSettingsComponent,
     GenreFeedComponent,
-    ProcessRefundDialogComponent,
+    ProcessRefundsDialogComponent,
     UserPatronageComponent,
     ConfirmationDialogComponent,
     UserPatronageComponent,

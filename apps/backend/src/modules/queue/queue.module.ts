@@ -135,7 +135,6 @@ export class QueueModule implements Module {
     {
 
       bus.subscribe("performance.created",               handlers.createPerformanceAnalyticsCollectionJob);
-
       bus.subscribe("host.created",                      handlers.createHostAnalyticsCollectionJob)
       bus.subscribe('host.stripe_connected',             handlers.setupDefaultPatronTierForHost);
       bus.subscribe("host.invoice_export",              async ct => {
@@ -151,11 +150,10 @@ export class QueueModule implements Module {
       });
 
       bus.subscribe('refund.requested',                  handlers.sendInvoiceRefundRequestConfirmation);
-      bus.subscribe("refund.refunded", combine([         handlers.sendUserRefundRefundedEmail,
-                                                         handlers.sendHostRefundRefundedEmail]))
-      bus.subscribe("refund.initiated", combine([        handlers.sendUserRefundInitiatedEmail,
-                                                         handlers.sendHostRefundInitiatedEmail]))
-
+      bus.subscribe("refund.initiated",        combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail, handlers.enactStripeRefund]));
+      bus.subscribe("refund.refunded",         combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail])) 
+      bus.subscribe("refund.bulk",                       handlers.processBulkRefunds);                                    
+      bus.subscribe("test.send_email",                   handlers.sendTestEmail); 
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
       // bus.subscribe('user.invited_to_private_showing',  handlers.sendUserPrivatePerformanceInviteEmail);

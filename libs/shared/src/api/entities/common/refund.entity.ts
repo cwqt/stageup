@@ -1,5 +1,12 @@
 import { uuid } from '@core/helpers';
-import { IRefund, IRefundRequest, RefundResponseReason, RefundReason } from '@core/interfaces';
+import {
+  IRefund,
+  IRefundRequest,
+  RefundResponseReason,
+  RefundRequestReason,
+  BulkRefundReason,
+  IBulkRefund
+} from '@core/interfaces';
 import { BaseEntity, Entity, Column, ManyToOne, BeforeInsert, PrimaryColumn, OneToOne } from 'typeorm';
 import { Invoice } from './invoice.entity';
 
@@ -13,24 +20,35 @@ export class Refund extends BaseEntity implements IRefund {
   @Column() is_refunded: boolean;
 
   // Request
-  @Column() requested_on: number;
-  @Column('enum', { enum: RefundReason }) request_reason: RefundReason;
-  @Column() request_detail: string;
+  @Column({ nullable: true }) requested_on: number;
+  @Column('enum', { enum: RefundRequestReason, nullable: true }) request_reason: RefundRequestReason;
+  @Column({ nullable: true }) request_detail: string;
 
   // Response
   @Column({ nullable: true }) responded_on?: number;
   @Column('enum', { enum: RefundResponseReason, nullable: true }) response_reason?: RefundResponseReason;
   @Column({ nullable: true }) response_detail?: string;
 
-  @ManyToOne(() => Invoice, invoice => invoice.refunds) invoice: Invoice;
+  // Bulk Refunds
+  @Column('enum', { enum: BulkRefundReason, nullable: true }) bulk_refund_reason?: BulkRefundReason;
+  @Column({ nullable: true }) bulk_refund_detail?: string;
 
-  constructor(invoice: Invoice, request: IRefundRequest) {
+  @ManyToOne(() => Invoice, invoice => invoice.refunds, { cascade: true, nullable: false }) invoice: Invoice;
+
+  constructor(invoice: Invoice, request?: IRefundRequest, bulkRefund?: IBulkRefund) {
     super();
     this.invoice = invoice;
 
-    this.requested_on = request.requested_on;
-    this.request_detail = request.request_detail;
-    this.request_reason = request.request_reason;
+    if (request) {
+      this.requested_on = request.requested_on;
+      this.request_detail = request.request_detail;
+      this.request_reason = request.request_reason;
+    }
+
+    if (bulkRefund) {
+      this.bulk_refund_reason = bulkRefund.bulk_refund_reason;
+      this.bulk_refund_detail = bulkRefund.bulk_refund_detail;
+    }
 
     this.is_refunded = false;
   }
@@ -44,7 +62,9 @@ export class Refund extends BaseEntity implements IRefund {
       is_refunded: this.is_refunded,
       responded_on: this.responded_on,
       response_reason: this.response_reason,
-      response_detail: this.response_detail
+      response_detail: this.response_detail,
+      bulk_refund_reason: this.bulk_refund_reason,
+      bulk_refund_detail: this.bulk_refund_detail
     };
   }
 }

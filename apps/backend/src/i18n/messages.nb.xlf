@@ -178,7 +178,7 @@
         <target state="needs-translation">Fant ingen fakturaer</target>
       </trans-unit>
       <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while one another refund is already outstanding</source>
+        <source>Cannot refund while another refund is already outstanding</source>
         <target state="needs-translation">Kan ikke tilbakebetale mens hverandre er allerede utestående</target>
       </trans-unit>
       <trans-unit id="email.user.refund_initiated__content" datatype="html">
@@ -244,6 +244,38 @@ Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, vennl
       <trans-unit id="email.host.refund_initiated__subject" datatype="html">
         <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
         <target state="needs-translation">Refusjon startet for {user_username}s kjøp av {performance_name}</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_subject" datatype="html">
+        <source>You have initiated refunds for {refund_quantity} invoice(s)</source>
+        <target state="needs-translation">Du har startet refusjoner for {refund_quantity} faktura (er)</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
+        <source>**Hi {host_name},**
+
+You have initiated refunds for {refund_quantity} invoices
+
+**Total value: **{invoices_total}**
+
+We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
+
+**Thanks,**
+
+**StageUp Team**
+
+Please note, if this request was not initated by you please notify us immediately"</source>
+        <target state="needs-translation">** Hei {host_name}, **
+
+Du har startet refusjon for {refund_quantity} fakturaer
+
+** Total verdi: ** {invoices_total} **
+
+Vi har varslet de berørte kundene om at de skal motta det refunderte beløpet i kontoene sine innen 5 virkedager
+
+**Takk,**
+
+** StageUp Team **
+
+Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, må du varsle oss umiddelbart "</target>
       </trans-unit>
       <trans-unit id="email.user.refund_refunded__subject" datatype="html">
         <source>Refund for {performance_name} succesful!</source>

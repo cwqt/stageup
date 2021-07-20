@@ -13,6 +13,7 @@ import {
   OnboardingReview,
   PatronSubscription,
   Performance,
+  Refund,
   PerformanceAnalytics,
   User,
   UserHostInfo,
@@ -29,6 +30,7 @@ import {
   HostOnboardingStep,
   HostPermission,
   HTTP,
+  IBulkRefund,
   IDeleteHostAssertion,
   IDeleteHostReason,
   IEnvelopedData,
@@ -891,13 +893,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
   processRefunds(): IControllerEndpoint<void> {
     return {
       validators: {
-        body: object({
-          invoice_ids: array(fields.nuuid)
-        })
+        body: Validators.Objects.processRefunds
       },
       authorisation: AuthStrat.isMemberOfHost(),
       controller: async req => {
         const invoiceIds: string[] = req.body.invoice_ids;
+        let bulkRefundData: IBulkRefund = {
+          bulk_refund_reason: req.body.bulk_refund_reason,
+          bulk_refund_detail: req.body.bulk_refund_detail
+        };
+
         const invoices = await Invoice.find({
           where: {
             _id: In(invoiceIds),
@@ -907,37 +912,45 @@ export default class HostController extends BaseController<BackendProviderMap> {
           },
           relations: {
             host: true,
-            user: true
+            user: true,
+            refunds: {
+              invoice: true
+            }
           },
           select: {
-            host: { _id: true, stripe_account_id: true }
+            host: { _id: true, stripe_account_id: true },
+            refunds: true,
+            user: true
           }
         });
+
         // No invoices found for provided ids
         if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
-        // Refund all invoices in parallel, & wait for them all to finish
+
+        // Create an entry in the refund table for bulk refunds where a request was not made
         await Promise.all(
-          // invoices.map evaluates to [Promise<pending>, Promise<pending>, ...]
           invoices.map(async invoice => {
-            if (invoice.status !== PaymentStatus.RefundRequested)
-              throw new ErrorHandler(HTTP.BadRequest, '@@refunds.refund_already_outstanding');
+            let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
 
-            this.providers.stripe.connection.refunds.create(
-              {
-                payment_intent: invoice.stripe_payment_intent_id
-              },
-              {
-                stripeAccount: invoice.host.stripe_account_id
-              }
-            );
-
-            return await this.providers.bus.publish(
-              'refund.initiated',
-              { invoice_id: invoice._id, user_id: invoice.user._id },
-              req.locale
-            );
+            if (refundPresent === undefined) {
+              await this.ORM.transaction(async txc => {
+                const refund = await new Refund(invoice, null, bulkRefundData);
+                refund.invoice = invoice;
+                await txc.save(refund);
+              });
+            }
           })
         );
+
+        if (invoiceIds.length > 1) {
+          return await this.providers.bus.publish('refund.bulk', { invoice_ids: invoiceIds }, req.locale);
+        } else {
+          return await this.providers.bus.publish(
+            'refund.initiated',
+            { invoice_id: invoices[0]._id, user_id: invoices[0].user._id },
+            req.locale
+          );
+        }
       }
     };
   }

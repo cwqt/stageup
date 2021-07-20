@@ -58,7 +58,7 @@
 
   // Refunds ----------------------------------------------------------------------------------------------
   "refunds.no_invoices_found": Could not find any invoices
-  "refunds.refund_already_outstanding": Cannot refund while one another refund is already outstanding
+  "refunds.refund_already_outstanding": Cannot refund while another refund is already outstanding
 
   // Emails -----------------------------------------------------------------------------------------------
   "email.user.refund_initiated__content":
@@ -95,6 +95,24 @@
     Please note, if this request was not initated by you please notify us immediately
     '''
   "email.host.refund_initiated__subject": Refund initiated for {user_username}'s purchase of {performance_name}
+  "email.host.refund_bulk_initiated_subject": You have initiated refunds for {refund_quantity} invoice(s)
+  "email.host.refund_bulk_initiated_content":
+    '''
+
+    **Hi {host_name},**
+
+    You have initiated refunds for {refund_quantity} invoices
+
+    **Total value: **{invoices_total}**
+
+    We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
+
+    **Thanks,**
+
+    **StageUp Team**
+
+    Please note, if this request was not initated by you please notify us immediately"
+    '''
   "email.user.refund_refunded__subject": Refund for {performance_name} succesful!
   "email.user.refund_refunded__content":
     '''

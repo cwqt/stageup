@@ -88,7 +88,6 @@ export class SearchComponent implements OnInit {
   }
 
   openDialogHost(hostname) {
-    console.log(hostname);
     this.baseAppService.navigateTo(`/@${hostname}`);
   }
 }

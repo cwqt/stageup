@@ -42,7 +42,7 @@ export class Seeder {
 
     await Promise.all(
       hostMockData.map(async (hostData, idx) => {
-        const user = await this.createUser(idx == 0 ? 'rubicon@stageup.uk' : undefined);
+        const user = await this.createUser(idx == 0 ? 'torch@stageup.uk' : undefined);
         const host = await this.createHost(hostData);
         await this.addUserToHost(user, host, HostPermission.Owner);
 

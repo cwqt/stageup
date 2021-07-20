@@ -178,7 +178,7 @@
         <target state="needs-translation">Methu dod o hyd i unrhyw anfonebau</target>
       </trans-unit>
       <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while one another refund is already outstanding</source>
+        <source>Cannot refund while another refund is already outstanding</source>
         <target state="needs-translation">Ni ellir ad-dalu tra bo ad-daliad ei gilydd eisoes yn ddyledus</target>
       </trans-unit>
       <trans-unit id="email.user.refund_initiated__content" datatype="html">
@@ -244,6 +244,38 @@ Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith<
       <trans-unit id="email.host.refund_initiated__subject" datatype="html">
         <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
         <target state="needs-translation">Cychwynnwyd ad-daliad ar gyfer pryniant {user_username} o {performance_name}</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_subject" datatype="html">
+        <source>You have initiated refunds for {refund_quantity} invoice(s)</source>
+        <target state="needs-translation">Rydych wedi cychwyn ad-daliadau ar gyfer anfoneb (ion) {refund_quantity}</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
+        <source>**Hi {host_name},**
+
+You have initiated refunds for {refund_quantity} invoices
+
+**Total value: **{invoices_total}**
+
+We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
+
+**Thanks,**
+
+**StageUp Team**
+
+Please note, if this request was not initated by you please notify us immediately"</source>
+        <target state="needs-translation">** Hi {host_name}, **
+
+Rydych wedi cychwyn ad-daliadau ar gyfer anfonebau {refund_quantity}
+
+** Cyfanswm gwerth: ** {invoices_total} **
+
+Rydym wedi hysbysu'r cwsmeriaid yr effeithir arnynt y byddant yn derbyn y swm a ad-dalwyd yn eu cyfrifon cyn pen 5 diwrnod gwaith
+
+** Diolch, **
+
+** Tîm StageUp **
+
+Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith "</target>
       </trans-unit>
       <trans-unit id="email.user.refund_refunded__subject" datatype="html">
         <source>Refund for {performance_name} succesful!</source>

@@ -61,7 +61,8 @@ export type EventContract = {
   ['refund.refunded']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; refund_id: IRefund['_id'] };
   ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id'] };
   ['refund.rejected']: {};
-  // Patronage ----------------------------------------------------------------
+  ['refund.bulk']: { invoice_ids: Array<IInvoice['_id']> };
+  // Patronage ----------------------------------------------------------------#
   ['patronage.started']: {
     user_id: IUser['_id'];
     tier_id: IPatronTier['_id'];
@@ -103,4 +104,4 @@ export type Contract<T extends Event> = EventContract[T] & {
  * @example bus.subscribe("some.event", combine([handler1, handler2]));
  */
 export const combine = <T extends Event>(fns: Array<(ct: Contract<T>) => Promise<void>>) => (ct: Contract<T>) =>
-  Promise.all(fns.map(f => f(ct)));
+  Promise.allSettled(fns.map(f => f(ct)));

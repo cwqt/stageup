@@ -1,4 +1,4 @@
-<ui-dialog [buttons]="buttons" title="Refund request" [loading]="$loading | async">
+<ui-dialog *ngIf="!multipleRefunds" [buttons]="buttons" title="Refund request" [loading]="$loading | async">
     <ng-container *ngIf="invoice.data">
     <h4 i18n>Invoice Number: <span class="opacity-50">#{{ invoice.data.invoice_id }}</span></h4>
     <h5 i18n>Amount: {{ invoice.data.amount | currencyPipe: invoice.data.currency }}</h5>
@@ -8,5 +8,13 @@
     <p>{{ refunds.data[0].request_reason | refundReasonPipe }}</p>
     <h5 i18n>Reason details:</h5>
     <p>{{ refunds.data[0].request_detail}}</p>
+</ng-container>
+</ui-dialog>
+<!-- For bulk refunds for cancelled perfs etc (blanket reason given for all) -->
+<ui-dialog *ngIf="multipleRefunds" [buttons]="buttons" title="Bulk Refund Request" [loading]="$loading | async">
+    <ng-container *ngIf="data">
+    <h4 i18n>Number of invoices: <span class="opacity-50">{{ data.length }}</span></h4>
+    
+   <ui-form [form]="bulkRefundForm"></ui-form>
 </ng-container>
 </ui-dialog>

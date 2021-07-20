@@ -1,7 +1,17 @@
 import Env from '@backend/env';
-import { Host, Invoice, PatronSubscription, PatronTier, Performance, Refund, transact, User } from '@core/api';
+import {
+  ErrorHandler,
+  Host,
+  Invoice,
+  PatronSubscription,
+  PatronTier,
+  Performance,
+  Refund,
+  transact,
+  User
+} from '@core/api';
 import { dateOrdinal, i18n, pipes, richtext, timestamp, timeout } from '@core/helpers';
-import { CurrencyCode, PatronSubscriptionStatus } from '@core/interfaces';
+import { CurrencyCode, HTTP, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
 
 // FOR SENDING EMAILS: ----------------------------------------------------------
@@ -16,6 +26,7 @@ import dbless from 'dbless-email-verification';
 // ------------------------------------------------------------------------------
 import { Contract } from 'libs/shared/src/api/event-bus/contracts';
 import moment from 'moment';
+import { In } from 'typeorm';
 import { QueueModule, QueueProviders } from './queue.module';
 
 export class EventHandlers {
@@ -266,16 +277,17 @@ export class EventHandlers {
 
   sendHostRefundInitiatedEmail = async (ct: Contract<'refund.initiated'>) => {
     const invoice = await Invoice.findOne({
+      where: {
+        _id: ct.invoice_id
+      },
       relations: {
         ticket: {
           performance: true
         },
         host: true
-      },
-      where: {
-        _id: ct.invoice_id
       }
     });
+
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address', 'username'] });
 
     this.queues.send_email.add({
@@ -298,15 +310,15 @@ export class EventHandlers {
 
   sendUserRefundInitiatedEmail = async (ct: Contract<'refund.initiated'>) => {
     const invoice = await Invoice.findOne({
+      where: {
+        _id: ct.invoice_id
+      },
       relations: {
         ticket: {
           performance: true
         },
         host: true,
         payment_method: true
-      },
-      where: {
-        _id: ct.invoice_id
       }
     });
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address'] });
@@ -402,6 +414,80 @@ export class EventHandlers {
       markdown: true,
       attachments: []
     });
+  };
+
+  enactStripeRefund = async (ct: Contract<'refund.initiated'>) => {
+    console.log('in requeststriperefund');
+    const invoice = await this.providers.orm.connection
+      .createQueryBuilder(Invoice, 'i')
+      .where('i._id = :_id', { _id: ct.invoice_id })
+      .leftJoinAndSelect('i.host', 'host')
+      .getOne();
+
+    await this.providers.stripe.connection.refunds.create(
+      {
+        payment_intent: invoice.stripe_payment_intent_id
+      },
+      {
+        stripeAccount: invoice.host.stripe_account_id
+      }
+    );
+  };
+
+  processBulkRefunds = async (ct: Contract<'refund.bulk'>) => {
+    const invoices = await Invoice.find({
+      relations: {
+        ticket: {
+          performance: true
+        },
+        host: true,
+        user: true
+      },
+      where: {
+        _id: In(ct.invoice_ids)
+      }
+    });
+
+    const refundQuantity = invoices.length;
+
+    //Check all invoices are the same currency, error if not
+
+    if (!invoices.every(i => i.currency === invoices[0].currency))
+      //TODO remove this error when multi currency implemented
+      throw new ErrorHandler(HTTP.Forbidden, 'All refunds must be in the same currency');
+
+    const invoicesTotal = i18n.money(
+      invoices.reduce((acc, curr) => ((acc += +curr.amount), acc), 0),
+      invoices[0].currency
+    );
+
+    //Send bulk refund initiation email to host
+    this.queues.send_email.add({
+      subject: this.providers.i18n.translate('@@email.host.refund_bulk_initiated_subject', ct.__meta.locale, {
+        refund_quantity: refundQuantity
+      }),
+      content: this.providers.i18n.translate('@@email.host.refund_bulk_initiated_content', ct.__meta.locale, {
+        host_name: invoices[0].host.name,
+        refund_quantity: refundQuantity,
+        invoices_total: invoicesTotal
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: invoices[0].host.email_address, //TODO need to change this when we go multi currency
+      markdown: true,
+      attachments: []
+    });
+
+    //Initiate individual refund jobs
+
+    await Promise.all(
+      invoices.map(async invoice => {
+        await this.providers.bus.publish(
+          'refund.initiated',
+          { invoice_id: invoice._id, user_id: invoice.user._id },
+          ct.__meta.locale
+        );
+      })
+    );
   };
 
   unsubscribeAllPatronTierSubscribers = async (ct: Contract<'patronage.tier_deleted'>) => {

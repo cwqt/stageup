@@ -116,6 +116,7 @@ popper-content {
 
 .ui-table--actions {
   display: flex;
+  flex-flow: column;
   ui-button {
     margin: 0;
     ::ng-deep button {

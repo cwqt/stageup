@@ -61,7 +61,14 @@ export class FeedComponent implements OnInit {
       small: true
     },
     [Genre.Family]: { label: $localize`Family`, gradient: 'linear-gradient(to right, #76b852, #8dc26f);' },
-    [Genre.Theatre]: { label: $localize`Theatre`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' }
+    [Genre.Theatre]: { label: $localize`Theatre`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' },
+    [Genre.Ballet]: { label: $localize`Ballet`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' },
+    [Genre.Country]: { label: $localize`Country`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' },
+    [Genre.Music]: { label: $localize`Music`, gradient: 'linear-gradient(to right, #6a3093, #a044ff)' },
+    [Genre.Networking]: { label: $localize`Networking`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' },
+    [Genre.Opera]: { label: $localize`Opera`, gradient: 'linear-gradient(to right, #6a3093, #a044ff)' },
+    [Genre.Poetry]: { label: $localize`Poetry`, gradient: 'linear-gradient(to right, #403a3e, #be5869);' },
+    [Genre.Orchestra]: { label: $localize`Orchestra`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' }
   };
 
   constructor(
