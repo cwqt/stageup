@@ -1,3 +1,4 @@
+import { GdprService } from './../../../services/gdpr.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,11 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./general-terms.component.scss']
 })
 export class GeneralTermsComponent implements OnInit {
+  constructor(private gdprService: GdprService) {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-
+  async ngOnInit(): Promise<void> {
+    const termsAndConditions = await this.gdprService.getLatestDocument('general_toc');
+    console.log('termsAndConditions', termsAndConditions);
   }
-
 }
