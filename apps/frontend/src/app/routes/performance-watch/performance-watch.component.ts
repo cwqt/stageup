@@ -48,6 +48,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
   };
 
   rating: number; // user rating (if they have)
+  registeredView: boolean = false; // if view hit already counted
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
@@ -105,6 +106,12 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
 
   handlePlayerError(event: Plyr.PlyrEvent) {
     console.log(event);
+  }
+
+  handlePlayerPlay(event: Plyr.PlyrEvent) {
+    if (!this.registeredView) this.performanceService.registerView(this.performance.data._id, this.primaryAsset._id);
+
+    this.registeredView = true;
   }
 
   initialiseSSE() {

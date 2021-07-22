@@ -51,10 +51,6 @@ export class PerformanceComponent implements OnInit {
       );
   }
 
-  gotoWatch() {
-    this.appService.navigateTo(`performances/${this.perf._id}/watch`);
-  }
-
   gotoFeed() {
     this.appService.navigateTo(`/`);
   }

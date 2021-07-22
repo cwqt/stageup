@@ -16,6 +16,7 @@ export class PlayerComponent implements OnInit {
   @Output() onPlayerError: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
   @Output() onPlayerWaiting: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
   @Output() onPlayerEnded: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
+  @Output() onPlayerPlay: EventEmitter<Plyr.PlyrEvent> = new EventEmitter();
 
   asset?: IAssetStub;
   token?: ISignedToken;
@@ -60,8 +61,8 @@ export class PlayerComponent implements OnInit {
     this.poster = `https://image.mux.com/${playbackId}/thumbnail.jpg`;
   }
 
-  _onPlay() {
-    console.log(this.streamSources);
+  _onPlay(event: Plyr.PlyrEvent) {
+    this.onPlayerPlay.emit(event);
   }
 
   _onPlayerInit(event: Plyr) {

@@ -32,12 +32,20 @@
   </ng-container>
   <div class="absolute top-4 right-4 z-10">
     <div class="mb-3">
-      <app-rate-performance [rating]="rating" [starCount]="3" (ratingUpdated)="onRatingChanged($event)"></app-rate-performance>
+      <app-rate-performance
+        [rating]="rating"
+        [starCount]="3"
+        (ratingUpdated)="onRatingChanged($event)"
+      ></app-rate-performance>
     </div>
     <app-social-sharing class="inline-flex justify-end min-w-full" [url]="performanceSharingUrl"></app-social-sharing>
   </div>
 
-  <app-player (onPlayerError)="handlePlayerError($event)" (onPlayerReady)="handlePlayerReady($event)"></app-player>
+  <app-player
+    (onPlayerError)="handlePlayerError($event)"
+    (onPlayerReady)="handlePlayerReady($event)"
+    (onPlayerPlay)="handlePlayerPlay($event)"
+  ></app-player>
 </div>
 
 <!--

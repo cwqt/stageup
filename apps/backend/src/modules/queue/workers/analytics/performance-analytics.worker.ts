@@ -1,9 +1,15 @@
-import { Invoice, Performance, PerformanceAnalytics, Providers } from '@core/api';
+import { AssetGroup, AssetView, Invoice, Performance, PerformanceAnalytics, Providers } from '@core/api';
 import { JobData, PurchaseableType } from '@core/interfaces';
 import { Job } from 'bullmq';
 import { analyze } from './analytics.worker';
 
-export default ({ orm }: { orm: InstanceType<typeof Providers.Postgres> }) => async (job: Job) => {
+export default ({
+  orm,
+  mux
+}: {
+  orm: InstanceType<typeof Providers.Postgres>;
+  mux: InstanceType<typeof Providers.Mux>;
+}) => async (job: Job) => {
   const data: JobData['collect_performance_analytics'] = job.data;
   const performance = await Performance.findOne({ where: { _id: data.performance_id } });
 
@@ -42,7 +48,13 @@ export default ({ orm }: { orm: InstanceType<typeof Providers.Postgres> }) => as
           .getRawOne()) || { sum: '0' };
 
         return parseInt(sum);
-      }
+      },
+      performance_views: async (start, end) =>
+        orm.connection
+          .createQueryBuilder(AssetView, 'view')
+          .where('view.performance__id = :pid', { pid: performance._id })
+          .andWhere('view.viewed_at BETWEEN :end AND :start', { start, end })
+          .getCount()
     },
     job
   );

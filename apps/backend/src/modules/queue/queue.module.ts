@@ -33,6 +33,7 @@ export type QueueProviders = {
   orm: InstanceType<typeof Providers.Postgres>;
   stripe: InstanceType<typeof Providers.Stripe>;
   bus: InstanceType<typeof Providers.EventBus>;
+  mux: InstanceType<typeof Providers.Mux>;
 };
 
 const w = worker => {
@@ -83,7 +84,7 @@ export class QueueModule implements Module {
         (() => {
           switch (type) {
             case 'collect_performance_analytics':
-              return w(this.workers['collect_performance_analytics']({ orm: providers.orm }));
+              return w(this.workers['collect_performance_analytics']({ orm: providers.orm, mux: providers.mux }));
             case 'collect_host_analytics':
               return w(this.workers['collect_host_analytics']({ orm: providers.orm }));
             case 'send_email':
@@ -133,7 +134,6 @@ export class QueueModule implements Module {
 
     // prettier-ignore
     {
-
       bus.subscribe("performance.created",               handlers.createPerformanceAnalyticsCollectionJob);
       bus.subscribe("host.created",                      handlers.createHostAnalyticsCollectionJob)
       bus.subscribe('host.stripe_connected',             handlers.setupDefaultPatronTierForHost);
@@ -151,9 +151,9 @@ export class QueueModule implements Module {
 
       bus.subscribe('refund.requested',                  handlers.sendInvoiceRefundRequestConfirmation);
       bus.subscribe("refund.initiated",        combine([ handlers.sendUserRefundInitiatedEmail, handlers.sendHostRefundInitiatedEmail, handlers.enactStripeRefund]));
-      bus.subscribe("refund.refunded",         combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail])) 
-      bus.subscribe("refund.bulk",                       handlers.processBulkRefunds);                                    
-      bus.subscribe("test.send_email",                   handlers.sendTestEmail); 
+      bus.subscribe("refund.refunded",         combine([ handlers.sendUserRefundRefundedEmail, handlers.sendHostRefundRefundedEmail]))
+      bus.subscribe("refund.bulk",                       handlers.processBulkRefunds);
+      bus.subscribe("test.send_email",                   handlers.sendTestEmail);
       bus.subscribe('user.registered',                   handlers.sendUserVerificationEmail);
       bus.subscribe('user.invited_to_host',              handlers.sendUserHostInviteEmail);
       // bus.subscribe('user.invited_to_private_showing',  handlers.sendUserPrivatePerformanceInviteEmail);

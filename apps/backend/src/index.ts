@@ -72,7 +72,8 @@ Register<BackendProviderMap>({
     email: providers.email,
     orm: providers.torm,
     stripe: providers.stripe,
-    bus: providers.bus
+    bus: providers.bus,
+    mux: providers.mux
   });
 
   const SSE = await new SSEModule(logger).register(providers.bus, {

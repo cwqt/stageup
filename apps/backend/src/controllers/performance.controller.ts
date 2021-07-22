@@ -3,6 +3,8 @@ import {
   AccessToken,
   Asset,
   AssetGroup,
+  AssetView,
+  Auth,
   BaseController,
   Follow,
   getCheck,
@@ -851,7 +853,8 @@ export default class PerformanceController extends BaseController<BackendProvide
         if (existingRating) {
           await this.ORM.transaction(async txc => {
             // Update the performance rating_total. The rating_count does not change.
-            performance.rating_total = performance.rating_total - existingRating.rating + req.body.rate_value.toFixed(4);
+            performance.rating_total =
+              performance.rating_total - existingRating.rating + req.body.rate_value.toFixed(4);
             await txc.save(performance);
             // Update the rating
             existingRating.rating = req.body.rate_value.toFixed(4);
@@ -884,7 +887,7 @@ export default class PerformanceController extends BaseController<BackendProvide
             .andWhere('rating.performance__id = :pid', { pid: req.params.pid })
             .getOne()
         );
-        if(!existingRating) throw new ErrorHandler(HTTP.BadRequest, "@@error.no_rating_exists");
+        if (!existingRating) throw new ErrorHandler(HTTP.BadRequest, '@@error.no_rating_exists');
         // Check performance exists with performance ID
         const performance = await getCheck(Performance.findOne({ where: { _id: req.params.pid } }));
         // Create new rating and update total count/rating
@@ -939,6 +942,28 @@ export default class PerformanceController extends BaseController<BackendProvide
             await txc.save(performance);
           });
         }
+      }
+    };
+  }
+
+  registerView(): IControllerEndpoint<void> {
+    return {
+      authorisation: AuthStrat.none,
+      middleware: this.middleware.rateLimit(60, 10, this.providers.redis.connection),
+      controller: async req => {
+        const { pid: performanceId, aid: assetId } = req.params;
+        const performance = await getCheck(Performance.findOne({ _id: performanceId }));
+
+        // asset must be on this performance
+        if (!performance.asset_group.assets.map(g => g._id).includes(assetId))
+          throw new ErrorHandler(HTTP.BadRequest, '@@error.incorrect');
+
+        const view = new AssetView(req.session.user?._id, assetId, performanceId);
+        await view.save();
+
+        // increment counter
+        performance.views += 1;
+        await performance.save();
       }
     };
   }
