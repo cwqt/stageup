@@ -38,7 +38,7 @@ export interface IPerformanceStub {
   views: number; // total user view count
   like_count: number; // total user likes
   created_at: number;
-  assets: IAssetStub[];
+  assets?: IAssetStub[];
   thumbnail: string;
   status: PerformanceStatus;
 }

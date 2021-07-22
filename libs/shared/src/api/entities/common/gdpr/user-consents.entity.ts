@@ -1,4 +1,4 @@
-import { Host } from '@core/api';
+import { Host, User, Performance } from '@core/api';
 import {
   IUserCookiesConsent,
   IUserHostMarketingConsent,
@@ -15,12 +15,14 @@ export class UserHostMarketingConsent extends UserConsent<'host_marketing'> impl
   constructor(
     softOptIn: boolean,
     host: Host,
+    user: User,
     termsAndConditions: Consentable<'general_toc'>,
     privacyPolicy: Consentable<'privacy_policy'>
   ) {
     super();
     this.soft_opt_in = softOptIn;
     this.host = host;
+    this.user = user;
     this.terms_and_conditions = termsAndConditions;
     this.privacy_policy = privacyPolicy;
   }
@@ -36,10 +38,14 @@ export class UserHostMarketingConsent extends UserConsent<'host_marketing'> impl
   @RelationId((consent: UserHostMarketingConsent) => consent.host) host__id: NUUID;
   @ManyToOne(() => Host) @JoinColumn() host: Host;
 
+  @RelationId((consent: UserHostMarketingConsent) => consent.user) user__id: NUUID;
+  @ManyToOne(() => User) @JoinColumn() user: User;
+
   toFull(): Required<IUserHostMarketingConsent> {
     return {
       ...super.toConsent(),
       host: this.host.toStub(),
+      user: this.user.toStub(),
       privacy_policy: this.privacy_policy,
       terms_and_conditions: this.terms_and_conditions,
       soft_opt_in: this.soft_opt_in
@@ -51,30 +57,55 @@ export class UserHostMarketingConsent extends UserConsent<'host_marketing'> impl
 export class UserStageUpMarketingConsent
   extends UserConsent<'stageup_marketing'>
   implements IUserStageUpMarketingConsent {
-  constructor() {
+  constructor(    
+    user: User,
+    termsAndConditions: Consentable<'general_toc'>,
+    privacyPolicy: Consentable<'privacy_policy'>
+  ) {
     super();
+    this.user = user;
+    this.terms_and_conditions = termsAndConditions;
+    this.privacy_policy = privacyPolicy;
   }
+
+  @RelationId((consent: UserStageUpMarketingConsent) => consent.terms_and_conditions) terms_and_conditions__id: NUUID;
+  @ManyToOne(() => Consentable) @JoinColumn() terms_and_conditions: Consentable<'general_toc'>;
+
+  @RelationId((consent: UserStageUpMarketingConsent) => consent.privacy_policy) privacy_policy__id: NUUID;
+  @ManyToOne(() => Consentable) @JoinColumn() privacy_policy: Consentable<'privacy_policy'>;
+
+  @RelationId((consent: UserStageUpMarketingConsent) => consent.user) user__id: NUUID;
+  @ManyToOne(() => User) @JoinColumn() user: User;
 
   toFull(): Required<IUserStageUpMarketingConsent> {
     return {
-      ...this.toConsent()
+      user: this.user.toStub(),
+      privacy_policy: this.privacy_policy,
+      terms_and_conditions: this.terms_and_conditions,
+      ...super.toConsent()
     };
   }
 }
 
 @ChildEntity()
 export class UserCookieConsent extends UserConsent<'cookies'> implements IUserCookiesConsent {
-  constructor(ipAddress: string) {
+  constructor(ipAddress: string, cookies: Consentable<'cookies'>) {
     super();
     this.ip_address = ipAddress;
+    this.cookies = cookies;
   }
 
   @Column('inet', { nullable: true }) ip_address: string;
 
+  @RelationId((consent: UserCookieConsent) => consent.cookies) cookies__id: NUUID;
+  @ManyToOne(() => Consentable) @JoinColumn() cookies: Consentable<'cookies'>;
+
+
   toFull(): Required<IUserCookiesConsent> {
     return {
       ...super.toConsent(),
-      ip_address: this.ip_address
+      ip_address: this.ip_address,
+      cookies: this.cookies,
     };
   }
 }
@@ -83,18 +114,28 @@ export class UserCookieConsent extends UserConsent<'cookies'> implements IUserCo
 export class UserPerformanceUploadConsent
   extends UserConsent<'upload_consent'>
   implements IUserPerformanceUploadConsent {
-  constructor(termsAndConditions: Consentable<'uploaders_toc'>) {
+  constructor(termsAndConditions: Consentable<'uploaders_toc'>, host: Host, performance: Performance) {
     super();
     this.terms_and_conditions = termsAndConditions;
+    this.host = host;
+    this.performance = performance;
   }
 
   @RelationId((consent: UserPerformanceUploadConsent) => consent.terms_and_conditions) terms_and_conditions__id: NUUID;
   @ManyToOne(() => Consentable) @JoinColumn() terms_and_conditions: Consentable<'uploaders_toc'>;
 
+  @RelationId((consent: UserPerformanceUploadConsent) => consent.performance) performance__id: NUUID;
+  @ManyToOne(() => Performance) @JoinColumn() performance: Performance;
+
+  @RelationId((consent: UserPerformanceUploadConsent) => consent.host) host__id: NUUID;
+  @ManyToOne(() => Host) @JoinColumn() host: Host;
+
   toFull(): Required<IUserPerformanceUploadConsent> {
     return {
       ...super.toConsent(),
-      terms_and_conditions: this.terms_and_conditions
+      terms_and_conditions: this.terms_and_conditions,
+      host: this.host.toStub(),
+      performance: this.performance.toStub(),
     };
   }
 }

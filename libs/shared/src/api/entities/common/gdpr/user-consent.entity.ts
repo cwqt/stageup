@@ -28,9 +28,6 @@ export abstract class UserConsent<T extends UserConsentType> extends BaseEntity 
 
   @Column() type: T;
 
-  @RelationId((userConsent: UserConsent<any>) => userConsent.user) user__id: NUUID;
-  @ManyToOne(() => User) user: User;
-
   constructor() {
     super();
     this._id = uuid();
@@ -39,7 +36,6 @@ export abstract class UserConsent<T extends UserConsentType> extends BaseEntity 
   toConsent(): Required<IUserConsent<T>> {
     return {
       _id: this._id,
-      user: this.user.toStub(),
       type: this.type
     };
   }
