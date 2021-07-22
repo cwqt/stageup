@@ -24,7 +24,7 @@ export interface IConsentable<T extends ConsentableType> {
 }
 
 // INTERFACES RELATING TO USERS GIVING/DENYING CONSENT
-export const UserConsentTypes = ['host_marketing', 'stageup_marketing', 'cookies', 'upload_consent'] as const;
+export const UserConsentTypes = ['host_marketing', 'stageup_marketing', 'upload_consent'] as const;
 export type UserConsentType = typeof UserConsentTypes[number];
 
 // Universal personl/consent interface
@@ -47,11 +47,6 @@ export type UserConsentData = {
     terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
   };
-  cookies: {
-    // user: IUserStub; // Commented for now. I am still not certain on what the decision is for ip_address vs user
-    cookies: IConsentable<'cookies'>;
-    ip_address: string; 
-  };
   upload_consent: {
     host: IHostStub;
     terms_and_conditions: IConsentable<'uploaders_toc'>;
@@ -65,5 +60,4 @@ type ConsentMixin<T extends UserConsentType> = IUserConsent<T> & UserConsentData
 // Different types for each
 export type IUserHostMarketingConsent = ConsentMixin<'host_marketing'>;
 export type IUserStageUpMarketingConsent = ConsentMixin<'stageup_marketing'>;
-export type IUserCookiesConsent = ConsentMixin<'cookies'>;
 export type IUserPerformanceUploadConsent = ConsentMixin<'upload_consent'>;

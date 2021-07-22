@@ -2,7 +2,6 @@ import { Host, User } from '@core/api';
 import { uuid } from '@core/helpers';
 import {
   IUserConsent,
-  IUserCookiesConsent,
   IUserHostMarketingConsent,
   IUserPerformanceUploadConsent,
   IUserStageUpMarketingConsent,

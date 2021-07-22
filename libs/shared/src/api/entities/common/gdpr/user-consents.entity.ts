@@ -1,6 +1,5 @@
 import { Host, User, Performance } from '@core/api';
 import {
-  IUserCookiesConsent,
   IUserHostMarketingConsent,
   IUserPerformanceUploadConsent,
   IUserStageUpMarketingConsent,
@@ -57,7 +56,7 @@ export class UserHostMarketingConsent extends UserConsent<'host_marketing'> impl
 export class UserStageUpMarketingConsent
   extends UserConsent<'stageup_marketing'>
   implements IUserStageUpMarketingConsent {
-  constructor(    
+  constructor(
     user: User,
     termsAndConditions: Consentable<'general_toc'>,
     privacyPolicy: Consentable<'privacy_policy'>
@@ -88,29 +87,6 @@ export class UserStageUpMarketingConsent
 }
 
 @ChildEntity()
-export class UserCookieConsent extends UserConsent<'cookies'> implements IUserCookiesConsent {
-  constructor(ipAddress: string, cookies: Consentable<'cookies'>) {
-    super();
-    this.ip_address = ipAddress;
-    this.cookies = cookies;
-  }
-
-  @Column('inet', { nullable: true }) ip_address: string;
-
-  @RelationId((consent: UserCookieConsent) => consent.cookies) cookies__id: NUUID;
-  @ManyToOne(() => Consentable) @JoinColumn() cookies: Consentable<'cookies'>;
-
-
-  toFull(): Required<IUserCookiesConsent> {
-    return {
-      ...super.toConsent(),
-      ip_address: this.ip_address,
-      cookies: this.cookies,
-    };
-  }
-}
-
-@ChildEntity()
 export class UserPerformanceUploadConsent
   extends UserConsent<'upload_consent'>
   implements IUserPerformanceUploadConsent {
@@ -135,7 +111,7 @@ export class UserPerformanceUploadConsent
       ...super.toConsent(),
       terms_and_conditions: this.terms_and_conditions,
       host: this.host.toStub(),
-      performance: this.performance.toStub(),
+      performance: this.performance.toStub()
     };
   }
 }
