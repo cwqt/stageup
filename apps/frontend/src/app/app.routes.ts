@@ -8,7 +8,7 @@ import { RedirectComponent } from './components/redirect/redirect.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { FeedComponent } from './routes/feed/feed.component';
-import { GeneralTermsComponent } from './components/general-terms/general-terms.component';
+import { GeneralTermsComponent } from './routes/gdpr/general-terms/general-terms.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
