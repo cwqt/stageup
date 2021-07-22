@@ -131,27 +131,33 @@ export class HostSettingsComponent implements OnInit {
           fields: {
             site_url: UiField.Text({
               label: $localize`Website`,
-              icon_code: 'wikis'
+              icon: 'wikis',
+              width: 6
             }),
             instagram_url: UiField.Text({
               label: $localize`Instagram`,
-              icon_code: 'logo--instagram'
+              icon: 'logo--instagram',
+              width: 6
             }),
             facebook_url: UiField.Text({
               label: $localize`Facebook`,
-              icon_code: 'logo--facebook'
+              icon: 'logo--facebook',
+              width: 6
             }),
             twitter_url: UiField.Text({
               label: $localize`Twitter`,
-              icon_code: 'logo--twitter'
+              icon: 'logo--twitter',
+              width: 6
             }),
             linkedin_url: UiField.Text({
               label: $localize`LinkedIn`,
-              icon_code: 'logo--linkedin'
+              icon: 'logo--linkedin',
+              width: 6
             }),
             pinterest_url: UiField.Text({
               label: $localize`Pinterest`,
-              icon_code: 'logo--pinterest'
+              icon: 'logo--pinterest',
+              width: 6
             })
           }
         })

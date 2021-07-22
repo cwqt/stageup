@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
   loading: boolean = true;
   showCurtain: boolean = false; // show the bouncing icon for a bit longer while the page content is loading
   loadError: string;
+  hasCookiePolicySet: boolean = false;
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
@@ -42,6 +43,9 @@ export class AppComponent implements OnInit {
     this.titleService.setTitle(`StageUp - ${environment.app_version}`);
     this.locale = this.locale || 'en';
     this.logger.debug(`Running in: ${environment.environment} with locale ${this.locale}`);
+
+    // Only show pop-up when value is undefined
+    this.myselfService.$acceptedCookiesPolicy.subscribe(v => (this.hasCookiePolicySet = v != undefined));
 
     // Curtain is the bouncing StageUp logo - & loading is the content beneath
     // allow the content beneath to load for a second before revealing the curtain
@@ -73,7 +77,7 @@ export class AppComponent implements OnInit {
     // Upon start up, check if logged in by re-hydrating stored data (if any exists)
     // and then re-fetch the user incase of any changes & set all permissions
     try {
-      if (this.authService.checkLoggedIn(false)) {
+      if (this.authService.checkLoggedIn()) {
         const myself = await this.myselfService.getMyself();
         this.toastService.emit(`Welcome back to StageUp! (${environment.app_version})`);
 

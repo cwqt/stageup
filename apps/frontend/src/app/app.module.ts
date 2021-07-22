@@ -70,7 +70,6 @@ import { VerifiedComponent } from './components/pages/verified/verified.componen
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
 import { HeaderBarComponent } from './components/app/header-bar/header-bar.component';
-import { ProfileComponent } from './routes/profile/profile.component';
 import { FooterComponent } from './components/app/footer/footer.component';
 import { PageComponent } from './components/app/page/page.component';
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
@@ -147,6 +146,7 @@ import { RedirectComponent } from './components/redirect/redirect.component';
 import { FollowButtonComponent } from './components/follow-button/follow-button.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
+import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -159,7 +159,6 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
     LoginComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    ProfileComponent,
     VerifiedComponent,
     SettingsComponent,
     HeaderBarComponent,
@@ -177,7 +176,6 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
     HostPerformanceThumbnailsComponent,
     UpdatePerformanceComponent,
     PlayerComponent,
-    ProfileComponent,
     ProfileSettingsComponent,
     SearchComponent,
     AdminOnboardingListComponent,
@@ -260,7 +258,8 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
     RedirectComponent,
     FollowButtonComponent,
     HostAnalyticsComponent,
-    HostAnalyticsHeaderItemComponent
+    HostAnalyticsHeaderItemComponent,
+    CookieConsentComponent
   ],
   imports: [
     AngularMaterialModule,

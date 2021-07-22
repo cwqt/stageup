@@ -7,6 +7,11 @@
   </ng-container>
 </div>
 
-<ng-container *ngIf="!loading">
+<div *ngIf="!loading">
   <router-outlet></router-outlet>
-</ng-container>
+
+  <app-cookies-consent
+    *ngIf="!hasCookiePolicySet"
+    class="fixed left-8 bottom-8 z-50 rounded-md overflow-hidden shadow-2xl w-2/3 mx-auto"
+  ></app-cookies-consent>
+</div>
