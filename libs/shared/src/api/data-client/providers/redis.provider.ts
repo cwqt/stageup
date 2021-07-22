@@ -6,6 +6,8 @@ export interface IRedisProviderConfig {
   port: number;
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class RedisProvider implements Provider<RedisClient> {
   name = 'Redis';
   connection: RedisClient;
@@ -33,7 +35,7 @@ export default class RedisProvider implements Provider<RedisClient> {
     return this.connection.end();
   }
 
-  async drop () {
+  async drop() {
     await new Promise(resolve => this.connection.flushdb(resolve));
   }
 }

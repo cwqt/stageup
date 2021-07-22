@@ -10,8 +10,12 @@
         <target state="needs-translation">Nid yw'r defnyddiwr yn bodoli</target>
       </trans-unit>
       <trans-unit id="error.not_a_video" datatype="html">
-        <source>This is not a video!</source>
+        <source>This is not a video</source>
         <target state="needs-translation">Nid fideo mo hwn!</target>
+      </trans-unit>
+      <trans-unit id="error.email_already_in_use" datatype="html">
+        <source>E-mail address is already in use</source>
+        <target state="needs-translation">Mae cyfeiriad e-bost eisoes yn cael ei ddefnyddio</target>
       </trans-unit>
       <trans-unit id="host.example_patron_tier_name" datatype="html">
         <source>Example Tier</source>
@@ -153,6 +157,18 @@
         <source>Cannot set performance publicity period outside one of the tickets selling period</source>
         <target state="needs-translation">Ni all osod cyfnod cyhoeddusrwydd perfformiad y tu allan i un o'r cyfnod gwerthu tocynnau</target>
       </trans-unit>
+      <trans-unit id="error.already_following" datatype="html">
+        <source>You are already following this host</source>
+        <target state="needs-translation">Rydych chi eisoes yn dilyn y gwesteiwr hwn</target>
+      </trans-unit>
+      <trans-unit id="error.invalid_rating" datatype="html">
+        <source>The provided rate value is invalid</source>
+        <target state="needs-translation">Mae'r gwerth cyfradd a ddarperir yn annilys</target>
+      </trans-unit>
+      <trans-unit id="error.no_rating_exists" datatype="html">
+        <source>Could not find existing rating</source>
+        <target state="needs-translation">Methu dod o hyd i'r sgôr bresennol</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="needs-translation">Nid yw'r ymateb a dderbynnir yn cyfateb i'r cyflwynydd!</target>
@@ -162,7 +178,7 @@
         <target state="needs-translation">Methu dod o hyd i unrhyw anfonebau</target>
       </trans-unit>
       <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while one another refund is already outstanding</source>
+        <source>Cannot refund while another refund is already outstanding</source>
         <target state="needs-translation">Ni ellir ad-dalu tra bo ad-daliad ei gilydd eisoes yn ddyledus</target>
       </trans-unit>
       <trans-unit id="email.user.refund_initiated__content" datatype="html">
@@ -228,6 +244,38 @@ Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith<
       <trans-unit id="email.host.refund_initiated__subject" datatype="html">
         <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
         <target state="needs-translation">Cychwynnwyd ad-daliad ar gyfer pryniant {user_username} o {performance_name}</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_subject" datatype="html">
+        <source>You have initiated refunds for {refund_quantity} invoice(s)</source>
+        <target state="needs-translation">Rydych wedi cychwyn ad-daliadau ar gyfer anfoneb (ion) {refund_quantity}</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
+        <source>**Hi {host_name},**
+
+You have initiated refunds for {refund_quantity} invoices
+
+**Total value: **{invoices_total}**
+
+We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
+
+**Thanks,**
+
+**StageUp Team**
+
+Please note, if this request was not initated by you please notify us immediately"</source>
+        <target state="needs-translation">** Hi {host_name}, **
+
+Rydych wedi cychwyn ad-daliadau ar gyfer anfonebau {refund_quantity}
+
+** Cyfanswm gwerth: ** {invoices_total} **
+
+Rydym wedi hysbysu'r cwsmeriaid yr effeithir arnynt y byddant yn derbyn y swm a ad-dalwyd yn eu cyfrifon cyn pen 5 diwrnod gwaith
+
+** Diolch, **
+
+** Tîm StageUp **
+
+Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith "</target>
       </trans-unit>
       <trans-unit id="email.user.refund_refunded__subject" datatype="html">
         <source>Refund for {performance_name} succesful!</source>
@@ -379,7 +427,7 @@ I brosesu'r cais hwn gallwch ymweld â'ch [dangosfwrdd anfoneb yma] ({invoice_da
       </trans-unit>
       <trans-unit id="email.test.send_email__content" datatype="html">
         <source>Hey {username} **How are you? &lt;{url}>**</source>
-        <target state="needs-translation">Hei {username} ** Sut wyt ti? &amp; lt; {url}> **</target>
+        <target state="needs-translation">Hei {username} ** Sut wyt ti? &lt; {url}> **</target>
       </trans-unit>
       <trans-unit id="email.user.registered__subject" datatype="html">
         <source>Verify your StageUp account</source>
@@ -387,7 +435,7 @@ I brosesu'r cais hwn gallwch ymweld â'ch [dangosfwrdd anfoneb yma] ({invoice_da
       </trans-unit>
       <trans-unit id="email.user.registered__content" datatype="html">
         <source>Click the link to verify: &lt;{url}></source>
-        <target state="needs-translation">Cliciwch y ddolen i wirio: &amp; lt; {url}></target>
+        <target state="needs-translation">Cliciwch y ddolen i wirio: &lt; {url}></target>
       </trans-unit>
       <trans-unit id="email.user.invited_to_host__subject" datatype="html">
         <source>You have been invited to join {host_name} by {inviter_name}</source>
@@ -397,7 +445,7 @@ I brosesu'r cais hwn gallwch ymweld â'ch [dangosfwrdd anfoneb yma] ({invoice_da
         <source>Hi {user_name},
 Click the link to accept the invitation: &lt;{url}>, this invite will expire in **24 hours**.</source>
         <target state="needs-translation">Helo {user_name},
-Cliciwch y ddolen i dderbyn y gwahoddiad: &amp; lt; {url}>, bydd y gwahoddiad hwn yn dod i ben mewn ** 24 awr **.</target>
+Cliciwch y ddolen i dderbyn y gwahoddiad: &lt; {url}>, bydd y gwahoddiad hwn yn dod i ben mewn ** 24 awr **.</target>
       </trans-unit>
       <trans-unit id="email.user.invited_to_private_showing__subject" datatype="html">
         <source>You have been invited to watch a private performance</source>
@@ -407,7 +455,7 @@ Cliciwch y ddolen i dderbyn y gwahoddiad: &amp; lt; {url}>, bydd y gwahoddiad hw
         <source>Hi {user_name},
 Click the link to watch **{performance_name}** by **{host_name}** on StageUp now: &lt;{url}>></source>
         <target state="needs-translation">Helo {user_name},
-Cliciwch y ddolen i wylio ** {performance_name} ** gan ** {host_name} ** ar StageUp nawr: &amp; lt; {url} >></target>
+Cliciwch y ddolen i wylio ** {performance_name} ** gan ** {host_name} ** ar StageUp nawr: &lt; {url} >></target>
       </trans-unit>
       <trans-unit id="email.ticket.purchased__subject" datatype="html">
         <source>Receipt of purchase of StageUp ticket</source>
@@ -420,8 +468,8 @@ Click here to watch: &lt;{watch_url}>
 Receipt of this purchase: &lt;{receipt_url}></source>
         <target state="needs-translation">Helo {user_name},
 Fe wnaethoch chi brynu {ticket_name} i wylio {performance_name} ar gyfer {amount}.
-Cliciwch yma i wylio: &amp; lt; {watch_url}>
-Derbyn y pryniant hwn: &amp; lt; {receipt_url}></target>
+Cliciwch yma i wylio: &lt; {watch_url}>
+Derbyn y pryniant hwn: &lt; {receipt_url}></target>
       </trans-unit>
       <trans-unit id="email.user.patronage_started__subject" datatype="html">
         <source>Patron Subscription to {tier_name}</source>
@@ -481,7 +529,7 @@ Rydych chi'n derbyn hwn oherwydd eich bod chi (neu rywun arall) wedi gofyn am ai
 
 Cliciwch ar y ddolen ganlynol i gwblhau'r broses. Mae'r ddolen hon yn ddilys am y 24 awr nesaf.
 
-&amp; lt; {password_reset_url}>
+&lt; {password_reset_url}>
 
 Os na ofynasoch am y newid hwn, anwybyddwch yr e-bost hwn a bydd eich cyfrinair yn aros yr un fath.</target>
       </trans-unit>
@@ -529,7 +577,7 @@ Thanks, StageUp</source>
         <target state="needs-translation">Helo @ {user_username},
 
 Dyma dderbynneb o'ch tanysgrifiad gan haen noddwr ** @ {host_username} **, ** {tier_name} **.
-Ni chodir tâl arnoch mwyach am y tanysgrifiad hwn &amp; amp; bydd y tanysgrifiad hwn yn cael ei restru fel 'Canslo' ar eich cyfrif o hyn ymlaen.
+Ni chodir tâl arnoch mwyach am y tanysgrifiad hwn &amp; bydd y tanysgrifiad hwn yn cael ei restru fel 'Canslo' ar eich cyfrif o hyn ymlaen.
 
 Diolch, StageUp</target>
       </trans-unit>
@@ -550,7 +598,7 @@ Diolch, StageUp</target>
         <target state="needs-translation">Heb ei ddarganfod</target>
       </trans-unit>
       <trans-unit id="error.no_such_route" datatype="html">
-        <source>Route not found</source>
+        <source>No such route</source>
         <target state="needs-translation">Ni ddaethpwyd o hyd i'r llwybr</target>
       </trans-unit>
       <trans-unit id="error.not_member" datatype="html">
@@ -601,10 +649,6 @@ Diolch, StageUp</target>
         <source>Method is not implemented</source>
         <target state="needs-translation">Ni weithredir y dull</target>
       </trans-unit>
-      <trans-unit id="error.not_such_route" datatype="html">
-        <source>No such route</source>
-        <target state="needs-translation">Dim llwybr o'r fath</target>
-      </trans-unit>
       <trans-unit id="error.incorrect" datatype="html">
         <source>Value is incorrect</source>
         <target state="needs-translation">Mae'r gwerth yn anghywir</target>
@@ -645,9 +689,37 @@ Diolch, StageUp</target>
         <source>Not a valid HMRC Company number</source>
         <target state="needs-translation">Ddim yn rhif Cwmni Cyllid a Thollau EM dilys</target>
       </trans-unit>
+      <trans-unit id="validation.invalid_vat_number" datatype="html">
+        <source>Not a valid VAT number</source>
+        <target state="needs-translation">Ddim yn rhif TAW dilys</target>
+      </trans-unit>
       <trans-unit id="validation.invalid_url" datatype="html">
         <source>Not a valid URL</source>
         <target state="needs-translation">Ddim yn URL dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_facebook_url" datatype="html">
+        <source>Not a valid Facebook URL</source>
+        <target state="needs-translation">Ddim yn URL dilys ar Facebook</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_instagram_url" datatype="html">
+        <source>Not a valid Instagram URL</source>
+        <target state="needs-translation">Ddim yn URL Instagram dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_linkedin_url" datatype="html">
+        <source>Not a valid LinkedIn URL</source>
+        <target state="needs-translation">Ddim yn URL LinkedIn dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_twitter_url" datatype="html">
+        <source>Not a valid Twitter URL</source>
+        <target state="needs-translation">Ddim yn URL Twitter dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_pinterest_url" datatype="html">
+        <source>Not a valid Pinterest URL</source>
+        <target state="needs-translation">Ddim yn URL Pinterest dilys</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_youtube_url" datatype="html">
+        <source>Not a valid Youtube URL</source>
+        <target state="needs-translation">Ddim yn URL dilys Youtube</target>
       </trans-unit>
     </body>
   </file>

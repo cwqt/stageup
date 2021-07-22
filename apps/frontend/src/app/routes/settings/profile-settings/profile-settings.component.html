@@ -6,7 +6,7 @@
     <div class="flex items-center">
       <div class="mx-4">
         <div class="profile-picture__container">
-          <img [src]="user.avatar" alt="" />
+          <img [src]="myself.user.avatar" alt="" />
           <ui-button (click)="openChangeAvatarDialog()" kind="accent" icon="image" i18n>Edit</ui-button>
         </div>
       </div>
@@ -22,6 +22,25 @@
         >
           Update profile
         </ui-button>
+      </div>
+    </div>
+  </app-content-box>
+
+  <!-- LANGUAGE SELECTION BOX -->
+  <app-content-box>
+    <h2 i18n>Site Settings</h2>
+    <ui-hr></ui-hr>
+
+    <div class="flex items-center justify-between">
+      <div>
+        <b i18n>Preferred Language</b>
+        <p i18n>
+          Set the language you'd prefer to view StageUp in, applies to any communications from us you may also recieve.
+        </p>
+      </div>
+
+      <div class="w-1/3">
+        <ui-form [form]="languageSelectForm"></ui-form>
       </div>
     </div>
   </app-content-box>

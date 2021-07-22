@@ -6,6 +6,8 @@ export interface ILocalTunnelProviderConfig {
   domain: string;
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class LocalTunnelProvider implements Provider<Tunnel> {
   name = 'LocalTunnel';
   connection: Tunnel;

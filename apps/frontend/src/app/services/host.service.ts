@@ -6,6 +6,7 @@ import {
   IUserHostInfo,
   HostOnboardingStep,
   IOnboardingStepMap,
+  IFollower,
   IPerformanceStub,
   IPerformance,
   DtoCreatePerformance,
@@ -19,12 +20,17 @@ import {
   IHostInvoiceStub,
   IRefund,
   IInvoice,
+  IUserFollow,
   DtoHostPatronageSubscription,
   IDeleteHostAssertion,
   IDeleteHostReason,
   DtoUpdateHost,
   IHostPatronTier,
-  DtoUpdatePatronTier
+  DtoUpdatePatronTier,
+  IBulkRefund,
+  DtoPerformanceAnalytics,
+  AnalyticsTimePeriod,
+  DtoHostAnalytics
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -92,8 +98,8 @@ export class HostService {
       .toPromise();
   }
 
-  readHost(hostId: string): Promise<IHost> {
-    return this.http.get<IHost>(`/api/hosts/${hostId}`).toPromise();
+  readHost(hostId: string): Promise<IEnvelopedData<IHost, IUserFollow>> {
+    return this.http.get<IEnvelopedData<IHost, IUserFollow>>(`/api/hosts/${hostId}`).toPromise();
   }
 
   // router.put <IHostPrivate> ("/hosts/:hid", Hosts.updateHost());
@@ -131,8 +137,8 @@ export class HostService {
   }
 
   // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
-  readHostByUsername(hostUsername: string): Promise<IHost> {
-    return this.http.get<IHost>(`/api/hosts/@${hostUsername}`).toPromise();
+  readHostByUsername(hostUsername: string): Promise<IEnvelopedData<IHost, IUserFollow>> {
+    return this.http.get<IEnvelopedData<IHost, IUserFollow>>(`/api/hosts/@${hostUsername}`).toPromise();
   }
 
   // router.get <IUserStub[]> ("/hosts/:hid/members", Hosts.readMembers());
@@ -207,9 +213,13 @@ export class HostService {
   }
 
   //router.post<void>("/hosts/:hid/invoices/process-refunds", Hosts.processRefund());
-  processRefunds(invoiceIds: string[], hostId: string): Promise<void> {
+  processRefunds(invoiceIds: string[], hostId: string, bulkRefund?: IBulkRefund): Promise<void> {
     return this.http
-      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, { invoice_ids: invoiceIds })
+      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, {
+        invoice_ids: invoiceIds,
+        bulk_refund_reason: bulkRefund.bulk_refund_reason,
+        bulk_refund_detail: bulkRefund.bulk_refund_detail
+      })
       .toPromise();
   }
 
@@ -280,5 +290,28 @@ export class HostService {
   //router.get <IHostPrivate> ("/hosts/:hid/details", Hosts.readDetails());
   readDetails(hostId: string): Promise<IHostPrivate> {
     return this.http.get<IHostPrivate>(`/api/hosts/${hostId}/details`).toPromise();
+  }
+
+  //router.get <IEnvelopedData<IFollower[], null>> ("/hosts/:hid/followers", Hosts.readHostFollowers());
+  readHostFollowers(hostId: string): Promise<IEnvelopedData<IFollower[]>> {
+    return this.http.get<IEnvelopedData<IFollower[]>>(`/api/hosts/${hostId}/followers`).toPromise();
+  }
+
+  // router.get <IE<DtoPerfAnalytics[]>>("/hosts/:hid/analytics/performances", Hosts.readPerformancesAnalytics());
+  readPerformancesAnalytics(
+    hostId: string,
+    period: AnalyticsTimePeriod = 'WEEKLY',
+    query: IQueryParams
+  ): Promise<IEnvelopedData<DtoPerformanceAnalytics[]>> {
+    return this.http
+      .get<IEnvelopedData<DtoPerformanceAnalytics[]>>(
+        `/api/hosts/${hostId}/analytics/performances${querize({ ...query, period })}`
+      )
+      .toPromise();
+  }
+
+  // router.get <DtoHostAnalytics>  ("/hosts/:hid/analytics", Hosts.readHostAnalytics());
+  readHostAnalytics(hostId: string, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> {
+    return this.http.get<DtoHostAnalytics>(`/api/hosts/${hostId}/analytics?period=${period}`).toPromise();
   }
 }

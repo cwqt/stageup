@@ -26,7 +26,7 @@ import {
   PurchaseableType
 } from '@core/interfaces';
 import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
-import { BackendProviderMap } from '..';
+import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 
 // Stripe Connected Subscriptions --------------------------------------------------------------

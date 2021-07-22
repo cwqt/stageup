@@ -17,7 +17,7 @@ import {
   IHostMemberChangeRequest,
   IInvoice,
   IRefundRequest,
-  RefundReason,
+  RefundRequestReason,
   IPersonInfo,
   ISocialInfo,
   PaginationOptions,
@@ -29,12 +29,16 @@ import {
   BusinessType,
   DtoUpdateHost,
   IContactInfo,
-  DtoUpdatePatronTier
+  DtoUpdatePatronTier,
+  IBulkRefund,
+  BulkRefundReason,
+  IProcessRefunds
 } from '@core/interfaces';
 import {
   any,
   array,
   boolean,
+  coerce,
   Describe,
   enums,
   integer,
@@ -123,8 +127,19 @@ export namespace objects {
 
   export const RefundInvoiceRequest: Describe<IRefundRequest> = object({
     requested_on: fields.timestamp,
-    request_reason: enums<RefundReason>(enumToValues(RefundReason)),
+    request_reason: enums<RefundRequestReason>(enumToValues(RefundRequestReason)),
     request_detail: string()
+  });
+
+  export const IBulkRefund: Describe<IBulkRefund> = object({
+    bulk_refund_reason: optional(enums<BulkRefundReason>(enumToValues(BulkRefundReason))),
+    bulk_refund_detail: optional(string())
+  });
+
+  export const IProcessRefunds: Describe<IProcessRefunds> = object({
+    invoice_ids: array(fields.nuuid),
+    bulk_refund_reason: optional(enums<BulkRefundReason>(enumToValues(BulkRefundReason))),
+    bulk_refund_detail: optional(string())
   });
 
   export const IHostBusinessDetails: Describe<IHostBusinessDetails> = object({
@@ -145,7 +160,10 @@ export namespace objects {
     site_url: optional(fields.url),
     linkedin_url: optional(fields.url),
     facebook_url: optional(fields.url),
-    instagram_url: optional(fields.url)
+    instagram_url: optional(fields.url),
+    pinterest_url: optional(fields.url),
+    youtube_url: optional(fields.url),
+    twitter_url: optional(fields.url)
   });
 
   export const DtoCreatePaymentIntent: Describe<DtoCreatePaymentIntent<PurchaseableType>> = object({
@@ -171,11 +189,20 @@ export namespace objects {
     value: optional(string())
   });
 
+  // Updated, since the received data in the request is a 'string'.
   export const PaginationOptions = (pageLimit: number = 50): Describe<PaginationOptions> =>
     object({
-      per_page: size(integer(), 1, pageLimit),
-      page: integer()
-    });
+      per_page: refine(union([number(), string()]), 'per_page', value => {
+        const num = typeof value == 'number' ? value : parseInt(value);
+        return !isNaN(num) && num >= 1 && num <= pageLimit;
+      }),
+      page: refine(union([number(), string()]), 'page', value => {
+        const num = typeof value == 'number' ? value : parseInt(value);
+        return !isNaN(num);
+      })
+    }) as any; // cast to any because of issues with qs parsing query string parameters
+  // as strings & not inferring number, should be either string | number - but the type
+  // should only be numbers
 
   export const IDeleteHostReason: Describe<IDeleteHostReason> = object({
     reasons: array(enums<DeleteHostReason>(enumToValues(DeleteHostReason))),

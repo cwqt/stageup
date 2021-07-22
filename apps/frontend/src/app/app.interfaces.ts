@@ -1,7 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { i18nToken, Primitive } from '@core/interfaces';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Except } from 'type-fest';
+import { i18nToken, ILocale, Primitive } from '@core/interfaces';
+import { BehaviorSubject } from 'rxjs';
+
+type MappedILocale<T = string> = ILocale & { code: T };
+
+//ISO 639-1 - ISO 3166-1 Alpha-2
+export const SUPPORTED_LOCALES = (<T>(p: readonly MappedILocale<T>[]) => p)([
+  { language: 'en', region: 'GB', code: 'en-GB' },
+  { language: 'cy', region: 'GB', code: 'cy-GB' },
+  { language: 'nb', region: 'NO', code: 'nb-NO' }
+] as const); // readonly MappedILocale<"en-GB" | "cy-GB">[]
+
+export type SUPPORTED_LOCALE_CODES = typeof SUPPORTED_LOCALES[number]['code']; // "en-GB" | "cy-GB"
 
 /**
  * @description Wrapper around requests to do common actions when making requests

@@ -1,3 +1,4 @@
+import { IUserFollow } from './../hosts/host.interface';
 import { DeltaOperation } from 'quill';
 import { Except } from 'type-fest';
 import { AssetDto, IAssetStub } from '../common/asset.interface';
@@ -31,13 +32,19 @@ export interface IPerformanceStub {
   host: IHostStub; // who created the performance
   name: string; // title of performance
   description?: RichText; // description of performance
-  average_rating: number; // average rating across all ratings
+  rating_count: number; // Total scores accumulated
+  rating_total: number; // Number of ratings
   premiere_datetime?: number; // when the performance is ready to be streamed
   views: number; // total user view count
+  like_count: number; // total user likes
   created_at: number;
   assets: IAssetStub[];
   thumbnail: string;
   status: PerformanceStatus;
+}
+
+export interface IFeedPerformanceStub extends IPerformanceStub {
+  client_likes?: boolean;
 }
 
 export interface IPerformance extends IPerformanceStub {
@@ -48,7 +55,17 @@ export interface IPerformance extends IPerformanceStub {
   publicity_period: { start: number; end: number }; // unix timestamps
 }
 
-export type DtoPerformance = IEnvelopedData<Except<IPerformance, 'assets'> & { assets: AssetDto[] }, null>;
+// Interface for additional client information regarding the performance.
+export interface IClientPerformanceData {
+  is_following?: boolean;
+  is_liking?: boolean;
+  rating?: number;
+}
+
+export type DtoPerformance = IEnvelopedData<
+  Except<IPerformance, 'assets'> & { assets: AssetDto[] },
+  IClientPerformanceData
+>;
 
 // data transfer object
 export type DtoCreatePerformance = Pick<

@@ -21,7 +21,6 @@ import {
   IHostInvoiceStub,
   IHostInvoice,
   IPaymentSourceDetails,
-  RefundReason,
   IRefundRequest
 } from '@core/interfaces';
 import { User } from '../users/user.entity';

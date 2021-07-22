@@ -58,7 +58,7 @@ export namespace fields {
   export const vatNumber = refine(
     string(),
     'vat_number',
-    value => pattern(string(), regexes.vat).is(value) || '@@validation.invalid'
+    value => pattern(string(), regexes.vat).is(value) || '@@validation.invalid_vat_number'
   );
   export const postcode = define<string>('postcode', value => validator.isPostalCode(value as string, 'GB'));
   export const country = define<CountryCode>('iso3166', value => validator.isISO31661Alpha2(value as string));
@@ -67,4 +67,5 @@ export namespace fields {
   export const genre = enums(enumToValues(Genre) as Genre[]);
   export const personTitle = enums<PersonTitle>(enumToValues(PersonTitle));
   export const url = refine(string(), 'url', value => validator.isURL(value) || '@@validation.invalid_url');
+  export const rating = size(number(), 0, 1);
 }

@@ -16,7 +16,7 @@ import {
   UserHostInfo,
   transact
 } from '@core/api';
-import { BackendProviderMap } from '..';
+import { BackendProviderMap } from '@backend/common/providers';
 
 import AuthStrat from '../common/authorisation';
 import { any, array, enums, number, object, optional, record, string } from 'superstruct';

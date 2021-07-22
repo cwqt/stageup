@@ -16,9 +16,12 @@ import {
   IStripeProviderConfig
 } from '@core/api';
 
-type Envify<T> = { [index in keyof T as Uppercase<string & index>]: T[index] };
+type Envify<T> = { [index in keyof T as Uppercase<string & index>]: T[index] } & { [index: string]: any };
 
-interface IEnvironment {
+const isLocal = ['localhost', '127.0.0.1'].some(v => process.env.LOAD_BALANCER_URL.includes(v));
+
+const Env: {
+  IS_LOCAL: boolean; // running on a local machine, not deployed
   BACKEND: { PORT: number; ENDPOINT: string; URL: string };
   FRONTEND: { PORT: number; ENDPOINT: string; URL: string };
   ENVIRONMENT: Environment;
@@ -26,7 +29,6 @@ interface IEnvironment {
   EMAIL_ADDRESS: string;
   SITE_TITLE: string;
   UWU_MODE: boolean;
-  WEBHOOK_URL: string;
   PG: Envify<IPostgresProviderConfig>;
   MUX: Envify<IMuxProviderConfig>;
   AWS: Envify<IAWS3ProviderConfig>;
@@ -36,34 +38,39 @@ interface IEnvironment {
   EMAIL: Envify<IEmailProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   isEnv: (env: Environment | Environment[]) => boolean;
-}
-
-const Env: IEnvironment = {
+} = {
   isEnv: isEnv(TRUE_ENV as Environment),
+  IS_LOCAL: isLocal,
   SITE_TITLE: 'StageUp',
   BACKEND: {
     PORT: parseInt(process.env.BACKEND_PORT),
     ENDPOINT: process.env.BACKEND_ENDPOINT,
-    URL: `${process.env.LOAD_BALANCER_URL}:${process.env.BACKEND_PORT}${process.env.BACKEND_ENDPOINT}`
+    // Only include the port when running locally
+    URL: isLocal
+      ? `${process.env.LOAD_BALANCER_URL}:${process.env.BACKEND_PORT}${process.env.BACKEND_ENDPOINT}`
+      : `${process.env.LOAD_BALANCER_URL}${process.env.BACKEND_ENDPOINT}`
   },
   FRONTEND: {
     PORT: parseInt(process.env.FRONTEND_PORT),
     ENDPOINT: process.env.FRONTEND_ENDPOINT,
-    URL: `${process.env.LOAD_BALANCER_URL}:${process.env.FRONTEND_PORT}${process.env.FRONTEND_ENDPOINT}`
+    // Only include the port when running locally
+    URL: isLocal
+      ? `${process.env.LOAD_BALANCER_URL}:${process.env.FRONTEND_PORT}${process.env.FRONTEND_ENDPOINT}`
+      : `${process.env.LOAD_BALANCER_URL}${process.env.FRONTEND_ENDPOINT}`
   },
   ENVIRONMENT: TRUE_ENV as Environment,
   PRIVATE_KEY: process.env.BACKEND_PRIVATE_KEY,
   EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
-  WEBHOOK_URL: process.env.WEBHOOK_URL,
-  LOCALTUNNEL: {
+  // Only use HTTP Tunneling in local development so we don't need to port forward routers to recieve webhooks
+  LOCALTUNNEL: isLocal && {
     PORT: parseInt(process.env.BACKEND_PORT),
-    DOMAIN: new URL(process.env.WEBHOOK_URL).hostname.split('.').shift()
+    DOMAIN: new URL(process.env.HTTP_TUNNEL_URL).hostname.split('.').shift()
   },
   UWU_MODE: process.env.UWU_MODE === 'true',
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
-    HOOK_SIGNATURE: process.env.MUX_HOOK_SIGNATURE
+    WEBHOOK_SIGNATURE: process.env.MUX_WEBHOOK_SIGNATURE
   },
   PG: {
     USERNAME: process.env.POSTGRES_USER,
@@ -82,13 +89,13 @@ const Env: IEnvironment = {
     TTL: 86400
   },
   EMAIL: {
-    API_KEY: process.env.QUEUE_SENDGRID_API_KEY,
+    API_KEY: process.env.SENDGRID_API_KEY,
     ENABLED: process.env.QUEUE_EMAIL_ENABLED === 'true'
   },
   STRIPE: {
     PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
     PRIVATE_KEY: process.env.STRIPE_PRIVATE_KEY,
-    HOOK_SIGNATURE: process.env.STRIPE_HOOK_SIGNATURE,
+    WEBHOOK_SIGNATURE: process.env.STRIPE_WEBHOOK_SIGNATURE,
     CLIENT_ID: process.env.STRIPE_CLIENT_ID
   },
   AWS: {
@@ -99,7 +106,5 @@ const Env: IEnvironment = {
     S3_REGION: process.env.AWS_S3_REGION
   }
 };
-
-console.log(Env.LOCALTUNNEL);
 
 export default Env;

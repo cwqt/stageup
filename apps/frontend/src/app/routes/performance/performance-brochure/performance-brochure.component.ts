@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, LOCALE_ID, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -9,6 +9,7 @@ import {
   DonoPeg,
   IAssetStub,
   IEnvelopedData,
+  IFollowing,
   IMyself,
   IPaymentIntentClientSecret,
   IPerformance,
@@ -42,6 +43,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
+  @Output() onLikeEvent = new EventEmitter();
+
   performanceCacheable: ICacheable<IEnvelopedData<IPerformance>> = createICacheable();
   paymentIntentSecret: ICacheable<IPaymentIntentClientSecret> = createICacheable();
   stripePaymentIntent: PaymentIntent;
@@ -55,29 +58,37 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   performanceTrailer: IAssetStub<AssetType.Video>;
 
   performanceSharingUrl: SocialSharingComponent['url'];
+  userFollowing: boolean;
+
+  userLiked: boolean;
 
   get performance() {
     return this.performanceCacheable.data?.data;
   }
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private myselfService: MyselfService,
     private performanceService: PerformanceService,
     private helperService: HelperService,
     private appService: BaseAppService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<PerformanceBrochureComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IPerformanceStub
+    @Inject(MAT_DIALOG_DATA) public data: { performance: IPerformanceStub; onFollowEvent: EventEmitter<string> }
   ) {}
 
   async ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
-    await cachize(this.performanceService.readPerformance(this.data._id), this.performanceCacheable).then(d => {
-      this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
-      return d;
-    });
+    await cachize(this.performanceService.readPerformance(this.data.performance._id), this.performanceCacheable).then(
+      d => {
+        this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
+        this.userFollowing = d.__client_data?.is_following;
+        this.userLiked = d.__client_data?.is_liking;
+        return d;
+      }
+    );
 
-    this.performanceSharingUrl = `${environment.frontendUrl}/${environment.locale}/performances/${this.performance._id}`;
+    this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
   }
 
   openPerformanceDescriptionSection() {
@@ -182,5 +193,9 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     } else {
       this.selectedTicket.amount = getDonoAmount(this.selectedDonoPeg, this.selectedTicket.currency);
     }
+  }
+
+  likeEvent(value: boolean) {
+    this.onLikeEvent.emit(value);
   }
 }

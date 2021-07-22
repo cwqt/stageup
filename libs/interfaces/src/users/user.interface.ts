@@ -1,5 +1,11 @@
-import { HostPermission, IHost, IHostStub } from '../hosts/host.interface';
-import { IPersonInfo } from './person.interface';
+import {
+  HostPermission,
+  IHost,
+  IHostStub,
+  ILocale,
+  IPersonInfo,
+  NUUID,
+} from '@core/interfaces';
 
 export type DtoLogin = Pick<IUserPrivate, 'email_address'> & { password: string };
 export type DtoCreateUser = Pick<IUserPrivate, 'username' | 'email_address'> & { password: string };
@@ -16,6 +22,7 @@ export interface IUser extends IUserStub {
   created_at: number;
   cover_image?: string; //s3 bucket url
   bio?: string;
+  locale?: ILocale;
   is_verified: boolean; //has completed email verification
   is_new_user: boolean; //gone through first time setup
   is_admin?: boolean; //site admin global perms
@@ -41,6 +48,7 @@ export interface IMyself {
   user: IUser & { email_address: IUserPrivate['email_address'] };
   host?: IHost;
   host_info?: IUserHostInfo;
+  following?: IFollowing[];
 }
 
 // For normal users, outside of a Host
@@ -53,3 +61,29 @@ export enum UserPermission {
 export interface IPasswordConfirmationResponse {
   is_valid: boolean;
 }
+
+export interface ILike {
+  like_date: number;
+  user__id: NUUID;
+  performance__id: NUUID;
+  like_location: LikeLocation;
+}
+
+// Different pages/locations that a user can like a performance from
+export enum LikeLocation {
+  Thumb = 'thumbnail',
+  Performance = 'video',
+  Brochure = 'brochure'
+}
+
+export interface IFollow {
+  _id: NUUID;
+  follow_date: number;
+  user__id: NUUID;
+  host__id: NUUID;
+}
+
+// Follows can be seen as from 2 perspectives. The host wants to see the users that follow them (and does not need their ID attached to each follow).
+// Likewise, the user that follows multiple hosts does not want to have the user ID attached to each follow.
+export type IFollower = Omit<IFollow, "host__id">
+export type IFollowing = Omit<IFollow, "user__id">

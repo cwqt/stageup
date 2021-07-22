@@ -3,7 +3,7 @@ import { Validators, User, BaseController, IControllerEndpoint } from '@core/api
 import Env from '../env';
 import AuthStrat from '../common/authorisation';
 import { verifyEmail } from '../common/email';
-import { BackendProviderMap } from '..';
+import { BackendProviderMap } from '@backend/common/providers';
 import { object, string } from 'superstruct';
 
 export default class AuthController extends BaseController<BackendProviderMap> {

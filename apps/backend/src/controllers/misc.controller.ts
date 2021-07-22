@@ -11,7 +11,7 @@ import {
   User,
   UserHostInfo
 } from '@core/api';
-import { BackendProviderMap } from '..';
+import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import Env from '../env';
 
@@ -126,7 +126,6 @@ export default class MiscController extends BaseController<BackendProviderMap> {
       authorisation: AuthStrat.none,
       controller: async req => {
         const assets = await Asset.find({});
-        console.log(assets);
       }
     };
   }

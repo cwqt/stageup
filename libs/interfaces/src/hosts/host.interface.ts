@@ -11,7 +11,7 @@ export enum BusinessType {
   Individual = 'individual',
   Company = 'company',
   NonProfit = 'non_profit',
-  GovernmentEntity = 'gov_entity'
+  GovernmentEntity = 'government_entity'
 }
 
 export interface IHostStub {
@@ -35,6 +35,11 @@ export interface IHostPrivate extends IHost {
   business_details: IHostBusinessDetails;
 }
 
+// True if the current user is following the particular host
+export interface IUserFollow {
+  is_following: boolean;
+}
+
 export type DtoUpdateHost = Except<
   IHostPrivate,
   '_id' | 'banner' | 'avatar' | 'created_at' | 'is_onboarded' | 'stripe_account_id'
@@ -53,6 +58,9 @@ export interface ISocialInfo {
   linkedin_url: string;
   facebook_url: string;
   instagram_url: string;
+  twitter_url: string;
+  youtube_url: string;
+  pinterest_url: string;
 }
 
 export enum HostPermission {

@@ -1,15 +1,15 @@
-import { i18nToken, ILocale, Primitive, CurrencyCode, i18nTokenMap } from '@core/interfaces';
+import { i18n } from '@core/helpers';
+import { CurrencyCode, i18nTokenMap, ILocale, Primitive } from '@core/interfaces';
 import xml from 'fast-xml-parser';
 import { readFile } from 'fs';
 import IntlMessageFormat from 'intl-messageformat';
-import { Logger } from 'winston';
 import { Service } from 'typedi';
+import { Logger } from 'winston';
 import path = require('path');
 import colors = require('colors');
-import { i18n } from '@core/helpers';
 
 export interface Ii18nConfig {
-  locales: string[];
+  locales: ReadonlyArray<ILocale>;
   path: string;
 }
 
@@ -38,10 +38,10 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
     this.locales = new Map();
 
     // contains messages.locale.xlf files
-    for await (let locale of this.config.locales) {
-      logger.debug(`Loading locale ${locale}...`);
+    for await (let { language, region } of this.config.locales) {
+      logger.debug(`Loading locale ${language}-${region}...`);
       const file = await new Promise((res, rej) =>
-        readFile(path.resolve(this.config.path, `messages.${locale}.xlf`), { encoding: 'utf-8' }, (err, data) => {
+        readFile(path.resolve(this.config.path, `messages.${language}.xlf`), { encoding: 'utf-8' }, (err, data) => {
           if (err) return rej(err);
           res(data);
         })
@@ -70,7 +70,7 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
 
       // Pull out xliff data into code : translation map
       this.locales.set(
-        locale,
+        language,
         new Map(
           xliff.file.body['trans-unit'].map(unit => [
             unit['@_id'],
@@ -82,6 +82,10 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
     }
 
     return this;
+  }
+
+  code(locale: ILocale) {
+    return i18n.code(locale);
   }
 
   money(amount: number, currency: CurrencyCode) {
@@ -97,7 +101,6 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
     locale: ILocale,
     variables?: { [index in TokenMap[T]]: Primitive }
   ): string {
-    console.log('i18n code::', code);
     const translation = this.locales.get(locale.language)?.get(code.slice(2));
 
     if (!translation) {

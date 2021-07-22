@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { enumToValues, timestamp } from '@core/helpers';
-import { DtoInvoice, RefundReason } from '@core/interfaces';
+import { DtoInvoice, RefundRequestReason } from '@core/interfaces';
 import { MyselfService } from '@frontend/services/myself.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
@@ -32,7 +32,7 @@ export class RefundDialogComponent implements OnInit, IUiDialogOptions {
       fields: {
         reason: UiField.Select({
           label: 'Select a reason for requesting a refund',
-          values: enumToValues(RefundReason).reduce((acc, curr) => {
+          values: enumToValues(RefundRequestReason).reduce((acc, curr) => {
             acc.set(curr, { label: this.refundReasonPipe.transform(curr) });
             return acc;
           }, new Map()),

@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ParamMap, Data, ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
+import { intersect } from '@core/helpers';
+import { SUPPORTED_LOCALES } from '@frontend/app.interfaces';
 
 export enum RouteParam {
   UserId = 'userId',
   HostId = 'hostId',
   PerformanceId = 'performanceId',
-  Genre = 'genreType'
+  Genre = 'genreType',
+  ExternalUrl = 'externalUrl'
 }
 
 export enum RouteChange {
@@ -97,5 +100,24 @@ export class BaseAppService {
 
   navigateTo(url: string, extras?: NavigationExtras): Promise<boolean> {
     return this.router.navigate([url], extras);
+  }
+
+  /**
+   * @description Gets the current URL, removing supported locales (if any)
+   * */
+  getUrl(): string {
+    // Get the current route and split to array (e.g. router.url will be ['', 'nb', 'settings'])
+    const currentRouteArray = this.router.url.split('/').filter(v => v);
+
+    // Check if the current URL has any locale prefixes
+    const hasLocalePrefix =
+      intersect(
+        SUPPORTED_LOCALES.map(l => l.language),
+        [currentRouteArray[0]]
+      ).length == 1;
+
+    console.log(currentRouteArray, hasLocalePrefix);
+
+    return hasLocalePrefix ? '/' + currentRouteArray.slice(1).join('/') : this.router.url;
   }
 }

@@ -1,7 +1,9 @@
 import { ErrorHandler } from '@backend/common/error';
+import { SUPPORTED_LOCALES } from '@backend/common/locales';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
-  AccessToken,
   BaseController,
+  Follow,
   getCheck,
   Host,
   IControllerEndpoint,
@@ -16,10 +18,14 @@ import {
 } from '@core/api';
 import { timestamp } from '@core/helpers';
 import {
+  DtoUserPatronageSubscription,
   HTTP,
   IEnvelopedData,
   IFeed,
+  ILocale,
+  IFollowing,
   IMyself,
+  IPasswordConfirmationResponse,
   IPaymentMethod,
   IPaymentMethodStub,
   IPerformanceStub,
@@ -29,12 +35,9 @@ import {
   IUserInvoiceStub,
   PaymentStatus,
   pick,
-  DtoUserPatronageSubscription,
-  Visibility,
-  IPasswordConfirmationResponse
+  Visibility
 } from '@core/interfaces';
-import { boolean, enums, object, partial, record, string } from 'superstruct';
-import { BackendProviderMap } from '..';
+import { boolean, enums, object, record, string } from 'superstruct';
 import AuthStrat from '../common/authorisation';
 
 export default class MyselfController extends BaseController<BackendProviderMap> {
@@ -82,11 +85,9 @@ export default class MyselfController extends BaseController<BackendProviderMap>
   readFeed(): IControllerEndpoint<IFeed> {
     return {
       validators: {
-        query: partial(
-          record(
-            enums<keyof IFeed>(['upcoming', 'everything']),
-            Validators.Objects.PaginationOptions(10)
-          )
+        query: record(
+          enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts']),
+          Validators.Objects.PaginationOptions(10)
         )
       },
       authorisation: AuthStrat.none,
@@ -94,7 +95,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
         const feed: IFeed = {
           upcoming: null,
           everything: null,
-          hosts: null
+          hosts: null,
+          follows: null
         };
 
         // None of the req.query paging options are present, so fetch the first page of every carousel
@@ -106,7 +108,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             .andWhere('p.visibility = :state', { state: Visibility.Public })
             .innerJoinAndSelect('p.host', 'host')
             .orderBy('p.premiere_datetime')
-            .paginate(p => p.toStub(), {
+            .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+            .paginate(p => p.toClientStub(), {
               page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
               per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
             });
@@ -115,7 +118,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
             .andWhere('p.visibility = :state', { state: Visibility.Public })
             .innerJoinAndSelect('p.host', 'host')
-            .paginate(p => p.toStub(), {
+            .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+            .paginate(p => p.toClientStub(), {
               page: req.query.everything ? parseInt((req.query['everything'] as any).page) : 0,
               per_page: req.query.everything ? parseInt((req.query['everything'] as any).per_page) : 4
             });
@@ -125,6 +129,27 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             page: req.query.hosts ? parseInt((req.query['hosts'] as any).page) : 0,
             per_page: req.query.hosts ? parseInt((req.query['hosts'] as any).per_page) : 4
           });
+
+        // User does not need to be logged in for this API request. Therefore we need to first check if user is logged in before getting their follows
+        if ((fetchAll || req.query['follows']) && req.session.user) {
+          const follows = await this.ORM.createQueryBuilder(Follow, 'follow')
+            .where('follow.user__id = :uid', { uid: req.session.user._id })
+            .getMany();
+          // Map the 'follows' to an array of host IDs
+          const hostIds = follows.map(follow => follow.host__id);
+          // Query the database for all performances that have a host ID included in the array.
+          if (hostIds && hostIds.length > 0) {
+            feed.follows = await this.ORM.createQueryBuilder(Performance, 'p')
+              .where('p.host IN (:...hostArray)', { hostArray: hostIds })
+              .andWhere('p.visibility = :state', { state: Visibility.Public })
+              .innerJoinAndSelect('p.host', 'host')
+              .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+              .paginate(p => p.toClientStub(), {
+                page: req.query.follows ? parseInt((req.query['follows'] as any).page) : 0,
+                per_page: req.query.follows ? parseInt((req.query['follows'] as any).per_page) : 4
+              });
+          }
+        }
 
         return feed;
       }
@@ -405,6 +430,67 @@ export default class MyselfController extends BaseController<BackendProviderMap>
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         return {} as any;
+      }
+    };
+  }
+
+  updateLocale(): IControllerEndpoint<ILocale> {
+    return {
+      // Check the locale exists in our currently available options
+      validators: {
+        body: object({
+          language: enums(SUPPORTED_LOCALES.map(l => l.language)),
+          region: enums(SUPPORTED_LOCALES.map(l => l.region))
+        })
+      },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
+        myself.locale = req.body;
+        await myself.save();
+        return myself.locale;
+      }
+    };
+  }
+
+  // Adds a follow to the database with the current users ID (Follower) and the provided host ID (Followee?)
+  addFollow(): IControllerEndpoint<IFollowing> {
+    return {
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        // Check current user exists with the session id
+        const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
+        // Check host exists with the provided id
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+        // Check to make sure we don't add duplicate user/host follow relationships
+        const followExists = await this.ORM.createQueryBuilder(Follow, 'follow')
+          .where('follow.user__id = :uid', { uid: req.session.user._id })
+          .andWhere('follow.host__id = :hid', { hid: req.params.hid })
+          .getOne();
+        // Throw an error if the user is already following this host
+        if (followExists) throw new ErrorHandler(HTTP.BadRequest, '@@error.already_following');
+
+        // If we have passed all checks we can add the follow and save to the database
+        const follow = new Follow(myself, host);
+        await follow.save();
+        return follow.toFollowing();
+      }
+    };
+  }
+
+  // Removes a follow to the database with the current users ID (Follower) and the provided host ID (Followee?)
+  deleteFollow(): IControllerEndpoint<void> {
+    return {
+      validators: { params: object({ hid: Validators.Fields.nuuid }) },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        const follow = await getCheck(
+          this.ORM.createQueryBuilder(Follow, 'follow')
+            .where('follow.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('follow.host__id = :hid', { hid: req.params.hid })
+            .getOne()
+        );
+        if (follow) await Follow.delete({ _id: follow._id });
       }
     };
   }

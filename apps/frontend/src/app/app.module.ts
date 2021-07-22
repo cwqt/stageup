@@ -1,11 +1,5 @@
 import { environment } from '../environments/environment';
 
-import countries from 'i18n-iso-countries';
-// No cy support for this library, but I have opened a PR with its addition
-// https://github.com/michaelwittig/node-i18n-iso-countries/pull/246
-const locale = environment.locale == 'cy' ? 'en' : environment.locale;
-countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
-
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -28,6 +22,22 @@ import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
+// https://github.com/scttcper/ngx-chartjs
+import { ChartjsModule } from '@ctrl/ngx-chartjs';
+import {
+  LineController,
+  LineElement,
+  PointElement,
+  Chart,
+  CategoryScale,
+  LinearScale,
+  Filler,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+// What you register will depend on what chart you are using and features used.
+Chart.register(LineController, LineElement, Filler, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/onboarding-state.pipe';
@@ -122,7 +132,7 @@ import { PaymentMethodThumbComponent } from './components/payment-method/payment
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
-import { ProcessRefundDialogComponent } from './components/dialogs/process-refund-dialog/process-refund-dialog.component';
+import { ProcessRefundsDialogComponent } from './components/dialogs/process-refunds-dialog/process-refunds-dialog.component';
 import { ConfirmationDialogComponent } from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
 import { HostThumbComponent } from './components/host-thumb/host-thumb.component';
@@ -132,6 +142,12 @@ import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-pas
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
 import { PerformanceDeleteDialogComponent } from './routes/performance/performance-delete-dialog/performance-delete-dialog.component';
+import { RatePerformanceComponent } from './components/rate-performance/rate-performance.component';
+import { LikePerformanceComponent } from './components/like-performance/like-performance.component';
+import { RedirectComponent } from './components/redirect/redirect.component';
+import { FollowButtonComponent } from './components/follow-button/follow-button.component';
+import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
+import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -229,7 +245,7 @@ import { PerformanceDeleteDialogComponent } from './routes/performance/performan
     PaymentMethodThumbComponent,
     WalletSettingsComponent,
     GenreFeedComponent,
-    ProcessRefundDialogComponent,
+    ProcessRefundsDialogComponent,
     UserPatronageComponent,
     ConfirmationDialogComponent,
     UserPatronageComponent,
@@ -240,7 +256,13 @@ import { PerformanceDeleteDialogComponent } from './routes/performance/performan
     ConfirmPasswordDialogComponent,
     HostPerformanceThumbnailsComponent,
     SocialSharingComponent,
-    PerformanceDeleteDialogComponent
+    PerformanceDeleteDialogComponent,
+    RatePerformanceComponent,
+    LikePerformanceComponent,
+    RedirectComponent,
+    FollowButtonComponent,
+    HostAnalyticsComponent,
+    HostAnalyticsHeaderItemComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -257,11 +279,12 @@ import { PerformanceDeleteDialogComponent } from './routes/performance/performan
     ClipboardModule,
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
-    NgxStripeModule.forRoot(environment.stripePublicKey),
+    NgxStripeModule.forRoot(environment.stripe_public_key),
     ClipboardModule,
     NgxPermissionsModule.forRoot(),
     PlyrModule,
     IvyCarouselModule,
+    ChartjsModule,
     QuillModule.forRoot(),
     LoggerModule.forRoot({
       serverLoggingUrl: '/api/logs',
@@ -272,7 +295,6 @@ import { PerformanceDeleteDialogComponent } from './routes/performance/performan
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],
-  // entryComponents: [DeleteConfirmationDialogComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

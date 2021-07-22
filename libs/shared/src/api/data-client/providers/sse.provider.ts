@@ -3,6 +3,8 @@ export interface ISSEProviderConfig {}
 
 import { RedisHub } from '@toverux/expresse';
 
+import { Service } from 'typedi';
+@Service()
 export default class SSEProvider implements Provider<RedisHub> {
   name = 'Store';
   connection: RedisHub;
@@ -13,7 +15,7 @@ export default class SSEProvider implements Provider<RedisHub> {
   }
 
   async connect(providerMap: ProviderMap) {
-    this.connection = new RedisHub("sse");
+    this.connection = new RedisHub('sse');
     return this.connection;
   }
 

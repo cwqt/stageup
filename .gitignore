@@ -1,20 +1,60 @@
+# Modules, metadata files, logs, compiled code etc.
 node_modules
 .DS_Store
 logs
 build
 dist
-.env
-.env_prod
-sendgrid.env
 coverage
+
+# GCP service account private keys
+*.service_account.json
+
+# Postgres Docker Compose copy
 store
-deploy/env/*
-*.env
-.env.*
-!.env.example
+
+# Compiled code
 bundle.zip
 bundle.7z
 
+# Environment files
+.env*
+!.env.example
+
+# Frontend environment files
 environment.*
 !environment.ts
-*service_account.json
+
+# Terraform GCP Service Account Key
+terraform-sa.json
+
+# Local .terraform directories
+.terraform
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files, which are likely to contain sentitive data, such as
+# password, private keys, and other secrets. These should not be part of version
+# control as they are data points which are potentially sensitive and subject
+# to change depending on the environment.
+*.tfvars
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Firebase
+firebase-debug.log
+apps/webhooks/functions/lib

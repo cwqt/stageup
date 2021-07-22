@@ -5,10 +5,12 @@ import Stripe from 'stripe';
 export interface IStripeProviderConfig {
   public_key: string;
   private_key: string;
-  hook_signature: string;
+  webhook_signature: string;
   client_id: string;
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class StripeProvider implements Provider<Stripe> {
   name = 'Stripe';
   connection: Stripe;

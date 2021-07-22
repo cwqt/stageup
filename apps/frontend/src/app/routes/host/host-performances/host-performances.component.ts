@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit, Inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { CreatePerformanceComponent } from './create-performance/create-performance.component';
@@ -30,6 +30,7 @@ export class HostPerformancesComponent implements OnInit {
   // displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private performanceService: PerformanceService,
     private hostService: HostService,
     private helperService: HelperService,
@@ -53,7 +54,7 @@ export class HostPerformancesComponent implements OnInit {
         },
         {
           label: $localize`Created At`,
-          accessor: p => i18n.date(unix(p.created_at), environment.locale)
+          accessor: p => i18n.date(unix(p.created_at), this.locale)
         },
         {
           label: $localize`Status`,

@@ -9,6 +9,8 @@ export interface IEmailProviderConfig {
   enabled: boolean;
 }
 
+import { Service } from 'typedi';
+@Service()
 export class EmailProvider implements Provider<Mail> {
   name = 'Email';
   connection: Mail;

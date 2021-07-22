@@ -16,7 +16,15 @@ import hostMockData, { SeederHostName } from '../mock/hosts.mock';
 import performanceMockData, { allTickets, SeedMockPerformance } from '../mock/performances.mock';
 import * as faker from 'faker';
 import Stripe from 'stripe';
-import { DtoCreateHost, HostPermission, PersonTitle, Visibility } from '@core/interfaces';
+import {
+  BusinessType,
+  CountryCode,
+  DtoCreateHost,
+  HostPermission,
+  IHostBusinessDetails,
+  PersonTitle,
+  Visibility
+} from '@core/interfaces';
 import { SeederProviderMap } from '..';
 import { sample } from '@core/helpers';
 
@@ -34,7 +42,7 @@ export class Seeder {
 
     await Promise.all(
       hostMockData.map(async (hostData, idx) => {
-        const user = await this.createUser(idx == 0 ? 'rubicon@stageup.uk' : undefined);
+        const user = await this.createUser(idx == 0 ? 'torch@stageup.uk' : undefined);
         const host = await this.createHost(hostData);
         await this.addUserToHost(user, host, HostPermission.Owner);
 
@@ -100,16 +108,23 @@ export class Seeder {
 
     host.onboarding_process = await new Onboarding(host, host.owner).save();
 
-    // host.contact_info = await new ContactInfo({
-    //   mobile_number: faker.phone.phoneNumber(),
-    //   landline_number: faker.phone.phoneNumber(),
-    //   addresses: []
-    // }).save();
-
     host.is_onboarded = true;
     host.stripe_account_id = 'acct_1Iimp3FMVjDWWJf3';
     host.avatar = hostData.avatar;
     host.banner = hostData.banner;
+
+    const bd: IHostBusinessDetails = {
+      business_type: BusinessType.Company,
+      business_address: {
+        line1: 'A road',
+        city: 'Bristol',
+        country: CountryCode.GB,
+        postal_code: 'BS12TD'
+      },
+      business_contact_number: '+441257651423'
+    };
+
+    host.business_details = bd;
 
     return await host.save();
   }

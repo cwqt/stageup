@@ -1,9 +1,11 @@
+import { Like } from './../users/like.entity';
 import { timestamp, uuid } from '@core/helpers';
 import {
   DtoCreatePerformance,
   Genre,
   IPerformance,
   IPerformanceStub,
+  IFeedPerformanceStub,
   PerformanceStatus,
   RichText,
   Visibility
@@ -31,8 +33,10 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column() created_at: number;
   @Column() name: string;
   @Column() views: number;
+  @Column({ unsigned: true }) like_count: number;
   @Column({ nullable: true }) premiere_datetime?: number;
-  @Column({ nullable: true }) average_rating: number | null;
+  @Column({ unsigned: true }) rating_count: number;
+  @Column('float') rating_total: number;
   @Column('jsonb', { nullable: true }) description?: RichText;
   @Column('varchar', { nullable: true }) thumbnail: string;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
@@ -43,6 +47,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
+  @OneToMany(() => Like, like => like.performance) likes: Like[];
 
   constructor(data: DtoCreatePerformance, host: Host) {
     super();
@@ -57,7 +62,9 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this.status = PerformanceStatus.PendingSchedule;
     this.created_at = timestamp(new Date());
     this.views = 0;
-    this.average_rating = null;
+    this.like_count = 0;
+    this.rating_count = 0;
+    this.rating_total = 0;
     this.host = host;
     this.publicity_period = { start: null, end: null };
   }
@@ -75,14 +82,23 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       _id: this._id,
       host: this.host?.toStub(),
       name: this.name,
-      average_rating: this.average_rating,
+      rating_count: this.rating_count,
+      rating_total: this.rating_total,
       views: this.views,
+      like_count: this.like_count,
       description: this.description,
       created_at: this.created_at,
       thumbnail: this.thumbnail,
       premiere_datetime: this.premiere_datetime,
       assets: this.asset_group.assets.map(a => a.toStub()),
       status: this.status
+    };
+  }
+
+  toClientStub(): Required<IFeedPerformanceStub> {
+    return {
+      ...this.toStub(),
+      client_likes: this.likes?.length > 0 ? true : false // If client has liked this performance, set to true
     };
   }
 

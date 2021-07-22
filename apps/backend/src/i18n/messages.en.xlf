@@ -10,8 +10,12 @@
         <target state="final">User does not exist</target>
       </trans-unit>
       <trans-unit id="error.not_a_video" datatype="html">
-        <source>This is not a video!</source>
-        <target state="final">This is not a video!</target>
+        <source>This is not a video</source>
+        <target state="final">This is not a video</target>
+      </trans-unit>
+      <trans-unit id="error.email_already_in_use" datatype="html">
+        <source>E-mail address is already in use</source>
+        <target state="final">E-mail address is already in use</target>
       </trans-unit>
       <trans-unit id="host.example_patron_tier_name" datatype="html">
         <source>Example Tier</source>
@@ -153,6 +157,18 @@
         <source>Cannot set performance publicity period outside one of the tickets selling period</source>
         <target state="final">Cannot set performance publicity period outside one of the tickets selling period</target>
       </trans-unit>
+      <trans-unit id="error.already_following" datatype="html">
+        <source>You are already following this host</source>
+        <target state="final">You are already following this host</target>
+      </trans-unit>
+      <trans-unit id="error.invalid_rating" datatype="html">
+        <source>The provided rate value is invalid</source>
+        <target state="final">The provided rate value is invalid</target>
+      </trans-unit>
+      <trans-unit id="error.no_rating_exists" datatype="html">
+        <source>Could not find existing rating</source>
+        <target state="final">Could not find existing rating</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="final">Received response does not match submitter!</target>
@@ -162,8 +178,8 @@
         <target state="final">Could not find any invoices</target>
       </trans-unit>
       <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while one another refund is already outstanding</source>
-        <target state="final">Cannot refund while one another refund is already outstanding</target>
+        <source>Cannot refund while another refund is already outstanding</source>
+        <target state="final">Cannot refund while another refund is already outstanding</target>
       </trans-unit>
       <trans-unit id="email.user.refund_initiated__content" datatype="html">
         <source>**Hi {user_username},**
@@ -228,6 +244,38 @@ Please note, if this request was not initated by you please notify us immediatel
       <trans-unit id="email.host.refund_initiated__subject" datatype="html">
         <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
         <target state="final">Refund initiated for {user_username}'s purchase of {performance_name}</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_subject" datatype="html">
+        <source>You have initiated refunds for {refund_quantity} invoice(s)</source>
+        <target state="final">You have initiated refunds for {refund_quantity} invoice(s)</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
+        <source>**Hi {host_name},**
+
+You have initiated refunds for {refund_quantity} invoices
+
+**Total value: **{invoices_total}**
+
+We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
+
+**Thanks,**
+
+**StageUp Team**
+
+Please note, if this request was not initated by you please notify us immediately"</source>
+        <target state="final">**Hi {host_name},**
+
+You have initiated refunds for {refund_quantity} invoices
+
+**Total value: **{invoices_total}**
+
+We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
+
+**Thanks,**
+
+**StageUp Team**
+
+Please note, if this request was not initated by you please notify us immediately"</target>
       </trans-unit>
       <trans-unit id="email.user.refund_refunded__subject" datatype="html">
         <source>Refund for {performance_name} succesful!</source>
@@ -550,8 +598,8 @@ Thanks, StageUp</target>
         <target state="final">Not found</target>
       </trans-unit>
       <trans-unit id="error.no_such_route" datatype="html">
-        <source>Route not found</source>
-        <target state="final">Route not found</target>
+        <source>No such route</source>
+        <target state="final">No such route</target>
       </trans-unit>
       <trans-unit id="error.not_member" datatype="html">
         <source>Not a member of company</source>
@@ -601,10 +649,6 @@ Thanks, StageUp</target>
         <source>Method is not implemented</source>
         <target state="final">Method is not implemented</target>
       </trans-unit>
-      <trans-unit id="error.not_such_route" datatype="html">
-        <source>No such route</source>
-        <target state="final">No such route</target>
-      </trans-unit>
       <trans-unit id="error.incorrect" datatype="html">
         <source>Value is incorrect</source>
         <target state="final">Value is incorrect</target>
@@ -645,9 +689,37 @@ Thanks, StageUp</target>
         <source>Not a valid HMRC Company number</source>
         <target state="final">Not a valid HMRC Company number</target>
       </trans-unit>
+      <trans-unit id="validation.invalid_vat_number" datatype="html">
+        <source>Not a valid VAT number</source>
+        <target state="final">Not a valid VAT number</target>
+      </trans-unit>
       <trans-unit id="validation.invalid_url" datatype="html">
         <source>Not a valid URL</source>
         <target state="final">Not a valid URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_facebook_url" datatype="html">
+        <source>Not a valid Facebook URL</source>
+        <target state="final">Not a valid Facebook URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_instagram_url" datatype="html">
+        <source>Not a valid Instagram URL</source>
+        <target state="final">Not a valid Instagram URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_linkedin_url" datatype="html">
+        <source>Not a valid LinkedIn URL</source>
+        <target state="final">Not a valid LinkedIn URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_twitter_url" datatype="html">
+        <source>Not a valid Twitter URL</source>
+        <target state="final">Not a valid Twitter URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_pinterest_url" datatype="html">
+        <source>Not a valid Pinterest URL</source>
+        <target state="final">Not a valid Pinterest URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_youtube_url" datatype="html">
+        <source>Not a valid Youtube URL</source>
+        <target state="final">Not a valid Youtube URL</target>
       </trans-unit>
     </body>
   </file>

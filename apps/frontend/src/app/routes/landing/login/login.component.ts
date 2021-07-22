@@ -67,7 +67,9 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
         success: async () => {
           // get user, host & host info on login & re-direct according to set preferred landing page
           this.myselfService.getMyself().then(myself => {
-            this.baseAppService.navigateTo(myself.host_info?.prefers_dashboard_landing ? '/dashboard' : '/');
+            // If the user has set a preferred language, we want to prefix the URL with that when they login
+            const localeRedirect = myself.user.locale ? `/${myself.user.locale.language}` : '';
+            this.baseAppService.navigateTo(myself.host_info?.prefers_dashboard_landing ? `${localeRedirect}/dashboard` : `${localeRedirect}/`);
             this.dialog.closeAll();
           });
         }

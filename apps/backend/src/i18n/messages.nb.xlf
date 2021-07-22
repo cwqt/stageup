@@ -10,8 +10,12 @@
         <target state="needs-translation">Bruker finnes ikke</target>
       </trans-unit>
       <trans-unit id="error.not_a_video" datatype="html">
-        <source>This is not a video!</source>
+        <source>This is not a video</source>
         <target state="needs-translation">Dette er ikke en video!</target>
+      </trans-unit>
+      <trans-unit id="error.email_already_in_use" datatype="html">
+        <source>E-mail address is already in use</source>
+        <target state="needs-translation">E-postadressen er allerede i bruk</target>
       </trans-unit>
       <trans-unit id="host.example_patron_tier_name" datatype="html">
         <source>Example Tier</source>
@@ -153,6 +157,18 @@
         <source>Cannot set performance publicity period outside one of the tickets selling period</source>
         <target state="needs-translation">Kan ikke angi reklameperiode for ytelse utenfor en av selgerperioden for billetter</target>
       </trans-unit>
+      <trans-unit id="error.already_following" datatype="html">
+        <source>You are already following this host</source>
+        <target state="needs-translation">Du følger allerede denne verten</target>
+      </trans-unit>
+      <trans-unit id="error.invalid_rating" datatype="html">
+        <source>The provided rate value is invalid</source>
+        <target state="needs-translation">Den angitte hastighetsverdien er ugyldig</target>
+      </trans-unit>
+      <trans-unit id="error.no_rating_exists" datatype="html">
+        <source>Could not find existing rating</source>
+        <target state="needs-translation">Fant ikke eksisterende vurdering</target>
+      </trans-unit>
       <trans-unit id="stripe.origin_url_not_matched" datatype="html">
         <source>Received response does not match submitter!</source>
         <target state="needs-translation">Mottatt svar samsvarer ikke med innsenderen!</target>
@@ -162,7 +178,7 @@
         <target state="needs-translation">Fant ingen fakturaer</target>
       </trans-unit>
       <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while one another refund is already outstanding</source>
+        <source>Cannot refund while another refund is already outstanding</source>
         <target state="needs-translation">Kan ikke tilbakebetale mens hverandre er allerede utestående</target>
       </trans-unit>
       <trans-unit id="email.user.refund_initiated__content" datatype="html">
@@ -217,7 +233,7 @@ Please note, if this request was not initated by you please notify us immediatel
 
 ** Totalt beløp: {invoice_amount} **
 
-Vi har varslet den berørte kunden om at de skal motta det refunderte beløpet på kontoen innen 5 virkedager
+Vi har varslet den berørte kunden om at de skal motta det refunderte beløpet på kontoen sin innen 5 virkedager
 
 **Takk,**
 
@@ -227,7 +243,39 @@ Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, vennl
       </trans-unit>
       <trans-unit id="email.host.refund_initiated__subject" datatype="html">
         <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
-        <target state="needs-translation">Refusjon startet for kjøp av {user_username} av {performance_name}</target>
+        <target state="needs-translation">Refusjon startet for {user_username}s kjøp av {performance_name}</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_subject" datatype="html">
+        <source>You have initiated refunds for {refund_quantity} invoice(s)</source>
+        <target state="needs-translation">Du har startet refusjoner for {refund_quantity} faktura (er)</target>
+      </trans-unit>
+      <trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
+        <source>**Hi {host_name},**
+
+You have initiated refunds for {refund_quantity} invoices
+
+**Total value: **{invoices_total}**
+
+We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
+
+**Thanks,**
+
+**StageUp Team**
+
+Please note, if this request was not initated by you please notify us immediately"</source>
+        <target state="needs-translation">** Hei {host_name}, **
+
+Du har startet refusjon for {refund_quantity} fakturaer
+
+** Total verdi: ** {invoices_total} **
+
+Vi har varslet de berørte kundene om at de skal motta det refunderte beløpet i kontoene sine innen 5 virkedager
+
+**Takk,**
+
+** StageUp Team **
+
+Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, må du varsle oss umiddelbart "</target>
       </trans-unit>
       <trans-unit id="email.user.refund_refunded__subject" datatype="html">
         <source>Refund for {performance_name} succesful!</source>
@@ -253,7 +301,7 @@ Dette er et varsel for å bekrefte at {host_name} har refundert bestillingen ** 
 
 > {refund_reason}
 
-Midlene er nå kreditert ** {card_brand} ** som ender på ** {last_4} **.
+Midlene er nå kreditert ** {card_brand} ** som ender med ** {last_4} **.
 
 Du kan se en logg over denne refusjonen i StageUp-kontoinnstillingene
 
@@ -379,7 +427,7 @@ For å behandle denne forespørselen kan du gå til [fakturaoversikten her] ({in
       </trans-unit>
       <trans-unit id="email.test.send_email__content" datatype="html">
         <source>Hey {username} **How are you? &lt;{url}>**</source>
-        <target state="needs-translation">Hei {username} ** Hvordan har du det? &amp; lt; {url}> **</target>
+        <target state="needs-translation">Hei {username} ** Hvordan har du det? &lt; {url}> **</target>
       </trans-unit>
       <trans-unit id="email.user.registered__subject" datatype="html">
         <source>Verify your StageUp account</source>
@@ -387,7 +435,7 @@ For å behandle denne forespørselen kan du gå til [fakturaoversikten her] ({in
       </trans-unit>
       <trans-unit id="email.user.registered__content" datatype="html">
         <source>Click the link to verify: &lt;{url}></source>
-        <target state="needs-translation">Klikk på lenken for å bekrefte: &amp; lt; {url}></target>
+        <target state="needs-translation">Klikk på lenken for å bekrefte: &lt; {url}></target>
       </trans-unit>
       <trans-unit id="email.user.invited_to_host__subject" datatype="html">
         <source>You have been invited to join {host_name} by {inviter_name}</source>
@@ -397,7 +445,7 @@ For å behandle denne forespørselen kan du gå til [fakturaoversikten her] ({in
         <source>Hi {user_name},
 Click the link to accept the invitation: &lt;{url}>, this invite will expire in **24 hours**.</source>
         <target state="needs-translation">Hei {user_name},
-Klikk på lenken for å godta invitasjonen: &amp; lt; {url}>, denne invitasjonen utløper om ** 24 timer **.</target>
+Klikk på lenken for å godta invitasjonen: &lt; {url}>, denne invitasjonen utløper om ** 24 timer **.</target>
       </trans-unit>
       <trans-unit id="email.user.invited_to_private_showing__subject" datatype="html">
         <source>You have been invited to watch a private performance</source>
@@ -407,7 +455,7 @@ Klikk på lenken for å godta invitasjonen: &amp; lt; {url}>, denne invitasjonen
         <source>Hi {user_name},
 Click the link to watch **{performance_name}** by **{host_name}** on StageUp now: &lt;{url}>></source>
         <target state="needs-translation">Hei {user_name},
-Klikk på lenken for å se ** {performance_name} ** av ** {host_name} ** på StageUp nå: &amp; lt; {url} >></target>
+Klikk på lenken for å se ** {performance_name} ** av ** {host_name} ** på StageUp nå: &lt; {url} >></target>
       </trans-unit>
       <trans-unit id="email.ticket.purchased__subject" datatype="html">
         <source>Receipt of purchase of StageUp ticket</source>
@@ -420,8 +468,8 @@ Click here to watch: &lt;{watch_url}>
 Receipt of this purchase: &lt;{receipt_url}></source>
         <target state="needs-translation">Hei {user_name},
 Du kjøpte en {ticket_name} for å se {performance_name} for {amount}.
-Klikk her for å se: &amp; lt; {watch_url}>
-Mottak av dette kjøpet: &amp; lt; {receipt_url}></target>
+Klikk her for å se: &lt; {watch_url}>
+Mottak på dette kjøpet: &lt; {receipt_url}></target>
       </trans-unit>
       <trans-unit id="email.user.patronage_started__subject" datatype="html">
         <source>Patron Subscription to {tier_name}</source>
@@ -439,7 +487,7 @@ StageUp Team</source>
         <target state="needs-translation">Hei {user_name},
 Takk for at du støtter ** {host_name} **!
 
-Våre betalere på {amount} blir belastet {date_ordinal} i hver måned, fra og med i dag.
+Våre betalere på {amount} belastes {date_ordinal} i hver måned fra og med i dag.
 
 Du kan når som helst kansellere betalingene dine. Ved å utføre denne betalingen godtar du [StageUps vilkår for bruk] ({tos_url})
 Takk,
@@ -477,11 +525,11 @@ Please click on the following link to complete the process. This link is valid f
 
 If you did not request this change, please ignore this email and your password will remain unchanged.</source>
         <target state="needs-translation">Hei ** {user_name} **,
-Du mottar dette fordi du (eller noen andre) har bedt om å tilbakestille passordet for StageUp-kontoen din.
+Du mottar dette fordi du (eller noen andre) har bedt om tilbakestilling av passordet for StageUp-kontoen din.
 
 Klikk på følgende lenke for å fullføre prosessen. Denne lenken er gyldig det neste døgnet.
 
-&amp; lt; {password_reset_url}>
+&lt; {password_reset_url}>
 
 Hvis du ikke ba om denne endringen, kan du ignorere denne e-postadressen, og passordet ditt forblir uendret.</target>
       </trans-unit>
@@ -511,7 +559,7 @@ Hvis du nylig har endret passordet, kan du ignorere denne e-posten.</target>
 Thanks, StageUp</source>
         <target state="needs-translation">Hei ** @ {user_username} **,
 
-** @ {host_username} ** har slettet / fjernet ** {tier_name} ** nivå. Vi har sagt opp det nåværende abonnementet ditt ({sub_id}). Det vil tre i kraft umiddelbart. Du vil motta og e-post om bekreftelse av un-abonnementet.
+** @ {host_username} ** har slettet / fjernet ** {tier_name} ** nivå. Vi har kansellert ditt nåværende abonnement ({sub_id}). Det vil tre i kraft umiddelbart. Du vil motta og e-post om bekreftelse av un-abonnementet.
 
 Takk, StageUp</target>
       </trans-unit>
@@ -529,7 +577,7 @@ Thanks, StageUp</source>
         <target state="needs-translation">Hei @ {user_username},
 
 Dette er en kvittering for unabonnementet ditt fra ** @ {host_username} ** s beskyttelsesnivå, ** {tier_name} **.
-Du blir ikke lenger belastet for dette abonnementet &amp; amp; dette abonnementet vil bli oppført som 'Avbrutt' på kontoen din fra nå av.
+Du blir ikke lenger belastet for dette abonnementet &amp; dette abonnementet vil bli oppført som 'Avbrutt' på kontoen din fra nå av.
 
 Takk, StageUp</target>
       </trans-unit>
@@ -550,7 +598,7 @@ Takk, StageUp</target>
         <target state="needs-translation">Ikke funnet</target>
       </trans-unit>
       <trans-unit id="error.no_such_route" datatype="html">
-        <source>Route not found</source>
+        <source>No such route</source>
         <target state="needs-translation">Ruten ble ikke funnet</target>
       </trans-unit>
       <trans-unit id="error.not_member" datatype="html">
@@ -601,10 +649,6 @@ Takk, StageUp</target>
         <source>Method is not implemented</source>
         <target state="needs-translation">Metoden er ikke implementert</target>
       </trans-unit>
-      <trans-unit id="error.not_such_route" datatype="html">
-        <source>No such route</source>
-        <target state="needs-translation">Ingen slik rute</target>
-      </trans-unit>
       <trans-unit id="error.incorrect" datatype="html">
         <source>Value is incorrect</source>
         <target state="needs-translation">Verdien er feil</target>
@@ -645,9 +689,37 @@ Takk, StageUp</target>
         <source>Not a valid HMRC Company number</source>
         <target state="needs-translation">Ikke et gyldig HMRC-firmanummer</target>
       </trans-unit>
+      <trans-unit id="validation.invalid_vat_number" datatype="html">
+        <source>Not a valid VAT number</source>
+        <target state="needs-translation">Ikke et gyldig momsnummer</target>
+      </trans-unit>
       <trans-unit id="validation.invalid_url" datatype="html">
         <source>Not a valid URL</source>
         <target state="needs-translation">Ikke en gyldig URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_facebook_url" datatype="html">
+        <source>Not a valid Facebook URL</source>
+        <target state="needs-translation">Ikke en gyldig URL på Facebook</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_instagram_url" datatype="html">
+        <source>Not a valid Instagram URL</source>
+        <target state="needs-translation">Ikke en gyldig URL på Instagram</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_linkedin_url" datatype="html">
+        <source>Not a valid LinkedIn URL</source>
+        <target state="needs-translation">Ikke en gyldig LinkedIn URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_twitter_url" datatype="html">
+        <source>Not a valid Twitter URL</source>
+        <target state="needs-translation">Ikke en gyldig Twitter-URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_pinterest_url" datatype="html">
+        <source>Not a valid Pinterest URL</source>
+        <target state="needs-translation">Ikke en gyldig Pinterest-URL</target>
+      </trans-unit>
+      <trans-unit id="validation.invalid_youtube_url" datatype="html">
+        <source>Not a valid Youtube URL</source>
+        <target state="needs-translation">Ikke en gyldig URL på YouTube</target>
       </trans-unit>
     </body>
   </file>

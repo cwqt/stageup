@@ -8,6 +8,8 @@ export interface IStoreProviderConfig {
   redis_key?: string;
 }
 
+import { Service } from 'typedi';
+@Service()
 export default class StoreProvider implements Provider<RedisStore> {
   name = 'Store';
   connection: RedisStore;

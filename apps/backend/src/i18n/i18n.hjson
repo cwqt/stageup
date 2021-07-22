@@ -2,14 +2,25 @@
   // Users ------------------------------------------------------------------------------------------------
   "login.password_incorrect": Password is incorrect
   "user.not_found": User does not exist
-  "error.not_a_video": This is not a video!
+
+  // Errors ----------------------------------------------------------------------------------------------
+  "error.not_a_video": This is not a video
+  "error.email_already_in_use": E-mail address is already in use
+  "error.user_has_no_claim": You don't have permissions to view this content
+  "error.too_many_thumbnails": You have too many thumbnails, try deleting some before uploading new ones
+  "error.publicity_period_outside_ticket_period": Cannot set performance publicity period outside one of the tickets selling period
+  "error.already_following": You are already following this host
+  "error.invalid_rating": The provided rate value is invalid
+  "error.no_rating_exists": Could not find existing rating
+
+  // Onboarding ------------------------------------------------------------------------------------------
+  "onboarding.steps_invalid": Some steps are invalid
+  "onboarding.step_is_invalid": Step is invalid
 
   // Hosts -----------------------------------------------------------------------------------------------
   "host.example_patron_tier_name": Example Tier
   "host.example_patron_tier_description": Example Tier Description
   "host.requires_stripe_connected": Requires Stripe to be connected to perform this action
-  "onboarding.steps_invalid": Some steps are invalid
-  "onboarding.step_is_invalid": Step is invalid
   "host.invoice_csv.invoice_id": Invoice ID
   "host.invoice_csv.performance_name": Performance Title
   "host.invoice_csv.ticket_type": Ticket Type
@@ -42,17 +53,12 @@
   "ticket_type.free": Free
   "ticket_type.dono": Donation
 
-  // Errors ----------------------------------------------------------------------------------------------
-  "error.user_has_no_claim": You don't have permissions to view this content
-  "error.too_many_thumbnails": You have too many thumbnails, try deleting some before uploading new ones
-  "error.publicity_period_outside_ticket_period": Cannot set performance publicity period outside one of the tickets selling period
-
   // Stripe ----------------------------------------------------------------------------------------------
   "stripe.origin_url_not_matched": Received response does not match submitter!
 
   // Refunds ----------------------------------------------------------------------------------------------
   "refunds.no_invoices_found": Could not find any invoices
-  "refunds.refund_already_outstanding": Cannot refund while one another refund is already outstanding
+  "refunds.refund_already_outstanding": Cannot refund while another refund is already outstanding
 
   // Emails -----------------------------------------------------------------------------------------------
   "email.user.refund_initiated__content":
@@ -89,6 +95,24 @@
     Please note, if this request was not initated by you please notify us immediately
     '''
   "email.host.refund_initiated__subject": Refund initiated for {user_username}'s purchase of {performance_name}
+  "email.host.refund_bulk_initiated_subject": You have initiated refunds for {refund_quantity} invoice(s)
+  "email.host.refund_bulk_initiated_content":
+    '''
+
+    **Hi {host_name},**
+
+    You have initiated refunds for {refund_quantity} invoices
+
+    **Total value: **{invoices_total}**
+
+    We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
+
+    **Thanks,**
+
+    **StageUp Team**
+
+    Please note, if this request was not initated by you please notify us immediately"
+    '''
   "email.user.refund_refunded__subject": Refund for {performance_name} succesful!
   "email.user.refund_refunded__content":
     '''

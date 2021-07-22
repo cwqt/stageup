@@ -4,7 +4,7 @@ import { AssetGroup } from '../asset-group.entity';
 import { AssetTag, AssetType, IMuxPassthroughOwnerInfo, LiveStreamState } from '@core/interfaces';
 import { ChildEntity, EntityManager } from 'typeorm';
 import { AssetMethods, AssetOptions, AssetProvider } from '.';
-import { LiveStream, Upload } from '@mux/mux-node';
+import { LiveStream } from '@mux/mux-node';
 
 @ChildEntity(AssetType.LiveStream)
 export class LiveStreamAsset extends Asset<AssetType.LiveStream> implements AssetMethods<AssetType.LiveStream> {

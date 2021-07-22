@@ -34,7 +34,7 @@ export interface IUiTable<Input = any, Transformed = Input> {
 export interface IUiTableColumn<K> {
   label: string;
   accessor: (v: K) => Primitive; // how to display the column data
-  image?: string;
+  image?: (v: K) => Primitive;
   sort?: IUITableColumnSort;
   filter?: IUiTableColumnFilter;
   chip_selector?: (v: K) => ChipComponent['kind'];
