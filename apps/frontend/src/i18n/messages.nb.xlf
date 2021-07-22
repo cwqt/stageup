@@ -1641,7 +1641,7 @@ trinn ukontrollert          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCou
       </trans-unit>
       <trans-unit id="09ec31be6961eb936e6f265208e4f39b9b6daeeb" datatype="html">
         <source>Fresh theatre, any time &amp; any place.</source>
-        <target state="needs-translation">Frisk teater, når som helst & amp; hvor som helst.</target>
+        <target state="needs-translation">Frisk teater, når som helst &amp; hvor som helst.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context>
           <context context-type="linenumber">14</context>
@@ -2147,7 +2147,7 @@ grunnet premiere kl          <x id="INTERPOLATION" equiv-text="{{ perf.premiere_
       </trans-unit>
       <trans-unit id="810540268946872488" datatype="html">
         <source>Submit &amp; Delete</source>
-        <target state="needs-translation">Send inn & amp; Slett</target>
+        <target state="needs-translation">Send inn &amp; Slett</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.ts</context>
           <context context-type="linenumber">101</context>
@@ -2531,7 +2531,7 @@ Teamet vårt er for tiden i ferd med å gjennomgå informasjonen din, når vi er
       </trans-unit>
       <trans-unit id="1e44c172087f256de61fa59c7748f4a204b19b04" datatype="html">
         <source>Review &amp; submit for verification</source>
-        <target state="needs-translation">Gjennomgang & amp; send inn for bekreftelse</target>
+        <target state="needs-translation">Gjennomgang &amp; send inn for bekreftelse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
           <context context-type="linenumber">76</context>
@@ -3691,7 +3691,7 @@ Delt ytelse med brukere          <x id="PH" equiv-text="this.addedEmailAddresses
       </trans-unit>
       <trans-unit id="5741432696781943689" datatype="html">
         <source>Schedule the performance to be released at a certain date &amp; time (optional)</source>
-        <target state="needs-translation">Planlegg forestillingen som skal utgis på en bestemt dato & amp; tid (valgfritt)</target>
+        <target state="needs-translation">Planlegg forestillingen som skal utgis på en bestemt dato &amp; tid (valgfritt)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/create-performance/create-performance.component.ts</context>
           <context context-type="linenumber">74</context>
@@ -4338,7 +4338,7 @@ Skriv inn e-postadressen din, så sender vi deg instruksjoner for å generere et
 The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="needs-translation">
-Alt-i-ett-plattformen for forbruk & amp; lage scenekunstinnhold! Velg det alternativet som passer best for din tiltenkte bruk av StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Alt-i-ett-plattformen for forbruk &amp; lage scenekunstinnhold! Velg det alternativet som passer best for din tiltenkte bruk av StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/user-type-clarification/user-type-clarification.component.html</context>
@@ -4845,7 +4845,7 @@ Bedrifter          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-tex
       </trans-unit>
       <trans-unit id="5ad279d6e9f56b32c2902b3caf41db4b7fc599b2" datatype="html">
         <source>Account &amp; Settings</source>
-        <target state="needs-translation">Konto & amp; Innstillinger</target>
+        <target state="needs-translation">Konto &amp; Innstillinger</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/settings.component.html</context>
           <context context-type="linenumber">3</context>
@@ -5353,7 +5353,7 @@ kreves          <x id="PH" equiv-text="this.data.options.label"></x>
       </trans-unit>
       <trans-unit id="ui_testbed_title" datatype="html">
         <source>UI &amp; Component Library</source>
-        <target state="needs-translation">UI & amp; Komponentbibliotek</target>
+        <target state="needs-translation">UI &amp; Komponentbibliotek</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>
           <context context-type="linenumber">4</context>

@@ -402,7 +402,7 @@
 Live-streaming &amp; VoD platform for the performing arts.Copyright © 2021 StageUp Ltd. All rights reserved.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="needs-translation">
-Ffrydio byw & amp; Llwyfan VoD ar gyfer y celfyddydau perfformio.Copyright © 2021 StageUp Ltd. Cedwir pob hawl.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Ffrydio byw &amp; Llwyfan VoD ar gyfer y celfyddydau perfformio.Copyright © 2021 StageUp Ltd. Cedwir pob hawl.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/components/app/footer/footer.component.html</context>
@@ -1641,7 +1641,7 @@ camau heb eu gwirio          <x id="INTERPOLATION" equiv-text="{{ getUncheckedCo
       </trans-unit>
       <trans-unit id="09ec31be6961eb936e6f265208e4f39b9b6daeeb" datatype="html">
         <source>Fresh theatre, any time &amp; any place.</source>
-        <target state="needs-translation">Theatr ffres, unrhyw bryd & amp; unrhyw le.</target>
+        <target state="needs-translation">Theatr ffres, unrhyw bryd &amp; unrhyw le.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/feed/feed.component.html</context>
           <context context-type="linenumber">14</context>
@@ -1840,7 +1840,7 @@ Methwyd tudalen nôl ar gyfer          <x id="PH" equiv-text="carouselIndex"></x
 Creating a company account gives you permissions to start streams &amp; manage ticketing.You will have to go through a further onboarding step before being to make your content public to StageUp users.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="needs-translation">
-Mae creu cyfrif cwmni yn rhoi caniatâd i chi gychwyn ffrydiau & amp; rheoli tocynnau. Bydd yn rhaid i chi fynd trwy gam pellach cyn bod i wneud eich cynnwys yn gyhoeddus i ddefnyddwyr StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Mae creu cyfrif cwmni yn rhoi caniatâd i chi gychwyn ffrydiau &amp; rheoli tocynnau. Bydd yn rhaid i chi fynd trwy gam pellach cyn bod i wneud eich cynnwys yn gyhoeddus i ddefnyddwyr StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/create-host/create-host.component.html</context>
@@ -2147,7 +2147,7 @@ oherwydd y perfformiad cyntaf yn          <x id="INTERPOLATION" equiv-text="{{ p
       </trans-unit>
       <trans-unit id="810540268946872488" datatype="html">
         <source>Submit &amp; Delete</source>
-        <target state="needs-translation">Cyflwyno & amp; Dileu</target>
+        <target state="needs-translation">Cyflwyno &amp; Dileu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.ts</context>
           <context context-type="linenumber">101</context>
@@ -2531,7 +2531,7 @@ Ar hyn o bryd mae ein tîm yn y broses o adolygu'ch gwybodaeth, ar ôl ei chwblh
       </trans-unit>
       <trans-unit id="1e44c172087f256de61fa59c7748f4a204b19b04" datatype="html">
         <source>Review &amp; submit for verification</source>
-        <target state="needs-translation">Adolygiad & amp; cyflwyno i'w wirio</target>
+        <target state="needs-translation">Adolygiad &amp; cyflwyno i'w wirio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.html</context>
           <context context-type="linenumber">76</context>
@@ -3691,7 +3691,7 @@ Rhannu perfformiad          <x id="PH" equiv-text="this.addedEmailAddresses.leng
       </trans-unit>
       <trans-unit id="5741432696781943689" datatype="html">
         <source>Schedule the performance to be released at a certain date &amp; time (optional)</source>
-        <target state="needs-translation">Trefnwch y perfformiad i'w ryddhau ar ddyddiad penodol & amp; amser (dewisol)</target>
+        <target state="needs-translation">Trefnwch y perfformiad i'w ryddhau ar ddyddiad penodol &amp; amser (dewisol)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performances/create-performance/create-performance.component.ts</context>
           <context context-type="linenumber">74</context>
@@ -4111,7 +4111,7 @@ Gadewch ''          <x id="PH" equiv-text="this.myself.host.name"></x>
       </trans-unit>
       <trans-unit id="3174cefaae7ad8316ad3413a0bc8cacd125afb35" datatype="html">
         <source>Live streaming &amp; VoD for Performance Arts</source>
-        <target state="needs-translation">Ffrydio byw & amp; VoD ar gyfer y Celfyddydau Perfformio</target>
+        <target state="needs-translation">Ffrydio byw &amp; VoD ar gyfer y Celfyddydau Perfformio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/host-landing/host-landing.component.html</context>
           <context context-type="linenumber">5</context>
@@ -4338,7 +4338,7 @@ Rhowch eich e-bost a byddwn yn anfon cyfarwyddiadau atoch i godi cyfrinair newyd
 The all-in-one platform for consuming &amp; creating performing arts content!Please select the option for which best suits your intended useage of StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </source>
         <target state="needs-translation">
-Y platfform popeth-mewn-un ar gyfer bwyta & amp; creu cynnwys celfyddydau perfformio! Dewiswch yr opsiwn sy'n gweddu orau i'ch defnydd arfaethedig o StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
+Y platfform popeth-mewn-un ar gyfer bwyta &amp; creu cynnwys celfyddydau perfformio! Dewiswch yr opsiwn sy'n gweddu orau i'ch defnydd arfaethedig o StageUp.          <x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br />"></x>
         </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/landing/user-type-clarification/user-type-clarification.component.html</context>
@@ -4845,7 +4845,7 @@ Cwmnïau          <x id="START_TAG_MAT_SPINNER" ctype="x-mat_spinner" equiv-text
       </trans-unit>
       <trans-unit id="5ad279d6e9f56b32c2902b3caf41db4b7fc599b2" datatype="html">
         <source>Account &amp; Settings</source>
-        <target state="needs-translation">Cyfrif & amp; Gosodiadau</target>
+        <target state="needs-translation">Cyfrif &amp; Gosodiadau</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/settings/settings.component.html</context>
           <context context-type="linenumber">3</context>
@@ -5353,7 +5353,7 @@ yn ofynnol          <x id="PH" equiv-text="this.data.options.label"></x>
       </trans-unit>
       <trans-unit id="ui_testbed_title" datatype="html">
         <source>UI &amp; Component Library</source>
-        <target state="needs-translation">UI & amp; Llyfrgell Cydran</target>
+        <target state="needs-translation">UI &amp; Llyfrgell Cydran</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/ui-lib/testbed/testbed.component.html</context>
           <context context-type="linenumber">4</context>
