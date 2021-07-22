@@ -256,9 +256,9 @@ export const pipes = {
       [RefundRequestReason.Dissatisfied]: 'Dissatisfied with event',
       [RefundRequestReason.CannotAttend]: 'Unable to attend event',
       [RefundRequestReason.Other]: 'Other, please provide details below...',
-      [BulkRefundReason.cancelled]: 'Performance was cancelled',
-      [BulkRefundReason.dateMoved]: 'Performance was rescheduled/ postponed',
-      [BulkRefundReason.overcharged]: 'Buyer was overcharged'
+      [BulkRefundReason.Cancelled]: 'Performance was cancelled',
+      [BulkRefundReason.DateMoved]: 'Performance was rescheduled/ postponed',
+      [BulkRefundReason.Overcharged]: 'Buyer was overcharged'
     };
 
     return pretty[reason];

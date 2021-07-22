@@ -62,6 +62,7 @@ import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
 import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
+import ConsentController from './controllers/consent.controller';
 import PatronageController from './controllers/patronage.controller';
 
 import { BackendModules } from '.';
@@ -223,4 +224,9 @@ router.get                               ("/sse/assets/:aid",                   
 // JOB QUEUE ----------------------------------------------------------------------------------------------------------
 router.use                               ("/admin/queue",                             Queue.jobQueueUi.handler);
 
+// CONSENT ---------------------------------------------------------------------------------------------------------------
+const Consent = new ConsentController(providers, middlewares);
+router.get      <any>                   ("/consent/general-terms",                    Consent.getGeneralTerms());
 }
+
+

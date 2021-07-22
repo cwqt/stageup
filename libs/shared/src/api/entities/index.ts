@@ -34,3 +34,6 @@ export { Refund } from './common/refund.entity';
 export { AnalyticsChunk } from './analytics/chunk-analytics.entity';
 export { HostAnalytics } from './analytics/host-analytics.entity';
 export { PerformanceAnalytics } from './analytics/performance-analytics.entity';
+
+export { Consent } from './common/consent.entity';
+

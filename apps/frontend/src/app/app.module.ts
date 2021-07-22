@@ -147,6 +147,7 @@ import { RedirectComponent } from './components/redirect/redirect.component';
 import { FollowButtonComponent } from './components/follow-button/follow-button.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
+import { GeneralTermsComponent } from './components/general-terms/general-terms.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -260,7 +261,8 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
     RedirectComponent,
     FollowButtonComponent,
     HostAnalyticsComponent,
-    HostAnalyticsHeaderItemComponent
+    HostAnalyticsHeaderItemComponent,
+    GeneralTermsComponent
   ],
   imports: [
     AngularMaterialModule,
