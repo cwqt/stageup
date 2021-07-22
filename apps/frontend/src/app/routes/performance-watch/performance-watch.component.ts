@@ -50,6 +50,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
+    private performanceService: PerformanceService,
     private sse: SseService,
     private myself: MyselfService,
     private zone: NgZone,
@@ -103,7 +104,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
   }
 
   handlePlayerPlay(event: Plyr.PlyrEvent) {
-    if (!this.registeredView) this.performanceService.registerView(this.performance.data._id, this.primaryAsset._id);
+    if (!this.registeredView) this.performanceService.registerView(this.performance._id, this.primaryAsset._id);
 
     this.registeredView = true;
   }
