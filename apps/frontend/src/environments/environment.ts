@@ -5,7 +5,8 @@ export const environment: IFrontendEnvironment = {
   is_deployed: true,
   frontend_url: 'http://localhost:4200',
   stripe_public_key: '',
-  app_version: ''
+  app_version: '',
+  mux_env_key: ''
 };
 
 import 'zone.js/dist/zone-error'; // Included with Angular CLI.

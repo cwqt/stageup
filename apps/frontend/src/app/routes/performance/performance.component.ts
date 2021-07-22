@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   DtoAccessToken,
@@ -10,9 +10,11 @@ import {
   AssetType,
   ISignedToken
 } from '@core/interfaces';
+import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
 import { Cacheable } from 'apps/frontend/src/app/app.interfaces';
 import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
+import { environment } from 'apps/frontend/src/environments/environment';
 import { merge, Observable } from 'rxjs';
 
 @Component({
@@ -21,37 +23,65 @@ import { merge, Observable } from 'rxjs';
   styleUrls: ['./performance.component.scss']
 })
 export class PerformanceComponent implements OnInit {
-  $loading: Observable<boolean>;
-  performance: Cacheable<DtoPerformance> = new Cacheable();
+  loading: boolean; // performance & token
+  performanceCacheable: Cacheable<DtoPerformance> = new Cacheable();
   primaryAsset: IAssetStub<AssetType.Video | AssetType.LiveStream>;
   primarySignedToken: Cacheable<ISignedToken> = new Cacheable();
 
+  performanceSharingUrl: SocialSharingComponent['url'];
+  rating: number; // user rating (if they have)
+
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private performanceService: PerformanceService,
     private route: ActivatedRoute,
     private appService: BaseAppService
   ) {}
 
-  get perf() {
-    return this.performance.data?.data;
+  get performance(): DtoPerformance['data'] {
+    return this.performanceCacheable.data?.data;
+  }
+
+  get token(): ISignedToken {
+    return this.primarySignedToken.data;
   }
 
   async ngOnInit() {
+    this.loading = true;
     await this.appService.componentInitialising(this.route);
-    this.$loading = merge(this.performance.$loading, this.primarySignedToken.$loading);
 
-    await this.performance.request(
+    await this.performanceCacheable.request(
       this.performanceService.readPerformance(this.appService.getParam(RouteParam.PerformanceId))
     );
 
-    this.primaryAsset = this.perf.assets.find(asset => asset.tags.includes('primary'));
-    if (this.primaryAsset)
-      await this.primarySignedToken.request(
-        this.performanceService.generateSignedToken(this.performance.data.data._id, this.primaryAsset._id)
-      );
+    if (this.performance) {
+      this.rating = this.performanceCacheable.data.__client_data.rating;
+      this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
+
+      // Look for VoD or LiveStream asset marked as 'primary'
+      this.primaryAsset = this.performance.assets.find(asset => asset.tags.includes('primary'));
+
+      if (this.primaryAsset)
+        await this.primarySignedToken.request(
+          this.performanceService.generateSignedToken(this.performance._id, this.primaryAsset._id)
+        );
+    }
+
+    this.loading = false;
   }
 
   gotoFeed() {
     this.appService.navigateTo(`/`);
+  }
+
+  // If user clicks on the same rating, it will remove it. Else it adds/updates it
+  onRatingChanged(rateValue: number): void {
+    if (this.rating === rateValue) {
+      this.rating = null;
+      this.performanceService.deleteRating(this.performance._id);
+    } else {
+      this.rating = rateValue;
+      this.performanceService.setRating(this.performance._id, rateValue);
+    }
   }
 }

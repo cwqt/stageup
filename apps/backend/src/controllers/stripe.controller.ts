@@ -68,6 +68,9 @@ export default class StripeController extends BaseController<BackendProviderMap>
       },
       // https://github.com/stripe/stripe-node/blob/master/examples/webhook-signing/typescript-node-express/express-ts.ts
       controller: async req => {
+        // Only continue if this webhook was meant for us
+        if (Env.IS_LOCAL && req.headers['x-forwarded-host'] != Env.LOCALTUNNEL.DOMAIN) return;
+
         const event = req.body as Stripe.Event;
         log.http(`Received Stripe hook: ${event.type}`);
 

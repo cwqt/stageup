@@ -1,7 +1,7 @@
 import { AssetGroup, AssetView, Invoice, Performance, PerformanceAnalytics, Providers } from '@core/api';
 import { JobData, PurchaseableType } from '@core/interfaces';
 import { Job } from 'bullmq';
-import { analyze } from './analytics.worker';
+import { collectMetrics } from './analytics.worker';
 
 export default ({
   orm,
@@ -13,7 +13,7 @@ export default ({
   const data: JobData['collect_performance_analytics'] = job.data;
   const performance = await Performance.findOne({ where: { _id: data.performance_id } });
 
-  await analyze(
+  await collectMetrics(
     new PerformanceAnalytics(performance),
     {
       total_ticket_sales: async (start, end) => {
@@ -28,7 +28,7 @@ export default ({
           .createQueryBuilder(Invoice, 'i')
           .where('i.type = :type', { type: PurchaseableType.Ticket })
           .andWhere('i.ticket__id IN (:...ticketIds)', { ticketIds: tickets.map(t => t._id) })
-          .andWhere('i.purchased_at BETWEEN :end AND :start', { start, end })
+          .andWhere('i.purchased_at BETWEEN :start AND :end', { start, end })
           .getCount();
       },
       total_revenue: async (start, end) => {
@@ -43,7 +43,7 @@ export default ({
           .createQueryBuilder(Invoice, 'i')
           .where('i.type = :type', { type: PurchaseableType.Ticket })
           .andWhere('i.ticket__id IN (:...ticketIds)', { ticketIds: tickets.map(t => t._id) })
-          .andWhere('i.purchased_at BETWEEN :end AND :start', { start, end })
+          .andWhere('i.purchased_at BETWEEN :start AND :end', { start, end })
           .select('SUM(i.amount)', 'sum') // returns as string if matches, or null if none
           .getRawOne()) || { sum: '0' };
 

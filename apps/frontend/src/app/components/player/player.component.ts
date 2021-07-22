@@ -3,6 +3,10 @@ import { AssetType, IAsset, IAssetStub, ISignedToken } from '@core/interfaces';
 import { PlyrComponent } from 'ngx-plyr';
 import { timeInterval } from 'rxjs/operators';
 import { HlsjsPlyrDriver } from './hls-plyr-driver';
+import Hls from 'hls.js';
+import mux from 'mux-embed';
+import { environment } from 'apps/frontend/src/environments/environment';
+import { MyselfService } from '@frontend/services/myself.service';
 
 @Component({
   selector: 'app-player',
@@ -31,7 +35,7 @@ export class PlayerComponent implements OnInit {
     captions: { active: true, update: true, language: 'en' }
   };
 
-  constructor() {}
+  constructor(private myselfService: MyselfService) {}
 
   ngOnInit(): void {
     this.hlsjsDriver = new HlsjsPlyrDriver(false);
@@ -41,7 +45,7 @@ export class PlayerComponent implements OnInit {
     this.asset = asset;
     this.token = token;
 
-    this.setPoster();
+    // this.setPoster();
     this.streamSources = [
       {
         provider: 'html5',
@@ -52,13 +56,35 @@ export class PlayerComponent implements OnInit {
       }
     ];
 
-    this.hlsjsDriver.load(this.streamSources[0].src);
+    const video = this.hlsjsDriver.load(this.streamSources[0].src);
+
+    // Setup the MUX video monitor for capturing data stats (views)
+    // https://docs.mux.com/guides/data/monitor-hls-js#2-initialize-mux-data
+    mux.monitor(video, {
+      // debug: true,
+      hlsjs: this.hlsjsDriver.hls,
+      Hls: Hls,
+      data: {
+        env_key: environment.mux_env_key,
+        player_init_time: Date.now(),
+        player_name: 'player',
+
+        // https://docs.mux.com/guides/data/make-your-data-actionable-with-metadata#high-priority-configurable-metadata
+        // StageUp internal video ID
+        video_id: asset._id,
+        // StageUp internal user ID
+        viewer_user_id: this.myselfService.$myself.value?.user?._id || 'not-logged-in'
+      }
+    });
+
     return this.player;
   }
 
   setPoster() {
     const playbackId = this.asset.location.split('.m3u8').shift().split('/').pop();
-    this.poster = `https://image.mux.com/${playbackId}/thumbnail.jpg`;
+    this.poster = this.token
+      ? `https://image.mux.com/${playbackId}/thumbnail.jpg?token=${this.token.signed_token}`
+      : `https://image.mux.com/${playbackId}/thumbnail.jpg`;
   }
 
   _onPlay(event: Plyr.PlyrEvent) {

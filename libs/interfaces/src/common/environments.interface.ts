@@ -11,4 +11,5 @@ export interface IFrontendEnvironment {
   is_deployed: boolean;
   stripe_public_key: string;
   environment: Environment;
+  mux_env_key: string;
 }

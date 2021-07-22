@@ -98,6 +98,7 @@
     "moment-duration-format": "^2.3.2",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
+    "mux-embed": "^4.0.1",
     "nanoid": "^3.1.20",
     "ng-click-outside": "^7.0.1",
     "ngx-cookie-service": "^11.0.2",
