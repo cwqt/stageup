@@ -43,11 +43,9 @@ export type UserConsentData = {
     privacy_policy: IConsentable<'privacy_policy'>;
   };
   stageup_marketing: {
-    // _>_>
     user: IUserStub;
     terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
-    // _>_>
   };
   cookies: {
     // user: IUserStub; // Commented for now. I am still not certain on what the decision is for ip_address vs user
