@@ -49,12 +49,26 @@ export default ({
 
         return parseInt(sum);
       },
-      performance_views: async (start, end) =>
-        orm.connection
-          .createQueryBuilder(AssetView, 'view')
-          .where('view.performance__id = :pid', { pid: performance._id })
-          .andWhere('view.viewed_at BETWEEN :end AND :start', { start, end })
-          .getCount()
+      trailer_views: async (start, end) => {
+        const trailer = performance.asset_group.assets.find(a => a.tags.includes('trailer'));
+        return trailer
+          ? orm.connection
+              .createQueryBuilder(AssetView, 'view')
+              .where('view.asset__id = :aid', { aid: trailer._id })
+              .andWhere('view.viewed_at BETWEEN :end AND :start', { start, end })
+              .getCount()
+          : 0;
+      },
+      performance_views: async (start, end) => {
+        const primaryAsset = performance.asset_group.assets.find(a => a.tags.includes('primary'));
+        return primaryAsset
+          ? orm.connection
+              .createQueryBuilder(AssetView, 'view')
+              .where('view.asset__id = :aid', { aid: primaryAsset._id })
+              .andWhere('view.viewed_at BETWEEN :end AND :start', { start, end })
+              .getCount()
+          : 0;
+      }
     },
     job
   );
