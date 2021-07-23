@@ -102,5 +102,6 @@ export class Cacheable<T> implements ICacheable<T> {
 }
 
 export enum LocalStorageKey {
-  Myself = '__myself'
+  Myself = '__myself',
+  CookiesPolicyAcceptance = '__cookies_policy_acceptance'
 }

@@ -22,7 +22,7 @@ export class AuthenticationService {
     private router: Router
   ) {}
 
-  checkLoggedIn(redirect?: boolean) {
+  checkLoggedIn() {
     this.$loggedIn.next(
       new LoggedInGuard(this.router, this.myselfService).canActivate(
         this.route.snapshot,
@@ -40,7 +40,12 @@ export class AuthenticationService {
         tap(user => {
           // Remove last logged in user stored
           this.myselfService.store(null);
-          this.myselfService.getMyself().then(() => this.$loggedIn.next(true));
+          this.myselfService.getMyself().then(() => {
+            this.$loggedIn.next(true);
+            // override set cookie consent, because of legimate interest
+            // https://alacrityfoundationteam31.atlassian.net/browse/SU-465
+            this.myselfService.setCookiesConsent(true);
+          });
         })
       )
       .toPromise();

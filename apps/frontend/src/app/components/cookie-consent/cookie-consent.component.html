@@ -1,0 +1,17 @@
+<div class="relative bg-white px-8 py-6">
+  <ui-button [transparent]="true" (click)="setAcceptance(false)" class="absolute right-0 top-0"
+    ><ui-icon>close</ui-icon></ui-button
+  >
+
+  <h1 i18n>Cookies Agreement</h1>
+  <p class="mb-4" i18n>
+    StageUp, and certain approved third parties, use functional, analytical and tracking cookies (or similar
+    technologies) to understand your event preferences and provide you with a customised experience. By closing this
+    banner or by continuing to use StageUp, you agree. For more information please review our privacy policy.
+  </p>
+
+  <div class="flex space-x-2">
+    <ui-button kind="primary" i18n (click)="setAcceptance(true)">I accept</ui-button>
+    <ui-button (click)="gotoCookiesPolicy()" i18n>Read policy</ui-button>
+  </div>
+</div>
