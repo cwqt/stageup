@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DtoPerformance } from '@core/interfaces';
+import { IConfirmationDialogData } from '@frontend/components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { HelperService } from '@frontend/services/helper.service';
 import { MyselfService } from '@frontend/services/myself.service';
 import { ToastService } from '@frontend/services/toast.service';
@@ -22,21 +23,27 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
     private myselfService: MyselfService,
     private ref: MatDialogRef<PerformanceDeleteDialogComponent>,
     private helperService: HelperService,
-    @Inject(MAT_DIALOG_DATA) public data: DtoPerformance
+    @Inject(MAT_DIALOG_DATA) public data: DtoPerformance,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     console.log(this.data.data);
+
+    // let confirmDialogData: IConfirmationDialogData = {
+    //   title: $localize`Confirm refund`,
+
+    // };
     this.buttons = [
       new UiDialogButton({
-        label: $localize`Cancel Performance`,
+        label: $localize`Cancel`,
         kind: ThemeKind.Secondary,
         callback: () => this.cancel.emit()
       }),
       new UiDialogButton({
         label: $localize`Delete Performance`,
         kind: ThemeKind.Primary,
-        callback: null //() => this.helperService.showConfirmationDialog(this.dialog, confirmDialogData, null, null)
+        callback: () => this.helperService.showConfirmationDialog(this.dialog, confirmDialogData, null, null)
       })
     ];
   }

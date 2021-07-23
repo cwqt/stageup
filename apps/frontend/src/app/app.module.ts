@@ -148,6 +148,7 @@ import { FollowButtonComponent } from './components/follow-button/follow-button.
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
+import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -261,7 +262,8 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     FollowButtonComponent,
     HostAnalyticsComponent,
     HostAnalyticsHeaderItemComponent,
-    CookieConsentComponent
+    CookieConsentComponent,
+    SelectReasonDialogComponent
   ],
   imports: [
     AngularMaterialModule,
