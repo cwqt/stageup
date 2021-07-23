@@ -193,7 +193,7 @@ const LOGGED_IN_ROUTES: Routes = [
               component: SearchComponent
             },
             {
-              path: `terms`,
+              path: `terms-and-conditions`,
               component: GeneralTermsComponent
             },
             {

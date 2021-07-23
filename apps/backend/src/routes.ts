@@ -14,7 +14,6 @@ import {
   IHostOnboarding as IHOnboarding,
   IOnboardingStep,
   IAddress,
-  IConsentable,
   IOnboardingStepMap,
   ISearchResponse,
   IHostStub as IHostS,
@@ -50,7 +49,9 @@ import {
   IFollowing,
   IUserFollow,
   DtoPerformanceAnalytics as DtoPerfAnalytics,
-  DtoHostAnalytics
+  DtoHostAnalytics,
+  ConsentableType as CType,
+  IConsentable,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -227,7 +228,7 @@ router.use                               ("/admin/queue",                       
 
 // GDPR ---------------------------------------------------------------------------------------------------------------
 const Gdpr = new GdprController(providers, middlewares);
-router.get      <IConsentable<T>>          ("/gdpr",                                   Gdpr.getLatestDocument());
+router.get      <IConsentable<CType>>    ("/gdpr/document",                           Gdpr.getLatestDocument());
 }
 
 

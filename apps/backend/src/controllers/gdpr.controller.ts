@@ -1,11 +1,11 @@
-import { ConsentableType, ConsentableTypes } from '@core/interfaces';
+import { ConsentableType, ConsentableTypes, IConsentable } from '@core/interfaces';
 import { BaseController, IControllerEndpoint, Consent } from '@core/api';
 import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import { enums, object } from 'superstruct';
 
 export default class GdprController extends BaseController<BackendProviderMap> {
-  getLatestDocument(): IControllerEndpoint<Consent<ConsentableType>> {
+  getLatestDocument(): IControllerEndpoint<IConsentable<ConsentableType>> {
     return {
       authorisation: AuthStrat.none,
       validators: {

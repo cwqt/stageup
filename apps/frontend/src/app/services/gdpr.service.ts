@@ -1,4 +1,4 @@
-import { ConsentableType } from '@core/interfaces';
+import { ConsentableType, IConsentable } from '@core/interfaces';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -8,8 +8,8 @@ import { HttpClient } from '@angular/common/http';
 export class GdprService {
   constructor(private http: HttpClient) {}
 
-  //router.get <any> ("/api/gdpr", Gdpr.getGeneralTerms());
-  getLatestDocument(type: ConsentableType): Promise<any> {
-    return this.http.get<any>(`/api/gdpr?type=${type}`).toPromise();
+  //router.get <IConsentable<ConsentableType>> ("/api/gdpr/document", Gdpr.getGeneralTerms());
+  getLatestDocument(type: ConsentableType): Promise<IConsentable<ConsentableType>> {
+    return this.http.get<IConsentable<ConsentableType>>(`/api/gdpr/document?type=${type}`).toPromise();
   }
 }
