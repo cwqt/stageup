@@ -42,7 +42,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -58,7 +57,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: ct.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -82,7 +80,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: invitee.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -103,7 +100,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -128,7 +124,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -148,7 +143,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: tier.host.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -170,7 +164,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -183,7 +176,6 @@ export class EventHandlers {
       content: this.providers.i18n.translate('@@email.user.password_reset_requested__content', ct.__meta.locale),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -196,7 +188,6 @@ export class EventHandlers {
       content: this.providers.i18n.translate('@@email.user.password_changed__content', ct.__meta.locale),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -226,7 +217,6 @@ export class EventHandlers {
 
       from: Env.EMAIL_ADDRESS,
       to: invoice.host.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -251,7 +241,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: invoice.user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -303,7 +292,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -339,7 +327,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -373,7 +360,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: invoice.host.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -411,7 +397,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: invoice.user.email_address,
-      markdown: true,
       attachments: []
     });
   };
@@ -473,7 +458,6 @@ export class EventHandlers {
       }),
       from: Env.EMAIL_ADDRESS,
       to: invoices[0].host.email_address, //TODO need to change this when we go multi currency
-      markdown: true,
       attachments: []
     });
 
@@ -525,7 +509,6 @@ export class EventHandlers {
             host_username: row.tier_host_username,
             tier_name: row.tier_name
           }),
-          markdown: true,
           attachments: []
         });
       });
@@ -572,7 +555,6 @@ export class EventHandlers {
         host_username: sub.host.username,
         tier_name: sub.patron_tier.name
       }),
-      markdown: true,
       attachments: []
     });
   };

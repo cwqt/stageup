@@ -1,0 +1,42 @@
+# WRITE IN CommonMark https://commonmark.org/help/
+
+# Errors ----------------------------------------------------------------------
+error:
+  internal_server_error: Internal server error
+  missing_translation: Missing translation
+  missing_permissions: Insufficent privileges
+  not_found: Not found
+  no_such_route: No such route
+  not_member: Not a member of company
+  duplicate: Duplicate value found
+  in_use: Value is already in use
+  invalid: Value is invalid
+  code: Test code
+  unknown: An unknown error occured
+  no_session: Must be logged in to perform this action
+  admin_only: Must be a Site Admin to perform this action
+  missing_field: Missing a field in the provided data
+  not_verified: Your account must be verified to perform this action
+  forbidden: This action is forbidden
+  not_implemented: Method is not implemented
+  incorrect: Value is incorrect
+  missing_body: Missing body data
+  locked: Data is locked
+
+# Validation ------------------------------------------------------------------
+validation:
+  not_allowed: Value is not allowed
+  invalid: Value is not valid
+  too_long: Value is too long
+  too_short: Value is too short
+  invalid_email: Not a valid e-mail address
+  invalid_phone_number: Not a valid phone number
+  not_hmrc_number: Not a valid HMRC Company number
+  invalid_vat_number: Not a valid VAT number
+  invalid_url: Not a valid URL
+  invalid_facebook_url: Not a valid Facebook URL
+  invalid_instagram_url: Not a valid Instagram URL
+  invalid_linkedin_url: Not a valid LinkedIn URL
+  invalid_twitter_url: Not a valid Twitter URL
+  invalid_pinterest_url: Not a valid Pinterest URL
+  invalid_youtube_url: Not a valid Youtube URL

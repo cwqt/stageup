@@ -71,13 +71,7 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
       // Pull out xliff data into code : translation map
       this.locales.set(
         language,
-        new Map(
-          xliff.file.body['trans-unit'].map(unit => [
-            unit['@_id'],
-            // un-escape markdown stuff
-            unit.target['#text']?.replace(/(&lt;)|(&gt;)/g, m => ({ '&lt;': '<', '&gt;': '>' }[m]))
-          ])
-        )
+        new Map(xliff.file.body['trans-unit'].map(unit => [unit['@_id'], unit.target['#text']]))
       );
     }
 
