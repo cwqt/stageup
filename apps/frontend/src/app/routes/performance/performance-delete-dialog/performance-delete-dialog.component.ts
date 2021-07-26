@@ -23,8 +23,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
     private myselfService: MyselfService,
     private ref: MatDialogRef<PerformanceDeleteDialogComponent>,
     private helperService: HelperService,
-    @Inject(MAT_DIALOG_DATA) public data: DtoPerformance,
-    private dialog: MatDialog
+    @Inject(MAT_DIALOG_DATA) public data: DtoPerformance
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +42,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
       new UiDialogButton({
         label: $localize`Delete Performance`,
         kind: ThemeKind.Primary,
-        callback: () => this.helperService.showConfirmationDialog(this.dialog, confirmDialogData, null, null)
+        callback: () => this.helperService.showDialog(this.dialog)
       })
     ];
   }
