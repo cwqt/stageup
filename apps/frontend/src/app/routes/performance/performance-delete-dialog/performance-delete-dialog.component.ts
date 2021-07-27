@@ -5,6 +5,7 @@ import { IConfirmationDialogData } from '@frontend/components/dialogs/confirmati
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { HelperService } from '@frontend/services/helper.service';
 import { MyselfService } from '@frontend/services/myself.service';
+import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
@@ -21,8 +22,8 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
 
   constructor(
     private toastService: ToastService,
-    private myselfService: MyselfService,
     private ref: MatDialogRef<PerformanceDeleteDialogComponent>,
+    private performanceService: PerformanceService,
     private helperService: HelperService,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: DtoPerformance
@@ -63,7 +64,12 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 hide_further_info: currentSelection => currentSelection != DeletePerfReason.Other
               }
             }),
-            () => {}
+            async () => {
+              await this.performanceService
+                .deletePerformance(this.data.data._id)
+                .then(() => this.toastService.emit($localize`Performance Deleted!`))
+                .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));
+            }
           )
       })
     ];

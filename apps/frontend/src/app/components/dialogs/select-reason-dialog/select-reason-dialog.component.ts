@@ -20,7 +20,6 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ISelectReasonData<Primitive>,
-    private toastService: ToastService,
     public ref: MatDialogRef<SelectReasonDialogComponent>
   ) {}
 
@@ -53,11 +52,9 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
       handlers: {
         success: async () => {
           this.submit.emit();
-          this.toastService.emit($localize`Performance Deleted!`);
           this.ref.close();
         },
         failure: async err => {
-          this.toastService.emit(err.message, ThemeKind.Danger);
           this.ref.close(null);
         }
       }
