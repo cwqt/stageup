@@ -192,7 +192,7 @@ const LOGGED_IN_ROUTES: Routes = [
             },
             {
               path: `terms-and-conditions`,
-              component: GeneralTermsComponent
+              component: GeneralTermsComponent // To be updated in SU-464
             },
             {
               matcher: hostMatcher,
