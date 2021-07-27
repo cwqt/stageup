@@ -32,7 +32,8 @@ export enum DeletePerfReason {
   CancelledResceduled = 'cancelled_rescheduled',
   Covid19 = 'covid_19',
   TooFewSold = 'too_few_sold',
-  PoorUserExperience = 'poor_user_experience'
+  PoorUserExperience = 'poor_user_experience',
+  Other = 'other'
 }
 
 export interface IPerformanceStub {

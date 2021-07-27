@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ISelectReasonData } from '@core/interfaces';
+import { ISelectReasonData, Primitive } from '@core/interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
@@ -19,7 +19,7 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
   cancel: EventEmitter<string> = new EventEmitter();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ISelectReasonData,
+    @Inject(MAT_DIALOG_DATA) public data: ISelectReasonData<Primitive>,
     private toastService: ToastService,
     public ref: MatDialogRef<SelectReasonDialogComponent>
   ) {}
@@ -39,15 +39,12 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
     this.selectReasonForm = new UiForm({
       fields: {
         select_reason: UiField.Select({
-          values: this.data.reasons.reduce((acc, curr) => {
-            acc.set(curr, { label: curr });
-            return acc;
-          }, new Map()),
+          values: this.data.reasons,
           validators: [{ type: 'required' }]
         }),
         further_info: UiField.Textarea({
           placeholder: 'Another reason?',
-          hide: this.data.hide_further_info
+          hide: fg => this.data.hide_further_info(fg.value.select_reason)
         })
       },
       resolvers: {

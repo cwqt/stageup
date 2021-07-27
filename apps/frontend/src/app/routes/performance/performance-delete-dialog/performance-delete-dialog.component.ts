@@ -18,7 +18,6 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
   submit: EventEmitter<string> = new EventEmitter();
   cancel: EventEmitter<string> = new EventEmitter();
   buttons?: UiDialogButton[];
-  
 
   constructor(
     private toastService: ToastService,
@@ -30,12 +29,6 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data.data);
-
-    // let confirmDialogData: IConfirmationDialogData = {
-    //   title: $localize`Confirm refund`,
-
-    // };
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
@@ -53,17 +46,21 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
             this.dialog.open(SelectReasonDialogComponent, {
               data: {
                 dialog_title: $localize`Why do you want to delete the performance?`,
-                reasons: new Map(
+                reasons: new Map([
+                  [DeletePerfReason.TechnicalIssues, { label: $localize`Technical Issues` }],
                   [
-                    [DeletePerfReason.TechnicalIssues, { label: $localize`Technical Issues` }],
-                    [DeletePerfReason.CancelledResceduled, { label: $localize`Original performance got cancelled/rescheduled` }],
-                    [DeletePerfReason.Covid19, { label: $localize`COVID-19` }],
-                    [DeletePerfReason.TooFewSold, { label: $localize`Did not sell enough tickets` }],
-                    [DeletePerfReason.PoorUserExperience, { label: $localize`Did not like the user experience on StageUp` }],  
-                  ]
-                )
-                
-                hide_further_info: 
+                    DeletePerfReason.CancelledResceduled,
+                    { label: $localize`Original performance got cancelled/rescheduled` }
+                  ],
+                  [DeletePerfReason.Covid19, { label: $localize`COVID-19` }],
+                  [DeletePerfReason.TooFewSold, { label: $localize`Did not sell enough tickets` }],
+                  [
+                    DeletePerfReason.PoorUserExperience,
+                    { label: $localize`Did not like the user experience on StageUp` }
+                  ],
+                  [DeletePerfReason.Other, { label: $localize`Other, please specify below:` }]
+                ]),
+                hide_further_info: currentSelection => currentSelection != DeletePerfReason.Other
               }
             }),
             () => {}
