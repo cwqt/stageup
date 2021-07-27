@@ -1,3 +1,3 @@
-<ui-dialog [title]="data.title" [buttons]="buttons" [loading]="data.loading | async" [dialogRef]="dialogRef">
-    
+<ui-dialog i18n-title [title]="data.dialog_title" [buttons]="buttons" [dialogRef]="ref">
+    <ui-form [form]="selectReasonForm"></ui-form>
 </ui-dialog>
