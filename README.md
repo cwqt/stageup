@@ -79,7 +79,7 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
   .env.development     # also .env.staging, .testing & .production
 ```
 
-# i18n & a11y
+## i18n & a11y
 
 - Country codes: ISO-3166-Alpha2 [iso-3166-1](https://www.npmjs.com/package/iso-3166-1)
 - Language codes: ISO 639-1 [iso-939-1](https://www.npmjs.com/package/iso-639-1)

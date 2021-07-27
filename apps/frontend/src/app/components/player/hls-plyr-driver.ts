@@ -6,10 +6,13 @@ export class HlsjsPlyrDriver implements PlyrDriver {
   hls = new Hls();
   private loaded = false;
 
+  public video: HTMLVideoElement;
+
   constructor(private autoload: boolean) {}
 
   create(params: PlyrDriverCreateParams) {
     this.hls.attachMedia(params.videoElement);
+    this.video = params.videoElement;
     return new Plyr(params.videoElement, params.options);
   }
 
@@ -32,6 +35,7 @@ export class HlsjsPlyrDriver implements PlyrDriver {
     if (!this.loaded) {
       this.loaded = true;
       this.hls.loadSource(src);
+      return this.video;
     }
   }
 }

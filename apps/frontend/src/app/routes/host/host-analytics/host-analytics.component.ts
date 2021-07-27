@@ -150,7 +150,9 @@ export class HostAnalyticsComponent implements OnInit {
         {
           label: $localize`Performance`,
           accessor: v => v.name,
-          image: v => v.assets.find(a => a.type == AssetType.Image && a.tags.includes('secondary')).location
+          image: v =>
+            v.assets.find(a => a.type == AssetType.Image && a.tags.includes('secondary'))?.location ||
+            '/assets/performance-placeholder.jpeg'
         },
         {
           label: $localize`Premiere Date`,
@@ -165,8 +167,8 @@ export class HostAnalyticsComponent implements OnInit {
           accessor: v => i18n.money(v.snapshot.latest_period.metrics.total_revenue, CurrencyCode.GBP)
         },
         {
-          label: $localize`Average Watch %`,
-          accessor: v => `${v.snapshot.latest_period.metrics.average_watch_percentage}`
+          label: $localize`Performance Views`,
+          accessor: v => `${v.snapshot.latest_period.metrics.performance_views.toLocaleString()}`
         },
         {
           label: $localize`Trailer Views`,

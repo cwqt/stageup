@@ -18,9 +18,8 @@ $animation-duration: 0.2s;
   &--has-icon {
     display: flex;
     align-items: center;
-    width: 50%;
     ui-icon {
-      margin-right: 0.5rem;
+      margin-right: 1rem;
     }
   }
 

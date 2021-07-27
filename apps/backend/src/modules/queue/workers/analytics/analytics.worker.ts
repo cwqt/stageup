@@ -1,16 +1,22 @@
 import { AnalyticsChunk, PerformanceAnalytics, transact } from '@core/api';
 import { Job } from 'bullmq';
 import { timestamp } from '@core/helpers';
+import { EntityMetric } from '@core/interfaces';
 
-type AnalyticsMetricsResolvers<T = {}> = { [index in keyof T]?: (start: number, end: number) => Promise<T[index]> };
+type AnalyticsMetricsResolvers<T extends EntityMetric> = {
+  [index in keyof T]?: (start: number, end: number) => Promise<T[index]>;
+};
 
-export const analyze = async <T extends AnalyticsChunk<any>>(
+export const collectMetrics = async <T extends AnalyticsChunk<EntityMetric>>(
   entity: T,
   resolvers: AnalyticsMetricsResolvers<T['metrics']>,
   job: Job
 ) => {
-  entity.period_started_at = timestamp();
-  entity.period_ended_at = entity.period_started_at - job.opts.repeat.every / 1000;
+  // start      end
+  //   |---------|
+  //   t -->    now
+  entity.period_ended_at = timestamp();
+  entity.period_started_at = entity.period_ended_at - job.opts.repeat.every / 1000;
 
   entity.collection_started_at = timestamp();
 

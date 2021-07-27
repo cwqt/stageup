@@ -16,15 +16,15 @@ terraform init
 
 # feature core
 echo "Creating core 'feat'..."
-terraform workspace new stage
-terraform plan -var "gcp_project_id=$gcpid" -var 'workspace=feat' -auto-approve
+terraform workspace new feat
+terraform apply -var "gcp_project_id=$gcpid" -var 'workspace=feat' -auto-approve
 
 # staging core
 echo "Creating core 'stage'..."
 terraform workspace new stage
-terraform plan -var "gcp_project_id=$gcpid" -var 'workspace=stage' -auto-approve
+terraform apply -var "gcp_project_id=$gcpid" -var 'workspace=stage' -auto-approve
 
 # production core
 echo "Creating core 'prod'..."
 terraform workspace new prod
-terraform plan -var "gcp_project_id=$gcpid" -var 'workspace=prod' -auto-approve
+terraform apply -var "gcp_project_id=$gcpid" -var 'workspace=prod' -auto-approve

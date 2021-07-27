@@ -70,7 +70,6 @@ import { VerifiedComponent } from './components/pages/verified/verified.componen
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
 import { HeaderBarComponent } from './components/app/header-bar/header-bar.component';
-import { ProfileComponent } from './routes/profile/profile.component';
 import { FooterComponent } from './components/app/footer/footer.component';
 import { PageComponent } from './components/app/page/page.component';
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
@@ -149,6 +148,7 @@ import { FollowButtonComponent } from './components/follow-button/follow-button.
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
+import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -161,7 +161,6 @@ import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.compo
     LoginComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    ProfileComponent,
     VerifiedComponent,
     SettingsComponent,
     HeaderBarComponent,
@@ -179,7 +178,6 @@ import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.compo
     HostPerformanceThumbnailsComponent,
     UpdatePerformanceComponent,
     PlayerComponent,
-    ProfileComponent,
     ProfileSettingsComponent,
     SearchComponent,
     AdminOnboardingListComponent,
@@ -264,7 +262,8 @@ import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.compo
     HostAnalyticsComponent,
     HostAnalyticsHeaderItemComponent,
     GeneralTermsComponent,
-    TermsLinksComponent
+    TermsLinksComponent,
+    CookieConsentComponent
   ],
   imports: [
     AngularMaterialModule,

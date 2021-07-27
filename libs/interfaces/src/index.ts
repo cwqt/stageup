@@ -44,3 +44,4 @@ export * from './users/password.interface';
 export * from './analytics/chunk-analytics.interface';
 export * from './analytics/performance-analytics.interface';
 export * from './analytics/host-analytics.interface';
+export * from './analytics/view.interface';

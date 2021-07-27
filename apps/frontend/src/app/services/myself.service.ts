@@ -33,8 +33,18 @@ import { LocalStorageKey } from '../app.interfaces';
 export class MyselfService {
   $myself: BehaviorSubject<IMyself | null>;
 
+  // cookies pop-up for logged-in/out users
+  $acceptedCookiesPolicy: BehaviorSubject<boolean | undefined>;
+
   constructor(private http: HttpClient, private router: Router) {
     this.$myself = new BehaviorSubject(this.hydrate());
+
+    // populate subject with value, if one set, else undefined
+    this.$acceptedCookiesPolicy = new BehaviorSubject(
+      localStorage.getItem(LocalStorageKey.CookiesPolicyAcceptance)
+        ? localStorage.getItem(LocalStorageKey.CookiesPolicyAcceptance) == 'true'
+        : undefined
+    );
   }
 
   store(myself: IMyself | null, rehydrate?: boolean) {
@@ -79,6 +89,19 @@ export class MyselfService {
         )
       )
       .toPromise();
+  }
+
+  getCookiesConsent() {
+    return this.$acceptedCookiesPolicy.value;
+  }
+
+  setCookiesConsent(doesAccept: boolean | null) {
+    if (doesAccept == null) {
+      localStorage.removeItem(LocalStorageKey.CookiesPolicyAcceptance);
+    } else {
+      this.$acceptedCookiesPolicy.next(doesAccept);
+      localStorage.setItem(LocalStorageKey.CookiesPolicyAcceptance, doesAccept.toString());
+    }
   }
 
   setUser(user: IMyself['user']) {

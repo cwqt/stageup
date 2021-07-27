@@ -23,7 +23,7 @@ import {
   IHostStripeInfo,
   IPaymentIntentClientSecret as IPaymentICS,
   IHostInvoice,
-  ILike, 
+  ILike,
   IUserInvoice,
   IPatronTier as IPTier,
   IDeleteHostAssertion as IDelHostAssert,
@@ -172,6 +172,7 @@ router.put      <IPerformance>          ("/performances/:pid/publicity-period", 
 router.post     <AssetDto | void>       ("/performances/:pid/thumbnails",             Perfs.changeThumbnails());
 router.post     <ICreateAssetRes | void>("/performances/:pid/assets",                 Perfs.createAsset());
 router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
+router.post     <void>                  ("/performances/:pid/assets/:aid/views",      Perfs.registerView());
 router.get      <ISignedToken>          ("/performances/:pid/assets/:aid/token",      Perfs.generateSignedToken());
 router.get      <ICreateAssetRes>       ("/performances/:pid/assets/:aid/signed-url", Perfs.readVideoAssetSignedUrl());
 router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());

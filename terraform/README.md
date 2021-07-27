@@ -58,6 +58,34 @@ cd core/
 sh setup.sh # follow any instructions
 ```
 
+## Deploying
+
+Due to how Terraform works you can't deploy the core infra. on `stage` & then also the ephemeral infra. on `stage` at the same time on the same workspace, the states would just remove each other on `apply`.
+
+| Core Workspace | Workspace      |
+| -------------- | -------------- |
+| prod           | release        |
+| stage          | dev            |
+| feat           | su-123, su-456 |
+
+In the same way that branch deploys use `su-123` workspace (`terraform workspace select su-123`), `prod` & `stage` do the same, `prod` maps to `release` and `stage` maps to `dev`. So setting up core & normal infra looks like this:
+
+```shell
+terraform init
+
+# set up core infra
+terraform workspace select stage
+terraform -chdir=terraform/core -var "gcp_project_id=GCP_ID" -var "workspace=stage" apply
+
+# set up other infra, stage -> dev
+terraform workspace select dev
+terraform -chdir=terraform/core \
+  -var "workspace=stage" \
+  -var "gcp_project_id=GCP_ID" apply
+```
+
+_n.b._ it looks like [Terragrunt](https://terragrunt.gruntwork.io/) would solve this issue since you can generate tf code depending on environment, but I don't have time to implement it.
+
 ## Performing Terraform commands
 
 - Grab a service account key from [terraform@core-314910.iam.gserviceaccount.com](https://console.cloud.google.com/iam-admin/serviceaccounts/details/108490880570864712407/keys?organizationId=818397748082&project=core-314910)

@@ -1,726 +1,616 @@
-<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en" datatype="plaintext" original="generate-xlf" target-language="nb">
-    <body>
-      <trans-unit id="login.password_incorrect" datatype="html">
-        <source>Password is incorrect</source>
-        <target state="needs-translation">passordet er feil</target>
-      </trans-unit>
-      <trans-unit id="user.not_found" datatype="html">
-        <source>User does not exist</source>
-        <target state="needs-translation">Bruker finnes ikke</target>
-      </trans-unit>
-      <trans-unit id="error.not_a_video" datatype="html">
-        <source>This is not a video</source>
-        <target state="needs-translation">Dette er ikke en video!</target>
-      </trans-unit>
-      <trans-unit id="error.email_already_in_use" datatype="html">
-        <source>E-mail address is already in use</source>
-        <target state="needs-translation">E-postadressen er allerede i bruk</target>
-      </trans-unit>
-      <trans-unit id="host.example_patron_tier_name" datatype="html">
-        <source>Example Tier</source>
-        <target state="needs-translation">Eksempel Tier</target>
-      </trans-unit>
-      <trans-unit id="host.example_patron_tier_description" datatype="html">
-        <source>Example Tier Description</source>
-        <target state="needs-translation">Eksempel på nivåbeskrivelse</target>
-      </trans-unit>
-      <trans-unit id="host.requires_stripe_connected" datatype="html">
-        <source>Requires Stripe to be connected to perform this action</source>
-        <target state="needs-translation">Krever at Stripe er koblet til for å utføre denne handlingen</target>
-      </trans-unit>
-      <trans-unit id="onboarding.steps_invalid" datatype="html">
-        <source>Some steps are invalid</source>
-        <target state="needs-translation">Noen trinn er ugyldige</target>
-      </trans-unit>
-      <trans-unit id="onboarding.step_is_invalid" datatype="html">
-        <source>Step is invalid</source>
-        <target state="needs-translation">Trinnet er ugyldig</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.invoice_id" datatype="html">
-        <source>Invoice ID</source>
-        <target state="needs-translation">Faktura-ID</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.performance_name" datatype="html">
-        <source>Performance Title</source>
-        <target state="needs-translation">Ytelsestittel</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.ticket_type" datatype="html">
-        <source>Ticket Type</source>
-        <target state="needs-translation">Billettype</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.purchased_at" datatype="html">
-        <source>Purchased At</source>
-        <target state="needs-translation">Kjøpt kl</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.amount" datatype="html">
-        <source>Amount</source>
-        <target state="needs-translation">Beløp</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.net_amount" datatype="html">
-        <source>Net Amount</source>
-        <target state="needs-translation">Nettobeløp</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.currency" datatype="html">
-        <source>Currency</source>
-        <target state="needs-translation">Valuta</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.status" datatype="html">
-        <source>Payment Status</source>
-        <target state="needs-translation">Betalingsstatus</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.invoice_id" datatype="html">
-        <source>Invoice ID</source>
-        <target state="needs-translation">Faktura-ID</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.performance_name" datatype="html">
-        <source>Performance Title</source>
-        <target state="needs-translation">Ytelsestittel</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.ticket_type" datatype="html">
-        <source>Ticket Type</source>
-        <target state="needs-translation">Billettype</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.purchased_at" datatype="html">
-        <source>Purchased At</source>
-        <target state="needs-translation">Kjøpt kl</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.amount" datatype="html">
-        <source>Amount</source>
-        <target state="needs-translation">Beløp</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.net_amount" datatype="html">
-        <source>Net Amount</source>
-        <target state="needs-translation">Nettobeløp</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.currency" datatype="html">
-        <source>Currency</source>
-        <target state="needs-translation">Valuta</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.status" datatype="html">
-        <source>Payment Status</source>
-        <target state="needs-translation">Betalingsstatus</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.created_at" datatype="html">
-        <source>Created At</source>
-        <target state="needs-translation">Laget kl</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.total_rows" datatype="html">
-        <source>Total Rows</source>
-        <target state="needs-translation">Totalt antall rader</target>
-      </trans-unit>
-      <trans-unit id="payment_status.created" datatype="html">
-        <source>Created</source>
-        <target state="needs-translation">Laget</target>
-      </trans-unit>
-      <trans-unit id="payment_status.paid" datatype="html">
-        <source>Paid</source>
-        <target state="needs-translation">Betalt</target>
-      </trans-unit>
-      <trans-unit id="payment_status.fufilled" datatype="html">
-        <source>Fufilled</source>
-        <target state="needs-translation">Oppfylt</target>
-      </trans-unit>
-      <trans-unit id="payment_status.refunded" datatype="html">
-        <source>Refunded</source>
-        <target state="needs-translation">Refunderes</target>
-      </trans-unit>
-      <trans-unit id="payment_status.refund_pending" datatype="html">
-        <source>Refund Pending</source>
-        <target state="needs-translation">Refusjon venter</target>
-      </trans-unit>
-      <trans-unit id="payment_status.refund_denied" datatype="html">
-        <source>Refund Denied</source>
-        <target state="needs-translation">Refusjon nektet</target>
-      </trans-unit>
-      <trans-unit id="ticket_type.paid" datatype="html">
-        <source>Paid</source>
-        <target state="needs-translation">Betalt</target>
-      </trans-unit>
-      <trans-unit id="ticket_type.free" datatype="html">
-        <source>Free</source>
-        <target state="needs-translation">Gratis</target>
-      </trans-unit>
-      <trans-unit id="ticket_type.dono" datatype="html">
-        <source>Donation</source>
-        <target state="needs-translation">Donasjon</target>
-      </trans-unit>
-      <trans-unit id="error.user_has_no_claim" datatype="html">
-        <source>You don't have permissions to view this content</source>
-        <target state="needs-translation">Du har ikke tillatelse til å se dette innholdet</target>
-      </trans-unit>
-      <trans-unit id="error.too_many_thumbnails" datatype="html">
-        <source>You have too many thumbnails, try deleting some before uploading new ones</source>
-        <target state="needs-translation">Du har for mange miniatyrbilder, prøv å slette noen før du laster opp nye</target>
-      </trans-unit>
-      <trans-unit id="error.publicity_period_outside_ticket_period" datatype="html">
-        <source>Cannot set performance publicity period outside one of the tickets selling period</source>
-        <target state="needs-translation">Kan ikke angi reklameperiode for ytelse utenfor en av selgerperioden for billetter</target>
-      </trans-unit>
-      <trans-unit id="error.already_following" datatype="html">
-        <source>You are already following this host</source>
-        <target state="needs-translation">Du følger allerede denne verten</target>
-      </trans-unit>
-      <trans-unit id="error.invalid_rating" datatype="html">
-        <source>The provided rate value is invalid</source>
-        <target state="needs-translation">Den angitte hastighetsverdien er ugyldig</target>
-      </trans-unit>
-      <trans-unit id="error.no_rating_exists" datatype="html">
-        <source>Could not find existing rating</source>
-        <target state="needs-translation">Fant ikke eksisterende vurdering</target>
-      </trans-unit>
-      <trans-unit id="stripe.origin_url_not_matched" datatype="html">
-        <source>Received response does not match submitter!</source>
-        <target state="needs-translation">Mottatt svar samsvarer ikke med innsenderen!</target>
-      </trans-unit>
-      <trans-unit id="refunds.no_invoices_found" datatype="html">
-        <source>Could not find any invoices</source>
-        <target state="needs-translation">Fant ingen fakturaer</target>
-      </trans-unit>
-      <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while another refund is already outstanding</source>
-        <target state="needs-translation">Kan ikke tilbakebetale mens hverandre er allerede utestående</target>
-      </trans-unit>
-      <trans-unit id="email.user.refund_initiated__content" datatype="html">
-        <source>**Hi {user_username},**
-
- This is a notification to confirm that **{host_name}** has initiated a refund on your order **{invoice_id}** for the amount of **{invoice_amount}** for the performance **{performance_name}**.
-
-You can view the status of this refund at any time by logging in to your StageUp account and clicking settings -> payments.
-
-We will automatically credit the funds to your **{card_brand}** ending in **{last_4}**. Please note, the amount may take up to 5 working days to appear in your account.
-
-**Thanks,**
-
-**StageUp Team**</source>
-        <target state="needs-translation">** Hei {user_username}, **
-
- Dette er et varsel for å bekrefte at ** {host_name} ** har initiert en refusjon på bestillingen din ** {invoice_id} ** for beløpet på ** {invoice_amount} ** for ytelsen ** {performance_name} **.
-
-Du kan når som helst se statusen på denne refusjonen ved å logge på StageUp-kontoen din og klikke på innstillinger -> betalinger.
-
-Vi krediterer midlene automatisk til ** {card_brand} ** din som ender på ** {last_4} **. Vær oppmerksom på at beløpet kan ta opptil 5 virkedager før det vises i kontoen din.
-
-**Takk,**
-
-** StageUp Team **</target>
-      </trans-unit>
-      <trans-unit id="email.user.refund_initiated__subject" datatype="html">
-        <source>Refund initiated by {host_name} for {performance_name}</source>
-        <target state="needs-translation">Refusjon initiert av {host_name} for {performance_name}</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_initiated__content" datatype="html">
-        <source>**Hi {host_name},**
-
- You have initiated a refund for your performance "{performance_name}"
-
-**Invoice#: {invoice_id}**
-
-**Total Amount: {invoice_amount}**
-
-We have notified the affected customer that they shall receive the refunded amount in their account within 5 working days
-
-**Thanks,**
-
-**StageUp Team**
-
-Please note, if this request was not initated by you please notify us immediately</source>
-        <target state="needs-translation">** Hei {host_name}, **
-
- Du har startet en refusjon for ytelsen din "{performance_name}"
-
-** Faktura nr: {invoice_id} **
-
-** Totalt beløp: {invoice_amount} **
-
-Vi har varslet den berørte kunden om at de skal motta det refunderte beløpet på kontoen sin innen 5 virkedager
-
-**Takk,**
-
-** StageUp Team **
-
-Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, vennligst gi oss beskjed umiddelbart</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_initiated__subject" datatype="html">
-        <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
-        <target state="needs-translation">Refusjon startet for {user_username}s kjøp av {performance_name}</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_bulk_initiated_subject" datatype="html">
-        <source>You have initiated refunds for {refund_quantity} invoice(s)</source>
-        <target state="needs-translation">Du har startet refusjoner for {refund_quantity} faktura (er)</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
-        <source>**Hi {host_name},**
-
-You have initiated refunds for {refund_quantity} invoices
-
-**Total value: **{invoices_total}**
-
-We have notified the affected customers that they shall receive the refunded amount in their accounts within 5 working days
-
-**Thanks,**
-
-**StageUp Team**
-
-Please note, if this request was not initated by you please notify us immediately"</source>
-        <target state="needs-translation">** Hei {host_name}, **
-
-Du har startet refusjon for {refund_quantity} fakturaer
-
-** Total verdi: ** {invoices_total} **
-
-Vi har varslet de berørte kundene om at de skal motta det refunderte beløpet i kontoene sine innen 5 virkedager
-
-**Takk,**
-
-** StageUp Team **
-
-Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, må du varsle oss umiddelbart "</target>
-      </trans-unit>
-      <trans-unit id="email.user.refund_refunded__subject" datatype="html">
-        <source>Refund for {performance_name} succesful!</source>
-        <target state="needs-translation">Refusjon for {performance_name} vellykket!</target>
-      </trans-unit>
-      <trans-unit id="email.user.refund_refunded__content" datatype="html">
-        <source>Hi {user_username},
-
-This is a notification to confirm that {host_name} has successfully refunded your order **{invoice_id}** for **{invoice_amount}** for your purchase of **{performance_name}** due to:
-
-> {refund_reason}
-
-The funds have now been credited to **{card_brand}** ending in **{last_4}**.
-
-You can view a log of this refund within your StageUp account settings
-
-**Thanks,**
-
-**StageUp Team**</source>
-        <target state="needs-translation">Hei {user_username},
-
-Dette er et varsel for å bekrefte at {host_name} har refundert bestillingen ** {invoice_id} ** for ** {invoice_amount} ** for kjøpet av ** {performance_name} ** på grunn av:
-
-> {refund_reason}
-
-Midlene er nå kreditert ** {card_brand} ** som ender med ** {last_4} **.
-
-Du kan se en logg over denne refusjonen i StageUp-kontoinnstillingene
-
-**Takk,**
-
-** StageUp Team **</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_refunded__subject" datatype="html">
-        <source>Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</source>
-        <target state="needs-translation">Refusjon for {user_username} for {performance_name} (ID: {invoice_id}), behandlet av Stripe</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_refunded__content" datatype="html">
-        <source>Hi {host_name},
-
-This is a notification to confirm that your recent refund request for **{user_username}** for **{performance_name}** for the amount of **{invoice_amount}** has succesfully been refunded by Stripe and the user has been notified.
-
-You can view the status of all your refunds within your account settings
-
-**Thanks,**
-**StageUp Team**</source>
-        <target state="needs-translation">Hei {host_name},
-
-Dette er et varsel for å bekrefte at den nylige refusjonsforespørselen din for ** {user_username} ** for ** {performance_name} ** for beløpet ** {invoice_amount} ** har blitt refundert av Stripe, og brukeren har blitt varslet.
-
-Du kan se statusen for alle refusjonene dine i kontoinnstillingene
-
-**Takk,**
-** StageUp Team **</target>
-      </trans-unit>
-      <trans-unit id="email.refund_requested__subject" datatype="html">
-        <source>StageUp: Your refund request has been sent to @{host_name}</source>
-        <target state="needs-translation">StageUp: Refusjonsforespørselen din er sendt til @ {host_name}</target>
-      </trans-unit>
-      <trans-unit id="email.refund_requested__content" datatype="html">
-        <source>Your refund request for the following invoice has been sent to **{host_name}**.
-
-- Invoice #: **{invoice_id}**
-- Performance: **{performance_name}**
-- Purchased: **{purchase_date}**
-- Amount: **{amount}**
-
-We'll let you know when the host has processed your request
-
-**Thanks,**
-
-**StageUp Team**</source>
-        <target state="needs-translation">Refusjonsforespørselen din for følgende faktura er sendt til ** {host_name} **.
-
-- Faktura nr: ** {invoice_id} **
-- Ytelse: ** {performance_name} **
-- Kjøpt: ** {purchase_date} **
-- Beløp: ** {amount} **
-
-Vi gir deg beskjed når verten har behandlet forespørselen din
-
-**Takk,**
-
-** StageUp Team **</target>
-      </trans-unit>
-      <trans-unit id="email.host_refund_requested_confirmation__subject" datatype="html">
-        <source>StageUp: Refund request received for {performance_name} from @{user_username}</source>
-        <target state="needs-translation">StageUp: Refusjonsforespørsel mottatt for {performance_name} fra @ {user_username}</target>
-      </trans-unit>
-      <trans-unit id="email.host_refund_requested_confirmation__content" datatype="html">
-        <source>Hi {host_name},
-
-@{user_username} ({user_email_address}) has requested a refund on their purchase of {performance_name}
-
-**Refund Details:**
-
-- **Invoice #:** {invoice_id}
-- **Performance:** {performance_name}
-- **Purchased On:** {purchase_date}
-- **Amount:** {amount}
-
-To process this request you can visit your [invoice dashboard here]({invoice_dashboard_url}).
-
-**Thanks,**
-************StageUp Team**</source>
-        <target state="needs-translation">Hei {host_name},
-
-@ {user_username} ({user_email_address}) har bedt om refusjon på kjøpet av {performance_name}
-
-** Refusjonsdetaljer: **
-
-- ** Faktura nr.: ** {invoice_id}
-- ** Ytelse: ** {performance_name}
-- ** Kjøpt på: ** {purchase_date}
-- ** Beløp: ** {amount}
-
-For å behandle denne forespørselen kan du gå til [fakturaoversikten her] ({invoice_dashboard_url}).
-
-**Takk,**
-************ StageUp Team **</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_pdf__subject" datatype="html">
-        <source>Exported Invoice PDF files</source>
-        <target state="needs-translation">Eksporterte PDF-filer for faktura</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_pdf__content" datatype="html">
-        <source>See attachments for invoice data</source>
-        <target state="needs-translation">Se vedlegg for fakturdata</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_csv__filename" datatype="html">
-        <source>stageup-invoice</source>
-        <target state="needs-translation">stageup-faktura</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_csv__subject" datatype="html">
-        <source>Exported Invoice CSV files</source>
-        <target state="needs-translation">Eksporterte faktura-CSV-filer</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_csv__content" datatype="html">
-        <source>See attachments for invoice data</source>
-        <target state="needs-translation">Se vedlegg for fakturdata</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_pdf__filename" datatype="html">
-        <source>stageup-invoice</source>
-        <target state="needs-translation">stageup-faktura</target>
-      </trans-unit>
-      <trans-unit id="email.test.send_email__subject" datatype="html">
-        <source>Testing e-mails!</source>
-        <target state="needs-translation">Testing av e-post!</target>
-      </trans-unit>
-      <trans-unit id="email.test.send_email__content" datatype="html">
-        <source>Hey {username} **How are you? &lt;{url}>**</source>
-        <target state="needs-translation">Hei {username} ** Hvordan har du det? &lt; {url}> **</target>
-      </trans-unit>
-      <trans-unit id="email.user.registered__subject" datatype="html">
-        <source>Verify your StageUp account</source>
-        <target state="needs-translation">Bekreft StageUp-kontoen din</target>
-      </trans-unit>
-      <trans-unit id="email.user.registered__content" datatype="html">
-        <source>Click the link to verify: &lt;{url}></source>
-        <target state="needs-translation">Klikk på lenken for å bekrefte: &lt; {url}></target>
-      </trans-unit>
-      <trans-unit id="email.user.invited_to_host__subject" datatype="html">
-        <source>You have been invited to join {host_name} by {inviter_name}</source>
-        <target state="needs-translation">Du er invitert til å bli med i {host_name} av {inviter_name}</target>
-      </trans-unit>
-      <trans-unit id="email.user.invited_to_host__content" datatype="html">
-        <source>Hi {user_name},
-Click the link to accept the invitation: &lt;{url}>, this invite will expire in **24 hours**.</source>
-        <target state="needs-translation">Hei {user_name},
-Klikk på lenken for å godta invitasjonen: &lt; {url}>, denne invitasjonen utløper om ** 24 timer **.</target>
-      </trans-unit>
-      <trans-unit id="email.user.invited_to_private_showing__subject" datatype="html">
-        <source>You have been invited to watch a private performance</source>
-        <target state="needs-translation">Du er invitert til å se en privat forestilling</target>
-      </trans-unit>
-      <trans-unit id="email.user.invited_to_private_showing__content" datatype="html">
-        <source>Hi {user_name},
-Click the link to watch **{performance_name}** by **{host_name}** on StageUp now: &lt;{url}>></source>
-        <target state="needs-translation">Hei {user_name},
-Klikk på lenken for å se ** {performance_name} ** av ** {host_name} ** på StageUp nå: &lt; {url} >></target>
-      </trans-unit>
-      <trans-unit id="email.ticket.purchased__subject" datatype="html">
-        <source>Receipt of purchase of StageUp ticket</source>
-        <target state="needs-translation">Mottak på kjøp av StageUp-billett</target>
-      </trans-unit>
-      <trans-unit id="email.ticket.purchased__content" datatype="html">
-        <source>Hi {user_name},
-You purchased a {ticket_name} to watch {performance_name} for {amount}.
-Click here to watch: &lt;{watch_url}>
-Receipt of this purchase: &lt;{receipt_url}></source>
-        <target state="needs-translation">Hei {user_name},
-Du kjøpte en {ticket_name} for å se {performance_name} for {amount}.
-Klikk her for å se: &lt; {watch_url}>
-Mottak på dette kjøpet: &lt; {receipt_url}></target>
-      </trans-unit>
-      <trans-unit id="email.user.patronage_started__subject" datatype="html">
-        <source>Patron Subscription to {tier_name}</source>
-        <target state="needs-translation">Beskyttelsesabonnement på {tier_name}</target>
-      </trans-unit>
-      <trans-unit id="email.user.patronage_started__content" datatype="html">
-        <source>Hi {user_name},
-Thank you for supporting **{host_name}**!
-
-Your patron payments of {amount} will be debited on {date_ordinal} of each month, starting today.
-
-You can cancel your payments at any time. By making this payment you agree to [StageUp's Terms of Use]({tos_url})
-Thanks,
-StageUp Team</source>
-        <target state="needs-translation">Hei {user_name},
-Takk for at du støtter ** {host_name} **!
-
-Våre betalere på {amount} belastes {date_ordinal} i hver måned fra og med i dag.
-
-Du kan når som helst kansellere betalingene dine. Ved å utføre denne betalingen godtar du [StageUps vilkår for bruk] ({tos_url})
-Takk,
-StageUp Team</target>
-      </trans-unit>
-      <trans-unit id="email.host.patronage_started__subject" datatype="html">
-        <source>New Patron to {tier_name}</source>
-        <target state="needs-translation">Ny beskytter til {tier_name}</target>
-      </trans-unit>
-      <trans-unit id="email.host.patronage_started__content" datatype="html">
-        <source>Hi **{host_name}**,
-
-@{user_username} is now a patron of your company.
-
-- Patron Tier: **{tier_name}**
-- Amount: **{amount}**</source>
-        <target state="needs-translation">Hei ** {host_name} **,
-
-@ {user_username} er nå beskytter av selskapet ditt.
-
-- Beskyttelsesnivå: ** {tier_name} **
-- Beløp: ** {amount} **</target>
-      </trans-unit>
-      <trans-unit id="email.user.password_reset_requested__subject" datatype="html">
-        <source>StageUp Reset Password</source>
-        <target state="needs-translation">StageUp Reset Password</target>
-      </trans-unit>
-      <trans-unit id="email.user.password_reset_requested__content" datatype="html">
-        <source>Hi **{user_name}**,
-You are receiving this because you (or someone else) has requested the reset of the password for your StageUp account.
-
-Please click on the following link to complete the process. This link is valid for the next 24 hours.
-
-&lt;{password_reset_url}>
-
-If you did not request this change, please ignore this email and your password will remain unchanged.</source>
-        <target state="needs-translation">Hei ** {user_name} **,
-Du mottar dette fordi du (eller noen andre) har bedt om tilbakestilling av passordet for StageUp-kontoen din.
-
-Klikk på følgende lenke for å fullføre prosessen. Denne lenken er gyldig det neste døgnet.
-
-&lt; {password_reset_url}>
-
-Hvis du ikke ba om denne endringen, kan du ignorere denne e-postadressen, og passordet ditt forblir uendret.</target>
-      </trans-unit>
-      <trans-unit id="email.user.password_changed__subject" datatype="html">
-        <source>Your StageUp password was just changed</source>
-        <target state="needs-translation">StageUp-passordet ditt ble nettopp endret</target>
-      </trans-unit>
-      <trans-unit id="email.user.password_changed__content" datatype="html">
-        <source>Your StageUp account password has recently been changed.
-If you did not make this change, please login into your account and change your password as soon as possible.
-
-If you have recently changed your password, then please ignore this email.</source>
-        <target state="needs-translation">StageUp-kontopassordet ditt er nylig endret.
-Hvis du ikke gjorde denne endringen, vennligst logg inn på kontoen din og endre passordet ditt så snart som mulig.
-
-Hvis du nylig har endret passordet, kan du ignorere denne e-posten.</target>
-      </trans-unit>
-      <trans-unit id="email.subscriber_notify_tier_deleted__subject" datatype="html">
-        <source>Notification of Patron Tier removal</source>
-        <target state="needs-translation">Melding om fjerning av Patron Tier</target>
-      </trans-unit>
-      <trans-unit id="email.subscriber_notify_tier_deleted__content" datatype="html">
-        <source>Hi **@{user_username}**,
-
-**@{host_username}** has deleted/removed the **{tier_name}** tier. We have cancelled your current subscription ({sub_id}). It will come into effect immediately. You'll recieve and e-mail shortly confirming the un-subscription.
-
-Thanks, StageUp</source>
-        <target state="needs-translation">Hei ** @ {user_username} **,
-
-** @ {host_username} ** har slettet / fjernet ** {tier_name} ** nivå. Vi har kansellert ditt nåværende abonnement ({sub_id}). Det vil tre i kraft umiddelbart. Du vil motta og e-post om bekreftelse av un-abonnementet.
-
-Takk, StageUp</target>
-      </trans-unit>
-      <trans-unit id="email.user_unsubscribed_from_patron_tier__subject" datatype="html">
-        <source>Un-subscribed from patron tier</source>
-        <target state="needs-translation">Ikke abonnert fra beskyttelsesnivå</target>
-      </trans-unit>
-      <trans-unit id="email.user_unsubscribed_from_patron_tier__content" datatype="html">
-        <source>Hi @{user_username},
-
-This is a receipt of your un-subscription from **@{host_username}**'s patron tier, **{tier_name}**.
-You'll no longer be charged for this subscription &amp; this subscription will be listed as 'Cancelled' on your account from now on.
-
-Thanks, StageUp</source>
-        <target state="needs-translation">Hei @ {user_username},
-
-Dette er en kvittering for unabonnementet ditt fra ** @ {host_username} ** s beskyttelsesnivå, ** {tier_name} **.
-Du blir ikke lenger belastet for dette abonnementet &amp; dette abonnementet vil bli oppført som 'Avbrutt' på kontoen din fra nå av.
-
-Takk, StageUp</target>
-      </trans-unit>
-      <trans-unit id="error.internal_server_error" datatype="html">
-        <source>Internal server error</source>
-        <target state="needs-translation">Intern server feil</target>
-      </trans-unit>
-      <trans-unit id="error.missing_translation" datatype="html">
-        <source>Missing translation</source>
-        <target state="needs-translation">Mangler oversettelse</target>
-      </trans-unit>
-      <trans-unit id="error.missing_permissions" datatype="html">
-        <source>Insufficent privileges</source>
-        <target state="needs-translation">Utilstrekkelige privilegier</target>
-      </trans-unit>
-      <trans-unit id="error.not_found" datatype="html">
-        <source>Not found</source>
-        <target state="needs-translation">Ikke funnet</target>
-      </trans-unit>
-      <trans-unit id="error.no_such_route" datatype="html">
-        <source>No such route</source>
-        <target state="needs-translation">Ruten ble ikke funnet</target>
-      </trans-unit>
-      <trans-unit id="error.not_member" datatype="html">
-        <source>Not a member of company</source>
-        <target state="needs-translation">Ikke medlem av selskapet</target>
-      </trans-unit>
-      <trans-unit id="error.duplicate" datatype="html">
-        <source>Duplicate value found</source>
-        <target state="needs-translation">Dupliserte verdi funnet</target>
-      </trans-unit>
-      <trans-unit id="error.in_use" datatype="html">
-        <source>Value is already in use</source>
-        <target state="needs-translation">Verdien er allerede i bruk</target>
-      </trans-unit>
-      <trans-unit id="error.invalid" datatype="html">
-        <source>Value is invalid</source>
-        <target state="needs-translation">Verdien er ugyldig</target>
-      </trans-unit>
-      <trans-unit id="error.code" datatype="html">
-        <source>Test code</source>
-        <target state="needs-translation">Testkode</target>
-      </trans-unit>
-      <trans-unit id="error.unknown" datatype="html">
-        <source>An unknown error occured</source>
-        <target state="needs-translation">Det oppstod en ukjent feil</target>
-      </trans-unit>
-      <trans-unit id="error.no_session" datatype="html">
-        <source>Must be logged in to perform this action</source>
-        <target state="needs-translation">Må være logget på for å utføre denne handlingen</target>
-      </trans-unit>
-      <trans-unit id="error.admin_only" datatype="html">
-        <source>Must be a Site Admin to perform this action</source>
-        <target state="needs-translation">Må være administrator for å utføre denne handlingen</target>
-      </trans-unit>
-      <trans-unit id="error.missing_field" datatype="html">
-        <source>Missing a field in the provided data</source>
-        <target state="needs-translation">Mangler et felt i de oppgitte dataene</target>
-      </trans-unit>
-      <trans-unit id="error.not_verified" datatype="html">
-        <source>Your account must be verified to perform this action</source>
-        <target state="needs-translation">Kontoen din må verifiseres for å utføre denne handlingen</target>
-      </trans-unit>
-      <trans-unit id="error.forbidden" datatype="html">
-        <source>This action is forbidden</source>
-        <target state="needs-translation">Denne handlingen er forbudt</target>
-      </trans-unit>
-      <trans-unit id="error.not_implemented" datatype="html">
-        <source>Method is not implemented</source>
-        <target state="needs-translation">Metoden er ikke implementert</target>
-      </trans-unit>
-      <trans-unit id="error.incorrect" datatype="html">
-        <source>Value is incorrect</source>
-        <target state="needs-translation">Verdien er feil</target>
-      </trans-unit>
-      <trans-unit id="error.missing_body" datatype="html">
-        <source>Missing body data</source>
-        <target state="needs-translation">Manglende kroppsdata</target>
-      </trans-unit>
-      <trans-unit id="error.locked" datatype="html">
-        <source>Data is locked</source>
-        <target state="needs-translation">Data er låst</target>
-      </trans-unit>
-      <trans-unit id="validation.not_allowed" datatype="html">
-        <source>Value is not allowed</source>
-        <target state="needs-translation">Verdi er ikke tillatt</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid" datatype="html">
-        <source>Value is not valid</source>
-        <target state="needs-translation">Verdien er ikke gyldig</target>
-      </trans-unit>
-      <trans-unit id="validation.too_long" datatype="html">
-        <source>Value is too long</source>
-        <target state="needs-translation">Verdien er for lang</target>
-      </trans-unit>
-      <trans-unit id="validation.too_short" datatype="html">
-        <source>Value is too short</source>
-        <target state="needs-translation">Verdien er for kort</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_email" datatype="html">
-        <source>Not a valid e-mail address</source>
-        <target state="needs-translation">Ikke en gyldig e-postadresse</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_phone_number" datatype="html">
-        <source>Not a valid phone number</source>
-        <target state="needs-translation">Ikke et gyldig telefonnummer</target>
-      </trans-unit>
-      <trans-unit id="validation.not_hmrc_number" datatype="html">
-        <source>Not a valid HMRC Company number</source>
-        <target state="needs-translation">Ikke et gyldig HMRC-firmanummer</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_vat_number" datatype="html">
-        <source>Not a valid VAT number</source>
-        <target state="needs-translation">Ikke et gyldig momsnummer</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_url" datatype="html">
-        <source>Not a valid URL</source>
-        <target state="needs-translation">Ikke en gyldig URL</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_facebook_url" datatype="html">
-        <source>Not a valid Facebook URL</source>
-        <target state="needs-translation">Ikke en gyldig URL på Facebook</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_instagram_url" datatype="html">
-        <source>Not a valid Instagram URL</source>
-        <target state="needs-translation">Ikke en gyldig URL på Instagram</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_linkedin_url" datatype="html">
-        <source>Not a valid LinkedIn URL</source>
-        <target state="needs-translation">Ikke en gyldig LinkedIn URL</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_twitter_url" datatype="html">
-        <source>Not a valid Twitter URL</source>
-        <target state="needs-translation">Ikke en gyldig Twitter-URL</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_pinterest_url" datatype="html">
-        <source>Not a valid Pinterest URL</source>
-        <target state="needs-translation">Ikke en gyldig Pinterest-URL</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_youtube_url" datatype="html">
-        <source>Not a valid Youtube URL</source>
-        <target state="needs-translation">Ikke en gyldig URL på YouTube</target>
-      </trans-unit>
-    </body>
-  </file>
-</xliff>
+<?xml version="1.0" encoding="UTF-8"?>
+  <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="nb" datatype="plaintext" original="generate-xlf">
+      <body>
+				
+		<trans-unit id="login.password_incorrect" datatype="html">
+      <source>Password is incorrect</source>
+      <target state="needs-translation">passordet er feil</target>
+    </trans-unit>				
+		<trans-unit id="user.not_found" datatype="html">
+      <source>User does not exist</source>
+      <target state="needs-translation">Bruker finnes ikke</target>
+    </trans-unit>				
+		<trans-unit id="error.not_a_video" datatype="html">
+      <source>This is not a video</source>
+      <target state="needs-translation">Dette er ikke en video</target>
+    </trans-unit>				
+		<trans-unit id="error.email_already_in_use" datatype="html">
+      <source>E-mail address is already in use</source>
+      <target state="needs-translation">E-postadressen er allerede i bruk</target>
+    </trans-unit>				
+		<trans-unit id="error.user_has_no_claim" datatype="html">
+      <source>You don’t have permissions to view this content</source>
+      <target state="needs-translation">Du har ikke tillatelse til å se dette innholdet</target>
+    </trans-unit>				
+		<trans-unit id="error.too_many_thumbnails" datatype="html">
+      <source>You have too many thumbnails, try deleting some before uploading new ones</source>
+      <target state="needs-translation">Du har for mange miniatyrbilder, prøv å slette noen før du laster opp nye</target>
+    </trans-unit>				
+		<trans-unit id="error.publicity_period_outside_ticket_period" datatype="html">
+      <source>Cannot set performance publicity period outside one of the tickets selling period</source>
+      <target state="needs-translation">Kan ikke angi reklameperiode for ytelse utenfor en av selgerperioden for billetter</target>
+    </trans-unit>				
+		<trans-unit id="error.already_following" datatype="html">
+      <source>You are already following this host</source>
+      <target state="needs-translation">Du følger allerede denne verten</target>
+    </trans-unit>				
+		<trans-unit id="error.invalid_rating" datatype="html">
+      <source>The provided rate value is invalid</source>
+      <target state="needs-translation">Den angitte hastighetsverdien er ugyldig</target>
+    </trans-unit>				
+		<trans-unit id="error.no_rating_exists" datatype="html">
+      <source>Could not find existing rating</source>
+      <target state="needs-translation">Fant ikke eksisterende vurdering</target>
+    </trans-unit>				
+		<trans-unit id="onboarding.steps_invalid" datatype="html">
+      <source>Some steps are invalid</source>
+      <target state="needs-translation">Noen trinn er ugyldige</target>
+    </trans-unit>				
+		<trans-unit id="onboarding.step_is_invalid" datatype="html">
+      <source>Step is invalid</source>
+      <target state="needs-translation">Trinnet er ugyldig</target>
+    </trans-unit>				
+		<trans-unit id="host.example_patron_tier_name" datatype="html">
+      <source>Example Tier</source>
+      <target state="needs-translation">Eksempel Tier</target>
+    </trans-unit>				
+		<trans-unit id="host.example_patron_tier_description" datatype="html">
+      <source>Example Tier Description</source>
+      <target state="needs-translation">Eksempel på nivåbeskrivelse</target>
+    </trans-unit>				
+		<trans-unit id="host.requires_stripe_connected" datatype="html">
+      <source>Requires Stripe to be connected to perform this action</source>
+      <target state="needs-translation">Krever at Stripe er koblet til for å utføre denne handlingen</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.invoice_id" datatype="html">
+      <source>Invoice ID</source>
+      <target state="needs-translation">Faktura-ID</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.performance_name" datatype="html">
+      <source>Performance Title</source>
+      <target state="needs-translation">Ytelsestittel</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.ticket_type" datatype="html">
+      <source>Ticket Type</source>
+      <target state="needs-translation">Billettype</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.purchased_at" datatype="html">
+      <source>Purchased At</source>
+      <target state="needs-translation">Kjøpt kl</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.amount" datatype="html">
+      <source>Amount</source>
+      <target state="needs-translation">Beløp</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.net_amount" datatype="html">
+      <source>Net Amount</source>
+      <target state="needs-translation">Nettobeløp</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.currency" datatype="html">
+      <source>Currency</source>
+      <target state="needs-translation">Valuta</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.status" datatype="html">
+      <source>Payment Status</source>
+      <target state="needs-translation">Betalingsstatus</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.invoice_id" datatype="html">
+      <source>Invoice ID</source>
+      <target state="needs-translation">Faktura-ID</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.performance_name" datatype="html">
+      <source>Performance Title</source>
+      <target state="needs-translation">Ytelsestittel</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.ticket_type" datatype="html">
+      <source>Ticket Type</source>
+      <target state="needs-translation">Billettype</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.purchased_at" datatype="html">
+      <source>Purchased At</source>
+      <target state="needs-translation">Kjøpt kl</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.amount" datatype="html">
+      <source>Amount</source>
+      <target state="needs-translation">Beløp</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.net_amount" datatype="html">
+      <source>Net Amount</source>
+      <target state="needs-translation">Nettobeløp</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.currency" datatype="html">
+      <source>Currency</source>
+      <target state="needs-translation">Valuta</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.status" datatype="html">
+      <source>Payment Status</source>
+      <target state="needs-translation">Betalingsstatus</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.created_at" datatype="html">
+      <source>Created At</source>
+      <target state="needs-translation">Laget kl</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.total_rows" datatype="html">
+      <source>Total Rows</source>
+      <target state="needs-translation">Totalt antall rader</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.created" datatype="html">
+      <source>Created</source>
+      <target state="needs-translation">Laget</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.paid" datatype="html">
+      <source>Paid</source>
+      <target state="needs-translation">Betalt</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.fufilled" datatype="html">
+      <source>Fufilled</source>
+      <target state="needs-translation">Oppfylt</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.refunded" datatype="html">
+      <source>Refunded</source>
+      <target state="needs-translation">Refunderes</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.refund_pending" datatype="html">
+      <source>Refund Pending</source>
+      <target state="needs-translation">Refusjon venter</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.refund_denied" datatype="html">
+      <source>Refund Denied</source>
+      <target state="needs-translation">Refusjon nektet</target>
+    </trans-unit>				
+		<trans-unit id="ticket_type.paid" datatype="html">
+      <source>Paid</source>
+      <target state="needs-translation">Betalt</target>
+    </trans-unit>				
+		<trans-unit id="ticket_type.free" datatype="html">
+      <source>Free</source>
+      <target state="needs-translation">Gratis</target>
+    </trans-unit>				
+		<trans-unit id="ticket_type.dono" datatype="html">
+      <source>Donation</source>
+      <target state="needs-translation">Donasjon</target>
+    </trans-unit>				
+		<trans-unit id="stripe.origin_url_not_matched" datatype="html">
+      <source>Received response does not match submitter!</source>
+      <target state="needs-translation">Mottatt svar samsvarer ikke med innsenderen!</target>
+    </trans-unit>				
+		<trans-unit id="refunds.no_invoices_found" datatype="html">
+      <source>Could not find any invoices</source>
+      <target state="needs-translation">Fant ingen fakturaer</target>
+    </trans-unit>				
+		<trans-unit id="refunds.refund_already_outstanding" datatype="html">
+      <source>Cannot refund while another refund is already outstanding</source>
+      <target state="needs-translation">Kan ikke tilbakebetale mens en annen refusjon allerede er utestående</target>
+    </trans-unit>				
+		<trans-unit id="email.user.refund_initiated__content" datatype="html">
+      <source><p><strong>Hi {user_username},</strong></p>
+<p>This is a notification to confirm that <strong>{host_name}</strong> has initiated a refund on your order <strong>{invoice_id}</strong>
+for the amount of <strong>{invoice_amount}</strong> for the performance <strong>{performance_name}</strong>.</p>
+<p>You can view the status of this refund at any time by logging in to your
+StageUp account and clicking settings -> payments.</p>
+<p>We will automatically credit the funds to your <strong>{card_brand}</strong> ending in
+<strong>{last_4}</strong>. Please note, the amount may take up to 5 working days to appear
+in your account.</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p><strong>Hei {user_username},</strong></p><p> Dette er et varsel for å bekrefte at <strong>{host_name}</strong> har initiert en refusjon på bestillingen din <strong>{invoice_id}</strong> for beløpet på <strong>{invoice_amount}</strong> for ytelsen <strong>{performance_name}</strong> .</p><p> Du kan når som helst se statusen på denne refusjonen ved å logge på StageUp-kontoen din og klikke på innstillinger -&gt; betalinger.</p><p> Vi krediterer midlene automatisk til <strong>{card_brand} som</strong> ender på <strong>{last_4}</strong> . Vær oppmerksom på at beløpet kan ta opptil 5 virkedager før det vises i kontoen din.</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.refund_initiated__subject" datatype="html">
+      <source>Refund initiated by {host_name} for {performance_name}</source>
+      <target state="needs-translation">Refusjon initiert av {host_name} for {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_initiated__content" datatype="html">
+      <source><p><strong>Hi {host_name},</strong></p>
+<p>You have initiated a refund for your performance “{performance_name}”</p>
+<p><strong>Invoice#: {invoice_id}</strong>
+<strong>Total Amount: {invoice_amount}</strong></p>
+<p>We have notified the affected customer that they shall receive the refunded
+amount in their account within 5 working days</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+<p>Please note, if this request was not initated by you please notify us
+immediately</p>
+</source>
+      <target state="needs-translation"><p><strong>Hei {host_name},</strong></p><p> Du har startet en refusjon for ytelsen din “{performance_name}”</p><p> <strong>Fakturanummer: {invoice_id}</strong> <strong>Totalt beløp: {invoice_amount}</strong></p><p> Vi har varslet den berørte kunden om at de skal motta det refunderte beløpet på kontoen sin innen 5 virkedager</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p><p> Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, vennligst gi oss beskjed umiddelbart</p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_initiated__subject" datatype="html">
+      <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
+      <target state="needs-translation">Refusjon startet for kjøp av {user_username} av {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_bulk_initiated_subject" datatype="html">
+      <source>You have initiated refunds for {refund_quantity} invoice(s)</source>
+      <target state="needs-translation">Du har startet refusjoner for {refund_quantity} faktura (er)</target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
+      <source><p><strong>Hi {host_name},</strong></p>
+<p>You have initiated refunds for {refund_quantity} invoices</p>
+<p>Total value: <strong>{invoices_total}</strong></p>
+<p>We have notified the affected customers that they shall receive the refunded
+amount in their accounts within 5 working days</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+<p>Please note, if this request was not initated by you please notify us
+immediately"</p>
+</source>
+      <target state="needs-translation"><p><strong>Hei {host_name},</strong></p><p> Du har startet refusjoner for {refund_quantity} fakturaer</p><p> Total verdi: <strong>{invoices_total}</strong></p><p> Vi har varslet de berørte kundene om at de skal motta det refunderte beløpet i kontoene sine innen 5 virkedager</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p><p> Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, vennligst gi oss beskjed umiddelbart '</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
+      <source>Refund for {performance_name} succesful!</source>
+      <target state="needs-translation">Refusjon for {performance_name} vellykket!</target>
+    </trans-unit>				
+		<trans-unit id="email.user.refund_refunded__content" datatype="html">
+      <source><p>Hi {user_username},</p>
+<p>This is a notification to confirm that {host_name} has successfully refunded
+your order <strong>{invoice_id}</strong> for <strong>{invoice_amount}</strong> for your purchase of
+<strong>{performance_name}</strong> due to:</p>
+<blockquote>
+<p>{refund_reason}</p>
+</blockquote>
+<p>The funds have now been credited to <strong>{card_brand}</strong> ending in <strong>{last_4}</strong>.
+You can view a log of this refund within your StageUp account settings</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Hei {user_username},</p><p> Dette er et varsel for å bekrefte at {host_name} har refundert bestillingen <strong>{invoice_id}</strong> for <strong>{invoice_amount}</strong> for kjøpet av <strong>{performance_name} på</strong> grunn av:</p><blockquote><p> {refund_reason}</p></blockquote><p> Midlene er nå kreditert <strong>{card_brand} som</strong> ender på <strong>{last_4}</strong> . Du kan se en logg over denne refusjonen i StageUp-kontoinnstillingene</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
+      <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
+succesfully processed by Stripe</p>
+</source>
+      <target state="needs-translation"><p>Refusjon for {user_username} for {performance_name} (ID: {invoice_id}), behandlet av Stripe</p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_refunded__content" datatype="html">
+      <source><p>Hi {host_name},</p>
+<p>This is a notification to confirm that your recent refund request for
+<strong>{user_username}</strong> for <strong>{performance_name}</strong> for the amount of
+<strong>{invoice_amount}</strong> has succesfully been refunded by Stripe and the user has
+been notified.</p>
+<p>You can view the status of all your refunds within your account settings</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Hei {host_name},</p><p> Dette er et varsel for å bekrefte at den nylige refusjonsforespørselen din for <strong>{user_username}</strong> for <strong>{performance_name}</strong> for beløpet <strong>{invoice_amount}</strong> har blitt refundert av Stripe og brukeren har blitt varslet.</p><p> Du kan se statusen for alle refusjonene dine i kontoinnstillingene</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.refund_requested__subject" datatype="html">
+      <source>StageUp: Your refund request has been sent to @{host_name}</source>
+      <target state="needs-translation">StageUp: Refusjonsforespørselen din er sendt til @{host_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.refund_requested__content" datatype="html">
+      <source><p>Your refund request for the following invoice has been sent to
+<strong>{host_name}</strong>.</p>
+<ul>
+<li>Invoice #: <strong>{invoice_id}</strong></li>
+<li>Performance: <strong>{performance_name}</strong></li>
+<li>Purchased: <strong>{purchase_date}</strong></li>
+<li>Amount: <strong>{amount}</strong></li>
+</ul>
+<p>We’ll let you know when the host has processed your request</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Refusjonsforespørselen din for følgende faktura er sendt til <strong>{host_name}</strong> .</p><ul><li> Faktura nr.: <strong>{invoice_id}</strong></li><li> Ytelse: <strong>{performance_name}</strong></li><li> Kjøpt: <strong>{purchase_date}</strong></li><li> Beløp: <strong>{amount}</strong></li></ul><p> Vi gir deg beskjed når verten har behandlet forespørselen din</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.host_refund_requested_confirmation__subject" datatype="html">
+      <source>StageUp: Refund request received for {performance_name} from @{user_username}</source>
+      <target state="needs-translation">StageUp: Refusjonsforespørsel mottatt for {performance_name} fra @{user_username}</target>
+    </trans-unit>				
+		<trans-unit id="email.host_refund_requested_confirmation__content" datatype="html">
+      <source><p>Hi {host_name},</p>
+<p>@{user_username} ({user_email_address}) has requested a refund on their purchase of {performance_name}</p>
+<p><strong>Refund Details:</strong></p>
+<ul>
+<li><strong>Invoice #:</strong> {invoice_id}</li>
+<li><strong>Performance:</strong> {performance_name}</li>
+<li><strong>Purchased On:</strong> {purchase_date}</li>
+<li><strong>Amount:</strong> {amount}</li>
+</ul>
+<p>To process this request you can visit your <a href="{invoice_dashboard_url}">invoice dashboard
+here</a>.</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Hei {host_name},</p><p> @{user_username} ({user_email_address}) har bedt om refusjon på kjøpet av {performance_name}</p><p> <strong>Refusjonsdetaljer:</strong></p><ul><li> <strong>Faktura nr.:</strong> {invoice_id}</li><li> <strong>Ytelse:</strong> {performance_name}</li><li> <strong>Kjøpt den:</strong> {purchase_date}</li><li> <strong>Beløp:</strong> {amount}</li></ul><p> For å behandle denne forespørselen kan du gå til <a href="{invoice_dashboard_url}">fakturaoversikten</a> din her.</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_pdf__subject" datatype="html">
+      <source>Exported Invoice PDF files</source>
+      <target state="needs-translation">Eksporterte PDF-filer for faktura</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_pdf__content" datatype="html">
+      <source>See attachments for invoice data</source>
+      <target state="needs-translation">Se vedlegg for fakturdata</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_csv__filename" datatype="html">
+      <source>stageup-invoice</source>
+      <target state="needs-translation">stageup-faktura</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_csv__subject" datatype="html">
+      <source>Exported Invoice CSV files</source>
+      <target state="needs-translation">Eksporterte faktura-CSV-filer</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_csv__content" datatype="html">
+      <source>See attachments for invoice data</source>
+      <target state="needs-translation">Se vedlegg for fakturdata</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_pdf__filename" datatype="html">
+      <source>stageup-invoice</source>
+      <target state="needs-translation">stageup-faktura</target>
+    </trans-unit>				
+		<trans-unit id="email.test.send_email__subject" datatype="html">
+      <source>Testing e-mails!</source>
+      <target state="needs-translation">Testing av e-post!</target>
+    </trans-unit>				
+		<trans-unit id="email.test.send_email__content" datatype="html">
+      <source>Hey {username} <strong>How are you? [{url}]</strong></source>
+      <target state="needs-translation">Hei {username} <strong>Hvordan har du det? [{url}]</strong></target>
+    </trans-unit>				
+		<trans-unit id="email.user.registered__subject" datatype="html">
+      <source>Verify your StageUp account</source>
+      <target state="needs-translation">Bekreft StageUp-kontoen din</target>
+    </trans-unit>				
+		<trans-unit id="email.user.registered__content" datatype="html">
+      <source>Click the link to verify: <a href="{url}">{url}</a></source>
+      <target state="needs-translation">Klikk på lenken for å bekrefte: <a href="{url}">{url}</a></target>
+    </trans-unit>				
+		<trans-unit id="email.user.invited_to_host__subject" datatype="html">
+      <source>You have been invited to join {host_name} by {inviter_name}</source>
+      <target state="needs-translation">Du er invitert til å bli med i {host_name} av {inviter_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.user.invited_to_host__content" datatype="html">
+      <source><p>Hi {user_name},</p>
+<p>Click the link to accept the invitation: <a href="{url}">{url}</a>, this invite will expire in
+<strong>24 hours</strong>.</p>
+</source>
+      <target state="needs-translation"><p>Hei {user_name},</p><p> Klikk på lenken for å godta invitasjonen: <a href="{url}">{url}</a> , denne invitasjonen utløper om <strong>24 timer</strong> .</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.invited_to_private_showing__subject" datatype="html">
+      <source>You have been invited to watch a private performance</source>
+      <target state="needs-translation">Du er invitert til å se en privat forestilling</target>
+    </trans-unit>				
+		<trans-unit id="email.user.invited_to_private_showing__content" datatype="html">
+      <source><p>Hi {user_name},</p>
+<p>Click the link to watch <strong>{performance_name}</strong> by <strong>{host_name}</strong> on StageUp
+now: <a href="{url}">{url}</a>></p>
+</source>
+      <target state="needs-translation"><p>Hei {user_name},</p><p> Klikk på lenken for å se <strong>{performance_name}</strong> av <strong>{host_name}</strong> på StageUp nå: <a href="{url}">{url}</a> &gt;</p></target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased__subject" datatype="html">
+      <source>Receipt of purchase of StageUp ticket</source>
+      <target state="needs-translation">Mottak på kjøp av StageUp-billett</target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased__content" datatype="html">
+      <source><p>Hi {user_name},</p>
+<p>You purchased a {ticket_name} to watch {performance_name} for {amount}.
+Click here to watch: <a href="{watch_url}">{watch_url}</a>
+Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
+</source>
+      <target state="needs-translation"><p>Hei {user_name},</p><p> Du kjøpte en {ticket_name} for å se {performance_name} for {amount}. Klikk her for å se: <a href="{watch_url}">{watch_url}</a> Mottak på kjøpet: <a href="{receipt_url}">{receipt_url}</a></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.patronage_started__subject" datatype="html">
+      <source>Patron Subscription to {tier_name}</source>
+      <target state="needs-translation">Beskyttelsesabonnement på {tier_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.user.patronage_started__content" datatype="html">
+      <source><p>Hi {user_name},</p>
+<p>Thank you for supporting <strong>{host_name}</strong>!</p>
+<p>Your patron payments of {amount} will be debited on {date_ordinal} of each
+month, starting today.</p>
+<p>You can cancel your payments at any time. By making this payment you agree to
+<a href="{tos_url}">StageUp’s Terms of Use</a></p>
+<p>Thanks,
+StageUp Team</p>
+</source>
+      <target state="needs-translation"><p>Hei {user_name},</p><p> Takk for at du støtter <strong>{host_name}</strong> !</p><p> Våre betalere på {amount} blir belastet {date_ordinal} i hver måned, fra og med i dag.</p><p> Du kan når som helst kansellere betalingene dine. Ved å utføre denne betalingen godtar du <a href="{tos_url}">StageUps vilkår for bruk</a></p><p> Takk, StageUp Team</p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.patronage_started__subject" datatype="html">
+      <source>New Patron to {tier_name}</source>
+      <target state="needs-translation">Ny beskytter til {tier_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.host.patronage_started__content" datatype="html">
+      <source><p>Hi <strong>{host_name}</strong>,</p>
+<p>@{user_username} is now a patron of your company.</p>
+<ul>
+<li>Patron Tier: <strong>{tier_name}</strong></li>
+<li>Amount: <strong>{amount}</strong></li>
+</ul>
+</source>
+      <target state="needs-translation"><p>Hei <strong>{host_name}</strong> ,</p><p> @{user_username} er nå beskytter av selskapet ditt.</p><ul><li> Beskyttelsesnivå: <strong>{tier_name}</strong></li><li> Beløp: <strong>{amount}</strong></li></ul></target>
+    </trans-unit>				
+		<trans-unit id="email.user.password_reset_requested__subject" datatype="html">
+      <source>StageUp Reset Password</source>
+      <target state="needs-translation">StageUp Reset Password</target>
+    </trans-unit>				
+		<trans-unit id="email.user.password_reset_requested__content" datatype="html">
+      <source><p>Hi <strong>{user_name}</strong>,</p>
+<p>You are receiving this because you (or someone else) has requested the reset
+of the password for your StageUp account.</p>
+<p>Please click on the following link to complete the process. This link is valid
+for the next 24 hours.</p>
+<p><a href="{password_reset_url}">{password_reset_url}</a></p>
+<p>If you did not request this change, please ignore this email and your password
+will remain unchanged.</p>
+</source>
+      <target state="needs-translation"><p>Hei <strong>{user_name}</strong> ,</p><p> Du mottar dette fordi du (eller noen andre) har bedt om tilbakestilling av passordet for StageUp-kontoen din.</p><p> Klikk på følgende lenke for å fullføre prosessen. Denne lenken er gyldig det neste døgnet.</p><p> <a href="{password_reset_url}">{password_reset_url}</a></p><p> Hvis du ikke ba om denne endringen, kan du ignorere denne e-postadressen, og passordet ditt forblir uendret.</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.password_changed__subject" datatype="html">
+      <source>Your StageUp password was just changed</source>
+      <target state="needs-translation">StageUp-passordet ditt ble nettopp endret</target>
+    </trans-unit>				
+		<trans-unit id="email.user.password_changed__content" datatype="html">
+      <source><p>Your StageUp account password has recently been changed.</p>
+<p>If you did not make this change, please login into your account and change
+your password as soon as possible.</p>
+<p>If you have recently changed your password, then please ignore this</p>
+</source>
+      <target state="needs-translation"><p>StageUp-kontopassordet ditt er nylig endret.</p><p> Hvis du ikke gjorde denne endringen, vennligst logg inn på kontoen din og endre passordet ditt så snart som mulig.</p><p> Hvis du nylig har endret passordet ditt, kan du ignorere dette</p></target>
+    </trans-unit>				
+		<trans-unit id="email.subscriber_notify_tier_deleted__subject" datatype="html">
+      <source>Notification of Patron Tier removal</source>
+      <target state="needs-translation">Melding om fjerning av Patron Tier</target>
+    </trans-unit>				
+		<trans-unit id="email.subscriber_notify_tier_deleted__content" datatype="html">
+      <source><p>Hi <strong>@{user_username}</strong>,</p>
+<p><strong>@{host_username}</strong> has deleted/removed the <strong>{tier_name}</strong> tier. We have
+cancelled your current subscription ({sub_id}). It will come into effect
+immediately. You’ll recieve and e-mail shortly confirming the un-subscription.</p>
+<p>Thanks, StageUp</p>
+</source>
+      <target state="needs-translation"><p>Hei <strong>@{user_username}</strong> ,</p><p> <strong>@{host_username}</strong> har slettet / fjernet <strong>{tier_name}-</strong> nivået. Vi har sagt opp det nåværende abonnementet ditt ({sub_id}). Det vil tre i kraft umiddelbart. Du vil motta og e-post om bekreftelse av un-abonnementet.</p><p> Takk, StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user_unsubscribed_from_patron_tier__subject" datatype="html">
+      <source>Un-subscribed from patron tier</source>
+      <target state="needs-translation">Ikke abonnert fra beskyttelsesnivå</target>
+    </trans-unit>				
+		<trans-unit id="email.user_unsubscribed_from_patron_tier__content" datatype="html">
+      <source><p>Hi @{user_username},</p>
+<p>This is a receipt of your un-subscription from <strong>@{host_username}</strong>'s patron
+tier, <strong>{tier_name}</strong>.</p>
+<p>You’ll no longer be charged for this subscription & this subscription will be
+listed as ‘Cancelled’ on your account from now on.</p>
+<p>Thanks, StageUp</p>
+</source>
+      <target state="needs-translation"><p>Hei @{user_username},</p><p> Dette er en kvittering for <strong>unabonnementet ditt fra @{host_username}s</strong> beskyttelsesnivå, <strong>{tier_name}</strong> .</p><p> Du blir ikke lenger belastet for dette abonnementet, og dette abonnementet vil bli oppført som &#39;Avbrutt&#39; på kontoen din fra nå av.</p><p> Takk, StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="error.internal_server_error" datatype="html">
+      <source>Internal server error</source>
+      <target state="needs-translation">Intern server feil</target>
+    </trans-unit>				
+		<trans-unit id="error.missing_translation" datatype="html">
+      <source>Missing translation</source>
+      <target state="needs-translation">Mangler oversettelse</target>
+    </trans-unit>				
+		<trans-unit id="error.missing_permissions" datatype="html">
+      <source>Insufficent privileges</source>
+      <target state="needs-translation">Utilstrekkelige privilegier</target>
+    </trans-unit>				
+		<trans-unit id="error.not_found" datatype="html">
+      <source>Not found</source>
+      <target state="needs-translation">Ikke funnet</target>
+    </trans-unit>				
+		<trans-unit id="error.no_such_route" datatype="html">
+      <source>No such route</source>
+      <target state="needs-translation">Ingen slik rute</target>
+    </trans-unit>				
+		<trans-unit id="error.not_member" datatype="html">
+      <source>Not a member of company</source>
+      <target state="needs-translation">Ikke medlem av selskapet</target>
+    </trans-unit>				
+		<trans-unit id="error.duplicate" datatype="html">
+      <source>Duplicate value found</source>
+      <target state="needs-translation">Duplikatverdi funnet</target>
+    </trans-unit>				
+		<trans-unit id="error.in_use" datatype="html">
+      <source>Value is already in use</source>
+      <target state="needs-translation">Verdien er allerede i bruk</target>
+    </trans-unit>				
+		<trans-unit id="error.invalid" datatype="html">
+      <source>Value is invalid</source>
+      <target state="needs-translation">Verdien er ugyldig</target>
+    </trans-unit>				
+		<trans-unit id="error.code" datatype="html">
+      <source>Test code</source>
+      <target state="needs-translation">Testkode</target>
+    </trans-unit>				
+		<trans-unit id="error.unknown" datatype="html">
+      <source>An unknown error occured</source>
+      <target state="needs-translation">Det oppstod en ukjent feil</target>
+    </trans-unit>				
+		<trans-unit id="error.no_session" datatype="html">
+      <source>Must be logged in to perform this action</source>
+      <target state="needs-translation">Må være logget på for å utføre denne handlingen</target>
+    </trans-unit>				
+		<trans-unit id="error.admin_only" datatype="html">
+      <source>Must be a Site Admin to perform this action</source>
+      <target state="needs-translation">Må være administrator for å utføre denne handlingen</target>
+    </trans-unit>				
+		<trans-unit id="error.missing_field" datatype="html">
+      <source>Missing a field in the provided data</source>
+      <target state="needs-translation">Mangler et felt i de oppgitte dataene</target>
+    </trans-unit>				
+		<trans-unit id="error.not_verified" datatype="html">
+      <source>Your account must be verified to perform this action</source>
+      <target state="needs-translation">Kontoen din må verifiseres for å utføre denne handlingen</target>
+    </trans-unit>				
+		<trans-unit id="error.forbidden" datatype="html">
+      <source>This action is forbidden</source>
+      <target state="needs-translation">Denne handlingen er forbudt</target>
+    </trans-unit>				
+		<trans-unit id="error.not_implemented" datatype="html">
+      <source>Method is not implemented</source>
+      <target state="needs-translation">Metoden er ikke implementert</target>
+    </trans-unit>				
+		<trans-unit id="error.incorrect" datatype="html">
+      <source>Value is incorrect</source>
+      <target state="needs-translation">Verdien er feil</target>
+    </trans-unit>				
+		<trans-unit id="error.missing_body" datatype="html">
+      <source>Missing body data</source>
+      <target state="needs-translation">Manglende kroppsdata</target>
+    </trans-unit>				
+		<trans-unit id="error.locked" datatype="html">
+      <source>Data is locked</source>
+      <target state="needs-translation">Data er låst</target>
+    </trans-unit>				
+		<trans-unit id="validation.not_allowed" datatype="html">
+      <source>Value is not allowed</source>
+      <target state="needs-translation">Verdi er ikke tillatt</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid" datatype="html">
+      <source>Value is not valid</source>
+      <target state="needs-translation">Verdien er ikke gyldig</target>
+    </trans-unit>				
+		<trans-unit id="validation.too_long" datatype="html">
+      <source>Value is too long</source>
+      <target state="needs-translation">Verdien er for lang</target>
+    </trans-unit>				
+		<trans-unit id="validation.too_short" datatype="html">
+      <source>Value is too short</source>
+      <target state="needs-translation">Verdien er for kort</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_email" datatype="html">
+      <source>Not a valid e-mail address</source>
+      <target state="needs-translation">Ikke en gyldig e-postadresse</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_phone_number" datatype="html">
+      <source>Not a valid phone number</source>
+      <target state="needs-translation">Ikke et gyldig telefonnummer</target>
+    </trans-unit>				
+		<trans-unit id="validation.not_hmrc_number" datatype="html">
+      <source>Not a valid HMRC Company number</source>
+      <target state="needs-translation">Ikke et gyldig HMRC-firmanummer</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_vat_number" datatype="html">
+      <source>Not a valid VAT number</source>
+      <target state="needs-translation">Ikke et gyldig momsnummer</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_url" datatype="html">
+      <source>Not a valid URL</source>
+      <target state="needs-translation">Ikke en gyldig URL</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_facebook_url" datatype="html">
+      <source>Not a valid Facebook URL</source>
+      <target state="needs-translation">Ikke en gyldig URL på Facebook</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_instagram_url" datatype="html">
+      <source>Not a valid Instagram URL</source>
+      <target state="needs-translation">Ikke en gyldig URL på Instagram</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_linkedin_url" datatype="html">
+      <source>Not a valid LinkedIn URL</source>
+      <target state="needs-translation">Ikke en gyldig LinkedIn-URL</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_twitter_url" datatype="html">
+      <source>Not a valid Twitter URL</source>
+      <target state="needs-translation">Ikke en gyldig Twitter-URL</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_pinterest_url" datatype="html">
+      <source>Not a valid Pinterest URL</source>
+      <target state="needs-translation">Ikke en gyldig Pinterest-URL</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_youtube_url" datatype="html">
+      <source>Not a valid Youtube URL</source>
+      <target state="needs-translation">Ikke en gyldig URL på YouTube</target>
+    </trans-unit>			</body>
+    </file>
+  </xliff>

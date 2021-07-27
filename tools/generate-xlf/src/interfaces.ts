@@ -11,15 +11,3 @@ export interface WorkspaceProject {
   prefix: string;
   targets: any;
 }
-
-export interface Xliff {
-  file: {
-    body: {
-      ['trans-unit']: Array<{
-        '@_id': string;
-        source: string;
-        target: { ['#text']: string; '@_state': 'new' | 'final' | 'translated' | 'needs-translation' };
-      }>;
-    };
-  };
-}

@@ -152,4 +152,9 @@ export class PerformanceService {
       .post<void>(`/api/performances/${performanceId}/toggle-like`, { location })
       .toPromise();
   }
+
+  // router.post <void> ("/performances/:pid/assets/:aid/views", Perfs.registerView());
+  registerView(performanceId: string, assetId: string) {
+    return this.http.post(`/api/performances/${performanceId}/assets/${assetId}/views`, {}).toPromise();
+  }
 }

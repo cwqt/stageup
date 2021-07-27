@@ -28,7 +28,7 @@ export type JobData = {
     to: string;
     subject: string;
     content: string;
-    markdown: boolean;
+    markdown?: boolean;
     attachments: Attachment[];
   };
   ['schedule_performance_release']: Required<Pick<IPerformance, '_id'>>;

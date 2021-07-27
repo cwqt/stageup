@@ -1,0 +1,156 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: STAGING
+
+# Deploy to staging when SU-XXX branch is merged into dev
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  BRANCH_NAME: ${{ github.head_ref }}
+
+jobs:
+  ctx:
+    name: Check if PR merged & get context variables
+    if: github.event.pull_request.merged == true && github.base_ref == 'dev'
+    outputs:
+      branch: ${{ steps.ctx.outputs.branch }}
+      short_sha: ${{ steps.ctx.outputs.short_sha }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse short sha
+        uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+
+      - name: Get last commit body & lower-case branch name
+        id: ctx
+        run: |
+          echo "::set-output name=branch::${BRANCH_NAME,,}"
+          echo "::set-output name=short_sha::${{ steps.short-sha.outputs.sha }}"
+
+  check_has_images:
+    name: Check closed branch images exist
+    needs: [ctx]
+    if: startsWith(needs.ctx.outputs.branch, 'su-')
+    outputs:
+      has_images: ${{ steps.backend.outputs.exists == 'true' && steps.frontend.outputs.exists == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.TF_GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - run: gcloud container images list-tags eu.gcr.io/core-314910/core-backend --filter="ft-${{ needs.ctx.outputs.branch }}-latest"
+
+      - name: Check backend image exists
+        id: backend
+        run: |
+          output=$(gcloud container images list-tags eu.gcr.io/core-314910/core-backend --filter="ft-${{ needs.ctx.outputs.branch }}-latest")
+          exists=$(echo $output | grep -q "ft-${{ needs.ctx.outputs.branch }}-latest" && echo "true" || echo "false")
+          echo "::set-output name=exists::$(echo $exists)"
+
+      - name: Check frontend image exists
+        id: frontend
+        run: |
+          output=$(gcloud container images list-tags eu.gcr.io/core-314910/core-frontend --filter="ft-${{ needs.ctx.outputs.branch }}-latest")
+          exists=$(echo $output | grep -q "ft-${{ needs.ctx.outputs.branch }}-latest" && echo "true" || echo "false")
+          echo "::set-output name=exists::$(echo $exists)"
+
+      - name: Log image presence state
+        run: |
+          echo "Backend exists?   ${{ steps.backend.outputs.exists }}"
+          echo "Frontend exists?  ${{ steps.frontend.outputs.exists }}"
+
+      - name: Throw if images missing
+        if: steps.backend.outputs.exists == 'false' || steps.frontend.outputs.exists == 'false'
+        run: |
+          echo "Missing images!"
+          exit 1
+
+  add_tags:
+    name: Add staging tags to latest images
+    needs: [ctx, check_has_images]
+    if: needs.check_has_images.outputs.has_images == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: dev
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.TF_GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # must be 'stage-latest' because will be using 'stage' Core Workspace
+      - name: Add backend :stage-latest & :stage-SHA tags
+        run: >
+          gcloud container images add-tag
+          eu.gcr.io/core-314910/core-backend:ft-${{ needs.ctx.outputs.branch }}-latest
+          eu.gcr.io/core-314910/core-backend:stage-latest
+          eu.gcr.io/core-314910/core-backend:stage-${{ needs.ctx.outputs.short_sha }}
+
+      - name: Add frontend :stage-latest & :stage-SHA tags
+        run: >
+          gcloud container images add-tag
+          eu.gcr.io/core-314910/core-frontend:ft-${{ needs.ctx.outputs.branch }}-latest
+          eu.gcr.io/core-314910/core-frontend:stage-latest
+          eu.gcr.io/core-314910/core-frontend:stage-${{ needs.ctx.outputs.short_sha }}
+
+  deploy:
+    name: Deploy to staging
+    needs: [ctx, add_tags]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # have a service account on the file system to be used by the tf script
+      - name: Setup Terraform workspace
+        working-directory: terraform
+        # literal block scalar because these are separate commands
+        run: |
+          echo ${{ secrets.TF_GCP_SA_KEY }} | base64 -d > terraform.service_account.json
+          terraform init -input=false
+          terraform workspace select dev
+          terraform workspace show
+
+      # infra a go-go
+      - name: Create infrastructure
+        working-directory: terraform
+        # folded block scalar because this is one big long command
+        run: >
+          terraform apply
+          -var 'core=stage'
+          -var 'gcp_project_id=core-314910'
+          -var 'sql_password=helloworld'
+          -var 'stripe_api_token=${{ secrets.STRIPE_TEST_SECRET_KEY }}'
+          -input=false
+          -auto-approve
+
+  slack:
+    name: Post state on slack
+    needs: [ctx, deploy]
+    if: always() # run regardless of deploy state
+    runs-on: ubuntu-latest
+    steps:
+      - uses: haya14busa/action-cond@v1
+        id: body
+        with:
+          cond: ${{ needs.deploy.result == 'success' }}
+          if_true: ':large_green_circle: (staging-${{ needs.ctx.outputs.short_sha }}) https://dev.stageup.uk/en :sparkles:'
+          if_false: ':red_circle: (staging-${{ needs.ctx.outputs.short_sha }}) https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} :sadblob:'
+
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.14.0
+        with:
+          channel-id: 'C01JMTA1FNU'  # general channel ID
+          slack-message: ${{ steps.body.outputs.value }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_STAGEUP_BOT_OAUTH_TOKEN }}

@@ -1,0 +1,21 @@
+1: Hello World!
+2: This is a {variable} & {another}
+3: _*Some CommonMark*_ formatting would be **great**... (tm)
+4: Link formats <{wow_a_var_link}> [another link]({url})
+
+nested:
+  object:
+    token: Here I am!
+
+multiline: |
+  @{user_username} ({user_email_address}) has requested a refund on their purchase of {performance_name}
+
+  - **Invoice #:** {invoice_id}
+  - **Performance:** {performance_name}
+  - **Purchased On:** {purchase_date}
+  - **Amount:** {amount}
+
+angular: File type <x id="PH" equiv-text="inputElement.files[0].type"/> not allowed
+
+# Missing tokens checking (see missing-token.ts) -------------
+not_missing: Placeholder for missing-tokens.ts test

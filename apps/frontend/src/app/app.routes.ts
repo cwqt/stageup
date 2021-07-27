@@ -33,7 +33,6 @@ import { ResetPasswordComponent } from './routes/landing/login/reset-password/re
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
-import { ProfileComponent } from './routes/profile/profile.component';
 import { SearchComponent } from './routes/search/search.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
@@ -72,7 +71,6 @@ const LOGGED_IN_ROUTES: Routes = [
     path: `performances/:${RP.PerformanceId}`,
     component: PerformanceComponent
   },
-  { path: `user/:${RP.UserId}`, component: ProfileComponent },
   { path: `verified`, component: VerifiedComponent },
   {
     path: `settings`,

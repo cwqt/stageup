@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Tear down branch deployment
+name: BRANCH
 
 on:
   pull_request:
@@ -14,15 +14,26 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       branch: ${{ steps.ctx.outputs.branch }}
+      comment_id: ${{ steps.ctx.outputs.comment_id }}
     steps:
+      # only continue if PR has a deployment log comment, otherwise /deploy was never called
+      - name: Find past deployment comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Deployment log
+
       - name: Get last commit body & lower-case branch name
         id: ctx
-        run: echo "::set-output name=branch::${BRANCH_NAME,,}"
+        run: |
+          echo "::set-output name=branch::${BRANCH_NAME,,}"
+          echo "::set-output name=comment_id::${{ steps.fc.outputs.comment-id }}"
 
   delete-infra:
     name: Terraform teardown
     needs: [ctx]
-    if: startsWith(needs.ctx.outputs.branch, 'su-')
+    if: needs.ctx.outputs.comment_id != '' && startsWith(needs.ctx.outputs.branch, 'su-')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -77,5 +88,5 @@ jobs:
       - name: Update log comment
         uses: peter-evans/create-or-update-comment@v1
         with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
+          comment-id: ${{ needs.ctx.outputs.comment_id }}
           body: "\n\n:red_circle: [PR closed, environment torn down](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) :red_circle:"

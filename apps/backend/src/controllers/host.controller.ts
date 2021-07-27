@@ -893,7 +893,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
   processRefunds(): IControllerEndpoint<void> {
     return {
       validators: {
-        body: Validators.Objects.processRefunds
+        body: Validators.Objects.IProcessRefunds
       },
       authorisation: AuthStrat.isMemberOfHost(),
       controller: async req => {

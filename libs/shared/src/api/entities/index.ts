@@ -29,11 +29,11 @@ export { LiveStreamAsset } from './common/assets/livestream.asset';
 export { VideoAsset } from './common/assets/video.asset';
 export { ImageAsset } from './common/assets/image.asset';
 export { Refund } from './common/refund.entity';
+export { Consentable } from './common/gdpr/consentable.entity';
+export { UserConsent } from './common/gdpr/user-consent.entity';
+export * from './common/gdpr/user-consents.entity';
 
 export { AnalyticsChunk } from './analytics/chunk-analytics.entity';
 export { HostAnalytics } from './analytics/host-analytics.entity';
 export { PerformanceAnalytics } from './analytics/performance-analytics.entity';
-
-export { Consentable } from './common/gdpr/consentable.entity';
-export { UserConsent } from './common/gdpr/user-consent.entity';
-export * from './common/gdpr/user-consents.entity';
+export { AssetView } from './analytics/view.entity';
