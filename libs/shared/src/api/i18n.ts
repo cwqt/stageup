@@ -54,7 +54,8 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
         parseNodeValue: true,
         parseAttributeValue: true,
         trimValues: true,
-        parseTrueNumberOnly: false
+        parseTrueNumberOnly: false,
+        stopNodes: ['target', 'source'] // don't parse target tags otherwise will parse html as xml & incorrectly set map value
       });
 
       const missingCodes = xliff.file.body['trans-unit'].reduce(
