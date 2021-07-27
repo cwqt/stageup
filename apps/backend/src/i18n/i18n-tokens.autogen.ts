@@ -45,6 +45,7 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@ticket_type.paid"]: never,
   ["@@ticket_type.free"]: never,
   ["@@ticket_type.dono"]: never,
+  ["@@performance.cannot_delete_live"]: never,
   ["@@stripe.origin_url_not_matched"]: never,
   ["@@refunds.no_invoices_found"]: never,
   ["@@refunds.refund_already_outstanding"]: never,

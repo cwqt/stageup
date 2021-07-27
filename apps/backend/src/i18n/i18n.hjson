@@ -53,6 +53,9 @@
   "ticket_type.free": Free
   "ticket_type.dono": Donation
 
+  // Performances ---------------------------------------------------------------------------------------
+  "performance.cannot_delete_live": Performance cannot be deleted while currently live
+
   // Stripe ----------------------------------------------------------------------------------------------
   "stripe.origin_url_not_matched": Received response does not match submitter!
 

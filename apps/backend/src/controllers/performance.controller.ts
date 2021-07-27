@@ -382,6 +382,10 @@ export default class PerformanceController extends BaseController<BackendProvide
       ),
       controller: async req => {
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
+
+        if (perf.status === PerformanceStatus.Live)
+          throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
+
         perf.status = PerformanceStatus.Deleted;
         await perf.softRemove();
       }
