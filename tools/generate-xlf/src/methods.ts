@@ -11,6 +11,8 @@ import md from 'markdown-it';
 import dot from 'dot-object';
 import { MD5 } from 'object-hash';
 import xlf from './parser';
+const replaceAll = require('string.prototype.replaceall');
+replaceAll.shim(); //es6 polyfill
 
 // https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
 // Typographer does the following replacements:

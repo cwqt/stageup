@@ -1,7 +1,8 @@
 # core : workspace, except in the case of feat - which must be su-123 or something
 resource "null_resource" "core_workspace_check" {
-  count = (var.core == "prod" && terraform.workspace == "prod" ? 0 :
-    (var.core == "stage" && terraform.workspace == "stage" ? 0 :
+  # see mapping in README.md
+  count = (var.core == "prod" && terraform.workspace == "release" ? 0 :
+    (var.core == "stage" && terraform.workspace == "dev" ? 0 :
   (var.core == "feat" && terraform.workspace != "feat" ? 0 : "Bad core/workspace selection")))
 }
 
@@ -30,7 +31,7 @@ locals {
       name               = var.core
       NODE_ENV           = "staging"
       postgres_name      = "postgres"
-      load_balancer_host = "staging.stageup.uk"
+      load_balancer_host = "dev.stageup.uk"
     }
     feat = {
       core     = "feat"
@@ -84,10 +85,10 @@ resource "google_sql_user" "pg_admin" {
 # in feat, rather than making an entirely new instance we make a schema in the db for the
 # deploy branch to make use of, cheaper & faster to instantiate in a CI build
 resource "google_sql_database" "feat_database" {
-  count      = var.core == "feat" ? 1 : 0
-  name       = local.postgres_name
-  instance   = data.google_sql_database_instance.postgres.name
-  
+  count    = var.core == "feat" ? 1 : 0
+  name     = local.postgres_name
+  instance = data.google_sql_database_instance.postgres.name
+
   # delete the admin before the db
   depends_on = [google_sql_user.pg_admin]
 }

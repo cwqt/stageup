@@ -1,5 +1,7 @@
 import { createXlf, readFile } from './methods';
 import * as fs from 'fs';
+const replaceAll = require('string.prototype.replaceall');
+replaceAll.shim(); //es6 polyfill
 
 // this is not even a parser, it's just a bunch of regexes shittly thrown together
 // because none of the 5 xlf/xml parsers i've tried work properly
@@ -75,7 +77,7 @@ const parse = async (path: string): Promise<Xlf> => {
       state: state as ITransUnit['state']
     });
 
-    console.log(trannies[trannies.length - 1]);
+    // console.log(trannies[trannies.length - 1]);
   }
 
   return {
