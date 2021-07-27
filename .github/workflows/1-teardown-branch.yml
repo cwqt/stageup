@@ -28,7 +28,7 @@ jobs:
         id: ctx
         run: |
           echo "::set-output name=branch::${BRANCH_NAME,,}"
-          echo "::set-output name=comment_id::${steps.fc.outputs.comment-id}"
+          echo "::set-output name=comment_id::${{ steps.fc.outputs.comment-id }}"
 
   delete-infra:
     name: Terraform teardown
