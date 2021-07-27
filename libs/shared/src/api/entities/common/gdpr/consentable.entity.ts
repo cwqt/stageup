@@ -1,10 +1,10 @@
 import { timestamp, uuid } from '@core/helpers';
 import { ConsentableType, ConsentableTypes, IConsentable } from '@core/interfaces';
 import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
-import BlobProvider from '../../data-client/providers/blob.provider';
+import BlobProvider from '../../../data-client/providers/blob.provider';
 
 @Entity()
-export class Consent<T extends ConsentableType> extends BaseEntity implements IConsentable<T> {
+export class Consentable<T extends ConsentableType> extends BaseEntity implements IConsentable<T> {
   @PrimaryColumn() _id: string;
 
   @Column('enum', { enum: ConsentableTypes }) type: T;
@@ -16,8 +16,8 @@ export class Consent<T extends ConsentableType> extends BaseEntity implements IC
   @Column() version: number; // incremented on succession
 
   // linked list
-  @OneToOne(() => Consent) @JoinColumn() succeeded_by: Consent<T>;
-  @OneToOne(() => Consent) @JoinColumn() preceeded_by: Consent<T>;
+  @OneToOne(() => Consentable) @JoinColumn() succeeded_by: Consentable<T>;
+  @OneToOne(() => Consentable) @JoinColumn() preceeded_by: Consentable<T>;
 
   constructor(documentLink: string) {
     super();
@@ -34,8 +34,8 @@ export class Consent<T extends ConsentableType> extends BaseEntity implements IC
     return this;
   }
 
-  superscede(documentLink: string): Consent<T> {
-    const newConsent = new Consent<T>(documentLink);
+  superscede(documentLink: string): Consentable<T> {
+    const newConsent = new Consentable<T>(documentLink);
     newConsent.version = this.version + 1;
     newConsent.preceeded_by = this;
 
