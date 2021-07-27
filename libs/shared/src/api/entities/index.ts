@@ -34,4 +34,6 @@ export { AnalyticsChunk } from './analytics/chunk-analytics.entity';
 export { HostAnalytics } from './analytics/host-analytics.entity';
 export { PerformanceAnalytics } from './analytics/performance-analytics.entity';
 
-export { Consent } from './common/consent.entity';
+export { Consentable } from './common/gdpr/consentable.entity';
+export { UserConsent } from './common/gdpr/user-consent.entity';
+export * from './common/gdpr/user-consents.entity';
