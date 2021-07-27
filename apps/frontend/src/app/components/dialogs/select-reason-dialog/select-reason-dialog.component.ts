@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ISelectReasonData, Primitive } from '@core/interfaces';
+import { DeletePerfReason, ISelectReasonData, Primitive } from '@core/interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
@@ -15,7 +15,7 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
   public selectReasonForm: UiForm;
   public buttons: IUiDialogOptions['buttons'];
 
-  submit: EventEmitter<string> = new EventEmitter();
+  submit: EventEmitter<DeletePerfReason> = new EventEmitter();
   cancel: EventEmitter<string> = new EventEmitter();
 
   constructor(
@@ -50,8 +50,8 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
         output: async () => {}
       },
       handlers: {
-        success: async () => {
-          this.submit.emit();
+        success: async (v, fg) => {
+          this.submit.emit(fg.value.select_reason);
           this.ref.close();
         },
         failure: async err => {

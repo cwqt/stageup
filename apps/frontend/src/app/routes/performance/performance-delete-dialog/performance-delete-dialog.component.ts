@@ -64,7 +64,8 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 hide_further_info: currentSelection => currentSelection != DeletePerfReason.Other
               }
             }),
-            async () => {
+            async deletePerfReason => {
+              //TODO: Send delete performance reason to db
               await this.performanceService
                 .deletePerformance(this.data.data._id)
                 .then(() => this.toastService.emit($localize`Performance Deleted!`))

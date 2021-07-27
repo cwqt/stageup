@@ -8,8 +8,6 @@ export type UiFieldMap<T extends Primitive> = Map<T, { label: string; disabled?:
 export interface ISelectReasonData<T extends Primitive> {
   dialog_title: string;
   reasons: UiFieldMap<T>;
-  // confirm_button_label: string;
   further_info?: string;
-  further_info_label?: string;
   hide_further_info: (currentSelection: T) => boolean;
 }
