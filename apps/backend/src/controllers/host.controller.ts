@@ -895,7 +895,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       validators: {
         body: Validators.Objects.IProcessRefunds
       },
-      authorisation: AuthStrat.isMemberOfHost(),
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const invoiceIds: string[] = req.body.invoice_ids;
         let bulkRefundData: IBulkRefund = {

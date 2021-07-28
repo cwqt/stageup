@@ -64,12 +64,14 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 hide_further_info: currentSelection => currentSelection != DeletePerfReason.Other
               }
             }),
-            async deletePerfReason => {
+            async dtoDeletePerfReason => {
               //TODO: Send delete performance reason to db
+              console.log(dtoDeletePerfReason);
               await this.performanceService
-                .deletePerformance(this.data.data._id)
+                .deletePerformance(this.data.data._id, dtoDeletePerfReason)
                 .then(() => this.toastService.emit($localize`Performance Deleted!`))
                 .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));
+              this.ref.close();
             }
           )
       })

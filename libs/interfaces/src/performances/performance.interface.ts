@@ -36,6 +36,11 @@ export enum DeletePerfReason {
   Other = 'other'
 }
 
+export interface DtoDeletePerfReason {
+  delete_reason: DeletePerfReason;
+  further_info: string;
+}
+
 export interface IPerformanceStub {
   _id: NUUID;
   host: IHostStub; // who created the performance

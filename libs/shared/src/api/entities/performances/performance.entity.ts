@@ -8,12 +8,14 @@ import {
   IFeedPerformanceStub,
   PerformanceStatus,
   RichText,
-  Visibility
+  Visibility,
+  DtoDeletePerfReason
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
   BaseEntity,
   Column,
+  DeleteDateColumn,
   Entity,
   EntityManager,
   JoinColumn,
@@ -43,6 +45,9 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.PendingSchedule }) status: PerformanceStatus;
   @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
+
+  @DeleteDateColumn() deletedAt?: Date;
+  @Column('jsonb', { nullable: true }) delete_reason: DtoDeletePerfReason;
 
   @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];

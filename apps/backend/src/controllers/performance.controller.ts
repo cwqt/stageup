@@ -381,13 +381,14 @@ export default class PerformanceController extends BaseController<BackendProvide
         AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
       ),
       controller: async req => {
-        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
+        console.log(req.body);
+        // const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
 
-        if (perf.status === PerformanceStatus.Live)
-          throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
+        // if (perf.status === PerformanceStatus.Live)
+        //   throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
 
-        perf.status = PerformanceStatus.Deleted;
-        await perf.softRemove();
+        // perf.status = PerformanceStatus.Deleted;
+        // await perf.softRemove();
       }
     };
   }
