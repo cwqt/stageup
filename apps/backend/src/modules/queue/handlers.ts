@@ -7,6 +7,7 @@ import {
   PatronTier,
   Performance,
   Refund,
+  Ticket,
   transact,
   User
 } from '@core/api';
@@ -170,12 +171,10 @@ export class EventHandlers {
       markdown: true,
       attachments: []
     });
-  };
 
-  sendHostPerformanceDeletionEmail = async (ct: Contract<'Performance.deleted'>) => {
-    const perf = await Performance.findOne({ _id: ct.performance_id });
+    //Find all users who've bought tickets and fire Performance.deleted_notify_user for each invoice
 
-    await this.providers.orm.connection.createQueryBuilder();
+    const tickets = await this.providers.orm.connection.createQueryBuilder(Ticket, 'ticket').where();
   };
 
   sendUserPerformanceDeletionEmail = async (ct: Contract<'Performance.deleted_notify_user'>) => {
