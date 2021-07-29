@@ -1,16 +1,15 @@
-import { CurrencyCode, DtoCreatePerformance, DtoCreateTicket, Genre, TicketFees, TicketType } from '@core/interfaces';
 import { sample, timestamp, to } from '@core/helpers';
-import { SeederHostName } from './hosts.mock';
+import { CurrencyCode, DtoCreatePerformance, DtoCreateTicket, Genre, TicketFees, TicketType } from '@core/interfaces';
 import faker from 'faker';
-import { generate } from 'rxjs';
+import { SeederHostName } from './hosts.mock';
 
 export type SeedMockPerformance = DtoCreatePerformance & { hostusername: SeederHostName; thumbnail?: string };
 
 const ticketFactory = (): DtoCreateTicket => ({
   name: sample(['My Cool Ticket', 'Early Access', 'VIP Special', 'Super Star', 'Patron ticket']),
   type: TicketType.Paid,
-  quantity: faker.random.number(),
-  is_quantity_visible: faker.random.boolean(),
+  quantity: faker.datatype.number(),
+  is_quantity_visible: faker.datatype.boolean(),
   currency: CurrencyCode.GBP,
   amount: 1000,
   start_datetime: timestamp(),
@@ -24,8 +23,6 @@ export const allTickets: DtoCreateTicket[] = [];
 for (let i = 0; i < 20; i++) {
   allTickets.push(ticketFactory());
 }
-
-console.log(allTickets);
 
 export default to<Array<SeedMockPerformance>>([
   {
@@ -243,7 +240,7 @@ export default to<Array<SeedMockPerformance>>([
     description: `The Silence Of The Lambs meets Last Of The Summer Wine in dark comedy thriller THE KILLER QUESTION...
 
     Former game show champion Walter Crump lives for murder (it was even his specialist subject on the nerve shredding, general knowledge quiz show The Chair). But did his obsession with death ultimately lead to his own? That’s certainly what Inspector Black believes, and now it is Crump’s dopey widow Margaret who finds herself in the chair – accused of her husband’s murder. But as shocking details emerge about the events leading up to Walter’s final head to head, it quickly transpires that what started out as an open and shut case has turned into another game altogether: the cat and mouse variety, with more than one deadly twist in the tale.
-    
+
     Will Inspector Black solve the mystery? Will Margaret be home in time for Country File? Who will prove to be the ultimate victim of The Chair? And, just as important, which actor will play which character…the audience decides!
     `,
     genre: Genre.Theatre,
@@ -258,7 +255,7 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Creative Conversations are 4 quarterly events (Inspired by Creative Cardiff’s Show & Tell Events), hosted by Artis Community. We started the events in 2019, and will continue throughout 2020, at Clwb Y Bont.
 
     The aim of these events is to give the Creative Community of Pontypridd the opportunity to:
-    
+
     - Hear from 3 Artists/ Organisations to have 10 -15 minutes to share and talk about their work, ambitions, and to hear about their current & future projects
     - Meet other artists, network and make connections
     - Have an informal creative space to meet
@@ -274,13 +271,13 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Brand new touring production for 2020.
 
     Critics’ Circle Award winning company, Ballet Cymru, present an extraordinary new ballet based on the eternal story of Giselle, the young girl who falls in love with the wrong person and pays a terrible price.
-    
+
     Ballet Cymru have put their own unique stamp on this tale of love and loss, bringing relevance, poignancy and grittiness to this most romantic of ballets.
-    
+
     Featuring a new score by acclaimed composer and harpist Catrin Finch whose spellbinding music is interwoven with mesmerizing movement by Ballet Cymru Artistic Director Darius James OBE and Assistant Artistic Director Amy Doughty.
-    
+
     Don’t miss this once only opportunity to relish some of the best dance in Wales, made in Wales.
-    
+
     Ballet Cymru is an international touring ballet company for Wales, committed to inclusion and innovation in dance and classical ballet, and to the highest standard of collaboration. The company produce original professional dance performances based in the ballet technique which tour nationally and internationally. Its extensive Access and Outreach programme is committed to breaking down barriers to accessing the arts."`,
     genre: Genre.Ballet,
     type: 'live',
@@ -293,7 +290,7 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Nominated Best Dance Production 2013 at the Theatre Critics of Wales Awards.
 
     An outstanding adaptation of Shakespeare’s timeless play that features breathtaking choreography danced by some of the finest dancers around. This vibrant and dramatic production features Mendelssohn’s joyous music, choreography by the company’s Artistic Director Darius James and critically acclaimed costumes by Welsh Designer Yvonne Greenleaf.
-    
+
     The Queen of the Fairies Titania, and Puck the mischievous messenger, inhabit the supernatural fairy kingdom. Bottom and his boot wearing “Rude Mechanicals” present their famous play Pyramus and Thisbe. And finally the lovers, caught in a thrilling web of mistaken identity and confusion finally find their way through the Athenian forest to an unforgettable and joyous reconciliation.
     "`,
     genre: Genre.Classical,
@@ -325,13 +322,13 @@ export default to<Array<SeedMockPerformance>>([
     description: `"The Music of Dolly Parton & Kenny Rogers
 
     Enjoy the songs of the Queen and King of country music - Dolly Parton and Kenny Rogers.
-    
+
     Leave your 9 to 5 worries at the door and get ready for a night in the company of Country Music Royalty!
-    
+
     This thigh-slapping stage show brings together the beloved glamour and personality of Dolly, along with Kenny’s charisma and energy with hit after hit including: Jolene, Ruby, 9 to 5, Lucille, Here You Come Again, The Gambler, I Will Always Love You, Coward of the County, plus the smash hit Islands in the Stream.
-    
+
     Enjoy a superb score and supreme musicianship as we bring the house down with the ultimate tribute to two country music legends.
-    
+
     This is a tribute show and is no way affiliated with any original artists/estates/management companies or similar shows."`,
     genre: Genre.Country,
     type: 'live',
@@ -377,9 +374,9 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Greta is out with friends when she meets the chancer Faust. But with darker forces at play, a bit of harmless flirting leads to an irreversible journey of destruction.
 
     Faust + Greta is a tragic and twisted love story that sees the original German tale re-imagined in an amped-up, contemporary Wales. Devised and performed by an ensemble of young people coming out of lockdown, this digital theatrical experience is about the human obsession with wanting more, seizing power and pushing boundaries to extremes.
-    
+
     Inspired by T. Gwynn Jones’s Welsh translation of Goethe’s classic, Faust + Greta will embrace social distancing limitations to offer a completely new, experimental, and unexpected theatrical experience.
-    
+
     Staged in an empty theatre, a dark and devious world, and new experiences beckon. How far can we tempt you?"`,
     genre: Genre.Theatre,
     type: 'live',
@@ -389,14 +386,14 @@ export default to<Array<SeedMockPerformance>>([
   {
     name: `"The Rheingans Sisters"`,
     premiere_datetime: 1630346400,
-    description: `"The Rheingans Sisters make playful, powerful and richly connecting music that is wholly contemporary while deeply anchored in folk traditions. The award-winning multi-instrumentalists, composers and folk scholars are nominated for 'Best Duo/Group' at 2019 BBC Radio 2 Folk Awards. 
+    description: `"The Rheingans Sisters make playful, powerful and richly connecting music that is wholly contemporary while deeply anchored in folk traditions. The award-winning multi-instrumentalists, composers and folk scholars are nominated for 'Best Duo/Group' at 2019 BBC Radio 2 Folk Awards.
 
     Over the last five years, three critically acclaimed albums and a BBC Radio 2 Folk Award win for 'Best Original Track' in 2016, audiences across the UK, Europe and Australia have been utterly captivated by their very special live performances. Drawing on their pan-European musical scholarship and their spirited mission to make connections between the music of different geographical roots, they have developed a rich artistic approach to the deconstruction and reimagining of traditional music alongside their own beguiling compositions.
-    
+
     Performing live, the sisters are inimitable; full-hearted performers and spontaneous, on-stage improvisors, with the adventurous use of fiddles, voices, banjo, bansitar, tambourin à cordes, spoken word, dancing feet and percussion.
-    
+
     A unique and unmissable act on the folk and world music stage today, Rowan and Anna play a plethora of instruments in their live shows, many of them handmade by their luthier father Helmut Rheingans who is based in their native Peak District home.
-    
+
     The Rheingans Sisters released their much anticipated fourth album 'Receiver' in 2020 on the Bendigedig Label. "`,
     genre: Genre.Music,
     type: 'live',
@@ -505,7 +502,7 @@ export default to<Array<SeedMockPerformance>>([
     description: `"with Simon Armitage, Taylor Edmonds & Owen Sheers.
 
     Join us for Everything Change’s closing event, in which the current Poet Laureate of the United Kingdom, Simon Armitage, will be joined by Taylor Edmonds, the recently appointed Poet in Residence for the Future Generations Commissioner for Wales. Simon will read from his climate-related work and discuss the response of poets to the climate crisis, as well as his creation of The Laurel Prize for eco-poetry. He will then hand over to Taylor to introduce her new role — the first of its kind anywhere in the world — and close Everything Change with readings of her own poems, which imagine some tools to make our planet’s future a brighter one for all.
-    
+
     This event will be introduced and moderated by Owen Sheers, Professor in Creativity at Swansea University."`,
     genre: Genre.Poetry,
     type: 'live',
@@ -519,7 +516,7 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Theatr Bara Caws are thrilled to invite you to a virtual performance of Gair o Gariad.
 
     Gair o Gariad is a Welsh language adaptation of Uninvited Guests’ Love Letters Straight From Your Heart, and each time Bara Caws have presented the stage version our audiences have been enthralled. In these challenging times we’d like to give you the opportunity to meet in a unique way when meeting face-to-face is impossible.
-    
+
     Actors: Carwyn Jones and Lleuwen Steffan"`,
     genre: Genre.Theatre,
     type: 'live',
@@ -532,7 +529,7 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Juliet Stevenson voices the Storyteller/Doctor’s wife in this gripping story of the rise and, ultimately, profoundly hopeful end of an unimaginable global pandemic.
 
     As the lights change at a major crossroads in a city in the heart of Europe a car grinds to a halt. Its driver can drive no more. Suddenly, without warning or cause, he has gone blind. Within hours it is clear that this is a blindness like no other. This blindness is infectious. Within days an epidemic of blindness has spread through the city. The government tries to quarantine the contagion by herding the newly blind people into an empty asylum. But their attempts are futile. The city is in panic.
-    
+
     Award-winning playwright Simon Stephens has adapted Nobel Prize-winner José Saramago’s dystopian novel Blindness as a sound installation, directed by Walter Meierjohann with immersive binaural sound design by Ben and Max Ringham.
     "`,
     genre: Genre.Theatre,
@@ -547,9 +544,9 @@ export default to<Array<SeedMockPerformance>>([
     description: `"One night out. One chance meeting. A love story doomed from the start.
 
     Greta is out with friends when she meets the chancer Faust. But with darker forces at play, a bit of harmless flirting leads to an irreversible journey of destruction.
-    
+
     Faust + Greta is a tragic and twisted love story that sees the original German tale re-imagined in an amped-up, contemporary Wales. Devised and performed by an ensemble of young people coming out of lockdown, this digital theatrical experience is about the human obsession with wanting more, seizing power and pushing boundaries to extremes.
-    
+
     Inspired by T. Gwynn Jones’s Welsh translation of Goethe’s classic, Faust + Greta will embrace social distancing limitations to offer a completely new, experimental, and unexpected theatrical experience. Staged in an empty theatre, a dark and devious world, and new experiences beckon. How far can we tempt you?"`,
     genre: Genre.Theatre,
     type: 'live',
@@ -563,7 +560,7 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Winter has arrived and the woods are covered white. A child wraps up warm and runs outside to play in a sparkling new world.
 
     But what’s hiding under the snow? A little mouse, fast asleep. Sliding, tumbling and laughing, the two new friends explore the winter wonderland together.
-    
+
     Filled with play, puppetry and music, the enchanting and mischievous Llygoden yr Eira returns to venues across Wales this winter.  So come and keep warm in the winter freeze and join us on an adventure in a magical forest.
     "`,
     genre: Genre.Theatre,
@@ -588,22 +585,22 @@ export default to<Array<SeedMockPerformance>>([
     description: `"By Mali Tudno Jones and Geinor Styles
 
     In partnership with Swansea Museum, National Waterfront Museum and Technocamps
-    
-    Lina dreams of singing at La Scala. 
-    Then Italy enters the war in the summer of 1940, Italian families, living in Wales, are torn apart as men taken from their homes are branded, enemy aliens. 
-    
-    Lina watches in horror as her father dragged from their little cafe in Swansea and imprisoned. 
+
+    Lina dreams of singing at La Scala.
+    Then Italy enters the war in the summer of 1940, Italian families, living in Wales, are torn apart as men taken from their homes are branded, enemy aliens.
+
+    Lina watches in horror as her father dragged from their little cafe in Swansea and imprisoned.
     Forced out of their home, by people they knew as friends, Lina and her mother face an uncertain and lonely future.
-    
-    Then news arrives that on the 2nd of July 1940 mistaken for a troopship, The Arandora Star it's torpedoed by a German U-boat off the coast of Ireland and sinks with 446 Italian men's lives lost. 
-    
-    There is no news of Lina's father, whether he survived or drowned. 
+
+    Then news arrives that on the 2nd of July 1940 mistaken for a troopship, The Arandora Star it's torpedoed by a German U-boat off the coast of Ireland and sinks with 446 Italian men's lives lost.
+
+    There is no news of Lina's father, whether he survived or drowned.
     In her new home, far away from Swansea, Lina clings to the dream of her family's reunion one day.
-    
+
     Our play tells the emotional story of Lina as she struggles with the loss of her father, Guido. How, she and her mother, Carmela survive in a time of war and prejudice.
-     
-    The Arandora Star is a true story and will explore the life of Italians living and working in Wales during World War 2 and follows Lina's quest for her father and the truth. 
-    
+
+    The Arandora Star is a true story and will explore the life of Italians living and working in Wales during World War 2 and follows Lina's quest for her father and the truth.
+
     This play highlights the issues of immigration and integration. "`,
     genre: Genre.Theatre,
     type: 'live',
@@ -616,15 +613,15 @@ export default to<Array<SeedMockPerformance>>([
     premiere_datetime: 1630346400,
     description: `"Directed by Gareth Armstrong
     Music by Simon Slater
-    
+
     This is a spine-tingling evening of three tales of the supernatural from E.F. Benson’s brilliant collection of ghost stories, Night Terrors. With masterful storytelling  the award-winning actor Gerard Logan, Night Terrors will transport you to a darker, more sinister world of the unexpected and the unexplainable.
-    
+
     The three stories ('The Dance', 'In The Tube' and 'The Confession of Charles Linkworth'), are dramatic, haunting and hugely memorable.
-    
+
     Gerard Logan won The Stage Best Solo Performer of the 2011 Edinburgh Festival Award for his acclaimed performance in Gareth Armstrong’s production of Shakespeare’s The Rape of Lucrece. He won the Best Actor award at the 2014 Buxton Fringe Festival, and was nominated for the Michael MacLiammoir Award for Best Male Performance at the 2016 International Dublin Gay Theatre Festival for his performance in Wilde Without the Boy.
-    
+
     Gareth Armstrong has developed and directed many successful solo shows, including his own award-winning Shylock.
-    
+
     Night Terrors is also underscored by a beautiful, original and specially-commissioned score by the award-winning RSC composer, Simon Slater."`,
     genre: Genre.Theatre,
     type: 'live',
@@ -637,11 +634,11 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Featuring pieces by Sir Harrison Birtwistle and Param Vir, Birmingham Contemporary Music Group is delighted to return to Town Hall, Birmingham, for a full-scale 15-piece performance, Past the Stars.
 
     Past the Stars is a collection of pieces that encompasses everything contemporary music should be: expressive, unexpected, and thought provoking. From Birtwistle’s powerful play on rhythm within Cantus Iambeus,, through Param Vir’s poetic Wheeling Past the Stars, and to the dramatic storytelling piece Hayagriva, each composition takes you on a new emotive journey. Past the Stars is inspired by language and spirituality and elevated by the skill and passion of BCMG’s 15-piece ensemble.
-    
-    This thought-provoking evening of contemporary music will also feature performances by musicians from BCMG’s NEXT programme. These early-career musicians have been coached by BCMG players in some of the most inspiring and challenging works written in the last 70 years. Past the Stars will be their first public performance of 2021.  
-    
+
+    This thought-provoking evening of contemporary music will also feature performances by musicians from BCMG’s NEXT programme. These early-career musicians have been coached by BCMG players in some of the most inspiring and challenging works written in the last 70 years. Past the Stars will be their first public performance of 2021.
+
     After preparing through multiple lockdowns for the opportunity to perform music as a full ensemble, Birmingham Contemporary Music Group’s patience and efforts have been rewarded.
-    
+
     There will be no interval during this performance."`,
     genre: Genre.Music,
     type: 'live',
@@ -655,12 +652,12 @@ export default to<Array<SeedMockPerformance>>([
     description: `"Joined by the fabulous Chloé van Soeterstède, our fellowship will take you on a musical journey of devotion through the guise of three powerful pieces of classical music.
 
     Laden with rich hymn melodies, Elfrida Andrée's Overture in D is powerful in all the right places. From big swooping themes, to the Mendelssohn-like orchestration and melodic development, this overture was a triumph for the 19th century organist.
-    
+
     Modlitwa ('Song') has received a number of different orchestrations between father-daughter super team Andrzej and Roxanna Panufnik. The original, a vocal piece with piano accompaniment, turned into a chamber work for strings after Roxanna was asked to take the piece on again some years after her father's death. The music is based on a prayer, and this can be heard through the intricate orchestration and subtle dissonances throughout.
-    
+
     Felix Mendelssohn's mighty Fifth Symphony, also known as 'The Reformation', was composed for the 300th anniversary of the Presentation of the Augsburg Confession. A key document in the Protestant Reformation, Mendelssohn channels this theme within the music by using popular hymn structures and traditional Church harmonies. The symphony was not published until 1868, 21 years after Mendelssohn's death. His devoted sister, Fanny, chose to subtitle it 'The Reformation Symphony'.
-    
-    Described as ""intuitive"", ""expressive"", and bearing a ""positive presence"", we are absolutely thrilled to be welcome Chloé van Soeterstède back to conduct Southbank Sinfonia. 
+
+    Described as ""intuitive"", ""expressive"", and bearing a ""positive presence"", we are absolutely thrilled to be welcome Chloé van Soeterstède back to conduct Southbank Sinfonia.
     "`,
     genre: Genre.Music,
     type: 'live',

@@ -1,21 +1,16 @@
 import {
-  apiLogger,
+  AssetGroup,
+  Claim,
   ContactInfo,
   Host,
-  User,
-  UserHostInfo,
-  Person,
   Onboarding,
   Performance,
+  Person,
   Ticket,
-  Claim,
-  AssetGroup
+  User,
+  UserHostInfo
 } from '@core/api';
-
-import hostMockData, { SeederHostName } from '../mock/hosts.mock';
-import performanceMockData, { allTickets, SeedMockPerformance } from '../mock/performances.mock';
-import * as faker from 'faker';
-import Stripe from 'stripe';
+import { sample } from '@core/helpers';
 import {
   BusinessType,
   CountryCode,
@@ -25,10 +20,11 @@ import {
   PersonTitle,
   Visibility
 } from '@core/interfaces';
-import { SeederProviderMap } from '..';
-import { sample } from '@core/helpers';
-
-const log = apiLogger('seeder').log;
+import * as faker from 'faker';
+import Stripe from 'stripe';
+import { SeederProviderMap } from '.';
+import hostMockData from './mock/hosts.mock';
+import performanceMockData, { allTickets, SeedMockPerformance } from './mock/performances.mock';
 
 export class Seeder {
   private stripeCustomer: Stripe.Customer;
@@ -42,7 +38,12 @@ export class Seeder {
 
     await Promise.all(
       hostMockData.map(async (hostData, idx) => {
-        const user = await this.createUser(idx == 0 ? 'torch@stageup.uk' : undefined);
+        // 1st user should be admin@stageup.uk : helloworld
+        const user = await this.createUser(
+          idx == 0 ? 'admin@stageup.uk' : undefined,
+          idx == 0 ? 'helloworld' : undefined
+        );
+
         const host = await this.createHost(hostData);
         await this.addUserToHost(user, host, HostPermission.Owner);
 

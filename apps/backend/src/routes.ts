@@ -211,6 +211,7 @@ const Misc = new MiscController(providers, middlewares);
 router.post     <void>                   ("/logs",                                    Misc.logFrontendMessage());
 router.get      <string>                 ("/ping",                                    Misc.ping());
 router.post     <void>                   ("/drop",                                    Misc.dropAllData());
+router.get      <any>                    ("/stats",                                   Misc.stats());
 router.get      <IHost>                  ("/verify-host/:hid",                        Misc.verifyHost());
 router.post     <void>                   ("/accept-invite/:uid",                      Misc.acceptHostInvite());
 router.get      <void>                   ("/utils/send-test-email",                   Misc.sendTestEmail());
@@ -231,5 +232,3 @@ router.use                               ("/admin/queue",                       
 const Gdpr = new GdprController(providers, middlewares);
 router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
 }
-
-

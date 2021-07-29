@@ -1,4 +1,5 @@
-import { Environment, HostInviteState, HostPermission, IHost, LiveStreamState } from '@core/interfaces';
+import { Configuration } from '@backend/common/configuration.entity';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
   Asset,
   BaseController,
@@ -11,9 +12,8 @@ import {
   User,
   UserHostInfo
 } from '@core/api';
-import { BackendProviderMap } from '@backend/common/providers';
+import { Environment, HostInviteState, HostPermission, IHost, LiveStreamState } from '@core/interfaces';
 import AuthStrat from '../common/authorisation';
-import Env from '../env';
 
 export default class MiscController extends BaseController<BackendProviderMap> {
   logFrontendMessage(): IControllerEndpoint<void> {
@@ -27,9 +27,22 @@ export default class MiscController extends BaseController<BackendProviderMap> {
 
   ping(): IControllerEndpoint<string> {
     return {
-      authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      authorisation: AuthStrat.none,
       controller: async () => {
         return 'Pong!';
+      }
+    };
+  }
+
+  stats(): IControllerEndpoint<any> {
+    return {
+      authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+      controller: async () => {
+        const config = await Configuration.findOne({});
+
+        return {
+          server_started_at: config.started_at
+        };
       }
     };
   }
