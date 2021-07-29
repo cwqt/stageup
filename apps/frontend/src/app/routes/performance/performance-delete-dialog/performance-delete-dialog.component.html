@@ -1,7 +1,7 @@
 
 <ui-dialog [buttons]="buttons" title="Delete Performance">
     <h2>
-      <span i18n>Your performance is scheduled to premiere in: {{data.data.premiere_datetime | timeUntilPipe}}</span>
+      <span i18n>Your performance is scheduled to premiere in: {{ data.data.name }}</span>
     </h2>
     <div class="mx-auto my-4" >
       <h3>Deleting your performance will result in:</h3>
@@ -9,6 +9,5 @@
         <li>All tickets purchased being refunded</li>
         <li>All data associated with the performance being deleted</li>
       </ul>
-
     </div>
 </ui-dialog>
