@@ -49,7 +49,9 @@ import {
   IFollowing,
   IUserFollow,
   DtoPerformanceAnalytics as DtoPerfAnalytics,
-  DtoHostAnalytics
+  DtoHostAnalytics,
+  ConsentableType as CType,
+  IConsentable,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -62,6 +64,7 @@ import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
 import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
+import GdprController from './controllers/gdpr.controller';
 import PatronageController from './controllers/patronage.controller';
 
 import { BackendModules } from '.';
@@ -224,4 +227,9 @@ router.get                               ("/sse/assets/:aid",                   
 // JOB QUEUE ----------------------------------------------------------------------------------------------------------
 router.use                               ("/admin/queue",                             Queue.jobQueueUi.handler);
 
+// GDPR ---------------------------------------------------------------------------------------------------------------
+const Gdpr = new GdprController(providers, middlewares);
+router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
 }
+
+

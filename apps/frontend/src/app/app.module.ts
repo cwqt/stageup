@@ -131,6 +131,7 @@ import { PaymentMethodThumbComponent } from './components/payment-method/payment
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
+import { DocumentViewComponent } from './routes/gdpr/document-view/document-view.component';
 import { ProcessRefundsDialogComponent } from './components/dialogs/process-refunds-dialog/process-refunds-dialog.component';
 import { ConfirmationDialogComponent } from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
@@ -146,6 +147,7 @@ import { RedirectComponent } from './components/redirect/redirect.component';
 import { FollowButtonComponent } from './components/follow-button/follow-button.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
+import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -259,6 +261,8 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     FollowButtonComponent,
     HostAnalyticsComponent,
     HostAnalyticsHeaderItemComponent,
+    DocumentViewComponent,
+    TermsLinksComponent,
     CookieConsentComponent
   ],
   imports: [
