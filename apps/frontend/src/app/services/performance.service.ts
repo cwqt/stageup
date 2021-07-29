@@ -20,7 +20,7 @@ import {
   ISignedToken,
   IAssetStub,
   AssetDto,
-  DtoDeletePerfReason
+  IDeletePerfReason
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
@@ -99,7 +99,7 @@ export class PerformanceService {
       .toPromise();
   }
 
-  deletePerformance(performanceId: string, dtoDeletePerfReason: DtoDeletePerfReason) {
+  deletePerformance(performanceId: string, dtoDeletePerfReason: IDeletePerfReason) {
     console.log('In service id', performanceId);
     return this.http.put(`/api/performances/${performanceId}`, dtoDeletePerfReason).toPromise();
   }

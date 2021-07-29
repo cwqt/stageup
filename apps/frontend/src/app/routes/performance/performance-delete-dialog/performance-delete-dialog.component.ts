@@ -1,15 +1,12 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DeletePerfReason, DtoPerformance } from '@core/interfaces';
-import { IConfirmationDialogData } from '@frontend/components/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { DeletePerfReason, DtoPerformance, IPerformance } from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { HelperService } from '@frontend/services/helper.service';
-import { MyselfService } from '@frontend/services/myself.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-performance-delete-dialog',
@@ -28,12 +25,10 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
     private performanceService: PerformanceService,
     private helperService: HelperService,
     private dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: DtoPerformance
+    @Inject(MAT_DIALOG_DATA) public performance: IPerformance
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
-    this.test = this.data;
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
@@ -68,12 +63,9 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 hide_further_info: currentSelection => currentSelection != DeletePerfReason.Other
               }
             }),
-            async dtoDeletePerfReason => {
-              //TODO: Send delete performance reason to db
-              console.log(dtoDeletePerfReason);
-              console.log('In perf delete dialog', this.data.data);
+            async deletePerfReason => {
               await this.performanceService
-                .deletePerformance(this.data.data._id, dtoDeletePerfReason)
+                .deletePerformance(this.performance._id, deletePerfReason)
                 .then(() => this.toastService.emit($localize`Performance Deleted!`))
                 .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));
               this.ref.close();

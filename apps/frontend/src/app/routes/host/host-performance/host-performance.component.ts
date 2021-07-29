@@ -69,7 +69,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
 
   deletePerformance() {
     this.dialog.open(PerformanceDeleteDialogComponent, {
-      data: this.performance
+      data: this.performance.data.data
     });
   }
 

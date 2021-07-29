@@ -36,7 +36,7 @@ export enum DeletePerfReason {
   Other = 'other'
 }
 
-export interface DtoDeletePerfReason {
+export interface IDeletePerfReason {
   delete_reason: DeletePerfReason;
   further_info: string;
 }
