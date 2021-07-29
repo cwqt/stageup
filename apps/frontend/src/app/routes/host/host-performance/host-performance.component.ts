@@ -73,6 +73,10 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     });
   }
 
+  cancelPerformance() {
+    //TODO Cancel Performance
+  }
+
   ngOnDestroy() {
     this.performanceService.$activeHostPerformanceId.next(null);
   }
