@@ -1,5 +1,5 @@
-import { NUUID } from '../common/fp.interface';
 import Stripe from 'stripe';
+import { NUUID } from '../common/fp.interface';
 
 export enum CardBrand {
   Amex = `amex`,

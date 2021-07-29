@@ -32,7 +32,8 @@ import {
   DtoUpdatePatronTier,
   IBulkRefund,
   BulkRefundReason,
-  IProcessRefunds
+  IProcessRefunds,
+  DonoPegs
 } from '@core/interfaces';
 import {
   any,
@@ -52,6 +53,7 @@ import {
   string,
   union
 } from 'superstruct';
+import { Except } from 'type-fest';
 import { fields } from './fields.validators';
 
 export namespace objects {
@@ -174,13 +176,17 @@ export namespace objects {
       switch (value.purchasable_type) {
         case PurchaseableType.PatronTier:
           return object<DtoCreatePaymentIntent<PurchaseableType.PatronTier>['options']>({}).is(value);
-        case PurchaseableType.Ticket:
-          return optional(
-            object<DtoCreatePaymentIntent<PurchaseableType.PatronTier>['options']>({
-              selected_dono_peg: enums<DonoPeg>(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any']),
-              allow_any_amount: number()
-            })
-          ).is(value);
+        case PurchaseableType.Ticket: {
+          type X = DtoCreatePaymentIntent<PurchaseableType.Ticket>['options'];
+          // IMPORTANT X[index] --> Type 'T' does not satisfy the constraint 'ObjectSchema'.
+          type T = { [index in keyof X]: any }; // not fully type-safe, but at least keeping keys
+
+          return object<T>({
+            selected_dono_peg: enums<DonoPeg>(DonoPegs),
+            allow_any_amount: number(),
+            hard_host_marketing_opt_out: boolean()
+          }).is(value);
+        }
       }
     })
   });

@@ -1,21 +1,9 @@
-import { IMuxAsset, IPerformance, ISigningKey, AssetType, ISignedToken } from '@core/interfaces';
-import {
-  BaseEntity,
-  BeforeInsert,
-  Column,
-  Entity,
-  EntityManager,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryColumn
-} from 'typeorm';
-
-import Mux, { JWT, JWTOptions } from '@mux/mux-node';
-
 import { timestamp, uuid } from '@core/helpers';
-import { Asset } from '../common/asset.entity';
+import { AssetType, IMuxAsset, ISignedToken, ISigningKey } from '@core/interfaces';
+import { JWT, JWTOptions } from '@mux/mux-node';
+import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, PrimaryColumn } from 'typeorm';
 import MuxProvider from '../../data-client/providers/mux.provider';
+import { Asset } from './asset.entity';
 
 export type SignableAssetType =
   | AssetType.AnimatedGIF

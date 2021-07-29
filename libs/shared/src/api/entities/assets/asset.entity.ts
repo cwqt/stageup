@@ -2,7 +2,6 @@ import { timestamp, uuid } from '@core/helpers';
 import {
   AssetMetaUnion,
   AssetTag,
-  AssetTags,
   AssetType,
   IAsset,
   IAssetStub,
@@ -21,8 +20,8 @@ import {
   RelationId,
   TableInheritance
 } from 'typeorm';
-import { SigningKey } from '../performances/signing-key.entity';
 import { AssetGroup } from './asset-group.entity';
+import { SigningKey } from './signing-key.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })

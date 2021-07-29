@@ -1,8 +1,10 @@
+// API response for wrapping data with some meta-data
 export interface IEnvelopedData<T, K = null> {
   data: T;
   __client_data?: K;
   __paging_data?: PagingData;
 }
+
 // The url request sends data in string format
 export interface PaginationOptions {
   page: number;

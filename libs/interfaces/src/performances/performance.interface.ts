@@ -1,13 +1,13 @@
-import { IUserFollow } from './../hosts/host.interface';
 import { DeltaOperation } from 'quill';
 import { Except } from 'type-fest';
-import { AssetDto, IAssetStub } from '../common/asset.interface';
+import { DtoAccessToken } from '../assets/access-token.interface';
+import { AssetDto, IAssetStub } from '../assets/asset.interface';
+import { ISigningKey } from '../assets/signing-key.interface';
 import { IEnvelopedData } from '../common/envelope.interface';
 import { NUUID } from '../common/fp.interface';
+import { ConsentOpt } from '../gdpr/consent.interface';
 import { IHostStub } from '../hosts/host.interface';
-import { DtoAccessToken } from './access-token.interface';
 import { Genre } from './genres.interface';
-import { ISigningKey } from './signing-key.interface';
 import { ITicketStub } from './ticket.interface';
 
 export type ParsedRichText = { ops: DeltaOperation[] }; // stringified-json
@@ -57,9 +57,10 @@ export interface IPerformance extends IPerformanceStub {
 
 // Interface for additional client information regarding the performance.
 export interface IClientPerformanceData {
-  is_following?: boolean;
-  is_liking?: boolean;
-  rating?: number;
+  is_following: boolean;
+  is_liking: boolean;
+  rating: number | null;
+  host_marketing_opt_status: ConsentOpt | null;
 }
 
 export type DtoPerformance = IEnvelopedData<

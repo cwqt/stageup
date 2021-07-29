@@ -7,7 +7,8 @@ import {
   PaymentStatus,
   IStripeChargePassthrough,
   RefundResponseReason,
-  Environment
+  Environment,
+  ConsentOpt
 } from '@core/interfaces';
 import {
   BaseController,
@@ -68,9 +69,6 @@ export default class StripeController extends BaseController<BackendProviderMap>
       },
       // https://github.com/stripe/stripe-node/blob/master/examples/webhook-signing/typescript-node-express/express-ts.ts
       controller: async req => {
-        // Only continue if this webhook was meant for us
-        if (Env.IS_LOCAL && req.headers['x-forwarded-host'] != Env.LOCALTUNNEL.DOMAIN) return;
-
         const event = req.body as Stripe.Event;
         log.http(`Received Stripe hook: ${event.type}`);
 
@@ -195,7 +193,14 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
         this.providers.bus.publish(
           'ticket.purchased',
-          { purchaser_id: user._id, invoice_id: invoice._id },
+          {
+            purchaser_id: user._id,
+            invoice_id: invoice._id,
+            ticket_id: ticket._id,
+            host_id: ticket.performance.host._id,
+            // from performance.controller.ts in purchasing a ticket
+            marketing_consent: passthrough.marketing_consent as ConsentOpt
+          },
           user.locale
         );
       }

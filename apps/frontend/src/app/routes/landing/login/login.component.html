@@ -21,10 +21,10 @@
 
   <ui-form [form]="loginForm"> </ui-form>
 
-  <div class="text-right">
-    <a class="text-black hover:text-pink-600 cursor-pointer" (click)="openPasswordResetDialog()" i18n
+  <div class="flex justify-between items-center">
+    <app-terms-links class="my-2"></app-terms-links>
+    <a class="text-black hover:text-pink-600 cursor-pointer whitespace-nowrap" (click)="openPasswordResetDialog()" i18n
       >Forgot Password?</a
     >
   </div>
-  <app-terms-links class="my-2"></app-terms-links>
 </ui-dialog>

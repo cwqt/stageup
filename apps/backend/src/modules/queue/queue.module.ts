@@ -164,16 +164,14 @@ export class QueueModule implements Module {
       bus.subscribe('user.invited_to_private_showing',   handlers.sendUserPrivatePerformanceInviteEmail);
       bus.subscribe('user.password_reset_requested',     handlers.sendPasswordResetLinkEmail);
       bus.subscribe('user.password_changed',             handlers.sendPasswordChangedNotificationEmail);
-
-      bus.subscribe('ticket.purchased',                  handlers.sendTicketReceiptEmail);
-
+      bus.subscribe('ticket.purchased',        combine([ handlers.sendTicketReceiptEmail,
+                                                         handlers.setUserHostMarketingOptStatus]));
       bus.subscribe("patronage.tier_deleted",            handlers.unsubscribeAllPatronTierSubscribers);
       bus.subscribe("patronage.unsubscribe_user",        handlers.unsubscribeFromPatronTier);
       bus.subscribe("patronage.user_unsubscribed",       handlers.sendUserUnsubscribedConfirmationEmail);
       bus.subscribe("patronage.tier_amount_changed",     handlers.transferAllTierSubscribersToNewTier);
-      bus.subscribe('patronage.started', ct => {
-                                                        handlers.sendHostPatronSubscriptionStartedEmail(ct);
-                                                        handlers.sendUserPatronSubscriptionStartedReceiptEmail(ct)});
+      bus.subscribe('patronage.started',       combine([ handlers.sendHostPatronSubscriptionStartedEmail,
+                                                         handlers.sendUserPatronSubscriptionStartedReceiptEmail]))
     }
 
     setQueues(Object.values(this.queues).map(q => new BullMQAdapter(q.queue)) as any);

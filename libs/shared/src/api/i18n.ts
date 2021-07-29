@@ -103,7 +103,9 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
     } else {
       const msg = new IntlMessageFormat(
         this.locales.get(locale.language).get(code.slice(2)),
-        `${locale.language}-${locale.region}`
+        `${locale.language}-${locale.region}`,
+        {},
+        { ignoreTag: true }
       );
 
       return msg.format(variables || {}) as string;

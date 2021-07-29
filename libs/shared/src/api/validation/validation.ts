@@ -1,11 +1,7 @@
+import { ErrorHandler } from '@core/api';
 import { HTTP, IFormErrorField, RequestLocation } from '@core/interfaces';
 import { RequestHandler } from 'express-async-router';
-import { ErrorHandler } from '@core/api';
-
-// MIDDLEWARE =================================================================================================
-
-import { Struct, StructError, create } from 'superstruct';
-import { i18nProvider } from '../i18n';
+import { create, Struct, StructError } from 'superstruct';
 
 export const formatError = (error: StructError): IFormErrorField[] => {
   return error.failures().map(failure => ({

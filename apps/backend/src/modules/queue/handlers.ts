@@ -1,5 +1,6 @@
 import Env from '@backend/env';
 import {
+  Consentable,
   ErrorHandler,
   Host,
   Invoice,
@@ -8,12 +9,12 @@ import {
   Performance,
   Refund,
   transact,
-  User
+  User,
+  UserHostMarketingConsent
 } from '@core/api';
-import { dateOrdinal, i18n, pipes, richtext, timestamp, timeout } from '@core/helpers';
+import { dateOrdinal, i18n, pipes, richtext, timestamp } from '@core/helpers';
 import { CurrencyCode, HTTP, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
-
 // FOR SENDING EMAILS: ----------------------------------------------------------
 // define the event & contract that goes along with it
 // emit the event & contract data on onto the event bus
@@ -607,6 +608,7 @@ export class EventHandlers {
       }
     );
   };
+
   createHostAnalyticsCollectionJob = async (ct: Contract<'host.created'>) => {
     // Collect analytics for this performance once per week at 0:00
     await this.queues.collect_host_analytics.add(
@@ -615,5 +617,25 @@ export class EventHandlers {
         repeat: { every: 604800000 } // 7 days in milliseconds
       }
     );
+  };
+
+  setUserHostMarketingOptStatus = async (ct: Contract<'ticket.purchased'>) => {
+    // check if already consenting to this host, if not then soft-opt in
+    const c = await this.providers.orm.connection
+      .createQueryBuilder(UserHostMarketingConsent, 'c')
+      .where('c.user__id = :uid', { uid: ct.purchaser_id })
+      .andWhere('c.host__id = :hid', { hid: ct.host_id })
+      .getOne();
+
+    if (c) return;
+
+    // create new consent, using latest policies
+    const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+    const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
+    const user = await User.findOne({ _id: ct.purchaser_id });
+    const host = await Host.findOne({ _id: ct.host_id });
+
+    const consent = new UserHostMarketingConsent(ct.marketing_consent, host, user, toc, privacyPolicy);
+    await consent.save();
   };
 }

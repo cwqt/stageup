@@ -16,7 +16,6 @@
 //        - pro
 //        - premium
 
-import { HostSubscriptionLevel } from '../common/subscription.interface';
 import { IPersonInfo } from '../users/person.interface';
 import { IUser, IUserPrivate, IUserStub } from '../users/user.interface';
 import { HostPermission, ISocialInfo, IHostStub, IHostBusinessDetails } from './host.interface';
@@ -85,8 +84,4 @@ export interface IHostMemberChangeRequest {
 
 export interface IOnboardingAddMembers {
   members_to_add: IHostMemberChangeRequest[];
-}
-
-export interface IOnboardingSubscriptionConfiguration {
-  tier: HostSubscriptionLevel;
 }

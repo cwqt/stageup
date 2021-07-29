@@ -23,7 +23,7 @@
     </div>
     <img
       class="w-full h-full object-cover"
-      [src]="performance.thumbnail || '/assets/performance-placeholder.jpeg'"
+      [src]="performance.thumbnail || thumbnail?.location || '/assets/performance-placeholder.jpeg'"
       alt=""
     />
   </div>

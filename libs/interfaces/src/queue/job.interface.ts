@@ -1,9 +1,9 @@
-import { IPerformance } from '../performances/performance.interface';
-import { Job, JobsOptions } from 'bullmq';
-import { IInvoice } from '../common/invoice.interface';
-import { IHost, IHostPrivate } from '../hosts/host.interface';
+import { JobsOptions } from 'bullmq';
 import { Attachment } from 'nodemailer/lib/mailer';
+import { IInvoice } from '../finance/invoice.interface';
+import { IHost, IHostPrivate } from '../hosts/host.interface';
 import { ILocale } from '../i18n/i18n.interface';
+import { IPerformance } from '../performances/performance.interface';
 
 export const JobTypes = [
   'send_email',

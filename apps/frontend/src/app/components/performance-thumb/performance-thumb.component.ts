@@ -1,7 +1,7 @@
 import { MyselfService } from '@frontend/services/myself.service';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { IMyself, IPerformanceStub } from '@core/interfaces';
+import { AssetTags, AssetType, IAssetStub, IMyself, IPerformanceStub } from '@core/interfaces';
 import { PerformanceBrochureComponent } from '@frontend/routes/performance/performance-brochure/performance-brochure.component';
 import { HelperService } from '@frontend/services/helper.service';
 
@@ -18,11 +18,15 @@ export class PerformanceThumbComponent implements OnInit {
   @Output() onLikeEvent = new EventEmitter();
 
   myself: IMyself;
+  thumbnail: IAssetStub<AssetType.Image>;
 
   constructor(private helperService: HelperService, private dialog: MatDialog, private myselfService: MyselfService) {}
 
   async ngOnInit(): Promise<void> {
     this.myself = this.myselfService.$myself.value;
+
+    // See if there's a thumbnail on this performance to set the cover image
+    this.thumbnail = this.performance.assets.find(a => a.type == AssetType.Image && a.tags.includes('thumbnail'));
   }
 
   setLikeValue(value: boolean) {

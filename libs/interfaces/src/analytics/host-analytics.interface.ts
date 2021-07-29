@@ -1,10 +1,5 @@
 import { IHostStub } from '../hosts/host.interface';
-import {
-  AnalyticsPeriodDifference,
-  IAnalyticsChunk,
-  MetricFormatters,
-  MetricsAggregator
-} from './chunk-analytics.interface';
+import { IAnalyticsChunk, MetricFormatters, MetricsAggregator } from './chunk-analytics.interface';
 
 export type IHostAnalyticsMetrics = {
   performances_created: number;

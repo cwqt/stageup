@@ -1,4 +1,4 @@
-import { HostAnalytics, patchTypeORM, PerformanceAnalytics, Register } from '@core/api';
+import { Consentable, HostAnalytics, patchTypeORM, PerformanceAnalytics, Register } from '@core/api';
 import { timeout, timestamp } from '@core/helpers';
 import { Environment } from '@core/interfaces';
 import session from 'express-session';

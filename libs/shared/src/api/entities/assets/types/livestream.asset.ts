@@ -1,5 +1,5 @@
 import { Asset } from '../asset.entity';
-import { SigningKey } from '../../performances/signing-key.entity';
+import { SigningKey } from '../signing-key.entity';
 import { AssetGroup } from '../asset-group.entity';
 import { AssetTag, AssetType, IMuxPassthroughOwnerInfo, LiveStreamState } from '@core/interfaces';
 import { ChildEntity, EntityManager } from 'typeorm';

@@ -1,4 +1,5 @@
 import {
+  ConsentOpt,
   IAsset,
   IHost,
   IHostInvitation,
@@ -17,6 +18,7 @@ import {
   LiveStreamState
 } from '@core/interfaces';
 import { PasswordReset } from '../entities';
+import { validationMiddleware } from '../validation/validation';
 
 export type EventContract = {
   // Users --------------------------------------------------------------------
@@ -76,6 +78,9 @@ export type EventContract = {
   ['ticket.purchased']: {
     purchaser_id: IUser['_id'];
     invoice_id: IInvoice['_id'];
+    host_id: IHost['_id'];
+    ticket_id: ITicket['_id'];
+    marketing_consent: ConsentOpt;
   };
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
@@ -104,4 +109,7 @@ export type Contract<T extends Event> = EventContract[T] & {
  * @example bus.subscribe("some.event", combine([handler1, handler2]));
  */
 export const combine = <T extends Event>(fns: Array<(ct: Contract<T>) => Promise<void>>) => (ct: Contract<T>) =>
-  Promise.allSettled(fns.map(f => f(ct)));
+  Promise.allSettled(fns.map(f => f(ct))).then(
+    // log out any errored functions in the combined one
+    v => (v.forEach(r => r.status == 'rejected' && console.error(ct, 'failure!', r.reason)), v)
+  );

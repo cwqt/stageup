@@ -1,6 +1,6 @@
+import { DottedPaths } from '../common/fp.interface';
 import { IUserStub } from '../users/user.interface';
 import { HostOnboardingState, HostOnboardingStep, IHostOnboarding } from './host-onboarding.interface';
-import { DottedPaths } from '../common/fp.interface';
 
 /**
  * @description What the Admin sends to the /review route which is formed into an IOnboardingStepReview
@@ -16,14 +16,14 @@ import { DottedPaths } from '../common/fp.interface';
  */
 export interface IOnboardingStepReview<T> {
   state: HostOnboardingState.HasIssues | HostOnboardingState.Verified;
-  issues: {[index in DottedPaths<T>]?:string[]}
+  issues: { [index in DottedPaths<T>]?: string[] };
   review_message?: string; // hand-written message
 }
 
 export interface IOnboardingReview {
   _id: string;
-  onboarding_version?: IHostOnboarding["version"];
+  onboarding_version?: IHostOnboarding['version'];
   reviewed_by: IUserStub;
   reviewed_at: number; // unix timestamp
-  steps: {[ index in HostOnboardingStep]?: IOnboardingStepReview<any>}
-};
+  steps: { [index in HostOnboardingStep]?: IOnboardingStepReview<any> };
+}

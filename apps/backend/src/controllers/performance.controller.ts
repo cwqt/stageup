@@ -1,10 +1,10 @@
 import { ErrorHandler } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
   AccessToken,
   Asset,
   AssetGroup,
   AssetView,
-  Auth,
   BaseController,
   Follow,
   getCheck,
@@ -16,10 +16,12 @@ import {
   PaymentMethod,
   Performance,
   Rating,
+  SignableAssetType,
   SigningKey,
   Ticket,
   transact,
   User,
+  UserHostMarketingConsent,
   Validators,
   VideoAsset
 } from '@core/api';
@@ -31,13 +33,13 @@ import {
   AssetTags,
   AssetType,
   BASE_AMOUNT_MAP,
+  ConsentOpt,
   DtoCreateAsset,
   DtoCreatePaymentIntent,
   DtoCreateTicket,
   DtoPerformance,
   HostPermission,
   HTTP,
-  IAssetStub,
   ICreateAssetRes,
   IEnvelopedData,
   IPaymentIntentClientSecret,
@@ -56,11 +58,8 @@ import {
   TicketType,
   Visibility
 } from '@core/interfaces';
-import { SignableAssetType } from 'libs/shared/src/api/entities/performances/signing-key.entity';
-import { fields } from 'libs/shared/src/api/validate/fields.validators';
 import { array, boolean, enums, object, optional } from 'superstruct';
 import { In } from 'typeorm';
-import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import { default as IdFinderStrat } from '../common/authorisation/id-finder-strategies';
 import Env from '../env';
@@ -161,18 +160,20 @@ export default class PerformanceController extends BaseController<BackendProvide
           t => t.is_visible && t.start_datetime < currentTime && currentTime < t.end_datetime
         );
 
-        const isLiking =
+        const existingLike =
           req.session.user &&
           (await this.ORM.createQueryBuilder(Like, 'like')
             .where('like.user__id = :uid', { uid: req.session.user._id })
             .andWhere('like.performance__id = :pid', { pid: performance._id })
             .getOne());
-        const isFollowing =
+
+        const existingFollow =
           req.session.user &&
           (await this.ORM.createQueryBuilder(Follow, 'follow')
             .where('follow.user__id = :uid', { uid: req.session.user._id })
             .andWhere('follow.host__id = :hid', { hid: performance.host._id })
             .getOne());
+
         const existingRating =
           req.session.user &&
           (await this.ORM.createQueryBuilder(Rating, 'rating')
@@ -180,12 +181,20 @@ export default class PerformanceController extends BaseController<BackendProvide
             .andWhere('rating.performance__id = :pid', { pid: performance._id })
             .getOne());
 
+        const hostMarketingStatus =
+          req.session.user &&
+          (await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'c')
+            .where('c.host__id = :hid', { hid: performance.host._id })
+            .andWhere('c.user__id = :uid', { uid: req.session.user._id })
+            .getOne());
+
         const response: DtoPerformance = {
           data: performance.toFull(),
           __client_data: {
-            is_liking: isLiking ? true : false,
-            is_following: isFollowing ? true : false,
-            rating: existingRating ? existingRating.rating : null
+            is_liking: existingLike ? true : false,
+            is_following: existingFollow ? true : false,
+            rating: existingRating ? existingRating.rating : null,
+            host_marketing_opt_status: hostMarketingStatus ? (hostMarketingStatus.opt_status as ConsentOpt) : null
           }
         };
 
@@ -264,7 +273,9 @@ export default class PerformanceController extends BaseController<BackendProvide
   createPaymentIntent(): IControllerEndpoint<IPaymentIntentClientSecret> {
     return {
       authorisation: AuthStrat.isLoggedIn,
-      validators: { body: Validators.Objects.DtoCreatePaymentIntent },
+      validators: {
+        body: Validators.Objects.DtoCreatePaymentIntent
+      },
       controller: async req => {
         const body: DtoCreatePaymentIntent<PurchaseableType.Ticket> = req.body;
 
@@ -352,7 +363,10 @@ export default class PerformanceController extends BaseController<BackendProvide
               user_id: platformPaymentMethod.user._id,
               purchaseable_id: ticket._id,
               purchaseable_type: PurchaseableType.Ticket,
-              payment_method_id: platformPaymentMethod._id
+              payment_method_id: platformPaymentMethod._id,
+              marketing_consent: body.options.hard_host_marketing_opt_out
+                ? to<ConsentOpt>('hard-out')
+                : to<ConsentOpt>('soft-in')
             })
           },
           {
@@ -731,7 +745,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   changeThumbnails(): IControllerEndpoint<AssetDto | void> {
     return {
-      validators: { query: object({ replaces: optional(fields.nuuid) }) },
+      validators: { query: object({ replaces: optional(Validators.Fields.nuuid) }) },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
       middleware: this.middleware.file(2048, ACCEPTED_IMAGE_MIME_TYPES).single('file'),
       controller: async req => {
@@ -805,7 +819,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   updatePublicityPeriod(): IControllerEndpoint<IPerformance> {
     return {
-      validators: { body: object({ start: fields.timestamp, end: fields.timestamp }) },
+      validators: { body: object({ start: Validators.Fields.timestamp, end: Validators.Fields.timestamp }) },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
       controller: async req => {
         const performance = await getCheck(
@@ -835,7 +849,10 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   setRating(): IControllerEndpoint<void> {
     return {
-      validators: { body: object({ rate_value: fields.rating }), params: object({ pid: fields.nuuid }) },
+      validators: {
+        body: object({ rate_value: Validators.Fields.rating }),
+        params: object({ pid: Validators.Fields.nuuid })
+      },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         if (0 <= req.body.rating && req.body.rating <= 1)
@@ -878,7 +895,7 @@ export default class PerformanceController extends BaseController<BackendProvide
 
   deleteRating(): IControllerEndpoint<void> {
     return {
-      validators: { params: object({ pid: fields.nuuid }) },
+      validators: { params: object({ pid: Validators.Fields.nuuid }) },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
         const existingRating = await getCheck(

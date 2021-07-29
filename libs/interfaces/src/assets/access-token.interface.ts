@@ -1,6 +1,6 @@
 import { NUUID } from '../common/fp.interface';
 import { IUser, IUserStub } from '../users/user.interface';
-import { IInvoice } from '../common/invoice.interface';
+import { IInvoice } from '../finance/invoice.interface';
 
 export enum TokenProvisioner {
   User = 'user',

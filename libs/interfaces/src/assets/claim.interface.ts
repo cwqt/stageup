@@ -1,4 +1,4 @@
-import { IAsset, IAssetStub } from './asset.interface';
+import { IAssetStub } from './asset.interface';
 
 // Tickets have a Claim, Claims map to Assets
 // Tickets by proxy provision access to Assets through an AssetToken

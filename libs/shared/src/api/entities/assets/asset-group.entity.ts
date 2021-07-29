@@ -1,6 +1,6 @@
-import { to, uuid } from '@core/helpers';
-import { NUUID, AssetDto, AssetType } from '@core/interfaces';
-import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn, RelationId } from 'typeorm';
+import { uuid } from '@core/helpers';
+import { NUUID } from '@core/interfaces';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { Asset } from './asset.entity';
 
 @Entity()
