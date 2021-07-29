@@ -71,6 +71,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
             async dtoDeletePerfReason => {
               //TODO: Send delete performance reason to db
               console.log(dtoDeletePerfReason);
+              console.log('In perf delete dialog', this.data.data);
               await this.performanceService
                 .deletePerformance(this.data.data._id, dtoDeletePerfReason)
                 .then(() => this.toastService.emit($localize`Performance Deleted!`))

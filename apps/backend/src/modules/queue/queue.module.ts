@@ -135,7 +135,7 @@ export class QueueModule implements Module {
     // prettier-ignore
     {
       bus.subscribe("performance.created",               handlers.createPerformanceAnalyticsCollectionJob);
-      bus.subscribe("Performance.deleted",               handlers.sendPerformanceDeletionEmail);
+      bus.subscribe("Performance.deleted",               handlers.deletePerformance);
       bus.subscribe("host.created",                      handlers.createHostAnalyticsCollectionJob)
       bus.subscribe('host.stripe_connected',             handlers.setupDefaultPatronTierForHost);
       bus.subscribe("host.invoice_export",              async ct => {

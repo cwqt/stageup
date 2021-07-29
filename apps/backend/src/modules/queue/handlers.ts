@@ -10,10 +10,9 @@ import {
   transact,
   User
 } from '@core/api';
-import { dateOrdinal, i18n, pipes, richtext, timestamp, timeout } from '@core/helpers';
+import { dateOrdinal, i18n, pipes, richtext, timestamp } from '@core/helpers';
 import { CurrencyCode, HTTP, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
-
 // FOR SENDING EMAILS: ----------------------------------------------------------
 // define the event & contract that goes along with it
 // emit the event & contract data on onto the event bus
@@ -153,7 +152,39 @@ export class EventHandlers {
     });
   };
 
-  sendPerformanceDeletionEmail = async (ct: Contract<'Performance.deleted'>) => {};
+  deletePerformance = async (ct: Contract<'Performance.deleted'>) => {
+    const perf = await Performance.findOne({ _id: ct.performance_id }, { relations: ['host'] });
+
+    //Send host email notifcation
+    this.queues.send_email.add({
+      subject: this.providers.i18n.translate('@@email.performance_deleted_notify_host__subject', ct.__meta.locale, {
+        performance_name: perf.name
+      }),
+      content: this.providers.i18n.translate('@@email.performance_deleted_notify_host__content', ct.__meta.locale, {
+        host_name: perf.host.name,
+        performance_name: perf.name,
+        performance_premiere_date: moment.unix(perf.premiere_datetime).format('LLLL')
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: perf.host.email_address,
+      markdown: true,
+      attachments: []
+    });
+  };
+
+  sendHostPerformanceDeletionEmail = async (ct: Contract<'Performance.deleted'>) => {
+    const perf = await Performance.findOne({ _id: ct.performance_id });
+
+    await this.providers.orm.connection.createQueryBuilder();
+  };
+
+  sendUserPerformanceDeletionEmail = async (ct: Contract<'Performance.deleted_notify_user'>) => {
+    const perf = await Performance.findOne({ _id: ct.performance_id });
+
+    //Find all users who've purchased tickets. Get all invoices associated with all ticket ids associated with a perf
+
+    await this.providers.orm.connection.createQueryBuilder();
+  };
 
   sendUserPatronSubscriptionStartedReceiptEmail = async (ct: Contract<'patronage.started'>) => {
     const user = await User.findOne({ _id: ct.user_id }, { select: ['email_address', 'name', 'username'] });

@@ -6,14 +6,12 @@ import fromUnixTime from 'date-fns/fromUnixTime';
 
 @Pipe({ name: 'timeUntilPipe' })
 export class TimeUntilPipe implements PipeTransform {
-  transform(value: number): string {
-    const futureDate = fromUnixTime(value * 1000);
-    console.log(value);
+  transform(value: any): string {
+    const timeUntil = intervalToDuration({
+      start: new Date(),
+      end: new Date(value * 1000)
+    });
 
-    const timeUntil = differenceInCalendarDays(new Date(value * 1000), new Date());
-
-    console.log(timeUntil);
-
-    return timeUntil.toString();
+    return timeUntil.days + ' Days, ' + timeUntil.hours + ' hours';
   }
 }

@@ -585,6 +585,66 @@ Du blir ikke lenger belastet for dette abonnementet &amp; dette abonnementet vil
 
 Takk, StageUp</target>
       </trans-unit>
+      <trans-unit id="email.performance_deleted_notify_host__subject" datatype="html">
+        <source>You have deleted **{performance_name}**</source>
+        <target state="needs-translation">Du har slettet ** {performance_name} **</target>
+      </trans-unit>
+      <trans-unit id="email.performance_deleted_notify_host__content" datatype="html">
+        <source>Hello **{host_name}**,
+
+You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
+
+We have initiated refunds to all customers who purchased tickets to this event. Fund will be automatically credited into their account within 5 
+working days.
+
+Thanks,
+
+**StageUp Team**</source>
+        <target state="needs-translation">Hei ** {host_name} **,
+
+Du har slettet ytelsen din: ** {performance_name} ** som var planlagt ** {performance_premiere_date} **
+
+Vi har iverksatt refusjon til alle kunder som kjøpte billetter til dette arrangementet. Fondet blir automatisk kreditert på kontoen innen 5
+arbeidsdager.
+
+Takk,
+
+** StageUp Team **</target>
+      </trans-unit>
+      <trans-unit id="email.performance_deleted_notify_user__subject" datatype="html">
+        <source>Peformance: {performance_name} cancellation notification</source>
+        <target state="needs-translation">Framføring: {performance_name} varsel om kansellering</target>
+      </trans-unit>
+      <trans-unit id="email.performance_deleted_notify_user__content" datatype="html">
+        <source>Hi **{user_username}**,
+
+Unfortunately, {host_name} has had to cancel the performance: {performance_name}.
+
+We have initiated a refund on your ticket purchased on { ticket_purchase_date }.
+
+Invoice#: { invoice_id }
+Ticket Price: { ticket_amount }
+
+We will automatically credit the funds to your **{card_brand}** ending in **{last_4}**. Please note, it may take up to 5 working days for your account to be credited.
+
+Thanks,
+
+**StageUp Team**</source>
+        <target state="needs-translation">Hei ** {user_username} **,
+
+Dessverre har {host_name} måtte avbryte forestillingen: {performance_name}.
+
+Vi har igangsatt en refusjon på billetten din som er kjøpt på { ticket_purchase_date }.
+
+Faktura nr.: { invoice_id }
+Billettpris: { ticket_amount }
+
+Vi krediterer midlene automatisk til ** {card_brand} ** som ender på ** {last_4} **. Vær oppmerksom på at det kan ta opptil fem virkedager før kontoen din blir kreditert.
+
+Takk,
+
+** StageUp Team **</target>
+      </trans-unit>
       <trans-unit id="error.internal_server_error" datatype="html">
         <source>Internal server error</source>
         <target state="needs-translation">Intern server feil</target>

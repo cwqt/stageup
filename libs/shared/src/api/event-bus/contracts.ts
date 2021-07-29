@@ -81,6 +81,12 @@ export type EventContract = {
   // Performances -------------------------------------------------------------
   ['performance.created']: IPerformance;
   ['Performance.deleted']: { performance_id: IPerformance['_id'] };
+  ['Performance.deleted_notify_user']: {
+    performance_id: IPerformance['_id'];
+    user_id: IUser['_id'];
+    invoice_id: IInvoice['_id'];
+  };
+  ['Performance.deleted_notify_host']: { performance_id: IPerformance['_id']; host_id: IHost['_id'] };
   ['performance.publicity_period_changed']: { performance_id: IPerformance['_id'] };
   ['live_stream.state_changed']: { asset_id: IAsset['_id']; state: LiveStreamState };
   // Onboardings --------------------------------------------------------------
