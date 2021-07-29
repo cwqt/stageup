@@ -273,4 +273,37 @@
 
     Thanks, StageUp
     '''
+  "email.performance_deleted_notify_host__subject": You have deleted **{performance_name}**
+  "email.performance_deleted_notify_host__content":
+    '''
+    Hello **{host_name}**,
+
+    You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
+
+    We have initiated refunds to all customers who purchased tickets to this event. Fund will be automatically credited into their account within 5 
+    working days.
+
+    Thanks,
+
+    **StageUp Team**
+    '''
+  "email.performance_deleted_notify_user__subject": Peformance: {performance_name} cancellation notification
+  "email.performance_deleted_notify_user__content":
+    '''
+    Hi **{user_username}**,
+
+    Unfortunately, {host_name} has had to cancel the performance: {performance_name}.
+
+    We have initiated a refund on your ticket purchased on { ticket_purchase_date }.
+
+    Invoice#: { invoice_id }
+    Ticket Price: { ticket_amount }
+
+    We will automatically credit the funds to your **{card_brand}** ending in **{last_4}**. Please note, it may take up to 5 working days for your account to be credited.
+
+    Thanks,
+
+    **StageUp Team**
+
+    '''
 }

@@ -80,6 +80,7 @@ export type EventContract = {
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
   ['performance.created']: IPerformance;
+  ['Performance.deleted']: { performance_id: IPerformance['_id'] };
   ['performance.publicity_period_changed']: { performance_id: IPerformance['_id'] };
   ['live_stream.state_changed']: { asset_id: IAsset['_id']; state: LiveStreamState };
   // Onboardings --------------------------------------------------------------

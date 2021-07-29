@@ -153,6 +153,8 @@ export class EventHandlers {
     });
   };
 
+  sendPerformanceDeletionEmail = async (ct: Contract<'Performance.deleted'>) => {};
+
   sendUserPatronSubscriptionStartedReceiptEmail = async (ct: Contract<'patronage.started'>) => {
     const user = await User.findOne({ _id: ct.user_id }, { select: ['email_address', 'name', 'username'] });
     const tier = await PatronTier.findOne({ _id: ct.tier_id }, { relations: ['host'] });

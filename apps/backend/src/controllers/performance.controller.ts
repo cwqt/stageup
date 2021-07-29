@@ -389,6 +389,14 @@ export default class PerformanceController extends BaseController<BackendProvide
 
         // perf.status = PerformanceStatus.Deleted;
         // await perf.softRemove();
+
+        return await this.providers.bus.publish(
+          'Performance.deleted',
+          {
+            performance_id: req.params.pid
+          },
+          req.locale
+        );
       }
     };
   }
