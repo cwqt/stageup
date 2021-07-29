@@ -55,6 +55,7 @@ import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-statu
 import { DeleteHostReasonPipe } from './_pipes/delete-host-reason.pipe';
 import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
 import { TimesPipe } from './_pipes/times.pipe';
+import { TimeUntilPipe } from './_pipes/time-until.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -246,6 +247,7 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     GenreFeedComponent,
     ProcessRefundsDialogComponent,
     UserPatronageComponent,
+    TimeUntilPipe,
     ConfirmationDialogComponent,
     UserPatronageComponent,
     HostPatronageSubscribersComponent,

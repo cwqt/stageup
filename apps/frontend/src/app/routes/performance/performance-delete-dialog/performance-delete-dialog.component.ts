@@ -19,6 +19,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
   submit: EventEmitter<string> = new EventEmitter();
   cancel: EventEmitter<string> = new EventEmitter();
   buttons?: UiDialogButton[];
+  public test: DtoPerformance;
 
   constructor(
     private toastService: ToastService,
@@ -30,6 +31,8 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
   ) {}
 
   ngOnInit(): void {
+    console.log(this.data);
+    this.test = this.data;
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
