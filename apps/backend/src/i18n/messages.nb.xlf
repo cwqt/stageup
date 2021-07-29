@@ -195,7 +195,7 @@ in your account.</p>
 <p><strong>Thanks,</strong>
 <strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p><strong>Hei {user_username},</strong></p><p> Dette er et varsel for å bekrefte at <strong>{host_name}</strong> har initiert en refusjon på bestillingen din <strong>{invoice_id}</strong> for beløpet på <strong>{invoice_amount}</strong> for ytelsen <strong>{performance_name}</strong> .</p><p> Du kan når som helst se statusen på denne refusjonen ved å logge på StageUp-kontoen din og klikke på innstillinger -&gt; betalinger.</p><p> Vi krediterer midlene automatisk til <strong>{card_brand} som</strong> ender på <strong>{last_4}</strong> . Vær oppmerksom på at beløpet kan ta opptil 5 virkedager før det vises i kontoen din.</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p></target>
+      <target state="needs-translation"><p><strong>Hei {user_username},</strong></p><p> Dette er et varsel for å bekrefte at <strong>{host_name}</strong> har initiert en refusjon på bestillingen din <strong>{invoice_id}</strong> for beløpet på <strong>{invoice_amount}</strong> for ytelsen <strong>{performance_name}</strong> .</p><p> Du kan når som helst se statusen på denne refusjonen ved å logge på StageUp-kontoen din og klikke på innstillinger -> betalinger.</p><p> Vi krediterer midlene automatisk til <strong>{card_brand} som</strong> ender på <strong>{last_4}</strong> . Vær oppmerksom på at beløpet kan ta opptil 5 virkedager før det vises i kontoen din.</p><p> <strong>Takk,</strong> <strong>StageUp Team</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_initiated__subject" datatype="html">
       <source>Refund initiated by {host_name} for {performance_name}</source>
@@ -373,19 +373,34 @@ here</a>.</p>
 <p>Click the link to watch <strong>{performance_name}</strong> by <strong>{host_name}</strong> on StageUp
 now: <a href="{url}">{url}</a>></p>
 </source>
-      <target state="needs-translation"><p>Hei {user_name},</p><p> Klikk på lenken for å se <strong>{performance_name}</strong> av <strong>{host_name}</strong> på StageUp nå: <a href="{url}">{url}</a> &gt;</p></target>
+      <target state="needs-translation"><p>Hei {user_name},</p><p> Klikk på lenken for å se <strong>{performance_name}</strong> av <strong>{host_name}</strong> på StageUp nå: <a href="{url}">{url}</a> ></p></target>
     </trans-unit>				
-		<trans-unit id="email.ticket.purchased__subject" datatype="html">
-      <source>Receipt of purchase of StageUp ticket</source>
-      <target state="needs-translation">Mottak på kjøp av StageUp-billett</target>
+		<trans-unit id="email.ticket.purchased_current__subject" datatype="html">
+      <source>Thank you for purchasing {performance_name}. Watch it now</source>
+      <target state="needs-translation">Takk for at du kjøpte {performance_name}. Se det nå</target>
     </trans-unit>				
-		<trans-unit id="email.ticket.purchased__content" datatype="html">
+		<trans-unit id="email.ticket.purchased_current__content" datatype="html">
       <source><p>Hi {user_name},</p>
-<p>You purchased a {ticket_name} to watch {performance_name} for {amount}.
-Click here to watch: <a href="{watch_url}">{watch_url}</a>
-Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
+<p>You purchased a {ticket_name} to watch {performance_name} for {amount}.</p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Click here to watch</a></p>
+<p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
 </source>
-      <target state="needs-translation"><p>Hei {user_name},</p><p> Du kjøpte en {ticket_name} for å se {performance_name} for {amount}. Klikk her for å se: <a href="{watch_url}">{watch_url}</a> Mottak på kjøpet: <a href="{receipt_url}">{receipt_url}</a></p></target>
+      <target state="needs-translation"><p>Hei {user_name},</p><p> Du kjøpte en {ticket_name} for å se {performance_name} for {amount}.</p><p> Klikk her for å se: <a href="{url}">{url}</a> Mottak på dette kjøpet: <a href="{receipt_url}">{receipt_url}</a></p></target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased_future__subject" datatype="html">
+      <source>Thank you for purchasing {performance_name}</source>
+      <target state="needs-translation">Takk for at du kjøpte {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased_future__content" datatype="html">
+      <source><p>Hello {user_name},</p>
+<p>You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don’t forget to mark your calendar.
+We’ll send you reminders closer to the time, so you don’t miss it. :)</p>
+<p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to my library</a></p>
+<p>Cheers,</p>
+<p>StageUp Team</p>
+</source>
+      <target state="needs-translation"><p>Hei {user_name},</p><p> Du kjøpte billetter for {performance_name} for {amount}. Den har premiere på {premier_time}. Ikke glem å merke kalenderen din. Vi sender deg påminnelser nær datoen, slik at du ikke går glipp av det. :)</p><p> Mottak på dette kjøpet: <a href="{receipt_url}">{receipt_url}</a> Ta meg med til biblioteket mitt: <a href="{url}">{url}</a></p><p> Jubel,</p><p> StagUp Team</p></target>
     </trans-unit>				
 		<trans-unit id="email.user.patronage_started__subject" datatype="html">
       <source>Patron Subscription to {tier_name}</source>
@@ -470,7 +485,34 @@ tier, <strong>{tier_name}</strong>.</p>
 listed as ‘Cancelled’ on your account from now on.</p>
 <p>Thanks, StageUp</p>
 </source>
-      <target state="needs-translation"><p>Hei @{user_username},</p><p> Dette er en kvittering for <strong>unabonnementet ditt fra @{host_username}s</strong> beskyttelsesnivå, <strong>{tier_name}</strong> .</p><p> Du blir ikke lenger belastet for dette abonnementet, og dette abonnementet vil bli oppført som &#39;Avbrutt&#39; på kontoen din fra nå av.</p><p> Takk, StageUp</p></target>
+      <target state="needs-translation"><p>Hei @{user_username},</p><p> Dette er en kvittering for <strong>unabonnementet ditt fra @{host_username}s</strong> beskyttelsesnivå, <strong>{tier_name}</strong> .</p><p> Du blir ikke lenger belastet for dette abonnementet, og dette abonnementet vil bli oppført som 'Avbrutt' på kontoen din fra nå av.</p><p> Takk, StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.one_day_performance_reminder__subject" datatype="html">
+      <source>{performance_name}'s premiere is around the corner</source>
+      <target state="needs-translation">Premieren til {performance_name} er rundt hjørnet</target>
+    </trans-unit>				
+		<trans-unit id="email.user.one_day_performance_reminder__content" datatype="html">
+      <source><p>Hello {user_username}!</p>
+<p>You purchased tickets for {performance_name}. It will premiere <strong>tomorrow</strong> on <strong>{premier_time}</strong>.</p>
+<p>We’re looking forward seeing you on StageUp!</p>
+<p>Cheers,</p>
+<p>StageUp team</p>
+</source>
+      <target state="needs-translation"><p>Hei {user_username}!</p><p> Du kjøpte billetter for {performance_name}. Den har premiere i <strong>morgen</strong> på <strong>{premier_time}</strong> .</p><p> Vi håper du blir spent på å se det.</p><p> Jubel,</p><p> StageUp team</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.fifteen_minute_performance_reminder__subject" datatype="html">
+      <source>It’s on in 15 minutes!</source>
+      <target state="needs-translation">Det er på om 15 minutter!</target>
+    </trans-unit>				
+		<trans-unit id="email.user.fifteen_minute_performance_reminder__content" datatype="html">
+      <source><p>Hello {user_username}!</p>
+<p>You purchased tickets for {performance_name}. It will start at {premier_time}.</p>
+<p>We hope you’re all set to watch it!</p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to the performance</a></p>
+<p>Cheers,</p>
+<p>StageUp team</p>
+</source>
+      <target state="needs-translation"><p>Hei {user_username}!</p><p> Du kjøpte billetter for {performance_name}. Det starter på {premier_time}.</p><p> Vi håper du er klar til å se det!</p><p> Ta meg med til biblioteket mitt: <a href="{url}">{url}</a></p><p> Jubel,</p><p> StageUp team</p></target>
     </trans-unit>				
 		<trans-unit id="error.internal_server_error" datatype="html">
       <source>Internal server error</source>

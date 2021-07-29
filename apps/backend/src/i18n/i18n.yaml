@@ -209,13 +209,29 @@ email:
 
     Click the link to watch **{performance_name}** by **{host_name}** on StageUp
     now: <{url}>>
-  ticket.purchased__subject: Receipt of purchase of StageUp ticket
-  ticket.purchased__content: |
+  ticket.purchased_current__subject: Thank you for purchasing {performance_name}. Watch it now
+  ticket.purchased_current__content: |
     Hi {user_name},
 
     You purchased a {ticket_name} to watch {performance_name} for {amount}.
-    Click here to watch: <{watch_url}>
+
+    <a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Click here to watch</a>
+
     Receipt of this purchase: <{receipt_url}>
+  ticket.purchased_future__subject: Thank you for purchasing {performance_name}
+  ticket.purchased_future__content: |
+    Hello {user_name},
+
+    You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don't forget to mark your calendar.
+    We'll send you reminders closer to the time, so you don't miss it. :)    
+
+    Receipt of this purchase: <{receipt_url}>
+
+    <a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to my library</a>
+
+    Cheers,
+
+    StageUp Team
   user.patronage_started__subject: Patron Subscription to {tier_name}
   user.patronage_started__content: |
     Hi {user_name},
@@ -280,3 +296,27 @@ email:
     listed as 'Cancelled' on your account from now on.
 
     Thanks, StageUp
+  user.one_day_performance_reminder__subject: "{performance_name}'s premiere is around the corner"
+  user.one_day_performance_reminder__content: |
+    Hello {user_username}!
+
+    You purchased tickets for {performance_name}. It will premiere **tomorrow** on **{premier_time}**.
+
+    We're looking forward seeing you on StageUp!
+
+    Cheers, 
+    
+    StageUp team
+  user.fifteen_minute_performance_reminder__subject: It's on in 15 minutes!
+  user.fifteen_minute_performance_reminder__content: |
+    Hello {user_username}!
+
+    You purchased tickets for {performance_name}. It will start at {premier_time}.
+
+    We hope you're all set to watch it!
+
+    <a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to the performance</a>
+
+    Cheers, 
+    
+    StageUp team

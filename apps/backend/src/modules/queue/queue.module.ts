@@ -17,6 +17,7 @@ import CollectPerformanceAnalytics from './workers/analytics/performance-analyti
 import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker';
 import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
 import SendEmailWorker from './workers/send-email.worker';
+import SendReminderEmailsWorker from './workers/send-reminder-emails.worker';
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 interface IQueue<T extends JobType = any> {
@@ -59,6 +60,7 @@ export class QueueModule implements Module {
   queues: { [index in JobType]: IQueue<index> };
   workers = {
     ['send_email']: SendEmailWorker,
+    ['send_reminder_emails']: SendReminderEmailsWorker,
     ['host_invoice_csv']: HostInvoiceCSVWorker,
     ['host_invoice_pdf']: HostInvoicePDFWorker,
     ['collect_performance_analytics']: CollectPerformanceAnalytics,
@@ -91,6 +93,14 @@ export class QueueModule implements Module {
               return w(
                 this.workers['send_email']({
                   email: providers.email
+                })
+              );
+            case 'send_reminder_emails':
+              return w(
+                this.workers['send_reminder_emails']({
+                  email: providers.email,
+                  orm: providers.orm,
+                  i18n: providers.i18n
                 })
               );
             case 'host_invoice_pdf':
@@ -134,7 +144,10 @@ export class QueueModule implements Module {
 
     // prettier-ignore
     {
-      bus.subscribe("performance.created",               handlers.createPerformanceAnalyticsCollectionJob);
+
+      bus.subscribe("performance.created", combine([     handlers.createPerformanceAnalyticsCollectionJob,
+                                                         handlers.sendPerformanceReminderEmails]));
+
       bus.subscribe("host.created",                      handlers.createHostAnalyticsCollectionJob)
       bus.subscribe('host.stripe_connected',             handlers.setupDefaultPatronTierForHost);
       bus.subscribe("host.invoice_export",              async ct => {

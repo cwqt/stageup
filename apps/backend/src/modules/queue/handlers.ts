@@ -12,7 +12,8 @@ import {
   User,
   UserHostMarketingConsent
 } from '@core/api';
-import { dateOrdinal, i18n, pipes, richtext, timestamp } from '@core/helpers';
+import { dateOrdinal, i18n, pipes, richtext, timestamp, timeout, unix } from '@core/helpers';
+
 import { CurrencyCode, HTTP, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
 // FOR SENDING EMAILS: ----------------------------------------------------------
@@ -111,22 +112,53 @@ export class EventHandlers {
       { _id: ct.invoice_id },
       { relations: { ticket: { performance: { host: true } } } }
     );
-    const performanceLink = `${Env.FRONTEND.URL}/${ct.__meta.locale}/performances/${invoice.ticket.performance._id}/watch`;
+    // The performance is currently available if the current timestamp is after the publicity period start and before the end
+    // Discussed with Shreya who said that new wireframes will show the whole period on the event creation dialog as opposed to premiere_datetime
+    const performanceIsAvailable =
+      invoice.ticket.performance.publicity_period.start <= timestamp() &&
+      timestamp() < invoice.ticket.performance.publicity_period.end;
 
-    this.queues.send_email.add({
-      subject: this.providers.i18n.translate('@@email.user.invited_to_private_showing__subject', ct.__meta.locale),
-      content: this.providers.i18n.translate('@@email.ticket.purchased__content', ct.__meta.locale, {
-        receipt_url: invoice.stripe_receipt_url,
-        user_name: user.name || user.username,
-        ticket_name: invoice.ticket.name,
-        performance_name: invoice.ticket.performance.name,
-        amount: i18n.money(invoice.amount, invoice.currency),
-        watch_url: performanceLink
-      }),
-      from: Env.EMAIL_ADDRESS,
-      to: user.email_address,
-      attachments: []
-    });
+    const link = performanceIsAvailable
+      ? `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/performances/${invoice.ticket.performance._id}/watch`
+      : `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/my-stuff`;
+
+    if (performanceIsAvailable) {
+      this.queues.send_email.add({
+        subject: this.providers.i18n.translate('@@email.ticket.purchased_current__subject', ct.__meta.locale, {
+          performance_name: invoice.ticket.performance.name
+        }),
+        content: this.providers.i18n.translate('@@email.ticket.purchased_current__content', ct.__meta.locale, {
+          receipt_url: invoice.stripe_receipt_url,
+          user_name: user.name || user.username,
+          ticket_name: invoice.ticket.name,
+          performance_name: invoice.ticket.performance.name,
+          amount: i18n.money(invoice.amount, invoice.currency),
+          url: link
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: user.email_address,
+        markdown: true,
+        attachments: []
+      });
+    } else {
+      this.queues.send_email.add({
+        subject: this.providers.i18n.translate('@@email.ticket.purchased_future__subject', ct.__meta.locale, {
+          performance_name: invoice.ticket.performance.name,
+        }),
+        content: this.providers.i18n.translate('@@email.ticket.purchased_future__content', ct.__meta.locale, {
+          receipt_url: invoice.stripe_receipt_url,
+          user_name: user.name || user.username,
+          performance_name: invoice.ticket.performance.name,
+          premier_time: i18n.date(unix(invoice.ticket.performance.premiere_datetime), ct.__meta.locale),
+          amount: i18n.money(invoice.amount, invoice.currency),
+          url: link
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: user.email_address,
+        markdown: true,
+        attachments: []
+      });
+    }
   };
 
   sendHostPatronSubscriptionStartedEmail = async (ct: Contract<'patronage.started'>) => {
@@ -558,6 +590,46 @@ export class EventHandlers {
       }),
       attachments: []
     });
+  };
+
+  sendPerformanceReminderEmails = async (ct: Contract<'performance.created'>) => {
+    const performance = await Performance.findOne({ _id: ct._id });
+    const premierDate = performance.premiere_datetime; 
+    if (!premierDate) return; // TODO: This will instead be based on publicity_period.start in the future (which will be a compulsory field)
+    const oneDayPrior = premierDate - 86400 - timestamp(); // 86400 is the number of seconds in 24 hours
+    const fifteenMinutesPrior = premierDate - 900 - timestamp(); // 900 is the number of seconds in 15 minutes
+    const url = `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/my-stuff`; // URL to direct the user to in the email
+
+    // Need to send off 2 different jobs, one 1 day before and one for 15 minutes before performance premier date
+    // Only queue emails if the 'send' date is in the future.
+    if (oneDayPrior > 0)
+      await this.queues.send_reminder_emails.add(
+        {
+          performance_id: ct._id,
+          sender_email_address: Env.EMAIL_ADDRESS,
+          type: '24 hours',
+          premier_date: premierDate,
+          url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/my-stuff`
+        },
+        {
+          // delay: 1000 * 2 * 60 // used for testing (sends in 2 minutes)
+          delay: 1000 * oneDayPrior // multiply by 1000 to get time in milliseconds
+        }
+      );
+    if (fifteenMinutesPrior > 0)
+      await this.queues.send_reminder_emails.add(
+        {
+          performance_id: ct._id,
+          sender_email_address: Env.EMAIL_ADDRESS,
+          type: '15 minutes',
+          premier_date: premierDate,
+          url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/performances/${ct._id}`
+        },
+        {
+          // delay: 1000 * 3 * 60 // used for testing (sends in 3 minutes)
+          delay: 1000 * fifteenMinutesPrior // multiply by 1000 to get time in milliseconds
+        }
+      );
   };
 
   transferAllTierSubscribersToNewTier = async (ct: Contract<'patronage.tier_amount_changed'>) => {

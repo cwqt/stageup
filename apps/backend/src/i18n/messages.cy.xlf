@@ -195,7 +195,7 @@ in your account.</p>
 <p><strong>Thanks,</strong>
 <strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p><strong>Helo {user_username},</strong></p><p> Mae hwn yn hysbysiad i gadarnhau bod <strong>{host_name}</strong> wedi cychwyn ad-daliad ar eich archeb <strong>{invoice_id}</strong> am y swm o <strong>{invoice_amount} ar</strong> gyfer y perfformiad <strong>{performance_name}</strong> .</p><p> Gallwch weld statws yr ad-daliad hwn ar unrhyw adeg trwy fewngofnodi i&#39;ch cyfrif StageUp a chlicio gosodiadau -&gt; taliadau.</p><p> Byddwn yn credydu&#39;r arian yn awtomatig i&#39;ch <strong>{card_brand} sy&#39;n</strong> dod i ben yn <strong>{last_4}</strong> . Sylwch, gall y swm gymryd hyd at 5 diwrnod gwaith i ymddangos yn eich cyfrif.</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p><strong>Helo {user_username},</strong></p><p> Mae hwn yn hysbysiad i gadarnhau bod <strong>{host_name}</strong> wedi cychwyn ad-daliad ar eich archeb <strong>{invoice_id}</strong> am y swm o <strong>{invoice_amount} ar</strong> gyfer y perfformiad <strong>{performance_name}</strong> .</p><p> Gallwch weld statws yr ad-daliad hwn ar unrhyw adeg trwy fewngofnodi i'ch cyfrif StageUp a chlicio gosodiadau -> taliadau.</p><p> Byddwn yn credydu'r arian yn awtomatig i'ch <strong>{card_brand} sy'n</strong> dod i ben yn <strong>{last_4}</strong> . Sylwch, gall y swm gymryd hyd at 5 diwrnod gwaith i ymddangos yn eich cyfrif.</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_initiated__subject" datatype="html">
       <source>Refund initiated by {host_name} for {performance_name}</source>
@@ -213,7 +213,7 @@ amount in their account within 5 working days</p>
 <p>Please note, if this request was not initated by you please notify us
 immediately</p>
 </source>
-      <target state="needs-translation"><p><strong>Helo {host_name},</strong></p><p> Rydych wedi cychwyn ad-daliad am eich perfformiad “{performance_name}”</p><p> <strong>Anfoneb #: {invoice_id}</strong> <strong>Cyfanswm Swm: {invoice_amount}</strong></p><p> Rydym wedi hysbysu&#39;r cwsmer yr effeithir arno y bydd yn derbyn y swm a ad-dalwyd yn ei gyfrif cyn pen 5 diwrnod gwaith</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p><p> Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith</p></target>
+      <target state="needs-translation"><p><strong>Helo {host_name},</strong></p><p> Rydych wedi cychwyn ad-daliad am eich perfformiad “{performance_name}”</p><p> <strong>Anfoneb #: {invoice_id}</strong> <strong>Cyfanswm Swm: {invoice_amount}</strong></p><p> Rydym wedi hysbysu'r cwsmer yr effeithir arno y bydd yn derbyn y swm a ad-dalwyd yn ei gyfrif cyn pen 5 diwrnod gwaith</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p><p> Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith</p></target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_initiated__subject" datatype="html">
       <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
@@ -234,7 +234,7 @@ amount in their accounts within 5 working days</p>
 <p>Please note, if this request was not initated by you please notify us
 immediately"</p>
 </source>
-      <target state="needs-translation"><p><strong>Helo {host_name},</strong></p><p> Rydych wedi cychwyn ad-daliadau ar gyfer anfonebau {refund_quantity}</p><p> Cyfanswm gwerth: <strong>{invoices_total}</strong></p><p> Rydym wedi hysbysu&#39;r cwsmeriaid yr effeithir arnynt y byddant yn derbyn y swm a ad-dalwyd yn eu cyfrifon cyn pen 5 diwrnod gwaith</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p><p> Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith '</p></target>
+      <target state="needs-translation"><p><strong>Helo {host_name},</strong></p><p> Rydych wedi cychwyn ad-daliadau ar gyfer anfonebau {refund_quantity}</p><p> Cyfanswm gwerth: <strong>{invoices_total}</strong></p><p> Rydym wedi hysbysu'r cwsmeriaid yr effeithir arnynt y byddant yn derbyn y swm a ad-dalwyd yn eu cyfrifon cyn pen 5 diwrnod gwaith</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p><p> Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith '</p></target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
       <source>Refund for {performance_name} succesful!</source>
@@ -253,13 +253,13 @@ You can view a log of this refund within your StageUp account settings</p>
 <p><strong>Thanks,</strong>
 <strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Helo {user_username},</p><p> Mae hwn yn hysbysiad i gadarnhau bod {host_name} wedi ad- <strong>dalu&#39;ch archeb {invoice_id} yn llwyddiannus ar</strong> gyfer <strong>{invoice_amount}</strong> am eich pryniant o <strong>{performance_name}</strong> oherwydd:</p><blockquote><p> {refund_reason}</p></blockquote><p> Mae&#39;r cronfeydd bellach wedi&#39;u credydu i <strong>{card_brand} sy&#39;n</strong> dod i ben yn <strong>{last_4}</strong> . Gallwch weld log o&#39;r ad-daliad hwn yn eich gosodiadau cyfrif StageUp</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p>Helo {user_username},</p><p> Mae hwn yn hysbysiad i gadarnhau bod {host_name} wedi ad- <strong>dalu'ch archeb {invoice_id} yn llwyddiannus ar</strong> gyfer <strong>{invoice_amount}</strong> am eich pryniant o <strong>{performance_name}</strong> oherwydd:</p><blockquote><p> {refund_reason}</p></blockquote><p> Mae'r cronfeydd bellach wedi'u credydu i <strong>{card_brand} sy'n</strong> dod i ben yn <strong>{last_4}</strong> . Gallwch weld log o'r ad-daliad hwn yn eich gosodiadau cyfrif StageUp</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
       <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
 succesfully processed by Stripe</p>
 </source>
-      <target state="needs-translation"><p>Ad-daliad ar gyfer {user_username} ar gyfer {performance_name} (ID: {invoice_id}), wedi&#39;i brosesu&#39;n llwyddiannus gan Stripe</p></target>
+      <target state="needs-translation"><p>Ad-daliad ar gyfer {user_username} ar gyfer {performance_name} (ID: {invoice_id}), wedi'i brosesu'n llwyddiannus gan Stripe</p></target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
       <source><p>Hi {host_name},</p>
@@ -271,7 +271,7 @@ been notified.</p>
 <p><strong>Thanks,</strong>
 <strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Helo {host_name},</p><p> Mae hwn yn hysbysiad i gadarnhau bod eich cais am ad-daliad diweddar am <strong>{user_username} ar</strong> gyfer <strong>{performance_name}</strong> am y swm o <strong>{invoice_amount}</strong> wedi&#39;i ad-dalu&#39;n llwyddiannus gan Stripe a bod y defnyddiwr wedi&#39;i hysbysu.</p><p> Gallwch weld statws eich holl ad-daliadau o fewn gosodiadau eich cyfrif</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p>Helo {host_name},</p><p> Mae hwn yn hysbysiad i gadarnhau bod eich cais am ad-daliad diweddar am <strong>{user_username} ar</strong> gyfer <strong>{performance_name}</strong> am y swm o <strong>{invoice_amount}</strong> wedi'i ad-dalu'n llwyddiannus gan Stripe a bod y defnyddiwr wedi'i hysbysu.</p><p> Gallwch weld statws eich holl ad-daliadau o fewn gosodiadau eich cyfrif</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.refund_requested__subject" datatype="html">
       <source>StageUp: Your refund request has been sent to @{host_name}</source>
@@ -290,7 +290,7 @@ been notified.</p>
 <p><strong>Thanks,</strong>
 <strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Mae eich cais am ad-daliad am yr anfoneb ganlynol wedi&#39;i anfon at <strong>{host_name}</strong> .</p><ul><li> Anfoneb #: <strong>{invoice_id}</strong></li><li> Perfformiad: <strong>{performance_name}</strong></li><li> Prynwyd: <strong>{purchase_date}</strong></li><li> Swm: <strong>{amount}</strong></li></ul><p> Byddwn yn rhoi gwybod ichi pan fydd y gwesteiwr wedi prosesu&#39;ch cais</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p>Mae eich cais am ad-daliad am yr anfoneb ganlynol wedi'i anfon at <strong>{host_name}</strong> .</p><ul><li> Anfoneb #: <strong>{invoice_id}</strong></li><li> Perfformiad: <strong>{performance_name}</strong></li><li> Prynwyd: <strong>{purchase_date}</strong></li><li> Swm: <strong>{amount}</strong></li></ul><p> Byddwn yn rhoi gwybod ichi pan fydd y gwesteiwr wedi prosesu'ch cais</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.host_refund_requested_confirmation__subject" datatype="html">
       <source>StageUp: Refund request received for {performance_name} from @{user_username}</source>
@@ -311,7 +311,7 @@ here</a>.</p>
 <p><strong>Thanks,</strong>
 <strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Helo {host_name},</p><p> Mae @{user_username} ({user_email_address}) wedi gofyn am ad-daliad ar eu pryniant o {performance_name}</p><p> <strong>Manylion Ad-daliad:</strong></p><ul><li> <strong>Anfoneb #:</strong> {invoice_id}</li><li> <strong>Perfformiad:</strong> {performance_name}</li><li> <strong>Prynwyd Ymlaen:</strong> {purchase_date}</li><li> <strong>Swm:</strong> {amount}</li></ul><p> I brosesu&#39;r cais hwn gallwch ymweld â&#39;ch <a href="{invoice_dashboard_url}">dangosfwrdd anfoneb yma</a> .</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p>Helo {host_name},</p><p> Mae @{user_username} ({user_email_address}) wedi gofyn am ad-daliad ar eu pryniant o {performance_name}</p><p> <strong>Manylion Ad-daliad:</strong></p><ul><li> <strong>Anfoneb #:</strong> {invoice_id}</li><li> <strong>Perfformiad:</strong> {performance_name}</li><li> <strong>Prynwyd Ymlaen:</strong> {purchase_date}</li><li> <strong>Swm:</strong> {amount}</li></ul><p> I brosesu'r cais hwn gallwch ymweld â'ch <a href="{invoice_dashboard_url}">dangosfwrdd anfoneb yma</a> .</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.host.invoice_pdf__subject" datatype="html">
       <source>Exported Invoice PDF files</source>
@@ -373,19 +373,34 @@ here</a>.</p>
 <p>Click the link to watch <strong>{performance_name}</strong> by <strong>{host_name}</strong> on StageUp
 now: <a href="{url}">{url}</a>></p>
 </source>
-      <target state="needs-translation"><p>Helo {user_name},</p><p> Cliciwch y ddolen i wylio <strong>{performance_name}</strong> gan <strong>{host_name}</strong> ar StageUp nawr: <a href="{url}">{url}</a> &gt;</p></target>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Cliciwch y ddolen i wylio <strong>{performance_name}</strong> gan <strong>{host_name}</strong> ar StageUp nawr: <a href="{url}">{url}</a> ></p></target>
     </trans-unit>				
-		<trans-unit id="email.ticket.purchased__subject" datatype="html">
-      <source>Receipt of purchase of StageUp ticket</source>
-      <target state="needs-translation">Derbyn pryniant tocyn StageUp</target>
+		<trans-unit id="email.ticket.purchased_current__subject" datatype="html">
+      <source>Thank you for purchasing {performance_name}. Watch it now</source>
+      <target state="needs-translation">Diolch am brynu {performance_name}. Gwyliwch ef nawr</target>
     </trans-unit>				
-		<trans-unit id="email.ticket.purchased__content" datatype="html">
+		<trans-unit id="email.ticket.purchased_current__content" datatype="html">
       <source><p>Hi {user_name},</p>
-<p>You purchased a {ticket_name} to watch {performance_name} for {amount}.
-Click here to watch: <a href="{watch_url}">{watch_url}</a>
-Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
+<p>You purchased a {ticket_name} to watch {performance_name} for {amount}.</p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Click here to watch</a></p>
+<p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
 </source>
-      <target state="needs-translation"><p>Helo {user_name},</p><p> Fe wnaethoch chi brynu {ticket_name} i wylio {performance_name} ar gyfer {amount}. Cliciwch yma i wylio: <a href="{watch_url}">{watch_url}</a> Derbyn y pryniant hwn: <a href="{receipt_url}">{receipt_url}</a></p></target>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Fe wnaethoch chi brynu {ticket_name} i wylio {performance_name} ar gyfer {amount}.</p><p> Cliciwch yma i wylio: <a href="{url}">{url}</a> Derbyn y pryniant hwn: <a href="{receipt_url}">{receipt_url}</a></p></target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased_future__subject" datatype="html">
+      <source>Thank you for purchasing {performance_name}</source>
+      <target state="needs-translation">Diolch am brynu {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased_future__content" datatype="html">
+      <source><p>Hello {user_name},</p>
+<p>You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don’t forget to mark your calendar.
+We’ll send you reminders closer to the time, so you don’t miss it. :)</p>
+<p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to my library</a></p>
+<p>Cheers,</p>
+<p>StageUp Team</p>
+</source>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name} ar gyfer {amount}. Bydd yn dangos am y tro cyntaf ar {premier_time}. Peidiwch ag anghofio marcio'ch calender. Byddwn yn anfon nodiadau atgoffa atoch yn agos at y dyddiad, felly ni fyddwch yn ei golli. :)</p><p> Derbyn y pryniant hwn: <a href="{receipt_url}">{receipt_url}</a> Ewch â mi i'm llyfrgell: <a href="{url}">{url}</a></p><p> Lloniannau,</p><p> Tîm StagUp</p></target>
     </trans-unit>				
 		<trans-unit id="email.user.patronage_started__subject" datatype="html">
       <source>Patron Subscription to {tier_name}</source>
@@ -401,7 +416,7 @@ month, starting today.</p>
 <p>Thanks,
 StageUp Team</p>
 </source>
-      <target state="needs-translation"><p>Helo {user_name},</p><p> Diolch am gefnogi <strong>{host_name}</strong> !</p><p> Bydd eich taliadau noddwr o {amount} yn cael eu debydu ar {date_ordinal} bob mis, gan ddechrau heddiw.</p><p> Gallwch ganslo&#39;ch taliadau ar unrhyw adeg. Trwy wneud y taliad hwn rydych chi&#39;n cytuno i <a href="{tos_url}">Delerau Defnyddio StageUp</a></p><p> Diolch, Tîm StageUp</p></target>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Diolch am gefnogi <strong>{host_name}</strong> !</p><p> Bydd eich taliadau noddwr o {amount} yn cael eu debydu ar {date_ordinal} bob mis, gan ddechrau heddiw.</p><p> Gallwch ganslo'ch taliadau ar unrhyw adeg. Trwy wneud y taliad hwn rydych chi'n cytuno i <a href="{tos_url}">Delerau Defnyddio StageUp</a></p><p> Diolch, Tîm StageUp</p></target>
     </trans-unit>				
 		<trans-unit id="email.host.patronage_started__subject" datatype="html">
       <source>New Patron to {tier_name}</source>
@@ -415,7 +430,7 @@ StageUp Team</p>
 <li>Amount: <strong>{amount}</strong></li>
 </ul>
 </source>
-      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Mae @{user_username} bellach yn noddwr i&#39;ch cwmni.</p><ul><li> Haen <strong>Noddwyr: {tier_name}</strong></li><li> Swm: <strong>{amount}</strong></li></ul></target>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Mae @{user_username} bellach yn noddwr i'ch cwmni.</p><ul><li> Haen <strong>Noddwyr: {tier_name}</strong></li><li> Swm: <strong>{amount}</strong></li></ul></target>
     </trans-unit>				
 		<trans-unit id="email.user.password_reset_requested__subject" datatype="html">
       <source>StageUp Reset Password</source>
@@ -431,7 +446,7 @@ for the next 24 hours.</p>
 <p>If you did not request this change, please ignore this email and your password
 will remain unchanged.</p>
 </source>
-      <target state="needs-translation"><p>Helo <strong>{user_name}</strong> ,</p><p> Rydych chi&#39;n derbyn hwn oherwydd eich bod chi (neu rywun arall) wedi gofyn am ailosod y cyfrinair ar gyfer eich cyfrif StageUp.</p><p> Cliciwch ar y ddolen ganlynol i gwblhau&#39;r broses. Mae&#39;r ddolen hon yn ddilys am y 24 awr nesaf.</p><p> <a href="{password_reset_url}">{password_reset_url}</a></p><p> Os na ofynasoch am y newid hwn, anwybyddwch yr e-bost hwn a bydd eich cyfrinair yn aros yr un fath.</p></target>
+      <target state="needs-translation"><p>Helo <strong>{user_name}</strong> ,</p><p> Rydych chi'n derbyn hwn oherwydd eich bod chi (neu rywun arall) wedi gofyn am ailosod y cyfrinair ar gyfer eich cyfrif StageUp.</p><p> Cliciwch ar y ddolen ganlynol i gwblhau'r broses. Mae'r ddolen hon yn ddilys am y 24 awr nesaf.</p><p> <a href="{password_reset_url}">{password_reset_url}</a></p><p> Os na ofynasoch am y newid hwn, anwybyddwch yr e-bost hwn a bydd eich cyfrinair yn aros yr un fath.</p></target>
     </trans-unit>				
 		<trans-unit id="email.user.password_changed__subject" datatype="html">
       <source>Your StageUp password was just changed</source>
@@ -443,7 +458,7 @@ will remain unchanged.</p>
 your password as soon as possible.</p>
 <p>If you have recently changed your password, then please ignore this</p>
 </source>
-      <target state="needs-translation"><p>Newidiwyd cyfrinair eich cyfrif StageUp yn ddiweddar.</p><p> Os na wnaethoch y newid hwn, mewngofnodwch i&#39;ch cyfrif a newid eich cyfrinair cyn gynted â phosibl.</p><p> Os ydych chi wedi newid eich cyfrinair yn ddiweddar, yna anwybyddwch hyn</p></target>
+      <target state="needs-translation"><p>Newidiwyd cyfrinair eich cyfrif StageUp yn ddiweddar.</p><p> Os na wnaethoch y newid hwn, mewngofnodwch i'ch cyfrif a newid eich cyfrinair cyn gynted â phosibl.</p><p> Os ydych chi wedi newid eich cyfrinair yn ddiweddar, yna anwybyddwch hyn</p></target>
     </trans-unit>				
 		<trans-unit id="email.subscriber_notify_tier_deleted__subject" datatype="html">
       <source>Notification of Patron Tier removal</source>
@@ -456,7 +471,7 @@ cancelled your current subscription ({sub_id}). It will come into effect
 immediately. You’ll recieve and e-mail shortly confirming the un-subscription.</p>
 <p>Thanks, StageUp</p>
 </source>
-      <target state="needs-translation"><p>Helo <strong>@{user_username}</strong> ,</p><p> <strong>Mae @{host_username}</strong> wedi dileu / dileu haen <strong>{tier_name}.</strong> Rydym wedi canslo&#39;ch tanysgrifiad cyfredol ({sub_id}). Daw i rym ar unwaith. Byddwch yn derbyn ac yn e-bostio cyn bo hir yn cadarnhau&#39;r tanysgrifiad.</p><p> Diolch, StageUp</p></target>
+      <target state="needs-translation"><p>Helo <strong>@{user_username}</strong> ,</p><p> <strong>Mae @{host_username}</strong> wedi dileu / dileu haen <strong>{tier_name}.</strong> Rydym wedi canslo'ch tanysgrifiad cyfredol ({sub_id}). Daw i rym ar unwaith. Byddwch yn derbyn ac yn e-bostio cyn bo hir yn cadarnhau'r tanysgrifiad.</p><p> Diolch, StageUp</p></target>
     </trans-unit>				
 		<trans-unit id="email.user_unsubscribed_from_patron_tier__subject" datatype="html">
       <source>Un-subscribed from patron tier</source>
@@ -470,7 +485,34 @@ tier, <strong>{tier_name}</strong>.</p>
 listed as ‘Cancelled’ on your account from now on.</p>
 <p>Thanks, StageUp</p>
 </source>
-      <target state="needs-translation"><p>Helo @{user_username},</p><p> Dyma dderbynneb o&#39;ch tanysgrifiad gan haen noddwr <strong>@{host_username}</strong> <strong>, {tier_name}</strong> .</p><p> Ni chodir tâl arnoch am y tanysgrifiad hwn mwyach a bydd y tanysgrifiad hwn yn cael ei restru fel &#39;Canslo&#39; ar eich cyfrif o hyn ymlaen.</p><p> Diolch, StageUp</p></target>
+      <target state="needs-translation"><p>Helo @{user_username},</p><p> Dyma dderbynneb o'ch tanysgrifiad gan haen noddwr <strong>@{host_username}</strong> <strong>, {tier_name}</strong> .</p><p> Ni chodir tâl arnoch am y tanysgrifiad hwn mwyach a bydd y tanysgrifiad hwn yn cael ei restru fel 'Canslo' ar eich cyfrif o hyn ymlaen.</p><p> Diolch, StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.one_day_performance_reminder__subject" datatype="html">
+      <source>{performance_name}'s premiere is around the corner</source>
+      <target state="needs-translation">Mae première {performance_name} rownd y gornel</target>
+    </trans-unit>				
+		<trans-unit id="email.user.one_day_performance_reminder__content" datatype="html">
+      <source><p>Hello {user_username}!</p>
+<p>You purchased tickets for {performance_name}. It will premiere <strong>tomorrow</strong> on <strong>{premier_time}</strong>.</p>
+<p>We’re looking forward seeing you on StageUp!</p>
+<p>Cheers,</p>
+<p>StageUp team</p>
+</source>
+      <target state="needs-translation"><p>Helo {user_username}!</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name}. Bydd yn cael ei <strong>ddangos</strong> am y <strong>tro cyntaf yfory</strong> yn {premier_time}.</p><p> Gobeithio eich bod chi'n cynhyrfu i'w wylio.</p><p> Lloniannau,</p><p> Tîm StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.fifteen_minute_performance_reminder__subject" datatype="html">
+      <source>It’s on in 15 minutes!</source>
+      <target state="needs-translation">Mae ymlaen mewn 15 munud!</target>
+    </trans-unit>				
+		<trans-unit id="email.user.fifteen_minute_performance_reminder__content" datatype="html">
+      <source><p>Hello {user_username}!</p>
+<p>You purchased tickets for {performance_name}. It will start at {premier_time}.</p>
+<p>We hope you’re all set to watch it!</p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to the performance</a></p>
+<p>Cheers,</p>
+<p>StageUp team</p>
+</source>
+      <target state="needs-translation"><p>Helo {user_username}!</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name}. Bydd yn cychwyn yn {premier_time}.</p><p> Gobeithio eich bod chi i gyd yn barod i'w wylio!</p><p> Ewch â mi i'm llyfrgell: <a href="{url}">{url}</a></p><p> Lloniannau,</p><p> Tîm StageUp</p></target>
     </trans-unit>				
 		<trans-unit id="error.internal_server_error" datatype="html">
       <source>Internal server error</source>
