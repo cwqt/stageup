@@ -14,7 +14,7 @@ import { CurrencyCode, ITicket, ITicketStub, TicketType, DtoCreateTicket, Ticket
 import { uuid } from '@core/helpers';
 import { Performance } from './performance.entity';
 import { Except } from 'type-fest';
-import { Claim } from '../common/claim.entity';
+import { Claim } from '../assets/claim.entity';
 import { transact } from '../../typeorm-patches';
 @Entity()
 export class Ticket extends BaseEntity implements ITicket {

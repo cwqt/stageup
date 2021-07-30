@@ -1,5 +1,5 @@
 <div
-  class="h-64 rounded-lg overflow-hidden relative cursor-pointer shadow transform hover:scale-105 duration-200 hover:shadow-lg"
+  class="h-64 rounded-lg overflow-hidden relative cursor-pointer shadow transform hover:scale-105 duration-200 hover:shadow-lg thumbnail"
 >
   <!-- thumb footer -->
   <div class="h-52 relative">
@@ -23,7 +23,7 @@
     </div>
     <img
       class="w-full h-full object-cover"
-      [src]="performance.thumbnail || '/assets/performance-placeholder.jpeg'"
+      [src]="performance.thumbnail || thumbnail?.location || '/assets/performance-placeholder.jpeg'"
       alt=""
     />
   </div>

@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: BRANCH
+
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  BRANCH_NAME: ${{ github.head_ref }}
+
+jobs:
+  ctx:
+    name: Get lowercased branch name for Terraform workspace
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.ctx.outputs.branch }}
+      comment_id: ${{ steps.ctx.outputs.comment_id }}
+    steps:
+      # only continue if PR has a deployment log comment, otherwise /deploy was never called
+      - name: Find past deployment comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Deployment log
+
+      - name: Get last commit body & lower-case branch name
+        id: ctx
+        run: |
+          echo "::set-output name=branch::${BRANCH_NAME,,}"
+          echo "::set-output name=comment_id::${{ steps.fc.outputs.comment-id }}"
+
+  delete-infra:
+    name: Terraform teardown
+    needs: [ctx]
+    if: needs.ctx.outputs.comment_id != '' && startsWith(needs.ctx.outputs.branch, 'su-')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ env.BRANCH_NAME }}
+
+      # need a service account in fs in order to interact with remote state
+      - name: Initialise Terraform workspace
+        working-directory: terraform
+        run: |
+          echo ${{ secrets.TF_GCP_SA_KEY }} | base64 -d > terraform.service_account.json
+          terraform init -input=false
+          terraform workspace select ${{ needs.ctx.outputs.branch }}
+
+      # now that lifecycle.prevent_destroy items removed, can go ahead and delete things
+      - name: Tear down ephemeral infrastructure
+        working-directory: terraform
+        run: >
+          terraform destroy
+          -var 'core=feat'
+          -var 'gcp_project_id=core-314910'
+          -var 'sql_password=helloworld'
+          -var 'stripe_api_token=${{ secrets.STRIPE_TEST_SECRET_KEY }}'
+          -auto-approve
+
+      # tf workspace isn't needed anymore, switch to default because must not
+      # be on workspace to be deleted to delete it
+      # https://www.terraform.io/docs/cli/commands/workspace/delete.html
+      - name: Delete branch workspace
+        working-directory: terraform
+        run: |
+          terraform workspace select default
+          terraform workspace delete ${{ needs.ctx.outputs.branch }}
+
+      # clean up the webhook fan-out branch
+      - uses: fjogeleit/http-request-action@master
+        with:
+          # forward it to nginx/api which will proxy the request to the backend
+          url: https://webhooks.stageup.uk/endpoints?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api&api_key=${{ secrets.SU_WEBHOOKS_API_KEY }}
+          method: 'DELETE'
+          ignoreStatusCodes: true # will fire this on every PR run
+          timeout: 10000 # serverless cold starts can take a while
+
+      # update deployment log to show PR has been torn down
+      - name: Find past deployment comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Deployment log
+
+      - name: Update log comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ needs.ctx.outputs.comment_id }}
+          body: "\n\n:red_circle: [PR closed, environment torn down](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) :red_circle:"

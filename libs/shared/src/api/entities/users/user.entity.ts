@@ -18,9 +18,9 @@ import { Except } from 'type-fest';
 import { Host } from '../hosts/host.entity';
 import { Person } from './person.entity';
 import { ContactInfo } from './contact-info.entity';
-import { Invoice } from '../common/invoice.entity';
 import { PatronSubscription } from './patron-subscription.entity';
-import { PaymentMethod } from './payment-method.entity';
+import { PaymentMethod } from '../finance/payment-method.entity';
+import { Invoice } from '../finance/invoice.entity';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {

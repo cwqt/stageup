@@ -3,6 +3,7 @@ import { PG_MODELS, Providers } from '@core/api';
 import { Environment } from '@core/interfaces';
 import { Token } from 'typedi';
 import { log } from './logger';
+import { Configuration } from './configuration.entity';
 
 // Dependency Injection across the applications' modules
 export const PROVIDERS = new Token<BackendProviderMap>('PROVIDERS');
@@ -23,7 +24,7 @@ const PROVIDER_MAP = {
       // Re-sync in test, dev & staging - prod use migrations
       synchronize: !Env.isEnv(Environment.Production)
     },
-    PG_MODELS
+    { ...PG_MODELS, Configuration }
   ),
   redis: new Providers.Redis({
     host: Env.REDIS.HOST,

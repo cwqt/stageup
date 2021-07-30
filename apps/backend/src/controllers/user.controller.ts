@@ -1,4 +1,5 @@
 import { ErrorHandler } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
   Address,
   BaseController,
@@ -21,13 +22,10 @@ import {
   IMyself,
   IUser,
   IUserHostInfo,
-  IUserStub,
   pick
 } from '@core/interfaces';
-import { fields } from 'libs/shared/src/api/validate/fields.validators';
 import { object, string } from 'superstruct';
 import { EntityManager } from 'typeorm';
-import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import Env from '../env';
 
@@ -128,7 +126,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   readUserByUsername(): IControllerEndpoint<IUser> {
     return {
-      validators: { params: object({ username: fields.username }) },
+      validators: { params: object({ username: Validators.Fields.username }) },
       authorisation: AuthStrat.none,
       controller: async req => {
         const u = await getCheck(User.findOne({ username: req.params.username }));

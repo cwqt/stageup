@@ -1,4 +1,5 @@
 import { ErrorHandler } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
   BaseController,
   Follow,
@@ -13,16 +14,21 @@ import {
   OnboardingReview,
   PatronSubscription,
   Performance,
-  Refund,
   PerformanceAnalytics,
+  Refund,
   User,
   UserHostInfo,
   Validators
 } from '@core/api';
-import { timestamp, unix } from '@core/helpers';
+import { timestamp } from '@core/helpers';
 import {
+  Analytics,
+  AnalyticsTimePeriod,
+  AnalyticsTimePeriods,
   AssetType,
+  DtoHostAnalytics,
   DtoHostPatronageSubscription,
+  DtoPerformanceAnalytics,
   DtoUpdateHost,
   hasRequiredHostPermission,
   HostInviteState,
@@ -48,20 +54,10 @@ import {
   IRefund,
   IUserFollow,
   IUserHostInfo,
-  LiveStreamState,
-  PaymentStatus,
-  DtoPerformanceAnalytics,
-  IPerformanceAnalyticsMetrics,
-  AnalyticsTimePeriods,
-  AnalyticsTimePeriod,
-  DtoHostAnalytics,
-  Analytics
+  LiveStreamState
 } from '@core/interfaces';
-import deepmerge from 'deepmerge';
-import { fields } from 'libs/shared/src/api/validate/fields.validators';
-import { array, assign, boolean, coerce, enums, intersection, object, string, StructError } from 'superstruct';
+import { array, assign, boolean, coerce, enums, object, string, StructError } from 'superstruct';
 import { In } from 'typeorm';
-import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Env from '../env';
@@ -728,7 +724,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
   // See: https://alacrityfoundationteam31.atlassian.net/browse/SU-883
   // provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
   //   return {
-  //     validators: { body: object({ email_addresses: array(fields.email) }) },
+  //     validators: { body: object({ email_addresses: array(Validators.Fields.email) }) },
   //     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
   //     controller: async req => {
   //       const host = await getCheck(Host.findOne({ _id: req.params.hid }));
@@ -957,7 +953,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
   exportInvoicesToCSV(): IControllerEndpoint<void> {
     return {
-      validators: { body: object({ invoices: array(fields.nuuid) }) },
+      validators: { body: object({ invoices: array(Validators.Fields.nuuid) }) },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));

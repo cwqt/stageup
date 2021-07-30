@@ -1,5 +1,16 @@
 import { Primitive } from './fp.interface';
 
+// Describes a method of querying/sorting data
+// uses the .filter() fn created in typeorm-patches.ts
+/**
+ * ?filter[column]=type,opcode,...args
+ * {
+ * 	filter: {
+ * 		column: ["STR", "eq", "search value"]
+ * 	}
+ * }
+ */
+
 export enum FilterCode {
   String = 'STR',
   Number = 'NUM',
@@ -44,15 +55,6 @@ export type Operators =
   | NumberFilterOperator
   | BooleanFilterOperator
   | DateFilterOperator;
-
-/**
- * ?filter[column]=type,opcode,...args
- * {
- * 	filter: {
- * 		column: ["STR", "eq", "search value"]
- * 	}
- * }
- */
 
 // STR ----------------------------------------------------------------------------------
 export enum StringFilterOperator {

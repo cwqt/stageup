@@ -7,7 +7,7 @@
       "projectType": "application",
       "prefix": "backend",
       "i18n": {
-        "sources": ["tools/generate-xlf/tests/assets/i18.test.hjson"],
+        "sources": ["tools/generate-xlf/tests/assets/i18.test.yaml"],
         "path": "tools/generate-xlf/tests/assets/i18n",
         "locales": ["en", "nb", "cy"]
       }

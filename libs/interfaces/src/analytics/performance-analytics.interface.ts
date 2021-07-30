@@ -1,11 +1,6 @@
 import { i18n } from '@core/helpers';
-import {
-  AnalyticsPeriodDifference,
-  IAnalyticsChunk,
-  MetricFormatters,
-  MetricsAggregator
-} from './chunk-analytics.interface';
 import { IPerformanceStub } from '../performances/performance.interface';
+import { IAnalyticsChunk, MetricFormatters, MetricsAggregator } from './chunk-analytics.interface';
 
 // Data that is collected on the performance in the last week
 export type IPerformanceAnalyticsMetrics = {

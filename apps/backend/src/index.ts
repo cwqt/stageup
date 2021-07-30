@@ -1,5 +1,4 @@
-import { HostAnalytics, patchTypeORM, PerformanceAnalytics, Register } from '@core/api';
-import { timeout, timestamp } from '@core/helpers';
+import { patchTypeORM, Register } from '@core/api';
 import { Environment } from '@core/interfaces';
 import session from 'express-session';
 import { i18nProvider } from 'libs/shared/src/api/i18n';
@@ -10,10 +9,12 @@ import Auth from './common/authorisation';
 import { SUPPORTED_LOCALES } from './common/locales';
 import { log as logger, stream } from './common/logger';
 import providers, { BackendProviderMap, PROVIDERS as token } from './common/providers';
+import { Configuration } from './common/configuration.entity';
 import Env from './env';
 import { QueueModule } from './modules/queue/queue.module';
 import { SSEModule } from './modules/sse/sse.module';
 import routes from './routes';
+import seeder from './seeder';
 
 export type BackendModules = {
   SSE: SSEModule;
@@ -43,6 +44,9 @@ Register<BackendProviderMap>({
     }
   }
 })(async (app, providers) => {
+  const configuration = (await Configuration.findOne({})) || new Configuration();
+  await configuration.start();
+
   // Register session middleware
   app.use(
     session({
@@ -81,6 +85,15 @@ Register<BackendProviderMap>({
     email: providers.email,
     orm: providers.torm
   });
+
+  // Run the seeder in staging, for branch & staging deploys
+  if (Env.isEnv(Environment.Staging) && configuration.is_seeded == false) {
+    await seeder({ torm: providers.torm, stripe: providers.stripe }).run();
+
+    // seeder will wipe config momentarily, but stored in memory & will be saved again
+    configuration.is_seeded = true;
+    await configuration.save();
+  }
 
   return routes({
     Queue: Queue.routes,

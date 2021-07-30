@@ -65,12 +65,6 @@ const applications: {
       execute: env => `npx nx test api-tests --watch`
     },
     environments: ['development', 'staging', 'production']
-  },
-  seeder: {
-    cmd: {
-      seed: () => `nx run seeder:start`
-    },
-    environments: ['development']
   }
 };
 

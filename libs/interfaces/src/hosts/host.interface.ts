@@ -1,9 +1,7 @@
-import { IUserHostInfo } from '../users/user.interface';
-import { IPerformanceStub } from '../performances/performance.interface';
-import { IContactInfo } from '../users/person.interface';
-import { IAddress } from '../users/address.interface';
-import { Idless, NUUID } from '../common/fp.interface';
 import { Except } from 'type-fest';
+import { Idless, NUUID } from '../common/fp.interface';
+import { IPerformanceStub } from '../performances/performance.interface';
+import { IAddress } from '../users/address.interface';
 
 export type DtoCreateHost = Pick<IHostPrivate, 'email_address' | 'username' | 'name'>;
 

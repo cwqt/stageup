@@ -37,7 +37,7 @@ export default class EventBusProvider implements Provider<void> {
       uuid: uuid()
     };
 
-    this.log.debug(`Published %o to ${event}`, data);
+    this.log.debug(`Published (${meta.uuid}) %o to ${event}`, data);
     return this._connection.subject(event).next({ ...data, __meta: meta });
   }
 
@@ -46,7 +46,7 @@ export default class EventBusProvider implements Provider<void> {
       .subject(event)
       .pipe(
         tap((ct: Contract<T>) => {
-          this.log.debug(`Recieved message ${ct.__meta.uuid} from ${event}`);
+          this.log.debug(`Recieved (${ct.__meta.uuid}) from ${event}`);
           return ct;
         })
       )

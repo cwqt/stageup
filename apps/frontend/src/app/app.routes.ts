@@ -8,6 +8,7 @@ import { RedirectComponent } from './components/redirect/redirect.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { FeedComponent } from './routes/feed/feed.component';
+import { DocumentViewComponent } from './routes/gdpr/document-view/document-view.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
@@ -188,6 +189,22 @@ const LOGGED_IN_ROUTES: Routes = [
             {
               path: `search`,
               component: SearchComponent
+            },
+            {
+              path: 'documents',
+              children: [
+                {
+                  path: 'terms-and-conditions',
+                  component: DocumentViewComponent,
+                  data: { document_type: 'general_toc' }
+                },
+                {
+                  path: 'privacy-policy',
+                  component: DocumentViewComponent,
+                  data: { document_type: 'privacy_policy' }
+                },
+                { path: '**', component: NotFoundComponent }
+              ]
             },
             {
               matcher: hostMatcher,

@@ -1,14 +1,32 @@
 import * as fs from 'fs';
-import Hjson from 'hjson';
+import YAML from 'yaml';
 import path from 'path';
 import colors = require('colors');
 import spawn from 'await-spawn';
 import { exec } from 'child_process';
-import xml from 'fast-xml-parser';
 import { readFile as fsReadFile } from 'fs';
-import { Xliff } from './interfaces';
 import Translate from '@google-cloud/translate';
 import ora = require('ora');
+import md from 'markdown-it';
+import dot from 'dot-object';
+import { MD5 } from 'object-hash';
+import xlf from './parser';
+const replaceAll = require('string.prototype.replaceall');
+replaceAll.shim(); //es6 polyfill
+
+// https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
+// Typographer does the following replacements:
+// (c) (C) → ©
+// (tm) (TM) → ™
+// (r) (R) → ®
+// +- → ±
+// (p) (P) -> §
+// ... → … (also ?.... → ?.., !.... → !..)
+// ???????? → ???, !!!!! → !!!, `,,` → `,`
+// -- → &ndash;, --- → &mdash;
+const markdownRenderer = new md({ typographer: true, html: true });
+markdownRenderer.normalizeLink = v => v; // don't encode vars in links from {url} to %7Burl%7D
+markdownRenderer.validateLink = v => true; // allow every kind of link
 
 export const createSourceXlfTransUnit = ([id, message]: [string, string]): string => {
   // <trans-unit id="header-search-bar" datatype="html">
@@ -17,11 +35,13 @@ export const createSourceXlfTransUnit = ([id, message]: [string, string]): strin
   return `<trans-unit id="${id}" datatype="html"><source>${message}</source></trans-unit>\n`;
 };
 
-export const createSourceXlf = (body: string[]): string => {
+export const createXlf = (body: string[], sourceLanguage: string = 'en', targetLanguage?: string): string => {
   //  <file source-language="en" datatype="plaintext" original="generate-xlf">
   return `<?xml version="1.0" encoding="UTF-8"?>
   <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="generate-xlf">
+    <file source-language="${sourceLanguage}" ${
+    targetLanguage ? `target-language="${targetLanguage}"` : ''
+  } datatype="plaintext" original="generate-xlf">
       <body>
 ${body.reduce((acc, curr) => ((acc += `\t\t\t\t${curr}`), acc), '')}\t\t\t</body>
     </file>
@@ -52,7 +72,7 @@ export const extractTokensFromSources = async (sources: string[]): Promise<{ [in
   // Merge the source files into one big source map
   let tokens: { [code: string]: string };
   for await (let source of sources) {
-    // Read in the i18n.hjson
+    // Read in the i18n.yaml
     const buffer = await fs.promises
       .readFile(path.resolve(source))
       .catch(() => console.log(colors.red.bold(`${source} not found`)));
@@ -60,9 +80,12 @@ export const extractTokensFromSources = async (sources: string[]): Promise<{ [in
     // If there isn't a file, this'll be undefined, so skip this source
     if (!buffer) continue;
 
-    const sourceTokens: { [code: string]: string } = Hjson.parse(buffer.toString());
-    tokens = { ...tokens, ...sourceTokens };
+    const sourceTokens: { [code: string]: string } = YAML.parse(buffer.toString());
+
+    // Flatten object down into "some.dot.accessor" object
+    tokens = dot.dot({ ...tokens, ...sourceTokens });
   }
+
   return tokens;
 };
 
@@ -118,7 +141,7 @@ export const findMissingTokens = async (
               console.log('');
             }
 
-            console.log(`${missing.size} tokens are missing from the i18n.hjson files!`);
+            console.log(`${missing.size} tokens are missing from the i18n.yaml files!`);
             return res(missing);
           }
         }
@@ -129,10 +152,52 @@ export const findMissingTokens = async (
   }
 };
 
+export const convertMarkdownTokensToHtml = async (tokens: {
+  [code: string]: string;
+}): Promise<{ [code: string]: string }> =>
+  Object.entries(tokens).reduce((acc, [code, markdown]) => {
+    const urls = markdown.match(/\<\{.*\}\>/g);
+
+    // Strings that contain new-lines are multi-line strings & so should not use the inlineRenderer
+    // Normal renderer doesn't wrap text in a <p> tag
+    const isMulitline = markdown.includes('\n');
+    const renderer = isMulitline
+      ? markdownRenderer.render.bind(markdownRenderer)
+      : markdownRenderer.renderInline.bind(markdownRenderer);
+
+    if (urls) {
+      const url = 'https://please-replace-me.com';
+      const map = urls.reduce((acc, curr) => {
+        acc[curr] = `${url}/${MD5(curr)}`;
+        return acc;
+      }, {});
+
+      // so the markdown parser won't parse <{url}> as a <a> tag unless the contents of <>
+      // meets a valid url rule - so swap out {url} with url/hash, do the markdowning, and then
+      // replace the ICU variable back in.....jesus christ this fucking sucks
+      urls?.forEach(match => (markdown = markdown.replace(match, `<${map[match]}>`)));
+
+      // for every <{}> that exists there will now be 2 to take its place, hence md5 hash
+      // <{url}> --> <a href="{url}">{url}</a>
+      // Render markdown using inline/multi-line renderer
+      markdown = renderer(markdown);
+
+      // And now put the match codes back in place, removing the <> from <{}> to leave only the ICU var
+      urls.forEach(match => {
+        markdown = markdown.replaceAll(`${map[match]}`, match.replaceAll(/\<|\>/g, ''));
+      });
+    } else {
+      markdown = renderer(markdown);
+    }
+
+    acc[code] = markdown;
+    return acc;
+  }, {});
+
 export const writeSourceXlfFile = async (sourcePath: string, tokens: { [code: string]: string }) => {
   // Generate the Source XLF file, for purposes of merging new entries into existing XLFs
   const completeSourcePath = path.resolve(process.cwd(), sourcePath);
-  const source = createSourceXlf(Object.entries(tokens).map(createSourceXlfTransUnit));
+  const source = createXlf(Object.entries(tokens).map(createSourceXlfTransUnit));
 
   // Delete the old source file & write the new one
   await fs.promises.unlink(path.resolve(completeSourcePath, 'messages.source.xlf')).catch(() => {});
@@ -151,7 +216,7 @@ export const writeLocaleXlfFiles = async (sourcePath: string) => {
   // Tool uses the same xliff generator that our Angular project does, it consumes a base
   // messages.xlf file which contains all the source trans-units - and then for each locale,
   // merges the existing locale xlf files (if any), with the base xlf to update; for if any
-  // new codes were added to the i18n.hjson
+  // new codes were added to the i18n.yaml
   try {
     // https://github.com/martinroob/ngx-i18nsupport/issues/144#issuecomment-801019865
     await spawn('node', [
@@ -163,7 +228,7 @@ export const writeLocaleXlfFiles = async (sourcePath: string) => {
   } catch (e) {
     console.log(e.stderr.toString());
     console.log(e.stdout.toString());
-    process.exit(1);
+    throw new Error('Merging XLFs failed!');
   }
 };
 
@@ -189,18 +254,34 @@ ${tsMap.map(t => `  ${t}`).join(',\n')}
   fs.writeFileSync(path.resolve(sourcePath, 'i18n-tokens.autogen.ts'), types, { flag: 'w' });
 };
 
-export const fixCharacterEntityProblems = async (sourcePath: string) => {
+export const fixCharacterEntityProblems = async (sourcePath: string): Promise<{ [filename: string]: string }> => {
   // Often times problems like "& amp;" occur, where there's a space between the & and the code
   // Scan all .xlfs for &.*; and replace any spaces with nothing
   const files = fs.readdirSync(sourcePath).filter(f => f.endsWith('.xlf'));
+  const bodies = {};
 
   for await (const file of files) {
     let body = await readFile(path.resolve(sourcePath, file));
     const matches = [...new Set(body.match(/&\s.*?;/g) || [])];
     // Replace all whitespace in matches
     matches.forEach(match => (body = body.replaceAll(match, match.replace(/\s/g, ''))));
+
+    // Perform character replacements
+    const replacements = {
+      ['&amp;']: '&',
+      ['&quot;']: "'",
+      ['&lt;']: '<',
+      ['@ ']: '@' // translation likes to do '@ username', rather than '@username'
+    };
+    for (let [target, replacement] of Object.entries(replacements)) {
+      body = body.replaceAll(target, replacement);
+    }
+
+    bodies[file] = body;
     fs.writeFileSync(path.resolve(sourcePath, file), body);
   }
+
+  return bodies;
 };
 
 export const translateICUString = async (
@@ -211,14 +292,22 @@ export const translateICUString = async (
   // Since we use ICU formatting, we have variables inside e.g. {this_is_a_var}
   // that may get translated -> {amount} => {beløp}, so we need to replace all these with some substring
   // that definitely __won't__ get translated - $$TRANS_REPLACE_n
-  const variables = input.match(/\{(.*?)\}/g);
-  variables?.forEach((match, idx) => (input = input.replace(match, `TRANS_REPLACE_${idx}`)));
+  // also capture <x /> tags from angulars' extract-i18n tooling
+  const variables = input.match(/\{(.*?)\}|<x.*\/>/g);
+  variables?.forEach((match, idx) => (input = input.replace(match, `VAR_REPLACE_${idx}`)));
+
+  // Also need to replace <x/> self-closing tags!
+  // equiv-text can contain html so need to be a bit smarted with handling this one
+  const xTags = input.match(/<x(.*?)(?<=equiv-text=".*"\/>)/gms);
+  xTags?.forEach((match, idx) => (input = input.replace(match, `X_TAG_REPLACE_${idx}`)));
 
   // Do the translating!
   let [translation] = await Translator.translate(input, locale);
 
   // And now put the match codes back in place within the translated string...
-  variables?.forEach((match, idx) => (translation = translation.replace(`TRANS_REPLACE_${idx}`, match)));
+  variables?.forEach((match, idx) => (translation = translation.replace(`VAR_REPLACE_${idx}`, match)));
+  xTags?.forEach((match, idx) => (translation = translation.replace(`X_TAG_REPLACE_${idx}`, match)));
+
   return translation;
 };
 
@@ -234,51 +323,25 @@ export const translateUntranslatedTransUnits = async (sourcePath: string, locale
 
   // Begin translation each trans unit of each locale
   for await (let locale of locales) {
-    const file = await readFile(path.resolve(sourcePath, `messages.${locale}.xlf`));
+    spinner.prefixText = locale;
 
-    // Parse to JSON so we can iterate over all the nodes, for translating
-    const xliff: { xliff: Xliff; [index: string]: any } = await xml.parse(file.toString(), {
-      // Use prefix so the parser knows which fields are XML attributes
-      attributeNamePrefix: '@_',
-      ignoreAttributes: false,
-      ignoreNameSpace: false,
-      allowBooleanAttributes: false,
-      trimValues: true,
-      // angular i18n-tooling generates random ids for trans-units which are numbers (as strings) with a
-      // size > 2^53 bits, so we will lose precision on the trans unit ids if it attempts to parse values
-      // if we allow this lib to coerce from string -> num, the resulting ids won't match because the
-      // precision loss (replaced with 0's) - so lets leave them as strings :)
-      parseAttributeValue: false,
-      parseNodeValue: false
-    });
+    // Get all trans-units from locale XLF file
+    const parsed = await xlf.parse(path.resolve(sourcePath, `messages.${locale}.xlf`));
 
-    // For parsing back into XML from JSON
-    const parser = new xml.j2xParser({ ignoreAttributes: false, attributeNamePrefix: '@_', format: true });
+    // Translate all newly added tokens using GCP Translate API
+    for await (let unit of parsed.trans_units) {
+      if (unit.state == 'new') {
+        spinner.text = `Translating: ${unit.id}`.gray;
+        unit.target = await translateICUString(unit.target, locale, Translator);
 
-    // Get all nodes whose state is new
-    const untranslatedCodes: Array<{ _id: string; text: string }> = xliff.xliff.file.body['trans-unit'].reduce(
-      (acc, curr) => (
-        curr.target['@_state'] == 'new' && acc.push({ _id: curr['@_id'], text: curr['target']['#text'] }), acc
-      ),
-      []
-    );
-
-    if (untranslatedCodes.length) {
-      spinner.prefixText = locale;
-
-      for await (let { _id, text } of untranslatedCodes) {
-        spinner.text = `Translating: ${_id}`.gray;
-        const translation = await translateICUString(text, locale, Translator);
-
-        // Set all the metadata & new value of the trans-unit
-        const unit = xliff.xliff.file.body['trans-unit'].find(unit => unit['@_id'] == _id);
-        unit.target['@_state'] = 'needs-translation'; // mark as needing to be checked over by a human
-        unit.target['#text'] = translation;
+        // Mark as needing to be double checked by a human
+        unit.state = 'needs-translation';
+        console.log(unit);
       }
     }
 
-    fs.writeFileSync(path.resolve(sourcePath, `messages.${locale}.xlf`), parser.parse(xliff));
     spinner.text = 'Saving XML...'.gray;
+    await xlf.save(path.resolve(sourcePath, `messages.${locale}.xlf`), parsed);
   }
 
   spinner.text = 'Translating new un-translated tokens...'.gray;
@@ -312,7 +375,7 @@ export const readFile = async (path: string): Promise<string> => {
   const file = await new Promise<string>((res, rej) =>
     fsReadFile(path, { encoding: 'utf-8' }, (err, data) => {
       if (err) return rej(err);
-      res(data);
+      res(data.toString());
     })
   );
 

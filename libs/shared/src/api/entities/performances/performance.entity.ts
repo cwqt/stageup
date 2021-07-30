@@ -24,7 +24,7 @@ import {
   OneToOne,
   PrimaryColumn
 } from 'typeorm';
-import { AssetGroup } from '../common/asset-group.entity';
+import { AssetGroup } from '../assets/asset-group.entity';
 import { Host } from '../hosts/host.entity';
 import { Ticket } from './ticket.entity';
 

@@ -54,7 +54,8 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
         parseNodeValue: true,
         parseAttributeValue: true,
         trimValues: true,
-        parseTrueNumberOnly: false
+        parseTrueNumberOnly: false,
+        stopNodes: ['target', 'source'] // don't parse target tags otherwise will parse html as xml & incorrectly set map value
       });
 
       const missingCodes = xliff.file.body['trans-unit'].reduce(
@@ -71,13 +72,7 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
       // Pull out xliff data into code : translation map
       this.locales.set(
         language,
-        new Map(
-          xliff.file.body['trans-unit'].map(unit => [
-            unit['@_id'],
-            // un-escape markdown stuff
-            unit.target['#text']?.replace(/(&lt;)|(&gt;)/g, m => ({ '&lt;': '<', '&gt;': '>' }[m]))
-          ])
-        )
+        new Map(xliff.file.body['trans-unit'].map(unit => [unit['@_id'], unit.target['#text']]))
       );
     }
 
@@ -108,7 +103,9 @@ export class i18nProvider<TokenMap extends i18nTokenMap> {
     } else {
       const msg = new IntlMessageFormat(
         this.locales.get(locale.language).get(code.slice(2)),
-        `${locale.language}-${locale.region}`
+        `${locale.language}-${locale.region}`,
+        {},
+        { ignoreTag: true }
       );
 
       return msg.format(variables || {}) as string;

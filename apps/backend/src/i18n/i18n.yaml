@@ -1,0 +1,349 @@
+# WRITE IN CommonMark https://commonmark.org/help/
+
+# Users ------------------------------------------------------------------------------------------------
+login:
+  password_incorrect: Password is incorrect
+
+user:
+  not_found: User does not exist
+
+# Errors -----------------------------------------------------------------------------------------------
+error:
+  not_a_video: This is not a video
+  email_already_in_use: E-mail address is already in use
+  user_has_no_claim: You don't have permissions to view this content
+  too_many_thumbnails: You have too many thumbnails, try deleting some before uploading new ones
+  publicity_period_outside_ticket_period: Cannot set performance publicity period outside one of the tickets selling period
+  already_following: You are already following this host
+  invalid_rating: The provided rate value is invalid
+  no_rating_exists: Could not find existing rating
+
+# Onboarding -----------------------------------------------------------------------------------------------
+onboarding:
+  steps_invalid: Some steps are invalid
+  step_is_invalid: Step is invalid
+
+# Hosts -----------------------------------------------------------------------------------------------
+host:
+  example_patron_tier_name: Example Tier
+  example_patron_tier_description: Example Tier Description
+  requires_stripe_connected: Requires Stripe to be connected to perform this action
+  invoice_csv:
+    invoice_id: Invoice ID
+    performance_name: Performance Title
+    ticket_type: Ticket Type
+    purchased_at: Purchased At
+    amount: Amount
+    net_amount: Net Amount
+    currency: Currency
+    status: Payment Status
+  invoice_pdf:
+    invoice_id: Invoice ID
+    performance_name: Performance Title
+    ticket_type: Ticket Type
+    purchased_at: Purchased At
+    amount: Amount
+    net_amount: Net Amount
+    currency: Currency
+    status: Payment Status
+    created_at: Created At
+    total_rows: Total Rows
+
+# Payment Status --------------------------------------------------------------------------------------
+payment_status:
+  created: Created
+  paid: Paid
+  fufilled: Fufilled
+  refunded: Refunded
+  refund_pending: Refund Pending
+  refund_denied: Refund Denied
+
+# Ticket Type ----------------------------------------------------------------------------------------
+ticket_type:
+  paid: Paid
+  free: Free
+  dono: Donation
+
+# Stripe ----------------------------------------------------------------------------------------------
+stripe:
+  origin_url_not_matched: Received response does not match submitter!
+
+# Refunds ----------------------------------------------------------------------------------------------
+refunds:
+  no_invoices_found: Could not find any invoices
+  refund_already_outstanding: Cannot refund while another refund is already outstanding
+
+# Emails ----------------------------------------------------------------------------------------------
+email:
+  user.refund_initiated__content: |
+    **Hi {user_username},**
+
+    This is a notification to confirm that **{host_name}** has initiated a refund on your order **{invoice_id}**
+    for the amount of **{invoice_amount}** for the performance **{performance_name}**.
+
+    You can view the status of this refund at any time by logging in to your
+    StageUp account and clicking settings -> payments.
+
+
+    We will automatically credit the funds to your **{card_brand}** ending in
+    **{last_4}**. Please note, the amount may take up to 5 working days to appear
+    in your account.
+
+    **Thanks,**
+    **StageUp Team**
+  user.refund_initiated__subject: Refund initiated by {host_name} for {performance_name}
+  host.refund_initiated__content: |
+    **Hi {host_name},**
+
+    You have initiated a refund for your performance "{performance_name}"
+
+    **Invoice#: {invoice_id}**
+    **Total Amount: {invoice_amount}**
+
+    We have notified the affected customer that they shall receive the refunded
+    amount in their account within 5 working days
+
+    **Thanks,**
+    **StageUp Team**
+
+    Please note, if this request was not initated by you please notify us
+    immediately
+  host.refund_initiated__subject: Refund initiated for {user_username}'s purchase of {performance_name}
+  host.refund_bulk_initiated_subject: You have initiated refunds for {refund_quantity} invoice(s)
+  host.refund_bulk_initiated_content: |
+    **Hi {host_name},**
+
+    You have initiated refunds for {refund_quantity} invoices
+
+    Total value: **{invoices_total}**
+
+    We have notified the affected customers that they shall receive the refunded
+    amount in their accounts within 5 working days
+
+    **Thanks,**
+    **StageUp Team**
+
+    Please note, if this request was not initated by you please notify us
+    immediately"
+  user.refund_refunded__subject: Refund for {performance_name} succesful!
+  user.refund_refunded__content: |
+    Hi {user_username},
+
+    This is a notification to confirm that {host_name} has successfully refunded
+    your order **{invoice_id}** for **{invoice_amount}** for your purchase of
+    **{performance_name}** due to:
+
+    > {refund_reason}
+
+    The funds have now been credited to **{card_brand}** ending in **{last_4}**.
+    You can view a log of this refund within your StageUp account settings
+
+    **Thanks,**
+    **StageUp Team**
+  host.refund_refunded__subject: |
+    Refund for {user_username} for {performance_name}(ID:{invoice_id}),
+    succesfully processed by Stripe
+  host.refund_refunded__content: |
+    Hi {host_name},
+
+    This is a notification to confirm that your recent refund request for
+    **{user_username}** for **{performance_name}** for the amount of
+    **{invoice_amount}** has succesfully been refunded by Stripe and the user has
+    been notified.
+
+    You can view the status of all your refunds within your account settings
+
+    **Thanks,**
+    **StageUp Team**
+  refund_requested__subject: 'StageUp: Your refund request has been sent to @{host_name}'
+  refund_requested__content: |
+    Your refund request for the following invoice has been sent to
+    **{host_name}**.
+
+    - Invoice #: **{invoice_id}**
+    - Performance: **{performance_name}**
+    - Purchased: **{purchase_date}**
+    - Amount: **{amount}**
+
+    We'll let you know when the host has processed your request
+
+    **Thanks,**
+    **StageUp Team**
+  host_refund_requested_confirmation__subject: 'StageUp: Refund request received for {performance_name} from @{user_username}'
+  host_refund_requested_confirmation__content: |
+    Hi {host_name},
+
+    @{user_username} ({user_email_address}) has requested a refund on their purchase of {performance_name}
+
+    **Refund Details:**
+
+    - **Invoice #:** {invoice_id}
+    - **Performance:** {performance_name}
+    - **Purchased On:** {purchase_date}
+    - **Amount:** {amount}
+
+    To process this request you can visit your [invoice dashboard
+    here]({invoice_dashboard_url}).
+
+    **Thanks,**
+    **StageUp Team**
+  host.invoice_pdf__subject: Exported Invoice PDF files
+  host.invoice_pdf__content: See attachments for invoice data
+  host.invoice_csv__filename: stageup-invoice
+  host.invoice_csv__subject: Exported Invoice CSV files
+  host.invoice_csv__content: See attachments for invoice data
+  host.invoice_pdf__filename: stageup-invoice
+  test.send_email__subject: Testing e-mails!
+  test.send_email__content: Hey {username} **How are you? [{url}]**
+  user.registered__subject: Verify your StageUp account
+  user.registered__content: 'Click the link to verify: <{url}>'
+  user.invited_to_host__subject: You have been invited to join {host_name} by {inviter_name}
+  user.invited_to_host__content: |
+    Hi {user_name},
+
+    Click the link to accept the invitation: <{url}>, this invite will expire in
+    **24 hours**.
+  user.invited_to_private_showing__subject: You have been invited to watch a private performance
+  user.invited_to_private_showing__content: |
+    Hi {user_name},
+
+    Click the link to watch **{performance_name}** by **{host_name}** on StageUp
+    now: <{url}>>
+  ticket.purchased_current__subject: Thank you for purchasing {performance_name}. Watch it now
+  ticket.purchased_current__content: |
+    Hi {user_name},
+
+    You purchased a {ticket_name} to watch {performance_name} for {amount}.
+
+    <a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Click here to watch</a>
+
+    Receipt of this purchase: <{receipt_url}>
+  ticket.purchased_future__subject: Thank you for purchasing {performance_name}
+  ticket.purchased_future__content: |
+    Hello {user_name},
+
+    You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don't forget to mark your calendar.
+    We'll send you reminders closer to the time, so you don't miss it. :)    
+
+    Receipt of this purchase: <{receipt_url}>
+
+    <a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to my library</a>
+
+    Cheers,
+
+    StageUp Team
+  user.patronage_started__subject: Patron Subscription to {tier_name}
+  user.patronage_started__content: |
+    Hi {user_name},
+
+    Thank you for supporting **{host_name}**!
+
+    Your patron payments of {amount} will be debited on {date_ordinal} of each
+    month, starting today.
+
+    You can cancel your payments at any time. By making this payment you agree to
+    [StageUp's Terms of Use]({tos_url})
+
+    Thanks,
+    StageUp Team
+  host.patronage_started__subject: New Patron to {tier_name}
+  host.patronage_started__content: |-
+    Hi **{host_name}**,
+
+    @{user_username} is now a patron of your company.
+
+    - Patron Tier: **{tier_name}**
+    - Amount: **{amount}**
+  user.password_reset_requested__subject: StageUp Reset Password
+  user.password_reset_requested__content: |
+    Hi **{user_name}**,
+
+    You are receiving this because you (or someone else) has requested the reset
+    of the password for your StageUp account.
+
+    Please click on the following link to complete the process. This link is valid
+    for the next 24 hours.
+
+    <{password_reset_url}>
+
+    If you did not request this change, please ignore this email and your password
+    will remain unchanged.
+  user.password_changed__subject: Your StageUp password was just changed
+  user.password_changed__content: |
+    Your StageUp account password has recently been changed.
+
+    If you did not make this change, please login into your account and change
+    your password as soon as possible.
+
+    If you have recently changed your password, then please ignore this
+  subscriber_notify_tier_deleted__subject: Notification of Patron Tier removal
+  subscriber_notify_tier_deleted__content: |
+    Hi **@{user_username}**,
+
+    **@{host_username}** has deleted/removed the **{tier_name}** tier. We have
+    cancelled your current subscription ({sub_id}). It will come into effect
+    immediately. You'll recieve and e-mail shortly confirming the un-subscription.
+
+    Thanks, StageUp
+  user_unsubscribed_from_patron_tier__subject: Un-subscribed from patron tier
+  user_unsubscribed_from_patron_tier__content: |
+    Hi @{user_username},
+
+    This is a receipt of your un-subscription from **@{host_username}**'s patron
+    tier, **{tier_name}**.
+
+    You'll no longer be charged for this subscription & this subscription will be
+    listed as 'Cancelled' on your account from now on.
+
+    Thanks, StageUp
+  user.one_day_performance_reminder__subject: "{performance_name}'s premiere is around the corner"
+  user.one_day_performance_reminder__content: |
+    Hello {user_username}!
+
+    You purchased tickets for {performance_name}. It will premiere **tomorrow** on **{premier_time}**.
+
+    We're looking forward seeing you on StageUp!
+
+    Cheers, 
+
+    StageUp team
+  user.fifteen_minute_performance_reminder__subject: It's on in 15 minutes!
+  user.fifteen_minute_performance_reminder__content: |
+    Hello {user_username}!
+
+    You purchased tickets for {performance_name}. It will start at {premier_time}.
+
+    We hope you're all set to watch it!
+
+    <a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to the performance</a>
+
+    Cheers, 
+
+    StageUp team
+  performance.deleted_notify_host__subject: You have deleted {performance_name}
+  performance.deleted_notify_host__content: |
+    Hello **{host_name}**,
+
+    You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
+
+    We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.
+
+    Thanks,
+
+    **StageUp Team**
+  performance.deleted_notify_user__subject: |
+    Peformance: {performance_name} cancellation notification
+  performance.deleted_notify_user__content: |
+    Hi **{user_username}**,
+
+    Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.
+
+    Invoice#: {invoice_id}
+
+    Ticket Price: {ticket_amount}
+
+    We will automatically credit the funds to your **{card_brand}** ending in **{last_4}**. Please note, it may take up to 5 working days for your account to be credited.
+
+    Thanks,
+
+    **StageUp Team**
