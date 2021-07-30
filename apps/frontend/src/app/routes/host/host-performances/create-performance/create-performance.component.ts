@@ -77,6 +77,9 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
               min_date: new Date()
             })
           }
+        }),
+        terms: UiField.Checkbox({
+          label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally`
         })
       },
       resolvers: {
