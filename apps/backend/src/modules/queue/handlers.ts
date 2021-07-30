@@ -181,7 +181,7 @@ export class EventHandlers {
     });
   };
 
-  deletePerformance = async (ct: Contract<'Performance.deleted'>) => {
+  deletePerformance = async (ct: Contract<'performance.deleted'>) => {
     const perf = await Performance.findOne({ _id: ct.performance_id }, { relations: ['host'] });
 
     //Send host email notifcation
@@ -201,16 +201,84 @@ export class EventHandlers {
     });
 
     //Find all users who've bought tickets and fire Performance.deleted_notify_user for each invoice
+    //First, return all tickets for a perf
+    const tickets: Ticket[] = await this.providers.orm.connection
+      .createQueryBuilder(Ticket, 'ticket')
+      .select(['ticket._id', 'performance__id'])
+      .where('ticket.performance__id = :performance_id', { performance_id: ct.performance_id })
+      .getMany();
 
-    // const tickets = await this.providers.orm.connection.createQueryBuilder(Ticket, 'ticket').where();
+    //Create an array of ticket ids
+    const ticketIds: string[] = tickets.map(t => t._id);
+
+    //Then, get all invoices with those tickets referenced
+    const invoices: Invoice[] = await this.providers.orm.connection
+      .createQueryBuilder(Invoice, 'invoice')
+      .select(['invoice._id', 'invoice.amount', 'invoice.ticket__id'])
+      .where('invoice.ticket__id IN (:...ticket_ids)', { ticket_ids: ticketIds })
+      .innerJoin('invoice.user', 'user')
+      .addSelect('user._id')
+      .getMany();
+
+    //FIre off user email event for each invoice
+    invoices.map(async i => {
+      return await this.providers.bus.publish(
+        'performance.deleted_notify_user',
+        {
+          performance_id: ct.performance_id,
+          user_id: i.user._id,
+          invoice_id: i._id
+        },
+        ct.__meta.locale
+      );
+    });
   };
 
-  sendUserPerformanceDeletionEmail = async (ct: Contract<'Performance.deleted_notify_user'>) => {
-    const perf = await Performance.findOne({ _id: ct.performance_id });
+  sendUserPerformanceDeletionEmail = async (ct: Contract<'performance.deleted_notify_user'>) => {
+    const perf = await Performance.findOne({
+      where: { _id: ct.user_id },
+      relations: { host: true },
+      select: {
+        name: true,
+        host: { name: true }
+      }
+    });
+    const user = await User.findOne({ _id: ct.user_id }, { select: ['name', 'email_address'] });
+    const invoice = await Invoice.findOne({
+      where: { _id: ct.invoice_id },
+      relations: { payment_method: true },
+      select: {
+        _id: true,
+        amount: true,
+        purchased_at: true,
+        currency: true,
+        payment_method: {
+          brand: true,
+          last4: true
+        }
+      }
+    });
 
-    //Find all users who've purchased tickets. Get all invoices associated with all ticket ids associated with a perf
-
-    await this.providers.orm.connection.createQueryBuilder();
+    //Send user email notifcation
+    this.queues.send_email.add({
+      subject: this.providers.i18n.translate('@@email.performance.deleted_notify_user__subject', ct.__meta.locale, {
+        performance_name: perf.name
+      }),
+      content: this.providers.i18n.translate('@@email.performance.deleted_notify_user__content', ct.__meta.locale, {
+        user_username: user.name,
+        host_name: perf.host.name,
+        performance_name: perf.name,
+        invoice_id: invoice._id,
+        ticket_purchase_date: moment.unix(invoice.purchased_at).format('LLLL'),
+        ticket_amount: i18n.money(invoice.amount, invoice.currency),
+        card_brand: pipes.cardBrand(invoice.payment_method.brand),
+        last_4: invoice.payment_method.last4
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: user.email_address,
+      markdown: true,
+      attachments: []
+    });
   };
 
   sendUserPatronSubscriptionStartedReceiptEmail = async (ct: Contract<'patronage.started'>) => {
