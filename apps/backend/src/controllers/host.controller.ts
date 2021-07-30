@@ -1,5 +1,6 @@
 import { ErrorHandler } from '@backend/common/error';
 import { BackendProviderMap } from '@backend/common/providers';
+import { InvoiceService, IProcessRefund } from '@backend/modules/invoice/invoice.service';
 import {
   BaseController,
   Follow,
@@ -893,60 +894,73 @@ export default class HostController extends BaseController<BackendProviderMap> {
       },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const invoiceIds: string[] = req.body.invoice_ids;
-        let bulkRefundData: IBulkRefund = {
-          bulk_refund_reason: req.body.bulk_refund_reason,
-          bulk_refund_detail: req.body.bulk_refund_detail
+        const invoiceService = new InvoiceService(req);
+
+        const refundData: IProcessRefund = {
+          host_id: req.params.hid,
+          invoice_ids: req.body.invoice_ids,
+          bulk_refund_data: {
+            bulk_refund_reason: req.body.bulk_refund_reason,
+            bulk_refund_detail: req.body.bulk_refund_detail
+          }
         };
 
-        const invoices = await Invoice.find({
-          where: {
-            _id: In(invoiceIds),
-            host: {
-              _id: req.params.hid
-            }
-          },
-          relations: {
-            host: true,
-            user: true,
-            refunds: {
-              invoice: true
-            }
-          },
-          select: {
-            host: { _id: true, stripe_account_id: true },
-            refunds: true,
-            user: true
-          }
-        });
+        invoiceService.processRefunds(refundData);
 
-        // No invoices found for provided ids
-        if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
+        // const invoiceIds: string[] = req.body.invoice_ids;
+        // let bulkRefundData: IBulkRefund = {
+        //   bulk_refund_reason: req.body.bulk_refund_reason,
+        //   bulk_refund_detail: req.body.bulk_refund_detail
+        // };
 
-        // Create an entry in the refund table for bulk refunds where a request was not made
-        await Promise.all(
-          invoices.map(async invoice => {
-            let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
+        // const invoices = await Invoice.find({
+        //   where: {
+        //     _id: In(invoiceIds),
+        //     host: {
+        //       _id: req.params.hid
+        //     }
+        //   },
+        //   relations: {
+        //     host: true,
+        //     user: true,
+        //     refunds: {
+        //       invoice: true
+        //     }
+        //   },
+        //   select: {
+        //     host: { _id: true, stripe_account_id: true },
+        //     refunds: true,
+        //     user: true
+        //   }
+        // });
 
-            if (refundPresent === undefined) {
-              await this.ORM.transaction(async txc => {
-                const refund = await new Refund(invoice, null, bulkRefundData);
-                refund.invoice = invoice;
-                await txc.save(refund);
-              });
-            }
-          })
-        );
+        // // No invoices found for provided ids
+        // if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
 
-        if (invoiceIds.length > 1) {
-          return await this.providers.bus.publish('refund.bulk', { invoice_ids: invoiceIds }, req.locale);
-        } else {
-          return await this.providers.bus.publish(
-            'refund.initiated',
-            { invoice_id: invoices[0]._id, user_id: invoices[0].user._id },
-            req.locale
-          );
-        }
+        // // Create an entry in the refund table for bulk refunds where a request was not made
+        // await Promise.all(
+        //   invoices.map(async invoice => {
+        //     let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
+
+        //     if (refundPresent === undefined) {
+        //       await this.ORM.transaction(async txc => {
+        //         const refund = await new Refund(invoice, null, bulkRefundData);
+        //         refund.invoice = invoice;
+        //         await txc.save(refund);
+        //       });
+        //     }
+        //   })
+        // );
+
+        // if (invoiceIds.length > 1) {
+        //   return await this.providers.bus.publish('refund.bulk', { invoice_ids: invoiceIds }, req.locale);
+        // } else {
+        //   return await this.providers.bus.publish(
+        //     'refund.initiated',
+        //     { invoice_id: invoices[0]._id, user_id: invoices[0].user._id },
+        //     req.locale
+        //   );
+        // }
       }
     };
   }
