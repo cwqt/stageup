@@ -146,7 +146,8 @@ export class QueueModule implements Module {
     {
       bus.subscribe("performance.created", combine([     handlers.createPerformanceAnalyticsCollectionJob,
                                                          handlers.sendPerformanceReminderEmails]));
-      bus.subscribe("Performance.deleted",               handlers.deletePerformance);                                                   
+      bus.subscribe("performance.deleted",               handlers.deletePerformance);     
+      bus.subscribe("performance.deleted_notify_user",   handlers.sendUserPerformanceDeletionEmail);                                              
       bus.subscribe("host.created",                      handlers.createHostAnalyticsCollectionJob)
       bus.subscribe('host.stripe_connected',             handlers.setupDefaultPatronTierForHost);
       bus.subscribe("host.invoice_export",              async ct => {

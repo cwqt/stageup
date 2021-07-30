@@ -395,7 +395,6 @@ export default class PerformanceController extends BaseController<BackendProvide
         AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
       ),
       controller: async req => {
-        console.log('body', req.body);
         // const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
 
         // if (perf.status === PerformanceStatus.Live)
@@ -405,7 +404,7 @@ export default class PerformanceController extends BaseController<BackendProvide
         // await perf.softRemove();
 
         return await this.providers.bus.publish(
-          'Performance.deleted',
+          'performance.deleted',
           {
             performance_id: req.params.pid
           },

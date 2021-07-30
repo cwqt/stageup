@@ -214,13 +214,13 @@ export class EventHandlers {
     //Then, get all invoices with those tickets referenced
     const invoices: Invoice[] = await this.providers.orm.connection
       .createQueryBuilder(Invoice, 'invoice')
-      .select(['invoice._id', 'invoice.amount', 'invoice.ticket__id'])
+      .select(['invoice._id', 'invoice.ticket__id'])
       .where('invoice.ticket__id IN (:...ticket_ids)', { ticket_ids: ticketIds })
       .innerJoin('invoice.user', 'user')
       .addSelect('user._id')
       .getMany();
 
-    //FIre off user email event for each invoice
+    //Fire off user email event for each invoice
     invoices.map(async i => {
       return await this.providers.bus.publish(
         'performance.deleted_notify_user',
@@ -235,29 +235,23 @@ export class EventHandlers {
   };
 
   sendUserPerformanceDeletionEmail = async (ct: Contract<'performance.deleted_notify_user'>) => {
-    const perf = await Performance.findOne({
-      where: { _id: ct.user_id },
-      relations: { host: true },
-      select: {
-        name: true,
-        host: { name: true }
-      }
-    });
+    const perf: Performance = await this.providers.orm.connection
+      .createQueryBuilder(Performance, 'performance')
+      .select(['performance.name'])
+      .where('performance._id = :performance_id', { performance_id: ct.performance_id })
+      .innerJoin('performance.host', 'host')
+      .addSelect('host.name')
+      .getOne();
+
     const user = await User.findOne({ _id: ct.user_id }, { select: ['name', 'email_address'] });
-    const invoice = await Invoice.findOne({
-      where: { _id: ct.invoice_id },
-      relations: { payment_method: true },
-      select: {
-        _id: true,
-        amount: true,
-        purchased_at: true,
-        currency: true,
-        payment_method: {
-          brand: true,
-          last4: true
-        }
-      }
-    });
+
+    const invoice = await this.providers.orm.connection
+      .createQueryBuilder(Invoice, 'invoice')
+      .select(['invoice._id', 'invoice.amount', 'invoice.purchased_at', 'invoice.currency'])
+      .where('invoice._id = :invoice_id', { invoice_id: ct.invoice_id })
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .addSelect(['payment_method.brand', 'payment_method.last4'])
+      .getOne();
 
     //Send user email notifcation
     this.queues.send_email.add({
