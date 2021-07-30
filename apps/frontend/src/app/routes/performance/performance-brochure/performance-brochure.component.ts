@@ -44,6 +44,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   @Output() cancel = new EventEmitter();
 
   @Output() onLikeEvent = new EventEmitter();
+  @Output() onFollowEvent = new EventEmitter();
 
   performanceCacheable: ICacheable<DtoPerformance> = createICacheable();
   paymentIntentSecret: ICacheable<IPaymentIntentClientSecret> = createICacheable();
@@ -57,7 +58,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   selectedDonoPeg: DonoPeg;
   performanceTrailer: IAssetStub<AssetType.Video>;
 
-  performanceSharingUrl: SocialSharingComponent['url'];
+  brochureSharingUrl: SocialSharingComponent['url'];
   userFollowing: boolean;
 
   userLiked: boolean;
@@ -76,12 +77,12 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     private appService: BaseAppService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<PerformanceBrochureComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { performance: IPerformanceStub; onFollowEvent: EventEmitter<string> }
+    @Inject(MAT_DIALOG_DATA) public data: { performance_id: string }
   ) {}
 
   async ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
-    await cachize(this.performanceService.readPerformance(this.data.performance._id), this.performanceCacheable).then(
+    await cachize(this.performanceService.readPerformance(this.data.performance_id), this.performanceCacheable).then(
       d => {
         this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
         this.userFollowing = d.__client_data?.is_following;
@@ -90,9 +91,13 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       }
     );
 
-    this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
+    // Used for social sharing component
+    this.brochureSharingUrl = `${environment.frontend_url}/?performance=${this.performance._id}`;
+
+    // Find first thumbnail, to show on cover image if no trailer video is present
     this.thumbnail = this.performance.assets.find(a => a.type == AssetType.Image && a.tags.includes('thumbnail'));
 
+    // Marketing form when going to purchase a ticket
     this.hostMarketingOptForm = new UiForm({
       fields: {
         does_opt_out: UiField.Checkbox({

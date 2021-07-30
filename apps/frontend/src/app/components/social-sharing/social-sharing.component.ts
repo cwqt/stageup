@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ShareLocations } from '@core/interfaces';
 import { BaseAppService } from '@frontend/services/app.service';
 //#endregion
@@ -9,7 +9,7 @@ import { BaseAppService } from '@frontend/services/app.service';
 })
 export class SocialSharingComponent implements OnInit {
   @Input() url: string;
-  @Input() returnRoute: string;
+  @Output() onLinkClick = new EventEmitter();
 
   icons: { [index in ShareLocations]: string } = {
     facebook: 'logo--facebook',
@@ -27,36 +27,27 @@ export class SocialSharingComponent implements OnInit {
 
     this.callbacks = {
       facebook: () =>
-        this.baseAppService.navigateTo(`/redirect`, {
-          state: {
-            data: {
-              redirect_to: `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(this.url)}`,
-              redirect_from: this.returnRoute,
-              social_type: ShareLocations.Facebook
-            }
+        this.baseAppService.navigateToNewTab(`/redirect`, {
+          queryParams: {
+            redirect_to: `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(this.url)}`,
+            social_type: ShareLocations.Facebook
           }
         }),
       twitter: () =>
-        this.baseAppService.navigateTo(`/redirect`, {
-          state: {
-            data: {
-              redirect_to: `https://twitter.com/intent/tweet?url=${encodeURI(this.url)}`,
-              redirect_from: this.returnRoute,
-              social_type: ShareLocations.Twitter
-            }
+        this.baseAppService.navigateToNewTab(`/redirect`, {
+          queryParams: {
+            redirect_to: `https://twitter.com/intent/tweet?url=${encodeURI(this.url)}`,
+            social_type: ShareLocations.Twitter
           }
         }),
       linkedin: () =>
-        this.baseAppService.navigateTo(`/redirect`, {
-          state: {
-            data: {
-              redirect_to: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURI(this.url).replace(
-                'http',
-                'https'
-              )}`,
-              redirect_from: this.returnRoute,
-              social_type: ShareLocations.Linkedin
-            }
+        this.baseAppService.navigateToNewTab(`/redirect`, {
+          queryParams: {
+            redirect_to: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURI(this.url).replace(
+              'http',
+              'https'
+            )}`,
+            social_type: ShareLocations.Linkedin
           }
         })
     };

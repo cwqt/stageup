@@ -38,7 +38,7 @@ export class PerformanceThumbComponent implements OnInit {
     let dialogRef: MatDialogRef<PerformanceBrochureComponent>;
     // Send both the performance stub and an 'output' event emitter to the performance brochure component.
     // When a user clicks to 'follow' or 'unfollow' a host it will trigger the emitter and refresh the 'My Follows' feed.
-    const envelope = { performance: this.performance, onFollowEvent: this.onFollowEvent };
+    const envelope = { performance_id: this.performance._id };
     this.helperService.showDialog(
       (dialogRef = this.dialog.open(PerformanceBrochureComponent, {
         data: envelope,
@@ -46,12 +46,16 @@ export class PerformanceThumbComponent implements OnInit {
       }))
     );
 
-    const sub = dialogRef.componentInstance.onLikeEvent.subscribe(data => {
+    const likeSubscription = dialogRef.componentInstance.onLikeEvent.subscribe(data => {
       this.setLikeValue(data);
+    });
+    const followSubscription = dialogRef.componentInstance.onFollowEvent.subscribe(data => {
+      this.onFollowEvent.emit(data);
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      sub.unsubscribe();
+      likeSubscription.unsubscribe();
+      followSubscription.unsubscribe();
     });
   }
 }

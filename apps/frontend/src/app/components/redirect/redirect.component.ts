@@ -19,9 +19,11 @@ export class RedirectComponent implements OnInit {
   constructor(private baseAppService: BaseAppService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    //Data sent to redirect component
-    this.redirectData = history.state.data;
-    //Previous stored choices
+    // Data sent to redirect component
+    this.route.queryParams.subscribe(params => {
+      this.redirectData = JSON.parse(JSON.stringify(params)); // params object is not directly mutable, so need to make a copy
+    })
+    // Previous stored choices
     this.storedRedirectData = JSON.parse(localStorage.getItem('redirect_data')) as IRedirectData;
 
     if (this.storedRedirectData) {
@@ -74,11 +76,6 @@ export class RedirectComponent implements OnInit {
   }
 
   openExternal() {
-    window.open(this.redirectData.redirect_to);
-    this.returnToCaller();
-  }
-
-  returnToCaller() {
-    this.baseAppService.navigateTo(this.redirectData.redirect_from);
+    window.location.href = this.redirectData.redirect_to;
   }
 }
