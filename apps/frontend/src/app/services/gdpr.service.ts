@@ -12,4 +12,9 @@ export class GdprService {
   getLatestDocument(type: ConsentableType): Promise<IConsentable<ConsentableType>> {
     return this.http.get<IConsentable<ConsentableType>>(`/api/gdpr/documents/latest?type=${type}`).toPromise();
   }
+
+  //router.post<void>("/gdpr/:hid/set-stream-compliance",Gdpr.setStreamCompliance());
+  setStreamCompliance(type: ConsentableType): Promise<void> {
+    return this.http.post<void>(`/api/gdpr/`, {}).toPromise();
+  }
 }

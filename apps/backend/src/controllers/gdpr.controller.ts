@@ -19,4 +19,11 @@ export default class GdprController extends BaseController<BackendProviderMap> {
       }
     };
   }
+
+  setStreamCompliance(): IControllerEndpoint<void> {
+    return {
+      authorisation: AuthStrat.none,
+      controller: async req => {}
+    };
+  }
 }

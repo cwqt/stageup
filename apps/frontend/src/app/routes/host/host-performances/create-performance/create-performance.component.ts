@@ -13,6 +13,7 @@ import { PerformanceService } from '@frontend/services/performance.service';
 import { Cacheable } from '@frontend/app.interfaces';
 import { merge, Observable } from 'rxjs';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
+import { MyselfService } from '@frontend/services/myself.service';
 
 @Component({
   selector: 'app-create-performance',
@@ -39,7 +40,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     private performanceService: PerformanceService,
     private hostService: HostService,
     private toastService: ToastService,
-    private baseAppService: BaseAppService
+    private baseAppService: BaseAppService,
+    private myselfService: MyselfService
   ) {}
 
   setType(type: 'live' | 'vod') {
@@ -83,14 +85,15 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
         })
       },
       resolvers: {
-        output: async v =>
-          this.hostService.createPerformance(this.hostService.hostId, {
+        output: async v => {
+          return this.hostService.createPerformance(this.hostService.hostId, {
             name: v.name,
             description: v.description,
             genre: v.genre,
             premiere_datetime: timestamp(new Date(v.premiere.datetime)) || null,
             type: this.type
-          })
+          });
+        }
       },
       handlers: {
         success: async v => {

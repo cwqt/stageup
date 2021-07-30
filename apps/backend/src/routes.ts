@@ -1,3 +1,4 @@
+
 import { AsyncRouter, Middlewares, Providers } from '@core/api';
 
 import {
@@ -231,4 +232,5 @@ router.use                               ("/admin/queue",                       
 // GDPR ---------------------------------------------------------------------------------------------------------------
 const Gdpr = new GdprController(providers, middlewares);
 router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
+router.post     <void>                   ("/gdpr/:hid/set-stream-compliance",         Gdpr.setStreamCompliance());
 }
