@@ -14,7 +14,9 @@ export class GdprService {
   }
 
   //router.post<void>("/gdpr/:hid/set-stream-compliance",Gdpr.setStreamCompliance());
-  setStreamCompliance(inCompliance: true): Promise<void> {
-    return this.http.post<void>(`/api/gdpr/:hid/set-stream-compliance`, {}).toPromise();
+  setStreamCompliance(isCompliant: boolean, hostId: string): Promise<void> {
+    return this.http
+      .post<void>(`/api/gdpr/${hostId}/set-stream-compliance`, { is_compliant: isCompliant })
+      .toPromise();
   }
 }
