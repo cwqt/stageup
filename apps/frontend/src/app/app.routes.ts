@@ -1,3 +1,4 @@
+import { UploadDocumentComponent } from './routes/admin-panel/admin-gdpr-documents/upload-document/upload-document.component';
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { NgModule } from '@angular/core';
@@ -130,7 +131,7 @@ const LOGGED_IN_ROUTES: Routes = [
     children: [
       {
         path: `onboardings`,
-        component: AdminOnboardingListComponent,
+        component: AdminOnboardingListComponent
       },
       {
         path: `onboardings/:${RP.HostId}`,
@@ -139,8 +140,12 @@ const LOGGED_IN_ROUTES: Routes = [
       },
       {
         path: 'documents',
-        component: AdminGdprDocumentsComponent,
+        component: AdminGdprDocumentsComponent
       },
+      {
+        path: 'documents/new',
+        component: UploadDocumentComponent
+      }
     ]
   }
 ];

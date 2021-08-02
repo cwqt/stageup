@@ -1,4 +1,4 @@
-import { ConsentableType, ConsentableTypes, IConsentable } from '@core/interfaces';
+import { ConsentableType, ConsentableTypes, IConsentable, IEnvelopedData } from '@core/interfaces';
 import { BaseController, IControllerEndpoint, Consentable } from '@core/api';
 import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
@@ -21,16 +21,18 @@ export default class GdprController extends BaseController<BackendProviderMap> {
   }
 
   // Returns one of each type of document (the highest version)
-  getAllLatestDocuments(): IControllerEndpoint<IConsentable<ConsentableType>[]> {
-    // getAllLatestDocuments(): IControllerEndpoint<any> {
+
+  getAllLatestDocuments(): IControllerEndpoint<IEnvelopedData<IConsentable<ConsentableType>[]>> {
     return {
       authorisation: AuthStrat.isSiteAdmin,
       controller: async req => {
-        return await this.ORM.createQueryBuilder(Consentable, 'consentable')
+        const documents = await this.ORM.createQueryBuilder(Consentable, 'consentable')
           .distinctOn(['consentable.type']) // Will only get one of each type
           .orderBy('consentable.type', 'DESC') // puts the documents in order of type and then order of version (to get the highest version of each type)
           .addOrderBy('consentable.version', 'DESC')
           .getMany();
+
+        return { data: documents };
       }
     };
   }

@@ -50,7 +50,7 @@ import {
   IUserFollow,
   DtoPerformanceAnalytics as DtoPerfAnalytics,
   DtoHostAnalytics,
-  ConsentableType as CType,
+  ConsentableType as CT,
   IConsentable,
 } from '@core/interfaces';
 
@@ -230,6 +230,6 @@ router.use                               ("/admin/queue",                       
 
 // GDPR ---------------------------------------------------------------------------------------------------------------
 const Gdpr = new GdprController(providers, middlewares);
-router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
-router.get      <IConsentable<CType>[]>  ("/gdpr/documents/all-latest",               Gdpr.getAllLatestDocuments());
+router.get      <IConsentable<CT>>       ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
+router.get      <IE<IConsentable<CT>[]>> ("/gdpr/documents/all-latest",               Gdpr.getAllLatestDocuments());
 }
