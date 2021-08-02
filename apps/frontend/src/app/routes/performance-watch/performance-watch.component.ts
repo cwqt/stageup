@@ -29,9 +29,7 @@ type NarrowState =
 })
 export class PerformanceWatchComponent implements OnInit, OnDestroy {
   @Input() token: ISignedToken;
-  @Input() performance: DtoPerformance;
-
-  performanceSharingUrl: SocialSharingComponent['url'];
+  @Input() performance: DtoPerformance['data'];
 
   primaryAsset: AssetDto<AssetType.LiveStream | AssetType.Video>;
   player?: PlayerComponent;
@@ -47,24 +45,27 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
     complete: 'blue'
   };
 
+  rating: number; // user rating (if they have)
+  registeredView: boolean = false; // if view hit already counted
+
   constructor(
     @Inject(LOCALE_ID) public locale: string,
+    private performanceService: PerformanceService,
     private sse: SseService,
     private myself: MyselfService,
-    private performanceService: PerformanceService,
     private zone: NgZone,
     private http: HttpClient
   ) {}
 
   async ngOnInit() {
-    this.primaryAsset = this.performance.data.assets.find(asset => asset._id == this.token.asset_id);
+    this.primaryAsset = this.performance.assets.find(asset => asset._id == this.token.asset_id);
   }
 
   handlePlayerReady(player: PlayerComponent) {
     this.player = player;
 
     setTimeout(() => {
-      if (this.primaryAsset.type == AssetType.LiveStream) {
+      if (this.primaryAsset?.type == AssetType.LiveStream) {
         const stream = this.primaryAsset as AssetDto<AssetType.LiveStream>;
         // after the player has initialised we can perform actions on the initial state of the video
         this.enactUponStreamState(stream.state);
@@ -73,7 +74,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
         if (
           // performance has already started
           stream.state == LiveStreamState.Active ||
-          currentTime > this.performance.data.premiere_datetime
+          currentTime > this.performance.premiere_datetime
         ) {
           // TODO: handle what should happen when a stream is completed
           if (stream.state != LiveStreamState.Completed) {
@@ -81,7 +82,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
           }
         } else {
           // track time until live, and update player when it goes past the premiere date
-          this.etaUntilLive = this.performance.data.premiere_datetime - currentTime;
+          this.etaUntilLive = this.performance.premiere_datetime - currentTime;
           this.premiereCountdown = setTimeout(this.initialiseSSE.bind(this), this.etaUntilLive);
 
           // update the primitive counter every second
@@ -89,23 +90,27 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
 
           // we are apart of this host & so have permissions to watch previews
           const myself = this.myself.$myself.getValue();
-          this.isHostPerformancePreview = myself.host._id == this.performance.data.host._id;
+          this.isHostPerformancePreview = myself.host._id == this.performance.host._id;
           if (this.isHostPerformancePreview) this.initialiseSSE();
         }
-      } else if (this.primaryAsset.type == AssetType.Video) {
+      } else if (this.primaryAsset?.type == AssetType.Video) {
         this.player.load(this.primaryAsset, this.token).play();
       }
     }, 0);
-
-    this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance.data._id}`;
   }
 
   handlePlayerError(event: Plyr.PlyrEvent) {
     console.log(event);
   }
 
+  handlePlayerPlay(event: Plyr.PlyrEvent) {
+    if (!this.registeredView) this.performanceService.registerView(this.performance._id, this.primaryAsset._id);
+
+    this.registeredView = true;
+  }
+
   initialiseSSE() {
-    this.streamEvents = this.sse.getStreamEvents(this.performance.data._id).subscribe(event => {
+    this.streamEvents = this.sse.getStreamEvents(this.performance._id).subscribe(event => {
       this.enactUponStreamState(event.data);
     });
   }
@@ -158,6 +163,6 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
       complete: LiveStreamState.Completed
     };
 
-    await this.http.get(`/api/utils/performances/${this.performance.data._id}/state?value=${map[state]}`).toPromise();
+    await this.http.get(`/api/utils/performances/${this.performance._id}/state?value=${map[state]}`).toPromise();
   }
 }

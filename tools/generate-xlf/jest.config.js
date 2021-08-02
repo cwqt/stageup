@@ -1,11 +1,11 @@
 module.exports = {
-  displayName: 'api-tests',
+  displayName: 'generate-xlf',
   preset: '../../jest.preset.js',
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
   testEnvironment: 'node',
   verbose: true,
   bail: true,
-  modulePathIgnorePatterns: ['assets'],
+  modulePathIgnorePatterns: [],
   globals: {
     'ts-jest': { tsconfig: '<rootDir>/../tsconfig.spec.json' }
   },

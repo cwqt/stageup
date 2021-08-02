@@ -4,9 +4,11 @@ import { AppWrapperComponent } from './components/app/wrapper/wrapper.component'
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { VerifiedComponent } from './components/pages/verified/verified.component';
+import { RedirectComponent } from './components/redirect/redirect.component';
 import { AdminOnboardingViewComponent } from './routes/admin-panel/admin-onboarding-view/admin-onboarding-view.component';
 import { AdminPanelComponent } from './routes/admin-panel/admin-panel.component';
 import { FeedComponent } from './routes/feed/feed.component';
+import { DocumentViewComponent } from './routes/gdpr/document-view/document-view.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
@@ -31,7 +33,6 @@ import { ResetPasswordComponent } from './routes/landing/login/reset-password/re
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { PerformanceComponent } from './routes/performance/performance.component';
-import { ProfileComponent } from './routes/profile/profile.component';
 import { SearchComponent } from './routes/search/search.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
@@ -70,7 +71,6 @@ const LOGGED_IN_ROUTES: Routes = [
     path: `performances/:${RP.PerformanceId}`,
     component: PerformanceComponent
   },
-  { path: `user/:${RP.UserId}`, component: ProfileComponent },
   { path: `verified`, component: VerifiedComponent },
   {
     path: `settings`,
@@ -152,6 +152,10 @@ const LOGGED_IN_ROUTES: Routes = [
           ]
         },
         {
+          path: `redirect`,
+          component: RedirectComponent
+        },
+        {
           path: '',
           component: AppWrapperComponent,
           children: [
@@ -185,6 +189,22 @@ const LOGGED_IN_ROUTES: Routes = [
             {
               path: `search`,
               component: SearchComponent
+            },
+            {
+              path: 'documents',
+              children: [
+                {
+                  path: 'terms-and-conditions',
+                  component: DocumentViewComponent,
+                  data: { document_type: 'general_toc' }
+                },
+                {
+                  path: 'privacy-policy',
+                  component: DocumentViewComponent,
+                  data: { document_type: 'privacy_policy' }
+                },
+                { path: '**', component: NotFoundComponent }
+              ]
             },
             {
               matcher: hostMatcher,

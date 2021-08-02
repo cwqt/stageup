@@ -1,4 +1,4 @@
-import { AsyncRouter, Middlewares } from '@core/api';
+import { AsyncRouter, Middlewares, Providers } from '@core/api';
 
 import {
   IHost,
@@ -23,6 +23,7 @@ import {
   IHostStripeInfo,
   IPaymentIntentClientSecret as IPaymentICS,
   IHostInvoice,
+  ILike,
   IUserInvoice,
   IPatronTier as IPTier,
   IDeleteHostAssertion as IDelHostAssert,
@@ -47,7 +48,10 @@ import {
   IFollower,
   IFollowing,
   IUserFollow,
-  DtoPerformanceAnalytics as DtoPerfAnalytics
+  DtoPerformanceAnalytics as DtoPerfAnalytics,
+  DtoHostAnalytics,
+  ConsentableType as CType,
+  IConsentable,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -60,11 +64,13 @@ import MiscController from './controllers/misc.controller';
 import AdminController from './controllers/admin.controller';
 import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
+import GdprController from './controllers/gdpr.controller';
 import PatronageController from './controllers/patronage.controller';
 
 import { BackendModules } from '.';
 import { Module } from './modules';
 import { BackendProviderMap } from './common/providers';
+
 
 type ModuleRoutes<T extends {[i:string]: Partial<Pick<Module, "routes">>}> = {[index in keyof T]:T[index]["routes"]};
 
@@ -142,6 +148,7 @@ router.post     <void>                  ("/hosts/:hid/invoices/export-csv",     
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
 router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",         Hosts.readPatronageSubscribers());
 router.get      <IE<IFollower[]>>       ("/hosts/:hid/followers",                     Hosts.readHostFollowers());
+router.get      <DtoHostAnalytics>      ("/hosts/:hid/analytics",                     Hosts.readHostAnalytics());
 router.get      <IE<DtoPerfAnalytics[]>>("/hosts/:hid/analytics/performances",        Hosts.readPerformancesAnalytics());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
@@ -164,6 +171,7 @@ router.put      <IPerformance>          ("/performances/:pid/publicity-period", 
 router.post     <AssetDto | void>       ("/performances/:pid/thumbnails",             Perfs.changeThumbnails());
 router.post     <ICreateAssetRes | void>("/performances/:pid/assets",                 Perfs.createAsset());
 router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
+router.post     <void>                  ("/performances/:pid/assets/:aid/views",      Perfs.registerView());
 router.get      <ISignedToken>          ("/performances/:pid/assets/:aid/token",      Perfs.generateSignedToken());
 router.get      <ICreateAssetRes>       ("/performances/:pid/assets/:aid/signed-url", Perfs.readVideoAssetSignedUrl());
 router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
@@ -175,6 +183,9 @@ router.get      <ITicket>               ("/performances/:pid/tickets/:tid",     
 router.put      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.updateTicket());
 router.delete   <void>                  ("/performances/:pid/tickets/:tid",           Perfs.deleteTicket());
 router.post     <IPaymentICS>           ("/tickets/:tid/payment-intent",              Perfs.createPaymentIntent());
+router.post     <void>                  ("/performances/:pid/rate",                   Perfs.setRating());
+router.delete   <void>                  ("/performances/:pid/rate",                   Perfs.deleteRating());
+router.post     <void>                  ("/performances/:pid/toggle-like",            Perfs.toggleLike());
 
 // ADMIN  -------------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, middlewares);
@@ -199,6 +210,7 @@ const Misc = new MiscController(providers, middlewares);
 router.post     <void>                   ("/logs",                                    Misc.logFrontendMessage());
 router.get      <string>                 ("/ping",                                    Misc.ping());
 router.post     <void>                   ("/drop",                                    Misc.dropAllData());
+router.get      <any>                    ("/stats",                                   Misc.stats());
 router.get      <IHost>                  ("/verify-host/:hid",                        Misc.verifyHost());
 router.post     <void>                   ("/accept-invite/:uid",                      Misc.acceptHostInvite());
 router.get      <void>                   ("/utils/send-test-email",                   Misc.sendTestEmail());
@@ -215,4 +227,7 @@ router.get                               ("/sse/assets/:aid",                   
 // JOB QUEUE ----------------------------------------------------------------------------------------------------------
 router.use                               ("/admin/queue",                             Queue.jobQueueUi.handler);
 
+// GDPR ---------------------------------------------------------------------------------------------------------------
+const Gdpr = new GdprController(providers, middlewares);
+router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
 }

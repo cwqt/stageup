@@ -5,3 +5,27 @@
   position: absolute;
   padding: 2px 8px;
 }
+
+// .like-background {
+//   visibility: hidden;
+//   background-color: rgba(255, 255, 255, 0.6);
+//   transition: ease background-color 0.2s;
+//   &:hover {
+//     background-color: rgba(255, 255, 255, 1);
+//   }
+// }
+
+.thumbnail {
+  .like-background {
+    visibility: hidden;
+  }
+  &:hover .like-background {
+    visibility: visible;
+    background-color: rgba(255, 255, 255, 0.4);
+    transition: ease background-color 0.2s;
+    &:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+

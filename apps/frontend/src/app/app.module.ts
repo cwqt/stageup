@@ -70,7 +70,6 @@ import { VerifiedComponent } from './components/pages/verified/verified.componen
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
 import { HeaderBarComponent } from './components/app/header-bar/header-bar.component';
-import { ProfileComponent } from './routes/profile/profile.component';
 import { FooterComponent } from './components/app/footer/footer.component';
 import { PageComponent } from './components/app/page/page.component';
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
@@ -132,7 +131,8 @@ import { PaymentMethodThumbComponent } from './components/payment-method/payment
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
-import { ProcessRefundDialogComponent } from './components/dialogs/process-refund-dialog/process-refund-dialog.component';
+import { DocumentViewComponent } from './routes/gdpr/document-view/document-view.component';
+import { ProcessRefundsDialogComponent } from './components/dialogs/process-refunds-dialog/process-refunds-dialog.component';
 import { ConfirmationDialogComponent } from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
 import { HostThumbComponent } from './components/host-thumb/host-thumb.component';
@@ -141,8 +141,14 @@ import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
+import { RatePerformanceComponent } from './components/rate-performance/rate-performance.component';
+import { LikePerformanceComponent } from './components/like-performance/like-performance.component';
+import { RedirectComponent } from './components/redirect/redirect.component';
 import { FollowButtonComponent } from './components/follow-button/follow-button.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
+import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
+import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
+import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -155,7 +161,6 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
     LoginComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    ProfileComponent,
     VerifiedComponent,
     SettingsComponent,
     HeaderBarComponent,
@@ -173,7 +178,6 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
     HostPerformanceThumbnailsComponent,
     UpdatePerformanceComponent,
     PlayerComponent,
-    ProfileComponent,
     ProfileSettingsComponent,
     SearchComponent,
     AdminOnboardingListComponent,
@@ -240,7 +244,7 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
     PaymentMethodThumbComponent,
     WalletSettingsComponent,
     GenreFeedComponent,
-    ProcessRefundDialogComponent,
+    ProcessRefundsDialogComponent,
     UserPatronageComponent,
     ConfirmationDialogComponent,
     UserPatronageComponent,
@@ -251,8 +255,15 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
     ConfirmPasswordDialogComponent,
     HostPerformanceThumbnailsComponent,
     SocialSharingComponent,
+    RatePerformanceComponent,
+    LikePerformanceComponent,
+    RedirectComponent,
     FollowButtonComponent,
-    HostAnalyticsComponent
+    HostAnalyticsComponent,
+    HostAnalyticsHeaderItemComponent,
+    DocumentViewComponent,
+    TermsLinksComponent,
+    CookieConsentComponent
   ],
   imports: [
     AngularMaterialModule,

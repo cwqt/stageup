@@ -110,7 +110,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             .andWhere('p.visibility = :state', { state: Visibility.Public })
             .innerJoinAndSelect('p.host', 'host')
             .orderBy('p.premiere_datetime')
-            .paginate(p => p.toStub(), {
+            .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+            .paginate(p => p.toClientStub(), {
               page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
               per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
             });
@@ -119,7 +120,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
             .andWhere('p.visibility = :state', { state: Visibility.Public })
             .innerJoinAndSelect('p.host', 'host')
-            .paginate(p => p.toStub(), {
+            .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+            .paginate(p => p.toClientStub(), {
               page: req.query.everything ? parseInt((req.query['everything'] as any).page) : 0,
               per_page: req.query.everything ? parseInt((req.query['everything'] as any).per_page) : 4
             });
@@ -143,7 +145,8 @@ export default class MyselfController extends BaseController<BackendProviderMap>
               .where('p.host IN (:...hostArray)', { hostArray: hostIds })
               .andWhere('p.visibility = :state', { state: Visibility.Public })
               .innerJoinAndSelect('p.host', 'host')
-              .paginate(p => p.toStub(), {
+              .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+              .paginate(p => p.toClientStub(), {
                 page: req.query.follows ? parseInt((req.query['follows'] as any).page) : 0,
                 per_page: req.query.follows ? parseInt((req.query['follows'] as any).per_page) : 4
               });

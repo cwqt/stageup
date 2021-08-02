@@ -27,8 +27,10 @@ import {
   DtoUpdateHost,
   IHostPatronTier,
   DtoUpdatePatronTier,
+  IBulkRefund,
   DtoPerformanceAnalytics,
-  AnalyticsTimePeriod
+  AnalyticsTimePeriod,
+  DtoHostAnalytics
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -211,9 +213,13 @@ export class HostService {
   }
 
   //router.post<void>("/hosts/:hid/invoices/process-refunds", Hosts.processRefund());
-  processRefunds(invoiceIds: string[], hostId: string): Promise<void> {
+  processRefunds(invoiceIds: string[], hostId: string, bulkRefund?: IBulkRefund): Promise<void> {
     return this.http
-      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, { invoice_ids: invoiceIds })
+      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, {
+        invoice_ids: invoiceIds,
+        bulk_refund_reason: bulkRefund.bulk_refund_reason,
+        bulk_refund_detail: bulkRefund.bulk_refund_detail
+      })
       .toPromise();
   }
 
@@ -302,5 +308,10 @@ export class HostService {
         `/api/hosts/${hostId}/analytics/performances${querize({ ...query, period })}`
       )
       .toPromise();
+  }
+
+  // router.get <DtoHostAnalytics>  ("/hosts/:hid/analytics", Hosts.readHostAnalytics());
+  readHostAnalytics(hostId: string, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> {
+    return this.http.get<DtoHostAnalytics>(`/api/hosts/${hostId}/analytics?period=${period}`).toPromise();
   }
 }

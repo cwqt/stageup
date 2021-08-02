@@ -22,12 +22,7 @@ export class AdminOnboardingListComponent implements OnInit {
       resolver: query => this.adminService.readOnboardingProcesses(query),
       selection: {
         multi: true,
-        actions: [
-          {
-            label: 'log',
-            click: v => console.log(v)
-          }
-        ]
+        actions: []
       },
       pagination: {
         page_sizes: [5, 10, 25]

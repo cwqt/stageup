@@ -1,4 +1,5 @@
 import {
+  ConsentOpt,
   IAsset,
   IHost,
   IHostInvitation,
@@ -17,6 +18,7 @@ import {
   LiveStreamState
 } from '@core/interfaces';
 import { PasswordReset } from '../entities';
+import { validationMiddleware } from '../validation/validation';
 
 export type EventContract = {
   // Users --------------------------------------------------------------------
@@ -48,6 +50,7 @@ export type EventContract = {
   // ['user.unsubscribed_from_patron_tier']: { sub_id: IPatronSubscription['_id'] }; // stripe un-sub complete
 
   // Hosts --------------------------------------------------------------------
+  ['host.created']: { host_id: IHost['_id'] };
   ['host.stripe_connected']: { host_id: IHost['_id'] };
   ['host.invoice_export']: {
     format: 'csv' | 'pdf';
@@ -60,7 +63,8 @@ export type EventContract = {
   ['refund.refunded']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; refund_id: IRefund['_id'] };
   ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id'] };
   ['refund.rejected']: {};
-  // Patronage ----------------------------------------------------------------
+  ['refund.bulk']: { invoice_ids: Array<IInvoice['_id']> };
+  // Patronage ----------------------------------------------------------------#
   ['patronage.started']: {
     user_id: IUser['_id'];
     tier_id: IPatronTier['_id'];
@@ -74,6 +78,9 @@ export type EventContract = {
   ['ticket.purchased']: {
     purchaser_id: IUser['_id'];
     invoice_id: IInvoice['_id'];
+    host_id: IHost['_id'];
+    ticket_id: ITicket['_id'];
+    marketing_consent: ConsentOpt;
   };
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
@@ -96,3 +103,13 @@ export type ContractMeta = {
 export type Contract<T extends Event> = EventContract[T] & {
   __meta: ContractMeta;
 };
+
+/**
+ * @description Have multiple event handlers on a single event
+ * @example bus.subscribe("some.event", combine([handler1, handler2]));
+ */
+export const combine = <T extends Event>(fns: Array<(ct: Contract<T>) => Promise<void>>) => (ct: Contract<T>) =>
+  Promise.allSettled(fns.map(f => f(ct))).then(
+    // log out any errored functions in the combined one
+    v => (v.forEach(r => r.status == 'rejected' && console.error(ct, 'failure!', r.reason)), v)
+  );

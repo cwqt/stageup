@@ -134,4 +134,27 @@ export class PerformanceService {
   updatePublicityPeriod(performanceId: string, period: IPerformance['publicity_period']): Promise<IPerformance> {
     return this.http.put<IPerformance>(`/api/performances/${performanceId}/publicity-period`, period).toPromise();
   }
+
+  // router.post <void> ("/performances/:pid/rate", Perfs.setRating());
+  setRating(performanceId: string, rateValue: number): Promise<void> {
+    return this.http
+      .post<void>(`/api/performances/${performanceId}/rate`, { rate_value: rateValue })
+      .toPromise();
+  }
+
+  // router.delete <void> ("/performances/:pid/rate", Perfs.deleteRating());
+  deleteRating(performanceId: string): Promise<void> {
+    return this.http.delete<void>(`/api/performances/${performanceId}/rate`).toPromise();
+  }
+  // router.post <void> ("/performances/:pid/toggle-like", Perfs.toggleLike());
+  toggleLike(performanceId: NUUID, location: string): Promise<void> {
+    return this.http
+      .post<void>(`/api/performances/${performanceId}/toggle-like`, { location })
+      .toPromise();
+  }
+
+  // router.post <void> ("/performances/:pid/assets/:aid/views", Perfs.registerView());
+  registerView(performanceId: string, assetId: string) {
+    return this.http.post(`/api/performances/${performanceId}/assets/${assetId}/views`, {}).toPromise();
+  }
 }

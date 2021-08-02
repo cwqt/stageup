@@ -1,13 +1,13 @@
 import { IEnvelopedData } from '../common/envelope.interface';
 import { IHostStub } from '../hosts/host.interface';
-import { IPerformanceStub } from '../performances/performance.interface';
+import { IFeedPerformanceStub } from '../performances/performance.interface';
 
 export interface IFeed {
-  everything: IEnvelopedData<IPerformanceStub[]>;
-  upcoming: IEnvelopedData<IPerformanceStub[]>;
+  everything: IEnvelopedData<IFeedPerformanceStub[]>;
+  upcoming: IEnvelopedData<IFeedPerformanceStub[]>;
   // personalised /// etc...
-  // promoted: IEnvelopedData<IPerformanceStub[]>
+  // promoted: IEnvelopedData<IFeedPerformanceStub[]>
   hosts: IEnvelopedData<IHostStub[]>;
-  follows?: IEnvelopedData<IPerformanceStub[]>;
-  trending?: IEnvelopedData<IPerformanceStub[]>;
+  follows?: IEnvelopedData<IFeedPerformanceStub[]>;
+  trending?: IEnvelopedData<IFeedPerformanceStub[]>;
 }

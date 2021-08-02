@@ -9,7 +9,7 @@ import { AuthStrategy } from './authorisation';
 import { ProviderMap } from './data-client';
 import { i18nProvider } from './i18n';
 import { Middlewares } from './middleware';
-import Validator from './validate';
+import Validator from './validation';
 
 export type Routes<T extends ProviderMap> = (router: AsyncRouter<T>, providers: T, middleware: Middlewares) => void;
 

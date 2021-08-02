@@ -1,12 +1,15 @@
-:host { width: 100%; }
+:host {
+  width: 100%;
+}
 
 ::ng-deep {
-  .mat-tab-label, .mat-tab-label-active{
+  .mat-tab-label,
+  .mat-tab-label-active {
     min-width: 0 !important;
-    padding: 3px ;
+    padding: 3px;
     margin: 3px !important;
-    @apply px-4
-   }
+    @apply px-4;
+  }
 }
 
 .banner-picture__container img {
@@ -15,4 +18,10 @@
 
 .profile-picture__container {
   margin-top: -40px;
+}
+
+:host ::ng-deep #shareButton {
+  button {
+    border: none;
+  }
 }

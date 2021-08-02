@@ -25,7 +25,7 @@
       "projectType": "application",
       "prefix": "backend",
       "i18n": {
-        "sources": ["apps/backend/src/i18n/i18n.hjson", "libs/interfaces/src/i18n/i18n.hjson"],
+        "sources": ["apps/backend/src/i18n/i18n.yaml", "libs/interfaces/src/i18n/i18n.yaml"],
         "path": "apps/backend/src/i18n",
         "locales": ["en", "nb", "cy"]
       },
@@ -113,9 +113,9 @@
       "i18n": {
         "path": "apps/frontend/src/i18n",
         "locales": {
-          "nb": "apps/frontend/src/i18n/messages.nb.xlf",
           "en": "apps/frontend/src/i18n/messages.en.xlf",
-          "cy": "apps/frontend/src/i18n/messages.cy.xlf"
+          "cy": "apps/frontend/src/i18n/messages.cy.xlf",
+          "nb": "apps/frontend/src/i18n/messages.nb.xlf"
         }
       },
       "targets": {
@@ -159,7 +159,7 @@
             ],
             "scripts": [],
             "i18nMissingTranslation": "warning",
-            "localize": ["en", "nb", "cy"]
+            "localize": ["en", "cy", "nb"]
           },
           "configurations": {
             "en": {
@@ -278,39 +278,6 @@
       "sourceRoot": "libs/interfaces/src",
       "projectType": "library",
       "targets": {}
-    },
-    "seeder": {
-      "root": "apps/seeder",
-      "sourceRoot": "apps/seeder/src",
-      "projectType": "application",
-      "prefix": "seeder",
-      "targets": {
-        "build": {
-          "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/apps/seeder",
-            "main": "apps/seeder/src/index.ts",
-            "tsConfig": "apps/seeder/tsconfig.app.json",
-            "showCircularDependencies": false,
-            "maxWorkers": 1,
-            "memoryLimit": 1024
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            }
-          }
-        },
-        "start": {
-          "executor": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "seeder:build"
-          }
-        }
-      }
     },
     "shared": {
       "root": "libs/shared",

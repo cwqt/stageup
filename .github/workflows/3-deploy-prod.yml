@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: PRODUCTION
+on:
+  pull_request:
+    types:
+      - closed
+
+env:
+  BRANCH_NAME: ${{ github.head_ref }}
+
+jobs:
+  ctx:
+    name: Check if release PR merged & get context variables
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'releases/v')
+    outputs:
+      branch: ${{ steps.ctx.outputs.branch }}
+      short_sha: ${{ steps.ctx.outputs.short_sha }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse short sha
+        uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+
+      - name: Get last commit body & lower-case branch name
+        id: ctx
+        run: |
+          echo "::set-output name=branch::${BRANCH_NAME,,}"
+          echo "::set-output name=short_sha::${{ steps.short-sha.outputs.sha }}"
+
+  # we will always assume that the ':stage-latest' images exist
+  add_tags:
+    name: Add production tags to latest staging images
+    needs: [ctx]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: dev
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.TF_GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # must be 'prod-latest' because will be using 'prod' Core Workspace
+      - name: Add backend :prod-latest & :prod-SHA tags
+        run: >
+          gcloud container images add-tag
+          eu.gcr.io/core-314910/core-backend:stage-latest
+          eu.gcr.io/core-314910/core-backend:prod-latest
+          eu.gcr.io/core-314910/core-backend:${{ env.BRANCH_NAME }}
+
+      - name: Add frontend :prod-latest & :prod-SHA tags
+        run: >
+          gcloud container images add-tag
+          eu.gcr.io/core-314910/core-frontend:stage-latest
+          eu.gcr.io/core-314910/core-frontend:prod-latest
+          eu.gcr.io/core-314910/core-frontend:${{ env.BRANCH_NAME }}
+
+  deploy:
+    name: Deploy to production
+    needs: [ctx, add_tags]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # have a service account on the file system to be used by the tf script
+      - name: Setup Terraform workspace
+        working-directory: terraform
+        # literal block scalar because these are separate commands
+        run: |
+          echo ${{ secrets.TF_GCP_SA_KEY }} | base64 -d > terraform.service_account.json
+          terraform init -input=false
+          terraform workspace select master
+          terraform workspace show
+
+      # infra a go-go
+      - name: Create infrastructure
+        working-directory: terraform
+        # folded block scalar because this is one big long command
+        run: >
+          terraform apply
+          -var 'core=prod'
+          -var 'gcp_project_id=core-314910'
+          -var 'sql_password=helloworld'
+          -var 'stripe_api_token=${{ secrets.STRIPE_PROD_SECRET_KEY }}'
+          -input=false
+          -auto-approve
+
+  slack:
+    name: Post state on slack
+    needs: [ctx, deploy]
+    if: always() # run regardless of deploy state
+    runs-on: ubuntu-latest
+    steps:
+      - uses: cwqt/needs-result-lookup@v1.0.0
+        id: message
+        with:
+          result: ${{ needs.deploy.result }}
+          if-success: ':large_green_circle: (production-${{ needs.ctx.outputs.short_sha }}) https://stageup.uk/app/en :sparkles:'
+          if-failure: ':red_circle: (production-${{ needs.ctx.outputs.short_sha }}) https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          if-cancelled: ':large_orange_circle: (production-${{ needs.ctx.outputs.short_sha }}) cancelled https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          if-skipped: ':large_yellow_circle: (production-${{ needs.ctx.outputs.short_sha }}) skipped https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.14.0
+        with:
+          channel-id: 'C01JMTA1FNU'  # general channel ID
+          slack-message: ${{ steps.message.outputs.value }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_STAGEUP_BOT_OAUTH_TOKEN }}
+
+  shipjs_trigger:
+    name: Create git tags & release
+    runs-on: ubuntu-latest
+    needs: [ctx, deploy]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: dev
+
+      - uses: actions/setup-node@v1
+        with:
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: npm install
+      - run: npx shipjs trigger
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

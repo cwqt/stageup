@@ -1,8 +1,7 @@
-import { NUUID } from '../common/fp.interface';
-import { PurchaseableType } from '../common/invoice.interface';
-import { IHostPrivate } from '../hosts/host.interface';
+import { NUUID, Primitive } from '../common/fp.interface';
+import { PurchaseableType } from '../finance/invoice.interface';
 import { DonoPeg } from '../performances/ticket.interface';
-import { IPaymentMethod, IPaymentMethodStub } from '../users/payment-method.interface';
+import { IPaymentMethodStub } from '../finance/payment-method.interface';
 
 export interface DtoCreatePaymentIntent<T extends PurchaseableType> {
   payment_method_id: IPaymentMethodStub['_id'];
@@ -15,6 +14,7 @@ type PurchaseablePaymentIntentOptions = {
   [PurchaseableType.Ticket]: {
     selected_dono_peg: DonoPeg;
     allow_any_amount: number;
+    hard_host_marketing_opt_out: boolean;
   };
   [PurchaseableType.PatronTier]: {};
 };
@@ -41,5 +41,8 @@ export interface IStripeChargePassthrough {
   purchaseable_type: PurchaseableType;
   purchaseable_id: NUUID;
   user_id: string;
+
+  // metadata is always a dictionary of string key and string value.
+  // https://stackoverflow.com/a/59429263
   [index: string]: string;
 }

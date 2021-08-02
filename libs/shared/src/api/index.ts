@@ -7,12 +7,12 @@ export * from './middleware';
 export * from './controller';
 export * from './router';
 export * from './authorisation';
-export * from './validate';
+export * from './validation';
 export * from './router';
 export * from './typeorm-patches';
 
 export { default as Auth } from './authorisation';
-export { default as Validators } from './validate';
+export { default as Validators } from './validation';
 export { default as Register } from './service';
 
 export { IMuxProviderConfig } from './data-client/providers/mux.provider';
@@ -27,4 +27,5 @@ export { IStripeProviderConfig } from './data-client/providers/stripe.provider';
 export { ISSEProviderConfig } from './data-client/providers/sse.provider';
 
 export * from './entities';
+export { SignableAssetType } from './entities/assets/signing-key.entity';
 export const PG_MODELS = require('./entities');

@@ -13,6 +13,8 @@ import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/
 import { HostProfileAboutComponent } from './host-profile-about/host-profile-about.component';
 import { HostProfileFeedComponent } from './host-profile-feed/host-profile-feed.component';
 import { HostProfilePatronageComponent } from './host-profile-patronage/host-profile-patronage.component';
+import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
+import { environment } from 'apps/frontend/src/environments/environment';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -26,17 +28,18 @@ export class HostProfileComponent implements OnInit {
   host: ICacheable<IEnvelopedData<IHost, IUserFollow>> = createICacheable();
   isHostView: boolean;
   tabs: Array<{ label: string; route: string }>;
+  hostSharingUrl: SocialSharingComponent['url'];
+  currentRoutePath: string;
   userFollowing: boolean;
   myselfSubscription: Subscription;
-
 
   constructor(
     private myselfService: MyselfService,
     private baseAppService: BaseAppService,
-    private route: ActivatedRoute,
+    public route: ActivatedRoute,
     private hostService: HostService,
     private helperService: HelperService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   async ngOnInit() {
@@ -47,6 +50,10 @@ export class HostProfileComponent implements OnInit {
       { label: $localize`Contact`, route: 'contact' },
       { label: $localize`Merch`, route: null }
     ];
+
+    this.route.url.subscribe(url => {
+      this.currentRoutePath = '/dashboard/' + url[0].path.toString();
+    });
 
     // Change view of component depending on if on /dashboard/@user or /@user
     this.isHostView = this.route.snapshot.data['is_host_view'];
@@ -95,7 +102,10 @@ export class HostProfileComponent implements OnInit {
       }),
       url => {
         this.host.data.data.avatar = url;
-        this.myselfService.setHost({ ...this.myselfService.$myself.getValue().host, avatar: this.host.data.data.avatar });
+        this.myselfService.setHost({
+          ...this.myselfService.$myself.getValue().host,
+          avatar: this.host.data.data.avatar
+        });
       }
     );
   }
@@ -110,7 +120,10 @@ export class HostProfileComponent implements OnInit {
       }),
       url => {
         this.host.data.data.banner = url || '/assets/banner-placeholder.png';
-        this.myselfService.setHost({ ...this.myselfService.$myself.getValue().host, banner: this.host.data.data.banner });
+        this.myselfService.setHost({
+          ...this.myselfService.$myself.getValue().host,
+          banner: this.host.data.data.banner
+        });
       }
     );
   }
@@ -127,7 +140,6 @@ export class HostProfileComponent implements OnInit {
     this.userFollowing
       ? this.myselfService.unfollowHost(this.host.data.data._id)
       : this.myselfService.followHost(this.host.data.data._id);
-     this.userFollowing = !this.userFollowing;
+    this.userFollowing = !this.userFollowing;
   }
-
 }

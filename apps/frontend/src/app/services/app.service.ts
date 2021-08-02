@@ -9,7 +9,8 @@ export enum RouteParam {
   UserId = 'userId',
   HostId = 'hostId',
   PerformanceId = 'performanceId',
-  Genre = 'genreType'
+  Genre = 'genreType',
+  ExternalUrl = 'externalUrl'
 }
 
 export enum RouteChange {
@@ -99,6 +100,12 @@ export class BaseAppService {
 
   navigateTo(url: string, extras?: NavigationExtras): Promise<boolean> {
     return this.router.navigate([url], extras);
+  }
+
+  // router.navigate doesn't support "target='_blank'". Uses window.open with queryParams to enable this.
+  navigateToNewTab(baseUrl: string, extras?: NavigationExtras): void {
+    const url = this.router.serializeUrl(this.router.createUrlTree([baseUrl], { queryParams: extras?.queryParams }));
+    window.open(url, '_blank');
   }
 
   /**

@@ -31,14 +31,17 @@ export default class EventBusProvider implements Provider<void> {
   }
 
   async publish<T extends Event>(event: T, data: EventContract[T], locale: ILocale) {
-    const meta: ContractMeta = {
-      locale: locale,
-      timestamp: timestamp(),
-      uuid: uuid()
+    const contract: Contract<T> = {
+      ...data,
+      __meta: {
+        locale: locale,
+        timestamp: timestamp(),
+        uuid: uuid()
+      }
     };
 
-    this.log.debug(`Published %o to ${event}`, data);
-    return this._connection.subject(event).next({ ...data, __meta: meta });
+    this.log.debug(`Published %o to ${event}`, contract);
+    return this._connection.subject(event).next(contract);
   }
 
   async subscribe<T extends Event>(event: T, handler: (contract: Contract<T>) => void): Promise<RxSubscription> {
@@ -46,7 +49,7 @@ export default class EventBusProvider implements Provider<void> {
       .subject(event)
       .pipe(
         tap((ct: Contract<T>) => {
-          this.log.debug(`Recieved message ${ct.__meta.uuid} from ${event}`);
+          this.log.debug(`Recieved (${ct.__meta.uuid}) from ${event}`);
           return ct;
         })
       )
@@ -55,4 +58,10 @@ export default class EventBusProvider implements Provider<void> {
 
   async disconnect() {}
   async drop() {}
+
+  async register(handlers: { [index in Event]?: (contract: Contract<index>) => Promise<void> }) {
+    for (let [event, handler] of Object.entries(handlers)) {
+      this.subscribe(event as Event, handler);
+    }
+  }
 }

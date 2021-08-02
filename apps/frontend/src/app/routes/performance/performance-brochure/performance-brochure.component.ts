@@ -7,9 +7,9 @@ import {
   AssetType,
   BASE_AMOUNT_MAP,
   DonoPeg,
+  DtoPerformance,
   IAssetStub,
   IEnvelopedData,
-  IFollowing,
   IMyself,
   IPaymentIntentClientSecret,
   IPerformance,
@@ -43,7 +43,10 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
-  performanceCacheable: ICacheable<IEnvelopedData<IPerformance>> = createICacheable();
+  @Output() onLikeEvent = new EventEmitter();
+  @Output() onFollowEvent = new EventEmitter();
+
+  performanceCacheable: ICacheable<DtoPerformance> = createICacheable();
   paymentIntentSecret: ICacheable<IPaymentIntentClientSecret> = createICacheable();
   stripePaymentIntent: PaymentIntent;
 
@@ -55,8 +58,13 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   selectedDonoPeg: DonoPeg;
   performanceTrailer: IAssetStub<AssetType.Video>;
 
-  performanceSharingUrl: SocialSharingComponent['url'];
+  brochureSharingUrl: SocialSharingComponent['url'];
   userFollowing: boolean;
+
+  userLiked: boolean;
+  thumbnail: IAssetStub<AssetType.Image>;
+
+  hostMarketingOptForm: UiForm<{ does_opt_out: boolean }>;
 
   get performance() {
     return this.performanceCacheable.data?.data;
@@ -66,24 +74,40 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     @Inject(LOCALE_ID) public locale: string,
     private myselfService: MyselfService,
     private performanceService: PerformanceService,
-    private helperService: HelperService,
     private appService: BaseAppService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<PerformanceBrochureComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { performance: IPerformanceStub; onFollowEvent: EventEmitter<string> }
+    @Inject(MAT_DIALOG_DATA) public data: { performance_id: string }
   ) {}
 
   async ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
-    await cachize(this.performanceService.readPerformance(this.data.performance._id), this.performanceCacheable).then(
+    await cachize(this.performanceService.readPerformance(this.data.performance_id), this.performanceCacheable).then(
       d => {
         this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
         this.userFollowing = d.__client_data?.is_following;
+        this.userLiked = d.__client_data?.is_liking;
         return d;
       }
     );
 
-    this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
+    // Used for social sharing component
+    this.brochureSharingUrl = `${environment.frontend_url}/?performance=${this.performance._id}`;
+
+    // Find first thumbnail, to show on cover image if no trailer video is present
+    this.thumbnail = this.performance.assets.find(a => a.type == AssetType.Image && a.tags.includes('thumbnail'));
+
+    // Marketing form when going to purchase a ticket
+    this.hostMarketingOptForm = new UiForm({
+      fields: {
+        does_opt_out: UiField.Checkbox({
+          label: $localize`I do not wish to recieve direct marketing from the creator of this performance, @${this.performance.host.username}`
+        })
+      },
+      resolvers: {
+        output: async v => v
+      }
+    });
   }
 
   openPerformanceDescriptionSection() {
@@ -145,7 +169,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
         purchaseable_id: this.selectedTicket._id,
         options: {
           selected_dono_peg: this.donoPegSelectForm?.group?.value?.pegs,
-          allow_any_amount: this.donoPegSelectForm?.group?.value?.allow_any_amount
+          allow_any_amount: this.donoPegSelectForm?.group?.value?.allow_any_amount,
+          hard_host_marketing_opt_out: this.hostMarketingOptForm.group.value.does_opt_out
         }
       },
       this.performance.host.stripe_account_id
@@ -188,5 +213,9 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     } else {
       this.selectedTicket.amount = getDonoAmount(this.selectedDonoPeg, this.selectedTicket.currency);
     }
+  }
+
+  likeEvent(value: boolean) {
+    this.onLikeEvent.emit(value);
   }
 }

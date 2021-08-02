@@ -7,7 +7,8 @@ import {
   PaymentStatus,
   IStripeChargePassthrough,
   RefundResponseReason,
-  Environment
+  Environment,
+  ConsentOpt
 } from '@core/interfaces';
 import {
   BaseController,
@@ -192,7 +193,14 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
         this.providers.bus.publish(
           'ticket.purchased',
-          { purchaser_id: user._id, invoice_id: invoice._id },
+          {
+            purchaser_id: user._id,
+            invoice_id: invoice._id,
+            ticket_id: ticket._id,
+            host_id: ticket.performance.host._id,
+            // from performance.controller.ts in purchasing a ticket
+            marketing_consent: passthrough.marketing_consent as ConsentOpt
+          },
           user.locale
         );
       }

@@ -379,7 +379,7 @@ export enum CountryCode {
 // TODO: add all base amounts for all currencies (minimum stripe amount for each currency expressed in smallest denomination)
 // https://stripe.com/docs/currencies#presentment-currencies
 export const BASE_AMOUNT_MAP: { [code in CurrencyCode]?: number } = {
-  [CurrencyCode.GBP]: 100 //£1
+  [CurrencyCode.GBP]: 100 // £1
 } as const;
 
 export const calculateAmountFromCurrency = (currency: CurrencyCode, peg: DonoPegWeights): number => {

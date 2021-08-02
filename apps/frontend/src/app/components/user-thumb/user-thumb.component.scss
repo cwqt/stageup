@@ -2,7 +2,6 @@
   max-width: 100%;
 }
 
-
 .thumb {
   max-height: 64px;
   img {
@@ -10,7 +9,7 @@
     width: 64px;
     object-fit: cover;
   }
-  
+
   &--small {
     max-height: 48px;
     img {

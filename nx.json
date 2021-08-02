@@ -11,7 +11,7 @@
     "default": {
       "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e", "generate-xlf", "extract-i18n", "xliffmerge"],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "accessToken": "ZTIwODMwY2ItM2Y1OS00OWVjLTk3YTctNmQ3NzFmN2JlNzdlfHJlYWQtd3JpdGU=",
         "canTrackAnalytics": false,
         "showUsageWarnings": true
@@ -23,7 +23,6 @@
     "backend": { "tags": [] },
     "frontend": { "tags": [] },
     "interfaces": { "tags": [] },
-    "seeder": { "tags": [] },
     "shared": { "tags": [] },
     "generate-xlf": { "tags": [] }
   },

@@ -8,6 +8,8 @@ import {
   IEnvelopedData,
   IFollowing,
   IHost,
+  IHostStub,
+  ILike,
   ILocale,
   IMyself,
   IPasswordConfirmationResponse,
@@ -16,7 +18,8 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
-  IUserInvoice
+  IUserInvoice,
+  NUUID
 } from '@core/interfaces';
 import { UserHostInfo } from '@core/api';
 import { IQueryParams, querize } from '@core/helpers';
@@ -30,8 +33,18 @@ import { LocalStorageKey } from '../app.interfaces';
 export class MyselfService {
   $myself: BehaviorSubject<IMyself | null>;
 
+  // cookies pop-up for logged-in/out users
+  $acceptedCookiesPolicy: BehaviorSubject<boolean | undefined>;
+
   constructor(private http: HttpClient, private router: Router) {
     this.$myself = new BehaviorSubject(this.hydrate());
+
+    // populate subject with value, if one set, else undefined
+    this.$acceptedCookiesPolicy = new BehaviorSubject(
+      localStorage.getItem(LocalStorageKey.CookiesPolicyAcceptance)
+        ? localStorage.getItem(LocalStorageKey.CookiesPolicyAcceptance) == 'true'
+        : undefined
+    );
   }
 
   store(myself: IMyself | null, rehydrate?: boolean) {
@@ -76,6 +89,19 @@ export class MyselfService {
         )
       )
       .toPromise();
+  }
+
+  getCookiesConsent() {
+    return this.$acceptedCookiesPolicy.value;
+  }
+
+  setCookiesConsent(doesAccept: boolean | null) {
+    if (doesAccept == null) {
+      localStorage.removeItem(LocalStorageKey.CookiesPolicyAcceptance);
+    } else {
+      this.$acceptedCookiesPolicy.next(doesAccept);
+      localStorage.setItem(LocalStorageKey.CookiesPolicyAcceptance, doesAccept.toString());
+    }
   }
 
   setUser(user: IMyself['user']) {
@@ -164,15 +190,11 @@ export class MyselfService {
 
   //router.post <IFollowing> ("/myself/follow-host/:hid", Myself.addFollow());
   followHost(hostId: string): Promise<IFollowing> {
-    return this.http
-    .post<IFollowing>(`/api/myself/follow-host/${hostId}`, {})
-    .toPromise()
+    return this.http.post<IFollowing>(`/api/myself/follow-host/${hostId}`, {}).toPromise();
   }
 
   //router.delete <void> ("/myself/unfollow-host/hid", Myself.deleteFollow());
   unfollowHost(hostId: string): Promise<void> {
-    return this.http
-    .delete<void>(`/api/myself/unfollow-host/${hostId}`)
-    .toPromise();
+    return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
   }
 }

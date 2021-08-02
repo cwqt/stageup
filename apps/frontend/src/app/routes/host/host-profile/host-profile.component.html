@@ -83,6 +83,25 @@
                 *ngIf="host.data.data.social_info.linkedin_url"
                 >logo--linkedin</ui-icon
               >
+              <ui-button
+              id="shareButton"
+              [popper]="shareMenu"
+              [popperTrigger]="'click'"
+              [popperPositionFixed]="true"
+              [popperPreventOverflow]="false"
+              [popperPlacement]="'bottom'"
+              size="s"
+              class="border-0"
+            >
+            <ui-icon
+            size="l"
+            >Share</ui-icon
+          >
+            </ui-button>
+            <popper-content #shareMenu (click)="$event.stopPropagation()">
+              <app-social-sharing [url]="hostSharingUrl"></app-social-sharing>
+            </popper-content>
+             
             </div>
             <div class="flex absolute right-2 top-0 w-auto">
               <ui-button [transparent]="true" class="flex-1" size="m">

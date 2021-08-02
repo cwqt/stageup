@@ -1,32 +1,50 @@
-import { IPerformance } from '../performances/performance.interface';
-import { Job, JobsOptions } from 'bullmq';
-import { IInvoice } from '../common/invoice.interface';
-import { IHostPrivate } from '../hosts/host.interface';
-import { SendMailOptions } from 'nodemailer';
+import { JobsOptions } from 'bullmq';
 import { Attachment } from 'nodemailer/lib/mailer';
+import { IInvoice } from '../finance/invoice.interface';
+import { IHost, IHostPrivate } from '../hosts/host.interface';
 import { ILocale } from '../i18n/i18n.interface';
+import { IPerformance } from '../performances/performance.interface';
 
 export const JobTypes = [
   'send_email',
+  'send_reminder_emails',
   'schedule_performance_release',
   'host_invoice_csv',
   'host_invoice_pdf',
-  'collect_analytics'
+  'collect_performance_analytics',
+  'collect_host_analytics'
 ] as const;
 
 export type JobType = typeof JobTypes[number];
 
+export const EmailReminderTypes = [
+  '24 hours',
+  '15 minutes',
+] as const;
+
+export type EmailReminderType = typeof EmailReminderTypes[number];
+
 export type JobData = {
-  ['collect_analytics']: {
+  ['collect_performance_analytics']: {
     performance_id: IPerformance['_id'];
+  };
+  ['collect_host_analytics']: {
+    host_id: IHost['_id'];
   };
   ['send_email']: {
     from: string;
     to: string;
     subject: string;
     content: string;
-    markdown: boolean;
+    markdown?: boolean;
     attachments: Attachment[];
+  };
+  ['send_reminder_emails']: {
+    performance_id: IPerformance['_id'];
+    sender_email_address: string;
+    type: EmailReminderType;
+    premier_date: number;
+    url: string;
   };
   ['schedule_performance_release']: Required<Pick<IPerformance, '_id'>>;
   ['host_invoice_csv']: {

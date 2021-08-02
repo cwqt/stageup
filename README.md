@@ -2,7 +2,7 @@
   <img src="https://user-images.githubusercontent.com/61694629/119231515-31434200-bb19-11eb-8aec-3f1927f3f183.jpg" width="350" >
 </p>
 
-# core &nbsp; ![Dev Build](https://github.com/StageUp/core/workflows/Build%20&%20Test/badge.svg) &nbsp;[![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/) &nbsp;[![Build & Deploy](https://github.com/StageUp/core/actions/workflows/deploy.yml/badge.svg)](https://github.com/StageUp/core/actions/workflows/deploy.yml)
+# core &nbsp; [![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/) &nbsp;[![Staging](https://github.com/StageUp/core/actions/workflows/2-deploy-staging.yml/badge.svg)](https://github.com/StageUp/core/actions/workflows/2-deploy-staging.yml) 
 
 Live-streaming & VoD platform for the performance arts.
 
@@ -79,7 +79,7 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
   .env.development     # also .env.staging, .testing & .production
 ```
 
-# i18n & a11y
+## i18n & a11y
 
 - Country codes: ISO-3166-Alpha2 [iso-3166-1](https://www.npmjs.com/package/iso-3166-1)
 - Language codes: ISO 639-1 [iso-939-1](https://www.npmjs.com/package/iso-639-1)

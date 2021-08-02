@@ -1,10 +1,9 @@
-import { BaseEntity, Entity, Column, BeforeInsert, PrimaryColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
-import { IAccessToken, TokenProvisioner, DtoAccessToken, IAccessTokenStub } from '@core/interfaces';
-import { User } from '../users/user.entity';
 import { timestamp, uuid } from '@core/helpers';
-import { SigningKey } from './signing-key.entity';
-import { Invoice } from '../common/invoice.entity';
-import { Claim } from '../common/claim.entity';
+import { DtoAccessToken, IAccessToken, IAccessTokenStub, TokenProvisioner } from '@core/interfaces';
+import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Claim } from '../assets/claim.entity';
+import { Invoice } from '../finance/invoice.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class AccessToken extends BaseEntity implements IAccessToken {

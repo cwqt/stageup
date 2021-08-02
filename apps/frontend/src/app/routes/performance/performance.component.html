@@ -1,49 +1,51 @@
 <app-page>
   <div body>
-    <mat-spinner *ngIf="$loading | async"></mat-spinner>
+    <mat-spinner *ngIf="loading"></mat-spinner>
 
-    <div *ngIf="performance.error && !performance.loading">
+    <!-- Performance player -->
+    <ng-container *ngIf="!loading && performance">
+      <ng-container *ngIf="!token; else player">
+        <mat-error i18n>You do not have access to this performance</mat-error>
+      </ng-container>
+
+      <div class="relative" #player>
+        <!-- Performance Rating -->
+        <div class="absolute top-4 right-4 z-10">
+          <div class="mb-3">
+            <app-rate-performance
+              [rating]="rating"
+              [starCount]="3"
+              (ratingUpdated)="onRatingChanged($event)"
+            ></app-rate-performance>
+          </div>
+
+          <!-- Social Sharing -->
+          <app-social-sharing
+            class="inline-flex justify-end min-w-full"
+            [url]="performanceSharingUrl"
+          ></app-social-sharing>
+        </div>
+
+        <!-- The actual video player for streams/vod -->
+        <app-performance-watch [performance]="performance" [token]="token"></app-performance-watch>
+      </div>
+    </ng-container>
+
+    <!-- Performance title, description, host etc -->
+    <div class="performance-body mt-4" *ngIf="performance">
+      <h1>{{ performance.name }}</h1>
+      <app-user-thumb [user]="performance.host"></app-user-thumb>
+      <mat-divider></mat-divider>
+
+      <quill-view [content]="performance.description" format="json" theme="snow"></quill-view>
+    </div>
+
+    <!-- Performance Not Found -->
+    <div *ngIf="performanceCacheable.error && !loading">
       <h1 i18n>Performance not found</h1>
       <h4 i18n>This performance either doesn't exist or is set to Private</h4>
       <br />
       <ui-button (click)="gotoFeed()" size="l" kind="primary" icon="undo" i18n>Back to Feed?</ui-button>
-    </div>
-
-    <div class="performance" *ngIf="perf && !performance.loading">
-      <div class="performance-player" *ngIf="performance.data.__client_data">
-        <app-performance-watch [performance]="performance.data"></app-performance-watch>
-      </div>
-
-      <div class="performance" *ngIf="performance.data?.data">
-        <div class="performance-player" *ngIf="primarySignedToken.data.signed_token">
-          <app-performance-watch
-            [performance]="performance.data"
-            [token]="primarySignedToken.data"
-          ></app-performance-watch>
-        </div>
-
-        <!-- show three image preview images -->
-        <div class="performance-previews" *ngIf="!primarySignedToken.data.signed_token">
-          <div class="performance-previews__1">
-            <img src="https://i.ytimg.com/vi/wypxtfYy6tk/maxresdefault.jpg" alt="" />
-          </div>
-          <div class="performance-previews__3">
-            <img src="https://pbs.twimg.com/media/EIul7ONUUAEAWPg.jpg" alt="" />
-            <div class="performance-previews__final-overlay">
-              <ui-icon size="l">overflow-menu--horizontal</ui-icon>
-              <span i18n>3 more</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="performance-body">
-          <h1>{{ perf.name }}</h1>
-          <app-user-thumb [user]="perf.host"></app-user-thumb>
-          <mat-divider></mat-divider>
-
-          <quill-view [content]="perf.description" format="json" theme="snow"></quill-view>
-        </div>
-      </div>
     </div>
   </div>
 </app-page>

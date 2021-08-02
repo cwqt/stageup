@@ -28,7 +28,7 @@ import { UserHostInfo } from './user-host-info.entity';
 import { Onboarding } from './onboarding.entity';
 import { timestamp, uuid } from '@core/helpers';
 import { ErrorHandler } from '../../errors';
-import { Invoice } from '../common/invoice.entity';
+import { Invoice } from '../finance/invoice.entity';
 import { PatronTier } from './patron-tier.entity';
 import { PatronSubscription } from '@core/api';
 

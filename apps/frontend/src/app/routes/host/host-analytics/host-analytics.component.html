@@ -11,29 +11,24 @@
         <ui-form [form]="periodForm"></ui-form>
       </div>
 
-      <div class="flex space-x-4 w-full">
-        <div
-          *ngFor="let header of headerItems | keyvalue"
-          class="bg-white rounded overflow-hidden shadow relative w-1/4"
-        >
-          <div class="p-4 absolute z-10">
-            <h2>{{ header.value.title }}</h2>
-            <h3>{{ header.value.aggregation }} ({{ header.value.difference }})</h3>
-          </div>
-          <ngx-chartjs
-            class="opacity-25 pt-12"
-            type="line"
-            [data]="header.value.graph.data"
-            [options]="header.value.graph.options"
-          ></ngx-chartjs>
-        </div>
+      <div class="flex space-x-4 w-full overflow-x-scroll">
+        <ng-container *ngFor="let entity of snapshot | keyvalue">
+          <app-host-analytics-header-item
+            class="m-1"
+            *ngFor="let item of entity.value.header_items | keyvalue"
+            [ref]="entity.key"
+            [item]="item.value"
+            [loading]="entity.value.loading"
+          >
+          </app-host-analytics-header-item>
+        </ng-container>
       </div>
     </div>
 
     <div class="bg-white p-4 rounded shadow-sm mb-4 w-full">
       <h2 i18n>Performances</h2>
       <p i18n>Filter by columns for aggregated analytics</p>
-      <ui-table [table]="analyticsTable"></ui-table>
+      <ui-table [table]="performanceAnalyticsTable"></ui-table>
     </div>
   </div>
 </app-page>

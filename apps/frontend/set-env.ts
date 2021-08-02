@@ -20,6 +20,7 @@ envConfigFile += `export const environment = {
   frontend_url: '${extension(process.env.LOAD_BALANCER_URL, 4200)}',
   app_version: '${process.env.npm_package_version}',
   stripe_public_key: '${process.env.STRIPE_PUBLIC_KEY}',
+  mux_env_key: '${process.env.MUX_ENV_KEY}',
 };
 `;
 
