@@ -149,6 +149,9 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
+import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
+import { CurrentDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/current-documents/current-documents.component';
+import { NewDocumentComponent } from './routes/admin-panel/admin-gdpr-documents/new-document/new-document.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -263,7 +266,10 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     HostAnalyticsHeaderItemComponent,
     DocumentViewComponent,
     TermsLinksComponent,
-    CookieConsentComponent
+    CookieConsentComponent,
+    AdminGdprDocumentsComponent,
+    CurrentDocumentsComponent,
+    NewDocumentComponent
   ],
   imports: [
     AngularMaterialModule,

@@ -8,13 +8,8 @@ import { HttpClient } from '@angular/common/http';
 export class GdprService {
   constructor(private http: HttpClient) {}
 
-  //router.get <IConsentable<ConsentableType>> ("/api/gdpr/document/latest", Gdpr.getLatestDocument());;
+  //router.get <IConsentable<ConsentableType>> ("/api/gdpr/document/latest", Gdpr.getGeneralTerms());;
   getLatestDocument(type: ConsentableType): Promise<IConsentable<ConsentableType>> {
     return this.http.get<IConsentable<ConsentableType>>(`/api/gdpr/documents/latest?type=${type}`).toPromise();
-  }
-
-  //router.get <IConsentable<ConsentableType>[]> ("/api/gdpr/document/all-latest", Gdpr.getAllLatestDocuments());;
-  getAllLatestDocuments(): Promise<IConsentable<ConsentableType>[]> {
-    return this.http.get<IConsentable<ConsentableType>[]>(`/api/gdpr/documents/all-latest`).toPromise();
   }
 }

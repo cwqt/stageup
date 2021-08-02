@@ -19,19 +19,4 @@ export default class GdprController extends BaseController<BackendProviderMap> {
       }
     };
   }
-
-  // Returns one of each type of document (the highest version)
-  getAllLatestDocuments(): IControllerEndpoint<IConsentable<ConsentableType>[]> {
-    // getAllLatestDocuments(): IControllerEndpoint<any> {
-    return {
-      authorisation: AuthStrat.isSiteAdmin,
-      controller: async req => {
-        return await this.ORM.createQueryBuilder(Consentable, 'consentable')
-          .distinctOn(['consentable.type']) // Will only get one of each type
-          .orderBy('consentable.type', 'DESC') // puts the documents in order of type and then order of version (to get the highest version of each type)
-          .addOrderBy('consentable.version', 'DESC')
-          .getMany();
-      }
-    };
-  }
 }

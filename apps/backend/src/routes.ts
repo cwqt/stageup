@@ -231,4 +231,5 @@ router.use                               ("/admin/queue",                       
 // GDPR ---------------------------------------------------------------------------------------------------------------
 const Gdpr = new GdprController(providers, middlewares);
 router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
+router.get      <IConsentable<CType>[]>  ("/gdpr/documents/all-latest",               Gdpr.getAllLatestDocuments());
 }
