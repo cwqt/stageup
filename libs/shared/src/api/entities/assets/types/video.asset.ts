@@ -49,6 +49,7 @@ export class VideoAsset extends Asset<AssetType.Video> implements AssetMethods<A
 
   async delete(provider: AssetProvider[AssetType.Video]) {
     if (this.asset_identifier) {
+      console.log('Asset Identifier', this.asset_identifier);
       await provider.connection.Video.Assets.del(this.asset_identifier);
     }
     await this.remove();

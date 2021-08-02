@@ -23,6 +23,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performanceId: string;
   performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
+  disableDeleteButton: boolean;
 
   onChildLoaded(
     component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent

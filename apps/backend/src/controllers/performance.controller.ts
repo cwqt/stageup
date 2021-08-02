@@ -58,6 +58,7 @@ import {
   TicketType,
   Visibility
 } from '@core/interfaces';
+import { Video } from '@mux/mux-node';
 import { array, boolean, enums, object, optional } from 'superstruct';
 import { In } from 'typeorm';
 import AuthStrat from '../common/authorisation';
@@ -401,18 +402,23 @@ export default class PerformanceController extends BaseController<BackendProvide
           throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
 
         //Delete all mux assets
-        const vidAssets: VideoAsset[] = VideoAsset.createQueryBuilder(VideoAsset, 'vasset');
+        const perfAssets: VideoAsset[] = await this.ORM.createQueryBuilder(VideoAsset, 'vasset')
+          .where('vasset.group__id = :group_id', { group_id: perf.asset_group._id })
+          .getMany();
 
+        perfAssets.map(vasset => vasset.delete(this.providers.mux).catch(err => console.log(err)));
+
+        // console.log(vidAssets);
         // perf.status = PerformanceStatus.Deleted;
         // await perf.softRemove();
 
-        return await this.providers.bus.publish(
-          'performance.deleted',
-          {
-            performance_id: req.params.pid
-          },
-          req.locale
-        );
+        // return await this.providers.bus.publish(
+        //   'performance.deleted',
+        //   {
+        //     performance_id: req.params.pid
+        //   },
+        //   req.locale
+        // );
       }
     };
   }
