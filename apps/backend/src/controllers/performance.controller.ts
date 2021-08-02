@@ -400,6 +400,9 @@ export default class PerformanceController extends BaseController<BackendProvide
         if (perf.status === PerformanceStatus.Live)
           throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
 
+        //Delete all mux assets
+        const vidAssets: VideoAsset[] = VideoAsset.createQueryBuilder(VideoAsset, 'vasset');
+
         // perf.status = PerformanceStatus.Deleted;
         // await perf.softRemove();
 
