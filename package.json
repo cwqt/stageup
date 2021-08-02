@@ -3,6 +3,7 @@
   "version": "0.0.7",
   "license": "MIT",
   "scripts": {
+    "release": "shipjs prepare",
     "ng": "node --max_old_space_size=8096 ./node_modules/@angular/cli/bin/ng",
     "nx": "node --max_old_space_size=8096 ./node_modules/@nrwl/cli/bin/nx",
     "start": "ts-node --project tools/tsconfig.tools.json tools/misc-scripts/run-command",
