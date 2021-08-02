@@ -49,6 +49,9 @@ host:
     created_at: Created At
     total_rows: Total Rows
 
+# Peformances    --------------------------------------------------------------------------------------
+performance:
+  cannot_delete_live: Performance cannot be deleted while currently live
 # Payment Status --------------------------------------------------------------------------------------
 payment_status:
   created: Created

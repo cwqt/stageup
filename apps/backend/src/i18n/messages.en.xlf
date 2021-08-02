@@ -111,6 +111,10 @@
       <source>Total Rows</source>
       <target state="final">Total Rows</target>
     </trans-unit>				
+		<trans-unit id="performance.cannot_delete_live" datatype="html">
+      <source>Performance cannot be deleted while currently live</source>
+      <target state="final">Performance cannot be deleted while currently live</target>
+    </trans-unit>				
 		<trans-unit id="payment_status.created" datatype="html">
       <source>Created</source>
       <target state="final">Created</target>
