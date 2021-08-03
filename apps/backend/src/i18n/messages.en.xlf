@@ -115,6 +115,10 @@
       <source>Performance cannot be deleted while currently live</source>
       <target state="final">Performance cannot be deleted while currently live</target>
     </trans-unit>				
+		<trans-unit id="performance.cannot_delete_after_occurrence" datatype="html">
+      <source>Performance cannot be deleted after it has occured</source>
+      <target state="final">Performance cannot be deleted after it has occured</target>
+    </trans-unit>				
 		<trans-unit id="payment_status.created" datatype="html">
       <source>Created</source>
       <target state="final">Created</target>

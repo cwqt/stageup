@@ -134,6 +134,7 @@ export default class PerformanceController extends BaseController<BackendProvide
           .filter({
             genre: { subject: 'p.genre' }
           })
+          .withDeleted()
           .paginate(p => p.toStub());
       }
     };
@@ -402,6 +403,9 @@ export default class PerformanceController extends BaseController<BackendProvide
 
         if (perf.status === PerformanceStatus.Live)
           throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
+
+        if (perf.status === PerformanceStatus.Complete)
+          throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_after_occurrence`);
 
         perf.status = PerformanceStatus.Deleted;
         await perf.softRemove();
