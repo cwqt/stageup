@@ -8,7 +8,7 @@ export class AssetGroup extends BaseEntity {
   @PrimaryColumn() _id: string;
 
   @Column('varchar') owner__id: NUUID; // double underscore to match everything else
-  @OneToMany(() => Asset, asset => asset.group, { eager: true }) assets: Asset[];
+  @OneToMany(() => Asset, asset => asset.group, { eager: true, onDelete: 'CASCADE', cascade: true }) assets: Asset[];
 
   //Added soft delete column as performances will always be soft deleted for analytics/ undeletion reasons, associated
   //asset references will therefore be soft deleted too

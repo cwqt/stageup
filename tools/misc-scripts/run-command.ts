@@ -60,6 +60,12 @@ const applications: {
     environments: ['development', 'staging', 'production'],
     locales: SUPPORTED_LOCALES
   },
+  seeder: {
+    cmd: {
+      seed: () => `nx run seeder:start`
+    },
+    environments: ['development']
+  },
   ['api-tests']: {
     cmd: {
       execute: env => `npx nx test api-tests --watch`

@@ -23,6 +23,7 @@
     "backend": { "tags": [] },
     "frontend": { "tags": [] },
     "interfaces": { "tags": [] },
+    "seeder": { "tags": [] },
     "shared": { "tags": [] },
     "generate-xlf": { "tags": [] }
   },

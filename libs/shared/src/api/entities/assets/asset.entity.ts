@@ -40,7 +40,9 @@ export abstract class Asset<T extends AssetType = any> extends BaseEntity implem
   @Column('varchar', { array: true, default: '{}' }) tags: AssetTag[];
 
   @RelationId((asset: Asset) => asset.signing_key) signing_key__id?: string;
-  @OneToOne(() => SigningKey, { nullable: true }) @JoinColumn() signing_key?: SigningKey;
+  @OneToOne(() => SigningKey, { nullable: true, onDelete: 'CASCADE', cascade: true })
+  @JoinColumn()
+  signing_key?: SigningKey;
 
   @RelationId((asset: Asset) => asset.group) group__id: NUUID;
   @ManyToOne(() => AssetGroup, group => group.assets) group: AssetGroup;
