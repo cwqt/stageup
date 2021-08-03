@@ -49,10 +49,12 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @DeleteDateColumn() deletedAt?: Date;
   @Column('jsonb', { nullable: true }) delete_reason: IDeletePerfReason;
 
-  @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
-  @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
+  @OneToOne(() => AssetGroup, { eager: true, onDelete: 'CASCADE', cascade: true })
+  @JoinColumn()
+  asset_group: AssetGroup;
+  @OneToMany(() => Ticket, ticket => ticket.performance, { onDelete: 'CASCADE', cascade: true }) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
-  @OneToMany(() => Like, like => like.performance) likes: Like[];
+  @OneToMany(() => Like, like => like.performance, { onDelete: 'CASCADE', cascade: true }) likes: Like[];
 
   constructor(data: DtoCreatePerformance, host: Host) {
     super();

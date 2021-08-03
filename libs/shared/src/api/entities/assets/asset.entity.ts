@@ -12,6 +12,7 @@ import {
 import {
   BaseEntity,
   Column,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -43,6 +44,10 @@ export abstract class Asset<T extends AssetType = any> extends BaseEntity implem
 
   @RelationId((asset: Asset) => asset.group) group__id: NUUID;
   @ManyToOne(() => AssetGroup, group => group.assets) group: AssetGroup;
+
+  //Added soft delete column as performances will always be soft deleted for analytics/ undeletion reasons, associated
+  //asset references will therefore be soft deleted too
+  @DeleteDateColumn() deletedAt?: Date;
 
   constructor(type: T, group: AssetGroup, tags?: AssetTag[]) {
     super();
