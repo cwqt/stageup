@@ -401,24 +401,16 @@ export default class PerformanceController extends BaseController<BackendProvide
         if (perf.status === PerformanceStatus.Live)
           throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
 
-        //Delete all mux assets
-        const perfAssets: VideoAsset[] = await this.ORM.createQueryBuilder(VideoAsset, 'vasset')
-          .where('vasset.group__id = :group_id', { group_id: perf.asset_group._id })
-          .getMany();
+        perf.status = PerformanceStatus.Deleted;
+        await perf.softRemove();
 
-        perfAssets.map(vasset => vasset.delete(this.providers.mux).catch(err => console.log(err)));
-
-        // console.log(vidAssets);
-        // perf.status = PerformanceStatus.Deleted;
-        // await perf.softRemove();
-
-        // return await this.providers.bus.publish(
-        //   'performance.deleted',
-        //   {
-        //     performance_id: req.params.pid
-        //   },
-        //   req.locale
-        // );
+        return await this.providers.bus.publish(
+          'performance.deleted',
+          {
+            performance_id: req.params.pid
+          },
+          req.locale
+        );
       }
     };
   }
