@@ -154,14 +154,13 @@ export default class MyselfController extends BaseController<BackendProviderMap>
         }
 
         if (fetchAll || req.query['trending']) {
-          const ticketSales = await this.ORM.createQueryBuilder()
-            .select(['invoice._id', 'ticket._id'])
-            .addSelect('COUNT(ticket._id) as ticketsSold')
-            .where('invoice.purchased_at >= :curdate', { curdate: getUnixTime(startOfWeek(new Date())) })
-            .from(Invoice, 'invoice')
+          const ticketSales: Invoice[] = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+            // .select(['invoice._id', 'ticket._id'])
+            // .addSelect('COUNT(ticket._id) as ticketsSold')
+            .where('invoice.purchased_at <= :curdate', { curdate: getUnixTime(startOfWeek(new Date())) })
             .innerJoin('invoice.ticket', 'ticket')
 
-            .groupBy('ticket._id')
+            // .groupBy('ticket._id')
             // .innerJoin('i.ticket', 'ticket')
             // .innerJoin('ticket.performance', 'performance')
             // .addSelect('i.ticket')
