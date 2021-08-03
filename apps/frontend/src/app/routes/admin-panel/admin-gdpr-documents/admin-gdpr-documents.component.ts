@@ -1,4 +1,6 @@
-import { BaseAppService } from '@frontend/services/app.service';
+import { UploadDocumentDialogComponent } from './../../../components/dialogs/upload-document-dialog/upload-document-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { HelperService } from '@frontend/services/helper.service';
 import { GdprService } from 'apps/frontend/src/app/services/gdpr.service';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { Component, OnInit } from '@angular/core';
@@ -16,7 +18,8 @@ export class AdminGdprDocumentsComponent implements OnInit {
 
   constructor(
     private gdprService: GdprService,
-    private appService: BaseAppService,
+    private helperService: HelperService,
+    public dialog: MatDialog,
     @Inject(LOCALE_ID) public locale: string
   ) {}
 
@@ -61,7 +64,15 @@ export class AdminGdprDocumentsComponent implements OnInit {
         {
           label: $localize`Upload New`,
           type: 'button',
-          click: document => null, // TODO: Navigate to 'add document' page and add backend functionality
+          click: document => {
+            this.helperService.showDialog(
+              this.dialog.open(UploadDocumentDialogComponent, {
+                data: { document },
+                width: '800px',
+                minHeight: '500px'
+              })
+            );
+          },
           icon: 'upload'
         }
       ]

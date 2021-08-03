@@ -232,4 +232,5 @@ router.use                               ("/admin/queue",                       
 const Gdpr = new GdprController(providers, middlewares);
 router.get      <IConsentable<CT>>       ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
 router.get      <IE<IConsentable<CT>[]>> ("/gdpr/documents/all-latest",               Gdpr.getAllLatestDocuments());
+router.post     <void>                   ("/gdpr/documents/upload",                   Gdpr.uploadDocument());
 }

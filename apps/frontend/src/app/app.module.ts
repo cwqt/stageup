@@ -150,7 +150,7 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
-import { UploadDocumentComponent } from './routes/admin-panel/admin-gdpr-documents/upload-document/upload-document.component';
+import { UploadDocumentDialogComponent } from './components/dialogs/upload-document-dialog/upload-document-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -267,7 +267,7 @@ import { UploadDocumentComponent } from './routes/admin-panel/admin-gdpr-documen
     TermsLinksComponent,
     CookieConsentComponent,
     AdminGdprDocumentsComponent,
-    UploadDocumentComponent
+    UploadDocumentDialogComponent
   ],
   imports: [
     AngularMaterialModule,

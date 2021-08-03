@@ -1,4 +1,3 @@
-import { UploadDocumentComponent } from './routes/admin-panel/admin-gdpr-documents/upload-document/upload-document.component';
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { NgModule } from '@angular/core';
@@ -141,10 +140,6 @@ const LOGGED_IN_ROUTES: Routes = [
       {
         path: 'documents',
         component: AdminGdprDocumentsComponent
-      },
-      {
-        path: 'documents/new',
-        component: UploadDocumentComponent
       }
     ]
   }

@@ -21,7 +21,6 @@ export default class GdprController extends BaseController<BackendProviderMap> {
   }
 
   // Returns one of each type of document (the highest version)
-
   getAllLatestDocuments(): IControllerEndpoint<IEnvelopedData<IConsentable<ConsentableType>[]>> {
     return {
       authorisation: AuthStrat.isSiteAdmin,
@@ -33,6 +32,17 @@ export default class GdprController extends BaseController<BackendProviderMap> {
           .getMany();
 
         return { data: documents };
+      }
+    };
+  }
+
+  uploadDocument(): IControllerEndpoint<void> {
+    return {
+      authorisation: AuthStrat.isSiteAdmin,
+      middleware: this.middleware.file(2048, ['application/pdf']).single('file'),
+      controller: async req => {
+        console.log('REQUEST LOL', req);
+        return null;
       }
     };
   }
