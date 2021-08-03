@@ -79,7 +79,7 @@ export class SearchComponent implements OnInit {
   openDialogPerf(performance: IPerformanceStub): void {
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
-        data: { performance },
+        data: { performance_id: performance._id },
         width: '800px',
         position: { top: '5% ' }
       }),

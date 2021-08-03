@@ -139,18 +139,20 @@ jobs:
     if: always() # run regardless of deploy state
     runs-on: ubuntu-latest
     steps:
-      - uses: haya14busa/action-cond@v1
-        id: body
+      - uses: cwqt/needs-result-lookup@v1.0.0
+        id: message
         with:
-          cond: ${{ needs.deploy.result == 'success' }}
-          if_true: ':large_green_circle: (staging-${{ needs.ctx.outputs.short_sha }}) https://dev.stageup.uk/en :sparkles:'
-          if_false: ':red_circle: (staging-${{ needs.ctx.outputs.short_sha }}) https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} :sadblob:'
+          result: ${{ needs.deploy.result }}
+          if-success: ':large_green_circle: (staging-${{ needs.ctx.outputs.short_sha }}) https://dev.stageup.uk/en :sparkles:'
+          if-failure: ':red_circle: (staging-${{ needs.ctx.outputs.short_sha }}) https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          if-cancelled: ':large_orange_circle: (staging-${{ needs.ctx.outputs.short_sha }}) cancelled https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          if-skipped: ':large_yellow_circle: (staging-${{ needs.ctx.outputs.short_sha }}) skipped https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
 
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.14.0
         with:
           channel-id: 'C01JMTA1FNU'  # general channel ID
-          slack-message: ${{ steps.body.outputs.value }}
+          slack-message: ${{ steps.message.outputs.value }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_STAGEUP_BOT_OAUTH_TOKEN }}

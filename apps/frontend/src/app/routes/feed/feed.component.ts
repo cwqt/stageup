@@ -1,10 +1,12 @@
+import { ActivatedRoute } from '@angular/router';
+import { PerformanceBrochureComponent } from './../performance/performance-brochure/performance-brochure.component';
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { Genre, IEnvelopedData as IEnv, IFeed, IPerformanceStub, GenreMap, IHostStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HelperService } from '../../services/helper.service';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { timeout } from '@core/helpers';
@@ -78,7 +80,8 @@ export class FeedComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private toastService: ToastService,
     private logger: NGXLogger,
-    private appService: BaseAppService
+    private appService: BaseAppService,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
@@ -108,6 +111,10 @@ export class FeedComponent implements OnInit {
         }
       }
     });
+    // After loading feed, check if there are query params and whether we should open a performance brochure
+    this.route.queryParams.subscribe(params => {
+      if(params.performance) this.openBrochure(params.performance);
+    })
   }
 
   async getNextCarouselPage(carouselIndex: CarouselIdx) {
@@ -193,6 +200,29 @@ export class FeedComponent implements OnInit {
       feed.data?.data?.forEach(performance => {
         if (performance._id === $event.performance) performance.client_likes = $event.value;
       });
+    });
+  }
+
+  openBrochure(performanceId: string): void {
+    let dialogRef: MatDialogRef<PerformanceBrochureComponent>;
+    const envelope = { performance_id: performanceId };
+    this.helperService.showDialog(
+      (dialogRef = this.dialog.open(PerformanceBrochureComponent, {
+        data: envelope,
+        width: '1000px'
+      }))
+    );
+    // Event listeners for like and follow events inside the MatDialog
+    const likeSubscription = dialogRef.componentInstance.onLikeEvent.subscribe(data => {
+      this.syncLikes({performance: performanceId, value: data});
+    });
+    const followSubscription = dialogRef.componentInstance.onFollowEvent.subscribe(data => {
+      this.refreshFeed(data);
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      likeSubscription.unsubscribe();
+      followSubscription.unsubscribe();
     });
   }
 }

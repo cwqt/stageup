@@ -102,6 +102,12 @@ export class BaseAppService {
     return this.router.navigate([url], extras);
   }
 
+  // router.navigate doesn't support "target='_blank'". Uses window.open with queryParams to enable this.
+  navigateToNewTab(baseUrl: string, extras?: NavigationExtras): void {
+    const url = this.router.serializeUrl(this.router.createUrlTree([baseUrl], { queryParams: extras?.queryParams }));
+    window.open(url, '_blank');
+  }
+
   /**
    * @description Gets the current URL, removing supported locales (if any)
    * */

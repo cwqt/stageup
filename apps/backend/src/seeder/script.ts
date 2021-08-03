@@ -32,6 +32,8 @@ export class Seeder {
   constructor(private providers: SeederProviderMap) {}
 
   async run() {
+    console.log('Running seeder!');
+
     this.stripeCustomer = await this.providers.stripe.connection.customers.create({
       description: 'Stripe test customer'
     });
