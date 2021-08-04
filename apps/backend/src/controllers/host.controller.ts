@@ -907,61 +907,6 @@ export default class HostController extends BaseController<BackendProviderMap> {
         };
 
         invoiceService.processRefunds(refundData);
-
-        const invoiceIds: string[] = req.body.invoice_ids;
-        let bulkRefundData: IBulkRefund = {
-          bulk_refund_reason: req.body.bulk_refund_reason,
-          bulk_refund_detail: req.body.bulk_refund_detail
-        };
-
-        // const invoices = await Invoice.find({
-        //   where: {
-        //     _id: In(invoiceIds),
-        //     host: {
-        //       _id: req.params.hid
-        //     }
-        //   },
-        //   relations: {
-        //     host: true,
-        //     user: true,
-        //     refunds: {
-        //       invoice: true
-        //     }
-        //   },
-        //   select: {
-        //     host: { _id: true, stripe_account_id: true },
-        //     refunds: true,
-        //     user: true
-        //   }
-        // });
-
-        // // No invoices found for provided ids
-        // if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
-
-        // // Create an entry in the refund table for bulk refunds where a request was not made
-        // await Promise.all(
-        //   invoices.map(async invoice => {
-        //     let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
-
-        //     if (refundPresent === undefined) {
-        //       await this.ORM.transaction(async txc => {
-        //         const refund = await new Refund(invoice, null, bulkRefundData);
-        //         refund.invoice = invoice;
-        //         await txc.save(refund);
-        //       });
-        //     }
-        //   })
-        // );
-
-        // if (invoiceIds.length > 1) {
-        //   return await this.providers.bus.publish('refund.bulk', { invoice_ids: invoiceIds }, req.locale);
-        // } else {
-        //   return await this.providers.bus.publish(
-        //     'refund.initiated',
-        //     { invoice_id: invoices[0]._id, user_id: invoices[0].user._id },
-        //     req.locale
-        //   );
-        // }
       }
     };
   }
