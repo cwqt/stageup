@@ -1,6 +1,6 @@
 {
   "name": "stageup-core",
-  "version": "0.0.8",
+  "version": "0.0.7",
   "license": "MIT",
   "scripts": {
     "release": "shipjs prepare",
@@ -23,7 +23,8 @@
     "format:write": "nx format:write",
     "format:check": "nx format:check",
     "ng-postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
-    "bundle-report-frontend": "nx run frontend:build:production --stats-json && webpack-bundle-analyzer dist/apps/frontend/en/stats.json"
+    "bundle-report-frontend": "nx run frontend:build:production --stats-json && webpack-bundle-analyzer dist/apps/frontend/en/stats.json",
+    "release": "shipjs prepare"
   },
   "private": true,
   "dependencies": {
