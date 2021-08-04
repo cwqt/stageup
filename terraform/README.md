@@ -62,11 +62,11 @@ sh setup.sh # follow any instructions
 
 Due to how Terraform works you can't deploy the core infra. on `stage` & then also the ephemeral infra. on `stage` at the same time on the same workspace, the states would just remove each other on `apply`.
 
-| Core Workspace | Workspace      |
-| -------------- | -------------- |
-| prod           | release        |
-| stage          | dev            |
-| feat           | su-123, su-456 |
+| Core Workspace | Workspace      | URL                           |
+| -------------- | -------------- | ----------------------------- |
+| prod           | release        | https://release.stageup.uk/en |
+| stage          | dev            | https://dev.stageup.uk/en     |
+| feat           | su-123, su-456 | https://su-XXX.stageup.uk/en  |
 
 In the same way that branch deploys use `su-123` workspace (`terraform workspace select su-123`), `prod` & `stage` do the same, `prod` maps to `release` and `stage` maps to `dev`. So setting up core & normal infra looks like this:
 

@@ -26,7 +26,7 @@ locals {
       postgres_name = "postgres"
       # eventually this should be changed to just stageup.uk
       # & then set-up the reverse proxy to direct to here
-      load_balancer_host = "app.stageup.uk"
+      load_balancer_host = "release.stageup.uk"
     }
     stage = {
       core               = "stage"
