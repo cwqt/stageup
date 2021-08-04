@@ -61,14 +61,15 @@ jobs:
           gcloud container images add-tag
           eu.gcr.io/core-314910/core-backend:stage-latest
           eu.gcr.io/core-314910/core-backend:prod-latest
-          eu.gcr.io/core-314910/core-backend:${{ steps.tag.outputs.main }}
+          eu.gcr.io/core-314910/core-backend:${{ steps.tag.outputs.value }}
+
 
       - name: Add frontend :prod-latest & :prod-SHA tags
         run: >
           gcloud container images add-tag
           eu.gcr.io/core-314910/core-frontend:stage-latest
           eu.gcr.io/core-314910/core-frontend:prod-latest
-          eu.gcr.io/core-314910/core-frontend:${{ steps.tag.outputs.main }}
+          eu.gcr.io/core-314910/core-frontend:${{ steps.tag.outputs.value }}
 
   deploy:
     name: Deploy to production
