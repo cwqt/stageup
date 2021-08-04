@@ -110,7 +110,7 @@ resource "google_vpc_access_connector" "vpc_connector" {
   name         = "${local.name}-connector"
 
   # use higher specc'd connector for production
-  machine_type = var.core == "prod" ? "e2-standard-4" : "f1-micro"
+  machine_type = var.core == "prod" ? "e2-standard-4" : "e2-micro"
   subnet {
     name = google_compute_subnetwork.subnet.name
   }
