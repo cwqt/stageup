@@ -38,6 +38,16 @@ jobs:
           fetch-depth: 0
           ref: dev
 
+      # container tags cannot contain slashes
+      # convert to hyphens for use in tagging images later
+      - name: Convert releases/v0.0.0 to releases-v0.0.0
+        uses: mad9000/actions-find-and-replace-string@2
+        id: tag
+        with:
+          source: ${{ env.BRANCH_NAME }}
+          find: '/'
+          replace: '-'
+
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
@@ -51,14 +61,14 @@ jobs:
           gcloud container images add-tag
           eu.gcr.io/core-314910/core-backend:stage-latest
           eu.gcr.io/core-314910/core-backend:prod-latest
-          eu.gcr.io/core-314910/core-backend:${{ env.BRANCH_NAME }}
+          eu.gcr.io/core-314910/core-backend:${{ steps.tag.outputs.main }}
 
       - name: Add frontend :prod-latest & :prod-SHA tags
         run: >
           gcloud container images add-tag
           eu.gcr.io/core-314910/core-frontend:stage-latest
           eu.gcr.io/core-314910/core-frontend:prod-latest
-          eu.gcr.io/core-314910/core-frontend:${{ env.BRANCH_NAME }}
+          eu.gcr.io/core-314910/core-frontend:${{ steps.tag.outputs.main }}
 
   deploy:
     name: Deploy to production
@@ -96,7 +106,7 @@ jobs:
     if: always() # run regardless of deploy state
     runs-on: ubuntu-latest
     steps:
-      - uses: cwqt/needs-result-lookup@v1.0.0
+      - uses: cwqt/needs-result-lookup@v1.0.1
         id: message
         with:
           result: ${{ needs.deploy.result }}
