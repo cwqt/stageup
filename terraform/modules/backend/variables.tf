@@ -36,6 +36,7 @@ variable "env" {
     MUX_SECRET_KEY           = string
     MUX_ACCESS_TOKEN         = string
     MUX_WEBHOOK_SIGNATURE    = string
+    MUX_DATA_ENV_KEY         = string
     SENDGRID_API_KEY         = string
     STRIPE_PRIVATE_KEY       = string
     STRIPE_WEBHOOK_SIGNATURE = string
