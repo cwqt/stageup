@@ -71,14 +71,15 @@ output "STRIPE_PRIVATE_KEY" {
   sensitive = true
 }
 
-data "google_secret_manager_secret_version" "STRIPE_WEBHOOK_SIGNATURE" {
-  provider = google-beta
-  secret   = "${local.prefix[var.core]}STRIPE_WEBHOOK_SIGNATURE"
-}
-output "STRIPE_WEBHOOK_SIGNATURE" {
-  value     = data.google_secret_manager_secret_version.STRIPE_WEBHOOK_SIGNATURE.secret_data
-  sensitive = true
-}
+# Stripe module creates webhook endpoint
+# data "google_secret_manager_secret_version" "STRIPE_WEBHOOK_SIGNATURE" {
+#   provider = google-beta
+#   secret   = "${local.prefix[var.core]}STRIPE_WEBHOOK_SIGNATURE"
+# }
+# output "STRIPE_WEBHOOK_SIGNATURE" {
+#   value     = data.google_secret_manager_secret_version.STRIPE_WEBHOOK_SIGNATURE.secret_data
+#   sensitive = true
+# }
 
 # always the same regardless of environment
 data "google_secret_manager_secret_version" "STRIPE_CLIENT_ID" {
