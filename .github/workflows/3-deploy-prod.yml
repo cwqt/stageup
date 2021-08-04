@@ -111,7 +111,7 @@ jobs:
         id: message
         with:
           result: ${{ needs.deploy.result }}
-          if-success: ':large_green_circle: (production-${{ needs.ctx.outputs.short_sha }}) https://stageup.uk/app/en :sparkles:'
+          if-success: ':large_green_circle: (production-${{ needs.ctx.outputs.short_sha }}) https://release.stageup.uk/en :sparkles:'
           if-failure: ':red_circle: (production-${{ needs.ctx.outputs.short_sha }}) https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
           if-cancelled: ':large_orange_circle: (production-${{ needs.ctx.outputs.short_sha }}) cancelled https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
           if-skipped: ':large_yellow_circle: (production-${{ needs.ctx.outputs.short_sha }}) skipped https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
