@@ -25,6 +25,7 @@ export class AdminGdprDocumentsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // Setup table for displaying most recent documents
+    // If a document doesn't exist, we instead display '-'
     this.table = new UiTable<IConsentable<ConsentableType>>({
       resolver: () => this.gdprService.getAllLatestDocuments(),
       pagination: {},
@@ -46,15 +47,16 @@ export class AdminGdprDocumentsComponent implements OnInit {
         },
         {
           label: $localize`Updated`,
-          accessor: document => i18n.date(unix(document.created_at), this.locale)
+          accessor: document => (document.created_at ? i18n.date(unix(document.created_at), this.locale) : '-')
         },
         {
           label: $localize`Version`,
-          accessor: document => document.version
+          // Need to specifically check that version is not undefined (since a version of '0' will also be falsey)
+          accessor: document => (document.version !== undefined ? document.version : '-')
         },
         {
           label: $localize`Link to document`,
-          accessor: () => 'View',
+          accessor: document => (document.document_location ? 'View' : ''),
           click_handler: document => {
             window.open(document.document_location, '_blank'); // Open direct link to PDF URL in new tab
           }
@@ -70,7 +72,10 @@ export class AdminGdprDocumentsComponent implements OnInit {
                 data: { document },
                 width: '800px',
                 minHeight: '500px'
-              })
+              }),
+              () => {
+                this.table.refresh();
+              }
             );
           },
           icon: 'upload'

@@ -14,6 +14,7 @@ export class SidebarComponent implements OnInit {
   @Input() myself: IMyself;
 
   activeHostPerformanceId: string;
+  activeAdmin: boolean;
 
   constructor(private performanceService: PerformanceService) {}
 

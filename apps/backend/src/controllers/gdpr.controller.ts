@@ -21,6 +21,7 @@ export default class GdprController extends BaseController<BackendProviderMap> {
   }
 
   // Returns one of each type of document (the highest version)
+  // getAllLatestDocuments(): IControllerEndpoint<IEnvelopedData<IConsentable<ConsentableType>[]>> {
   getAllLatestDocuments(): IControllerEndpoint<IEnvelopedData<IConsentable<ConsentableType>[]>> {
     return {
       authorisation: AuthStrat.isSiteAdmin,
@@ -31,7 +32,14 @@ export default class GdprController extends BaseController<BackendProviderMap> {
           .addOrderBy('consentable.version', 'DESC')
           .getMany();
 
-        return { data: documents };
+        // Edge case for when we don't yet have any documents (i.e. in early days).
+        // Ensures that one of each type of document is returned (non-existent documents will just return the type)
+        const allDocumentTypes = ConsentableTypes.map(documentType => {
+          const existingDocument = documents.find(document => document.type == documentType);
+          return existingDocument ? existingDocument : <Consentable<ConsentableType>>{ type: documentType };
+        });
+
+        return { data: allDocumentTypes };
       }
     };
   }
@@ -40,9 +48,26 @@ export default class GdprController extends BaseController<BackendProviderMap> {
     return {
       authorisation: AuthStrat.isSiteAdmin,
       middleware: this.middleware.file(2048, ['application/pdf']).single('file'),
+      validators: {
+        query: object({ type: enums<ConsentableType>(ConsentableTypes) })
+      },
       controller: async req => {
-        console.log('REQUEST LOL', req);
-        return null;
+        // Get the highest version existing document (if it exists)
+        const existingDocument = await this.ORM.createQueryBuilder(Consentable, 'consentable')
+          .where('consentable.type = :type', { type: req.query.type })
+          .orderBy('consentable.version', 'DESC')
+          .getOne();
+
+        // Simultaneously create new consent and upload document
+        await this.ORM.transaction(async txc => {
+          const document = existingDocument // if document exists we supersede it. Else we create a new one
+            ? existingDocument.superscede(req.body.summary)
+            : new Consentable(<ConsentableType>req.query.type, req.body.summary);
+          // Then we upload the file and update the document location/identifier
+          await document.upload(req.file, this.providers.blob);
+          await txc.save(document);
+          if (existingDocument) await txc.save(existingDocument); // Also save any changes made to existing document
+        });
       }
     };
   }

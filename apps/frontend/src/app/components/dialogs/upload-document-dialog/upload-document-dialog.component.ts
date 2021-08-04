@@ -56,7 +56,7 @@ export class UploadDocumentDialogComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   ngOnInit(): void {
-    // For UI - to display title as words instead of code/type
+    // For UI - to display the dialog title as words instead of code/type
     switch (this.data.document.type) {
       case 'privacy_policy':
         this.title = $localize`Privacy Policy`;
@@ -74,8 +74,7 @@ export class UploadDocumentDialogComponent implements OnInit, IUiDialogOptions {
     this.form = new UiForm({
       fields: {
         notes: UiField.Richtext({
-          label: $localize`Notes`,
-          validators: [{ type: 'required' }]
+          label: $localize`Write some notes to summarise the key changes` // optional
         })
       },
       resolvers: {
@@ -89,7 +88,8 @@ export class UploadDocumentDialogComponent implements OnInit, IUiDialogOptions {
 
   onFileSelected() {
     this.selectedFile = this.fileSelector.nativeElement.files[0];
-    this.uploadButton.disabled = this.selectedFile && this.selectedFile.type == this.allowedFileType ? false : true; // Disable upload button depending on whether user selected a pdf file or not
+    // Disable upload button depending on whether user selected a pdf file or not
+    this.uploadButton.disabled = this.selectedFile && this.selectedFile.type == this.allowedFileType ? false : true;
   }
 
   async uploadFile() {
@@ -112,11 +112,11 @@ export class UploadDocumentDialogComponent implements OnInit, IUiDialogOptions {
               .uploadDocument(this.data.document.type, formData)
               .then(() => {
                 this.uploadButton.loading = false;
+                this.submit.emit();
               })
               .catch(e => {
                 this.uploadButton.loading = false;
                 reject(e);
-                // TODO: SET ERROR TO TRUE
               });
           };
           reader.readAsArrayBuffer(this.selectedFile);

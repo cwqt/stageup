@@ -143,7 +143,7 @@ export class EventHandlers {
     } else {
       this.queues.send_email.add({
         subject: this.providers.i18n.translate('@@email.ticket.purchased_future__subject', ct.__meta.locale, {
-          performance_name: invoice.ticket.performance.name,
+          performance_name: invoice.ticket.performance.name
         }),
         content: this.providers.i18n.translate('@@email.ticket.purchased_future__content', ct.__meta.locale, {
           receipt_url: invoice.stripe_receipt_url,
@@ -594,7 +594,7 @@ export class EventHandlers {
 
   sendPerformanceReminderEmails = async (ct: Contract<'performance.created'>) => {
     const performance = await Performance.findOne({ _id: ct._id });
-    const premierDate = performance.premiere_datetime; 
+    const premierDate = performance.premiere_datetime;
     if (!premierDate) return; // TODO: This will instead be based on publicity_period.start in the future (which will be a compulsory field)
     const oneDayPrior = premierDate - 86400 - timestamp(); // 86400 is the number of seconds in 24 hours
     const fifteenMinutesPrior = premierDate - 900 - timestamp(); // 900 is the number of seconds in 15 minutes

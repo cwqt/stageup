@@ -129,6 +129,11 @@ const LOGGED_IN_ROUTES: Routes = [
     component: AdminPanelComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'onboardings',
+        pathMatch: 'full'
+      },
+      {
         path: `onboardings`,
         component: AdminOnboardingListComponent
       },

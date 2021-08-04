@@ -7,11 +7,9 @@ import { BaseAppService } from '../../services/app.service';
   styleUrls: ['./admin-panel.component.scss']
 })
 export class AdminPanelComponent implements OnInit {
+  constructor(private baseAppService: BaseAppService) {}
 
-  constructor(private baseAppService:BaseAppService) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   gotoOnboardingList() {
     this.baseAppService.navigateTo(`/admin/onboardings`);

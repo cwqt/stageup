@@ -16,7 +16,7 @@
     </mat-step>
     <mat-step i18n-label label="Select File">
       <div class="flex items-center">
-        <input hidden (change)="onFileSelected()" #fileSelector type="file" id="file" />
+        <input hidden accept=".pdf" (change)="onFileSelected()" #fileSelector type="file" id="file" />
         <ui-button icon="attachment" kind="primary" (click)="fileSelector.click()" i18n>
           {{ selectedFile ? 'Change' : 'Select Document' }}
         </ui-button>
