@@ -116,14 +116,14 @@ resource "google_vpc_access_connector" "vpc_connector" {
 
 module "secrets" {
   source = "./modules/secrets"
-  core = var.core
+  core   = var.core
 }
 
 # since Stripe makes this API publically accessible we can use a tf module
 # to set up the webhook endpoint
 # with MUX it has to be done manually :(
 resource "stripe_webhook_endpoint" "stripe_webhook" {
-  url        = "https://${local.load_balancer_host}/api/stripe/hooks"
+  url = "https://${local.load_balancer_host}/api/stripe/hooks"
 
   # take these from StripeHook enum in @core/interfaces
   enabled_events = [
@@ -169,6 +169,7 @@ module "backend" {
     MUX_SECRET_KEY           = module.secrets.MUX_SECRET_KEY
     MUX_ACCESS_TOKEN         = module.secrets.MUX_ACCESS_TOKEN
     MUX_WEBHOOK_SIGNATURE    = module.secrets.MUX_WEBHOOK_SIGNATURE
+    MUX_DATA_ENV_KEY         = module.secrets.MUX_DATA_ENV_KEY
     SENDGRID_API_KEY         = module.secrets.SENDGRID_API_KEY
     STRIPE_PRIVATE_KEY       = module.secrets.STRIPE_PRIVATE_KEY
     STRIPE_WEBHOOK_SIGNATURE = stripe_webhook_endpoint.stripe_webhook.secret
