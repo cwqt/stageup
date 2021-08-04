@@ -182,20 +182,26 @@ export class EventHandlers {
   };
 
   deletePerformance = async (ct: Contract<'performance.deleted'>) => {
-    const perf = await Performance.findOne({ _id: ct.performance_id }, { relations: ['host'] });
+    const performance = await this.providers.orm.connection
+      .createQueryBuilder(Performance, 'performance')
+      .where('performance._id = :pid', { pid: ct.performance_id })
+      .innerJoin('performance.host', 'host')
+      .addSelect(['host.name', 'host.email_address'])
+      .withDeleted()
+      .getOne();
 
     //Send host email notifcation
     this.queues.send_email.add({
       subject: this.providers.i18n.translate('@@email.performance.deleted_notify_host__subject', ct.__meta.locale, {
-        performance_name: perf.name
+        performance_name: performance.name
       }),
       content: this.providers.i18n.translate('@@email.performance.deleted_notify_host__content', ct.__meta.locale, {
-        host_name: perf.host.name,
-        performance_name: perf.name,
-        performance_premiere_date: moment.unix(perf.premiere_datetime).format('LLLL')
+        host_name: performance.host.name,
+        performance_name: performance.name,
+        performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
       }),
       from: Env.EMAIL_ADDRESS,
-      to: perf.host.email_address,
+      to: performance.host.email_address,
       markdown: true,
       attachments: []
     });
@@ -241,6 +247,7 @@ export class EventHandlers {
       .where('performance._id = :performance_id', { performance_id: ct.performance_id })
       .innerJoin('performance.host', 'host')
       .addSelect('host.name')
+      .withDeleted()
       .getOne();
 
     const user = await User.findOne({ _id: ct.user_id }, { select: ['name', 'email_address'] });

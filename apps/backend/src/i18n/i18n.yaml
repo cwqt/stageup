@@ -335,7 +335,7 @@ email:
     Thanks,
 
     **StageUp Team**
-  performance.deleted_notify_user__subject: |
+  performance.deleted_notify_user__subject: >
     Peformance: {performance_name} cancellation notification
   performance.deleted_notify_user__content: |
     Hi **{user_username}**,

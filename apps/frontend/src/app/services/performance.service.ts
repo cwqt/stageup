@@ -100,7 +100,6 @@ export class PerformanceService {
   }
 
   deletePerformance(performanceId: string, dtoDeletePerfReason: IDeletePerfReason) {
-    console.log('In service id', performanceId);
     return this.http.put(`/api/performances/${performanceId}`, dtoDeletePerfReason).toPromise();
   }
 

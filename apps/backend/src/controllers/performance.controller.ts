@@ -41,6 +41,7 @@ import {
   HostPermission,
   HTTP,
   ICreateAssetRes,
+  IDeletePerfReason,
   IEnvelopedData,
   IPaymentIntentClientSecret,
   IPerformance,
@@ -134,7 +135,7 @@ export default class PerformanceController extends BaseController<BackendProvide
           .filter({
             genre: { subject: 'p.genre' }
           })
-          .withDeleted()
+          .withDeleted() //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
           .paginate(p => p.toStub());
       }
     };
@@ -397,9 +398,9 @@ export default class PerformanceController extends BaseController<BackendProvide
         AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
       ),
       controller: async req => {
-        const perf = await getCheck(
-          Performance.findOne({ _id: req.params.pid }, { relations: ['tickets', 'likes', 'asset_group'] })
-        );
+        const deletePerfReason: IDeletePerfReason = req.body;
+
+        const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
 
         if (perf.status === PerformanceStatus.Live)
           throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
@@ -408,6 +409,8 @@ export default class PerformanceController extends BaseController<BackendProvide
           throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_after_occurrence`);
 
         perf.status = PerformanceStatus.Deleted;
+        perf.delete_reason = deletePerfReason;
+        perf.save();
         await perf.softRemove();
 
         return await this.providers.bus.publish(
