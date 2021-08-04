@@ -135,7 +135,6 @@ export default class PerformanceController extends BaseController<BackendProvide
           .filter({
             genre: { subject: 'p.genre' }
           })
-          .withDeleted() //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
           .paginate(p => p.toStub());
       }
     };

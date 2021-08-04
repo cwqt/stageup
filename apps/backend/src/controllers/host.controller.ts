@@ -627,6 +627,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
           .innerJoinAndSelect('performance.host', 'host')
           .where('host._id = :id', { id: req.params.hid })
           .orderBy('performance.created_at', 'DESC')
+          .withDeleted() //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
           .paginate(o => o.toStub());
       }
     };
