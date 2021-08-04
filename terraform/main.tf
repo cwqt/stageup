@@ -108,7 +108,9 @@ module "redis" {
 resource "google_vpc_access_connector" "vpc_connector" {
   provider     = google-beta
   name         = "${local.name}-connector"
-  machine_type = "e2-standard-4"
+
+  # use higher specc'd connector for production
+  machine_type = var.core == "prod" ? "e2-standard-4" : "f1-micro"
   subnet {
     name = google_compute_subnetwork.subnet.name
   }
@@ -195,7 +197,7 @@ module "frontend" {
   location            = "europe-west1"
   allow_public_access = true
   port                = 80
-  max_instances       = 1
+  max_instances       = var.core == "prod" ? 2 : 1
   min_instances       = 1
   map_domains         = [local.load_balancer_host]
   depends_on          = [module.backend]
