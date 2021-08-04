@@ -107,7 +107,7 @@ jobs:
     if: always() # run regardless of deploy state
     runs-on: ubuntu-latest
     steps:
-      - uses: cwqt/needs-result-lookup@v1.0.2
+      - uses: cwqt/needs-result-lookup@v1.0.3
         id: message
         with:
           result: ${{ needs.deploy.result }}
