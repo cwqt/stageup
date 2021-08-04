@@ -895,7 +895,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
       },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
-        const invoiceService = new InvoiceService(req);
+        const invoiceService = new InvoiceService(this.providers, req);
 
         const refundData: IProcessRefund = {
           host_id: req.params.hid,
@@ -908,11 +908,11 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         invoiceService.processRefunds(refundData);
 
-        // const invoiceIds: string[] = req.body.invoice_ids;
-        // let bulkRefundData: IBulkRefund = {
-        //   bulk_refund_reason: req.body.bulk_refund_reason,
-        //   bulk_refund_detail: req.body.bulk_refund_detail
-        // };
+        const invoiceIds: string[] = req.body.invoice_ids;
+        let bulkRefundData: IBulkRefund = {
+          bulk_refund_reason: req.body.bulk_refund_reason,
+          bulk_refund_detail: req.body.bulk_refund_detail
+        };
 
         // const invoices = await Invoice.find({
         //   where: {

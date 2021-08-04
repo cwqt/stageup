@@ -3,6 +3,7 @@ import { HTTP, IBulkRefund } from '@core/interfaces';
 import { In } from 'typeorm';
 import { BaseService } from '../base.service';
 import * as express from 'express';
+import { BackendProviderMap } from '@backend/common/providers';
 
 export declare type Request = express.Request;
 export interface IProcessRefund {
@@ -11,9 +12,9 @@ export interface IProcessRefund {
   bulk_refund_data: IBulkRefund;
 }
 
-export class InvoiceService extends BaseService {
-  constructor(req?: Request) {
-    super(req);
+export class InvoiceService extends BaseService<BackendProviderMap> {
+  constructor(providers: BackendProviderMap, req?: Request) {
+    super(providers, req);
   }
 
   public async processRefunds(refundData: IProcessRefund) {
@@ -47,7 +48,7 @@ export class InvoiceService extends BaseService {
         let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
 
         if (refundPresent === undefined) {
-          await this.serviceProviderMap.orm.connection.transaction(async txc => {
+          await this.ORM.transaction(async txc => {
             const refund = await new Refund(invoice, null, refundData.bulk_refund_data);
             refund.invoice = invoice;
             await txc.save(refund);
@@ -57,13 +58,9 @@ export class InvoiceService extends BaseService {
     );
 
     if (refundData.invoice_ids.length > 1) {
-      return await this.serviceProviderMap.bus.publish(
-        'refund.bulk',
-        { invoice_ids: refundData.invoice_ids },
-        this.req.locale
-      );
+      return await this.providers.bus.publish('refund.bulk', { invoice_ids: refundData.invoice_ids }, this.req.locale);
     } else {
-      return await this.serviceProviderMap.bus.publish(
+      return await this.providers.bus.publish(
         'refund.initiated',
         { invoice_id: invoices[0]._id, user_id: invoices[0].user._id },
         this.req.locale
