@@ -15,7 +15,7 @@ import {
 } from '@core/api';
 import { dateOrdinal, i18n, pipes, richtext, timestamp, timeout, unix } from '@core/helpers';
 
-import { CurrencyCode, HTTP, PatronSubscriptionStatus } from '@core/interfaces';
+import { BulkRefundReason, CurrencyCode, HTTP, PatronSubscriptionStatus } from '@core/interfaces';
 import dbless from 'dbless-email-verification';
 // FOR SENDING EMAILS: ----------------------------------------------------------
 // define the event & contract that goes along with it
@@ -30,10 +30,15 @@ import dbless from 'dbless-email-verification';
 import { Contract } from 'libs/shared/src/api/event-bus/contracts';
 import moment from 'moment';
 import { In } from 'typeorm';
+import { InvoiceService } from '../invoice/invoice.service';
 import { QueueModule, QueueProviders } from './queue.module';
 
 export class EventHandlers {
-  constructor(private queues: QueueModule['queues'], private providers: QueueProviders) {}
+  constructor(
+    private queues: QueueModule['queues'],
+    private providers: QueueProviders,
+    private invoiceService: InvoiceService
+  ) {}
 
   sendTestEmail = async (ct: Contract<'test.send_email'>) => {
     const user = await User.findOne({ _id: ct.user_id }, { select: ['email_address', 'username', 'name'] });
@@ -225,6 +230,19 @@ export class EventHandlers {
       .innerJoin('invoice.user', 'user')
       .addSelect('user._id')
       .getMany();
+
+    //Get array of invoice ids
+    const invoiceIds: string[] = invoices.map(invoice => invoice._id);
+
+    //Then refund those invoices
+    this.invoiceService.processRefunds({
+      host_id: performance.host._id,
+      invoice_ids: invoiceIds,
+      bulk_refund_data: {
+        bulk_refund_reason: BulkRefundReason.PerformanceDeletedAutoRefund,
+        bulk_refund_detail: null
+      }
+    });
 
     //Fire off user email event for each invoice
     invoices.map(async i => {
