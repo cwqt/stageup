@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 
 export enum UserType {
   Client = 'client',
@@ -14,12 +14,12 @@ export enum UserType {
   styleUrls: ['./user-type-clarification.component.scss']
 })
 export class UserTypeClarificationComponent implements OnInit {
-  constructor(private baseAppService: BaseAppService, public dialogRef: MatDialogRef<UserTypeClarificationComponent>) {}
+  constructor(private appService: AppService, public dialogRef: MatDialogRef<UserTypeClarificationComponent>) {}
 
   ngOnInit(): void {}
 
   goToHostLanding() {
-    this.baseAppService.navigateTo('/host');
+    this.appService.navigateTo('/host');
     this.dialogRef.close();
   }
 

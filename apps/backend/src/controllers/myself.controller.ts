@@ -1,10 +1,9 @@
-import { ErrorHandler } from '@backend/common/error';
+import { ErrorHandler, getCheck } from '@backend/common/error';
 import { SUPPORTED_LOCALES } from '@backend/common/locales';
 import { BackendProviderMap } from '@backend/common/providers';
 import {
   BaseController,
   Follow,
-  getCheck,
   Host,
   IControllerEndpoint,
   Invoice,
@@ -22,8 +21,8 @@ import {
   HTTP,
   IEnvelopedData,
   IFeed,
-  ILocale,
   IFollowing,
+  ILocale,
   IMyself,
   IPasswordConfirmationResponse,
   IPaymentMethod,

@@ -1,4 +1,4 @@
-import { ErrorHandler as EH } from '@core/api';
+import { ErrorHandler as EH, getCheck as GC } from '@core/api';
 import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
 import { HTTP, IFormErrorField as IFEF } from '@core/interfaces';
 import { Except } from 'type-fest';
@@ -11,3 +11,6 @@ export class ErrorHandler extends EH {
     super(statusCode, message, errors);
   }
 }
+
+export const getCheck = async <T>(promise: Promise<T>, code: keyof AUTOGEN_i18n_TOKEN_MAP = '@@error.not_found') =>
+  GC<T>(promise, code);

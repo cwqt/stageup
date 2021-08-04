@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostStub, IEnvelopedData, IUserFollow } from '@core/interfaces';
 import fd from 'form-data';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
-import { BaseAppService, RouteParam } from '../../../services/app.service';
+import { AppService, RouteParam } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
 import { MyselfService } from '../../../services/myself.service';
@@ -35,7 +35,7 @@ export class HostProfileComponent implements OnInit {
 
   constructor(
     private myselfService: MyselfService,
-    private baseAppService: BaseAppService,
+    private appService: AppService,
     public route: ActivatedRoute,
     private hostService: HostService,
     private helperService: HelperService,
@@ -57,10 +57,10 @@ export class HostProfileComponent implements OnInit {
 
     // Change view of component depending on if on /dashboard/@user or /@user
     this.isHostView = this.route.snapshot.data['is_host_view'];
-    await this.baseAppService.componentInitialising(this.route);
+    await this.appService.componentInitialising(this.route);
 
     // If not passed through input, get from route param since this is probably on /@host_username
-    if (!this.hostUsername) this.hostUsername = this.baseAppService.getParam(RouteParam.HostId).split('@').pop();
+    if (!this.hostUsername) this.hostUsername = this.appService.getParam(RouteParam.HostId).split('@').pop();
 
     // Get the host by username & populate the ICacheable
     await cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
@@ -87,7 +87,7 @@ export class HostProfileComponent implements OnInit {
   }
 
   openTabLink(event: MatTabChangeEvent) {
-    this.baseAppService.navigateTo(
+    this.appService.navigateTo(
       `${this.isHostView ? '/dashboard' : ''}/@${this.hostUsername}/${this.tabs[event.index].route}`
     );
   }

@@ -12,7 +12,8 @@ const PROVIDER_MAP = {
   mux: new Providers.Mux({
     access_token: Env.MUX.ACCESS_TOKEN,
     secret_key: Env.MUX.SECRET_KEY,
-    webhook_signature: Env.MUX.WEBHOOK_SIGNATURE
+    webhook_signature: Env.MUX.WEBHOOK_SIGNATURE,
+    data_env_key: Env.MUX.DATA_ENV_KEY
   }),
   torm: new Providers.Postgres(
     {

@@ -74,7 +74,7 @@ jobs:
         run: |
           echo ${{ secrets.TF_GCP_SA_KEY }} | base64 -d > terraform.service_account.json
           terraform init -input=false
-          terraform workspace select master
+          terraform workspace select release
           terraform workspace show
 
       # infra a go-go
@@ -117,7 +117,7 @@ jobs:
   shipjs_trigger:
     name: Create git tags & release
     runs-on: ubuntu-latest
-    needs: [ctx, deploy]
+    needs: [deploy]
     steps:
       - uses: actions/checkout@v2
         with:

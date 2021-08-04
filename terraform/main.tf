@@ -20,11 +20,13 @@ locals {
     # feat    = subnet-ft-su-xxx
 
     prod = {
-      core               = "prod"
-      name               = var.core
-      NODE_ENV           = "production"
-      postgres_name      = "postgres"
-      load_balancer_host = "stageup.uk"
+      core          = "prod"
+      name          = var.core
+      NODE_ENV      = "production"
+      postgres_name = "postgres"
+      # eventually this should be changed to just stageup.uk
+      # & then set-up the reverse proxy to direct to here
+      load_balancer_host = "app.stageup.uk"
     }
     stage = {
       core               = "stage"
@@ -114,7 +116,25 @@ resource "google_vpc_access_connector" "vpc_connector" {
 
 module "secrets" {
   source = "./modules/secrets"
+  core = var.core
 }
+
+# since Stripe makes this API publically accessible we can use a tf module
+# to set up the webhook endpoint
+# with MUX it has to be done manually :(
+resource "stripe_webhook_endpoint" "stripe_webhook" {
+  url        = "https://${local.load_balancer_host}/api/stripe/hooks"
+
+  # take these from StripeHook enum in @core/interfaces
+  enabled_events = [
+    "payment_intent.created",
+    "payment_intent.succeeded",
+    "charge.refunded",
+    "invoice.payment_succeeded",
+    "customer.subscription.deleted"
+  ]
+}
+
 
 module "backend" {
   source = "./modules/backend"
@@ -122,6 +142,7 @@ module "backend" {
     module.redis,
     data.google_sql_database_instance.postgres,
     google_vpc_access_connector.vpc_connector,
+    stripe_webhook_endpoint.stripe_webhook
   ]
 
   name          = local.name
@@ -150,7 +171,7 @@ module "backend" {
     MUX_WEBHOOK_SIGNATURE    = module.secrets.MUX_WEBHOOK_SIGNATURE
     SENDGRID_API_KEY         = module.secrets.SENDGRID_API_KEY
     STRIPE_PRIVATE_KEY       = module.secrets.STRIPE_PRIVATE_KEY
-    STRIPE_WEBHOOK_SIGNATURE = module.secrets.STRIPE_WEBHOOK_SIGNATURE
+    STRIPE_WEBHOOK_SIGNATURE = stripe_webhook_endpoint.stripe_webhook.secret
     STRIPE_CLIENT_ID         = module.secrets.STRIPE_CLIENT_ID
     STRIPE_PUBLIC_KEY        = module.secrets.STRIPE_PUBLIC_KEY
     BACKEND_PRIVATE_KEY      = module.secrets.BACKEND_PRIVATE_KEY
@@ -192,18 +213,4 @@ resource "google_dns_record_set" "resource-recordset" {
   type         = each.value[0].type
   rrdatas      = each.value[0].rrdatas
   ttl          = 3600
-}
-
-resource "stripe_webhook_endpoint" "stripe_webhook" {
-  url        = "https://${local.load_balancer_host}/api/stripe/hooks"
-  depends_on = [module.backend, module.frontend]
-
-  # take these from StripeHook enum in @core/interfaces
-  enabled_events = [
-    "payment_intent.created",
-    "payment_intent.succeeded",
-    "charge.refunded",
-    "invoice.payment_succeeded",
-    "customer.subscription.deleted"
-  ]
 }

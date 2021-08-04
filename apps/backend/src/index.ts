@@ -7,10 +7,10 @@ import path from 'path';
 import 'reflect-metadata';
 import { Container } from 'typedi';
 import Auth from './common/authorisation';
+import { Configuration } from './common/configuration.entity';
 import { SUPPORTED_LOCALES } from './common/locales';
 import { log as logger, stream } from './common/logger';
 import providers, { BackendProviderMap, PROVIDERS as token } from './common/providers';
-import { Configuration } from './common/configuration.entity';
 import Env from './env';
 import { QueueModule } from './modules/queue/queue.module';
 import { SSEModule } from './modules/sse/sse.module';
@@ -46,7 +46,7 @@ Register<BackendProviderMap>({
   }
 })(async (app, providers) => {
   const configuration = (await Configuration.findOne({})) || new Configuration();
-  await configuration.start();
+  await configuration.setup();
 
   // Register session middleware
   app.use(

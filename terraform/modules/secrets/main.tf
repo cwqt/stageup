@@ -1,10 +1,19 @@
 # None of these have a specific version pinned & so all secrets will be the latest version
+
+locals {
+  prefix = {
+    feat  = ""      # stage & feat use the same env vars -- im lazy
+    stage = ""      # potentially you could add like STAGE_ for staging only keys
+    prod  = "PROD_" # so in GCP Secret Manager you'd have PROD_SOME_VALUE
+  }
+}
+
 # ===================================================================================
 # MUX
 # ===================================================================================
 data "google_secret_manager_secret_version" "MUX_SECRET_KEY" {
   provider = google-beta
-  secret   = "MUX_SECRET_KEY"
+  secret   = "${local.prefix[var.core]}MUX_SECRET_KEY"
 }
 output "MUX_SECRET_KEY" {
   value     = data.google_secret_manager_secret_version.MUX_SECRET_KEY.secret_data
@@ -13,7 +22,7 @@ output "MUX_SECRET_KEY" {
 
 data "google_secret_manager_secret_version" "MUX_ACCESS_TOKEN" {
   provider = google-beta
-  secret   = "MUX_ACCESS_TOKEN"
+  secret   = "${local.prefix[var.core]}MUX_ACCESS_TOKEN"
 }
 output "MUX_ACCESS_TOKEN" {
   value     = data.google_secret_manager_secret_version.MUX_ACCESS_TOKEN.secret_data
@@ -22,10 +31,19 @@ output "MUX_ACCESS_TOKEN" {
 
 data "google_secret_manager_secret_version" "MUX_WEBHOOK_SIGNATURE" {
   provider = google-beta
-  secret   = "MUX_WEBHOOK_SIGNATURE"
+  secret   = "${local.prefix[var.core]}MUX_WEBHOOK_SIGNATURE"
 }
 output "MUX_WEBHOOK_SIGNATURE" {
   value     = data.google_secret_manager_secret_version.MUX_WEBHOOK_SIGNATURE.secret_data
+  sensitive = true
+}
+
+data "google_secret_manager_secret_version" "MUX_DATA_ENV_KEY" {
+  provider = google-beta
+  secret   = "${local.prefix[var.core]}MUX_DATA_ENV_KEY"
+}
+output "MUX_DATA_ENV_KEY" {
+  value     = data.google_secret_manager_secret_version.MUX_DATA_ENV_KEY.secret_data
   sensitive = true
 }
 
@@ -34,7 +52,7 @@ output "MUX_WEBHOOK_SIGNATURE" {
 # ===================================================================================
 data "google_secret_manager_secret_version" "SENDGRID_API_KEY" {
   provider = google-beta
-  secret   = "SENDGRID_API_KEY"
+  secret   = "${local.prefix[var.core]}SENDGRID_API_KEY"
 }
 output "SENDGRID_API_KEY" {
   value     = data.google_secret_manager_secret_version.SENDGRID_API_KEY.secret_data
@@ -46,7 +64,7 @@ output "SENDGRID_API_KEY" {
 # ===================================================================================
 data "google_secret_manager_secret_version" "STRIPE_PRIVATE_KEY" {
   provider = google-beta
-  secret   = "STRIPE_PRIVATE_KEY"
+  secret   = "${local.prefix[var.core]}STRIPE_PRIVATE_KEY"
 }
 output "STRIPE_PRIVATE_KEY" {
   value     = data.google_secret_manager_secret_version.STRIPE_PRIVATE_KEY.secret_data
@@ -55,13 +73,14 @@ output "STRIPE_PRIVATE_KEY" {
 
 data "google_secret_manager_secret_version" "STRIPE_WEBHOOK_SIGNATURE" {
   provider = google-beta
-  secret   = "STRIPE_WEBHOOK_SIGNATURE"
+  secret   = "${local.prefix[var.core]}STRIPE_WEBHOOK_SIGNATURE"
 }
 output "STRIPE_WEBHOOK_SIGNATURE" {
   value     = data.google_secret_manager_secret_version.STRIPE_WEBHOOK_SIGNATURE.secret_data
   sensitive = true
 }
 
+# always the same regardless of environment
 data "google_secret_manager_secret_version" "STRIPE_CLIENT_ID" {
   provider = google-beta
   secret   = "STRIPE_CLIENT_ID"
@@ -73,7 +92,7 @@ output "STRIPE_CLIENT_ID" {
 
 data "google_secret_manager_secret_version" "STRIPE_PUBLIC_KEY" {
   provider = google-beta
-  secret   = "STRIPE_PUBLIC_KEY"
+  secret   = "${local.prefix[var.core]}STRIPE_PUBLIC_KEY"
 }
 output "STRIPE_PUBLIC_KEY" {
   value     = data.google_secret_manager_secret_version.STRIPE_PUBLIC_KEY.secret_data
@@ -86,7 +105,7 @@ output "STRIPE_PUBLIC_KEY" {
 # ===================================================================================
 data "google_secret_manager_secret_version" "BACKEND_PRIVATE_KEY" {
   provider = google-beta
-  secret   = "BACKEND_PRIVATE_KEY"
+  secret   = "${local.prefix[var.core]}BACKEND_PRIVATE_KEY"
 }
 output "BACKEND_PRIVATE_KEY" {
   value     = data.google_secret_manager_secret_version.BACKEND_PRIVATE_KEY.secret_data
@@ -95,6 +114,7 @@ output "BACKEND_PRIVATE_KEY" {
 
 # ===================================================================================
 # S3
+# S3 WILL USE THE SAME KEYS AS FEAT/STAGE SINCE IS GOING TO BE REPLACED BY GCP STORAGE
 # ===================================================================================
 data "google_secret_manager_secret_version" "AWS_S3_ACCESS_KEY_ID" {
   provider = google-beta

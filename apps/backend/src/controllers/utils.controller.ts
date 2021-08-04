@@ -1,5 +1,8 @@
 import { Configuration } from '@backend/common/configuration.entity';
+import { log } from '@backend/common/logger';
 import { BackendProviderMap } from '@backend/common/providers';
+import Env from '@backend/env';
+import seeder from '@backend/seeder';
 import {
   Asset,
   BaseController,
@@ -12,10 +15,17 @@ import {
   User,
   UserHostInfo
 } from '@core/api';
-import { Environment, HostInviteState, HostPermission, IHost, LiveStreamState } from '@core/interfaces';
+import {
+  Environment,
+  HostInviteState,
+  HostPermission,
+  IDynamicFrontendEnvironment,
+  IHost,
+  LiveStreamState
+} from '@core/interfaces';
 import AuthStrat from '../common/authorisation';
 
-export default class MiscController extends BaseController<BackendProviderMap> {
+export default class UtilityController extends BaseController<BackendProviderMap> {
   logFrontendMessage(): IControllerEndpoint<void> {
     return {
       authorisation: AuthStrat.none,
@@ -24,6 +34,21 @@ export default class MiscController extends BaseController<BackendProviderMap> {
       }
     };
   }
+
+  seed: IControllerEndpoint<any> = {
+    authorisation: AuthStrat.or(AuthStrat.isEnv(Environment.Development), AuthStrat.isEnv(Environment.Development)),
+    controller: async req => {
+      const configuration = (await Configuration.findOne({})) || new Configuration();
+      await configuration.setup();
+
+      await seeder({ torm: this.providers.torm, stripe: this.providers.stripe }).run();
+
+      // seeder will wipe config momentarily, but stored in memory & will be saved again
+      configuration.is_seeded = true;
+      await configuration.save();
+      return configuration;
+    }
+  };
 
   ping(): IControllerEndpoint<string> {
     return {
@@ -34,6 +59,19 @@ export default class MiscController extends BaseController<BackendProviderMap> {
     };
   }
 
+  // Frontend Docker image is built once, but used for both Staging & Production
+  // however there are some environment variables that need to be supplied
+  // distinct to each environment, these are requested at run time from the API
+  readFrontendEnvironment: IControllerEndpoint<IDynamicFrontendEnvironment> = {
+    authorisation: AuthStrat.none,
+    controller: async req => ({
+      frontend_url: Env.FRONTEND.URL,
+      stripe_public_key: Env.STRIPE.PUBLIC_KEY,
+      environment: Env.ENVIRONMENT,
+      mux_env_key: Env.MUX.DATA_ENV_KEY
+    })
+  };
+
   stats(): IControllerEndpoint<any> {
     return {
       authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
@@ -41,7 +79,7 @@ export default class MiscController extends BaseController<BackendProviderMap> {
         const config = await Configuration.findOne({});
 
         return {
-          server_started_at: config.started_at
+          is_seeded: config.is_seeded
         };
       }
     };
