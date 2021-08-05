@@ -9,6 +9,7 @@
     <div class="card">
       <ngx-stripe-card
         #card
+        [stripe]="stripe"
         (blur)="focused = false"
         (focus)="focused = true"
         (change)="handleOnChange($event)"

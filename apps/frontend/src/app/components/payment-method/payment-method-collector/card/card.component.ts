@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { IPaymentIntentClientSecret, IPaymentMethod, IPaymentSourceDetails, IUser } from '@core/interfaces';
 import { createICacheable, ICacheable } from '@frontend/app.interfaces';
+import { AppService } from '@frontend/services/app.service';
 import { MyselfService } from '@frontend/services/myself.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import {
@@ -28,6 +29,8 @@ export class CardComponent implements OnInit {
   error: StripeElementChangeEvent['error'];
   loading: boolean = false;
 
+  stripe: StripeInstance;
+
   readonly elementsOptions: StripeElementsOptions = { locale: 'en-GB' };
   readonly cardOptions: StripeCardElementOptions = {
     hidePostalCode: true,
@@ -43,9 +46,15 @@ export class CardComponent implements OnInit {
     }
   };
 
-  constructor(private myselfService: MyselfService, private stripeService: StripeService) {}
+  constructor(
+    private myselfService: MyselfService,
+    private stripeFactory: StripeFactoryService,
+    private appService: AppService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.stripe = this.stripeFactory.create(this.appService.environment.stripe_public_key);
+  }
 
   handleOnChange(event: StripeCardElementChangeEvent) {
     this.error = event.error;
@@ -55,7 +64,7 @@ export class CardComponent implements OnInit {
   }
 
   async createPaymentMethod(billingDetails: IPaymentMethod['billing_details']['address']) {
-    const response = await this.stripeService
+    const response = await this.stripe
       .createPaymentMethod({
         type: 'card',
         card: this.card.element,
