@@ -154,20 +154,20 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
         if (fetchAll || req.query['trending']) {
           const ticketSales: Invoice[] = await this.ORM.createQueryBuilder(Invoice, 'invoice')
-            // .select(['invoice._id', 'ticket._id'])
-            // .addSelect('COUNT(ticket._id) as ticketsSold')
-            .where('invoice.purchased_at <= :curdate', { curdate: getUnixTime(startOfWeek(new Date())) })
+            .select(['invoice._id', 'ticket._id', 'performance._id'])
+            .addSelect('COUNT(ticket._id) as ticketsSold')
+            .where('invoice.purchased_at >= :curdate', { curdate: getUnixTime(startOfWeek(new Date())) })
             .innerJoin('invoice.ticket', 'ticket')
+            .innerJoin('ticket.performance', 'performance')
+            .groupBy('performance._id')
+            .addGroupBy('invoice._id')
+            .addGroupBy('ticket._id')
+            .getQuery();
+          // .innerJoin('i.ticket', 'ticket')
+          // .innerJoin('ticket.performance', 'performance')
+          // .addSelect('i.ticket')
 
-            // .groupBy('ticket._id')
-            // .innerJoin('i.ticket', 'ticket')
-            // .innerJoin('ticket.performance', 'performance')
-            // .addSelect('i.ticket')
-
-            // .addSelect('COUNT(i.ticket)', 'ticketCount')
-            // .groupBy('i._id')
-            // .orderBy('ticketCount')
-            .getMany();
+          // .getMany();
 
           console.log(ticketSales);
           // //Use list of ordered performance ids obtained from invoice table
