@@ -7,6 +7,7 @@ export interface IMuxProviderConfig {
   access_token: string;
   secret_key: string;
   webhook_signature: string;
+  data_env_key: string;
 }
 
 @Service()

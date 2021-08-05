@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IUser } from '@core/interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
@@ -30,7 +30,7 @@ export class UserRegisterComponent implements OnInit, IUiDialogOptions, OnDestro
     private userService: UserService,
     private authService: AuthenticationService,
     private myselfService: MyselfService,
-    private appService: BaseAppService,
+    private appService: AppService,
     private dialog: MatDialog
   ) {}
 

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostStub, IMyself, IUser } from '@core/interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 
 @Component({

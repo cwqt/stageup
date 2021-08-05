@@ -8,27 +8,29 @@
         <mat-error i18n>You do not have access to this performance</mat-error>
       </ng-container>
 
-      <div class="relative" #player>
-        <!-- Performance Rating -->
-        <div class="absolute top-4 right-4 z-10">
-          <div class="mb-3">
-            <app-rate-performance
-              [rating]="rating"
-              [starCount]="3"
-              (ratingUpdated)="onRatingChanged($event)"
-            ></app-rate-performance>
+      <ng-template #player>
+        <div class="relative">
+          <!-- Performance Rating -->
+          <div class="absolute top-4 right-4 z-10">
+            <div class="mb-3">
+              <app-rate-performance
+                [rating]="rating"
+                [starCount]="3"
+                (ratingUpdated)="onRatingChanged($event)"
+              ></app-rate-performance>
+            </div>
+
+            <!-- Social Sharing -->
+            <app-social-sharing
+              class="inline-flex justify-end min-w-full"
+              [url]="performanceSharingUrl"
+            ></app-social-sharing>
           </div>
 
-          <!-- Social Sharing -->
-          <app-social-sharing
-            class="inline-flex justify-end min-w-full"
-            [url]="performanceSharingUrl"
-          ></app-social-sharing>
+          <!-- The actual video player for streams/vod -->
+          <app-performance-watch [performance]="performance" [token]="token"></app-performance-watch>
         </div>
-
-        <!-- The actual video player for streams/vod -->
-        <app-performance-watch [performance]="performance" [token]="token"></app-performance-watch>
-      </div>
+      </ng-template>
     </ng-container>
 
     <!-- Performance title, description, host etc -->

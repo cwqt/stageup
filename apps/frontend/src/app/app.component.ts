@@ -5,7 +5,7 @@ import { AuthenticationService } from './services/authentication.service';
 import { MyselfService } from './services/myself.service';
 import { ToastService } from './services/toast.service';
 import { NgxPermissionsService } from 'ngx-permissions';
-import { BaseAppService } from './services/app.service';
+import { AppService } from './services/app.service';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Environment, UserPermission } from '@core/interfaces';
 import { NGXLogger } from 'ngx-logger';
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     private titleService: Title,
     private authService: AuthenticationService,
     private toastService: ToastService,
-    private baseAppService: BaseAppService,
+    private appService: AppService,
     private route: ActivatedRoute,
     private permissionsService: NgxPermissionsService,
     private logger: NGXLogger,
@@ -42,7 +42,6 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     this.titleService.setTitle(`StageUp - ${environment.app_version}`);
     this.locale = this.locale || 'en';
-    this.logger.debug(`Running in: ${environment.environment} with locale ${this.locale}`);
 
     // Only show pop-up when value is undefined
     this.myselfService.$acceptedCookiesPolicy.subscribe(v => (this.hasCookiePolicySet = v != undefined));
@@ -52,9 +51,13 @@ export class AppComponent implements OnInit {
     this.loading = true;
     this.showCurtain = true;
 
+    // Fetch the dynamic environment from the backend to create the complete environment
+    await this.appService.getEnvironment();
+    this.logger.debug(`Running in: ${this.appService.environment.environment} with locale ${this.locale}`);
+
     // Not using nginx in prod which serves many locales, so any links we get in e-mails will result in 404s because
     // of the locale /en/, /no/, /cy/ not existing on serve server - so re-write them out if the url starts with the current locale
-    if (environment.environment == Environment.Development) {
+    if (this.appService.environment.environment == Environment.Development) {
       this.router.events.pipe(filter(event => event instanceof NavigationStart)).subscribe((event: NavigationStart) => {
         // Check if URL starts with any supported locale language, URL could contain locale, e.g. ["", "cy", "settings"] etc.
         const routeTail = event.url.split('/').filter(p => p)[0];
@@ -72,7 +75,7 @@ export class AppComponent implements OnInit {
     // Dynamic require of current LOCALE_ID set from angular
     countries.registerLocale(require(`i18n-iso-countries/langs/${this.locale}.json`));
 
-    await this.baseAppService.componentInitialising(this.route);
+    await this.appService.componentInitialising(this.route);
 
     // Upon start up, check if logged in by re-hydrating stored data (if any exists)
     // and then re-fetch the user incase of any changes & set all permissions
@@ -86,10 +89,10 @@ export class AppComponent implements OnInit {
         if (environment.is_deployed && this.locale !== myself.user.locale.language)
           // NGINX serves different URLs on subpaths, /en/, /cy/ - but the angular apps' router has no knowledge of that
           // so we have to use window.location to change the _entire_ path from the root upwards
-          window.location.href = `${myself.user.locale.language}/${this.baseAppService.getUrl()}`;
+          window.location.href = `${myself.user.locale.language}/${this.appService.getUrl()}`;
 
         // May be coming in from an e-mail to accept invite stageup.uk/?invite_accepted=...
-        if (this.baseAppService.getQueryParam('invite_accepted')) this.baseAppService.navigateTo(`/dashboard`);
+        if (this.appService.getQueryParam('invite_accepted')) this.appService.navigateTo(`/dashboard`);
       }
 
       // Subscribe to login state & re-set permissions state on changes

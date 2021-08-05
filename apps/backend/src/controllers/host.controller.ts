@@ -1,9 +1,8 @@
-import { ErrorHandler } from '@backend/common/error';
+import { ErrorHandler, getCheck } from '@backend/common/error';
 import { BackendProviderMap } from '@backend/common/providers';
 import {
   BaseController,
   Follow,
-  getCheck,
   Host,
   HostAnalytics,
   HostInvitation,

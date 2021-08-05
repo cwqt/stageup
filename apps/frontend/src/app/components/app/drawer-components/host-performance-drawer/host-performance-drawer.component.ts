@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DtoPerformance, IHostStub } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { DrawerService } from 'apps/frontend/src/app/services/drawer.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class HostPerformanceDrawerComponent implements OnInit {
     performance: ICacheable<DtoPerformance>;
   };
 
-  constructor(private drawerService: DrawerService, private baseAppService: BaseAppService) {}
+  constructor(private drawerService: DrawerService, private appService: AppService) {}
 
   get performance() {
     return this.data?.performance.data?.data;
@@ -29,6 +29,6 @@ export class HostPerformanceDrawerComponent implements OnInit {
   }
 
   gotoPerformancesList() {
-    this.baseAppService.navigateTo(`/dashboard/performances`);
+    this.appService.navigateTo(`/dashboard/performances`);
   }
 }

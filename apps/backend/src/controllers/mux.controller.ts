@@ -1,3 +1,16 @@
+import { getCheck } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
+import {
+  Asset,
+  AssetGroup,
+  BaseArguments,
+  BaseController,
+  IControllerEndpoint,
+  LiveStreamAsset,
+  Performance,
+  VideoAsset
+} from '@core/api';
+import { timeout } from '@core/helpers';
 import {
   AssetOwnerType,
   AssetType,
@@ -8,26 +21,11 @@ import {
   PerformanceStatus,
   VideoAssetState
 } from '@core/interfaces';
-import {
-  Performance,
-  Asset,
-  BaseArguments,
-  BaseController,
-  getCheck,
-  IControllerEndpoint,
-  AssetGroup,
-  VideoAsset,
-  LiveStreamAsset
-} from '@core/api';
-import { timeout, timestamp, uuid } from '@core/helpers';
-import { LiveStream, Webhooks } from '@mux/mux-node';
+import { Asset as MuxAsset, LiveStream, Webhooks } from '@mux/mux-node';
 import { MD5 } from 'object-hash';
 import { RedisClient } from 'redis';
 import { log } from '../common/logger';
 import Env from '../env';
-
-import { Asset as MuxAsset } from '@mux/mux-node';
-import { BackendProviderMap } from '@backend/common/providers';
 
 export default class MUXController extends BaseController<BackendProviderMap> {
   readonly hookMap: {

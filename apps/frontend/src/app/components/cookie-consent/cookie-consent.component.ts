@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 import { MyselfService } from '@frontend/services/myself.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { MyselfService } from '@frontend/services/myself.service';
   styleUrls: ['./cookie-consent.component.scss']
 })
 export class CookieConsentComponent implements OnInit {
-  constructor(private myselfService: MyselfService, private appService: BaseAppService) {}
+  constructor(private myselfService: MyselfService, private appService: AppService) {}
 
   ngOnInit(): void {}
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IHostStub } from '@core/interfaces';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 @Component({
   selector: 'app-host-thumb',
   templateUrl: './host-thumb.component.html',
@@ -9,11 +9,11 @@ import { BaseAppService } from '@frontend/services/app.service';
 export class HostThumbComponent implements OnInit {
   @Input() host: IHostStub;
 
-  constructor(private baseAppService: BaseAppService) {}
+  constructor(private appService: AppService) {}
 
   ngOnInit(): void {}
 
   openHostPage(): void {
-    this.baseAppService.navigateTo(`/@${this.host.username}`);
+    this.appService.navigateTo(`/@${this.host.username}`);
   }
 }

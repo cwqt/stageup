@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IHost, IPatronTier } from '@core/interfaces';
 import { timeout } from '@core/helpers';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
+import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class HostProfilePatronageComponent implements OnInit {
   host: IHost; //injected from parent
   tiers: ICacheable<IPatronTier[]> = createICacheable([]);
 
-  constructor(private hostService: HostService, private appService: BaseAppService, private route: ActivatedRoute) {}
+  constructor(private hostService: HostService, private appService: AppService, private route: ActivatedRoute) {}
 
   async ngOnInit() {
     await this.appService.componentInitialising(this.route);

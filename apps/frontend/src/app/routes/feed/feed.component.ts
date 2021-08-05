@@ -13,7 +13,7 @@ import { timeout } from '@core/helpers';
 import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 
 type CarouselIdx = keyof IFeed;
 
@@ -82,7 +82,7 @@ export class FeedComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private toastService: ToastService,
     private logger: NGXLogger,
-    private appService: BaseAppService,
+    private appService: AppService,
     private route: ActivatedRoute
   ) {}
 
@@ -115,8 +115,8 @@ export class FeedComponent implements OnInit {
     });
     // After loading feed, check if there are query params and whether we should open a performance brochure
     this.route.queryParams.subscribe(params => {
-      if(params.performance) this.openBrochure(params.performance);
-    })
+      if (params.performance) this.openBrochure(params.performance);
+    });
   }
 
   async getNextCarouselPage(carouselIndex: CarouselIdx) {
@@ -216,7 +216,7 @@ export class FeedComponent implements OnInit {
     );
     // Event listeners for like and follow events inside the MatDialog
     const likeSubscription = dialogRef.componentInstance.onLikeEvent.subscribe(data => {
-      this.syncLikes({performance: performanceId, value: data});
+      this.syncLikes({ performance: performanceId, value: data });
     });
     const followSubscription = dialogRef.componentInstance.onFollowEvent.subscribe(data => {
       this.refreshFeed(data);

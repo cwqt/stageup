@@ -1,9 +1,7 @@
-import { ISearchResponse } from '@core/interfaces';
-
-import { BaseController, IControllerEndpoint, Performance, Host } from '@core/api';
 import { BackendProviderMap } from '@backend/common/providers';
+import { BaseController, Host, IControllerEndpoint, Performance } from '@core/api';
+import { ISearchResponse } from '@core/interfaces';
 import AuthStrat from '../common/authorisation';
-import { enums, object, optional } from 'superstruct';
 
 export default class SearchController extends BaseController<BackendProviderMap> {
   search(): IControllerEndpoint<ISearchResponse> {

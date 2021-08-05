@@ -1,7 +1,7 @@
 import { Component, OnInit, Testability } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IRedirectData, ShareLocations } from '@core/interfaces';
-import { BaseAppService, RouteParam } from '@frontend/services/app.service';
+import { AppService, RouteParam } from '@frontend/services/app.service';
 import { IUiFormField, UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
@@ -16,13 +16,13 @@ export class RedirectComponent implements OnInit {
   storedRedirectData: IRedirectData;
   doNotShowRedirect: boolean;
 
-  constructor(private baseAppService: BaseAppService, private route: ActivatedRoute) {}
+  constructor(private appService: AppService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     // Data sent to redirect component
     this.route.queryParams.subscribe(params => {
       this.redirectData = JSON.parse(JSON.stringify(params)); // params object is not directly mutable, so need to make a copy
-    })
+    });
     // Previous stored choices
     this.storedRedirectData = JSON.parse(localStorage.getItem('redirect_data')) as IRedirectData;
 

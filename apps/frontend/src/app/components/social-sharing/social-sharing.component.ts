@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ShareLocations } from '@core/interfaces';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 //#endregion
 @Component({
   selector: 'app-social-sharing',
@@ -20,28 +20,28 @@ export class SocialSharingComponent implements OnInit {
   callbacks: { [index in ShareLocations]: () => void };
   socials: ShareLocations[];
 
-  constructor(private baseAppService: BaseAppService) {}
+  constructor(private appService: AppService) {}
 
   ngOnInit(): void {
     this.socials = Object.keys(this.icons) as any;
 
     this.callbacks = {
       facebook: () =>
-        this.baseAppService.navigateToNewTab(`/redirect`, {
+        this.appService.navigateToNewTab(`/redirect`, {
           queryParams: {
             redirect_to: `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(this.url)}`,
             social_type: ShareLocations.Facebook
           }
         }),
       twitter: () =>
-        this.baseAppService.navigateToNewTab(`/redirect`, {
+        this.appService.navigateToNewTab(`/redirect`, {
           queryParams: {
             redirect_to: `https://twitter.com/intent/tweet?url=${encodeURI(this.url)}`,
             social_type: ShareLocations.Twitter
           }
         }),
       linkedin: () =>
-        this.baseAppService.navigateToNewTab(`/redirect`, {
+        this.appService.navigateToNewTab(`/redirect`, {
           queryParams: {
             redirect_to: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURI(this.url).replace(
               'http',
