@@ -34,11 +34,9 @@ import { InvoiceService } from '../invoice/invoice.service';
 import { QueueModule, QueueProviders } from './queue.module';
 
 export class EventHandlers {
-  constructor(
-    private queues: QueueModule['queues'],
-    private providers: QueueProviders,
-    private invoiceService: InvoiceService
-  ) {}
+  private invoiceService: InvoiceService;
+
+  constructor(private queues: QueueModule['queues'], private providers: QueueProviders) {}
 
   sendTestEmail = async (ct: Contract<'test.send_email'>) => {
     const user = await User.findOne({ _id: ct.user_id }, { select: ['email_address', 'username', 'name'] });
@@ -234,6 +232,7 @@ export class EventHandlers {
     //Get array of invoice ids
     const invoiceIds: string[] = invoices.map(invoice => invoice._id);
 
+    this.invoiceService = new InvoiceService(this.providers);
     //Then refund those invoices
     this.invoiceService.processRefunds({
       host_id: performance.host._id,
