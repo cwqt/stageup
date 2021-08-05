@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IHostStub, IMyself } from '@core/interfaces';
-import { BaseAppService, RouteParam } from '@frontend/services/app.service';
+import { AppService, RouteParam } from '@frontend/services/app.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { filter, startWith } from 'rxjs/operators';
 

@@ -70,7 +70,8 @@ const Env: {
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
-    WEBHOOK_SIGNATURE: process.env.MUX_WEBHOOK_SIGNATURE
+    WEBHOOK_SIGNATURE: process.env.MUX_WEBHOOK_SIGNATURE,
+    DATA_ENV_KEY: process.env.MUX_DATA_ENV_KEY
   },
   PG: {
     USERNAME: process.env.POSTGRES_USER,

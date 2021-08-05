@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { HelperService } from '../../../services/helper.service';
 import merge from 'deepmerge';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -14,7 +14,7 @@ import { Subject, Subscription } from 'rxjs';
 })
 export class DialogEntryComponent implements OnInit, OnDestroy {
   private _subAfterClosed: Subscription;
-  constructor(private dialog: MatDialog, private route: ActivatedRoute, private appService: BaseAppService) {}
+  constructor(private dialog: MatDialog, private route: ActivatedRoute, private appService: AppService) {}
 
   ngOnInit(): void {
     this.route.data.pipe(first()).subscribe(data => {

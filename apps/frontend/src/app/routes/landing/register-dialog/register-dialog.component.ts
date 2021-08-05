@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatHorizontalStepper, MatStepper } from '@angular/material/stepper';
 import { IHost, IUser } from '@core/interfaces';
 import { IUiDialogOptions } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
-import { BaseAppService } from '../../../services/app.service';
+import { AppService } from '../../../services/app.service';
 
 @Component({
   selector: 'app-register-dialog',
@@ -21,7 +21,7 @@ export class RegisterDialogComponent implements OnInit, IUiDialogOptions {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private ref: MatDialogRef<RegisterDialogComponent>,
-    private baseAppService: BaseAppService
+    private appService: AppService
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +48,7 @@ export class RegisterDialogComponent implements OnInit, IUiDialogOptions {
 
     // state propagation push to next tick
     setTimeout(() => {
-      this.baseAppService.navigateTo(`/dashboard`);
+      this.appService.navigateTo(`/dashboard`);
       this.ref.close();
     }, 1);
   }

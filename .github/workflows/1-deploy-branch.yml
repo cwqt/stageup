@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: BRANCH
+name: BRANCH ↑
 
 #  event that fires every time a PR is created, synchronised with the source branch
 # (a new commit is pushed), or reopened.

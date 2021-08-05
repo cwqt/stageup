@@ -5,10 +5,13 @@ export enum Environment {
   Testing = 'testing'
 }
 
-export interface IFrontendEnvironment {
-  frontend_url: string;
+export interface IStaticFrontendEnvironment {
   app_version: string;
   is_deployed: boolean;
+}
+
+export interface IDynamicFrontendEnvironment {
+  frontend_url: string;
   stripe_public_key: string;
   environment: Environment;
   mux_env_key: string;

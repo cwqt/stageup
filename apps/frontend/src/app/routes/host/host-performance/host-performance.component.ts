@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DtoPerformance, IHost, IPerformanceHostInfo } from '@core/interfaces';
 import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
+import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { DrawerKey, DrawerService } from '../../../services/drawer.service';
 import { HelperService } from '../../../services/helper.service';
@@ -40,7 +40,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
 
   constructor(
     private performanceService: PerformanceService,
-    private baseAppService: BaseAppService,
+    private appService: AppService,
     private drawerService: DrawerService,
     private route: ActivatedRoute,
     private helperService: HelperService,
@@ -48,8 +48,8 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    await this.baseAppService.componentInitialising(this.route);
-    this.performanceId = this.baseAppService.getParam(RouteParam.PerformanceId);
+    await this.appService.componentInitialising(this.route);
+    this.performanceId = this.appService.getParam(RouteParam.PerformanceId);
 
     this.performanceService.$activeHostPerformanceId.next(this.performanceId);
     cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
@@ -65,7 +65,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   }
 
   gotoPerformance() {
-    this.baseAppService.navigateTo(`/performances/${this.performanceData._id}`);
+    this.appService.navigateTo(`/performances/${this.performanceData._id}`);
   }
 
   deletePerformance() {

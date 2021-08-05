@@ -1,12 +1,8 @@
-import { Environment, IFrontendEnvironment } from '@core/interfaces';
+import { Environment, IStaticFrontendEnvironment } from '@core/interfaces';
 
-export const environment: IFrontendEnvironment = {
-  environment: Environment.Development,
+export const environment: IStaticFrontendEnvironment = {
   is_deployed: true,
-  frontend_url: 'http://localhost:4200',
-  stripe_public_key: '',
-  app_version: '',
-  mux_env_key: ''
+  app_version: ''
 };
 
 import 'zone.js/dist/zone-error'; // Included with Angular CLI.

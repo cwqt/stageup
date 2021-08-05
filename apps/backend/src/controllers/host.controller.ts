@@ -1,10 +1,9 @@
-import { ErrorHandler } from '@backend/common/error';
+import { ErrorHandler, getCheck } from '@backend/common/error';
 import { BackendProviderMap } from '@backend/common/providers';
 import { InvoiceService, IProcessRefund } from '@backend/modules/invoice/invoice.service';
 import {
   BaseController,
   Follow,
-  getCheck,
   Host,
   HostAnalytics,
   HostInvitation,

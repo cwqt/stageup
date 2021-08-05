@@ -8,7 +8,7 @@ For Terraform CLI follow this guide: <https://www.terraform.io/downloads.html>
 
 For `gcloud` CLI:
 
-```shell
+```bash
 brew install --cask google-cloud-sdk
 gcloud components update
 gcloud auth login
@@ -29,11 +29,11 @@ gcloud services enable \
 Contains things that should never be destroyed, VPC's, databases, private IPs etc. <br/>
 Only need to run this _once_ per GCP project.
 
-![](workspaces.png)
+![](z_workspaces.png)
 
 - Three distinct _core_, non-ephemeral workspaces (see `terraform/core`):
   - `prod` production environment, higher auto scaling / machine specs & real API keys
-  - `staging` staging environment, exact same as production, but with test API keys
+  - `stage` staging environment, exact same as production, but with test API keys
   - `feat` feature environment, slightly different configuration as prod/staging for faster development, lower specs & test API keys
 
 ### feat
@@ -53,7 +53,7 @@ Visualised as separate workspaces:
 
 For a new GCP project, from this directory do:
 
-```shell
+```bash
 cd core/
 sh setup.sh # follow any instructions
 ```
@@ -62,15 +62,15 @@ sh setup.sh # follow any instructions
 
 Due to how Terraform works you can't deploy the core infra. on `stage` & then also the ephemeral infra. on `stage` at the same time on the same workspace, the states would just remove each other on `apply`.
 
-| Core Workspace | Workspace      |
-| -------------- | -------------- |
-| prod           | release        |
-| stage          | dev            |
-| feat           | su-123, su-456 |
+| Core Workspace | Workspace      | URL                           |
+| -------------- | -------------- | ----------------------------- |
+| prod           | release        | https://release.stageup.uk/en |
+| stage          | dev            | https://dev.stageup.uk/en     |
+| feat           | su-123, su-456 | https://su-XXX.stageup.uk/en  |
 
 In the same way that branch deploys use `su-123` workspace (`terraform workspace select su-123`), `prod` & `stage` do the same, `prod` maps to `release` and `stage` maps to `dev`. So setting up core & normal infra looks like this:
 
-```shell
+```bash
 terraform init
 
 # set up core infra
@@ -110,7 +110,7 @@ Some stuff for safe keeping
 
 ### Bastion host
 
-```shell
+```bash
 ssh-keygen -t rsa -C "USER@stageup.uk"
 gcloud compute os-login ssh-keys add --key-file=~/.ssh/id_rsa.pub --ttl=365d
 
@@ -127,7 +127,7 @@ sudo docker run --rm --network=host -it postgres:11-alpine psql -U admin -h loca
 
 `terraform destroy` will fail to delete DB user if the CloudSQL instance has been destroyed already
 
-```shell
+```bash
 # delete the user from tf state
 terraform state rm google_sql_user.db_user
 terraform destroy $@
@@ -138,21 +138,42 @@ terraform destroy $@
 At the end of every sprint a release will be deployed, going through a number of checks in the staging area & then onto production.
 To be able to create a release first:
 
+## 1st time setup
+
+Require a Personal Access Token in order for _shipjs_ to create pull requests on your behalf.
+
 - Create a new token: <https://github.com/settings/tokens>
 - Add a `.env` into the root directory
 - Add value called `GITHUB_TOKEN=XXXX`
 
 ## Triggering a release
 
-- All code merged into dev ready for release (`commit-build-test.yml`)
-- Prepare release via: `npm run release`, which will:
+- All code/PRs merged into `dev` ready for release
+- Prepare release by running `npm run release`, which will:
   - Switch to `dev` branch
-  - Create a release PR on GitHub via _shipjs_ (`shipjs-prepare.yml`)
-    - Automated actions on branch `release-*` (`release-build.yml`)
-      - Build all projects source & compile Docker images
-      - Push images to AWS Elastic Container Registry
-      - Deploy to staging AWS EC2 instance
-      - Integration tests against staging environment
-- Squash-merge release PR squash-merged into master
-  - Automated actions on branch `master` (`release-deploy.yml`)
-    - Deploy created images to production infrastructure
+  - Create a release PR on GitHub via _shipjs_
+  - Add to the CHANGELOG.md with all the Conventional Commits PR titles
+- Squash-merge release PR into dev
+  - `3-deploy-prod.yml` will run upon merging into `dev` & deploy new code to production
+
+## [Infracost.io](https://www.infracost.io/docs/)
+
+Is a tool for calculating costs of infrastructure by using the current Terraform state.
+
+![](z_infracost.png)
+
+```bash
+brew install infracost
+infracost register
+
+
+# for ephemeral infra
+cd terraform
+terraform workspace select stage # or any other ws like prod, su-131
+infracost breakdown --path=.
+
+# for core infra
+cd terraform/core
+terraform workspace select stage # or any other ws like prod, su-131
+infracost breakdown --path=.
+```

@@ -1,5 +1,3 @@
-import { environment } from '../environments/environment';
-
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -22,6 +20,7 @@ import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
+
 // https://github.com/scttcper/ngx-chartjs
 import { ChartjsModule } from '@ctrl/ngx-chartjs';
 import {
@@ -286,7 +285,7 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     ClipboardModule,
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
-    NgxStripeModule.forRoot(environment.stripe_public_key),
+    NgxStripeModule.forRoot(),
     ClipboardModule,
     NgxPermissionsModule.forRoot(),
     PlyrModule,
@@ -294,7 +293,7 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     ChartjsModule,
     QuillModule.forRoot(),
     LoggerModule.forRoot({
-      serverLoggingUrl: '/api/logs',
+      serverLoggingUrl: '/api/utils/logs',
       colorScheme: ['purple', 'teal', 'gray', 'gray', 'red', 'red', 'red'],
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR
