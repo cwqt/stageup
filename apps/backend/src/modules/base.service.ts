@@ -17,7 +17,7 @@ export class BaseService<T extends ProviderMap> {
   providers: T;
 
   get ORM(): Connection {
-    return this.providers['torm'].connection;
+    return this.providers['orm'].connection;
   }
 
   constructor(pm: T, protected req?: Request) {
