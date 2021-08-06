@@ -10,7 +10,7 @@ import {
 } from '@core/interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
@@ -39,7 +39,7 @@ export class HostSettingsComponent implements OnInit {
     private myselfService: MyselfService,
     private hostService: HostService,
     private toastService: ToastService,
-    private baseAppService: BaseAppService
+    private appService: AppService
   ) {}
 
   ngOnInit(): void {
@@ -239,7 +239,7 @@ export class HostSettingsComponent implements OnInit {
                 )
               );
 
-            this.baseAppService.navigateTo('/settings');
+            this.appService.navigateTo('/settings');
             r.close();
           }
         })

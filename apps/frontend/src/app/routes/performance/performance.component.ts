@@ -12,7 +12,7 @@ import {
 } from '@core/interfaces';
 import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
 import { Cacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
+import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { environment } from 'apps/frontend/src/environments/environment';
 import { merge, Observable } from 'rxjs';
@@ -35,7 +35,7 @@ export class PerformanceComponent implements OnInit {
     @Inject(LOCALE_ID) public locale: string,
     private performanceService: PerformanceService,
     private route: ActivatedRoute,
-    private appService: BaseAppService
+    private appService: AppService
   ) {}
 
   get performance(): DtoPerformance['data'] {
@@ -56,7 +56,7 @@ export class PerformanceComponent implements OnInit {
 
     if (this.performance) {
       this.rating = this.performanceCacheable.data.__client_data.rating;
-      this.performanceSharingUrl = `${environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
+      this.performanceSharingUrl = `${this.appService.environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
 
       // Look for VoD or LiveStream asset marked as 'primary'
       this.primaryAsset = this.performance.assets.find(asset => asset.tags.includes('primary'));

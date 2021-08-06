@@ -1,16 +1,6 @@
-import { ErrorHandler } from '@backend/common/error';
+import { ErrorHandler, getCheck } from '@backend/common/error';
 import { BackendProviderMap } from '@backend/common/providers';
-import {
-  Address,
-  BaseController,
-  Follow,
-  getCheck,
-  Host,
-  IControllerEndpoint,
-  PasswordReset,
-  User,
-  Validators
-} from '@core/api';
+import { Address, BaseController, Follow, Host, IControllerEndpoint, PasswordReset, User, Validators } from '@core/api';
 import {
   Environment,
   HostPermission,
@@ -24,6 +14,7 @@ import {
   IUserHostInfo,
   pick
 } from '@core/interfaces';
+
 import { object, string } from 'superstruct';
 import { EntityManager } from 'typeorm';
 import AuthStrat from '../common/authorisation';

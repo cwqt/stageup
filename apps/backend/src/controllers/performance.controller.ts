@@ -1,4 +1,4 @@
-import { ErrorHandler } from '@backend/common/error';
+import { ErrorHandler, getCheck } from '@backend/common/error';
 import { BackendProviderMap } from '@backend/common/providers';
 import {
   AccessToken,
@@ -7,7 +7,6 @@ import {
   AssetView,
   BaseController,
   Follow,
-  getCheck,
   Host,
   IControllerEndpoint,
   ImageAsset,
@@ -857,15 +856,19 @@ export default class PerformanceController extends BaseController<BackendProvide
       controller: async req => {
         if (0 <= req.body.rating && req.body.rating <= 1)
           throw new ErrorHandler(HTTP.BadRequest, '@@error.invalid_rating');
+
         // Check current user exists with the session ID
         const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
+
         // Check performance exists with performance ID
         const performance = await getCheck(Performance.findOne({ where: { _id: req.params.pid } }));
+
         // Check if user has already rated this performance.
         const existingRating = await this.ORM.createQueryBuilder(Rating, 'rating')
           .where('rating.user__id = :uid', { uid: req.session.user._id })
           .andWhere('rating.performance__id = :hid', { hid: req.params.pid })
           .getOne();
+
         // If they have rated, update the existing rating
         if (existingRating) {
           await this.ORM.transaction(async txc => {
@@ -873,6 +876,7 @@ export default class PerformanceController extends BaseController<BackendProvide
             performance.rating_total =
               performance.rating_total - existingRating.rating + req.body.rate_value.toFixed(4);
             await txc.save(performance);
+
             // Update the rating
             existingRating.rating = req.body.rate_value.toFixed(4);
             await txc.save(existingRating);
@@ -884,6 +888,7 @@ export default class PerformanceController extends BaseController<BackendProvide
             performance.rating_total = performance.rating_total + req.body.rate_value.toFixed(4);
             performance.rating_count++;
             await txc.save(performance);
+
             // Create new rating
             const newRating = new Rating(myself, performance, req.body.rate_value.toFixed(4));
             await txc.save(newRating);
@@ -902,11 +907,13 @@ export default class PerformanceController extends BaseController<BackendProvide
           this.ORM.createQueryBuilder(Rating, 'rating')
             .where('rating.user__id = :uid', { uid: req.session.user._id })
             .andWhere('rating.performance__id = :pid', { pid: req.params.pid })
-            .getOne()
+            .getOne(),
+          '@@error.no_rating_exists'
         );
-        if (!existingRating) throw new ErrorHandler(HTTP.BadRequest, '@@error.no_rating_exists');
+
         // Check performance exists with performance ID
         const performance = await getCheck(Performance.findOne({ where: { _id: req.params.pid } }));
+
         // Create new rating and update total count/rating
         await this.ORM.transaction(async txc => {
           // Update the performance rating_total. Increment the rating count.
@@ -933,13 +940,16 @@ export default class PerformanceController extends BaseController<BackendProvide
       controller: async req => {
         // Check current user exists with the session id
         const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
+
         // Check performance exists with the provided id
         const performance = await getCheck(Performance.findOne({ _id: req.params.pid }));
+
         // Check to make sure we don't add duplicate likes
         const existingLike = await this.ORM.createQueryBuilder(Like, 'like')
           .where('like.user__id = :uid', { uid: req.session.user._id })
           .andWhere('like.performance__id = :pid', { pid: req.params.pid })
           .getOne();
+
         // If like exists, we delete. Else we add.
         if (existingLike) {
           // Delete the like and decrement the count in a single transaction

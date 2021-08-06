@@ -12,7 +12,8 @@ const PROVIDER_MAP = {
   mux: new Providers.Mux({
     access_token: Env.MUX.ACCESS_TOKEN,
     secret_key: Env.MUX.SECRET_KEY,
-    webhook_signature: Env.MUX.WEBHOOK_SIGNATURE
+    webhook_signature: Env.MUX.WEBHOOK_SIGNATURE,
+    data_env_key: Env.MUX.DATA_ENV_KEY
   }),
   torm: new Providers.Postgres(
     {
@@ -21,8 +22,9 @@ const PROVIDER_MAP = {
       username: Env.PG.USERNAME,
       password: Env.PG.PASSWORD,
       database: Env.PG.DATABASE,
-      // Re-sync in test, dev & staging - prod use migrations
-      synchronize: !Env.isEnv(Environment.Production)
+      // IMPORTANT Re-sync in test, dev & staging - prod use migrations
+      // need to write migrations first!!
+      synchronize: true //!Env.isEnv(Environment.Production)
     },
     { ...PG_MODELS, Configuration }
   ),

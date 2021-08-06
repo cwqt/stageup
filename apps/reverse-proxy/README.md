@@ -11,10 +11,11 @@ Run all commands from this directory.
 ```shell
 # build the docker image
 docker build -t eu.gcr.io/core-314910/su-reverse-proxy:latest .
+
 # push to gcp container registry
 docker push eu.gcr.io/core-314910/su-reverse-proxy:latest
 
-# now deploy the app on compute engine using the terraform script in main.tf
+# now deploy the app on Cloud Run using the terraform script in main.tf
 terraform init
 terraform workspace select reverse-proxy
 terraform apply

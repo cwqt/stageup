@@ -21,7 +21,7 @@ import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces'
 import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
 import { PlayerComponent } from '@frontend/components/player/player.component';
 import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { MyselfService } from '@frontend/services/myself.service';
 import { PerformanceService } from '@frontend/services/performance.service';
@@ -74,7 +74,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     @Inject(LOCALE_ID) public locale: string,
     private myselfService: MyselfService,
     private performanceService: PerformanceService,
-    private appService: BaseAppService,
+    private appService: AppService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<PerformanceBrochureComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { performance_id: string }
@@ -92,7 +92,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     );
 
     // Used for social sharing component
-    this.brochureSharingUrl = `${environment.frontend_url}/?performance=${this.performance._id}`;
+    this.brochureSharingUrl = `${this.appService.environment.frontend_url}/?performance=${this.performance._id}`;
 
     // Find first thumbnail, to show on cover image if no trailer video is present
     this.thumbnail = this.performance.assets.find(a => a.type == AssetType.Image && a.tags.includes('thumbnail'));

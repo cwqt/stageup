@@ -15,7 +15,7 @@ import {
 } from '@core/interfaces';
 import { i18n, timeless, timestamp } from '@core/helpers';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
+import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
@@ -47,7 +47,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
     private ref: MatDialogRef<CreateUpdateTicketComponent>,
     private toastService: ToastService,
     private performanceService: PerformanceService,
-    private baseAppService: BaseAppService
+    private appService: AppService
   ) {}
 
   ngOnInit(): void {
@@ -135,7 +135,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         input: async () => {
           if (this.data.operation == 'update') {
             const data = await this.performanceService.readTicket(
-              this.baseAppService.getParam(RouteParam.PerformanceId),
+              this.appService.getParam(RouteParam.PerformanceId),
               this.data.ticketId
             );
 
@@ -169,11 +169,11 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         output: async v =>
           this.data.operation == 'create'
             ? this.performanceService.createTicket(
-                this.baseAppService.getParam(RouteParam.PerformanceId),
+                this.appService.getParam(RouteParam.PerformanceId),
                 this.formOutputTransformer(v)
               )
             : this.performanceService.updateTicket(
-                this.baseAppService.getParam(RouteParam.PerformanceId),
+                this.appService.getParam(RouteParam.PerformanceId),
                 this.data.ticketId,
                 this.formOutputTransformer(v)
               )

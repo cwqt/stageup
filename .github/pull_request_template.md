@@ -17,3 +17,24 @@ When PR complete & ready for review by a PM, make a commit with the body `/deplo
 ```shell
 git commit --allow-empty -m "/deploy"
 ```
+
+## PR title
+
+Follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard. e.g.
+
+```
+<type>: <message>
+<type>(<scope>): <message>
+
+feature(SU-120): As a User I want to ...
+fix(SU-912): Fix component from ....
+release: version 0.2.1
+```
+
+**Common Types**
+
+- `feature` - A large feature that consist of multiple types of changes.
+- `fix` - Fixes existing functionality.
+- `release` - Not a breaking change but bumps the major version.
+- `update` - Updates an existing feature.
+- `misc` - Catch all for commits that don't align with other types.

@@ -3,7 +3,7 @@ import { enumToValues } from '@core/helpers';
 import { FilterCode, HostOnboardingState, IHostOnboarding } from '@core/interfaces';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { AdminService } from 'apps/frontend/src/app/services/admin.service';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { OnboardingStatePipe } from '../../../_pipes/onboarding-state.pipe';
 
 @Component({
@@ -14,7 +14,7 @@ import { OnboardingStatePipe } from '../../../_pipes/onboarding-state.pipe';
 export class AdminOnboardingListComponent implements OnInit {
   table: UiTable<IHostOnboarding>;
 
-  constructor(private adminService: AdminService, private appService: BaseAppService) {}
+  constructor(private adminService: AdminService, private appService: AppService) {}
 
   ngOnInit() {
     this.table = new UiTable<IHostOnboarding>({
