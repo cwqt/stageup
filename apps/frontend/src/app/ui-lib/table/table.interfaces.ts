@@ -57,6 +57,7 @@ export interface IUiTableAction<K> {
   click: (v: K) => void;
   kind?: ThemeKind;
   icon?: string;
+  hide?: (v: K) => boolean; // if expression evaluates to true then the action will not be displayed for this row
   dropdown?: Array<{
     icon?: string;
     label: string;

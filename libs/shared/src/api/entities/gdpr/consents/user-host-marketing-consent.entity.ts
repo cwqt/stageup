@@ -39,7 +39,7 @@ export class UserHostMarketingConsent extends Consent<'host_marketing'> implemen
   toFull(): Required<IUserHostMarketingConsent> {
     return {
       ...super.toConsent(),
-      host: this.host.toStub(),
+      host: { ...this.host.toStub(), email_address: this.host.email_address },
       user: this.user.toStub(),
       privacy_policy: this.privacy_policy,
       terms_and_conditions: this.terms_and_conditions,

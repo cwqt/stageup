@@ -1,3 +1,4 @@
+import { UserHostMarketingConsent } from './../../../../libs/shared/src/api/entities/gdpr/consents/user-host-marketing-consent.entity';
 import { ErrorHandler, getCheck } from '@backend/common/error';
 import { SUPPORTED_LOCALES } from '@backend/common/locales';
 import { BackendProviderMap } from '@backend/common/providers';
@@ -18,6 +19,9 @@ import {
 import { timestamp } from '@core/helpers';
 import {
   DtoUserPatronageSubscription,
+  ConsentOpt,
+  ConsentOpts,
+  ConsentableType,
   HTTP,
   IEnvelopedData,
   IFeed,
@@ -38,6 +42,7 @@ import {
 } from '@core/interfaces';
 import { boolean, enums, object, record, string } from 'superstruct';
 import AuthStrat from '../common/authorisation';
+import { Not } from 'typeorm';
 
 export default class MyselfController extends BaseController<BackendProviderMap> {
   readMyself(): IControllerEndpoint<IMyself> {
@@ -490,6 +495,57 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             .getOne()
         );
         if (follow) await Follow.delete({ _id: follow._id });
+      }
+    };
+  }
+
+  // Returns all of the current users opt-ins and opt outs for host marketing
+  readUserHostMarketingConsents(): IControllerEndpoint<any> {
+    return {
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        return await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
+          .where('consent.type = :type', { type: <ConsentableType>'host_marketing' })
+          .andWhere('consent.user__id = :uid', { uid: req.session.user._id })
+          .innerJoinAndSelect('consent.user', 'user')
+          .innerJoinAndSelect('consent.host', 'host')
+          .paginate(o => {
+            return {
+              ...o.toFull(),
+              email_address: o.host.email_address
+            };
+          });
+      }
+    };
+  }
+
+  // Returns all of the current users opt-ins and opt outs for host marketing
+  updateOptInStatus(): IControllerEndpoint<void> {
+    return {
+      validators: {
+        params: object({ hid: Validators.Fields.nuuid }),
+        body: object({
+          new_status: enums<ConsentOpt>(ConsentOpts)
+        })
+      },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        // Check host exists
+        await getCheck(
+          this.ORM.createQueryBuilder(Host, 'host').where('host._id = :hid', { hid: req.params.hid }).getOne()
+        );
+        // Check consent exists
+        const existingConsent = await getCheck(
+          this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
+            .where('consent.type = :type', { type: <ConsentableType>'host_marketing' })
+            .andWhere('consent.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('consent.host__id = :hid', { hid: req.params.hid })
+            .getOne()
+        );
+        // Update new status and save
+        // TODO: ADD DATE OF CONSENT?
+        existingConsent.opt_status = req.body.new_status;
+        await existingConsent.save();
       }
     };
   }

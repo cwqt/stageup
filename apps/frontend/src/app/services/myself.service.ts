@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  ConsentOpt,
   DtoAddPaymentMethod,
   DtoUserPatronageSubscription,
   HTTP,
@@ -196,5 +197,17 @@ export class MyselfService {
   //router.delete <void> ("/myself/unfollow-host/hid", Myself.deleteFollow());
   unfollowHost(hostId: string): Promise<void> {
     return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
+  }
+
+  // router.get <any> ("/myself/opt-ins", Myself.readUserHostMarketingConsents());
+  readUserHostMarketingConsents(query: IQueryParams): Promise<any> {
+    return this.http.get<any>(`/api/myself/opt-ins${querize(query)}`).toPromise();
+  }
+
+  // router.post <void> ("/myself/opt-ins", Myself.updateOptInStatus());
+  updateOptInStatus(hostId: string, newStatus: ConsentOpt): Promise<void> {
+    return this.http
+      .post<void>(`/api/myself/opt-ins/${hostId}`, { new_status: newStatus })
+      .toPromise();
   }
 }

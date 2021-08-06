@@ -167,28 +167,30 @@
           <td mat-cell *matCellDef="let element">
             <div class="ui-table--actions">
               <ng-container *ngFor="let action of table.config.actions">
-                <ui-button
-                  [popper]="dropdownMenu"
-                  [popperHideOnClickOutside]="true"
-                  [popperTrigger]="action.dropdown ? 'click' : 'none'"
-                  [popperPositionFixed]="true"
-                  [popperPreventOverflow]="false"
-                  [popperPlacement]="'bottom'"
-                  [kind]="action.kind || 'accent'"
-                  (click)="action.click(element.__data)"
-                >
-                  <ui-icon *ngIf="action.icon" class="mr-2">{{ action.icon }}</ui-icon>
-                  <span *ngIf="action.label">{{ action.label }}</span>
-                </ui-button>
+                <ng-container *ngIf="!action.hide(element.__data)">
+                  <ui-button
+                    [popper]="dropdownMenu"
+                    [popperHideOnClickOutside]="true"
+                    [popperTrigger]="action.dropdown ? 'click' : 'none'"
+                    [popperPositionFixed]="true"
+                    [popperPreventOverflow]="false"
+                    [popperPlacement]="'bottom'"
+                    [kind]="action.kind || 'accent'"
+                    (click)="action.click(element.__data)"
+                  >
+                    <ui-icon *ngIf="action.icon" class="mr-2">{{ action.icon }}</ui-icon>
+                    <span *ngIf="action.label">{{ action.label }}</span>
+                  </ui-button>
 
-                <popper-content #dropdownMenu>
-                  <div class="ui-table--dropdown">
-                    <ui-button (click)="action.click(element.__data)" *ngFor="let dropdown of action.dropdown">
-                      <ui-icon *ngIf="dropdown.icon">{{ dropdown.icon }}</ui-icon>
-                      <span *ngIf="dropdown.label">{{ dropdown.label }}</span>
-                    </ui-button>
-                  </div>
-                </popper-content>
+                  <popper-content #dropdownMenu>
+                    <div class="ui-table--dropdown">
+                      <ui-button (click)="action.click(element.__data)" *ngFor="let dropdown of action.dropdown">
+                        <ui-icon *ngIf="dropdown.icon">{{ dropdown.icon }}</ui-icon>
+                        <span *ngIf="dropdown.label">{{ dropdown.label }}</span>
+                      </ui-button>
+                    </div>
+                  </popper-content>
+                </ng-container>
               </ng-container>
             </div>
           </td>
