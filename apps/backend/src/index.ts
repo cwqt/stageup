@@ -1,30 +1,21 @@
-import { patchTypeORM, PG_MODELS, ProviderMap, Providers, Register } from '@core/api';
+import { patchTypeORM, Register, Consentable, HostAnalytics, PerformanceAnalytics } from '@core/api';
+import { timeout, timestamp } from '@core/helpers';
 import { Environment } from '@core/interfaces';
-import { Topic } from '@google-cloud/pubsub';
 import session from 'express-session';
+import { i18nProvider } from 'libs/shared/src/api/i18n';
 import path from 'path';
 import 'reflect-metadata';
+import { Container } from 'typedi';
 import Auth from './common/authorisation';
-import { log, stream } from './common/logger';
+import { Configuration } from './common/configuration.entity';
+import { SUPPORTED_LOCALES } from './common/locales';
+import { log as logger, stream } from './common/logger';
+import providers, { BackendProviderMap, PROVIDERS as token } from './common/providers';
 import Env from './env';
-import routes from './routes';
-
 import { QueueModule } from './modules/queue/queue.module';
 import { SSEModule } from './modules/sse/sse.module';
-import { Container } from 'typedi';
-import { i18nProvider } from 'libs/shared/src/api/i18n';
-
-export interface BackendProviderMap extends ProviderMap {
-  torm: InstanceType<typeof Providers.Postgres>;
-  mux: InstanceType<typeof Providers.Mux>;
-  redis: InstanceType<typeof Providers.Redis>;
-  store: InstanceType<typeof Providers.Store>;
-  stripe: InstanceType<typeof Providers.Stripe>;
-  blob: InstanceType<typeof Providers.Blob>;
-  tunnel?: InstanceType<typeof Providers.LocalTunnel>;
-  email: InstanceType<typeof Providers.Email>;
-  bus: InstanceType<typeof Providers.EventBus>;
-}
+import routes from './routes';
+import seeder from './seeder';
 
 export type BackendModules = {
   SSE: SSEModule;
@@ -33,71 +24,15 @@ export type BackendModules = {
 
 Register<BackendProviderMap>({
   name: 'Backend',
-  environment: Env.ENVIRONMENT,
   port: Env.BACKEND.PORT,
+  logging: { logger, stream },
   endpoint: Env.BACKEND.ENDPOINT,
-  logger: log,
-  stream: stream,
-  i18n: {
-    locales: ['en', 'nb', 'cy'],
-    path: path.join(__dirname, '/i18n')
-  },
+  providers: { providers, token },
+  environment: Env.ENVIRONMENT,
   authorisation: Auth.isSiteAdmin,
-  providers: {
-    mux: new Providers.Mux({
-      access_token: Env.MUX.ACCESS_TOKEN,
-      secret_key: Env.MUX.SECRET_KEY,
-      hook_signature: Env.MUX.HOOK_SIGNATURE
-    }),
-    torm: new Providers.Postgres(
-      {
-        host: Env.PG.HOST,
-        port: Env.PG.PORT,
-        username: Env.PG.USERNAME,
-        password: Env.PG.PASSWORD,
-        database: Env.PG.DATABASE,
-        // Re-sync in test, dev & staging - prod use migrations
-        synchronize: !Env.isEnv(Environment.Production)
-      },
-      PG_MODELS
-    ),
-    redis: new Providers.Redis({
-      host: Env.REDIS.HOST,
-      port: Env.REDIS.PORT
-    }),
-    store: new Providers.Store({
-      host: Env.STORE.HOST,
-      port: Env.STORE.PORT,
-      ttl: Env.STORE.TTL
-    }),
-    stripe: new Providers.Stripe({
-      public_key: Env.STRIPE.PUBLIC_KEY,
-      private_key: Env.STRIPE.PRIVATE_KEY,
-      hook_signature: Env.STRIPE.HOOK_SIGNATURE,
-      client_id: Env.STRIPE.CLIENT_ID
-    }),
-    email: new Providers.Email(
-      {
-        api_key: Env.EMAIL.API_KEY,
-        enabled: Env.EMAIL.ENABLED
-      },
-      log
-    ),
-    blob: new Providers.Blob({
-      s3_access_key_id: Env.AWS.S3_ACCESS_KEY_ID,
-      s3_access_secret_key: Env.AWS.S3_ACCESS_SECRET_KEY,
-      s3_bucket_name: Env.AWS.S3_BUCKET_NAME,
-      s3_url: Env.AWS.S3_URL,
-      s3_region: Env.AWS.S3_REGION
-    }),
-    bus: new Providers.EventBus({}, log),
-    // Use HTTP tunnelling in development for receiving webhooks
-    tunnel: Env.isEnv([Environment.Production, Environment.Staging])
-      ? null
-      : new Providers.LocalTunnel({
-          port: Env.LOCALTUNNEL.PORT,
-          domain: Env.LOCALTUNNEL.DOMAIN
-        })
+  i18n: {
+    locales: SUPPORTED_LOCALES,
+    path: path.join(__dirname, 'i18n')
   },
   options: {
     body_parser: {
@@ -109,7 +44,10 @@ Register<BackendProviderMap>({
       }
     }
   }
-})(async (app, providers, router) => {
+})(async (app, providers) => {
+  const configuration = (await Configuration.findOne({})) || new Configuration();
+  await configuration.setup();
+
   // Register session middleware
   app.use(
     session({
@@ -133,20 +71,30 @@ Register<BackendProviderMap>({
   // Register all the modules
   const Queue = await new QueueModule(
     { redis: { host: providers.redis.config.host, port: providers.redis.config.port } },
-    log
+    logger
   ).register(providers.bus, {
-    i18n,
+    i18n: i18n,
     email: providers.email,
     orm: providers.torm,
     stripe: providers.stripe,
-    bus: providers.bus
+    bus: providers.bus,
+    mux: providers.mux
   });
 
-  const SSE = await new SSEModule(log).register(providers.bus, {
+  const SSE = await new SSEModule(logger).register(providers.bus, {
     i18n: i18n,
     email: providers.email,
     orm: providers.torm
   });
+
+  // Run the seeder in staging, for branch & staging deploys
+  if (Env.isEnv(Environment.Staging) && configuration.is_seeded == false) {
+    await seeder({ torm: providers.torm, stripe: providers.stripe }).run();
+
+    // seeder will wipe config momentarily, but stored in memory & will be saved again
+    configuration.is_seeded = true;
+    await configuration.save();
+  }
 
   return routes({
     Queue: Queue.routes,

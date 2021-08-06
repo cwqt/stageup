@@ -1,3 +1,7 @@
+import { Upload } from '@mux/mux-node';
+import { Except } from 'type-fest';
+import { AssetTag, AssetType } from '../assets/asset.interface';
+
 export enum VideoAssetState {
   Created = 'video.asset.created',
   Ready = 'video.asset.ready',
@@ -73,10 +77,6 @@ export interface IMUXHookResponse<T = any> {
     webhook_id: number;
   }>;
 }
-
-import { Upload } from '@mux/mux-node';
-import { Except } from 'type-fest';
-import { AssetTag, AssetType } from '../common/asset.interface';
 
 export interface DtoCreateAsset {
   is_signed: boolean;

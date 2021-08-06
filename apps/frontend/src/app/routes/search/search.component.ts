@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import { IEnvelopedData, IHostStub, IPerformanceStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '../../app.interfaces';
-import { BaseAppService } from '../../services/app.service';
+import { AppService } from '../../services/app.service';
 import { SearchService } from '../../services/search.service';
 import { HelperService } from '../../services/helper.service';
 import { PerformanceBrochureComponent } from '../performance/performance-brochure/performance-brochure.component';
@@ -24,7 +24,7 @@ export class SearchComponent implements OnInit {
   searchQuery: string;
 
   constructor(
-    private baseAppService: BaseAppService,
+    private appService: AppService,
     private route: ActivatedRoute,
     private searchService: SearchService,
     public dialog: MatDialog,
@@ -32,7 +32,7 @@ export class SearchComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.baseAppService.componentInitialising(this.route);
+    await this.appService.componentInitialising(this.route);
 
     // Listen for change in Observable value for search box / url query param values
     this.searchService.$searchQuery.subscribe(v => {
@@ -41,12 +41,11 @@ export class SearchComponent implements OnInit {
     });
 
     // Check if when coming in by URL there is a searchQuery, then fan it to subscribers
-    this.searchQuery = this.baseAppService.getQueryParam('query');
+    this.searchQuery = this.appService.getQueryParam('query');
     if (this.searchQuery) this.searchService.$searchQuery.next(this.searchQuery);
   }
 
   async search(page: number, perPage: number, returnOnly?: 'hosts' | 'performances') {
-
     if (returnOnly == 'hosts') {
       cachize(this.searchService.search(this.searchQuery, page, perPage, 'hosts'), this.hosts, d => d.hosts);
     } else if (returnOnly == 'performances') {
@@ -80,7 +79,7 @@ export class SearchComponent implements OnInit {
   openDialogPerf(performance: IPerformanceStub): void {
     this.helperService.showDialog(
       this.dialog.open(PerformanceBrochureComponent, {
-        data: performance,
+        data: { performance_id: performance._id },
         width: '800px',
         position: { top: '5% ' }
       }),
@@ -89,7 +88,6 @@ export class SearchComponent implements OnInit {
   }
 
   openDialogHost(hostname) {
-    console.log(hostname);
-    this.baseAppService.navigateTo(`/@${hostname}`);
+    this.appService.navigateTo(`/@${hostname}`);
   }
 }

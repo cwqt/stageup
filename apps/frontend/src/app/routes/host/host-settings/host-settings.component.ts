@@ -10,7 +10,7 @@ import {
 } from '@core/interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
@@ -39,7 +39,7 @@ export class HostSettingsComponent implements OnInit {
     private myselfService: MyselfService,
     private hostService: HostService,
     private toastService: ToastService,
-    private baseAppService: BaseAppService
+    private appService: AppService
   ) {}
 
   ngOnInit(): void {
@@ -125,13 +125,47 @@ export class HostSettingsComponent implements OnInit {
               ]
             })
           }
+        }),
+        social_info: UiField.Container({
+          label: $localize`Social Media`,
+          fields: {
+            site_url: UiField.Text({
+              label: $localize`Website`,
+              icon: 'wikis',
+              width: 6
+            }),
+            instagram_url: UiField.Text({
+              label: $localize`Instagram`,
+              icon: 'logo--instagram',
+              width: 6
+            }),
+            facebook_url: UiField.Text({
+              label: $localize`Facebook`,
+              icon: 'logo--facebook',
+              width: 6
+            }),
+            twitter_url: UiField.Text({
+              label: $localize`Twitter`,
+              icon: 'logo--twitter',
+              width: 6
+            }),
+            linkedin_url: UiField.Text({
+              label: $localize`LinkedIn`,
+              icon: 'logo--linkedin',
+              width: 6
+            }),
+            pinterest_url: UiField.Text({
+              label: $localize`Pinterest`,
+              icon: 'logo--pinterest',
+              width: 6
+            })
+          }
         })
       },
       resolvers: {
         input: async () => {
           this.host = await this.hostService.readDetails(this.myself.host._id);
           const host = this.host;
-
           return {
             fields: {
               name: host.name,
@@ -144,11 +178,13 @@ export class HostSettingsComponent implements OnInit {
               hmrc_company_number: host.business_details?.hmrc_company_number,
               vat_number: host.business_details?.vat_number,
               business_type: host.business_details.business_type,
-              business_address: host.business_details?.business_address
+              business_address: host.business_details?.business_address,
+              social_info: host.social_info
             }
           };
         },
         output: async v => {
+          console.log(v);
           const res = await this.hostService.updateHost(this.host._id, {
             name: v.name,
             email_address: v.email_address,
@@ -162,12 +198,13 @@ export class HostSettingsComponent implements OnInit {
               business_address: v.business_address
             }),
             // turn nullish into undefined
-            social_info: Object.keys(this.host.social_info).reduce<any>(
-              (acc, curr) => ((acc[curr] = this.host.social_info[curr] || undefined), acc),
+            social_info: Object.keys(v.social_info).reduce<any>(
+              (acc, curr) => ((acc[curr] = v.social_info[curr] || undefined), acc),
               {}
             ),
             username: this.host.username
           });
+
           return res;
         }
       }
@@ -202,7 +239,7 @@ export class HostSettingsComponent implements OnInit {
                 )
               );
 
-            this.baseAppService.navigateTo('/settings');
+            this.appService.navigateTo('/settings');
             r.close();
           }
         })

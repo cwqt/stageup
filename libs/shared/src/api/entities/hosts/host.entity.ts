@@ -28,7 +28,7 @@ import { UserHostInfo } from './user-host-info.entity';
 import { Onboarding } from './onboarding.entity';
 import { timestamp, uuid } from '@core/helpers';
 import { ErrorHandler } from '../../errors';
-import { Invoice } from '../common/invoice.entity';
+import { Invoice } from '../finance/invoice.entity';
 import { PatronTier } from './patron-tier.entity';
 import { PatronSubscription } from '@core/api';
 
@@ -76,7 +76,10 @@ export class Host extends BaseEntity implements IHostPrivate {
       site_url: null,
       linkedin_url: null,
       facebook_url: null,
-      instagram_url: null
+      instagram_url: null,
+      twitter_url: null,
+      pinterest_url: null,
+      youtube_url: null
     };
   }
 
@@ -138,7 +141,8 @@ export class Host extends BaseEntity implements IHostPrivate {
     return {
       ...this.toFull(),
       email_address: this.email_address,
-      business_details: this.business_details
+      business_details: this.business_details,
+      social_info: this.social_info
     };
   }
 }

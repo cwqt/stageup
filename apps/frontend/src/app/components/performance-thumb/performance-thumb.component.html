@@ -1,5 +1,5 @@
 <div
-  class="h-64 rounded-lg overflow-hidden relative cursor-pointer shadow transform hover:scale-105 duration-200 hover:shadow-lg"
+  class="h-64 rounded-lg overflow-hidden relative cursor-pointer shadow transform hover:scale-105 duration-200 hover:shadow-lg thumbnail"
 >
   <!-- thumb footer -->
   <div class="h-52 relative">
@@ -13,10 +13,17 @@
         viewers
       </span>
     --></div>
-
+    <div (click)="$event.stopPropagation()" *ngIf="myself" class="absolute top-2 right-2 rounded p-1 like-background">
+      <app-like-performance
+        [userLiked]="userLiked"
+        [location]="'thumbnail'"
+        [performanceId]="performance._id"
+        (onLikeEvent)="setLikeValue($event)"
+      ></app-like-performance>
+    </div>
     <img
       class="w-full h-full object-cover"
-      [src]="performance.thumbnail || '/assets/performance-placeholder.jpeg'"
+      [src]="performance.thumbnail || thumbnail?.location || '/assets/performance-placeholder.jpeg'"
       alt=""
     />
   </div>
@@ -38,4 +45,3 @@
     alt=""
   />
 </div>
-

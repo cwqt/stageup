@@ -16,10 +16,8 @@ import {
   IAddress,
   IOnboardingStepMap,
   ISearchResponse,
-  IHostStub as IHostS,
   ITicket,
   ITicketStub as ITcktS,
-  IUserStub as IUserS,
   IHostStripeInfo,
   IPaymentIntentClientSecret as IPaymentICS,
   IHostInvoice,
@@ -41,9 +39,17 @@ import {
   DtoHostPatronageSubscription as HPatronSub,
   IRefund,
   IHostPrivate,
-  IAssetStub,
   AssetDto,
   IPerformance,
+  ILocale,
+  IFollower,
+  IFollowing,
+  IUserFollow,
+  DtoPerformanceAnalytics as DtoPerfAnalytics,
+  DtoHostAnalytics,
+  ConsentableType as CType,
+  IConsentable,
+  IDynamicFrontendEnvironment as IDynamicFeEnv,
 } from '@core/interfaces';
 
 import MyselfController from './controllers/myself.controller';
@@ -52,14 +58,16 @@ import HostController from './controllers/host.controller';
 import PerfController from './controllers/performance.controller';
 import MUXController from './controllers/mux.controller';
 import AuthController from './controllers/auth.controller';
-import MiscController from './controllers/misc.controller';
+import UtilityController from './controllers/utils.controller';
 import AdminController from './controllers/admin.controller';
 import StripeController from './controllers/stripe.controller';
 import SearchController from './controllers/search.controller';
+import GdprController from './controllers/gdpr.controller';
 import PatronageController from './controllers/patronage.controller';
 
-import { BackendModules, BackendProviderMap } from '.';
+import { BackendModules } from '.';
 import { Module } from './modules';
+import { BackendProviderMap } from './common/providers';
 
 type ModuleRoutes<T extends {[i:string]: Partial<Pick<Module, "routes">>}> = {[index in keyof T]:T[index]["routes"]};
 
@@ -85,6 +93,9 @@ router.post     <IPaymentMethod>        ("/myself/payment-methods",             
 router.get      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.readPaymentMethod());
 router.delete   <void>                  ("/myself/payment-methods/:pmid",             Myself.deletePaymentMethod());
 router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",             Myself.updatePaymentMethod());
+router.put      <ILocale>               ("/myself/locale",                            Myself.updateLocale());
+router.post     <IFollowing>            ("/myself/follow-host/:hid",                  Myself.addFollow());
+router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow());
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providers, middlewares);
@@ -102,15 +113,17 @@ router.get      <IAddress[]>            ("/users/:uid/addresses",               
 router.post     <IAddress>              ("/users/:uid/addresses",                     Users.createAddress());
 router.put      <IAddress>              ("/users/:uid/addresses/:aid",                Users.updateAddress());
 router.delete   <void>                  ("/users/:uid/addresses/:aid",                Users.deleteAddress());
+router.get      <IE<IFollowing[]>>      ("/users/:uid/following",                     Users.readUserFollows());
 
 // HOSTS --------------------------------------------------------------------------------------------------------------
 const Hosts = new HostController(providers, middlewares);
 router.post     <IHost>                 ("/hosts",                                    Hosts.createHost());
-router.get      <IHost>                 ("/hosts/:hid",                               Hosts.readHost())
+router.get      <IE<IHost, IUserFollow>>("/hosts/:hid",                               Hosts.readHost())
 router.delete   <IDelHostAssert | void> ("/hosts/:hid",                               Hosts.deleteHost());
 router.put      <IHostPrivate>          ("/hosts/:hid",                               Hosts.updateHost());
 router.get      <IHostPrivate>          ("/hosts/:hid/details",                       Hosts.readDetails());
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances());
+// router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 router.put      <string>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar());
 router.put      <string>                ("/hosts/:hid/banner",                        Hosts.changeBanner());
 router.get      <IE<IUHInfo[]>>         ("/hosts/:hid/members",                       Hosts.readMembers());
@@ -123,7 +136,6 @@ router.get      <IOnboardingStepMap>    ("/hosts/:hid/onboarding/steps",        
 router.get      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",              Hosts.readOnboardingProcessStep());
 router.put      <IOnboardingStep>       ("/hosts/:hid/onboarding/:step",              Hosts.updateOnboardingProcessStep());
 router.redirect                         ("/hosts/:hid/invites/:iid",                  Hosts.handleHostInvite());
-// router.post     <void>                  ("/hosts/:hid/performances/:pid/provision",   Hosts.provisionPerformanceAccessTokens());
 router.post     <string>                ("/hosts/:hid/stripe/connect",                Hosts.connectStripe());
 router.get      <IHostStripeInfo>       ("/hosts/:hid/stripe/info",                   Hosts.readStripeInfo());
 router.get      <IE<IHostInvoiceStub[]>>("/hosts/:hid/invoices",                      Hosts.readInvoices());
@@ -133,6 +145,9 @@ router.post     <void>                  ('/hosts/:hid/invoices/process-refunds',
 router.post     <void>                  ("/hosts/:hid/invoices/export-csv",           Hosts.exportInvoicesToCSV());
 router.post     <void>                  ("/hosts/:hid/invoices/export-pdf",           Hosts.exportInvoicesToPDF());
 router.get      <IE<HPatronSub[]>>      ("/hosts/:hid/patronage/subscribers",         Hosts.readPatronageSubscribers());
+router.get      <IE<IFollower[]>>       ("/hosts/:hid/followers",                     Hosts.readHostFollowers());
+router.get      <DtoHostAnalytics>      ("/hosts/:hid/analytics",                     Hosts.readHostAnalytics());
+router.get      <IE<DtoPerfAnalytics[]>>("/hosts/:hid/analytics/performances",        Hosts.readPerformancesAnalytics());
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
 const Patronage = new PatronageController(providers, middlewares);
@@ -154,6 +169,7 @@ router.put      <IPerformance>          ("/performances/:pid/publicity-period", 
 router.post     <AssetDto | void>       ("/performances/:pid/thumbnails",             Perfs.changeThumbnails());
 router.post     <ICreateAssetRes | void>("/performances/:pid/assets",                 Perfs.createAsset());
 router.delete   <void>                  ("/performances/:pid/assets/:aid",            Perfs.deleteAsset());
+router.post     <void>                  ("/performances/:pid/assets/:aid/views",      Perfs.registerView());
 router.get      <ISignedToken>          ("/performances/:pid/assets/:aid/token",      Perfs.generateSignedToken());
 router.get      <ICreateAssetRes>       ("/performances/:pid/assets/:aid/signed-url", Perfs.readVideoAssetSignedUrl());
 router.get      <IPHInfo>               ("/performances/:pid/host-info",              Perfs.readPerformanceHostInfo());
@@ -165,6 +181,12 @@ router.get      <ITicket>               ("/performances/:pid/tickets/:tid",     
 router.put      <ITicket>               ("/performances/:pid/tickets/:tid",           Perfs.updateTicket());
 router.delete   <void>                  ("/performances/:pid/tickets/:tid",           Perfs.deleteTicket());
 router.post     <IPaymentICS>           ("/tickets/:tid/payment-intent",              Perfs.createPaymentIntent());
+router.post     <void>                  ("/performances/:pid/rate",                   Perfs.setRating());
+router.delete   <void>                  ("/performances/:pid/rate",                   Perfs.deleteRating());
+router.post     <void>                  ("/performances/:pid/toggle-like",            Perfs.toggleLike());
+
+// SSE ----------------------------------------------------------------------------------------------------------------
+router.get                               ("/sse/assets/:aid",                         SSE.performanceStateSSE);
 
 // ADMIN  -------------------------------------------------------------------------------------------------------------
 const Admin = new AdminController(providers, middlewares);
@@ -184,25 +206,25 @@ router.redirect                          ("/stripe/oauth",                      
 const Auth =  new AuthController(providers, middlewares)
 router.redirect                          ("/auth/verify-email",                       Auth.verifyUserEmail());
 
-// MISC ---------------------------------------------------------------------------------------------------------------
-const Misc = new MiscController(providers, middlewares);
-router.post     <void>                   ("/logs",                                    Misc.logFrontendMessage());
-router.get      <string>                 ("/ping",                                    Misc.ping());
-router.post     <void>                   ("/drop",                                    Misc.dropAllData());
-router.get      <IHost>                  ("/verify-host/:hid",                        Misc.verifyHost());
-router.post     <void>                   ("/accept-invite/:uid",                      Misc.acceptHostInvite());
-router.get      <void>                   ("/utils/send-test-email",                   Misc.sendTestEmail());
-router.get      <void>                   ("/utils/assets",                            Misc.readAssets());
-router.get      <void>                   ("/utils/assets/:aid/stream-state",          Misc.setPerformanceStreamState())
-
 // SEARCH ---------------------------------------------------------------------------------------------------------------
 const Search = new SearchController(providers, middlewares);
 router.get      <ISearchResponse>        ("/search",                                  Search.search());
 
-// SSE ----------------------------------------------------------------------------------------------------------------
-router.get                               ("/sse/assets/:aid",                         SSE.performanceStateSSE);
+// GDPR ---------------------------------------------------------------------------------------------------------------
+const Gdpr = new GdprController(providers, middlewares);
+router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument());
 
-// JOB QUEUE ----------------------------------------------------------------------------------------------------------
-router.use                               ("/admin/queue",                             Queue.jobQueueUi.handler);
+// MISC ---------------------------------------------------------------------------------------------------------------
+const Utils = new UtilityController(providers, middlewares);
+router.get      <IDynamicFeEnv>          ("/utils/frontend-environment",              Utils.readFrontendEnvironment)
+router.post     <void>                   ("/utils/logs",                              Utils.logFrontendMessage());
+router.get      <string>                 ("/utils/ping",                              Utils.ping());
+router.get      <any>                    ("/utils/seed",                              Utils.seed);
+router.post     <void>                   ("/utils/drop",                              Utils.dropAllData());
+router.get      <any>                    ("/utils/stats",                             Utils.stats());
+router.get      <void>                   ("/utils/send-test-email",                   Utils.sendTestEmail());
+router.get      <void>                   ("/utils/assets",                            Utils.readAssets());
+router.get      <void>                   ("/utils/assets/:aid/stream-state",          Utils.setPerformanceStreamState())
+router.use                               ("/utils/queue-ui",                          Queue.jobQueueUi.handler);
 
 }

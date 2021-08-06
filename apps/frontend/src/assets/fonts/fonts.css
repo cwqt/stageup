@@ -1,10 +1,11 @@
 @font-face {
-  font-family: 'icomoon';
-  src: url('./icomoon.eot');
-  src: url('./icomoon.eot?#iefix') format('embedded-opentype'), url('./icomoon.woff') format('woff'),
-    url('./icomoon.ttf') format('truetype'), url('./icomoon.svg#my-font') format('svg');
+  font-family: 'ibm-icon';
+  src: url('./ibm-icon.eot?p7kwwb');
+  src: url('./ibm-icon.eot?p7kwwb#iefix') format('embedded-opentype'), url('./ibm-icon.ttf?p7kwwb') format('truetype'),
+    url('./ibm-icon.woff?p7kwwb') format('woff'), url('./ibm-icon.svg?p7kwwb#ibm-icon') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 @font-face {

@@ -8,8 +8,10 @@
     [class.form-field--is-small]="!data.options.label"
     [class.form-field--is-errored]="showError"
     [class.form-field--is-disabled]="control.disabled"
+    [class.form-field--has-icon]="data.options.icon"
     *ngIf="data.type == 'number' || data.type == 'text' || data.type == 'password' || data.type == 'phone'"
   >
+    <ui-icon *ngIf="data.options.icon" class="" size="l">{{ data.options.icon }}</ui-icon>
     <div class="form-field__control">
       <label *ngIf="data.options.label" class="form-field__label"
         >{{ data.options.label }}
@@ -176,8 +178,8 @@
   </mat-form-field>
 
   <!-- Select with search -->
-  <mat-form-field *ngIf="data.type == 'select'" appearance="fill">
-    <mat-label>{{ data.options.label }}</mat-label>
+  <mat-form-field *ngIf="data.type == 'select'" appearance="fill" [class.form-field--no-label]="!data.options.label">
+    <mat-label *ngIf="data.options.label">{{ data.options.label }}</mat-label>
     <mat-select
       #singleSelect
       [disabled]="control.disabled"

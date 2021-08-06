@@ -16,13 +16,11 @@ import {
 import { Except } from 'type-fest';
 
 import { Host } from '../hosts/host.entity';
-import { Performance } from '../performances/performance.entity';
 import { Person } from './person.entity';
 import { ContactInfo } from './contact-info.entity';
-import { Invoice } from '../common/invoice.entity';
 import { PatronSubscription } from './patron-subscription.entity';
-import { PaymentMethod } from './payment-method.entity';
-import { SupportedLocale } from '../../event-bus/contracts';
+import { PaymentMethod } from '../finance/payment-method.entity';
+import { Invoice } from '../finance/invoice.entity';
 
 @Entity()
 export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'pw_hash'> {
@@ -102,7 +100,8 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
       is_verified: this.is_verified,
       is_admin: this.is_admin,
       cover_image: this.cover_image,
-      bio: this.bio
+      bio: this.bio,
+      locale: this.locale
       // Purchases: []
     };
   }

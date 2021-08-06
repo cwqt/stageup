@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-
-type ShareLocations = 'facebook' | 'twitter' | 'linkedin';
-
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { ShareLocations } from '@core/interfaces';
+import { AppService } from '@frontend/services/app.service';
+//#endregion
 @Component({
   selector: 'app-social-sharing',
   templateUrl: './social-sharing.component.html',
@@ -9,6 +9,7 @@ type ShareLocations = 'facebook' | 'twitter' | 'linkedin';
 })
 export class SocialSharingComponent implements OnInit {
   @Input() url: string;
+  @Output() onLinkClick = new EventEmitter();
 
   icons: { [index in ShareLocations]: string } = {
     facebook: 'logo--facebook',
@@ -19,40 +20,36 @@ export class SocialSharingComponent implements OnInit {
   callbacks: { [index in ShareLocations]: () => void };
   socials: ShareLocations[];
 
-  constructor() {}
+  constructor(private appService: AppService) {}
 
   ngOnInit(): void {
     this.socials = Object.keys(this.icons) as any;
 
-    // https://jonsuh.com/blog/social-share-links/
     this.callbacks = {
-      facebook: () => this.windowPopup(`https://www.facebook.com/sharer/sharer.php?u=${encodeURI(this.url)}`),
-      twitter: () => this.windowPopup(`https://twitter.com/intent/tweet?url=${encodeURI(this.url)}`),
-      // https://stackoverflow.com/a/61583095
+      facebook: () =>
+        this.appService.navigateToNewTab(`/redirect`, {
+          queryParams: {
+            redirect_to: `https://www.facebook.com/sharer/sharer.php?u=${encodeURI(this.url)}`,
+            social_type: ShareLocations.Facebook
+          }
+        }),
+      twitter: () =>
+        this.appService.navigateToNewTab(`/redirect`, {
+          queryParams: {
+            redirect_to: `https://twitter.com/intent/tweet?url=${encodeURI(this.url)}`,
+            social_type: ShareLocations.Twitter
+          }
+        }),
       linkedin: () =>
-        this.windowPopup(
-          `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURI(this.url).replace('http', 'https')}`
-        )
+        this.appService.navigateToNewTab(`/redirect`, {
+          queryParams: {
+            redirect_to: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURI(this.url).replace(
+              'http',
+              'https'
+            )}`,
+            social_type: ShareLocations.Linkedin
+          }
+        })
     };
-  }
-
-  windowPopup(url, width = 300, height = 500) {
-    // Calculate the position of the popup so
-    // it’s centered on the screen.
-    var left = screen.width / 2 - width / 2,
-      top = screen.height / 2 - height / 2;
-
-    window.open(
-      url,
-      '',
-      'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=' +
-        width +
-        ',height=' +
-        height +
-        ',top=' +
-        top +
-        ',left=' +
-        left
-    );
   }
 }

@@ -101,19 +101,17 @@ const drop = async <T>(providerMap: ProviderMap<T>) => {
 };
 
 export const DataClient = { connect, disconnect, drop };
-export namespace Providers {
-  export const SSE = SSEProvider;
-  export const EventBus = EventBusProvider;
-  export const Email = EmailProvider;
-  export const i18n = i18nProvider;
-  export const Blob = BlobProvider;
-
-  // Non generic providers
-  export const Postgres = PostgresProvider;
-  export const Mux = MuxProvider;
-  export const Redis = RedisProvider;
-  export const Influx = InfluxProvider;
-  export const LocalTunnel = LocalTunnelProvider;
-  export const Store = StoreProvider;
-  export const Stripe = StripeProvider;
-}
+export const Providers = {
+  SSE: SSEProvider,
+  EventBus: EventBusProvider,
+  Email: EmailProvider,
+  i18n: i18nProvider,
+  Blob: BlobProvider,
+  Postgres: PostgresProvider,
+  Mux: MuxProvider,
+  Redis: RedisProvider,
+  Influx: InfluxProvider,
+  LocalTunnel: LocalTunnelProvider,
+  Store: StoreProvider,
+  Stripe: StripeProvider
+};

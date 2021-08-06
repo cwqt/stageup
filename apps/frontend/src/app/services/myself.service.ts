@@ -6,8 +6,11 @@ import {
   DtoUserPatronageSubscription,
   HTTP,
   IEnvelopedData,
+  IFollowing,
   IHost,
   IHostStub,
+  ILike,
+  ILocale,
   IMyself,
   IPasswordConfirmationResponse,
   IPaymentMethod,
@@ -15,7 +18,8 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
-  IUserInvoice
+  IUserInvoice,
+  NUUID
 } from '@core/interfaces';
 import { UserHostInfo } from '@core/api';
 import { IQueryParams, querize } from '@core/helpers';
@@ -29,8 +33,18 @@ import { LocalStorageKey } from '../app.interfaces';
 export class MyselfService {
   $myself: BehaviorSubject<IMyself | null>;
 
+  // cookies pop-up for logged-in/out users
+  $acceptedCookiesPolicy: BehaviorSubject<boolean | undefined>;
+
   constructor(private http: HttpClient, private router: Router) {
     this.$myself = new BehaviorSubject(this.hydrate());
+
+    // populate subject with value, if one set, else undefined
+    this.$acceptedCookiesPolicy = new BehaviorSubject(
+      localStorage.getItem(LocalStorageKey.CookiesPolicyAcceptance)
+        ? localStorage.getItem(LocalStorageKey.CookiesPolicyAcceptance) == 'true'
+        : undefined
+    );
   }
 
   store(myself: IMyself | null, rehydrate?: boolean) {
@@ -77,6 +91,19 @@ export class MyselfService {
       .toPromise();
   }
 
+  getCookiesConsent() {
+    return this.$acceptedCookiesPolicy.value;
+  }
+
+  setCookiesConsent(doesAccept: boolean | null) {
+    if (doesAccept == null) {
+      localStorage.removeItem(LocalStorageKey.CookiesPolicyAcceptance);
+    } else {
+      this.$acceptedCookiesPolicy.next(doesAccept);
+      localStorage.setItem(LocalStorageKey.CookiesPolicyAcceptance, doesAccept.toString());
+    }
+  }
+
   setUser(user: IMyself['user']) {
     this.store({ ...this.$myself.value, user: user }, true);
   }
@@ -89,9 +116,17 @@ export class MyselfService {
     this.store({ ...this.$myself.value, host_info: userHostInfo });
   }
 
+  setFollowing(following: IFollowing[]) {
+    this.store({ ...this.$myself.value, following }, true);
+  }
+
   // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
   updatePreferredLandingPage(data: Pick<UserHostInfo, 'prefers_dashboard_landing'>): Promise<IMyself['host_info']> {
     return this.http.put<IMyself['host_info']>('/api/myself/landing-page', data).toPromise();
+  }
+
+  updateLocale(body: ILocale): Promise<ILocale> {
+    return this.http.put<ILocale>('/api/myself/locale', body).toPromise();
   }
 
   // router.get <IE<IPerfS[]>> ("/myself/purchased-performances", Myself.readMyPurchasedPerformances());
@@ -151,5 +186,15 @@ export class MyselfService {
     return this.http
       .post<IPasswordConfirmationResponse>(`/api/myself/confirm-password`, { password: password })
       .toPromise();
+  }
+
+  //router.post <IFollowing> ("/myself/follow-host/:hid", Myself.addFollow());
+  followHost(hostId: string): Promise<IFollowing> {
+    return this.http.post<IFollowing>(`/api/myself/follow-host/${hostId}`, {}).toPromise();
+  }
+
+  //router.delete <void> ("/myself/unfollow-host/hid", Myself.deleteFollow());
+  unfollowHost(hostId: string): Promise<void> {
+    return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
   }
 }

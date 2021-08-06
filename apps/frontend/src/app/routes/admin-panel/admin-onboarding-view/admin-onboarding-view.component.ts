@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostOnboarding } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
+import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 
 @Component({
@@ -18,15 +18,15 @@ export class AdminOnboardingViewComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { route: ActivatedRoute },
     private hostService: HostService,
-    private baseAppService: BaseAppService
+    private appService: AppService
   ) {}
 
   async ngOnInit() {
     // https://github.com/angular/components/issues/13803
-    await this.baseAppService.componentInitialising(this.data.route);
+    await this.appService.componentInitialising(this.data.route);
 
     return cachize(
-      this.hostService.readOnboardingProcessStatus(this.baseAppService.getParam(RouteParam.HostId)),
+      this.hostService.readOnboardingProcessStatus(this.appService.getParam(RouteParam.HostId)),
       this.onboarding
     );
   }

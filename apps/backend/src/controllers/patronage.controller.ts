@@ -1,13 +1,12 @@
 import idFinderStrategies from '@backend/common/authorisation/id-finder-strategies';
-import { ErrorHandler } from '@backend/common/error';
+import { getCheck } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
   BaseController,
-  getCheck,
   Host,
   IControllerEndpoint,
   PatronSubscription,
   PaymentMethod,
-  Ticket,
   transact,
   User,
   Validators
@@ -17,16 +16,13 @@ import {
   DtoCreatePaymentIntent,
   DtoUpdatePatronTier,
   HostPermission,
-  HTTP,
   IHostPatronTier,
   IPatronSubscription,
   IPatronTier,
   IStripeChargePassthrough,
-  pick,
   PurchaseableType
 } from '@core/interfaces';
 import { PatronTier } from 'libs/shared/src/api/entities/hosts/patron-tier.entity';
-import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 
 // Stripe Connected Subscriptions --------------------------------------------------------------

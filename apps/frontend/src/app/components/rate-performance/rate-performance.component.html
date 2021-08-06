@@ -1,0 +1,7 @@
+<div class="rate-container rounded">
+  <button *ngFor="let i of starCount | times" (click)="onClick(i + 1)">
+    <mat-icon>
+      {{ loadIcon(i) }}
+    </mat-icon>
+  </button>
+</div>

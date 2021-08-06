@@ -10,7 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es2016",
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
@@ -19,11 +19,11 @@
     "typeRoots": ["node_modules/@types"],
     "baseUrl": ".",
     "paths": {
-      "@core/interfaces": ["libs/interfaces/src/index.ts"],
-      "@core/helpers": ["libs/shared/src/helpers/index.ts"],
+      "@backend/*": ["apps/backend/src/*"],
       "@core/api": ["libs/shared/src/api/index.ts"],
-      "@frontend/*": ["apps/frontend/src/app/*"],
-      "@backend/*": ["apps/backend/src/*"]
+      "@core/helpers": ["libs/shared/src/helpers/index.ts"],
+      "@core/interfaces": ["libs/interfaces/src/index.ts"],
+      "@frontend/*": ["apps/frontend/src/app/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

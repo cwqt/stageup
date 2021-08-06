@@ -1,4 +1,3 @@
-import { IClaim } from '../common/claim.interface';
 import { CurrencyCode } from '../common/currency.interface';
 
 export enum TicketType {
@@ -12,6 +11,9 @@ export enum TicketFees {
   Absorb = 'absorb'
 }
 
+export const DonoPegs = ['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'] as const;
+export type DonoPeg = typeof DonoPegs[number];
+
 export enum DonoPegWeights {
   Lowest = 2.5,
   Low = 5.0,
@@ -19,8 +21,6 @@ export enum DonoPegWeights {
   High = 15,
   Highest = 20
 }
-
-export type DonoPeg = 'lowest' | 'low' | 'medium' | 'high' | 'highest' | 'allow_any';
 
 export const DONO_PEG_WEIGHT_MAPPING: { [index in DonoPeg]: DonoPegWeights } = {
   lowest: DonoPegWeights.Lowest,

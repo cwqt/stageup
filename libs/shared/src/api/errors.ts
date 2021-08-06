@@ -28,7 +28,7 @@ export const handleError = (
 ) => {
   const statusCode: HTTP = error instanceof ErrorHandler ? error.statusCode : HTTP.ServerError;
 
-  console.log(error['errors']);
+  if (statusCode !== HTTP.NotFound) console.log(error);
 
   const response: IErrorResponse =
     error instanceof ErrorHandler && i18n
@@ -49,14 +49,13 @@ export const handleError = (
         };
 
   log.error(`(${statusCode}) ${colors.bold(error.message)}`);
-  if (response.errors) log.error(JSON.stringify(response.errors, null, 2));
-  if (statusCode !== HTTP.NotFound) console.log(error.stack);
+  if (response.errors?.length > 0) log.error(JSON.stringify(response.errors, null, 2));
 
   res.status(statusCode).json(response);
 };
 
 export const global404Handler = (logger, i18n?) => (req: Request, res: Response, next: NextFunction) =>
-  handleError(req, res, next, new ErrorHandler(HTTP.NotFound, '@@error.not_such_route'), logger, i18n);
+  handleError(req, res, next, new ErrorHandler(HTTP.NotFound, '@@error.no_such_route'), logger, i18n);
 
 export const globalErrorHandler = (logger, i18n?) => (err: any, req: Request, res: Response, next: NextFunction) => {
   handleError(req, res, next, err, logger, i18n);

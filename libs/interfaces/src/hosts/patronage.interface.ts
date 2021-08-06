@@ -1,6 +1,6 @@
 import { CurrencyCode } from '../common/currency.interface';
 import { NUUID } from '../common/fp.interface';
-import { DtoInvoice, IInvoice } from '../common/invoice.interface';
+import { DtoInvoice } from '../finance/invoice.interface';
 import { RichText } from '../performances/performance.interface';
 import { IUserStub } from '../users/user.interface';
 

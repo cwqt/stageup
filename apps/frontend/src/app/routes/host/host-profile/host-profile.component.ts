@@ -2,10 +2,10 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
-import { IHost, IHostStub } from '@core/interfaces';
+import { IHost, IHostStub, IEnvelopedData, IUserFollow } from '@core/interfaces';
 import fd from 'form-data';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
-import { BaseAppService, RouteParam } from '../../../services/app.service';
+import { AppService, RouteParam } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
 import { MyselfService } from '../../../services/myself.service';
@@ -13,6 +13,9 @@ import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/
 import { HostProfileAboutComponent } from './host-profile-about/host-profile-about.component';
 import { HostProfileFeedComponent } from './host-profile-feed/host-profile-feed.component';
 import { HostProfilePatronageComponent } from './host-profile-patronage/host-profile-patronage.component';
+import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
+import { environment } from 'apps/frontend/src/environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-host-profile',
@@ -22,14 +25,18 @@ import { HostProfilePatronageComponent } from './host-profile-patronage/host-pro
 export class HostProfileComponent implements OnInit {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   @Input() hostUsername?: string;
-  host: ICacheable<IHost> = createICacheable();
+  host: ICacheable<IEnvelopedData<IHost, IUserFollow>> = createICacheable();
   isHostView: boolean;
   tabs: Array<{ label: string; route: string }>;
+  hostSharingUrl: SocialSharingComponent['url'];
+  currentRoutePath: string;
+  userFollowing: boolean;
+  myselfSubscription: Subscription;
 
   constructor(
     private myselfService: MyselfService,
-    private baseAppService: BaseAppService,
-    private route: ActivatedRoute,
+    private appService: AppService,
+    public route: ActivatedRoute,
     private hostService: HostService,
     private helperService: HelperService,
     public dialog: MatDialog
@@ -44,12 +51,16 @@ export class HostProfileComponent implements OnInit {
       { label: $localize`Merch`, route: null }
     ];
 
+    this.route.url.subscribe(url => {
+      this.currentRoutePath = '/dashboard/' + url[0].path.toString();
+    });
+
     // Change view of component depending on if on /dashboard/@user or /@user
     this.isHostView = this.route.snapshot.data['is_host_view'];
-    await this.baseAppService.componentInitialising(this.route);
+    await this.appService.componentInitialising(this.route);
 
     // If not passed through input, get from route param since this is probably on /@host_username
-    if (!this.hostUsername) this.hostUsername = this.baseAppService.getParam(RouteParam.HostId).split('@').pop();
+    if (!this.hostUsername) this.hostUsername = this.appService.getParam(RouteParam.HostId).split('@').pop();
 
     // Get the host by username & populate the ICacheable
     await cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
@@ -67,14 +78,16 @@ export class HostProfileComponent implements OnInit {
         }
       });
     }, 0);
+
+    this.userFollowing = this.host.data.__client_data.is_following;
   }
 
   onChildLoaded(component: HostProfileAboutComponent | HostProfileFeedComponent | HostProfilePatronageComponent) {
-    component.host = this.host.data;
+    component.host = this.host.data.data;
   }
 
   openTabLink(event: MatTabChangeEvent) {
-    this.baseAppService.navigateTo(
+    this.appService.navigateTo(
       `${this.isHostView ? '/dashboard' : ''}/@${this.hostUsername}/${this.tabs[event.index].route}`
     );
   }
@@ -83,13 +96,16 @@ export class HostProfileComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(ChangeImageComponent, {
         data: {
-          initialImage: this.host.data.avatar,
-          fileHandler: async (fd: FormData) => this.hostService.changeAvatar(this.host.data._id, fd)
+          initialImage: this.host.data.data.avatar,
+          fileHandler: async (fd: FormData) => this.hostService.changeAvatar(this.host.data.data._id, fd)
         }
       }),
       url => {
-        this.host.data.avatar = url;
-        this.myselfService.setHost({ ...this.myselfService.$myself.getValue().host, avatar: this.host.data.avatar });
+        this.host.data.data.avatar = url;
+        this.myselfService.setHost({
+          ...this.myselfService.$myself.getValue().host,
+          avatar: this.host.data.data.avatar
+        });
       }
     );
   }
@@ -98,22 +114,32 @@ export class HostProfileComponent implements OnInit {
     this.helperService.showDialog(
       this.dialog.open(ChangeImageComponent, {
         data: {
-          initialImage: this.host.data.banner,
-          fileHandler: async (fd: FormData) => this.hostService.changeBanner(this.host.data._id, fd)
+          initialImage: this.host.data.data.banner,
+          fileHandler: async (fd: FormData) => this.hostService.changeBanner(this.host.data.data._id, fd)
         }
       }),
       url => {
-        this.host.data.banner = url || '/assets/banner-placeholder.png';
-        this.myselfService.setHost({ ...this.myselfService.$myself.getValue().host, banner: this.host.data.banner });
+        this.host.data.data.banner = url || '/assets/banner-placeholder.png';
+        this.myselfService.setHost({
+          ...this.myselfService.$myself.getValue().host,
+          banner: this.host.data.data.banner
+        });
       }
     );
   }
 
   openSocialLink(link: string) {
-    window.open(this.host.data.social_info[link], '_blank');
+    window.open(this.host.data.data.social_info[link], '_blank');
   }
 
   originalOrder() {
     return 0;
+  }
+
+  followEvent(): void {
+    this.userFollowing
+      ? this.myselfService.unfollowHost(this.host.data.data._id)
+      : this.myselfService.followHost(this.host.data.data._id);
+    this.userFollowing = !this.userFollowing;
   }
 }

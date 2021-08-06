@@ -1,8 +1,10 @@
-import { ErrorHandler } from '@backend/common/error';
+import { ErrorHandler, getCheck } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
   BaseController,
-  getCheck,
+  Follow,
   Host,
+  HostAnalytics,
   HostInvitation,
   IControllerEndpoint,
   Invoice,
@@ -11,14 +13,21 @@ import {
   OnboardingReview,
   PatronSubscription,
   Performance,
+  PerformanceAnalytics,
+  Refund,
   User,
   UserHostInfo,
   Validators
 } from '@core/api';
 import { timestamp } from '@core/helpers';
 import {
+  Analytics,
+  AnalyticsTimePeriod,
+  AnalyticsTimePeriods,
   AssetType,
+  DtoHostAnalytics,
   DtoHostPatronageSubscription,
+  DtoPerformanceAnalytics,
   DtoUpdateHost,
   hasRequiredHostPermission,
   HostInviteState,
@@ -26,9 +35,11 @@ import {
   HostOnboardingStep,
   HostPermission,
   HTTP,
+  IBulkRefund,
   IDeleteHostAssertion,
   IDeleteHostReason,
   IEnvelopedData,
+  IFollower,
   IHost,
   IHostInvoice,
   IHostInvoiceStub,
@@ -40,15 +51,12 @@ import {
   IOnboardingStepMap,
   IPerformanceStub,
   IRefund,
+  IUserFollow,
   IUserHostInfo,
-  LiveStreamState,
-  PaymentStatus
+  LiveStreamState
 } from '@core/interfaces';
-import deepmerge from 'deepmerge';
-import { fields } from 'libs/shared/src/api/validate/fields.validators';
-import { array, boolean, coerce, enums, object, string, StructError } from 'superstruct';
+import { array, assign, boolean, coerce, enums, object, string, StructError } from 'superstruct';
 import { In } from 'typeorm';
-import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import IdFinderStrat from '../common/authorisation/id-finder-strategies';
 import Env from '../env';
@@ -72,7 +80,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         // Create host & add current user (creator) to it through transaction
         // & begin the onboarding process by running .setup()
-        return this.ORM.transaction(async txc => {
+        const host = await this.ORM.transaction(async txc => {
           const host = await txc.save(
             new Host({
               username: req.body.username,
@@ -85,13 +93,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
           await host.setup(user, txc);
           await host.addMember(user, HostPermission.Owner, txc);
 
-          return (await txc.save(host)).toFull();
+          return await txc.save(host);
         });
+
+        await this.providers.bus.publish('host.created', { host_id: host._id }, req.locale);
+        return host.toFull();
       }
     };
   }
 
-  readHost(): IControllerEndpoint<IHost> {
+  readHost(): IControllerEndpoint<IEnvelopedData<IHost, IUserFollow>> {
     return {
       authorisation: AuthStrat.none,
       controller: async req => {
@@ -106,7 +117,19 @@ export default class HostController extends BaseController<BackendProviderMap> {
           }
         );
 
-        return host.toFull();
+        // if req.session.user._id && userHasFollow then envelope.__client_data.is_following = true
+        const isFollowing =
+          req.session.user &&
+          (await this.ORM.createQueryBuilder(Follow, 'follow')
+            .where('follow.user__id = :uid', { uid: req.session.user._id })
+            .andWhere('follow.host__id = :hid', { hid: host._id })
+            .getOne());
+
+        const envelope = {
+          data: host.toFull(),
+          __client_data: { is_following: isFollowing ? true : false }
+        };
+        return envelope;
       }
     };
   }
@@ -133,6 +156,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
             line2: dto.business_details.business_address.line2 || null,
             state: dto.business_details.business_address.state || null
           }
+        };
+
+        host.social_info = {
+          site_url: dto.social_info.site_url,
+          facebook_url: dto.social_info.facebook_url,
+          instagram_url: dto.social_info.instagram_url,
+          twitter_url: dto.social_info.twitter_url,
+          pinterest_url: dto.social_info.pinterest_url,
+          linkedin_url: dto.social_info.linkedin_url,
+          youtube_url: dto.social_info.youtube_url
         };
 
         host.email_address = dto.email_address;
@@ -612,7 +645,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
             type: 'standard',
             email: host.email_address,
             country: host.business_details.business_address.country,
-            business_type: 'company', // FUTURE https://alacrityfoundationteam31.atlassian.net/browse/SU-892
+            business_type: host.business_details.business_type, // FUTURE https://alacrityfoundationteam31.atlassian.net/browse/SU-892
             business_profile: {
               name: host.username,
               url: host.social_info.site_url
@@ -690,7 +723,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
   // See: https://alacrityfoundationteam31.atlassian.net/browse/SU-883
   // provisionPerformanceAccessTokens(): IControllerEndpoint<void> {
   //   return {
-  //     validators: { body: object({ email_addresses: array(fields.email) }) },
+  //     validators: { body: object({ email_addresses: array(Validators.Fields.email) }) },
   //     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
   //     controller: async req => {
   //       const host = await getCheck(Host.findOne({ _id: req.params.hid }));
@@ -855,13 +888,16 @@ export default class HostController extends BaseController<BackendProviderMap> {
   processRefunds(): IControllerEndpoint<void> {
     return {
       validators: {
-        body: object({
-          invoice_ids: array(fields.nuuid)
-        })
+        body: Validators.Objects.IProcessRefunds
       },
       authorisation: AuthStrat.isMemberOfHost(),
       controller: async req => {
         const invoiceIds: string[] = req.body.invoice_ids;
+        let bulkRefundData: IBulkRefund = {
+          bulk_refund_reason: req.body.bulk_refund_reason,
+          bulk_refund_detail: req.body.bulk_refund_detail
+        };
+
         const invoices = await Invoice.find({
           where: {
             _id: In(invoiceIds),
@@ -871,45 +907,52 @@ export default class HostController extends BaseController<BackendProviderMap> {
           },
           relations: {
             host: true,
-            user: true
+            user: true,
+            refunds: {
+              invoice: true
+            }
           },
           select: {
-            host: { _id: true, stripe_account_id: true }
+            host: { _id: true, stripe_account_id: true },
+            refunds: true,
+            user: true
           }
         });
+
         // No invoices found for provided ids
         if (invoices.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
-        // Refund all invoices in parallel, & wait for them all to finish
+
+        // Create an entry in the refund table for bulk refunds where a request was not made
         await Promise.all(
-          // invoices.map evaluates to [Promise<pending>, Promise<pending>, ...]
           invoices.map(async invoice => {
-            if (invoice.status !== PaymentStatus.RefundRequested)
-              throw new ErrorHandler(HTTP.BadRequest, '@@refunds.refund_already_outstanding');
+            let refundPresent = invoice.refunds.find(refund => refund.invoice._id == invoice._id);
 
-            this.providers.stripe.connection.refunds.create(
-              {
-                payment_intent: invoice.stripe_payment_intent_id,
-                metadata: { __origin_url: Env.WEBHOOK_URL }
-              },
-              {
-                stripeAccount: invoice.host.stripe_account_id
-              }
-            );
-
-            return await this.providers.bus.publish(
-              'refund.initiated',
-              { invoice_id: invoice._id, user_id: invoice.user._id },
-              req.locale
-            );
+            if (refundPresent === undefined) {
+              await this.ORM.transaction(async txc => {
+                const refund = await new Refund(invoice, null, bulkRefundData);
+                refund.invoice = invoice;
+                await txc.save(refund);
+              });
+            }
           })
         );
+
+        if (invoiceIds.length > 1) {
+          return await this.providers.bus.publish('refund.bulk', { invoice_ids: invoiceIds }, req.locale);
+        } else {
+          return await this.providers.bus.publish(
+            'refund.initiated',
+            { invoice_id: invoices[0]._id, user_id: invoices[0].user._id },
+            req.locale
+          );
+        }
       }
     };
   }
 
   exportInvoicesToCSV(): IControllerEndpoint<void> {
     return {
-      validators: { body: object({ invoices: array(fields.nuuid) }) },
+      validators: { body: object({ invoices: array(Validators.Fields.nuuid) }) },
       authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
       controller: async req => {
         const h = await getCheck(Host.findOne({ _id: req.params.hid }));
@@ -960,6 +1003,81 @@ export default class HostController extends BaseController<BackendProviderMap> {
           })
           .withDeleted() // tickets & performances & patronages can be soft deleted
           .paginate(sub => sub.toDtoHostPatronageSubscription());
+      }
+    };
+  }
+
+  readHostFollowers(): IControllerEndpoint<IEnvelopedData<IFollower[]>> {
+    return {
+      validators: { params: object({ hid: string() }) },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        return await this.ORM.createQueryBuilder(Follow, 'follow')
+          .where('follow.host__id = :hid', { hid: req.params.hid })
+          .paginate(follow => follow.toFollower());
+      }
+    };
+  }
+
+  readHostAnalytics(): IControllerEndpoint<DtoHostAnalytics> {
+    return {
+      validators: {
+        query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
+      },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+
+        // Get all the recorded analytics chunks for this host
+        const chunks = await this.ORM.createQueryBuilder(HostAnalytics, 'host_analytics')
+          .where('host_analytics.host__id = :id', { id: req.params.hid })
+          .orderBy('host_analytics.period_ended_at', 'DESC')
+          .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
+          .getMany();
+
+        // Only a single host, this one!
+        return {
+          ...host.toStub(),
+          chunks: chunks.map(chunk => chunk.toDto())
+        };
+      }
+    };
+  }
+
+  readPerformancesAnalytics(): IControllerEndpoint<IEnvelopedData<DtoPerformanceAnalytics[]>> {
+    return {
+      validators: {
+        query: assign(
+          object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) }),
+          Validators.Objects.PaginationOptions(10)
+        )
+      },
+      authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+      controller: async req => {
+        // Get paginated list of performances, will then append analytics onto the stubs for DtoPerformanceAnalytics type
+        const performances = await this.ORM.createQueryBuilder(Performance, 'performance')
+          .innerJoinAndSelect('performance.host', 'host')
+          .where('host._id = :id', { id: req.params.hid })
+          .orderBy('performance.created_at', 'DESC')
+          .paginate(o => o.toStub());
+
+        const dtos: DtoPerformanceAnalytics[] = [];
+        for await (let performance of performances.data) {
+          // Get weekly aggregations sorted by period_end (when collected)
+          const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
+            .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
+            .orderBy('analytics.period_ended_at', 'DESC')
+            // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
+            .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
+            .getMany();
+
+          dtos.push({
+            ...performance,
+            chunks: chunks.map(chunk => chunk.toDto())
+          });
+        }
+
+        return { data: dtos, __paging_data: performances.__paging_data };
       }
     };
   }

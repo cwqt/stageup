@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BaseAppService } from '../../../services/app.service';
+import { AppService } from '../../../services/app.service';
 
 @Component({
   selector: 'app-verified',
@@ -10,11 +10,11 @@ import { BaseAppService } from '../../../services/app.service';
 export class VerifiedComponent implements OnInit {
   public state: string;
 
-  constructor(private route: ActivatedRoute, private baseAppService: BaseAppService) {}
+  constructor(private route: ActivatedRoute, private appService: AppService) {}
 
   async ngOnInit() {
-    await this.baseAppService.componentInitialising(this.route);
-    this.state = this.baseAppService.getQueryParam('state');
+    await this.appService.componentInitialising(this.route);
+    this.state = this.appService.getQueryParam('state');
   }
 
   gotoSupportForm() {

@@ -1,5 +1,6 @@
 import {
   BASE_AMOUNT_MAP,
+  BulkRefundReason,
   CardBrand,
   CurrencyCode,
   DonoPeg,
@@ -10,7 +11,7 @@ import {
   NUUID,
   ParsedRichText,
   Primitive,
-  RefundReason,
+  RefundRequestReason,
   RichText
 } from '@core/interfaces';
 import locale from 'express-locale';
@@ -33,6 +34,16 @@ export const timeout = (duration: number = 1000) => new Promise(resolve => setTi
  * @description Generate a unique identifier which is as long as a YouTube ID
  */
 export const uuid = () => nanoid(11) as NUUID;
+
+/**
+ * @description Return a random integer between min & max (inclusive)
+ */
+export const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+/**
+ * @description Turn a UNIX timestamp (in seconds) into a Date
+ */
+export const unix = (date: number): Date => new Date(date * 1000);
 
 /**
  * @description Join kv's and uri escape
@@ -58,6 +69,7 @@ export const isEnv = (currentEnv: Environment) => (desiredEnv: Environment | Env
  * @example
  * enum Test { hello = "world" }
  * enumToValues(Test) // ["world"]
+ * @see https://www.typescriptlang.org/play?ts=4.0.5#code/KYOwrgtgBAsgngUXNA3gWAFBSgCWAG3wHsAaTbAOQEMJhMBfTTAYyJAGcj9gA6YgcwAUAeQBGAK2DMALjwDWwOO0HwkkAJTqA3EwysOXXgMEAiALQWT23fs7c+RIWMkyeANyr4wwZauSatIA
  */
 export const enumToValues = <T = string>(enumme: any, numberEnum: boolean = false): T[] => {
   return Object.keys(enumme)
@@ -183,9 +195,12 @@ export const richtext = {
     (typeof text == 'string' ? richtext.parse(text) : text).ops.reduce((acc, curr) => ((acc += curr.insert), acc), '')
 };
 
-export const unix = (date: number): Date => new Date(date * 1000);
-
 export const i18n = {
+  /**
+   * @description Take a locale & return a formatted code like en-GB or nb-NO
+   */
+  code: (locale: ILocale): string => `${locale.language}-${locale.region}`,
+
   /**
    * @description Takes an amount (in smallest currency denomination) and a currency code, & returns a formatted string
    * like 1000 USD --> $10.00
@@ -232,15 +247,18 @@ export const pipes = {
 
     return pretty[brand];
   },
-  refundReason: (reason: RefundReason): string => {
-    const pretty: { [index in RefundReason]: string } = {
-      [RefundReason.Covid]: 'COVID-19',
-      [RefundReason.CancelledPostponed]: 'Event was cancelled/postponed',
-      [RefundReason.Duplicate]: 'Duplicate ticket/purchased twice',
-      [RefundReason.WrongTicket]: 'Wrong event purchased',
-      [RefundReason.Dissatisfied]: 'Dissatisfied with event',
-      [RefundReason.CannotAttend]: 'Unable to attend event',
-      [RefundReason.Other]: 'Other, please provide details below...'
+  refundReason: (reason: RefundRequestReason): string => {
+    const pretty: { [index in RefundRequestReason & BulkRefundReason]: string } = {
+      [RefundRequestReason.Covid]: 'COVID-19',
+      [RefundRequestReason.CancelledPostponed]: 'Event was cancelled/postponed',
+      [RefundRequestReason.Duplicate]: 'Duplicate ticket/purchased twice',
+      [RefundRequestReason.WrongTicket]: 'Wrong event purchased',
+      [RefundRequestReason.Dissatisfied]: 'Dissatisfied with event',
+      [RefundRequestReason.CannotAttend]: 'Unable to attend event',
+      [RefundRequestReason.Other]: 'Other, please provide details below...',
+      [BulkRefundReason.Cancelled]: 'Performance was cancelled',
+      [BulkRefundReason.DateMoved]: 'Performance was rescheduled/ postponed',
+      [BulkRefundReason.Overcharged]: 'Buyer was overcharged'
     };
 
     return pretty[reason];
@@ -250,4 +268,7 @@ export const pipes = {
 /**
  * @description Regexes for usage in validators in the front/back-end
  */
-export const regexes = { vat: /(GB)?(\d{12}|\d{9})/g };
+export const regexes = {
+  url: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})\/?/g,
+  vat: /(GB)?(\d{12}|\d{9})/g
+};

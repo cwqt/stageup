@@ -1,31 +1,22 @@
-import { ErrorHandler } from '@backend/common/error';
-import {
-  Address,
-  BaseController,
-  getCheck,
-  Host,
-  IControllerEndpoint,
-  PasswordReset,
-  User,
-  Validators
-} from '@core/api';
+import { ErrorHandler, getCheck } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
+import { Address, BaseController, Follow, Host, IControllerEndpoint, PasswordReset, User, Validators } from '@core/api';
 import {
   Environment,
   HostPermission,
   HTTP,
   IAddress,
   IEnvelopedData,
+  IFollowing,
   IHost,
   IMyself,
   IUser,
   IUserHostInfo,
-  IUserStub,
   pick
 } from '@core/interfaces';
-import { fields } from 'libs/shared/src/api/validate/fields.validators';
+
 import { object, string } from 'superstruct';
 import { EntityManager } from 'typeorm';
-import { BackendProviderMap } from '..';
 import AuthStrat from '../common/authorisation';
 import Env from '../env';
 
@@ -73,8 +64,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
         // Create a Stripe Customer, for purposes of managing cards on our Multi-Party platform
         // https://stripe.com/docs/connect/cloning-saved-payment-methods#storing-customers
         const customer = await this.providers.stripe.connection.customers.create({
-          email: req.body.email_address,
-          metadata: { __origin_url: Env.WEBHOOK_URL }
+          email: req.body.email_address
         });
 
         // Save the user through a transaction (creates ContactInfo & Person)
@@ -127,7 +117,7 @@ export default class UserController extends BaseController<BackendProviderMap> {
 
   readUserByUsername(): IControllerEndpoint<IUser> {
     return {
-      validators: { params: object({ username: fields.username }) },
+      validators: { params: object({ username: Validators.Fields.username }) },
       authorisation: AuthStrat.none,
       controller: async req => {
         const u = await getCheck(User.findOne({ username: req.params.username }));
@@ -335,6 +325,18 @@ export default class UserController extends BaseController<BackendProviderMap> {
         await user.save();
 
         this.providers.bus.publish('user.password_changed', { user_id: user._id }, req.locale);
+      }
+    };
+  }
+
+  readUserFollows(): IControllerEndpoint<IEnvelopedData<IFollowing[]>> {
+    return {
+      validators: { params: object({ uid: string() }) },
+      authorisation: AuthStrat.isLoggedIn,
+      controller: async req => {
+        return await this.ORM.createQueryBuilder(Follow, 'follow')
+          .where('follow.user__id = :uid', { uid: req.params.uid })
+          .paginate(follow => follow.toFollowing());
       }
     };
   }

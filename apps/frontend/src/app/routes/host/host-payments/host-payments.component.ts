@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IHost, IHostStripeInfo, IHostStub } from '@core/interfaces';
 import { StripeService } from 'ngx-stripe';
 import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
-import { BaseAppService } from '../../../services/app.service';
+import { AppService } from '../../../services/app.service';
 import { HostService } from '../../../services/host.service';
 import { ToastService } from '../../../services/toast.service';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
@@ -20,7 +20,7 @@ export class HostPaymentsComponent implements OnInit {
   host: IHost;
 
   constructor(
-    private baseAppService: BaseAppService,
+    private appService: AppService,
     private toastService: ToastService,
     private route: ActivatedRoute,
     private hostService: HostService
@@ -28,11 +28,11 @@ export class HostPaymentsComponent implements OnInit {
 
   async ngOnInit() {
     this.host = this.hostService.currentHostValue;
-    await this.baseAppService.componentInitialising(this.route);
+    await this.appService.componentInitialising(this.route);
 
     // Check for query param, coerce to boolean if exists
-    this.connectSuccess = this.baseAppService.getQueryParam('connect-success')
-      ? this.baseAppService.getQueryParam('connect-success') == 'true'
+    this.connectSuccess = this.appService.getQueryParam('connect-success')
+      ? this.appService.getQueryParam('connect-success') == 'true'
       : undefined;
 
     // Emit toast if QP with details of Stripe connect onboarding result

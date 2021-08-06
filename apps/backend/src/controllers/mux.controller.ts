@@ -1,3 +1,16 @@
+import { getCheck } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
+import {
+  Asset,
+  AssetGroup,
+  BaseArguments,
+  BaseController,
+  IControllerEndpoint,
+  LiveStreamAsset,
+  Performance,
+  VideoAsset
+} from '@core/api';
+import { timeout } from '@core/helpers';
 import {
   AssetOwnerType,
   AssetType,
@@ -8,26 +21,11 @@ import {
   PerformanceStatus,
   VideoAssetState
 } from '@core/interfaces';
-import {
-  Performance,
-  Asset,
-  BaseArguments,
-  BaseController,
-  getCheck,
-  IControllerEndpoint,
-  AssetGroup,
-  VideoAsset,
-  LiveStreamAsset
-} from '@core/api';
-import { timeout, timestamp, uuid } from '@core/helpers';
-import { LiveStream, Webhooks } from '@mux/mux-node';
+import { Asset as MuxAsset, LiveStream, Webhooks } from '@mux/mux-node';
 import { MD5 } from 'object-hash';
 import { RedisClient } from 'redis';
-import { BackendProviderMap } from '..';
 import { log } from '../common/logger';
 import Env from '../env';
-
-import { Asset as MuxAsset } from '@mux/mux-node';
 
 export default class MUXController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
@@ -154,7 +152,7 @@ export default class MUXController extends BaseController<BackendProviderMap> {
           const isValidHook = Webhooks.verifyHeader(
             (req as any).rawBody,
             req.headers['mux-signature'] as string,
-            Env.MUX.HOOK_SIGNATURE
+            Env.MUX.WEBHOOK_SIGNATURE
           );
 
           if (!isValidHook) return [false, {}, '@@error.invalid'];
@@ -166,6 +164,9 @@ export default class MUXController extends BaseController<BackendProviderMap> {
         return [true, {}];
       },
       controller: async req => {
+        // Only continue if this webhook was meant for us
+        if (Env.IS_LOCAL && req.headers['x-forwarded-host'] != Env.LOCALTUNNEL.DOMAIN) return;
+
         // Is a valid hook & we should handle it
         const data: IMUXHookResponse = req.body;
 

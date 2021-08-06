@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { BaseAppService } from '../../../services/app.service';
+import { AppService } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { IUiDialogOptions } from '../../../ui-lib/ui-lib.interfaces';
 
@@ -9,14 +9,11 @@ import { IUiDialogOptions } from '../../../ui-lib/ui-lib.interfaces';
   styleUrls: ['./host-landing.component.scss']
 })
 export class HostLandingComponent implements OnInit {
+  constructor(private appService: AppService, private helperService: HelperService) {}
 
-  constructor(private baseAppService:BaseAppService, private helperService:HelperService) { }
-
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 
   openHostRegister() {
-    this.baseAppService.navigateTo(`/host/register`);
+    this.appService.navigateTo(`/host/register`);
   }
 }

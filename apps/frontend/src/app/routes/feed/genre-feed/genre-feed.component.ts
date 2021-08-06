@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EnumFilterOperator, Genre, IEnvelopedData, IPerformanceStub, Filters } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
-import { BaseAppService, RouteParam } from '@frontend/services/app.service';
+import { AppService, RouteParam } from '@frontend/services/app.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class GenreFeedComponent implements OnInit {
   performances: ICacheable<IEnvelopedData<IPerformanceStub[]>> = createICacheable([]);
 
   constructor(
-    private appService: BaseAppService,
+    private appService: AppService,
     private route: ActivatedRoute,
     private performanceService: PerformanceService
   ) {}

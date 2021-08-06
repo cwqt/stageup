@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit, Inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { CreatePerformanceComponent } from './create-performance/create-performance.component';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -30,11 +30,12 @@ export class HostPerformancesComponent implements OnInit {
   // displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private performanceService: PerformanceService,
     private hostService: HostService,
     private helperService: HelperService,
     private dialog: MatDialog,
-    private appService: BaseAppService
+    private appService: AppService
   ) {}
 
   async ngOnInit() {
@@ -53,7 +54,7 @@ export class HostPerformancesComponent implements OnInit {
         },
         {
           label: $localize`Created At`,
-          accessor: p => i18n.date(unix(p.created_at), environment.locale)
+          accessor: p => i18n.date(unix(p.created_at), this.locale)
         },
         {
           label: $localize`Status`,

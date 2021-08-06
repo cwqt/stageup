@@ -1,11 +1,3 @@
-import { environment } from '../environments/environment';
-
-import countries from 'i18n-iso-countries';
-// No cy support for this library, but I have opened a PR with its addition
-// https://github.com/michaelwittig/node-i18n-iso-countries/pull/246
-const locale = environment.locale == 'cy' ? 'en' : environment.locale;
-countries.registerLocale(require(`i18n-iso-countries/langs/${locale}.json`));
-
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -28,6 +20,23 @@ import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
+
+// https://github.com/scttcper/ngx-chartjs
+import { ChartjsModule } from '@ctrl/ngx-chartjs';
+import {
+  LineController,
+  LineElement,
+  PointElement,
+  Chart,
+  CategoryScale,
+  LinearScale,
+  Filler,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+// What you register will depend on what chart you are using and features used.
+Chart.register(LineController, LineElement, Filler, PointElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 // Pipes ----------------------------------------------------------------------------------------------------------------
 import { OnboardingStatePipe } from './_pipes/onboarding-state.pipe';
@@ -60,7 +69,6 @@ import { VerifiedComponent } from './components/pages/verified/verified.componen
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
 import { HeaderBarComponent } from './components/app/header-bar/header-bar.component';
-import { ProfileComponent } from './routes/profile/profile.component';
 import { FooterComponent } from './components/app/footer/footer.component';
 import { PageComponent } from './components/app/page/page.component';
 import { SidebarComponent } from './components/app/sidebar/sidebar.component';
@@ -122,7 +130,8 @@ import { PaymentMethodThumbComponent } from './components/payment-method/payment
 import { WalletSettingsComponent } from './routes/settings/wallet-settings/wallet-settings.component';
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { UserPatronageComponent } from './routes/settings/user-patronage/user-patronage.component';
-import { ProcessRefundDialogComponent } from './components/dialogs/process-refund-dialog/process-refund-dialog.component';
+import { DocumentViewComponent } from './routes/gdpr/document-view/document-view.component';
+import { ProcessRefundsDialogComponent } from './components/dialogs/process-refunds-dialog/process-refunds-dialog.component';
 import { ConfirmationDialogComponent } from './components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { HostPatronageSubscribersComponent } from './routes/host/host-payments/host-patronage/host-patronage-subscribers/host-patronage-subscribers.component';
 import { HostThumbComponent } from './components/host-thumb/host-thumb.component';
@@ -131,6 +140,14 @@ import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
+import { RatePerformanceComponent } from './components/rate-performance/rate-performance.component';
+import { LikePerformanceComponent } from './components/like-performance/like-performance.component';
+import { RedirectComponent } from './components/redirect/redirect.component';
+import { FollowButtonComponent } from './components/follow-button/follow-button.component';
+import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
+import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
+import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
+import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -143,7 +160,6 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     LoginComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
-    ProfileComponent,
     VerifiedComponent,
     SettingsComponent,
     HeaderBarComponent,
@@ -161,7 +177,6 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     HostPerformanceThumbnailsComponent,
     UpdatePerformanceComponent,
     PlayerComponent,
-    ProfileComponent,
     ProfileSettingsComponent,
     SearchComponent,
     AdminOnboardingListComponent,
@@ -228,7 +243,7 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     PaymentMethodThumbComponent,
     WalletSettingsComponent,
     GenreFeedComponent,
-    ProcessRefundDialogComponent,
+    ProcessRefundsDialogComponent,
     UserPatronageComponent,
     ConfirmationDialogComponent,
     UserPatronageComponent,
@@ -238,7 +253,16 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     HostDeleteDialogComponent,
     ConfirmPasswordDialogComponent,
     HostPerformanceThumbnailsComponent,
-    SocialSharingComponent
+    SocialSharingComponent,
+    RatePerformanceComponent,
+    LikePerformanceComponent,
+    RedirectComponent,
+    FollowButtonComponent,
+    HostAnalyticsComponent,
+    HostAnalyticsHeaderItemComponent,
+    DocumentViewComponent,
+    TermsLinksComponent,
+    CookieConsentComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -255,14 +279,15 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
     ClipboardModule,
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
-    NgxStripeModule.forRoot(environment.stripePublicKey),
+    NgxStripeModule.forRoot(),
     ClipboardModule,
     NgxPermissionsModule.forRoot(),
     PlyrModule,
     IvyCarouselModule,
+    ChartjsModule,
     QuillModule.forRoot(),
     LoggerModule.forRoot({
-      serverLoggingUrl: '/api/logs',
+      serverLoggingUrl: '/api/utils/logs',
       colorScheme: ['purple', 'teal', 'gray', 'gray', 'red', 'red', 'red'],
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR
@@ -270,7 +295,6 @@ import { SocialSharingComponent } from './components/social-sharing/social-shari
   ],
   providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
   bootstrap: [AppComponent],
-  // entryComponents: [DeleteConfirmationDialogComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

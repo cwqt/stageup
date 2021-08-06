@@ -12,14 +12,6 @@
   "prettier.semi": true,
   "prettier.arrowParens": "avoid",
   "prettier.bracketSpacing": true,
-  "hjson-formatter.options": {
-    "multiline": "no-tabs",
-    "separator": false,
-    "condense": 1,
-    "bracesSameLine": true,
-    "emitRootBraces": true,
-    "space": 2
-  },
   "todo-tree.highlights.customHighlight": {
     "FUTURE": {
       "foreground": "white",
@@ -56,5 +48,6 @@
     "staging": {
       "host": "stageup.uk"
     }
-  }
+  },
+  "slackpresence.enabled": false
 }

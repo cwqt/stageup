@@ -1,37 +1,35 @@
+import { getCheck } from '@backend/common/error';
+import { BackendProviderMap } from '@backend/common/providers';
 import {
-  CurrencyCode,
-  HostPermission,
-  StripeHook,
-  TokenProvisioner,
-  PurchaseableType,
-  PaymentStatus,
-  IStripeChargePassthrough,
-  RefundResponseReason,
-  Environment
-} from '@core/interfaces';
-import {
-  BaseController,
-  getCheck,
-  IControllerEndpoint,
-  UserHostInfo,
-  BaseArguments,
-  User,
-  Ticket,
-  Invoice,
   AccessToken,
-  PatronTier,
+  BaseArguments,
+  BaseController,
+  IControllerEndpoint,
+  Invoice,
+  PatronSubscription,
   PaymentMethod,
-  ErrorHandler,
-  Refund,
-  PatronSubscription
+  Ticket,
+  User,
+  UserHostInfo
 } from '@core/api';
-import { BackendProviderMap } from '..';
-import AuthStrat from '../common/authorisation';
-import Env from '../env';
-import Stripe from 'stripe';
-import { log } from '../common/logger';
-import { IsNull } from 'typeorm';
 import { timestamp } from '@core/helpers';
+import {
+  ConsentOpt,
+  CurrencyCode,
+  Environment,
+  HostPermission,
+  IStripeChargePassthrough,
+  PaymentStatus,
+  PurchaseableType,
+  RefundResponseReason,
+  StripeHook,
+  TokenProvisioner
+} from '@core/interfaces';
+import Stripe from 'stripe';
+import { IsNull } from 'typeorm';
+import AuthStrat from '../common/authorisation';
+import { log } from '../common/logger';
+import Env from '../env';
 
 export default class StripeController extends BaseController<BackendProviderMap> {
   readonly hookMap: {
@@ -57,7 +55,7 @@ export default class StripeController extends BaseController<BackendProviderMap>
           this.providers.stripe.connection.webhooks.signature.verifyHeader(
             (req as any).rawBody,
             req.headers['stripe-signature'] as string,
-            this.providers.stripe.config.hook_signature
+            this.providers.stripe.config.webhook_signature
           );
         } catch (error) {
           log.error(error);
@@ -73,6 +71,8 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
         await (this.hookMap[event.type] || this.unsupportedHookHandler)(event);
         return { received: true };
+        // FIXME: Figure out some way of handling webhooks from other peoples machines coming to ours
+        // idempotency keys?
         // Check from metadata that this machine sent this request
         // if ((event.data.object as any)?.metadata?.__origin_url == Env.WEBHOOK_URL) {
         //   await (this.hookMap[event.type] || this.unsupportedHookHandler)(event);
@@ -190,7 +190,14 @@ export default class StripeController extends BaseController<BackendProviderMap>
 
         this.providers.bus.publish(
           'ticket.purchased',
-          { purchaser_id: user._id, invoice_id: invoice._id },
+          {
+            purchaser_id: user._id,
+            invoice_id: invoice._id,
+            ticket_id: ticket._id,
+            host_id: ticket.performance.host._id,
+            // from performance.controller.ts in purchasing a ticket
+            marketing_consent: passthrough.marketing_consent as ConsentOpt
+          },
           user.locale
         );
       }

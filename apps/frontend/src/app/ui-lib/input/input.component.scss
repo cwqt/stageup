@@ -2,23 +2,6 @@
 
 .ui-input-wrapper {
   margin-bottom: 16px;
-  &--has-icon {
-    input,
-    textarea {
-      padding-left: 38px;
-    }
-    .form-field__label {
-      padding-left: 50px;
-    }
-    ui-icon {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-      display: flex;
-      align-items: center;
-    }
-  }
 }
 
 $primary-color: #1362fe;
@@ -31,10 +14,24 @@ $animation-duration: 0.2s;
 
 .form-field {
   display: block;
+
+  &--has-icon {
+    display: flex;
+    align-items: center;
+    ui-icon {
+      margin-right: 1rem;
+    }
+  }
+
   &--is-active {
     input {
       opacity: 1 !important;
     }
+
+    ui-icon {
+      color: $primary-color;
+    }
+
     .form-field__control {
       &::after {
         border-bottom: 2px solid $primary-color;
@@ -166,6 +163,16 @@ $animation-duration: 0.2s;
   border: 0;
   color: #333;
   display: block;
+  outline: 0;
+  width: 100%;
+}
+
+.form-field__texticon {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: #333;
+  display: flex;
   outline: 0;
   width: 100%;
 }
@@ -410,4 +417,19 @@ ui-icon {
 // https://stackoverflow.com/a/57978961
 ::ng-deep .mat-form-field-infix {
   width: auto !important;
+}
+
+// form-field--no-label
+.form-field--no-label {
+  ::ng-deep {
+    .mat-select-arrow-wrapper {
+      padding-top: 16px !important;
+    }
+    .mat-form-field-infix {
+      padding-top: 0 !important;
+    }
+    .mat-form-field-flex {
+      padding-top: 0 !important;
+    }
+  }
 }

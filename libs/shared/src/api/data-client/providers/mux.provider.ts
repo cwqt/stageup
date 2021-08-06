@@ -1,13 +1,16 @@
 import { timeout } from '@core/helpers';
 import Mux from '@mux/mux-node';
+import { Service } from 'typedi';
 import { Provider } from '../';
 
 export interface IMuxProviderConfig {
   access_token: string;
   secret_key: string;
-  hook_signature: string;
+  webhook_signature: string;
+  data_env_key: string;
 }
 
+@Service()
 export default class MuxProvider implements Provider<Mux> {
   name = 'Mux';
   connection: Mux;

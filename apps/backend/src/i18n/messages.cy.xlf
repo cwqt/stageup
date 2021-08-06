@@ -1,654 +1,658 @@
-<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en" datatype="plaintext" original="generate-xlf" target-language="cy">
-    <body>
-      <trans-unit id="login.password_incorrect" datatype="html">
-        <source>Password is incorrect</source>
-        <target state="needs-translation">Mae'r cyfrinair yn anghywir</target>
-      </trans-unit>
-      <trans-unit id="user.not_found" datatype="html">
-        <source>User does not exist</source>
-        <target state="needs-translation">Nid yw'r defnyddiwr yn bodoli</target>
-      </trans-unit>
-      <trans-unit id="error.not_a_video" datatype="html">
-        <source>This is not a video!</source>
-        <target state="needs-translation">Nid fideo mo hwn!</target>
-      </trans-unit>
-      <trans-unit id="host.example_patron_tier_name" datatype="html">
-        <source>Example Tier</source>
-        <target state="needs-translation">Haen Enghreifftiol</target>
-      </trans-unit>
-      <trans-unit id="host.example_patron_tier_description" datatype="html">
-        <source>Example Tier Description</source>
-        <target state="needs-translation">Disgrifiad Haen Enghreifftiol</target>
-      </trans-unit>
-      <trans-unit id="host.requires_stripe_connected" datatype="html">
-        <source>Requires Stripe to be connected to perform this action</source>
-        <target state="needs-translation">Yn ei gwneud yn ofynnol i Stripe gael ei gysylltu i gyflawni'r weithred hon</target>
-      </trans-unit>
-      <trans-unit id="onboarding.steps_invalid" datatype="html">
-        <source>Some steps are invalid</source>
-        <target state="needs-translation">Mae rhai camau yn annilys</target>
-      </trans-unit>
-      <trans-unit id="onboarding.step_is_invalid" datatype="html">
-        <source>Step is invalid</source>
-        <target state="needs-translation">Mae'r cam yn annilys</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.invoice_id" datatype="html">
-        <source>Invoice ID</source>
-        <target state="needs-translation">ID yr anfoneb</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.performance_name" datatype="html">
-        <source>Performance Title</source>
-        <target state="needs-translation">Teitl Perfformiad</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.ticket_type" datatype="html">
-        <source>Ticket Type</source>
-        <target state="needs-translation">Math o Docyn</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.purchased_at" datatype="html">
-        <source>Purchased At</source>
-        <target state="needs-translation">Prynwyd Yn</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.amount" datatype="html">
-        <source>Amount</source>
-        <target state="needs-translation">Swm</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.net_amount" datatype="html">
-        <source>Net Amount</source>
-        <target state="needs-translation">Swm Net</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.currency" datatype="html">
-        <source>Currency</source>
-        <target state="needs-translation">Arian cyfred</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_csv.status" datatype="html">
-        <source>Payment Status</source>
-        <target state="needs-translation">Statws Taliad</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.invoice_id" datatype="html">
-        <source>Invoice ID</source>
-        <target state="needs-translation">ID yr anfoneb</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.performance_name" datatype="html">
-        <source>Performance Title</source>
-        <target state="needs-translation">Teitl Perfformiad</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.ticket_type" datatype="html">
-        <source>Ticket Type</source>
-        <target state="needs-translation">Math o Docyn</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.purchased_at" datatype="html">
-        <source>Purchased At</source>
-        <target state="needs-translation">Prynwyd Yn</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.amount" datatype="html">
-        <source>Amount</source>
-        <target state="needs-translation">Swm</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.net_amount" datatype="html">
-        <source>Net Amount</source>
-        <target state="needs-translation">Swm Net</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.currency" datatype="html">
-        <source>Currency</source>
-        <target state="needs-translation">Arian cyfred</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.status" datatype="html">
-        <source>Payment Status</source>
-        <target state="needs-translation">Statws Taliad</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.created_at" datatype="html">
-        <source>Created At</source>
-        <target state="needs-translation">Wedi'i greu yn</target>
-      </trans-unit>
-      <trans-unit id="host.invoice_pdf.total_rows" datatype="html">
-        <source>Total Rows</source>
-        <target state="needs-translation">Cyfanswm y Rhesi</target>
-      </trans-unit>
-      <trans-unit id="payment_status.created" datatype="html">
-        <source>Created</source>
-        <target state="needs-translation">Wedi'i greu</target>
-      </trans-unit>
-      <trans-unit id="payment_status.paid" datatype="html">
-        <source>Paid</source>
-        <target state="needs-translation">Talwyd</target>
-      </trans-unit>
-      <trans-unit id="payment_status.fufilled" datatype="html">
-        <source>Fufilled</source>
-        <target state="needs-translation">Wedi'i lenwi</target>
-      </trans-unit>
-      <trans-unit id="payment_status.refunded" datatype="html">
-        <source>Refunded</source>
-        <target state="needs-translation">Ad-dalwyd</target>
-      </trans-unit>
-      <trans-unit id="payment_status.refund_pending" datatype="html">
-        <source>Refund Pending</source>
-        <target state="needs-translation">Ad-daliad yn yr arfaeth</target>
-      </trans-unit>
-      <trans-unit id="payment_status.refund_denied" datatype="html">
-        <source>Refund Denied</source>
-        <target state="needs-translation">Ad-daliad Gwadu</target>
-      </trans-unit>
-      <trans-unit id="ticket_type.paid" datatype="html">
-        <source>Paid</source>
-        <target state="needs-translation">Talwyd</target>
-      </trans-unit>
-      <trans-unit id="ticket_type.free" datatype="html">
-        <source>Free</source>
-        <target state="needs-translation">Am ddim</target>
-      </trans-unit>
-      <trans-unit id="ticket_type.dono" datatype="html">
-        <source>Donation</source>
-        <target state="needs-translation">Rhodd</target>
-      </trans-unit>
-      <trans-unit id="error.user_has_no_claim" datatype="html">
-        <source>You don't have permissions to view this content</source>
-        <target state="needs-translation">Nid oes gennych ganiatâd i weld y cynnwys hwn</target>
-      </trans-unit>
-      <trans-unit id="error.too_many_thumbnails" datatype="html">
-        <source>You have too many thumbnails, try deleting some before uploading new ones</source>
-        <target state="needs-translation">Mae gennych ormod o fawd, ceisiwch ddileu rhai cyn uwchlwytho rhai newydd</target>
-      </trans-unit>
-      <trans-unit id="error.publicity_period_outside_ticket_period" datatype="html">
-        <source>Cannot set performance publicity period outside one of the tickets selling period</source>
-        <target state="needs-translation">Ni all osod cyfnod cyhoeddusrwydd perfformiad y tu allan i un o'r cyfnod gwerthu tocynnau</target>
-      </trans-unit>
-      <trans-unit id="stripe.origin_url_not_matched" datatype="html">
-        <source>Received response does not match submitter!</source>
-        <target state="needs-translation">Nid yw'r ymateb a dderbynnir yn cyfateb i'r cyflwynydd!</target>
-      </trans-unit>
-      <trans-unit id="refunds.no_invoices_found" datatype="html">
-        <source>Could not find any invoices</source>
-        <target state="needs-translation">Methu dod o hyd i unrhyw anfonebau</target>
-      </trans-unit>
-      <trans-unit id="refunds.refund_already_outstanding" datatype="html">
-        <source>Cannot refund while one another refund is already outstanding</source>
-        <target state="needs-translation">Ni ellir ad-dalu tra bo ad-daliad ei gilydd eisoes yn ddyledus</target>
-      </trans-unit>
-      <trans-unit id="email.user.refund_initiated__content" datatype="html">
-        <source>**Hi {user_username},**
-
- This is a notification to confirm that **{host_name}** has initiated a refund on your order **{invoice_id}** for the amount of **{invoice_amount}** for the performance **{performance_name}**.
-
-You can view the status of this refund at any time by logging in to your StageUp account and clicking settings -> payments.
-
-We will automatically credit the funds to your **{card_brand}** ending in **{last_4}**. Please note, the amount may take up to 5 working days to appear in your account.
-
-**Thanks,**
-
-**StageUp Team**</source>
-        <target state="needs-translation">** Hi {user_username}, **
-
- Mae hwn yn hysbysiad i gadarnhau bod ** {host_name} ** wedi cychwyn ad-daliad ar eich archeb ** {invoice_id} ** am y swm o ** {invoice_amount} ** ar gyfer y perfformiad ** {performance_name} **.
-
-Gallwch weld statws yr ad-daliad hwn ar unrhyw adeg trwy fewngofnodi i'ch cyfrif StageUp a chlicio gosodiadau -> taliadau.
-
-Byddwn yn credydu'r arian yn awtomatig i'ch ** {card_brand} ** sy'n gorffen yn ** {last_4} **. Sylwch, gall y swm gymryd hyd at 5 diwrnod gwaith i ymddangos yn eich cyfrif.
-
-** Diolch, **
-
-** Tîm StageUp **</target>
-      </trans-unit>
-      <trans-unit id="email.user.refund_initiated__subject" datatype="html">
-        <source>Refund initiated by {host_name} for {performance_name}</source>
-        <target state="needs-translation">Ad-daliad a gychwynnwyd gan {host_name} ar gyfer {performance_name}</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_initiated__content" datatype="html">
-        <source>**Hi {host_name},**
-
- You have initiated a refund for your performance "{performance_name}"
-
-**Invoice#: {invoice_id}**
-
-**Total Amount: {invoice_amount}**
-
-We have notified the affected customer that they shall receive the refunded amount in their account within 5 working days
-
-**Thanks,**
-
-**StageUp Team**
-
-Please note, if this request was not initated by you please notify us immediately</source>
-        <target state="needs-translation">** Hi {host_name}, **
-
- Rydych wedi cychwyn ad-daliad am eich perfformiad "{performance_name}"
-
-** Anfoneb #: {invoice_id} **
-
-** Cyfanswm Swm: {invoice_amount} **
-
-Rydym wedi hysbysu'r cwsmer yr effeithir arno y bydd yn derbyn y swm a ad-dalwyd yn ei gyfrif cyn pen 5 diwrnod gwaith
-
-** Diolch, **
-
-** Tîm StageUp **
-
-Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_initiated__subject" datatype="html">
-        <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
-        <target state="needs-translation">Cychwynnwyd ad-daliad ar gyfer pryniant {user_username} o {performance_name}</target>
-      </trans-unit>
-      <trans-unit id="email.user.refund_refunded__subject" datatype="html">
-        <source>Refund for {performance_name} succesful!</source>
-        <target state="needs-translation">Ad-daliad ar gyfer {performance_name} yn llwyddiannus!</target>
-      </trans-unit>
-      <trans-unit id="email.user.refund_refunded__content" datatype="html">
-        <source>Hi {user_username},
-
-This is a notification to confirm that {host_name} has successfully refunded your order **{invoice_id}** for **{invoice_amount}** for your purchase of **{performance_name}** due to:
-
-> {refund_reason}
-
-The funds have now been credited to **{card_brand}** ending in **{last_4}**.
-
-You can view a log of this refund within your StageUp account settings
-
-**Thanks,**
-
-**StageUp Team**</source>
-        <target state="needs-translation">Helo {user_username},
-
-Mae hwn yn hysbysiad i gadarnhau bod {host_name} wedi ad-dalu'ch archeb yn llwyddiannus ** {invoice_id} ** ar gyfer ** {invoice_amount} ** am eich pryniant o ** {performance_name} ** oherwydd:
-
-> {refund_reason}
-
-Mae'r cronfeydd bellach wedi'u credydu i ** {card_brand} ** sy'n gorffen yn ** {last_4} **.
-
-Gallwch weld log o'r ad-daliad hwn yn eich gosodiadau cyfrif StageUp
-
-** Diolch, **
-
-** Tîm StageUp **</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_refunded__subject" datatype="html">
-        <source>Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</source>
-        <target state="needs-translation">Ad-daliad ar gyfer {user_username} ar gyfer {performance_name} (ID: {invoice_id}), wedi'i brosesu'n llwyddiannus gan Stripe</target>
-      </trans-unit>
-      <trans-unit id="email.host.refund_refunded__content" datatype="html">
-        <source>Hi {host_name},
-
-This is a notification to confirm that your recent refund request for **{user_username}** for **{performance_name}** for the amount of **{invoice_amount}** has succesfully been refunded by Stripe and the user has been notified.
-
-You can view the status of all your refunds within your account settings
-
-**Thanks,**
-**StageUp Team**</source>
-        <target state="needs-translation">Helo {host_name},
-
-Mae hwn yn hysbysiad i gadarnhau bod eich cais am ad-daliad diweddar am ** {user_username} ** ar gyfer ** {performance_name} ** am y swm o ** {invoice_amount} ** wedi'i ad-dalu'n llwyddiannus gan Stripe ac mae'r defnyddiwr wedi'i hysbysu.
-
-Gallwch weld statws eich holl ad-daliadau o fewn gosodiadau eich cyfrif
-
-** Diolch, **
-** Tîm StageUp **</target>
-      </trans-unit>
-      <trans-unit id="email.refund_requested__subject" datatype="html">
-        <source>StageUp: Your refund request has been sent to @{host_name}</source>
-        <target state="needs-translation">StageUp: Mae eich cais am ad-daliad wedi'i anfon at @ {host_name}</target>
-      </trans-unit>
-      <trans-unit id="email.refund_requested__content" datatype="html">
-        <source>Your refund request for the following invoice has been sent to **{host_name}**.
-
-- Invoice #: **{invoice_id}**
-- Performance: **{performance_name}**
-- Purchased: **{purchase_date}**
-- Amount: **{amount}**
-
-We'll let you know when the host has processed your request
-
-**Thanks,**
-
-**StageUp Team**</source>
-        <target state="needs-translation">Mae eich cais am ad-daliad am yr anfoneb ganlynol wedi'i anfon at ** {host_name} **.
-
-- Anfoneb #: ** {invoice_id} **
-- Perfformiad: ** {performance_name} **
-- Prynwyd: ** {purchase_date} **
-- Swm: ** {amount} **
-
-Byddwn yn rhoi gwybod ichi pan fydd y gwesteiwr wedi prosesu'ch cais
-
-** Diolch, **
-
-** Tîm StageUp **</target>
-      </trans-unit>
-      <trans-unit id="email.host_refund_requested_confirmation__subject" datatype="html">
-        <source>StageUp: Refund request received for {performance_name} from @{user_username}</source>
-        <target state="needs-translation">StageUp: Derbyniwyd cais am ad-daliad am {performance_name} gan @ {user_username}</target>
-      </trans-unit>
-      <trans-unit id="email.host_refund_requested_confirmation__content" datatype="html">
-        <source>Hi {host_name},
-
-@{user_username} ({user_email_address}) has requested a refund on their purchase of {performance_name}
-
-**Refund Details:**
-
-- **Invoice #:** {invoice_id}
-- **Performance:** {performance_name}
-- **Purchased On:** {purchase_date}
-- **Amount:** {amount}
-
-To process this request you can visit your [invoice dashboard here]({invoice_dashboard_url}).
-
-**Thanks,**
-************StageUp Team**</source>
-        <target state="needs-translation">Helo {host_name},
-
-Mae @ {user_username} ({user_email_address}) wedi gofyn am ad-daliad ar eu pryniant o {performance_name}
-
-** Manylion Ad-daliad: **
-
-- ** Anfoneb #: ** {invoice_id}
-- ** Perfformiad: ** {performance_name}
-- ** Prynwyd Ymlaen: ** {purchase_date}
-- ** Swm: ** {amount}
-
-I brosesu'r cais hwn gallwch ymweld â'ch [dangosfwrdd anfoneb yma] ({invoice_dashboard_url}).
-
-** Diolch, **
-************ Tîm StageUp **</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_pdf__subject" datatype="html">
-        <source>Exported Invoice PDF files</source>
-        <target state="needs-translation">Ffeiliau PDF Anfoneb Allforio</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_pdf__content" datatype="html">
-        <source>See attachments for invoice data</source>
-        <target state="needs-translation">Gweler yr atodiadau am ddata anfoneb</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_csv__filename" datatype="html">
-        <source>stageup-invoice</source>
-        <target state="needs-translation">llwyfanup-anfoneb</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_csv__subject" datatype="html">
-        <source>Exported Invoice CSV files</source>
-        <target state="needs-translation">Ffeiliau CSV Anfoneb Allforio</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_csv__content" datatype="html">
-        <source>See attachments for invoice data</source>
-        <target state="needs-translation">Gweler yr atodiadau am ddata anfoneb</target>
-      </trans-unit>
-      <trans-unit id="email.host.invoice_pdf__filename" datatype="html">
-        <source>stageup-invoice</source>
-        <target state="needs-translation">llwyfanup-anfoneb</target>
-      </trans-unit>
-      <trans-unit id="email.test.send_email__subject" datatype="html">
-        <source>Testing e-mails!</source>
-        <target state="needs-translation">Profi e-byst!</target>
-      </trans-unit>
-      <trans-unit id="email.test.send_email__content" datatype="html">
-        <source>Hey {username} **How are you? &lt;{url}>**</source>
-        <target state="needs-translation">Hei {username} ** Sut wyt ti? &amp; lt; {url}> **</target>
-      </trans-unit>
-      <trans-unit id="email.user.registered__subject" datatype="html">
-        <source>Verify your StageUp account</source>
-        <target state="needs-translation">Gwiriwch eich cyfrif StageUp</target>
-      </trans-unit>
-      <trans-unit id="email.user.registered__content" datatype="html">
-        <source>Click the link to verify: &lt;{url}></source>
-        <target state="needs-translation">Cliciwch y ddolen i wirio: &amp; lt; {url}></target>
-      </trans-unit>
-      <trans-unit id="email.user.invited_to_host__subject" datatype="html">
-        <source>You have been invited to join {host_name} by {inviter_name}</source>
-        <target state="needs-translation">Fe'ch gwahoddwyd i ymuno â {host_name} gan {inviter_name}</target>
-      </trans-unit>
-      <trans-unit id="email.user.invited_to_host__content" datatype="html">
-        <source>Hi {user_name},
-Click the link to accept the invitation: &lt;{url}>, this invite will expire in **24 hours**.</source>
-        <target state="needs-translation">Helo {user_name},
-Cliciwch y ddolen i dderbyn y gwahoddiad: &amp; lt; {url}>, bydd y gwahoddiad hwn yn dod i ben mewn ** 24 awr **.</target>
-      </trans-unit>
-      <trans-unit id="email.user.invited_to_private_showing__subject" datatype="html">
-        <source>You have been invited to watch a private performance</source>
-        <target state="needs-translation">Fe'ch gwahoddwyd i wylio perfformiad preifat</target>
-      </trans-unit>
-      <trans-unit id="email.user.invited_to_private_showing__content" datatype="html">
-        <source>Hi {user_name},
-Click the link to watch **{performance_name}** by **{host_name}** on StageUp now: &lt;{url}>></source>
-        <target state="needs-translation">Helo {user_name},
-Cliciwch y ddolen i wylio ** {performance_name} ** gan ** {host_name} ** ar StageUp nawr: &amp; lt; {url} >></target>
-      </trans-unit>
-      <trans-unit id="email.ticket.purchased__subject" datatype="html">
-        <source>Receipt of purchase of StageUp ticket</source>
-        <target state="needs-translation">Derbyn pryniant tocyn StageUp</target>
-      </trans-unit>
-      <trans-unit id="email.ticket.purchased__content" datatype="html">
-        <source>Hi {user_name},
-You purchased a {ticket_name} to watch {performance_name} for {amount}.
-Click here to watch: &lt;{watch_url}>
-Receipt of this purchase: &lt;{receipt_url}></source>
-        <target state="needs-translation">Helo {user_name},
-Fe wnaethoch chi brynu {ticket_name} i wylio {performance_name} ar gyfer {amount}.
-Cliciwch yma i wylio: &amp; lt; {watch_url}>
-Derbyn y pryniant hwn: &amp; lt; {receipt_url}></target>
-      </trans-unit>
-      <trans-unit id="email.user.patronage_started__subject" datatype="html">
-        <source>Patron Subscription to {tier_name}</source>
-        <target state="needs-translation">Tanysgrifiad Noddwr i {tier_name}</target>
-      </trans-unit>
-      <trans-unit id="email.user.patronage_started__content" datatype="html">
-        <source>Hi {user_name},
-Thank you for supporting **{host_name}**!
-
-Your patron payments of {amount} will be debited on {date_ordinal} of each month, starting today.
-
-You can cancel your payments at any time. By making this payment you agree to [StageUp's Terms of Use]({tos_url})
-Thanks,
-StageUp Team</source>
-        <target state="needs-translation">Helo {user_name},
-Diolch am gefnogi ** {host_name} **!
-
-Bydd eich taliadau noddwr o {amount} yn cael eu debydu ar {date_ordinal} bob mis, gan ddechrau heddiw.
-
-Gallwch ganslo'ch taliadau ar unrhyw adeg. Trwy wneud y taliad hwn rydych chi'n cytuno i [Telerau Defnyddio StageUp] ({tos_url})
-Diolch,
-Tîm StageUp</target>
-      </trans-unit>
-      <trans-unit id="email.host.patronage_started__subject" datatype="html">
-        <source>New Patron to {tier_name}</source>
-        <target state="needs-translation">Noddwr Newydd i {tier_name}</target>
-      </trans-unit>
-      <trans-unit id="email.host.patronage_started__content" datatype="html">
-        <source>Hi **{host_name}**,
-
-@{user_username} is now a patron of your company.
-
-- Patron Tier: **{tier_name}**
-- Amount: **{amount}**</source>
-        <target state="needs-translation">Helo ** {host_name} **,
-
-Mae @ {user_username} bellach yn noddwr i'ch cwmni.
-
-- Haen Noddwyr: ** {tier_name} **
-- Swm: ** {amount} **</target>
-      </trans-unit>
-      <trans-unit id="email.user.password_reset_requested__subject" datatype="html">
-        <source>StageUp Reset Password</source>
-        <target state="needs-translation">Cyfrinair Ailosod StageUp</target>
-      </trans-unit>
-      <trans-unit id="email.user.password_reset_requested__content" datatype="html">
-        <source>Hi **{user_name}**,
-You are receiving this because you (or someone else) has requested the reset of the password for your StageUp account.
-
-Please click on the following link to complete the process. This link is valid for the next 24 hours.
-
-&lt;{password_reset_url}>
-
-If you did not request this change, please ignore this email and your password will remain unchanged.</source>
-        <target state="needs-translation">Helo ** {user_name} **,
-Rydych chi'n derbyn hwn oherwydd eich bod chi (neu rywun arall) wedi gofyn am ailosod y cyfrinair ar gyfer eich cyfrif StageUp.
-
-Cliciwch ar y ddolen ganlynol i gwblhau'r broses. Mae'r ddolen hon yn ddilys am y 24 awr nesaf.
-
-&amp; lt; {password_reset_url}>
-
-Os na ofynasoch am y newid hwn, anwybyddwch yr e-bost hwn a bydd eich cyfrinair yn aros yr un fath.</target>
-      </trans-unit>
-      <trans-unit id="email.user.password_changed__subject" datatype="html">
-        <source>Your StageUp password was just changed</source>
-        <target state="needs-translation">Newidiwyd eich cyfrinair StageUp yn unig</target>
-      </trans-unit>
-      <trans-unit id="email.user.password_changed__content" datatype="html">
-        <source>Your StageUp account password has recently been changed.
-If you did not make this change, please login into your account and change your password as soon as possible.
-
-If you have recently changed your password, then please ignore this email.</source>
-        <target state="needs-translation">Newidiwyd cyfrinair eich cyfrif StageUp yn ddiweddar.
-Os na wnaethoch y newid hwn, mewngofnodwch i'ch cyfrif a newid eich cyfrinair cyn gynted â phosibl.
-
-Os ydych chi wedi newid eich cyfrinair yn ddiweddar, yna anwybyddwch yr e-bost hwn.</target>
-      </trans-unit>
-      <trans-unit id="email.subscriber_notify_tier_deleted__subject" datatype="html">
-        <source>Notification of Patron Tier removal</source>
-        <target state="needs-translation">Hysbysiad o symud Haen Noddwyr</target>
-      </trans-unit>
-      <trans-unit id="email.subscriber_notify_tier_deleted__content" datatype="html">
-        <source>Hi **@{user_username}**,
-
-**@{host_username}** has deleted/removed the **{tier_name}** tier. We have cancelled your current subscription ({sub_id}). It will come into effect immediately. You'll recieve and e-mail shortly confirming the un-subscription.
-
-Thanks, StageUp</source>
-        <target state="needs-translation">Helo ** @ {user_username} **,
-
-Mae ** @ {host_username} ** wedi dileu / dileu'r haen ** {tier_name} **. Rydym wedi canslo'ch tanysgrifiad cyfredol ({sub_id}). Daw i rym ar unwaith. Byddwch yn derbyn ac yn e-bostio cyn bo hir yn cadarnhau'r tanysgrifiad.
-
-Diolch, StageUp</target>
-      </trans-unit>
-      <trans-unit id="email.user_unsubscribed_from_patron_tier__subject" datatype="html">
-        <source>Un-subscribed from patron tier</source>
-        <target state="needs-translation">Heb danysgrifio o haen noddwyr</target>
-      </trans-unit>
-      <trans-unit id="email.user_unsubscribed_from_patron_tier__content" datatype="html">
-        <source>Hi @{user_username},
-
-This is a receipt of your un-subscription from **@{host_username}**'s patron tier, **{tier_name}**.
-You'll no longer be charged for this subscription &amp; this subscription will be listed as 'Cancelled' on your account from now on.
-
-Thanks, StageUp</source>
-        <target state="needs-translation">Helo @ {user_username},
-
-Dyma dderbynneb o'ch tanysgrifiad gan haen noddwr ** @ {host_username} **, ** {tier_name} **.
-Ni chodir tâl arnoch mwyach am y tanysgrifiad hwn &amp; amp; bydd y tanysgrifiad hwn yn cael ei restru fel 'Canslo' ar eich cyfrif o hyn ymlaen.
-
-Diolch, StageUp</target>
-      </trans-unit>
-      <trans-unit id="error.internal_server_error" datatype="html">
-        <source>Internal server error</source>
-        <target state="needs-translation">Gwall gweinydd mewnol</target>
-      </trans-unit>
-      <trans-unit id="error.missing_translation" datatype="html">
-        <source>Missing translation</source>
-        <target state="needs-translation">Cyfieithiad ar goll</target>
-      </trans-unit>
-      <trans-unit id="error.missing_permissions" datatype="html">
-        <source>Insufficent privileges</source>
-        <target state="needs-translation">Breintiau annigonol</target>
-      </trans-unit>
-      <trans-unit id="error.not_found" datatype="html">
-        <source>Not found</source>
-        <target state="needs-translation">Heb ei ddarganfod</target>
-      </trans-unit>
-      <trans-unit id="error.no_such_route" datatype="html">
-        <source>Route not found</source>
-        <target state="needs-translation">Ni ddaethpwyd o hyd i'r llwybr</target>
-      </trans-unit>
-      <trans-unit id="error.not_member" datatype="html">
-        <source>Not a member of company</source>
-        <target state="needs-translation">Ddim yn aelod o gwmni</target>
-      </trans-unit>
-      <trans-unit id="error.duplicate" datatype="html">
-        <source>Duplicate value found</source>
-        <target state="needs-translation">Gwerth dyblyg wedi'i ddarganfod</target>
-      </trans-unit>
-      <trans-unit id="error.in_use" datatype="html">
-        <source>Value is already in use</source>
-        <target state="needs-translation">Mae gwerth eisoes yn cael ei ddefnyddio</target>
-      </trans-unit>
-      <trans-unit id="error.invalid" datatype="html">
-        <source>Value is invalid</source>
-        <target state="needs-translation">Mae'r gwerth yn annilys</target>
-      </trans-unit>
-      <trans-unit id="error.code" datatype="html">
-        <source>Test code</source>
-        <target state="needs-translation">Cod prawf</target>
-      </trans-unit>
-      <trans-unit id="error.unknown" datatype="html">
-        <source>An unknown error occured</source>
-        <target state="needs-translation">Digwyddodd gwall anhysbys</target>
-      </trans-unit>
-      <trans-unit id="error.no_session" datatype="html">
-        <source>Must be logged in to perform this action</source>
-        <target state="needs-translation">Rhaid mewngofnodi i gyflawni'r weithred hon</target>
-      </trans-unit>
-      <trans-unit id="error.admin_only" datatype="html">
-        <source>Must be a Site Admin to perform this action</source>
-        <target state="needs-translation">Rhaid bod yn Weinyddwr Safle i gyflawni'r weithred hon</target>
-      </trans-unit>
-      <trans-unit id="error.missing_field" datatype="html">
-        <source>Missing a field in the provided data</source>
-        <target state="needs-translation">Ar goll maes yn y data a ddarperir</target>
-      </trans-unit>
-      <trans-unit id="error.not_verified" datatype="html">
-        <source>Your account must be verified to perform this action</source>
-        <target state="needs-translation">Rhaid gwirio'ch cyfrif i gyflawni'r weithred hon</target>
-      </trans-unit>
-      <trans-unit id="error.forbidden" datatype="html">
-        <source>This action is forbidden</source>
-        <target state="needs-translation">Gwaherddir y weithred hon</target>
-      </trans-unit>
-      <trans-unit id="error.not_implemented" datatype="html">
-        <source>Method is not implemented</source>
-        <target state="needs-translation">Ni weithredir y dull</target>
-      </trans-unit>
-      <trans-unit id="error.not_such_route" datatype="html">
-        <source>No such route</source>
-        <target state="needs-translation">Dim llwybr o'r fath</target>
-      </trans-unit>
-      <trans-unit id="error.incorrect" datatype="html">
-        <source>Value is incorrect</source>
-        <target state="needs-translation">Mae'r gwerth yn anghywir</target>
-      </trans-unit>
-      <trans-unit id="error.missing_body" datatype="html">
-        <source>Missing body data</source>
-        <target state="needs-translation">Data corff ar goll</target>
-      </trans-unit>
-      <trans-unit id="error.locked" datatype="html">
-        <source>Data is locked</source>
-        <target state="needs-translation">Mae'r data wedi'i gloi</target>
-      </trans-unit>
-      <trans-unit id="validation.not_allowed" datatype="html">
-        <source>Value is not allowed</source>
-        <target state="needs-translation">Ni chaniateir gwerth</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid" datatype="html">
-        <source>Value is not valid</source>
-        <target state="needs-translation">Nid yw'r gwerth yn ddilys</target>
-      </trans-unit>
-      <trans-unit id="validation.too_long" datatype="html">
-        <source>Value is too long</source>
-        <target state="needs-translation">Mae'r gwerth yn rhy hir</target>
-      </trans-unit>
-      <trans-unit id="validation.too_short" datatype="html">
-        <source>Value is too short</source>
-        <target state="needs-translation">Mae'r gwerth yn rhy fyr</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_email" datatype="html">
-        <source>Not a valid e-mail address</source>
-        <target state="needs-translation">Ddim yn gyfeiriad e-bost dilys</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_phone_number" datatype="html">
-        <source>Not a valid phone number</source>
-        <target state="needs-translation">Ddim yn rhif ffôn dilys</target>
-      </trans-unit>
-      <trans-unit id="validation.not_hmrc_number" datatype="html">
-        <source>Not a valid HMRC Company number</source>
-        <target state="needs-translation">Ddim yn rhif Cwmni Cyllid a Thollau EM dilys</target>
-      </trans-unit>
-      <trans-unit id="validation.invalid_url" datatype="html">
-        <source>Not a valid URL</source>
-        <target state="needs-translation">Ddim yn URL dilys</target>
-      </trans-unit>
-    </body>
-  </file>
-</xliff>
+<?xml version="1.0" encoding="UTF-8"?>
+  <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="cy" datatype="plaintext" original="generate-xlf">
+      <body>
+				
+		<trans-unit id="login.password_incorrect" datatype="html">
+      <source>Password is incorrect</source>
+      <target state="needs-translation">Mae'r cyfrinair yn anghywir</target>
+    </trans-unit>				
+		<trans-unit id="user.not_found" datatype="html">
+      <source>User does not exist</source>
+      <target state="needs-translation">Nid yw'r defnyddiwr yn bodoli</target>
+    </trans-unit>				
+		<trans-unit id="error.not_a_video" datatype="html">
+      <source>This is not a video</source>
+      <target state="needs-translation">Nid fideo mo hwn</target>
+    </trans-unit>				
+		<trans-unit id="error.email_already_in_use" datatype="html">
+      <source>E-mail address is already in use</source>
+      <target state="needs-translation">Mae cyfeiriad e-bost eisoes yn cael ei ddefnyddio</target>
+    </trans-unit>				
+		<trans-unit id="error.user_has_no_claim" datatype="html">
+      <source>You don’t have permissions to view this content</source>
+      <target state="needs-translation">Nid oes gennych ganiatâd i weld y cynnwys hwn</target>
+    </trans-unit>				
+		<trans-unit id="error.too_many_thumbnails" datatype="html">
+      <source>You have too many thumbnails, try deleting some before uploading new ones</source>
+      <target state="needs-translation">Mae gennych ormod o fawd, ceisiwch ddileu rhai cyn uwchlwytho rhai newydd</target>
+    </trans-unit>				
+		<trans-unit id="error.publicity_period_outside_ticket_period" datatype="html">
+      <source>Cannot set performance publicity period outside one of the tickets selling period</source>
+      <target state="needs-translation">Ni all osod cyfnod cyhoeddusrwydd perfformiad y tu allan i un o'r cyfnod gwerthu tocynnau</target>
+    </trans-unit>				
+		<trans-unit id="error.already_following" datatype="html">
+      <source>You are already following this host</source>
+      <target state="needs-translation">Rydych chi eisoes yn dilyn y gwesteiwr hwn</target>
+    </trans-unit>				
+		<trans-unit id="error.invalid_rating" datatype="html">
+      <source>The provided rate value is invalid</source>
+      <target state="needs-translation">Mae'r gwerth cyfradd a ddarperir yn annilys</target>
+    </trans-unit>				
+		<trans-unit id="error.no_rating_exists" datatype="html">
+      <source>Could not find existing rating</source>
+      <target state="needs-translation">Methu dod o hyd i'r sgôr bresennol</target>
+    </trans-unit>				
+		<trans-unit id="onboarding.steps_invalid" datatype="html">
+      <source>Some steps are invalid</source>
+      <target state="needs-translation">Mae rhai camau yn annilys</target>
+    </trans-unit>				
+		<trans-unit id="onboarding.step_is_invalid" datatype="html">
+      <source>Step is invalid</source>
+      <target state="needs-translation">Mae'r cam yn annilys</target>
+    </trans-unit>				
+		<trans-unit id="host.example_patron_tier_name" datatype="html">
+      <source>Example Tier</source>
+      <target state="needs-translation">Haen Enghreifftiol</target>
+    </trans-unit>				
+		<trans-unit id="host.example_patron_tier_description" datatype="html">
+      <source>Example Tier Description</source>
+      <target state="needs-translation">Disgrifiad Haen Enghreifftiol</target>
+    </trans-unit>				
+		<trans-unit id="host.requires_stripe_connected" datatype="html">
+      <source>Requires Stripe to be connected to perform this action</source>
+      <target state="needs-translation">Yn ei gwneud yn ofynnol i Stripe gael ei gysylltu i gyflawni'r weithred hon</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.invoice_id" datatype="html">
+      <source>Invoice ID</source>
+      <target state="needs-translation">ID yr anfoneb</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.performance_name" datatype="html">
+      <source>Performance Title</source>
+      <target state="needs-translation">Teitl Perfformiad</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.ticket_type" datatype="html">
+      <source>Ticket Type</source>
+      <target state="needs-translation">Math o Docyn</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.purchased_at" datatype="html">
+      <source>Purchased At</source>
+      <target state="needs-translation">Prynwyd Yn</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.amount" datatype="html">
+      <source>Amount</source>
+      <target state="needs-translation">Swm</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.net_amount" datatype="html">
+      <source>Net Amount</source>
+      <target state="needs-translation">Swm Net</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.currency" datatype="html">
+      <source>Currency</source>
+      <target state="needs-translation">Arian cyfred</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_csv.status" datatype="html">
+      <source>Payment Status</source>
+      <target state="needs-translation">Statws Taliad</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.invoice_id" datatype="html">
+      <source>Invoice ID</source>
+      <target state="needs-translation">ID yr anfoneb</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.performance_name" datatype="html">
+      <source>Performance Title</source>
+      <target state="needs-translation">Teitl Perfformiad</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.ticket_type" datatype="html">
+      <source>Ticket Type</source>
+      <target state="needs-translation">Math o Docyn</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.purchased_at" datatype="html">
+      <source>Purchased At</source>
+      <target state="needs-translation">Prynwyd Yn</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.amount" datatype="html">
+      <source>Amount</source>
+      <target state="needs-translation">Swm</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.net_amount" datatype="html">
+      <source>Net Amount</source>
+      <target state="needs-translation">Swm Net</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.currency" datatype="html">
+      <source>Currency</source>
+      <target state="needs-translation">Arian cyfred</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.status" datatype="html">
+      <source>Payment Status</source>
+      <target state="needs-translation">Statws Taliad</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.created_at" datatype="html">
+      <source>Created At</source>
+      <target state="needs-translation">Wedi'i greu yn</target>
+    </trans-unit>				
+		<trans-unit id="host.invoice_pdf.total_rows" datatype="html">
+      <source>Total Rows</source>
+      <target state="needs-translation">Cyfanswm y Rhesi</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.created" datatype="html">
+      <source>Created</source>
+      <target state="needs-translation">Wedi'i greu</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.paid" datatype="html">
+      <source>Paid</source>
+      <target state="needs-translation">Talwyd</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.fufilled" datatype="html">
+      <source>Fufilled</source>
+      <target state="needs-translation">Wedi'i lenwi</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.refunded" datatype="html">
+      <source>Refunded</source>
+      <target state="needs-translation">Ad-dalwyd</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.refund_pending" datatype="html">
+      <source>Refund Pending</source>
+      <target state="needs-translation">Ad-daliad yn yr arfaeth</target>
+    </trans-unit>				
+		<trans-unit id="payment_status.refund_denied" datatype="html">
+      <source>Refund Denied</source>
+      <target state="needs-translation">Ad-daliad Gwadu</target>
+    </trans-unit>				
+		<trans-unit id="ticket_type.paid" datatype="html">
+      <source>Paid</source>
+      <target state="needs-translation">Talwyd</target>
+    </trans-unit>				
+		<trans-unit id="ticket_type.free" datatype="html">
+      <source>Free</source>
+      <target state="needs-translation">Am ddim</target>
+    </trans-unit>				
+		<trans-unit id="ticket_type.dono" datatype="html">
+      <source>Donation</source>
+      <target state="needs-translation">Rhodd</target>
+    </trans-unit>				
+		<trans-unit id="stripe.origin_url_not_matched" datatype="html">
+      <source>Received response does not match submitter!</source>
+      <target state="needs-translation">Nid yw'r ymateb a dderbynnir yn cyfateb i'r cyflwynydd!</target>
+    </trans-unit>				
+		<trans-unit id="refunds.no_invoices_found" datatype="html">
+      <source>Could not find any invoices</source>
+      <target state="needs-translation">Methu dod o hyd i unrhyw anfonebau</target>
+    </trans-unit>				
+		<trans-unit id="refunds.refund_already_outstanding" datatype="html">
+      <source>Cannot refund while another refund is already outstanding</source>
+      <target state="needs-translation">Ni ellir ad-dalu tra bo ad-daliad arall eisoes heb ei dalu</target>
+    </trans-unit>				
+		<trans-unit id="email.user.refund_initiated__content" datatype="html">
+      <source><p><strong>Hi {user_username},</strong></p>
+<p>This is a notification to confirm that <strong>{host_name}</strong> has initiated a refund on your order <strong>{invoice_id}</strong>
+for the amount of <strong>{invoice_amount}</strong> for the performance <strong>{performance_name}</strong>.</p>
+<p>You can view the status of this refund at any time by logging in to your
+StageUp account and clicking settings -> payments.</p>
+<p>We will automatically credit the funds to your <strong>{card_brand}</strong> ending in
+<strong>{last_4}</strong>. Please note, the amount may take up to 5 working days to appear
+in your account.</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p><strong>Helo {user_username},</strong></p><p> Mae hwn yn hysbysiad i gadarnhau bod <strong>{host_name}</strong> wedi cychwyn ad-daliad ar eich archeb <strong>{invoice_id}</strong> am y swm o <strong>{invoice_amount} ar</strong> gyfer y perfformiad <strong>{performance_name}</strong> .</p><p> Gallwch weld statws yr ad-daliad hwn ar unrhyw adeg trwy fewngofnodi i'ch cyfrif StageUp a chlicio gosodiadau -> taliadau.</p><p> Byddwn yn credydu'r arian yn awtomatig i'ch <strong>{card_brand} sy'n</strong> dod i ben yn <strong>{last_4}</strong> . Sylwch, gall y swm gymryd hyd at 5 diwrnod gwaith i ymddangos yn eich cyfrif.</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.refund_initiated__subject" datatype="html">
+      <source>Refund initiated by {host_name} for {performance_name}</source>
+      <target state="needs-translation">Ad-daliad a gychwynnwyd gan {host_name} ar gyfer {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_initiated__content" datatype="html">
+      <source><p><strong>Hi {host_name},</strong></p>
+<p>You have initiated a refund for your performance “{performance_name}”</p>
+<p><strong>Invoice#: {invoice_id}</strong>
+<strong>Total Amount: {invoice_amount}</strong></p>
+<p>We have notified the affected customer that they shall receive the refunded
+amount in their account within 5 working days</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+<p>Please note, if this request was not initated by you please notify us
+immediately</p>
+</source>
+      <target state="needs-translation"><p><strong>Helo {host_name},</strong></p><p> Rydych wedi cychwyn ad-daliad am eich perfformiad “{performance_name}”</p><p> <strong>Anfoneb #: {invoice_id}</strong> <strong>Cyfanswm Swm: {invoice_amount}</strong></p><p> Rydym wedi hysbysu'r cwsmer yr effeithir arno y bydd yn derbyn y swm a ad-dalwyd yn ei gyfrif cyn pen 5 diwrnod gwaith</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p><p> Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith</p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_initiated__subject" datatype="html">
+      <source>Refund initiated for {user_username}'s purchase of {performance_name}</source>
+      <target state="needs-translation">Cychwynnwyd ad-daliad ar gyfer pryniant {user_username} o {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_bulk_initiated_subject" datatype="html">
+      <source>You have initiated refunds for {refund_quantity} invoice(s)</source>
+      <target state="needs-translation">Rydych wedi cychwyn ad-daliadau ar gyfer anfoneb (ion) {refund_quantity}</target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_bulk_initiated_content" datatype="html">
+      <source><p><strong>Hi {host_name},</strong></p>
+<p>You have initiated refunds for {refund_quantity} invoices</p>
+<p>Total value: <strong>{invoices_total}</strong></p>
+<p>We have notified the affected customers that they shall receive the refunded
+amount in their accounts within 5 working days</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+<p>Please note, if this request was not initated by you please notify us
+immediately"</p>
+</source>
+      <target state="needs-translation"><p><strong>Helo {host_name},</strong></p><p> Rydych wedi cychwyn ad-daliadau ar gyfer anfonebau {refund_quantity}</p><p> Cyfanswm gwerth: <strong>{invoices_total}</strong></p><p> Rydym wedi hysbysu'r cwsmeriaid yr effeithir arnynt y byddant yn derbyn y swm a ad-dalwyd yn eu cyfrifon cyn pen 5 diwrnod gwaith</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p><p> Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith '</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
+      <source>Refund for {performance_name} succesful!</source>
+      <target state="needs-translation">Ad-daliad ar gyfer {performance_name} yn llwyddiannus!</target>
+    </trans-unit>				
+		<trans-unit id="email.user.refund_refunded__content" datatype="html">
+      <source><p>Hi {user_username},</p>
+<p>This is a notification to confirm that {host_name} has successfully refunded
+your order <strong>{invoice_id}</strong> for <strong>{invoice_amount}</strong> for your purchase of
+<strong>{performance_name}</strong> due to:</p>
+<blockquote>
+<p>{refund_reason}</p>
+</blockquote>
+<p>The funds have now been credited to <strong>{card_brand}</strong> ending in <strong>{last_4}</strong>.
+You can view a log of this refund within your StageUp account settings</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo {user_username},</p><p> Mae hwn yn hysbysiad i gadarnhau bod {host_name} wedi ad- <strong>dalu'ch archeb {invoice_id} yn llwyddiannus ar</strong> gyfer <strong>{invoice_amount}</strong> am eich pryniant o <strong>{performance_name}</strong> oherwydd:</p><blockquote><p> {refund_reason}</p></blockquote><p> Mae'r cronfeydd bellach wedi'u credydu i <strong>{card_brand} sy'n</strong> dod i ben yn <strong>{last_4}</strong> . Gallwch weld log o'r ad-daliad hwn yn eich gosodiadau cyfrif StageUp</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
+      <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
+succesfully processed by Stripe</p>
+</source>
+      <target state="needs-translation"><p>Ad-daliad ar gyfer {user_username} ar gyfer {performance_name} (ID: {invoice_id}), wedi'i brosesu'n llwyddiannus gan Stripe</p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.refund_refunded__content" datatype="html">
+      <source><p>Hi {host_name},</p>
+<p>This is a notification to confirm that your recent refund request for
+<strong>{user_username}</strong> for <strong>{performance_name}</strong> for the amount of
+<strong>{invoice_amount}</strong> has succesfully been refunded by Stripe and the user has
+been notified.</p>
+<p>You can view the status of all your refunds within your account settings</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo {host_name},</p><p> Mae hwn yn hysbysiad i gadarnhau bod eich cais am ad-daliad diweddar am <strong>{user_username} ar</strong> gyfer <strong>{performance_name}</strong> am y swm o <strong>{invoice_amount}</strong> wedi'i ad-dalu'n llwyddiannus gan Stripe a bod y defnyddiwr wedi'i hysbysu.</p><p> Gallwch weld statws eich holl ad-daliadau o fewn gosodiadau eich cyfrif</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.refund_requested__subject" datatype="html">
+      <source>StageUp: Your refund request has been sent to @{host_name}</source>
+      <target state="needs-translation">StageUp: Mae eich cais am ad-daliad wedi'i anfon at @{host_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.refund_requested__content" datatype="html">
+      <source><p>Your refund request for the following invoice has been sent to
+<strong>{host_name}</strong>.</p>
+<ul>
+<li>Invoice #: <strong>{invoice_id}</strong></li>
+<li>Performance: <strong>{performance_name}</strong></li>
+<li>Purchased: <strong>{purchase_date}</strong></li>
+<li>Amount: <strong>{amount}</strong></li>
+</ul>
+<p>We’ll let you know when the host has processed your request</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Mae eich cais am ad-daliad am yr anfoneb ganlynol wedi'i anfon at <strong>{host_name}</strong> .</p><ul><li> Anfoneb #: <strong>{invoice_id}</strong></li><li> Perfformiad: <strong>{performance_name}</strong></li><li> Prynwyd: <strong>{purchase_date}</strong></li><li> Swm: <strong>{amount}</strong></li></ul><p> Byddwn yn rhoi gwybod ichi pan fydd y gwesteiwr wedi prosesu'ch cais</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.host_refund_requested_confirmation__subject" datatype="html">
+      <source>StageUp: Refund request received for {performance_name} from @{user_username}</source>
+      <target state="needs-translation">StageUp: Derbyniwyd cais am ad-daliad am {performance_name} gan @{user_username}</target>
+    </trans-unit>				
+		<trans-unit id="email.host_refund_requested_confirmation__content" datatype="html">
+      <source><p>Hi {host_name},</p>
+<p>@{user_username} ({user_email_address}) has requested a refund on their purchase of {performance_name}</p>
+<p><strong>Refund Details:</strong></p>
+<ul>
+<li><strong>Invoice #:</strong> {invoice_id}</li>
+<li><strong>Performance:</strong> {performance_name}</li>
+<li><strong>Purchased On:</strong> {purchase_date}</li>
+<li><strong>Amount:</strong> {amount}</li>
+</ul>
+<p>To process this request you can visit your <a href="{invoice_dashboard_url}">invoice dashboard
+here</a>.</p>
+<p><strong>Thanks,</strong>
+<strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo {host_name},</p><p> Mae @{user_username} ({user_email_address}) wedi gofyn am ad-daliad ar eu pryniant o {performance_name}</p><p> <strong>Manylion Ad-daliad:</strong></p><ul><li> <strong>Anfoneb #:</strong> {invoice_id}</li><li> <strong>Perfformiad:</strong> {performance_name}</li><li> <strong>Prynwyd Ymlaen:</strong> {purchase_date}</li><li> <strong>Swm:</strong> {amount}</li></ul><p> I brosesu'r cais hwn gallwch ymweld â'ch <a href="{invoice_dashboard_url}">dangosfwrdd anfoneb yma</a> .</p><p> <strong>Diolch,</strong> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_pdf__subject" datatype="html">
+      <source>Exported Invoice PDF files</source>
+      <target state="needs-translation">Ffeiliau PDF Anfoneb Allforio</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_pdf__content" datatype="html">
+      <source>See attachments for invoice data</source>
+      <target state="needs-translation">Gweler yr atodiadau am ddata anfoneb</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_csv__filename" datatype="html">
+      <source>stageup-invoice</source>
+      <target state="needs-translation">llwyfanup-anfoneb</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_csv__subject" datatype="html">
+      <source>Exported Invoice CSV files</source>
+      <target state="needs-translation">Ffeiliau CSV Anfoneb Allforio</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_csv__content" datatype="html">
+      <source>See attachments for invoice data</source>
+      <target state="needs-translation">Gweler yr atodiadau am ddata anfoneb</target>
+    </trans-unit>				
+		<trans-unit id="email.host.invoice_pdf__filename" datatype="html">
+      <source>stageup-invoice</source>
+      <target state="needs-translation">llwyfanup-anfoneb</target>
+    </trans-unit>				
+		<trans-unit id="email.test.send_email__subject" datatype="html">
+      <source>Testing e-mails!</source>
+      <target state="needs-translation">Profi e-byst!</target>
+    </trans-unit>				
+		<trans-unit id="email.test.send_email__content" datatype="html">
+      <source>Hey {username} <strong>How are you? [{url}]</strong></source>
+      <target state="needs-translation">Hei {username} <strong>Sut wyt ti? [{url}]</strong></target>
+    </trans-unit>				
+		<trans-unit id="email.user.registered__subject" datatype="html">
+      <source>Verify your StageUp account</source>
+      <target state="needs-translation">Gwiriwch eich cyfrif StageUp</target>
+    </trans-unit>				
+		<trans-unit id="email.user.registered__content" datatype="html">
+      <source>Click the link to verify: <a href="{url}">{url}</a></source>
+      <target state="needs-translation">Cliciwch y ddolen i wirio: <a href="{url}">{url}</a></target>
+    </trans-unit>				
+		<trans-unit id="email.user.invited_to_host__subject" datatype="html">
+      <source>You have been invited to join {host_name} by {inviter_name}</source>
+      <target state="needs-translation">Fe'ch gwahoddwyd i ymuno â {host_name} gan {inviter_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.user.invited_to_host__content" datatype="html">
+      <source><p>Hi {user_name},</p>
+<p>Click the link to accept the invitation: <a href="{url}">{url}</a>, this invite will expire in
+<strong>24 hours</strong>.</p>
+</source>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Cliciwch y ddolen i dderbyn y gwahoddiad: <a href="{url}">{url}</a> , bydd y gwahoddiad hwn yn dod i ben mewn <strong>24 awr</strong> .</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.invited_to_private_showing__subject" datatype="html">
+      <source>You have been invited to watch a private performance</source>
+      <target state="needs-translation">Fe'ch gwahoddwyd i wylio perfformiad preifat</target>
+    </trans-unit>				
+		<trans-unit id="email.user.invited_to_private_showing__content" datatype="html">
+      <source><p>Hi {user_name},</p>
+<p>Click the link to watch <strong>{performance_name}</strong> by <strong>{host_name}</strong> on StageUp
+now: <a href="{url}">{url}</a>></p>
+</source>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Cliciwch y ddolen i wylio <strong>{performance_name}</strong> gan <strong>{host_name}</strong> ar StageUp nawr: <a href="{url}">{url}</a> ></p></target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased_current__subject" datatype="html">
+      <source>Thank you for purchasing {performance_name}. Watch it now</source>
+      <target state="needs-translation">Diolch am brynu {performance_name}. Gwyliwch ef nawr</target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased_current__content" datatype="html">
+      <source><p>Hi {user_name},</p>
+<p>You purchased a {ticket_name} to watch {performance_name} for {amount}.</p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Click here to watch</a></p>
+<p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
+</source>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Fe wnaethoch chi brynu {ticket_name} i wylio {performance_name} ar gyfer {amount}.</p><p> Cliciwch yma i wylio: <a href="{url}">{url}</a> Derbyn y pryniant hwn: <a href="{receipt_url}">{receipt_url}</a></p></target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased_future__subject" datatype="html">
+      <source>Thank you for purchasing {performance_name}</source>
+      <target state="needs-translation">Diolch am brynu {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.ticket.purchased_future__content" datatype="html">
+      <source><p>Hello {user_name},</p>
+<p>You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don’t forget to mark your calendar.
+We’ll send you reminders closer to the time, so you don’t miss it. :)</p>
+<p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to my library</a></p>
+<p>Cheers,</p>
+<p>StageUp Team</p>
+</source>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name} ar gyfer {amount}. Bydd yn dangos am y tro cyntaf ar {premier_time}. Peidiwch ag anghofio marcio'ch calender. Byddwn yn anfon nodiadau atgoffa atoch yn agos at y dyddiad, felly ni fyddwch yn ei golli. :)</p><p> Derbyn y pryniant hwn: <a href="{receipt_url}">{receipt_url}</a> Ewch â mi i'm llyfrgell: <a href="{url}">{url}</a></p><p> Lloniannau,</p><p> Tîm StagUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.patronage_started__subject" datatype="html">
+      <source>Patron Subscription to {tier_name}</source>
+      <target state="needs-translation">Tanysgrifiad Noddwr i {tier_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.user.patronage_started__content" datatype="html">
+      <source><p>Hi {user_name},</p>
+<p>Thank you for supporting <strong>{host_name}</strong>!</p>
+<p>Your patron payments of {amount} will be debited on {date_ordinal} of each
+month, starting today.</p>
+<p>You can cancel your payments at any time. By making this payment you agree to
+<a href="{tos_url}">StageUp’s Terms of Use</a></p>
+<p>Thanks,
+StageUp Team</p>
+</source>
+      <target state="needs-translation"><p>Helo {user_name},</p><p> Diolch am gefnogi <strong>{host_name}</strong> !</p><p> Bydd eich taliadau noddwr o {amount} yn cael eu debydu ar {date_ordinal} bob mis, gan ddechrau heddiw.</p><p> Gallwch ganslo'ch taliadau ar unrhyw adeg. Trwy wneud y taliad hwn rydych chi'n cytuno i <a href="{tos_url}">Delerau Defnyddio StageUp</a></p><p> Diolch, Tîm StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.host.patronage_started__subject" datatype="html">
+      <source>New Patron to {tier_name}</source>
+      <target state="needs-translation">Noddwr Newydd i {tier_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.host.patronage_started__content" datatype="html">
+      <source><p>Hi <strong>{host_name}</strong>,</p>
+<p>@{user_username} is now a patron of your company.</p>
+<ul>
+<li>Patron Tier: <strong>{tier_name}</strong></li>
+<li>Amount: <strong>{amount}</strong></li>
+</ul>
+</source>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Mae @{user_username} bellach yn noddwr i'ch cwmni.</p><ul><li> Haen <strong>Noddwyr: {tier_name}</strong></li><li> Swm: <strong>{amount}</strong></li></ul></target>
+    </trans-unit>				
+		<trans-unit id="email.user.password_reset_requested__subject" datatype="html">
+      <source>StageUp Reset Password</source>
+      <target state="needs-translation">Cyfrinair Ailosod StageUp</target>
+    </trans-unit>				
+		<trans-unit id="email.user.password_reset_requested__content" datatype="html">
+      <source><p>Hi <strong>{user_name}</strong>,</p>
+<p>You are receiving this because you (or someone else) has requested the reset
+of the password for your StageUp account.</p>
+<p>Please click on the following link to complete the process. This link is valid
+for the next 24 hours.</p>
+<p><a href="{password_reset_url}">{password_reset_url}</a></p>
+<p>If you did not request this change, please ignore this email and your password
+will remain unchanged.</p>
+</source>
+      <target state="needs-translation"><p>Helo <strong>{user_name}</strong> ,</p><p> Rydych chi'n derbyn hwn oherwydd eich bod chi (neu rywun arall) wedi gofyn am ailosod y cyfrinair ar gyfer eich cyfrif StageUp.</p><p> Cliciwch ar y ddolen ganlynol i gwblhau'r broses. Mae'r ddolen hon yn ddilys am y 24 awr nesaf.</p><p> <a href="{password_reset_url}">{password_reset_url}</a></p><p> Os na ofynasoch am y newid hwn, anwybyddwch yr e-bost hwn a bydd eich cyfrinair yn aros yr un fath.</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.password_changed__subject" datatype="html">
+      <source>Your StageUp password was just changed</source>
+      <target state="needs-translation">Newidiwyd eich cyfrinair StageUp yn unig</target>
+    </trans-unit>				
+		<trans-unit id="email.user.password_changed__content" datatype="html">
+      <source><p>Your StageUp account password has recently been changed.</p>
+<p>If you did not make this change, please login into your account and change
+your password as soon as possible.</p>
+<p>If you have recently changed your password, then please ignore this</p>
+</source>
+      <target state="needs-translation"><p>Newidiwyd cyfrinair eich cyfrif StageUp yn ddiweddar.</p><p> Os na wnaethoch y newid hwn, mewngofnodwch i'ch cyfrif a newid eich cyfrinair cyn gynted â phosibl.</p><p> Os ydych chi wedi newid eich cyfrinair yn ddiweddar, yna anwybyddwch hyn</p></target>
+    </trans-unit>				
+		<trans-unit id="email.subscriber_notify_tier_deleted__subject" datatype="html">
+      <source>Notification of Patron Tier removal</source>
+      <target state="needs-translation">Hysbysiad o symud Haen Noddwyr</target>
+    </trans-unit>				
+		<trans-unit id="email.subscriber_notify_tier_deleted__content" datatype="html">
+      <source><p>Hi <strong>@{user_username}</strong>,</p>
+<p><strong>@{host_username}</strong> has deleted/removed the <strong>{tier_name}</strong> tier. We have
+cancelled your current subscription ({sub_id}). It will come into effect
+immediately. You’ll recieve and e-mail shortly confirming the un-subscription.</p>
+<p>Thanks, StageUp</p>
+</source>
+      <target state="needs-translation"><p>Helo <strong>@{user_username}</strong> ,</p><p> <strong>Mae @{host_username}</strong> wedi dileu / dileu haen <strong>{tier_name}.</strong> Rydym wedi canslo'ch tanysgrifiad cyfredol ({sub_id}). Daw i rym ar unwaith. Byddwch yn derbyn ac yn e-bostio cyn bo hir yn cadarnhau'r tanysgrifiad.</p><p> Diolch, StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user_unsubscribed_from_patron_tier__subject" datatype="html">
+      <source>Un-subscribed from patron tier</source>
+      <target state="needs-translation">Heb danysgrifio o haen noddwyr</target>
+    </trans-unit>				
+		<trans-unit id="email.user_unsubscribed_from_patron_tier__content" datatype="html">
+      <source><p>Hi @{user_username},</p>
+<p>This is a receipt of your un-subscription from <strong>@{host_username}</strong>'s patron
+tier, <strong>{tier_name}</strong>.</p>
+<p>You’ll no longer be charged for this subscription & this subscription will be
+listed as ‘Cancelled’ on your account from now on.</p>
+<p>Thanks, StageUp</p>
+</source>
+      <target state="needs-translation"><p>Helo @{user_username},</p><p> Dyma dderbynneb o'ch tanysgrifiad gan haen noddwr <strong>@{host_username}</strong> <strong>, {tier_name}</strong> .</p><p> Ni chodir tâl arnoch am y tanysgrifiad hwn mwyach a bydd y tanysgrifiad hwn yn cael ei restru fel 'Canslo' ar eich cyfrif o hyn ymlaen.</p><p> Diolch, StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.one_day_performance_reminder__subject" datatype="html">
+      <source>{performance_name}'s premiere is around the corner</source>
+      <target state="needs-translation">Mae première {performance_name} rownd y gornel</target>
+    </trans-unit>				
+		<trans-unit id="email.user.one_day_performance_reminder__content" datatype="html">
+      <source><p>Hello {user_username}!</p>
+<p>You purchased tickets for {performance_name}. It will premiere <strong>tomorrow</strong> on <strong>{premier_time}</strong>.</p>
+<p>We’re looking forward seeing you on StageUp!</p>
+<p>Cheers,</p>
+<p>StageUp team</p>
+</source>
+      <target state="needs-translation"><p>Helo {user_username}!</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name}. Bydd yn cael ei <strong>ddangos</strong> am y <strong>tro cyntaf yfory</strong> yn {premier_time}.</p><p> Gobeithio eich bod chi'n cynhyrfu i'w wylio.</p><p> Lloniannau,</p><p> Tîm StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.fifteen_minute_performance_reminder__subject" datatype="html">
+      <source>It’s on in 15 minutes!</source>
+      <target state="needs-translation">Mae ymlaen mewn 15 munud!</target>
+    </trans-unit>				
+		<trans-unit id="email.user.fifteen_minute_performance_reminder__content" datatype="html">
+      <source><p>Hello {user_username}!</p>
+<p>You purchased tickets for {performance_name}. It will start at {premier_time}.</p>
+<p>We hope you’re all set to watch it!</p>
+<p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to the performance</a></p>
+<p>Cheers,</p>
+<p>StageUp team</p>
+</source>
+      <target state="needs-translation"><p>Helo {user_username}!</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name}. Bydd yn cychwyn yn {premier_time}.</p><p> Gobeithio eich bod chi i gyd yn barod i'w wylio!</p><p> Ewch â mi i'm llyfrgell: <a href="{url}">{url}</a></p><p> Lloniannau,</p><p> Tîm StageUp</p></target>
+    </trans-unit>				
+		<trans-unit id="error.internal_server_error" datatype="html">
+      <source>Internal server error</source>
+      <target state="needs-translation">Gwall gweinydd mewnol</target>
+    </trans-unit>				
+		<trans-unit id="error.missing_translation" datatype="html">
+      <source>Missing translation</source>
+      <target state="needs-translation">Cyfieithiad ar goll</target>
+    </trans-unit>				
+		<trans-unit id="error.missing_permissions" datatype="html">
+      <source>Insufficent privileges</source>
+      <target state="needs-translation">Breintiau annigonol</target>
+    </trans-unit>				
+		<trans-unit id="error.not_found" datatype="html">
+      <source>Not found</source>
+      <target state="needs-translation">Heb ei ddarganfod</target>
+    </trans-unit>				
+		<trans-unit id="error.no_such_route" datatype="html">
+      <source>No such route</source>
+      <target state="needs-translation">Dim llwybr o'r fath</target>
+    </trans-unit>				
+		<trans-unit id="error.not_member" datatype="html">
+      <source>Not a member of company</source>
+      <target state="needs-translation">Ddim yn aelod o gwmni</target>
+    </trans-unit>				
+		<trans-unit id="error.duplicate" datatype="html">
+      <source>Duplicate value found</source>
+      <target state="needs-translation">Gwerth dyblyg wedi'i ddarganfod</target>
+    </trans-unit>				
+		<trans-unit id="error.in_use" datatype="html">
+      <source>Value is already in use</source>
+      <target state="needs-translation">Mae gwerth eisoes yn cael ei ddefnyddio</target>
+    </trans-unit>				
+		<trans-unit id="error.invalid" datatype="html">
+      <source>Value is invalid</source>
+      <target state="needs-translation">Mae'r gwerth yn annilys</target>
+    </trans-unit>				
+		<trans-unit id="error.code" datatype="html">
+      <source>Test code</source>
+      <target state="needs-translation">Cod prawf</target>
+    </trans-unit>				
+		<trans-unit id="error.unknown" datatype="html">
+      <source>An unknown error occured</source>
+      <target state="needs-translation">Digwyddodd gwall anhysbys</target>
+    </trans-unit>				
+		<trans-unit id="error.no_session" datatype="html">
+      <source>Must be logged in to perform this action</source>
+      <target state="needs-translation">Rhaid mewngofnodi i gyflawni'r weithred hon</target>
+    </trans-unit>				
+		<trans-unit id="error.admin_only" datatype="html">
+      <source>Must be a Site Admin to perform this action</source>
+      <target state="needs-translation">Rhaid bod yn Weinyddwr Safle i gyflawni'r weithred hon</target>
+    </trans-unit>				
+		<trans-unit id="error.missing_field" datatype="html">
+      <source>Missing a field in the provided data</source>
+      <target state="needs-translation">Ar goll maes yn y data a ddarperir</target>
+    </trans-unit>				
+		<trans-unit id="error.not_verified" datatype="html">
+      <source>Your account must be verified to perform this action</source>
+      <target state="needs-translation">Rhaid gwirio'ch cyfrif i gyflawni'r weithred hon</target>
+    </trans-unit>				
+		<trans-unit id="error.forbidden" datatype="html">
+      <source>This action is forbidden</source>
+      <target state="needs-translation">Gwaherddir y weithred hon</target>
+    </trans-unit>				
+		<trans-unit id="error.not_implemented" datatype="html">
+      <source>Method is not implemented</source>
+      <target state="needs-translation">Ni weithredir y dull</target>
+    </trans-unit>				
+		<trans-unit id="error.incorrect" datatype="html">
+      <source>Value is incorrect</source>
+      <target state="needs-translation">Mae'r gwerth yn anghywir</target>
+    </trans-unit>				
+		<trans-unit id="error.missing_body" datatype="html">
+      <source>Missing body data</source>
+      <target state="needs-translation">Data corff ar goll</target>
+    </trans-unit>				
+		<trans-unit id="error.locked" datatype="html">
+      <source>Data is locked</source>
+      <target state="needs-translation">Mae'r data wedi'i gloi</target>
+    </trans-unit>				
+		<trans-unit id="validation.not_allowed" datatype="html">
+      <source>Value is not allowed</source>
+      <target state="needs-translation">Ni chaniateir gwerth</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid" datatype="html">
+      <source>Value is not valid</source>
+      <target state="needs-translation">Nid yw'r gwerth yn ddilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.too_long" datatype="html">
+      <source>Value is too long</source>
+      <target state="needs-translation">Mae'r gwerth yn rhy hir</target>
+    </trans-unit>				
+		<trans-unit id="validation.too_short" datatype="html">
+      <source>Value is too short</source>
+      <target state="needs-translation">Mae'r gwerth yn rhy fyr</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_email" datatype="html">
+      <source>Not a valid e-mail address</source>
+      <target state="needs-translation">Ddim yn gyfeiriad e-bost dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_phone_number" datatype="html">
+      <source>Not a valid phone number</source>
+      <target state="needs-translation">Ddim yn rhif ffôn dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.not_hmrc_number" datatype="html">
+      <source>Not a valid HMRC Company number</source>
+      <target state="needs-translation">Ddim yn rhif Cwmni Cyllid a Thollau EM dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_vat_number" datatype="html">
+      <source>Not a valid VAT number</source>
+      <target state="needs-translation">Ddim yn rhif TAW dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_url" datatype="html">
+      <source>Not a valid URL</source>
+      <target state="needs-translation">Ddim yn URL dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_facebook_url" datatype="html">
+      <source>Not a valid Facebook URL</source>
+      <target state="needs-translation">Ddim yn URL dilys ar Facebook</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_instagram_url" datatype="html">
+      <source>Not a valid Instagram URL</source>
+      <target state="needs-translation">Ddim yn URL Instagram dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_linkedin_url" datatype="html">
+      <source>Not a valid LinkedIn URL</source>
+      <target state="needs-translation">Ddim yn URL LinkedIn dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_twitter_url" datatype="html">
+      <source>Not a valid Twitter URL</source>
+      <target state="needs-translation">Ddim yn URL Twitter dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_pinterest_url" datatype="html">
+      <source>Not a valid Pinterest URL</source>
+      <target state="needs-translation">Ddim yn URL Pinterest dilys</target>
+    </trans-unit>				
+		<trans-unit id="validation.invalid_youtube_url" datatype="html">
+      <source>Not a valid Youtube URL</source>
+      <target state="needs-translation">Ddim yn URL dilys Youtube</target>
+    </trans-unit>			</body>
+    </file>
+  </xliff>

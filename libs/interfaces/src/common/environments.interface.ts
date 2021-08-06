@@ -5,19 +5,14 @@ export enum Environment {
   Testing = 'testing'
 }
 
-export interface IBackendEnvironment {
-  apiUrl: string;
-  frontendUrl: string;
-  postgresDatabase: string;
-  environment: Environment;
+export interface IStaticFrontendEnvironment {
+  app_version: string;
+  is_deployed: boolean;
 }
 
-export interface IFrontendEnvironment {
-  apiUrl: string;
-  sseUrl: string;
-  frontendUrl: string;
+export interface IDynamicFrontendEnvironment {
+  frontend_url: string;
+  stripe_public_key: string;
   environment: Environment;
-  stripePublicKey: string;
-  appVersion: string;
-  locale: string;
+  mux_env_key: string;
 }

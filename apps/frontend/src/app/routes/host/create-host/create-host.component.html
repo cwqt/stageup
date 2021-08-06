@@ -13,6 +13,7 @@
   </ui-admonition>
 
   <ui-button
+    class="mb-4"
     kind="primary"
     (click)="hostForm.submit()"
     [disabled]="hostForm.group.disabled"
@@ -22,10 +23,5 @@
     Create Host
   </ui-button>
 
-  <p class="pb-0 opacity-50 mt-2">
-    <small i18n>
-      By creating a company account, you agree to the company Terms of Service. For more information about StageUp's
-      privacy practices, see the StageUp Privacy Statement.
-    </small>
-  </p>
+  <app-terms-links></app-terms-links>
 </div>

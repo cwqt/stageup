@@ -9,7 +9,7 @@ import {
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, RelationId } from 'typeorm';
-import { Invoice } from '../common/invoice.entity';
+import { Invoice } from '../finance/invoice.entity';
 import { PatronTier } from '../hosts/patron-tier.entity';
 import { User } from './user.entity';
 

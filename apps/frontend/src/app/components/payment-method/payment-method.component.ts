@@ -9,6 +9,7 @@ import {
   PurchaseableType
 } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
+import { AppService } from '@frontend/services/app.service';
 import { MyselfService } from '@frontend/services/myself.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
@@ -40,7 +41,8 @@ export class PaymentMethodComponent implements OnInit {
   constructor(
     private myselfService: MyselfService,
     private toastService: ToastService,
-    private stripeFactory: StripeFactoryService
+    private stripeFactory: StripeFactoryService,
+    private appService: AppService
   ) {}
 
   async ngOnInit() {
@@ -87,7 +89,7 @@ export class PaymentMethodComponent implements OnInit {
     const intent = await cachize(paymentIntentFn(paymentIntentData), this.paymentIntent);
 
     // PaymentIntent is on the hosts Stripe Account
-    const stripe = this.stripeFactory.create(environment.stripePublicKey, {
+    const stripe = this.stripeFactory.create(this.appService.environment.stripe_public_key, {
       stripeAccount: stripeAccountId
     });
 
