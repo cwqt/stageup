@@ -40,12 +40,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     private performanceService: PerformanceService,
     private hostService: HostService,
     private toastService: ToastService,
-<<<<<<< HEAD
-    private baseAppService: BaseAppService,
-    private myselfService: MyselfService
-=======
     private appService: AppService
->>>>>>> ee5dfe66a58e0397678c3c7255ff68968bbab295
   ) {}
 
   setType(type: 'live' | 'vod') {
