@@ -16,18 +16,18 @@ $clr-ntrl-min: #fff;
 $clr-ntrl-max: #000;
 
 // primary colour
-$clr-primary: #ef4571;
-$clr-primary-lt: #e36689;
-$clr-primary-ltr: lighten($clr-primary-lt, 10%);
-$clr-primary-dk: #c95559;
-$clr-primary-dkr: darken($clr-primary-dk, 10%);
+$clr-primary: #e47290;
+$clr-primary-lt: lighten($clr-primary, 10%);
+$clr-primary-ltr: lighten($clr-primary, 15%);
+$clr-primary-dk: darken($clr-primary, 10%);
+$clr-primary-dkr: darken($clr-primary,15%);
 
 // secondary colour
-$clr-secondary: #282828;
-$clr-secondary-lt: lighten($clr-secondary, 5%);
-$clr-secondary-ltr: lighten($clr-secondary, 10%);
-$clr-secondary-dk: darken($clr-secondary, 5%);
-$clr-secondary-dkr: darken($clr-secondary, 10%);
+$clr-secondary: #b7b7b7;
+$clr-secondary-lt: lighten($clr-secondary, 10%);
+$clr-secondary-ltr: lighten($clr-secondary, 15%);
+$clr-secondary-dk: darken($clr-secondary, 10%);
+$clr-secondary-dkr: darken($clr-secondary, 15%);
 
 $clr-red: #ffd7d9;
 $clr-red-drk: #a2191f;
@@ -61,7 +61,7 @@ $clr-warm-grey-drk: #565151;
 $clr-info: #00b8d4;
 $clr-info-drk: rgba(0, 184, 212, 0.1);
 
-$clr-warning: #ff9100;
+$clr-warning: #EDBC29;
 $clr-warning-drk: rgba(255, 145, 0, 0.1);
 
 $clr-success: #00c853;

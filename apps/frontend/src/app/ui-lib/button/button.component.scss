@@ -14,7 +14,7 @@
   position: relative;
   user-select: none;
   transition: background-color 0.2s;
-  border-radius: 4px;
+  border-radius: 5px;
   width: inherit;
   .ui-button__icon,
   mat-spinner {
@@ -71,7 +71,7 @@
   background-color: $clr-secondary;
   color: white;
   &:hover {
-    background-color: $clr-secondary-lt;
+    background-color: $clr-secondary-dk;
   }
   .ripple {
     background-color: rgba($color: #fff, $alpha: 0.2) !important;
