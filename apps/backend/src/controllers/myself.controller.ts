@@ -11,6 +11,7 @@ import {
   PaymentMethod,
   Performance,
   Refund,
+  Ticket,
   User,
   UserHostInfo,
   Validators
@@ -154,15 +155,14 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
         if (fetchAll || req.query['trending']) {
           const ticketSales: Invoice[] = await this.ORM.createQueryBuilder(Invoice, 'invoice')
-            .select(['invoice._id', 'ticket._id', 'performance._id'])
-            .addSelect('COUNT(ticket._id) as ticketsSold')
-            .where('invoice.purchased_at >= :curdate', { curdate: getUnixTime(startOfWeek(new Date())) })
-            .innerJoin('invoice.ticket', 'ticket')
-            .innerJoin('ticket.performance', 'performance')
-            .groupBy('performance._id')
-            .addGroupBy('invoice._id')
-            .addGroupBy('ticket._id')
-            .getQuery();
+            .select(['COUNT(invoice._id) as tickets_sold', 'ticket._id'])
+            // .where('invoice.purchased_at >= :curdate', { curdate: getUnixTime(startOfWeek(new Date())) })
+
+            .andWhere('invoice.ticket__id = ticket._id')
+            .groupBy('ticket._id')
+            .orderBy('tickets_sold', 'DESC')
+            .getMany();
+
           // .innerJoin('i.ticket', 'ticket')
           // .innerJoin('ticket.performance', 'performance')
           // .addSelect('i.ticket')
@@ -220,7 +220,7 @@ export default class MyselfController extends BaseController<BackendProviderMap>
     return {
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        return await this.ORM.createQueryBuilder(Invoice, 'invoice')
+        const perfs = await this.ORM.createQueryBuilder(Invoice, 'invoice')
           .where('invoice.user__id = :user_id', { user_id: req.session.user._id })
           .leftJoinAndSelect('invoice.ticket', 'ticket')
           .leftJoinAndSelect('ticket.performance', 'performance')
@@ -232,6 +232,9 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           .innerJoinAndSelect('group.assets', 'assets')
           .withDeleted() // ticket/performance can be soft removed
           .paginate(i => i.ticket.performance.toStub());
+
+        console.log(perfs);
+        return perfs;
       }
     };
   }

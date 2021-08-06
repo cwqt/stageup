@@ -89,10 +89,9 @@ Register<BackendProviderMap>({
 
   // Run the seeder in staging, for branch & staging deploys
   if (Env.isEnv(Environment.Staging) && configuration.is_seeded == false) {
-    await seeder({ torm: providers.torm, stripe: providers.stripe }).run();
-
     // seeder will wipe config momentarily, but stored in memory & will be saved again
     configuration.is_seeded = true;
+    await seeder({ torm: providers.torm, stripe: providers.stripe }).run();
     await configuration.save();
   }
 
