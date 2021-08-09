@@ -18,7 +18,8 @@ export interface IUserConsent<T extends ConsentType> {
 export type UserConsentData = {
   host_marketing: {
     user: IUserStub;
-    host: IHostStub & IHostPrivate['email_address'];
+    // host: IHostStub & IHostPrivate['email_address'];
+    host: IHostStub;
     opt_status: ConsentOpt;
     terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
@@ -48,3 +49,16 @@ type ConsentMixin<T extends ConsentType> = IUserConsent<T> & UserConsentData[T];
 export type IUserHostMarketingConsent = ConsentMixin<'host_marketing'>;
 export type IUserStageUpMarketingConsent = ConsentMixin<'stageup_marketing'>;
 export type IHostUploadersConsent = ConsentMixin<'upload_consent'>;
+
+export enum OptOutOptions {
+  TooFrequent = 'too_frequent',
+  TooCluttered = 'too_cluttered',
+  NotRelevant = 'not_relevant',
+  DidntSignUp = 'didnt_sign_up'
+}
+
+// When the user opts out from host marketing, an email is sent to the host with optional 'reason' and 'message' from the user as to why the are opting out.
+export interface IOptOutReason {
+  reason?: OptOutOptions;
+  message?: string;
+}

@@ -13,6 +13,7 @@ import {
   ILike,
   ILocale,
   IMyself,
+  IOptOutReason,
   IPasswordConfirmationResponse,
   IPaymentMethod,
   IPaymentMethodStub,
@@ -205,9 +206,9 @@ export class MyselfService {
   }
 
   // router.post <void> ("/myself/opt-ins", Myself.updateOptInStatus());
-  updateOptInStatus(hostId: string, newStatus: ConsentOpt): Promise<void> {
+  updateOptInStatus(hostId: string, newStatus: ConsentOpt, optOutReason?: IOptOutReason): Promise<void> {
     return this.http
-      .post<void>(`/api/myself/opt-ins/${hostId}`, { new_status: newStatus })
+      .post<void>(`/api/myself/opt-ins/${hostId}`, { new_status: newStatus, opt_out_reason: optOutReason })
       .toPromise();
   }
 }

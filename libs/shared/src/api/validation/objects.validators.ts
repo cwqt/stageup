@@ -20,6 +20,8 @@ import {
   RefundRequestReason,
   IPersonInfo,
   ISocialInfo,
+  IOptOutReason,
+  OptOutOptions,
   PaginationOptions,
   PurchaseableType,
   IDeleteHostReason,
@@ -229,5 +231,10 @@ export namespace objects {
     description: fields.richtext,
     amount: number(),
     is_visible: boolean()
+  });
+
+  export const IOptOutReason: Describe<IOptOutReason> = object({
+    reason: optional(enums<OptOutOptions>(enumToValues(OptOutOptions))),
+    message: optional(string())
   });
 }

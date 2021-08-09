@@ -1,4 +1,3 @@
-import { UserHostMarketingConsent } from './../../../../libs/shared/src/api/entities/gdpr/consents/user-host-marketing-consent.entity';
 import { ErrorHandler, getCheck } from '@backend/common/error';
 import { SUPPORTED_LOCALES } from '@backend/common/locales';
 import { BackendProviderMap } from '@backend/common/providers';
@@ -14,6 +13,7 @@ import {
   Refund,
   User,
   UserHostInfo,
+  UserHostMarketingConsent,
   Validators
 } from '@core/api';
 import { timestamp } from '@core/helpers';
@@ -40,7 +40,7 @@ import {
   pick,
   Visibility
 } from '@core/interfaces';
-import { boolean, enums, object, record, string } from 'superstruct';
+import { boolean, enums, object, record, string, optional } from 'superstruct';
 import AuthStrat from '../common/authorisation';
 import { Not } from 'typeorm';
 
@@ -525,11 +525,13 @@ export default class MyselfController extends BaseController<BackendProviderMap>
       validators: {
         params: object({ hid: Validators.Fields.nuuid }),
         body: object({
-          new_status: enums<ConsentOpt>(ConsentOpts)
+          new_status: enums<ConsentOpt>(ConsentOpts),
+          opt_out_reason: optional(Validators.Objects.IOptOutReason)
         })
       },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
+        console.log(req.body);
         // Check host exists
         await getCheck(
           this.ORM.createQueryBuilder(Host, 'host').where('host._id = :hid', { hid: req.params.hid }).getOne()
@@ -542,8 +544,9 @@ export default class MyselfController extends BaseController<BackendProviderMap>
             .andWhere('consent.host__id = :hid', { hid: req.params.hid })
             .getOne()
         );
+        // TODO: ADD EMAIL EVENT. WAIT FOR MERGE WITH DEV FIRST
+
         // Update new status and save
-        // TODO: ADD DATE OF CONSENT?
         existingConsent.opt_status = req.body.new_status;
         await existingConsent.save();
       }

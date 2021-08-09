@@ -149,6 +149,7 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { GdprSettingsComponent } from './routes/settings/gdpr-settings/gdpr-settings.component';
+import { OptOutDialogComponent } from './components/dialogs/opt-out-dialog/opt-out-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -264,7 +265,8 @@ import { GdprSettingsComponent } from './routes/settings/gdpr-settings/gdpr-sett
     DocumentViewComponent,
     TermsLinksComponent,
     CookieConsentComponent,
-    GdprSettingsComponent
+    GdprSettingsComponent,
+    OptOutDialogComponent
   ],
   imports: [
     AngularMaterialModule,

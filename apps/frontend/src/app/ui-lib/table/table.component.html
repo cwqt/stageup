@@ -167,7 +167,7 @@
           <td mat-cell *matCellDef="let element">
             <div class="ui-table--actions">
               <ng-container *ngFor="let action of table.config.actions">
-                <ng-container *ngIf="!action.hide(element.__data)">
+                <ng-container *ngIf="action.type != 'toggle'">
                   <ui-button
                     [popper]="dropdownMenu"
                     [popperHideOnClickOutside]="true"
@@ -191,6 +191,18 @@
                     </div>
                   </popper-content>
                 </ng-container>
+                <div *ngIf="action.type == 'toggle' && action.toggle">
+                  <mat-label *ngIf="action.toggle.before_label" class="label-before-slide" i18n>{{
+                    action.toggle.before_label
+                  }}</mat-label>
+                  <mat-slide-toggle
+                    [checked]="action.toggle.initial_value(element.__data)"
+                    (change)="action.toggle.event($event, element.__data)"
+                    i18n
+                  >
+                    {{ action.toggle.primary_label }}
+                  </mat-slide-toggle>
+                </div>
               </ng-container>
             </div>
           </td>
