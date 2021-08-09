@@ -97,7 +97,7 @@ router.put      <ILocale>               ("/myself/locale",                      
 router.post     <IFollowing>            ("/myself/follow-host/:hid",                  Myself.addFollow());
 router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow());
 router.get      <any>                   ("/myself/opt-ins",                           Myself.readUserHostMarketingConsents());
-router.post     <void>                  ("/myself/opt-ins/:hid",                      Myself.updateOptInStatus());
+router.put      <void>                  ("/myself/opt-ins/:hid",                      Myself.updateOptInStatus());
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = new UserController(providers, middlewares);

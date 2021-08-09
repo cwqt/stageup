@@ -531,7 +531,6 @@ export default class MyselfController extends BaseController<BackendProviderMap>
       },
       authorisation: AuthStrat.isLoggedIn,
       controller: async req => {
-        console.log(req.body);
         // Check host exists
         await getCheck(
           this.ORM.createQueryBuilder(Host, 'host').where('host._id = :hid', { hid: req.params.hid }).getOne()

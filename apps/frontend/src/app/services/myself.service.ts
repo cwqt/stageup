@@ -205,10 +205,10 @@ export class MyselfService {
     return this.http.get<any>(`/api/myself/opt-ins${querize(query)}`).toPromise();
   }
 
-  // router.post <void> ("/myself/opt-ins", Myself.updateOptInStatus());
+  // router.put <void> ("/myself/opt-ins", Myself.updateOptInStatus());
   updateOptInStatus(hostId: string, newStatus: ConsentOpt, optOutReason?: IOptOutReason): Promise<void> {
     return this.http
-      .post<void>(`/api/myself/opt-ins/${hostId}`, { new_status: newStatus, opt_out_reason: optOutReason })
+      .put<void>(`/api/myself/opt-ins/${hostId}`, { new_status: newStatus, opt_out_reason: optOutReason })
       .toPromise();
   }
 }
