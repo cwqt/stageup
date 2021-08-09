@@ -397,7 +397,6 @@ export default class PerformanceController extends BaseController<BackendProvide
         const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
         perf.status = PerformanceStatus.Deleted;
         await perf.softRemove();
-        //
       }
     };
   }
