@@ -1,3 +1,4 @@
+import { FilterCode } from '@core/interfaces';
 import { HelperService } from '@frontend/services/helper.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OptOutDialogComponent } from '@frontend/components/dialogs/opt-out-dialog/opt-out-dialog.component';
@@ -25,7 +26,8 @@ export class GdprSettingsComponent implements OnInit {
       columns: [
         {
           label: $localize`Company`,
-          accessor: v => v.host.name
+          accessor: v => v.host.name,
+          sort: { field: 'host_name' }
         }
       ],
       actions: [

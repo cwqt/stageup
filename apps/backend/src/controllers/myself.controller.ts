@@ -509,12 +509,10 @@ export default class MyselfController extends BaseController<BackendProviderMap>
           .andWhere('consent.user__id = :uid', { uid: req.session.user._id })
           .innerJoinAndSelect('consent.user', 'user')
           .innerJoinAndSelect('consent.host', 'host')
-          .paginate(o => {
-            return {
-              ...o.toFull(),
-              email_address: o.host.email_address
-            };
-          });
+          .sort({
+            host_name: 'host.name'
+          })
+          .paginate(o => o.toFull());
       }
     };
   }
