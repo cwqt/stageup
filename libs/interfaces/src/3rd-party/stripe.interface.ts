@@ -36,6 +36,9 @@ export enum StripeHook {
   SubscriptionDeleted = 'customer.subscription.deleted'
 }
 
+// enum to value string union
+export type HandledStripeHooks = `${StripeHook}`;
+
 export interface IStripeChargePassthrough {
   payment_method_id: NUUID;
   purchaseable_type: PurchaseableType;

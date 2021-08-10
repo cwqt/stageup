@@ -6,15 +6,13 @@ import { HTTP } from '@core/interfaces';
 import Multer from 'multer';
 import { RedisClient } from 'redis';
 
-export class Middlewares {
-  constructor() {}
-
+export class Middleware {
   /**
    * @description File parsing middleware
    * @param maxFileSize Max file size in kB
    * @param acceptedTypes Accepted file MIME types
    */
-  file(maxFileSize: number, acceptedTypes: Readonly<string[]>) {
+  static file(maxFileSize: number, acceptedTypes: Readonly<string[]>) {
     return Multer({
       storage: Multer.memoryStorage(),
       limits: {
@@ -36,7 +34,7 @@ export class Middlewares {
    * @param period Plain-english cache duration e.g. "5 minutes"
    * @param cacheFunction Cache only when true, passed req & res objects
    */
-  cache(period: string, redis: RedisClient, cacheFunction?: (request: Request, res: Response) => boolean): any {
+  static cache(period: string, redis: RedisClient, cacheFunction?: (request: Request, res: Response) => boolean): any {
     return apicache
       .options({
         redisClient: redis
@@ -49,7 +47,7 @@ export class Middlewares {
    * @param period Period in seconds that requests are remembered for
    * @param max Max number of requests in period
    */
-  rateLimit(period: number, max: number, redis: RedisClient): RateLimiter.RateLimit {
+  static rateLimit(period: number, max: number, redis: RedisClient): RateLimiter.RateLimit {
     return RateLimiter({
       store: new RedisStore({
         client: redis
