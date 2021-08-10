@@ -8,7 +8,10 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 export class Configuration extends BaseEntity {
   @PrimaryColumn() _id: number;
   @Column() is_seeded: boolean;
-  @Column() started_at: number;
+  // @Column() started_at: number;
+  // _>_>
+  @Column({ nullable: true }) started_at: number;
+  // _>_>
 
   constructor() {
     super();
