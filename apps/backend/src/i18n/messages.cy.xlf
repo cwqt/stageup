@@ -1261,6 +1261,37 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </source>
       <target state="needs-translation"><p>Helo <strong>{user_username}</strong> ,</p><p> Yn anffodus, bu'n rhaid i {host_name} ganslo'r perfformiad: {performance_name}. Rydym wedi cychwyn ad-daliad ar eich tocyn a brynwyd ar {ticket_purchase_date}.</p><p> Anfoneb #: {invoice_id}</p><p> Pris y Tocyn: {ticket_amount}</p><p> Byddwn yn credydu'r arian yn awtomatig i'ch <strong>{card_brand} sy'n</strong> dod i ben yn <strong>{last_4}</strong> . Sylwch, gall gymryd hyd at 5 diwrnod gwaith i'ch cyfrif gael ei gredydu.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__subject" datatype="html">
+      <source>A new user has consented to marketing</source>
+      <target state="needs-translation">Mae defnyddiwr newydd wedi cydsynio i farchnata</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__content" datatype="html">
+      <source><p>Hi <strong>{host_name}</strong>,</p>
+<p>You have a new user who has consented to receiving marketing from you!</p>
+<p>Username: {user_name}
+Email: {user_email}</p>
+<p>Please add them to your marketing communications. We will inform you again if the user chooses to opt out of marketing in the future.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Mae gennych chi ddefnyddiwr newydd sydd wedi cydsynio i dderbyn marchnata gennych chi!</p><p> Enw defnyddiwr: {user_name} E-bost: {user_email}</p><p> Gallwch eu hychwanegu at eich rhestr bostio. Byddwn yn eich hysbysu eto os bydd y defnyddiwr yn dewis optio allan o farchnata yn y dyfodol.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__subject" datatype="html">
+      <source>A user has opted out of marketing</source>
+      <target state="needs-translation">Mae defnyddiwr wedi optio allan o farchnata</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__content" datatype="html">
+      <source><p>Hello,</p>
+<p>Your subscriber {user_name} ({user_email}) has opted out of receiving direct emails from your organisation.
+This information was provided:</p>
+<p>Reason: {opt_out_reason}
+Message: {opt_out_message}</p>
+<p>Kindly remove them from your mailing list. We will inform you again by email if they choose to opt back in.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo,</p><p> Mae eich tanysgrifiwr {user_name} ({user_email}) wedi dewis peidio â derbyn e-byst uniongyrchol gan eich sefydliad. Darparwyd y wybodaeth hon:</p><p> Rheswm: {opt_out_reason} Neges: {opt_out_message}</p><p> Yn garedig, tynnwch nhw oddi ar eich rhestr bostio. Byddwn yn eich hysbysu eto trwy e-bost os byddant yn dewis optio i mewn.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
 		<trans-unit id="error.internal_server_error" datatype="html">
       <source>Internal server error</source>
       <target state="needs-translation">Gwall gweinydd mewnol</target>
