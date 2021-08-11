@@ -526,6 +526,16 @@ export class MyselfController extends ModuleController {
           .getOne()
       );
       // TODO: ADD EMAIL EVENT. WAIT FOR MERGE WITH DEV FIRST
+      this.bus.publish(
+        'user.marketing_opt_in_change',
+        {
+          user_id: req.session.user._id,
+          host_id: req.params.hid,
+          opt_status: req.body.new_status,
+          opt_out_reason: req.body.opt_out_reason
+        },
+        req.locale
+      );
 
       // Update new status and save
       existingConsent.opt_status = req.body.new_status;

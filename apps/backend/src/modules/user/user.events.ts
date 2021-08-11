@@ -22,6 +22,7 @@ export class UserEvents extends ModuleEvents {
       ['user.registered']:                 this.sendUserVerificationEmail,
       ['user.invited_to_host']:            this.sendUserHostInviteEmail,
       ['user.invited_to_private_showing']: this.sendUserPrivatePerformanceInviteEmail,
+      ['user.marketing_opt_in_change']:    this.sendHostEmailAboutChange,
       // ['user.invited_to_private_showing']: this.sendUserPrivatePerformanceInviteEmail
     };
   }
@@ -106,5 +107,29 @@ export class UserEvents extends ModuleEvents {
       to: user.email_address,
       attachments: []
     });
+  }
+
+  async sendHostEmailAboutChange(ct: Contract<'user.marketing_opt_in_change'>) {
+    const user = await User.findOne({ _id: ct.user_id }, { select: ['username', 'email_address'] });
+    const host = await Host.findOne({ _id: ct.host_id }, { select: ['_id', 'email_address'] });
+
+    console.log('USER', user);
+    console.log('HOST', host);
+    console.log('REASON', ct.opt_out_reason);
+    console.log('STATUS', ct.opt_status);
+
+    // TODOS:
+    // 1. Check if opt out or opt in
+    // 2. If opt in, just send email
+    // 3. If opt out, check if opt_out_reason, opt_out_reason.reason or opt_out_reason.message exist so we know what to include in the body
+    // 4. Send opt out email with required information for host, depending on what was supplied
+
+    // this.queueService.addJob('send_email', {
+    //   subject: this.i18n.translate('@@email.user.marketing_opt_in_change__subject', ct.__meta.locale),
+    //   content: this.i18n.translate('@@email.user.marketing_opt_in_change__content', ct.__meta.locale),
+    //   from: Env.EMAIL_ADDRESS,
+    //   to: user.email_address,
+    //   attachments: []
+    // });
   }
 }

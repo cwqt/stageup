@@ -150,12 +150,9 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
-<<<<<<< HEAD
 import { GdprSettingsComponent } from './routes/settings/gdpr-settings/gdpr-settings.component';
 import { OptOutDialogComponent } from './components/dialogs/opt-out-dialog/opt-out-dialog.component';
-=======
 import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
->>>>>>> dev
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
