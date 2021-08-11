@@ -34,7 +34,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column() name: string;
   @Column() views: number;
   @Column({ unsigned: true }) like_count: number;
-  @Column({ nullable: true }) premiere_datetime?: number;
+  @Column({ nullable: true }) publicity_period: { start: number; end: number };
   @Column({ unsigned: true }) rating_count: number;
   @Column('float') rating_total: number;
   @Column('jsonb', { nullable: true }) description?: RichText;
@@ -42,7 +42,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.PendingSchedule }) status: PerformanceStatus;
-  @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
+  //@Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
 
   @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
@@ -54,7 +54,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this._id = uuid();
     this.name = data.name;
     this.description = data.description;
-    this.premiere_datetime = data.premiere_datetime;
+    this.publicity_period = data.publicity_period;
     this.genre = data.genre;
     this.tickets = [];
 

@@ -27,7 +27,7 @@ for (let i = 0; i < 20; i++) {
 export default to<Array<SeedMockPerformance>>([
   {
     name: 'The Phantom of the Opera',
-    publicity_period: 570153600,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description:
       'The Phantom of the Opera is a stage musical with music by Andrew Lloyd Webber, lyrics by Charles Hart, and a book by Richard Stilgoe (which also contributed with additional lyrics) and Lloyd Webber. Based on the 1910 novel of the same name by Gaston Leroux, its central plot revolves around a beautiful soprano, Christine Daaé, who becomes the obsession of a mysterious, disfigured musical genius living in the subterranean labyrinth beneath the Paris Opéra House.',
     genre: Genre.Theatre,
@@ -38,7 +38,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Chicago (1996 revival)',
-    premiere_datetime: 847929600,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Chicago is an American musical with music by John Kander, lyrics by Fred Ebb, and book by Ebb and Bob Fosse. Set in Chicago in the jazz age, the musical is based on a 1926 play of the same name by reporter Maurine Dallas Watkins, about actual criminals and the crimes on which she reported. The story is a satire on corruption in the administration of criminal justice and the concept of the "celebrity criminal".`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -47,7 +47,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'The Lion King',
-    premiere_datetime: 879379200,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `The Lion King is a musical based on the 1994 Walt Disney Animation Studios\' animated feature film of the same name with music by Elton John, lyrics by Tim Rice, and book by Roger Allers and Irene Mecchi, along with additional music and lyrics by Lebo M, Mark Mancina, Jay Rifkin, Julie Taymor, and Hans Zimmer.[1] Directed by Taymor, the musical features actors in animal costumes as well as giant, hollow puppets. The show is produced by Disney Theatrical Productions`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -57,7 +57,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Cats',
-    premiere_datetime: 402793200,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Cats is a sung-through musical composed by Andrew Lloyd Webber, based on the 1939 poetry collection Old Possum's Book of Practical Cats by T. S. Eliot. It tells the story of a tribe of cats called the Jellicles and the night they make the "Jellicle choice," deciding which cat will ascend to the Heaviside Layer and come back to a new life. The musical includes the well-known song "Memory" as sung by Grizabella. As of 2019, Cats remains the fourth-longest-running Broadway show and the sixth-longest-running West End show.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -67,7 +67,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Wicked',
-    premiere_datetime: 1067472000,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Wicked is a Broadway musical, with music and lyrics by Stephen Schwartz and book by Winnie Holzman. It is based on the 1995 Gregory Maguire novel Wicked: The Life and Times of the Wicked Witch of the West, itself a retelling of the classic 1900 novel, The Wonderful Wizard of Oz by L. Frank Baum and the 1939 Metro-Goldwyn-Mayer film The Wizard of Oz.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -77,7 +77,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Les Misérables',
-    premiere_datetime: 542505600,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Les Misérables (/leɪ ˌmɪzəˈrɑːb(lə)/; French pronunciation: ​[le mizeʁabl(ə)]), colloquially known as Les Mis or Les Miz (/leɪ ˈmɪz/), is a sung-through musical adaptation of Victor Hugo's 1862 novel of the same name, by Claude-Michel Schönberg (music), Alain Boublil and Jean-Marc Natel (original French lyrics), and Herbert Kretzmer (English lyrics). The original French musical premiered in Paris in 1980 with direction by Robert Hossein. Its English-language adaptation by producer Cameron Mackintosh has been running in London since October 1985, making it the longest-running musical in the West End and the second longest-running musical in the world after the original Off-Broadway run of The Fantasticks.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -86,7 +86,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'A Chorus Line',
-    premiere_datetime: 175474800,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `A Chorus Line is a musical with music by Marvin Hamlisch, lyrics by Edward Kleban, and a book by James Kirkwood Jr. and Nicholas Dante. Set on the bare stage of a Broadway theater, the musical is centered on seventeen Broadway dancers auditioning for spots on a chorus line. A Chorus Line provides a glimpse into the personalities of the performers and the choreographer, as they describe the events that have shaped their lives and their decisions to become dancers.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -96,7 +96,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Oh! Calcutta! (1976 revival)',
-    premiere_datetime: 212367600,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Oh! Calcutta! is an avant-garde theatrical revue created by British drama critic Kenneth Tynan. The show, consisting of sketches on sex-related topics, debuted Off-Broadway in 1969 and then in the West End in 1970. It ran in London for over 3,900 performances, and in New York initially for 1,314. Revivals enjoyed even longer runs, including a Broadway revival that ran for 5,959 performances, making the show the longest-running revue in Broadway history at the time.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -105,7 +105,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Mamma Mia!',
-    premiere_datetime: 1003359600,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Mamma Mia! (promoted as Benny Andersson & Björn Ulvaeus' Mamma Mia!) is a jukebox musical written by British playwright Catherine Johnson, based on the songs of ABBA composed by Benny Andersson and Björn Ulvaeus, former members of the band. The title of the musical is taken from the group's 1975 chart-topper "Mamma Mia". Ulvaeus and Andersson, who composed the original music for ABBA, were involved in the development of the show from the beginning. Singer Anni-Frid Lyngstad was involved financially in the production and she was also present at many of the premieres around the world.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -115,7 +115,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Beauty and the Beast',
-    premiere_datetime: 766623600,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Beauty and the Beast is a musical with music by Alan Menken, lyrics by Howard Ashman and Tim Rice, and book by Linda Woolverton. Adapted from Walt Disney Pictures' Academy Award-winning 1991 animated musical film of the same name – which in turn had been based on the classic French fairy tale by Jeanne-Marie Leprince de Beaumont –[1] Beauty and the Beast tells the story of a cold-blooded prince who has been magically transformed into an unsightly creature as punishment for his selfish ways. To revert into his true human form, the Beast must first learn to love a bright, beautiful young woman whom he has imprisoned in his enchanted castle before it is too late.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -124,7 +124,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Rent',
-    premiere_datetime: 830732400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Rent (stylized as RENT) is a rock musical with music, lyrics, and book by Jonathan Larson,[1] loosely based on Giacomo Puccini's 1896 opera La Bohème. It tells the story of a group of impoverished young artists struggling to survive and create a life in Lower Manhattan's East Village in the thriving days of bohemian Alphabet City, under the shadow of HIV/AIDS.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -133,7 +133,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Jersey Boys',
-    premiere_datetime: 1131235200,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Jersey Boys is a 2005 jukebox musical with music by Bob Gaudio, lyrics by Bob Crewe, and book by Marshall Brickman and Rick Elice. It is presented in a documentary-style format that dramatizes the formation, success and eventual break-up of the 1960s rock 'n' roll group The Four Seasons. The musical is structured as four "seasons", each narrated by a different member of the band who gives his own perspective on its history and music. Songs include "Big Girls Don't Cry", "Sherry", "December 1963 (Oh, What A Night)", "My Eyes Adored You", "Stay", "Can't Take My Eyes Off You", "Who Loves You", "Working My Way Back to You" and "Rag Doll", among others.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -143,7 +143,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Miss Saigon',
-    premiere_datetime: 671324400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Miss Saigon is a musical by Claude-Michel Schönberg and Alain Boublil, with lyrics by Boublil and Richard Maltby Jr. It is based on Giacomo Puccini's 1904 opera Madame Butterfly, and similarly tells the tragic tale of a doomed romance involving an Asian woman abandoned by her American lover. The setting of the plot is relocated to 1970s Saigon during the Vietnam War, and Madame Butterfly's story of marriage between an American lieutenant and a geisha is replaced by a romance between a United States Marine and a seventeen-year-old South Vietnamese bargirl.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -153,7 +153,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'The Book of Mormon',
-    premiere_datetime: 1300924800,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `The Book of Mormon is a musical comedy with music, lyrics, and book by Trey Parker, Robert Lopez, and Matt Stone. First staged in 2011, the play is a satirical examination of the beliefs and practices of The Church of Jesus Christ of Latter-day Saints. The musical ultimately endorses the positive power of love and service.[1] Parker and Stone were best known for creating the animated comedy South Park; Lopez had co-written the music for the musical Avenue Q.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -162,7 +162,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: '42nd Street',
-    premiere_datetime: 336006000,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `42nd Street is a musical with a book by Michael Stewart and Mark Bramble, lyrics by Al Dubin and Johnny Mercer and music by Harry Warren. The 1980 Broadway production won the Tony Award for Best Musical and became a long-running hit. The show was produced in London in 1984 (winning the Olivier Award for Best Musical) and its 2001 Broadway revival won the Tony for Best Revival.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -172,7 +172,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Grease',
-    premiere_datetime: 66873600,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Grease is a 1971 musical by Jim Jacobs and Warren Casey with additional songs written by John Farrar. Named after the 1950s United States working-class youth subculture known as greasers, the musical is set in 1959 at fictional Rydell High School[1] (based on William Howard Taft School in Chicago, Illinois[2] and named after Bobby Rydell) and follows ten working-class teenagers as they navigate the complexities of peer pressure, politics, personal core values, and love. The score borrows heavily from the sounds of early rock and roll. In its original production in Chicago, Grease was a raunchy, raw, aggressive, vulgar show. Subsequent productions sanitized it and toned it down.[3] The show mentions social issues such as teenage pregnancy, peer pressure and gang violence; its themes include love, friendship, teenage rebellion, sexual exploration during adolescence, and, to some extent, class consciousness and class conflict. Jacobs described the show's basic plot as a subversion of common tropes of 1950s cinema, since the female lead, who in many 1950s films transformed the alpha male into a more sensitive and sympathetic character, is instead drawn into the man's influence and transforms into his fantasy.[4]`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -181,7 +181,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Fiddler on the Roof',
-    premiere_datetime: -166496400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Fiddler on the Roof is a musical with music by Jerry Bock, lyrics by Sheldon Harnick, and book by Joseph Stein, set in the Pale of Settlement of Imperial Russia in or around 1905. It is based on Tevye and his Daughters (or Tevye the Dairyman) and other tales by Sholem Aleichem. The story centers on Tevye, a milkman in the village of Anatevka, who attempts to maintain his Jewish religious and cultural traditions as outside influences encroach upon his family's lives. He must cope with the strong-willed actions of his three older daughters who wish to marry for love; their choices of husbands are successively less palatable for Tevye. An edict of the Tsar eventually evicts the Jews from their village.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -190,7 +190,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Life With Father',
-    premiere_datetime: -951440400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Life with Father is a 1939 play by Howard Lindsay and Russel Crouse, adapted from a humorous autobiographical book of stories compiled in 1935 by Clarence Day. The Broadway production ran for 3,224 performances over 401 weeks to become the longest-running non-musical play on Broadway, a record that it still holds.[1] The play was adapted into a 1947 feature film and a television series.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -199,7 +199,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Tobacco Road',
-    premiere_datetime: -1138492800,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Tobacco Road is a play by Jack Kirkland first performed in 1933, based on the 1932 novel of the same name by Erskine Caldwell. The play ran on Broadway for a total of 3,182 performances, surpassing Abie's Irish Rose to become the longest-running play in history at the time.[1][2] As of 2018, it was still the 19th longest-running Broadway show in history, as well as being the second-longest running non-musical ever on Broadway.[3]`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -208,7 +208,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Hello, Dolly!',
-    premiere_datetime: -188092800,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Hello, Dolly! is a 1964 musical with lyrics and music by Jerry Herman and a book by Michael Stewart, based on Thornton Wilder's 1938 farce The Merchant of Yonkers, which Wilder revised and retitled The Matchmaker in 1955. The musical follows the story of Dolly Gallagher Levi, a strong-willed matchmaker, as she travels to Yonkers, New York, to find a match for the miserly "well-known unmarried half-a-millionaire" Horace Vandergelder.`,
     genre: Genre.Theatre,
     type: 'vod',
@@ -236,7 +236,7 @@ export default to<Array<SeedMockPerformance>>([
   // },
   {
     name: 'The Killer Question',
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `The Silence Of The Lambs meets Last Of The Summer Wine in dark comedy thriller THE KILLER QUESTION...
 
     Former game show champion Walter Crump lives for murder (it was even his specialist subject on the nerve shredding, general knowledge quiz show The Chair). But did his obsession with death ultimately lead to his own? That’s certainly what Inspector Black believes, and now it is Crump’s dopey widow Margaret who finds herself in the chair – accused of her husband’s murder. But as shocking details emerge about the events leading up to Walter’s final head to head, it quickly transpires that what started out as an open and shut case has turned into another game altogether: the cat and mouse variety, with more than one deadly twist in the tale.
@@ -251,7 +251,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'CreativeConversations',
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Creative Conversations are 4 quarterly events (Inspired by Creative Cardiff’s Show & Tell Events), hosted by Artis Community. We started the events in 2019, and will continue throughout 2020, at Clwb Y Bont.
 
     The aim of these events is to give the Creative Community of Pontypridd the opportunity to:
@@ -267,7 +267,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Giselle',
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Brand new touring production for 2020.
 
     Critics’ Circle Award winning company, Ballet Cymru, present an extraordinary new ballet based on the eternal story of Giselle, the young girl who falls in love with the wrong person and pays a terrible price.
@@ -286,7 +286,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `A Midsummer Night's Dream`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Nominated Best Dance Production 2013 at the Theatre Critics of Wales Awards.
 
     An outstanding adaptation of Shakespeare’s timeless play that features breathtaking choreography danced by some of the finest dancers around. This vibrant and dramatic production features Mendelssohn’s joyous music, choreography by the company’s Artistic Director Darius James and critically acclaimed costumes by Welsh Designer Yvonne Greenleaf.
@@ -300,7 +300,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Digital Concerts: Mozart`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Matthew Featherstone and Catrin Finch perform Mozart's Concerto for Flute and Harp with BBC NOW and conductor Chloé van Soeterstède.`,
     genre: Genre.Classical,
     type: 'live',
@@ -309,7 +309,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `"Digital Concerts: Matthew Taylor"`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"BBC NOW perform the world premiere of Matthew Taylor's Symphony No."`,
     genre: Genre.Classical,
     type: 'live',
@@ -318,7 +318,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Island in the Stream`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"The Music of Dolly Parton & Kenny Rogers
 
     Enjoy the songs of the Queen and King of country music - Dolly Parton and Kenny Rogers.
@@ -338,7 +338,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Dead Ringer for Love - Meatloaf & Cher`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"This high energy tribute to two of music’s most formidable stars is sure to make your ‘Rock ‘N’ Roll Dreams Come Through’ as we ‘Turn Back Time’ to bring you a celebration of the work of Meatloaf and Cher.
 
     Let a full live band take you on a journey spanning the careers of two of the eras most globally renowned stars. Combining the epic, operatic goth anthems of Meatloaf and the iconic show-stopping dance hits from the Goddess of Pop, Dead Ringer for Love will have you revelling in power ballads such as I’d Do Anything For Love (But I Won’t Do That) and Two Out of Three Ain’t Bad and dancing to feel-good sensations including If I Could Turn Back Time, Strong Enough and Bat Out of Hell."`,
@@ -350,7 +350,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Jonas Kaufmann: My Vienna`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Jonas Kaufmann My Vienna is a deeply personal tribute by the star tenor to the world-famous melodies from the birthplace of waltz and operetta. Filmed live in the magical setting of the Wiener Konzerthaus, the concert features popular Viennese music from Die Fledermaus and Wienerblut by Johann Strauss and Franz Lehår's the Merry Widow, plus many of the classic songs inspired by the city of Vienna. Jonas Kaufmann performs with the Prague Philharmonia orchestra under the baton of Maestro Jochen Rieder and is joined by the internationally acclaimed soprano Rachel Willis-Sørensen.`,
     genre: Genre.Orchestra,
     type: 'live',
@@ -359,7 +359,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Tempted`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Tempted is a forum theatre production that discusses sexual exploitation of young people – reflecting young people’s concerns and status. Produced in collaboration with Dyfed-Powys Police and crime commissioner. Tempted is currently nominated for two Arts & Business Cymru awards.
 
     “…fast paced, energetic and thoroughly engaging. A sensitive performance, based a very serious and current issue with teenagers… Our pupils (and staff) talked about this performance for the rest of the day! Please come back next year!” – Athro / Teacher"`,
@@ -370,7 +370,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Faust + Greta`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Greta is out with friends when she meets the chancer Faust. But with darker forces at play, a bit of harmless flirting leads to an irreversible journey of destruction.
 
     Faust + Greta is a tragic and twisted love story that sees the original German tale re-imagined in an amped-up, contemporary Wales. Devised and performed by an ensemble of young people coming out of lockdown, this digital theatrical experience is about the human obsession with wanting more, seizing power and pushing boundaries to extremes.
@@ -385,7 +385,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `"The Rheingans Sisters"`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"The Rheingans Sisters make playful, powerful and richly connecting music that is wholly contemporary while deeply anchored in folk traditions. The award-winning multi-instrumentalists, composers and folk scholars are nominated for 'Best Duo/Group' at 2019 BBC Radio 2 Folk Awards.
 
     Over the last five years, three critically acclaimed albums and a BBC Radio 2 Folk Award win for 'Best Original Track' in 2016, audiences across the UK, Europe and Australia have been utterly captivated by their very special live performances. Drawing on their pan-European musical scholarship and their spirited mission to make connections between the music of different geographical roots, they have developed a rich artistic approach to the deconstruction and reimagining of traditional music alongside their own beguiling compositions.
@@ -403,7 +403,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Calan`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `They breathe fire into the old traditions with their evocative rhythms and lively routines before slowing down with some of the most beautiful songs as they explore the magic and myths of Wales. They have successfully introduced traditional Welsh music to a new wave of music lovers, in Wales, Europe, North America and beyond.`,
     genre: Genre.Music,
     type: 'live',
@@ -413,7 +413,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Meet Fred`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Meet Fred, the two foot tall cloth puppet that fights prejudice every day.
 
     He just wants to be a regular guy, part of the real world, to get a job and meet a girl, but when threatened with losing his PLA (Puppetry Living Allowance), Fred’s life begins to spiral out of his control. Contains strong language and puppet nudity."`,
@@ -425,7 +425,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Sounds of Summer`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `An eclectic mix of joyful, entertaining and uplifting musical treats, from the world of song, opera and cabaret, and much else besides!`,
     genre: Genre.Opera,
     type: 'live',
@@ -434,7 +434,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Y Tŵr`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"In our new creative collaboration with Theatr Genedlaethol Cymru, composer Guto Puw and singer-songwriter-playwright Gwyneth Glyn breathe new life into Gwenlyn Parry’s disturbing and provocative play.
 
     The result is an intense and intimate story of love and life based on the work of one of Wales’ most important playwrights, reimagined in new form as a touching and lyrical Welsh language chamber opera."`,
@@ -445,7 +445,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `A Mighty Wind`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `NDCWales presents A Mighty Wind, by Jeroen Verbruggen, one of Europe’s most exciting choreographers. This high energy, vibrant piece captures the intensity of nature’s elements during a storm, set against the power generated by an alternative rock music concert.`,
     genre: Genre.Dance,
     type: 'live',
@@ -455,7 +455,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Afterimage`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Afterimage is a dance of fleeting images; that uses mirrors to create a unique and beautiful experience of appearance and disappearance. Afterimage shows the audience a series of scenes to evoke a personal response from each person without providing a single narrative.`,
     genre: Genre.Dance,
     type: 'live',
@@ -465,7 +465,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Possible`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Shôn’s new show was going to be all about love. But what do you do when you’re writing a show all about love, and everything goes dark? You find a new story. A story with scones after midnight, estate agents, Gandhi-inspired motivational texts, mothers, fathers, families, and Grandmaster Flash.
 
     Possible is a playful and profound piece of storytelling that blurs reality with live music and surreal, cinematic visuals. Funny and endearingly honest, it’s a show about love, resilience and finding the courage to explore the past, in order to shape the future."`,
@@ -476,7 +476,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Alice's Adventures in Wonderland`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"The classic tale of Alice’s Adventures in Wonderland comes to life in this quirky and delightful family opera. Follow Alice down the rabbit hole on her adventures where she encounters a whole host of peculiar characters including a relaxed caterpillar, happy cat, depressive hare, mad hatter and sleepy dormouse. Find out why all is not well in Wonderland and why the Queen of Hearts is so cross.
 
     Will Todd’s score, performed by a small orchestra, is an eclectic mix of jazz, musical and opera and perfectly accompanies the witty libretto to create a fun and engaging story that remains true to the original book."`,
@@ -487,7 +487,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Madam Butterfly Puccini`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"On the surface a dream-like wedding for a groom and his young, beautiful bride - but behind the façade is a cruel reality. Abandoned and betrayed, Butterfly finds her world crashing around her as her one chance for freedom becomes her prison.  Her desperation and pain escalate as she fights for survival with devastating consequences.
 
     Madam Butterfly is a powerful story of unrequited love, human pain and suffering which is magnificently intensified by Puccini’s glorious music, promising a night of drama and emotion. Inspired by Puccini’s fantasy landscape of exotic pleasures, Lindy Hume’s new production interprets Butterfly’s famous story through a dystopian prism."`,
@@ -498,7 +498,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Would you sing it out loud?`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"with Simon Armitage, Taylor Edmonds & Owen Sheers.
 
     Join us for Everything Change’s closing event, in which the current Poet Laureate of the United Kingdom, Simon Armitage, will be joined by Taylor Edmonds, the recently appointed Poet in Residence for the Future Generations Commissioner for Wales. Simon will read from his climate-related work and discuss the response of poets to the climate crisis, as well as his creation of The Laurel Prize for eco-poetry. He will then hand over to Taylor to introduce her new role — the first of its kind anywhere in the world — and close Everything Change with readings of her own poems, which imagine some tools to make our planet’s future a brighter one for all.
@@ -512,7 +512,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Gair o Gariad`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Theatr Bara Caws are thrilled to invite you to a virtual performance of Gair o Gariad.
 
     Gair o Gariad is a Welsh language adaptation of Uninvited Guests’ Love Letters Straight From Your Heart, and each time Bara Caws have presented the stage version our audiences have been enthralled. In these challenging times we’d like to give you the opportunity to meet in a unique way when meeting face-to-face is impossible.
@@ -525,7 +525,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Blindness`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Juliet Stevenson voices the Storyteller/Doctor’s wife in this gripping story of the rise and, ultimately, profoundly hopeful end of an unimaginable global pandemic.
 
     As the lights change at a major crossroads in a city in the heart of Europe a car grinds to a halt. Its driver can drive no more. Suddenly, without warning or cause, he has gone blind. Within hours it is clear that this is a blindness like no other. This blindness is infectious. Within days an epidemic of blindness has spread through the city. The government tries to quarantine the contagion by herding the newly blind people into an empty asylum. But their attempts are futile. The city is in panic.
@@ -540,7 +540,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Fausta + Greta`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"One night out. One chance meeting. A love story doomed from the start.
 
     Greta is out with friends when she meets the chancer Faust. But with darker forces at play, a bit of harmless flirting leads to an irreversible journey of destruction.
@@ -556,7 +556,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Llygoden yr Eira`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Winter has arrived and the woods are covered white. A child wraps up warm and runs outside to play in a sparkling new world.
 
     But what’s hiding under the snow? A little mouse, fast asleep. Sliding, tumbling and laughing, the two new friends explore the winter wonderland together.
@@ -571,7 +571,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `The Snow Queen`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `Join Ballet Theatre UK in their beautiful re-telling of Hans Christian Andersen’s classic fairy tale ballet, The Snow Queen. This spectacular production follows the story of Gerda and her quest to find her friend Kay, whom the Snow Queen has placed under an evil spell. Gerda’s fantastic adventure takes her on a journey across the frozen north where she encounters a band of gypsys, enchanted reindeer, and a mysterious and reclusive Lapland woman. Gerda is told by the mysterious woman to continue travelling north, where she will find Kay and the Snow Queen’s Palace of Ice. Only Gerda’s love for Kay can release him from the spell and break the Snow Queen’s curse of eternal winter. Ballet Theatre UK's renowned company of international dancers, beautiful costumes and glittering stage sets combine to create a magnificent spectacle, all set to a glorious and magical score.    `,
     genre: Genre.Ballet,
     type: 'live',
@@ -581,7 +581,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Arandora Star`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"By Mali Tudno Jones and Geinor Styles
 
     In partnership with Swansea Museum, National Waterfront Museum and Technocamps
@@ -610,7 +610,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `The Ghost Stories of E R Benson`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Directed by Gareth Armstrong
     Music by Simon Slater
 
@@ -630,7 +630,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Past the Stars`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Featuring pieces by Sir Harrison Birtwistle and Param Vir, Birmingham Contemporary Music Group is delighted to return to Town Hall, Birmingham, for a full-scale 15-piece performance, Past the Stars.
 
     Past the Stars is a collection of pieces that encompasses everything contemporary music should be: expressive, unexpected, and thought provoking. From Birtwistle’s powerful play on rhythm within Cantus Iambeus,, through Param Vir’s poetic Wheeling Past the Stars, and to the dramatic storytelling piece Hayagriva, each composition takes you on a new emotive journey. Past the Stars is inspired by language and spirituality and elevated by the skill and passion of BCMG’s 15-piece ensemble.
@@ -648,7 +648,7 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Southbank Sinfonia`,
-    premiere_datetime: 1630346400,
+    publicity_period: { start: 11/11/2021 , end: 21/11/2021 },
     description: `"Joined by the fabulous Chloé van Soeterstède, our fellowship will take you on a musical journey of devotion through the guise of three powerful pieces of classical music.
 
     Laden with rich hymn melodies, Elfrida Andrée's Overture in D is powerful in all the right places. From big swooping themes, to the Mendelssohn-like orchestration and melodic development, this overture was a triumph for the 19th century organist.

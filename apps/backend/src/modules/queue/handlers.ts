@@ -149,7 +149,7 @@ export class EventHandlers {
           receipt_url: invoice.stripe_receipt_url,
           user_name: user.name || user.username,
           performance_name: invoice.ticket.performance.name,
-          premier_time: i18n.date(unix(invoice.ticket.performance.premiere_datetime), ct.__meta.locale),
+          publicity_period: i18n.date(unix(invoice.ticket.performance.publicity_period.start), ct.__meta.locale),
           amount: i18n.money(invoice.amount, invoice.currency),
           url: link
         }),
@@ -594,10 +594,10 @@ export class EventHandlers {
 
   sendPerformanceReminderEmails = async (ct: Contract<'performance.created'>) => {
     const performance = await Performance.findOne({ _id: ct._id });
-    const premierDate = performance.premiere_datetime; 
-    if (!premierDate) return; // TODO: This will instead be based on publicity_period.start in the future (which will be a compulsory field)
-    const oneDayPrior = premierDate - 86400 - timestamp(); // 86400 is the number of seconds in 24 hours
-    const fifteenMinutesPrior = premierDate - 900 - timestamp(); // 900 is the number of seconds in 15 minutes
+    const publicity_period = performance.publicity_period; 
+    if (!publicity_period.start) return; // TODO: This will instead be based on publicity_period.start in the future (which will be a compulsory field)
+    const oneDayPrior = publicity_period.start - 86400 - timestamp(); // 86400 is the number of seconds in 24 hours
+    const fifteenMinutesPrior = publicity_period.start - 900 - timestamp(); // 900 is the number of seconds in 15 minutes
     const url = `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/my-stuff`; // URL to direct the user to in the email
 
     // Need to send off 2 different jobs, one 1 day before and one for 15 minutes before performance premier date
@@ -608,7 +608,7 @@ export class EventHandlers {
           performance_id: ct._id,
           sender_email_address: Env.EMAIL_ADDRESS,
           type: '24 hours',
-          premier_date: premierDate,
+          publicity_period: publicity_period.start,
           url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/my-stuff`
         },
         {
@@ -622,7 +622,7 @@ export class EventHandlers {
           performance_id: ct._id,
           sender_email_address: Env.EMAIL_ADDRESS,
           type: '15 minutes',
-          premier_date: premierDate,
+          publicity_period: publicity_period,
           url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/performances/${ct._id}`
         },
         {

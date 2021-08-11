@@ -207,7 +207,7 @@ export default class HostController extends BaseController<BackendProviderMap> {
 
         // First assert the following before being able to delete:
         //  * There are no currently live performances
-        const duePerformances = host.performances.filter(p => p.premiere_datetime && p.premiere_datetime > timestamp());
+        const duePerformances = host.performances.filter(p => p.publicity_period.start && p.publicity_period.start > timestamp());
 
         //  * There are no performances that are due to be premiered in the future
         const presentlyLivePerformances = host.performances.filter(p =>
