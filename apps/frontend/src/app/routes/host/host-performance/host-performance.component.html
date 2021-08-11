@@ -4,8 +4,23 @@
     <ng-container *ngIf="performance.data">
       <div class="flex align-middle">
         <h1 class="flex-1 mb-0">{{ performanceData.name }}</h1>
-        <div class="ml-auto my-auto">
+        <div class="ml-auto my-auto flex items-center">
           <ui-button (click)="gotoPerformance()" kind="secondary" class="mr-2" icon="launch" i18n>Preview</ui-button>
+          
+          <div
+            class="flex items-center cursor-pointer z-40"
+            [popper]="managePerformanceDropdown"
+            [popperShowOnStart]="false"
+            [popperHideOnClickOutside]="true"
+            [popperHideOnScroll]="true"
+            [popperApplyClass]="'user-dropdown-menu'"
+            popperTrigger="click"
+            popperPlacement="bottom"
+          >
+          <ui-icon size="l">overflow-menu--vertical</ui-icon>
+          </div>
+
+
           <!--
             Need to revisit this at some point, see provisionPerformanceAccessTokens in
             host.controller.ts & SU-883
@@ -23,4 +38,12 @@
       </div>
     </ng-container>
   </div>
+
 </app-page>
+
+<popper-content #managePerformanceDropdown class="flex flex-col">
+  <div class="flex flex-col">
+    <ui-button class="border-0" [disabled]='disableDeleteButton' (click)="deletePerformance()" i18n>Delete Performance</ui-button>
+    <ui-button class="border-0" (click)="cancelPerformance()" i18n>Cancel Performance</ui-button>
+  </div>
+</popper-content>

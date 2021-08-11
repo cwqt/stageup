@@ -1,16 +1,7 @@
-import { Logger } from 'winston';
-import InfluxProvider from './providers/influx.provider';
-import LocalTunnelProvider from './providers/localtunnel.provider';
-import MuxProvider from './providers/mux.provider';
-import PostgresProvider from './providers/postgres.provider';
-import RedisProvider from './providers/redis.provider';
-import StoreProvider from './providers/store.provider';
-import { EmailProvider } from './providers/email.provider';
-import StripeProvider from './providers/stripe.provider';
-import BlobProvider from './providers/blob.provider';
-import SSEProvider from './providers/sse.provider';
-import EventBusProvider from './providers/event-bus.provider';
-import { i18nProvider } from '../i18n';
+import { timestamp } from '@core/helpers';
+import Container, { Token } from 'typedi';
+import { Logger } from './providers/logging.provider';
+import { LOGGING_PROVIDER } from './tokens';
 
 /**
  * DataClient: Object with methods for maintaining all providers
@@ -22,26 +13,25 @@ import { i18nProvider } from '../i18n';
 const CONNECTION_TIMEOUT = 20000;
 
 // A class that creates/maintains/destroys a connection
-export interface Provider<T = unknown, K = any> {
+export interface Provider<T = any, K = any> {
   name: string;
   connection: T;
   config: K;
-  connect: (providerMap: ProviderMap<T>) => Promise<Provider<T, K>['connection']>;
+  connect: (map?: ProviderMap) => Promise<Provider<T, K>['connection']>;
   disconnect: (...args: unknown[]) => Promise<void>;
   drop?: () => Promise<void>;
   ping?: () => Promise<number>;
 }
 
-export type ProviderMap<T = any> = { [index in keyof T]: Provider<T[index]> };
+export type ProviderMap = Map<Token<any>, Provider>;
 
 // Creates the DataClient object from an object of DataProviders
-const connect = async <T extends ProviderMap>(providerMap: T, log: Logger): Promise<T> => {
-  return Object.keys(providerMap).reduce(async (acc, key) => {
-    const accumulator = await acc;
-    const provider = providerMap[key as keyof T];
+const connect = async <T extends ProviderMap>(map: T): Promise<T> => {
+  const log = Container.get(LOGGING_PROVIDER);
 
+  for await (const [token, provider] of map.entries()) {
     // Show the message now, so if any fields are missing we know to what provider
-    log.info(`Connecting to ${provider.name}...`);
+    log.info(`Setting up ${provider.name}...`);
 
     // Throw an error if any fields are missing
     Object.keys(provider.config).forEach(k => {
@@ -55,35 +45,37 @@ const connect = async <T extends ProviderMap>(providerMap: T, log: Logger): Prom
       // Attempt to connect, passing previous connections through to later ones
       await new Promise((resolve, reject) => {
         const t = setTimeout(() => {
-          log.error(`Took took long to connect to service ${provider.name}...`);
+          log.error(`Took took long to setup service ${provider.name}...`);
           process.exit();
         }, CONNECTION_TIMEOUT);
 
         provider
-          .connect(accumulator as any)
+          .connect(map)
           .catch(e => {
             clearTimeout(t);
             reject(e);
           })
           .then(v => {
             clearTimeout(t);
+            provider.connection = v;
             resolve(v);
           });
       });
 
-      accumulator[key as keyof T] = provider;
+      // Populate IoC container with instantiated & connected provider
+      Container.set(token, provider.connection);
     } catch (error) {
       log.error(`Failed to connect to ${provider.name}`, error);
       process.exit(0);
     }
+  }
 
-    return accumulator;
-  }, Promise.resolve(<T>{}));
+  return map;
 };
 
 // Closes all the connections from the providers object
-const disconnect = async <T>(providerMap: ProviderMap<T>) => {
-  return Promise.all(Object.values(providerMap).map((p: Provider) => p.disconnect()));
+const disconnect = async (map: ProviderMap) => {
+  return Promise.all(Object.values(map).map((p: Provider) => p.disconnect()));
 };
 
 // // Get a KV of ping response times from providers
@@ -96,22 +88,8 @@ const disconnect = async <T>(providerMap: ProviderMap<T>) => {
 //   ).data;
 // };
 
-const drop = async <T>(providerMap: ProviderMap<T>) => {
+const drop = async (providerMap: ProviderMap) => {
   return Promise.all(Object.keys(providerMap).map(p => providerMap[p].drop && providerMap[p].drop()));
 };
 
 export const DataClient = { connect, disconnect, drop };
-export const Providers = {
-  SSE: SSEProvider,
-  EventBus: EventBusProvider,
-  Email: EmailProvider,
-  i18n: i18nProvider,
-  Blob: BlobProvider,
-  Postgres: PostgresProvider,
-  Mux: MuxProvider,
-  Redis: RedisProvider,
-  Influx: InfluxProvider,
-  LocalTunnel: LocalTunnelProvider,
-  Store: StoreProvider,
-  Stripe: StripeProvider
-};

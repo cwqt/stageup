@@ -1,7 +1,8 @@
-import { Connection, Entity, createConnection } from 'typeorm';
-import { Provider } from '../';
+import { Service, Token } from 'typedi';
+import { Connection, createConnection } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { Provider } from '../';
 
 export interface IPostgresProviderConfig {
   host: string;
@@ -13,9 +14,8 @@ export interface IPostgresProviderConfig {
   extra?: any;
 }
 
-import { Service } from 'typedi';
 @Service()
-export default class PostgresProvider implements Provider<Connection> {
+export class PostgresProvider implements Provider<Connection> {
   name = 'Postgres';
   connection: Connection;
   config: IPostgresProviderConfig;

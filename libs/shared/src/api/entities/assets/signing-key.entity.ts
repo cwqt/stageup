@@ -1,8 +1,8 @@
 import { timestamp, uuid } from '@core/helpers';
 import { AssetType, IMuxAsset, ISignedToken, ISigningKey } from '@core/interfaces';
-import { JWT, JWTOptions } from '@mux/mux-node';
+import Mux, { JWT, JWTOptions } from '@mux/mux-node';
 import { BaseEntity, BeforeInsert, Column, Entity, EntityManager, PrimaryColumn } from 'typeorm';
-import MuxProvider from '../../data-client/providers/mux.provider';
+import { MuxProvider } from '../../data-client/providers/mux.provider';
 import { Asset } from './asset.entity';
 
 export type SignableAssetType =
@@ -28,9 +28,9 @@ export class SigningKey extends BaseEntity implements ISigningKey {
     this.created_at = timestamp();
   }
 
-  async setup(mux: MuxProvider, txc: EntityManager): Promise<SigningKey> {
+  async setup(mux: Mux, txc: EntityManager): Promise<SigningKey> {
     // https://docs.mux.com/reference#url-signing-keys
-    const { id, private_key } = await mux.connection.Video.SigningKeys.create();
+    const { id, private_key } = await mux.Video.SigningKeys.create();
 
     this.mux_key_id = id;
     this.rsa256_key = private_key;
