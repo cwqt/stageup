@@ -27,7 +27,7 @@ for (let i = 0; i < 20; i++) {
 export default to<Array<SeedMockPerformance>>([
   {
     name: 'The Phantom of the Opera',
-    premiere_datetime: 570153600,
+    publicity_period: 570153600,
     description:
       'The Phantom of the Opera is a stage musical with music by Andrew Lloyd Webber, lyrics by Charles Hart, and a book by Richard Stilgoe (which also contributed with additional lyrics) and Lloyd Webber. Based on the 1910 novel of the same name by Gaston Leroux, its central plot revolves around a beautiful soprano, Christine Daaé, who becomes the obsession of a mysterious, disfigured musical genius living in the subterranean labyrinth beneath the Paris Opéra House.',
     genre: Genre.Theatre,

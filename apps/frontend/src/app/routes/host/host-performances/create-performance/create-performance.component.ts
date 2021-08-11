@@ -13,6 +13,7 @@ import { PerformanceService } from '@frontend/services/performance.service';
 import { Cacheable } from '@frontend/app.interfaces';
 import { merge, Observable } from 'rxjs';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
+import { unix } from 'moment';
 
 @Component({
   selector: 'app-create-performance',
@@ -68,16 +69,27 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             })
           )
         }),
-        premiere: UiField.Container({
-          label: $localize`Premiere Date`,
+        period: UiField.Date({
+          label: $localize`Schedule`,
           separator: 'above',
-          hint: $localize`Schedule the performance to be released at a certain date & time (optional)`,
-          fields: {
-            datetime: UiField.Datetime({
+          hint: $localize`Set the start and end date for your event`,
+          //fields: {
+           // period: UiField.Date({
+              initial: {
+                start: new Date (this.performance.publicity_period.start),
+                  //? unix(this.performance.publicity_period.start)
+                 // : undefined,
+                end: new Date (this.performance.publicity_period.end)
+               // ? unix(this.performance.publicity_period.end) : undefined
+              },
+              is_date_range: true,
+              actions: true,
               min_date: new Date()
+              //label: $localize'Schedule'
             })
-          }
-        })
+          
+
+       // })
       },
       resolvers: {
         output: async v =>
@@ -85,14 +97,19 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             name: v.name,
             description: v.description,
             genre: v.genre,
-            premiere_datetime: timestamp(new Date(v.premiere.datetime)) || null,
+            publicity_period: { 
+              start: v.period.publicity_period.start,//timestamp(v.fields.publicity_period.start),
+              end: v.period.publicity_period.end},//timestamp(v.fields.publicity_period.end) },
+            //premiere_datetime: timestamp(new Date(v.premiere.performance.publicity_period.start)) || null,
             type: this.type
+          
           })
       },
       handlers: {
         success: async v => {
           this.performance = v;
           this.toastService.emit($localize`Created performance: ${v.name}!`);
+          //if (v.value['period'].start && v.value['period'].end)
           if (this.type == 'vod') {
             // VoD performances have their assets created at the same time as the performance
             // so all we need to do is pass the fn that returns the pre-created, pre-signed URL

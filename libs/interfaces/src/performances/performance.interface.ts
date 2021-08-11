@@ -34,7 +34,8 @@ export interface IPerformanceStub {
   description?: RichText; // description of performance
   rating_count: number; // Total scores accumulated
   rating_total: number; // Number of ratings
-  premiere_datetime?: number; // when the performance is ready to be streamed
+  //premiere_datetime?: number; // when the performance is ready to be streamed
+  publicity_period: { start: number; end: number }; // unix timestamps
   views: number; // total user view count
   like_count: number; // total user likes
   created_at: number;
@@ -71,7 +72,7 @@ export type DtoPerformance = IEnvelopedData<
 // data transfer object
 export type DtoCreatePerformance = Pick<
   Required<IPerformance>,
-  'name' | 'premiere_datetime' | 'description' | 'genre'
+  'name' | 'publicity_period' | 'description' | 'genre'
 > & { type: 'vod' | 'live' };
 
 // private to host
