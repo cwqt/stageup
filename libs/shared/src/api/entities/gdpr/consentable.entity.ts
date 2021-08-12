@@ -14,7 +14,7 @@ class ConsentableEntity extends BaseEntity {
 
     // use 'latest' as short-circruit for that with no successor
     if (version == 'latest') {
-      q.superseded_at = undefined;
+      q.superseded_at = null;
     } else {
       q.version = version;
     }
