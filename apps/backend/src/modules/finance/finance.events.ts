@@ -72,18 +72,24 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendUserRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      },
-      relations: {
-        ticket: {
-          performance: true
-        },
-        host: true,
-        payment_method: true
-      }
-    });
+    const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice._id = :iid', { iid: ct.invoice_id })
+      .innerJoinAndSelect('invoice.ticket', 'ticket')
+      .innerJoin('ticket.performance', 'performance')
+      .innerJoin('invoice.host', 'host')
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .addSelect([
+        'host.name',
+        'performance.name',
+        'invoice.ticket',
+        'payment_method.brand',
+        'invoice._id',
+        'invoice.amount',
+        'invoice.currency'
+      ])
+      .withDeleted()
+      .getOne();
+
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address'] });
 
     this.queueService.addJob('send_email', {
@@ -107,16 +113,40 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendHostRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      },
-      relations: {
-        ticket: {
-          performance: true
-        },
-        host: true
-      }
+    const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice._id = :iid', { iid: ct.invoice_id })
+      .innerJoin('invoice.ticket', 'ticket')
+      .innerJoin('ticket.performance', 'performance')
+      .innerJoin('invoice.host', 'host')
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .addSelect([
+        'host.name',
+        'performance.name',
+        'payment_method.brand',
+        'invoice._id',
+        'invoice.ticket',
+        'invoice.amount',
+        'invoice.currency'
+      ])
+      .withDeleted()
+      .getOne();
+
+    const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address', 'username'] });
+
+    this.queueService.addJob('send_email', {
+      subject: this.i18n.translate('@@email.host.refund_initiated__subject', ct.__meta.locale, {
+        user_username: user.username,
+        performance_name: invoice.ticket.performance.name
+      }),
+      content: this.i18n.translate('@@email.host.refund_initiated__content', ct.__meta.locale, {
+        host_name: invoice.host.name,
+        performance_name: invoice.ticket.performance.name,
+        invoice_id: invoice._id,
+        invoice_amount: this.i18n.money(invoice.amount, invoice.currency)
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: user.email_address,
+      attachments: []
     });
   }
 
@@ -137,19 +167,26 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendUserRefundRefundedEmail(ct: Contract<'refund.refunded'>) {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      },
-      relations: {
-        user: true,
-        payment_method: true,
-        ticket: {
-          performance: true
-        },
-        host: true
-      }
-    });
+    const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice._id = :iid', { iid: ct.invoice_id })
+      .innerJoinAndSelect('invoice.ticket', 'ticket')
+      .innerJoin('ticket.performance', 'performance')
+      .innerJoin('invoice.host', 'host')
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .innerJoin('invoice.user', 'user')
+      .addSelect([
+        'host.name',
+        'performance.name',
+        'payment_method.brand',
+        'payment_method.last4',
+        'invoice._id',
+        'invoice.ticket',
+        'invoice.amount',
+        'invoice.currency',
+        'user.username'
+      ])
+      .withDeleted()
+      .getOne();
 
     const refund = await Refund.findOne({ _id: ct.refund_id });
 
@@ -174,19 +211,26 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendHostRefundRefundedEmail(ct: Contract<'refund.refunded'>) {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      },
-      relations: {
-        user: true,
-        payment_method: true,
-        ticket: {
-          performance: true
-        },
-        host: true
-      }
-    });
+    const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice._id = :iid', { iid: ct.invoice_id })
+      .innerJoinAndSelect('invoice.ticket', 'ticket')
+      .innerJoin('ticket.performance', 'performance')
+      .innerJoin('invoice.host', 'host')
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .innerJoin('invoice.user', 'user')
+      .addSelect([
+        'host.name',
+        'performance.name',
+        'payment_method.brand',
+        'payment_method.last4',
+        'invoice._id',
+        'invoice.ticket',
+        'invoice.amount',
+        'invoice.currency',
+        'user.username'
+      ])
+      .withDeleted()
+      .getOne();
 
     this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.host.refund_refunded__subject', ct.__meta.locale, {
