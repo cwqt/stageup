@@ -1,4 +1,5 @@
-import { RedisClient, createClient } from 'redis';
+import { createClient, RedisClient } from 'redis';
+import { Service, Token } from 'typedi';
 import { Provider } from '../';
 
 export interface IRedisProviderConfig {
@@ -6,9 +7,8 @@ export interface IRedisProviderConfig {
   port: number;
 }
 
-import { Service } from 'typedi';
 @Service()
-export default class RedisProvider implements Provider<RedisClient> {
+export class RedisProvider implements Provider<RedisClient> {
   name = 'Redis';
   connection: RedisClient;
   config: IRedisProviderConfig;
@@ -24,9 +24,7 @@ export default class RedisProvider implements Provider<RedisClient> {
     });
 
     return new Promise<RedisClient>((resolve, reject) => {
-      this.connection.on('connect', () => {
-        resolve(this.connection);
-      });
+      this.connection.on('connect', () => resolve(this.connection));
       this.connection.on('error', reject);
     });
   }

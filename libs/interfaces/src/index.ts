@@ -7,6 +7,7 @@ export * from './common/errors.interface';
 export * from './common/environments.interface';
 export * from './common/querying.interface';
 export * from './common/sse.interface';
+export * from './common/dialog.interface';
 
 // Users -----------------------------------------------------------------
 export * from './users/user.interface';

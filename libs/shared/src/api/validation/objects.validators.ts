@@ -79,15 +79,15 @@ export namespace objects {
     old_password: fields.password
   });
 
-  export const DtoCreatePerformance: Describe<DtoCreatePerformance> = object({
-    name: size(string(), 8, 64),
-    publicity_period: {start: fields.timestamp, end: fields.timestamp},
-    //publicity_period_end: fields.timestamp,
-    //publicity_period: optional(fields.timestamp),{ start: fields.number, end: fields.number }
-    description: optional(fields.richtext),
-    genre: fields.genre,
-    type: union([literal('vod'), literal('live')])
-  });
+  // export const DtoCreatePerformance: Describe<DtoCreatePerformance> = object({
+  //   name: size(string(), 8, 64),
+  //   publicity_period: {start: fields.timestamp, end: fields.timestamp},
+  //   //publicity_period_end: fields.timestamp,
+  //   //publicity_period: optional(fields.timestamp),{ start: fields.number, end: fields.number }
+  //   description: optional(fields.richtext),
+  //   genre: fields.genre,
+  //   type: union([literal('vod'), literal('live')])
+  // });
 
   export const DtoCreateHost: Describe<DtoCreateHost> = object({
     username: fields.username,
