@@ -9,7 +9,7 @@ import { RichText } from '@core/interfaces';
 
 // Starting to prefer this method of creating enums of 'enum' keyword due to how easily it lends itself
 // to iterating over - no need for enumToValues(enum)
-export const ConsentableTypes = ['general_toc', 'uploaders_toc', 'cookies', 'privacy_policy'] as const;
+export const ConsentableTypes = ['general_toc', 'cookies', 'privacy_policy'] as const;
 export type ConsentableType = typeof ConsentableTypes[number];
 
 export interface IConsentable<T extends ConsentableType> {

@@ -38,8 +38,6 @@ export class AdminGdprDocumentsComponent implements OnInit {
                 return $localize`Privacy Policy`;
               case 'general_toc':
                 return $localize`General Terms & Conditions`;
-              case 'uploaders_toc':
-                return $localize`Uploaders Terms & Conditions`;
               case 'cookies':
                 return $localize`Cookies`;
             }

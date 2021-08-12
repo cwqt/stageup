@@ -64,9 +64,6 @@ export class UploadDocumentDialogComponent implements OnInit, IUiDialogOptions {
       case 'general_toc':
         this.title = $localize`General Terms & Conditions`;
         break;
-      case 'uploaders_toc':
-        this.title = $localize`Uploaders Terms & Conditions`;
-        break;
       case 'cookies':
         this.title = $localize`Cookies`;
     }
