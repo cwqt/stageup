@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IHost, IHostStub, IUser } from '@core/interfaces';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 import { HostService } from '@frontend/services/host.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 

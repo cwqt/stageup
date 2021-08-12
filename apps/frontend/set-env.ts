@@ -15,14 +15,15 @@ const extension = (url: string, port: number) =>
   `${url}${!url.includes('ngrok') && environment == 'development' ? `:${port}` : ''}`;
 
 envConfigFile += `export const environment = {
-  environment: '${environment}',
   is_deployed: ${argv?.['is-deployed'] || false},
-  frontend_url: '${extension(process.env.LOAD_BALANCER_URL, 4200)}',
   app_version: '${process.env.npm_package_version}',
-  stripe_public_key: '${process.env.STRIPE_PUBLIC_KEY}',
-  mux_env_key: '${process.env.MUX_ENV_KEY}',
 };
 `;
+
+// environment: '${environment}',
+// frontend_url: '${extension(process.env.LOAD_BALANCER_URL, 4200)}',
+// stripe_public_key: '${process.env.STRIPE_PUBLIC_KEY}',
+// mux_env_key: '${process.env.MUX_ENV_KEY}',
 
 console.log(colors.magenta(`The file 'environment.${environment}.ts' will be written with the following content:\n`));
 console.log(colors.grey(envConfigFile));

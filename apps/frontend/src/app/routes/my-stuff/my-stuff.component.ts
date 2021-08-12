@@ -3,7 +3,7 @@ import { IEnvelopedData, IPerformanceStub } from '@core/interfaces';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { cachize, createICacheable, ICacheable } from '../../app.interfaces';
-import { BaseAppService } from '../../services/app.service';
+import { AppService } from '../../services/app.service';
 import { MyselfService } from '../../services/myself.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class MyStuffComponent implements OnInit {
   myStuff: ICacheable<IEnvelopedData<IPerformanceStub[]>> = createICacheable([]);
   searchTerms = new Subject<string>();
 
-  constructor(private myselfService: MyselfService, private appService: BaseAppService) {}
+  constructor(private myselfService: MyselfService, private appService: AppService) {}
 
   ngOnInit() {
     this.searchTerms

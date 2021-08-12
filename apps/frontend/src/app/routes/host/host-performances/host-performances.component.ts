@@ -2,7 +2,7 @@ import { Component, LOCALE_ID, OnInit, Inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { CreatePerformanceComponent } from './create-performance/create-performance.component';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -35,7 +35,7 @@ export class HostPerformancesComponent implements OnInit {
     private hostService: HostService,
     private helperService: HelperService,
     private dialog: MatDialog,
-    private appService: BaseAppService
+    private appService: AppService
   ) {}
 
   async ngOnInit() {
@@ -96,25 +96,25 @@ export class HostPerformancesComponent implements OnInit {
     return richtext.read(text);
   }
 
-  deletePerformance(performance: IPerformanceStub) {
-    this.helperService.showConfirmationDialog(this.dialog, {
-      title: $localize`Delete '${performance.name}'`,
-      description: $localize`Are you sure you want to delete this performance?`,
-      buttons: [
-        new UiDialogButton({
-          label: $localize`Cancel`,
-          kind: ThemeKind.Secondary,
-          callback: r => r.close()
-        }),
-        new UiDialogButton({
-          label: $localize`Delete`,
-          kind: ThemeKind.Primary,
-          callback: r => {
-            this.performanceService.deletePerformance(performance._id);
-            r.close();
-          }
-        })
-      ]
-    });
-  }
+  // deletePerformance(performance: IPerformanceStub) {
+  //   this.helperService.showConfirmationDialog(this.dialog, {
+  //     title: $localize`Delete '${performance.name}'`,
+  //     description: $localize`Are you sure you want to delete this performance?`,
+  //     buttons: [
+  //       new UiDialogButton({
+  //         label: $localize`Cancel`,
+  //         kind: ThemeKind.Secondary,
+  //         callback: r => r.close()
+  //       }),
+  //       new UiDialogButton({
+  //         label: $localize`Delete`,
+  //         kind: ThemeKind.Primary,
+  //         callback: r => {
+  //           this.performanceService.deletePerformance(performance._id);
+  //           r.close();
+  //         }
+  //       })
+  //     ]
+  //   });
+  // }
 }

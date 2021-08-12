@@ -4,7 +4,7 @@ import { Auth, ErrorHandler, handleError } from '@core/api';
 import { ICacheable, createICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { IUiForm, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { environment as env } from 'apps/frontend/src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
   buttons: UiDialogButton[];
 
   constructor(
-    private baseAppService: BaseAppService,
+    private appService: AppService,
     private myselfService: MyselfService,
     private authService: AuthenticationService,
     private dialog: MatDialog
@@ -69,7 +69,9 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
           this.myselfService.getMyself().then(myself => {
             // If the user has set a preferred language, we want to prefix the URL with that when they login
             const localeRedirect = myself.user.locale ? `/${myself.user.locale.language}` : '';
-            this.baseAppService.navigateTo(myself.host_info?.prefers_dashboard_landing ? `${localeRedirect}/dashboard` : `${localeRedirect}/`);
+            this.appService.navigateTo(
+              myself.host_info?.prefers_dashboard_landing ? `${localeRedirect}/dashboard` : `${localeRedirect}/`
+            );
             this.dialog.closeAll();
           });
         }
@@ -86,7 +88,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
 
   openRegister() {
     this.dialog.closeAll();
-    this.baseAppService.navigateTo(`/register`);
+    this.appService.navigateTo(`/register`);
   }
 
   openPasswordResetDialog() {

@@ -1,7 +1,7 @@
 import { timestamp, uuid } from '@core/helpers';
 import { ConsentableType, ConsentableTypes, IConsentable, RichText } from '@core/interfaces';
 import { BaseEntity, Column, Entity, FindOptionsWhereCondition, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
-import BlobProvider from '../../data-client/providers/blob.provider';
+import { Blobs } from '../../data-client/providers/blob.provider';
 
 // Convenience methods for Consentable.retrieve("general_toc") to return Consentable<"general_toc">
 class ConsentableEntity extends BaseEntity {
@@ -49,8 +49,8 @@ export class Consentable<T extends ConsentableType> extends ConsentableEntity im
     this.changes_text = changesText;
   }
 
-  async upload(document: Express.Multer.File, blob: BlobProvider) {
-    const asset = await blob.upload(document);
+  async upload(document: Express.Multer.File, blobs: Blobs) {
+    const asset = await blobs.upload(document);
     this.document_location = asset.location;
     this.document_identifier = asset.asset_identifier;
     return this;

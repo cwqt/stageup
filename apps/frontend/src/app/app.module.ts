@@ -1,5 +1,3 @@
-import { environment } from '../environments/environment';
-
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -22,6 +20,7 @@ import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
+
 // https://github.com/scttcper/ngx-chartjs
 import { ChartjsModule } from '@ctrl/ngx-chartjs';
 import {
@@ -55,6 +54,7 @@ import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-statu
 import { DeleteHostReasonPipe } from './_pipes/delete-host-reason.pipe';
 import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
 import { TimesPipe } from './_pipes/times.pipe';
+import { TimeUntilPipe } from './_pipes/time-until.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -141,6 +141,7 @@ import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
+import { PerformanceDeleteDialogComponent } from './routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { RatePerformanceComponent } from './components/rate-performance/rate-performance.component';
 import { LikePerformanceComponent } from './components/like-performance/like-performance.component';
 import { RedirectComponent } from './components/redirect/redirect.component';
@@ -151,6 +152,7 @@ import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.compo
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
 import { UploadDocumentDialogComponent } from './components/dialogs/upload-document-dialog/upload-document-dialog.component';
+import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -248,6 +250,7 @@ import { UploadDocumentDialogComponent } from './components/dialogs/upload-docum
     GenreFeedComponent,
     ProcessRefundsDialogComponent,
     UserPatronageComponent,
+    TimeUntilPipe,
     ConfirmationDialogComponent,
     UserPatronageComponent,
     HostPatronageSubscribersComponent,
@@ -257,13 +260,15 @@ import { UploadDocumentDialogComponent } from './components/dialogs/upload-docum
     ConfirmPasswordDialogComponent,
     HostPerformanceThumbnailsComponent,
     SocialSharingComponent,
+    PerformanceDeleteDialogComponent,
     RatePerformanceComponent,
     LikePerformanceComponent,
     RedirectComponent,
     FollowButtonComponent,
     HostAnalyticsComponent,
     HostAnalyticsHeaderItemComponent,
-    DocumentViewComponent,
+    CookieConsentComponent,
+    SelectReasonDialogComponent,
     TermsLinksComponent,
     CookieConsentComponent,
     AdminGdprDocumentsComponent,
@@ -284,7 +289,7 @@ import { UploadDocumentDialogComponent } from './components/dialogs/upload-docum
     ClipboardModule,
     NgxMaskModule.forRoot(),
     NgxPopperModule.forRoot(),
-    NgxStripeModule.forRoot(environment.stripe_public_key),
+    NgxStripeModule.forRoot(),
     ClipboardModule,
     NgxPermissionsModule.forRoot(),
     PlyrModule,
@@ -292,7 +297,7 @@ import { UploadDocumentDialogComponent } from './components/dialogs/upload-docum
     ChartjsModule,
     QuillModule.forRoot(),
     LoggerModule.forRoot({
-      serverLoggingUrl: '/api/logs',
+      serverLoggingUrl: '/api/utils/logs',
       colorScheme: ['purple', 'teal', 'gray', 'gray', 'red', 'red', 'red'],
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR

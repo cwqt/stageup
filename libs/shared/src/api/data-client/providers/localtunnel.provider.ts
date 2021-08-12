@@ -1,4 +1,5 @@
 import localtunnel, { Tunnel } from 'localtunnel';
+import { Service, Token } from 'typedi';
 import { Provider } from '../index';
 
 export interface ILocalTunnelProviderConfig {
@@ -6,9 +7,8 @@ export interface ILocalTunnelProviderConfig {
   domain: string;
 }
 
-import { Service } from 'typedi';
 @Service()
-export default class LocalTunnelProvider implements Provider<Tunnel> {
+export class LocalTunnelProvider implements Provider<Tunnel> {
   name = 'LocalTunnel';
   connection: Tunnel;
   config: ILocalTunnelProviderConfig;
@@ -22,8 +22,6 @@ export default class LocalTunnelProvider implements Provider<Tunnel> {
       port: this.config.port,
       subdomain: this.config.domain
     });
-
-    console.log(this.connection.url);
 
     if (!this.connection.url.includes(this.config.domain)) console.error(`URL mismatch, ${this.connection.url}`);
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BaseAppService } from '../../services/app.service';
+import { AppService } from '../../services/app.service';
 
 @Component({
   selector: 'app-admin-panel',
@@ -7,11 +7,11 @@ import { BaseAppService } from '../../services/app.service';
   styleUrls: ['./admin-panel.component.scss']
 })
 export class AdminPanelComponent implements OnInit {
-  constructor(private baseAppService: BaseAppService) {}
+  constructor(private appService: AppService) {}
 
   ngOnInit(): void {}
 
   gotoOnboardingList() {
-    this.baseAppService.navigateTo(`/admin/onboardings`);
+    this.appService.navigateTo(`/admin/onboardings`);
   }
 }

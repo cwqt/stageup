@@ -7,6 +7,7 @@ import Hls from 'hls.js';
 import mux from 'mux-embed';
 import { environment } from 'apps/frontend/src/environments/environment';
 import { MyselfService } from '@frontend/services/myself.service';
+import { AppService } from '@frontend/services/app.service';
 
 @Component({
   selector: 'app-player',
@@ -35,7 +36,7 @@ export class PlayerComponent implements OnInit {
     captions: { active: true, update: true, language: 'en' }
   };
 
-  constructor(private myselfService: MyselfService) {}
+  constructor(private myselfService: MyselfService, private appService: AppService) {}
 
   ngOnInit(): void {
     this.hlsjsDriver = new HlsjsPlyrDriver(false);
@@ -65,7 +66,7 @@ export class PlayerComponent implements OnInit {
       hlsjs: this.hlsjsDriver.hls,
       Hls: Hls,
       data: {
-        env_key: environment.mux_env_key,
+        env_key: this.appService.environment.mux_env_key,
         player_init_time: Date.now(),
         player_name: 'player',
 

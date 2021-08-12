@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { IMyself } from '@core/interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 import { HelperService } from '../../../services/helper.service';
 import { SearchService } from '../../../services/search.service';
@@ -19,7 +19,7 @@ export class HeaderBarComponent implements OnInit {
 
   constructor(
     private searchService: SearchService,
-    private baseAppService: BaseAppService,
+    private appService: AppService,
     private authService: AuthenticationService,
     private route: ActivatedRoute
   ) {}
@@ -27,16 +27,16 @@ export class HeaderBarComponent implements OnInit {
   ngOnInit(): void {}
 
   gotoCatalog() {
-    this.baseAppService.navigateTo('/catalog');
+    this.appService.navigateTo('/catalog');
   }
 
   gotoRoot() {
-    this.baseAppService.navigateTo('/');
+    this.appService.navigateTo('/');
   }
 
   search(event: string) {
     this.searchService.$searchQuery.next(event);
-    this.baseAppService.navigateTo(`/search`, { queryParams: { query: event } });
+    this.appService.navigateTo(`/search`, { queryParams: { query: event } });
   }
 
   toggleUserPopup(state: boolean) {
@@ -48,10 +48,10 @@ export class HeaderBarComponent implements OnInit {
   }
 
   openLoginDialog() {
-    this.baseAppService.navigateTo(`/login`);
+    this.appService.navigateTo(`/login`);
   }
 
   openRegisterDialog() {
-    this.baseAppService.navigateTo(`/register`);
+    this.appService.navigateTo(`/register`);
   }
 }

@@ -10,7 +10,7 @@ import { SUPPORTED_LOCALES, SUPPORTED_LOCALE_CODES } from '../../../app.interfac
 import { HelperService } from '../../../services/helper.service';
 import { MyselfService } from '../../../services/myself.service';
 import { UiField, UiForm } from '../../../ui-lib/form/form.interfaces';
-import { BaseAppService } from './../../../services/app.service';
+import { AppService } from './../../../services/app.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -28,13 +28,13 @@ export class ProfileSettingsComponent implements OnInit {
     private userService: UserService,
     private myselfService: MyselfService,
     private helperService: HelperService,
-    private baseAppService: BaseAppService,
+    private appService: AppService,
     private route: ActivatedRoute,
     public dialog: MatDialog
   ) {}
 
   async ngOnInit() {
-    await this.baseAppService.componentInitialising(this.route);
+    await this.appService.componentInitialising(this.route);
 
     this.myself = this.myselfService.$myself.getValue();
     this.profileDetailsForm = new UiForm({
@@ -100,7 +100,7 @@ export class ProfileSettingsComponent implements OnInit {
         },
         // On success, we want to reload the current page with the language prefixed (e.g. '/cy/settings')
         success: async v => {
-          this.baseAppService.navigateTo(`/${v.language}/${this.baseAppService.getUrl()}`);
+          this.appService.navigateTo(`/${v.language}/${this.appService.getUrl()}`);
         }
       }
     });

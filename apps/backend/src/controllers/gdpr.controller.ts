@@ -1,5 +1,5 @@
 import { ConsentableType, ConsentableTypes, IConsentable, IEnvelopedData } from '@core/interfaces';
-import { BaseController, IControllerEndpoint, Consentable } from '@core/api';
+import { BaseController, IControllerEndpoint, Consentable, Middleware } from '@core/api';
 import { BackendProviderMap } from '@backend/common/providers';
 import AuthStrat from '../common/authorisation';
 import { enums, object } from 'superstruct';
@@ -47,7 +47,7 @@ export default class GdprController extends BaseController<BackendProviderMap> {
   uploadDocument(): IControllerEndpoint<void> {
     return {
       authorisation: AuthStrat.isSiteAdmin,
-      middleware: this.middleware.file(2048, ['application/pdf']).single('file'),
+      middleware: Middleware.file(2048, ['application/pdf']).single('file'),
       validators: {
         query: object({ type: enums<ConsentableType>(ConsentableTypes) })
       },

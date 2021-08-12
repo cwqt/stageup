@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AssetType, GenreMap, ICreateAssetRes, IPerformance } from '@core/interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { HostService } from '../../../../services/host.service';
@@ -39,7 +39,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     private performanceService: PerformanceService,
     private hostService: HostService,
     private toastService: ToastService,
-    private baseAppService: BaseAppService
+    private appService: AppService
   ) {}
 
   setType(type: 'live' | 'vod') {
@@ -101,7 +101,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             this.stepper.next();
           } else {
             // live
-            this.baseAppService.navigateTo(`/dashboard/performances/${v._id}`);
+            this.appService.navigateTo(`/dashboard/performances/${v._id}`);
             this.ref.close(v);
           }
         },
@@ -128,7 +128,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
 
   handleVoDUploadChange(event: UploadEvent) {
     if (event == 'success') {
-      this.baseAppService.navigateTo(`/dashboard/performances/${this.performance._id}`);
+      this.appService.navigateTo(`/dashboard/performances/${this.performance._id}`);
       this.ref.close(this.performance);
     }
   }

@@ -4,6 +4,9 @@ import { ParamMap, Data, ActivatedRoute, Router, NavigationExtras } from '@angul
 import { AuthenticationService } from './authentication.service';
 import { intersect } from '@core/helpers';
 import { SUPPORTED_LOCALES } from '@frontend/app.interfaces';
+import { HttpClient } from '@angular/common/http';
+import { IDynamicFrontendEnvironment, IStaticFrontendEnvironment } from '@core/interfaces';
+import { environment as staticEnv } from '../../environments/environment';
 
 export enum RouteParam {
   UserId = 'userId',
@@ -20,25 +23,30 @@ export enum RouteChange {
   Params = 'params'
 }
 
+export type IEnvironment = IStaticFrontendEnvironment & IDynamicFrontendEnvironment;
+
 @Injectable({
   providedIn: 'root'
 })
-export class BaseAppService {
+export class AppService {
   $params: BehaviorSubject<ParamMap>;
   $queryParams: BehaviorSubject<ParamMap>;
   $routeData: BehaviorSubject<Data>;
-  $componentError: BehaviorSubject<boolean>;
+  private $environment: BehaviorSubject<IEnvironment | undefined>;
+
   loggedIn: boolean;
   // the boolean is whether the component was changed (initialised)
   // true means it was - false means just route params altered - query param changes are ignored
   $routeAltered: Subject<RouteChange> = new Subject();
 
   constructor(
+    private http: HttpClient,
     private authenticationService: AuthenticationService,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.$componentError = new BehaviorSubject(false);
+    this.$environment = new BehaviorSubject(undefined);
+
     this.authenticationService.checkLoggedIn();
 
     this.loggedIn = this.authenticationService.$loggedIn.getValue();
@@ -54,7 +62,6 @@ export class BaseAppService {
   }
 
   async componentInitialising(activatedRoute: ActivatedRoute) {
-    if (this.$componentError.getValue()) this.$componentError.next(false);
     this.$params.next(activatedRoute.snapshot.paramMap);
     this.$queryParams.next(activatedRoute.snapshot.queryParamMap);
     this.$routeData.next(activatedRoute.snapshot.data);
@@ -96,6 +103,26 @@ export class BaseAppService {
 
   getData() {
     if (this.$routeData) return this.$routeData.getValue();
+  }
+
+  async getEnvironment(): Promise<IEnvironment> {
+    return new Promise(async (res, rej) => {
+      if (this.$environment.value) return res(this.$environment.value);
+      try {
+        const dynamicEnv = await this.http
+          .get<IDynamicFrontendEnvironment>(`/api/utils/frontend-environment`)
+          .toPromise();
+        const env = { ...dynamicEnv, ...staticEnv };
+        this.$environment.next(env);
+        res(env);
+      } catch (err) {
+        rej(err);
+      }
+    });
+  }
+
+  get environment(): IEnvironment {
+    return this.$environment.value;
   }
 
   navigateTo(url: string, extras?: NavigationExtras): Promise<boolean> {

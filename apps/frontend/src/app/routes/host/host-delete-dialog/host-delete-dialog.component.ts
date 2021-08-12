@@ -12,7 +12,7 @@ import {
 } from '@core/interfaces';
 import { Cacheable } from '@frontend/app.interfaces';
 import { ConfirmPasswordDialogComponent } from '@frontend/components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
-import { BaseAppService } from '@frontend/services/app.service';
+import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
 import { MyselfService } from '@frontend/services/myself.service';
@@ -65,7 +65,7 @@ export class HostDeleteDialogComponent implements OnInit, IUiDialogOptions {
     private logger: NGXLogger,
     private helperService: HelperService,
     private myselfService: MyselfService,
-    private appService: BaseAppService
+    private appService: AppService
   ) {}
 
   async ngOnInit() {

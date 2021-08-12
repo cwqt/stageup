@@ -7,13 +7,14 @@ import { isEnv } from '@core/helpers';
 import { Environment } from '@core/interfaces';
 import {
   IMuxProviderConfig,
-  IEmailProviderConfig,
+  ISendGridMailProviderConfig,
   IPostgresProviderConfig,
   IRedisProviderConfig,
   IAWS3ProviderConfig,
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
-  IStripeProviderConfig
+  IStripeProviderConfig,
+  REDIS_PROVIDER
 } from '@core/api';
 
 type Envify<T> = { [index in keyof T as Uppercase<string & index>]: T[index] } & { [index: string]: any };
@@ -35,7 +36,7 @@ const Env: {
   REDIS: Envify<IRedisProviderConfig>;
   STORE: Envify<IStoreProviderConfig>;
   STRIPE: Envify<IStripeProviderConfig>;
-  EMAIL: Envify<IEmailProviderConfig>;
+  EMAIL: Envify<ISendGridMailProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   isEnv: (env: Environment | Environment[]) => boolean;
 } = {
@@ -70,7 +71,8 @@ const Env: {
   MUX: {
     ACCESS_TOKEN: process.env.MUX_ACCESS_TOKEN,
     SECRET_KEY: process.env.MUX_SECRET_KEY,
-    WEBHOOK_SIGNATURE: process.env.MUX_WEBHOOK_SIGNATURE
+    WEBHOOK_SIGNATURE: process.env.MUX_WEBHOOK_SIGNATURE,
+    DATA_ENV_KEY: process.env.MUX_DATA_ENV_KEY
   },
   PG: {
     USERNAME: process.env.POSTGRES_USER,
@@ -86,7 +88,8 @@ const Env: {
   STORE: {
     HOST: process.env.BACKEND_STORE_HOST,
     PORT: 6379,
-    TTL: 86400
+    TTL: 86400,
+    REDIS_TOKEN: REDIS_PROVIDER
   },
   EMAIL: {
     API_KEY: process.env.SENDGRID_API_KEY,

@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IUser } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { BaseAppService } from 'apps/frontend/src/app/services/app.service';
+import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { FormComponent } from 'apps/frontend/src/app/ui-lib/form/form.component';
 import { IUiForm, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { ActivatedRoute } from '@angular/router';
@@ -30,7 +30,7 @@ export class ResetPasswordComponent implements OnInit, IUiDialogOptions {
 
   constructor(
     private userService: UserService,
-    private appService: BaseAppService,
+    private appService: AppService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<IUser>,
     private toastService: ToastService,
