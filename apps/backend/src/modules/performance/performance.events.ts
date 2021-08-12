@@ -134,42 +134,45 @@ export class PerformanceEvents extends ModuleEvents {
     //Create an array of ticket ids
     const ticketIds: string[] = tickets.map(t => t._id);
 
-    //Then, get all invoices with those tickets referenced
-    const invoices: Invoice[] = await this.ORM.createQueryBuilder(Invoice, 'invoice')
-      .select(['invoice._id', 'invoice.ticket__id'])
-      .where('invoice.ticket__id IN (:...ticket_ids)', { ticket_ids: ticketIds })
-      .innerJoin('invoice.user', 'user')
-      .addSelect('user._id')
-      .getMany();
+    //Check if tickets were created
+    if (ticketIds.length > 0) {
+      //Then, get all invoices with those tickets referenced
+      const invoices: Invoice[] = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+        .select(['invoice._id', 'invoice.ticket__id'])
+        .where('invoice.ticket__id IN (:...ticket_ids)', { ticket_ids: ticketIds })
+        .innerJoin('invoice.user', 'user')
+        .addSelect('user._id')
+        .getMany();
 
-    //Get array of invoice ids
-    const invoiceIds: string[] = invoices.map(invoice => invoice._id);
+      //Get array of invoice ids
+      const invoiceIds: string[] = invoices.map(invoice => invoice._id);
 
-    //Then refund those invoices
-    this.financeService.processRefunds(
-      {
-        host_id: performance.host._id,
-        invoice_ids: invoiceIds,
-        bulk_refund_data: {
-          bulk_refund_reason: BulkRefundReason.PerformanceDeletedAutoRefund,
-          bulk_refund_detail: null
-        }
-      },
-      ct.__meta.locale
-    );
-
-    //Fire off user email event for each invoice
-    invoices.map(async i => {
-      return await this.bus.publish(
-        'performance.deleted_notify_user',
+      //Then refund those invoices
+      this.financeService.processRefunds(
         {
-          performance_id: ct.performance_id,
-          user_id: i.user._id,
-          invoice_id: i._id
+          host_id: performance.host._id,
+          invoice_ids: invoiceIds,
+          bulk_refund_data: {
+            bulk_refund_reason: BulkRefundReason.PerformanceDeletedAutoRefund,
+            bulk_refund_detail: null
+          }
         },
         ct.__meta.locale
       );
-    });
+
+      //Fire off user email event for each invoice
+      invoices.map(async i => {
+        return await this.bus.publish(
+          'performance.deleted_notify_user',
+          {
+            performance_id: ct.performance_id,
+            user_id: i.user._id,
+            invoice_id: i._id
+          },
+          ct.__meta.locale
+        );
+      });
+    }
   }
 
   async sendUserPerformanceDeletionEmail(ct: Contract<'performance.deleted_notify_user'>) {
