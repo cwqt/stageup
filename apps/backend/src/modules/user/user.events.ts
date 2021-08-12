@@ -114,11 +114,6 @@ export class UserEvents extends ModuleEvents {
     const user = await User.findOne({ _id: ct.user_id }, { select: ['name', 'username', 'email_address'] });
     const host = await Host.findOne({ _id: ct.host_id }, { select: ['name', 'username', 'email_address'] });
 
-    console.log('USER', user);
-    console.log('HOST', host);
-    console.log('REASON', ct.opt_out_reason);
-    console.log('STATUS', ct.opt_status);
-
     // Currently, this function can only be triggered with 'hard-in' status but added 'soft-in' in case of future changes
     if(ct.opt_status == 'hard-in' || ct.opt_status == 'soft-in'){
         this.queueService.addJob('send_email', {

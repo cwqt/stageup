@@ -370,7 +370,7 @@ email:
     Hello,
 
     Your subscriber {user_name} ({user_email}) has opted out of receiving direct emails from your organisation.
-    The user provided this additional information:
+    Additional information:
 
     Reason: {opt_out_reason}
     Message: {opt_out_message}
