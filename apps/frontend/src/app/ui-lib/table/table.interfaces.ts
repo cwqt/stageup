@@ -53,9 +53,7 @@ export interface IUITableColumnSort {
 }
 
 export interface IUiTableAction<K> {
-  // _>_>
   type?: 'button' | 'popover' | 'toggle';
-  // _>_>
   label?: string;
   click?: (v: K) => void;
   kind?: ThemeKind;
@@ -66,14 +64,12 @@ export interface IUiTableAction<K> {
     kind?: ThemeKind;
     click: (v: K) => void;
   }>;
-  // _>_>
   toggle?: {
     primary_label: string;
     before_label?: string; // Optional additional label (when toggle in off position)
     initial_value: (v: K) => boolean;
     event: (e: MatSlideToggleChange, v: K) => void;
   };
-  // _>_>
 }
 
 export type IUiTransformedRowMeta<Input> = {

@@ -115,6 +115,7 @@ export class UserEvents extends ModuleEvents {
     const host = await Host.findOne({ _id: ct.host_id }, { select: ['name', 'username', 'email_address'] });
 
     // Currently, this function can only be triggered with 'hard-in' status but added 'soft-in' in case of future changes
+    // If user is opting in, send one type of email
     if(ct.opt_status == 'hard-in' || ct.opt_status == 'soft-in'){
         this.queueService.addJob('send_email', {
         subject: this.i18n.translate('@@email.user.opting_in_to_marketing__subject', ct.__meta.locale),
@@ -127,12 +128,15 @@ export class UserEvents extends ModuleEvents {
         to: host.email_address,
         attachments: []
       });
+      // Else if user is opting out, send a different email
     } else if (ct.opt_status == 'hard-out') {
       this.queueService.addJob('send_email', {
         subject: this.i18n.translate('@@email.user.opting_out_of_marketing__subject', ct.__meta.locale),
         content: this.i18n.translate('@@email.user.opting_out_of_marketing__content', ct.__meta.locale, {
           user_name: user.name || user.username,
           user_email: user.email_address,
+          // If reason was provided, use the map to convert the enum to text
+          // If not provided, will display N/A
           opt_out_reason: ct.opt_out_reason?.reason ? optOutOptionsMap[ct.opt_out_reason?.reason] : "N/A",
           opt_out_message: ct.opt_out_reason?.message || "N/A",
         }),

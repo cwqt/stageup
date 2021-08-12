@@ -20,6 +20,7 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
+  IUserHostMarketingConsent,
   IUserInvoice,
   NUUID
 } from '@core/interfaces';
@@ -200,9 +201,9 @@ export class MyselfService {
     return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
   }
 
-  // router.get <any> ("/myself/opt-ins", Myself.readUserHostMarketingConsents());
-  readUserHostMarketingConsents(query: IQueryParams): Promise<any> {
-    return this.http.get<any>(`/api/myself/opt-ins${querize(query)}`).toPromise();
+  // router.get <IEnvelopedData<IUserHostMarketingConsent[]>> ("/myself/opt-ins", Myself.readUserHostMarketingConsents());
+  readUserHostMarketingConsents(query: IQueryParams): Promise<IEnvelopedData<IUserHostMarketingConsent[]>> {
+    return this.http.get<IEnvelopedData<IUserHostMarketingConsent[]>>(`/api/myself/opt-ins${querize(query)}`).toPromise();
   }
 
   // router.put <void> ("/myself/opt-ins", Myself.updateOptInStatus());

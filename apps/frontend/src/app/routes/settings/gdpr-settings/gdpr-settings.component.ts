@@ -1,11 +1,10 @@
-import { FilterCode } from '@core/interfaces';
 import { HelperService } from '@frontend/services/helper.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OptOutDialogComponent } from '@frontend/components/dialogs/opt-out-dialog/opt-out-dialog.component';
-import { UserHostMarketingConsent } from 'libs/shared/src/api/entities/gdpr/consents/user-host-marketing-consent.entity';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { Component, OnInit } from '@angular/core';
+import { IUserHostMarketingConsent } from '@core/interfaces';
 
 @Component({
   selector: 'app-gdpr-settings',
@@ -13,12 +12,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./gdpr-settings.component.scss']
 })
 export class GdprSettingsComponent implements OnInit {
-  table: UiTable<UserHostMarketingConsent>;
+  table: UiTable<IUserHostMarketingConsent>;
 
   constructor(private myselfService: MyselfService, public dialog: MatDialog, private helperService: HelperService) {}
 
   async ngOnInit(): Promise<void> {
-    this.table = new UiTable<UserHostMarketingConsent>({
+    this.table = new UiTable<IUserHostMarketingConsent>({
       resolver: async query => this.myselfService.readUserHostMarketingConsents(query),
       pagination: {
         page_sizes: [5, 10, 25]
@@ -65,8 +64,3 @@ export class GdprSettingsComponent implements OnInit {
     });
   }
 }
-
-// updateLandingPage(event: MatSlideToggleChange) {
-//   this.myselfService.updatePreferredLandingPage({ prefers_dashboard_landing: event.checked });
-//   this.myself.host_info.prefers_dashboard_landing = event.checked;
-// }

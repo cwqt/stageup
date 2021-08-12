@@ -1,5 +1,4 @@
 import { Host, User } from '@core/api';
-import { enumToValues } from '@core/helpers';
 import { ConsentOpt, ConsentOpts, IUserHostMarketingConsent, NUUID } from '@core/interfaces';
 import { ChildEntity, Column, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { Consent } from '../consent.entity';
@@ -39,7 +38,6 @@ export class UserHostMarketingConsent extends Consent<'host_marketing'> implemen
   toFull(): Required<IUserHostMarketingConsent> {
     return {
       ...super.toConsent(),
-      // host: { ...this.host.toStub(), email_address: this.host.email_address },
       host: this.host.toStub(),
       user: this.user.toStub(),
       privacy_policy: this.privacy_policy,

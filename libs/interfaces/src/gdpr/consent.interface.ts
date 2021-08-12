@@ -1,5 +1,5 @@
 import { NUUID } from '@core/interfaces';
-import { IHostStub, IHostPrivate } from '../hosts/host.interface';
+import { IHostStub } from '../hosts/host.interface';
 import { IPerformanceStub } from '../performances/performance.interface';
 import { IUserStub } from '../users/user.interface';
 import { IConsentable } from './consentable.interface';
@@ -18,7 +18,6 @@ export interface IUserConsent<T extends ConsentType> {
 export type UserConsentData = {
   host_marketing: {
     user: IUserStub;
-    // host: IHostStub & IHostPrivate['email_address'];
     host: IHostStub;
     opt_status: ConsentOpt;
     terms_and_conditions: IConsentable<'general_toc'>;
@@ -57,6 +56,7 @@ export enum OptOutOptions {
   DidntSignUp = 'didnt_sign_up'
 }
 
+// Map it to user friendly text for displaying in dropdown and in emails
 export const optOutOptionsMap: { [index in OptOutOptions]: string } = {
   [OptOutOptions.TooFrequent]: `I'm getting emails too often.`,
   [OptOutOptions.TooCluttered]: `Emails are too cluttered.`,

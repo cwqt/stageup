@@ -41,6 +41,7 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
+  IUserHostMarketingConsent,
   IUserInvoice,
   IUserInvoiceStub,
   PaymentStatus,
@@ -485,9 +486,8 @@ export class MyselfController extends ModuleController {
       if (follow) await Follow.delete({ _id: follow._id });
     }
   };
-
   // Returns all of the current users opt-ins and opt outs for host marketing
-  readUserHostMarketingConsents: IControllerEndpoint<any> = {
+  readUserHostMarketingConsents: IControllerEndpoint<IEnvelopedData<IUserHostMarketingConsent[]>> = {
     authorisation: AuthStrat.isLoggedIn,
     controller: async req => {
       return await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
@@ -502,7 +502,7 @@ export class MyselfController extends ModuleController {
     }
   };
 
-  // Returns all of the current users opt-ins and opt outs for host marketing
+  // Changes the current users marketing consent status for a paricular host
   updateOptInStatus: IControllerEndpoint<void> = {
     validators: {
       params: object({ hid: Validators.Fields.nuuid }),
@@ -525,7 +525,7 @@ export class MyselfController extends ModuleController {
           .andWhere('consent.host__id = :hid', { hid: req.params.hid })
           .getOne()
       );
-      // TODO: ADD EMAIL EVENT. WAIT FOR MERGE WITH DEV FIRST
+      // Trigger email to be sent to the host, informing them of the change
       this.bus.publish(
         'user.marketing_opt_in_change',
         {

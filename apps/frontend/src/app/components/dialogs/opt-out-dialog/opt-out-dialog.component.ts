@@ -1,6 +1,5 @@
-import { optOutOptionsMap } from './../../../../../../../libs/interfaces/src/gdpr/consent.interface';
+import { optOutOptionsMap } from 'libs/interfaces/src/gdpr/consent.interface';
 import { MyselfService } from '@frontend/services/myself.service';
-import { OptOutOptions } from 'libs/interfaces/src/gdpr/consent.interface';
 import { IHostStub, IUserStub } from '@core/interfaces';
 import { UiForm, UiField } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
@@ -49,23 +48,16 @@ export class OptOutDialogComponent implements OnInit, IUiDialogOptions {
     //Form to be used for bulk refunds (>1 invoice selected)
     this.optOutForm = new UiForm({
       fields: {
+        // Reason for opting out (as a drop-down field)
         opt_out_reason: UiField.Select({
           label: $localize`Reason`,
-          // values: new Map<OptOutOptions, { label: string }>([
-          //   [
-          //     OptOutOptions.DidntSignUp,
-          //     { label: $localize`I never signed up, or I didn't realize that I have signed up.` }
-          //   ],
-          //   [OptOutOptions.TooCluttered, { label: $localize`I'm getting emails too often.` }],
-          //   [OptOutOptions.TooFrequent, { label: $localize`Emails are too cluttered.` }],
-          //   [OptOutOptions.NotRelevant, { label: $localize`The content isn't relevant to me.` }]
-          // ])
           values: new Map(
             Object.entries(optOutOptionsMap).map(([key, value]) => {
               return [key, { label: $localize`${value}` }];
             })
           )
         }),
+        // Additional message to company
         note_to_company: UiField.Textarea({
           label: $localize`Note to Company`
         })
