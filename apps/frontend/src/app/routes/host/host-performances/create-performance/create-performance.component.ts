@@ -76,10 +76,11 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           //fields: {
            // period: UiField.Date({
               initial: {
-                start: new Date (this.performance.publicity_period.start),
+                start: undefined,
+                //new Date (this.performance.publicity_period.start),
                   //? unix(this.performance.publicity_period.start)
                  // : undefined,
-                end: new Date (this.performance.publicity_period.end)
+                end: undefined
                // ? unix(this.performance.publicity_period.end) : undefined
               },
               is_date_range: true,
@@ -98,8 +99,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             description: v.description,
             genre: v.genre,
             publicity_period: { 
-              start: v.period.publicity_period.start,//timestamp(v.fields.publicity_period.start),
-              end: v.period.publicity_period.end},//timestamp(v.fields.publicity_period.end) },
+              start: timestamp(v.period.publicity_period.start),//timestamp(v.fields.publicity_period.start),
+              end: timestamp(v.period.publicity_period.end)},//timestamp(v.fields.publicity_period.end) },
             //premiere_datetime: timestamp(new Date(v.premiere.performance.publicity_period.start)) || null,
             type: this.type
           

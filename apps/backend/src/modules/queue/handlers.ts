@@ -149,7 +149,7 @@ export class EventHandlers {
           receipt_url: invoice.stripe_receipt_url,
           user_name: user.name || user.username,
           performance_name: invoice.ticket.performance.name,
-          publicity_period: i18n.date(unix(invoice.ticket.performance.publicity_period.start), ct.__meta.locale),
+          publicity_period_start: i18n.date(unix(invoice.ticket.performance.publicity_period.start), ct.__meta.locale),
           amount: i18n.money(invoice.amount, invoice.currency),
           url: link
         }),
@@ -608,7 +608,7 @@ export class EventHandlers {
           performance_id: ct._id,
           sender_email_address: Env.EMAIL_ADDRESS,
           type: '24 hours',
-          publicity_period: publicity_period.start,
+          premier_date: publicity_period.start,
           url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/my-stuff`
         },
         {
@@ -622,7 +622,7 @@ export class EventHandlers {
           performance_id: ct._id,
           sender_email_address: Env.EMAIL_ADDRESS,
           type: '15 minutes',
-          publicity_period: publicity_period,
+          premier_date: publicity_period.start,
           url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/performances/${ct._id}`
         },
         {

@@ -81,7 +81,8 @@ export namespace objects {
 
   export const DtoCreatePerformance: Describe<DtoCreatePerformance> = object({
     name: size(string(), 8, 64),
-    publicity_period: fields.timestamp,
+    publicity_period: {start: fields.timestamp, end: fields.timestamp},
+    //publicity_period_end: fields.timestamp,
     //publicity_period: optional(fields.timestamp),{ start: fields.number, end: fields.number }
     description: optional(fields.richtext),
     genre: fields.genre,

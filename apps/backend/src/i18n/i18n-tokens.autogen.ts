@@ -79,7 +79,7 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@email.ticket.purchased_current__subject"]: "performance_name",
   ["@@email.ticket.purchased_current__content"]: "user_name" | "ticket_name" | "performance_name" | "amount" | "url" | "receipt_url" | "receipt_url",
   ["@@email.ticket.purchased_future__subject"]: "performance_name",
-  ["@@email.ticket.purchased_future__content"]: "user_name" | "performance_name" | "amount" | "premier_time" | "receipt_url" | "receipt_url" | "url",
+  ["@@email.ticket.purchased_future__content"]: "user_name" | "performance_name" | "amount" | "publicity_period_start" | "receipt_url" | "receipt_url" | "url",
   ["@@email.user.patronage_started__subject"]: "tier_name",
   ["@@email.user.patronage_started__content"]: "user_name" | "host_name" | "amount" | "date_ordinal" | "tos_url",
   ["@@email.host.patronage_started__subject"]: "tier_name",
@@ -132,4 +132,3 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@validation.invalid_pinterest_url"]: never,
   ["@@validation.invalid_youtube_url"]: never
 }
-

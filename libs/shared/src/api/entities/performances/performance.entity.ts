@@ -34,7 +34,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column() name: string;
   @Column() views: number;
   @Column({ unsigned: true }) like_count: number;
-  @Column({ nullable: true }) publicity_period: { start: number; end: number };
+ // @Column({ nullable: true }) publicity_period: { start: null; end: null };
   @Column({ unsigned: true }) rating_count: number;
   @Column('float') rating_total: number;
   @Column('jsonb', { nullable: true }) description?: RichText;
@@ -42,7 +42,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.PendingSchedule }) status: PerformanceStatus;
-  //@Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
+  @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
 
   @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
   @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
@@ -89,7 +89,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       description: this.description,
       created_at: this.created_at,
       thumbnail: this.thumbnail,
-      publicity_period: this.publicity_period,
+      publicity_period_start: this.publicity_period.start,
+      publicity_period_end: this.publicity_period.end,
       assets: this.asset_group.assets.map(a => a.toStub()),
       status: this.status
     };

@@ -74,7 +74,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
         if (
           // performance has already started
           stream.state == LiveStreamState.Active ||
-          currentTime > this.performance.premiere_datetime
+          currentTime > this.performance.publicity_period.start
         ) {
           // TODO: handle what should happen when a stream is completed
           if (stream.state != LiveStreamState.Completed) {
@@ -82,7 +82,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
           }
         } else {
           // track time until live, and update player when it goes past the premiere date
-          this.etaUntilLive = this.performance.premiere_datetime - currentTime;
+          this.etaUntilLive = this.performance.publicity_period.start - currentTime;
           this.premiereCountdown = setTimeout(this.initialiseSSE.bind(this), this.etaUntilLive);
 
           // update the primitive counter every second
