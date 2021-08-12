@@ -1,3 +1,4 @@
+import { GdprDocumentTypePipe } from '@frontend/_pipes/gdpr-document-type.pipe';
 import { ToastService } from '@frontend/services/toast.service';
 import { GdprService } from 'apps/frontend/src/app/services/gdpr.service';
 import fd from 'form-data';
@@ -6,15 +7,15 @@ import { UiForm, UiField } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { RichText } from '@core/interfaces';
+import { RichText, IConsentable, ConsentableType } from '@core/interfaces';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 
 @Component({
-  selector: 'frontend-upload-document-dialog',
-  templateUrl: './upload-document-dialog.component.html',
-  styleUrls: ['./upload-document-dialog.component.scss']
+  selector: 'app-gdpr-document-upload',
+  templateUrl: './gdpr-document-upload.component.html',
+  styleUrls: ['./gdpr-document-upload.component.scss']
 })
-export class UploadDocumentDialogComponent implements OnInit, IUiDialogOptions {
+export class GdprDocumentUpload implements OnInit, IUiDialogOptions {
   @ViewChild('stepper') stepper: MatHorizontalStepper;
   @ViewChild('fileSelector') fileSelector: ElementRef;
 
@@ -51,22 +52,13 @@ export class UploadDocumentDialogComponent implements OnInit, IUiDialogOptions {
   constructor(
     private gdprService: GdprService,
     private toastService: ToastService,
-    public dialogRef: MatDialogRef<UploadDocumentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { document: any }
+    public dialogRef: MatDialogRef<GdprDocumentUpload>,
+    @Inject(MAT_DIALOG_DATA) public data: { document: IConsentable<ConsentableType> }
   ) {}
 
   ngOnInit(): void {
     // Display the dialog title as user friendly string instead of type
-    switch (this.data.document.type) {
-      case 'privacy_policy':
-        this.title = $localize`Privacy Policy`;
-        break;
-      case 'general_toc':
-        this.title = $localize`Terms & Conditions`;
-        break;
-      case 'cookies':
-        this.title = $localize`Cookies`;
-    }
+    this.title = new GdprDocumentTypePipe().transform(this.data.document.type);
 
     this.form = new UiForm({
       fields: {

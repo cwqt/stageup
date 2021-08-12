@@ -151,8 +151,9 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
-import { UploadDocumentDialogComponent } from './components/dialogs/upload-document-dialog/upload-document-dialog.component';
+import { GdprDocumentUpload } from './components/dialogs/gdpr-document-upload/gdpr-document-upload.component';
 import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
+import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -189,6 +190,7 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     HostDashboardComponent,
     OnboardingViewComponent,
     TimesPipe,
+    GdprDocumentTypePipe,
     OnboardingStatePipe,
     DeleteHostReasonPipe,
     ObjectLengthPipe,
@@ -273,7 +275,7 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     TermsLinksComponent,
     CookieConsentComponent,
     AdminGdprDocumentsComponent,
-    UploadDocumentDialogComponent
+    GdprDocumentUpload
   ],
   imports: [
     AngularMaterialModule,

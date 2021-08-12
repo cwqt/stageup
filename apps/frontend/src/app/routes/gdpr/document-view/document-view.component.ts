@@ -21,7 +21,7 @@ export class DocumentViewComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const documentType = this.route.snapshot.data.document_type;
-    const document = await this.gdprService.getLatestDocument(documentType);
+    const document = await this.gdprService.readLatestDocument(documentType);
 
     document?.document_location ? (this.documentUrl = this.pdfUrl(document.document_location)) : (this.error = true);
   }

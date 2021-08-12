@@ -18,24 +18,20 @@ export class GdprController extends ModuleController {
     super();
   }
 
-  getLatestDocument: IControllerEndpoint<IConsentable<ConsentableType>> = {
+  readLatestDocument: IControllerEndpoint<IConsentable<ConsentableType>> = {
     authorisation: AuthStrat.none,
     validators: {
-      query: object({ type: enums<ConsentableType>(ConsentableTypes) })
+      params: object({ type: enums<ConsentableType>(ConsentableTypes) })
     },
-    controller: async req => this.gdprService.readConsentable(req.query.type as ConsentableType, 'latest')
+    controller: async req =>
+      this.gdprService.readConsentable(req.params.type as ConsentableType, req.params.version as number | 'latest')
   };
 
   // Returns one of each type of document (the highest version)
-  getAllLatestDocuments: IControllerEndpoint<IEnvelopedData<IConsentable<ConsentableType>[]>> = {
+  readAllLatestDocuments: IControllerEndpoint<IEnvelopedData<IConsentable<ConsentableType>[]>> = {
     authorisation: AuthStrat.isSiteAdmin,
     controller: async req => {
-      const documents = await this.ORM.createQueryBuilder(Consentable, 'consentable')
-        .distinctOn(['consentable.type']) // Will only get one of each type
-        .orderBy('consentable.type', 'DESC') // puts the documents in order of type and version (to get the highest version of each type)
-        .addOrderBy('consentable.version', 'DESC')
-        .getMany();
-
+      const documents = await Consentable.retrieveAll(req.params.version as number | 'latest');
       // Edge case for when we don't yet have any documents (i.e. in early days).
       // Ensures that one of each type of document is returned (non-existent documents will just return undefined)
       const allDocumentTypes = ConsentableTypes.map(documentType => {
@@ -55,10 +51,7 @@ export class GdprController extends ModuleController {
     },
     controller: async req => {
       // Get the highest version existing document (if it exists)
-      const existingDocument = await this.ORM.createQueryBuilder(Consentable, 'consentable')
-        .where('consentable.type = :type', { type: req.query.type })
-        .orderBy('consentable.version', 'DESC')
-        .getOne();
+      const existingDocument = await Consentable.retrieve({ type: <ConsentableType>req.query.type }, 'latest');
 
       // Simultaneously create new consent and uploads document
       await this.ORM.transaction(async txc => {

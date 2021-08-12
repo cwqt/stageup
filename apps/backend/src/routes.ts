@@ -202,8 +202,8 @@ router.redirect                          ("/auth/verify-email",                 
 
 // GDPR ---------------------------------------------------------------------------------------------------------------
 const Gdpr = Container.get(GdprController);
-router.get      <IConsentable<CT>>       ("/gdpr/documents/latest",                   Gdpr.getLatestDocument);
-router.get      <IE<IConsentable<CT>[]>> ("/gdpr/documents/all-latest",               Gdpr.getAllLatestDocuments);
+router.get      <IConsentable<CT>>       ("/gdpr/documents/:type/:version",           Gdpr.readLatestDocument);
+router.get      <IE<IConsentable<CT>[]>> ("/gdpr/documents/:version",                 Gdpr.readAllLatestDocuments);
 router.post     <void>                   ("/gdpr/documents/upload",                   Gdpr.uploadDocument);
 
 // UTILS ---------------------------------------------------------------------------------------------------------------

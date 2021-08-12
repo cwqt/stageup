@@ -1,4 +1,5 @@
-import { UploadDocumentDialogComponent } from '@frontend/components/dialogs/upload-document-dialog/upload-document-dialog.component';
+import { GdprDocumentTypePipe } from '@frontend/_pipes/gdpr-document-type.pipe';
+import { GdprDocumentUpload } from '@frontend/components/dialogs/gdpr-document-upload/gdpr-document-upload.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@frontend/services/helper.service';
 import { GdprService } from 'apps/frontend/src/app/services/gdpr.service';
@@ -9,7 +10,7 @@ import { LOCALE_ID, Inject } from '@angular/core';
 import { IConsentable, ConsentableType } from '@core/interfaces';
 
 @Component({
-  selector: 'frontend-admin-gdpr-documents',
+  selector: 'app-admin-gdpr-documents',
   templateUrl: './admin-gdpr-documents.component.html',
   styleUrls: ['./admin-gdpr-documents.component.scss']
 })
@@ -27,21 +28,12 @@ export class AdminGdprDocumentsComponent implements OnInit {
     // Setup table for displaying most recent documents
     // If a document doesn't exist, we instead display '-'
     this.table = new UiTable<IConsentable<ConsentableType>>({
-      resolver: () => this.gdprService.getAllLatestDocuments(),
+      resolver: () => this.gdprService.readAllLatestDocuments(),
       pagination: {},
       columns: [
         {
           label: $localize`Document type`,
-          accessor: document => {
-            switch (document.type) {
-              case 'privacy_policy':
-                return $localize`Privacy Policy`;
-              case 'general_toc':
-                return $localize`Terms & Conditions`;
-              case 'cookies':
-                return $localize`Cookies`;
-            }
-          }
+          accessor: document => new GdprDocumentTypePipe().transform(document.type)
         },
         {
           label: $localize`Updated`,
@@ -66,14 +58,12 @@ export class AdminGdprDocumentsComponent implements OnInit {
           type: 'button',
           click: document => {
             this.helperService.showDialog(
-              this.dialog.open(UploadDocumentDialogComponent, {
+              this.dialog.open(GdprDocumentUpload, {
                 data: { document },
                 width: '800px',
                 minHeight: '500px'
               }),
-              () => {
-                this.table.refresh();
-              }
+              this.table.refresh.bind(this)
             );
           },
           icon: 'upload'

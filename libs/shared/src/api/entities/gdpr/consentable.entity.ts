@@ -21,6 +21,16 @@ class ConsentableEntity extends BaseEntity {
 
     return Consentable.findOne(q) as Promise<Consentable<K>>;
   }
+
+  static retrieveAll<K extends ConsentableType>(version: number | 'latest'): Promise<Array<Consentable<K>>> {
+    const q: FindOptionsWhereCondition<Consentable<K>> = {};
+    if (version == 'latest') {
+      q.superseded_at = null;
+    } else {
+      q.version = version;
+    }
+    return Consentable.find(q) as Promise<Array<Consentable<K>>>;
+  }
 }
 
 @Entity()

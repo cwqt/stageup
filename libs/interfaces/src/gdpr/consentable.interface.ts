@@ -18,5 +18,5 @@ export interface IConsentable<T extends ConsentableType> {
   superseded_at: number;
   document_location: string; // url of stored asset
   version: number; // incremented on succession
-  changes_text?: RichText; // Optional field. User can specify summary text of the changes being added/removed in the new document
+  change_reason?: RichText;
 }

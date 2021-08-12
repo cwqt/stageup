@@ -9,14 +9,14 @@ import fd from 'form-data';
 export class GdprService {
   constructor(private http: HttpClient) {}
 
-  //router.get <IConsentable<ConsentableType>> ("/api/gdpr/document/latest", Gdpr.getLatestDocument());;
-  getLatestDocument(type: ConsentableType): Promise<IConsentable<ConsentableType>> {
-    return this.http.get<IConsentable<ConsentableType>>(`/api/gdpr/documents/latest?type=${type}`).toPromise();
+  //router.get <IConsentable<ConsentableType>> ("/api/gdpr/documents/:type/:version", Gdpr.readLatestDocument());;
+  readLatestDocument(type: ConsentableType): Promise<IConsentable<ConsentableType>> {
+    return this.http.get<IConsentable<ConsentableType>>(`/api/gdpr/documents/${type}/latest`).toPromise();
   }
 
-  //router.get <IEnvelopedData<IConsentable<ConsentableType>[]>> ("/api/gdpr/document/all-latest", Gdpr.getAllLatestDocuments());;
-  getAllLatestDocuments(): Promise<IEnvelopedData<IConsentable<ConsentableType>[]>> {
-    return this.http.get<IEnvelopedData<IConsentable<ConsentableType>[]>>(`/api/gdpr/documents/all-latest`).toPromise();
+  //router.get <IEnvelopedData<IConsentable<ConsentableType>[]>> ("/api/gdpr/document/:version", Gdpr.readAllLatestDocuments());;
+  readAllLatestDocuments(): Promise<IEnvelopedData<IConsentable<ConsentableType>[]>> {
+    return this.http.get<IEnvelopedData<IConsentable<ConsentableType>[]>>(`/api/gdpr/documents/latest`).toPromise();
   }
 
   //router.post <void> ("/api/gdpr/document/upload", Gdpr.uploadDOcument());;
