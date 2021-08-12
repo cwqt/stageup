@@ -179,6 +179,7 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     HostComponent,
     HostPerformancesComponent,
     CreatePerformanceComponent,
+    DocumentViewComponent,
     HostPerformanceThumbnailsComponent,
     UpdatePerformanceComponent,
     PlayerComponent,

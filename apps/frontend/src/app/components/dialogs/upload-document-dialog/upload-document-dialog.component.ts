@@ -56,13 +56,13 @@ export class UploadDocumentDialogComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   ngOnInit(): void {
-    // For UI - to display the dialog title as words instead of code/type
+    // Display the dialog title as user friendly string instead of type
     switch (this.data.document.type) {
       case 'privacy_policy':
         this.title = $localize`Privacy Policy`;
         break;
       case 'general_toc':
-        this.title = $localize`General Terms & Conditions`;
+        this.title = $localize`Terms & Conditions`;
         break;
       case 'cookies':
         this.title = $localize`Cookies`;

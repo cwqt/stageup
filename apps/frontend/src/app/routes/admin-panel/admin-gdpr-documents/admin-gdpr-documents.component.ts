@@ -1,4 +1,4 @@
-import { UploadDocumentDialogComponent } from './../../../components/dialogs/upload-document-dialog/upload-document-dialog.component';
+import { UploadDocumentDialogComponent } from '@frontend/components/dialogs/upload-document-dialog/upload-document-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@frontend/services/helper.service';
 import { GdprService } from 'apps/frontend/src/app/services/gdpr.service';
@@ -37,7 +37,7 @@ export class AdminGdprDocumentsComponent implements OnInit {
               case 'privacy_policy':
                 return $localize`Privacy Policy`;
               case 'general_toc':
-                return $localize`General Terms & Conditions`;
+                return $localize`Terms & Conditions`;
               case 'cookies':
                 return $localize`Cookies`;
             }

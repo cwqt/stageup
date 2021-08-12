@@ -130,7 +130,7 @@ const LOGGED_IN_ROUTES: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'onboardings',
+        redirectTo: 'onboardings', // '/admin' will redirect to '/admin/onboardings'
         pathMatch: 'full'
       },
       {

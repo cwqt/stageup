@@ -2,8 +2,7 @@ import { RichText } from '@core/interfaces';
 // There will need to be tables for legal documents that users have agreed to on StageUp.
 // These are Consentables
 //    Privacy Policy Table
-//    General Terms & Conditions Table
-//    Uploaders Terms & Conditions Table
+//    Terms & Conditions Table
 //    Cookies Table
 // A Consent is an agreement of consent to a Consentable
 

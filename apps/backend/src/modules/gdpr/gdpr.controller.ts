@@ -1,6 +1,5 @@
-import { BLOB_PROVIDER } from './../../../../../libs/shared/src/api/data-client/tokens';
 import { Connection } from 'typeorm';
-import { Consentable, IControllerEndpoint, POSTGRES_PROVIDER, Middleware, Blobs } from '@core/api';
+import { Consentable, IControllerEndpoint, POSTGRES_PROVIDER, BLOB_PROVIDER, Middleware, Blobs } from '@core/api';
 import { ConsentableType, ConsentableTypes, IConsentable, IEnvelopedData } from '@core/interfaces';
 import { enums, object } from 'superstruct';
 import { Inject, Service } from 'typedi';
@@ -33,12 +32,12 @@ export class GdprController extends ModuleController {
     controller: async req => {
       const documents = await this.ORM.createQueryBuilder(Consentable, 'consentable')
         .distinctOn(['consentable.type']) // Will only get one of each type
-        .orderBy('consentable.type', 'DESC') // puts the documents in order of type and then order of version (to get the highest version of each type)
+        .orderBy('consentable.type', 'DESC') // puts the documents in order of type and version (to get the highest version of each type)
         .addOrderBy('consentable.version', 'DESC')
         .getMany();
 
       // Edge case for when we don't yet have any documents (i.e. in early days).
-      // Ensures that one of each type of document is returned (non-existent documents will just return the type)
+      // Ensures that one of each type of document is returned (non-existent documents will just return undefined)
       const allDocumentTypes = ConsentableTypes.map(documentType => {
         const existingDocument = documents.find(document => document.type == documentType);
         return existingDocument ? existingDocument : <Consentable<ConsentableType>>{ type: documentType };
@@ -61,15 +60,15 @@ export class GdprController extends ModuleController {
         .orderBy('consentable.version', 'DESC')
         .getOne();
 
-      // Simultaneously create new consent and upload document
+      // Simultaneously create new consent and uploads document
       await this.ORM.transaction(async txc => {
-        const document = existingDocument // if document exists we supersede it. Else we create a new one
+        const document = existingDocument // if document exists we supersede it. Else we create new
           ? existingDocument.superscede(req.body.summary)
           : new Consentable(<ConsentableType>req.query.type, req.body.summary);
         // Then we upload the file and update the document location/identifier
         await document.upload(req.file, this.blobs);
         await txc.save(document);
-        if (existingDocument) await txc.save(existingDocument); // Also save any changes made to existing document
+        if (existingDocument) await txc.save(existingDocument); // Save changes made to prior existing document
       });
     }
   };
