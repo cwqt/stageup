@@ -1908,7 +1908,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="f8fb864e4cf94310247ed9c634576cadd0476015" datatype="html">
-        <source>due to premiere at <x id="INTERPOLATION" equiv-text="{{ perf.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/></source>
+        <source>due to premiere at <x id="INTERPOLATION" equiv-text="{{ perf.publicity_period_start | amFromUnix | amDateFormat: 'LLL' }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-delete-dialog/host-delete-dialog.component.html</context>
           <context context-type="linenumber">55</context>
@@ -3835,7 +3835,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="6c54aaca3b5e8aedc8194d1a03a07dccec525069" datatype="html">
-        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="<b>"/>@<x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="</b>"/> is due to premiere this stream at <x id="INTERPOLATION_1" equiv-text="{{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}"/>, you'll be notified by e-mail before it begins. </source>
+        <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="<b>"/>@<x id="INTERPOLATION" equiv-text="{{ performance.host.username }}"/><x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="</b>"/> is due to premiere this stream at <x id="INTERPOLATION_1" equiv-text="{{ performance.publicity_period_start  | amFromUnix | amDateFormat: 'LLL' }}"/>, you'll be notified by e-mail before it begins. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/performance/performance-brochure/performance-brochure.component.html</context>
           <context context-type="linenumber">139,142</context>

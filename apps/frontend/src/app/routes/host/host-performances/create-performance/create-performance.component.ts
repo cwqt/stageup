@@ -99,8 +99,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             description: v.description,
             genre: v.genre,
             publicity_period: { 
-              start: timestamp(v.period.publicity_period.start),//timestamp(v.fields.publicity_period.start),
-              end: timestamp(v.period.publicity_period.end)},//timestamp(v.fields.publicity_period.end) },
+              start: undefined, // v.period.publicity_period.start,//timestamp(v.fields.publicity_period.start),
+              end: undefined}, // v.period.publicity_period.end},//timestamp(v.fields.publicity_period.end) },
             //premiere_datetime: timestamp(new Date(v.premiere.performance.publicity_period.start)) || null,
             type: this.type
           
