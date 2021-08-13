@@ -115,7 +115,7 @@ export class FinanceEvents extends ModuleEvents {
   async sendHostRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
     const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
       .where('invoice._id = :iid', { iid: ct.invoice_id })
-      .innerJoin('invoice.ticket', 'ticket')
+      .innerJoinAndSelect('invoice.ticket', 'ticket')
       .innerJoin('ticket.performance', 'performance')
       .innerJoin('invoice.host', 'host')
       .innerJoin('invoice.payment_method', 'payment_method')
@@ -170,7 +170,7 @@ export class FinanceEvents extends ModuleEvents {
     const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
       .where('invoice._id = :iid', { iid: ct.invoice_id })
       .innerJoinAndSelect('invoice.ticket', 'ticket')
-      .innerJoin('ticket.performance', 'performance')
+      .innerJoinAndSelect('ticket.performance', 'performance')
       .innerJoin('invoice.host', 'host')
       .innerJoin('invoice.payment_method', 'payment_method')
       .innerJoin('invoice.user', 'user')
@@ -183,7 +183,8 @@ export class FinanceEvents extends ModuleEvents {
         'invoice.ticket',
         'invoice.amount',
         'invoice.currency',
-        'user.username'
+        'user.username',
+        'user.email_address'
       ])
       .withDeleted()
       .getOne();
