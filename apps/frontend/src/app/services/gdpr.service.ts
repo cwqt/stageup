@@ -15,8 +15,8 @@ export class GdprService {
   }
 
   //router.get <IEnvelopedData<IConsentable<ConsentableType>[]>> ("/api/gdpr/document/:version", Gdpr.readAllLatestDocuments());;
-  readAllLatestDocuments(): Promise<IEnvelopedData<IConsentable<ConsentableType>[]>> {
-    return this.http.get<IEnvelopedData<IConsentable<ConsentableType>[]>>(`/api/gdpr/documents/latest`).toPromise();
+  readAllLatestDocuments(): Promise<IConsentable<ConsentableType>[]> {
+    return this.http.get<IConsentable<ConsentableType>[]>(`/api/gdpr/documents/latest`).toPromise();
   }
 
   //router.post <void> ("/api/gdpr/document/upload", Gdpr.uploadDOcument());;

@@ -28,7 +28,7 @@ export class GdprController extends ModuleController {
   };
 
   // Returns one of each type of document (the highest version)
-  readAllLatestDocuments: IControllerEndpoint<IEnvelopedData<IConsentable<ConsentableType>[]>> = {
+  readAllLatestDocuments: IControllerEndpoint<IConsentable<ConsentableType>[]> = {
     authorisation: AuthStrat.isSiteAdmin,
     controller: async req => {
       const documents = await Consentable.retrieveAll(req.params.version as number | 'latest');
@@ -39,7 +39,7 @@ export class GdprController extends ModuleController {
         return existingDocument ? existingDocument : <Consentable<ConsentableType>>{ type: documentType };
       });
 
-      return { data: allDocumentTypes };
+      return allDocumentTypes;
     }
   };
 

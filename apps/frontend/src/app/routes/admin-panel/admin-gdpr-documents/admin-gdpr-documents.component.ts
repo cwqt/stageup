@@ -28,7 +28,7 @@ export class AdminGdprDocumentsComponent implements OnInit {
     // Setup table for displaying most recent documents
     // If a document doesn't exist, we instead display '-'
     this.table = new UiTable<IConsentable<ConsentableType>>({
-      resolver: () => this.gdprService.readAllLatestDocuments(),
+      resolver: async () => ({ data: await this.gdprService.readAllLatestDocuments() }),
       pagination: {},
       columns: [
         {
