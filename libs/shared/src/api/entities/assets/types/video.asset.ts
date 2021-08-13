@@ -21,7 +21,7 @@ export class VideoAsset extends Asset<AssetType.Video> implements AssetMethods<A
   ) {
     // https://docs.mux.com/guides/video/upload-files-directly#1-create-an-authenticated-mux-url
     // deepmerge to avoid new_asset_settings over-write
-    const video: Upload = await provider.Video.Uploads.create(
+    const video: Upload = await provider.connection.Video.Uploads.create(
       merge(options, { new_asset_settings: { passthrough: JSON.stringify(super.createPassthroughData(owner)) } })
     );
 
@@ -49,7 +49,7 @@ export class VideoAsset extends Asset<AssetType.Video> implements AssetMethods<A
 
   async delete(provider: AssetProvider[AssetType.Video]) {
     if (this.asset_identifier) {
-      await provider.Video.Assets.del(this.asset_identifier);
+      await provider.connection.Video.Assets.del(this.asset_identifier);
     }
     await this.remove();
   }

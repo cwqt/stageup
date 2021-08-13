@@ -16,7 +16,7 @@ import {
   StringFilter,
   StringFilterOperator
 } from '@core/interfaces';
-import { IQueryParams, timeless, timestamp, to } from '@core/helpers';
+import { timeless, timestamp, to } from '@core/helpers';
 import { NextFunction, Request, Response } from 'express';
 import { EntityManager, SelectQueryBuilder } from 'typeorm';
 
@@ -25,8 +25,8 @@ export type SortDirection = 'ASC' | 'DESC';
 
 declare module 'typeorm' {
   export interface SelectQueryBuilder<Entity> {
-    filter(map: FilterMap, filters?: IQueryParams['filter']): SelectQueryBuilder<Entity>;
-    sort(map: Record<string, string>, sorts?: IQueryParams['sort']): SelectQueryBuilder<Entity>;
+    filter(map: FilterMap): SelectQueryBuilder<Entity>;
+    sort(map: Record<string, string>): SelectQueryBuilder<Entity>;
 
     /**
      * @description Iterate over a lot of rows by streaming row by row, as opposed to getting all at once & then processing it
@@ -36,7 +36,8 @@ declare module 'typeorm' {
     // Modified from https://github.com/savannabits/typeorm-pagination
     paginate(): Promise<IEnvelopedData<Entity[], null>>;
     paginate<K>(
-      opts: { serialiser?: EntitySerialiser<Entity, K> } & Partial<PaginationOptions>
+      serialiser: EntitySerialiser<Entity, K>,
+      paging?: PaginationOptions
     ): Promise<IEnvelopedData<K[], null>>;
   }
 }
@@ -47,30 +48,21 @@ declare module 'typeorm' {
 export const patchTypeORM = (req: Request, res: Response, next: NextFunction) => {
   // Use function instead of => to have this reference in queryBuilder chain
   SelectQueryBuilder.prototype.paginate = async function <T, K>(
-    opts?: { serialiser?: EntitySerialiser<T, K> } & Partial<PaginationOptions>
+    serialiser?: EntitySerialiser<T, K>,
+    paging?: PaginationOptions
   ): Promise<IEnvelopedData<T[] | K[], null>> {
-    // Fall back on req.query.page etc. if no opts passed in (or partial opts)
-    if (opts.page == undefined) opts.page = req.query.page as any;
-    if (opts.per_page == undefined) opts.per_page = req.query.per_page as any;
+    const page = paging?.page ?? (parseInt(req.query.page as string) || 0);
+    const perPage = paging?.per_page ?? (parseInt(req.query.per_page as string) || 10);
 
-    const page = opts?.page ?? (parseInt(opts.page as any) || 0);
-    const perPage = opts?.per_page ?? (parseInt(opts.per_page as any) || 10);
-
-    return paginate<T, K>(this, page, perPage, opts?.serialiser);
+    return paginate<T, K>(this, page, perPage, serialiser);
   };
 
-  SelectQueryBuilder.prototype.filter = function <T>(
-    fm: FilterMap,
-    filters: IQueryParams['filter']
-  ): SelectQueryBuilder<T> {
-    return filter(this, (filters || req.query?.filter || {}) as { [index: string]: any }, fm);
+  SelectQueryBuilder.prototype.filter = function <T>(fm: FilterMap): SelectQueryBuilder<T> {
+    return filter(this, (req.query?.filter || {}) as { [index: string]: any }, fm);
   };
 
-  SelectQueryBuilder.prototype.sort = function <T>(
-    sm: Record<string, string>,
-    sorts: IQueryParams['sort']
-  ): SelectQueryBuilder<T> {
-    return sort(this, (sorts || req.query?.sort || {}) as { [index: string]: any }, sm);
+  SelectQueryBuilder.prototype.sort = function <T>(sm: Record<string, string>): SelectQueryBuilder<T> {
+    return sort(this, (req.query?.sort || {}) as { [index: string]: any }, sm);
   };
 
   SelectQueryBuilder.prototype.iterate = async function <T>(

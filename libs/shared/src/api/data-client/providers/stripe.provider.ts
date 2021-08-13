@@ -9,10 +9,9 @@ export interface IStripeProviderConfig {
   client_id: string;
 }
 
-import { Service, Token } from 'typedi';
-
+import { Service } from 'typedi';
 @Service()
-export class StripeProvider implements Provider<Stripe> {
+export default class StripeProvider implements Provider<Stripe> {
   name = 'Stripe';
   connection: Stripe;
   config: IStripeProviderConfig;

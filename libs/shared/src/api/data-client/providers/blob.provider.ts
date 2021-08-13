@@ -1,17 +1,6 @@
 import { config, S3 } from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { Provider } from '../';
-import { Service, Token } from 'typedi';
-
-export interface BlobUploadResponse {
-  location: string; // url
-  asset_identifier: string; // asset id
-}
-
-export interface Blobs {
-  upload: (asset: Express.Multer.File | null, oldUrl?: string) => Promise<BlobUploadResponse>;
-  delete: (id: string) => Promise<void>;
-}
 
 export interface IAWS3ProviderConfig {
   s3_access_key_id: string;
@@ -21,17 +10,17 @@ export interface IAWS3ProviderConfig {
   s3_region: string;
 }
 
-// For moving to GCP Storage...
-// @Service()
-// export class GCPBlobManager implements Provider<BlobManager>
+export interface BlobUploadResponse {
+  location: string; // url
+  asset_identifier: string; // asset id
+}
 
+import { Service } from 'typedi';
 @Service()
-export class S3BlobProvider implements Provider<Blobs> {
+export default class BlobProvider implements Provider<S3> {
   name = 'AWS S3';
-  connection: Blobs;
+  connection: S3;
   config: IAWS3ProviderConfig;
-
-  private s3: S3;
 
   constructor(config: IAWS3ProviderConfig) {
     this.config = config;
@@ -44,8 +33,8 @@ export class S3BlobProvider implements Provider<Blobs> {
       secretAccessKey: this.config.s3_access_secret_key
     });
 
-    this.s3 = new S3({ apiVersion: '2006-03-01' });
-    return this;
+    this.connection = new S3({ apiVersion: '2006-03-01' });
+    return this.connection;
   }
 
   public async upload(asset: Express.Multer.File | null, oldUrl?: string): Promise<BlobUploadResponse> {
@@ -58,7 +47,7 @@ export class S3BlobProvider implements Provider<Blobs> {
 
   public async delete(keyId: string) {
     try {
-      await this.s3
+      return await this.connection
         .deleteObject({
           Key: keyId,
           Bucket: this.config.s3_bucket_name
@@ -75,7 +64,7 @@ export class S3BlobProvider implements Provider<Blobs> {
 
   async drop() {
     try {
-      const listedObjects = await this.s3
+      const listedObjects = await this.connection
         .listObjectsV2({
           Bucket: this.config.s3_bucket_name
         })
@@ -83,7 +72,7 @@ export class S3BlobProvider implements Provider<Blobs> {
 
       if (listedObjects.Contents.length === 0) return;
 
-      await this.s3
+      await this.connection
         .deleteObjects({
           Bucket: this.config.s3_bucket_name,
           Delete: {
@@ -102,7 +91,7 @@ export class S3BlobProvider implements Provider<Blobs> {
     try {
       if (!file) throw new Error('No available file to upload');
 
-      const asset = await this.s3
+      const asset = await this.connection
         .upload({
           Body: file.buffer,
           ContentType: file.mimetype,

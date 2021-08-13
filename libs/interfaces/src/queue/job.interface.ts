@@ -8,6 +8,7 @@ import { IPerformance } from '../performances/performance.interface';
 export const JobTypes = [
   'send_email',
   'send_reminder_emails',
+  'schedule_performance_release',
   'host_invoice_csv',
   'host_invoice_pdf',
   'collect_performance_analytics',
@@ -16,7 +17,11 @@ export const JobTypes = [
 
 export type JobType = typeof JobTypes[number];
 
-export const EmailReminderTypes = ['24_HOURS', '15_MINUTES'] as const;
+export const EmailReminderTypes = [
+  '24 hours',
+  '15 minutes',
+] as const;
+
 export type EmailReminderType = typeof EmailReminderTypes[number];
 
 export type JobData = {
@@ -41,6 +46,7 @@ export type JobData = {
     premier_date: number;
     url: string;
   };
+  ['schedule_performance_release']: Required<Pick<IPerformance, '_id'>>;
   ['host_invoice_csv']: {
     locale: ILocale;
     sender_email_address: string;

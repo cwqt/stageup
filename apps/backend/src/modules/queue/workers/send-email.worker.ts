@@ -1,14 +1,6 @@
-import { EMAIL_PROVIDER, Mail } from '@core/api';
-import { Inject, Service } from 'typedi';
-import { WorkerScript } from '.';
+import { Providers } from '@core/api';
+import { Job } from 'bullmq';
 
-@Service()
-export default class extends WorkerScript<'send_email'> {
-  constructor(@Inject(EMAIL_PROVIDER) private email: Mail) {
-    super();
-
-    this.script = async job => {
-      this.email.send(job.data);
-    };
-  }
-}
+export default ({ email }: { email: InstanceType<typeof Providers.Email> }) => async (job: Job) => {
+  return email.send(job.data);
+};

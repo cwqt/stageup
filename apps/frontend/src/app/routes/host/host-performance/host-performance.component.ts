@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DtoPerformance, IHost, IPerformanceHostInfo } from '@core/interfaces';
-import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -23,7 +22,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performanceId: string;
   performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
-  disableDeleteButton: boolean;
 
   onChildLoaded(
     component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent
@@ -66,16 +64,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
 
   gotoPerformance() {
     this.appService.navigateTo(`/performances/${this.performanceData._id}`);
-  }
-
-  deletePerformance() {
-    this.dialog.open(PerformanceDeleteDialogComponent, {
-      data: this.performance.data.data
-    });
-  }
-
-  cancelPerformance() {
-    //TODO Cancel Performance
   }
 
   ngOnDestroy() {

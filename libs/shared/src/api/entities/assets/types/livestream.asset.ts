@@ -19,7 +19,7 @@ export class LiveStreamAsset extends Asset<AssetType.LiveStream> implements Asse
     txc: EntityManager
   ) {
     // https://docs.mux.com/reference#create-a-live-stream
-    const stream: LiveStream = await provider.Video.LiveStreams.create({
+    const stream: LiveStream = await provider.connection.Video.LiveStreams.create({
       reconnect_window: 0, // Time to wait for reconnect on signal loss
       playback_policy: 'signed', // Requires token
       new_asset_settings: {},
@@ -50,7 +50,7 @@ export class LiveStreamAsset extends Asset<AssetType.LiveStream> implements Asse
   }
 
   async delete(provider: AssetProvider[AssetType.LiveStream]) {
-    await provider.Video.LiveStreams.del(this.asset_identifier);
+    await provider.connection.Video.LiveStreams.del(this.asset_identifier);
     await super.remove();
   }
 

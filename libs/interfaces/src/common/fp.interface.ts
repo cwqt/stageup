@@ -42,7 +42,7 @@ export const pick = <T extends object, U extends keyof T>(obj: T, paths: Array<U
 };
 
 /**
-// @description May or may not be a promise
+// @description Lazy loaded entity
 */
 export type Lazy<T> = Promise<T> | T;
 

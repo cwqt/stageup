@@ -96,25 +96,25 @@ export class HostPerformancesComponent implements OnInit {
     return richtext.read(text);
   }
 
-  // deletePerformance(performance: IPerformanceStub) {
-  //   this.helperService.showConfirmationDialog(this.dialog, {
-  //     title: $localize`Delete '${performance.name}'`,
-  //     description: $localize`Are you sure you want to delete this performance?`,
-  //     buttons: [
-  //       new UiDialogButton({
-  //         label: $localize`Cancel`,
-  //         kind: ThemeKind.Secondary,
-  //         callback: r => r.close()
-  //       }),
-  //       new UiDialogButton({
-  //         label: $localize`Delete`,
-  //         kind: ThemeKind.Primary,
-  //         callback: r => {
-  //           this.performanceService.deletePerformance(performance._id);
-  //           r.close();
-  //         }
-  //       })
-  //     ]
-  //   });
-  // }
+  deletePerformance(performance: IPerformanceStub) {
+    this.helperService.showConfirmationDialog(this.dialog, {
+      title: $localize`Delete '${performance.name}'`,
+      description: $localize`Are you sure you want to delete this performance?`,
+      buttons: [
+        new UiDialogButton({
+          label: $localize`Cancel`,
+          kind: ThemeKind.Secondary,
+          callback: r => r.close()
+        }),
+        new UiDialogButton({
+          label: $localize`Delete`,
+          kind: ThemeKind.Primary,
+          callback: r => {
+            this.performanceService.deletePerformance(performance._id);
+            r.close();
+          }
+        })
+      ]
+    });
+  }
 }

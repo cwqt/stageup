@@ -1,15 +1,16 @@
-import { Blobs, BlobUploadResponse } from '@core/api';
 import { AssetDto, AssetType, IMuxPassthroughOwnerInfo } from '@core/interfaces';
-import Mux, { CreateUploadParams, LiveStream, Upload } from '@mux/mux-node';
+import { CreateUploadParams, LiveStream, Upload } from '@mux/mux-node';
 import { EntityManager } from 'typeorm';
+import BlobProvider, { BlobUploadResponse } from '../../../data-client/providers/blob.provider';
+import MuxProvider from '../../../data-client/providers/mux.provider';
 
 export type AssetProvider = {
-  [AssetType.Image]: Blobs;
-  [AssetType.AnimatedGIF]: Mux;
-  [AssetType.LiveStream]: Mux;
-  [AssetType.Thumbnail]: Mux;
-  [AssetType.Video]: Mux;
-  [AssetType.Storyboard]: Mux;
+  [AssetType.Image]: BlobProvider;
+  [AssetType.AnimatedGIF]: MuxProvider;
+  [AssetType.LiveStream]: MuxProvider;
+  [AssetType.Thumbnail]: MuxProvider;
+  [AssetType.Video]: MuxProvider;
+  [AssetType.Storyboard]: MuxProvider;
 };
 
 export type AssetOptions = {

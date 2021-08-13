@@ -1,16 +1,7 @@
 import { User, Performance } from '@core/api';
 import { timestamp, uuid } from '@core/helpers';
 import { ILike, LikeLocation, NUUID } from '@core/interfaces';
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryColumn,
-  JoinColumn,
-  RelationId,
-  DeleteDateColumn
-} from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, JoinColumn, RelationId } from 'typeorm';
 
 @Entity()
 export class Like extends BaseEntity implements ILike {
@@ -25,8 +16,6 @@ export class Like extends BaseEntity implements ILike {
 
   @Column() like_date: number;
   @Column('varchar') like_location: LikeLocation;
-
-  @DeleteDateColumn() deletedAt?: Date;
 
   constructor(user: User, performance: Performance, location: LikeLocation) {
     super();

@@ -39,7 +39,7 @@ export class Ticket extends BaseEntity implements ITicket {
 
   @DeleteDateColumn({ type: 'timestamptz' }) deleted_at?: Date; // soft delete
   @ManyToOne(() => Performance, perf => perf.tickets) performance: Performance;
-  @OneToOne(() => Claim, { onDelete: 'CASCADE', cascade: true }) @JoinColumn() claim: Claim;
+  @OneToOne(() => Claim) @JoinColumn() claim: Claim;
 
   constructor(ticket: DtoCreateTicket) {
     super();

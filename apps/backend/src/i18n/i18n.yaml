@@ -49,10 +49,6 @@ host:
     created_at: Created At
     total_rows: Total Rows
 
-# Peformances    --------------------------------------------------------------------------------------
-performance:
-  cannot_delete_live: Performance cannot be deleted while currently live
-  cannot_delete_after_occurrence: Performance cannot be deleted after it has occured
 # Payment Status --------------------------------------------------------------------------------------
 payment_status:
   created: Created
@@ -309,7 +305,7 @@ email:
     We're looking forward seeing you on StageUp!
 
     Cheers, 
-
+    
     StageUp team
   user.fifteen_minute_performance_reminder__subject: It's on in 15 minutes!
   user.fifteen_minute_performance_reminder__content: |
@@ -322,32 +318,5 @@ email:
     <a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to the performance</a>
 
     Cheers, 
-
+    
     StageUp team
-  performance.deleted_notify_host__subject: You have deleted {performance_name}
-  performance.deleted_notify_host__content: |
-    Hello **{host_name}**,
-
-    You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
-
-    We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.
-
-    Thanks,
-
-    **StageUp Team**
-  performance.deleted_notify_user__subject: >
-    Peformance: {performance_name} cancellation notification
-  performance.deleted_notify_user__content: |
-    Hi **{user_username}**,
-
-    Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.
-
-    Invoice#: {invoice_id}
-
-    Ticket Price: {ticket_amount}
-
-    We will automatically credit the funds to your **{card_brand}** ending in **{last_4}**. Please note, it may take up to 5 working days for your account to be credited.
-
-    Thanks,
-
-    **StageUp Team**

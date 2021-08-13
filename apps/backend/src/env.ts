@@ -7,14 +7,13 @@ import { isEnv } from '@core/helpers';
 import { Environment } from '@core/interfaces';
 import {
   IMuxProviderConfig,
-  ISendGridMailProviderConfig,
+  IEmailProviderConfig,
   IPostgresProviderConfig,
   IRedisProviderConfig,
   IAWS3ProviderConfig,
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
-  IStripeProviderConfig,
-  REDIS_PROVIDER
+  IStripeProviderConfig
 } from '@core/api';
 
 type Envify<T> = { [index in keyof T as Uppercase<string & index>]: T[index] } & { [index: string]: any };
@@ -36,7 +35,7 @@ const Env: {
   REDIS: Envify<IRedisProviderConfig>;
   STORE: Envify<IStoreProviderConfig>;
   STRIPE: Envify<IStripeProviderConfig>;
-  EMAIL: Envify<ISendGridMailProviderConfig>;
+  EMAIL: Envify<IEmailProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   isEnv: (env: Environment | Environment[]) => boolean;
 } = {
@@ -88,8 +87,7 @@ const Env: {
   STORE: {
     HOST: process.env.BACKEND_STORE_HOST,
     PORT: 6379,
-    TTL: 86400,
-    REDIS_TOKEN: REDIS_PROVIDER
+    TTL: 86400
   },
   EMAIL: {
     API_KEY: process.env.SENDGRID_API_KEY,

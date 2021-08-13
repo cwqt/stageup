@@ -1,6 +1,6 @@
 import { timeout } from '@core/helpers';
 import Mux from '@mux/mux-node';
-import { Service, Token } from 'typedi';
+import { Service } from 'typedi';
 import { Provider } from '../';
 
 export interface IMuxProviderConfig {
@@ -11,7 +11,7 @@ export interface IMuxProviderConfig {
 }
 
 @Service()
-export class MuxProvider implements Provider<Mux> {
+export default class MuxProvider implements Provider<Mux> {
   name = 'Mux';
   connection: Mux;
   config: IMuxProviderConfig;

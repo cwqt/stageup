@@ -1,16 +1,16 @@
-import connectRedis, { RedisStore } from 'connect-redis';
 import session from 'express-session';
-import { Service, Token } from 'typedi';
-import { Provider, ProviderMap } from '../';
+import connectRedis, { RedisStore } from 'connect-redis';
+import { ProviderMap, Provider } from '../';
 export interface IStoreProviderConfig {
   host: string;
   port: number;
   ttl: number;
-  redis_token: Token<string>;
+  redis_key?: string;
 }
 
+import { Service } from 'typedi';
 @Service()
-export class StoreProvider implements Provider<RedisStore> {
+export default class StoreProvider implements Provider<RedisStore> {
   name = 'Store';
   connection: RedisStore;
   config: IStoreProviderConfig;
@@ -19,9 +19,9 @@ export class StoreProvider implements Provider<RedisStore> {
     this.config = config;
   }
 
-  async connect(map: ProviderMap) {
+  async connect(providerMap: ProviderMap) {
     this.connection = new (connectRedis(session))({
-      client: map.get(this.config.redis_token).connection,
+      client: this.config.redis_key ? providerMap[this.config.redis_key].connection : providerMap.redis.connection,
       host: this.config.host,
       port: this.config.port,
       ttl: this.config.ttl

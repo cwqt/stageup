@@ -1,40 +1,29 @@
-import marked from 'marked';
-import { createTransport, Transporter } from 'nodemailer';
-import { Attachment } from 'nodemailer/lib/mailer';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import Container, { Service } from 'typedi';
+import { createTransport } from 'nodemailer';
+import Mail, { Attachment } from 'nodemailer/lib/mailer';
 import { Provider } from '../';
-import { LOGGING_PROVIDER } from '../tokens';
-import { Logger } from './logging.provider';
+import marked from 'marked';
+import { Logger } from 'winston';
 
-export interface Mail {
-  send: (
-    options: { from: string; to: string; subject: string; content: string; markdown?: boolean },
-    attachments?: Attachment[]
-  ) => Promise<void>;
-}
-
-export interface ISendGridMailProviderConfig {
+export interface IEmailProviderConfig {
   api_key: string;
   enabled: boolean;
 }
 
+import { Service } from 'typedi';
 @Service()
-export class SendGridMailProvider implements Provider<Mail> {
-  name = 'SendGrid';
+export class EmailProvider implements Provider<Mail> {
+  name = 'Email';
   connection: Mail;
-  config: ISendGridMailProviderConfig;
-
+  config: IEmailProviderConfig;
   private log: Logger;
-  private transport: Transporter<SMTPTransport.SentMessageInfo>;
 
-  constructor(config: ISendGridMailProviderConfig) {
+  constructor(config: IEmailProviderConfig, log: Logger) {
+    this.log = log;
     this.config = config;
-    this.log = Container.get(LOGGING_PROVIDER);
   }
 
   async connect() {
-    this.transport = createTransport({
+    this.connection = createTransport({
       service: 'SendGrid',
       auth: {
         user: 'apikey',
@@ -42,7 +31,7 @@ export class SendGridMailProvider implements Provider<Mail> {
       }
     });
 
-    return this;
+    return this.connection;
   }
 
   async send(
@@ -55,18 +44,16 @@ export class SendGridMailProvider implements Provider<Mail> {
       return;
     }
 
-    await this.transport.sendMail({
+    return this.connection.sendMail({
       from: options.from,
       to: options.to,
       subject: options.subject,
       html: options.markdown ? marked(options.content) : options.content,
       attachments: attachments
     });
-
-    return;
   }
 
   async disconnect() {
-    return this.transport.close();
+    return this.connection.close();
   }
 }

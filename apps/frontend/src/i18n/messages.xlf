@@ -143,15 +143,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">87</context>
-=======
-          <context context-type="linenumber">88</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">93</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="3647914214639404913" datatype="html">
@@ -162,15 +154,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">175</context>
-=======
-          <context context-type="linenumber">188</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">193</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="3769868024967739310" datatype="html">
@@ -181,15 +165,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">211</context>
-=======
-          <context context-type="linenumber">224</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">229</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="8204176479746810612" datatype="html">
@@ -702,15 +678,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">169</context>
-=======
-          <context context-type="linenumber">187</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">218</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="6932865105766151309" datatype="html">
@@ -1140,23 +1108,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">123</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">87</context>
-=======
-          <context context-type="linenumber">136</context>
-=======
           <context context-type="linenumber">141</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">104</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="3900973269747328092" datatype="html">
@@ -1174,23 +1130,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">147</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">80</context>
-=======
-          <context context-type="linenumber">160</context>
-=======
           <context context-type="linenumber">165</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">97</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="9152239466994048368" datatype="html">
@@ -1208,23 +1152,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">151</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">84</context>
-=======
-          <context context-type="linenumber">164</context>
-=======
           <context context-type="linenumber">169</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">101</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="2524452943996127527" datatype="html">
@@ -1242,23 +1174,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">136</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">100</context>
-=======
-          <context context-type="linenumber">149</context>
-=======
           <context context-type="linenumber">154</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">117</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="3394206503815564138" datatype="html">
@@ -1751,11 +1671,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">43</context>
-=======
           <context context-type="linenumber">50</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="7958310305025725897" datatype="html">
@@ -2369,64 +2285,29 @@
         <source>HMRC Company Number</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">93</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">55</context>
-=======
-          <context context-type="linenumber">94</context>
-=======
           <context context-type="linenumber">99</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">62</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="458537271622473293" datatype="html">
         <source>Business Contact Number</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">100</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">50</context>
-=======
-          <context context-type="linenumber">101</context>
-=======
           <context context-type="linenumber">106</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">57</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="5980633567524214484" datatype="html">
         <source>Of the form 1724 123321, no leading zero</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">101</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">51</context>
-=======
-          <context context-type="linenumber">102</context>
-=======
           <context context-type="linenumber">107</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
@@ -2486,159 +2367,68 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">88</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="7457588667876942577" datatype="html">
         <source>VAT Number</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">105</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">64</context>
-=======
-          <context context-type="linenumber">117</context>
-=======
           <context context-type="linenumber">122</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">71</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="304992313093218309" datatype="html">
         <source>This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">106</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">65</context>
-=======
-          <context context-type="linenumber">118</context>
-=======
           <context context-type="linenumber">123</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">72</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="7185949621526158605" datatype="html">
         <source>Number must be 9 or 12 digits with or without GB at the start</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">111</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">71</context>
-=======
-          <context context-type="linenumber">123</context>
-=======
           <context context-type="linenumber">128</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">78</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="2651572224940085362" datatype="html">
         <source>Business Address</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">116</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">77</context>
-=======
-          <context context-type="linenumber">129</context>
-=======
           <context context-type="linenumber">134</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">94</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
-<<<<<<< HEAD
-      <trans-unit id="516176798986294299" datatype="html">
-        <source>Country</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">127</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">91</context>
-=======
-          <context context-type="linenumber">140</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">108</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-        </context-group>
-      </trans-unit>
-=======
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
       <trans-unit id="6763533414436592129" datatype="html">
         <source>Not a valid postal code</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">142</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">106</context>
-=======
-          <context context-type="linenumber">155</context>
-=======
           <context context-type="linenumber">160</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">123</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="5701618810648052610" datatype="html">
         <source>Title</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">181</context>
-=======
-          <context context-type="linenumber">194</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">199</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-performance/update-performance/app-update-performance.component.ts</context>
@@ -2649,154 +2439,74 @@
         <source>Mr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">183</context>
-=======
-          <context context-type="linenumber">196</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">201</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="9150055758879543882" datatype="html">
         <source>Miss</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">184</context>
-=======
-          <context context-type="linenumber">197</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">202</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="6596832884812875220" datatype="html">
         <source>Mrs</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">185</context>
-=======
-          <context context-type="linenumber">198</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">203</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="7437237689758241140" datatype="html">
         <source>Ms</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">186</context>
-=======
-          <context context-type="linenumber">199</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">204</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="1931106069119599587" datatype="html">
         <source>Dr</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">187</context>
-=======
-          <context context-type="linenumber">200</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">205</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="1951990390156602647" datatype="html">
         <source>Professor</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">188</context>
-=======
-          <context context-type="linenumber">201</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">206</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="8083897527920072255" datatype="html">
         <source>Master</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">189</context>
-=======
-          <context context-type="linenumber">202</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">207</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="5342432350421167093" datatype="html">
         <source>First name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">194</context>
-=======
-          <context context-type="linenumber">207</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">212</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="3586674587150281199" datatype="html">
         <source>Last name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">198</context>
-=======
-          <context context-type="linenumber">211</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">216</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="5481284030283031915" datatype="html">
         <source>Website</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-onboarding/host-onboarding.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">216</context>
-=======
-          <context context-type="linenumber">229</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">234</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
           <context context-type="linenumber">133</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="7746461358973988084" datatype="html">
@@ -3709,29 +3419,14 @@
         <source>Company e-mail address</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">45</context>
-=======
           <context context-type="linenumber">52</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="8001731341167448537" datatype="html">
         <source>We'll use this e-mail to send notifications and updates</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2128629015726973593" datatype="html">
-        <source>Business Type</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-          <context context-type="linenumber">75</context>
-=======
           <context context-type="linenumber">53</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
         </context-group>
       </trans-unit>
       <trans-unit id="1123921182481387584" datatype="html">
@@ -3780,75 +3475,35 @@
         <source>Leave '<x id="PH" equiv-text="this.myself.host.name"/>'</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">165</context>
-=======
-          <context context-type="linenumber">183</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">214</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="8696509214436479036" datatype="html">
         <source>Are you sure you want to leave this company?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">166</context>
-=======
-          <context context-type="linenumber">184</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">215</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="7489917179635795879" datatype="html">
         <source>Leave Company</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">174</context>
-=======
-          <context context-type="linenumber">192</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">223</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="6873982912779936167" datatype="html">
         <source>Successfully left company</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">179</context>
-=======
-          <context context-type="linenumber">197</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">228</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="7866081016755839002" datatype="html">
         <source>An error occured while trying to leave, try again later</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/frontend/src/app/routes/host/host-settings/host-settings.component.ts</context>
-<<<<<<< HEAD
-<<<<<<< HEAD
-          <context context-type="linenumber">182</context>
-=======
-          <context context-type="linenumber">200</context>
->>>>>>> bb8b20c25ca703d879be8a6f2f5927637f11227e
-=======
           <context context-type="linenumber">231</context>
->>>>>>> c6f4b00b39fdc3de2097b494fd995d5130109c39
         </context-group>
       </trans-unit>
       <trans-unit id="da09217876333a82d36ae035c7e0017407f29fc2" datatype="html">
