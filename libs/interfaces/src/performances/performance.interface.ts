@@ -27,6 +27,20 @@ export enum PerformanceStatus {
   PendingSchedule = 'pending_schedule'
 }
 
+export enum DeletePerfReason {
+  TechnicalIssues = 'technical_issues',
+  CancelledResceduled = 'cancelled_rescheduled',
+  Covid19 = 'covid_19',
+  TooFewSold = 'too_few_sold',
+  PoorUserExperience = 'poor_user_experience',
+  Other = 'other'
+}
+
+export interface IDeletePerfReason {
+  delete_reason: DeletePerfReason;
+  further_info: string;
+}
+
 export interface IPerformanceStub {
   _id: NUUID;
   host: IHostStub; // who created the performance

@@ -54,6 +54,7 @@ import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-statu
 import { DeleteHostReasonPipe } from './_pipes/delete-host-reason.pipe';
 import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
 import { TimesPipe } from './_pipes/times.pipe';
+import { TimeUntilPipe } from './_pipes/time-until.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -140,6 +141,7 @@ import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
+import { PerformanceDeleteDialogComponent } from './routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { RatePerformanceComponent } from './components/rate-performance/rate-performance.component';
 import { LikePerformanceComponent } from './components/like-performance/like-performance.component';
 import { RedirectComponent } from './components/redirect/redirect.component';
@@ -148,6 +150,7 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
+import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -245,6 +248,7 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     GenreFeedComponent,
     ProcessRefundsDialogComponent,
     UserPatronageComponent,
+    TimeUntilPipe,
     ConfirmationDialogComponent,
     UserPatronageComponent,
     HostPatronageSubscribersComponent,
@@ -254,13 +258,15 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     ConfirmPasswordDialogComponent,
     HostPerformanceThumbnailsComponent,
     SocialSharingComponent,
+    PerformanceDeleteDialogComponent,
     RatePerformanceComponent,
     LikePerformanceComponent,
     RedirectComponent,
     FollowButtonComponent,
     HostAnalyticsComponent,
     HostAnalyticsHeaderItemComponent,
-    DocumentViewComponent,
+    CookieConsentComponent,
+    SelectReasonDialogComponent,
     TermsLinksComponent,
     CookieConsentComponent
   ],

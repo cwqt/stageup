@@ -1,33 +1,39 @@
-import { Logger } from 'winston';
+import { LOGGING_PROVIDER } from '@core/api';
+import { timestamp, uuid } from '@core/helpers';
+import { ILocale } from '@core/interfaces';
 import { Subscription as RxSubscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import Rxmq, { Channel } from 'rxmq';
-
-export interface IEventBusConfig {}
-
+import Container, { Token } from 'typedi';
 import { Provider } from '../';
-import { Contract, ContractMeta, Event, EventContract } from '../../event-bus/contracts';
-import { timestamp, uuid } from '@core/helpers';
-import { ILocale } from '@core/interfaces';
+import { Contract, Event, EventContract } from '../../contracts';
+import { Logger } from './logging.provider';
 
-export default class EventBusProvider implements Provider<void> {
-  name = 'EventBus';
-  connection: void;
-  config: IEventBusConfig;
+export interface EventBus {
+  publish: (event: Event, contract: EventContract[Event], locale: ILocale) => Promise<void>;
+  subscribe: (event: Event, handler: (ct: EventContract[Event]) => void) => Promise<RxSubscription>;
+}
+
+export interface IRxmqEventBusConfig {}
+
+// In future you'd want to replace this with GCP PubSub or RabbitMQ
+// https://www.npmjs.com/package/rxmq
+export class RxmqEventBus implements Provider<EventBus> {
+  name = 'Rxmq Event Bus';
+  connection: EventBus;
+  config: IRxmqEventBusConfig;
   log: Logger;
 
-  // don't expose the inner workings of this provider to everyone, since we may swap it out
-  // for rabbitmq/gcp pubsub etc.
-  private _connection: Channel<any>;
+  private channel: Channel<any>;
 
-  constructor(config: IEventBusConfig, log: Logger) {
+  constructor(config: IRxmqEventBusConfig) {
     this.config = config;
-    this.log = log;
+    this.log = Container.get(LOGGING_PROVIDER);
   }
 
   async connect() {
-    this._connection = Rxmq.channel('__bus'); // single channel bus
-    return this.connection;
+    this.channel = Rxmq.channel('__bus'); // single channel bus
+    return this;
   }
 
   async publish<T extends Event>(event: T, data: EventContract[T], locale: ILocale) {
@@ -41,11 +47,11 @@ export default class EventBusProvider implements Provider<void> {
     };
 
     this.log.debug(`Published %o to ${event}`, contract);
-    return this._connection.subject(event).next(contract);
+    return this.channel.subject(event).next(contract);
   }
 
   async subscribe<T extends Event>(event: T, handler: (contract: Contract<T>) => void): Promise<RxSubscription> {
-    return this._connection
+    return this.channel
       .subject(event)
       .pipe(
         tap((ct: Contract<T>) => {
@@ -53,15 +59,9 @@ export default class EventBusProvider implements Provider<void> {
           return ct;
         })
       )
-      .subscribe(handler);
+      .subscribe(handler, err => console.error(err));
   }
 
   async disconnect() {}
   async drop() {}
-
-  async register(handlers: { [index in Event]?: (contract: Contract<index>) => Promise<void> }) {
-    for (let [event, handler] of Object.entries(handlers)) {
-      this.subscribe(event as Event, handler);
-    }
-  }
 }
