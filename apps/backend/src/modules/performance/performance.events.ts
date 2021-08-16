@@ -19,7 +19,7 @@ import {
   i18n
 } from '@core/api';
 import { pipes, timestamp, unix } from '@core/helpers';
-import { BulkRefundReason } from '@core/interfaces';
+import { BulkRefundReason, PerformanceStatus } from '@core/interfaces';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
@@ -159,6 +159,12 @@ export class PerformanceEvents extends ModuleEvents {
         },
         ct.__meta.locale
       );
+
+      //Soft delete the performance
+      performance.status = PerformanceStatus.Deleted;
+      performance.delete_reason = ct.delete_perf_reason;
+      performance.save();
+      await performance.softRemove();
 
       //Fire off user email event for each invoice
       invoices.map(async i => {

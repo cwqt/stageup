@@ -406,8 +406,6 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
     ),
     controller: async req => {
-      const deletePerfReason: IDeletePerfReason = req.body;
-
       const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
 
       if (perf.status === PerformanceStatus.Live)
@@ -416,15 +414,11 @@ export class PerformanceController extends ModuleController {
       if (perf.status === PerformanceStatus.Complete)
         throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_after_occurrence`);
 
-      perf.status = PerformanceStatus.Deleted;
-      perf.delete_reason = deletePerfReason;
-      perf.save();
-      await perf.softRemove();
-
       return await this.bus.publish(
         'performance.deleted',
         {
-          performance_id: req.params.pid
+          performance_id: req.params.pid,
+          delete_perf_reason: req.body
         },
         req.locale
       );

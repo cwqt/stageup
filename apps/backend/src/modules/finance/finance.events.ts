@@ -189,6 +189,8 @@ export class FinanceEvents extends ModuleEvents {
       .withDeleted()
       .getOne();
 
+    const user: User = invoice.user;
+
     const refund = await Refund.findOne({ _id: ct.refund_id });
 
     this.queueService.addJob('send_email', {
@@ -206,7 +208,7 @@ export class FinanceEvents extends ModuleEvents {
         refund_reason: pipes.refundReason(refund.request_reason)
       }),
       from: Env.EMAIL_ADDRESS,
-      to: invoice.user.email_address,
+      to: user.email_address,
       attachments: []
     });
   }
@@ -221,6 +223,7 @@ export class FinanceEvents extends ModuleEvents {
       .innerJoin('invoice.user', 'user')
       .addSelect([
         'host.name',
+        'host.email_address',
         'performance.name',
         'payment_method.brand',
         'payment_method.last4',
