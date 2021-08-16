@@ -100,10 +100,14 @@
             ></app-payment-method>
 
             <div class="mx-8">
-              <!-- Marketing Opt-out button -->
+              <!-- Host marketing Opt-out button -->
               <ui-form
                 *ngIf="performanceCacheable.data.__client_data.host_marketing_opt_status === null"
                 [form]="hostMarketingOptForm"
+              ></ui-form>
+              <!-- SU marketing Opt-in button -->
+              <ui-form
+                [form]="stageupMarketingOptForm"
               ></ui-form>
             </div>
 

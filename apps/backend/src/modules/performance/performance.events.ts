@@ -1,3 +1,4 @@
+import { UserStageUpMarketingConsent } from './../../../../../libs/shared/src/api/entities/gdpr/consents/user-stageup-marketing-consent.entity';
 import Env from '@backend/env';
 import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
 import {
@@ -24,12 +25,14 @@ import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 import { FinanceService } from '../finance/finance.service';
+import { UserService } from '../user/user.service';
 import { JobQueueService } from '../queue/queue.service';
 
 @Service()
 export class PerformanceEvents extends ModuleEvents {
   constructor(
     private financeService: FinanceService,
+    private userService: UserService,
     private queueService: JobQueueService,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(POSTGRES_PROVIDER) private ORM: Connection,
@@ -43,7 +46,7 @@ export class PerformanceEvents extends ModuleEvents {
      ["performance.deleted"]:             this.deletePerformance,
      ["performance.deleted_notify_user"]: this.sendUserPerformanceDeletionEmail,
      ["ticket.purchased"]:    combine([   this.sendTicketReceiptEmail,
-                                          this.setUserHostMarketingOptStatus])
+                                          this.setUserMarketingOptStatus])
     }
   }
 
@@ -267,22 +270,22 @@ export class PerformanceEvents extends ModuleEvents {
     }
   }
 
-  async setUserHostMarketingOptStatus(ct: Contract<'ticket.purchased'>) {
-    // check if already consenting to this host, if not then soft-opt in
-    const c = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'c')
-      .where('c.user__id = :uid', { uid: ct.purchaser_id })
-      .andWhere('c.host__id = :hid', { hid: ct.host_id })
-      .getOne();
 
-    if (c) return;
+  async setUserMarketingOptStatus(ct: Contract<'ticket.purchased'>) {
+    console.log('-------------------------------------------------------------------------------------------------------------------')
+    console.log('ct.host_marketing_consent', ct.host_marketing_consent)
+    console.log('ct.su_marketing_consent', ct.su_marketing_consent)
+    console.log('--------------------------------------------------------------------------------------------------------------------')
 
-    // create new consent, using latest policies
-    const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
-    const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
-    const user = await User.findOne({ _id: ct.purchaser_id });
-    const host = await Host.findOne({ _id: ct.host_id });
 
-    const consent = new UserHostMarketingConsent(ct.marketing_consent, host, user, toc, privacyPolicy);
-    await consent.save();
+    // Update the user / host marketing status (if the data is provided)
+    if (ct.host_marketing_consent) {
+      await this.userService.setUserHostMarketingOptStatus(ct.purchaser_id, ct.host_id, ct.host_marketing_consent);
+    }
+    // Update the user / StageUp marketing status (if the data is provided)
+    console.log('ct.su_marketing_consent', ct.su_marketing_consent)
+    if (ct.su_marketing_consent) {
+      await this.userService.setUserSuMarketingOptStatus(ct.purchaser_id, ct.su_marketing_consent);
+    }
   }
 }
