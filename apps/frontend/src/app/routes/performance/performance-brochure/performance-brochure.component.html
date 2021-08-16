@@ -76,7 +76,17 @@
               >
             </div>
 
+            <small class="block text-gray-500 my-2 p-2 bg-gray-200" i18n>
+              By clicking "Pay", I accept the 
+              <a class="whitespace-nowrap" [routerLink]="['/documents/terms-and-conditions']" target="_blank"
+                >terms and conditions</a
+              > and have read the 
+              <a class="whitespace-nowrap" [routerLink]="['/documents/privacy-policy']" target="_blank">privacy policy</a>. 
+              I agree that StageUp <b>may share my information</b> with the {{performance.host.name}}.
+            </small>
+
             <ui-hr></ui-hr>
+            
 
             <ui-form class="w-1/2 place-self-center" *ngIf="selectedTicket.type == 'dono'" [form]="donoPegSelectForm">
             </ui-form>
