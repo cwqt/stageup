@@ -144,9 +144,7 @@ email:
 
     **Thanks,**
     **StageUp Team**
-  host.refund_refunded__subject: |
-    Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-    succesfully processed by Stripe
+  host.refund_refunded__subject: Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe
   host.refund_refunded__content: |
     Hi {host_name},
 
@@ -335,8 +333,7 @@ email:
     Thanks,
 
     **StageUp Team**
-  performance.deleted_notify_user__subject: >
-    Peformance: {performance_name} cancellation notification
+  performance.deleted_notify_user__subject: Peformance, {performance_name} cancellation notification
   performance.deleted_notify_user__content: |
     Hi **{user_username}**,
 

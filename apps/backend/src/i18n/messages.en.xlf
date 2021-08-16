@@ -304,12 +304,8 @@ You can view a log of this refund within your StageUp account settings</p>
 </target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
-      <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-succesfully processed by Stripe</p>
-</source>
-      <target state="final"><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-succesfully processed by Stripe</p>
-</target>
+      <source>Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</source>
+      <target state="final">Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
       <source><p>Hi {host_name},</p>
@@ -1394,10 +1390,8 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_user__subject" datatype="html">
-      <source><p>Peformance: {performance_name} cancellation notification</p>
-</source>
-      <target state="final"><p>Peformance: {performance_name} cancellation notification</p>
-</target>
+      <source>Peformance, {performance_name} cancellation notification</source>
+      <target state="final">Peformance, {performance_name} cancellation notification</target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_user__content" datatype="html">
       <source><p>Hi <strong>{user_username}</strong>,</p>

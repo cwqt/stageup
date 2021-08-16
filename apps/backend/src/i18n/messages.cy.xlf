@@ -312,9 +312,7 @@ Gallwch weld log o'r ad-daliad hwn yn eich gosodiadau cyfrif StageUp
 ** Tîm StageUp **</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
-      <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-succesfully processed by Stripe</p>
-</source>
+      <source>Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</source>
       <target state="needs-translation">Ad-daliad ar gyfer {user_username} ar gyfer {performance_name} (ID: {invoice_id}), wedi'i brosesu'n llwyddiannus gan Stripe</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
@@ -1246,8 +1244,7 @@ listed as ‘Cancelled’ on your account from now on.</p>
       <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Rydych wedi dileu eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i'r holl gwsmeriaid a brynodd docynnau i'r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i'w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_user__subject" datatype="html">
-      <source><p>Peformance: {performance_name} cancellation notification</p>
-</source>
+      <source>Peformance, {performance_name} cancellation notification</source>
       <target state="needs-translation"><p>Perfformiad: HAR_REPLACE_0 hysbysiad canslo</p></target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_user__content" datatype="html">

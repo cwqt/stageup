@@ -312,9 +312,7 @@ Du kan se en logg over denne refusjonen i StageUp-kontoinnstillingene
 ** StageUp Team **</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
-      <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-succesfully processed by Stripe</p>
-</source>
+      <source>Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</source>
       <target state="needs-translation">Refusjon for {user_username} for {performance_name} (ID: {invoice_id}), behandlet av Stripe</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
@@ -1246,8 +1244,7 @@ listed as ‘Cancelled’ on your account from now on.</p>
       <target state="needs-translation"><p>Hei <strong>{host_name}</strong> ,</p><p> Du har slettet ytelsen din: <strong>{performance_name}</strong> som var planlagt på <strong>{performance_premiere_date}</strong></p><p> Vi har iverksatt refusjon til alle kunder som kjøpte billetter til dette arrangementet. Midler blir kreditert på kontoene innen 5 \ ndager.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_user__subject" datatype="html">
-      <source><p>Peformance: {performance_name} cancellation notification</p>
-</source>
+      <source>Peformance, {performance_name} cancellation notification</source>
       <target state="needs-translation"><p>Framføring: {performance_name} avbestillingsvarsel</p></target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_user__content" datatype="html">
