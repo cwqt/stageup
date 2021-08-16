@@ -63,7 +63,9 @@ export class AdminGdprDocumentsComponent implements OnInit {
                 width: '800px',
                 minHeight: '500px'
               }),
-              this.table.refresh.bind(this)
+              () => {
+                this.table.refresh()
+              }
             );
           },
           icon: 'upload'

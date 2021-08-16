@@ -1,5 +1,5 @@
 import { Connection } from 'typeorm';
-import { Consentable, IControllerEndpoint, POSTGRES_PROVIDER, BLOB_PROVIDER, Middleware, Blobs } from '@core/api';
+import { Consentable, IControllerEndpoint, POSTGRES_PROVIDER, BLOB_PROVIDER, Middleware, Blobs, Validators } from '@core/api';
 import { ConsentableType, ConsentableTypes, IConsentable, IEnvelopedData } from '@core/interfaces';
 import { enums, object } from 'superstruct';
 import { Inject, Service } from 'typedi';
@@ -21,7 +21,7 @@ export class GdprController extends ModuleController {
   readLatestDocument: IControllerEndpoint<IConsentable<ConsentableType>> = {
     authorisation: AuthStrat.none,
     validators: {
-      params: object({ type: enums<ConsentableType>(ConsentableTypes) })
+      params: Validators.Objects.IDocumentRequest,
     },
     controller: async req =>
       this.gdprService.readConsentable(req.params.type as ConsentableType, req.params.version as number | 'latest')
@@ -47,17 +47,17 @@ export class GdprController extends ModuleController {
     authorisation: AuthStrat.isSiteAdmin,
     middleware: Middleware.file(2048, ['application/pdf']).single('file'),
     validators: {
-      query: object({ type: enums<ConsentableType>(ConsentableTypes) })
+      params: object({ type: enums<ConsentableType>(ConsentableTypes) })
     },
     controller: async req => {
       // Get the highest version existing document (if it exists)
-      const existingDocument = await Consentable.retrieve({ type: <ConsentableType>req.query.type }, 'latest');
+      const existingDocument = await Consentable.retrieve({ type: <ConsentableType>req.params.type }, 'latest');
 
       // Simultaneously create new consent and uploads document
       await this.ORM.transaction(async txc => {
         const document = existingDocument // if document exists we supersede it. Else we create new
           ? existingDocument.superscede(req.body.summary)
-          : new Consentable(<ConsentableType>req.query.type, req.body.summary);
+          : new Consentable(<ConsentableType>req.params.type, req.body.summary);
         // Then we upload the file and update the document location/identifier
         await document.upload(req.file, this.blobs);
         await txc.save(document);

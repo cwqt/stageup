@@ -21,6 +21,6 @@ export class GdprService {
 
   //router.post <void> ("/api/gdpr/document/upload", Gdpr.uploadDOcument());;
   uploadDocument(type: string, data: fd | null): Promise<void> {
-    return this.http.post<void>(`/api/gdpr/documents/upload?type=${type}`, data).toPromise();
+    return this.http.post<void>(`/api/gdpr/documents/${type}/supersede`, data).toPromise();
   }
 }

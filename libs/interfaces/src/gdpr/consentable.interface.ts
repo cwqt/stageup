@@ -20,3 +20,8 @@ export interface IConsentable<T extends ConsentableType> {
   version: number; // incremented on succession
   change_reason?: RichText;
 }
+
+export interface IDocumentRequest<T extends ConsentableType> {
+  type: T;
+  version: number | 'latest';
+}
