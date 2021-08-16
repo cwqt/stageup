@@ -144,7 +144,7 @@ email:
 
     **Thanks,**
     **StageUp Team**
-  host.refund_refunded__subject: Refund for {user_username} for {performance_name} (ID:{invoice_id}) succesfully processed by Stripe
+  host.refund_refunded__subject: Refund for {user_username} for {performance_name} (ID:{invoice_id}) successful
   host.refund_refunded__content: |
     Hi {host_name},
 
