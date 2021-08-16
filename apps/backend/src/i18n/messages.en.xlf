@@ -304,8 +304,8 @@ You can view a log of this refund within your StageUp account settings</p>
 </target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
-      <source>Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</source>
-      <target state="final">Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</target>
+      <source>Refund for {user_username} for {performance_name} (ID:{invoice_id}) succesfully processed by Stripe</source>
+      <target state="final">Refund for {user_username} for {performance_name} (ID:{invoice_id}) succesfully processed by Stripe</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
       <source><p>Hi {host_name},</p>

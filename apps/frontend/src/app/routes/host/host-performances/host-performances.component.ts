@@ -17,6 +17,7 @@ import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { environment } from 'apps/frontend/src/environments/environment';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
+import { P } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-host-performances',
@@ -77,7 +78,8 @@ export class HostPerformancesComponent implements OnInit {
         {
           label: $localize`Edit`,
           click: p => this.appService.navigateTo(`/dashboard/performances/${p._id}`),
-          icon: 'maximize'
+          icon: 'maximize',
+          disabled: p => (p.status == PerformanceStatus.Deleted ? true : false)
         }
       ],
       pagination: {}

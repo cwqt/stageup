@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit } from '@ang
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DeletePerfReason, DtoPerformance, IPerformance } from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
+import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
@@ -25,6 +26,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
     private performanceService: PerformanceService,
     private helperService: HelperService,
     private dialog: MatDialog,
+    private appService: AppService,
     @Inject(MAT_DIALOG_DATA) public performance: IPerformance
   ) {}
 
@@ -68,6 +70,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 .deletePerformance(this.performance._id, deletePerfReason)
                 .then(() => this.toastService.emit($localize`Performance Deleted!`))
                 .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));
+              this.appService.navigateTo('/dashboard/performances');
               this.ref.close();
             }
           )

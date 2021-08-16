@@ -83,6 +83,7 @@ export class FinanceEvents extends ModuleEvents {
         'performance.name',
         'invoice.ticket',
         'payment_method.brand',
+        'payment_method.last4',
         'invoice._id',
         'invoice.amount',
         'invoice.currency'

@@ -176,6 +176,7 @@
                   [popperPlacement]="'bottom'"
                   [kind]="action.kind || 'accent'"
                   (click)="action.click(element.__data)"
+                  [disabled]="action.disabled(element.__data)"
                 >
                   <ui-icon *ngIf="action.icon" class="mr-2">{{ action.icon }}</ui-icon>
                   <span *ngIf="action.label">{{ action.label }}</span>

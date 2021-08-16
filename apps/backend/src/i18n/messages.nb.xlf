@@ -312,7 +312,7 @@ Du kan se en logg over denne refusjonen i StageUp-kontoinnstillingene
 ** StageUp Team **</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
-      <source>Refund for {user_username} for {performance_name}(ID:{invoice_id}), succesfully processed by Stripe</source>
+      <source>Refund for {user_username} for {performance_name} (ID:{invoice_id}) succesfully processed by Stripe</source>
       <target state="needs-translation">Refusjon for {user_username} for {performance_name} (ID: {invoice_id}), behandlet av Stripe</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
