@@ -270,20 +270,12 @@ export class PerformanceEvents extends ModuleEvents {
     }
   }
 
-
   async setUserMarketingOptStatus(ct: Contract<'ticket.purchased'>) {
-    console.log('-------------------------------------------------------------------------------------------------------------------')
-    console.log('ct.host_marketing_consent', ct.host_marketing_consent)
-    console.log('ct.su_marketing_consent', ct.su_marketing_consent)
-    console.log('--------------------------------------------------------------------------------------------------------------------')
-
-
     // Update the user / host marketing status (if the data is provided)
     if (ct.host_marketing_consent) {
       await this.userService.setUserHostMarketingOptStatus(ct.purchaser_id, ct.host_id, ct.host_marketing_consent);
     }
     // Update the user / StageUp marketing status (if the data is provided)
-    console.log('ct.su_marketing_consent', ct.su_marketing_consent)
     if (ct.su_marketing_consent) {
       await this.userService.setUserSuMarketingOptStatus(ct.purchaser_id, ct.su_marketing_consent);
     }

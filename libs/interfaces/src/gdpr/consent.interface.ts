@@ -27,6 +27,7 @@ export type UserConsentData = {
     user: IUserStub;
     terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
+    opt_status: SuConsentOpt;
   };
   upload_consent: {
     host: IHostStub;
@@ -40,6 +41,8 @@ export type UserConsentData = {
 // hard-in: explicit consent
 export const ConsentOpts = ['soft-in', 'hard-in', 'hard-out'] as const;
 export type ConsentOpt = typeof ConsentOpts[number];
+// SU marketing consent opts are either 'hard-in' or 'hard-out'
+export type SuConsentOpt = Omit<ConsentOpt, 'soft-in'>;
 
 // utility type for below
 type ConsentMixin<T extends ConsentType> = IUserConsent<T> & UserConsentData[T];

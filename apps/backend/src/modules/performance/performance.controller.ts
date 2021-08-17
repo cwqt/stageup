@@ -31,6 +31,7 @@ import {
   transact,
   User,
   UserHostMarketingConsent,
+  UserStageUpMarketingConsent,
   Validators,
   VideoAsset
 } from '@core/api';
@@ -65,6 +66,7 @@ import {
   PerformanceStatus,
   pick,
   PurchaseableType,
+  SuConsentOpt,
   TicketType,
   Visibility
 } from '@core/interfaces';
@@ -209,13 +211,20 @@ export class PerformanceController extends ModuleController {
           .andWhere('c.user__id = :uid', { uid: req.session.user._id })
           .getOne());
 
+      const suMarketingStatus =
+        req.session.user &&
+        (await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
+          .where('c.user__id = :uid', { uid: req.session.user._id })
+          .getOne());
+
       const response: DtoPerformance = {
         data: performance.toFull(),
         __client_data: {
           is_liking: existingLike ? true : false,
           is_following: existingFollow ? true : false,
           rating: existingRating ? existingRating.rating : null,
-          host_marketing_opt_status: hostMarketingStatus ? (hostMarketingStatus.opt_status as ConsentOpt) : null
+          host_marketing_opt_status: hostMarketingStatus ? (hostMarketingStatus.opt_status as ConsentOpt) : null,
+          su_marketing_opt_status: suMarketingStatus ? (suMarketingStatus.opt_status as SuConsentOpt) : null
         }
       };
 
@@ -379,9 +388,7 @@ export class PerformanceController extends ModuleController {
             host_marketing_consent: body.options.hard_host_marketing_opt_out
               ? to<ConsentOpt>('hard-out')
               : to<ConsentOpt>('soft-in'),
-            su_marketing_consent: body.options.stageup_marketing_opt_in
-              ? to<ConsentOpt>('hard-in')
-              : null // true or false would be fine here. However metadata needs to be of string type
+            su_marketing_consent: body.options.stageup_marketing_opt_in ? to<ConsentOpt>('hard-in') : null
           })
         },
         {

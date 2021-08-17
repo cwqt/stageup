@@ -1,14 +1,19 @@
 import { DeltaOperation } from 'quill';
 import { Except } from 'type-fest';
-import { DtoAccessToken } from '../assets/access-token.interface';
-import { AssetDto, IAssetStub } from '../assets/asset.interface';
-import { ISigningKey } from '../assets/signing-key.interface';
-import { IEnvelopedData } from '../common/envelope.interface';
-import { NUUID } from '../common/fp.interface';
-import { ConsentOpt } from '../gdpr/consent.interface';
-import { IHostStub } from '../hosts/host.interface';
-import { Genre } from './genres.interface';
-import { ITicketStub } from './ticket.interface';
+
+import {
+  AssetDto,
+  ConsentOpt,
+  DtoAccessToken,
+  Genre,
+  IAssetStub,
+  IEnvelopedData,
+  IHostStub,
+  ISigningKey,
+  ITicketStub,
+  NUUID,
+  SuConsentOpt
+} from '@core/interfaces';
 
 export type ParsedRichText = { ops: DeltaOperation[] }; // stringified-json
 export type RichText = string;
@@ -75,6 +80,7 @@ export interface IClientPerformanceData {
   is_liking: boolean;
   rating: number | null;
   host_marketing_opt_status: ConsentOpt | null;
+  su_marketing_opt_status: SuConsentOpt | null;
 }
 
 export type DtoPerformance = IEnvelopedData<

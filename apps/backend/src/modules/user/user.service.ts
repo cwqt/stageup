@@ -1,8 +1,20 @@
 import { UserStageUpMarketingConsent } from './../../../../../libs/shared/src/api/entities/gdpr/consents/user-stageup-marketing-consent.entity';
 import { Connection } from 'typeorm';
 import { UserHostMarketingConsent } from './../../../../../libs/shared/src/api/entities/gdpr/consents/user-host-marketing-consent.entity';
-import { Address, getCheck, PasswordReset, Provider, StripeProvider, STRIPE_PROVIDER, transact, User, Consentable, Host, POSTGRES_PROVIDER } from '@core/api';
-import { DtoCreateUser, Environment, IAddress, ConsentOpt } from '@core/interfaces';
+import {
+  Address,
+  getCheck,
+  PasswordReset,
+  Provider,
+  StripeProvider,
+  STRIPE_PROVIDER,
+  transact,
+  User,
+  Consentable,
+  Host,
+  POSTGRES_PROVIDER
+} from '@core/api';
+import { DtoCreateUser, Environment, IAddress, ConsentOpt, SuConsentOpt } from '@core/interfaces';
 import jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
 import { ModuleService } from '@core/api';
@@ -97,13 +109,17 @@ export class UserService extends ModuleService {
     return { user, token, reset };
   }
 
-
   async setUserHostMarketingOptStatus(userId: string, hostId: string, optStatus: ConsentOpt) {
+    console.log('inside user host marketing');
     // check if already consenting to this host, if not then soft-opt in
     const existingConsent = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'c')
-    .where('c.user__id = :uid', { uid: userId })
-    .andWhere('c.host__id = :hid', { hid: hostId })
-    .getOne();
+      .where('c.user__id = :uid', { uid: userId })
+      .andWhere('c.host__id = :hid', { hid: hostId })
+      .getOne();
+
+    // Return if there is existing consent and it is equal to what the user is setting it to
+    if (existingConsent?.opt_status == optStatus) return;
+    console.log('host status being updated');
 
     // Get the latest policies
     const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
@@ -112,11 +128,12 @@ export class UserService extends ModuleService {
     const host = await Host.findOne({ _id: hostId });
 
     // User is updating the opt in status
-    if(existingConsent){
+    if (existingConsent) {
       // Update the status. Also update which documents it is that the user is opting in/out from
       existingConsent.opt_status = optStatus;
       existingConsent.privacy_policy = privacyPolicy;
       existingConsent.terms_and_conditions = toc;
+
       await existingConsent.save();
     } else {
       // User is opting in/out for the first time
@@ -125,26 +142,35 @@ export class UserService extends ModuleService {
     }
   }
 
-  async setUserSuMarketingOptStatus(userId: string, optingIn: boolean) {
-    // check if already consenting to this host, if not then soft-opt in
+  async setUserSuMarketingOptStatus(userId: string, optStatus: SuConsentOpt) {
+    console.log('inside su host marketing');
+
+    // check if already consenting to SU marketing
     const existingConsent = await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
       .where('c.user__id = :uid', { uid: userId })
       .getOne();
 
+    // Return if there is existing consent and it is equal to what the user is setting it to
+    if (existingConsent?.opt_status == optStatus) return;
+    console.log('su status being updated');
+
+    // Get the latest policies
+    const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+    const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
+
     // SU marketing doesn't include an opt-in status. It is simply true or false (i.e. it exists in the DB or it does not)
     // Add to database if the user is opting in and the consent doesn't already exist
-    if(optingIn && !existingConsent) {
-      // Get the latest policies
-      const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
-      const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
+    if (!existingConsent) {
       const user = await User.findOne({ _id: userId });
-      const suMarketingConsent = new UserStageUpMarketingConsent(user, toc, privacyPolicy);
+      const suMarketingConsent = new UserStageUpMarketingConsent(optStatus, user, toc, privacyPolicy);
       await suMarketingConsent.save();
-    } else if (!optingIn && existingConsent) {
-      // Delete if user is opting out and the consent exists in the database
-      await existingConsent.remove()
+    } else {
+      // Update existing consent
+      existingConsent.opt_status = optStatus;
+      existingConsent.privacy_policy = privacyPolicy;
+      existingConsent.terms_and_conditions = toc;
+      await existingConsent.save();
     }
-    // Else we carry out no action
   }
 
   // async readUserFollows(): Promise<IEnvelopedData<IFollowing[]>> {}

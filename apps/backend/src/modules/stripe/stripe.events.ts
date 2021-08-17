@@ -23,6 +23,7 @@ import {
   PaymentStatus,
   PurchaseableType,
   RefundResponseReason,
+  SuConsentOpt,
   TokenProvisioner
 } from '@core/interfaces';
 import Stripe from 'stripe';
@@ -162,7 +163,7 @@ export class StripeEvents extends ModuleEvents {
             host_id: ticket.performance.host._id,
             // from performance.controller.ts in purchasing a ticket
             host_marketing_consent: passthrough.host_marketing_consent as ConsentOpt,
-            su_marketing_consent: passthrough.su_marketing_consent ? true : false // 'hard-in' -> true. null -> false
+            su_marketing_consent: passthrough.su_marketing_consent as SuConsentOpt | null
           },
           user.locale
         );

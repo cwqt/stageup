@@ -92,6 +92,9 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       }
     );
 
+    console.log('host opt status', this.performanceCacheable.data.__client_data.host_marketing_opt_status);
+    console.log('su opt status', this.performanceCacheable.data.__client_data.su_marketing_opt_status);
+
     // Used for social sharing component
     this.brochureSharingUrl = `${this.appService.environment.frontend_url}/?performance=${this.performance._id}`;
 
@@ -183,7 +186,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
           selected_dono_peg: this.donoPegSelectForm?.group?.value?.pegs,
           allow_any_amount: this.donoPegSelectForm?.group?.value?.allow_any_amount,
           hard_host_marketing_opt_out: this.hostMarketingOptForm.group.value.does_opt_out,
-          stageup_marketing_opt_in: this.stageupMarketingOptForm.group.value.does_opt_in,
+          stageup_marketing_opt_in: this.stageupMarketingOptForm.group.value.does_opt_in
         }
       },
       this.performance.host.stripe_account_id
