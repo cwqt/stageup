@@ -72,6 +72,9 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendUserRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
+    //Do not run if refund is part of performance deletion (deletion and refund inititation emails merged)
+    if (ct.performance_deletion) return;
+
     const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
       .where('invoice._id = :iid', { iid: ct.invoice_id })
       .innerJoinAndSelect('invoice.ticket', 'ticket')
@@ -114,6 +117,9 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendHostRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
+    //Do not run if refund is part of performance deletion (deletion and refund inititation emails merged)
+    if (ct.performance_deletion) return;
+
     const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
       .where('invoice._id = :iid', { iid: ct.invoice_id })
       .innerJoinAndSelect('invoice.ticket', 'ticket')
@@ -302,7 +308,7 @@ export class FinanceEvents extends ModuleEvents {
       invoices.map(async invoice => {
         await this.bus.publish(
           'refund.initiated',
-          { invoice_id: invoice._id, user_id: invoice.user._id },
+          { invoice_id: invoice._id, user_id: invoice.user._id, performance_deletion: ct.performance_deletion },
           ct.__meta.locale
         );
       })

@@ -60,11 +60,19 @@ export class FinanceService extends ModuleService {
     );
 
     if (refundData.invoice_ids.length > 1) {
-      return await this.bus.publish('refund.bulk', { invoice_ids: refundData.invoice_ids }, locale);
+      return await this.bus.publish(
+        'refund.bulk',
+        { invoice_ids: refundData.invoice_ids, performance_deletion: refundData.performance_deletion },
+        locale
+      );
     } else {
       return await this.bus.publish(
         'refund.initiated',
-        { invoice_id: invoices[0]._id, user_id: invoices[0].user._id },
+        {
+          invoice_id: invoices[0]._id,
+          user_id: invoices[0].user._id,
+          performance_deletion: refundData.performance_deletion
+        },
         locale
       );
     }
