@@ -12,6 +12,7 @@ export type ConsentType = typeof ConsentTypes[number];
 export interface IUserConsent<T extends ConsentType> {
   _id: NUUID;
   type: T;
+  terms_and_conditions: IConsentable<'general_toc'>;
 }
 
 // mapped types ftw
@@ -20,18 +21,15 @@ export type UserConsentData = {
     user: IUserStub;
     host: IHostStub;
     opt_status: ConsentOpt;
-    terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
   };
   stageup_marketing: {
     user: IUserStub;
-    terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
     opt_status: SuConsentOpt;
   };
   upload_consent: {
     host: IHostStub;
-    terms_and_conditions: IConsentable<'uploaders_toc'>;
     performance: IPerformanceStub;
   };
 };
@@ -51,3 +49,24 @@ type ConsentMixin<T extends ConsentType> = IUserConsent<T> & UserConsentData[T];
 export type IUserHostMarketingConsent = ConsentMixin<'host_marketing'>;
 export type IUserStageUpMarketingConsent = ConsentMixin<'stageup_marketing'>;
 export type IHostUploadersConsent = ConsentMixin<'upload_consent'>;
+
+export enum OptOutOptions {
+  TooFrequent = 'too_frequent',
+  TooCluttered = 'too_cluttered',
+  NotRelevant = 'not_relevant',
+  DidntSignUp = 'didnt_sign_up'
+}
+
+// Map it to user friendly text for displaying in dropdown and in emails
+export const optOutOptionsMap: { [index in OptOutOptions]: string } = {
+  [OptOutOptions.TooFrequent]: `I'm getting emails too often.`,
+  [OptOutOptions.TooCluttered]: `Emails are too cluttered.`,
+  [OptOutOptions.NotRelevant]: `The content isn't relevant to me.`,
+  [OptOutOptions.DidntSignUp]: `I never signed up, or I didn't realize that I have signed up.`
+};
+
+// When the user opts out from host marketing, an email is sent to the host with optional 'reason' and 'message' from the user as to why the are opting out.
+export interface IOptOutReason {
+  reason?: OptOutOptions;
+  message?: string;
+}

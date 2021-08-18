@@ -12,17 +12,13 @@ export class UserStageUpMarketingConsent extends Consent<'stageup_marketing'> im
     termsAndConditions: Consentable<'general_toc'>,
     privacyPolicy: Consentable<'privacy_policy'>
   ) {
-    super('stageup_marketing');
+    super('stageup_marketing', termsAndConditions);
     this.opt_status = opt;
     this.user = user;
-    this.terms_and_conditions = termsAndConditions;
     this.privacy_policy = privacyPolicy;
   }
 
   @Column('enum', { enum: ConsentOpts }) opt_status: SuConsentOpt;
-
-  @RelationId((consent: UserStageUpMarketingConsent) => consent.terms_and_conditions) terms_and_conditions__id: NUUID;
-  @ManyToOne(() => Consentable) @JoinColumn() terms_and_conditions: Consentable<'general_toc'>;
 
   @RelationId((consent: UserStageUpMarketingConsent) => consent.privacy_policy) privacy_policy__id: NUUID;
   @ManyToOne(() => Consentable) @JoinColumn() privacy_policy: Consentable<'privacy_policy'>;
@@ -34,7 +30,6 @@ export class UserStageUpMarketingConsent extends Consent<'stageup_marketing'> im
     return {
       user: this.user.toStub(),
       privacy_policy: this.privacy_policy,
-      terms_and_conditions: this.terms_and_conditions,
       opt_status: this.opt_status,
       ...super.toConsent()
     };

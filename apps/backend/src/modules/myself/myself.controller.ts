@@ -20,10 +20,14 @@ import {
   STRIPE_PROVIDER,
   User,
   UserHostInfo,
+  UserHostMarketingConsent,
   Validators
 } from '@core/api';
 import { timestamp } from '@core/helpers';
 import {
+  ConsentableType,
+  ConsentOpt,
+  ConsentOpts,
   DtoUserPatronageSubscription,
   HTTP,
   IEnvelopedData,
@@ -37,6 +41,7 @@ import {
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
+  IUserHostMarketingConsent,
   IUserInvoice,
   IUserInvoiceStub,
   PaymentStatus,
@@ -44,7 +49,7 @@ import {
   Visibility
 } from '@core/interfaces';
 import Stripe from 'stripe';
-import { boolean, enums, object, record, string } from 'superstruct';
+import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 
@@ -479,6 +484,62 @@ export class MyselfController extends ModuleController {
           .getOne()
       );
       if (follow) await Follow.delete({ _id: follow._id });
+    }
+  };
+  // Returns all of the current users opt-ins and opt outs for host marketing
+  readUserHostMarketingConsents: IControllerEndpoint<IEnvelopedData<IUserHostMarketingConsent[]>> = {
+    authorisation: AuthStrat.isLoggedIn,
+    controller: async req => {
+      return await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
+        .where('consent.type = :type', { type: <ConsentableType>'host_marketing' })
+        .andWhere('consent.user__id = :uid', { uid: req.session.user._id })
+        .innerJoinAndSelect('consent.user', 'user')
+        .innerJoinAndSelect('consent.host', 'host')
+        .sort({
+          host_name: 'host.name'
+        })
+        .paginate({ serialiser: i => i.toFull() });
+    }
+  };
+
+  // Changes the current users marketing consent status for a paricular host
+  updateOptInStatus: IControllerEndpoint<void> = {
+    validators: {
+      params: object({ hid: Validators.Fields.nuuid }),
+      body: object({
+        new_status: enums<ConsentOpt>(ConsentOpts),
+        opt_out_reason: optional(Validators.Objects.IOptOutReason)
+      })
+    },
+    authorisation: AuthStrat.isLoggedIn,
+    controller: async req => {
+      // Check host exists
+      await getCheck(
+        this.ORM.createQueryBuilder(Host, 'host').where('host._id = :hid', { hid: req.params.hid }).getOne()
+      );
+      // Check consent exists
+      const existingConsent = await getCheck(
+        this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
+          .where('consent.type = :type', { type: <ConsentableType>'host_marketing' })
+          .andWhere('consent.user__id = :uid', { uid: req.session.user._id })
+          .andWhere('consent.host__id = :hid', { hid: req.params.hid })
+          .getOne()
+      );
+      // Trigger email to be sent to the host, informing them of the change
+      this.bus.publish(
+        'user.marketing_opt_in_change',
+        {
+          user_id: req.session.user._id,
+          host_id: req.params.hid,
+          opt_status: req.body.new_status,
+          opt_out_reason: req.body.opt_out_reason
+        },
+        req.locale
+      );
+
+      // Update new status and save
+      existingConsent.opt_status = req.body.new_status;
+      await existingConsent.save();
     }
   };
 }

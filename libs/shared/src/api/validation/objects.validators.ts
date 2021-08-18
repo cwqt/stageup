@@ -1,3 +1,4 @@
+import { ConsentableType, ConsentableTypes } from './../../../../interfaces/src/gdpr/consentable.interface';
 import { enumToValues } from '@core/helpers';
 import {
   AssetType,
@@ -13,6 +14,7 @@ import {
   DtoUpdateUser,
   IAddress,
   Idless,
+  IDocumentRequest,
   IHostBusinessDetails,
   IHostMemberChangeRequest,
   IInvoice,
@@ -20,6 +22,8 @@ import {
   RefundRequestReason,
   IPersonInfo,
   ISocialInfo,
+  IOptOutReason,
+  OptOutOptions,
   PaginationOptions,
   PurchaseableType,
   IDeleteHostReason,
@@ -230,5 +234,15 @@ export namespace objects {
     description: fields.richtext,
     amount: number(),
     is_visible: boolean()
+  });
+
+  export const IOptOutReason: Describe<IOptOutReason> = object({
+    reason: optional(enums<OptOutOptions>(enumToValues(OptOutOptions))),
+    message: optional(string())
+  });
+
+  export const IDocumentRequest: Describe<IDocumentRequest<ConsentableType>> = object({
+    type: enums<ConsentableType>(ConsentableTypes),
+    version: union([number(), literal('latest')])
   });
 }
