@@ -96,7 +96,6 @@ export class MuxEvents extends ModuleEvents<`mux.${HandledMuxEvents}`, true> {
     // the transaction hasn't completed, so put a timeout of 500ms
     // we'll need to revisit this at some point...
     await timeout(500);
-    console.log(ct.data.passthrough);
     const passthrough: IMuxPassthrough = JSON.parse(ct.data.passthrough);
     await this.muxService.setLiveStreamAssetState(passthrough.asset_id, LiveStreamState.Idle);
   }
