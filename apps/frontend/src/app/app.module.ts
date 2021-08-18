@@ -159,6 +159,7 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     AdminOnboardingViewComponent,
     AdminPanelComponent,
     AppComponent,
+    DocumentViewComponent,
     LandingComponent,
     LoginComponent,
     ForgotPasswordComponent,
