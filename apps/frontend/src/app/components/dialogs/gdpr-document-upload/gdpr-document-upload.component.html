@@ -1,0 +1,29 @@
+<ui-dialog i18n-title title="{{ 'New ' + title }}" [loading]="form.loading | async" [buttons]="buttons">
+  <mat-horizontal-stepper #stepper [class.hidden]="stepper.selectedIndex == 0">
+    <!-- Step 1 - enter 'changes text' -->
+    <mat-step i18n-label label="Summary">
+      <ui-form [form]="form"></ui-form>
+      <div class="flex">
+        <ui-button
+          [loading]="form.loading | async"
+          [disabled]="form.group.valid == false"
+          kind="primary"
+          class="ml-auto"
+          (click)="form.submit()"
+        >
+          <span i18n>Continue to upload</span>
+        </ui-button>
+      </div>
+    </mat-step>
+    <!-- Step 2 - select and upload document -->
+    <mat-step i18n-label label="Select File">
+      <div class="flex items-center">
+        <input hidden accept=".pdf" (change)="onFileSelected()" #fileSelector type="file" id="file" />
+        <ui-button icon="attachment" kind="primary" (click)="fileSelector.click()" i18n>
+          {{ selectedFile ? 'Change' : 'Select Document' }}
+        </ui-button>
+        <span class="ml-3" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</ui-dialog>

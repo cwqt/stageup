@@ -24,6 +24,7 @@ import {
   IUserInvoice,
   IDeleteHostAssertion as IDelHostAssert,
   IHostInvoiceStub,
+  IUserHostMarketingConsent as IUserHostMC,
   IUserInvoiceStub,
   NUUID,
   IPaymentMethod,
@@ -43,7 +44,7 @@ import {
   IUserFollow,
   DtoPerformanceAnalytics as DtoPerfAnalytics,
   DtoHostAnalytics,
-  ConsentableType as CType,
+  ConsentableType as CT,
   IConsentable,
   IDynamicFrontendEnvironment as IDynamicFeEnv,
 } from '@core/interfaces';
@@ -85,6 +86,8 @@ router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",       
 router.put      <ILocale>               ("/myself/locale",                            Myself.updateLocale);
 router.post     <IFollowing>            ("/myself/follow-host/:hid",                  Myself.addFollow);
 router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow);
+router.get      <IE<IUserHostMC[]>>     ("/myself/opt-ins",                           Myself.readUserHostMarketingConsents);
+router.put      <void>                  ("/myself/opt-ins/:hid",                      Myself.updateOptInStatus);
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = Container.get(UserController)
@@ -202,7 +205,9 @@ router.redirect                          ("/auth/verify-email",                 
 
 // GDPR ---------------------------------------------------------------------------------------------------------------
 const Gdpr = Container.get(GdprController);
-router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument);
+router.get      <IConsentable<CT>>       ("/gdpr/documents/:type/:version",           Gdpr.readLatestDocument);
+router.get      <IConsentable<CT>[]>     ("/gdpr/documents/:version",                 Gdpr.readAllLatestDocuments);
+router.post     <void>                   ("/gdpr/documents/:type/supersede",          Gdpr.uploadDocument);
 
 // UTILS ---------------------------------------------------------------------------------------------------------------
 const Utils = Container.get(UtilityController);
