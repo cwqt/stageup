@@ -31,7 +31,8 @@ export class AdminOnboardingListComponent implements OnInit {
         {
           label: $localize`:@@admin_onboardings_list_open:Open`,
           icon: 'launch',
-          click: v => this.openOnboarding(v)
+          click: v => this.openOnboarding(v),
+          disabled: p => false
         }
       ],
       columns: [
