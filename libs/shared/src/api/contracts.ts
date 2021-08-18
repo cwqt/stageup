@@ -65,9 +65,9 @@ export type EventContract = {
   // Refunds ------------------------------------------------------------------
   ['refund.requested']: { invoice_id: IInvoice['_id'] };
   ['refund.refunded']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; refund_id: IRefund['_id'] };
-  ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; performance_deletion: boolean };
+  ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; send_initiation_emails: boolean };
   ['refund.rejected']: {};
-  ['refund.bulk']: { invoice_ids: Array<IInvoice['_id']>; performance_deletion: boolean };
+  ['refund.bulk']: { invoice_ids: Array<IInvoice['_id']>; send_initiation_emails: boolean };
   // Patronage ----------------------------------------------------------------#
   ['patronage.started']: {
     user_id: IUser['_id'];

@@ -156,7 +156,7 @@ export class PerformanceEvents extends ModuleEvents {
             bulk_refund_reason: BulkRefundReason.PerformanceDeletedAutoRefund,
             bulk_refund_detail: null
           },
-          performance_deletion: true
+          send_inititaion_emails: false
         },
         ct.__meta.locale
       );

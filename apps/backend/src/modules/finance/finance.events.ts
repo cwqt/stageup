@@ -72,8 +72,8 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendUserRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
-    //Do not run if refund is part of performance deletion (deletion and refund inititation emails merged)
-    if (ct.performance_deletion) return;
+    //Do not run if refund initiation email flag is false
+    if (!ct.send_initiation_emails) return;
 
     const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
       .where('invoice._id = :iid', { iid: ct.invoice_id })
@@ -117,8 +117,8 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendHostRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
-    //Do not run if refund is part of performance deletion (deletion and refund inititation emails merged)
-    if (ct.performance_deletion) return;
+    //Do not run if refund initiation email flag is false
+    if (!ct.send_initiation_emails) return;
 
     const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
       .where('invoice._id = :iid', { iid: ct.invoice_id })
