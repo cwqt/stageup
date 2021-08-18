@@ -1,7 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
 import { timestamp, unix } from '@core/helpers';
-import { DtoPerformance, IAssetStub, IHost, AssetType, IPerformanceHostInfo, Visibility } from '@core/interfaces';
+import { DtoPerformance, IAssetStub, IHost, AssetType, IPerformanceHostInfo, Visibility, IPerformance} from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { IUiFormField, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
@@ -18,6 +18,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
   performance: ICacheable<DtoPerformance>;
   host: IHost;
 
+
   // TODO: temporary until multi-asset
   stream: IAssetStub<AssetType.LiveStream>;
   vod: IAssetStub<AssetType.Video>;
@@ -32,6 +33,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
     return this.performanceHostInfo.data;
   }
 
+
+
   visibilityForm: UiForm;
   publicityPeriodForm: UiForm;
 
@@ -45,22 +48,25 @@ export class HostPerformanceDetailsComponent implements OnInit {
 
     this.publicityPeriodForm = new UiForm({
       fields: {
-        period: UiField.Date({
-          initial: {
-            start: this.performanceData.publicity_period.start
-              ? unix(this.performanceData.publicity_period.start)
+        publicity_period: UiField.Date({
+          initial:  {
+            start: this.performance.data.data.publicity_period.start
+            ? unix(this.performance.data.data.publicity_period.start)
               : undefined,
-            end: this.performanceData.publicity_period.end ? unix(this.performanceData.publicity_period.end) : undefined
+            end: this.performance.data.data.publicity_period.end
+            ? unix(this.performance.data.data.publicity_period.start)
+              : undefined 
           },
           is_date_range: true,
           actions: true,
           min_date: new Date(),
-          label: $localize`Publicity Period`
+          max_date: new Date(),
+          label: $localize`Schedule`
         })
       },
       handlers: {
         changes: async v => {
-          if (v.value['period'].start && v.value['period'].end) {
+          if (v.value['publicity_period'].start && v.value['publicity_period'].end) {
             this.publicityPeriodForm.submit();
           }
         }
@@ -68,8 +74,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
       resolvers: {
         output: async v =>
           this.performanceService.updatePublicityPeriod(this.performanceId, {
-            start: timestamp(v.period.start),
-            end: timestamp(v.period.end)
+            start: v.publicity_period.start,
+            end:v.publicity_period.end
           })
       }
     });

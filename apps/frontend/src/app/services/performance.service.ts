@@ -19,7 +19,8 @@ import {
   PurchaseableType,
   ISignedToken,
   IAssetStub,
-  AssetDto
+  AssetDto,
+  DtoCreatePerformance
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
@@ -131,8 +132,8 @@ export class PerformanceService {
   }
 
   // router.put <IPerformance> ("/performances/:pid/publicity-period", Perfs.updatePublicityPeriod());
-  updatePublicityPeriod(performanceId: string, period: IPerformance['publicity_period']): Promise<IPerformance> {
-    return this.http.put<IPerformance>(`/api/performances/${performanceId}/publicity-period`, period).toPromise();
+  updatePublicityPeriod(performanceId: string, publicity_period: IPerformance['publicity_period']): Promise<IPerformance> {
+    return this.http.put<IPerformance>(`/api/performances/${performanceId}/publicity-period`, publicity_period).toPromise();
   }
 
   // router.post <void> ("/performances/:pid/rate", Perfs.setRating());

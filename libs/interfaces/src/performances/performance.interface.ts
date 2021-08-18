@@ -34,8 +34,8 @@ export interface IPerformanceStub {
   description?: RichText; // description of performance
   rating_count: number; // Total scores accumulated
   rating_total: number; // Number of ratings
-  publicity_period_start?: number; // when the performance is ready to be streamed
-  publicity_period_end?:  number ; // unix timestamps
+  publicity_period: {start: number, end: number}; // when the performance is ready to be streamed
+  //publicity_period_end:  number ; // unix timestamps
   views: number; // total user view count
   like_count: number; // total user likes
   created_at: number;
@@ -53,8 +53,8 @@ export interface IPerformance extends IPerformanceStub {
   genre: Genre;
   tickets: ITicketStub[];
   assets: IAssetStub[];
-  publicity_period: {start:number, end:number}; // unix timestamps
-  //publicity_period_end: number
+  publicity_period: {start: number, end: number}; // unix timestamps
+  
 }
 
 // Interface for additional client information regarding the performance.

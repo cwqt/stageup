@@ -103,10 +103,10 @@ export default class MyselfController extends BaseController<BackendProviderMap>
 
         if (fetchAll || req.query['upcoming'])
           feed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
-            .where('p.publicity_period_start > :currentTime', { currentTime: timestamp() })
+            .where('p.publicity_period.start > :currentTime', { currentTime: timestamp() })
             .andWhere('p.visibility = :state', { state: Visibility.Public })
             .innerJoinAndSelect('p.host', 'host')
-            .orderBy('p.publicity_period_start')
+            .orderBy('p.publicity_period.start')
             .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
             .paginate(p => p.toClientStub(), {
               page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,

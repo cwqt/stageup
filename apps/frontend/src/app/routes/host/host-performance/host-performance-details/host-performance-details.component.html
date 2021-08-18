@@ -6,10 +6,10 @@
 
 <div class="flex items-center justify-between">
   <div class="mr-4">
-    <b i18n>Publicity Period</b>
+    <b i18n>Schedule</b>
     <p i18n>
-      Set a date period in which the performance is publically visible<br />
-      across the platform
+      Update the start and end date for your event.<br />
+
     </p>
   </div>
   <ui-form class="flex-1" [form]="publicityPeriodForm"></ui-form>
@@ -21,9 +21,9 @@
     <p i18n>
       <ng-container *ngIf="host.is_onboarded == false">
         You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made
-        Public<br />
+        Public.<br />
       </ng-container>
-      Set whether a performance is visible across the platform
+      Set whether a performance is visible across the platform.
     </p>
   </div>
   <ui-form [form]="visibilityForm"></ui-form>

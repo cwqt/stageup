@@ -5,15 +5,15 @@ import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { HostService } from '../../../../services/host.service';
-import { UiField, UiForm } from '../../../../ui-lib/form/form.interfaces';
+import { UiField, UiForm, IUiFormField } from '../../../../ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from '../../../../ui-lib/ui-lib.interfaces';
-import { timestamp } from '@core/helpers';
+import { timestamp, unix } from '@core/helpers';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { Cacheable } from '@frontend/app.interfaces';
 import { merge, Observable } from 'rxjs';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
-import { unix } from 'moment';
+import { DtoPerformance, IAssetStub, IHost, IPerformanceHostInfo, Visibility } from '@core/interfaces';
 
 @Component({
   selector: 'app-create-performance',
@@ -33,6 +33,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
   buttons: UiDialogButton[];
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { host_id: string },
@@ -69,23 +70,22 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             })
           )
         }),
-        period: UiField.Date({
+        publicity_period: UiField.Date({
           label: $localize`Schedule`,
+          //validators: [{ type: 'required' }],
           separator: 'above',
           hint: $localize`Set the start and end date for your event`,
-          //fields: {
-           // period: UiField.Date({
-              initial: {
-                start: undefined,
-                //new Date (this.performance.publicity_period.start),
-                  //? unix(this.performance.publicity_period.start)
-                 // : undefined,
-                end: undefined
-               // ? unix(this.performance.publicity_period.end) : undefined
-              },
-              is_date_range: true,
-              actions: true,
-              min_date: new Date()
+          initial: {
+            start: this.performance.publicity_period.start ?
+               unix(this.performance.publicity_period.start)
+              : undefined,
+            end: this.performance.publicity_period.end ? 
+            unix(this.performance.publicity_period.end) : undefined
+          },
+          is_date_range: true,
+          actions: true,
+          min_date: new Date(),
+          max_date: new Date()
               //label: $localize'Schedule'
             })
           
@@ -99,9 +99,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             description: v.description,
             genre: v.genre,
             publicity_period: { 
-              start: undefined, // v.period.publicity_period.start,//timestamp(v.fields.publicity_period.start),
-              end: undefined}, // v.period.publicity_period.end},//timestamp(v.fields.publicity_period.end) },
-            //premiere_datetime: timestamp(new Date(v.premiere.performance.publicity_period.start)) || null,
+              start: timestamp(new Date(v.publicity_period.start)),
+              end: timestamp(new Date(v.publicity_period.end))},
             type: this.type
           
           })
@@ -150,4 +149,5 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
       this.ref.close(this.performance);
     }
   }
+
 }
