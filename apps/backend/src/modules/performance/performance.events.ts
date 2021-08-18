@@ -1,4 +1,3 @@
-import { UserStageUpMarketingConsent } from './../../../../../libs/shared/src/api/entities/gdpr/consents/user-stageup-marketing-consent.entity';
 import Env from '@backend/env';
 import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
 import {
@@ -13,7 +12,6 @@ import {
   POSTGRES_PROVIDER,
   Ticket,
   User,
-  UserHostMarketingConsent,
   combine,
   Contract,
   I18N_PROVIDER,

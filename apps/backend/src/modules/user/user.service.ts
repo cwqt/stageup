@@ -110,7 +110,6 @@ export class UserService extends ModuleService {
   }
 
   async setUserHostMarketingOptStatus(userId: string, hostId: string, optStatus: ConsentOpt) {
-    console.log('inside user host marketing');
     // check if already consenting to this host, if not then soft-opt in
     const existingConsent = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'c')
       .where('c.user__id = :uid', { uid: userId })
@@ -119,7 +118,6 @@ export class UserService extends ModuleService {
 
     // Return if there is existing consent and it is equal to what the user is setting it to
     if (existingConsent?.opt_status == optStatus) return;
-    console.log('host status being updated');
 
     // Get the latest policies
     const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
