@@ -151,6 +151,7 @@ import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/h
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
 import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
+import { PerformanceCancelDialogComponent } from './routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -268,7 +269,8 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     CookieConsentComponent,
     SelectReasonDialogComponent,
     TermsLinksComponent,
-    CookieConsentComponent
+    CookieConsentComponent,
+    PerformanceCancelDialogComponent
   ],
   imports: [
     AngularMaterialModule,
