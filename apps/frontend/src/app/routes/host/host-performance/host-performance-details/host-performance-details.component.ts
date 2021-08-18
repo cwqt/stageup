@@ -50,17 +50,15 @@ export class HostPerformanceDetailsComponent implements OnInit {
       fields: {
         publicity_period: UiField.Date({
           initial:  {
-            start: this.performance.data.data.publicity_period.start
-            ? unix(this.performance.data.data.publicity_period.start)
-              : undefined,
-            end: this.performance.data.data.publicity_period.end
-            ? unix(this.performance.data.data.publicity_period.start)
-              : undefined 
+            start: unix(this.performance.data.data.publicity_period.start),
+           
+            end: unix(this.performance.data.data.publicity_period.end),
+           
           },
           is_date_range: true,
           actions: true,
-          min_date: new Date(),
-          max_date: new Date(),
+          //min_date: new Date(),
+          //max_date: new Date(),
           label: $localize`Schedule`
         })
       },

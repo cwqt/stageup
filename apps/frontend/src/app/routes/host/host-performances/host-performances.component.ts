@@ -52,11 +52,11 @@ export class HostPerformancesComponent implements OnInit {
         },
         {
           label: $localize`Schedule Start`,
-          accessor: p => i18n.date(unix(p.publicity_period.start), this.locale),
+          accessor: p => unix(p.publicity_period.start),
         },
         {
           label: $localize`Schedule End`,
-          accessor: p => i18n.date(unix(p.publicity_period.end), this.locale),
+          accessor: p => unix(p.publicity_period.end),//i18n.date(unix(p.publicity_period.end), this.locale),
         },
         {
           label: $localize`Description`,

@@ -75,17 +75,20 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           //validators: [{ type: 'required' }],
           separator: 'above',
           hint: $localize`Set the start and end date for your event`,
-          initial: {
-            start: this.performance.publicity_period.start ?
-               unix(this.performance.publicity_period.start)
-              : undefined,
-            end: this.performance.publicity_period.end ? 
-            unix(this.performance.publicity_period.end) : undefined
+          initial: {start: new Date(), 
+            end: new Date()
           },
+          // initial: {
+          //   start: this.performance.publicity_period.start ?
+          //      unix(this.performance.publicity_period.start)
+          //     : undefined,
+          //   end: this.performance.publicity_period.end ? 
+          //   unix(this.performance.publicity_period.end) : undefined
+          // },
           is_date_range: true,
           actions: true,
-          min_date: new Date(),
-          max_date: new Date()
+          //min_date: new Date(),
+          //max_date: new Date()
               //label: $localize'Schedule'
             })
           
@@ -99,8 +102,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             description: v.description,
             genre: v.genre,
             publicity_period: { 
-              start: timestamp(new Date(v.publicity_period.start)),
-              end: timestamp(new Date(v.publicity_period.end))},
+              start: timestamp(v.publicity_period.start),
+              end: timestamp(v.publicity_period.end)},
             type: this.type
           
           })
