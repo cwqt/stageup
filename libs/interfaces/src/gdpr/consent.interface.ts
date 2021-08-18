@@ -12,6 +12,7 @@ export type ConsentType = typeof ConsentTypes[number];
 export interface IUserConsent<T extends ConsentType> {
   _id: NUUID;
   type: T;
+  terms_and_conditions: IConsentable<'general_toc'>;
 }
 
 // mapped types ftw
@@ -20,17 +21,14 @@ export type UserConsentData = {
     user: IUserStub;
     host: IHostStub;
     opt_status: ConsentOpt;
-    terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
   };
   stageup_marketing: {
     user: IUserStub;
-    terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
   };
   upload_consent: {
     host: IHostStub;
-    terms_and_conditions: IConsentable<'uploaders_toc'>;
     performance: IPerformanceStub;
   };
 };
