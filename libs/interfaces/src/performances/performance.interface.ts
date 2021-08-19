@@ -85,7 +85,7 @@ export type DtoPerformance = IEnvelopedData<
 // data transfer object
 export type DtoCreatePerformance = Pick<
   Required<IPerformance>,
-  'name' | 'premiere_datetime' | 'description' | 'genre'
+  'name' | 'publicity_period' | 'description' | 'genre'
 > & { type: 'vod' | 'live' };
 
 // private to host

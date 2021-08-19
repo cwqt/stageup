@@ -6,17 +6,18 @@ import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { IEnvelopedData, IPerformanceStub, IPerformance, PerformanceStatus } from '@core/interfaces';
+import { IEnvelopedData, IPerformanceStub, IPerformance, PerformanceStatus, Visibility } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PerformanceService } from '../../../services/performance.service';
 import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { i18n, richtext, unix } from '@core/helpers';
+import { enumToValues, i18n, richtext, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { environment } from 'apps/frontend/src/environments/environment';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
+import { enums } from 'superstruct';
 
 @Component({
   selector: 'app-host-performances',
@@ -49,8 +50,22 @@ export class HostPerformancesComponent implements OnInit {
           accessor: p => p.name
         },
         {
+          label: $localize`Schedule Start`,
+          accessor: p => unix(p.publicity_period.start)
+        },
+        {
+          label: $localize`Schedule End`,
+          accessor: p => unix(p.publicity_period.end) //i18n.date(unix(p.publicity_period.end), this.locale),
+        },
+        {
           label: $localize`Description`,
           accessor: p => richtext.read(p.description)
+        },
+        {
+          label: $localize`Visibility`,
+          accessor: p => Object({ visibility: enums(enumToValues(Visibility) as Visibility[]) })
+
+          //{p.publicity_period.start,p.publicity_period.end}
         },
         {
           label: $localize`Created At`,
