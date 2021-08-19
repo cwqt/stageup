@@ -61,7 +61,6 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this._id = uuid();
     this.name = data.name;
     this.description = data.description;
-    this.premiere_datetime = data.premiere_datetime;
     this.genre = data.genre;
     this.tickets = [];
 
