@@ -3,22 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { CreatePerformanceComponent } from './create-performance/create-performance.component';
 import { AppService } from 'apps/frontend/src/app/services/app.service';
-import { ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { IEnvelopedData, IPerformanceStub, IPerformance, PerformanceStatus } from '@core/interfaces';
+import { IPerformanceStub, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
 import { PerformanceService } from '../../../services/performance.service';
-import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { i18n, richtext, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
-import { environment } from 'apps/frontend/src/environments/environment';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
-import { P } from '@angular/cdk/keycodes';
-
 @Component({
   selector: 'app-host-performances',
   templateUrl: './host-performances.component.html',
