@@ -1,4 +1,5 @@
-import { optOutOptionsMap } from 'libs/interfaces/src/gdpr/consent.interface';
+import { OptOutOptions } from './../../../../../../../libs/interfaces/src/gdpr/consent.interface';
+import { OptOutReason } from '@frontend/_pipes/opt-out-reason.pipe';
 import { MyselfService } from '@frontend/services/myself.service';
 import { IHostStub, IUserStub } from '@core/interfaces';
 import { UiForm, UiField } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
@@ -45,6 +46,8 @@ export class OptOutDialogComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   ngOnInit(): void {
+    const reasonPipe = new OptOutReason();
+
     //Form to be used for bulk refunds (>1 invoice selected)
     this.optOutForm = new UiForm({
       fields: {
@@ -52,8 +55,8 @@ export class OptOutDialogComponent implements OnInit, IUiDialogOptions {
         opt_out_reason: UiField.Select({
           label: $localize`Reason`,
           values: new Map(
-            Object.entries(optOutOptionsMap).map(([key, value]) => {
-              return [key, { label: $localize`${value}` }];
+            Object.entries(OptOutOptions).map(([key, value]) => {
+              return [key, { label: reasonPipe.transform(value) }];
             })
           )
         }),
