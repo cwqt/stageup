@@ -27,7 +27,7 @@ export enum PerformanceStatus {
   PendingSchedule = 'pending_schedule'
 }
 
-export enum DeletePerfReason {
+export enum DeleteCancelPerfReason {
   TechnicalIssues = 'technical_issues',
   CancelledResceduled = 'cancelled_rescheduled',
   Covid19 = 'covid_19',
@@ -37,7 +37,7 @@ export enum DeletePerfReason {
 }
 
 export interface IDeletePerfReason {
-  delete_reason: DeletePerfReason;
+  delete_reason: DeleteCancelPerfReason;
   further_info: string;
 }
 

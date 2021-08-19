@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DtoPerformance, IHost, IPerformanceHostInfo } from '@core/interfaces';
+import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
@@ -75,7 +76,10 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   }
 
   cancelPerformance() {
-    //TODO Cancel Performance
+    this.dialog.open(PerformanceCancelDialogComponent),
+      {
+        data: this.performance.data.data
+      };
   }
 
   ngOnDestroy() {
