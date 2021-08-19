@@ -69,7 +69,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
               await this.performanceService
                 .deletePerformance(this.performance._id, deletePerfReason)
                 .then(() => {
-                  this.toastService.emit($localize`Performance Deleted!`);
+                  this.toastService.emit($localize`${this.performance.name} Deleted!`);
                   this.toastService.emit($localize`We have initiated refunds for your performance`);
                 })
                 .then(() => {

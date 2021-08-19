@@ -308,7 +308,7 @@ export class FinanceEvents extends ModuleEvents {
       invoices.map(async invoice => {
         await this.bus.publish(
           'refund.initiated',
-          { invoice_id: invoice._id, user_id: invoice.user._id, performance_deletion: ct.send_initiation_emails },
+          { invoice_id: invoice._id, user_id: invoice.user._id, send_initiation_emails: ct.send_initiation_emails },
           ct.__meta.locale
         );
       })
