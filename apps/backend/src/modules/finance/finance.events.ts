@@ -140,7 +140,7 @@ export class FinanceEvents extends ModuleEvents {
 
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address', 'username'] });
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.host.refund_initiated__subject', ct.__meta.locale, {
         user_username: user.username,
         performance_name: invoice.ticket.performance.name
