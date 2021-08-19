@@ -62,7 +62,7 @@ export class FinanceService extends ModuleService {
     if (refundData.invoice_ids.length > 1) {
       return await this.bus.publish(
         'refund.bulk',
-        { invoice_ids: refundData.invoice_ids, performance_deletion: refundData.send_inititaion_emails },
+        { invoice_ids: refundData.invoice_ids, performance_deletion: refundData.send_initiation_emails },
         locale
       );
     } else {
@@ -71,7 +71,7 @@ export class FinanceService extends ModuleService {
         {
           invoice_id: invoices[0]._id,
           user_id: invoices[0].user._id,
-          send_initiation_emails: refundData.send_inititaion_emails
+          send_initiation_emails: refundData.send_initiation_emails
         },
         locale
       );

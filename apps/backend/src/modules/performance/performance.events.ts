@@ -174,12 +174,6 @@ export class PerformanceEvents extends ModuleEvents {
         );
       });
     }
-
-    //Soft delete the performance
-    performance.status = PerformanceStatus.Deleted;
-    performance.delete_reason = ct.delete_perf_reason;
-    performance.save();
-    await performance.softRemove();
   }
 
   async sendUserPerformanceDeletionEmail(ct: Contract<'performance.deleted_notify_user'>) {
