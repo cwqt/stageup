@@ -54,7 +54,7 @@ export class FinanceEvents extends ModuleEvents {
       { relations: { user: true, ticket: { performance: true }, host: true } }
     );
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.refund_requested__subject', ct.__meta.locale, {
         host_name: invoice.host.username
       }),
@@ -96,7 +96,7 @@ export class FinanceEvents extends ModuleEvents {
 
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address'] });
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.user.refund_initiated__subject', ct.__meta.locale, {
         host_name: invoice.host.name,
         performance_name: invoice.ticket.performance.name
@@ -200,7 +200,7 @@ export class FinanceEvents extends ModuleEvents {
 
     const refund = await Refund.findOne({ _id: ct.refund_id });
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.user.refund_refunded__subject', ct.__meta.locale, {
         performance_name: invoice.ticket.performance.name
       }),
@@ -243,7 +243,7 @@ export class FinanceEvents extends ModuleEvents {
       .withDeleted()
       .getOne();
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.host.refund_refunded__subject', ct.__meta.locale, {
         invoice_id: invoice._id,
         user_username: invoice.user.username,
@@ -288,7 +288,7 @@ export class FinanceEvents extends ModuleEvents {
     );
 
     //Send bulk refund initiation email to host
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.host.refund_bulk_initiated_subject', ct.__meta.locale, {
         refund_quantity: refundQuantity
       }),
