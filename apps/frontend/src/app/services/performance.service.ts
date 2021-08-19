@@ -99,7 +99,7 @@ export class PerformanceService {
       .toPromise();
   }
 
-  deletePerformance(performanceId: string, dtoDeletePerfReason: IDeletePerfReason) {
+  deletePerformance(performanceId: string, dtoDeletePerfReason: IDeletePerfReason, cancel?: boolean) {
     return this.http.put(`/api/performances/${performanceId}`, dtoDeletePerfReason).toPromise();
   }
 
