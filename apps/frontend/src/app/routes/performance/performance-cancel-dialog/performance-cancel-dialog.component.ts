@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IPerformance } from '@core/interfaces';
+import { DeletePerfReason, IPerformance } from '@core/interfaces';
+import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'frontend-performance-cancel-dialog',
@@ -39,13 +40,13 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
         }
       }),
       new UiDialogButton({
-        label: $localize`Delete Performance`,
+        label: $localize`Cancel Performance`,
         kind: ThemeKind.Primary,
         callback: () =>
           this.helperService.showDialog(
             this.dialog.open(SelectReasonDialogComponent, {
               data: {
-                dialog_title: $localize`Why do you want to delete the performance?`,
+                dialog_title: $localize`Why do you want to cancel the performance?`,
                 reasons: new Map([
                   [DeletePerfReason.TechnicalIssues, { label: $localize`Technical Issues` }],
                   [
