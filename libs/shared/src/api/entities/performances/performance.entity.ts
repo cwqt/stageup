@@ -97,7 +97,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       thumbnail: this.thumbnail,
       publicity_period: this.publicity_period,
       assets: this.asset_group.assets.map(a => a.toStub()),
-      status: this.status
+      status: this.status,
+      visibility: this.visibility
     };
   }
 

@@ -74,18 +74,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           separator: 'above',
           hint: $localize`Set the start and end date for your event`,
           initial: { start: new Date(), end: new Date() },
-          // initial: {
-          //   start: this.performance.publicity_period.start ?
-          //      unix(this.performance.publicity_period.start)
-          //     : undefined,
-          //   end: this.performance.publicity_period.end ?
-          //   unix(this.performance.publicity_period.end) : undefined
-          // },
           is_date_range: true,
           actions: true
-          //min_date: new Date(),
-          //max_date: new Date()
-          //label: $localize'Schedule'
         })
 
         // })

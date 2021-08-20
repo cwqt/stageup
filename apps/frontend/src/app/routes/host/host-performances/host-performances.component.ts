@@ -18,6 +18,8 @@ import { environment } from 'apps/frontend/src/environments/environment';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
 import { enums } from 'superstruct';
+import { VisibilityPipe } from '@frontend/_pipes/visibility.pipe';
+import {DatePipe} from '@angular/common'
 
 @Component({
   selector: 'app-host-performances',
@@ -28,20 +30,22 @@ export class HostPerformancesComponent implements OnInit {
   hostId: string;
   table: UiTable<IPerformanceStub>;
 
+
   // displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
-    private performanceService: PerformanceService,
     private hostService: HostService,
     private helperService: HelperService,
     private dialog: MatDialog,
-    private appService: AppService
+    private appService: AppService,
+    public datepipe: DatePipe
   ) {}
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
     const statusPipe = new PerformanceStatusPipe();
+    const visPipe = new VisibilityPipe();
     this.table = new UiTable<IPerformanceStub>({
       resolver: query => this.hostService.readHostPerformances(this.hostId, query),
       columns: [
@@ -50,12 +54,12 @@ export class HostPerformancesComponent implements OnInit {
           accessor: p => p.name
         },
         {
-          label: $localize`Schedule Start`,
-          accessor: p => unix(p.publicity_period.start)
+          label: $localize`Performance Schedule Start`,
+          accessor: p => this.datepipe.transform(unix(p.publicity_period.start), 'fullDate')
         },
         {
-          label: $localize`Schedule End`,
-          accessor: p => unix(p.publicity_period.end) //i18n.date(unix(p.publicity_period.end), this.locale),
+          label: $localize`Performance Schedule End`,
+          accessor: p => this.datepipe.transform(unix(p.publicity_period.end), 'fullDate')
         },
         {
           label: $localize`Description`,
@@ -63,13 +67,13 @@ export class HostPerformancesComponent implements OnInit {
         },
         {
           label: $localize`Visibility`,
-          accessor: p => Object({ visibility: enums(enumToValues(Visibility) as Visibility[]) })
+          accessor: p => visPipe.transform(p.visibility)
 
-          //{p.publicity_period.start,p.publicity_period.end}
+          
         },
         {
           label: $localize`Created At`,
-          accessor: p => i18n.date(unix(p.created_at), this.locale)
+          accessor: p => this.datepipe.transform(unix(p.created_at), 'shortDate')
         },
         {
           label: $localize`Status`,

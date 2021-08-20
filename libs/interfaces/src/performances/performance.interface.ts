@@ -10,6 +10,7 @@ import { IHostStub } from '../hosts/host.interface';
 import { Genre } from './genres.interface';
 import { ITicketStub } from './ticket.interface';
 
+
 export type ParsedRichText = { ops: DeltaOperation[] }; // stringified-json
 export type RichText = string;
 
@@ -17,6 +18,8 @@ export enum Visibility {
   Public = 'public',
   Private = 'private'
 }
+
+//export 
 
 export enum PerformanceStatus {
   Complete = 'complete',
@@ -55,6 +58,7 @@ export interface IPerformanceStub {
   thumbnail: string;
   status: PerformanceStatus;
   publicity_period: { start: number; end: number }; // unix timestamps
+  visibility: Visibility;
 }
 
 export interface IFeedPerformanceStub extends IPerformanceStub {
