@@ -133,6 +133,8 @@ export class HostService {
 
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance(hostId: string, data: DtoCreatePerformance): Promise<IPerformance> {
+    console.log('Host Id: ', hostId);
+    console.log('Data: ', data);
     return this.http.post<IPerformance>(`/api/hosts/${hostId}/performances`, data).toPromise();
   }
 
