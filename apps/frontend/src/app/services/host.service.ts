@@ -154,6 +154,8 @@ export class HostService {
 
   //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
   readHostPerformances(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IPerformanceStub[], null>> {
+    console.log('In host performances: ', query);
+
     return this.http
       .get<IEnvelopedData<IPerformanceStub[], null>>(`/api/hosts/${hostId}/performances${querize(query)}`)
       .toPromise();

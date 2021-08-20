@@ -605,6 +605,15 @@ export class HostController extends ModuleController {
   readHostPerformances: IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> = {
     authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
     controller: async req => {
+      const query = await this.ORM.createQueryBuilder(Performance, 'performance')
+        .innerJoinAndSelect('performance.host', 'host')
+        .where('host._id = :id', { id: req.params.hid })
+        .orderBy('performance.created_at', 'DESC')
+        .withDeleted() //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
+        .paginate({ serialiser: o => o.toStub() });
+
+      console.log('Query: ', query);
+
       return await this.ORM.createQueryBuilder(Performance, 'performance')
         .innerJoinAndSelect('performance.host', 'host')
         .where('host._id = :id', { id: req.params.hid })
