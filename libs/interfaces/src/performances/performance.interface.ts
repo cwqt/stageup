@@ -36,9 +36,14 @@ export enum DeleteCancelPerfReason {
   Other = 'other'
 }
 
-export interface IDeletePerfReason {
+export interface IDeleteCancelPerfReason {
   delete_reason: DeleteCancelPerfReason;
   further_info: string;
+}
+
+export interface DtoDeleteCancelPerf {
+  delete: IDeleteCancelPerfReason;
+  cancel?: boolean;
 }
 
 export interface IPerformanceStub {

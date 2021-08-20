@@ -10,7 +10,7 @@ import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-bu
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
-  selector: 'frontend-performance-cancel-dialog',
+  selector: 'app-performance-cancel-dialog',
   templateUrl: './performance-cancel-dialog.component.html',
   styleUrls: ['./performance-cancel-dialog.component.css']
 })
