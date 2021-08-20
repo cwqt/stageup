@@ -27,7 +27,9 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
     private dialog: MatDialog,
     private appService: AppService,
     @Inject(MAT_DIALOG_DATA) public performance: IPerformance
-  ) {}
+  ) {
+    console.log('Data in comp: ', performance);
+  }
 
   ngOnInit(): void {
     this.buttons = [
@@ -68,8 +70,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
               await this.performanceService
                 .deletePerformance(this.performance._id, deletePerfReason)
                 .then(() => {
-                  this.toastService.emit($localize`Performance Deleted!`);
-                  this.toastService.emit($localize`We have initiated refunds for your performance`);
+                  $localize`${this.performance.name} Cancelled! We have initiated refunds for all purchased tickets`;
                 })
                 .then(() => {
                   this.appService.navigateTo('/dashboard/performances');
