@@ -72,7 +72,7 @@ export class OptOutDialogComponent implements OnInit, IUiDialogOptions {
             reason: v.opt_out_reason,
             message: v.note_to_company
           };
-          await this.myselfService.updateOptInStatus(this.data.host._id, 'hard-out', optOutReason);
+          await this.myselfService.updateHostOptInStatus(this.data.host._id, 'hard-out', optOutReason);
         }
       },
       handlers: {

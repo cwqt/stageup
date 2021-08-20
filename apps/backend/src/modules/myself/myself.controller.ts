@@ -491,7 +491,7 @@ export class MyselfController extends ModuleController {
     authorisation: AuthStrat.isLoggedIn,
     controller: async req => {
       return await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
-        .where('consent.type = :type', { type: <ConsentableType>'host_marketing' })
+        .where('consent.type = :type', { type: 'host_marketing' as ConsentableType })
         .andWhere('consent.user__id = :uid', { uid: req.session.user._id })
         .innerJoinAndSelect('consent.user', 'user')
         .innerJoinAndSelect('consent.host', 'host')
@@ -503,7 +503,7 @@ export class MyselfController extends ModuleController {
   };
 
   // Changes the current users marketing consent status for a paricular host
-  updateOptInStatus: IControllerEndpoint<void> = {
+  updateHostOptInStatus: IControllerEndpoint<void> = {
     validators: {
       params: object({ hid: Validators.Fields.nuuid }),
       body: object({
@@ -526,7 +526,7 @@ export class MyselfController extends ModuleController {
           .getOne()
       );
       // Trigger email to be sent to the host, informing them of the change
-      this.bus.publish(
+      await this.bus.publish(
         'user.marketing_opt_in_change',
         {
           user_id: req.session.user._id,

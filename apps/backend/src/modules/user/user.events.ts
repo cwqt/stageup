@@ -139,8 +139,8 @@ export class UserEvents extends ModuleEvents {
           user_email: user.email_address,
           // If reason was provided, use the map to convert the enum to text
           // If not provided, will display N/A
-          opt_out_reason: ct.opt_out_reason?.reason ? reasonPipe.transform(ct.opt_out_reason?.reason) : 'N/A',
-          opt_out_message: ct.opt_out_reason?.message || 'N/A'
+          opt_out_reason: ct.opt_out_reason?.reason ? reasonPipe.transform(ct.opt_out_reason?.reason) : '-',
+          opt_out_message: ct.opt_out_reason?.message || '-'
         }),
         from: Env.EMAIL_ADDRESS,
         to: host.email_address,
