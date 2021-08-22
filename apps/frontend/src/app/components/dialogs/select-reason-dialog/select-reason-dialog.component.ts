@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IDeletePerfReason, ISelectReasonData, Primitive } from '@core/interfaces';
+import { IDeleteCancelPerfReason, ISelectReasonData, Primitive } from '@core/interfaces';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
@@ -14,7 +14,7 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
   public selectReasonForm: UiForm;
   public buttons: IUiDialogOptions['buttons'];
 
-  submit: EventEmitter<IDeletePerfReason> = new EventEmitter();
+  submit: EventEmitter<IDeleteCancelPerfReason> = new EventEmitter();
   cancel: EventEmitter<string> = new EventEmitter();
 
   constructor(

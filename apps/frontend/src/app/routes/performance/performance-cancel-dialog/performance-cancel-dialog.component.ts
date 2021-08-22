@@ -68,7 +68,10 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
             }),
             async deletePerfReason => {
               await this.performanceService
-                .deletePerformance(this.performance._id, deletePerfReason)
+                .deletePerformance(this.performance._id, {
+                  delete: deletePerfReason,
+                  cancel: true
+                })
                 .then(() => {
                   $localize`${this.performance.name} Cancelled! We have initiated refunds for all purchased tickets`;
                 })
