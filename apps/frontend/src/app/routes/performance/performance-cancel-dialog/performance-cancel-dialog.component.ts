@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DeleteCancelPerfReason, IPerformance } from '@core/interfaces';
+import { DeleteCancelPerfReason, IPerformance, RemovalType } from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
@@ -66,11 +66,11 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
                 hide_further_info: currentSelection => currentSelection != DeleteCancelPerfReason.Other
               }
             }),
-            async deletePerfReason => {
+            async cancelPerfReason => {
               await this.performanceService
                 .deletePerformance(this.performance._id, {
-                  delete: deletePerfReason,
-                  cancel: true
+                  removal_reason: cancelPerfReason,
+                  removal_type: RemovalType.Cancel
                 })
                 .then(() => {
                   $localize`${this.performance.name} Cancelled! We have initiated refunds for all purchased tickets`;

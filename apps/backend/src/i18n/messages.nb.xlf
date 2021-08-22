@@ -1231,7 +1231,7 @@ listed as ‘Cancelled’ on your account from now on.</p>
       <target state="needs-translation"><p>Hei {user_username}!</p><p> Du kjøpte billetter for {performance_name}. Det starter på {premier_time}.</p><p> Vi håper du er klar til å se det!</p><p> Ta meg med til biblioteket mitt: <a href="{url}">{url}</a></p><p> Jubel,</p><p> StageUp team</p></target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_host__subject" datatype="html">
-      <source>You have deleted {performance_name}</source>
+      <source>You have {action} {performance_name}</source>
       <target state="needs-translation">Du har slettet {performance_name}</target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_host__content" datatype="html">

@@ -1231,7 +1231,7 @@ listed as ‘Cancelled’ on your account from now on.</p>
       <target state="needs-translation"><p>Helo {user_username}!</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name}. Bydd yn cychwyn yn {premier_time}.</p><p> Gobeithio eich bod chi i gyd yn barod i'w wylio!</p><p> Ewch â mi i'm llyfrgell: <a href="{url}">{url}</a></p><p> Lloniannau,</p><p> Tîm StageUp</p></target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_host__subject" datatype="html">
-      <source>You have deleted {performance_name}</source>
+      <source>You have {action} {performance_name}</source>
       <target state="needs-translation">Rydych chi wedi dileu {performance_name}</target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_host__content" datatype="html">

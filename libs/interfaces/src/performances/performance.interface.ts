@@ -27,7 +27,7 @@ export enum PerformanceStatus {
   PendingSchedule = 'pending_schedule'
 }
 
-export enum DeleteCancelPerfReason {
+export enum RemovalReason {
   TechnicalIssues = 'technical_issues',
   CancelledResceduled = 'cancelled_rescheduled',
   Covid19 = 'covid_19',
@@ -36,14 +36,19 @@ export enum DeleteCancelPerfReason {
   Other = 'other'
 }
 
-export interface IDeleteCancelPerfReason {
-  delete_reason: DeleteCancelPerfReason;
+export enum RemovalType {
+  Cancel,
+  Delete
+}
+
+export interface IRemovalReason {
+  delete_cancel_reason: RemovalReason;
   further_info: string;
 }
 
-export interface DtoDeleteCancelPerf {
-  delete: IDeleteCancelPerfReason;
-  cancel?: boolean;
+export interface DtoRemovePerf {
+  removal_reason: IRemovalReason;
+  removal_type: RemovalType;
 }
 
 export interface IPerformanceStub {

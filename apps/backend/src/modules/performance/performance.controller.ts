@@ -414,11 +414,17 @@ export class PerformanceController extends ModuleController {
       if (perf.status === PerformanceStatus.Complete)
         throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_after_occurrence`);
 
-      //Soft delete the performance
-      perf.status = PerformanceStatus.Deleted;
-      perf.delete_reason = req.body;
-      perf.save();
-      await perf.softRemove();
+      if (req.body.cancel) {
+        perf.status = PerformanceStatus.Cancelled;
+        perf.removal_reason = req.body.delete_reason;
+        perf.save();
+      } else {
+        //Soft delete the performance
+        perf.status = PerformanceStatus.Deleted;
+        perf.removal_reason = req.body.delete;
+        perf.save();
+        await perf.softRemove();
+      }
 
       return await this.bus.publish(
         'performance.deleted',

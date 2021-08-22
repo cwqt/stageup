@@ -111,7 +111,8 @@ export class PerformanceEvents extends ModuleEvents {
     //Send host email notifcation
     this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.performance.deleted_notify_host__subject', ct.__meta.locale, {
-        performance_name: performance.name
+        performance_name: performance.name,
+        action: ct.cancel ? 'cancelled' : 'deleted'
       }),
       content: this.i18n.translate('@@email.performance.deleted_notify_host__content', ct.__meta.locale, {
         host_name: performance.host.name,

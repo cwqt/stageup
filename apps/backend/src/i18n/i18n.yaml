@@ -322,7 +322,7 @@ email:
     Cheers, 
 
     StageUp team
-  performance.deleted_notify_host__subject: You have deleted {performance_name}
+  performance.deleted_notify_host__subject: You have {action} {performance_name}
   performance.deleted_notify_host__content: |
     Hello **{host_name}**,
 

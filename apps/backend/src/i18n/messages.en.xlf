@@ -1372,8 +1372,8 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_host__subject" datatype="html">
-      <source>You have deleted {performance_name}</source>
-      <target state="final">You have deleted {performance_name}</target>
+      <source>You have {action} {performance_name}</source>
+      <target state="final">You have {action} {performance_name}</target>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_host__content" datatype="html">
       <source><p>Hello <strong>{host_name}</strong>,</p>

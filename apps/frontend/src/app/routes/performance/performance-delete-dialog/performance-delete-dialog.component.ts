@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DeleteCancelPerfReason, DtoPerformance, IPerformance } from '@core/interfaces';
+import { DeleteCancelPerfReason, DtoPerformance, IPerformance, RemovalType } from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
@@ -67,7 +67,10 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
             }),
             async deletePerfReason => {
               await this.performanceService
-                .deletePerformance(this.performance._id, { delete: deletePerfReason })
+                .deletePerformance(this.performance._id, {
+                  removal_reason: deletePerfReason,
+                  removal_type: RemovalType.Delete
+                })
                 .then(() => {
                   this.toastService.emit(
                     $localize`${this.performance.name} Deleted! We have initiated refunds for all purchased tickets`

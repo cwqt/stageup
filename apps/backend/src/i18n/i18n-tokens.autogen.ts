@@ -98,7 +98,7 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@email.user.one_day_performance_reminder__content"]: "user_username" | "performance_name" | "premier_time",
   ["@@email.user.fifteen_minute_performance_reminder__subject"]: never,
   ["@@email.user.fifteen_minute_performance_reminder__content"]: "user_username" | "performance_name" | "premier_time" | "url",
-  ["@@email.performance.deleted_notify_host__subject"]: "performance_name",
+  ["@@email.performance.deleted_notify_host__subject"]: "action" | "performance_name",
   ["@@email.performance.deleted_notify_host__content"]: "host_name" | "action" | "performance_name" | "performance_premiere_date",
   ["@@email.performance.deleted_notify_user__subject"]: "performance_name",
   ["@@email.performance.deleted_notify_user__content"]: "user_username" | "host_name" | "performance_name" | "ticket_purchase_date" | "invoice_id" | "ticket_amount" | "card_brand" | "last_4",
