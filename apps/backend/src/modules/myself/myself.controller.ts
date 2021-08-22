@@ -44,7 +44,7 @@ import {
   Visibility
 } from '@core/interfaces';
 import Stripe from 'stripe';
-import { boolean, enums, object, record, string } from 'superstruct';
+import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 
@@ -99,7 +99,10 @@ export class MyselfController extends ModuleController {
     validators: {
       query: record(
         enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts']),
-        Validators.Objects.PaginationOptions(10)
+        object({
+          ...Validators.Objects.PaginationOptions(10).schema,
+          hid: optional(Validators.Fields.nuuid)
+        })
       )
     },
     authorisation: AuthStrat.none,
@@ -114,18 +117,29 @@ export class MyselfController extends ModuleController {
       // None of the req.query paging options are present, so fetch the first page of every carousel
       const fetchAll = Object.keys(req.query).every(k => !Object.keys(feed).includes(k));
 
-      if (fetchAll || req.query['upcoming'])
-        feed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
+      if (fetchAll || req.query['upcoming']) {
+        let queryBuilder = this.ORM.createQueryBuilder(Performance, 'p')
           .where('p.premiere_datetime > :currentTime', { currentTime: timestamp() })
           .andWhere('p.visibility = :state', { state: Visibility.Public })
           .innerJoinAndSelect('p.host', 'host')
           .orderBy('p.premiere_datetime')
-          .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
-          .paginate({
-            serialiser: p => p.toClientStub(),
-            page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
-            per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
-          });
+          .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id });
+          
+        if (req.query['upcoming']) {
+          if ((req.query['upcoming'] as any).hid) {
+            queryBuilder = queryBuilder.where(
+              'host._id = :id',
+              { id: (req.query['upcoming'] as any).hid }
+            );
+          }
+        }
+
+        feed.upcoming = await queryBuilder.paginate({
+          serialiser: p => p.toClientStub(),
+          page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
+          per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
+        });
+      }
 
       if (fetchAll || req.query['everything'])
         feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
