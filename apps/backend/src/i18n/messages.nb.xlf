@@ -1236,7 +1236,7 @@ listed as ‘Cancelled’ on your account from now on.</p>
     </trans-unit>				
 		<trans-unit id="email.performance.deleted_notify_host__content" datatype="html">
       <source><p>Hello <strong>{host_name}</strong>,</p>
-<p>You have deleted your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
+<p>You have {action} your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
 <p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
 <p>Thanks,</p>
 <p><strong>StageUp Team</strong></p>

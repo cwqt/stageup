@@ -89,7 +89,11 @@ export type EventContract = {
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
   ['performance.created']: IPerformance;
-  ['performance.deleted']: { performance_id: IPerformance['_id']; delete_perf_reason: IDeleteCancelPerfReason };
+  ['performance.deleted']: {
+    performance_id: IPerformance['_id'];
+    delete_perf_reason: IDeleteCancelPerfReason;
+    cancel: boolean;
+  };
   ['performance.deleted_notify_user']: {
     performance_id: IPerformance['_id'];
     user_id: IUser['_id'];

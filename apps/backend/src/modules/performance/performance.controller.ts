@@ -424,7 +424,8 @@ export class PerformanceController extends ModuleController {
         'performance.deleted',
         {
           performance_id: req.params.pid,
-          delete_perf_reason: req.body
+          delete_perf_reason: req.body.delete_reason,
+          cancel: req.body.cancel
         },
         req.locale
       );

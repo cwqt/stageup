@@ -116,7 +116,8 @@ export class PerformanceEvents extends ModuleEvents {
       content: this.i18n.translate('@@email.performance.deleted_notify_host__content', ct.__meta.locale, {
         host_name: performance.host.name,
         performance_name: performance.name,
-        performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
+        performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL'),
+        action: ct.cancel ? 'cancelled' : 'deleted'
       }),
       from: Env.EMAIL_ADDRESS,
       to: performance.host.email_address,

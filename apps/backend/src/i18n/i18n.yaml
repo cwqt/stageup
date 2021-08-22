@@ -326,7 +326,7 @@ email:
   performance.deleted_notify_host__content: |
     Hello **{host_name}**,
 
-    You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
+    You have {action} your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
 
     We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.
 
