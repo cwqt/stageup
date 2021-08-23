@@ -6,7 +6,7 @@ This guide will take you through setting up your .env file, including setting up
 
 ## **Setting Up**
 
-Create a `.env.development` file in the project's root directory, '/core', based off of the provided `.env.example`, this will store your secret keys - **never share these with anyone** - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
+Create a `.env.development` file in the project's root directory, *'/core'*, based off of the provided `.env.example`, this will store your secret keys - **never share these with anyone** - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
 
 ### Localtunnel
 
@@ -57,9 +57,9 @@ STRIPE_PRIVATE_KEY="pk_test_{CODE}" #sk_test
 STRIPE_PUBLIC_KEY="sk_test_{CODE}" #pk_test
 ```
 
-Then, go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks). Then, under *'Endpoints receiving events from Connect application'*, click *'Add endpoint'.* Within 'Endpoint URL', write "[https://stageup-{YOUR_NAME}.loca.lt/stripe/hooks](https://stageup-george.loca.lt/stripe/hooks)", then under 'Events to send' click 'receive all events', then click 'Add enpoint'.
+Then, go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks). Then, under *'Endpoints receiving events from Connect application'*, click *'Add endpoint'.* Within *'Endpoint URL'*, write "https://stageup-{YOUR_NAME}.loca.lt/stripe/hooks", then under *'Events to send'* click *'receive all events'*, then click *'Add enpoint'*.
 
-Copy toe 'Signing secret' from your webhook and add it to your .env:
+Copy the 'Signing secret' from your webhook and add it to your .env:
 
 ```
 STRIPE_WEBHOOK_SIGNATURE="{KEY}" #whsec
@@ -75,7 +75,7 @@ STRIPE_CLIENT_ID="acct_{ID}" #ac
 
 Most of StageUp's cloud infrastructure is set up on GCP.
 
-Ask the SysAdmin to create you a GCP account. Then log in to GCP and from the dashboard copy the 'Project ID' into your .env: 
+Ask the SysAdmin to create you a GCP account. Then log in to GCP and from the dashboard copy the *'Project ID'* into your .env: 
 
 ```
 GCP_PROJECT_ID="" #core-314910
