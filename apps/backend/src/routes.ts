@@ -43,7 +43,7 @@ import {
   IUserFollow,
   DtoPerformanceAnalytics as DtoPerfAnalytics,
   DtoHostAnalytics,
-  ConsentableType as CType,
+  ConsentableType as CT,
   IConsentable,
   IDynamicFrontendEnvironment as IDynamicFeEnv,
 } from '@core/interfaces';
@@ -202,7 +202,9 @@ router.redirect                          ("/auth/verify-email",                 
 
 // GDPR ---------------------------------------------------------------------------------------------------------------
 const Gdpr = Container.get(GdprController);
-router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument);
+router.get      <IConsentable<CT>>       ("/gdpr/documents/:type/:version",           Gdpr.readLatestDocument);
+router.get      <IConsentable<CT>[]>     ("/gdpr/documents/:version",                 Gdpr.readAllLatestDocuments);
+router.post     <void>                   ("/gdpr/documents/:type/supersede",          Gdpr.uploadDocument);
 
 // UTILS ---------------------------------------------------------------------------------------------------------------
 const Utils = Container.get(UtilityController);
