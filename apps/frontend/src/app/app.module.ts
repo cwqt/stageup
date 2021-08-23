@@ -150,10 +150,13 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
+import { GdprSettingsComponent } from './routes/settings/gdpr-settings/gdpr-settings.component';
+import { OptOutDialogComponent } from './components/dialogs/opt-out-dialog/opt-out-dialog.component';
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
 import { GdprDocumentUpload } from './components/dialogs/gdpr-document-upload/gdpr-document-upload.component';
 import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
+import { OptOutReason } from './_pipes/opt-out-reason.pipe';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -192,6 +195,7 @@ import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
     TimesPipe,
     GdprDocumentTypePipe,
     OnboardingStatePipe,
+    OptOutReason,
     DeleteHostReasonPipe,
     ObjectLengthPipe,
     ShortDomainPipe,
@@ -274,6 +278,8 @@ import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
     SelectReasonDialogComponent,
     TermsLinksComponent,
     CookieConsentComponent,
+    GdprSettingsComponent,
+    OptOutDialogComponent,
     AdminGdprDocumentsComponent,
     GdprDocumentUpload
   ],

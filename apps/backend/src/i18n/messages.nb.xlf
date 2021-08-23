@@ -1261,6 +1261,37 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </source>
       <target state="needs-translation"><p>Hei <strong>{user_username}</strong> ,</p><p> Dessverre har {host_name} måtte avbryte forestillingen: {performance_name}. Vi har igangsatt en refusjon på billetten du har kjøpt på {ticket_purchase_date}.</p><p> Faktura nr.: {invoice_id}</p><p> Billettpris: {ticket_amount}</p><p> Vi krediterer automatisk midlene til <strong>{card_brand} som</strong> ender på <strong>{last_4}</strong> . Vær oppmerksom på at det kan ta opptil fem virkedager før kontoen din blir kreditert.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
     </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__subject" datatype="html">
+      <source>A new user has consented to marketing</source>
+      <target state="needs-translation">En ny bruker har samtykket til markedsføring</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__content" datatype="html">
+      <source><p>Hi <strong>{host_name}</strong>,</p>
+<p>You have a new user who has consented to receiving marketing from you!</p>
+<p>Username: {user_name}
+Email: {user_email}</p>
+<p>Please add them to your marketing communications. We will inform you again if the user chooses to opt out of marketing in the future.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Hei <strong>{host_name}</strong> ,</p><p> Du har en ny bruker som har samtykket i å motta markedsføring fra deg!</p><p> Brukernavn: {user_name} E -post: {user_email}</p><p> Du kan legge dem til i adresselisten. Vi vil informere deg igjen hvis brukeren velger å velge bort markedsføring i fremtiden.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__subject" datatype="html">
+      <source>A user has opted out of marketing</source>
+      <target state="needs-translation">En bruker har valgt bort markedsføring</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__content" datatype="html">
+      <source><p>Hello,</p>
+<p>Your subscriber {user_name} ({user_email}) has opted out of receiving direct emails from your organisation.
+Additional information:</p>
+<p>Reason: {opt_out_reason}
+Message: {opt_out_message}</p>
+<p>Kindly remove them from your mailing list. We will inform you again by email if they choose to opt back in.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Hallo,</p><p> Abonnenten din {user_name} ({user_email}) har valgt å ikke motta direkte e -post fra organisasjonen din. Denne informasjonen ble gitt:</p><p> Årsak: {opt_out_reason} Melding: {opt_out_message}</p><p> Fjern dem fra adresselisten din. Vi vil informere deg igjen via e -post hvis de velger å melde seg på igjen.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
 		<trans-unit id="error.internal_server_error" datatype="html">
       <source>Internal server error</source>
       <target state="needs-translation">Intern server feil</target>
