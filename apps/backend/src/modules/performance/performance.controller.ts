@@ -50,7 +50,6 @@ import {
   HostPermission,
   HTTP,
   ICreateAssetRes,
-  IDeletePerfReason,
   IEnvelopedData,
   IPaymentIntentClientSecret,
   IPerformance,
