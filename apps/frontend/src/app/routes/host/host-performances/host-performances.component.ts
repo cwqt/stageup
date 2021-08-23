@@ -5,7 +5,7 @@ import { CreatePerformanceComponent } from './create-performance/create-performa
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { IPerformanceStub, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { richtext, unix } from '@core/helpers';
+import { i18n, richtext, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
@@ -44,11 +44,11 @@ export class HostPerformancesComponent implements OnInit {
         },
         {
           label: $localize`Performance Schedule Start`,
-          accessor: p => datePipe.transform(unix(p.publicity_period.start), 'fullDate')
+          accessor: p => i18n.date(unix(p.publicity_period.start), this.locale)
         },
         {
           label: $localize`Performance Schedule End`,
-          accessor: p => datePipe.transform(unix(p.publicity_period.end), 'fullDate')
+          accessor: p => i18n.date(unix(p.publicity_period.end), this.locale)
         },
         {
           label: $localize`Description`,
@@ -60,7 +60,7 @@ export class HostPerformancesComponent implements OnInit {
         },
         {
           label: $localize`Created At`,
-          accessor: p => datePipe.transform(unix(p.created_at), 'shortDate')
+          accessor: p => i18n.date(unix(p.created_at), this.locale)
         },
         {
           label: $localize`Status`,
