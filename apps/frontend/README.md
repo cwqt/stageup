@@ -16,9 +16,9 @@ nx generate @nrwl/angular:service SERVICE_NAME
 
 These commands will generate boilerplate TS, SCSS & HTML files for the component or service. 
 
-- "--project=frontend adds these files within "apps/frontend"
-- "--module=app.module" automatically adds to the "app.module.ts" file rather than the "ui-lib.module.ts" file. This just saves you having to go to the file and import it yoursel (e.g. 'import { component } from "component-path')
+- `--project=frontend` adds these files within *'apps/frontend'*
+- `--module=app.module` automatically adds to the *'app.module.ts'* file rather than the *'ui-lib.module.ts'* file. This just saves you having to go to the file and import it yoursel (e.g. `import { component } from "component-path`)
 
 ## **nginx**
 
-'nginx.conf.template' contains configurations for a webserver. The variable `API_HOST` needs to be set to the hostname of backend URL to forward api requests to, e.g. `backend-su-193-uuid-nw.a.run.app`
+'nginx.conf.template' contains configurations for webserver. The variable `API_HOST` needs to be set to the hostname of backend URL to forward api requests to, e.g. `backend-su-193-uuid-nw.a.run.app`
