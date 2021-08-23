@@ -1,3 +1,5 @@
+import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
+import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, UrlMatcher, UrlSegment } from '@angular/router';
 import { AppWrapperComponent } from './components/app/wrapper/wrapper.component';
@@ -127,9 +129,22 @@ const LOGGED_IN_ROUTES: Routes = [
     component: AdminPanelComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'onboardings', // '/admin' will redirect to '/admin/onboardings'
+        pathMatch: 'full'
+      },
+      {
+        path: `onboardings`,
+        component: AdminOnboardingListComponent
+      },
+      {
         path: `onboardings/:${RP.HostId}`,
         component: DialogEntryComponent,
         data: { open_dialog: AdminOnboardingViewComponent, config: { width: '600px' } }
+      },
+      {
+        path: 'documents',
+        component: AdminGdprDocumentsComponent
       }
     ]
   }

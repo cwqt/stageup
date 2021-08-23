@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { IFormErrorField, HTTP, IErrorResponse, i18nToken, i18nTokenMap } from '@core/interfaces';
-import { Logger } from 'winston';
-import { i18nProvider } from './i18n';
+import { HTTP, i18nToken, IErrorResponse, IFormErrorField } from '@core/interfaces';
+import { NextFunction, Request, Response } from 'express';
+import { Container } from 'typedi';
+import { I18N_PROVIDER, LOGGING_PROVIDER } from './data-client/tokens';
 import colors = require('colors');
 
 /**
@@ -18,14 +18,10 @@ export const getCheck = async <T>(f: Promise<T>, code?: i18nToken): Promise<T> =
   return v;
 };
 
-export const handleError = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  error: ErrorHandler | Error,
-  log: Logger,
-  i18n?: i18nProvider<any>
-) => {
+export const handleError = (req: Request, res: Response, next: NextFunction, error: ErrorHandler | Error) => {
+  const i18n = Container.get(I18N_PROVIDER);
+  const log = Container.get(LOGGING_PROVIDER);
+
   const statusCode: HTTP = error instanceof ErrorHandler ? error.statusCode : HTTP.ServerError;
 
   if (statusCode !== HTTP.NotFound) console.log(error);
@@ -54,11 +50,11 @@ export const handleError = (
   res.status(statusCode).json(response);
 };
 
-export const global404Handler = (logger, i18n?) => (req: Request, res: Response, next: NextFunction) =>
-  handleError(req, res, next, new ErrorHandler(HTTP.NotFound, '@@error.no_such_route'), logger, i18n);
+export const global404Handler = (req: Request, res: Response, next: NextFunction) =>
+  handleError(req, res, next, new ErrorHandler(HTTP.NotFound, '@@error.no_such_route'));
 
-export const globalErrorHandler = (logger, i18n?) => (err: any, req: Request, res: Response, next: NextFunction) => {
-  handleError(req, res, next, err, logger, i18n);
+export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+  handleError(req, res, next, err);
 };
 
 export class ErrorHandler extends Error {

@@ -6,15 +6,11 @@ import { Consentable } from '../consentable.entity';
 
 @ChildEntity()
 export class UploadersConsent extends Consent<'upload_consent'> implements IHostUploadersConsent {
-  constructor(termsAndConditions: Consentable<'uploaders_toc'>, host: Host, performance: Performance) {
-    super('upload_consent');
-    this.terms_and_conditions = termsAndConditions;
+  constructor(termsAndConditions: Consentable<'general_toc'>, host: Host, performance: Performance) {
+    super('upload_consent', termsAndConditions);
     this.host = host;
     this.performance = performance;
   }
-
-  @RelationId((consent: UploadersConsent) => consent.terms_and_conditions) terms_and_conditions__id: NUUID;
-  @ManyToOne(() => Consentable) @JoinColumn() terms_and_conditions: Consentable<'uploaders_toc'>;
 
   @RelationId((consent: UploadersConsent) => consent.performance) performance__id: NUUID;
   @ManyToOne(() => Performance) @JoinColumn() performance: Performance;
@@ -25,7 +21,6 @@ export class UploadersConsent extends Consent<'upload_consent'> implements IHost
   toFull(): Required<IHostUploadersConsent> {
     return {
       ...super.toConsent(),
-      terms_and_conditions: this.terms_and_conditions,
       host: this.host.toStub(),
       performance: this.performance.toStub()
     };

@@ -4,32 +4,22 @@ import { NextFunction, Request, Response } from 'express';
 import { AsyncRouter as ExpressAsyncRouter, AsyncRouterInstance } from 'express-async-router';
 import { IRouterMatcher } from 'express-serve-static-core';
 import { Middleware } from 'express-validator/src/base';
-import { Logger } from 'winston';
 import { AuthStrategy } from './authorisation';
-import { ProviderMap } from './data-client';
-import { i18nProvider } from './i18n';
-import { Middlewares } from './middleware';
 import Validator from './validation';
 
-export type Routes<T extends ProviderMap> = (router: AsyncRouter<T>, providers: T, middleware: Middlewares) => void;
+export type Routes = (router) => void;
 
-export class AsyncRouter<PM extends ProviderMap> {
+export class AsyncRouter {
   router: AsyncRouterInstance;
-  providers: PM;
   auth: AuthStrategy;
-  logger: Logger;
-  i18n?: i18nProvider<any>;
 
-  constructor(providers: PM, auth: AuthStrategy, logger: Logger, i18n: i18nProvider<any>) {
+  constructor(auth: AuthStrategy) {
     this.router = ExpressAsyncRouter();
-    this.providers = providers;
     this.auth = auth;
-    this.logger = logger;
-    this.i18n = i18n;
   }
 
-  register(routes: Routes<PM>) {
-    routes(this, this.providers, new Middlewares());
+  register(routes: Routes) {
+    routes(this);
     return this.router;
   }
 
@@ -71,7 +61,7 @@ export class AsyncRouter<PM extends ProviderMap> {
     return (path: string, endpoint: IControllerEndpoint<T>) => {
       method(
         path,
-        this.executeAuthenticationStrategy<PM>(Auth.or(this.auth, endpoint.authorisation), this.providers),
+        this.executeAuthenticationStrategy(Auth.or(this.auth, endpoint.authorisation)),
         endpoint.validators ? Validator.Middleware(endpoint.validators) : (_, __, next) => next(),
         endpoint.middleware ? endpoint.middleware : (_, __, next) => next(),
         async (req: Request, res: Response, next: NextFunction) => {
@@ -79,17 +69,17 @@ export class AsyncRouter<PM extends ProviderMap> {
             const returnValue = await endpoint.controller(req);
             lambda ? lambda(res, returnValue) : res.status(responseCode || HTTP.OK).json(returnValue);
           } catch (error) {
-            handleError(req, res, next, error as ErrorHandler | Error, this.logger, this.i18n);
+            handleError(req, res, next, error as ErrorHandler | Error);
           }
         }
       );
     };
   };
 
-  private executeAuthenticationStrategy = <T extends ProviderMap>(authStrategy: AuthStrategy, providers: T) => {
+  private executeAuthenticationStrategy = (authStrategy: AuthStrategy) => {
     return async (req: Request, _: Response, next: NextFunction) => {
       try {
-        const [isAuthorised, _, reason] = await authStrategy(req, providers);
+        const [isAuthorised, _, reason] = await authStrategy(req);
         if (!isAuthorised) throw new ErrorHandler(HTTP.Unauthorised, reason);
         return next();
       } catch (error) {

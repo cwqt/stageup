@@ -19,7 +19,8 @@ import {
   PurchaseableType,
   ISignedToken,
   IAssetStub,
-  AssetDto
+  AssetDto,
+  IDeletePerfReason
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
@@ -98,8 +99,8 @@ export class PerformanceService {
       .toPromise();
   }
 
-  deletePerformance(performanceId: string) {
-    return this.http.delete(`/api/performances/${performanceId}`).toPromise();
+  deletePerformance(performanceId: string, dtoDeletePerfReason: IDeletePerfReason) {
+    return this.http.put(`/api/performances/${performanceId}`, dtoDeletePerfReason).toPromise();
   }
 
   // router.post <ICreateAssetRes|void> ("/performances/:pid/assets", Perfs.createAsset());
