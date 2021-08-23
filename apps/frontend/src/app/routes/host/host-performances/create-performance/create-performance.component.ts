@@ -70,15 +70,12 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
         }),
         publicity_period: UiField.Date({
           label: $localize`Schedule`,
-          //validators: [{ type: 'required' }],
           separator: 'above',
           hint: $localize`Set the start and end date for your event`,
           initial: { start: new Date(), end: new Date() },
           is_date_range: true,
           actions: true
         })
-
-        // })
       },
       resolvers: {
         output: async v =>

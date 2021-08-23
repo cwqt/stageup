@@ -133,8 +133,6 @@ export class HostService {
 
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance(hostId: string, data: DtoCreatePerformance): Promise<IPerformance> {
-    console.log('Host Id: ', hostId);
-    console.log('Data: ', data);
     return this.http.post<IPerformance>(`/api/hosts/${hostId}/performances`, data).toPromise();
   }
 
@@ -154,8 +152,6 @@ export class HostService {
 
   //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
   readHostPerformances(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IPerformanceStub[], null>> {
-    console.log('In host performances: ', query);
-
     return this.http
       .get<IEnvelopedData<IPerformanceStub[], null>>(`/api/hosts/${hostId}/performances${querize(query)}`)
       .toPromise();

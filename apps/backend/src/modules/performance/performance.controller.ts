@@ -96,7 +96,6 @@ export class PerformanceController extends ModuleController {
     // validators: { body: Validators.Objects.DtoCreatePerformance },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
-      console.log('Request: ', req.body);
       const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
       return await transact(async txc => {

@@ -3,24 +3,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { CreatePerformanceComponent } from './create-performance/create-performance.component';
 import { AppService } from 'apps/frontend/src/app/services/app.service';
-import { ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { IEnvelopedData, IPerformanceStub, IPerformance, PerformanceStatus, Visibility } from '@core/interfaces';
+import { IPerformanceStub, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
-import { PerformanceService } from '../../../services/performance.service';
-import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { enumToValues, i18n, richtext, unix } from '@core/helpers';
+import { richtext, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
-import { environment } from 'apps/frontend/src/environments/environment';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
-import { enums } from 'superstruct';
 import { VisibilityPipe } from '@frontend/_pipes/visibility.pipe';
-import {DatePipe} from '@angular/common'
-
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-host-performances',
   templateUrl: './host-performances.component.html',
@@ -30,7 +20,6 @@ export class HostPerformancesComponent implements OnInit {
   hostId: string;
   table: UiTable<IPerformanceStub>;
 
-
   // displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
 
   constructor(
@@ -38,14 +27,14 @@ export class HostPerformancesComponent implements OnInit {
     private hostService: HostService,
     private helperService: HelperService,
     private dialog: MatDialog,
-    private appService: AppService,
-    public datepipe: DatePipe
+    private appService: AppService
   ) {}
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
     const statusPipe = new PerformanceStatusPipe();
-    const visPipe = new VisibilityPipe();
+    const visibilityPipe = new VisibilityPipe();
+    const datePipe = new DatePipe(this.locale);
     this.table = new UiTable<IPerformanceStub>({
       resolver: query => this.hostService.readHostPerformances(this.hostId, query),
       columns: [
@@ -55,11 +44,11 @@ export class HostPerformancesComponent implements OnInit {
         },
         {
           label: $localize`Performance Schedule Start`,
-          accessor: p => this.datepipe.transform(unix(p.publicity_period.start), 'fullDate')
+          accessor: p => datePipe.transform(unix(p.publicity_period.start), 'fullDate')
         },
         {
           label: $localize`Performance Schedule End`,
-          accessor: p => this.datepipe.transform(unix(p.publicity_period.end), 'fullDate')
+          accessor: p => datePipe.transform(unix(p.publicity_period.end), 'fullDate')
         },
         {
           label: $localize`Description`,
@@ -67,13 +56,11 @@ export class HostPerformancesComponent implements OnInit {
         },
         {
           label: $localize`Visibility`,
-          accessor: p => visPipe.transform(p.visibility)
-
-          
+          accessor: p => visibilityPipe.transform(p.visibility)
         },
         {
           label: $localize`Created At`,
-          accessor: p => this.datepipe.transform(unix(p.created_at), 'shortDate')
+          accessor: p => datePipe.transform(unix(p.created_at), 'shortDate')
         },
         {
           label: $localize`Status`,
