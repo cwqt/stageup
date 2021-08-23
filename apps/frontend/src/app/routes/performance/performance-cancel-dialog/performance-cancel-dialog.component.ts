@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DeleteCancelPerfReason, IPerformance, RemovalType } from '@core/interfaces';
+import { RemovalReason, IPerformance, RemovalType } from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
@@ -50,20 +50,17 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
               data: {
                 dialog_title: $localize`Why do you want to cancel the performance?`,
                 reasons: new Map([
-                  [DeleteCancelPerfReason.TechnicalIssues, { label: $localize`Technical Issues` }],
+                  [RemovalReason.TechnicalIssues, { label: $localize`Technical Issues` }],
                   [
-                    DeleteCancelPerfReason.CancelledResceduled,
+                    RemovalReason.CancelledResceduled,
                     { label: $localize`Original performance got cancelled/rescheduled` }
                   ],
-                  [DeleteCancelPerfReason.Covid19, { label: $localize`COVID-19` }],
-                  [DeleteCancelPerfReason.TooFewSold, { label: $localize`Did not sell enough tickets` }],
-                  [
-                    DeleteCancelPerfReason.PoorUserExperience,
-                    { label: $localize`Did not like the user experience on StageUp` }
-                  ],
-                  [DeleteCancelPerfReason.Other, { label: $localize`Other, please specify below:` }]
+                  [RemovalReason.Covid19, { label: $localize`COVID-19` }],
+                  [RemovalReason.TooFewSold, { label: $localize`Did not sell enough tickets` }],
+                  [RemovalReason.PoorUserExperience, { label: $localize`Did not like the user experience on StageUp` }],
+                  [RemovalReason.Other, { label: $localize`Other, please specify below:` }]
                 ]),
-                hide_further_info: currentSelection => currentSelection != DeleteCancelPerfReason.Other
+                hide_further_info: currentSelection => currentSelection != RemovalReason.Other
               }
             }),
             async cancelPerfReason => {

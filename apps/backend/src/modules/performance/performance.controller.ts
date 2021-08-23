@@ -65,6 +65,7 @@ import {
   PerformanceStatus,
   pick,
   PurchaseableType,
+  RemovalType,
   TicketType,
   Visibility
 } from '@core/interfaces';
@@ -397,7 +398,7 @@ export class PerformanceController extends ModuleController {
     }
   };
 
-  deletePerformance: IControllerEndpoint<void> = {
+  removePerformance: IControllerEndpoint<void> = {
     // By getting the hostId from the performanceId & then checking if the user has the host
     // permission, there is an implicit intersection, because the UHI will not be returned
     // if the user is not part of the host in which the performance belongs to
@@ -414,7 +415,7 @@ export class PerformanceController extends ModuleController {
       if (perf.status === PerformanceStatus.Complete)
         throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_after_occurrence`);
 
-      if (req.body.cancel) {
+      if (req.body.removal_type === RemovalType.Cancel) {
         perf.status = PerformanceStatus.Cancelled;
         perf.removal_reason = req.body.delete_reason;
         perf.save();
@@ -430,7 +431,7 @@ export class PerformanceController extends ModuleController {
         'performance.deleted',
         {
           performance_id: req.params.pid,
-          delete_perf_reason: req.body.delete_reason,
+          removal_reason: req.body.removal_reason,
           cancel: req.body.cancel
         },
         req.locale

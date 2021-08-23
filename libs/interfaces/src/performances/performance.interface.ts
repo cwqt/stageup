@@ -42,7 +42,7 @@ export enum RemovalType {
 }
 
 export interface IRemovalReason {
-  delete_cancel_reason: RemovalReason;
+  removal_reason: RemovalReason;
   further_info: string;
 }
 

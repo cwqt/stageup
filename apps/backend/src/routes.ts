@@ -152,7 +152,7 @@ const Perfs = Container.get(PerformanceController)
 router.post     <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance);
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances);
 router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance);
-router.put      <void>                  ("/performances/:pid",                        Perfs.deletePerformance);
+router.put      <void>                  ("/performances/:pid",                        Perfs.removePerformance);
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance);
 router.put      <IPerformance>          ("/performances/:pid/publicity-period",       Perfs.updatePublicityPeriod);
 router.post     <AssetDto | void>       ("/performances/:pid/thumbnails",             Perfs.changeThumbnails);

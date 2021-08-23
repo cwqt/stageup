@@ -1,7 +1,7 @@
 import {
   ConsentOpt,
   IAsset,
-  IDeleteCancelPerfReason,
+  IRemovalReason,
   IHost,
   IHostInvitation,
   IHostOnboarding,
@@ -17,7 +17,8 @@ import {
   IUser,
   IUserPrivate,
   IUserStub,
-  LiveStreamState
+  LiveStreamState,
+  RemovalType
 } from '@core/interfaces';
 import { Asset as MuxAsset, LiveStream } from '@mux/mux-node';
 import Stripe from 'stripe';
@@ -89,10 +90,10 @@ export type EventContract = {
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
   ['performance.created']: IPerformance;
-  ['performance.deleted']: {
+  ['performance.removed']: {
     performance_id: IPerformance['_id'];
-    delete_perf_reason: IDeleteCancelPerfReason;
-    cancel: boolean;
+    removal_reason: IRemovalReason;
+    removal_type: RemovalType;
   };
   ['performance.deleted_notify_user']: {
     performance_id: IPerformance['_id'];
