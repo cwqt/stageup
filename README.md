@@ -36,11 +36,11 @@ For additional documentation on some of these and other topics, see our [Notion 
 
 All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects. Run `npm install` in the project root to install all required dependencies. Production builds perform tree-shaking optimization to remove unused libraries, so ensure you always use ES6 import syntax.
 
-- On a terminal, run the seeder using the command **'??????'**.
 - Start **Redis** from Docker Desktop
 - Start **PostgreSQL** from Docker Desktop
-- On a terminal, run npm run start, and start the backend
-- On another terminal, run npm run start, and start the frontend
+- On a terminal, run `npm run start`, and start the backend
+- With the backend running, run the seeder by using the route, [http://localhost:3000/utils/seed](http://localhost:3000/utils/seed)
+- On another terminal, run `npm run start`, and start the frontend
 
 - **Redis**: Start from Docker Desktop
 - **PostgreSQL**: Start from Docker Desktop
