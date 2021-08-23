@@ -43,8 +43,8 @@ const applications: {
 } = {
   backend: {
     cmd: {
-      serve: env => `cross-env NODE_ENV=${env} npx nx serve backend --configuration=${env}`,
-      build: env => `cross-env NODE_ENV=${env} npx nx build backend --configuration=${env} --generatePackageJson`
+      serve: env => `cross-env NODE_ENV=${env} npm run nx serve backend -- --configuration=${env}`,
+      build: env => `cross-env NODE_ENV=${env} npm run nx build backend -- --configuration=${env} --generatePackageJson`
     },
     environments: ['development', 'testing', 'staging', 'production']
   },
@@ -53,8 +53,8 @@ const applications: {
       // FIXME: use configuration composition https://github.com/nrwl/nx/issues/2839
       // https://ngrefs.com/latest/cli/builder-browser#localize
       // Pass locale to process.env for set-env.ts to add
-      serve: env => `${applications.frontend.cmd['set-env'](env)} && npx nx serve frontend --configuration=${env}`,
-      build: env => `${applications.frontend.cmd['set-env'](env)} && npx nx build frontend --configuration=${env}`,
+      serve: env => `${applications.frontend.cmd['set-env'](env)} && npm run nx serve frontend -- --configuration=${env}`,
+      build: env => `${applications.frontend.cmd['set-env'](env)} && npm run nx build frontend -- --configuration=${env}`,
       ['set-env']: env => `npx ts-node ./apps/frontend/set-env.ts --env=${env} ${isDeployed ? '--is-deployed' : ''}`
     },
     environments: ['development', 'staging', 'production'],
