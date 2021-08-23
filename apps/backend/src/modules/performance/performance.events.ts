@@ -41,7 +41,7 @@ export class PerformanceEvents extends ModuleEvents {
      ["performance.created"]: combine([   this.createPerformanceAnalyticsCollectionJob,
                                           this.sendPerformanceReminderEmails]),
      ["performance.removed"]:             this.removePerformance,
-     ["performance.deleted_notify_user"]: this.sendUserPerformanceRemovalEmail,
+     ["performance.removed_notify_user"]: this.sendUserPerformanceRemovalEmail,
      ["ticket.purchased"]:    combine([   this.sendTicketReceiptEmail,
                                           this.setUserHostMarketingOptStatus])
     }

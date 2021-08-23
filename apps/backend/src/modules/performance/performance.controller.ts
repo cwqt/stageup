@@ -428,11 +428,11 @@ export class PerformanceController extends ModuleController {
       }
 
       return await this.bus.publish(
-        'performance.deleted',
+        'performance.removed',
         {
           performance_id: req.params.pid,
           removal_reason: req.body.removal_reason,
-          cancel: req.body.cancel
+          removal_type: req.body.removal_type
         },
         req.locale
       );
