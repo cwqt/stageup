@@ -1,14 +1,24 @@
-# Frontend
+# **Frontend**
 
-StageUp Core Frontend using Angular 11
+StageUp's Frontend uses Angular 11.
 
-## ng-cli commands within Nx
+## Angular CLI (aka **ng-cli) commands within Nx**
 
-- **Component**: `nx g @nrwl/angular:component components/COMPONENT_NAME --project=frontend --module=app.module`
-- **Service**: `nx g @nrwl/angular:service services/SERVICE_NAME --project=frontend ---module=app.module`
+To generate boilerplate angular components and services you can use the following commands:
 
-## nginx
+```
+nx generate @nrwl/angular:component COMPONENT_NAME 
+--project=frontend --module=app.module
 
-Contains configurations for webserver, uses a template file for interpolating environment variables.
+nx generate @nrwl/angular:service SERVICE_NAME
+--project=frontend ---module=app.module
+```
 
-- `API_HOST`: hostname for backend URL to forward api requests, e.g. `backend-su-193-uuid-nw.a.run.app`
+These commands will generate boilerplate TS, SCSS & HTML files for the component or service. 
+
+- "--project=frontend adds these files within "apps/frontend"
+- "--module=app.module" automatically adds to the "app.module.ts" file rather than the "ui-lib.module.ts" file. This just saves you having to go to the file and import it yoursel (e.g. 'import { component } from "component-path')
+
+## **nginx**
+
+'nginx.conf.template' contains configurations for a webserver. The variable `API_HOST` needs to be set to the hostname of backend URL to forward api requests to, e.g. `backend-su-193-uuid-nw.a.run.app`
