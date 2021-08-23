@@ -54,7 +54,7 @@ export class HostPerformancesComponent implements OnInit {
           chip_selector: p => {
             const colours: { [index in PerformanceStatus]: ChipComponent['kind'] } = {
               [PerformanceStatus.Complete]: 'purple',
-              [PerformanceStatus.Cancelled]: 'gray',
+              [PerformanceStatus.Cancelled]: 'magenta',
               [PerformanceStatus.Deleted]: 'gray',
               [PerformanceStatus.Live]: 'red',
               [PerformanceStatus.PendingSchedule]: 'blue',
