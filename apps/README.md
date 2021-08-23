@@ -73,7 +73,7 @@ Open PGAdmin and create a new server. A modal should appear. In the *'General'* 
 
 1. Write 'localhost' under *'Host name/address'.* 
 2. Fill in the 'Port' number with the port number of the 'su-postgres' container running in Docker.
-3. Fill in the 'Password', which you can find by going to the Docker GUI, clicking on the 'su-postgres' container, navigating to the 'inspect' tab, and copying the 'POSTGRES_PASSWORD' value.
+3. Fill in the 'Password', which you can find by going to the Docker GUI, clicking on the 'su-postgres' container, navigating to the 'inspect' tab, and copying the *'POSTGRES_PASSWORD'* value.
 
 Last, click *'Save'*. You should now see the 'su-postgres' server in the left document tree on the PGAdmin dashboard.
 
