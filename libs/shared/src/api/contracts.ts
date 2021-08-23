@@ -95,7 +95,7 @@ export type EventContract = {
     removal_reason: IRemovalReason;
     removal_type: RemovalType;
   };
-  ['performance.deleted_notify_user']: {
+  ['performance.removed_notify_user']: {
     performance_id: IPerformance['_id'];
     user_id: IUser['_id'];
     invoice_id: IInvoice['_id'];

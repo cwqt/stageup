@@ -322,8 +322,8 @@ email:
     Cheers, 
 
     StageUp team
-  performance.deleted_notify_host__subject: You have {action} {performance_name}
-  performance.deleted_notify_host__content: |
+  performance.removed_notify_host__subject: You have {action} {performance_name}
+  performance.removed_notify_host__content: |
     Hello **{host_name}**,
 
     You have {action} your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
@@ -333,8 +333,8 @@ email:
     Thanks,
 
     **StageUp Team**
-  performance.deleted_notify_user__subject: Peformance, {performance_name} cancellation notification
-  performance.deleted_notify_user__content: |
+  performance.removed_notify_user__subject: Peformance, {performance_name} cancellation notification
+  performance.removed_notify_user__content: |
     Hi **{user_username}**,
 
     Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.

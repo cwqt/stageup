@@ -40,8 +40,8 @@ export class PerformanceEvents extends ModuleEvents {
     this.events = {
      ["performance.created"]: combine([   this.createPerformanceAnalyticsCollectionJob,
                                           this.sendPerformanceReminderEmails]),
-     ["performance.removed"]:             this.deletePerformance,
-     ["performance.deleted_notify_user"]: this.sendUserPerformanceDeletionEmail,
+     ["performance.removed"]:             this.removePerformance,
+     ["performance.deleted_notify_user"]: this.sendUserPerformanceRemovalEmail,
      ["ticket.purchased"]:    combine([   this.sendTicketReceiptEmail,
                                           this.setUserHostMarketingOptStatus])
     }
@@ -100,7 +100,7 @@ export class PerformanceEvents extends ModuleEvents {
       );
   }
 
-  async deletePerformance(ct: Contract<'performance.removed'>) {
+  async removePerformance(ct: Contract<'performance.removed'>) {
     const performance = await this.ORM.createQueryBuilder(Performance, 'performance')
       .where('performance._id = :pid', { pid: ct.performance_id })
       .innerJoin('performance.host', 'host')
@@ -110,11 +110,11 @@ export class PerformanceEvents extends ModuleEvents {
 
     //Send host email notifcation
     this.queueService.addJob('send_email', {
-      subject: this.i18n.translate('@@email.performance.deleted_notify_host__subject', ct.__meta.locale, {
+      subject: this.i18n.translate('@@email.performance.removed_notify_host__subject', ct.__meta.locale, {
         performance_name: performance.name,
         action: ct.removal_type === RemovalType.Cancel ? 'cancelled' : 'deleted'
       }),
-      content: this.i18n.translate('@@email.performance.deleted_notify_host__content', ct.__meta.locale, {
+      content: this.i18n.translate('@@email.performance.removed_notify_host__content', ct.__meta.locale, {
         host_name: performance.host.name,
         performance_name: performance.name,
         performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL'),
@@ -155,7 +155,7 @@ export class PerformanceEvents extends ModuleEvents {
           host_id: performance.host._id,
           invoice_ids: invoiceIds,
           bulk_refund_data: {
-            bulk_refund_reason: BulkRefundReason.PerformanceDeletedAutoRefund,
+            bulk_refund_reason: BulkRefundReason.PerformanceRemovedAutoRefund,
             bulk_refund_detail: null
           },
           send_initiation_emails: false
@@ -166,7 +166,7 @@ export class PerformanceEvents extends ModuleEvents {
       //Fire off user email event for each invoice
       invoices.map(async i => {
         return await this.bus.publish(
-          'performance.deleted_notify_user',
+          'performance.removed_notify_user',
           {
             performance_id: ct.performance_id,
             user_id: i.user._id,
@@ -178,7 +178,7 @@ export class PerformanceEvents extends ModuleEvents {
     }
   }
 
-  async sendUserPerformanceDeletionEmail(ct: Contract<'performance.deleted_notify_user'>) {
+  async sendUserPerformanceRemovalEmail(ct: Contract<'performance.removed_notify_user'>) {
     const perf: Performance = await this.ORM.createQueryBuilder(Performance, 'performance')
       .select(['performance.name'])
       .where('performance._id = :performance_id', { performance_id: ct.performance_id })
@@ -198,10 +198,10 @@ export class PerformanceEvents extends ModuleEvents {
 
     //Send user email notifcation
     this.queueService.addJob('send_email', {
-      subject: this.i18n.translate('@@email.performance.deleted_notify_user__subject', ct.__meta.locale, {
+      subject: this.i18n.translate('@@email.performance.removed_notify_user__subject', ct.__meta.locale, {
         performance_name: perf.name
       }),
-      content: this.i18n.translate('@@email.performance.deleted_notify_user__content', ct.__meta.locale, {
+      content: this.i18n.translate('@@email.performance.removed_notify_user__content', ct.__meta.locale, {
         user_username: user.name,
         host_name: perf.host.name,
         performance_name: perf.name,
