@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
@@ -25,6 +25,7 @@ import { SocialSharingComponent } from '@frontend/components/social-sharing/soci
 import { environment } from 'apps/frontend/src/environments/environment';
 import { Subscription } from 'rxjs';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
+import { CarouselBaseComponent } from '@frontend/components/carousel-base/carousel-base.component';
 import { ToastService } from '@frontend/services/toast.service';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
@@ -39,9 +40,10 @@ type CarouselIdx = keyof IFeed;
   templateUrl: './host-profile.component.html',
   styleUrls: ['./host-profile.component.scss']
 })
-export class HostProfileComponent implements OnInit {
+export class HostProfileComponent extends CarouselBaseComponent implements OnInit {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
-  @ViewChild(CarouselComponent) carousel: CarouselComponent;
+  // @ViewChild(CarouselComponent) carousel: CarouselComponent;
+  @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
   @Input() hostUsername?: string;
   host: ICacheable<IEnvelopedData<IHost, IUserFollow>> = createICacheable();
   isHostView: boolean;
@@ -61,24 +63,26 @@ export class HostProfileComponent implements OnInit {
     private toastService: ToastService,
     private feedService: FeedService,
     private breakpointObserver: BreakpointObserver,
-    private logger: NGXLogger,
-  ) {}
+    public logger: NGXLogger,
+  ) {
+    super();
+  }
 
-  activeBreakpoint: string;
-  currentCellsToShow: number;
-  breakpointCellShownMap: { [index: string]: number } = {
-    [Breakpoints.Small]: 1,
-    [Breakpoints.Medium]: 2,
-    [Breakpoints.Large]: 4,
-    [Breakpoints.XLarge]: 6
-  };
+  // activeBreakpoint: string;
+  // currentCellsToShow: number;
+  // breakpointCellShownMap: { [index: string]: number } = {
+  //   [Breakpoints.Small]: 1,
+  //   [Breakpoints.Medium]: 2,
+  //   [Breakpoints.Large]: 4,
+  //   [Breakpoints.XLarge]: 6
+  // };
 
-  carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
-    upcoming: createICacheable([], { loading_page: false }),
-    everything: createICacheable([], { loading_page: false }),
-    hosts: createICacheable([], { loading_page: false }),
-    follows: createICacheable([], { loading_page: false })
-  };
+  // carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
+  //   upcoming: createICacheable([], { loading_page: false }),
+  //   everything: createICacheable([], { loading_page: false }),
+  //   hosts: createICacheable([], { loading_page: false }),
+  //   follows: createICacheable([], { loading_page: false })
+  // };
 
   async ngOnInit() {
     this.tabs = [
@@ -100,8 +104,7 @@ export class HostProfileComponent implements OnInit {
     // If not passed through input, get from route param since this is probably on /@host_username
     if (!this.hostUsername) this.hostUsername = this.appService.getParam(RouteParam.HostId).split('@').pop();
 
-    // Get the host by username & populate the ICacheable
-    await cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
+    this.host = createICacheable(await this.hostService.readHostByUsername(this.hostUsername));
 
     this.userFollowing = this.host.data.__client_data.is_following;
 
@@ -115,16 +118,16 @@ export class HostProfileComponent implements OnInit {
           },
         },
         // TODO: when logged in and not the _id can be accessed differently
-        {  hid: this.host._id }
+        {  hid: this.host.data.data._id }
       );
-      this.carouselData.upcoming.data = feed.upcoming;
+      this.carouselData.upcoming.data = feed['upcoming'];
     } catch (error) {
       this.toastService.emit($localize`Error occurred fetching feed`, ThemeKind.Danger);
     } finally {
       this.carouselData.upcoming.loading = false;
     }
 
-    console.log(this.carouselData.upcoming);
+    // console.log(this.carouselData.upcoming);
 
     const breakpoints = Object.keys(this.breakpointCellShownMap);
     this.breakpointObserver.observe(breakpoints).subscribe(result => {
@@ -157,65 +160,65 @@ export class HostProfileComponent implements OnInit {
 
   // TODO: make it drier by making these functions commonly used, from the feed page too
   
-  async getNextCarouselPage() {
-    // Already fetching page or no more pages to fetch
-    if (this.carouselData.upcoming.meta.loading_page) return;
-    if (!this.carouselData.upcoming.data.__paging_data.next_page) {
-      this.logger.info('No next page for carousel upcoming');
-      return;
-    }
+  // async getNextCarouselPage() {
+  //   // Already fetching page or no more pages to fetch
+  //   if (this.carouselData.upcoming.meta.loading_page) return;
+  //   if (!this.carouselData.upcoming.data.__paging_data.next_page) {
+  //     this.logger.info('No next page for carousel upcoming');
+  //     return;
+  //   }
 
-    // Use loading_page over cache.loading to prevent carousel from being destroyed
-    this.carouselData.upcoming.meta.loading_page = true;
-    try {
-      await timeout(1000);
+  //   // Use loading_page over cache.loading to prevent carousel from being destroyed
+  //   this.carouselData.upcoming.meta.loading_page = true;
+  //   try {
+  //     await timeout(1000);
       
-      // Get the next page for this carousel by passing the index along to the backend
-      const envelope = (
-        await this.feedService.getFeed(
-          {
-            upcoming: {
-              page: this.carouselData.upcoming.data.__paging_data.next_page,
-              per_page: this.carouselData.upcoming.data.__paging_data.per_page
-            },
-          },
-          { hid: this.host._id }
-        )
-      ).upcoming;
+  //     // Get the next page for this carousel by passing the index along to the backend
+  //     const envelope = (
+  //       await this.feedService.getFeed(
+  //         {
+  //           upcoming: {
+  //             page: this.carouselData.upcoming.data.__paging_data.next_page,
+  //             per_page: this.carouselData.upcoming.data.__paging_data.per_page
+  //           },
+  //         },
+  //         { hid: this.host._id }
+  //       )
+  //     ).upcoming;
 
-      // Then join this page onto the current array at the end
-      envelope.data = [...this.carouselData.upcoming.data.data, ...envelope.data];
-      this.carouselData.upcoming.data = envelope;
-    } catch (error) {
-      this.toastService.emit($localize`Failed fetching page for upcoming`, ThemeKind.Danger);
-      throw error;
-    } finally {
-      this.carouselData.upcoming.meta.loading_page = false;
-    }
-  }
+  //     // Then join this page onto the current array at the end
+  //     envelope.data = [...this.carouselData.upcoming.data.data, ...envelope.data];
+  //     this.carouselData.upcoming.data = envelope;
+  //   } catch (error) {
+  //     this.toastService.emit($localize`Failed fetching page for upcoming`, ThemeKind.Danger);
+  //     throw error;
+  //   } finally {
+  //     this.carouselData.upcoming.meta.loading_page = false;
+  //   }
+  // }
 
-  async handleCarouselEvents(
-    event
-    //carouselIndex: CarouselIdx // keyof this.carousel
-  ) {
-    if (event.name == 'next') {
-      // get next page in carousel
-      const carousel = this.carousel;
+  // async handleCarouselEvents(
+  //   event
+  //   //carouselIndex: CarouselIdx // keyof this.carousel
+  // ) {
+  //   if (event.name == 'next') {
+  //     // get next page in carousel
+  //     const carousel = this.carousel;
 
-      if (carousel.slide.isLastSlide(carousel.slide.counter)) {
-        // Fetch the next page & push it onto the carousels data array
-        this.logger.info('Reached last page of carousel upcoming');
-        await this.getNextCarouselPage();
+  //     if (carousel.slide.isLastSlide(carousel.slide.counter)) {
+  //       // Fetch the next page & push it onto the carousels data array
+  //       this.logger.info('Reached last page of carousel upcoming');
+  //       await this.getNextCarouselPage();
 
-        // Update state of carousel with new pushed elements
-        carousel.cellLength = carousel.getCellLength();
-        carousel['ref'].detectChanges();
-        setTimeout(() => {
-          carousel.carousel.lineUpCells();
-        }, 0);
-      }
-    }
-  }
+  //       // Update state of carousel with new pushed elements
+  //       carousel.cellLength = carousel.getCellLength();
+  //       carousel['ref'].detectChanges();
+  //       setTimeout(() => {
+  //         carousel.carousel.lineUpCells();
+  //       }, 0);
+  //     }
+  //   }
+  // }
 
   onChildLoaded(component: HostProfileAboutComponent | HostProfileFeedComponent | HostProfilePatronageComponent) {
     component.host = this.host.data.data;
