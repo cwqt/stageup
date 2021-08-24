@@ -8,6 +8,7 @@ import {
   IInvoice,
   ILocale,
   IMUXHookResponse,
+  IOptOutReason,
   IPatronSubscription,
   IPatronTier,
   IPerformance,
@@ -44,6 +45,12 @@ export type EventContract = {
   };
   ['user.password_changed']: {
     user_id: IUser['_id'];
+  };
+  ['user.marketing_opt_in_change']: {
+    user_id: IUser['_id'];
+    host_id: IHost['_id'];
+    opt_status: ConsentOpt;
+    opt_out_reason?: IOptOutReason;
   };
 
   // ['user.unsubscribe_from_patron_tier']: {

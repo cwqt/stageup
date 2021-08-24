@@ -152,3 +152,11 @@ popper-content {
   text-decoration: underline;
   color: lighten(blue, 10%);
 }
+
+// For the 'toggle' action
+.label-before-slide {
+  vertical-align: top;
+  line-height: 24px;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}

@@ -24,6 +24,7 @@ import {
   IUserInvoice,
   IDeleteHostAssertion as IDelHostAssert,
   IHostInvoiceStub,
+  IUserHostMarketingConsent as IUserHostMC,
   IUserInvoiceStub,
   NUUID,
   IPaymentMethod,
@@ -85,6 +86,8 @@ router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",       
 router.put      <ILocale>               ("/myself/locale",                            Myself.updateLocale);
 router.post     <IFollowing>            ("/myself/follow-host/:hid",                  Myself.addFollow);
 router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow);
+router.get      <IE<IUserHostMC[]>>     ("/myself/opt-ins/host-marketing",            Myself.readUserHostMarketingConsents);
+router.put      <void>                  ("/myself/opt-ins/host-marketing/:hid",       Myself.updateHostOptInStatus);
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = Container.get(UserController)

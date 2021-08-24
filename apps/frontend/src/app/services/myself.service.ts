@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  ConsentOpt,
   DtoAddPaymentMethod,
   DtoUserPatronageSubscription,
   HTTP,
@@ -12,12 +13,14 @@ import {
   ILike,
   ILocale,
   IMyself,
+  IOptOutReason,
   IPasswordConfirmationResponse,
   IPaymentMethod,
   IPaymentMethodStub,
   IPerformanceStub,
   IRefundRequest,
   IUserHostInfo,
+  IUserHostMarketingConsent,
   IUserInvoice,
   NUUID
 } from '@core/interfaces';
@@ -196,5 +199,22 @@ export class MyselfService {
   //router.delete <void> ("/myself/unfollow-host/hid", Myself.deleteFollow());
   unfollowHost(hostId: string): Promise<void> {
     return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
+  }
+
+  // router.get <IEnvelopedData<IUserHostMarketingConsent[]>> ("/myself/host-marketing/opt-ins", Myself.readUserHostMarketingConsents());
+  readUserHostMarketingConsents(query: IQueryParams): Promise<IEnvelopedData<IUserHostMarketingConsent[]>> {
+    return this.http
+      .get<IEnvelopedData<IUserHostMarketingConsent[]>>(`/api/myself/host-marketing/opt-ins${querize(query)}`)
+      .toPromise();
+  }
+
+  // router.put <void> ("/myself/opt-ins/host-marketing", Myself.updateHostOptInStatus());
+  updateHostOptInStatus(hostId: string, newStatus: ConsentOpt, optOutReason?: IOptOutReason): Promise<void> {
+    return this.http
+      .put<void>(`/api/myself/opt-ins/host-marketing/${hostId}`, {
+        new_status: newStatus,
+        opt_out_reason: optOutReason
+      })
+      .toPromise();
   }
 }

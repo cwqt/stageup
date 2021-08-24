@@ -22,6 +22,8 @@ import {
   RefundRequestReason,
   IPersonInfo,
   ISocialInfo,
+  IOptOutReason,
+  OptOutOptions,
   PaginationOptions,
   PurchaseableType,
   IDeleteHostReason,
@@ -233,6 +235,10 @@ export namespace objects {
     is_visible: boolean()
   });
 
+  export const IOptOutReason: Describe<IOptOutReason> = object({
+    reason: optional(enums<OptOutOptions>(enumToValues(OptOutOptions))),
+    message: optional(string())
+  });
 
   export const IDocumentRequest: Describe<IDocumentRequest<ConsentableType>> = object({
     type: enums<ConsentableType>(ConsentableTypes),
