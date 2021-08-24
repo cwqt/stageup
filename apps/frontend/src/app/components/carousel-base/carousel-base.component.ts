@@ -1,38 +1,18 @@
-import { ActivatedRoute } from '@angular/router';
-import { PerformanceBrochureComponent } from './../performance/performance-brochure/performance-brochure.component';
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { Genre, IEnvelopedData as IEnv, IFeed, IPerformanceStub, GenreMap, IHostStub } from '@core/interfaces';
-import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { QueryList } from '@angular/core';
+import { IEnvelopedData as IEnv, IFeed, IPerformanceStub, IHostStub } from '@core/interfaces';
+import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { HelperService } from '../../services/helper.service';
+import { Breakpoints } from '@angular/cdk/layout';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { timeout } from '@core/helpers';
 import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
-import { AppService } from '@frontend/services/app.service';
 
 type CarouselIdx = keyof IFeed;
 
-//I'll figure it out in a bit
-// @Component({
-//     // selector: 'carousel-base',
-//     // template: ``
-//     selector: 'app-cookies-consent',
-//     templateUrl: '',
-//     styleUrls: []
-// })
-// if it's a component it will need the constructor and all
-// implements OnInit
 export class CarouselBaseComponent {
-    // I might do this from the child
-    //@ViewChildren(CarouselComponent) public carousels: QueryList<CarouselComponent>;
-
     public carousels: QueryList<CarouselComponent>;
-    public logger: NGXLogger;
 
     public activeBreakpoint: string;
     public currentCellsToShow: number;
@@ -43,10 +23,9 @@ export class CarouselBaseComponent {
       [Breakpoints.XLarge]: 6
     };
 
-    public toastService: ToastService;
-    public feedService: FeedService;
-
-    // constructor() {}
+    // logger: NGXLogger;
+    // toastService: ToastService;
+    // feedService: FeedService;
     
     public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
         upcoming: createICacheable([], { loading_page: false }),
@@ -55,7 +34,16 @@ export class CarouselBaseComponent {
         follows: createICacheable([], { loading_page: false })
       };
 
-    // why am I getting this error --> figure out in a bit
+    constructor(
+        protected logger: NGXLogger,
+        protected toastService: ToastService,
+        protected feedService: FeedService
+    ) {
+        // this.logger = logger;
+        // this.toastService = toastService;
+        // this.feedService = feedService;
+    }
+
     public async getNextCarouselPage(carouselIndex: CarouselIdx, hid?: string) {
     // Already fetching page or no more pages to fetch
         if (this.carouselData[carouselIndex].meta.loading_page) return;

@@ -2,17 +2,8 @@ import { Component, Input, OnInit, ViewChild, ViewChildren, QueryList } from '@a
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
-import { 
-  IHost,
-  IHostStub,
-  IEnvelopedData,
-  IUserFollow,
-  IEnvelopedData as IEnv,
-  IFeed,
-  IPerformanceStub
-} from '@core/interfaces';
-import fd from 'form-data';
-import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
+import { IHost, IEnvelopedData, IUserFollow } from '@core/interfaces';
+import { createICacheable, ICacheable } from '../../../app.interfaces';
 import { AppService, RouteParam } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
@@ -22,18 +13,14 @@ import { HostProfileAboutComponent } from './host-profile-about/host-profile-abo
 import { HostProfileFeedComponent } from './host-profile-feed/host-profile-feed.component';
 import { HostProfilePatronageComponent } from './host-profile-patronage/host-profile-patronage.component';
 import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
-import { environment } from 'apps/frontend/src/environments/environment';
 import { Subscription } from 'rxjs';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { CarouselBaseComponent } from '@frontend/components/carousel-base/carousel-base.component';
 import { ToastService } from '@frontend/services/toast.service';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { NGXLogger } from 'ngx-logger';
-import { timeout } from '@core/helpers';
-
-type CarouselIdx = keyof IFeed;
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { NGXLogger } from 'ngx-logger';;
 
 @Component({
   selector: 'app-host-profile',
@@ -42,7 +29,6 @@ type CarouselIdx = keyof IFeed;
 })
 export class HostProfileComponent extends CarouselBaseComponent implements OnInit {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
-  // @ViewChild(CarouselComponent) carousel: CarouselComponent;
   @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
   @Input() hostUsername?: string;
   host: ICacheable<IEnvelopedData<IHost, IUserFollow>> = createICacheable();
@@ -54,35 +40,19 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
   myselfSubscription: Subscription;
 
   constructor(
+    logger: NGXLogger,
+    toastService: ToastService,
+    feedService: FeedService,
     private myselfService: MyselfService,
     private appService: AppService,
     public route: ActivatedRoute,
     private hostService: HostService,
     private helperService: HelperService,
     public dialog: MatDialog,
-    private toastService: ToastService,
-    private feedService: FeedService,
     private breakpointObserver: BreakpointObserver,
-    public logger: NGXLogger,
   ) {
-    super();
+    super(logger, toastService, feedService);
   }
-
-  // activeBreakpoint: string;
-  // currentCellsToShow: number;
-  // breakpointCellShownMap: { [index: string]: number } = {
-  //   [Breakpoints.Small]: 1,
-  //   [Breakpoints.Medium]: 2,
-  //   [Breakpoints.Large]: 4,
-  //   [Breakpoints.XLarge]: 6
-  // };
-
-  // carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
-  //   upcoming: createICacheable([], { loading_page: false }),
-  //   everything: createICacheable([], { loading_page: false }),
-  //   hosts: createICacheable([], { loading_page: false }),
-  //   follows: createICacheable([], { loading_page: false })
-  // };
 
   async ngOnInit() {
     this.tabs = [
@@ -117,7 +87,6 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
             per_page: 4
           },
         },
-        // TODO: when logged in and not the _id can be accessed differently
         {  hid: this.host.data.data._id }
       );
       this.carouselData.upcoming.data = feed['upcoming'];
@@ -126,8 +95,6 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
     } finally {
       this.carouselData.upcoming.loading = false;
     }
-
-    // console.log(this.carouselData.upcoming);
 
     const breakpoints = Object.keys(this.breakpointCellShownMap);
     this.breakpointObserver.observe(breakpoints).subscribe(result => {
@@ -157,68 +124,6 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
       });
     }, 0);
   }
-
-  // TODO: make it drier by making these functions commonly used, from the feed page too
-  
-  // async getNextCarouselPage() {
-  //   // Already fetching page or no more pages to fetch
-  //   if (this.carouselData.upcoming.meta.loading_page) return;
-  //   if (!this.carouselData.upcoming.data.__paging_data.next_page) {
-  //     this.logger.info('No next page for carousel upcoming');
-  //     return;
-  //   }
-
-  //   // Use loading_page over cache.loading to prevent carousel from being destroyed
-  //   this.carouselData.upcoming.meta.loading_page = true;
-  //   try {
-  //     await timeout(1000);
-      
-  //     // Get the next page for this carousel by passing the index along to the backend
-  //     const envelope = (
-  //       await this.feedService.getFeed(
-  //         {
-  //           upcoming: {
-  //             page: this.carouselData.upcoming.data.__paging_data.next_page,
-  //             per_page: this.carouselData.upcoming.data.__paging_data.per_page
-  //           },
-  //         },
-  //         { hid: this.host._id }
-  //       )
-  //     ).upcoming;
-
-  //     // Then join this page onto the current array at the end
-  //     envelope.data = [...this.carouselData.upcoming.data.data, ...envelope.data];
-  //     this.carouselData.upcoming.data = envelope;
-  //   } catch (error) {
-  //     this.toastService.emit($localize`Failed fetching page for upcoming`, ThemeKind.Danger);
-  //     throw error;
-  //   } finally {
-  //     this.carouselData.upcoming.meta.loading_page = false;
-  //   }
-  // }
-
-  // async handleCarouselEvents(
-  //   event
-  //   //carouselIndex: CarouselIdx // keyof this.carousel
-  // ) {
-  //   if (event.name == 'next') {
-  //     // get next page in carousel
-  //     const carousel = this.carousel;
-
-  //     if (carousel.slide.isLastSlide(carousel.slide.counter)) {
-  //       // Fetch the next page & push it onto the carousels data array
-  //       this.logger.info('Reached last page of carousel upcoming');
-  //       await this.getNextCarouselPage();
-
-  //       // Update state of carousel with new pushed elements
-  //       carousel.cellLength = carousel.getCellLength();
-  //       carousel['ref'].detectChanges();
-  //       setTimeout(() => {
-  //         carousel.carousel.lineUpCells();
-  //       }, 0);
-  //     }
-  //   }
-  // }
 
   onChildLoaded(component: HostProfileAboutComponent | HostProfileFeedComponent | HostProfilePatronageComponent) {
     component.host = this.host.data.data;
