@@ -14,6 +14,7 @@ import { Cacheable } from '@frontend/app.interfaces';
 import { merge, Observable } from 'rxjs';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
 import { MyselfService } from '@frontend/services/myself.service';
+import { GdprService } from '@frontend/services/gdpr.service';
 
 @Component({
   selector: 'app-create-performance',
@@ -27,6 +28,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   VoDAssetCreator: () => Promise<ICreateAssetRes>;
   VoDSignedUrl: Cacheable<ICreateAssetRes> = new Cacheable();
   performance: IPerformance;
+  terms: boolean;
 
   loading: Observable<boolean>;
 
@@ -40,7 +42,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     private performanceService: PerformanceService,
     private hostService: HostService,
     private toastService: ToastService,
-    private appService: AppService
+    private appService: AppService,
+    private gdprService: GdprService
   ) {}
 
   setType(type: 'live' | 'vod') {
@@ -80,11 +83,14 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           }
         }),
         terms: UiField.Checkbox({
-          label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally`
+          label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally`,
+          validators: [{ type: 'required' }]
         })
       },
       resolvers: {
         output: async v => {
+          this.terms = v.terms;
+          console.log('Terms: ', v.terms);
           return this.hostService.createPerformance(this.hostService.hostId, {
             name: v.name,
             description: v.description,
@@ -109,6 +115,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             this.appService.navigateTo(`/dashboard/performances/${v._id}`);
             this.ref.close(v);
           }
+          this.gdprService.setStreamCompliance(this.terms, this.hostService.hostId, this.performance._id);
         },
         failure: async () => {}
       }

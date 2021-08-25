@@ -7,9 +7,20 @@ import {
   Middleware,
   Blobs,
   Validators,
-  Auth
+  Auth,
+  UploadersConsent,
+  Host,
+  Performance,
+  ErrorHandler
 } from '@core/api';
-import { ConsentableType, ConsentableTypes, IConsentable, IEnvelopedData } from '@core/interfaces';
+import {
+  ConsentableType,
+  ConsentableTypes,
+  HostPermission,
+  HTTP,
+  IConsentable,
+  IEnvelopedData
+} from '@core/interfaces';
 import { enums, object } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { ModuleController } from '@core/api';
@@ -76,7 +87,27 @@ export class GdprController extends ModuleController {
   };
 
   setStreamCompliance: IControllerEndpoint<void> = {
-    authorisation: AuthStrat.none,
-    controller: async req => {}
+    authorisation: AuthStrat.hasSpecificHostPermission(HostPermission.Admin),
+    controller: async req => {
+      const hostId = req.params.hid;
+      const perfId = req.params.pid;
+
+      if (!req.body.is_compliant) {
+        throw new ErrorHandler(
+          HTTP.Forbidden,
+          'Self-certification of streaming license compliance not made. Please tick the box when creating a performance'
+        );
+      }
+
+      const host = await Host.findOne({ _id: hostId });
+      const perf = await Performance.findOne({ _id: perfId });
+
+      const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+
+      await this.ORM.transaction(async txc => {
+        const consent = new UploadersConsent(toc, host, perf);
+        txc.save(consent);
+      });
+    }
   };
 }
