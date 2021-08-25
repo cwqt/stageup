@@ -90,7 +90,6 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
       resolvers: {
         output: async v => {
           this.terms = v.terms;
-          console.log('Terms: ', v.terms);
           return this.hostService.createPerformance(this.hostService.hostId, {
             name: v.name,
             description: v.description,
