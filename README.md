@@ -77,7 +77,7 @@ All packages that are used throughout all apps & libs are defined within a singl
     api-tests          # integration tests
     reverse-proxy      # nginx reverse proxy for blog/wordpress/prod app
 
-  libs                 # where all shared code live
+  libs                 # where all shared code lives
     interfaces         # shared typescript interfaces
     ui-lib             # frontend generic angular component library
     shared
