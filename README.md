@@ -121,14 +121,27 @@ All packages that are used throughout all apps & libs are defined within a singl
 
 ## **Useful Tools**
 
-- **VSCode**: [https://code.visualstudio.com/](https://code.visualstudio.com/)
-- **Postman**: [https://www.postman.com/downloads/](https://www.postman.com/downloads/)
-- **DB Client**: [https://tableplus.com/](https://tableplus.com/)
-- **JSONView**: [https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en)
+- **VSCode**: A fantastic IDE. Available at: [https://code.visualstudio.com/](https://code.visualstudio.com/).
+- **Postman**: An API platform for building and using APIs. Available at: [https://www.postman.com/downloads/](https://www.postman.com/downloads/).
+- **JSONView**: A Chrome extension for app understanding complex structure of JSON from web source pages and apis. Available at: [https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en).
+**TablePlus**: This is a simpler GUI than PGAdmin that you may prefer to use for interacting with PostgreSQL. Available at: [https://tableplus.com/](https://tableplus.com/).
+## **Useful VSCode Extensions**
 
-## Env Setup **Troubleshooting**
+**Error Lens**: Display error messages inline with the related code https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
+**Git lens**: View pull requests associated with code inline and more https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
+**Angular Language Service**: Angular command autocompletion https://marketplace.visualstudio.com/items?itemName=Angular.ng-template
+**vscode-angular-html**: Angular syntax highlighting/ formatting https://marketplace.visualstudio.com/items?itemName=ghaschel.vscode-angular-html
+**Bracket Pair Colorizer**: Highlights functions/ blocks to allow you to visually see where they start/end https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer
+**Tailwind CSS Intellisense**: Autocompletion for tailwind https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
+
+## **Troubleshooting**
+
+### **Env Setup**
 
 Below are some common errors we've seen devs experience when setting up their envs:
 
 - Sometimes trailing spaces in env files will cause them not to load properly.
 - if you copy & paste keyto and from Slack, Slack will replace quotation mark characters, so check that you're using the right type of quotation marks:  "
+### **VS CODE**
+
+- In VS Code, when switching branches you often have to restart the TS server or errors will appear when old files cannot be found. To restart the TS server, [use this guide](https://stackoverflow.com/questions/64454845/where-is-vscodes-restart-ts-server).
