@@ -30,3 +30,13 @@
   min-height: 256px;  
   margin-top: 30px;
 }
+
+.spinner {
+  z-index: 10001;
+  height: 40px;
+  right: 10px !important;
+  ::ng-deep .mat-progress-spinner circle,
+  .mat-spinner circle {
+    stroke: #fff;
+  }
+}
