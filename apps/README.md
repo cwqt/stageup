@@ -67,7 +67,7 @@ If you then check in the Docker Desktop app, the containers, "su-redis" and "su-
 
 ## PGAdmin
 
-To instal PGAdmin, go to [https://www.pgadmin.org/download/](https://www.pgadmin.org/download/), select your OS, choose a version,  e.g. *'pgAdmin 4 v5.6'*, down the .dmg file, and then install it.
+To install PGAdmin, go to [https://www.pgadmin.org/download/](https://www.pgadmin.org/download/), select your OS, choose a version,  e.g. *'pgAdmin 4 v5.6'*, down the .dmg file, and then install it.
 
 Open PGAdmin and create a new server. A modal should appear. In the *'General'* tab, give the server a name. Next, in the *'Connection'* tab you'll have to add a few values:
 
