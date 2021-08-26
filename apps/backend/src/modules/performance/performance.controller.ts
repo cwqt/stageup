@@ -438,6 +438,14 @@ export class PerformanceController extends ModuleController {
     }
   };
 
+  cancelPerformance: IControllerEndpoint<void> = {
+    authorisation: AuthStrat.runner(
+      { hid: IdFinderStrat.findHostIdFromPerformanceId },
+      AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
+    ),
+    controller: async req => {}
+  };
+
   createTicket: IControllerEndpoint<ITicket> = {
     validators: { body: Validators.Objects.DtoCreateTicket },
     authorisation: AuthStrat.runner(

@@ -1,5 +1,5 @@
 import Container from 'typedi';
-import { AsyncRouter } from '@core/api';
+import { AsyncRouter, Performance } from '@core/api';
 import {
   IHost,
   IUser,
@@ -153,6 +153,7 @@ router.post     <IPerf>                 ("/hosts/:hid/performances",            
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances);
 router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance);
 router.put      <void>                  ("/performances/:pid",                        Perfs.removePerformance);
+router.delete   <void>                  ("/performances/:pid/cancel",                 Perfs.cancelPerformance);
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance);
 router.put      <IPerformance>          ("/performances/:pid/publicity-period",       Perfs.updatePublicityPeriod);
 router.post     <AssetDto | void>       ("/performances/:pid/thumbnails",             Perfs.changeThumbnails);
