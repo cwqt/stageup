@@ -119,6 +119,14 @@
       <source>Performance cannot be deleted after it has occured</source>
       <target state="needs-translation">Ni ellir dileu perfformiad ar ôl iddo ddigwydd</target>
     </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_live" datatype="html">
+      <source>Performance cannot be cancelled while currently live</source>
+      <target state="needs-translation">Ni ellir canslo perfformiad tra’n fyw ar hyn o bryd</target>
+    </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_after_occurrence" datatype="html">
+      <source>Performance cannot be cancelled after it has occured</source>
+      <target state="needs-translation">Ni ellir canslo perfformiad ar ôl iddo ddigwydd</target>
+    </trans-unit>				
 		<trans-unit id="payment_status.created" datatype="html">
       <source>Created</source>
       <target state="needs-translation">Wedi'i greu</target>
@@ -1241,7 +1249,7 @@ listed as ‘Cancelled’ on your account from now on.</p>
 <p>Thanks,</p>
 <p><strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Mae gennych {action} eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i&#39;r holl gwsmeriaid a brynodd docynnau i&#39;r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i&#39;w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Mae gennych {action} eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i'r holl gwsmeriaid a brynodd docynnau i'r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i'w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.performance.removed_notify_user__subject" datatype="html">
       <source>Peformance, {performance_name} cancellation notification</source>
@@ -1256,7 +1264,7 @@ listed as ‘Cancelled’ on your account from now on.</p>
 <p>Thanks,</p>
 <p><strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Helo <strong>{user_username}</strong> ,</p><p> Yn anffodus, bu&#39;n rhaid i {host_name} ganslo&#39;r perfformiad: {performance_name}. Rydym wedi cychwyn ad-daliad ar eich tocyn a brynwyd ar {ticket_purchase_date}.</p><p> Anfoneb #: {invoice_id}</p><p> Pris y Tocyn: {ticket_amount}</p><p> Byddwn yn credydu&#39;r arian yn awtomatig i&#39;ch <strong>{card_brand} sy&#39;n</strong> dod i ben yn <strong>{last_4}</strong> . Sylwch, gall gymryd hyd at 5 diwrnod gwaith i&#39;ch cyfrif gael ei gredydu.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p>Helo <strong>{user_username}</strong> ,</p><p> Yn anffodus, bu'n rhaid i {host_name} ganslo'r perfformiad: {performance_name}. Rydym wedi cychwyn ad-daliad ar eich tocyn a brynwyd ar {ticket_purchase_date}.</p><p> Anfoneb #: {invoice_id}</p><p> Pris y Tocyn: {ticket_amount}</p><p> Byddwn yn credydu'r arian yn awtomatig i'ch <strong>{card_brand} sy'n</strong> dod i ben yn <strong>{last_4}</strong> . Sylwch, gall gymryd hyd at 5 diwrnod gwaith i'ch cyfrif gael ei gredydu.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="error.internal_server_error" datatype="html">
       <source>Internal server error</source>

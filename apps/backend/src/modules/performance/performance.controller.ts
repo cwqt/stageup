@@ -77,6 +77,7 @@ import { Connection, In } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
 import { default as IdFinderStrat } from '../../common/authorisation/id-finder-strategies';
 import Env from '../../env';
+import { PerformanceService } from './performance.service';
 
 @Service()
 export class PerformanceController extends ModuleController {
@@ -86,7 +87,8 @@ export class PerformanceController extends ModuleController {
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(REDIS_PROVIDER) private redis: RedisClient,
-    @Inject(BLOB_PROVIDER) private blobs: Blobs
+    @Inject(BLOB_PROVIDER) private blobs: Blobs,
+    private performanceService: PerformanceService
   ) {
     super();
   }
@@ -397,7 +399,7 @@ export class PerformanceController extends ModuleController {
     }
   };
 
-  removePerformance: IControllerEndpoint<void> = {
+  deletePerformance: IControllerEndpoint<void> = {
     // By getting the hostId from the performanceId & then checking if the user has the host
     // permission, there is an implicit intersection, because the UHI will not be returned
     // if the user is not part of the host in which the performance belongs to
@@ -406,35 +408,7 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
     ),
     controller: async req => {
-      const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
-
-      if (perf.status === PerformanceStatus.Live)
-        throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
-
-      if (perf.status === PerformanceStatus.Complete)
-        throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_after_occurrence`);
-
-      if (req.body.removal_type === RemovalType.Cancel) {
-        perf.status = PerformanceStatus.Cancelled;
-        perf.removal_reason = req.body.delete_reason;
-        perf.save();
-      } else {
-        //Soft delete the performance
-        perf.status = PerformanceStatus.Deleted;
-        perf.removal_reason = req.body.delete;
-        perf.save();
-        await perf.softRemove();
-      }
-
-      return await this.bus.publish(
-        'performance.removed',
-        {
-          performance_id: req.params.pid,
-          removal_reason: req.body.removal_reason,
-          removal_type: req.body.removal_type
-        },
-        req.locale
-      );
+      this.performanceService.deletePerformance(req.params.pid, req.body.removal_reason, req.locale);
     }
   };
 
@@ -443,7 +417,9 @@ export class PerformanceController extends ModuleController {
       { hid: IdFinderStrat.findHostIdFromPerformanceId },
       AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
     ),
-    controller: async req => {}
+    controller: async req => {
+      this.performanceService.cancelPerformance(req.params.pid, req.body.removal_reason, req.locale);
+    }
   };
 
   createTicket: IControllerEndpoint<ITicket> = {

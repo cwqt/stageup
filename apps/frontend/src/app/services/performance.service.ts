@@ -104,6 +104,10 @@ export class PerformanceService {
     return this.http.put(`/api/performances/${performanceId}`, data).toPromise();
   }
 
+  cancelPerformance(performanceId: string, data: DtoRemovePerformance) {
+    return this.http.put(`/api/performances/${performanceId}/cancel`, data).toPromise();
+  }
+
   // router.post <ICreateAssetRes|void> ("/performances/:pid/assets", Perfs.createAsset());
   createAsset(performanceId: string, data: DtoCreateAsset): Promise<ICreateAssetRes> {
     // FUTURE expand to support static s3 assets, and not just MUX assets

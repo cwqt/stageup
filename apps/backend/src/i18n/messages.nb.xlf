@@ -119,6 +119,14 @@
       <source>Performance cannot be deleted after it has occured</source>
       <target state="needs-translation">Ytelsen kan ikke slettes etter at den har skjedd</target>
     </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_live" datatype="html">
+      <source>Performance cannot be cancelled while currently live</source>
+      <target state="needs-translation">Forestillingen kan ikke avbrytes mens den er live</target>
+    </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_after_occurrence" datatype="html">
+      <source>Performance cannot be cancelled after it has occured</source>
+      <target state="needs-translation">Forestillingen kan ikke avbrytes etter at den har skjedd</target>
+    </trans-unit>				
 		<trans-unit id="payment_status.created" datatype="html">
       <source>Created</source>
       <target state="needs-translation">Laget</target>

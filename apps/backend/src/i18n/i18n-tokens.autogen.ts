@@ -38,6 +38,8 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@host.invoice_pdf.total_rows"]: never,
   ["@@performance.cannot_delete_live"]: never,
   ["@@performance.cannot_delete_after_occurrence"]: never,
+  ["@@performance.cannot_cancel_live"]: never,
+  ["@@performance.cannot_cancel_after_occurrence"]: never,
   ["@@payment_status.created"]: never,
   ["@@payment_status.paid"]: never,
   ["@@payment_status.fufilled"]: never,

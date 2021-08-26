@@ -63,7 +63,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
             }),
             async cancelPerfReason => {
               await this.performanceService
-                .deletePerformance(this.performance._id, {
+                .cancelPerformance(this.performance._id, {
                   removal_reason: cancelPerfReason,
                   removal_type: RemovalType.Cancel
                 })
