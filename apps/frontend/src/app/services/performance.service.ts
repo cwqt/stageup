@@ -21,7 +21,7 @@ import {
   IAssetStub,
   AssetDto,
   IRemovalReason,
-  DtoRemovePerf
+  DtoRemovePerformance
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
@@ -100,7 +100,7 @@ export class PerformanceService {
       .toPromise();
   }
 
-  deletePerformance(performanceId: string, data: DtoRemovePerf) {
+  deletePerformance(performanceId: string, data: DtoRemovePerformance) {
     return this.http.put(`/api/performances/${performanceId}`, data).toPromise();
   }
 

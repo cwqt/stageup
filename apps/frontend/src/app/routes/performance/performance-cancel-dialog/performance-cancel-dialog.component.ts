@@ -69,7 +69,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
                 })
                 .then(() => {
                   this.toastService.emit(
-                    $localize`${this.performance.name} Cancelled! We have initiated refunds for all purchased tickets`
+                    $localize`${this.performance.name} has been cancelled. We have initiated refunds for all purchased tickets`
                   );
                 })
                 .then(() => {

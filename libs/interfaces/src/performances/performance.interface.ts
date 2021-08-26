@@ -46,7 +46,7 @@ export interface IRemovalReason {
   further_info: string;
 }
 
-export interface DtoRemovePerf {
+export interface DtoRemovePerformance {
   removal_reason: IRemovalReason;
   removal_type: RemovalType;
 }
