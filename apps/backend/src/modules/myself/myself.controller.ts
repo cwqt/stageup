@@ -125,19 +125,19 @@ export class MyselfController extends ModuleController {
           .orderBy('p.premiere_datetime')
           .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id });
           
-        if (req.query['upcoming']) {
-          if ((req.query['upcoming'] as any).hid) {
+        if (req.query.upcoming) {
+          if ((req.query.upcoming as any).hid) {
             queryBuilder = queryBuilder.where(
               'host._id = :id',
-              { id: (req.query['upcoming'] as any).hid }
+              { id: (req.query.upcoming as any).hid }
             );
           }
         }
 
         feed.upcoming = await queryBuilder.paginate({
           serialiser: p => p.toClientStub(),
-          page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
-          per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
+          page: req.query.upcoming ? parseInt((req.query.upcoming as any).page) : 0,
+          per_page: req.query.upcoming ? parseInt((req.query.upcoming as any).per_page) : 4
         });
       }
 

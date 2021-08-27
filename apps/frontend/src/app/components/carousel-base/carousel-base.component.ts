@@ -2,7 +2,7 @@ import { QueryList } from '@angular/core';
 import { IEnvelopedData as IEnv, IFeed, IPerformanceStub, IHostStub } from '@core/interfaces';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
-import { Breakpoints } from '@angular/cdk/layout';
+import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { timeout } from '@core/helpers';
 import { ToastService } from '@frontend/services/toast.service';
@@ -22,10 +22,6 @@ export class CarouselBaseComponent {
       [Breakpoints.Large]: 4,
       [Breakpoints.XLarge]: 6
     };
-
-    // logger: NGXLogger;
-    // toastService: ToastService;
-    // feedService: FeedService;
     
     public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
         upcoming: createICacheable([], { loading_page: false }),
@@ -37,11 +33,25 @@ export class CarouselBaseComponent {
     constructor(
         protected logger: NGXLogger,
         protected toastService: ToastService,
-        protected feedService: FeedService
-    ) {
-        // this.logger = logger;
-        // this.toastService = toastService;
-        // this.feedService = feedService;
+        protected feedService: FeedService,
+        protected breakpointObserver: BreakpointObserver
+    ) {}
+
+    async onInit() {
+        // Change number of cells in a row displayed at any one point depending on screen width
+        const breakpoints = Object.keys(this.breakpointCellShownMap);
+        this.breakpointObserver.observe(breakpoints).subscribe(result => {
+          if (result.matches) {
+            for (let i = 0; i < breakpoints.length; i++) {
+              if (result.breakpoints[breakpoints[i]]) {
+                this.activeBreakpoint = breakpoints[i];
+                this.currentCellsToShow = this.breakpointCellShownMap[this.activeBreakpoint];
+                // this.carousels.forEach(c => c.carousel.lineUpCells());
+                break;
+              }
+            }
+          }
+        });
     }
 
     public async getNextCarouselPage(carouselIndex: CarouselIdx, hid?: string) {

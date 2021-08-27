@@ -21,7 +21,6 @@ type CarouselIdx = keyof IFeed;
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss']
 })
-// extends CarouselBaseComponent
 export class FeedComponent extends CarouselBaseComponent implements OnInit {
   @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
 
@@ -61,16 +60,18 @@ export class FeedComponent extends CarouselBaseComponent implements OnInit {
     feedService: FeedService,
     toastService: ToastService,
     logger: NGXLogger,
+    breakpointObserver: BreakpointObserver,
     public dialog: MatDialog,
-    private helperService: HelperService,
-    private breakpointObserver: BreakpointObserver,    
+    private helperService: HelperService,        
     private appService: AppService,
     private route: ActivatedRoute
   ) {
-    super(logger, toastService, feedService);
+    super(logger, toastService, feedService, breakpointObserver);
   }
 
   async ngOnInit() {
+    super.onInit();
+
     try {
       // Set all carousels to loading
       Object.keys(this.carouselData).forEach(k => (this.carouselData[k].loading = true));
@@ -83,21 +84,6 @@ export class FeedComponent extends CarouselBaseComponent implements OnInit {
       Object.keys(this.carouselData).forEach(k => (this.carouselData[k].loading = false));
     }
 
-    // Change number of cells in a row displayed at any one point depending on screen width
-    const breakpoints = Object.keys(this.breakpointCellShownMap);
-    this.breakpointObserver.observe(breakpoints).subscribe(result => {
-      if (result.matches) {
-        for (let i = 0; i < breakpoints.length; i++) {
-          if (result.breakpoints[breakpoints[i]]) {
-            this.activeBreakpoint = breakpoints[i];
-            this.currentCellsToShow = this.breakpointCellShownMap[this.activeBreakpoint];
-            // this.carousels.forEach(c => c.carousel.lineUpCells());
-            break;
-          }
-        }
-      }
-    });
-    // After loading feed, check if there are query params and whether we should open a performance brochure
     this.route.queryParams.subscribe(params => {
       if (params.performance) this.openBrochure(params.performance);
     });

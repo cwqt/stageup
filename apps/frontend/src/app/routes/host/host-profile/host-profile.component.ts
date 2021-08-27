@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { IHost, IEnvelopedData, IUserFollow } from '@core/interfaces';
-import { createICacheable, ICacheable } from '../../../app.interfaces';
+import { createICacheable, ICacheable, cachize } from '../../../app.interfaces';
 import { AppService, RouteParam } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
@@ -43,18 +43,20 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
     logger: NGXLogger,
     toastService: ToastService,
     feedService: FeedService,
+    breakpointObserver: BreakpointObserver,
     private myselfService: MyselfService,
     private appService: AppService,
     public route: ActivatedRoute,
     private hostService: HostService,
     private helperService: HelperService,
-    public dialog: MatDialog,
-    private breakpointObserver: BreakpointObserver,
+    public dialog: MatDialog,    
   ) {
-    super(logger, toastService, feedService);
+    super(logger, toastService, feedService, breakpointObserver);
   }
 
   async ngOnInit() {
+    super.onInit();
+
     this.tabs = [
       { label: $localize`Feed`, route: '' },
       { label: $localize`About`, route: 'about' },
@@ -74,7 +76,7 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
     // If not passed through input, get from route param since this is probably on /@host_username
     if (!this.hostUsername) this.hostUsername = this.appService.getParam(RouteParam.HostId).split('@').pop();
 
-    this.host = createICacheable(await this.hostService.readHostByUsername(this.hostUsername));
+    await cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
 
     this.userFollowing = this.host.data.__client_data.is_following;
 
@@ -95,20 +97,6 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
     } finally {
       this.carouselData.upcoming.loading = false;
     }
-
-    const breakpoints = Object.keys(this.breakpointCellShownMap);
-    this.breakpointObserver.observe(breakpoints).subscribe(result => {
-      if (result.matches) {
-        for (let i = 0; i < breakpoints.length; i++) {
-          if (result.breakpoints[breakpoints[i]]) {
-            this.activeBreakpoint = breakpoints[i];
-            this.currentCellsToShow = this.breakpointCellShownMap[this.activeBreakpoint];
-            // this.carousels.forEach(c => c.carousel.lineUpCells());
-            break;
-          }
-        }
-      }
-    });
 
     // Wait for tabs to be in the DOM before setting tabGroup selectedIndex to route
     setTimeout(() => {
