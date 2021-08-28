@@ -114,8 +114,8 @@ export class MyselfController extends ModuleController {
       // None of the req.query paging options are present, so fetch the first page of every carousel
       const fetchAll = Object.keys(req.query).every(k => !Object.keys(feed).includes(k));
 
-      if (fetchAll || req.query['upcoming']) {
-        feed.upcoming  = await this.ORM.createQueryBuilder(Performance, 'p')
+      if (fetchAll || req.query['upcoming'])
+        feed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
           .where('p.premiere_datetime > :currentTime', { currentTime: timestamp() })
           .andWhere('p.visibility = :state', { state: Visibility.Public })
           .innerJoinAndSelect('p.host', 'host')
@@ -123,10 +123,9 @@ export class MyselfController extends ModuleController {
           .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
           .paginate({
             serialiser: p => p.toClientStub(),
-            page: req.query.upcoming ? parseInt((req.query.upcoming as any).page) : 0,
-            per_page: req.query.upcoming ? parseInt((req.query.upcoming as any).per_page) : 4
+            page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).page) : 0,
+            per_page: req.query.upcoming ? parseInt((req.query['upcoming'] as any).per_page) : 4
           });
-      }
 
       if (fetchAll || req.query['everything'])
         feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
