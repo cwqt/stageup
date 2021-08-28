@@ -1,7 +1,5 @@
 import { QueryList } from '@angular/core';
 import { IFeed } from '@core/interfaces';
-import { FeedService } from 'apps/frontend/src/app/services/feed.service';
-import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { timeout } from '@core/helpers';
@@ -25,31 +23,11 @@ export class CarouselBaseComponent {
 
     public carouselData;
 
-    protected logger: NGXLogger;
-    protected toastService: ToastService;
-    protected breakpointObserver: BreakpointObserver;
-    protected feedService?: FeedService;
-    protected hostService?: HostService;
-
-    constructor({
-        logger,
-        toastService,
-        breakpointObserver,
-        feedService,
-        hostService,
-    }: {
-        logger: NGXLogger,
-        toastService: ToastService,
-        breakpointObserver: BreakpointObserver,
-        feedService?: FeedService,
-        hostService?: HostService,
-    }) {
-        this.logger = logger;
-        this.toastService = toastService;
-        this.breakpointObserver = breakpointObserver;
-        this.feedService = feedService;
-        this.hostService = hostService;
-    }
+    constructor(
+        protected logger: NGXLogger,
+        protected toastService: ToastService,
+        protected breakpointObserver: BreakpointObserver
+    ) {}
 
     async onInit() {
         // Change number of cells in a row displayed at any one point depending on screen width
@@ -68,7 +46,7 @@ export class CarouselBaseComponent {
         });
     }
 
-    public async getNextCarouselPage(carouselIndex: CarouselIdx, hid?: string) {
+    public async getNextCarouselPage(carouselIndex: CarouselIdx, fetchData: Function) {
     // Already fetching page or no more pages to fetch
         if (this.carouselData[carouselIndex].meta.loading_page) return;
         if (!this.carouselData[carouselIndex].data.__paging_data.next_page) {
@@ -79,34 +57,7 @@ export class CarouselBaseComponent {
         this.carouselData[carouselIndex].meta.loading_page = true;
         try {
             await timeout(1000);
-
-            let envelope;
-            
-            // Get the next page for this carousel by passing the index along to the backend
-            if (hid) {
-                envelope = (
-                    await this.hostService.readHostFeedPerformances(
-                        hid,
-                        {
-                            [carouselIndex]: {
-                                page: this.carouselData[carouselIndex].data.__paging_data.next_page,
-                                per_page: this.carouselData[carouselIndex].data.__paging_data.per_page
-                            }
-                        },    
-                    )
-                )[carouselIndex];
-            } else {
-                envelope = (
-                    await this.feedService.getFeed({
-                            [carouselIndex]: {
-                                page: this.carouselData[carouselIndex].data.__paging_data.next_page,
-                                per_page: this.carouselData[carouselIndex].data.__paging_data.per_page
-                            }
-                        }
-                    )
-                )[carouselIndex];
-            }            
-
+            const envelope = await fetchData(carouselIndex);
             // Then join this page onto the current array at the end
             envelope.data = [...this.carouselData[carouselIndex].data.data, ...envelope.data];
             this.carouselData[carouselIndex].data = envelope;
@@ -121,23 +72,23 @@ export class CarouselBaseComponent {
     public async handleCarouselEvents(
         event,
         carouselIndex: CarouselIdx, // keyof this.carousel
-        hid?: string
+        fetchData: Function,
     ) {
         if (event.name == 'next') {
             // get next page in carousel
             const carousel = this.carousels.find(c => ((c.id as unknown) as string) == carouselIndex);
 
             if (carousel.slide.isLastSlide(carousel.slide.counter)) {
-            // Fetch the next page & push it onto the carousels data array
-            this.logger.info('Reached last page of carousel: ${carouselIndex}');
-            await this.getNextCarouselPage(carouselIndex, hid);
+                // Fetch the next page & push it onto the carousels data array
+                this.logger.info('Reached last page of carousel: ${carouselIndex}');
+                await this.getNextCarouselPage(carouselIndex, fetchData);
 
-            // Update state of carousel with new pushed elements
-            carousel.cellLength = carousel.getCellLength();
-            carousel['ref'].detectChanges();
-            setTimeout(() => {
-                carousel.carousel.lineUpCells();
-            }, 0);
+                // Update state of carousel with new pushed elements
+                carousel.cellLength = carousel.getCellLength();
+                carousel['ref'].detectChanges();
+                setTimeout(() => {
+                    carousel.carousel.lineUpCells();
+                }, 0);
             }
         }
     }

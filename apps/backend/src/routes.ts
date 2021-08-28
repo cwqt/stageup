@@ -113,7 +113,7 @@ router.delete   <IDelHostAssert | void> ("/hosts/:hid",                         
 router.put      <IHostPrivate>          ("/hosts/:hid",                               Hosts.updateHost);
 router.get      <IHostPrivate>          ("/hosts/:hid/details",                       Hosts.readDetails);
 router.get      <IE<IPerfS[]>>          ("/hosts/:hid/performances",                  Hosts.readHostPerformances);
-router.get      <IHostFeed>             ("/hosts/:hid/feed-performances",             Hosts.readHostFeedPerformances);
+router.get      <IHostFeed>             ("/hosts/:hid/feed",                          Hosts.readHostFeed);
 router.put      <string>                ("/hosts/:hid/avatar",                        Hosts.changeAvatar);
 router.put      <string>                ("/hosts/:hid/banner",                        Hosts.changeBanner);
 router.get      <IE<IUHInfo[]>>         ("/hosts/:hid/members",                       Hosts.readMembers);

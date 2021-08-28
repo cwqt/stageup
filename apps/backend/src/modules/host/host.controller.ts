@@ -617,7 +617,7 @@ export class HostController extends ModuleController {
     }
   };
 
-  readHostFeedPerformances: IControllerEndpoint<IHostFeed> = {
+  readHostFeed: IControllerEndpoint<IHostFeed> = {
     validators: {
       query: record(
         enums<keyof IHostFeed>(['upcoming']),

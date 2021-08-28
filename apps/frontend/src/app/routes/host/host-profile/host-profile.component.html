@@ -141,7 +141,7 @@
 
         <carousel
           *ngIf="!carouselData.upcoming.loading"
-          (events)="handleCarouselEvents($event, 'upcoming', host.data.data._id)"
+          (events)="handleCarouselEvents($event, 'upcoming', fetchFeedParser())"
           [margin]="20"
           [height]="256"
           [loading]="carouselData.upcoming.meta.loading_page"

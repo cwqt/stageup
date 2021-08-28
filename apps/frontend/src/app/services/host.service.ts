@@ -160,12 +160,12 @@ export class HostService {
       .toPromise();
   }
 
-  readHostFeedPerformances(
+  readHostFeed(
     hostId: string,
     paging: { [index in keyof IHostFeed]?: PaginationOptions },
   ): Promise<IEnvelopedData<IFeedPerformanceStub[], null>> {
     return this.http
-      .get<IEnvelopedData<IFeedPerformanceStub[], null>>(`/api/hosts/${hostId}/feed-performances${querize(paging)}`)
+      .get<IEnvelopedData<IFeedPerformanceStub[], null>>(`/api/hosts/${hostId}/feed${querize(paging)}`)
       .toPromise();
   }
 

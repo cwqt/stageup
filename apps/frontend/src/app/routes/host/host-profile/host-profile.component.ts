@@ -8,7 +8,8 @@ import {
   IUserFollow,
   IEnvelopedData as IEnv,
   IPerformanceStub,
-  IHostStub
+  IHostStub,
+  IHostFeed
 } from '@core/interfaces';
 import { createICacheable, ICacheable, cachize } from '../../../app.interfaces';
 import { AppService, RouteParam } from '../../../services/app.service';
@@ -28,6 +29,8 @@ import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { NGXLogger } from 'ngx-logger';
 
+type CarouselIdx = keyof IHostFeed;
+
 @Component({
   selector: 'app-host-profile',
   templateUrl: './host-profile.component.html',
@@ -45,27 +48,22 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
   userFollowing: boolean;
   myselfSubscription: Subscription;
 
-  public carouselData: { ['upcoming']: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
+  public carouselData: { ['upcoming']: ICacheable<IEnv<IPerformanceStub[]>> } = {
     upcoming: createICacheable([], { loading_page: false }),
   };
 
   constructor(
     logger: NGXLogger,
     toastService: ToastService,
-    hostService: HostService,
     breakpointObserver: BreakpointObserver,
+    private hostService: HostService,
     private myselfService: MyselfService,
     private appService: AppService,
     public route: ActivatedRoute,
     private helperService: HelperService,
     public dialog: MatDialog,    
   ) {
-    super({
-      logger: logger,
-      toastService: toastService,
-      breakpointObserver: breakpointObserver,
-      hostService: hostService
-    });
+    super(logger, toastService, breakpointObserver);
   }
 
   async ngOnInit() {
@@ -96,7 +94,7 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
 
     try {
       this.carouselData.upcoming.loading = true;
-      const hostFeed = await this.hostService.readHostFeedPerformances(
+      const hostFeed = await this.hostService.readHostFeed(
         this.host.data.data._id,
         {
           upcoming: {
@@ -135,6 +133,26 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
     this.appService.navigateTo(
       `${this.isHostView ? '/dashboard' : ''}/@${this.hostUsername}/${this.tabs[event.index].route}`
     );
+  }
+
+  fetchFeedParser(): Function {
+    return this.fetchFeed.bind(null, this.hostService, this.carouselData, this.host.data.data._id);
+  }
+
+  async fetchFeed(
+    hostService: HostService,
+    carouselData: ICacheable<IEnv<IPerformanceStub[]>>,
+    hid: string,
+    carouselIndex: CarouselIdx
+  ): Promise<IPerformanceStub[]> {
+    return (await hostService.readHostFeed(
+      hid,
+      {
+          [carouselIndex]: {
+              page: carouselData[carouselIndex].data.__paging_data.next_page,
+              per_page: carouselData[carouselIndex].data.__paging_data.per_page
+          }
+      }))[carouselIndex];
   }
 
   openChangeAvatarDialog() {

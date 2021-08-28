@@ -24,6 +24,13 @@ type CarouselIdx = keyof IFeed;
 export class FeedComponent extends CarouselBaseComponent implements OnInit {
   @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
 
+  public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
+    upcoming: createICacheable([], { loading_page: false }),
+    everything: createICacheable([], { loading_page: false }),
+    hosts: createICacheable([], { loading_page: false }),
+    follows: createICacheable([], { loading_page: false })
+  };
+
   prettyKeys: { [index in CarouselIdx]: string } = {
     hosts: $localize`Performing Arts Companies`,
     upcoming: $localize`Upcoming`,
@@ -56,29 +63,17 @@ export class FeedComponent extends CarouselBaseComponent implements OnInit {
     [Genre.Orchestra]: { label: $localize`Orchestra`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' }
   };
 
-  public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
-    upcoming: createICacheable([], { loading_page: false }),
-    everything: createICacheable([], { loading_page: false }),
-    hosts: createICacheable([], { loading_page: false }),
-    follows: createICacheable([], { loading_page: false })
-  };
-
   constructor(
-    feedService: FeedService,
     toastService: ToastService,
     logger: NGXLogger,
     breakpointObserver: BreakpointObserver,
+    private feedService: FeedService,
     public dialog: MatDialog,
     private helperService: HelperService,        
     private appService: AppService,
     private route: ActivatedRoute
   ) {
-    super({
-      logger: logger,
-      toastService: toastService,
-      breakpointObserver: breakpointObserver,
-      feedService: feedService
-    });
+    super(logger, toastService, breakpointObserver);
   }
 
   async ngOnInit() {
@@ -103,6 +98,23 @@ export class FeedComponent extends CarouselBaseComponent implements OnInit {
 
   openGenreFeed(genre: Genre) {
     this.appService.navigateTo(`/genres/${genre}`);
+  }
+
+  fetchFeedParser(): Function {
+    return this.fetchFeed.bind(null, this.feedService, this.carouselData);
+  }
+
+  async fetchFeed(
+    feedService: FeedService,
+    carouselData: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>>,
+    carouselIndex: CarouselIdx
+  ): Promise<IPerformanceStub[]| IHostStub[]> {
+    return (await feedService.getFeed({
+        [carouselIndex]: {
+            page: carouselData[carouselIndex].data.__paging_data.next_page,
+            per_page: carouselData[carouselIndex].data.__paging_data.per_page
+        }
+    }))[carouselIndex];
   }
 
   // Refresh the feed of the given carousel index
