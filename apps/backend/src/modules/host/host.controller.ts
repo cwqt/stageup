@@ -47,6 +47,7 @@ import {
   IEnvelopedData,
   IFollower,
   IHost,
+  IHostFeed,
   IHostInvoice,
   IHostInvoiceStub,
   IHostMemberChangeRequest,
@@ -59,10 +60,12 @@ import {
   IRefund,
   IUserFollow,
   IUserHostInfo,
-  LiveStreamState
+  LiveStreamState,
+  IFeedPerformanceStub,
+  Visibility
 } from '@core/interfaces';
 import Stripe from 'stripe';
-import { array, assign, boolean, coerce, enums, object, string, StructError } from 'superstruct';
+import { array, assign, boolean, coerce, enums, object, string, StructError, record, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
@@ -611,6 +614,38 @@ export class HostController extends ModuleController {
         .orderBy('performance.created_at', 'DESC')
         .withDeleted() //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
         .paginate({ serialiser: o => o.toStub() });
+    }
+  };
+
+  readHostFeedPerformances: IControllerEndpoint<IHostFeed> = {
+    validators: {
+      query: record(
+        enums<keyof IHostFeed>(['upcoming']),
+        Validators.Objects.PaginationOptions(10)
+      ),
+      params: object({ hid: optional(Validators.Fields.nuuid) })
+    },
+
+    authorisation: AuthStrat.none,
+    controller: async req => {
+      const hostFeed: IHostFeed = {
+        upcoming: null
+      };
+
+      hostFeed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
+        .where('host._id = :id', { id: req.params.hid })
+        .andWhere('p.premiere_datetime > :currentTime', { currentTime: timestamp() })
+        .andWhere('p.visibility = :state', { state: Visibility.Public })
+        .innerJoinAndSelect('p.host', 'host')
+        .orderBy('p.premiere_datetime')
+        .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+        .paginate({
+          serialiser: p => p.toClientStub(),
+          page: req.query.upcoming ? parseInt((req.query.upcoming as any).page) : 0,
+          per_page: req.query.upcoming ? parseInt((req.query.upcoming as any).per_page) : 4
+        });
+
+        return hostFeed;
     }
   };
 

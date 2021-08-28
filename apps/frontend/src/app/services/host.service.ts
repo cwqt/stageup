@@ -30,7 +30,10 @@ import {
   IBulkRefund,
   DtoPerformanceAnalytics,
   AnalyticsTimePeriod,
-  DtoHostAnalytics
+  DtoHostAnalytics,
+  IFeedPerformanceStub,
+  IHostFeed,
+  PaginationOptions
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -154,6 +157,15 @@ export class HostService {
   readHostPerformances(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IPerformanceStub[], null>> {
     return this.http
       .get<IEnvelopedData<IPerformanceStub[], null>>(`/api/hosts/${hostId}/performances${querize(query)}`)
+      .toPromise();
+  }
+
+  readHostFeedPerformances(
+    hostId: string,
+    paging: { [index in keyof IHostFeed]?: PaginationOptions },
+  ): Promise<IEnvelopedData<IFeedPerformanceStub[], null>> {
+    return this.http
+      .get<IEnvelopedData<IFeedPerformanceStub[], null>>(`/api/hosts/${hostId}/feed-performances${querize(paging)}`)
       .toPromise();
   }
 

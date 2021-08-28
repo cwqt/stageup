@@ -2,7 +2,14 @@ import { Component, Input, OnInit, ViewChild, ViewChildren, QueryList } from '@a
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
-import { IHost, IEnvelopedData, IUserFollow } from '@core/interfaces';
+import { 
+  IHost,
+  IEnvelopedData,
+  IUserFollow,
+  IEnvelopedData as IEnv,
+  IPerformanceStub,
+  IHostStub
+} from '@core/interfaces';
 import { createICacheable, ICacheable, cachize } from '../../../app.interfaces';
 import { AppService, RouteParam } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
@@ -17,10 +24,9 @@ import { Subscription } from 'rxjs';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { CarouselBaseComponent } from '@frontend/components/carousel-base/carousel-base.component';
 import { ToastService } from '@frontend/services/toast.service';
-import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { NGXLogger } from 'ngx-logger';;
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-host-profile',
@@ -39,19 +45,27 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
   userFollowing: boolean;
   myselfSubscription: Subscription;
 
+  public carouselData: { ['upcoming']: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
+    upcoming: createICacheable([], { loading_page: false }),
+  };
+
   constructor(
     logger: NGXLogger,
     toastService: ToastService,
-    feedService: FeedService,
+    hostService: HostService,
     breakpointObserver: BreakpointObserver,
     private myselfService: MyselfService,
     private appService: AppService,
     public route: ActivatedRoute,
-    private hostService: HostService,
     private helperService: HelperService,
     public dialog: MatDialog,    
   ) {
-    super(logger, toastService, feedService, breakpointObserver);
+    super({
+      logger: logger,
+      toastService: toastService,
+      breakpointObserver: breakpointObserver,
+      hostService: hostService
+    });
   }
 
   async ngOnInit() {
@@ -82,16 +96,16 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
 
     try {
       this.carouselData.upcoming.loading = true;
-      const feed = await this.feedService.getFeed(
+      const hostFeed = await this.hostService.readHostFeedPerformances(
+        this.host.data.data._id,
         {
           upcoming: {
             page: 0,
             per_page: 4
           },
         },
-        {  hid: this.host.data.data._id }
       );
-      this.carouselData.upcoming.data = feed['upcoming'];
+      this.carouselData.upcoming.data = hostFeed['upcoming'];
     } catch (error) {
       this.toastService.emit($localize`Error occurred fetching feed`, ThemeKind.Danger);
     } finally {

@@ -1,7 +1,7 @@
 import { QueryList } from '@angular/core';
-import { IEnvelopedData as IEnv, IFeed, IPerformanceStub, IHostStub } from '@core/interfaces';
-import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { IFeed } from '@core/interfaces';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
+import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { timeout } from '@core/helpers';
@@ -22,20 +22,34 @@ export class CarouselBaseComponent {
       [Breakpoints.Large]: 4,
       [Breakpoints.XLarge]: 6
     };
-    
-    public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
-        upcoming: createICacheable([], { loading_page: false }),
-        everything: createICacheable([], { loading_page: false }),
-        hosts: createICacheable([], { loading_page: false }),
-        follows: createICacheable([], { loading_page: false })
-      };
 
-    constructor(
-        protected logger: NGXLogger,
-        protected toastService: ToastService,
-        protected feedService: FeedService,
-        protected breakpointObserver: BreakpointObserver
-    ) {}
+    public carouselData;
+
+    protected logger: NGXLogger;
+    protected toastService: ToastService;
+    protected breakpointObserver: BreakpointObserver;
+    protected feedService?: FeedService;
+    protected hostService?: HostService;
+
+    constructor({
+        logger,
+        toastService,
+        breakpointObserver,
+        feedService,
+        hostService,
+    }: {
+        logger: NGXLogger,
+        toastService: ToastService,
+        breakpointObserver: BreakpointObserver,
+        feedService?: FeedService,
+        hostService?: HostService,
+    }) {
+        this.logger = logger;
+        this.toastService = toastService;
+        this.breakpointObserver = breakpointObserver;
+        this.feedService = feedService;
+        this.hostService = hostService;
+    }
 
     async onInit() {
         // Change number of cells in a row displayed at any one point depending on screen width
@@ -66,17 +80,32 @@ export class CarouselBaseComponent {
         try {
             await timeout(1000);
 
+            let envelope;
+            
             // Get the next page for this carousel by passing the index along to the backend
-            const envelope = (
-                await this.feedService.getFeed({                   
-                        [carouselIndex]: {
-                            page: this.carouselData[carouselIndex].data.__paging_data.next_page,
-                            per_page: this.carouselData[carouselIndex].data.__paging_data.per_page
+            if (hid) {
+                envelope = (
+                    await this.hostService.readHostFeedPerformances(
+                        hid,
+                        {
+                            [carouselIndex]: {
+                                page: this.carouselData[carouselIndex].data.__paging_data.next_page,
+                                per_page: this.carouselData[carouselIndex].data.__paging_data.per_page
+                            }
+                        },    
+                    )
+                )[carouselIndex];
+            } else {
+                envelope = (
+                    await this.feedService.getFeed({
+                            [carouselIndex]: {
+                                page: this.carouselData[carouselIndex].data.__paging_data.next_page,
+                                per_page: this.carouselData[carouselIndex].data.__paging_data.per_page
+                            }
                         }
-                    },
-                    { hid: hid }
-                )
-            )[carouselIndex];
+                    )
+                )[carouselIndex];
+            }            
 
             // Then join this page onto the current array at the end
             envelope.data = [...this.carouselData[carouselIndex].data.data, ...envelope.data];

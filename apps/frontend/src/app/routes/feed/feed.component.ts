@@ -1,8 +1,8 @@
 import { ActivatedRoute } from '@angular/router';
 import { PerformanceBrochureComponent } from './../performance/performance-brochure/performance-brochure.component';
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { Genre, IFeed, GenreMap } from '@core/interfaces';
-import { cachize } from 'apps/frontend/src/app/app.interfaces';
+import { Genre, GenreMap, IEnvelopedData as IEnv, IFeed, IPerformanceStub, IHostStub } from '@core/interfaces';
+import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { CarouselBaseComponent } from '@frontend/components/carousel-base/carousel-base.component';
 import { FeedService } from 'apps/frontend/src/app/services/feed.service';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -56,6 +56,13 @@ export class FeedComponent extends CarouselBaseComponent implements OnInit {
     [Genre.Orchestra]: { label: $localize`Orchestra`, gradient: 'linear-gradient(to right, #f46b45, #eea849);' }
   };
 
+  public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
+    upcoming: createICacheable([], { loading_page: false }),
+    everything: createICacheable([], { loading_page: false }),
+    hosts: createICacheable([], { loading_page: false }),
+    follows: createICacheable([], { loading_page: false })
+  };
+
   constructor(
     feedService: FeedService,
     toastService: ToastService,
@@ -66,7 +73,12 @@ export class FeedComponent extends CarouselBaseComponent implements OnInit {
     private appService: AppService,
     private route: ActivatedRoute
   ) {
-    super(logger, toastService, feedService, breakpointObserver);
+    super({
+      logger: logger,
+      toastService: toastService,
+      breakpointObserver: breakpointObserver,
+      feedService: feedService
+    });
   }
 
   async ngOnInit() {
