@@ -72,7 +72,7 @@ All packages that are used throughout all apps & libs are defined within a singl
       src.styles       # global styles & Tailwind imports
     backend            # the stageup backend
       src.modules      # various sections of the backend 
-      src.i18n         # internationalisation files
+      src.i18n         # internationalisation files, inc. tokens file
       seeder           # database seeder
     api-tests          # integration tests
     reverse-proxy      # nginx reverse proxy for blog/wordpress/prod app
