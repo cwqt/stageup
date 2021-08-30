@@ -2,10 +2,10 @@ import { environment, UserType } from './environment';
 import { HostPermission, IMyself, IUser } from '@core/interfaces';
 
 export class CachedUser {
-  user: IMyself["user"];
+  user: IMyself['user'];
   session: string;
 
-  constructor(user: IMyself["user"]) {
+  constructor(user: IMyself['user']) {
     this.user = user;
     this.session = '';
   }
@@ -18,6 +18,7 @@ import hostsActions from './actions/hosts.actions';
 import adminActions from './actions/admin.actions';
 import performanceActions from './actions/performances.actions';
 import searchActions from './actions/search.actions';
+import gdprActions from './actions/gdpr.actions';
 
 export const Stories = {
   log: true,
@@ -30,7 +31,8 @@ export const Stories = {
     hosts: hostsActions,
     admin: adminActions,
     performances: performanceActions,
-    search: searchActions
+    search: searchActions,
+    gdpr: gdprActions
   },
 
   setActiveUser: async (user: CachedUser) => {
@@ -41,4 +43,3 @@ export const Stories = {
     return Stories.activeUser;
   }
 };
-
