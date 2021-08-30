@@ -39,7 +39,7 @@ All packages that are used throughout all apps & libs are defined within a singl
 - Start **Redis** from Docker Desktop
 - Start **PostgreSQL** from Docker Desktop
 - On a terminal, run `npm run start`, and start the backend
-- With the backend running, run the seeder by using the route, [http://localhost:3000/utils/seed](http://localhost:3000/utils/seed)
+- With the backend running, run the seeder by visiting the route: <http://localhost:3000/utils/seed> in a web browser (or sending it a `GET` request)
 - On another terminal, run `npm run start`, and start the frontend
 
 - **Redis**: Start from Docker Desktop
