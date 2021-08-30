@@ -18,7 +18,7 @@ This README will walk you through installing some key software we use:
 
 **localtunnel**: An application which allows you to easily share a web service on your local development machine without messing with DNS and firewall settings. localtunnel can be used to create a unique publicly accessible url on your local machine that will proxy all requests to your locally running webserver. We use this to receive webhooks from services like MUX and Stripe.
 
-## **Homebrew (MacOS)**
+## **Homebrew (macOS)**
 
 To install Homebrew, run:
 
@@ -37,14 +37,14 @@ brew update
 
 To install Git, run:
 
-```xml
+```shell
 brew install git 
 git version #2.32.0 
 ```
 
-## **Node & NPM**
+## **Node & npm**
 
-To install Node & NPM, run:
+To install Node & npm, run:
 
 ```
 brew install node   # install via https://nodejs.org/en/download/ on windows
@@ -79,15 +79,15 @@ Last, click *'Save'*. You should now see the 'su-postgres' server in the left do
 
 ## **Nx**
 
-To install NX, run:
+To install Nx, run:
 
 ```
 npm install -g nx   # 11.1.5
 ```
 
-## Localtunnel
+## localtunnel
 
-To install Localtunnel, run:
+To install localtunnel, run:
 
 ```
 npm install -g localtunnel # 7.20.3
