@@ -156,6 +156,7 @@ import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-doc
 import { GdprDocumentUpload } from './components/dialogs/gdpr-document-upload/gdpr-document-upload.component';
 import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
+import { OptOutReason } from './_pipes/opt-out-reason.pipe';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -195,6 +196,7 @@ import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
     TimesPipe,
     GdprDocumentTypePipe,
     OnboardingStatePipe,
+    OptOutReason,
     DeleteHostReasonPipe,
     ObjectLengthPipe,
     ShortDomainPipe,
