@@ -34,7 +34,7 @@ Once you've completed the prereuisites above, for each application, review the s
 For additional documentation on some of these and other topics, see our [Notion Software Wiki](https://www.notion.so/Software-Wiki-1b9f997a4d7942b49de9036eeb3f0f41).
 ## Running `npm run start`
 
-All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects. Run `npm install` in the project root to install all required dependencies. Production builds perform tree-shaking optimization to remove unused libraries, so ensure you always use ES6 import syntax.
+All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects. Run `npm install --force` in the project root to install all required dependencies. Production builds perform tree-shaking optimization to remove unused libraries, so ensure you always use ES6 import syntax.
 
 - Start **Redis** from Docker Desktop
 - Start **PostgreSQL** from Docker Desktop
