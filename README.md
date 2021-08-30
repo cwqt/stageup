@@ -107,7 +107,8 @@ All packages that are used throughout all apps & libs are defined within a singl
   
   .env                 # .env for github tokens (deployment only)
   .env.example         # example .env
-  .env.development     # also .env.staging, .testing & .production`
+  .env.development     # also .env.staging, .testing & .production
+\`\`\`
 
 ## **i18n & a11y**
 
