@@ -68,7 +68,7 @@ STRIPE_WEBHOOK_SIGNATURE="{KEY}"
 Finally, go to [https://dashboard.stripe.com/settings/connect](https://dashboard.stripe.com/settings/connect). Go to the *'Integration'* section, toggle on *'View test data'*, copy your *'Test mode client ID',* and add this to your .env:
 
 ```
-STRIPE_CLIENT_ID="acct_{ID}" #ac
+STRIPE_CLIENT_ID="acct_{ID}"
 ```
 
 ### Google Cloud Platform (GCP)
