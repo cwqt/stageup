@@ -5,7 +5,6 @@ import { Inject, Service } from 'typedi';
 import { ModuleEvents, Contract, I18N_PROVIDER } from '@core/api';
 import { JobQueueService } from '../queue/queue.service';
 import { AuthService } from '../auth/auth.service';
-import { optOutOptionsMap } from '@core/interfaces';
 
 @Service()
 export class UserEvents extends ModuleEvents {
@@ -116,8 +115,8 @@ export class UserEvents extends ModuleEvents {
 
     // Currently, this function can only be triggered with 'hard-in' status but added 'soft-in' in case of future changes
     // If user is opting in, send one type of email
-    if(ct.opt_status == 'hard-in' || ct.opt_status == 'soft-in'){
-        this.queueService.addJob('send_email', {
+    if (ct.opt_status == 'hard-in' || ct.opt_status == 'soft-in') {
+      this.queueService.addJob('send_email', {
         subject: this.i18n.translate('@@email.user.opting_in_to_marketing__subject', ct.__meta.locale),
         content: this.i18n.translate('@@email.user.opting_in_to_marketing__content', ct.__meta.locale, {
           user_name: user.name || user.username,
@@ -137,8 +136,8 @@ export class UserEvents extends ModuleEvents {
           user_email: user.email_address,
           // If reason was provided, use the map to convert the enum to text
           // If not provided, will display N/A
-          opt_out_reason: ct.opt_out_reason?.reason ? optOutOptionsMap[ct.opt_out_reason?.reason] : "N/A",
-          opt_out_message: ct.opt_out_reason?.message || "N/A",
+          opt_out_reason: ct.opt_out_reason?.reason ? ct.opt_out_reason.reason : '-',
+          opt_out_message: ct.opt_out_reason?.message || '-'
         }),
         from: Env.EMAIL_ADDRESS,
         to: host.email_address,

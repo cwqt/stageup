@@ -65,7 +65,7 @@ export interface IUiTableAction<K> {
     click: (v: K) => void;
   }>;
   toggle?: {
-    primary_label: string;
+    after_label: string; // required primary label (to the right of the toggle)
     before_label?: string; // Optional additional label (when toggle in off position)
     initial_value: (v: K) => boolean;
     event: (e: MatSlideToggleChange, v: K) => void;

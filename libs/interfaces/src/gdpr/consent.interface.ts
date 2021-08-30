@@ -57,14 +57,6 @@ export enum OptOutOptions {
   DidntSignUp = 'didnt_sign_up'
 }
 
-// Map it to user friendly text for displaying in dropdown and in emails
-export const optOutOptionsMap: { [index in OptOutOptions]: string } = {
-  [OptOutOptions.TooFrequent]: `I'm getting emails too often.`,
-  [OptOutOptions.TooCluttered]: `Emails are too cluttered.`,
-  [OptOutOptions.NotRelevant]: `The content isn't relevant to me.`,
-  [OptOutOptions.DidntSignUp]: `I never signed up, or I didn't realize that I have signed up.`
-};
-
 // When the user opts out from host marketing, an email is sent to the host with optional 'reason' and 'message' from the user as to why the are opting out.
 export interface IOptOutReason {
   reason?: OptOutOptions;

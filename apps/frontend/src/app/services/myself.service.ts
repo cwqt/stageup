@@ -201,15 +201,20 @@ export class MyselfService {
     return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
   }
 
-  // router.get <IEnvelopedData<IUserHostMarketingConsent[]>> ("/myself/opt-ins", Myself.readUserHostMarketingConsents());
+  // router.get <IEnvelopedData<IUserHostMarketingConsent[]>> ("/myself/host-marketing/opt-ins", Myself.readUserHostMarketingConsents());
   readUserHostMarketingConsents(query: IQueryParams): Promise<IEnvelopedData<IUserHostMarketingConsent[]>> {
-    return this.http.get<IEnvelopedData<IUserHostMarketingConsent[]>>(`/api/myself/opt-ins${querize(query)}`).toPromise();
+    return this.http
+      .get<IEnvelopedData<IUserHostMarketingConsent[]>>(`/api/myself/opt-ins/host-marketing${querize(query)}`)
+      .toPromise();
   }
 
-  // router.put <void> ("/myself/opt-ins", Myself.updateOptInStatus());
-  updateOptInStatus(hostId: string, newStatus: ConsentOpt, optOutReason?: IOptOutReason): Promise<void> {
+  // router.put <void> ("/myself/opt-ins/host-marketing", Myself.updateHostOptInStatus());
+  updateHostOptInStatus(hostId: string, newStatus: ConsentOpt, optOutReason?: IOptOutReason): Promise<void> {
     return this.http
-      .put<void>(`/api/myself/opt-ins/${hostId}`, { new_status: newStatus, opt_out_reason: optOutReason })
+      .put<void>(`/api/myself/opt-ins/host-marketing/${hostId}`, {
+        new_status: newStatus,
+        opt_out_reason: optOutReason
+      })
       .toPromise();
   }
 }

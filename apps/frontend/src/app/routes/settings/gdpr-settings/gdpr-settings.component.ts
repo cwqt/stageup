@@ -33,15 +33,14 @@ export class GdprSettingsComponent implements OnInit {
         {
           label: $localize`Opt Out`,
           type: 'toggle',
-
           toggle: {
-            primary_label: $localize`Opt In`,
+            after_label: $localize`Opt In`,
             before_label: $localize`Opt Out`,
             initial_value: v => v.opt_status != 'hard-out',
             event: (e, v) => {
               if (e.checked) {
                 // User is opting in.
-                this.myselfService.updateOptInStatus(v.host._id, 'hard-in');
+                this.myselfService.updateHostOptInStatus(v.host._id, 'hard-in');
               } else {
                 // User is opting out.
                 // stopPropagation is not possible on mat-slide-toggle, so we need to manually set toggle state back to true until the user has confirmed in the dialog.
