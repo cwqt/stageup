@@ -78,7 +78,7 @@ Most of StageUp's cloud infrastructure is set up on GCP.
 Ask the SysAdmin to create you a GCP account. Then log in to GCP and from the dashboard copy the *'Project ID'* into your .env: 
 
 ```
-GCP_PROJECT_ID="" #core-314910
+GCP_PROJECT_ID=""
 ```
 
 Next, you need to configure your GCP credentials in your .env. Ask the SysAdmin to create a service account for you and to send you the *'service_account.json'* credentials file. If the JSON file you're sent is named differently, just rename it to *'service_account.json'*.
