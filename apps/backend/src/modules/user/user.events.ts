@@ -5,7 +5,6 @@ import { Inject, Service } from 'typedi';
 import { ModuleEvents, Contract, I18N_PROVIDER } from '@core/api';
 import { JobQueueService } from '../queue/queue.service';
 import { AuthService } from '../auth/auth.service';
-import { OptOutReason } from '@frontend/_pipes/opt-out-reason.pipe';
 
 @Service()
 export class UserEvents extends ModuleEvents {
@@ -130,8 +129,6 @@ export class UserEvents extends ModuleEvents {
       });
       // Else if user is opting out, send a different email
     } else if (ct.opt_status == 'hard-out') {
-      const reasonPipe = new OptOutReason();
-
       this.queueService.addJob('send_email', {
         subject: this.i18n.translate('@@email.user.opting_out_of_marketing__subject', ct.__meta.locale),
         content: this.i18n.translate('@@email.user.opting_out_of_marketing__content', ct.__meta.locale, {
@@ -139,7 +136,7 @@ export class UserEvents extends ModuleEvents {
           user_email: user.email_address,
           // If reason was provided, use the map to convert the enum to text
           // If not provided, will display N/A
-          opt_out_reason: ct.opt_out_reason?.reason ? reasonPipe.transform(ct.opt_out_reason?.reason) : '-',
+          opt_out_reason: ct.opt_out_reason?.reason ? ct.opt_out_reason.reason : '-',
           opt_out_message: ct.opt_out_reason?.message || '-'
         }),
         from: Env.EMAIL_ADDRESS,
