@@ -126,6 +126,7 @@ All packages that are used throughout all apps & libs are defined within a singl
 - **Postman**: An API platform for building and using APIs. Available at: [https://www.postman.com/downloads/](https://www.postman.com/downloads/).
 - **JSONView**: A Chrome extension for app understanding complex structure of JSON from web source pages and apis. Available at: [https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en).
 **TablePlus**: This is a simpler GUI than PGAdmin that you may prefer to use for interacting with PostgreSQL. Available at: [https://tableplus.com/](https://tableplus.com/).
+
 ## **Useful VSCode Extensions**
 
 **Error Lens**: Display error messages inline with the related code https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
