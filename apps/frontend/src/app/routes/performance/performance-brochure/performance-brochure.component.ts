@@ -92,9 +92,6 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       }
     );
 
-    console.log('host opt status', this.performanceCacheable.data.__client_data.host_marketing_opt_status);
-    console.log('su opt status', this.performanceCacheable.data.__client_data.su_marketing_opt_status);
-
     // Used for social sharing component
     this.brochureSharingUrl = `${this.appService.environment.frontend_url}/?performance=${this.performance._id}`;
 

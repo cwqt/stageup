@@ -125,7 +125,7 @@ export class UserService extends ModuleService {
     const user = await User.findOne({ _id: userId });
     const host = await Host.findOne({ _id: hostId });
 
-    // User is updating the opt in status
+    // User is updating their previous opt-in status
     if (existingConsent) {
       // Update the status. Also update which documents it is that the user is opting in/out from
       existingConsent.opt_status = optStatus;
