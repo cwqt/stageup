@@ -2,7 +2,7 @@
 
 This README will walk you through installing some key software we use:
 
-**Homebrew**: A software package management system that simplifies the installation of software on Apple's operating system.
+**Homebrew**: A software package management system that simplifies the installation of software on macOS
 
 **Git**: A version control system to track file changes.
 
