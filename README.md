@@ -144,6 +144,7 @@ Below are some common errors we've seen devs experience when setting up their en
 
 - Sometimes trailing spaces in env files will cause them not to load properly.
 - if you copy & paste keyto and from Slack, Slack will replace quotation mark characters, so check that you're using the right type of quotation marks:  "
-### **VS CODE**
+
+### **VSCode**
 
 - In VS Code, when switching branches you often have to restart the TS server or errors will appear when old files cannot be found. To restart the TS server, [use this guide](https://stackoverflow.com/questions/64454845/where-is-vscodes-restart-ts-server).
