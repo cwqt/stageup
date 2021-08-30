@@ -129,12 +129,12 @@ All packages that are used throughout all apps & libs are defined within a singl
 
 ## **Useful VSCode Extensions**
 
-**Error Lens**: Display error messages inline with the related code https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
-**Git lens**: View pull requests associated with code inline and more https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
-**Angular Language Service**: Angular command autocompletion https://marketplace.visualstudio.com/items?itemName=Angular.ng-template
-**vscode-angular-html**: Angular syntax highlighting/ formatting https://marketplace.visualstudio.com/items?itemName=ghaschel.vscode-angular-html
-**Bracket Pair Colorizer**: Highlights functions/ blocks to allow you to visually see where they start/end https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer
-**Tailwind CSS Intellisense**: Autocompletion for tailwind https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
+- **Error Lens**: Display error messages inline with the related code https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
+- **Git lens**: View pull requests associated with code inline and more https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
+- **Angular Language Service**: Angular command autocompletion https://marketplace.visualstudio.com/items?itemName=Angular.ng-template
+- **vscode-angular-html**: Angular syntax highlighting/ formatting https://marketplace.visualstudio.com/items?itemName=ghaschel.vscode-angular-html
+- **Bracket Pair Colorizer**: Highlights functions/ blocks to allow you to visually see where they start/end https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer
+- **Tailwind CSS Intellisense**: Autocompletion for tailwind https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
 
 ## **Troubleshooting**
 
