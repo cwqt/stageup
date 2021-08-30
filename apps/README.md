@@ -6,7 +6,7 @@ This README will walk you through installing some key software we use:
 
 **Git**: A version control system to track file changes.
 
-**Node** & **NPM**: A JavaScript runtime environment (Node) & Javascript software package manager (NPM).
+**Node** & **npm**: A JavaScript runtime environment (Node) & Javascript software package manager (npm).
 
 **Docker**: A software platform for creating lightweight virtual machines that each run in their own sandbox environment on top of a host's operating system.
 
