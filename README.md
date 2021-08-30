@@ -69,7 +69,7 @@ All packages that are used throughout all apps & libs are defined within a singl
       src.app          # front-end routes, components & services
       src.assets       # media
       src.i18n         # internationalisation files
-      src.styles       # Scss
+      src.styles       # global styles & Tailwind imports
     backend            # the stageup backend
       src.modules      # event driven stuff, queue & notifs
       src.i18n         # internationalisation files
