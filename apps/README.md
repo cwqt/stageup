@@ -16,7 +16,7 @@ This README will walk you through installing some key software we use:
 
 **Nx**: An 'Extensible Dev Tools for Monorepos' that allows for versioning management and code sharing between our front-end and back-end. Currently we just have three applications - a frontend, backend & queue, but in the future this will be expanded to include other applications (i.e. recommendations, notifications etc). Using Nx, all of these will be able to share code (i.e. interfaces).
 
-**Localtunnel**: An application which allows you to easily share a web service on your local development machine without messing with DNS and firewall settings. Localtunnel can be used to create a unique publicly accessible url on your local machine that will proxy all requests to your locally running webserver. We use this to recieve webhooks from services like MUX and Stripe.
+**localtunnel**: An application which allows you to easily share a web service on your local development machine without messing with DNS and firewall settings. localtunnel can be used to create a unique publicly accessible url on your local machine that will proxy all requests to your locally running webserver. We use this to receive webhooks from services like MUX and Stripe.
 
 ## **Homebrew (MacOS)**
 
