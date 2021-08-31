@@ -135,7 +135,7 @@ export class UserEvents extends ModuleEvents {
           user_name: user.name || user.username,
           user_email: user.email_address,
           opt_out_reason: ct.opt_out_reason?.reason
-            ? this.i18n.translate(`@@host_marketing_opt_out.${ct.opt_out_reason?.reason}`, ct.__meta.locale)
+            ? this.i18n.translate(`@@host_marketing_opt_out.${ct.opt_out_reason?.reason}` as any, ct.__meta.locale)
             : '-',
           opt_out_message: ct.opt_out_reason?.message || '-'
         }),
