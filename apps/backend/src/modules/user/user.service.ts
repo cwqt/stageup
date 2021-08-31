@@ -110,6 +110,7 @@ export class UserService extends ModuleService {
   }
 
   async setUserHostMarketingOptStatus(userId: string, hostId: string, optStatus: ConsentOpt) {
+    console.log('testing host')
     // check if already consenting to this host, if not then soft-opt in
     const existingConsent = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'c')
       .where('c.user__id = :uid', { uid: userId })
