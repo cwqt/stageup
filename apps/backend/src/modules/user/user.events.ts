@@ -134,9 +134,9 @@ export class UserEvents extends ModuleEvents {
         content: this.i18n.translate('@@email.user.opting_out_of_marketing__content', ct.__meta.locale, {
           user_name: user.name || user.username,
           user_email: user.email_address,
-          // If reason was provided, use the map to convert the enum to text
-          // If not provided, will display N/A
-          opt_out_reason: ct.opt_out_reason?.reason ? ct.opt_out_reason.reason : '-',
+          opt_out_reason: ct.opt_out_reason?.reason
+            ? this.i18n.translate(`@@host_marketing_opt_out.${ct.opt_out_reason?.reason}`, ct.__meta.locale)
+            : '-',
           opt_out_message: ct.opt_out_reason?.message || '-'
         }),
         from: Env.EMAIL_ADDRESS,
