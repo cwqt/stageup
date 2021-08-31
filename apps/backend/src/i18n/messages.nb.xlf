@@ -191,6 +191,22 @@
       <source>Cannot refund while another refund is already outstanding</source>
       <target state="needs-translation">Kan ikke tilbakebetale mens hverandre er allerede utestående</target>
     </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.too_cluttered" datatype="html">
+      <source>Emails are too cluttered.</source>
+      <target state="needs-translation">E -post er for rotete.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.too_frequent" datatype="html">
+      <source>I’m getting emails too often.</source>
+      <target state="needs-translation">Jeg får for ofte e -post.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.not_relevant" datatype="html">
+      <source>The content isn’t relevant to me.</source>
+      <target state="needs-translation">Innholdet er ikke relevant for meg.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.didnt_sign_up" datatype="html">
+      <source>I never signed up, or I didn’t realize that I have signed up.</source>
+      <target state="needs-translation">Jeg registrerte meg aldri, eller jeg skjønte ikke at jeg har registrert meg.</target>
+    </trans-unit>				
 		<trans-unit id="email.user.refund_initiated__content" datatype="html">
       <source><p><strong>Hi {user_username},</strong></p>
 <p>This is a notification to confirm that <strong>{host_name}</strong> has initiated a refund on your order <strong>{invoice_id}</strong>
