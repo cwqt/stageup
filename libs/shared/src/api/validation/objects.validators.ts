@@ -85,7 +85,10 @@ export namespace objects {
 
   export const DtoCreatePerformance: Describe<DtoCreatePerformance> = object({
     name: size(string(), 8, 64),
-    premiere_datetime: optional(fields.timestamp),
+    publicity_period: object({
+      start: fields.timestamp,
+      end: fields.timestamp
+    }),
     description: optional(fields.richtext),
     genre: fields.genre,
     type: union([literal('vod'), literal('live')])

@@ -180,7 +180,8 @@ Content-Type: {{contentType}}
     "name":"New performance name",
     "description":"New performance description",
     "genre": "dance",
-    "premiere_date": 1613474834
+    "publicity_period": {"start:" "1613474834", 
+                        "end:" "1630313383"}
 }
 ###
 @performanceId = {{ createPerformance.response.body._id }}

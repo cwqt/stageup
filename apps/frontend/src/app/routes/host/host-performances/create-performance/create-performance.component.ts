@@ -68,15 +68,13 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             })
           )
         }),
-        premiere: UiField.Container({
-          label: $localize`Premiere Date`,
+        publicity_period: UiField.Date({
+          label: $localize`Schedule`,
           separator: 'above',
-          hint: $localize`Schedule the performance to be released at a certain date & time (optional)`,
-          fields: {
-            datetime: UiField.Datetime({
-              min_date: new Date()
-            })
-          }
+          hint: $localize`Set the start and end date for your event`,
+          initial: { start: new Date(), end: new Date() },
+          is_date_range: true,
+          actions: true
         })
       },
       resolvers: {
@@ -85,7 +83,10 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             name: v.name,
             description: v.description,
             genre: v.genre,
-            premiere_datetime: timestamp(new Date(v.premiere.datetime)) || null,
+            publicity_period: {
+              start: timestamp(v.publicity_period.start),
+              end: timestamp(v.publicity_period.end)
+            },
             type: this.type
           })
       },

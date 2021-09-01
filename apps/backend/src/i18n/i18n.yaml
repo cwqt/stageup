@@ -227,7 +227,7 @@ email:
   ticket.purchased_future__content: |
     Hello {user_name},
 
-    You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don't forget to mark your calendar.
+    You purchased tickets for {performance_name} for {amount}. It will premier on {publicity_period_start}. Don't forget to mark your calendar.
     We'll send you reminders closer to the time, so you don't miss it. :)    
 
     Receipt of this purchase: <{receipt_url}>

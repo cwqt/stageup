@@ -144,7 +144,7 @@
 
               <p i18n>
                 <b>@{{ performance.host.username }}</b> is due to premiere this stream at
-                {{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}, you'll be notified by e-mail
+                {{ performance.publicity_period.start | amFromUnix | amDateFormat: 'LLL' }}, you'll be notified by e-mail
                 before it begins.
               </p>
               <p i18n>
