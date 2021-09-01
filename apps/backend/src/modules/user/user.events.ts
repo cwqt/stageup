@@ -1,3 +1,4 @@
+import { OptOutOptions } from '@core/interfaces';
 import Env from '@backend/env';
 import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
 import { Host, i18n, Performance, Provider, User } from '@core/api';
@@ -113,6 +114,13 @@ export class UserEvents extends ModuleEvents {
     const user = await User.findOne({ _id: ct.user_id }, { select: ['name', 'username', 'email_address'] });
     const host = await Host.findOne({ _id: ct.host_id }, { select: ['name', 'username', 'email_address'] });
 
+    const reasonTokenMap: { [index in OptOutOptions]: keyof AUTOGEN_i18n_TOKEN_MAP } = {
+      [OptOutOptions.TooCluttered]: '@@host_marketing_opt_out.too_cluttered',
+      [OptOutOptions.TooFrequent]: '@@host_marketing_opt_out.too_frequent',
+      [OptOutOptions.NotRelevant]: '@@host_marketing_opt_out.not_relevant',
+      [OptOutOptions.DidntSignUp]: '@@host_marketing_opt_out.didnt_sign_up'
+    };
+
     // Currently, this function can only be triggered with 'hard-in' status but added 'soft-in' in case of future changes
     // If user is opting in, send one type of email
     if (ct.opt_status == 'hard-in' || ct.opt_status == 'soft-in') {
@@ -135,7 +143,7 @@ export class UserEvents extends ModuleEvents {
           user_name: user.name || user.username,
           user_email: user.email_address,
           opt_out_reason: ct.opt_out_reason?.reason
-            ? this.i18n.translate(`@@host_marketing_opt_out.${ct.opt_out_reason?.reason}` as any, ct.__meta.locale)
+            ? this.i18n.translate(reasonTokenMap[ct.opt_out_reason?.reason], ct.__meta.locale)
             : '-',
           opt_out_message: ct.opt_out_reason?.message || '-'
         }),
