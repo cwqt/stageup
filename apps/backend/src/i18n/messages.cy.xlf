@@ -289,7 +289,7 @@ Rydym wedi hysbysu'r cwsmeriaid yr effeithir arnynt y byddant yn derbyn y swm a 
 Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith "</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
-      <source>Refund for {performance_name} succesful!</source>
+      <source>Refund for {performance_name} successful!</source>
       <target state="needs-translation">Ad-daliad ar gyfer {performance_name} yn llwyddiannus!</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__content" datatype="html">

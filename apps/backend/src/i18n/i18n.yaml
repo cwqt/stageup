@@ -132,7 +132,7 @@ email:
 
     Please note, if this request was not initated by you please notify us
     immediately"
-  user.refund_refunded__subject: Refund for {performance_name} succesful!
+  user.refund_refunded__subject: Refund for {performance_name} successful!
   user.refund_refunded__content: |
     Hi {user_username},
 

@@ -104,7 +104,7 @@ export class PerformanceEvents extends ModuleEvents {
     const performance = await this.ORM.createQueryBuilder(Performance, 'performance')
       .where('performance._id = :pid', { pid: ct.performance_id })
       .innerJoin('performance.host', 'host')
-      .addSelect(['host.name', 'host.email_address'])
+      .addSelect(['host.name', 'host.email_address', 'host._id'])
       .withDeleted()
       .getOne();
 

@@ -282,8 +282,8 @@ immediately"</p>
 </target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
-      <source>Refund for {performance_name} succesful!</source>
-      <target state="final">Refund for {performance_name} succesful!</target>
+      <source>Refund for {performance_name} successful!</source>
+      <target state="final">Refund for {performance_name} successful!</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__content" datatype="html">
       <source><p>Hi {user_username},</p>

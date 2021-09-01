@@ -289,7 +289,7 @@ Vi har varslet de berørte kundene om at de skal motta det refunderte beløpet i
 Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, må du varsle oss umiddelbart "</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
-      <source>Refund for {performance_name} succesful!</source>
+      <source>Refund for {performance_name} successful!</source>
       <target state="needs-translation">Refusjon for {performance_name} vellykket!</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__content" datatype="html">
