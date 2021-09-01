@@ -325,11 +325,22 @@ email:
     Cheers, 
 
     StageUp team
-  performance.removed_notify_host__subject: You have {action} {performance_name}
-  performance.removed_notify_host__content: |
+  performance.cancelled_notify_host__subject: You have cancelled {performance_name}
+  performance.cancelled_notify_host__content: |
     Hello **{host_name}**,
 
-    You have {action} your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
+    You have cancelled your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
+
+    We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.
+
+    Thanks,
+
+    **StageUp Team**
+  performance.softDeleted_notify_host__subject: You have deleted {performance_name}
+  performance.softDeleted_notify_host__subject: |
+    Hello **{host_name}**,
+
+    You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
 
     We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.
 

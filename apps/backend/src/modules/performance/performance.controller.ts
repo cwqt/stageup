@@ -399,7 +399,7 @@ export class PerformanceController extends ModuleController {
     }
   };
 
-  deletePerformance: IControllerEndpoint<void> = {
+  softDeletePerformance: IControllerEndpoint<void> = {
     // By getting the hostId from the performanceId & then checking if the user has the host
     // permission, there is an implicit intersection, because the UHI will not be returned
     // if the user is not part of the host in which the performance belongs to
@@ -408,7 +408,7 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
     ),
     controller: async req => {
-      this.performanceService.deletePerformance(req.params.pid, req.body.removal_reason, req.locale);
+      this.performanceService.softDeletePerformance(req.params.pid, req.body.removal_reason, req.locale);
     }
   };
 

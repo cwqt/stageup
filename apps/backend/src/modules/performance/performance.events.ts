@@ -108,23 +108,7 @@ export class PerformanceEvents extends ModuleEvents {
       .withDeleted()
       .getOne();
 
-    //Send host email notifcation
-    this.queueService.addJob('send_email', {
-      subject: this.i18n.translate('@@email.performance.removed_notify_host__subject', ct.__meta.locale, {
-        performance_name: performance.name,
-        action: ct.removal_type === RemovalType.Cancel ? 'cancelled' : 'deleted'
-      }),
-      content: this.i18n.translate('@@email.performance.removed_notify_host__content', ct.__meta.locale, {
-        host_name: performance.host.name,
-        performance_name: performance.name,
-        performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL'),
-        action: ct.removal_type === RemovalType.Cancel ? 'cancelled' : 'deleted'
-      }),
-      from: Env.EMAIL_ADDRESS,
-      to: performance.host.email_address,
-      markdown: true,
-      attachments: []
-    });
+    this.sendHostPerformanceRemovalEmail(performance, ct.removal_type);
 
     //Find all users who've bought tickets and fire Performance.deleted_notify_user for each invoice
     //First, return all tickets for a perf
@@ -176,6 +160,26 @@ export class PerformanceEvents extends ModuleEvents {
         );
       });
     }
+  }
+
+  async sendHostPerformanceRemovalEmail(performance: Performance, removalType: RemovalType) {
+    //Send host email notifcation
+    this.queueService.addJob('send_email', {
+      subject: this.i18n.translate('@@email.performance.removed_notify_host__subject', ct.__meta.locale, {
+        performance_name: performance.name,
+        action: removalType === RemovalType.Cancel ? 'cancelled' : 'deleted'
+      }),
+      content: this.i18n.translate('@@email.performance.removed_notify_host__content', ct.__meta.locale, {
+        host_name: performance.host.name,
+        performance_name: performance.name,
+        performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL'),
+        action: removalType === RemovalType.Cancel ? 'cancelled' : 'deleted'
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: performance.host.email_address,
+      markdown: true,
+      attachments: []
+    });
   }
 
   async sendUserPerformanceRemovalEmail(ct: Contract<'performance.removed_notify_user'>) {
