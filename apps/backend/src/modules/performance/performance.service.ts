@@ -29,7 +29,7 @@ export class PerformanceService extends ModuleService {
     //Soft delete the performance
     perf.status = PerformanceStatus.Deleted;
     perf.removal_reason = removalReason;
-    perf.save();
+    await perf.save();
     await perf.softRemove();
 
     return await this.bus.publish(
@@ -54,7 +54,7 @@ export class PerformanceService extends ModuleService {
 
     perf.status = PerformanceStatus.Cancelled;
     perf.removal_reason = removalReason;
-    perf.save();
+    await perf.save();
 
     return await this.bus.publish(
       'performance.removed',

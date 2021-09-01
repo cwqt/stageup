@@ -32,7 +32,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
   ngOnInit(): void {
     this.buttons = [
       new UiDialogButton({
-        label: $localize`Cancel`,
+        label: $localize`Close`,
         kind: ThemeKind.Secondary,
         callback: () => {
           this.cancel.emit();
