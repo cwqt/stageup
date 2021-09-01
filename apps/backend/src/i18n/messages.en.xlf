@@ -1419,6 +1419,52 @@ listed as ‘Cancelled’ on your account from now on.</p>
 <p><strong>StageUp Team</strong></p>
 </target>
     </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__subject" datatype="html">
+      <source>A new user has consented to marketing</source>
+      <target state="final">A new user has consented to marketing</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__content" datatype="html">
+      <source><p>Hi <strong>{host_name}</strong>,</p>
+<p>You have a new user who has consented to receiving marketing from you!</p>
+<p>Username: {user_name}
+Email: {user_email}</p>
+<p>Please add them to your marketing communications. We will inform you again if the user chooses to opt out of marketing in the future.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="final"><p>Hi <strong>{host_name}</strong>,</p>
+<p>You have a new user who has consented to receiving marketing from you!</p>
+<p>Username: {user_name}
+Email: {user_email}</p>
+<p>Please add them to your marketing communications. We will inform you again if the user chooses to opt out of marketing in the future.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__subject" datatype="html">
+      <source>A user has opted out of marketing</source>
+      <target state="final">A user has opted out of marketing</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__content" datatype="html">
+      <source><p>Hello,</p>
+<p>Your subscriber {user_name} ({user_email}) has opted out of receiving direct emails from your organisation.
+Additional information:</p>
+<p>Reason: {opt_out_reason}
+Message: {opt_out_message}</p>
+<p>Kindly remove them from your mailing list. We will inform you again by email if they choose to opt back in.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="final"><p>Hello,</p>
+<p>Your subscriber {user_name} ({user_email}) has opted out of receiving direct emails from your organisation.
+Additional information:</p>
+<p>Reason: {opt_out_reason}
+Message: {opt_out_message}</p>
+<p>Kindly remove them from your mailing list. We will inform you again by email if they choose to opt back in.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</target>
+    </trans-unit>				
 		<trans-unit id="error.internal_server_error" datatype="html">
       <source>Internal server error</source>
       <target state="final">Internal server error</target>

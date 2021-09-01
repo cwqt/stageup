@@ -1,5 +1,5 @@
 import { timestamp, uuid } from '@core/helpers';
-import { ConsentableType, ConsentableTypes, IConsentable } from '@core/interfaces';
+import { ConsentableType, ConsentableTypes, IConsentable, RichText } from '@core/interfaces';
 import { BaseEntity, Column, Entity, FindOptionsWhereCondition, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { Blobs } from '../../data-client/providers/blob.provider';
 
@@ -14,12 +14,22 @@ class ConsentableEntity extends BaseEntity {
 
     // use 'latest' as short-circruit for that with no successor
     if (version == 'latest') {
-      q.superseded_at = undefined;
+      q.superseded_at = null;
     } else {
       q.version = version;
     }
 
     return Consentable.findOne(q) as Promise<Consentable<K>>;
+  }
+
+  static retrieveAll<K extends ConsentableType>(version: number | 'latest'): Promise<Array<Consentable<K>>> {
+    const q: FindOptionsWhereCondition<Consentable<K>> = {};
+    if (version == 'latest') {
+      q.superseded_at = null;
+    } else {
+      q.version = version;
+    }
+    return Consentable.find(q) as Promise<Array<Consentable<K>>>;
   }
 }
 
@@ -32,6 +42,7 @@ export class Consentable<T extends ConsentableType> extends ConsentableEntity im
   @Column() document_identifier: string;
   @Column() document_location: string;
   @Column({ nullable: true }) superseded_at: number;
+  @Column('jsonb', { nullable: true }) changes_text?: RichText;
 
   @Column() version: number; // incremented on succession
 
@@ -39,13 +50,13 @@ export class Consentable<T extends ConsentableType> extends ConsentableEntity im
   @OneToOne(() => Consentable) @JoinColumn() succeeded_by: Consentable<T>;
   @OneToOne(() => Consentable) @JoinColumn() preceeded_by: Consentable<T>;
 
-  constructor(type: T, documentLink: string) {
+  constructor(type: T, changesText: RichText) {
     super();
     this._id = uuid(); // have an id before save
     this.created_at = timestamp();
-    this.document_location = documentLink;
     this.type = type;
     this.version = 0;
+    this.changes_text = changesText;
   }
 
   async upload(document: Express.Multer.File, blobs: Blobs) {
@@ -55,8 +66,8 @@ export class Consentable<T extends ConsentableType> extends ConsentableEntity im
     return this;
   }
 
-  superscede(documentLink: string): Consentable<T> {
-    const newConsent = new Consentable<T>(this.type, documentLink);
+  superscede(changesText: RichText): Consentable<T> {
+    const newConsent = new Consentable<T>(this.type, changesText);
     newConsent.version = this.version + 1;
     newConsent.preceeded_by = this;
 

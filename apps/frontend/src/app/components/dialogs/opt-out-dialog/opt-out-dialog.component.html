@@ -1,0 +1,18 @@
+<ui-dialog
+  title="Are you sure you want to opt out of direct marketing from {{ data.host.name }}?"
+  i18n-title
+  [buttons]="buttons"
+>
+  <p i18n>If you opt out of direct marketing from {{ data.host.name }}:</p>
+  <p i18n>
+    1. We'll remember your opt-out, and we won't ask you about direct marketing from {{ data.host.name }} again.
+  </p>
+  <p i18n>2. We'll send an email to {{ data.host.name }} telling them that you've opted out from direct marketing.</p>
+  <br />
+  <p i18n>
+    We also recommend that you contact {{ data.host.name }} directly and inform them that you no longer want to receive
+    marketing from them.
+  </p>
+
+  <ui-form [form]="optOutForm"></ui-form>
+</ui-dialog>

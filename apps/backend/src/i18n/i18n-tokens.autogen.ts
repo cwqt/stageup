@@ -100,10 +100,21 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@email.user.one_day_performance_reminder__content"]: "user_username" | "performance_name" | "premier_time",
   ["@@email.user.fifteen_minute_performance_reminder__subject"]: never,
   ["@@email.user.fifteen_minute_performance_reminder__content"]: "user_username" | "performance_name" | "premier_time" | "url",
+<<<<<<< HEAD
   ["@@email.performance.removed_notify_host__subject"]: "action" | "performance_name",
   ["@@email.performance.removed_notify_host__content"]: "host_name" | "action" | "performance_name" | "performance_premiere_date",
   ["@@email.performance.removed_notify_user__subject"]: "performance_name",
   ["@@email.performance.removed_notify_user__content"]: "user_username" | "host_name" | "performance_name" | "ticket_purchase_date" | "invoice_id" | "ticket_amount" | "card_brand" | "last_4",
+=======
+  ["@@email.performance.deleted_notify_host__subject"]: "performance_name",
+  ["@@email.performance.deleted_notify_host__content"]: "host_name" | "performance_name" | "performance_premiere_date",
+  ["@@email.performance.deleted_notify_user__subject"]: "performance_name",
+  ["@@email.performance.deleted_notify_user__content"]: "user_username" | "host_name" | "performance_name" | "ticket_purchase_date" | "invoice_id" | "ticket_amount" | "card_brand" | "last_4",
+  ["@@email.user.opting_in_to_marketing__subject"]: never,
+  ["@@email.user.opting_in_to_marketing__content"]: "host_name" | "user_name" | "user_email",
+  ["@@email.user.opting_out_of_marketing__subject"]: never,
+  ["@@email.user.opting_out_of_marketing__content"]: "user_name" | "user_email" | "opt_out_reason" | "opt_out_message",
+>>>>>>> 94448ffe975e16fbe8bb2233840141c0942dce98
   ["@@error.internal_server_error"]: never,
   ["@@error.missing_translation"]: never,
   ["@@error.missing_permissions"]: never,
