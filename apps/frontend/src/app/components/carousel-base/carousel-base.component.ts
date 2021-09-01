@@ -1,5 +1,4 @@
 import { QueryList } from '@angular/core';
-import { IFeed } from '@core/interfaces';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
 import { timeout } from '@core/helpers';
@@ -7,7 +6,7 @@ import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
 
-type CarouselIdx = keyof IFeed;
+type CarouselIdx = any;
 
 export class CarouselBaseComponent {
     public carousels: QueryList<CarouselComponent>;
@@ -33,16 +32,12 @@ export class CarouselBaseComponent {
         // Change number of cells in a row displayed at any one point depending on screen width
         const breakpoints = Object.keys(this.breakpointCellShownMap);
         this.breakpointObserver.observe(breakpoints).subscribe(result => {
-          if (result.matches) {
-            for (let i = 0; i < breakpoints.length; i++) {
-              if (result.breakpoints[breakpoints[i]]) {
-                this.activeBreakpoint = breakpoints[i];
+            if (result.matches) {
+                this.activeBreakpoint = breakpoints.find(breakpoint => {
+                    return result.breakpoints[breakpoint];
+                });
                 this.currentCellsToShow = this.breakpointCellShownMap[this.activeBreakpoint];
-                // this.carousels.forEach(c => c.carousel.lineUpCells());
-                break;
-              }
             }
-          }
         });
     }
 

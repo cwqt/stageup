@@ -623,7 +623,7 @@ export class HostController extends ModuleController {
         enums<keyof IHostFeed>(['upcoming']),
         Validators.Objects.PaginationOptions(10)
       ),
-      params: object({ hid: optional(Validators.Fields.nuuid) })
+      params: object({ hid: Validators.Fields.nuuid })
     },
 
     authorisation: AuthStrat.none,

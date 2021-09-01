@@ -48,7 +48,7 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
   userFollowing: boolean;
   myselfSubscription: Subscription;
 
-  public carouselData: { ['upcoming']: ICacheable<IEnv<IPerformanceStub[]>> } = {
+  public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[]>> } = {
     upcoming: createICacheable([], { loading_page: false }),
   };
 
