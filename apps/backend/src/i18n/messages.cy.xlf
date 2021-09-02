@@ -191,6 +191,22 @@
       <source>Cannot refund while another refund is already outstanding</source>
       <target state="needs-translation">Ni ellir ad-dalu tra bo ad-daliad ei gilydd eisoes yn ddyledus</target>
     </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.too_cluttered" datatype="html">
+      <source>Emails are too cluttered.</source>
+      <target state="needs-translation">Mae e-byst yn rhy anniben.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.too_frequent" datatype="html">
+      <source>I’m getting emails too often.</source>
+      <target state="needs-translation">Rwy'n cael e-byst yn rhy aml.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.not_relevant" datatype="html">
+      <source>The content isn’t relevant to me.</source>
+      <target state="needs-translation">Nid yw'r cynnwys yn berthnasol i mi.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.didnt_sign_up" datatype="html">
+      <source>I never signed up, or I didn’t realize that I have signed up.</source>
+      <target state="needs-translation">Wnes i erioed arwyddo, neu wnes i ddim sylweddoli fy mod i wedi arwyddo.</target>
+    </trans-unit>				
 		<trans-unit id="email.user.refund_initiated__content" datatype="html">
       <source><p><strong>Hi {user_username},</strong></p>
 <p>This is a notification to confirm that <strong>{host_name}</strong> has initiated a refund on your order <strong>{invoice_id}</strong>

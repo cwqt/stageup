@@ -43,6 +43,8 @@ import { OnboardingStatePipe } from './_pipes/onboarding-state.pipe';
 import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
+import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
+import { OptOutReasonPipe } from './_pipes/opt-out-reason.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 import { DonoPegPipe } from './_pipes/dono-peg.pipe';
@@ -156,8 +158,6 @@ import { OptOutDialogComponent } from './components/dialogs/opt-out-dialog/opt-o
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
 import { GdprDocumentUpload } from './components/dialogs/gdpr-document-upload/gdpr-document-upload.component';
 import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
-import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
-import { OptOutReason } from './_pipes/opt-out-reason.pipe';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -166,6 +166,7 @@ import { OptOutReason } from './_pipes/opt-out-reason.pipe';
     AdminOnboardingViewComponent,
     AdminPanelComponent,
     AppComponent,
+    DocumentViewComponent,
     LandingComponent,
     LoginComponent,
     ForgotPasswordComponent,
@@ -197,7 +198,7 @@ import { OptOutReason } from './_pipes/opt-out-reason.pipe';
     VisibilityPipe,
     GdprDocumentTypePipe,
     OnboardingStatePipe,
-    OptOutReason,
+    OptOutReasonPipe,
     DeleteHostReasonPipe,
     ObjectLengthPipe,
     ShortDomainPipe,
