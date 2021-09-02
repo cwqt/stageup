@@ -1,5 +1,7 @@
 <div class="flex justify-center items-center">
-    <iframe class="w-full h-screen" title="gdpr-document" *ngIf="documentUrl && !error" [src]="documentUrl"></iframe>
-    <!-- Simple error message. Can consider redirect instead -->
-    <div *ngIf="error" class="w-full h-screen text-center mt-16" i18n>We were not able to locate this document. Please try again at a later date.</div>
+  <iframe class="w-full h-screen" title="gdpr-document" *ngIf="documentUrl && !error" [src]="documentUrl"></iframe>
+  <!-- Simple error message. Can consider redirect instead -->
+  <div *ngIf="error" class="w-full h-screen text-center mt-16" i18n>
+    We were not able to locate this document. Please try again at a later date.
+  </div>
 </div>

@@ -80,6 +80,13 @@ refunds:
   no_invoices_found: Could not find any invoices
   refund_already_outstanding: Cannot refund while another refund is already outstanding
 
+# Opt Out Reasons ----------------------------------------------------------------------------------------------
+host_marketing_opt_out:
+  too_cluttered: Emails are too cluttered.
+  too_frequent: I'm getting emails too often.
+  not_relevant: The content isn't relevant to me.
+  didnt_sign_up: I never signed up, or I didn't realize that I have signed up.
+
 # Emails ----------------------------------------------------------------------------------------------
 email:
   user.refund_initiated__content: |

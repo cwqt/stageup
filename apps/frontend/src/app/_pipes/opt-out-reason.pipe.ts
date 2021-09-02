@@ -2,9 +2,9 @@ import { OptOutOptions } from '@core/interfaces';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'optOutReason'
+  name: 'optOutReasonPipe'
 })
-export class OptOutReason implements PipeTransform {
+export class OptOutReasonPipe implements PipeTransform {
   transform(value: OptOutOptions): string {
     const prettyValues: { [index in OptOutOptions]: string } = {
       [OptOutOptions.TooFrequent]: $localize`I'm getting emails too often.`,

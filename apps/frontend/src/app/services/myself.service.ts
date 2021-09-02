@@ -204,7 +204,7 @@ export class MyselfService {
   // router.get <IEnvelopedData<IUserHostMarketingConsent[]>> ("/myself/host-marketing/opt-ins", Myself.readUserHostMarketingConsents());
   readUserHostMarketingConsents(query: IQueryParams): Promise<IEnvelopedData<IUserHostMarketingConsent[]>> {
     return this.http
-      .get<IEnvelopedData<IUserHostMarketingConsent[]>>(`/api/myself/host-marketing/opt-ins${querize(query)}`)
+      .get<IEnvelopedData<IUserHostMarketingConsent[]>>(`/api/myself/opt-ins/host-marketing${querize(query)}`)
       .toPromise();
   }
 
