@@ -14,7 +14,7 @@ import {
   UserHostMarketingConsent,
   UserStageUpMarketingConsent
 } from '@core/api';
-import { DtoCreateUser, Environment, IAddress, ConsentOpt, SuConsentOpt } from '@core/interfaces';
+import { DtoCreateUser, Environment, IAddress, ConsentOpt, PlatformConsentOpt } from '@core/interfaces';
 import jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
 import { ModuleService } from '@core/api';
@@ -140,7 +140,7 @@ export class UserService extends ModuleService {
     }
   }
 
-  async setUserSuMarketingOptStatus(userId: string, optStatus: SuConsentOpt) {
+  async setUserPlatformMarketingOptStatus(userId: string, optStatus: PlatformConsentOpt) {
 
     // check if already consenting to SU marketing
     const existingConsent = await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
@@ -157,8 +157,8 @@ export class UserService extends ModuleService {
     // Add to database if the user is opting in and the consent doesn't already exist
     if (!existingConsent) {
       const user = await User.findOne({ _id: userId });
-      const suMarketingConsent = new UserStageUpMarketingConsent(optStatus, user, toc, privacyPolicy);
-      await suMarketingConsent.save();
+      const platformMarketingConsent = new UserStageUpMarketingConsent(optStatus, user, toc, privacyPolicy);
+      await platformMarketingConsent.save();
     } else {
       // Update existing consent
       existingConsent.opt_status = optStatus;

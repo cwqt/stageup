@@ -26,7 +26,7 @@ export type UserConsentData = {
   stageup_marketing: {
     user: IUserStub;
     privacy_policy: IConsentable<'privacy_policy'>;
-    opt_status: SuConsentOpt;
+    opt_status: PlatformConsentOpt;
   };
   upload_consent: {
     host: IHostStub;
@@ -40,7 +40,7 @@ export type UserConsentData = {
 export const ConsentOpts = ['soft-in', 'hard-in', 'hard-out'] as const;
 export type ConsentOpt = typeof ConsentOpts[number];
 // SU marketing consent opts are either 'hard-in' or 'hard-out'
-export type SuConsentOpt = Omit<ConsentOpt, 'soft-in'>;
+export type PlatformConsentOpt = Omit<ConsentOpt, 'soft-in'>;
 
 // utility type for below
 type ConsentMixin<T extends ConsentType> = IUserConsent<T> & UserConsentData[T];

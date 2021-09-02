@@ -112,7 +112,7 @@
               ></ui-form>
               <!-- SU marketing Opt-in button. Always display unless the user is already opted in. -->
               <ui-form
-                *ngIf="performanceCacheable.data.__client_data.su_marketing_opt_status !== 'hard-in'"
+                *ngIf="performanceCacheable.data.__client_data.platform_marketing_opt_status !== 'hard-in'"
                 [form]="stageupMarketingOptForm"
               ></ui-form>
             </div>

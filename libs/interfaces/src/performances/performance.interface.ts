@@ -12,7 +12,7 @@ import {
   ISigningKey,
   ITicketStub,
   NUUID,
-  SuConsentOpt
+  PlatformConsentOpt
 } from '@core/interfaces';
 
 export type ParsedRichText = { ops: DeltaOperation[] }; // stringified-json
@@ -80,7 +80,7 @@ export interface IClientPerformanceData {
   is_liking: boolean;
   rating: number | null;
   host_marketing_opt_status: ConsentOpt | null;
-  su_marketing_opt_status: SuConsentOpt | null;
+  platform_marketing_opt_status: PlatformConsentOpt | null;
 }
 
 export type DtoPerformance = IEnvelopedData<

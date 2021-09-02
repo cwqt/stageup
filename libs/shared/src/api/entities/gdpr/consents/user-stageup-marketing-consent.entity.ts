@@ -1,5 +1,5 @@
 import { User } from '@core/api';
-import { IUserStageUpMarketingConsent, NUUID, ConsentOpts, SuConsentOpt } from '@core/interfaces';
+import { IUserStageUpMarketingConsent, NUUID, ConsentOpts, PlatformConsentOpt } from '@core/interfaces';
 import { ChildEntity, JoinColumn, ManyToOne, RelationId, Column } from 'typeorm';
 import { Consent } from '../consent.entity';
 import { Consentable } from '../consentable.entity';
@@ -7,7 +7,7 @@ import { Consentable } from '../consentable.entity';
 @ChildEntity()
 export class UserStageUpMarketingConsent extends Consent<'stageup_marketing'> implements IUserStageUpMarketingConsent {
   constructor(
-    opt: SuConsentOpt,
+    opt: PlatformConsentOpt,
     user: User,
     termsAndConditions: Consentable<'general_toc'>,
     privacyPolicy: Consentable<'privacy_policy'>
@@ -18,7 +18,7 @@ export class UserStageUpMarketingConsent extends Consent<'stageup_marketing'> im
     this.privacy_policy = privacyPolicy;
   }
 
-  @Column('enum', { enum: ConsentOpts }) opt_status: SuConsentOpt;
+  @Column('enum', { enum: ConsentOpts }) opt_status: PlatformConsentOpt;
 
   @RelationId((consent: UserStageUpMarketingConsent) => consent.privacy_policy) privacy_policy__id: NUUID;
   @ManyToOne(() => Consentable) @JoinColumn() privacy_policy: Consentable<'privacy_policy'>;

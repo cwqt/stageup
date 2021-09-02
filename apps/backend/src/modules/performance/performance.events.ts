@@ -274,8 +274,8 @@ export class PerformanceEvents extends ModuleEvents {
       await this.userService.setUserHostMarketingOptStatus(ct.purchaser_id, ct.host_id, ct.host_marketing_consent);
     }
     // Update the user / StageUp marketing status (if the data is provided)
-    if (ct.su_marketing_consent) {
-      await this.userService.setUserSuMarketingOptStatus(ct.purchaser_id, ct.su_marketing_consent);
+    if (ct.platform_marketing_consent) {
+      await this.userService.setUserPlatformMarketingOptStatus(ct.purchaser_id, ct.platform_marketing_consent);
     }
   }
 }

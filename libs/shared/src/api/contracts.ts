@@ -18,7 +18,7 @@ import {
   IUserPrivate,
   IUserStub,
   LiveStreamState,
-  SuConsentOpt
+  PlatformConsentOpt
 } from '@core/interfaces';
 import { Asset as MuxAsset, LiveStream } from '@mux/mux-node';
 import Stripe from 'stripe';
@@ -92,7 +92,7 @@ export type EventContract = {
     host_id: IHost['_id'];
     ticket_id: ITicket['_id'];
     host_marketing_consent: ConsentOpt;
-    su_marketing_consent: SuConsentOpt | null;
+    platform_marketing_consent: PlatformConsentOpt | null;
   };
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
