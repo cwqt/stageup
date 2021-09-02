@@ -43,6 +43,8 @@ import { OnboardingStatePipe } from './_pipes/onboarding-state.pipe';
 import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
+import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
+import { OptOutReasonPipe } from './_pipes/opt-out-reason.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
 import { DonoPegPipe } from './_pipes/dono-peg.pipe';
@@ -53,7 +55,9 @@ import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe'
 import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-status.pipe';
 import { DeleteHostReasonPipe } from './_pipes/delete-host-reason.pipe';
 import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
+import { VisibilityPipe } from './_pipes/visibility.pipe';
 import { TimesPipe } from './_pipes/times.pipe';
+import { TimeUntilPipe } from './_pipes/time-until.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -140,6 +144,7 @@ import { HostDeleteDialogComponent } from './routes/host/host-delete-dialog/host
 import { ConfirmPasswordDialogComponent } from './components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { HostPerformanceThumbnailsComponent } from './routes/host/host-performance/host-performance-thumbnails/host-performance-thumbnails.component';
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
+import { PerformanceDeleteDialogComponent } from './routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { RatePerformanceComponent } from './components/rate-performance/rate-performance.component';
 import { LikePerformanceComponent } from './components/like-performance/like-performance.component';
 import { RedirectComponent } from './components/redirect/redirect.component';
@@ -148,6 +153,11 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
 import { HostAnalyticsHeaderItemComponent } from './routes/host/host-analytics/host-analytics-header-item/host-analytics-header-item.component';
 import { TermsLinksComponent } from './routes/gdpr/terms-links/terms-links.component';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
+import { GdprSettingsComponent } from './routes/settings/gdpr-settings/gdpr-settings.component';
+import { OptOutDialogComponent } from './components/dialogs/opt-out-dialog/opt-out-dialog.component';
+import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
+import { GdprDocumentUpload } from './components/dialogs/gdpr-document-upload/gdpr-document-upload.component';
+import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -156,6 +166,7 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     AdminOnboardingViewComponent,
     AdminPanelComponent,
     AppComponent,
+    DocumentViewComponent,
     LandingComponent,
     LoginComponent,
     ForgotPasswordComponent,
@@ -174,6 +185,7 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     HostComponent,
     HostPerformancesComponent,
     CreatePerformanceComponent,
+    DocumentViewComponent,
     HostPerformanceThumbnailsComponent,
     UpdatePerformanceComponent,
     PlayerComponent,
@@ -183,7 +195,10 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     HostDashboardComponent,
     OnboardingViewComponent,
     TimesPipe,
+    VisibilityPipe,
+    GdprDocumentTypePipe,
     OnboardingStatePipe,
+    OptOutReasonPipe,
     DeleteHostReasonPipe,
     ObjectLengthPipe,
     ShortDomainPipe,
@@ -245,6 +260,7 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     GenreFeedComponent,
     ProcessRefundsDialogComponent,
     UserPatronageComponent,
+    TimeUntilPipe,
     ConfirmationDialogComponent,
     UserPatronageComponent,
     HostPatronageSubscribersComponent,
@@ -254,15 +270,21 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
     ConfirmPasswordDialogComponent,
     HostPerformanceThumbnailsComponent,
     SocialSharingComponent,
+    PerformanceDeleteDialogComponent,
     RatePerformanceComponent,
     LikePerformanceComponent,
     RedirectComponent,
     FollowButtonComponent,
     HostAnalyticsComponent,
     HostAnalyticsHeaderItemComponent,
-    DocumentViewComponent,
+    CookieConsentComponent,
+    SelectReasonDialogComponent,
     TermsLinksComponent,
-    CookieConsentComponent
+    CookieConsentComponent,
+    GdprSettingsComponent,
+    OptOutDialogComponent,
+    AdminGdprDocumentsComponent,
+    GdprDocumentUpload
   ],
   imports: [
     AngularMaterialModule,

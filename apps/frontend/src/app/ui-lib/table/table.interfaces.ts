@@ -1,3 +1,4 @@
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   DottedPaths,
@@ -52,9 +53,9 @@ export interface IUITableColumnSort {
 }
 
 export interface IUiTableAction<K> {
-  type?: 'button' | 'popover';
+  type?: 'button' | 'popover' | 'toggle';
   label?: string;
-  click: (v: K) => void;
+  click?: (v: K) => void;
   kind?: ThemeKind;
   icon?: string;
   dropdown?: Array<{
@@ -63,6 +64,12 @@ export interface IUiTableAction<K> {
     kind?: ThemeKind;
     click: (v: K) => void;
   }>;
+  toggle?: {
+    after_label: string; // required primary label (to the right of the toggle)
+    before_label?: string; // Optional additional label (when toggle in off position)
+    initial_value: (v: K) => boolean;
+    event: (e: MatSlideToggleChange, v: K) => void;
+  };
 }
 
 export type IUiTransformedRowMeta<Input> = {

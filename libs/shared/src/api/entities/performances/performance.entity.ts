@@ -8,12 +8,14 @@ import {
   IFeedPerformanceStub,
   PerformanceStatus,
   RichText,
-  Visibility
+  Visibility,
+  IDeletePerfReason
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
   BaseEntity,
   Column,
+  DeleteDateColumn,
   Entity,
   EntityManager,
   JoinColumn,
@@ -44,17 +46,21 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.PendingSchedule }) status: PerformanceStatus;
   @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
 
-  @OneToOne(() => AssetGroup, { eager: true }) @JoinColumn() asset_group: AssetGroup;
-  @OneToMany(() => Ticket, ticket => ticket.performance) tickets: Ticket[];
+  @DeleteDateColumn() deletedAt?: Date;
+  @Column('jsonb', { nullable: true }) delete_reason: IDeletePerfReason;
+
+  @OneToOne(() => AssetGroup, { eager: true, onDelete: 'CASCADE', cascade: true })
+  @JoinColumn()
+  asset_group: AssetGroup;
+  @OneToMany(() => Ticket, ticket => ticket.performance, { onDelete: 'CASCADE', cascade: true }) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
-  @OneToMany(() => Like, like => like.performance) likes: Like[];
+  @OneToMany(() => Like, like => like.performance, { onDelete: 'CASCADE', cascade: true }) likes: Like[];
 
   constructor(data: DtoCreatePerformance, host: Host) {
     super();
     this._id = uuid();
     this.name = data.name;
     this.description = data.description;
-    this.premiere_datetime = data.premiere_datetime;
     this.genre = data.genre;
     this.tickets = [];
 
@@ -66,7 +72,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this.rating_count = 0;
     this.rating_total = 0;
     this.host = host;
-    this.publicity_period = { start: null, end: null };
+    this.publicity_period = { start: data.publicity_period.start, end: data.publicity_period.end };
   }
 
   async setup(txc: EntityManager): Promise<Performance> {
@@ -89,9 +95,10 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       description: this.description,
       created_at: this.created_at,
       thumbnail: this.thumbnail,
-      premiere_datetime: this.premiere_datetime,
+      publicity_period: this.publicity_period,
       assets: this.asset_group.assets.map(a => a.toStub()),
-      status: this.status
+      status: this.status,
+      visibility: this.visibility
     };
   }
 

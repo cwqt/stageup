@@ -49,6 +49,10 @@ host:
     created_at: Created At
     total_rows: Total Rows
 
+# Peformances    --------------------------------------------------------------------------------------
+performance:
+  cannot_delete_live: Performance cannot be deleted while currently live
+  cannot_delete_after_occurrence: Performance cannot be deleted after it has occured
 # Payment Status --------------------------------------------------------------------------------------
 payment_status:
   created: Created
@@ -72,6 +76,13 @@ stripe:
 refunds:
   no_invoices_found: Could not find any invoices
   refund_already_outstanding: Cannot refund while another refund is already outstanding
+
+# Opt Out Reasons ----------------------------------------------------------------------------------------------
+host_marketing_opt_out:
+  too_cluttered: Emails are too cluttered.
+  too_frequent: I'm getting emails too often.
+  not_relevant: The content isn't relevant to me.
+  didnt_sign_up: I never signed up, or I didn't realize that I have signed up.
 
 # Emails ----------------------------------------------------------------------------------------------
 email:
@@ -222,7 +233,7 @@ email:
   ticket.purchased_future__content: |
     Hello {user_name},
 
-    You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don't forget to mark your calendar.
+    You purchased tickets for {performance_name} for {amount}. It will premier on {publicity_period_start}. Don't forget to mark your calendar.
     We'll send you reminders closer to the time, so you don't miss it. :)    
 
     Receipt of this purchase: <{receipt_url}>
@@ -305,7 +316,7 @@ email:
     We're looking forward seeing you on StageUp!
 
     Cheers, 
-    
+
     StageUp team
   user.fifteen_minute_performance_reminder__subject: It's on in 15 minutes!
   user.fifteen_minute_performance_reminder__content: |
@@ -318,5 +329,61 @@ email:
     <a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to the performance</a>
 
     Cheers, 
-    
+
     StageUp team
+  performance.deleted_notify_host__subject: You have deleted {performance_name}
+  performance.deleted_notify_host__content: |
+    Hello **{host_name}**,
+
+    You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
+
+    We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.
+
+    Thanks,
+
+    **StageUp Team**
+  performance.deleted_notify_user__subject: >
+    Peformance: {performance_name} cancellation notification
+  performance.deleted_notify_user__content: |
+    Hi **{user_username}**,
+
+    Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.
+
+    Invoice#: {invoice_id}
+
+    Ticket Price: {ticket_amount}
+
+    We will automatically credit the funds to your **{card_brand}** ending in **{last_4}**. Please note, it may take up to 5 working days for your account to be credited.
+
+    Thanks,
+
+    **StageUp Team**
+  user.opting_in_to_marketing__subject: A new user has consented to marketing
+  user.opting_in_to_marketing__content: |
+    Hi **{host_name}**,
+
+    You have a new user who has consented to receiving marketing from you!
+
+    Username: {user_name}
+    Email: {user_email}
+
+    Please add them to your marketing communications. We will inform you again if the user chooses to opt out of marketing in the future.
+
+    Thanks,
+
+    **StageUp Team**
+  user.opting_out_of_marketing__subject: A user has opted out of marketing
+  user.opting_out_of_marketing__content: |
+    Hello,
+
+    Your subscriber {user_name} ({user_email}) has opted out of receiving direct emails from your organisation.
+    Additional information:
+
+    Reason: {opt_out_reason}
+    Message: {opt_out_message}
+
+    Kindly remove them from your mailing list. We will inform you again by email if they choose to opt back in.
+
+    Thanks,
+
+    **StageUp Team**
