@@ -1117,7 +1117,7 @@ now: <a href="{url}">{url}</a>></p>
     </trans-unit>				
 		<trans-unit id="email.ticket.purchased_future__content" datatype="html">
       <source><p>Hello {user_name},</p>
-<p>You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don’t forget to mark your calendar.
+<p>You purchased tickets for {performance_name} for {amount}. It will premier on {publicity_period_start}. Don’t forget to mark your calendar.
 We’ll send you reminders closer to the time, so you don’t miss it. :)</p>
 <p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
 <p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to my library</a></p>
@@ -1238,18 +1238,31 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </source>
       <target state="needs-translation"><p>Helo {user_username}!</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name}. Bydd yn cychwyn yn {premier_time}.</p><p> Gobeithio eich bod chi i gyd yn barod i'w wylio!</p><p> Ewch â mi i'm llyfrgell: <a href="{url}">{url}</a></p><p> Lloniannau,</p><p> Tîm StageUp</p></target>
     </trans-unit>				
-		<trans-unit id="email.performance.removed_notify_host__subject" datatype="html">
-      <source>You have {action} {performance_name}</source>
-      <target state="needs-translation">Mae gennych {action} {performance_name}</target>
+		<trans-unit id="email.performance.cancelled_notify_host__subject" datatype="html">
+      <source>You have cancelled {performance_name}</source>
+      <target state="needs-translation">Rydych chi wedi canslo {performance_name}</target>
     </trans-unit>				
-		<trans-unit id="email.performance.removed_notify_host__content" datatype="html">
+		<trans-unit id="email.performance.cancelled_notify_host__content" datatype="html">
       <source><p>Hello <strong>{host_name}</strong>,</p>
-<p>You have {action} your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
+<p>You have cancelled your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
 <p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
 <p>Thanks,</p>
 <p><strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Mae gennych {action} eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i'r holl gwsmeriaid a brynodd docynnau i'r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i'w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Rydych wedi canslo eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i&#39;r holl gwsmeriaid a brynodd docynnau i&#39;r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i&#39;w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.performance.softDeleted_notify_host__subject" datatype="html">
+      <source>You have deleted {performance_name}</source>
+      <target state="needs-translation">Rydych wedi dileu {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.performance.softDeleted_notify_host__content" datatype="html">
+      <source><p>Hello <strong>{host_name}</strong>,</p>
+<p>You have deleted your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
+<p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Rydych wedi dileu eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i&#39;r holl gwsmeriaid a brynodd docynnau i&#39;r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i&#39;w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.performance.removed_notify_user__subject" datatype="html">
       <source>Peformance, {performance_name} cancellation notification</source>

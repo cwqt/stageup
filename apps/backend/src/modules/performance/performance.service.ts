@@ -17,7 +17,7 @@ export class PerformanceService extends ModuleService {
     super();
   }
 
-  async deletePerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
+  async softDeletePerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
     const perf = await getCheck(Performance.findOne({ _id: performanceId }));
 
     if (perf.status === PerformanceStatus.Live)
@@ -37,7 +37,7 @@ export class PerformanceService extends ModuleService {
       {
         performance_id: performanceId,
         removal_reason: removalReason,
-        removal_type: RemovalType.Delete
+        removal_type: RemovalType.softDelete
       },
       locale
     );

@@ -337,7 +337,7 @@ email:
 
     **StageUp Team**
   performance.softDeleted_notify_host__subject: You have deleted {performance_name}
-  performance.softDeleted_notify_host__subject: |
+  performance.softDeleted_notify_host__content: |
     Hello **{host_name}**,
 
     You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**

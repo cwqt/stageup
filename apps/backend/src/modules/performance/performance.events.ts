@@ -19,7 +19,7 @@ import {
   i18n
 } from '@core/api';
 import { pipes, timestamp, unix } from '@core/helpers';
-import { BulkRefundReason, PerformanceStatus, RemovalType } from '@core/interfaces';
+import { BulkRefundReason, ILocale, PerformanceStatus, RemovalType } from '@core/interfaces';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
@@ -108,7 +108,7 @@ export class PerformanceEvents extends ModuleEvents {
       .withDeleted()
       .getOne();
 
-    this.sendHostPerformanceRemovalEmail(performance, ct.removal_type);
+    this.sendHostPerformanceRemovalEmail(performance, ct.removal_type, ct.__meta.locale);
 
     //Find all users who've bought tickets and fire Performance.deleted_notify_user for each invoice
     //First, return all tickets for a perf
@@ -162,24 +162,38 @@ export class PerformanceEvents extends ModuleEvents {
     }
   }
 
-  async sendHostPerformanceRemovalEmail(performance: Performance, removalType: RemovalType) {
-    //Send host email notifcation
-    this.queueService.addJob('send_email', {
-      subject: this.i18n.translate('@@email.performance.removed_notify_host__subject', ct.__meta.locale, {
-        performance_name: performance.name,
-        action: removalType === RemovalType.Cancel ? 'cancelled' : 'deleted'
-      }),
-      content: this.i18n.translate('@@email.performance.removed_notify_host__content', ct.__meta.locale, {
-        host_name: performance.host.name,
-        performance_name: performance.name,
-        performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL'),
-        action: removalType === RemovalType.Cancel ? 'cancelled' : 'deleted'
-      }),
-      from: Env.EMAIL_ADDRESS,
-      to: performance.host.email_address,
-      markdown: true,
-      attachments: []
-    });
+  async sendHostPerformanceRemovalEmail(performance: Performance, removalType: RemovalType, locale: ILocale) {
+    if (removalType === RemovalType.softDelete) {
+      this.queueService.addJob('send_email', {
+        subject: this.i18n.translate('@@email.performance.softDeleted_notify_host__subject', locale, {
+          performance_name: performance.name
+        }),
+        content: this.i18n.translate('@@email.performance.softDeleted_notify_host__content', locale, {
+          host_name: performance.host.name,
+          performance_name: performance.name,
+          performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: performance.host.email_address,
+        markdown: true,
+        attachments: []
+      });
+    } else {
+      this.queueService.addJob('send_email', {
+        subject: this.i18n.translate('@@email.performance.cancelled_notify_host__subject', locale, {
+          performance_name: performance.name
+        }),
+        content: this.i18n.translate('@@email.performance.cancelled_notify_host__content', locale, {
+          host_name: performance.host.name,
+          performance_name: performance.name,
+          performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: performance.host.email_address,
+        markdown: true,
+        attachments: []
+      });
+    }
   }
 
   async sendUserPerformanceRemovalEmail(ct: Contract<'performance.removed_notify_user'>) {
@@ -265,7 +279,10 @@ export class PerformanceEvents extends ModuleEvents {
           receipt_url: invoice.stripe_receipt_url,
           user_name: user.name || user.username,
           performance_name: invoice.ticket.performance.name,
-          premier_time: this.i18n.date(unix(invoice.ticket.performance.premiere_datetime), ct.__meta.locale),
+          publicity_period_start: this.i18n.date(
+            unix(invoice.ticket.performance.publicity_period.start),
+            ct.__meta.locale
+          ),
           amount: this.i18n.money(invoice.amount, invoice.currency),
           url: link
         }),
