@@ -24,7 +24,7 @@ export default {
   createPerformance: async (host: IHost | IHostStub, data?: DtoCreatePerformance): Promise<IPerformance> => {
     data = data || {
       name: 'performance name',
-      premiere_datetime: timestamp(),
+      publicity_period: { start: 161347834, end: 161347834 },
       genre: Genre.Contemporary,
       description: 'some performance',
       type: 'vod'

@@ -8,6 +8,7 @@ coverage
 
 # GCP service account private keys
 *.service_account.json
+apps/backend/service_account.json
 
 # Postgres Docker Compose copy
 store
