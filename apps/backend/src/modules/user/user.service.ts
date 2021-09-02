@@ -1,6 +1,4 @@
-import { UserStageUpMarketingConsent } from './../../../../../libs/shared/src/api/entities/gdpr/consents/user-stageup-marketing-consent.entity';
 import { Connection } from 'typeorm';
-import { UserHostMarketingConsent } from './../../../../../libs/shared/src/api/entities/gdpr/consents/user-host-marketing-consent.entity';
 import {
   Address,
   getCheck,
@@ -12,7 +10,9 @@ import {
   User,
   Consentable,
   Host,
-  POSTGRES_PROVIDER
+  POSTGRES_PROVIDER,
+  UserHostMarketingConsent,
+  UserStageUpMarketingConsent
 } from '@core/api';
 import { DtoCreateUser, Environment, IAddress, ConsentOpt, SuConsentOpt } from '@core/interfaces';
 import jwt from 'jsonwebtoken';
@@ -110,7 +110,7 @@ export class UserService extends ModuleService {
   }
 
   async setUserHostMarketingOptStatus(userId: string, hostId: string, optStatus: ConsentOpt) {
-    // check if already consenting to this host, if not then soft-opt in
+    // check if already consenting to this host
     const existingConsent = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'c')
       .where('c.user__id = :uid', { uid: userId })
       .andWhere('c.host__id = :hid', { hid: hostId })
@@ -154,7 +154,6 @@ export class UserService extends ModuleService {
     const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
     const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
 
-    // SU marketing doesn't include an opt-in status. It is simply true or false (i.e. it exists in the DB or it does not)
     // Add to database if the user is opting in and the consent doesn't already exist
     if (!existingConsent) {
       const user = await User.findOne({ _id: userId });
