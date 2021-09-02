@@ -53,13 +53,14 @@ export interface IPerformanceStub {
   description?: RichText; // description of performance
   rating_count: number; // Total scores accumulated
   rating_total: number; // Number of ratings
-  premiere_datetime?: number; // when the performance is ready to be streamed
   views: number; // total user view count
   like_count: number; // total user likes
   created_at: number;
   assets?: IAssetStub[];
   thumbnail: string;
   status: PerformanceStatus;
+  publicity_period: { start: number; end: number }; // unix timestamps
+  visibility: Visibility;
 }
 
 export interface IFeedPerformanceStub extends IPerformanceStub {
@@ -71,7 +72,6 @@ export interface IPerformance extends IPerformanceStub {
   genre: Genre;
   tickets: ITicketStub[];
   assets: IAssetStub[];
-  publicity_period: { start: number; end: number }; // unix timestamps
 }
 
 // Interface for additional client information regarding the performance.
@@ -91,7 +91,7 @@ export type DtoPerformance = IEnvelopedData<
 // data transfer object
 export type DtoCreatePerformance = Pick<
   Required<IPerformance>,
-  'name' | 'premiere_datetime' | 'description' | 'genre'
+  'name' | 'publicity_period' | 'description' | 'genre'
 > & { type: 'vod' | 'live' };
 
 // private to host

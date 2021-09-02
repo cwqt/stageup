@@ -55,6 +55,7 @@ import { PaymentMethodBrandName } from './_pipes/payment-method-brand-name.pipe'
 import { PatronSubscriptionStatusPipe } from './_pipes/patron-subscription-status.pipe';
 import { DeleteHostReasonPipe } from './_pipes/delete-host-reason.pipe';
 import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
+import { VisibilityPipe } from './_pipes/visibility.pipe';
 import { TimesPipe } from './_pipes/times.pipe';
 import { TimeUntilPipe } from './_pipes/time-until.pipe';
 
@@ -194,6 +195,7 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
     HostDashboardComponent,
     OnboardingViewComponent,
     TimesPipe,
+    VisibilityPipe,
     GdprDocumentTypePipe,
     OnboardingStatePipe,
     OptOutReasonPipe,
