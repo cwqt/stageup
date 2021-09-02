@@ -28,7 +28,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   VoDAssetCreator: () => Promise<ICreateAssetRes>;
   VoDSignedUrl: Cacheable<ICreateAssetRes> = new Cacheable();
   performance: IPerformance;
-  terms: boolean;
+  acceptedStreamingTerms: boolean;
 
   loading: Observable<boolean>;
 
@@ -88,7 +88,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
       },
       resolvers: {
         output: async v => {
-          this.terms = v.terms;
+          this.acceptedStreamingTerms = v.terms;
           return this.hostService.createPerformance(this.hostService.hostId, {
             name: v.name,
             description: v.description,
@@ -116,7 +116,11 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             this.appService.navigateTo(`/dashboard/performances/${v._id}`);
             this.ref.close(v);
           }
-          this.gdprService.setStreamCompliance(this.terms, this.hostService.hostId, this.performance._id);
+          this.gdprService.updateStreamCompliance(
+            this.acceptedStreamingTerms,
+            this.hostService.hostId,
+            this.performance._id
+          );
         },
         failure: async () => {}
       }

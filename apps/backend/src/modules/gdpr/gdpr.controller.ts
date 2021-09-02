@@ -10,8 +10,7 @@ import {
   Auth,
   UploadersConsent,
   Host,
-  Performance,
-  ErrorHandler
+  Performance
 } from '@core/api';
 import {
   ConsentableType,
@@ -24,6 +23,7 @@ import {
 import { enums, object } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { ModuleController } from '@core/api';
+import { ErrorHandler } from '../../common/error';
 
 import AuthStrat from '../../common/authorisation';
 import { GdprService } from './gdpr.service';
@@ -86,17 +86,14 @@ export class GdprController extends ModuleController {
     }
   };
 
-  setStreamCompliance: IControllerEndpoint<void> = {
-    authorisation: AuthStrat.hasSpecificHostPermission(HostPermission.Admin),
+  updateStreamCompliance: IControllerEndpoint<void> = {
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
       const hostId = req.params.hid;
       const perfId = req.params.pid;
 
       if (!req.body.is_compliant) {
-        throw new ErrorHandler(
-          HTTP.Forbidden,
-          'Self-certification of streaming license compliance not made. Please tick the box when creating a performance'
-        );
+        throw new ErrorHandler(HTTP.Forbidden, '@@error.stream_compliance_not_accepted');
       }
 
       const host = await Host.findOne({ _id: hostId });
