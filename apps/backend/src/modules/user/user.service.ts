@@ -1,5 +1,20 @@
-import { Address, getCheck, PasswordReset, Provider, StripeProvider, STRIPE_PROVIDER, transact, User } from '@core/api';
-import { DtoCreateUser, Environment, IAddress } from '@core/interfaces';
+import { Connection } from 'typeorm';
+import {
+  Address,
+  getCheck,
+  PasswordReset,
+  Provider,
+  StripeProvider,
+  STRIPE_PROVIDER,
+  transact,
+  User,
+  Consentable,
+  Host,
+  POSTGRES_PROVIDER,
+  UserHostMarketingConsent,
+  UserStageUpMarketingConsent
+} from '@core/api';
+import { DtoCreateUser, Environment, IAddress, ConsentOpt, PlatformConsentOpt } from '@core/interfaces';
 import jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
 import { ModuleService } from '@core/api';
@@ -10,7 +25,7 @@ import Stripe from 'stripe';
 // IMPORTANT when fully implemented remove Partial<>
 @Service()
 export class UserService extends ModuleService {
-  constructor(@Inject(STRIPE_PROVIDER) private stripe: Stripe) {
+  constructor(@Inject(STRIPE_PROVIDER) private stripe: Stripe, @Inject(POSTGRES_PROVIDER) private ORM: Connection) {
     super();
   }
 
@@ -92,6 +107,65 @@ export class UserService extends ModuleService {
     await reset.save();
 
     return { user, token, reset };
+  }
+
+  async setUserHostMarketingOptStatus(userId: string, hostId: string, optStatus: ConsentOpt) {
+    // check if already consenting to this host
+    const existingConsent = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'c')
+      .where('c.user__id = :uid', { uid: userId })
+      .andWhere('c.host__id = :hid', { hid: hostId })
+      .getOne();
+
+    // Return if there is existing consent and it is equal to what the user is setting it to
+    if (existingConsent?.opt_status == optStatus) return;
+
+    // Get the latest policies
+    const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+    const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
+    const user = await User.findOne({ _id: userId });
+    const host = await Host.findOne({ _id: hostId });
+
+    // User is updating their previous opt-in status
+    if (existingConsent) {
+      // Update the status. Also update which documents it is that the user is opting in/out from
+      existingConsent.opt_status = optStatus;
+      existingConsent.privacy_policy = privacyPolicy;
+      existingConsent.terms_and_conditions = toc;
+
+      await existingConsent.save();
+    } else {
+      // User is opting in/out for the first time
+      const newConsent = new UserHostMarketingConsent(optStatus, host, user, toc, privacyPolicy);
+      await newConsent.save();
+    }
+  }
+
+  async setUserPlatformMarketingOptStatus(userId: string, optStatus: PlatformConsentOpt) {
+
+    // check if already consenting to SU marketing
+    const existingConsent = await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
+      .where('c.user__id = :uid', { uid: userId })
+      .getOne();
+
+    // Return if there is existing consent and it is equal to what the user is setting it to
+    if (existingConsent?.opt_status == optStatus) return;
+
+    // Get the latest policies
+    const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+    const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
+
+    // Add to database if the user is opting in and the consent doesn't already exist
+    if (!existingConsent) {
+      const user = await User.findOne({ _id: userId });
+      const platformMarketingConsent = new UserStageUpMarketingConsent(optStatus, user, toc, privacyPolicy);
+      await platformMarketingConsent.save();
+    } else {
+      // Update existing consent
+      existingConsent.opt_status = optStatus;
+      existingConsent.privacy_policy = privacyPolicy;
+      existingConsent.terms_and_conditions = toc;
+      await existingConsent.save();
+    }
   }
 
   // async readUserFollows(): Promise<IEnvelopedData<IFollowing[]>> {}

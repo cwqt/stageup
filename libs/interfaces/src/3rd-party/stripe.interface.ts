@@ -15,6 +15,7 @@ type PurchaseablePaymentIntentOptions = {
     selected_dono_peg: DonoPeg;
     allow_any_amount: number;
     hard_host_marketing_opt_out: boolean;
+    stageup_marketing_opt_in: boolean;
   };
   [PurchaseableType.PatronTier]: {};
 };
