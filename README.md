@@ -12,7 +12,7 @@ Refer to [README.md](https://github.com/StageUp/core/blob/dev/apps/README.md) 
 
 Then, if you haven't already, you need to pull the project from GitHub to your local machine.
 
-Before doing this, set up an SSH key for GitHub by following GitHub's "Connect with SSH" guide: [https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/about-ssh](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/about-ssh) 
+Before doing this, set up an SSH key for GitHub by following GitHub's "Connect with SSH" guide: <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent> 
 
 Then, pull this project onto your machine by entering the following command into a terminal:
 
@@ -61,7 +61,8 @@ All packages that are used throughout all apps & libs are defined within a singl
 
 ## **Project Layout**
 
-  `apps
+  ```
+  apps
     frontend           # the stageup frontend
       nginx.conf       # nginx config for frontend server
       src.app          # front-end routes, components & services
@@ -106,7 +107,7 @@ All packages that are used throughout all apps & libs are defined within a singl
   .env                 # .env for github tokens (deployment only)
   .env.example         # example .env
   .env.development     # also .env.staging, .testing & .production
-\`\`\`
+```
 
 ## **i18n & a11y**
 
