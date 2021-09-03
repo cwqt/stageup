@@ -13,6 +13,8 @@ import { PerformanceService } from '@frontend/services/performance.service';
 import { Cacheable } from '@frontend/app.interfaces';
 import { merge, Observable } from 'rxjs';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
+import { MyselfService } from '@frontend/services/myself.service';
+import { GdprService } from '@frontend/services/gdpr.service';
 
 @Component({
   selector: 'app-create-performance',
@@ -26,6 +28,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   VoDAssetCreator: () => Promise<ICreateAssetRes>;
   VoDSignedUrl: Cacheable<ICreateAssetRes> = new Cacheable();
   performance: IPerformance;
+  acceptedStreamingTerms: boolean;
 
   loading: Observable<boolean>;
 
@@ -39,7 +42,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     private performanceService: PerformanceService,
     private hostService: HostService,
     private toastService: ToastService,
-    private appService: AppService
+    private appService: AppService,
+    private gdprService: GdprService
   ) {}
 
   setType(type: 'live' | 'vod') {
@@ -75,11 +79,17 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           initial: { start: new Date(), end: new Date() },
           is_date_range: true,
           actions: true
+        }),
+        terms: UiField.Checkbox({
+          label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally`,
+          validators: [{ type: 'required' }],
+          hint: $localize`Set the start and end date for your event`
         })
       },
       resolvers: {
-        output: async v =>
-          this.hostService.createPerformance(this.hostService.hostId, {
+        output: async v => {
+          this.acceptedStreamingTerms = v.terms;
+          return this.hostService.createPerformance(this.hostService.hostId, {
             name: v.name,
             description: v.description,
             genre: v.genre,
@@ -88,7 +98,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
               end: timestamp(v.publicity_period.end)
             },
             type: this.type
-          })
+          });
+        }
       },
       handlers: {
         success: async v => {
@@ -105,6 +116,11 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             this.appService.navigateTo(`/dashboard/performances/${v._id}`);
             this.ref.close(v);
           }
+          this.gdprService.updateStreamCompliance(
+            this.acceptedStreamingTerms,
+            this.hostService.hostId,
+            this.performance._id
+          );
         },
         failure: async () => {}
       }

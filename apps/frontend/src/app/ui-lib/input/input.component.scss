@@ -230,6 +230,9 @@ mat-form-field ::ng-deep {
 // }
 
 .checkbox ::ng-deep {
+  .mat-checkbox-layout {
+    white-space: pre-wrap;
+  }
   .mat-form-field-infix {
     padding: 0;
     border: 0;
