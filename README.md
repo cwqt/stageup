@@ -14,12 +14,10 @@ Then, if you haven't already, you need to pull the project from GitHub to your l
 
 Before doing this, set up an SSH key for GitHub by following GitHub's "Connect with SSH" guide: [https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/about-ssh](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/about-ssh) 
 
-Then, pull this project onto your machine by typing the following commands into a terminal opened in an empty directory:
+Then, pull this project onto your machine by entering the following command into a terminal:
 
-```
-git init
-git remote add origin [git@github.com](mailto:git@github.com):StageUp/core.git
-git pull origin dev
+```shell
+git clone git@github.com:StageUp/core.git
 ```
 
 ## Installation
