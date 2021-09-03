@@ -30,32 +30,22 @@ Once you've completed the prereuisites above, for each application, review the s
 - **Terraform** (`terraform`): [README.md](terraform/README.md)
 
 For additional documentation on some of these and other topics, see our [Notion Software Wiki](https://www.notion.so/Software-Wiki-1b9f997a4d7942b49de9036eeb3f0f41).
+
 ## Running `npm run start`
 
 All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects. Run `npm install --force` in the project root to install all required dependencies. Production builds perform tree-shaking optimization to remove unused libraries, so ensure you always use ES6 import syntax.
 
-- Start **Redis** from Docker Desktop
-- Start **PostgreSQL** from Docker Desktop
-- On a terminal, run `npm run start`, and start the backend
-- With the backend running, run the seeder by visiting the route: <http://localhost:3000/utils/seed> in a web browser (or sending it a `GET` request)
-- On another terminal, run `npm run start`, and start the frontend
+- **Backend**: Use `npm run start` & pick `backend` from the TUI
+  - For first time setup, with the backend running, run the seeder by visiting the route: <http://localhost:3000/utils/seed> in a web browser (or sending it a `GET` request)
+- **Frontend** `npm run start`, and select the frontend
+- **Redis** & **Postgres** run from Docker Desktop
 
-- **Redis**: Start from Docker Desktop
-- **PostgreSQL**: Start from Docker Desktop
-- **api-tests**
-  - Create a new database using TablePlus called `testing` in Postgres
-  - Ensure the backend is running in test mode via `npm run backend:testing`
-  - For developing a single test use: `npm run api-tests`
-  - This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
-  - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
-  - Now you can develop the test & it will auto-re-run every time a change is made & saved
-
-## **Running `api-tests`**
+### **Running `api-tests`**
 
 - Create a new database using PGAdmin called `testing` in Postgres
-- Ensure the backend is running in test mode via `npm run backend:testing`
+- Ensure the backend is running in test mode via `npm run backend:serve:testing`
 - For developing a single test use: `npm run api-tests`
-- This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
+- This will first run all tests & then bring up a menu called `Watch Usage`, press `p` to filter by filename regex
 - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
 - Now you can develop the test & it will auto-re-run every time a change is made & saved
 
@@ -137,12 +127,12 @@ All packages that are used throughout all apps & libs are defined within a singl
 
 ## **Troubleshooting**
 
-### **Env Setup**
+### **.env Setup**
 
 Below are some common errors we've seen devs experience when setting up their envs:
 
 - Sometimes trailing spaces in env files will cause them not to load properly.
-- if you copy & paste keyto and from Slack, Slack will replace quotation mark characters, so check that you're using the right type of quotation marks:  "
+- if you copy & paste keyto and from Slack, Slack will replace quotation mark characters, so check that you're using the right type of quotation marks: `"`
 
 ### **VSCode**
 
