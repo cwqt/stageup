@@ -38,7 +38,7 @@ export enum RemovalReason {
 
 export enum RemovalType {
   Cancel,
-  softDelete
+  SoftDelete
 }
 
 export interface IRemovalReason {
