@@ -74,6 +74,13 @@ export class FeedComponent extends CarouselBaseComponent<IPerformanceStub|IHostS
     private route: ActivatedRoute
   ) {
     super(logger, toastService, breakpointObserver);
+
+    // setting fetchData separately as this is not accessible on super()
+    super.fetchData = this.fetchFeed.bind(
+      null,
+      this.feedService,
+      this.carouselData,
+    );
   }
 
   async ngOnInit() {
@@ -98,14 +105,6 @@ export class FeedComponent extends CarouselBaseComponent<IPerformanceStub|IHostS
 
   openGenreFeed(genre: Genre) {
     this.appService.navigateTo(`/genres/${genre}`);
-  }
-
-  fetchFeedParser(): (
-    feedService: FeedService,
-    carouselData: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>>,
-    carouselIndex: CarouselIdx
-  ) => Promise<IEnv<(IPerformanceStub|IHostStub)[]>> {
-    return this.fetchFeed.bind(null, this.feedService, this.carouselData);
   }
 
   async fetchFeed(

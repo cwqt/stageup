@@ -6,6 +6,7 @@ import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
 import { IEnvelopedData as IEnv } from '@core/interfaces';
+import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 
 export class CarouselBaseComponent<T, CarouselIdx> {
     public carousels: QueryList<CarouselComponent>;
@@ -19,7 +20,8 @@ export class CarouselBaseComponent<T, CarouselIdx> {
       [Breakpoints.XLarge]: 6
     };
 
-    public carouselData;
+    public carouselData: { [index in keyof CarouselIdx]: ICacheable<IEnv<T[]>> };
+    protected fetchData: (...args:any[]) => Promise<IEnv<T[]>>;
 
     constructor(
         protected logger: NGXLogger,
@@ -40,7 +42,6 @@ export class CarouselBaseComponent<T, CarouselIdx> {
 
     public async getNextCarouselPage(
         carouselIndex: keyof CarouselIdx,
-        fetchData: (...args:any[]) => Promise<IEnv<T[]>>
     ) {
     // Already fetching page or no more pages to fetch
         if (this.carouselData[carouselIndex].meta.loading_page) return;
@@ -52,7 +53,7 @@ export class CarouselBaseComponent<T, CarouselIdx> {
         this.carouselData[carouselIndex].meta.loading_page = true;
         try {
             await timeout(1000);
-            const envelope = await fetchData(carouselIndex);
+            const envelope = await this.fetchData(carouselIndex);
             // Then join this page onto the current array at the end
             envelope.data = [...this.carouselData[carouselIndex].data.data, ...envelope.data];
             this.carouselData[carouselIndex].data = envelope;
@@ -67,7 +68,6 @@ export class CarouselBaseComponent<T, CarouselIdx> {
     public async handleCarouselEvents(
         event,
         carouselIndex: keyof CarouselIdx,
-        fetchData: (...args:any[]) => Promise<IEnv<T[]>>,
     ) {
         if (event.name == 'next') {
             // get next page in carousel
@@ -76,7 +76,7 @@ export class CarouselBaseComponent<T, CarouselIdx> {
             if (carousel.slide.isLastSlide(carousel.slide.counter)) {
                 // Fetch the next page & push it onto the carousels data array
                 this.logger.info('Reached last page of carousel: ${carouselIndex}');
-                await this.getNextCarouselPage(carouselIndex, fetchData);
+                await this.getNextCarouselPage(carouselIndex);
 
                 // Update state of carousel with new pushed elements
                 carousel.cellLength = carousel.getCellLength();

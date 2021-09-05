@@ -60,7 +60,7 @@
 
           <carousel
             *ngIf="!carousel.value.loading"
-            (events)="handleCarouselEvents($event, carousel.key, fetchFeedParser())"
+            (events)="handleCarouselEvents($event, carousel.key)"
             [margin]="20"
             [height]="256"
             [loading]="carousel.value.meta.loading_page"

@@ -63,6 +63,14 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
     public dialog: MatDialog,    
   ) {
     super(logger, toastService, breakpointObserver);
+
+    // setting fetchData separately as this is not accessible on super()
+    super.fetchData = this.fetchFeed.bind(
+      null,
+      this.hostService,
+      this.carouselData,
+      this.host,
+    );
   }
 
   async ngOnInit() {
@@ -134,23 +142,14 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
     );
   }
 
-  fetchFeedParser(): (
-    hostService: HostService,
-    carouselData: ICacheable<IEnv<IPerformanceStub[]>>,
-    hid: string,
-    carouselIndex: CarouselIdx
-  ) => Promise<IEnv<IPerformanceStub[]>> {
-    return this.fetchFeed.bind(null, this.hostService, this.carouselData, this.host.data.data._id);
-  }
-
   async fetchFeed(
     hostService: HostService,
     carouselData: ICacheable<IEnv<IPerformanceStub[]>>,
-    hid: string,
+    host: ICacheable<IEnvelopedData<IHost, IUserFollow>>,
     carouselIndex: CarouselIdx
   ): Promise<IEnv<IPerformanceStub[]>> {
     return (await hostService.readHostFeed(
-      hid,
+      host.data.data._id,
       {
           [carouselIndex]: {
               page: carouselData[carouselIndex].data.__paging_data.next_page,
