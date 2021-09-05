@@ -21,7 +21,7 @@ type CarouselIdx = keyof IFeed;
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss']
 })
-export class FeedComponent extends CarouselBaseComponent implements OnInit {
+export class FeedComponent extends CarouselBaseComponent<IPerformanceStub|IHostStub> implements OnInit {
   @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
 
   public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
@@ -100,7 +100,7 @@ export class FeedComponent extends CarouselBaseComponent implements OnInit {
     this.appService.navigateTo(`/genres/${genre}`);
   }
 
-  fetchFeedParser(): Function {
+  fetchFeedParser(): (...args:any[]) => Promise<IEnv<(IPerformanceStub|IHostStub)[]>> {
     return this.fetchFeed.bind(null, this.feedService, this.carouselData);
   }
 
@@ -108,7 +108,7 @@ export class FeedComponent extends CarouselBaseComponent implements OnInit {
     feedService: FeedService,
     carouselData: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>>,
     carouselIndex: CarouselIdx
-  ): Promise<IPerformanceStub[]| IHostStub[]> {
+  ): Promise<IEnv<(IPerformanceStub|IHostStub)[]>> {
     return (await feedService.getFeed({
         [carouselIndex]: {
             page: carouselData[carouselIndex].data.__paging_data.next_page,

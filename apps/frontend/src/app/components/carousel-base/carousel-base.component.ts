@@ -5,10 +5,11 @@ import { timeout } from '@core/helpers';
 import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
+import { IEnvelopedData as IEnv, IPerformanceStub, IHostStub } from '@core/interfaces';
 
 type CarouselIdx = any;
 
-export class CarouselBaseComponent {
+export class CarouselBaseComponent<T> {
     public carousels: QueryList<CarouselComponent>;
 
     public activeBreakpoint: string;
@@ -33,15 +34,16 @@ export class CarouselBaseComponent {
         const breakpoints = Object.keys(this.breakpointCellShownMap);
         this.breakpointObserver.observe(breakpoints).subscribe(result => {
             if (result.matches) {
-                this.activeBreakpoint = breakpoints.find(breakpoint => {
-                    return result.breakpoints[breakpoint];
-                });
+                this.activeBreakpoint = breakpoints.find(breakpoint => result.breakpoints[breakpoint]);
                 this.currentCellsToShow = this.breakpointCellShownMap[this.activeBreakpoint];
             }
         });
     }
 
-    public async getNextCarouselPage(carouselIndex: CarouselIdx, fetchData: Function) {
+    public async getNextCarouselPage(
+        carouselIndex: CarouselIdx,
+        fetchData: (...args:any[]) => Promise<IEnv<T[]>>
+    ) {
     // Already fetching page or no more pages to fetch
         if (this.carouselData[carouselIndex].meta.loading_page) return;
         if (!this.carouselData[carouselIndex].data.__paging_data.next_page) {
@@ -67,7 +69,7 @@ export class CarouselBaseComponent {
     public async handleCarouselEvents(
         event,
         carouselIndex: CarouselIdx, // keyof this.carousel
-        fetchData: Function,
+        fetchData: (...args:any[]) => Promise<IEnv<T[]>>,
     ) {
         if (event.name == 'next') {
             // get next page in carousel

@@ -36,7 +36,7 @@ type CarouselIdx = keyof IHostFeed;
   templateUrl: './host-profile.component.html',
   styleUrls: ['./host-profile.component.scss']
 })
-export class HostProfileComponent extends CarouselBaseComponent implements OnInit {
+export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub> implements OnInit {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
   @Input() hostUsername?: string;
@@ -135,7 +135,7 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
     );
   }
 
-  fetchFeedParser(): Function {
+  fetchFeedParser(): (...args:any[]) => Promise<IEnv<IPerformanceStub[]>> {
     return this.fetchFeed.bind(null, this.hostService, this.carouselData, this.host.data.data._id);
   }
 
@@ -144,7 +144,7 @@ export class HostProfileComponent extends CarouselBaseComponent implements OnIni
     carouselData: ICacheable<IEnv<IPerformanceStub[]>>,
     hid: string,
     carouselIndex: CarouselIdx
-  ): Promise<IPerformanceStub[]> {
+  ): Promise<IEnv<IPerformanceStub[]>> {
     return (await hostService.readHostFeed(
       hid,
       {
