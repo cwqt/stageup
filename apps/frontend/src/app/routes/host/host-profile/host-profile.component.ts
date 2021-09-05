@@ -8,7 +8,6 @@ import {
   IUserFollow,
   IEnvelopedData as IEnv,
   IPerformanceStub,
-  IHostStub,
   IHostFeed
 } from '@core/interfaces';
 import { createICacheable, ICacheable, cachize } from '../../../app.interfaces';
@@ -36,7 +35,7 @@ type CarouselIdx = keyof IHostFeed;
   templateUrl: './host-profile.component.html',
   styleUrls: ['./host-profile.component.scss']
 })
-export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub> implements OnInit {
+export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub, IHostFeed> implements OnInit {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
   @Input() hostUsername?: string;
@@ -135,7 +134,12 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
     );
   }
 
-  fetchFeedParser(): (...args:any[]) => Promise<IEnv<IPerformanceStub[]>> {
+  fetchFeedParser(): (
+    hostService: HostService,
+    carouselData: ICacheable<IEnv<IPerformanceStub[]>>,
+    hid: string,
+    carouselIndex: CarouselIdx
+  ) => Promise<IEnv<IPerformanceStub[]>> {
     return this.fetchFeed.bind(null, this.hostService, this.carouselData, this.host.data.data._id);
   }
 

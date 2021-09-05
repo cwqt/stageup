@@ -5,11 +5,9 @@ import { timeout } from '@core/helpers';
 import { ToastService } from '@frontend/services/toast.service';
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
-import { IEnvelopedData as IEnv, IPerformanceStub, IHostStub } from '@core/interfaces';
+import { IEnvelopedData as IEnv } from '@core/interfaces';
 
-type CarouselIdx = any;
-
-export class CarouselBaseComponent<T> {
+export class CarouselBaseComponent<T, CarouselIdx> {
     public carousels: QueryList<CarouselComponent>;
 
     public activeBreakpoint: string;
@@ -41,7 +39,7 @@ export class CarouselBaseComponent<T> {
     }
 
     public async getNextCarouselPage(
-        carouselIndex: CarouselIdx,
+        carouselIndex: keyof CarouselIdx,
         fetchData: (...args:any[]) => Promise<IEnv<T[]>>
     ) {
     // Already fetching page or no more pages to fetch
@@ -68,7 +66,7 @@ export class CarouselBaseComponent<T> {
 
     public async handleCarouselEvents(
         event,
-        carouselIndex: CarouselIdx, // keyof this.carousel
+        carouselIndex: keyof CarouselIdx,
         fetchData: (...args:any[]) => Promise<IEnv<T[]>>,
     ) {
         if (event.name == 'next') {
