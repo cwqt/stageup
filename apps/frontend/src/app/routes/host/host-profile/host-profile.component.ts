@@ -52,20 +52,18 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
   };
 
   constructor(
-    logger: NGXLogger,
-    toastService: ToastService,
-    breakpointObserver: BreakpointObserver,
+    private toastService: ToastService,
     private hostService: HostService,
     private myselfService: MyselfService,
     private appService: AppService,
-    public route: ActivatedRoute,
     private helperService: HelperService,
+    public route: ActivatedRoute,
     public dialog: MatDialog,    
   ) {
-    super(logger, toastService, breakpointObserver);
+    super();
 
-    // setting fetchData separately as this is not accessible on super()
-    super.fetchData = this.fetchFeed.bind(
+    // setting resolver separately as this is not accessible on super()
+    super.resolver = this.fetchFeed.bind(
       null,
       this.hostService,
       this.carouselData,

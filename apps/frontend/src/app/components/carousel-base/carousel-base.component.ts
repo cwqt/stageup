@@ -7,35 +7,48 @@ import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { NGXLogger } from 'ngx-logger';
 import { IEnvelopedData as IEnv } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { AppModule } from '@frontend/app.module' // or whatever this path to the root app.module.ts file is
 
+const BREAKPOINT_CELLS_SHOWN_MAP: { [index: string]: number } = {
+    [Breakpoints.Small]: 1,
+    [Breakpoints.Medium]: 2,
+    [Breakpoints.Large]: 4,
+    [Breakpoints.XLarge]: 6
+  };
 export class CarouselBaseComponent<T, CarouselIdx> {
+    // public to template, consumers should ignore these
+    public _activeBreakpoint: string;
+    public _currentCellsToShow: number;
+
+    // function that returns carousel items
+    private resolver: (index:keyof CarouselIdx) => Promise<IEnv<T[]>>;
+
+    // carousel components themselves
     public carousels: QueryList<CarouselComponent>;
-
-    public activeBreakpoint: string;
-    public currentCellsToShow: number;
-    public breakpointCellShownMap: { [index: string]: number } = {
-      [Breakpoints.Small]: 1,
-      [Breakpoints.Medium]: 2,
-      [Breakpoints.Large]: 4,
-      [Breakpoints.XLarge]: 6
-    };
-
+    // indexed object of resolved carousel items
     public carouselData: { [index in keyof CarouselIdx]: ICacheable<IEnv<T[]>> };
-    protected fetchData: (...args:any[]) => Promise<IEnv<T[]>>;
 
-    constructor(
-        protected logger: NGXLogger,
-        protected toastService: ToastService,
-        protected breakpointObserver: BreakpointObserver
-    ) {}
+    private logger: NGXLogger;
+    private toastService:ToastService;
+    private breakpointObserver:BreakpointObserver;
+
+    constructor(resolver:(index:keyof CarouselIdx) => Promise<T[]>) {
+        // use the IoC container to avoid drilling these up to the parent
+        // i haven't tested this but worth a shot
+        this.logger = AppModule.injector.get(NGXLogger);
+        this.toastService = AppModule.injector.get(ToastService);
+        this.breakpointObserver = AppModule.injector.get(BreakpointObserver);
+
+        this.resolver = resolver;
+    }
 
     async onInit() {
         // Change number of cells in a row displayed at any one point depending on screen width
-        const breakpoints = Object.keys(this.breakpointCellShownMap);
+        const breakpoints = Object.keys(BREAKPOINT_CELLS_SHOWN_MAP);
         this.breakpointObserver.observe(breakpoints).subscribe(result => {
             if (result.matches) {
-                this.activeBreakpoint = breakpoints.find(breakpoint => result.breakpoints[breakpoint]);
-                this.currentCellsToShow = this.breakpointCellShownMap[this.activeBreakpoint];
+                this._activeBreakpoint = breakpoints.find(breakpoint => result.breakpoints[breakpoint]);
+                this._currentCellsToShow = BREAKPOINT_CELLS_SHOWN_MAP[this._activeBreakpoint];
             }
         });
     }
@@ -53,7 +66,7 @@ export class CarouselBaseComponent<T, CarouselIdx> {
         this.carouselData[carouselIndex].meta.loading_page = true;
         try {
             await timeout(1000);
-            const envelope = await this.fetchData(carouselIndex);
+            const envelope = await this.resolver(carouselIndex);
             // Then join this page onto the current array at the end
             envelope.data = [...this.carouselData[carouselIndex].data.data, ...envelope.data];
             this.carouselData[carouselIndex].data = envelope;

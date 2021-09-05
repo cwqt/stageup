@@ -303,4 +303,17 @@ import { SelectReasonDialogComponent } from './components/dialogs/select-reason-
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {}
+
+import {Injector} from '@angular/core';
+export class AppModule { 
+    /**
+     * Allows for retrieving singletons using `AppModule.injector.get(MyService)`
+     * This is good to prevent injecting the service as constructor parameter.
+     */
+
+      // see https://stackoverflow.com/a/44260455 for context
+      static injector: Injector;
+      constructor(injector: Injector) {
+          AppModule.injector = injector;
+      }
+  }
