@@ -1,3 +1,4 @@
+import { ConsentableType, ConsentableTypes } from './../../../../interfaces/src/gdpr/consentable.interface';
 import { enumToValues } from '@core/helpers';
 import {
   AssetType,
@@ -13,6 +14,7 @@ import {
   DtoUpdateUser,
   IAddress,
   Idless,
+  IDocumentRequest,
   IHostBusinessDetails,
   IHostMemberChangeRequest,
   IInvoice,
@@ -20,6 +22,8 @@ import {
   RefundRequestReason,
   IPersonInfo,
   ISocialInfo,
+  IOptOutReason,
+  OptOutOptions,
   PaginationOptions,
   PurchaseableType,
   IDeleteHostReason,
@@ -81,7 +85,10 @@ export namespace objects {
 
   export const DtoCreatePerformance: Describe<DtoCreatePerformance> = object({
     name: size(string(), 8, 64),
-    premiere_datetime: optional(fields.timestamp),
+    publicity_period: object({
+      start: fields.timestamp,
+      end: fields.timestamp
+    }),
     description: optional(fields.richtext),
     genre: fields.genre,
     type: union([literal('vod'), literal('live')])
@@ -184,7 +191,8 @@ export namespace objects {
           return object<T>({
             selected_dono_peg: enums<DonoPeg>(DonoPegs),
             allow_any_amount: number(),
-            hard_host_marketing_opt_out: boolean()
+            hard_host_marketing_opt_out: boolean(),
+            stageup_marketing_opt_in: boolean()
           }).is(value);
         }
       }
@@ -229,5 +237,15 @@ export namespace objects {
     description: fields.richtext,
     amount: number(),
     is_visible: boolean()
+  });
+
+  export const IOptOutReason: Describe<IOptOutReason> = object({
+    reason: optional(enums<OptOutOptions>(enumToValues(OptOutOptions))),
+    message: optional(string())
+  });
+
+  export const IDocumentRequest: Describe<IDocumentRequest<ConsentableType>> = object({
+    type: enums<ConsentableType>(ConsentableTypes),
+    version: union([number(), literal('latest')])
   });
 }

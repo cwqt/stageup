@@ -1,7 +1,7 @@
 import {
   ConsentOpt,
   IAsset,
-  IDeletePerfReason,
+  IRemovalReason,
   IHost,
   IHostInvitation,
   IHostOnboarding,
@@ -9,6 +9,7 @@ import {
   IInvoice,
   ILocale,
   IMUXHookResponse,
+  IOptOutReason,
   IPatronSubscription,
   IPatronTier,
   IPerformance,
@@ -17,7 +18,9 @@ import {
   IUser,
   IUserPrivate,
   IUserStub,
-  LiveStreamState
+  LiveStreamState,
+  RemovalType,
+  PlatformConsentOpt
 } from '@core/interfaces';
 import { Asset as MuxAsset, LiveStream } from '@mux/mux-node';
 import Stripe from 'stripe';
@@ -45,6 +48,12 @@ export type EventContract = {
   };
   ['user.password_changed']: {
     user_id: IUser['_id'];
+  };
+  ['user.marketing_opt_in_change']: {
+    user_id: IUser['_id'];
+    host_id: IHost['_id'];
+    opt_status: ConsentOpt;
+    opt_out_reason?: IOptOutReason;
   };
 
   // ['user.unsubscribe_from_patron_tier']: {
@@ -84,13 +93,18 @@ export type EventContract = {
     invoice_id: IInvoice['_id'];
     host_id: IHost['_id'];
     ticket_id: ITicket['_id'];
-    marketing_consent: ConsentOpt;
+    host_marketing_consent: ConsentOpt;
+    platform_marketing_consent: PlatformConsentOpt | null;
   };
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
   ['performance.created']: IPerformance;
-  ['performance.deleted']: { performance_id: IPerformance['_id']; delete_perf_reason: IDeletePerfReason };
-  ['performance.deleted_notify_user']: {
+  ['performance.removed']: {
+    performance_id: IPerformance['_id'];
+    removal_reason: IRemovalReason;
+    removal_type: RemovalType;
+  };
+  ['performance.removed_notify_user']: {
     performance_id: IPerformance['_id'];
     user_id: IUser['_id'];
     invoice_id: IInvoice['_id'];

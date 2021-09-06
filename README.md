@@ -4,50 +4,70 @@
 
 # core &nbsp; [![Nx](https://img.shields.io/badge/Maintained%20with-Nx-cc00ff.svg)](https://nx.dev/) &nbsp;[![Staging](https://github.com/StageUp/core/actions/workflows/2-deploy-staging.yml/badge.svg)](https://github.com/StageUp/core/actions/workflows/2-deploy-staging.yml) 
 
-Live-streaming & VoD platform for the performance arts.
+**StageUp** is a virtual events platform for performing arts.
+
+## Prerequisites
+
+Refer to [README.md](https://github.com/StageUp/core/blob/dev/apps/README.md) for installing Git, Node, NPM, Docker, PostgreSQL, Redis & NX.
+
+Then, if you haven't already, you need to pull the project from GitHub to your local machine.
+
+Before doing this, set up an SSH key for GitHub by following GitHub's "Connect with SSH" guide: <https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent> 
+
+Then, pull this project onto your machine by entering the following command into a terminal:
+
+```shell
+git clone git@github.com:StageUp/core.git
+```
 
 ## Installation
 
-Refer to [README.md](apps/README.md) for installing Node, Docker & the various databases before following the individual application setups.
-
-For each application, review the setup instructions in each of these files:
+Once you've completed the prereuisites above, for each application, review the setup instructions in each of these files:
 
 - **API** (`apps/backend`): [README.md](apps/backend/README.md)
 - **Frontend** (`apps/frontend`): [README.md](apps/frontend/README.md)
 - **Tests** (`apps/api-tests`): [README.md](apps/api-tests/README.md)
 - **Terraform** (`terraform`): [README.md](terraform/README.md)
 
+For additional documentation on some of these and other topics, see our [Notion Software Wiki](https://www.notion.so/Software-Wiki-1b9f997a4d7942b49de9036eeb3f0f41).
+
 ## Running `npm run start`
 
-All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects.
-Run `npm install` in the project root to install all required dependencies.
+All packages that are used throughout all apps & libs are defined within a single `package.json`, for purposes of having consistent versioning across all projects. Run `npm install --force` in the project root to install all required dependencies. Production builds perform tree-shaking optimization to remove unused libraries, so ensure you always use ES6 import syntax.
 
-Production builds perform tree-shaking optimization to remove unused libraries, so ensure you use ES6 import syntax.
+- **Backend**: Use `npm run start` & pick `backend` from the TUI
+  - For first time setup, with the backend running, run the seeder by visiting the route: <http://localhost:3000/utils/seed> in a web browser (or sending it a `GET` request)
+- **Frontend** `npm run start`, and select the frontend
+- **Redis** & **Postgres** run from Docker Desktop
 
-- **Redis**: Start from Docker Desktop
-- **PostgreSQL**: Start from Docker Desktop
-- **api-tests**
-  - Create a new database using TablePlus called `testing` in Postgres
-  - Ensure the backend is running in test mode via `npm run backend:testing`
-  - For developing a single test use: `npm run api-tests`
-  - This will first run all tests & then bring up a menu called `Watch Useage`, press `p` to filter by filename regex
-  - Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
-  - Now you can develop the test & it will auto-re-run every time a change is made & saved
+### **Running `api-tests`**
 
-## Project Layout
+- Create a new database using PGAdmin called `testing` in Postgres
+- Ensure the backend is running in test mode via `npm run backend:serve:testing`
+- For developing a single test use: `npm run api-tests`
+- This will first run all tests & then bring up a menu called `Watch Usage`, press `p` to filter by filename regex
+- Enter the filename of your test, e.g. `onboarding.story.ts` & press enter
+- Now you can develop the test & it will auto-re-run every time a change is made & saved
 
-```sh
+## **Project Layout**
+
+  ```
   apps
     frontend           # the stageup frontend
       nginx.conf       # nginx config for frontend server
+      src.app          # front-end routes, components & services
+      src.assets       # media
+      src.i18n         # internationalisation files
+      src.styles       # global styles & Tailwind imports
     backend            # the stageup backend
-      modules          # event driven stuff, queue & notifs
+      src.modules      # various sections of the backend 
+      src.i18n         # internationalisation files, inc. tokens file
+      seeder           # database seeder
     api-tests          # integration tests
     reverse-proxy      # nginx reverse proxy for blog/wordpress/prod app
-    seeder             # database seeder
 
-  libs                 # where all shared code live
-    interfaces         # typescript interfaces
+  libs                 # where all shared code lives
+    interfaces         # shared typescript interfaces
     ui-lib             # frontend generic angular component library
     shared
       api              # shared backend services utilities
@@ -79,19 +99,41 @@ Production builds perform tree-shaking optimization to remove unused libraries, 
   .env.development     # also .env.staging, .testing & .production
 ```
 
-## i18n & a11y
+## **i18n & a11y**
 
-- Country codes: ISO-3166-Alpha2 [iso-3166-1](https://www.npmjs.com/package/iso-3166-1)
-- Language codes: ISO 639-1 [iso-939-1](https://www.npmjs.com/package/iso-639-1)
+- Country codes: ISO-3166-Alpha2 [iso-3166-1](https://www.npmjs.com/package/iso-3166-1)
+- Language codes: ISO 639-1 [iso-939-1](https://www.npmjs.com/package/iso-639-1)
 - Currency codes: ISO-4217
-- Phone Numbers E.164 [formatInternational](https://www.npmjs.com/package/libphonenumber-js)
+- Phone Numbers E.164 [formatInternational](https://www.npmjs.com/package/libphonenumber-js)
 - Timestamps: UNIX relative to UTC
 - Stripe: PaymentIntents & PaymentMethods
-- https://www.npmjs.com/package/i18n-iso-countries
+- [https://www.npmjs.com/package/i18n-iso-countries](https://www.npmjs.com/package/i18n-iso-countries)
 
-## Useful Tools
+## **Useful Tools**
 
-- **VSCode**: <https://code.visualstudio.com/>
-- **Postman**: <https://www.postman.com/downloads/>
-- **DB Client**: <https://tableplus.com/>
-- **JSONView**: <https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en>
+- **VSCode**: A fantastic IDE. Available at: [https://code.visualstudio.com/](https://code.visualstudio.com/).
+- **Postman**: An API platform for building and using APIs. Available at: [https://www.postman.com/downloads/](https://www.postman.com/downloads/).
+- **JSONView**: A Chrome extension for app understanding complex structure of JSON from web source pages and apis. Available at: [https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en).
+**TablePlus**: This is a simpler GUI than PGAdmin that you may prefer to use for interacting with PostgreSQL. Available at: [https://tableplus.com/](https://tableplus.com/).
+
+## **Useful VSCode Extensions**
+
+- **Error Lens**: Display error messages inline with the related code https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens
+- **Git lens**: View pull requests associated with code inline and more https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
+- **Angular Language Service**: Angular command autocompletion https://marketplace.visualstudio.com/items?itemName=Angular.ng-template
+- **vscode-angular-html**: Angular syntax highlighting/ formatting https://marketplace.visualstudio.com/items?itemName=ghaschel.vscode-angular-html
+- **Bracket Pair Colorizer**: Highlights functions/ blocks to allow you to visually see where they start/end https://marketplace.visualstudio.com/items?itemName=CoenraadS.bracket-pair-colorizer
+- **Tailwind CSS Intellisense**: Autocompletion for tailwind https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
+
+## **Troubleshooting**
+
+### **.env Setup**
+
+Below are some common errors we've seen devs experience when setting up their envs:
+
+- Sometimes trailing spaces in env files will cause them not to load properly.
+- if you copy & paste keyto and from Slack, Slack will replace quotation mark characters, so check that you're using the right type of quotation marks: `"`
+
+### **VSCode**
+
+- In VS Code, when switching branches you often have to restart the TS server or errors will appear when old files cannot be found. To restart the TS server, [use this guide](https://stackoverflow.com/questions/64454845/where-is-vscodes-restart-ts-server).

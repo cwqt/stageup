@@ -12,24 +12,25 @@ import {
   POSTGRES_PROVIDER,
   Ticket,
   User,
-  UserHostMarketingConsent,
   combine,
   Contract,
   I18N_PROVIDER,
   i18n
 } from '@core/api';
 import { pipes, timestamp, unix } from '@core/helpers';
-import { BulkRefundReason, PerformanceStatus } from '@core/interfaces';
+import { BulkRefundReason, ILocale, PerformanceStatus, RemovalType } from '@core/interfaces';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 import { FinanceService } from '../finance/finance.service';
+import { UserService } from '../user/user.service';
 import { JobQueueService } from '../queue/queue.service';
 
 @Service()
 export class PerformanceEvents extends ModuleEvents {
   constructor(
     private financeService: FinanceService,
+    private userService: UserService,
     private queueService: JobQueueService,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(POSTGRES_PROVIDER) private ORM: Connection,
@@ -40,10 +41,10 @@ export class PerformanceEvents extends ModuleEvents {
     this.events = {
      ["performance.created"]: combine([   this.createPerformanceAnalyticsCollectionJob,
                                           this.sendPerformanceReminderEmails]),
-     ["performance.deleted"]:             this.deletePerformance,
-     ["performance.deleted_notify_user"]: this.sendUserPerformanceDeletionEmail,
+     ["performance.removed"]:             this.removePerformance,
+     ["performance.removed_notify_user"]: this.sendUserPerformanceRemovalEmail,
      ["ticket.purchased"]:    combine([   this.sendTicketReceiptEmail,
-                                          this.setUserHostMarketingOptStatus])
+                                          this.setUserMarketingOptStatus])
     }
   }
 
@@ -100,29 +101,15 @@ export class PerformanceEvents extends ModuleEvents {
       );
   }
 
-  async deletePerformance(ct: Contract<'performance.deleted'>) {
+  async removePerformance(ct: Contract<'performance.removed'>) {
     const performance = await this.ORM.createQueryBuilder(Performance, 'performance')
       .where('performance._id = :pid', { pid: ct.performance_id })
       .innerJoin('performance.host', 'host')
-      .addSelect(['host.name', 'host.email_address'])
+      .addSelect(['host.name', 'host.email_address', 'host._id'])
       .withDeleted()
       .getOne();
 
-    //Send host email notifcation
-    this.queueService.addJob('send_email', {
-      subject: this.i18n.translate('@@email.performance.deleted_notify_host__subject', ct.__meta.locale, {
-        performance_name: performance.name
-      }),
-      content: this.i18n.translate('@@email.performance.deleted_notify_host__content', ct.__meta.locale, {
-        host_name: performance.host.name,
-        performance_name: performance.name,
-        performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
-      }),
-      from: Env.EMAIL_ADDRESS,
-      to: performance.host.email_address,
-      markdown: true,
-      attachments: []
-    });
+    this.sendHostPerformanceRemovalEmail(performance, ct.removal_type, ct.__meta.locale);
 
     //Find all users who've bought tickets and fire Performance.deleted_notify_user for each invoice
     //First, return all tickets for a perf
@@ -153,7 +140,7 @@ export class PerformanceEvents extends ModuleEvents {
           host_id: performance.host._id,
           invoice_ids: invoiceIds,
           bulk_refund_data: {
-            bulk_refund_reason: BulkRefundReason.PerformanceDeletedAutoRefund,
+            bulk_refund_reason: BulkRefundReason.PerformanceRemovedAutoRefund,
             bulk_refund_detail: null
           },
           send_initiation_emails: false
@@ -164,7 +151,7 @@ export class PerformanceEvents extends ModuleEvents {
       //Fire off user email event for each invoice
       invoices.map(async i => {
         return await this.bus.publish(
-          'performance.deleted_notify_user',
+          'performance.removed_notify_user',
           {
             performance_id: ct.performance_id,
             user_id: i.user._id,
@@ -176,7 +163,41 @@ export class PerformanceEvents extends ModuleEvents {
     }
   }
 
-  async sendUserPerformanceDeletionEmail(ct: Contract<'performance.deleted_notify_user'>) {
+  async sendHostPerformanceRemovalEmail(performance: Performance, removalType: RemovalType, locale: ILocale) {
+    if (removalType === RemovalType.SoftDelete) {
+      this.queueService.addJob('send_email', {
+        subject: this.i18n.translate('@@email.performance.softDeleted_notify_host__subject', locale, {
+          performance_name: performance.name
+        }),
+        content: this.i18n.translate('@@email.performance.softDeleted_notify_host__content', locale, {
+          host_name: performance.host.name,
+          performance_name: performance.name,
+          performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: performance.host.email_address,
+        markdown: true,
+        attachments: []
+      });
+    } else {
+      this.queueService.addJob('send_email', {
+        subject: this.i18n.translate('@@email.performance.cancelled_notify_host__subject', locale, {
+          performance_name: performance.name
+        }),
+        content: this.i18n.translate('@@email.performance.cancelled_notify_host__content', locale, {
+          host_name: performance.host.name,
+          performance_name: performance.name,
+          performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: performance.host.email_address,
+        markdown: true,
+        attachments: []
+      });
+    }
+  }
+
+  async sendUserPerformanceRemovalEmail(ct: Contract<'performance.removed_notify_user'>) {
     const perf: Performance = await this.ORM.createQueryBuilder(Performance, 'performance')
       .select(['performance.name'])
       .where('performance._id = :performance_id', { performance_id: ct.performance_id })
@@ -196,10 +217,10 @@ export class PerformanceEvents extends ModuleEvents {
 
     //Send user email notifcation
     this.queueService.addJob('send_email', {
-      subject: this.i18n.translate('@@email.performance.deleted_notify_user__subject', ct.__meta.locale, {
+      subject: this.i18n.translate('@@email.performance.removed_notify_user__subject', ct.__meta.locale, {
         performance_name: perf.name
       }),
-      content: this.i18n.translate('@@email.performance.deleted_notify_user__content', ct.__meta.locale, {
+      content: this.i18n.translate('@@email.performance.removed_notify_user__content', ct.__meta.locale, {
         user_username: user.name,
         host_name: perf.host.name,
         performance_name: perf.name,
@@ -259,7 +280,10 @@ export class PerformanceEvents extends ModuleEvents {
           receipt_url: invoice.stripe_receipt_url,
           user_name: user.name || user.username,
           performance_name: invoice.ticket.performance.name,
-          premier_time: this.i18n.date(unix(invoice.ticket.performance.premiere_datetime), ct.__meta.locale),
+          publicity_period_start: this.i18n.date(
+            unix(invoice.ticket.performance.publicity_period.start),
+            ct.__meta.locale
+          ),
           amount: this.i18n.money(invoice.amount, invoice.currency),
           url: link
         }),
@@ -271,22 +295,14 @@ export class PerformanceEvents extends ModuleEvents {
     }
   }
 
-  async setUserHostMarketingOptStatus(ct: Contract<'ticket.purchased'>) {
-    // check if already consenting to this host, if not then soft-opt in
-    const c = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'c')
-      .where('c.user__id = :uid', { uid: ct.purchaser_id })
-      .andWhere('c.host__id = :hid', { hid: ct.host_id })
-      .getOne();
-
-    if (c) return;
-
-    // create new consent, using latest policies
-    const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
-    const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
-    const user = await User.findOne({ _id: ct.purchaser_id });
-    const host = await Host.findOne({ _id: ct.host_id });
-
-    const consent = new UserHostMarketingConsent(ct.marketing_consent, host, user, toc, privacyPolicy);
-    await consent.save();
+  async setUserMarketingOptStatus(ct: Contract<'ticket.purchased'>) {
+    // Update the user / host marketing status (if the data is provided)
+    if (ct.host_marketing_consent) {
+      await this.userService.setUserHostMarketingOptStatus(ct.purchaser_id, ct.host_id, ct.host_marketing_consent);
+    }
+    // Update the user / StageUp marketing status (if the data is provided)
+    if (ct.platform_marketing_consent) {
+      await this.userService.setUserPlatformMarketingOptStatus(ct.purchaser_id, ct.platform_marketing_consent);
+    }
   }
 }

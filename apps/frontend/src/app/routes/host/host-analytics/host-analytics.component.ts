@@ -156,7 +156,7 @@ export class HostAnalyticsComponent implements OnInit {
         },
         {
           label: $localize`Premiere Date`,
-          accessor: v => i18n.date(unix(v.premiere_datetime), this.locale)
+          accessor: v => i18n.date(unix(v.publicity_period.start), this.locale)
         },
         {
           label: $localize`Tickets sold`,

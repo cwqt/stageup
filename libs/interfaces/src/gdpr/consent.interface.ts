@@ -12,6 +12,7 @@ export type ConsentType = typeof ConsentTypes[number];
 export interface IUserConsent<T extends ConsentType> {
   _id: NUUID;
   type: T;
+  terms_and_conditions: IConsentable<'general_toc'>;
 }
 
 // mapped types ftw
@@ -20,17 +21,15 @@ export type UserConsentData = {
     user: IUserStub;
     host: IHostStub;
     opt_status: ConsentOpt;
-    terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
   };
   stageup_marketing: {
     user: IUserStub;
-    terms_and_conditions: IConsentable<'general_toc'>;
     privacy_policy: IConsentable<'privacy_policy'>;
+    opt_status: PlatformConsentOpt;
   };
   upload_consent: {
     host: IHostStub;
-    terms_and_conditions: IConsentable<'uploaders_toc'>;
     performance: IPerformanceStub;
   };
 };
@@ -40,6 +39,8 @@ export type UserConsentData = {
 // hard-in: explicit consent
 export const ConsentOpts = ['soft-in', 'hard-in', 'hard-out'] as const;
 export type ConsentOpt = typeof ConsentOpts[number];
+// SU marketing consent opts are either 'hard-in' or 'hard-out'
+export type PlatformConsentOpt = Omit<ConsentOpt, 'soft-in'>;
 
 // utility type for below
 type ConsentMixin<T extends ConsentType> = IUserConsent<T> & UserConsentData[T];
@@ -48,3 +49,16 @@ type ConsentMixin<T extends ConsentType> = IUserConsent<T> & UserConsentData[T];
 export type IUserHostMarketingConsent = ConsentMixin<'host_marketing'>;
 export type IUserStageUpMarketingConsent = ConsentMixin<'stageup_marketing'>;
 export type IHostUploadersConsent = ConsentMixin<'upload_consent'>;
+
+export enum OptOutOptions {
+  TooFrequent = 'too_frequent',
+  TooCluttered = 'too_cluttered',
+  NotRelevant = 'not_relevant',
+  DidntSignUp = 'didnt_sign_up'
+}
+
+// When the user opts out from host marketing, an email is sent to the host with optional 'reason' and 'message' from the user as to why the are opting out.
+export interface IOptOutReason {
+  reason?: OptOutOptions;
+  message?: string;
+}

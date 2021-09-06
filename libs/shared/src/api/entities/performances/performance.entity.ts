@@ -9,7 +9,7 @@ import {
   PerformanceStatus,
   RichText,
   Visibility,
-  IDeletePerfReason
+  IRemovalReason
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
@@ -47,7 +47,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
 
   @DeleteDateColumn() deletedAt?: Date;
-  @Column('jsonb', { nullable: true }) delete_reason: IDeletePerfReason;
+  @Column('jsonb', { nullable: true }) removal_reason: IRemovalReason;
 
   @OneToOne(() => AssetGroup, { eager: true, onDelete: 'CASCADE', cascade: true })
   @JoinColumn()
@@ -61,7 +61,6 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this._id = uuid();
     this.name = data.name;
     this.description = data.description;
-    this.premiere_datetime = data.premiere_datetime;
     this.genre = data.genre;
     this.tickets = [];
 
@@ -73,7 +72,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this.rating_count = 0;
     this.rating_total = 0;
     this.host = host;
-    this.publicity_period = { start: null, end: null };
+    this.publicity_period = { start: data.publicity_period.start, end: data.publicity_period.end };
   }
 
   async setup(txc: EntityManager): Promise<Performance> {
@@ -96,9 +95,10 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       description: this.description,
       created_at: this.created_at,
       thumbnail: this.thumbnail,
-      premiere_datetime: this.premiere_datetime,
-      assets: this.asset_group ? this.asset_group.assets.map(a => a.toStub()) : null,
-      status: this.status
+      publicity_period: this.publicity_period,
+      assets: this.asset_group.assets.map(a => a.toStub()),
+      status: this.status,
+      visibility: this.visibility
     };
   }
 

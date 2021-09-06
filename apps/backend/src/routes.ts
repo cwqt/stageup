@@ -1,5 +1,5 @@
 import Container from 'typedi';
-import { AsyncRouter } from '@core/api';
+import { AsyncRouter, Performance } from '@core/api';
 import {
   IHost,
   IUser,
@@ -24,6 +24,7 @@ import {
   IUserInvoice,
   IDeleteHostAssertion as IDelHostAssert,
   IHostInvoiceStub,
+  IUserHostMarketingConsent as IUserHostMC,
   IUserInvoiceStub,
   NUUID,
   IPaymentMethod,
@@ -43,7 +44,7 @@ import {
   IUserFollow,
   DtoPerformanceAnalytics as DtoPerfAnalytics,
   DtoHostAnalytics,
-  ConsentableType as CType,
+  ConsentableType as CT,
   IConsentable,
   IDynamicFrontendEnvironment as IDynamicFeEnv,
 } from '@core/interfaces';
@@ -85,6 +86,8 @@ router.put      <IPaymentMethod>        ("/myself/payment-methods/:pmid",       
 router.put      <ILocale>               ("/myself/locale",                            Myself.updateLocale);
 router.post     <IFollowing>            ("/myself/follow-host/:hid",                  Myself.addFollow);
 router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow);
+router.get      <IE<IUserHostMC[]>>     ("/myself/opt-ins/host-marketing",            Myself.readUserHostMarketingConsents);
+router.put      <void>                  ("/myself/opt-ins/host-marketing/:hid",       Myself.updateHostOptInStatus);
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = Container.get(UserController)
@@ -152,7 +155,8 @@ const Perfs = Container.get(PerformanceController)
 router.post     <IPerf>                 ("/hosts/:hid/performances",                  Perfs.createPerformance);
 router.get      <IE<IPerfS[]>>          ("/performances",                             Perfs.readPerformances);
 router.get      <DtoPerformance>        ("/performances/:pid",                        Perfs.readPerformance);
-router.put      <void>                  ("/performances/:pid",                        Perfs.deletePerformance);
+router.put      <void>                  ("/performances/:pid",                        Perfs.softDeletePerformance);
+router.put      <void>                  ("/performances/:pid/cancel",                 Perfs.cancelPerformance);
 router.put      <IPerf>                 ("/performances/:pid",                        Perfs.updatePerformance);
 router.put      <IPerformance>          ("/performances/:pid/publicity-period",       Perfs.updatePublicityPeriod);
 router.post     <AssetDto | void>       ("/performances/:pid/thumbnails",             Perfs.changeThumbnails);
@@ -202,7 +206,10 @@ router.redirect                          ("/auth/verify-email",                 
 
 // GDPR ---------------------------------------------------------------------------------------------------------------
 const Gdpr = Container.get(GdprController);
-router.get      <IConsentable<CType>>    ("/gdpr/documents/latest",                   Gdpr.getLatestDocument);
+router.get      <IConsentable<CT>>       ("/gdpr/documents/:type/:version",           Gdpr.readLatestDocument);
+router.get      <IConsentable<CT>[]>     ("/gdpr/documents/:version",                 Gdpr.readAllLatestDocuments);
+router.post     <void>                   ("/gdpr/documents/:type/supersede",          Gdpr.uploadDocument);
+router.put     <void>                   ("/gdpr/:hid/:pid/set-stream-compliance",    Gdpr.updateStreamCompliance);
 
 // UTILS ---------------------------------------------------------------------------------------------------------------
 const Utils = Container.get(UtilityController);

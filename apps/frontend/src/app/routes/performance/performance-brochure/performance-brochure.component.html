@@ -7,7 +7,11 @@
       class="object-cover h-96 w-full"
       [src]="performance.thumbnail || thumbnail?.location || '/assets/performance-placeholder.jpeg'"
     />
-    <app-social-sharing class="absolute right-4 bottom-4" [url]="brochureSharingUrl" (onLinkClick)="closeDialog()"></app-social-sharing>
+    <app-social-sharing
+      class="absolute right-4 bottom-4"
+      [url]="brochureSharingUrl"
+      (onLinkClick)="closeDialog()"
+    ></app-social-sharing>
   </div>
 
   <div class="flex">
@@ -76,6 +80,17 @@
               >
             </div>
 
+            <small class="block text-gray-500 my-2 p-2 bg-gray-200" i18n>
+              By clicking "Pay", I accept the
+              <a class="whitespace-nowrap" [routerLink]="['/documents/terms-and-conditions']" target="_blank"
+                >terms and conditions</a
+              >
+              and have read the
+              <a class="whitespace-nowrap" [routerLink]="['/documents/privacy-policy']" target="_blank"
+                >privacy policy</a
+              >. I agree that StageUp <b>may share my information</b> with the {{ performance.host.name }}.
+            </small>
+
             <ui-hr></ui-hr>
 
             <ui-form class="w-1/2 place-self-center" *ngIf="selectedTicket.type == 'dono'" [form]="donoPegSelectForm">
@@ -90,10 +105,15 @@
             ></app-payment-method>
 
             <div class="mx-8">
-              <!-- Marketing Opt-out button -->
+              <!-- Host marketing Opt-out button -->
               <ui-form
                 *ngIf="performanceCacheable.data.__client_data.host_marketing_opt_status === null"
                 [form]="hostMarketingOptForm"
+              ></ui-form>
+              <!-- SU marketing Opt-in button. Always display unless the user is already opted in. -->
+              <ui-form
+                *ngIf="performanceCacheable.data.__client_data.platform_marketing_opt_status !== 'hard-in'"
+                [form]="stageupMarketingOptForm"
               ></ui-form>
             </div>
 
@@ -144,8 +164,8 @@
 
               <p i18n>
                 <b>@{{ performance.host.username }}</b> is due to premiere this stream at
-                {{ performance.premiere_datetime | amFromUnix | amDateFormat: 'LLL' }}, you'll be notified by e-mail
-                before it begins.
+                {{ performance.publicity_period.start | amFromUnix | amDateFormat: 'LLL' }}, you'll be notified by
+                e-mail before it begins.
               </p>
               <p i18n>
                 Purchase confirmation will arrive at <b>{{ myself.email_address }}</b> shortly.

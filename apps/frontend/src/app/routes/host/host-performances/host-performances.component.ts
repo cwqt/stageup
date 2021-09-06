@@ -10,6 +10,8 @@ import { i18n, richtext, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
+import { VisibilityPipe } from '@frontend/_pipes/visibility.pipe';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-host-performances',
   templateUrl: './host-performances.component.html',
@@ -23,7 +25,6 @@ export class HostPerformancesComponent implements OnInit {
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
-    private performanceService: PerformanceService,
     private hostService: HostService,
     private helperService: HelperService,
     private dialog: MatDialog,
@@ -33,6 +34,8 @@ export class HostPerformancesComponent implements OnInit {
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
     const statusPipe = new PerformanceStatusPipe();
+    const visibilityPipe = new VisibilityPipe();
+    const datePipe = new DatePipe(this.locale);
     this.table = new UiTable<IPerformanceStub>({
       resolver: query => this.hostService.readHostPerformances(this.hostId, query),
       columns: [
@@ -41,8 +44,20 @@ export class HostPerformancesComponent implements OnInit {
           accessor: p => p.name
         },
         {
+          label: $localize`Performance Schedule Start`,
+          accessor: p => i18n.date(unix(p.publicity_period.start), this.locale)
+        },
+        {
+          label: $localize`Performance Schedule End`,
+          accessor: p => i18n.date(unix(p.publicity_period.end), this.locale)
+        },
+        {
           label: $localize`Description`,
           accessor: p => richtext.read(p.description)
+        },
+        {
+          label: $localize`Visibility`,
+          accessor: p => visibilityPipe.transform(p.visibility)
         },
         {
           label: $localize`Created At`,
@@ -54,7 +69,7 @@ export class HostPerformancesComponent implements OnInit {
           chip_selector: p => {
             const colours: { [index in PerformanceStatus]: ChipComponent['kind'] } = {
               [PerformanceStatus.Complete]: 'purple',
-              [PerformanceStatus.Cancelled]: 'gray',
+              [PerformanceStatus.Cancelled]: 'magenta',
               [PerformanceStatus.Deleted]: 'gray',
               [PerformanceStatus.Live]: 'red',
               [PerformanceStatus.PendingSchedule]: 'blue',

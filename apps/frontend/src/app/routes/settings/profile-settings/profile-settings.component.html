@@ -6,12 +6,12 @@
     <div class="flex items-center">
       <div class="mx-4">
         <div class="profile-picture__container">
-          <img [src]="myself.user.avatar" alt="" />
+          <img [src]="myself?.user.avatar" alt="" />
           <ui-button (click)="openChangeAvatarDialog()" kind="accent" icon="image" i18n>Edit</ui-button>
         </div>
       </div>
 
-      <div class="ml-4 flex-1">
+      <div *ngIf="profileDetailsForm" class="ml-4 flex-1">
         <ui-form [form]="profileDetailsForm"></ui-form>
         <ui-button
           kind="primary"
@@ -39,13 +39,14 @@
         </p>
       </div>
 
-      <div class="w-1/3">
+      <div *ngIf="languageSelectForm" class="w-1/3">
         <ui-form [form]="languageSelectForm"></ui-form>
       </div>
     </div>
   </app-content-box>
+  <app-gdpr-settings></app-gdpr-settings>
 
-  <app-content-box *ngIf="myself.host">
+  <app-content-box *ngIf="myself?.host">
     <h2 i18n>Company Settings</h2>
     <ui-hr></ui-hr>
 

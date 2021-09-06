@@ -1,3 +1,4 @@
+import { OptOutOptions } from '@core/interfaces';
 import Env from '@backend/env';
 import { AUTOGEN_i18n_TOKEN_MAP } from '@backend/i18n/i18n-tokens.autogen';
 import { Host, i18n, Performance, Provider, User } from '@core/api';
@@ -22,6 +23,7 @@ export class UserEvents extends ModuleEvents {
       ['user.registered']:                 this.sendUserVerificationEmail,
       ['user.invited_to_host']:            this.sendUserHostInviteEmail,
       ['user.invited_to_private_showing']: this.sendUserPrivatePerformanceInviteEmail,
+      ['user.marketing_opt_in_change']:    this.sendHostEmailAboutChange,
       // ['user.invited_to_private_showing']: this.sendUserPrivatePerformanceInviteEmail
     };
   }
@@ -106,5 +108,49 @@ export class UserEvents extends ModuleEvents {
       to: user.email_address,
       attachments: []
     });
+  }
+
+  async sendHostEmailAboutChange(ct: Contract<'user.marketing_opt_in_change'>) {
+    const user = await User.findOne({ _id: ct.user_id }, { select: ['name', 'username', 'email_address'] });
+    const host = await Host.findOne({ _id: ct.host_id }, { select: ['name', 'username', 'email_address'] });
+
+    const reasonTokenMap: { [index in OptOutOptions]: keyof AUTOGEN_i18n_TOKEN_MAP } = {
+      [OptOutOptions.TooCluttered]: '@@host_marketing_opt_out.too_cluttered',
+      [OptOutOptions.TooFrequent]: '@@host_marketing_opt_out.too_frequent',
+      [OptOutOptions.NotRelevant]: '@@host_marketing_opt_out.not_relevant',
+      [OptOutOptions.DidntSignUp]: '@@host_marketing_opt_out.didnt_sign_up'
+    };
+
+    // Currently, this function can only be triggered with 'hard-in' status but added 'soft-in' in case of future changes
+    // If user is opting in, send one type of email
+    if (ct.opt_status == 'hard-in' || ct.opt_status == 'soft-in') {
+      this.queueService.addJob('send_email', {
+        subject: this.i18n.translate('@@email.user.opting_in_to_marketing__subject', ct.__meta.locale),
+        content: this.i18n.translate('@@email.user.opting_in_to_marketing__content', ct.__meta.locale, {
+          user_name: user.name || user.username,
+          user_email: user.email_address,
+          host_name: host.name || host.username
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: host.email_address,
+        attachments: []
+      });
+      // Else if user is opting out, send a different email
+    } else if (ct.opt_status == 'hard-out') {
+      this.queueService.addJob('send_email', {
+        subject: this.i18n.translate('@@email.user.opting_out_of_marketing__subject', ct.__meta.locale),
+        content: this.i18n.translate('@@email.user.opting_out_of_marketing__content', ct.__meta.locale, {
+          user_name: user.name || user.username,
+          user_email: user.email_address,
+          opt_out_reason: ct.opt_out_reason?.reason
+            ? this.i18n.translate(reasonTokenMap[ct.opt_out_reason?.reason], ct.__meta.locale)
+            : '-',
+          opt_out_message: ct.opt_out_reason?.message || '-'
+        }),
+        from: Env.EMAIL_ADDRESS,
+        to: host.email_address,
+        attachments: []
+      });
+    }
   }
 }

@@ -119,6 +119,14 @@
       <source>Performance cannot be deleted after it has occured</source>
       <target state="needs-translation">Ni ellir dileu perfformiad ar ôl iddo ddigwydd</target>
     </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_live" datatype="html">
+      <source>Performance cannot be cancelled while currently live</source>
+      <target state="needs-translation">Ni ellir canslo perfformiad tra’n fyw ar hyn o bryd</target>
+    </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_after_occurrence" datatype="html">
+      <source>Performance cannot be cancelled after it has occured</source>
+      <target state="needs-translation">Ni ellir canslo perfformiad ar ôl iddo ddigwydd</target>
+    </trans-unit>				
 		<trans-unit id="payment_status.created" datatype="html">
       <source>Created</source>
       <target state="needs-translation">Wedi'i greu</target>
@@ -179,6 +187,10 @@
       <source>Could not find existing rating</source>
       <target state="needs-translation">Methu dod o hyd i'r sgôr bresennol</target>
     </trans-unit>				
+		<trans-unit id="error.stream_compliance_not_accepted" datatype="html">
+      <source>Self-certification of streaming license compliance not made. Please tick the box when creating a performance</source>
+      <target state="needs-translation">Ni wnaed hunan-ardystiad o gydymffurfiad trwydded ffrydio. Ticiwch y blwch wrth greu perfformiad</target>
+    </trans-unit>				
 		<trans-unit id="stripe.origin_url_not_matched" datatype="html">
       <source>Received response does not match submitter!</source>
       <target state="needs-translation">Nid yw'r ymateb a dderbynnir yn cyfateb i'r cyflwynydd!</target>
@@ -190,6 +202,22 @@
 		<trans-unit id="refunds.refund_already_outstanding" datatype="html">
       <source>Cannot refund while another refund is already outstanding</source>
       <target state="needs-translation">Ni ellir ad-dalu tra bo ad-daliad ei gilydd eisoes yn ddyledus</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.too_cluttered" datatype="html">
+      <source>Emails are too cluttered.</source>
+      <target state="needs-translation">Mae e-byst yn rhy anniben.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.too_frequent" datatype="html">
+      <source>I’m getting emails too often.</source>
+      <target state="needs-translation">Rwy'n cael e-byst yn rhy aml.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.not_relevant" datatype="html">
+      <source>The content isn’t relevant to me.</source>
+      <target state="needs-translation">Nid yw'r cynnwys yn berthnasol i mi.</target>
+    </trans-unit>				
+		<trans-unit id="host_marketing_opt_out.didnt_sign_up" datatype="html">
+      <source>I never signed up, or I didn’t realize that I have signed up.</source>
+      <target state="needs-translation">Wnes i erioed arwyddo, neu wnes i ddim sylweddoli fy mod i wedi arwyddo.</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_initiated__content" datatype="html">
       <source><p><strong>Hi {user_username},</strong></p>
@@ -281,7 +309,7 @@ Rydym wedi hysbysu'r cwsmeriaid yr effeithir arnynt y byddant yn derbyn y swm a 
 Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith "</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
-      <source>Refund for {performance_name} succesful!</source>
+      <source>Refund for {performance_name} successful!</source>
       <target state="needs-translation">Ad-daliad ar gyfer {performance_name} yn llwyddiannus!</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__content" datatype="html">
@@ -1109,7 +1137,7 @@ now: <a href="{url}">{url}</a>></p>
     </trans-unit>				
 		<trans-unit id="email.ticket.purchased_future__content" datatype="html">
       <source><p>Hello {user_name},</p>
-<p>You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don’t forget to mark your calendar.
+<p>You purchased tickets for {performance_name} for {amount}. It will premier on {publicity_period_start}. Don’t forget to mark your calendar.
 We’ll send you reminders closer to the time, so you don’t miss it. :)</p>
 <p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
 <p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to my library</a></p>
@@ -1230,24 +1258,37 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </source>
       <target state="needs-translation"><p>Helo {user_username}!</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name}. Bydd yn cychwyn yn {premier_time}.</p><p> Gobeithio eich bod chi i gyd yn barod i'w wylio!</p><p> Ewch â mi i'm llyfrgell: <a href="{url}">{url}</a></p><p> Lloniannau,</p><p> Tîm StageUp</p></target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_host__subject" datatype="html">
-      <source>You have deleted {performance_name}</source>
-      <target state="needs-translation">Rydych chi wedi dileu {performance_name}</target>
+		<trans-unit id="email.performance.cancelled_notify_host__subject" datatype="html">
+      <source>You have cancelled {performance_name}</source>
+      <target state="needs-translation">Rydych chi wedi canslo {performance_name}</target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_host__content" datatype="html">
+		<trans-unit id="email.performance.cancelled_notify_host__content" datatype="html">
+      <source><p>Hello <strong>{host_name}</strong>,</p>
+<p>You have cancelled your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
+<p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Rydych wedi canslo eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i&#39;r holl gwsmeriaid a brynodd docynnau i&#39;r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i&#39;w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.performance.softDeleted_notify_host__subject" datatype="html">
+      <source>You have deleted {performance_name}</source>
+      <target state="needs-translation">Rydych wedi dileu {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.performance.softDeleted_notify_host__content" datatype="html">
       <source><p>Hello <strong>{host_name}</strong>,</p>
 <p>You have deleted your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
 <p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
 <p>Thanks,</p>
 <p><strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Rydych wedi dileu eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i'r holl gwsmeriaid a brynodd docynnau i'r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i'w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Rydych wedi dileu eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i&#39;r holl gwsmeriaid a brynodd docynnau i&#39;r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i&#39;w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_user__subject" datatype="html">
+		<trans-unit id="email.performance.removed_notify_user__subject" datatype="html">
       <source>Peformance, {performance_name} cancellation notification</source>
-      <target state="needs-translation"><p>Perfformiad: HAR_REPLACE_0 hysbysiad canslo</p></target>
+      <target state="needs-translation">Perfformiad, hysbysiad canslo {performance_name}</target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_user__content" datatype="html">
+		<trans-unit id="email.performance.removed_notify_user__content" datatype="html">
       <source><p>Hi <strong>{user_username}</strong>,</p>
 <p>Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.</p>
 <p>Invoice#: {invoice_id}</p>
@@ -1257,6 +1298,37 @@ listed as ‘Cancelled’ on your account from now on.</p>
 <p><strong>StageUp Team</strong></p>
 </source>
       <target state="needs-translation"><p>Helo <strong>{user_username}</strong> ,</p><p> Yn anffodus, bu'n rhaid i {host_name} ganslo'r perfformiad: {performance_name}. Rydym wedi cychwyn ad-daliad ar eich tocyn a brynwyd ar {ticket_purchase_date}.</p><p> Anfoneb #: {invoice_id}</p><p> Pris y Tocyn: {ticket_amount}</p><p> Byddwn yn credydu'r arian yn awtomatig i'ch <strong>{card_brand} sy'n</strong> dod i ben yn <strong>{last_4}</strong> . Sylwch, gall gymryd hyd at 5 diwrnod gwaith i'ch cyfrif gael ei gredydu.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__subject" datatype="html">
+      <source>A new user has consented to marketing</source>
+      <target state="needs-translation">Mae defnyddiwr newydd wedi cydsynio i farchnata</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__content" datatype="html">
+      <source><p>Hi <strong>{host_name}</strong>,</p>
+<p>You have a new user who has consented to receiving marketing from you!</p>
+<p>Username: {user_name}
+Email: {user_email}</p>
+<p>Please add them to your marketing communications. We will inform you again if the user chooses to opt out of marketing in the future.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Mae gennych chi ddefnyddiwr newydd sydd wedi cydsynio i dderbyn marchnata gennych chi!</p><p> Enw defnyddiwr: {user_name} E-bost: {user_email}</p><p> Gallwch eu hychwanegu at eich rhestr bostio. Byddwn yn eich hysbysu eto os bydd y defnyddiwr yn dewis optio allan o farchnata yn y dyfodol.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__subject" datatype="html">
+      <source>A user has opted out of marketing</source>
+      <target state="needs-translation">Mae defnyddiwr wedi optio allan o farchnata</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__content" datatype="html">
+      <source><p>Hello,</p>
+<p>Your subscriber {user_name} ({user_email}) has opted out of receiving direct emails from your organisation.
+Additional information:</p>
+<p>Reason: {opt_out_reason}
+Message: {opt_out_message}</p>
+<p>Kindly remove them from your mailing list. We will inform you again by email if they choose to opt back in.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo,</p><p> Mae eich tanysgrifiwr {user_name} ({user_email}) wedi dewis peidio â derbyn e-byst uniongyrchol gan eich sefydliad. Darparwyd y wybodaeth hon:</p><p> Rheswm: {opt_out_reason} Neges: {opt_out_message}</p><p> Yn garedig, tynnwch nhw oddi ar eich rhestr bostio. Byddwn yn eich hysbysu eto trwy e-bost os byddant yn dewis optio i mewn.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
 		<trans-unit id="error.internal_server_error" datatype="html">
       <source>Internal server error</source>

@@ -95,12 +95,23 @@
       </ui-button>
     </ng-container>
 
-    <ng-container *ngIf="myself?.user.is_admin">
+    <!-- Admin menu -->
+    <ng-container *ngIf="myself?.user.is_admin" routerLinkActive="active-link" #adminMenu="routerLinkActive">
       <h4 i18n>Admin</h4>
       <ui-button routerLink="/admin" kind="accent" routerLinkActive="active-link">
         <ui-icon>virtual-private-cloud</ui-icon>
         <span i18n>Admin Panel</span>
       </ui-button>
+
+      <!-- Admin submenus -->
+      <div class="flex flex-col ml-8" *ngIf="adminMenu.isActive">
+        <ui-button [routerLink]="'/admin/onboardings/'" routerLinkActive="active-link">
+          <span i18n>Onboarding</span>
+        </ui-button>
+        <ui-button [routerLink]="'/admin/documents/'" routerLinkActive="active-link">
+          <span i18n>GDPR Documents</span>
+        </ui-button>
+      </div>
     </ng-container>
   </div>
 </div>
