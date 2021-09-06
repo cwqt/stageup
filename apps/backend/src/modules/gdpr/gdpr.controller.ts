@@ -1,9 +1,29 @@
 import { Connection } from 'typeorm';
-import { Consentable, IControllerEndpoint, POSTGRES_PROVIDER, BLOB_PROVIDER, Middleware, Blobs, Validators } from '@core/api';
-import { ConsentableType, ConsentableTypes, IConsentable, IEnvelopedData } from '@core/interfaces';
+import {
+  Consentable,
+  IControllerEndpoint,
+  POSTGRES_PROVIDER,
+  BLOB_PROVIDER,
+  Middleware,
+  Blobs,
+  Validators,
+  Auth,
+  UploadersConsent,
+  Host,
+  Performance
+} from '@core/api';
+import {
+  ConsentableType,
+  ConsentableTypes,
+  HostPermission,
+  HTTP,
+  IConsentable,
+  IEnvelopedData
+} from '@core/interfaces';
 import { enums, object } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { ModuleController } from '@core/api';
+import { ErrorHandler } from '../../common/error';
 
 import AuthStrat from '../../common/authorisation';
 import { GdprService } from './gdpr.service';
@@ -21,7 +41,7 @@ export class GdprController extends ModuleController {
   readLatestDocument: IControllerEndpoint<IConsentable<ConsentableType>> = {
     authorisation: AuthStrat.none,
     validators: {
-      params: Validators.Objects.IDocumentRequest,
+      params: Validators.Objects.IDocumentRequest
     },
     controller: async req =>
       this.gdprService.readConsentable(req.params.type as ConsentableType, req.params.version as number | 'latest')
@@ -62,6 +82,28 @@ export class GdprController extends ModuleController {
         await document.upload(req.file, this.blobs);
         await txc.save(document);
         if (existingDocument) await txc.save(existingDocument); // Save changes made to prior existing document
+      });
+    }
+  };
+
+  updateStreamCompliance: IControllerEndpoint<void> = {
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    controller: async req => {
+      const hostId = req.params.hid;
+      const perfId = req.params.pid;
+
+      if (!req.body.is_compliant) {
+        throw new ErrorHandler(HTTP.Forbidden, '@@error.stream_compliance_not_accepted');
+      }
+
+      const host = await Host.findOne({ _id: hostId });
+      const perf = await Performance.findOne({ _id: perfId });
+
+      const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+
+      await this.ORM.transaction(async txc => {
+        const consent = new UploadersConsent(toc, host, perf);
+        txc.save(consent);
       });
     }
   };

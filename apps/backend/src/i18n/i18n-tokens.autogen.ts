@@ -13,6 +13,7 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@error.already_following"]: never,
   ["@@error.invalid_rating"]: never,
   ["@@error.no_rating_exists"]: never,
+  ["@@error.stream_compliance_not_accepted"]: never,
   ["@@onboarding.steps_invalid"]: never,
   ["@@onboarding.step_is_invalid"]: never,
   ["@@host.example_patron_tier_name"]: never,

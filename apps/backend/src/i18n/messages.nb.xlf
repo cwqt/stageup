@@ -187,6 +187,10 @@
       <source>Could not find existing rating</source>
       <target state="needs-translation">Fant ikke eksisterende vurdering</target>
     </trans-unit>				
+		<trans-unit id="error.stream_compliance_not_accepted" datatype="html">
+      <source>Self-certification of streaming license compliance not made. Please tick the box when creating a performance</source>
+      <target state="needs-translation">Egen sertifisering av samsvar med streaming-lisenser er ikke gjort. Merk av i boksen når du lager en forestilling</target>
+    </trans-unit>				
 		<trans-unit id="stripe.origin_url_not_matched" datatype="html">
       <source>Received response does not match submitter!</source>
       <target state="needs-translation">Mottatt svar samsvarer ikke med innsenderen!</target>

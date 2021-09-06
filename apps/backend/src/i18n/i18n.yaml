@@ -17,6 +17,7 @@ error:
   already_following: You are already following this host
   invalid_rating: The provided rate value is invalid
   no_rating_exists: Could not find existing rating
+  stream_compliance_not_accepted: Self-certification of streaming license compliance not made. Please tick the box when creating a performance
 
 # Onboarding -----------------------------------------------------------------------------------------------
 onboarding:

@@ -31,6 +31,7 @@ import {
   transact,
   User,
   UserHostMarketingConsent,
+  UserStageUpMarketingConsent,
   Validators,
   VideoAsset
 } from '@core/api';
@@ -61,10 +62,9 @@ import {
   ITicketStub,
   LikeLocation,
   NUUID,
-  PerformanceStatus,
   pick,
   PurchaseableType,
-  RemovalType,
+  PlatformConsentOpt,
   TicketType,
   Visibility
 } from '@core/interfaces';
@@ -211,13 +211,22 @@ export class PerformanceController extends ModuleController {
           .andWhere('c.user__id = :uid', { uid: req.session.user._id })
           .getOne());
 
+      const platformMarketingStatus =
+        req.session.user &&
+        (await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
+          .where('c.user__id = :uid', { uid: req.session.user._id })
+          .getOne());
+
       const response: DtoPerformance = {
         data: performance.toFull(),
         __client_data: {
           is_liking: existingLike ? true : false,
           is_following: existingFollow ? true : false,
           rating: existingRating ? existingRating.rating : null,
-          host_marketing_opt_status: hostMarketingStatus ? (hostMarketingStatus.opt_status as ConsentOpt) : null
+          host_marketing_opt_status: hostMarketingStatus ? (hostMarketingStatus.opt_status as ConsentOpt) : null,
+          platform_marketing_opt_status: platformMarketingStatus
+            ? (platformMarketingStatus.opt_status as PlatformConsentOpt)
+            : null
         }
       };
 
@@ -364,7 +373,6 @@ export class PerformanceController extends ModuleController {
         },
         { stripeAccount: ticket.performance.host.stripe_account_id }
       );
-
       // Create a charge on the card, which the user will then accept locally
       const res = await this.stripe.paymentIntents.create(
         {
@@ -379,9 +387,10 @@ export class PerformanceController extends ModuleController {
             purchaseable_id: ticket._id,
             purchaseable_type: PurchaseableType.Ticket,
             payment_method_id: platformPaymentMethod._id,
-            marketing_consent: body.options.hard_host_marketing_opt_out
+            host_marketing_consent: body.options.hard_host_marketing_opt_out
               ? to<ConsentOpt>('hard-out')
-              : to<ConsentOpt>('soft-in')
+              : to<ConsentOpt>('soft-in'),
+            platform_marketing_consent: body.options.stageup_marketing_opt_in ? to<ConsentOpt>('hard-in') : null
           })
         },
         {
