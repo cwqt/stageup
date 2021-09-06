@@ -867,7 +867,8 @@ export class HostController extends ModuleController {
           bulk_refund_data: {
             bulk_refund_reason: req.body.bulk_refund_reason,
             bulk_refund_detail: req.body.bulk_refund_detail
-          }
+          },
+          send_initiation_emails: false
         },
         req.locale
       );

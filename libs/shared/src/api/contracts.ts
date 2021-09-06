@@ -1,6 +1,7 @@
 import {
   ConsentOpt,
   IAsset,
+  IRemovalReason,
   IHost,
   IHostInvitation,
   IHostOnboarding,
@@ -18,6 +19,7 @@ import {
   IUserPrivate,
   IUserStub,
   LiveStreamState,
+  RemovalType,
   PlatformConsentOpt
 } from '@core/interfaces';
 import { Asset as MuxAsset, LiveStream } from '@mux/mux-node';
@@ -72,9 +74,9 @@ export type EventContract = {
   // Refunds ------------------------------------------------------------------
   ['refund.requested']: { invoice_id: IInvoice['_id'] };
   ['refund.refunded']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; refund_id: IRefund['_id'] };
-  ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id'] };
+  ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; send_initiation_emails: boolean };
   ['refund.rejected']: {};
-  ['refund.bulk']: { invoice_ids: Array<IInvoice['_id']> };
+  ['refund.bulk']: { invoice_ids: Array<IInvoice['_id']>; send_initiation_emails: boolean };
   // Patronage ----------------------------------------------------------------#
   ['patronage.started']: {
     user_id: IUser['_id'];
@@ -97,8 +99,12 @@ export type EventContract = {
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
   ['performance.created']: IPerformance;
-  ['performance.deleted']: { performance_id: IPerformance['_id'] };
-  ['performance.deleted_notify_user']: {
+  ['performance.removed']: {
+    performance_id: IPerformance['_id'];
+    removal_reason: IRemovalReason;
+    removal_type: RemovalType;
+  };
+  ['performance.removed_notify_user']: {
     performance_id: IPerformance['_id'];
     user_id: IUser['_id'];
     invoice_id: IInvoice['_id'];

@@ -119,6 +119,14 @@
       <source>Performance cannot be deleted after it has occured</source>
       <target state="needs-translation">Ytelsen kan ikke slettes etter at den har skjedd</target>
     </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_live" datatype="html">
+      <source>Performance cannot be cancelled while currently live</source>
+      <target state="needs-translation">Forestillingen kan ikke avbrytes mens den er live</target>
+    </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_after_occurrence" datatype="html">
+      <source>Performance cannot be cancelled after it has occured</source>
+      <target state="needs-translation">Forestillingen kan ikke avbrytes etter at den har skjedd</target>
+    </trans-unit>				
 		<trans-unit id="payment_status.created" datatype="html">
       <source>Created</source>
       <target state="needs-translation">Laget</target>
@@ -301,7 +309,7 @@ Vi har varslet de berørte kundene om at de skal motta det refunderte beløpet i
 Vær oppmerksom på at hvis denne forespørselen ikke ble initiert av deg, må du varsle oss umiddelbart "</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
-      <source>Refund for {performance_name} succesful!</source>
+      <source>Refund for {performance_name} successful!</source>
       <target state="needs-translation">Refusjon for {performance_name} vellykket!</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__content" datatype="html">
@@ -332,9 +340,7 @@ Du kan se en logg over denne refusjonen i StageUp-kontoinnstillingene
 ** StageUp Team **</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
-      <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-succesfully processed by Stripe</p>
-</source>
+      <source>Refund for {user_username} for {performance_name} (ID:{invoice_id}) successful</source>
       <target state="needs-translation">Refusjon for {user_username} for {performance_name} (ID: {invoice_id}), behandlet av Stripe</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
@@ -1252,25 +1258,37 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </source>
       <target state="needs-translation"><p>Hei {user_username}!</p><p> Du kjøpte billetter for {performance_name}. Det starter på {premier_time}.</p><p> Vi håper du er klar til å se det!</p><p> Ta meg med til biblioteket mitt: <a href="{url}">{url}</a></p><p> Jubel,</p><p> StageUp team</p></target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_host__subject" datatype="html">
+		<trans-unit id="email.performance.cancelled_notify_host__subject" datatype="html">
+      <source>You have cancelled {performance_name}</source>
+      <target state="needs-translation">Du har kansellert {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.performance.cancelled_notify_host__content" datatype="html">
+      <source><p>Hello <strong>{host_name}</strong>,</p>
+<p>You have cancelled your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
+<p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Hei <strong>{host_name}</strong> ,</p><p> Du har kansellert forestillingen din: <strong>{performance_name}</strong> som var planlagt på <strong>{performance_premiere_date}</strong></p><p> Vi har startet refusjon til alle kunder som kjøpte billetter til dette arrangementet. Midler blir satt inn på kontoene deres innen 5 virkedager.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.performance.softDeleted_notify_host__subject" datatype="html">
       <source>You have deleted {performance_name}</source>
       <target state="needs-translation">Du har slettet {performance_name}</target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_host__content" datatype="html">
+		<trans-unit id="email.performance.softDeleted_notify_host__content" datatype="html">
       <source><p>Hello <strong>{host_name}</strong>,</p>
 <p>You have deleted your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
 <p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
 <p>Thanks,</p>
 <p><strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Hei <strong>{host_name}</strong> ,</p><p> Du har slettet ytelsen din: <strong>{performance_name}</strong> som var planlagt på <strong>{performance_premiere_date}</strong></p><p> Vi har iverksatt refusjon til alle kunder som kjøpte billetter til dette arrangementet. Midler blir kreditert på kontoene innen 5 \ ndager.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
+      <target state="needs-translation"><p>Hei <strong>{host_name}</strong> ,</p><p> Du har slettet ytelsen din: <strong>{performance_name}</strong> som var planlagt på <strong>{performance_premiere_date}</strong></p><p> Vi har startet refusjon til alle kunder som kjøpte billetter til dette arrangementet. Midler blir satt inn på kontoene deres innen 5 virkedager.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_user__subject" datatype="html">
-      <source><p>Peformance: {performance_name} cancellation notification</p>
-</source>
-      <target state="needs-translation"><p>Framføring: {performance_name} avbestillingsvarsel</p></target>
+		<trans-unit id="email.performance.removed_notify_user__subject" datatype="html">
+      <source>Peformance, {performance_name} cancellation notification</source>
+      <target state="needs-translation">Peformance, {performance_name} kanselleringsvarsel</target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_user__content" datatype="html">
+		<trans-unit id="email.performance.removed_notify_user__content" datatype="html">
       <source><p>Hi <strong>{user_username}</strong>,</p>
 <p>Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.</p>
 <p>Invoice#: {invoice_id}</p>
@@ -1279,7 +1297,38 @@ listed as ‘Cancelled’ on your account from now on.</p>
 <p>Thanks,</p>
 <p><strong>StageUp Team</strong></p>
 </source>
-      <target state="needs-translation"><p>Hei <strong>{user_username}</strong> ,</p><p> Dessverre har {host_name} måtte avbryte forestillingen: {performance_name}. Vi har igangsatt en refusjon på billetten du har kjøpt på {ticket_purchase_date}.</p><p> Faktura nr.: {invoice_id}</p><p> Billettpris: {ticket_amount}</p><p> Vi krediterer automatisk midlene til <strong>{card_brand} som</strong> ender på <strong>{last_4}</strong> . Vær oppmerksom på at det kan ta opptil fem virkedager før kontoen din blir kreditert.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
+      <target state="needs-translation"><p>Hei <strong>{user_username}</strong> ,</p><p> Dessverre har {host_name} måttet avlyse forestillingen: {performance_name}. Vi har startet refusjon for billetten din som ble kjøpt på {ticket_purchase_date}.</p><p> Faktura#: {invoice_id}</p><p> Billettpris: {ticket_amount}</p><p> Vi krediterer pengene automatisk til <strong>{card_brand} som</strong> slutter på <strong>{last_4}</strong> . Vær oppmerksom på at det kan ta opptil fem virkedager før kontoen din blir kreditert.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__subject" datatype="html">
+      <source>A new user has consented to marketing</source>
+      <target state="needs-translation">En ny bruker har samtykket til markedsføring</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_in_to_marketing__content" datatype="html">
+      <source><p>Hi <strong>{host_name}</strong>,</p>
+<p>You have a new user who has consented to receiving marketing from you!</p>
+<p>Username: {user_name}
+Email: {user_email}</p>
+<p>Please add them to your marketing communications. We will inform you again if the user chooses to opt out of marketing in the future.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Hei <strong>{host_name}</strong> ,</p><p> Du har en ny bruker som har samtykket i å motta markedsføring fra deg!</p><p> Brukernavn: {user_name} E -post: {user_email}</p><p> Du kan legge dem til i adresselisten. Vi vil informere deg igjen hvis brukeren velger å velge bort markedsføring i fremtiden.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__subject" datatype="html">
+      <source>A user has opted out of marketing</source>
+      <target state="needs-translation">En bruker har valgt bort markedsføring</target>
+    </trans-unit>				
+		<trans-unit id="email.user.opting_out_of_marketing__content" datatype="html">
+      <source><p>Hello,</p>
+<p>Your subscriber {user_name} ({user_email}) has opted out of receiving direct emails from your organisation.
+Additional information:</p>
+<p>Reason: {opt_out_reason}
+Message: {opt_out_message}</p>
+<p>Kindly remove them from your mailing list. We will inform you again by email if they choose to opt back in.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Hallo,</p><p> Abonnenten din {user_name} ({user_email}) har valgt å ikke motta direkte e -post fra organisasjonen din. Denne informasjonen ble gitt:</p><p> Årsak: {opt_out_reason} Melding: {opt_out_message}</p><p> Fjern dem fra adresselisten din. Vi vil informere deg igjen via e -post hvis de velger å melde seg på igjen.</p><p> Takk,</p><p> <strong>StageUp Team</strong></p></target>
     </trans-unit>				
 		<trans-unit id="email.user.opting_in_to_marketing__subject" datatype="html">
       <source>A new user has consented to marketing</source>

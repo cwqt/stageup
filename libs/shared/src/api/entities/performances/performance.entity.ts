@@ -9,7 +9,7 @@ import {
   PerformanceStatus,
   RichText,
   Visibility,
-  IDeletePerfReason
+  IRemovalReason
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
@@ -47,7 +47,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
 
   @DeleteDateColumn() deletedAt?: Date;
-  @Column('jsonb', { nullable: true }) delete_reason: IDeletePerfReason;
+  @Column('jsonb', { nullable: true }) removal_reason: IRemovalReason;
 
   @OneToOne(() => AssetGroup, { eager: true, onDelete: 'CASCADE', cascade: true })
   @JoinColumn()

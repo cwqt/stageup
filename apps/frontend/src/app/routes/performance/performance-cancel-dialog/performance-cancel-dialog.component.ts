@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IRemovalReason, DtoPerformance, IPerformance, RemovalType, RemovalReason } from '@core/interfaces';
+import { RemovalReason, IPerformance, RemovalType } from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
@@ -10,19 +10,18 @@ import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-bu
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
-  selector: 'app-performance-delete-dialog',
-  templateUrl: './performance-delete-dialog.component.html',
-  styleUrls: ['./performance-delete-dialog.component.css']
+  selector: 'app-performance-cancel-dialog',
+  templateUrl: './performance-cancel-dialog.component.html',
+  styleUrls: ['./performance-cancel-dialog.component.css']
 })
-export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOptions {
+export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOptions {
   submit: EventEmitter<string> = new EventEmitter();
   cancel: EventEmitter<string> = new EventEmitter();
   buttons?: UiDialogButton[];
-  public test: DtoPerformance;
 
   constructor(
     private toastService: ToastService,
-    private ref: MatDialogRef<PerformanceDeleteDialogComponent>,
+    private ref: MatDialogRef<PerformanceCancelDialogComponent>,
     private performanceService: PerformanceService,
     private helperService: HelperService,
     private dialog: MatDialog,
@@ -33,7 +32,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
   ngOnInit(): void {
     this.buttons = [
       new UiDialogButton({
-        label: $localize`Cancel`,
+        label: $localize`Close`,
         kind: ThemeKind.Secondary,
         callback: () => {
           this.cancel.emit();
@@ -41,13 +40,13 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
         }
       }),
       new UiDialogButton({
-        label: $localize`Delete Performance`,
+        label: $localize`Cancel Performance`,
         kind: ThemeKind.Primary,
         callback: () =>
           this.helperService.showDialog(
             this.dialog.open(SelectReasonDialogComponent, {
               data: {
-                dialog_title: $localize`Why do you want to delete the performance?`,
+                dialog_title: $localize`Why do you want to cancel the performance?`,
                 reasons: new Map([
                   [RemovalReason.TechnicalIssues, { label: $localize`Technical Issues` }],
                   [
@@ -62,15 +61,15 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 hide_further_info: currentSelection => currentSelection != RemovalReason.Other
               }
             }),
-            async deletePerfReason => {
+            async cancelPerfReason => {
               await this.performanceService
-                .deletePerformance(this.performance._id, {
-                  removal_reason: deletePerfReason,
-                  removal_type: RemovalType.SoftDelete
+                .cancelPerformance(this.performance._id, {
+                  removal_reason: cancelPerfReason,
+                  removal_type: RemovalType.Cancel
                 })
                 .then(() => {
                   this.toastService.emit(
-                    $localize`${this.performance.name} Deleted! We have initiated refunds for all purchased tickets`
+                    $localize`${this.performance.name} has been cancelled. We have initiated refunds for all purchased tickets`
                   );
                 })
                 .then(() => {

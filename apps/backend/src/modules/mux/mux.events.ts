@@ -96,7 +96,8 @@ export class MuxEvents extends ModuleEvents<`mux.${HandledMuxEvents}`, true> {
     // the transaction hasn't completed, so put a timeout of 500ms
     // we'll need to revisit this at some point...
     await timeout(500);
-    await this.muxService.setLiveStreamAssetState(JSON.parse(ct.data.passthrough), LiveStreamState.Idle);
+    const passthrough: IMuxPassthrough = JSON.parse(ct.data.passthrough);
+    await this.muxService.setLiveStreamAssetState(passthrough.asset_id, LiveStreamState.Idle);
   }
 
   async streamIdle(data: IMUXHookResponse<LiveStream>) {
@@ -122,10 +123,11 @@ export class MuxEvents extends ModuleEvents<`mux.${HandledMuxEvents}`, true> {
       await performance.save();
     }
 
-    await this.muxService.setLiveStreamAssetState(JSON.parse(data.data.passthrough), LiveStreamState.Disconnected);
+    await this.muxService.setLiveStreamAssetState(passthrough.asset_id, LiveStreamState.Disconnected);
   }
 
   async streamCompleted(data: IMUXHookResponse<LiveStream>) {
-    await this.muxService.setLiveStreamAssetState(JSON.parse(data.data.passthrough), LiveStreamState.Completed);
+    const passthrough: IMuxPassthrough = JSON.parse(data.data.passthrough);
+    await this.muxService.setLiveStreamAssetState(passthrough.asset_id, LiveStreamState.Completed);
   }
 }

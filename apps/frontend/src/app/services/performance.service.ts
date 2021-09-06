@@ -20,7 +20,8 @@ import {
   ISignedToken,
   IAssetStub,
   AssetDto,
-  IDeletePerfReason
+  IRemovalReason,
+  DtoRemovePerformance
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
@@ -99,8 +100,12 @@ export class PerformanceService {
       .toPromise();
   }
 
-  deletePerformance(performanceId: string, dtoDeletePerfReason: IDeletePerfReason) {
-    return this.http.put(`/api/performances/${performanceId}`, dtoDeletePerfReason).toPromise();
+  deletePerformance(performanceId: string, data: DtoRemovePerformance) {
+    return this.http.put(`/api/performances/${performanceId}`, data).toPromise();
+  }
+
+  cancelPerformance(performanceId: string, data: DtoRemovePerformance) {
+    return this.http.put(`/api/performances/${performanceId}/cancel`, data).toPromise();
   }
 
   // router.post <ICreateAssetRes|void> ("/performances/:pid/assets", Perfs.createAsset());

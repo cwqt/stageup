@@ -1,13 +1,14 @@
 
-<ui-dialog [buttons]="buttons" title="Delete Performance">
+<ui-dialog [buttons]="buttons" title="Cancel Performance" i18n-title>
     <h2>
       <span i18n>Your performance is scheduled to premiere in: {{ this.performance.publicity_period.start| timeUntilPipe }}</span>
     </h2>
     <div class="mx-auto my-4" >
-      <h3 i18n>Deleting your performance will result in:</h3>
+      <h3 i18n>Cancelling your performance will result in:</h3>
       <ul class="list-decimal ml-8 text-xl">
         <li i18n>All tickets purchased being refunded</li>
-        <li i18n>All data associated with the performance being deleted</li>
+        <li i18n>All data associated with the performance will be hidden</li>
+        <li i18n>You will have the option to recreate the performance</li>
       </ul>
     </div>
 </ui-dialog>

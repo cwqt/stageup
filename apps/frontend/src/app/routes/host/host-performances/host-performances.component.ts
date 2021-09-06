@@ -68,7 +68,7 @@ export class HostPerformancesComponent implements OnInit {
           chip_selector: p => {
             const colours: { [index in PerformanceStatus]: ChipComponent['kind'] } = {
               [PerformanceStatus.Complete]: 'purple',
-              [PerformanceStatus.Cancelled]: 'gray',
+              [PerformanceStatus.Cancelled]: 'magenta',
               [PerformanceStatus.Deleted]: 'gray',
               [PerformanceStatus.Live]: 'red',
               [PerformanceStatus.PendingSchedule]: 'blue',
@@ -83,7 +83,8 @@ export class HostPerformancesComponent implements OnInit {
         {
           label: $localize`Edit`,
           click: p => this.appService.navigateTo(`/dashboard/performances/${p._id}`),
-          icon: 'maximize'
+          icon: 'maximize',
+          disabled: p => (p.status == PerformanceStatus.Deleted ? true : false)
         }
       ],
       pagination: {}
