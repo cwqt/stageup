@@ -55,7 +55,7 @@ export class PerformanceService extends ModuleService {
     perf.status = PerformanceStatus.Cancelled;
     perf.removal_reason = removalReason;
     await perf.save();
-
+    console.log('test');
     return await this.bus.publish(
       'performance.removed',
       {
