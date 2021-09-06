@@ -48,6 +48,7 @@ import {
   pick,
   Visibility
 } from '@core/interfaces';
+import { UserService } from '../user/user.service';
 import Stripe from 'stripe';
 import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
@@ -56,6 +57,7 @@ import { Connection } from 'typeorm';
 @Service()
 export class MyselfController extends ModuleController {
   constructor(
+    private userService: UserService,
     @Inject(POSTGRES_PROVIDER) private ORM: Connection,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe
@@ -517,14 +519,8 @@ export class MyselfController extends ModuleController {
       await getCheck(
         this.ORM.createQueryBuilder(Host, 'host').where('host._id = :hid', { hid: req.params.hid }).getOne()
       );
-      // Check consent exists
-      const existingConsent = await getCheck(
-        this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
-          .where('consent.type = :type', { type: <ConsentableType>'host_marketing' })
-          .andWhere('consent.user__id = :uid', { uid: req.session.user._id })
-          .andWhere('consent.host__id = :hid', { hid: req.params.hid })
-          .getOne()
-      );
+      await this.userService.setUserHostMarketingOptStatus(req.session.user._id, req.params.hid, req.body.new_status);
+
       // Trigger email to be sent to the host, informing them of the change
       await this.bus.publish(
         'user.marketing_opt_in_change',
@@ -536,10 +532,6 @@ export class MyselfController extends ModuleController {
         },
         req.locale
       );
-
-      // Update new status and save
-      existingConsent.opt_status = req.body.new_status;
-      await existingConsent.save();
     }
   };
 }

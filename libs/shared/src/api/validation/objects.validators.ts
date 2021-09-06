@@ -191,7 +191,8 @@ export namespace objects {
           return object<T>({
             selected_dono_peg: enums<DonoPeg>(DonoPegs),
             allow_any_amount: number(),
-            hard_host_marketing_opt_out: boolean()
+            hard_host_marketing_opt_out: boolean(),
+            stageup_marketing_opt_in: boolean()
           }).is(value);
         }
       }

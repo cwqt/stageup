@@ -208,6 +208,7 @@ const Gdpr = Container.get(GdprController);
 router.get      <IConsentable<CT>>       ("/gdpr/documents/:type/:version",           Gdpr.readLatestDocument);
 router.get      <IConsentable<CT>[]>     ("/gdpr/documents/:version",                 Gdpr.readAllLatestDocuments);
 router.post     <void>                   ("/gdpr/documents/:type/supersede",          Gdpr.uploadDocument);
+router.put     <void>                   ("/gdpr/:hid/:pid/set-stream-compliance",    Gdpr.updateStreamCompliance);
 
 // UTILS ---------------------------------------------------------------------------------------------------------------
 const Utils = Container.get(UtilityController);

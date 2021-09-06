@@ -179,6 +179,10 @@
       <source>Could not find existing rating</source>
       <target state="needs-translation">Methu dod o hyd i'r sgôr bresennol</target>
     </trans-unit>				
+		<trans-unit id="error.stream_compliance_not_accepted" datatype="html">
+      <source>Self-certification of streaming license compliance not made. Please tick the box when creating a performance</source>
+      <target state="needs-translation">Ni wnaed hunan-ardystiad o gydymffurfiad trwydded ffrydio. Ticiwch y blwch wrth greu perfformiad</target>
+    </trans-unit>				
 		<trans-unit id="stripe.origin_url_not_matched" datatype="html">
       <source>Received response does not match submitter!</source>
       <target state="needs-translation">Nid yw'r ymateb a dderbynnir yn cyfateb i'r cyflwynydd!</target>
@@ -1127,7 +1131,7 @@ now: <a href="{url}">{url}</a>></p>
     </trans-unit>				
 		<trans-unit id="email.ticket.purchased_future__content" datatype="html">
       <source><p>Hello {user_name},</p>
-<p>You purchased tickets for {performance_name} for {amount}. It will premier on {premier_time}. Don’t forget to mark your calendar.
+<p>You purchased tickets for {performance_name} for {amount}. It will premier on {publicity_period_start}. Don’t forget to mark your calendar.
 We’ll send you reminders closer to the time, so you don’t miss it. :)</p>
 <p>Receipt of this purchase: <a href="{receipt_url}">{receipt_url}</a></p>
 <p><a href="{url}" style="background-color:#ef4571;color:white;padding:10px 15px;margin:30px 0px;text-decoration:none;border-radius:5px;">Take me to my library</a></p>

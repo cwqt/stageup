@@ -41,4 +41,3 @@ export const Stories = {
     return Stories.activeUser;
   }
 };
-
