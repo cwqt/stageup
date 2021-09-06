@@ -164,7 +164,7 @@ export class PerformanceEvents extends ModuleEvents {
   }
 
   async sendHostPerformanceRemovalEmail(performance: Performance, removalType: RemovalType, locale: ILocale) {
-    if (removalType === RemovalType.softDelete) {
+    if (removalType === RemovalType.SoftDelete) {
       this.queueService.addJob('send_email', {
         subject: this.i18n.translate('@@email.performance.softDeleted_notify_host__subject', locale, {
           performance_name: performance.name

@@ -37,7 +37,7 @@ export class PerformanceService extends ModuleService {
       {
         performance_id: performanceId,
         removal_reason: removalReason,
-        removal_type: RemovalType.softDelete
+        removal_type: RemovalType.SoftDelete
       },
       locale
     );

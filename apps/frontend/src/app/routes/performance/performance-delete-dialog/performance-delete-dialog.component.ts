@@ -66,7 +66,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
               await this.performanceService
                 .deletePerformance(this.performance._id, {
                   removal_reason: deletePerfReason,
-                  removal_type: RemovalType.softDelete
+                  removal_type: RemovalType.SoftDelete
                 })
                 .then(() => {
                   this.toastService.emit(
