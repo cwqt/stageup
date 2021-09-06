@@ -5,7 +5,6 @@ import { CreatePerformanceComponent } from './create-performance/create-performa
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { IPerformanceStub, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { PerformanceService } from '../../../services/performance.service';
 import { i18n, richtext, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
