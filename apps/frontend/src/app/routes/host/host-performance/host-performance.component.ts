@@ -1,18 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { DtoPerformance, IHost, IPerformanceHostInfo } from '@core/interfaces';
+import { DtoPerformance, IHost, IPerformanceHostInfo, PerformanceStatus } from '@core/interfaces';
 import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
+import { getPerformance } from 'apicache';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
-import { DrawerKey, DrawerService } from '../../../services/drawer.service';
+import { DrawerService } from '../../../services/drawer.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostPerformanceCustomiseComponent } from './host-performance-customise/host-performance-customise.component';
 import { HostPerformanceDetailsComponent } from './host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { SharePerformanceDialogComponent } from './share-performance-dialog/share-performance-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-host-performance',
@@ -25,6 +27,9 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
   disableDeleteButton: boolean;
+  disableCancelButton: boolean;
+  deletionDisabledTooltip = $localize`Cannot delete a live performance`;
+  cancellationDisabledTooltip = $localize`Cannot cancel a live performance`;
 
   onChildLoaded(
     component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent
@@ -33,6 +38,11 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     component.performanceHostInfo = this.performanceHostInfo;
     component.performance = this.performance;
     component.host = this.host;
+
+    if (this.performance.data.data.status === PerformanceStatus.Live) {
+      this.disableCancelButton = true;
+      this.disableDeleteButton = true;
+    }
   }
 
   get performanceData() {
@@ -42,7 +52,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   constructor(
     private performanceService: PerformanceService,
     private appService: AppService,
-    private drawerService: DrawerService,
     private route: ActivatedRoute,
     private helperService: HelperService,
     private dialog: MatDialog
@@ -54,6 +63,10 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
 
     this.performanceService.$activeHostPerformanceId.next(this.performanceId);
     cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
+  }
+
+  ngAfterContentInit() {
+    console.log(this.performance);
   }
 
   openSharePerformanceDialog() {

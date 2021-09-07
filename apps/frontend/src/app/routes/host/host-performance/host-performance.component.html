@@ -43,7 +43,8 @@
 
 <popper-content #managePerformanceDropdown class="flex flex-col">
   <div class="flex flex-col">
-    <ui-button class="border-0" [disabled]='disableDeleteButton' (click)="deletePerformance()" i18n>Delete Performance</ui-button>
-    <ui-button class="border-0" (click)="cancelPerformance()" i18n>Cancel Performance</ui-button>
+    <ui-button class="border-0" [matTooltip]='deletionDisabledTooltip' [matTooltipDisabled]='!disableDeleteButton' [disabled]='disableDeleteButton' (click)="deletePerformance()" i18n>Delete Performance</ui-button>
+    <ui-button class="border-0" [matTooltip]='cancellationDisabledTooltip' [matTooltipDisabled]='!disableCancelButton' [disabled]='disableCancelButton' (click)="cancelPerformance()" i18n>Cancel Performance</ui-button>
   </div>
 </popper-content>
+
