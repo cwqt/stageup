@@ -26,10 +26,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performanceId: string;
   performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
-  disableDeleteButton: boolean;
-  disableCancelButton: boolean;
-  deletionDisabledTooltip = $localize`Cannot delete a live performance`;
-  cancellationDisabledTooltip = $localize`Cannot cancel a live performance`;
 
   onChildLoaded(
     component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent
@@ -38,11 +34,10 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     component.performanceHostInfo = this.performanceHostInfo;
     component.performance = this.performance;
     component.host = this.host;
+  }
 
-    if (this.performance.data.data.status === PerformanceStatus.Live) {
-      this.disableCancelButton = true;
-      this.disableDeleteButton = true;
-    }
+  get isPerformanceLive(): boolean {
+    return this.performance?.data?.data?.status === PerformanceStatus.Live;
   }
 
   get performanceData() {
@@ -63,10 +58,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
 
     this.performanceService.$activeHostPerformanceId.next(this.performanceId);
     cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
-  }
-
-  ngAfterContentInit() {
-    console.log(this.performance);
   }
 
   openSharePerformanceDialog() {
