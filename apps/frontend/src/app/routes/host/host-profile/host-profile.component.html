@@ -125,5 +125,45 @@
     <div class="bg-white mt-4 rounded p-4 shadow">
       <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
     </div>
+
+    <div *ngIf="carouselData.upcoming.data?.data?.length > 0" class="carousel-container relative">
+      <h2>Scheduled events</h2>
+
+      <ui-hr></ui-hr>
+
+      <mat-spinner *ngIf="carouselData.upcoming.loading" i18n>Loading...</mat-spinner>
+      <h3 *ngIf="carouselData.upcoming.data?.data?.length == 0" i18n>No performances found</h3>
+
+      <div class="relative carousel-container">
+        <div class="absolute right-0 top-0 bottom-0 my-auto spinner" *ngIf="carouselData.upcoming.meta.loading_page">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </div>
+
+        <carousel
+          *ngIf="!carouselData.upcoming.loading"
+          (events)="handleCarouselEvents($event, 'upcoming')"
+          [margin]="20"
+          [height]="256"
+          [loading]="carouselData.upcoming.meta.loading_page"
+          [id]="'upcoming'"
+          [cellsToShow]="currentCellsToShow"
+          [loop]="false"
+        >
+          <div
+            class="carousel-cell overflow-hidden"
+            *ngFor="let performance of carouselData.upcoming.data.data; let i = index"
+          >
+            <app-performance-thumb
+              #thumb
+              [performance]="performance"
+              [userLiked]="performance.client_likes"
+              (click)="thumb.openBrochure()"
+            >
+            </app-performance-thumb>
+          </div>
+        </carousel>
+      </div>
+    </div>
+
   </div>
 </app-page>
