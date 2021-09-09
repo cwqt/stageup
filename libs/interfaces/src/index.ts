@@ -24,6 +24,7 @@ export * from './hosts/host-onboarding.interface';
 export * from './hosts/onboarding-step-review.interface';
 export * from './hosts/host-invite.interface';
 export * from './hosts/patronage.interface';
+export * from './hosts/host-feed.interface';
 
 // Performances ----------------------------------------------------------
 export * from './performances/performance.interface';

@@ -1,10 +1,16 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
-import { IHost, IHostStub, IEnvelopedData, IUserFollow } from '@core/interfaces';
-import fd from 'form-data';
-import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
+import { 
+  IHost,
+  IEnvelopedData,
+  IUserFollow,
+  IEnvelopedData as IEnv,
+  IPerformanceStub,
+  IHostFeed
+} from '@core/interfaces';
+import { createICacheable, ICacheable, cachize } from '../../../app.interfaces';
 import { AppService, RouteParam } from '../../../services/app.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
@@ -14,16 +20,24 @@ import { HostProfileAboutComponent } from './host-profile-about/host-profile-abo
 import { HostProfileFeedComponent } from './host-profile-feed/host-profile-feed.component';
 import { HostProfilePatronageComponent } from './host-profile-patronage/host-profile-patronage.component';
 import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
-import { environment } from 'apps/frontend/src/environments/environment';
 import { Subscription } from 'rxjs';
+import { CarouselComponent } from '@frontend/components/libraries/ivyсarousel/carousel.component';
+import { CarouselBaseComponent } from '@frontend/components/carousel-base/carousel-base.component';
+import { ToastService } from '@frontend/services/toast.service';
+import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { NGXLogger } from 'ngx-logger';
+
+type CarouselIdx = keyof IHostFeed;
 
 @Component({
   selector: 'app-host-profile',
   templateUrl: './host-profile.component.html',
   styleUrls: ['./host-profile.component.scss']
 })
-export class HostProfileComponent implements OnInit {
+export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub, IHostFeed> implements OnInit {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+  @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
   @Input() hostUsername?: string;
   host: ICacheable<IEnvelopedData<IHost, IUserFollow>> = createICacheable();
   isHostView: boolean;
@@ -33,16 +47,35 @@ export class HostProfileComponent implements OnInit {
   userFollowing: boolean;
   myselfSubscription: Subscription;
 
+  public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[]>> } = {
+    upcoming: createICacheable([], { loading_page: false }),
+  };
+
   constructor(
+    logger: NGXLogger,
+    toastService: ToastService,
+    breakpointObserver: BreakpointObserver,
+    private hostService: HostService,
     private myselfService: MyselfService,
     private appService: AppService,
     public route: ActivatedRoute,
-    private hostService: HostService,
     private helperService: HelperService,
-    public dialog: MatDialog
-  ) {}
+    public dialog: MatDialog,    
+  ) {
+    super(logger, toastService, breakpointObserver);
+
+    // setting fetchData separately as this is not accessible on super()
+    super.fetchData = this.fetchFeed.bind(
+      null,
+      this.hostService,
+      this.carouselData,
+      this.host,
+    );
+  }
 
   async ngOnInit() {
+    super.onInit();
+
     this.tabs = [
       { label: $localize`Feed`, route: '' },
       { label: $localize`About`, route: 'about' },
@@ -62,8 +95,27 @@ export class HostProfileComponent implements OnInit {
     // If not passed through input, get from route param since this is probably on /@host_username
     if (!this.hostUsername) this.hostUsername = this.appService.getParam(RouteParam.HostId).split('@').pop();
 
-    // Get the host by username & populate the ICacheable
     await cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
+
+    this.userFollowing = this.host.data.__client_data.is_following;
+
+    try {
+      this.carouselData.upcoming.loading = true;
+      const hostFeed = await this.hostService.readHostFeed(
+        this.host.data.data._id,
+        {
+          upcoming: {
+            page: 0,
+            per_page: 4
+          },
+        },
+      );
+      this.carouselData.upcoming.data = hostFeed['upcoming'];
+    } catch (error) {
+      this.toastService.emit($localize`Error occurred fetching feed`, ThemeKind.Danger);
+    } finally {
+      this.carouselData.upcoming.loading = false;
+    }
 
     // Wait for tabs to be in the DOM before setting tabGroup selectedIndex to route
     setTimeout(() => {
@@ -78,8 +130,6 @@ export class HostProfileComponent implements OnInit {
         }
       });
     }, 0);
-
-    this.userFollowing = this.host.data.__client_data.is_following;
   }
 
   onChildLoaded(component: HostProfileAboutComponent | HostProfileFeedComponent | HostProfilePatronageComponent) {
@@ -90,6 +140,22 @@ export class HostProfileComponent implements OnInit {
     this.appService.navigateTo(
       `${this.isHostView ? '/dashboard' : ''}/@${this.hostUsername}/${this.tabs[event.index].route}`
     );
+  }
+
+  async fetchFeed(
+    hostService: HostService,
+    carouselData: ICacheable<IEnv<IPerformanceStub[]>>,
+    host: ICacheable<IEnvelopedData<IHost, IUserFollow>>,
+    carouselIndex: CarouselIdx
+  ): Promise<IEnv<IPerformanceStub[]>> {
+    return (await hostService.readHostFeed(
+      host.data.data._id,
+      {
+          [carouselIndex]: {
+              page: carouselData[carouselIndex].data.__paging_data.next_page,
+              per_page: carouselData[carouselIndex].data.__paging_data.per_page
+          }
+      }))[carouselIndex];
   }
 
   openChangeAvatarDialog() {
