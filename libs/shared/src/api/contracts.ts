@@ -93,7 +93,7 @@ export type EventContract = {
     invoice_id: IInvoice['_id'];
     host_id: IHost['_id'];
     ticket_id: ITicket['_id'];
-    host_marketing_consent: ConsentOpt;
+    host_marketing_consent: ConsentOpt | null;
     platform_marketing_consent: PlatformConsentOpt | null;
   };
   // Patronage ----------------------------------------------------------------

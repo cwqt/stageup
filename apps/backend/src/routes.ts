@@ -89,6 +89,7 @@ router.post     <IFollowing>            ("/myself/follow-host/:hid",            
 router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow);
 router.get      <IE<IUserHostMC[]>>     ("/myself/opt-ins/host-marketing",            Myself.readUserHostMarketingConsents);
 router.put      <void>                  ("/myself/opt-ins/host-marketing/:hid",       Myself.updateHostOptInStatus);
+router.put      <void>                  ("/myself/opt-ins/prompts/host-marketing",     Myself.updateShowHostMarketingPrompts);
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = Container.get(UserController)

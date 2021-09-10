@@ -106,15 +106,9 @@
 
             <div class="mx-8">
               <!-- Host marketing Opt-out button -->
-              <ui-form
-                *ngIf="performanceCacheable.data.__client_data.host_marketing_opt_status === null"
-                [form]="hostMarketingOptForm"
-              ></ui-form>
+              <ui-form *ngIf="showHostMarketingForm" [form]="hostMarketingOptForm"></ui-form>
               <!-- SU marketing Opt-in button. Always display unless the user is already opted in. -->
-              <ui-form
-                *ngIf="performanceCacheable.data.__client_data.platform_marketing_opt_status !== 'hard-in'"
-                [form]="stageupMarketingOptForm"
-              ></ui-form>
+              <ui-form *ngIf="showPlatformMarketingForm" [form]="stageupMarketingOptForm"></ui-form>
             </div>
 
             <!-- Only show the button if **not** in the process of adding a new card -->

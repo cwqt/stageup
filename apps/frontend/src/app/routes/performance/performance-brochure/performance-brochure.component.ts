@@ -9,11 +9,8 @@ import {
   DonoPeg,
   DtoPerformance,
   IAssetStub,
-  IEnvelopedData,
   IMyself,
   IPaymentIntentClientSecret,
-  IPerformance,
-  IPerformanceStub,
   ITicketStub,
   PurchaseableType
 } from '@core/interfaces';
@@ -22,13 +19,11 @@ import { PaymentMethodComponent } from '@frontend/components/payment-method/paym
 import { PlayerComponent } from '@frontend/components/player/player.component';
 import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
 import { AppService } from '@frontend/services/app.service';
-import { HelperService } from '@frontend/services/helper.service';
 import { MyselfService } from '@frontend/services/myself.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
-import { environment } from 'apps/frontend/src/environments/environment';
 
 @Component({
   selector: 'performance-brochure',
@@ -66,6 +61,9 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
   hostMarketingOptForm: UiForm<{ does_opt_out: boolean }>;
   stageupMarketingOptForm: UiForm<{ does_opt_in: boolean }>;
+
+  showHostMarketingForm: boolean;
+  showPlatformMarketingForm: boolean;
 
   get performance() {
     return this.performanceCacheable.data?.data;
@@ -120,6 +118,12 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
         output: async v => v
       }
     });
+
+    // Reduce long, recurring, boolean expressions into variables
+    this.showHostMarketingForm =
+      this.performanceCacheable.data.__client_data.host_marketing_opt_status === null &&
+      !this.myself.is_hiding_host_marketing_prompts;
+    this.showPlatformMarketingForm = this.performanceCacheable.data.__client_data.platform_marketing_opt_status !== 'hard-in';
   }
 
   openPerformanceDescriptionSection() {
@@ -182,7 +186,10 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
         options: {
           selected_dono_peg: this.donoPegSelectForm?.group?.value?.pegs,
           allow_any_amount: this.donoPegSelectForm?.group?.value?.allow_any_amount,
-          hard_host_marketing_opt_out: this.hostMarketingOptForm.group.value.does_opt_out,
+          // If the user was shown the form then the the opt-out is true or false. If they weren't shown the form then the opt-out is 'null'.
+          hard_host_marketing_opt_out: this.showHostMarketingForm
+            ? this.hostMarketingOptForm.group.value.does_opt_out
+            : null,
           stageup_marketing_opt_in: this.stageupMarketingOptForm.group.value.does_opt_in
         }
       },

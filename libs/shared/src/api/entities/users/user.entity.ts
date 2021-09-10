@@ -1,4 +1,4 @@
-import { IUser, IUserStub, IUserPrivate, IMyself, ILocale } from '@core/interfaces';
+import { IUser, IUserStub, IUserPrivate, IMyself, ILocale, ConsentOpts, ConsentOpt } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import bcrypt from 'bcrypt';
 import {
@@ -38,6 +38,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() is_verified: boolean;
   @Column() is_new_user: boolean;
   @Column() is_admin: boolean;
+  @Column() is_hiding_host_marketing_prompts: boolean;
   @Column({ unique: true }) email_address: string;
   @Column() stripe_customer_id: string; // cus_xxx
   @Column('jsonb', { default: { language: 'en', region: 'GB' } }) locale: ILocale;
@@ -60,6 +61,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     this.is_admin = false;
     this.is_new_user = false; // TODO: change to true
     this.is_verified = false;
+    this.is_hiding_host_marketing_prompts = false;
     this.setPassword(data.password);
   }
 
@@ -101,7 +103,8 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
       is_admin: this.is_admin,
       cover_image: this.cover_image,
       bio: this.bio,
-      locale: this.locale
+      locale: this.locale,
+      is_hiding_host_marketing_prompts: this.is_hiding_host_marketing_prompts
       // Purchases: []
     };
   }

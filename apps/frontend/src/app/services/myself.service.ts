@@ -201,6 +201,13 @@ export class MyselfService {
     return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
   }
 
+  //router.put <void> ("/myself/opt-ins/prompts/host-marketing", Myself.updateShowHostMarketingPrompts());
+  updateShowHostMarketingPrompts(status: boolean): Promise<void> {
+    return this.http
+      .put<void>(`/api/myself/opt-ins/prompts/host-marketing`, { new_status: status })
+      .toPromise();
+  }
+
   // router.get <IEnvelopedData<IUserHostMarketingConsent[]>> ("/myself/host-marketing/opt-ins", Myself.readUserHostMarketingConsents());
   readUserHostMarketingConsents(query: IQueryParams): Promise<IEnvelopedData<IUserHostMarketingConsent[]>> {
     return this.http

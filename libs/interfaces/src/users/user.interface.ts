@@ -1,4 +1,4 @@
-import { HostPermission, IHost, ILocale, IPersonInfo } from '@core/interfaces';
+import { HostPermission, IHost, ILocale, IPersonInfo, ConsentOpt } from '@core/interfaces';
 import { IFollowing } from './follow.interface';
 
 export type DtoLogin = Pick<IUserPrivate, 'email_address'> & { password: string };
@@ -19,6 +19,7 @@ export interface IUser extends IUserStub {
   locale?: ILocale;
   is_verified: boolean; //has completed email verification
   is_new_user: boolean; //gone through first time setup
+  is_hiding_host_marketing_prompts: boolean; // has specified they want to hide prompts regarding host marketing in the future
   is_admin?: boolean; //site admin global perms
 }
 

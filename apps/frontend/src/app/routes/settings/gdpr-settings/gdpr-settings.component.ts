@@ -1,10 +1,13 @@
+import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { ToastService } from '@frontend/services/toast.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { HelperService } from '@frontend/services/helper.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OptOutDialogComponent } from '@frontend/components/dialogs/opt-out-dialog/opt-out-dialog.component';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { Component, OnInit } from '@angular/core';
-import { IUserHostMarketingConsent } from '@core/interfaces';
+import { IUserHostMarketingConsent, IMyself } from '@core/interfaces';
 
 @Component({
   selector: 'app-gdpr-settings',
@@ -12,11 +15,14 @@ import { IUserHostMarketingConsent } from '@core/interfaces';
   styleUrls: ['./gdpr-settings.component.scss']
 })
 export class GdprSettingsComponent implements OnInit {
+  myself: IMyself;
+
   table: UiTable<IUserHostMarketingConsent>;
 
-  constructor(private myselfService: MyselfService, public dialog: MatDialog, private helperService: HelperService) {}
+  constructor(private myselfService: MyselfService, public dialog: MatDialog, private helperService: HelperService, private toastService: ToastService) {}
 
   async ngOnInit(): Promise<void> {
+    this.myself = this.myselfService.$myself.getValue();
     this.table = new UiTable<IUserHostMarketingConsent>({
       resolver: async query => this.myselfService.readUserHostMarketingConsents(query),
       pagination: {
@@ -61,5 +67,21 @@ export class GdprSettingsComponent implements OnInit {
         }
       ]
     });
+  }
+
+  async toggleFutureHostMarketingPrompts(event: MatSlideToggleChange): Promise<void> {
+    try {
+      await this.myselfService.updateShowHostMarketingPrompts(event.checked);
+      // Update the `$myself` BehaviourSubject
+      this.myselfService.setUser({
+        ...this.myselfService.$myself.getValue().user,
+        is_hiding_host_marketing_prompts: event.checked
+      });
+      this.myself.user.is_hiding_host_marketing_prompts = event.checked;
+    } catch (error) {
+      this.toastService.emit($localize`An error occured while updating your preference`, ThemeKind.Danger, {
+        duration: 5000
+      });
+    }
   }
 }

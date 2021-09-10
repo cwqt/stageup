@@ -488,6 +488,7 @@ export class MyselfController extends ModuleController {
       if (follow) await Follow.delete({ _id: follow._id });
     }
   };
+
   // Returns all of the current users opt-ins and opt outs for host marketing
   readUserHostMarketingConsents: IControllerEndpoint<IEnvelopedData<IUserHostMarketingConsent[]>> = {
     authorisation: AuthStrat.isLoggedIn,
@@ -532,6 +533,21 @@ export class MyselfController extends ModuleController {
         },
         req.locale
       );
+    }
+  };
+
+  // Sets whether the user will see marketing consent tickboxes from hosts in the future
+  updateShowHostMarketingPrompts: IControllerEndpoint<void> = {
+    validators: {
+      body: object({
+        new_status: boolean()
+      })
+    },
+    authorisation: AuthStrat.isLoggedIn,
+    controller: async req => {
+      const user = await getCheck(User.findOne({ _id: req.session.user._id }));
+      user.is_hiding_host_marketing_prompts = req.body.new_status;
+      await user.save();
     }
   };
 }
