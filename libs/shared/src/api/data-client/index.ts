@@ -1,8 +1,7 @@
 import { timestamp } from '@core/helpers';
 import Container, { Token } from 'typedi';
 import { Logger } from './providers/logging.provider';
-import { LOGGING_PROVIDER, HTTP_TUNNEL_PROVIDER } from './tokens';
-import Env from '@backend/env';
+import { LOGGING_PROVIDER } from './tokens';
 
 /**
  * DataClient: Object with methods for maintaining all providers
@@ -29,8 +28,6 @@ export type ProviderMap = Map<Token<any>, Provider>;
 // Creates the DataClient object from an object of DataProviders
 const connect = async <T extends ProviderMap>(map: T): Promise<T> => {
   const log = Container.get(LOGGING_PROVIDER);
-
-  if (!Env.IS_LOCAL) map.delete(HTTP_TUNNEL_PROVIDER);
 
   for await (const [token, provider] of map.entries()) {
     // Show the message now, so if any fields are missing we know to what provider
