@@ -159,6 +159,7 @@ import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-doc
 import { GdprDocumentUpload } from './components/dialogs/gdpr-document-upload/gdpr-document-upload.component';
 import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { PerformanceCancelDialogComponent } from './routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
+import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -286,7 +287,8 @@ import { PerformanceCancelDialogComponent } from './routes/performance/performan
     GdprSettingsComponent,
     OptOutDialogComponent,
     AdminGdprDocumentsComponent,
-    GdprDocumentUpload
+    GdprDocumentUpload,
+    HostPerformanceMediaComponent
   ],
   imports: [
     AngularMaterialModule,

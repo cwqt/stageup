@@ -43,6 +43,12 @@
           <span i18n>Details</span>
         </ui-button>
         <ui-button
+          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/media'"
+          routerLinkActive="active-link"
+        >
+          <span i18n>Media</span>
+        </ui-button>
+        <ui-button
           [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/ticketing'"
           routerLinkActive="active-link"
         >

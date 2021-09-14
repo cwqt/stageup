@@ -15,6 +15,7 @@ import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.componen
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
+import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component';
@@ -107,6 +108,8 @@ const LOGGED_IN_ROUTES: Routes = [
           { path: '', component: HostPerformanceDetailsComponent },
           { path: 'ticketing', component: HostPerformanceTicketingComponent },
           { path: 'customise', component: HostPerformanceCustomiseComponent },
+          { path: 'media', component: HostPerformanceMediaComponent },
+
           // { path: "analytics", HostPerformanceDetailsComponent },
           { path: '**', component: NotFoundComponent }
         ]

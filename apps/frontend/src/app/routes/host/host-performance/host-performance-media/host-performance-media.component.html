@@ -1,0 +1,23 @@
+<h2 class="mb-0" i18n>Media</h2>
+<ui-hr></ui-hr>
+<!-- Upload Event Video -->
+<div class="mt-5">
+  <h3>Event video</h3>
+  <p>Upload your event's video</p>
+  <ui-button class="my-5" kind="primary" icon="upload" i18n> Upload Video </ui-button>
+</div>
+<ui-hr></ui-hr>
+<!-- Upload Thumbnails -->
+<div class="mt-5">
+  <h3>Thumbnail</h3>
+  <p>Select or upload a picture that shows what's in your video</p>
+</div>
+<ui-hr></ui-hr>
+<!-- Upload Trailer -->
+<div class="mt-5">
+  <h3>Trailer</h3>
+  <p>Add an introductory video or a trailer for your event</p>
+  <app-upload-video [initialSource]="asset?.location" [createAssetResHandler]="assetCreator.bind(this)">
+  </app-upload-video>
+  <!-- <ui-button class="my-5" kind="primary" icon="upload" i18n> Upload Trailer </ui-button> -->
+</div>
