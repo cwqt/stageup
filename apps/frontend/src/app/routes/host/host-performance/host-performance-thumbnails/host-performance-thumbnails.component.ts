@@ -15,7 +15,8 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
 
   THUMBNAIL_LIMIT: number = 5;
 
-  thumbnails: AssetDto[];
+  primaryThumbnail: AssetDto;
+  secondaryThumbnails: AssetDto[];
 
   constructor(
     private helperService: HelperService,
@@ -24,23 +25,27 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.thumbnails = this.performance.data.assets.filter(
-      a => a.type == AssetType.Image && a.tags.includes('thumbnail')
+    this.secondaryThumbnails = this.performance.data.assets.filter(
+      a => a.type == AssetType.Image && a.tags.includes('thumbnail') && a.tags.includes('secondary')
+    );
+    this.primaryThumbnail = this.performance.data.assets.find(
+      a => a.type == AssetType.Image && a.tags.includes('thumbnail') && a.tags.includes('primary')
     );
   }
 
-  changeThumbnail(index: number) {
+  changePrimaryThumbnail() {
     let asset: AssetDto | void;
 
     this.helperService.showDialog(
       this.dialog.open(ChangeImageComponent, {
         data: {
-          initialImage: this.thumbnails[index]?.location,
+          initialImage: this.primaryThumbnail?.location,
           fileHandler: async (fd: FormData) => {
             asset = await this.performanceService.changeThumbnails(
               this.performance.data._id,
               fd,
-              this.thumbnails[index]?._id
+              'primary',
+              this.primaryThumbnail?._id
             );
 
             return asset?.location;
@@ -48,9 +53,34 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
         }
       }),
       () => {
-        this.thumbnails[index]
-          ? this.thumbnails.splice(index, 1, asset) // replace image
-          : (this.thumbnails[index] = asset); // add new
+        this.primaryThumbnail = asset;
+      }
+    );
+  }
+
+  changeSecondaryThumbnail(index: number) {
+    let asset: AssetDto | void;
+
+    this.helperService.showDialog(
+      this.dialog.open(ChangeImageComponent, {
+        data: {
+          initialImage: this.secondaryThumbnails[index]?.location,
+          fileHandler: async (fd: FormData) => {
+            asset = await this.performanceService.changeThumbnails(
+              this.performance.data._id,
+              fd,
+              'secondary',
+              this.secondaryThumbnails[index]?._id
+            );
+
+            return asset?.location;
+          }
+        }
+      }),
+      () => {
+        this.secondaryThumbnails[index]
+          ? this.secondaryThumbnails.splice(index, 1, asset) // replace image
+          : (this.secondaryThumbnails[index] = asset); // add new
       }
     );
   }

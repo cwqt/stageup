@@ -94,7 +94,9 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     this.brochureSharingUrl = `${this.appService.environment.frontend_url}/?performance=${this.performance._id}`;
 
     // Find first thumbnail, to show on cover image if no trailer video is present
-    this.thumbnail = this.performance.assets.find(a => a.type == AssetType.Image && a.tags.includes('thumbnail'));
+    this.thumbnail = this.performance.assets.find(
+      a => a.type == AssetType.Image && a.tags.includes('thumbnail') && a.tags.includes('primary')
+    );
 
     // Host marketing form when going to purchase a ticket
     this.hostMarketingOptForm = new UiForm({
@@ -123,7 +125,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     this.showHostMarketingForm =
       this.performanceCacheable.data.__client_data.host_marketing_opt_status === null &&
       !this.myself.is_hiding_host_marketing_prompts;
-    this.showPlatformMarketingForm = this.performanceCacheable.data.__client_data.platform_marketing_opt_status !== 'hard-in';
+    this.showPlatformMarketingForm =
+      this.performanceCacheable.data.__client_data.platform_marketing_opt_status !== 'hard-in';
   }
 
   openPerformanceDescriptionSection() {

@@ -22,6 +22,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
   stream: IAssetStub<AssetType.LiveStream>;
   vod: IAssetStub<AssetType.Video>;
 
+  minimumAssetsMet: boolean;
+
   copyMessage: string = $localize`Copy`;
   visibilityInput: IUiFormField<'select'>;
 
@@ -40,8 +42,10 @@ export class HostPerformanceDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.stream = this.performance.data.data.assets.find(asset => asset.type == AssetType.LiveStream);
     this.vod = this.performance.data.data.assets.find(
-      asset => asset.type == AssetType.Video && asset.tags.includes('trailer')
+      asset => asset.type == AssetType.Video && asset.tags.includes('primary')
     );
+
+    this.minimumAssetsMet = this.performanceHasMinimumAssets();
 
     this.publicityPeriodForm = new UiForm({
       fields: {
@@ -106,5 +110,16 @@ export class HostPerformanceDetailsComponent implements OnInit {
     setTimeout(() => {
       this.copyMessage = $localize`Copy`;
     }, 2000);
+  }
+
+  // Performance needs either a trailer or at least 2 thumbnail images to go public
+  performanceHasMinimumAssets(): boolean {
+    const trailer = this.performance.data.data.assets.find(
+      asset => asset.type == AssetType.Video && asset.tags.includes('trailer')
+    );
+    const thumbnails = this.performance.data.data.assets.filter(
+      asset => asset.type == AssetType.Image && asset.tags.includes('thumbnail')
+    );
+    return trailer || thumbnails?.length > 0;
   }
 }

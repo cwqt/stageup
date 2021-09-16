@@ -40,6 +40,7 @@ import {
   ACCEPTED_IMAGE_MIME_TYPES,
   AssetDto,
   AssetOwnerType,
+  AssetTag,
   AssetTags,
   AssetType,
   BASE_AMOUNT_MAP,
@@ -71,7 +72,7 @@ import {
 import Mux from '@mux/mux-node';
 import { RedisClient } from 'redis';
 import Stripe from 'stripe';
-import { array, boolean, enums, object, optional } from 'superstruct';
+import { array, boolean, enums, literal, object, optional, union } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection, In } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
@@ -759,7 +760,13 @@ export class PerformanceController extends ModuleController {
   };
 
   changeThumbnails: IControllerEndpoint<AssetDto | void> = {
-    validators: { query: object({ replaces: optional(Validators.Fields.nuuid) }) },
+    validators: {
+      query: object({
+        replaces: optional(Validators.Fields.nuuid),
+        // tag: union([literal('primary'), literal('secondary')])
+        tag: enums(AssetTags)
+      })
+    },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
     middleware: Middleware.file(2048, ACCEPTED_IMAGE_MIME_TYPES).single('file'),
     controller: async req => {
@@ -785,7 +792,7 @@ export class PerformanceController extends ModuleController {
       if (!req.file) return;
 
       const asset = await transact(async txc => {
-        const asset = new ImageAsset(performance.asset_group, ['secondary', 'thumbnail']);
+        const asset = new ImageAsset(performance.asset_group, [req.query.tag as AssetTag, 'thumbnail']);
         await asset.setup(
           this.blobs,
           { file: req.file, s3_url: Env.AWS.S3_URL },

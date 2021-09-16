@@ -116,7 +116,6 @@ import { PerformanceThumbComponent } from './components/performance-thumb/perfor
 import { SettingsComponent } from './routes/settings/settings.component';
 import { CreateUpdateTicketComponent } from './routes/host/host-performance/host-performance-ticketing/create-update-ticket/create-update-ticket.component';
 import { HostInvoicesComponent } from './routes/host/host-invoices/host-invoices.component';
-import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component';
 import { UploadVideoComponent } from './components/upload-video/upload-video.component';
 import { HostPatronageComponent } from './routes/host/host-payments/host-patronage/host-patronage.component';
 import { CreateUpdatePatronTierComponent } from './routes/host/host-payments/host-patronage/create-update-patron-tier/create-update-patron-tier.component';
@@ -243,7 +242,6 @@ import { HostPerformanceMediaComponent } from './routes/host/host-performance/ho
     CreateHostComponent,
     HostOnboardingComponent,
     HostInvoicesComponent,
-    HostPerformanceCustomiseComponent,
     UploadVideoComponent,
     InvoiceDialogComponent,
     HostPatronageComponent,

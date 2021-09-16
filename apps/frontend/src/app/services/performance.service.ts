@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IQueryParams, querize } from '@core/helpers';
 import {
+  AssetTag,
   DtoCreateTicket,
   DtoPerformance,
   IEnvelopedData,
@@ -127,10 +128,10 @@ export class PerformanceService {
   }
 
   // router.post <AssetDto> ("/performances/:pid/thumbnails", Perfs.changeThumbnails());
-  changeThumbnails(performanceId: string, fd: FormData, replaces?: string): Promise<AssetDto | void> {
+  changeThumbnails(performanceId: string, fd: FormData, tag: AssetTag, replaces?: string): Promise<AssetDto | void> {
     return this.http
       .post<AssetDto | void>(
-        `/api/performances/${performanceId}/thumbnails${replaces ? `?replaces=${replaces}` : ''}`,
+        `/api/performances/${performanceId}/thumbnails/?tag=${tag}${replaces ? `&replaces=${replaces}` : ''}`,
         fd
       )
       .toPromise();

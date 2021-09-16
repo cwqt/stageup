@@ -1,5 +1,3 @@
-<app-host-performance-thumbnails [performance]="performance.data"></app-host-performance-thumbnails>
-<br />
 <app-update-performance [cacheable]="performance"></app-update-performance>
 
 <ui-hr></ui-hr>
@@ -7,10 +5,7 @@
 <div class="flex items-center justify-between">
   <div class="mr-4">
     <b i18n>Schedule</b>
-    <p i18n>
-      Update the start and end date for your event.<br />
-      
-    </p>
+    <p i18n>Update the start and end date for your event.<br /></p>
   </div>
   <ui-form class="flex-1" [form]="publicityPeriodForm"></ui-form>
 </div>
@@ -23,10 +18,19 @@
         You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made
         Public<br />
       </ng-container>
-      Set whether a performance is visible across the platform
+      <ng-container *ngIf="host.is_onboarded && !minimumAssetsMet">
+        A performance needs to have a trailer <b>or</b> a minimum of two images in order to make it public. Head to the
+        <a [routerLink]="'/dashboard/performances/' + performance.data.data._id + '/media'">media</a> section to start
+        uploading now!
+        <br />
+      </ng-container>
+      <ng-container *ngIf="host.is_onboarded && minimumAssetsMet">
+        Set whether a performance is visible across the platform
+        <br />
+      </ng-container>
     </p>
   </div>
-  <ui-form [form]="visibilityForm"></ui-form>
+  <ui-form *ngIf="host.is_onboarded && minimumAssetsMet" [form]="visibilityForm"></ui-form>
 </div>
 
 <ng-container *ngIf="stream">

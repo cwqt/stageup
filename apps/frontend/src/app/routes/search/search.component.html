@@ -32,7 +32,7 @@
         *ngFor="let results of performances.data.data"
         (click)="openDialogPerf(results)"
       >
-        <img [src]="results.thumbnail || '/assets/performance-placeholder.jpeg'" class="w-1/3 object-cover" alt="" />
+        <img [src]="getSrc(results)" class="w-1/3 object-cover" alt="" />
         <div class="w-2/3 p-4 flex flex-col">
           <h1 class="text-gray-900 font-bold text-2xl">{{ results?.name }}</h1>
           <quill-view

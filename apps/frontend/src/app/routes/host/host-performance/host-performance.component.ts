@@ -9,10 +9,10 @@ import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.servi
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { DrawerKey, DrawerService } from '../../../services/drawer.service';
 import { HelperService } from '../../../services/helper.service';
-import { HostPerformanceCustomiseComponent } from './host-performance-customise/host-performance-customise.component';
 import { HostPerformanceDetailsComponent } from './host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { SharePerformanceDialogComponent } from './share-performance-dialog/share-performance-dialog.component';
+import { HostPerformanceMediaComponent } from './host-performance-media/host-performance-media.component';
 
 @Component({
   selector: 'app-host-performance',
@@ -27,7 +27,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   disableDeleteButton: boolean;
 
   onChildLoaded(
-    component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent
+    component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceMediaComponent
   ) {
     component.performanceId = this.performanceId;
     component.performanceHostInfo = this.performanceHostInfo;
