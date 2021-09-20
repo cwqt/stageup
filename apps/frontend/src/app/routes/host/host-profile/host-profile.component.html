@@ -84,24 +84,20 @@
                 >logo--linkedin</ui-icon
               >
               <ui-button
-              id="shareButton"
-              [popper]="shareMenu"
-              [popperTrigger]="'click'"
-              [popperPositionFixed]="true"
-              [popperPreventOverflow]="false"
-              [popperPlacement]="'bottom'"
-              size="s"
-              class="border-0"
-            >
-            <ui-icon
-            size="l"
-            >Share</ui-icon
-          >
-            </ui-button>
-            <popper-content #shareMenu (click)="$event.stopPropagation()">
-              <app-social-sharing [url]="hostSharingUrl"></app-social-sharing>
-            </popper-content>
-             
+                id="shareButton"
+                [popper]="shareMenu"
+                [popperTrigger]="'click'"
+                [popperPositionFixed]="true"
+                [popperPreventOverflow]="false"
+                [popperPlacement]="'bottom'"
+                size="s"
+                class="border-0"
+              >
+                <ui-icon size="l">share</ui-icon>
+              </ui-button>
+              <popper-content #shareMenu (click)="$event.stopPropagation()">
+                <app-social-sharing [url]="hostSharingUrl"></app-social-sharing>
+              </popper-content>
             </div>
             <div class="flex absolute right-2 top-0 w-auto">
               <ui-button [transparent]="true" class="flex-1" size="m">
@@ -127,7 +123,7 @@
     </div>
 
     <div *ngIf="carouselData.upcoming.data?.data?.length > 0" class="carousel-container relative">
-      <h2>Scheduled events</h2>
+      <h2 i18n>Scheduled events</h2>
 
       <ui-hr></ui-hr>
 
@@ -164,6 +160,5 @@
         </carousel>
       </div>
     </div>
-
   </div>
 </app-page>

@@ -19,7 +19,14 @@ export class GdprSettingsComponent implements OnInit {
 
   table: UiTable<IUserHostMarketingConsent>;
 
-  constructor(private myselfService: MyselfService, public dialog: MatDialog, private helperService: HelperService, private toastService: ToastService) {}
+  userDeclinesPlatformMarketing: boolean;
+
+  constructor(
+    private myselfService: MyselfService,
+    public dialog: MatDialog,
+    private helperService: HelperService,
+    private toastService: ToastService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.myself = this.myselfService.$myself.getValue();
@@ -67,6 +74,10 @@ export class GdprSettingsComponent implements OnInit {
         }
       ]
     });
+
+    const platformMarketingOptStatus = await this.myselfService.readUserPlatformMarketingConsent();
+    // platform marketing is either 'hard-in' or 'hard-out'. If not yet consented, the default of the toggle will be false.
+    this.userDeclinesPlatformMarketing = platformMarketingOptStatus == 'hard-out';
   }
 
   async toggleFutureHostMarketingPrompts(event: MatSlideToggleChange): Promise<void> {
@@ -78,6 +89,17 @@ export class GdprSettingsComponent implements OnInit {
         is_hiding_host_marketing_prompts: event.checked
       });
       this.myself.user.is_hiding_host_marketing_prompts = event.checked;
+    } catch (error) {
+      this.toastService.emit($localize`An error occured while updating your preference`, ThemeKind.Danger, {
+        duration: 5000
+      });
+    }
+  }
+
+  async togglePlatformMarketing(event: MatSlideToggleChange): Promise<void> {
+    try {
+      const optStatus = event.checked ? 'hard-out' : 'hard-in';
+      await this.myselfService.updatePlatformMarketingConsent(optStatus);
     } catch (error) {
       this.toastService.emit($localize`An error occured while updating your preference`, ThemeKind.Danger, {
         duration: 5000

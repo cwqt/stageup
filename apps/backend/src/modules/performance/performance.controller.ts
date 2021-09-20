@@ -78,6 +78,7 @@ import AuthStrat from '../../common/authorisation';
 import { default as IdFinderStrat } from '../../common/authorisation/id-finder-strategies';
 import Env from '../../env';
 import { PerformanceService } from './performance.service';
+import { GdprService } from '../gdpr/gdpr.service';
 
 @Service()
 export class PerformanceController extends ModuleController {
@@ -88,6 +89,7 @@ export class PerformanceController extends ModuleController {
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(REDIS_PROVIDER) private redis: RedisClient,
     @Inject(BLOB_PROVIDER) private blobs: Blobs,
+    private gdprService: GdprService,
     private performanceService: PerformanceService
   ) {
     super();
@@ -212,10 +214,7 @@ export class PerformanceController extends ModuleController {
           .getOne());
 
       const platformMarketingStatus =
-        req.session.user &&
-        (await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
-          .where('c.user__id = :uid', { uid: req.session.user._id })
-          .getOne());
+        req.session.user && (await this.gdprService.readUserPlatformConsent(req.session.user._id));
 
       const response: DtoPerformance = {
         data: performance.toFull(),

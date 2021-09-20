@@ -47,7 +47,8 @@ import {
   ConsentableType as CT,
   IConsentable,
   IDynamicFrontendEnvironment as IDynamicFeEnv,
-  IHostFeed
+  IHostFeed,
+  PlatformConsentOpt
 } from '@core/interfaces';
 
 
@@ -88,8 +89,10 @@ router.put      <ILocale>               ("/myself/locale",                      
 router.post     <IFollowing>            ("/myself/follow-host/:hid",                  Myself.addFollow);
 router.delete   <void>                  ("/myself/unfollow-host/:hid",                Myself.deleteFollow);
 router.get      <IE<IUserHostMC[]>>     ("/myself/opt-ins/host-marketing",            Myself.readUserHostMarketingConsents);
+router.get      <PlatformConsentOpt>    ("/myself/opt-ins/platform",                  Myself.readUserPlatformMarketingConsent);
+router.put      <void>                  ("/myself/opt-ins/platform",                  Myself.updatePlatformMarketingConsent);
 router.put      <void>                  ("/myself/opt-ins/host-marketing/:hid",       Myself.updateHostOptInStatus);
-router.put      <void>                  ("/myself/opt-ins/prompts/host-marketing",     Myself.updateShowHostMarketingPrompts);
+router.put      <void>                  ("/myself/opt-ins/prompts/host-marketing",    Myself.updateShowHostMarketingPrompts);
 
 // USERS --------------------------------------------------------------------------------------------------------------
 const Users = Container.get(UserController)
