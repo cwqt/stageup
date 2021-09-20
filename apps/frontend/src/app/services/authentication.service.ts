@@ -51,6 +51,24 @@ export class AuthenticationService {
       .toPromise();
   }
 
+  loginWithGoogle(data: any): Promise<IUser> {
+    return this.http
+      .post<IUser>('/api/users/login/google', { user: data }, { withCredentials: true })
+      .pipe(
+        tap(user => {
+          // Remove last logged in user stored
+          this.myselfService.store(null);
+          this.myselfService.getMyself().then(() => {
+            this.$loggedIn.next(true);
+            // override set cookie consent, because of legimate interest
+            // https://alacrityfoundationteam31.atlassian.net/browse/SU-465
+            this.myselfService.setCookiesConsent(true);
+          });
+        })
+      )
+      .toPromise();
+  }
+
   logout() {
     this.$loggedIn.next(false);
     this.cookieService.delete('connect.sid');

@@ -85,6 +85,31 @@ export class UserController extends ModuleController {
     }
   };
 
+  loginUserWithGoogle: IControllerEndpoint<IUser> = {
+    middleware: Middleware.rateLimit(3600, 10, this.redis),
+    authorisation: AuthStrat.none,
+    controller: async req => {
+      console.log('req.body', req.body);
+      console.log('req.body.user', req.body.user);
+      // Check user exists
+      const u = await User.findOne({ email_address: req.body.user.email_address });
+
+      if (!u) {
+        // TODO: Create new user
+        console.log('NEED TO ADD USER');
+      }
+
+      // // Generate a session token
+      // req.session.user = {
+      //   _id: u._id,
+      //   is_admin: u.is_admin || false
+      // };
+
+      // return u.toFull();
+      return null;
+    }
+  };
+
   createUser: IControllerEndpoint<IMyself['user']> = {
     validators: { body: Validators.Objects.DtoCreateUser },
     authorisation: AuthStrat.none,

@@ -53,6 +53,7 @@
     "@types/faker": "^5.5.5",
     "@types/markdown-it": "^12.0.3",
     "angular-responsive-carousel": "^2.0.2",
+    "angularx-social-login": "^3.5.7",
     "apicache": "^1.5.3",
     "aws-sdk": "^2.799.0",
     "axios": "^0.21.1",

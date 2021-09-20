@@ -14,6 +14,7 @@ import { FormComponent } from '../../../ui-lib/form/form.component';
 import { HelperService } from '../../../services/helper.service';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
+import { SocialAuthService, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -41,7 +42,8 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
     private appService: AppService,
     private myselfService: MyselfService,
     private authService: AuthenticationService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private socialAuthService: SocialAuthService
   ) {}
 
   ngOnInit(): void {
@@ -93,5 +95,19 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
 
   openPasswordResetDialog() {
     this.dialog.open(ForgotPasswordComponent, { disableClose: true });
+  }
+
+  loginWithGoogle(): void {
+    this.socialAuthService
+      .signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(data => {
+        // Add details to our DB (if not already) and grant access
+        this.authService.loginWithGoogle(data);
+        console.log('DATA LOL', data);
+      })
+      .catch(error => {
+        // TODO: Display error
+        console.log('ERROR LOL', error);
+      });
   }
 }
