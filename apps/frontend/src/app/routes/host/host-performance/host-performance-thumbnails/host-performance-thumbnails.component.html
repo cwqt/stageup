@@ -1,7 +1,7 @@
 <div class="grid grid-cols-6 gap-10">
   <!-- Primary Thumbnail -->
   <div class="col-span-2">
-    <p>Primary Thumbnail</p>
+    <p i18n>Primary Thumbnail</p>
     <div
       class="flex items-center justify-center bg-gray-100 border border-gray-100 rounded-lg h-44 thumbnail-image cursor-pointer overflow-hidden mr-3"
       (click)="changePrimaryThumbnail()"
@@ -9,12 +9,12 @@
       <ui-icon *ngIf="!primaryThumbnail" size="l">image</ui-icon>
       <img class="w-full h-48 object-cover" *ngIf="primaryThumbnail" [src]="primaryThumbnail.location" alt="" />
     </div>
-    <p class="mt-5">Shown on StageUp's homepage and side menu</p>
+    <p class="mt-5" i18n>Shown on StageUp's homepage and side menu</p>
   </div>
 
   <!-- Additional Thumbnails -->
   <div class="col-span-1" *ngFor="let index of THUMBNAIL_LIMIT - 1 | times">
-    <p>Event Banner</p>
+    <p i18n>Event Banner</p>
     <div
       class="flex col-span-1 items-center justify-center bg-gray-100 border border-gray-100 rounded-lg h-44 cursor-pointer overflow-hidden"
       (click)="changeSecondaryThumbnail(index)"
@@ -27,7 +27,7 @@
         alt=""
       />
     </div>
-    <p class="mt-5">Shown on your event and profile pages</p>
+    <p class="mt-5" i18n>Shown on your event and profile pages</p>
   </div>
 </div>
-<p class="mt-4">(Max. upload size: 2MB)</p>
+<p class="mt-4" i18n>(Max. upload size: 2MB)</p>
