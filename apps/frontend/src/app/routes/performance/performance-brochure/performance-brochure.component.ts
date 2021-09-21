@@ -126,7 +126,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       this.performanceCacheable.data.__client_data.host_marketing_opt_status === null &&
       !this.myself.is_hiding_host_marketing_prompts;
     this.showPlatformMarketingForm =
-      this.performanceCacheable.data.__client_data.platform_marketing_opt_status !== 'hard-in';
+      this.performanceCacheable.data.__client_data.platform_marketing_opt_status === null;
   }
 
   openPerformanceDescriptionSection() {
