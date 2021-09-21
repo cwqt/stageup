@@ -53,6 +53,8 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
         }
       }),
       () => {
+        // Since performance data is cached between performance tabs, need to push it onto the assets array
+        this.performance.data.assets.push(asset);
         this.primaryThumbnail = asset;
       }
     );
@@ -78,6 +80,8 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
         }
       }),
       () => {
+        // Since performance data is cached between performance tabs, need to push it onto the assets array
+        this.performance.data.assets.push(asset);
         this.secondaryThumbnails[index]
           ? this.secondaryThumbnails.splice(index, 1, asset) // replace image
           : (this.secondaryThumbnails[index] = asset); // add new

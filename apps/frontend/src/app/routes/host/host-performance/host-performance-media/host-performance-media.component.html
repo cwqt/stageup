@@ -3,13 +3,12 @@
 <!-- Upload Event Video (only if the event is a VOD) -->
 <div *ngIf="vod" class="mt-5">
   <h3>Event video</h3>
-  <p>Upload your event's video</p>
+  <p>Upload your event's video.</p>
   <div class="my-8 w-full max-w-2xl">
     <app-upload-video
       *ngIf="VoDAssetCreator"
       [initialSource]="vod?.location"
       [createAssetResHandler]="VoDAssetCreator"
-      (uploadChange)="handleVideoUploadChange($event)"
     ></app-upload-video>
   </div>
   <ui-hr></ui-hr>
@@ -26,13 +25,7 @@
   <h3>Trailer</h3>
   <p>Add an introductory video or a trailer for your event</p>
   <div class="my-8 w-full max-w-2xl">
-    <app-upload-video
-      [initialSource]="trailer?.location"
-      [createAssetResHandler]="trailerAssetCreator.bind(this)"
-      (uploadChange)="handleVideoUploadChange($event)"
-    >
+    <app-upload-video [initialSource]="trailer?.location" [createAssetResHandler]="trailerAssetCreator.bind(this)">
     </app-upload-video>
   </div>
-
-  <!-- <ui-button class="my-5" kind="primary" icon="upload" i18n> Upload Trailer </ui-button> -->
 </div>

@@ -72,7 +72,7 @@ import {
 import Mux from '@mux/mux-node';
 import { RedisClient } from 'redis';
 import Stripe from 'stripe';
-import { array, boolean, enums, literal, object, optional, union } from 'superstruct';
+import { array, boolean, enums, object, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection, In } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
@@ -763,7 +763,6 @@ export class PerformanceController extends ModuleController {
     validators: {
       query: object({
         replaces: optional(Validators.Fields.nuuid),
-        // tag: union([literal('primary'), literal('secondary')])
         tag: enums(AssetTags)
       })
     },

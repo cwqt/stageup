@@ -1,14 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AssetType,
-  DtoPerformance,
-  GenreMap,
-  IAssetStub,
-  ICreateAssetRes,
-  IHost,
-  IPerformanceHostInfo,
-  IPerformance
-} from '@core/interfaces';
+import { AssetType, DtoPerformance, IAssetStub, ICreateAssetRes, IHost, IPerformanceHostInfo } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
@@ -42,7 +33,6 @@ export class HostPerformanceMediaComponent implements OnInit {
       );
 
     this.trailer = this.performance.data.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
-    console.log('this.trailer', this.trailer);
   }
 
   trailerAssetCreator() {
@@ -51,11 +41,5 @@ export class HostPerformanceMediaComponent implements OnInit {
       is_signed: false,
       tags: ['trailer']
     });
-  }
-
-  handleVideoUploadChange(event: UploadEvent) {
-    if (event == 'success') {
-      console.log('SUCCESS!');
-    }
   }
 }
