@@ -49,10 +49,10 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
   @OneToMany(() => PatronSubscription, sub => sub.user) patron_subscriptions: PatronSubscription[];
 
-  @Column() private salt: string;
-  @Column() private pw_hash: string;
+  @Column({ nullable: true }) private salt: string;
+  @Column({ nullable: true }) private pw_hash: string;
 
-  constructor(data: { email_address: string; username: string; password: string; stripe_customer_id: string }) {
+  constructor(data: { email_address: string; username: string; password?: string; stripe_customer_id: string }) {
     super();
     this.username = data.username;
     this.email_address = data.email_address;
@@ -62,7 +62,8 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     this.is_new_user = false; // TODO: change to true
     this.is_verified = false;
     this.is_hiding_host_marketing_prompts = false;
-    this.setPassword(data.password);
+    // Users logging in with google/facebook/twitter etc will not have a password
+    if (data.password) this.setPassword(data.password);
   }
 
   async setup(txc: EntityManager): Promise<User> {

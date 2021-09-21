@@ -5,7 +5,9 @@
   </div>
 
   <div class="grid grid-cols-3 gap-2 social-login mt-4">
-    <ui-button class="facebook w-full"><img class="w-8 h-8" src="assets/facebook.png" /></ui-button>
+    <ui-button class="facebook w-full" (click)="loginWithFacebook()"
+      ><img class="w-8 h-8" src="assets/facebook.png"
+    /></ui-button>
     <ui-button class="google w-full" (click)="loginWithGoogle()"
       ><img class="w-8 h-8" src="assets/google.png"
     /></ui-button>

@@ -22,7 +22,7 @@ import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
 
 // _>_>
-import { GoogleLoginProvider } from 'angularx-social-login';
+import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 // _>_>
 
@@ -339,6 +339,10 @@ import { PerformanceCancelDialogComponent } from './routes/performance/performan
             provider: new GoogleLoginProvider(
               '277477020432-qtnvgccsmigk5bbmo530kddhqpms74mc.apps.googleusercontent.com'
             )
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider('827395534603356') // test app for development purposes only
           }
         ]
       } as SocialAuthServiceConfig

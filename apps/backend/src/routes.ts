@@ -100,6 +100,7 @@ router.post     <IMyself["user"]>       ("/users",                              
 router.post     <void>                  ("/users/logout",                             Users.logoutUser);
 router.post     <IUser>                 ("/users/login",                              Users.loginUser);
 router.post     <IUser>                 ("/users/login/google",                       Users.loginUserWithGoogle);
+router.post     <IUser>                 ("/users/login/facebook",                     Users.loginUserWithFacebook);
 router.post     <void>                  ("/users/forgot-password",                    Users.forgotPassword);
 router.put      <void>                  ("/users/reset-password",                     Users.resetForgottenPassword);
 router.get      <IUser>                 ("/users/:uid",                               Users.readUser);

@@ -2,6 +2,7 @@ import { ErrorHandler } from '@backend/common/error';
 import {
   Address,
   BLOB_PROVIDER,
+  ContactInfo,
   EventBus,
   EVENT_BUS_PROVIDER,
   Follow,
@@ -11,6 +12,7 @@ import {
   Middleware,
   ModuleController,
   PasswordReset,
+  Person,
   POSTGRES_PROVIDER,
   REDIS_PROVIDER,
   STRIPE_PROVIDER,
@@ -89,24 +91,116 @@ export class UserController extends ModuleController {
     middleware: Middleware.rateLimit(3600, 10, this.redis),
     authorisation: AuthStrat.none,
     controller: async req => {
-      console.log('req.body', req.body);
-      console.log('req.body.user', req.body.user);
       // Check user exists
-      const u = await User.findOne({ email_address: req.body.user.email_address });
+      let u = await User.findOne({ email_address: req.body.user.email });
 
       if (!u) {
-        // TODO: Create new user
-        console.log('NEED TO ADD USER');
+        await transact(async (txc: EntityManager) => {
+          // Their username will be the first part of their email address
+          const username = req.body.user.email.split('@')[0];
+          const customer = await this.stripe.customers.create({
+            email: req.body.user.email
+          });
+
+          // Create User
+          u = new User({
+            username: username,
+            email_address: req.body.user.email,
+            stripe_customer_id: customer.id
+          });
+
+          // Create Person
+          u.personal_details = new Person({
+            first_name: req.body.user.firstName ? req.body.user.firstName : null,
+            last_name: req.body.user.lastName ? req.body.user.lastName : null,
+            title: null
+          });
+
+          // Add name to the database (if we have the data)
+          if (req.body.user.name) u.name = req.body.name;
+
+          // Verify user if in dev/testing
+          u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
+          await u.personal_details.save();
+
+          // Todo: If we can get this data from google we can populate it in the DB
+          u.personal_details.contact_info = new ContactInfo({
+            mobile_number: null,
+            landline_number: null,
+            addresses: []
+          });
+
+          await u.personal_details.contact_info.save();
+          await txc.save(u);
+        });
       }
 
-      // // Generate a session token
-      // req.session.user = {
-      //   _id: u._id,
-      //   is_admin: u.is_admin || false
-      // };
+      // Generate a session token
+      req.session.user = {
+        _id: u._id,
+        is_admin: u.is_admin || false
+      };
 
-      // return u.toFull();
-      return null;
+      return u.toFull();
+    }
+  };
+
+  loginUserWithFacebook: IControllerEndpoint<IUser> = {
+    middleware: Middleware.rateLimit(3600, 10, this.redis),
+    authorisation: AuthStrat.none,
+    controller: async req => {
+      // Check user exists
+      let u = await User.findOne({ email_address: req.body.user.email });
+
+      if (!u) {
+        await transact(async (txc: EntityManager) => {
+          // Their username will be the first part of their email address
+          const username = req.body.user.email.split('@')[0];
+          const customer = await this.stripe.customers.create({
+            email: req.body.user.email
+          });
+
+          // Create User
+          u = new User({
+            username: username,
+            email_address: req.body.user.email,
+            stripe_customer_id: customer.id
+          });
+
+          // Create Person
+          u.personal_details = new Person({
+            first_name: req.body.user.firstName ? req.body.user.firstName : null,
+            last_name: req.body.user.lastName ? req.body.user.lastName : null,
+            title: null
+          });
+
+          // Add name to the database (if we have the data)
+          if (req.body.user.firstName || req.body.user.lastName)
+            u.name = req.body.user.firstName + ' ' + req.body.user.lastName;
+
+          // Verify user if in dev/testing
+          u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
+          await u.personal_details.save();
+
+          // Todo: If we can get this data from google we can populate it in the DB
+          u.personal_details.contact_info = new ContactInfo({
+            mobile_number: null,
+            landline_number: null,
+            addresses: []
+          });
+
+          await u.personal_details.contact_info.save();
+          await txc.save(u);
+        });
+      }
+
+      // Generate a session token
+      req.session.user = {
+        _id: u._id,
+        is_admin: u.is_admin || false
+      };
+
+      return u.toFull();
     }
   };
 
