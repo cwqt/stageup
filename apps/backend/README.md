@@ -6,7 +6,7 @@ This guide will take you through setting up your .env file, including setting up
 
 ## **Setting Up**
 
-Create a `.env.development` file in the project's root directory, *'/core'*, based off of the provided `.env.example`, this will store your secret keys - **never share these with anyone** - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
+Create a `.env.development` file in the project's root directory, _'/core'_, based off of the provided `.env.example`, this will store your secret keys - **never share these with anyone** - it has been added to the `.gitignore` so you don't need to worry about accidentally committing it.
 
 ### Localtunnel
 
@@ -48,16 +48,16 @@ Stripe is a payment processing software service. To use Stripe, you'll have to a
 
 First, ask the SysAdmin to create you a Stripe account. Once it's been created, you'll receive a Stripe confirmation email where you can finish registering yourself.
 
-Once you're signed up, toggle on *'View test data'* in the left side nav.
+Once you're signed up, toggle on _'View test data'_ in the left side nav.
 
-Then, go to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys). From here, copy the *'Publishable key'* & *'Secret key'* to your .env:
+Then, go to [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys). From here, copy the _'Publishable key'_ & _'Secret key'_ to your .env:
 
 ```
 STRIPE_PRIVATE_KEY="pk_test_{CODE}" #sk_test
 STRIPE_PUBLIC_KEY="sk_test_{CODE}" #pk_test
 ```
 
-Then, go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks). Then, under *'Endpoints receiving events from Connect application'*, click *'Add endpoint'.* Within *'Endpoint URL'*, write "https://stageup-{YOUR_NAME}.loca.lt/stripe/hooks", then under *'Events to send'* click *'receive all events'*, then click *'Add enpoint'*.
+Then, go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks). Then, under _'Endpoints receiving events from Connect application'_, click _'Add endpoint'._ Within _'Endpoint URL'_, write "https://stageup-{YOUR*NAME}.loca.lt/stripe/hooks", then under *'Events to send'_ click _'receive all events'_, then click _'Add enpoint'\_.
 
 Copy the 'Signing secret' from your webhook and add it to your .env:
 
@@ -65,7 +65,7 @@ Copy the 'Signing secret' from your webhook and add it to your .env:
 STRIPE_WEBHOOK_SIGNATURE="{KEY}"
 ```
 
-Finally, go to [https://dashboard.stripe.com/settings/connect](https://dashboard.stripe.com/settings/connect). Go to the *'Integration'* section, toggle on *'View test data'*, copy your *'Test mode client ID',* and add this to your .env:
+Finally, go to [https://dashboard.stripe.com/settings/connect](https://dashboard.stripe.com/settings/connect). Go to the _'Integration'_ section, toggle on _'View test data'_, copy your _'Test mode client ID',_ and add this to your .env:
 
 ```
 STRIPE_CLIENT_ID="acct_{ID}"
@@ -75,13 +75,13 @@ STRIPE_CLIENT_ID="acct_{ID}"
 
 Most of StageUp's cloud infrastructure is set up on GCP.
 
-Ask the SysAdmin to create you a GCP account. Then log in to GCP and from the dashboard copy the *'Project ID'* into your .env: 
+Ask the SysAdmin to create you a GCP account. Then log in to GCP and from the dashboard copy the _'Project ID'_ into your .env:
 
 ```
 GCP_PROJECT_ID=""
 ```
 
-Next, you need to configure your GCP credentials in your .env. Ask the SysAdmin to create a service account for you and to send you the *'service_account.json'* credentials file. If the JSON file you're sent is named differently, just rename it to *'service_account.json'*.
+Next, you need to configure your GCP credentials in your .env. Ask the SysAdmin to create a service account for you and to send you the _'service_account.json'_ credentials file. If the JSON file you're sent is named differently, just rename it to _'service_account.json'_.
 
 Add this file into the root directory of this backend app (apps/backend). It's already added been added to the .gitignore, so you don't need to worry about accidentally pushing it. Finally, add the path to this file in your .env:
 
@@ -91,9 +91,9 @@ GOOGLE_APPLICATION_CREDENTIALS="./service_account.json"
 
 ### Sendgrid
 
-We use Sendgrid to send emails. You'll need your own account, so to go to Sendgrid and complete the registration process. 
+We use Sendgrid to send emails. You'll need your own account, so to go to Sendgrid and complete the registration process.
 
-Once you're logged in, go to [https://app.sendgrid.com/settings/api_keys](https://app.sendgrid.com/settings/api_keys) and create an API key called "Development Key". Give your key "Full API Permissions" and click 'Create & View'. Copy the api key code and add it to your .env: 
+Once you're logged in, go to [https://app.sendgrid.com/settings/api_keys](https://app.sendgrid.com/settings/api_keys) and create an API key called "Development Key". Give your key "Full API Permissions" and click 'Create & View'. Copy the api key code and add it to your .env:
 
 ```
 SENDGRID_API_KEY="" # SG.xx
@@ -103,4 +103,24 @@ You'll also need to authenticate an email address to use, ask the SysAdmin to do
 
 ```
 EMAIL_ADDRESS=""
+```
+
+### Social Media Sign-In
+
+Currently we have two ways for users to register/login, aside from email. That is through Facebook or through Google. These use an app ID to identify the service implementing the login.
+
+For Google, you can get this key from the Google Cloud Platform.
+
+- Login to our projects GCP (see above about contacting a SysAdmin for an account).
+- Nagivate to **"APIs and services" -> "Credentials"**.
+- Copy the Client ID from **"OAuth - Dev"** and add it to the .env:
+
+```
+GOOGLE_AUTH_APP_ID=""
+```
+
+For Facebook, ask the SysAdmin to add you to StageUp's [https://app.sendgrid.com/settings/api_keys](Facebook for Developers) account. For development purposes, there is an existing test app called **"StageUp - Dev"**. Copy the `Test App ID` and add it to your .env:
+
+```
+FACEBOOK_AUTH_APP_ID=""
 ```

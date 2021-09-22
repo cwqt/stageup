@@ -1,3 +1,4 @@
+import { SocialUser } from 'angularx-social-login';
 import { IUser, IUserStub, IUserPrivate, IMyself, ILocale, ConsentOpts, ConsentOpt } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import bcrypt from 'bcrypt';
@@ -49,10 +50,18 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
   @OneToMany(() => PatronSubscription, sub => sub.user) patron_subscriptions: PatronSubscription[];
 
+  @Column('simple-array', { default: [] }) sign_in_types: (SocialUser['provider'] | 'EMAIL')[];
+
   @Column({ nullable: true }) private salt: string;
   @Column({ nullable: true }) private pw_hash: string;
 
-  constructor(data: { email_address: string; username: string; password?: string; stripe_customer_id: string }) {
+  constructor(data: {
+    email_address: string;
+    username: string;
+    password?: string;
+    stripe_customer_id: string;
+    provider?: string;
+  }) {
     super();
     this.username = data.username;
     this.email_address = data.email_address;
@@ -64,6 +73,8 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     this.is_hiding_host_marketing_prompts = false;
     // Users logging in with google/facebook/twitter etc will not have a password
     if (data.password) this.setPassword(data.password);
+    // An array of sign in types (e.g. ['GOOGLE', 'FACEBOOK', 'EMAIL'])
+    this.sign_in_types = [data.provider ? data.provider : 'EMAIL'];
   }
 
   async setup(txc: EntityManager): Promise<User> {

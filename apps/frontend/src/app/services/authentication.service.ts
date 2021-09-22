@@ -1,3 +1,4 @@
+import { SocialUser } from 'angularx-social-login';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -7,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoggedInGuard } from '../_helpers/logged-in.guard';
 import { MyselfService } from './myself.service';
 import { DtoLogin, IUser } from '@core/interfaces';
+import { querize } from '@core/helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -33,9 +35,9 @@ export class AuthenticationService {
     return this.$loggedIn.getValue();
   }
 
-  login(data: DtoLogin): Promise<IUser> {
+  login(data: DtoLogin | SocialUser, socialType?: any): Promise<IUser> {
     return this.http
-      .post<IUser>('/api/users/login', data, { withCredentials: true })
+      .post<IUser>(`/api/users/login${querize({ social_type: socialType })}`, data, { withCredentials: true })
       .pipe(
         tap(user => {
           // Remove last logged in user stored
@@ -51,7 +53,25 @@ export class AuthenticationService {
       .toPromise();
   }
 
-  loginWithGoogle(data: any): Promise<IUser> {
+  socialSignIn(data: SocialUser): Promise<IUser> {
+    return this.http
+      .post<IUser>('/api/users/login/social', data, { withCredentials: true })
+      .pipe(
+        tap(user => {
+          // Remove last logged in user stored
+          this.myselfService.store(null);
+          this.myselfService.getMyself().then(() => {
+            this.$loggedIn.next(true);
+            // override set cookie consent, because of legimate interest
+            // https://alacrityfoundationteam31.atlassian.net/browse/SU-465
+            this.myselfService.setCookiesConsent(true);
+          });
+        })
+      )
+      .toPromise();
+  }
+
+  loginWithGoogle(data: SocialUser): Promise<IUser> {
     return this.http
       .post<IUser>('/api/users/login/google', { user: data }, { withCredentials: true })
       .pipe(
@@ -68,7 +88,7 @@ export class AuthenticationService {
       )
       .toPromise();
   }
-  loginWithFacebook(data: any): Promise<IUser> {
+  loginWithFacebook(data: SocialUser): Promise<IUser> {
     return this.http
       .post<IUser>('/api/users/login/facebook', { user: data }, { withCredentials: true })
       .pipe(

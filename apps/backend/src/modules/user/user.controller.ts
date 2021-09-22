@@ -87,43 +87,45 @@ export class UserController extends ModuleController {
     }
   };
 
-  loginUserWithGoogle: IControllerEndpoint<IUser> = {
+  signInUser: IControllerEndpoint<IUser> = {
+    //TODO: ADD VALIDATION
     middleware: Middleware.rateLimit(3600, 10, this.redis),
     authorisation: AuthStrat.none,
     controller: async req => {
+      console.log(req.body);
       // Check user exists
-      let u = await User.findOne({ email_address: req.body.user.email });
+      let u = await User.findOne({ email_address: req.body.email });
 
+      // If no user we can create one
       if (!u) {
         await transact(async (txc: EntityManager) => {
-          // Their username will be the first part of their email address
-          const username = req.body.user.email.split('@')[0];
+          // Set their username to be the first part of their email address
+          const username = req.body.email.split('@')[0];
           const customer = await this.stripe.customers.create({
-            email: req.body.user.email
+            email: req.body.email
           });
 
-          // Create User
           u = new User({
             username: username,
-            email_address: req.body.user.email,
-            stripe_customer_id: customer.id
+            email_address: req.body.email,
+            stripe_customer_id: customer.id,
+            provider: req.body.provider
           });
 
-          // Create Person
           u.personal_details = new Person({
-            first_name: req.body.user.firstName ? req.body.user.firstName : null,
-            last_name: req.body.user.lastName ? req.body.user.lastName : null,
+            first_name: req.body.firstName ? req.body.firstName : null,
+            last_name: req.body.lastName ? req.body.lastName : null,
             title: null
           });
 
-          // Add name to the database (if we have the data)
-          if (req.body.user.name) u.name = req.body.name;
+          // Add name to the database (if available from the social media platform)
+          if (req.body.name) u.name = req.body.name;
 
           // Verify user if in dev/testing
           u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
           await u.personal_details.save();
 
-          // Todo: If we can get this data from google we can populate it in the DB
+          // Todo: If we can get this data from social media we can populate it in the DB automatically
           u.personal_details.contact_info = new ContactInfo({
             mobile_number: null,
             landline_number: null,
@@ -133,65 +135,13 @@ export class UserController extends ModuleController {
           await u.personal_details.contact_info.save();
           await txc.save(u);
         });
-      }
-
-      // Generate a session token
-      req.session.user = {
-        _id: u._id,
-        is_admin: u.is_admin || false
-      };
-
-      return u.toFull();
-    }
-  };
-
-  loginUserWithFacebook: IControllerEndpoint<IUser> = {
-    middleware: Middleware.rateLimit(3600, 10, this.redis),
-    authorisation: AuthStrat.none,
-    controller: async req => {
-      // Check user exists
-      let u = await User.findOne({ email_address: req.body.user.email });
-
-      if (!u) {
-        await transact(async (txc: EntityManager) => {
-          // Their username will be the first part of their email address
-          const username = req.body.user.email.split('@')[0];
-          const customer = await this.stripe.customers.create({
-            email: req.body.user.email
-          });
-
-          // Create User
-          u = new User({
-            username: username,
-            email_address: req.body.user.email,
-            stripe_customer_id: customer.id
-          });
-
-          // Create Person
-          u.personal_details = new Person({
-            first_name: req.body.user.firstName ? req.body.user.firstName : null,
-            last_name: req.body.user.lastName ? req.body.user.lastName : null,
-            title: null
-          });
-
-          // Add name to the database (if we have the data)
-          if (req.body.user.firstName || req.body.user.lastName)
-            u.name = req.body.user.firstName + ' ' + req.body.user.lastName;
-
-          // Verify user if in dev/testing
-          u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
-          await u.personal_details.save();
-
-          // Todo: If we can get this data from google we can populate it in the DB
-          u.personal_details.contact_info = new ContactInfo({
-            mobile_number: null,
-            landline_number: null,
-            addresses: []
-          });
-
-          await u.personal_details.contact_info.save();
-          await txc.save(u);
-        });
+      } else {
+        // User exists, we can check if they have previously signed in using this method
+        if (!u.sign_in_types.includes(req.body.provider)) {
+          // If not we can add it to the array of providers
+          u.sign_in_types.push(req.body.provider);
+          await u.save();
+        }
       }
 
       // Generate a session token

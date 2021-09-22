@@ -14,7 +14,7 @@ import { FormComponent } from '../../../ui-lib/form/form.component';
 import { HelperService } from '../../../services/helper.service';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { SocialAuthService, GoogleLoginProvider, SocialUser, FacebookLoginProvider } from 'angularx-social-login';
+import { SocialAuthService, GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -99,17 +99,18 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
 
   loginWithGoogle(): void {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(async data => {
-      // Add details to our DB (if not already) and grant access
-      await this.authService.loginWithGoogle(data);
-      // get user, host & host info on login & re-direct according to set preferred landing page
-      this.myselfService.getMyself().then(myself => {
-        // If the user has set a preferred language, we want to prefix the URL with that when they login
-        const localeRedirect = myself.user.locale ? `/${myself.user.locale.language}` : '';
-        this.appService.navigateTo(
-          myself.host_info?.prefers_dashboard_landing ? `${localeRedirect}/dashboard` : `${localeRedirect}/`
-        );
-        this.dialog.closeAll();
-      });
+      console.log(data);
+      // // Add details to our DB (if not already) and grant access
+      await this.authService.socialSignIn(data);
+      // // get user, host & host info on login & re-direct according to set preferred landing page
+      // this.myselfService.getMyself().then(myself => {
+      //   // If the user has set a preferred language, we want to prefix the URL with that when they login
+      //   const localeRedirect = myself.user.locale ? `/${myself.user.locale.language}` : '';
+      //   this.appService.navigateTo(
+      //     myself.host_info?.prefers_dashboard_landing ? `${localeRedirect}/dashboard` : `${localeRedirect}/`
+      //   );
+      //   this.dialog.closeAll();
+      // });
     });
   }
 

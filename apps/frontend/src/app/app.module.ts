@@ -321,9 +321,7 @@ import { PerformanceCancelDialogComponent } from './routes/performance/performan
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR
     }),
-    // _>_>
     SocialLoginModule
-    // _>_>
   ],
   providers: [
     CookieService,
@@ -336,13 +334,11 @@ import { PerformanceCancelDialogComponent } from './routes/performance/performan
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              '277477020432-qtnvgccsmigk5bbmo530kddhqpms74mc.apps.googleusercontent.com'
-            )
+            provider: new GoogleLoginProvider(process.env.GOOGLE_AUTH_APP_ID)
           },
           {
             id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider('827395534603356') // test app for development purposes only
+            provider: new FacebookLoginProvider(process.env.FACEBOOK_AUTH_APP_ID) // test app for development purposes only
           }
         ]
       } as SocialAuthServiceConfig
