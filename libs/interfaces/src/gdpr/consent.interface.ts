@@ -13,6 +13,7 @@ export interface IUserConsent<T extends ConsentType> {
   _id: NUUID;
   type: T;
   terms_and_conditions: IConsentable<'general_toc'>;
+  saved_at: number;
 }
 
 // mapped types ftw

@@ -49,6 +49,9 @@ host:
     status: Payment Status
     created_at: Created At
     total_rows: Total Rows
+  audience_csv:
+    username: Username
+    email: Email Address
 
 # Peformances    --------------------------------------------------------------------------------------
 performance:
@@ -206,6 +209,9 @@ email:
   host.invoice_csv__subject: Exported Invoice CSV files
   host.invoice_csv__content: See attachments for invoice data
   host.invoice_pdf__filename: stageup-invoice
+  host.audience_csv__filename: stageup-audience
+  host.audience_csv__subject: Exported audience CSV files
+  host.audience_csv__content: See attachments for audience data. This last changed on {last_updated}
   test.send_email__subject: Testing e-mails!
   test.send_email__content: Hey {username} **How are you? [{url}]**
   user.registered__subject: Verify your StageUp account

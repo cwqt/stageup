@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
+  DtoUserMarketingInfo,
+  ExportFileType,
   HostPermission,
   IHostOnboarding,
   IOnboardingStep as IOnboardingStep,
@@ -31,6 +33,7 @@ import {
   DtoPerformanceAnalytics,
   AnalyticsTimePeriod,
   DtoHostAnalytics,
+  IUserMarketingInfo,
   IFeedPerformanceStub,
   IHostFeed,
   PaginationOptions
@@ -162,7 +165,7 @@ export class HostService {
 
   readHostFeed(
     hostId: string,
-    paging: { [index in keyof IHostFeed]?: PaginationOptions },
+    paging: { [index in keyof IHostFeed]?: PaginationOptions }
   ): Promise<IEnvelopedData<IFeedPerformanceStub[], null>> {
     return this.http
       .get<IEnvelopedData<IFeedPerformanceStub[], null>>(`/api/hosts/${hostId}/feed${querize(paging)}`)
@@ -235,17 +238,10 @@ export class HostService {
       .toPromise();
   }
 
-  // router.post <void> ("/hosts/:hid/invoices/export-csv", Hosts.exportInvoicesToCSV());
-  exportInvoicesToCSV(hostId: string, invoices: Array<IInvoice['_id']>): Promise<void> {
+  //router.post <void> ("/hosts/:hid/invoices/export/:type", Hosts.exportInvoices());
+  exportInvoices(hostId: string, invoices: Array<IInvoice['_id']>, type: ExportFileType): Promise<void> {
     return this.http
-      .post<void>(`/api/hosts/${hostId}/invoices/export-csv`, { invoices: invoices })
-      .toPromise();
-  }
-
-  //router.post <void> ("/hosts/:hid/invoices/export-pdf", Hosts.exportInvoicesToPDF());
-  exportInvoicesToPDF(hostId: string, invoices: Array<IInvoice['_id']>): Promise<void> {
-    return this.http
-      .post<void>(`/api/hosts/${hostId}/invoices/export-pdf`, { invoices: invoices })
+      .post<void>(`/api/hosts/${hostId}/invoices/export/${type}`, { invoices: invoices })
       .toPromise();
   }
 
@@ -325,5 +321,21 @@ export class HostService {
   // router.get <DtoHostAnalytics>  ("/hosts/:hid/analytics", Hosts.readHostAnalytics());
   readHostAnalytics(hostId: string, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> {
     return this.http.get<DtoHostAnalytics>(`/api/hosts/${hostId}/analytics?period=${period}`).toPromise();
+  }
+
+  // router.get <DtoUserMarketingInfo>  ("/hosts/:hid/marketing/audience", Host.readHostMarketingConsents());
+  readHostMarketingConsents(hostId: string, query: IQueryParams): Promise<DtoUserMarketingInfo> {
+    return this.http.get<DtoUserMarketingInfo>(`/api/hosts/${hostId}/marketing/audience${querize(query)}`).toPromise();
+  }
+
+  // router.post <void> ("/hosts/:hid/marketing/audience/export/:type", Hosts.exportUserMarketing());
+  exportUserMarketing(
+    hostId: string,
+    selectedUsers: Array<IUserMarketingInfo['_id']>,
+    type: ExportFileType
+  ): Promise<void> {
+    return this.http
+      .post<void>(`/api/hosts/${hostId}/marketing/audience/export/${type}`, { selected_users: selectedUsers })
+      .toPromise();
   }
 }

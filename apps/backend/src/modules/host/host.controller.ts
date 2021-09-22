@@ -24,6 +24,7 @@ import {
   STRIPE_PROVIDER,
   User,
   UserHostInfo,
+  UserHostMarketingConsent,
   Validators
 } from '@core/api';
 import { timestamp } from '@core/helpers';
@@ -32,10 +33,15 @@ import {
   AnalyticsTimePeriod,
   AnalyticsTimePeriods,
   AssetType,
+  ConsentableType,
+  ConsentOpt,
   DtoHostAnalytics,
   DtoHostPatronageSubscription,
   DtoPerformanceAnalytics,
   DtoUpdateHost,
+  DtoUserMarketingInfo,
+  ExportFileType,
+  ExportFileTypes,
   hasRequiredHostPermission,
   HostInviteState,
   HostOnboardingState,
@@ -62,15 +68,18 @@ import {
   IUserHostInfo,
   LiveStreamState,
   IFeedPerformanceStub,
+  JobType,
   Visibility
 } from '@core/interfaces';
 import Stripe from 'stripe';
-import { array, assign, boolean, coerce, enums, object, string, StructError, record, optional } from 'superstruct';
+import { array, assign, boolean, coerce, enums, nullable, object, string, StructError, record } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
 import IdFinderStrat from '../../common/authorisation/id-finder-strategies';
 import Env from '../../env';
+import { HostService } from './host.service';
+import { JobQueueService } from './../queue/queue.service';
 
 @Service()
 export class HostController extends ModuleController {
@@ -79,7 +88,9 @@ export class HostController extends ModuleController {
     @Inject(BLOB_PROVIDER) private blobs: Blobs,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
-    private financeService: FinanceService
+    private financeService: FinanceService,
+    private hostService: HostService,
+    private queueService: JobQueueService
   ) {
     super();
   }
@@ -645,7 +656,7 @@ export class HostController extends ModuleController {
           per_page: req.query.upcoming ? parseInt((req.query.upcoming as any).per_page) : 4
         });
 
-        return hostFeed;
+      return hostFeed;
     }
   };
 
@@ -910,27 +921,20 @@ export class HostController extends ModuleController {
     }
   };
 
-  exportInvoicesToCSV: IControllerEndpoint<void> = {
-    validators: { body: object({ invoices: array(Validators.Fields.nuuid) }) },
+  exportInvoices: IControllerEndpoint<void> = {
+    validators: {
+      body: object({ invoices: array(Validators.Fields.nuuid) }),
+      params: object({
+        hid: Validators.Fields.nuuid,
+        type: enums<ExportFileType>(ExportFileTypes)
+      })
+    },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
       const h = await getCheck(Host.findOne({ _id: req.params.hid }));
       await this.bus.publish(
         'host.invoice_export',
-        { format: 'csv', invoice_ids: req.body.invoices, email_address: h.email_address },
-        req.locale
-      );
-    }
-  };
-
-  //router.post <void>  ("/hosts/:hid/invoices/export-pdf", Hosts.exportInvoicesToPDF());
-  exportInvoicesToPDF: IControllerEndpoint<void> = {
-    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
-    controller: async req => {
-      const h = await getCheck(Host.findOne({ _id: req.params.hid }));
-      await this.bus.publish(
-        'host.invoice_export',
-        { format: 'pdf', invoice_ids: req.body.invoices, email_address: h.email_address },
+        { format: req.params.type, invoice_ids: req.body.invoices, email_address: h.email_address },
         req.locale
       );
     }
@@ -1027,6 +1031,55 @@ export class HostController extends ModuleController {
       }
 
       return { data: dtos, __paging_data: performances.__paging_data };
+    }
+  };
+
+  readHostMarketingConsents: IControllerEndpoint<DtoUserMarketingInfo> = {
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
+    controller: async req => {
+      await getCheck(Host.findOne({ _id: req.params.hid }));
+      const res = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
+        .where('consent.host__id = :host_id', { host_id: req.params.hid })
+        .andWhere('consent.opt_status != :opt_status', { opt_status: 'hard-out' as ConsentOpt })
+        .innerJoinAndSelect('consent.user', 'user')
+        .orderBy('consent.saved_at', 'DESC') // so we get most recently updated entries at the top
+        .filter({
+          email_address: { subject: 'user.email_address' }
+        })
+        .sort({
+          email_address: 'user.email_address'
+        })
+        .paginate({ serialiser: consent => consent.toUserMarketingInfo() });
+
+      const lastUpdated = await this.hostService.readHostMarketingLastUpdate(req.params.hid);
+
+      return {
+        data: res.data,
+        __paging_data: res.__paging_data,
+        __client_data: { last_updated: lastUpdated }
+      };
+    }
+  };
+
+  exportUserMarketing: IControllerEndpoint<void> = {
+    validators: {
+      body: object({ selected_users: nullable(array(Validators.Fields.nuuid)) }),
+      params: object({
+        hid: Validators.Fields.nuuid,
+        type: enums<ExportFileType>(ExportFileTypes)
+      })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
+    controller: async req => {
+      const h = await getCheck(Host.findOne({ _id: req.params.hid }));
+
+      await this.queueService.addJob(`host_audience_${req.params.type}` as JobType, {
+        locale: req.locale,
+        sender_email_address: Env.EMAIL_ADDRESS,
+        receiver_email_address: h.email_address,
+        host_id: h._id,
+        audience_ids: req.body.selected_users
+      });
     }
   };
 }

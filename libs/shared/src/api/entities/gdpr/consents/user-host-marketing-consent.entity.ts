@@ -1,8 +1,9 @@
 import { Host, User } from '@core/api';
-import { ConsentOpt, ConsentOpts, IUserHostMarketingConsent, NUUID } from '@core/interfaces';
+import { ConsentOpt, ConsentOpts, IUserHostMarketingConsent, IUserMarketingInfo, NUUID } from '@core/interfaces';
 import { ChildEntity, Column, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { Consent } from '../consent.entity';
 import { Consentable } from '../consentable.entity';
+import { timestamp } from '@core/helpers';
 
 @ChildEntity()
 export class UserHostMarketingConsent extends Consent<'host_marketing'> implements IUserHostMarketingConsent {
@@ -39,5 +40,25 @@ export class UserHostMarketingConsent extends Consent<'host_marketing'> implemen
       privacy_policy: this.privacy_policy,
       opt_status: this.opt_status
     };
+  }
+
+  // The host will only need access to the users name/username and email and date for marketing purposes
+  toUserMarketingInfo(): Required<IUserMarketingInfo> {
+    return {
+      _id: this.user._id,
+      email_address: this.user.email_address,
+      name: this.user.name,
+      username: this.user.username
+    };
+  }
+
+  // Sets the new status of an existing consent, using the most recent documents and with a current timestamp
+  async updateStatus(status: ConsentOpt): Promise<void> {
+    // Update the datetime of the consent
+    this.saved_at = timestamp();
+    // Get the latest policies
+    this.terms_and_conditions = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+    this.privacy_policy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
+    this.opt_status = status;
   }
 }

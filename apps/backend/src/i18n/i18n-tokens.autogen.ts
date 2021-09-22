@@ -37,6 +37,8 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ['@@host.invoice_pdf.status']: never;
   ['@@host.invoice_pdf.created_at']: never;
   ['@@host.invoice_pdf.total_rows']: never;
+  ['@@host.audience_csv.username']: never;
+  ['@@host.audience_csv.email']: never;
   ['@@performance.cannot_delete_live']: never;
   ['@@performance.cannot_delete_after_occurrence']: never;
   ['@@performance.cannot_cancel_live']: never;
@@ -101,6 +103,9 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ['@@email.host.invoice_csv__subject']: never;
   ['@@email.host.invoice_csv__content']: never;
   ['@@email.host.invoice_pdf__filename']: never;
+  ['@@email.host.audience_csv__filename']: never;
+  ['@@email.host.audience_csv__subject']: never;
+  ['@@email.host.audience_csv__content']: 'last_updated';
   ['@@email.test.send_email__subject']: never;
   ['@@email.test.send_email__content']: 'username' | 'url';
   ['@@email.user.registered__subject']: never;

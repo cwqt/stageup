@@ -77,7 +77,7 @@ import { Seeder } from './seeder';
     });
 
     // Run the seeder in staging, for branch & staging deploys
-    if (Env.isEnv(Environment.Staging) && configuration.is_seeded == false) {
+    if (Env.isEnv([Environment.Staging, Environment.Development]) && configuration.is_seeded == false) {
       // seeder will wipe config momentarily, but stored in memory & will be saved again
       const seeder = new Seeder(Container.get(STRIPE_PROVIDER));
       await seeder.run();
