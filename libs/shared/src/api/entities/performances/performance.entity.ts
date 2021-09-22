@@ -75,6 +75,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this.rating_total = 0;
     this.host = host;
     this.publicity_period = { start: data.publicity_period.start, end: data.publicity_period.end };
+    this.performance_type = data.type;
   }
 
   async setup(txc: EntityManager): Promise<Performance> {
