@@ -11,4 +11,17 @@
   </div>
 
   <ui-table [table]="table"></ui-table>
+
+  <mat-slide-toggle
+    [checked]="myself.user.is_hiding_host_marketing_prompts"
+    (change)="toggleFutureHostMarketingPrompts($event)"
+    i18n
+  >
+    Don't show me any direct marketing offers from performing arts companies on StageUp
+  </mat-slide-toggle>
+  <div *ngIf="userDeclinesPlatformMarketing !== undefined" class="mt-4">
+    <mat-slide-toggle [checked]="userDeclinesPlatformMarketing" (change)="togglePlatformMarketing($event)" i18n>
+      Opt out of all direct marketing from StageUp
+    </mat-slide-toggle>
+  </div>
 </app-content-box>

@@ -22,7 +22,8 @@ import {
   IUserHostInfo,
   IUserHostMarketingConsent,
   IUserInvoice,
-  NUUID
+  NUUID,
+  PlatformConsentOpt
 } from '@core/interfaces';
 import { UserHostInfo } from '@core/api';
 import { IQueryParams, querize } from '@core/helpers';
@@ -201,11 +202,30 @@ export class MyselfService {
     return this.http.delete<void>(`/api/myself/unfollow-host/${hostId}`).toPromise();
   }
 
+  //router.put <void> ("/myself/opt-ins/prompts/host-marketing", Myself.updateShowHostMarketingPrompts());
+  updateShowHostMarketingPrompts(status: boolean): Promise<void> {
+    return this.http
+      .put<void>(`/api/myself/opt-ins/prompts/host-marketing`, { new_status: status })
+      .toPromise();
+  }
+
+  //router.put <void> ("/myself/opt-ins/platform", Myself.updatePlatformMarketingConsent());
+  updatePlatformMarketingConsent(status: ConsentOpt): Promise<void> {
+    return this.http
+      .put<void>(`/api/myself/opt-ins/platform`, { new_status: status })
+      .toPromise();
+  }
+
   // router.get <IEnvelopedData<IUserHostMarketingConsent[]>> ("/myself/host-marketing/opt-ins", Myself.readUserHostMarketingConsents());
   readUserHostMarketingConsents(query: IQueryParams): Promise<IEnvelopedData<IUserHostMarketingConsent[]>> {
     return this.http
       .get<IEnvelopedData<IUserHostMarketingConsent[]>>(`/api/myself/opt-ins/host-marketing${querize(query)}`)
       .toPromise();
+  }
+
+  // router.get <PlatformConsentOpt> ("/myself/opt-ins/platform", Myself.readUserPlatformMarketingConsent());
+  readUserPlatformMarketingConsent(): Promise<PlatformConsentOpt> {
+    return this.http.get<PlatformConsentOpt>(`/api/myself/opt-ins/platform`).toPromise();
   }
 
   // router.put <void> ("/myself/opt-ins/host-marketing", Myself.updateHostOptInStatus());

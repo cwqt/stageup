@@ -119,21 +119,16 @@ export class UserService extends ModuleService {
     // Return if there is existing consent and it is equal to what the user is setting it to
     if (existingConsent?.opt_status == optStatus) return;
 
-    // Get the latest policies
-    const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
-    const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
-    const user = await User.findOne({ _id: userId });
-    const host = await Host.findOne({ _id: hostId });
-
     // User is updating their previous opt-in status
     if (existingConsent) {
-      // Update the status. Also update which documents it is that the user is opting in/out from
-      existingConsent.opt_status = optStatus;
-      existingConsent.privacy_policy = privacyPolicy;
-      existingConsent.terms_and_conditions = toc;
-
+      await existingConsent.updateStatus(optStatus);
       await existingConsent.save();
     } else {
+      // Get the latest policies
+      const toc = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+      const privacyPolicy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
+      const user = await User.findOne({ _id: userId });
+      const host = await Host.findOne({ _id: hostId });
       // User is opting in/out for the first time
       const newConsent = new UserHostMarketingConsent(optStatus, host, user, toc, privacyPolicy);
       await newConsent.save();
@@ -141,7 +136,6 @@ export class UserService extends ModuleService {
   }
 
   async setUserPlatformMarketingOptStatus(userId: string, optStatus: PlatformConsentOpt) {
-
     // check if already consenting to SU marketing
     const existingConsent = await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
       .where('c.user__id = :uid', { uid: userId })
@@ -160,10 +154,7 @@ export class UserService extends ModuleService {
       const platformMarketingConsent = new UserStageUpMarketingConsent(optStatus, user, toc, privacyPolicy);
       await platformMarketingConsent.save();
     } else {
-      // Update existing consent
-      existingConsent.opt_status = optStatus;
-      existingConsent.privacy_policy = privacyPolicy;
-      existingConsent.terms_and_conditions = toc;
+      await existingConsent.updateStatus(optStatus);
       await existingConsent.save();
     }
   }

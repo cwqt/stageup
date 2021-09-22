@@ -40,7 +40,7 @@ export class HostEvents extends ModuleEvents {
     this.events = {
       ['host.created']:           this.createHostAnalyticsCollectionJob,
       ['host.stripe_connected']:  this.setupDefaultPatronTierForHost,
-      ['host.invoice_export']:    this.sendHostInvoice
+      ['host.invoice_export']:    this.sendHostInvoice,
     };
   }
 

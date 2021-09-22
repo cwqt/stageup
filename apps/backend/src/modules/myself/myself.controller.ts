@@ -46,9 +46,11 @@ import {
   IUserInvoiceStub,
   PaymentStatus,
   pick,
+  PlatformConsentOpt,
   Visibility
 } from '@core/interfaces';
 import { UserService } from '../user/user.service';
+import { GdprService } from '../gdpr/gdpr.service';
 import Stripe from 'stripe';
 import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
@@ -58,6 +60,7 @@ import { Connection } from 'typeorm';
 export class MyselfController extends ModuleController {
   constructor(
     private userService: UserService,
+    private gdprService: GdprService,
     @Inject(POSTGRES_PROVIDER) private ORM: Connection,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe
@@ -488,6 +491,7 @@ export class MyselfController extends ModuleController {
       if (follow) await Follow.delete({ _id: follow._id });
     }
   };
+
   // Returns all of the current users opt-ins and opt outs for host marketing
   readUserHostMarketingConsents: IControllerEndpoint<IEnvelopedData<IUserHostMarketingConsent[]>> = {
     authorisation: AuthStrat.isLoggedIn,
@@ -501,6 +505,16 @@ export class MyselfController extends ModuleController {
           host_name: 'host.name'
         })
         .paginate({ serialiser: i => i.toFull() });
+    }
+  };
+
+  // Returns users current opt status with regards to StageUp marketing
+  readUserPlatformMarketingConsent: IControllerEndpoint<PlatformConsentOpt | undefined> = {
+    authorisation: AuthStrat.isLoggedIn,
+    controller: async req => {
+      if (!req.session?.user?._id) return null;
+      const consent = await this.gdprService.readUserPlatformConsent(req.session.user._id);
+      return consent.opt_status;
     }
   };
 
@@ -532,6 +546,34 @@ export class MyselfController extends ModuleController {
         },
         req.locale
       );
+    }
+  };
+
+  updatePlatformMarketingConsent: IControllerEndpoint<void> = {
+    validators: {
+      body: object({
+        new_status: enums<ConsentOpt>(ConsentOpts)
+      })
+    },
+    authorisation: AuthStrat.isLoggedIn,
+    controller: async req => {
+      await getCheck(User.findOne({ _id: req.session.user._id }));
+      await this.userService.setUserPlatformMarketingOptStatus(req.session.user._id, req.body.new_status);
+    }
+  };
+
+  // Sets whether the user will see marketing consent tickboxes from hosts in the future
+  updateShowHostMarketingPrompts: IControllerEndpoint<void> = {
+    validators: {
+      body: object({
+        new_status: boolean()
+      })
+    },
+    authorisation: AuthStrat.isLoggedIn,
+    controller: async req => {
+      const user = await getCheck(User.findOne({ _id: req.session.user._id }));
+      user.is_hiding_host_marketing_prompts = req.body.new_status;
+      await user.save();
     }
   };
 }

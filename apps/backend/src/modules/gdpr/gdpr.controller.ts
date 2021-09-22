@@ -7,19 +7,11 @@ import {
   Middleware,
   Blobs,
   Validators,
-  Auth,
   UploadersConsent,
   Host,
   Performance
 } from '@core/api';
-import {
-  ConsentableType,
-  ConsentableTypes,
-  HostPermission,
-  HTTP,
-  IConsentable,
-  IEnvelopedData
-} from '@core/interfaces';
+import { ConsentableType, ConsentableTypes, HostPermission, HTTP, IConsentable } from '@core/interfaces';
 import { enums, object } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { ModuleController } from '@core/api';

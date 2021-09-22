@@ -78,6 +78,7 @@ import AuthStrat from '../../common/authorisation';
 import { default as IdFinderStrat } from '../../common/authorisation/id-finder-strategies';
 import Env from '../../env';
 import { PerformanceService } from './performance.service';
+import { GdprService } from '../gdpr/gdpr.service';
 
 @Service()
 export class PerformanceController extends ModuleController {
@@ -88,6 +89,7 @@ export class PerformanceController extends ModuleController {
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(REDIS_PROVIDER) private redis: RedisClient,
     @Inject(BLOB_PROVIDER) private blobs: Blobs,
+    private gdprService: GdprService,
     private performanceService: PerformanceService
   ) {
     super();
@@ -212,10 +214,7 @@ export class PerformanceController extends ModuleController {
           .getOne());
 
       const platformMarketingStatus =
-        req.session.user &&
-        (await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
-          .where('c.user__id = :uid', { uid: req.session.user._id })
-          .getOne());
+        req.session.user && (await this.gdprService.readUserPlatformConsent(req.session.user._id));
 
       const response: DtoPerformance = {
         data: performance.toFull(),
@@ -387,9 +386,15 @@ export class PerformanceController extends ModuleController {
             purchaseable_id: ticket._id,
             purchaseable_type: PurchaseableType.Ticket,
             payment_method_id: platformPaymentMethod._id,
-            host_marketing_consent: body.options.hard_host_marketing_opt_out
-              ? to<ConsentOpt>('hard-out')
-              : to<ConsentOpt>('soft-in'),
+            // null -> null
+            // true -> to<ConsentOpt>('hard-out')
+            // false -> to<ConsentOpt>('soft-in')
+            host_marketing_consent:
+              body.options.hard_host_marketing_opt_out === null
+                ? null
+                : body.options.hard_host_marketing_opt_out
+                ? to<ConsentOpt>('hard-out')
+                : to<ConsentOpt>('soft-in'),
             platform_marketing_consent: body.options.stageup_marketing_opt_in ? to<ConsentOpt>('hard-in') : null
           })
         },

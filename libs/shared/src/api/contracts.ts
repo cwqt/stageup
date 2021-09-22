@@ -1,5 +1,6 @@
 import {
   ConsentOpt,
+  ExportFileType,
   IAsset,
   IRemovalReason,
   IHost,
@@ -16,6 +17,7 @@ import {
   IRefund,
   ITicket,
   IUser,
+  IUserMarketingInfo,
   IUserPrivate,
   IUserStub,
   LiveStreamState,
@@ -66,7 +68,7 @@ export type EventContract = {
   ['host.created']: { host_id: IHost['_id'] };
   ['host.stripe_connected']: { host_id: IHost['_id'] };
   ['host.invoice_export']: {
-    format: 'csv' | 'pdf';
+    format: ExportFileType;
     invoice_ids: Array<IInvoice['_id']>;
     email_address: IHostPrivate['email_address'];
   };
@@ -93,7 +95,7 @@ export type EventContract = {
     invoice_id: IInvoice['_id'];
     host_id: IHost['_id'];
     ticket_id: ITicket['_id'];
-    host_marketing_consent: ConsentOpt;
+    host_marketing_consent: ConsentOpt | null;
     platform_marketing_consent: PlatformConsentOpt | null;
   };
   // Patronage ----------------------------------------------------------------
