@@ -9,7 +9,8 @@ import {
   PerformanceStatus,
   RichText,
   Visibility,
-  IRemovalReason
+  IRemovalReason,
+  PerformanceType
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
@@ -37,6 +38,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column() views: number;
   @Column({ unsigned: true }) like_count: number;
   @Column({ nullable: true }) premiere_datetime?: number;
+  @Column('enum', { enum: PerformanceType, nullable: true }) performance_type: PerformanceType;
   @Column({ unsigned: true }) rating_count: number;
   @Column('float') rating_total: number;
   @Column('jsonb', { nullable: true }) description?: RichText;

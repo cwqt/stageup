@@ -37,7 +37,8 @@ import {
   IBulkRefund,
   BulkRefundReason,
   IProcessRefunds,
-  DonoPegs
+  DonoPegs,
+  PerformanceType
 } from '@core/interfaces';
 import {
   any,
@@ -91,7 +92,7 @@ export namespace objects {
     }),
     description: optional(fields.richtext),
     genre: fields.genre,
-    type: union([literal('vod'), literal('live')])
+    type: enums<PerformanceType>(enumToValues(PerformanceType))
   });
 
   export const DtoCreateHost: Describe<DtoCreateHost> = object({
