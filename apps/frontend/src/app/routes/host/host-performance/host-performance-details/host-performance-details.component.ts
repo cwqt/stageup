@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
-import { timestamp, unix } from '@core/helpers';
+import { findAssets, timestamp, unix } from '@core/helpers';
 import { DtoPerformance, IAssetStub, IHost, AssetType, IPerformanceHostInfo, Visibility } from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -32,6 +32,10 @@ export class HostPerformanceDetailsComponent implements OnInit {
   }
   get phiData() {
     return this.performanceHostInfo.data;
+  }
+
+  get performanceMeetsAllPublicityRequirements() {
+    return this.host.is_onboarded && this.minimumAssetsMet && (this.vod?.location || !this.vod);
   }
 
   visibilityForm: UiForm;
@@ -114,12 +118,9 @@ export class HostPerformanceDetailsComponent implements OnInit {
 
   // Performance needs either a trailer or at least 2 thumbnail images to go public
   performanceHasMinimumAssets(): boolean {
-    const trailer = this.performance.data.data.assets.find(
-      asset => asset.type == AssetType.Video && asset.tags.includes('trailer')
-    );
-    const thumbnails = this.performance.data.data.assets.filter(
-      asset => asset.type == AssetType.Image && asset.tags.includes('thumbnail')
-    );
-    return trailer || thumbnails?.length > 0;
+    const trailer = findAssets(this.performance.data.data.assets, AssetType.Video, ['trailer']);
+    const thumbnails = findAssets(this.performance.data.data.assets, AssetType.Image, ['thumbnail']);
+
+    return trailer.length > 0 || thumbnails?.length > 1;
   }
 }

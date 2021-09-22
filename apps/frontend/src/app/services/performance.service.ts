@@ -131,7 +131,7 @@ export class PerformanceService {
   changeThumbnails(performanceId: string, fd: FormData, tag: AssetTag, replaces?: string): Promise<AssetDto | void> {
     return this.http
       .post<AssetDto | void>(
-        `/api/performances/${performanceId}/thumbnails/?tag=${tag}${replaces ? `&replaces=${replaces}` : ''}`,
+        `/api/performances/${performanceId}/thumbnails/${querize({tag, replaces})}`,
         fd
       )
       .toPromise();

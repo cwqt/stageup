@@ -1,4 +1,5 @@
 import {
+  AssetType,
   BASE_AMOUNT_MAP,
   BulkRefundReason,
   CardBrand,
@@ -7,6 +8,7 @@ import {
   DONO_PEG_WEIGHT_MAPPING,
   Environment,
   FilterQuery,
+  IAsset,
   ILocale,
   NUUID,
   ParsedRichText,
@@ -128,6 +130,17 @@ export function to<T>(value: T): T {
  */
 export const getDonoAmount = (donoPeg: DonoPeg, currency: CurrencyCode, allowAnyQty: number = 0) => {
   return donoPeg == 'allow_any' ? allowAnyQty : DONO_PEG_WEIGHT_MAPPING[donoPeg] * BASE_AMOUNT_MAP[currency];
+};
+
+/**
+ * @description Filters a subset of assets from a list of provided assets
+ * @param assets array of assets to filter
+ * @param type the type of asset to include in the filter as AssetType
+ * @param tags array of string tags to include in the filter
+ * @returns array of assets
+ */
+export const findAssets = (assets: IAsset[], type: AssetType, tags?: string[]) => {
+  return assets.filter(asset => asset.type == type && (tags ? asset.tags.every(tag => tags.includes(tag)) : true));
 };
 
 /**

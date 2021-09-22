@@ -4,6 +4,7 @@ import { AssetDto, AssetType, DtoPerformance } from '@core/interfaces';
 import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
 import { HelperService } from '@frontend/services/helper.service';
 import { PerformanceService } from '@frontend/services/performance.service';
+import { findAssets } from '@core/helpers';
 
 @Component({
   selector: 'app-host-performance-thumbnails',
@@ -25,12 +26,8 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.secondaryThumbnails = this.performance.data.assets.filter(
-      a => a.type == AssetType.Image && a.tags.includes('thumbnail') && a.tags.includes('secondary')
-    );
-    this.primaryThumbnail = this.performance.data.assets.find(
-      a => a.type == AssetType.Image && a.tags.includes('thumbnail') && a.tags.includes('primary')
-    );
+    this.secondaryThumbnails = findAssets(this.performance.data.assets, AssetType.Image, ['thumbnail', 'secondary']);
+    this.primaryThumbnail = findAssets(this.performance.data.assets, AssetType.Image, ['thumbnail', 'primary'])[0];
   }
 
   changePrimaryThumbnail() {

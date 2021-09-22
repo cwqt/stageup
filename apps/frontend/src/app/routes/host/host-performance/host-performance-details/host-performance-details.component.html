@@ -13,33 +13,31 @@
 <div class="flex items-center justify-between">
   <div class="mr-4">
     <b i18n>Visibility</b>
-    <p i18n>
       <!-- Host needs to be onboarded before going public -->
-      <ng-container *ngIf="!host.is_onboarded">
+      <p *ngIf="!host.is_onboarded" i18n>
         You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made
         Public<br />
-      </ng-container>
+      </p>
       <ng-container *ngIf="host.is_onboarded">
         <!-- Performance needs a trailer or 2 thumbnails to be made public -->
-        <ng-container *ngIf="!minimumAssetsMet">
+        <p *ngIf="!minimumAssetsMet" i18n>
           A performance needs to have a trailer <b>or</b> a minimum of two images in order to make it public. Head to
           the <a [routerLink]="'/dashboard/performances/' + performance.data.data._id + '/media'">media</a> section to
           start uploading now!
           <br />
-        </ng-container>
+        </p>
         <ng-container *ngIf="minimumAssetsMet">
           <!-- VoD performances can only be made public after the video has been processed from mux -->
-          <ng-container *ngIf="vod && !vod.location; else performanceCanGoLive">
+          <p *ngIf="vod && !vod.location" i18n>
             VoD Asset is still processing. Once complete you can set this performance to public.
             <br />
-          </ng-container>
-          <ng-template #performanceCanGoLive> Set whether a performance is visible across the platform </ng-template>
+          </p>
+          <p *ngIf="performanceMeetsAllPublicityRequirements" i18n> Set whether a performance is visible across the platform </p>
           <br />
         </ng-container>
       </ng-container>
-    </p>
   </div>
-  <ui-form *ngIf="host.is_onboarded && minimumAssetsMet && (vod?.location || !vod)" [form]="visibilityForm"></ui-form>
+  <ui-form *ngIf="performanceMeetsAllPublicityRequirements" [form]="visibilityForm"></ui-form>
 </div>
 
 <ng-container *ngIf="stream">
