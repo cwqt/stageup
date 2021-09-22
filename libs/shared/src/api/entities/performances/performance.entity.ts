@@ -101,6 +101,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       publicity_period: this.publicity_period,
       assets: this.asset_group.assets.map(a => a.toStub()),
       status: this.status,
+      performance_type: this.performance_type,
       visibility: this.visibility
     };
   }
@@ -118,7 +119,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       visibility: this.visibility,
       genre: this.genre,
       tickets: this.tickets?.map(t => t.toStub()) || [],
-      publicity_period: this.publicity_period
+      publicity_period: this.publicity_period,
+      performance_type: this.performance_type
     };
   }
 

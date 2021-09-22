@@ -74,6 +74,7 @@ export interface IPerformanceStub {
   assets?: IAssetStub[];
   thumbnail: string;
   status: PerformanceStatus;
+  performance_type: PerformanceType;
   publicity_period: { start: number; end: number }; // unix timestamps
   visibility: Visibility;
 }

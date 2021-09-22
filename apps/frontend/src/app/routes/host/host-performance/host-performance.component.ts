@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { DtoPerformance, IHost, IPerformanceHostInfo, PerformanceStatus } from '@core/interfaces';
+import { DtoPerformance, IHost, IPerformanceHostInfo, PerformanceStatus, PerformanceType } from '@core/interfaces';
 import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { getPerformance } from 'apicache';
@@ -15,6 +15,8 @@ import { HostPerformanceDetailsComponent } from './host-performance-details/host
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { SharePerformanceDialogComponent } from './share-performance-dialog/share-performance-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { timestamp, unix } from '@core/helpers';
+import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 
 @Component({
   selector: 'app-host-performance',
@@ -37,7 +39,13 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   }
 
   get isPerformanceLive(): boolean {
-    return this.performance?.data?.data?.status === PerformanceStatus.Live;
+    const currentDate = timestamp(new Date());
+    const inPremierPeriod: boolean =
+      currentDate >= this.performance?.data?.data?.publicity_period.start &&
+      currentDate <= this.performance?.data?.data?.publicity_period.end;
+
+    if (this.performance?.data?.data?.performance_type === PerformanceType.Vod && inPremierPeriod) return true;
+    else return this.performance?.data?.data?.status === PerformanceStatus.Live;
   }
 
   get performanceData() {
