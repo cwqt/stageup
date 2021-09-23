@@ -178,6 +178,15 @@ export class MyselfController extends ModuleController {
       }
 
       if ((fetchAll || req.query['trending']) && req.session.user) {
+        let trending = await this.ORM.createQueryBuilder(Invoice, 'i')
+          .select(['i._id'])
+          .addSelect('COUNT(i._id)', 'numinvoices')
+          .innerJoin('i.ticket', 'ticket')
+          .innerJoin('ticket.performance', 'performance')
+          .groupBy('numinvoices')
+          .getMany();
+
+        console.log(trending);
       }
 
       return feed;
