@@ -22,6 +22,7 @@ import CollectHostAnalytics from './workers/analytics/host-analytics.worker';
 import CollectPerformanceAnalytics from './workers/analytics/performance-analytics.worker';
 import HostInvoiceCSVWorker from './workers/host-invoice-csv.worker';
 import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
+import HostAudienceCSVWorker from './workers/host-audience-csv.worker';
 import SendEmailWorker from './workers/send-email.worker';
 import SendReminderEmailsWorker from './workers/send-reminder-emails.worker';
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
@@ -55,6 +56,7 @@ export class JobQueueProvider implements Provider<Queues> {
     ['send_reminder_emails']: SendReminderEmailsWorker,
     ['host_invoice_csv']: HostInvoiceCSVWorker,
     ['host_invoice_pdf']: HostInvoicePDFWorker,
+    ['host_audience_csv']: HostAudienceCSVWorker,
     ['collect_performance_analytics']: CollectPerformanceAnalytics,
     ['collect_host_analytics']: CollectHostAnalytics
   };

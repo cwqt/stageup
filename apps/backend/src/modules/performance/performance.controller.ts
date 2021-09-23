@@ -51,7 +51,6 @@ import {
   HostPermission,
   HTTP,
   ICreateAssetRes,
-  IDeletePerfReason,
   IEnvelopedData,
   IPaymentIntentClientSecret,
   IPerformance,
@@ -63,7 +62,6 @@ import {
   ITicketStub,
   LikeLocation,
   NUUID,
-  PerformanceStatus,
   pick,
   PurchaseableType,
   PlatformConsentOpt,
@@ -79,6 +77,8 @@ import { Connection, In } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
 import { default as IdFinderStrat } from '../../common/authorisation/id-finder-strategies';
 import Env from '../../env';
+import { PerformanceService } from './performance.service';
+import { GdprService } from '../gdpr/gdpr.service';
 
 @Service()
 export class PerformanceController extends ModuleController {
@@ -88,7 +88,9 @@ export class PerformanceController extends ModuleController {
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(REDIS_PROVIDER) private redis: RedisClient,
-    @Inject(BLOB_PROVIDER) private blobs: Blobs
+    @Inject(BLOB_PROVIDER) private blobs: Blobs,
+    private gdprService: GdprService,
+    private performanceService: PerformanceService
   ) {
     super();
   }
@@ -212,10 +214,7 @@ export class PerformanceController extends ModuleController {
           .getOne());
 
       const platformMarketingStatus =
-        req.session.user &&
-        (await this.ORM.createQueryBuilder(UserStageUpMarketingConsent, 'c')
-          .where('c.user__id = :uid', { uid: req.session.user._id })
-          .getOne());
+        req.session.user && (await this.gdprService.readUserPlatformConsent(req.session.user._id));
 
       const response: DtoPerformance = {
         data: performance.toFull(),
@@ -224,7 +223,9 @@ export class PerformanceController extends ModuleController {
           is_following: existingFollow ? true : false,
           rating: existingRating ? existingRating.rating : null,
           host_marketing_opt_status: hostMarketingStatus ? (hostMarketingStatus.opt_status as ConsentOpt) : null,
-          platform_marketing_opt_status: platformMarketingStatus ? (platformMarketingStatus.opt_status as PlatformConsentOpt) : null
+          platform_marketing_opt_status: platformMarketingStatus
+            ? (platformMarketingStatus.opt_status as PlatformConsentOpt)
+            : null
         }
       };
 
@@ -385,9 +386,15 @@ export class PerformanceController extends ModuleController {
             purchaseable_id: ticket._id,
             purchaseable_type: PurchaseableType.Ticket,
             payment_method_id: platformPaymentMethod._id,
-            host_marketing_consent: body.options.hard_host_marketing_opt_out
-              ? to<ConsentOpt>('hard-out')
-              : to<ConsentOpt>('soft-in'),
+            // null -> null
+            // true -> to<ConsentOpt>('hard-out')
+            // false -> to<ConsentOpt>('soft-in')
+            host_marketing_consent:
+              body.options.hard_host_marketing_opt_out === null
+                ? null
+                : body.options.hard_host_marketing_opt_out
+                ? to<ConsentOpt>('hard-out')
+                : to<ConsentOpt>('soft-in'),
             platform_marketing_consent: body.options.stageup_marketing_opt_in ? to<ConsentOpt>('hard-in') : null
           })
         },
@@ -406,7 +413,7 @@ export class PerformanceController extends ModuleController {
     }
   };
 
-  deletePerformance: IControllerEndpoint<void> = {
+  softDeletePerformance: IControllerEndpoint<void> = {
     // By getting the hostId from the performanceId & then checking if the user has the host
     // permission, there is an implicit intersection, because the UHI will not be returned
     // if the user is not part of the host in which the performance belongs to
@@ -415,28 +422,17 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
     ),
     controller: async req => {
-      const deletePerfReason: IDeletePerfReason = req.body;
+      this.performanceService.softDeletePerformance(req.params.pid, req.body.removal_reason, req.locale);
+    }
+  };
 
-      const perf = await getCheck(Performance.findOne({ _id: req.params.pid }));
-
-      if (perf.status === PerformanceStatus.Live)
-        throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
-
-      if (perf.status === PerformanceStatus.Complete)
-        throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_after_occurrence`);
-
-      perf.status = PerformanceStatus.Deleted;
-      perf.delete_reason = deletePerfReason;
-      perf.save();
-      await perf.softRemove();
-
-      return await this.bus.publish(
-        'performance.deleted',
-        {
-          performance_id: req.params.pid
-        },
-        req.locale
-      );
+  cancelPerformance: IControllerEndpoint<void> = {
+    authorisation: AuthStrat.runner(
+      { hid: IdFinderStrat.findHostIdFromPerformanceId },
+      AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
+    ),
+    controller: async req => {
+      this.performanceService.cancelPerformance(req.params.pid, req.body.removal_reason, req.locale);
     }
   };
 

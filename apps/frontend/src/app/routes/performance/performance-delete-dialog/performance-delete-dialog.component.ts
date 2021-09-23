@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DeletePerfReason, DtoPerformance, IPerformance } from '@core/interfaces';
+import { IRemovalReason, DtoPerformance, IPerformance, RemovalType, RemovalReason } from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
+import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
@@ -25,6 +26,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
     private performanceService: PerformanceService,
     private helperService: HelperService,
     private dialog: MatDialog,
+    private appService: AppService,
     @Inject(MAT_DIALOG_DATA) public performance: IPerformance
   ) {}
 
@@ -47,28 +49,35 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
               data: {
                 dialog_title: $localize`Why do you want to delete the performance?`,
                 reasons: new Map([
-                  [DeletePerfReason.TechnicalIssues, { label: $localize`Technical Issues` }],
+                  [RemovalReason.TechnicalIssues, { label: $localize`Technical Issues` }],
                   [
-                    DeletePerfReason.CancelledResceduled,
+                    RemovalReason.CancelledResceduled,
                     { label: $localize`Original performance got cancelled/rescheduled` }
                   ],
-                  [DeletePerfReason.Covid19, { label: $localize`COVID-19` }],
-                  [DeletePerfReason.TooFewSold, { label: $localize`Did not sell enough tickets` }],
-                  [
-                    DeletePerfReason.PoorUserExperience,
-                    { label: $localize`Did not like the user experience on StageUp` }
-                  ],
-                  [DeletePerfReason.Other, { label: $localize`Other, please specify below:` }]
+                  [RemovalReason.Covid19, { label: $localize`COVID-19` }],
+                  [RemovalReason.TooFewSold, { label: $localize`Did not sell enough tickets` }],
+                  [RemovalReason.PoorUserExperience, { label: $localize`Did not like the user experience on StageUp` }],
+                  [RemovalReason.Other, { label: $localize`Other, please specify below:` }]
                 ]),
-                hide_further_info: currentSelection => currentSelection != DeletePerfReason.Other
+                hide_further_info: currentSelection => currentSelection != RemovalReason.Other
               }
             }),
             async deletePerfReason => {
               await this.performanceService
-                .deletePerformance(this.performance._id, deletePerfReason)
-                .then(() => this.toastService.emit($localize`Performance Deleted!`))
+                .deletePerformance(this.performance._id, {
+                  removal_reason: deletePerfReason,
+                  removal_type: RemovalType.SoftDelete
+                })
+                .then(() => {
+                  this.toastService.emit(
+                    $localize`${this.performance.name} Deleted! We have initiated refunds for all purchased tickets`
+                  );
+                })
+                .then(() => {
+                  this.appService.navigateTo('/dashboard/performances');
+                  this.ref.close();
+                })
                 .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));
-              this.ref.close();
             }
           )
       })

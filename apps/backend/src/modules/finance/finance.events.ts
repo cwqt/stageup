@@ -54,7 +54,7 @@ export class FinanceEvents extends ModuleEvents {
       { relations: { user: true, ticket: { performance: true }, host: true } }
     );
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.refund_requested__subject', ct.__meta.locale, {
         host_name: invoice.host.username
       }),
@@ -72,21 +72,31 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendUserRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      },
-      relations: {
-        ticket: {
-          performance: true
-        },
-        host: true,
-        payment_method: true
-      }
-    });
+    //Do not run if refund initiation email flag is false
+    if (!ct.send_initiation_emails) return;
+
+    const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice._id = :iid', { iid: ct.invoice_id })
+      .innerJoinAndSelect('invoice.ticket', 'ticket')
+      .innerJoin('ticket.performance', 'performance')
+      .innerJoin('invoice.host', 'host')
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .addSelect([
+        'host.name',
+        'performance.name',
+        'invoice.ticket',
+        'payment_method.brand',
+        'payment_method.last4',
+        'invoice._id',
+        'invoice.amount',
+        'invoice.currency'
+      ])
+      .withDeleted()
+      .getOne();
+
     const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address'] });
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.user.refund_initiated__subject', ct.__meta.locale, {
         host_name: invoice.host.name,
         performance_name: invoice.ticket.performance.name
@@ -107,16 +117,43 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendHostRefundInitiatedEmail(ct: Contract<'refund.initiated'>) {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      },
-      relations: {
-        ticket: {
-          performance: true
-        },
-        host: true
-      }
+    //Do not run if refund initiation email flag is false
+    if (!ct.send_initiation_emails) return;
+
+    const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice._id = :iid', { iid: ct.invoice_id })
+      .innerJoinAndSelect('invoice.ticket', 'ticket')
+      .innerJoin('ticket.performance', 'performance')
+      .innerJoin('invoice.host', 'host')
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .addSelect([
+        'host.name',
+        'performance.name',
+        'payment_method.brand',
+        'invoice._id',
+        'invoice.ticket',
+        'invoice.amount',
+        'invoice.currency'
+      ])
+      .withDeleted()
+      .getOne();
+
+    const user = await User.findOne({ _id: ct.user_id }, { select: ['_id', 'email_address', 'username'] });
+
+    await this.queueService.addJob('send_email', {
+      subject: this.i18n.translate('@@email.host.refund_initiated__subject', ct.__meta.locale, {
+        user_username: user.username,
+        performance_name: invoice.ticket.performance.name
+      }),
+      content: this.i18n.translate('@@email.host.refund_initiated__content', ct.__meta.locale, {
+        host_name: invoice.host.name,
+        performance_name: invoice.ticket.performance.name,
+        invoice_id: invoice._id,
+        invoice_amount: this.i18n.money(invoice.amount, invoice.currency)
+      }),
+      from: Env.EMAIL_ADDRESS,
+      to: user.email_address,
+      attachments: []
     });
   }
 
@@ -137,23 +174,33 @@ export class FinanceEvents extends ModuleEvents {
   }
 
   async sendUserRefundRefundedEmail(ct: Contract<'refund.refunded'>) {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      },
-      relations: {
-        user: true,
-        payment_method: true,
-        ticket: {
-          performance: true
-        },
-        host: true
-      }
-    });
+    const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice._id = :iid', { iid: ct.invoice_id })
+      .innerJoinAndSelect('invoice.ticket', 'ticket')
+      .innerJoinAndSelect('ticket.performance', 'performance')
+      .innerJoin('invoice.host', 'host')
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .innerJoin('invoice.user', 'user')
+      .addSelect([
+        'host.name',
+        'performance.name',
+        'payment_method.brand',
+        'payment_method.last4',
+        'invoice._id',
+        'invoice.ticket',
+        'invoice.amount',
+        'invoice.currency',
+        'user.username',
+        'user.email_address'
+      ])
+      .withDeleted()
+      .getOne();
+
+    const user: User = invoice.user;
 
     const refund = await Refund.findOne({ _id: ct.refund_id });
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.user.refund_refunded__subject', ct.__meta.locale, {
         performance_name: invoice.ticket.performance.name
       }),
@@ -168,27 +215,35 @@ export class FinanceEvents extends ModuleEvents {
         refund_reason: pipes.refundReason(refund.request_reason)
       }),
       from: Env.EMAIL_ADDRESS,
-      to: invoice.user.email_address,
+      to: user.email_address,
       attachments: []
     });
   }
 
   async sendHostRefundRefundedEmail(ct: Contract<'refund.refunded'>) {
-    const invoice = await Invoice.findOne({
-      where: {
-        _id: ct.invoice_id
-      },
-      relations: {
-        user: true,
-        payment_method: true,
-        ticket: {
-          performance: true
-        },
-        host: true
-      }
-    });
+    const invoice = await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice._id = :iid', { iid: ct.invoice_id })
+      .innerJoinAndSelect('invoice.ticket', 'ticket')
+      .innerJoin('ticket.performance', 'performance')
+      .innerJoin('invoice.host', 'host')
+      .innerJoin('invoice.payment_method', 'payment_method')
+      .innerJoin('invoice.user', 'user')
+      .addSelect([
+        'host.name',
+        'host.email_address',
+        'performance.name',
+        'payment_method.brand',
+        'payment_method.last4',
+        'invoice._id',
+        'invoice.ticket',
+        'invoice.amount',
+        'invoice.currency',
+        'user.username'
+      ])
+      .withDeleted()
+      .getOne();
 
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.host.refund_refunded__subject', ct.__meta.locale, {
         invoice_id: invoice._id,
         user_username: invoice.user.username,
@@ -233,7 +288,7 @@ export class FinanceEvents extends ModuleEvents {
     );
 
     //Send bulk refund initiation email to host
-    this.queueService.addJob('send_email', {
+    await this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.host.refund_bulk_initiated_subject', ct.__meta.locale, {
         refund_quantity: refundQuantity
       }),
@@ -253,7 +308,7 @@ export class FinanceEvents extends ModuleEvents {
       invoices.map(async invoice => {
         await this.bus.publish(
           'refund.initiated',
-          { invoice_id: invoice._id, user_id: invoice.user._id },
+          { invoice_id: invoice._id, user_id: invoice.user._id, send_initiation_emails: ct.send_initiation_emails },
           ct.__meta.locale
         );
       })

@@ -58,6 +58,7 @@ export interface IUiTableAction<K> {
   click?: (v: K) => void;
   kind?: ThemeKind;
   icon?: string;
+  disabled?: (v: K) => boolean;
   dropdown?: Array<{
     icon?: string;
     label: string;

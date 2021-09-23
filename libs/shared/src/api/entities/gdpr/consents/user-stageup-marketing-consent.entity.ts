@@ -3,6 +3,7 @@ import { IUserStageUpMarketingConsent, NUUID, ConsentOpts, PlatformConsentOpt } 
 import { ChildEntity, JoinColumn, ManyToOne, RelationId, Column } from 'typeorm';
 import { Consent } from '../consent.entity';
 import { Consentable } from '../consentable.entity';
+import { timestamp } from '@core/helpers';
 
 @ChildEntity()
 export class UserStageUpMarketingConsent extends Consent<'stageup_marketing'> implements IUserStageUpMarketingConsent {
@@ -33,5 +34,15 @@ export class UserStageUpMarketingConsent extends Consent<'stageup_marketing'> im
       opt_status: this.opt_status,
       ...super.toConsent()
     };
+  }
+
+  // Sets the new status of an existing consent, using the most recent documents and with a current timestamp
+  async updateStatus(status: PlatformConsentOpt): Promise<void> {
+    // Update the datetime of the consent
+    this.saved_at = timestamp(new Date());
+    // Get the latest policies
+    this.terms_and_conditions = await Consentable.retrieve({ type: 'general_toc' }, 'latest');
+    this.privacy_policy = await Consentable.retrieve({ type: 'privacy_policy' }, 'latest');
+    this.opt_status = status;
   }
 }

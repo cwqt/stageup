@@ -1,17 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { DtoPerformance, IHost, IPerformanceHostInfo } from '@core/interfaces';
+import { DtoPerformance, IHost, IPerformanceHostInfo, PerformanceStatus, PerformanceType } from '@core/interfaces';
+import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
+import { getPerformance } from 'apicache';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
-import { DrawerKey, DrawerService } from '../../../services/drawer.service';
+import { DrawerService } from '../../../services/drawer.service';
 import { HelperService } from '../../../services/helper.service';
 import { HostPerformanceCustomiseComponent } from './host-performance-customise/host-performance-customise.component';
 import { HostPerformanceDetailsComponent } from './host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { SharePerformanceDialogComponent } from './share-performance-dialog/share-performance-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { timestamp, unix } from '@core/helpers';
+import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 
 @Component({
   selector: 'app-host-performance',
@@ -23,7 +28,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performanceId: string;
   performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
-  disableDeleteButton: boolean;
 
   onChildLoaded(
     component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent
@@ -34,6 +38,16 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     component.host = this.host;
   }
 
+  get isPerformanceLive(): boolean {
+    const currentDate = timestamp(new Date());
+    const inPremierPeriod: boolean =
+      currentDate >= this.performance?.data?.data?.publicity_period.start &&
+      currentDate <= this.performance?.data?.data?.publicity_period.end;
+
+    if (this.performance?.data?.data?.performance_type === PerformanceType.Vod && inPremierPeriod) return true;
+    else return this.performance?.data?.data?.status === PerformanceStatus.Live;
+  }
+
   get performanceData() {
     return this.performance.data?.data;
   }
@@ -41,7 +55,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   constructor(
     private performanceService: PerformanceService,
     private appService: AppService,
-    private drawerService: DrawerService,
     private route: ActivatedRoute,
     private helperService: HelperService,
     private dialog: MatDialog
@@ -75,7 +88,9 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   }
 
   cancelPerformance() {
-    //TODO Cancel Performance
+    this.dialog.open(PerformanceCancelDialogComponent, {
+      data: this.performance.data.data
+    });
   }
 
   ngOnDestroy() {

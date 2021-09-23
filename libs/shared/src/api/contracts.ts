@@ -1,6 +1,8 @@
 import {
   ConsentOpt,
+  ExportFileType,
   IAsset,
+  IRemovalReason,
   IHost,
   IHostInvitation,
   IHostOnboarding,
@@ -15,9 +17,11 @@ import {
   IRefund,
   ITicket,
   IUser,
+  IUserMarketingInfo,
   IUserPrivate,
   IUserStub,
   LiveStreamState,
+  RemovalType,
   PlatformConsentOpt
 } from '@core/interfaces';
 import { Asset as MuxAsset, LiveStream } from '@mux/mux-node';
@@ -64,7 +68,7 @@ export type EventContract = {
   ['host.created']: { host_id: IHost['_id'] };
   ['host.stripe_connected']: { host_id: IHost['_id'] };
   ['host.invoice_export']: {
-    format: 'csv' | 'pdf';
+    format: ExportFileType;
     invoice_ids: Array<IInvoice['_id']>;
     email_address: IHostPrivate['email_address'];
   };
@@ -72,9 +76,9 @@ export type EventContract = {
   // Refunds ------------------------------------------------------------------
   ['refund.requested']: { invoice_id: IInvoice['_id'] };
   ['refund.refunded']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; refund_id: IRefund['_id'] };
-  ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id'] };
+  ['refund.initiated']: { invoice_id: IInvoice['_id']; user_id: IUser['_id']; send_initiation_emails: boolean };
   ['refund.rejected']: {};
-  ['refund.bulk']: { invoice_ids: Array<IInvoice['_id']> };
+  ['refund.bulk']: { invoice_ids: Array<IInvoice['_id']>; send_initiation_emails: boolean };
   // Patronage ----------------------------------------------------------------#
   ['patronage.started']: {
     user_id: IUser['_id'];
@@ -91,14 +95,18 @@ export type EventContract = {
     invoice_id: IInvoice['_id'];
     host_id: IHost['_id'];
     ticket_id: ITicket['_id'];
-    host_marketing_consent: ConsentOpt;
+    host_marketing_consent: ConsentOpt | null;
     platform_marketing_consent: PlatformConsentOpt | null;
   };
   // Patronage ----------------------------------------------------------------
   // Performances -------------------------------------------------------------
   ['performance.created']: IPerformance;
-  ['performance.deleted']: { performance_id: IPerformance['_id'] };
-  ['performance.deleted_notify_user']: {
+  ['performance.removed']: {
+    performance_id: IPerformance['_id'];
+    removal_reason: IRemovalReason;
+    removal_type: RemovalType;
+  };
+  ['performance.removed_notify_user']: {
     performance_id: IPerformance['_id'];
     user_id: IUser['_id'];
     invoice_id: IInvoice['_id'];

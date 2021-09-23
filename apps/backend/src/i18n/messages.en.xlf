@@ -111,6 +111,18 @@
       <source>Total Rows</source>
       <target state="final">Total Rows</target>
     </trans-unit>				
+		<trans-unit id="host.audience_csv.name" datatype="html">
+      <source>Full Name</source>
+      <target state="final">Full Name</target>
+    </trans-unit>				
+		<trans-unit id="host.audience_csv.username" datatype="html">
+      <source>Username</source>
+      <target state="final">Username</target>
+    </trans-unit>				
+		<trans-unit id="host.audience_csv.email" datatype="html">
+      <source>Email Address</source>
+      <target state="final">Email Address</target>
+    </trans-unit>				
 		<trans-unit id="performance.cannot_delete_live" datatype="html">
       <source>Performance cannot be deleted while currently live</source>
       <target state="final">Performance cannot be deleted while currently live</target>
@@ -118,6 +130,14 @@
 		<trans-unit id="performance.cannot_delete_after_occurrence" datatype="html">
       <source>Performance cannot be deleted after it has occured</source>
       <target state="final">Performance cannot be deleted after it has occured</target>
+    </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_live" datatype="html">
+      <source>Performance cannot be cancelled while currently live</source>
+      <target state="final">Performance cannot be cancelled while currently live</target>
+    </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_after_occurrence" datatype="html">
+      <source>Performance cannot be cancelled after it has occured</source>
+      <target state="final">Performance cannot be cancelled after it has occured</target>
     </trans-unit>				
 		<trans-unit id="payment_status.created" datatype="html">
       <source>Created</source>
@@ -294,8 +314,8 @@ immediately"</p>
 </target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
-      <source>Refund for {performance_name} succesful!</source>
-      <target state="final">Refund for {performance_name} succesful!</target>
+      <source>Refund for {performance_name} successful!</source>
+      <target state="final">Refund for {performance_name} successful!</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__content" datatype="html">
       <source><p>Hi {user_username},</p>
@@ -324,12 +344,8 @@ You can view a log of this refund within your StageUp account settings</p>
 </target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
-      <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-succesfully processed by Stripe</p>
-</source>
-      <target state="final"><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-succesfully processed by Stripe</p>
-</target>
+      <source>Refund for {user_username} for {performance_name} (ID:{invoice_id}) successful</source>
+      <target state="final">Refund for {user_username} for {performance_name} (ID:{invoice_id}) successful</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
       <source><p>Hi {host_name},</p>
@@ -438,6 +454,18 @@ here</a>.</p>
 		<trans-unit id="email.host.invoice_pdf__filename" datatype="html">
       <source>stageup-invoice</source>
       <target state="final">stageup-invoice</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__filename" datatype="html">
+      <source>stageup-audience</source>
+      <target state="final">stageup-audience</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__subject" datatype="html">
+      <source>Exported audience CSV files</source>
+      <target state="final">Exported audience CSV files</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__content" datatype="html">
+      <source>See attachments for audience data. This last changed on {last_updated}</source>
+      <target state="final">See attachments for audience data. This last changed on {last_updated}</target>
     </trans-unit>				
 		<trans-unit id="email.test.send_email__subject" datatype="html">
       <source>Testing e-mails!</source>
@@ -1395,11 +1423,29 @@ listed as ‘Cancelled’ on your account from now on.</p>
 <p>StageUp team</p>
 </target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_host__subject" datatype="html">
+		<trans-unit id="email.performance.cancelled_notify_host__subject" datatype="html">
+      <source>You have cancelled {performance_name}</source>
+      <target state="final">You have cancelled {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.performance.cancelled_notify_host__content" datatype="html">
+      <source><p>Hello <strong>{host_name}</strong>,</p>
+<p>You have cancelled your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
+<p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="final"><p>Hello <strong>{host_name}</strong>,</p>
+<p>You have cancelled your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
+<p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</target>
+    </trans-unit>				
+		<trans-unit id="email.performance.softDeleted_notify_host__subject" datatype="html">
       <source>You have deleted {performance_name}</source>
       <target state="final">You have deleted {performance_name}</target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_host__content" datatype="html">
+		<trans-unit id="email.performance.softDeleted_notify_host__content" datatype="html">
       <source><p>Hello <strong>{host_name}</strong>,</p>
 <p>You have deleted your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
 <p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
@@ -1413,13 +1459,11 @@ listed as ‘Cancelled’ on your account from now on.</p>
 <p><strong>StageUp Team</strong></p>
 </target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_user__subject" datatype="html">
-      <source><p>Peformance: {performance_name} cancellation notification</p>
-</source>
-      <target state="final"><p>Peformance: {performance_name} cancellation notification</p>
-</target>
+		<trans-unit id="email.performance.removed_notify_user__subject" datatype="html">
+      <source>Peformance, {performance_name} cancellation notification</source>
+      <target state="final">Peformance, {performance_name} cancellation notification</target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_user__content" datatype="html">
+		<trans-unit id="email.performance.removed_notify_user__content" datatype="html">
       <source><p>Hi <strong>{user_username}</strong>,</p>
 <p>Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.</p>
 <p>Invoice#: {invoice_id}</p>

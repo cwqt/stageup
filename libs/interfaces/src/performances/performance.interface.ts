@@ -32,7 +32,12 @@ export enum PerformanceStatus {
   PendingSchedule = 'pending_schedule'
 }
 
-export enum DeletePerfReason {
+export enum PerformanceType {
+  Live = 'live',
+  Vod = 'vod'
+}
+
+export enum RemovalReason {
   TechnicalIssues = 'technical_issues',
   CancelledResceduled = 'cancelled_rescheduled',
   Covid19 = 'covid_19',
@@ -41,9 +46,19 @@ export enum DeletePerfReason {
   Other = 'other'
 }
 
-export interface IDeletePerfReason {
-  delete_reason: DeletePerfReason;
+export enum RemovalType {
+  Cancel,
+  SoftDelete
+}
+
+export interface IRemovalReason {
+  removal_reason: RemovalReason;
   further_info: string;
+}
+
+export interface DtoRemovePerformance {
+  removal_reason: IRemovalReason;
+  removal_type: RemovalType;
 }
 
 export interface IPerformanceStub {
@@ -59,6 +74,7 @@ export interface IPerformanceStub {
   assets?: IAssetStub[];
   thumbnail: string;
   status: PerformanceStatus;
+  performance_type: PerformanceType;
   publicity_period: { start: number; end: number }; // unix timestamps
   visibility: Visibility;
 }
@@ -92,7 +108,7 @@ export type DtoPerformance = IEnvelopedData<
 export type DtoCreatePerformance = Pick<
   Required<IPerformance>,
   'name' | 'publicity_period' | 'description' | 'genre'
-> & { type: 'vod' | 'live' };
+> & { type: PerformanceType };
 
 // private to host
 export interface IPerformanceHostInfo {

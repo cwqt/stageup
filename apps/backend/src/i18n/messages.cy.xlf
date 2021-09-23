@@ -111,6 +111,18 @@
       <source>Total Rows</source>
       <target state="needs-translation">Cyfanswm y Rhesi</target>
     </trans-unit>				
+		<trans-unit id="host.audience_csv.name" datatype="html">
+      <source>Full Name</source>
+      <target state="needs-translation">Enw llawn</target>
+    </trans-unit>				
+		<trans-unit id="host.audience_csv.username" datatype="html">
+      <source>Username</source>
+      <target state="needs-translation">Enw defnyddiwr</target>
+    </trans-unit>				
+		<trans-unit id="host.audience_csv.email" datatype="html">
+      <source>Email Address</source>
+      <target state="needs-translation">Cyfeiriad ebost</target>
+    </trans-unit>				
 		<trans-unit id="performance.cannot_delete_live" datatype="html">
       <source>Performance cannot be deleted while currently live</source>
       <target state="needs-translation">Ni ellir dileu perfformiad wrth fyw ar hyn o bryd</target>
@@ -118,6 +130,14 @@
 		<trans-unit id="performance.cannot_delete_after_occurrence" datatype="html">
       <source>Performance cannot be deleted after it has occured</source>
       <target state="needs-translation">Ni ellir dileu perfformiad ar ôl iddo ddigwydd</target>
+    </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_live" datatype="html">
+      <source>Performance cannot be cancelled while currently live</source>
+      <target state="needs-translation">Ni ellir canslo perfformiad tra’n fyw ar hyn o bryd</target>
+    </trans-unit>				
+		<trans-unit id="performance.cannot_cancel_after_occurrence" datatype="html">
+      <source>Performance cannot be cancelled after it has occured</source>
+      <target state="needs-translation">Ni ellir canslo perfformiad ar ôl iddo ddigwydd</target>
     </trans-unit>				
 		<trans-unit id="payment_status.created" datatype="html">
       <source>Created</source>
@@ -301,7 +321,7 @@ Rydym wedi hysbysu'r cwsmeriaid yr effeithir arnynt y byddant yn derbyn y swm a 
 Sylwch, os na chychwynnwyd y cais hwn gennych chi, rhowch wybod i ni ar unwaith "</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__subject" datatype="html">
-      <source>Refund for {performance_name} succesful!</source>
+      <source>Refund for {performance_name} successful!</source>
       <target state="needs-translation">Ad-daliad ar gyfer {performance_name} yn llwyddiannus!</target>
     </trans-unit>				
 		<trans-unit id="email.user.refund_refunded__content" datatype="html">
@@ -332,9 +352,7 @@ Gallwch weld log o'r ad-daliad hwn yn eich gosodiadau cyfrif StageUp
 ** Tîm StageUp **</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__subject" datatype="html">
-      <source><p>Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-succesfully processed by Stripe</p>
-</source>
+      <source>Refund for {user_username} for {performance_name} (ID:{invoice_id}) successful</source>
       <target state="needs-translation">Ad-daliad ar gyfer {user_username} ar gyfer {performance_name} (ID: {invoice_id}), wedi'i brosesu'n llwyddiannus gan Stripe</target>
     </trans-unit>				
 		<trans-unit id="email.host.refund_refunded__content" datatype="html">
@@ -444,6 +462,18 @@ I brosesu'r cais hwn gallwch ymweld â'ch [dangosfwrdd anfoneb yma] ({invoice_da
 		<trans-unit id="email.host.invoice_pdf__filename" datatype="html">
       <source>stageup-invoice</source>
       <target state="needs-translation">llwyfanup-anfoneb</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__filename" datatype="html">
+      <source>stageup-audience</source>
+      <target state="needs-translation">llwyfan-gynulleidfa</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__subject" datatype="html">
+      <source>Exported audience CSV files</source>
+      <target state="needs-translation">Ffeiliau CSV y gynulleidfa a allforir</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__content" datatype="html">
+      <source>See attachments for audience data. This last changed on {last_updated}</source>
+      <target state="needs-translation">Gweler yr atodiadau am ddata'r gynulleidfa</target>
     </trans-unit>				
 		<trans-unit id="email.test.send_email__subject" datatype="html">
       <source>Testing e-mails!</source>
@@ -1252,11 +1282,24 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </source>
       <target state="needs-translation"><p>Helo {user_username}!</p><p> Fe wnaethoch chi brynu tocynnau ar gyfer {performance_name}. Bydd yn cychwyn yn {premier_time}.</p><p> Gobeithio eich bod chi i gyd yn barod i'w wylio!</p><p> Ewch â mi i'm llyfrgell: <a href="{url}">{url}</a></p><p> Lloniannau,</p><p> Tîm StageUp</p></target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_host__subject" datatype="html">
-      <source>You have deleted {performance_name}</source>
-      <target state="needs-translation">Rydych chi wedi dileu {performance_name}</target>
+		<trans-unit id="email.performance.cancelled_notify_host__subject" datatype="html">
+      <source>You have cancelled {performance_name}</source>
+      <target state="needs-translation">Rydych chi wedi canslo {performance_name}</target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_host__content" datatype="html">
+		<trans-unit id="email.performance.cancelled_notify_host__content" datatype="html">
+      <source><p>Hello <strong>{host_name}</strong>,</p>
+<p>You have cancelled your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
+<p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
+<p>Thanks,</p>
+<p><strong>StageUp Team</strong></p>
+</source>
+      <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Rydych wedi canslo eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i'r holl gwsmeriaid a brynodd docynnau i'r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i'w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
+    </trans-unit>				
+		<trans-unit id="email.performance.softDeleted_notify_host__subject" datatype="html">
+      <source>You have deleted {performance_name}</source>
+      <target state="needs-translation">Rydych wedi dileu {performance_name}</target>
+    </trans-unit>				
+		<trans-unit id="email.performance.softDeleted_notify_host__content" datatype="html">
       <source><p>Hello <strong>{host_name}</strong>,</p>
 <p>You have deleted your performance: <strong>{performance_name}</strong> which was scheduled on <strong>{performance_premiere_date}</strong></p>
 <p>We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.</p>
@@ -1265,12 +1308,11 @@ listed as ‘Cancelled’ on your account from now on.</p>
 </source>
       <target state="needs-translation"><p>Helo <strong>{host_name}</strong> ,</p><p> Rydych wedi dileu eich perfformiad: <strong>{performance_name}</strong> a drefnwyd ar <strong>{performance_premiere_date}</strong></p><p> Rydym wedi cychwyn ad-daliadau i'r holl gwsmeriaid a brynodd docynnau i'r digwyddiad hwn. Bydd cronfeydd yn cael eu credydu i'w cyfrifon cyn pen 5 diwrnod gwaith.</p><p> Diolch,</p><p> <strong>Tîm StageUp</strong></p></target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_user__subject" datatype="html">
-      <source><p>Peformance: {performance_name} cancellation notification</p>
-</source>
-      <target state="needs-translation"><p>Perfformiad: HAR_REPLACE_0 hysbysiad canslo</p></target>
+		<trans-unit id="email.performance.removed_notify_user__subject" datatype="html">
+      <source>Peformance, {performance_name} cancellation notification</source>
+      <target state="needs-translation">Perfformiad, hysbysiad canslo {performance_name}</target>
     </trans-unit>				
-		<trans-unit id="email.performance.deleted_notify_user__content" datatype="html">
+		<trans-unit id="email.performance.removed_notify_user__content" datatype="html">
       <source><p>Hi <strong>{user_username}</strong>,</p>
 <p>Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.</p>
 <p>Invoice#: {invoice_id}</p>

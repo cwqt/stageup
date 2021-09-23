@@ -162,7 +162,7 @@ export class StripeEvents extends ModuleEvents {
             ticket_id: ticket._id,
             host_id: ticket.performance.host._id,
             // from performance.controller.ts in purchasing a ticket
-            host_marketing_consent: passthrough.host_marketing_consent as ConsentOpt,
+            host_marketing_consent: passthrough.host_marketing_consent as ConsentOpt | null,
             platform_marketing_consent: passthrough.platform_marketing_consent as PlatformConsentOpt | null
           },
           user.locale

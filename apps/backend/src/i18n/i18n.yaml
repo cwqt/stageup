@@ -49,11 +49,17 @@ host:
     status: Payment Status
     created_at: Created At
     total_rows: Total Rows
+  audience_csv:
+    username: Username
+    email: Email Address
 
 # Peformances    --------------------------------------------------------------------------------------
 performance:
   cannot_delete_live: Performance cannot be deleted while currently live
   cannot_delete_after_occurrence: Performance cannot be deleted after it has occured
+  cannot_cancel_live: Performance cannot be cancelled while currently live
+  cannot_cancel_after_occurrence: Performance cannot be cancelled after it has occured
+
 # Payment Status --------------------------------------------------------------------------------------
 payment_status:
   created: Created
@@ -137,7 +143,7 @@ email:
 
     Please note, if this request was not initated by you please notify us
     immediately"
-  user.refund_refunded__subject: Refund for {performance_name} succesful!
+  user.refund_refunded__subject: Refund for {performance_name} successful!
   user.refund_refunded__content: |
     Hi {user_username},
 
@@ -152,9 +158,7 @@ email:
 
     **Thanks,**
     **StageUp Team**
-  host.refund_refunded__subject: |
-    Refund for {user_username} for {performance_name}(ID:{invoice_id}),
-    succesfully processed by Stripe
+  host.refund_refunded__subject: Refund for {user_username} for {performance_name} (ID:{invoice_id}) successful
   host.refund_refunded__content: |
     Hi {host_name},
 
@@ -205,6 +209,9 @@ email:
   host.invoice_csv__subject: Exported Invoice CSV files
   host.invoice_csv__content: See attachments for invoice data
   host.invoice_pdf__filename: stageup-invoice
+  host.audience_csv__filename: stageup-audience
+  host.audience_csv__subject: Exported audience CSV files
+  host.audience_csv__content: See attachments for audience data. This last changed on {last_updated}
   test.send_email__subject: Testing e-mails!
   test.send_email__content: Hey {username} **How are you? [{url}]**
   user.registered__subject: Verify your StageUp account
@@ -332,8 +339,19 @@ email:
     Cheers, 
 
     StageUp team
-  performance.deleted_notify_host__subject: You have deleted {performance_name}
-  performance.deleted_notify_host__content: |
+  performance.cancelled_notify_host__subject: You have cancelled {performance_name}
+  performance.cancelled_notify_host__content: |
+    Hello **{host_name}**,
+
+    You have cancelled your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
+
+    We have initiated refunds to all customers who purchased tickets to this event. Funds will be credited into their accounts within 5 working days.
+
+    Thanks,
+
+    **StageUp Team**
+  performance.softDeleted_notify_host__subject: You have deleted {performance_name}
+  performance.softDeleted_notify_host__content: |
     Hello **{host_name}**,
 
     You have deleted your performance: **{performance_name}** which was scheduled on **{performance_premiere_date}**
@@ -343,9 +361,8 @@ email:
     Thanks,
 
     **StageUp Team**
-  performance.deleted_notify_user__subject: >
-    Peformance: {performance_name} cancellation notification
-  performance.deleted_notify_user__content: |
+  performance.removed_notify_user__subject: Peformance, {performance_name} cancellation notification
+  performance.removed_notify_user__content: |
     Hi **{user_username}**,
 
     Unfortunately, {host_name} has had to cancel the performance: {performance_name}. We have initiated a refund on your ticket purchased on {ticket_purchase_date}.
