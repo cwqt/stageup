@@ -7,7 +7,8 @@ import {
   Performance,
   POSTGRES_PROVIDER
 } from '@core/api';
-import { HTTP, ILocale, IRemovalReason, PerformanceStatus, RemovalType } from '@core/interfaces';
+import { timestamp } from '@core/helpers';
+import { HTTP, ILocale, IRemovalReason, PerformanceStatus, PerformanceType, RemovalType } from '@core/interfaces';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 
@@ -19,9 +20,17 @@ export class PerformanceService extends ModuleService {
 
   async softDeletePerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
     const perf = await getCheck(Performance.findOne({ _id: performanceId }));
+    const currentDate = timestamp(new Date());
+    const inPremierPeriod: boolean =
+      currentDate >= perf.publicity_period.start && currentDate <= perf.publicity_period.end;
 
+    //If perf is live as a live show
     if (perf.status === PerformanceStatus.Live)
       throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_live`);
+
+    //If perf is live in VOD terms (within its publicity period)
+    if (perf.performance_type === PerformanceType.Vod && inPremierPeriod)
+      throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_cancel_live`);
 
     if (perf.status === PerformanceStatus.Complete)
       throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_delete_after_occurrence`);
@@ -45,8 +54,16 @@ export class PerformanceService extends ModuleService {
 
   async cancelPerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
     const perf = await getCheck(Performance.findOne({ _id: performanceId }));
+    const currentDate = timestamp(new Date());
+    const inPremierPeriod: boolean =
+      currentDate >= perf.publicity_period.start && currentDate <= perf.publicity_period.end;
 
+    //If perf is live as a live show
     if (perf.status === PerformanceStatus.Live)
+      throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_cancel_live`);
+
+    //If perf is live in VOD terms (within its publicity period)
+    if (perf.performance_type === PerformanceType.Vod && inPremierPeriod)
       throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_cancel_live`);
 
     if (perf.status === PerformanceStatus.Complete)

@@ -32,6 +32,11 @@ export enum PerformanceStatus {
   PendingSchedule = 'pending_schedule'
 }
 
+export enum PerformanceType {
+  Live = 'live',
+  Vod = 'vod'
+}
+
 export enum RemovalReason {
   TechnicalIssues = 'technical_issues',
   CancelledResceduled = 'cancelled_rescheduled',
@@ -69,6 +74,7 @@ export interface IPerformanceStub {
   assets?: IAssetStub[];
   thumbnail: string;
   status: PerformanceStatus;
+  performance_type: PerformanceType;
   publicity_period: { start: number; end: number }; // unix timestamps
   visibility: Visibility;
 }
@@ -102,7 +108,7 @@ export type DtoPerformance = IEnvelopedData<
 export type DtoCreatePerformance = Pick<
   Required<IPerformance>,
   'name' | 'publicity_period' | 'description' | 'genre'
-> & { type: 'vod' | 'live' };
+> & { type: PerformanceType };
 
 // private to host
 export interface IPerformanceHostInfo {
