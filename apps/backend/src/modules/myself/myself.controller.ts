@@ -108,7 +108,7 @@ export class MyselfController extends ModuleController {
   readFeed: IControllerEndpoint<IFeed> = {
     validators: {
       query: record(
-        enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts']),
+        enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts', 'trending']),
         Validators.Objects.PaginationOptions(10)
       )
     },
@@ -175,6 +175,9 @@ export class MyselfController extends ModuleController {
               per_page: req.query.follows ? parseInt((req.query['follows'] as any).per_page) : 4
             });
         }
+      }
+
+      if ((fetchAll || req.query['trending']) && req.session.user) {
       }
 
       return feed;
