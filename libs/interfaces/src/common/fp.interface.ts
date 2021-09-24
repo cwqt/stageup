@@ -85,3 +85,6 @@ export type DottedPaths<T> = string;
 
 // export const objectToFlatMap = () => {};
 // export const flatMapToObject = () => {};
+
+export const ExportFileTypes = ['csv', 'pdf'] as const;
+export type ExportFileType = typeof ExportFileTypes[number];

@@ -1,4 +1,4 @@
-import { HostPermission, IHost, ILocale, IPersonInfo, ConsentOpt } from '@core/interfaces';
+import { HostPermission, IEnvelopedData, IHost, ILocale, IPersonInfo, ConsentOpt } from '@core/interfaces';
 import { IFollowing } from './follow.interface';
 
 export type DtoLogin = Pick<IUserPrivate, 'email_address'> & { password: string };
@@ -37,6 +37,10 @@ export interface IUserHostInfo {
   user?: IUserStub; // the user who is a member of the host
   prefers_dashboard_landing: boolean; // where the host member would prefer landing page to be
 }
+
+export type IUserMarketingInfo = Pick<IUserPrivate, '_id' | 'name' | 'username' | 'email_address'>;
+
+export type DtoUserMarketingInfo = IEnvelopedData<IUserMarketingInfo[], { last_updated: number }>;
 
 export interface IMyself {
   // Send along private e-mail address when requesting the users own account

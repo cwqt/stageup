@@ -111,6 +111,18 @@
       <source>Total Rows</source>
       <target state="final">Total Rows</target>
     </trans-unit>				
+		<trans-unit id="host.audience_csv.name" datatype="html">
+      <source>Full Name</source>
+      <target state="final">Full Name</target>
+    </trans-unit>				
+		<trans-unit id="host.audience_csv.username" datatype="html">
+      <source>Username</source>
+      <target state="final">Username</target>
+    </trans-unit>				
+		<trans-unit id="host.audience_csv.email" datatype="html">
+      <source>Email Address</source>
+      <target state="final">Email Address</target>
+    </trans-unit>				
 		<trans-unit id="performance.cannot_delete_live" datatype="html">
       <source>Performance cannot be deleted while currently live</source>
       <target state="final">Performance cannot be deleted while currently live</target>
@@ -442,6 +454,18 @@ here</a>.</p>
 		<trans-unit id="email.host.invoice_pdf__filename" datatype="html">
       <source>stageup-invoice</source>
       <target state="final">stageup-invoice</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__filename" datatype="html">
+      <source>stageup-audience</source>
+      <target state="final">stageup-audience</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__subject" datatype="html">
+      <source>Exported audience CSV files</source>
+      <target state="final">Exported audience CSV files</target>
+    </trans-unit>				
+		<trans-unit id="email.host.audience_csv__content" datatype="html">
+      <source>See attachments for audience data. This last changed on {last_updated}</source>
+      <target state="final">See attachments for audience data. This last changed on {last_updated}</target>
     </trans-unit>				
 		<trans-unit id="email.test.send_email__subject" datatype="html">
       <source>Testing e-mails!</source>

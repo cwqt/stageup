@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AssetType, GenreMap, ICreateAssetRes, IPerformance } from '@core/interfaces';
+import { AssetType, GenreMap, ICreateAssetRes, IPerformance, PerformanceType } from '@core/interfaces';
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
@@ -24,14 +24,13 @@ import { GdprService } from '@frontend/services/gdpr.service';
 export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   @ViewChild('stepper') stepper: MatHorizontalStepper;
   form: UiForm<IPerformance>;
-  type: 'vod' | 'live';
+  type: PerformanceType;
   VoDAssetCreator: () => Promise<ICreateAssetRes>;
   VoDSignedUrl: Cacheable<ICreateAssetRes> = new Cacheable();
   performance: IPerformance;
   acceptedStreamingTerms: boolean;
 
   loading: Observable<boolean>;
-
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
   buttons: UiDialogButton[];
@@ -47,7 +46,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   setType(type: 'live' | 'vod') {
-    this.type = type;
+    type === 'live' ? (this.type = PerformanceType.Live) : (this.type = PerformanceType.Vod);
     this.stepper.next();
   }
 

@@ -9,7 +9,8 @@ import {
   PerformanceStatus,
   RichText,
   Visibility,
-  IRemovalReason
+  IRemovalReason,
+  PerformanceType
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
@@ -37,6 +38,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column() views: number;
   @Column({ unsigned: true }) like_count: number;
   @Column({ nullable: true }) premiere_datetime?: number;
+  @Column('enum', { enum: PerformanceType, nullable: true }) performance_type: PerformanceType;
   @Column({ unsigned: true }) rating_count: number;
   @Column('float') rating_total: number;
   @Column('jsonb', { nullable: true }) description?: RichText;
@@ -73,6 +75,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this.rating_total = 0;
     this.host = host;
     this.publicity_period = { start: data.publicity_period.start, end: data.publicity_period.end };
+    this.performance_type = data.type;
   }
 
   async setup(txc: EntityManager): Promise<Performance> {
@@ -98,6 +101,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       publicity_period: this.publicity_period,
       assets: this.asset_group.assets.map(a => a.toStub()),
       status: this.status,
+      performance_type: this.performance_type,
       visibility: this.visibility
     };
   }
@@ -115,7 +119,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       visibility: this.visibility,
       genre: this.genre,
       tickets: this.tickets?.map(t => t.toStub()) || [],
-      publicity_period: this.publicity_period
+      publicity_period: this.publicity_period,
+      performance_type: this.performance_type
     };
   }
 

@@ -1,15 +1,14 @@
 import { JobsOptions } from 'bullmq';
 import { Attachment } from 'nodemailer/lib/mailer';
-import { IInvoice } from '../finance/invoice.interface';
-import { IHost, IHostPrivate } from '../hosts/host.interface';
-import { ILocale } from '../i18n/i18n.interface';
-import { IPerformance } from '../performances/performance.interface';
+
+import { IHost, IHostPrivate, IInvoice, ILocale, IPerformance, IUserMarketingInfo } from '@core/interfaces';
 
 export const JobTypes = [
   'send_email',
   'send_reminder_emails',
   'host_invoice_csv',
   'host_invoice_pdf',
+  'host_audience_csv',
   'collect_performance_analytics',
   'collect_host_analytics'
 ] as const;
@@ -52,6 +51,13 @@ export type JobData = {
     sender_email_address: string;
     email_address: IHostPrivate['email_address'];
     invoice_ids: Array<IInvoice['_id']>;
+  };
+  ['host_audience_csv']: {
+    locale: ILocale;
+    sender_email_address: string;
+    receiver_email_address: IHostPrivate['email_address'];
+    host_id: IHostPrivate['_id'];
+    audience_ids: Array<IUserMarketingInfo['_id']>;
   };
 };
 

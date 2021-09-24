@@ -1,4 +1,4 @@
-import { ConsentableType, IConsentable, IEnvelopedData, RichText } from '@core/interfaces';
+import { ConsentableType, IConsentable } from '@core/interfaces';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import fd from 'form-data';

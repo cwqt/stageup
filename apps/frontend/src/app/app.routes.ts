@@ -14,6 +14,7 @@ import { DocumentViewComponent } from './routes/gdpr/document-view/document-view
 import { GenreFeedComponent } from './routes/feed/genre-feed/genre-feed.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
+import { HostMarketingComponent } from './routes/host/host-marketing/host-marketing.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
 import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
@@ -100,6 +101,7 @@ const LOGGED_IN_ROUTES: Routes = [
       { path: 'team', component: HostMembersComponent },
       { path: 'performances', component: HostPerformancesComponent },
       { path: 'analytics', component: HostAnalyticsComponent },
+      { path: 'marketing', component: HostMarketingComponent },
       {
         path: `performances/:${RP.PerformanceId}`,
         component: HostPerformanceComponent,

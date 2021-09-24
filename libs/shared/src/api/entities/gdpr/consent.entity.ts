@@ -1,5 +1,5 @@
 import { Consentable } from '@core/api';
-import { uuid } from '@core/helpers';
+import { uuid, timestamp } from '@core/helpers';
 import { ConsentType, ConsentTypes, IUserConsent, NUUID } from '@core/interfaces';
 import {
   BaseEntity,
@@ -18,6 +18,7 @@ export abstract class Consent<T extends ConsentType> extends BaseEntity implemen
   @PrimaryColumn('varchar') _id: NUUID;
 
   @Column('enum', { enum: ConsentTypes }) type: T;
+  @Column() saved_at: number;
 
   @RelationId((consent: Consent<T>) => consent.terms_and_conditions) terms_and_conditions__id: NUUID;
   @ManyToOne(() => Consentable) @JoinColumn() terms_and_conditions: Consentable<'general_toc'>;
@@ -27,13 +28,15 @@ export abstract class Consent<T extends ConsentType> extends BaseEntity implemen
     this._id = uuid();
     this.type = type;
     this.terms_and_conditions = termsAndConditions;
+    this.saved_at = timestamp(new Date());
   }
 
   toConsent(): Required<IUserConsent<T>> {
     return {
       _id: this._id,
       type: this.type,
-      terms_and_conditions: this.terms_and_conditions
+      terms_and_conditions: this.terms_and_conditions,
+      saved_at: this.saved_at
     };
   }
 }
