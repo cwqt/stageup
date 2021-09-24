@@ -21,7 +21,7 @@ type CarouselIdx = keyof IFeed;
   templateUrl: './feed.component.html',
   styleUrls: ['./feed.component.scss']
 })
-export class FeedComponent extends CarouselBaseComponent<IPerformanceStub|IHostStub, IFeed> implements OnInit {
+export class FeedComponent extends CarouselBaseComponent<IPerformanceStub | IHostStub, IFeed> implements OnInit {
   @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
 
   public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>> } = {
@@ -71,18 +71,14 @@ export class FeedComponent extends CarouselBaseComponent<IPerformanceStub|IHostS
     breakpointObserver: BreakpointObserver,
     private feedService: FeedService,
     public dialog: MatDialog,
-    private helperService: HelperService,        
+    private helperService: HelperService,
     private appService: AppService,
     private route: ActivatedRoute
   ) {
     super(logger, toastService, breakpointObserver);
 
     // setting fetchData separately as this is not accessible on super()
-    super.fetchData = this.fetchFeed.bind(
-      null,
-      this.feedService,
-      this.carouselData,
-    );
+    super.fetchData = this.fetchFeed.bind(null, this.feedService, this.carouselData);
   }
 
   async ngOnInit() {
@@ -113,13 +109,15 @@ export class FeedComponent extends CarouselBaseComponent<IPerformanceStub|IHostS
     feedService: FeedService,
     carouselData: ICacheable<IEnv<IPerformanceStub[] | IHostStub[]>>,
     carouselIndex: CarouselIdx
-  ): Promise<IEnv<(IPerformanceStub|IHostStub)[]>> {
-    return (await feedService.getFeed({
+  ): Promise<IEnv<(IPerformanceStub | IHostStub)[]>> {
+    return (
+      await feedService.getFeed({
         [carouselIndex]: {
-            page: carouselData[carouselIndex].data.__paging_data.next_page,
-            per_page: carouselData[carouselIndex].data.__paging_data.per_page
+          page: carouselData[carouselIndex].data.__paging_data.next_page,
+          per_page: carouselData[carouselIndex].data.__paging_data.per_page
         }
-    }))[carouselIndex];
+      })
+    )[carouselIndex];
   }
 
   // Refresh the feed of the given carousel index

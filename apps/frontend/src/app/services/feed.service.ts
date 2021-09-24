@@ -13,6 +13,9 @@ export class FeedService {
   getFeed(
     paging?: { [index in keyof IFeed]?: PaginationOptions }
   ): Promise<IEnvelopedData<IFeedPerformanceStub[] | IHostStub[]>> {
+    let data = this.http.get<IEnvelopedData<IFeedPerformanceStub[]>>(`/api/myself/feed${querize(paging)}`).toPromise();
+    console.log(data);
+
     return this.http.get<IEnvelopedData<IFeedPerformanceStub[]>>(`/api/myself/feed${querize(paging)}`).toPromise();
   }
 }

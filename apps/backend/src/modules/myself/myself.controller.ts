@@ -54,7 +54,7 @@ import { GdprService } from '../gdpr/gdpr.service';
 import Stripe from 'stripe';
 import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
-import { Connection } from 'typeorm';
+import { Connection, getManager } from 'typeorm';
 
 @Service()
 export class MyselfController extends ModuleController {
@@ -178,15 +178,15 @@ export class MyselfController extends ModuleController {
       }
 
       if ((fetchAll || req.query['trending']) && req.session.user) {
-        let trending = await this.ORM.createQueryBuilder(Invoice, 'i')
-          .select(['i._id'])
-          .addSelect('COUNT(i._id)', 'numinvoices')
-          .innerJoin('i.ticket', 'ticket')
-          .innerJoin('ticket.performance', 'performance')
-          .groupBy('numinvoices')
-          .getMany();
+        feed.trending = await getManager().query(`SELECT public.performance.name, COUNT(public.performance.name) 
+        FROM public.invoice 
+        INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
+        INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
+        GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance.name
+        ORDER BY COUNT(*) DESC`);
 
-        console.log(trending);
+        console.log(feed.trending);
+        console.log(feed);
       }
 
       return feed;
