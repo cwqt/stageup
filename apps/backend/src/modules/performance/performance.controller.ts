@@ -40,6 +40,7 @@ import {
   ACCEPTED_IMAGE_MIME_TYPES,
   AssetDto,
   AssetOwnerType,
+  AssetTag,
   AssetTags,
   AssetType,
   BASE_AMOUNT_MAP,
@@ -758,7 +759,12 @@ export class PerformanceController extends ModuleController {
   };
 
   changeThumbnails: IControllerEndpoint<AssetDto | void> = {
-    validators: { query: object({ replaces: optional(Validators.Fields.nuuid) }) },
+    validators: {
+      query: object({
+        replaces: optional(Validators.Fields.nuuid),
+        tag: enums(AssetTags)
+      })
+    },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
     middleware: Middleware.file(2048, ACCEPTED_IMAGE_MIME_TYPES).single('file'),
     controller: async req => {
@@ -784,7 +790,7 @@ export class PerformanceController extends ModuleController {
       if (!req.file) return;
 
       const asset = await transact(async txc => {
-        const asset = new ImageAsset(performance.asset_group, ['secondary', 'thumbnail']);
+        const asset = new ImageAsset(performance.asset_group, [req.query.tag as AssetTag, 'thumbnail']);
         await asset.setup(
           this.blobs,
           { file: req.file, s3_url: Env.AWS.S3_URL },

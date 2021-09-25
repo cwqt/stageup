@@ -1,6 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
-import { timestamp, unix } from '@core/helpers';
+import { findAssets, timestamp, unix } from '@core/helpers';
 import { DtoPerformance, IAssetStub, IHost, AssetType, IPerformanceHostInfo, Visibility } from '@core/interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
@@ -22,6 +22,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
   stream: IAssetStub<AssetType.LiveStream>;
   vod: IAssetStub<AssetType.Video>;
 
+  minimumAssetsMet: boolean;
+
   copyMessage: string = $localize`Copy`;
   visibilityInput: IUiFormField<'select'>;
 
@@ -32,6 +34,10 @@ export class HostPerformanceDetailsComponent implements OnInit {
     return this.performanceHostInfo.data;
   }
 
+  get performanceMeetsAllPublicityRequirements() {
+    return this.host.is_onboarded && this.minimumAssetsMet && (this.vod?.location || !this.vod);
+  }
+
   visibilityForm: UiForm;
   publicityPeriodForm: UiForm;
 
@@ -40,8 +46,10 @@ export class HostPerformanceDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.stream = this.performance.data.data.assets.find(asset => asset.type == AssetType.LiveStream);
     this.vod = this.performance.data.data.assets.find(
-      asset => asset.type == AssetType.Video && asset.tags.includes('trailer')
+      asset => asset.type == AssetType.Video && asset.tags.includes('primary')
     );
+
+    this.minimumAssetsMet = this.performanceHasMinimumAssets();
 
     this.publicityPeriodForm = new UiForm({
       fields: {
@@ -106,5 +114,13 @@ export class HostPerformanceDetailsComponent implements OnInit {
     setTimeout(() => {
       this.copyMessage = $localize`Copy`;
     }, 2000);
+  }
+
+  // Performance needs either a trailer or at least 2 thumbnail images to go public
+  performanceHasMinimumAssets(): boolean {
+    const trailer = findAssets(this.performance.data.data.assets, AssetType.Video, ['trailer']);
+    const thumbnails = findAssets(this.performance.data.data.assets, AssetType.Image, ['thumbnail']);
+
+    return trailer.length > 0 || thumbnails?.length > 1;
   }
 }

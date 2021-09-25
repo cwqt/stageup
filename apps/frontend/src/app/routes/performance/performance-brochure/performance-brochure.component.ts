@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, LOCALE_ID, OnInit, Output, ViewChild }
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
-import { getDonoAmount, i18n } from '@core/helpers';
+import { findAssets, getDonoAmount, i18n } from '@core/helpers';
 import {
   AssetType,
   BASE_AMOUNT_MAP,
@@ -83,7 +83,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     this.myself = this.myselfService.$myself.getValue()?.user;
     await cachize(this.performanceService.readPerformance(this.data.performance_id), this.performanceCacheable).then(
       d => {
-        this.performanceTrailer = d.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
+        this.performanceTrailer = findAssets(d.data.assets, AssetType.Video, ['trailer'])[0];
         this.userFollowing = d.__client_data?.is_following;
         this.userLiked = d.__client_data?.is_liking;
         return d;
@@ -94,7 +94,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     this.brochureSharingUrl = `${this.appService.environment.frontend_url}/?performance=${this.performance._id}`;
 
     // Find first thumbnail, to show on cover image if no trailer video is present
-    this.thumbnail = this.performance.assets.find(a => a.type == AssetType.Image && a.tags.includes('thumbnail'));
+    this.thumbnail = findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])[0];
 
     // Host marketing form when going to purchase a ticket
     this.hostMarketingOptForm = new UiForm({

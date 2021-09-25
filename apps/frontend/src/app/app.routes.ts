@@ -16,9 +16,9 @@ import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analyt
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
 import { HostMarketingComponent } from './routes/host/host-marketing/host-marketing.component';
 import { HostMembersComponent } from './routes/host/host-members/host-members.component';
+import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 import { HostOnboardingComponent } from './routes/host/host-onboarding/host-onboarding.component';
 import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
-import { HostPerformanceCustomiseComponent } from './routes/host/host-performance/host-performance-customise/host-performance-customise.component';
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
@@ -108,7 +108,8 @@ const LOGGED_IN_ROUTES: Routes = [
         children: [
           { path: '', component: HostPerformanceDetailsComponent },
           { path: 'ticketing', component: HostPerformanceTicketingComponent },
-          { path: 'customise', component: HostPerformanceCustomiseComponent },
+          { path: 'media', component: HostPerformanceMediaComponent },
+
           // { path: "analytics", HostPerformanceDetailsComponent },
           { path: '**', component: NotFoundComponent }
         ]
