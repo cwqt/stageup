@@ -1,3 +1,4 @@
+import { ISocialAuth } from './../../../libs/interfaces/src/users/auth.interface';
 // https://stackoverflow.com/a/59805161/8526764
 const TRUE_ENV = process.env['NODE' + '_ENV'];
 /* eslint @typescript-eslint/no-var-requires: "off" */
@@ -38,6 +39,7 @@ const Env: {
   STRIPE: Envify<IStripeProviderConfig>;
   EMAIL: Envify<ISendGridMailProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
+  SOCIAL_AUTH: Envify<ISocialAuth>;
   isEnv: (env: Environment | Environment[]) => boolean;
 } = {
   isEnv: isEnv(TRUE_ENV as Environment),
@@ -107,6 +109,10 @@ const Env: {
     S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
     S3_URL: process.env.AWS_S3_URL,
     S3_REGION: process.env.AWS_S3_REGION
+  },
+  SOCIAL_AUTH: {
+    GOOGLE: process.env.GOOGLE_AUTH_APP_ID,
+    FACEBOOK: process.env.FACEBOOK_AUTH_APP_ID
   }
 };
 

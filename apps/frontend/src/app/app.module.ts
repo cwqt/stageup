@@ -1,4 +1,3 @@
-require('dotenv').config();
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -6,7 +5,7 @@ import { AppRoutingModule } from './app.routes';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { CookieService } from 'ngx-cookie-service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +20,9 @@ import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
+
+// Service ----------------------------------------------------------------------------------------------------------------
+import { AppService } from '@frontend/services/app.service';
 
 // https://www.npmjs.com/package/angularx-social-login
 import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
@@ -164,6 +166,23 @@ import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-doc
 import { GdprDocumentUpload } from './components/dialogs/gdpr-document-upload/gdpr-document-upload.component';
 import { SelectReasonDialogComponent } from './components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { PerformanceCancelDialogComponent } from './routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
+
+// Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
+const getSigninProviders = (appService: AppService) => {
+  return appService.getEnvironment().then(env => {
+    const providers = [
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider(env.google_auth_app_id)
+      },
+      {
+        id: FacebookLoginProvider.PROVIDER_ID,
+        provider: new FacebookLoginProvider(env.facebook_auth_app_id)
+      }
+    ];
+    return { autoLogin: true, providers } as SocialAuthServiceConfig;
+  });
+};
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -326,24 +345,11 @@ import { PerformanceCancelDialogComponent } from './routes/performance/performan
   providers: [
     CookieService,
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
-    // _>_>
     {
       provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: true, //keeps the user signed in
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(process.env.GOOGLE_AUTH_APP_ID)
-          },
-          {
-            id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider(process.env.FACEBOOK_AUTH_APP_ID) // test app for development purposes only
-          }
-        ]
-      } as SocialAuthServiceConfig
+      useFactory: getSigninProviders,
+      deps: [AppService]
     }
-    //_>_>
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
