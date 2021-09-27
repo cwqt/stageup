@@ -7,7 +7,8 @@ import {
   OneToOne,
   JoinColumn,
   BeforeInsert,
-  PrimaryColumn
+  PrimaryColumn,
+  Check
 } from 'typeorm';
 
 import {
@@ -33,6 +34,7 @@ import { PatronTier } from './patron-tier.entity';
 import { PatronSubscription } from '@core/api';
 
 @Entity()
+@Check('0 <= "commission_rate" AND commission_rate <= 1') // Commission rate is a percentage
 export class Host extends BaseEntity implements IHostPrivate {
   @PrimaryColumn() _id: string;
   @BeforeInsert() private beforeInsert() {
@@ -61,6 +63,7 @@ export class Host extends BaseEntity implements IHostPrivate {
 
   @OneToOne(() => User) @JoinColumn() owner: User;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
+  @Column({ nullable: true, type: 'float' }) commission_rate: number;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {
     super();
@@ -81,6 +84,7 @@ export class Host extends BaseEntity implements IHostPrivate {
       pinterest_url: null,
       youtube_url: null
     };
+    this.commission_rate = null;
   }
 
   async setup(creator: User, txc: EntityManager) {
@@ -133,7 +137,8 @@ export class Host extends BaseEntity implements IHostPrivate {
       ...this.toStub(),
       created_at: this.created_at,
       is_onboarded: this.is_onboarded,
-      social_info: this.social_info
+      social_info: this.social_info,
+      commission_rate: this.commission_rate
     };
   }
 

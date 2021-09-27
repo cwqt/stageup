@@ -338,4 +338,11 @@ export class HostService {
       .post<void>(`/api/hosts/${hostId}/marketing/audience/export/${type}`, { selected_users: selectedUsers })
       .toPromise();
   }
+
+  // router.put <void> ("/hosts/:hid/commission-rate", Hosts.updateCommissionRate());
+  updateCommissionRate(hostId: string, newRate: number): Promise<void> {
+    return this.http
+      .put<void>(`/api/hosts/${hostId}/commission-rate`, { new_rate: newRate })
+      .toPromise();
+  }
 }

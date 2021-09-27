@@ -72,7 +72,20 @@ import {
   Visibility
 } from '@core/interfaces';
 import Stripe from 'stripe';
-import { array, assign, boolean, coerce, enums, nullable, object, string, StructError, record } from 'superstruct';
+import {
+  array,
+  assign,
+  boolean,
+  coerce,
+  enums,
+  nullable,
+  object,
+  string,
+  StructError,
+  record,
+  size,
+  number
+} from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
@@ -1080,6 +1093,22 @@ export class HostController extends ModuleController {
         host_id: h._id,
         audience_ids: req.body.selected_users
       });
+    }
+  };
+
+  updateCommissionRate: IControllerEndpoint<void> = {
+    validators: {
+      body: object({ new_rate: Validators.Fields.percentage }),
+      params: object({
+        hid: Validators.Fields.nuuid
+      })
+    },
+    authorisation: AuthStrat.isSiteAdmin,
+    controller: async req => {
+      const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+
+      host.commission_rate = req.body.new_rate;
+      await host.save();
     }
   };
 }

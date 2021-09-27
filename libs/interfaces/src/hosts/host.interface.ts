@@ -26,6 +26,7 @@ export interface IHost extends IHostStub {
   social_info: ISocialInfo;
   created_at: number;
   is_onboarded: boolean;
+  commission_rate: number;
 }
 
 export interface IHostPrivate extends IHost {
@@ -40,7 +41,7 @@ export interface IUserFollow {
 
 export type DtoUpdateHost = Except<
   IHostPrivate,
-  '_id' | 'banner' | 'avatar' | 'created_at' | 'is_onboarded' | 'stripe_account_id'
+  '_id' | 'banner' | 'avatar' | 'created_at' | 'is_onboarded' | 'stripe_account_id' | 'commission_rate'
 >;
 
 export interface IHostBusinessDetails {
