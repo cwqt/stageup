@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, LOCALE_ID, OnInit, Output, ViewChild }
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
-import { findAssets, getDonoAmount, i18n } from '@core/helpers';
+import { findAssets, getDonoAmount, i18n, timestamp, unix } from '@core/helpers';
 import {
   AssetType,
   BASE_AMOUNT_MAP,
@@ -24,6 +24,8 @@ import { PerformanceService } from '@frontend/services/performance.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
+
+const moment = require('moment');
 
 @Component({
   selector: 'performance-brochure',
@@ -55,8 +57,8 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
 
   brochureSharingUrl: SocialSharingComponent['url'];
   userFollowing: boolean;
-
   userLiked: boolean;
+
   thumbnail: IAssetStub<AssetType.Image>;
 
   hostMarketingOptForm: UiForm<{ does_opt_out: boolean }>;
@@ -65,8 +67,17 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   showHostMarketingForm: boolean;
   showPlatformMarketingForm: boolean;
 
+  performanceStartDate: string;
+  timeUntilPerformance: string;
+
+  currentTimestamp = timestamp();
+
   get performance() {
     return this.performanceCacheable.data?.data;
+  }
+
+  get userHasBoughtPerformance(): boolean {
+    return this.performanceCacheable?.data.__client_data.has_bought_ticket_for;
   }
 
   constructor(
@@ -125,6 +136,14 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       !this.myself.is_hiding_host_marketing_prompts;
     this.showPlatformMarketingForm =
       this.performanceCacheable.data.__client_data.platform_marketing_opt_status === null;
+  }
+
+  prettyDuration(duration: number): string {
+    return moment.duration(duration, 'second').humanize(true);
+  }
+
+  prettyDate(timestamp: number): string {
+    return i18n.date(unix(timestamp), this.myself.locale);
   }
 
   openPerformanceDescriptionSection() {

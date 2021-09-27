@@ -120,7 +120,6 @@ export class HostPerformanceDetailsComponent implements OnInit {
   performanceHasMinimumAssets(): boolean {
     const trailer = findAssets(this.performance.data.data.assets, AssetType.Video, ['trailer']);
     const thumbnails = findAssets(this.performance.data.data.assets, AssetType.Image, ['thumbnail']);
-
     return trailer.length > 0 || thumbnails?.length > 1;
   }
 }

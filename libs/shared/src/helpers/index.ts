@@ -140,7 +140,7 @@ export const getDonoAmount = (donoPeg: DonoPeg, currency: CurrencyCode, allowAny
  * @returns array of assets
  */
 export const findAssets = (assets: IAsset[], type: AssetType, tags?: string[]) => {
-  return assets.filter(asset => asset.type == type && (tags ? asset.tags.every(tag => tags.includes(tag)) : true));
+  return assets.filter(asset => asset.type == type && (tags ? tags.every(tag => asset.tags.includes(tag)) : true));
 };
 
 /**

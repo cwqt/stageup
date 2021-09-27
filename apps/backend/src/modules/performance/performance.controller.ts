@@ -13,6 +13,7 @@ import {
   Host,
   IControllerEndpoint,
   ImageAsset,
+  Invoice,
   Like,
   LiveStreamAsset,
   Middleware,
@@ -217,6 +218,9 @@ export class PerformanceController extends ModuleController {
       const platformMarketingStatus =
         req.session.user && (await this.gdprService.readUserPlatformConsent(req.session.user._id));
 
+      const invoice =
+        req.session.user && (await this.performanceService.readUserInvoice(performance._id, req.session.user._id));
+
       const response: DtoPerformance = {
         data: performance.toFull(),
         __client_data: {
@@ -226,7 +230,8 @@ export class PerformanceController extends ModuleController {
           host_marketing_opt_status: hostMarketingStatus ? (hostMarketingStatus.opt_status as ConsentOpt) : null,
           platform_marketing_opt_status: platformMarketingStatus
             ? (platformMarketingStatus.opt_status as PlatformConsentOpt)
-            : null
+            : null,
+          has_bought_ticket_for: invoice ? true : false
         }
       };
 

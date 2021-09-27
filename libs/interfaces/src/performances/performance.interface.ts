@@ -97,6 +97,7 @@ export interface IClientPerformanceData {
   rating: number | null;
   host_marketing_opt_status: ConsentOpt | null;
   platform_marketing_opt_status: PlatformConsentOpt | null;
+  has_bought_ticket_for: boolean;
 }
 
 export type DtoPerformance = IEnvelopedData<
