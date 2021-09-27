@@ -5,7 +5,6 @@ import {
   DtoCreateTicket,
   Genre,
   PerformanceType,
-  TicketFees,
   TicketType
 } from '@core/interfaces';
 import faker from 'faker';
@@ -22,7 +21,7 @@ const ticketFactory = (): DtoCreateTicket => ({
   amount: 1000,
   start_datetime: timestamp(),
   end_datetime: timestamp() + 10000,
-  fees: TicketFees.Absorb,
+  // fees: TicketFees.Absorb,
   is_visible: true,
   dono_pegs: []
 });

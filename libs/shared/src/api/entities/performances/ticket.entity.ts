@@ -10,7 +10,7 @@ import {
   OneToOne,
   EntityManager
 } from 'typeorm';
-import { CurrencyCode, ITicket, ITicketStub, TicketType, DtoCreateTicket, TicketFees, DonoPeg } from '@core/interfaces';
+import { CurrencyCode, ITicket, ITicketStub, TicketType, DtoCreateTicket, DonoPeg } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import { Performance } from './performance.entity';
 import { Except } from 'type-fest';
@@ -34,7 +34,7 @@ export class Ticket extends BaseEntity implements ITicket {
   @Column() end_datetime: number;
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
   @Column('enum', { enum: TicketType }) type: TicketType;
-  @Column('enum', { enum: TicketFees }) fees: TicketFees;
+  // @Column('enum', { enum: TicketFees }) fees: TicketFees;
   @Column('varchar', { array: true }) dono_pegs: DonoPeg[];
 
   @DeleteDateColumn({ type: 'timestamptz' }) deleted_at?: Date; // soft delete
@@ -49,7 +49,7 @@ export class Ticket extends BaseEntity implements ITicket {
     this.type = ticket.type;
     this.quantity = ticket.quantity;
     this.quantity_remaining = this.quantity;
-    this.fees = ticket.fees;
+    // this.fees = ticket.fees;
     this.start_datetime = ticket.start_datetime;
     this.end_datetime = ticket.end_datetime;
     this.is_visible = ticket.is_visible;
@@ -89,7 +89,7 @@ export class Ticket extends BaseEntity implements ITicket {
     return {
       ...this.toStub(),
       version: this.version,
-      fees: this.fees,
+      // fees: this.fees,
       start_datetime: this.start_datetime,
       end_datetime: this.end_datetime
     };
