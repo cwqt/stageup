@@ -87,12 +87,11 @@ export class UserController extends ModuleController {
     }
   };
 
-  signInUser: IControllerEndpoint<IUser> = {
+  socialSignInUser: IControllerEndpoint<IUser> = {
     //TODO: ADD VALIDATION
     middleware: Middleware.rateLimit(3600, 10, this.redis),
     authorisation: AuthStrat.none,
     controller: async req => {
-      console.log(req.body);
       // Check user exists
       let u = await User.findOne({ email_address: req.body.email });
 

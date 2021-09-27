@@ -99,9 +99,7 @@ const Users = Container.get(UserController)
 router.post     <IMyself["user"]>       ("/users",                                    Users.createUser);
 router.post     <void>                  ("/users/logout",                             Users.logoutUser);
 router.post     <IUser>                 ("/users/login",                              Users.loginUser);
-router.post     <IUser>                 ("/users/login/social",                       Users.signInUser);
-// router.post     <IUser>                 ("/users/login/google",                       Users.loginUserWithGoogle);
-// router.post     <IUser>                 ("/users/login/facebook",                     Users.loginUserWithFacebook);
+router.post     <IUser>                 ("/users/login/social",                       Users.socialSignInUser);
 router.post     <void>                  ("/users/forgot-password",                    Users.forgotPassword);
 router.put      <void>                  ("/users/reset-password",                     Users.resetForgottenPassword);
 router.get      <IUser>                 ("/users/:uid",                               Users.readUser);
