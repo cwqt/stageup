@@ -183,6 +183,8 @@ module "backend" {
     AWS_S3_BUCKET_NAME       = module.secrets.AWS_S3_BUCKET_NAME
     AWS_S3_REGION            = module.secrets.AWS_S3_REGION
     AWS_S3_URL               = module.secrets.AWS_S3_URL
+    GOOGLE_AUTH_APP_ID       = module.secrets.GOOGLE_AUTH_APP_ID
+    FACEBOOK_AUTH_APP_ID     = module.secrets.FACEBOOK_AUTH_APP_ID
   }
 }
 

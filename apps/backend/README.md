@@ -119,7 +119,9 @@ For Google, you can get this key from the Google Cloud Platform.
 GOOGLE_AUTH_APP_ID=""
 ```
 
-For Facebook, ask the SysAdmin to add you to StageUp's [https://app.sendgrid.com/settings/api_keys](Facebook for Developers) account. For development purposes, there is an existing test app called **"StageUp - Dev"**. Copy the `Test App ID` and add it to your .env:
+Unfortunately, at present GCP OAuth 2 doesn't support **wildcards** as 'Authorised JavaScript origins'. This means that we cannot specify https://su-XXX.stageup.uk as a valid URI and the google login will not work in branch deploys.
+
+For Facebook, ask the SysAdmin to add you to StageUp's [https://developers.facebook.com/](Facebook for Developers) account. For development purposes, there is an existing test app called **"StageUp - Dev"**. Copy the `Test App ID` and add it to your .env:
 
 ```
 FACEBOOK_AUTH_APP_ID=""

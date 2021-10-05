@@ -161,3 +161,24 @@ output "AWS_S3_URL" {
   value     = data.google_secret_manager_secret_version.AWS_S3_URL.secret_data
   sensitive = true
 }
+
+# ===================================================================================
+# OAUTH2
+# ===================================================================================
+data "google_secret_manager_secret_version" "GOOGLE_AUTH_APP_ID" {
+  provider = google-beta
+  secret   = "GOOGLE_AUTH_APP_ID"
+}
+output "GOOGLE_AUTH_APP_ID" {
+  value     = data.google_secret_manager_secret_version.GOOGLE_AUTH_APP_ID.secret_data
+  sensitive = true
+}
+
+data "google_secret_manager_secret_version" "FACEBOOK_AUTH_APP_ID" {
+  provider = google-beta
+  secret   = "FACEBOOK_AUTH_APP_ID"
+}
+output "FACEBOOK_AUTH_APP_ID" {
+  value     = data.google_secret_manager_secret_version.FACEBOOK_AUTH_APP_ID.secret_data
+  sensitive = true
+}
