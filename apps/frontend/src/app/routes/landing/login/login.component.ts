@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { IUser } from '@core/interfaces';
+import { DtoSocialLogin, IUser } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AuthenticationService } from 'apps/frontend/src/app/services/authentication.service';
 import { MyselfService } from 'apps/frontend/src/app/services/myself.service';
@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { IUiDialogOptions } from '../../../ui-lib/ui-lib.interfaces';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { SocialAuthService, GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
+import { SocialAuthService, GoogleLoginProvider, FacebookLoginProvider, SocialUser } from 'angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -87,16 +87,29 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
   loginWithGoogle(): void {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(async data => {
       // Add details to our DB (if not already) and grant access
-      await this.authService.socialSignIn(data);
+      await this.authService.socialSignIn(this.toDtoSocialLogin(data));
       this.handlePostSignIn();
     });
   }
 
   loginWithFacebook(): void {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(async data => {
-      await this.authService.socialSignIn(data);
+      await this.authService.socialSignIn(this.toDtoSocialLogin(data));
       this.handlePostSignIn();
     });
+  }
+
+  // Filter out the data we need from the SocialUser object
+  toDtoSocialLogin(data: SocialUser): DtoSocialLogin {
+    return {
+      email: data.email,
+      provider: data.provider,
+      name: data.name,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      photoUrl: data.photoUrl,
+      id: data.id
+    };
   }
 
   handlePostSignIn(): void {

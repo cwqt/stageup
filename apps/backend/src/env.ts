@@ -1,4 +1,3 @@
-import { ISocialAuth } from './../../../libs/interfaces/src/users/auth.interface';
 // https://stackoverflow.com/a/59805161/8526764
 const TRUE_ENV = process.env['NODE' + '_ENV'];
 /* eslint @typescript-eslint/no-var-requires: "off" */
@@ -15,8 +14,9 @@ import {
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
   IStripeProviderConfig,
-  REDIS_PROVIDER
+  REDIS_PROVIDER,
 } from '@core/api';
+import { ISocialAuth } from '@core/interfaces';
 
 type Envify<T> = { [index in keyof T as Uppercase<string & index>]: T[index] } & { [index: string]: any };
 

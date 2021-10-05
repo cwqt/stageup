@@ -36,7 +36,7 @@ import {
 import { Blobs } from 'libs/shared/src/api/data-client/providers/blob.provider';
 import { RedisClient } from 'redis';
 import Stripe from 'stripe';
-import { object, string } from 'superstruct';
+import { object, partial, string } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection, EntityManager } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
@@ -88,7 +88,7 @@ export class UserController extends ModuleController {
   };
 
   socialSignInUser: IControllerEndpoint<IUser> = {
-    //TODO: ADD VALIDATION
+    validators: { body: partial(Validators.Objects.DtoSocialLogin) },
     middleware: Middleware.rateLimit(3600, 10, this.redis),
     authorisation: AuthStrat.none,
     controller: async req => {
@@ -124,7 +124,7 @@ export class UserController extends ModuleController {
           u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
           await u.personal_details.save();
 
-          // Todo: If we can get this data from social media we can populate it in the DB automatically
+          // Possibility: If we want to get this data from social media we can populate it in the DB automatically
           u.personal_details.contact_info = new ContactInfo({
             mobile_number: null,
             landline_number: null,

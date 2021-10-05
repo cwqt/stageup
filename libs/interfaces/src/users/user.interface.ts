@@ -1,9 +1,11 @@
+import { SocialUser } from 'angularx-social-login';
 import { HostPermission, IEnvelopedData, IHost, ILocale, IPersonInfo, ConsentOpt } from '@core/interfaces';
 import { IFollowing } from './follow.interface';
 
 export type DtoLogin = Pick<IUserPrivate, 'email_address'> & { password: string };
 export type DtoCreateUser = Pick<IUserPrivate, 'username' | 'email_address'> & { password: string };
 export type DtoUpdateUser = Pick<IUserPrivate, 'email_address' | 'name' | 'bio'>;
+export type DtoSocialLogin = Pick<SocialUser, 'email' | 'name' | 'firstName' | 'lastName' | 'photoUrl' | 'provider' | 'id'>;
 
 export interface IUserStub {
   _id: string;

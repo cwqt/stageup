@@ -1,4 +1,3 @@
-import { SocialUser } from 'angularx-social-login';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -7,8 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggedInGuard } from '../_helpers/logged-in.guard';
 import { MyselfService } from './myself.service';
-import { DtoLogin, IUser } from '@core/interfaces';
-import { querize } from '@core/helpers';
+import { DtoLogin, DtoSocialLogin, IUser } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +44,7 @@ export class AuthenticationService {
       .toPromise();
   }
 
-  socialSignIn(data: SocialUser): Promise<IUser> {
+  socialSignIn(data: DtoSocialLogin): Promise<IUser> {
     return this.http
       .post<IUser>('/api/users/login/social', data, { withCredentials: true })
       .pipe(

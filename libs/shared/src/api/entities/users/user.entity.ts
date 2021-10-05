@@ -1,5 +1,4 @@
-import { SocialUser } from 'angularx-social-login';
-import { IUser, IUserStub, IUserPrivate, IMyself, ILocale, ConsentOpts, ConsentOpt } from '@core/interfaces';
+import { DtoSocialLogin, IUser, IUserStub, IUserPrivate, IMyself, ILocale, ConsentOpts, ConsentOpt } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import bcrypt from 'bcrypt';
 import {
@@ -50,7 +49,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
   @OneToMany(() => PatronSubscription, sub => sub.user) patron_subscriptions: PatronSubscription[];
 
-  @Column('simple-array', { default: [] }) sign_in_types: (SocialUser['provider'] | 'EMAIL')[];
+  @Column('simple-array', { default: [] }) sign_in_types: (DtoSocialLogin['provider'] | 'EMAIL')[];
 
   @Column({ nullable: true }) private salt: string;
   @Column({ nullable: true }) private pw_hash: string;
