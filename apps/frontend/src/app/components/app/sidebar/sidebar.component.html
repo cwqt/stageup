@@ -43,16 +43,16 @@
           <span i18n>Details</span>
         </ui-button>
         <ui-button
+          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/media'"
+          routerLinkActive="active-link"
+        >
+          <span i18n>Media</span>
+        </ui-button>
+        <ui-button
           [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/ticketing'"
           routerLinkActive="active-link"
         >
           <span i18n>Ticketing</span>
-        </ui-button>
-        <ui-button
-          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/customise'"
-          routerLinkActive="active-link"
-        >
-          <span i18n>Customise</span>
         </ui-button>
         <ui-button
           [disabled]="true"
@@ -77,6 +77,11 @@
       <ui-button routerLink="/dashboard/analytics" routerLinkActive="active-link">
         <ui-icon>analytics</ui-icon>
         <span i18n>Analytics</span>
+      </ui-button>
+
+      <ui-button routerLink="/dashboard/marketing" routerLinkActive="active-link">
+        <ui-icon>email</ui-icon>
+        <span i18n>Marketing</span>
       </ui-button>
 
       <ui-button routerLink="/dashboard/team" routerLinkActive="active-link">

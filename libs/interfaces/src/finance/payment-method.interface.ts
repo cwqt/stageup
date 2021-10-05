@@ -12,6 +12,11 @@ export enum CardBrand {
   Unknown = `unknown`
 }
 
+// Enum to make single definition, and also allows for further commission rates to be added in the future
+export enum CommissionRate {
+  Platform = 0.1
+}
+
 export interface IPaymentMethodStub {
   _id: NUUID;
   last4: string; // of cc details

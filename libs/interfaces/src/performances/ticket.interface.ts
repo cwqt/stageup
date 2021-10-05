@@ -6,10 +6,11 @@ export enum TicketType {
   Donation = 'dono'
 }
 
-export enum TicketFees {
-  PassOntoPurchaser = 'pass_onto_purchaser',
-  Absorb = 'absorb'
-}
+// Temporarily removed, will likely be re-added in future
+// export enum TicketFees {
+//   PassOntoPurchaser = 'pass_onto_purchaser',
+//   Absorb = 'absorb'
+// }
 
 export const DonoPegs = ['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'] as const;
 export type DonoPeg = typeof DonoPegs[number];
@@ -50,7 +51,7 @@ export interface ITicketStub {
 }
 
 export interface ITicket extends ITicketStub {
-  fees: TicketFees;
+  // fees: TicketFees;
   version: number;
   start_datetime: number;
   end_datetime: number;
@@ -64,7 +65,7 @@ export type DtoCreateTicket = Required<
     | 'name'
     | 'type'
     | 'quantity'
-    | 'fees'
+    // | 'fees'
     | 'start_datetime'
     | 'end_datetime'
     | 'is_visible'

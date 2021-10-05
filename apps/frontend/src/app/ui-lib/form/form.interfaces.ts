@@ -277,7 +277,7 @@ export type IUiFormField<T extends IUiFieldType = any> = {
 
 export interface IUiFieldOptions {
   label?: string;
-  hint?: string;
+  hint?: string | ((inputValue: IUiFormField['type']) => string);
   hide?: (f: FormGroup) => boolean;
   disabled?: boolean;
   width?: number;

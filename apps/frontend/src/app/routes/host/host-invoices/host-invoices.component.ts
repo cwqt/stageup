@@ -72,9 +72,10 @@ export class HostInvoicesComponent implements OnInit {
               label: $localize`Export as CSV`,
               click: async v => {
                 try {
-                  await this.hostService.exportInvoicesToCSV(
+                  await this.hostService.exportInvoices(
                     this.hostService.hostId,
-                    v.selected.map(i => i.__data.invoice_id)
+                    v.selected.map(i => i.__data.invoice_id),
+                    'csv'
                   );
                   this.toastService.emit(
                     $localize`Exported CSVs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account shortly`,
@@ -92,9 +93,10 @@ export class HostInvoicesComponent implements OnInit {
               label: $localize`Export as PDF`,
               click: async v => {
                 try {
-                  await this.hostService.exportInvoicesToPDF(
+                  await this.hostService.exportInvoices(
                     this.hostService.hostId,
-                    v.selected.map(i => i.__data.invoice_id)
+                    v.selected.map(i => i.__data.invoice_id),
+                    'pdf'
                   );
                   this.toastService.emit(
                     $localize`Exported PDFs!\n An e-mail with your attachments will arrive at the e-mail listed on this company account soon`,

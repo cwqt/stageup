@@ -27,7 +27,6 @@ import {
   PaginationOptions,
   PurchaseableType,
   IDeleteHostReason,
-  TicketFees,
   TicketType,
   DeleteHostReason,
   BusinessType,
@@ -37,7 +36,8 @@ import {
   IBulkRefund,
   BulkRefundReason,
   IProcessRefunds,
-  DonoPegs
+  DonoPegs,
+  PerformanceType
 } from '@core/interfaces';
 import {
   any,
@@ -91,7 +91,7 @@ export namespace objects {
     }),
     description: optional(fields.richtext),
     genre: fields.genre,
-    type: union([literal('vod'), literal('live')])
+    type: enums<PerformanceType>(enumToValues(PerformanceType))
   });
 
   export const DtoCreateHost: Describe<DtoCreateHost> = object({
@@ -113,7 +113,7 @@ export namespace objects {
     currency: fields.currency,
     type: enums<TicketType>(enumToValues(TicketType)),
     quantity: number(),
-    fees: enums<TicketFees>(enumToValues(TicketFees)),
+    // fees: enums<TicketFees>(enumToValues(TicketFees)),
     start_datetime: fields.timestamp,
     end_datetime: fields.timestamp,
     is_visible: boolean(),

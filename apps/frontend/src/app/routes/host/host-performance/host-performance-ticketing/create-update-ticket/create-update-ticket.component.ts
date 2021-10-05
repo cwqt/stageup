@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   calculateAmountFromCurrency,
   capitalize,
+  CommissionRate,
   CurrencyCode,
   DonoPeg,
   DONO_PEG_WEIGHT_MAPPING,
@@ -10,7 +11,6 @@ import {
   IHost,
   ITicket,
   ITicketStub,
-  TicketFees,
   TicketType
 } from '@core/interfaces';
 import { i18n, timeless, timestamp } from '@core/helpers';
@@ -53,7 +53,6 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
   ngOnInit(): void {
     this.host = this.data.host;
     this.dialogTitle = this.data.operation == 'update' ? $localize`Update ticket` : $localize`Create ticket`;
-
     this.ticketForm = new UiForm({
       fields: {
         type: UiField.Radio({
@@ -91,6 +90,17 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         amount: UiField.Money({
           width: 6,
           label: $localize`Price`,
+          hint: inputValue => {
+            const lineOne = `Your Revenue: ${i18n.money(
+              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * (1 - CommissionRate.Platform)),
+              CurrencyCode.GBP
+            )}`;
+            const lineTwo = ` StageUp Commission: ${i18n.money(
+              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * CommissionRate.Platform),
+              CurrencyCode.GBP
+            )} (${CommissionRate.Platform * 100}%)`;
+            return lineOne + '\n' + lineTwo;
+          },
           currency: CurrencyCode.GBP,
           disabled: false,
           validators: [{ type: 'maxlength', value: 100 }, { type: 'required' }]
@@ -100,14 +110,15 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           label: $localize`Quantity`,
           validators: [{ type: 'required' }]
         }),
-        fees: UiField.Select({
-          label: $localize`Fees`,
-          validators: [{ type: 'required' }],
-          values: new Map([
-            [TicketFees.Absorb, { label: $localize`Absorb Fees` }],
-            [TicketFees.PassOntoPurchaser, { label: $localize`Pass onto Purchaser` }]
-          ])
-        }),
+        // Temporarily removed for MVP. Will likely be re-added in the future
+        // fees: UiField.Select({
+        //   label: $localize`Fees`,
+        //   validators: [{ type: 'required' }],
+        //   values: new Map([
+        //     [TicketFees.Absorb, { label: $localize`Absorb Fees` }],
+        //     [TicketFees.PassOntoPurchaser, { label: $localize`Pass onto Purchaser` }]
+        //   ])
+        // }),
         start_datetime: UiField.Datetime({
           width: 6,
           label: $localize`Sales start`,
@@ -220,7 +231,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       amount: v.type == TicketType.Free ? 0 : v.amount * 100, // TODO: support more than pence
       type: v.type,
       quantity: v.quantity,
-      fees: v.fees,
+      // fees: v.fees,
       start_datetime: Math.floor(v.start_datetime.getTime() / 1000),
       end_datetime: Math.floor(v.end_datetime.getTime() / 1000),
       is_visible: !v.visibility.value,

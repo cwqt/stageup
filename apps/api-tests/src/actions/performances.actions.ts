@@ -13,6 +13,7 @@ import {
   ITicket,
   ITicketStub,
   NUUID,
+  PerformanceType,
   Visibility
 } from '@core/interfaces';
 import { timestamp } from '@core/helpers';
@@ -27,7 +28,7 @@ export default {
       publicity_period: { start: 161347834, end: 161347834 },
       genre: Genre.Contemporary,
       description: 'some performance',
-      type: 'vod'
+      type: PerformanceType.Vod
     };
 
     const res = await api.post(`/hosts/${host._id}/performances`, data, env.getOptions());

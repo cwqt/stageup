@@ -4,6 +4,7 @@ import { AssetDto, AssetType, DtoPerformance } from '@core/interfaces';
 import { ChangeImageComponent } from '@frontend/components/dialogs/change-image/change-image.component';
 import { HelperService } from '@frontend/services/helper.service';
 import { PerformanceService } from '@frontend/services/performance.service';
+import { findAssets } from '@core/helpers';
 
 @Component({
   selector: 'app-host-performance-thumbnails',
@@ -15,7 +16,8 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
 
   THUMBNAIL_LIMIT: number = 5;
 
-  thumbnails: AssetDto[];
+  primaryThumbnail: AssetDto;
+  secondaryThumbnails: AssetDto[];
 
   constructor(
     private helperService: HelperService,
@@ -24,23 +26,23 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.thumbnails = this.performance.data.assets.filter(
-      a => a.type == AssetType.Image && a.tags.includes('thumbnail')
-    );
+    this.secondaryThumbnails = findAssets(this.performance.data.assets, AssetType.Image, ['thumbnail', 'secondary']);
+    this.primaryThumbnail = findAssets(this.performance.data.assets, AssetType.Image, ['thumbnail', 'primary'])[0];
   }
 
-  changeThumbnail(index: number) {
+  changePrimaryThumbnail() {
     let asset: AssetDto | void;
 
     this.helperService.showDialog(
       this.dialog.open(ChangeImageComponent, {
         data: {
-          initialImage: this.thumbnails[index]?.location,
+          initialImage: this.primaryThumbnail?.location,
           fileHandler: async (fd: FormData) => {
             asset = await this.performanceService.changeThumbnails(
               this.performance.data._id,
               fd,
-              this.thumbnails[index]?._id
+              'primary',
+              this.primaryThumbnail?._id
             );
 
             return asset?.location;
@@ -48,9 +50,38 @@ export class HostPerformanceThumbnailsComponent implements OnInit {
         }
       }),
       () => {
-        this.thumbnails[index]
-          ? this.thumbnails.splice(index, 1, asset) // replace image
-          : (this.thumbnails[index] = asset); // add new
+        // Since performance data is cached between performance tabs, need to push it onto the assets array
+        this.performance.data.assets.push(asset);
+        this.primaryThumbnail = asset;
+      }
+    );
+  }
+
+  changeSecondaryThumbnail(index: number) {
+    let asset: AssetDto | void;
+
+    this.helperService.showDialog(
+      this.dialog.open(ChangeImageComponent, {
+        data: {
+          initialImage: this.secondaryThumbnails[index]?.location,
+          fileHandler: async (fd: FormData) => {
+            asset = await this.performanceService.changeThumbnails(
+              this.performance.data._id,
+              fd,
+              'secondary',
+              this.secondaryThumbnails[index]?._id
+            );
+
+            return asset?.location;
+          }
+        }
+      }),
+      () => {
+        // Since performance data is cached between performance tabs, need to push it onto the assets array
+        this.performance.data.assets.push(asset);
+        this.secondaryThumbnails[index]
+          ? this.secondaryThumbnails.splice(index, 1, asset) // replace image
+          : (this.secondaryThumbnails[index] = asset); // add new
       }
     );
   }

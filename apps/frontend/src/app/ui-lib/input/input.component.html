@@ -320,9 +320,14 @@
       </div>
 
       <!-- Hint message -->
-      <span *ngIf="data.options.hint && !data.options.hide_footer" class="form-field__hint">{{
-        data.options.hint
-      }}</span>
+      <span *ngIf="data.options.hint && !data.options.hide_footer" class="form-field__hint whitespace-pre-wrap">
+        <ng-container *ngIf="typeOf(data.options.hint) == 'function' && control.value">
+          {{ data.options.hint(control.value) }}
+        </ng-container>
+        <ng-container *ngIf="typeOf(data.options.hint) == 'string'">
+          {{ data.options.hint }}
+        </ng-container>
+      </span>
     </div>
 
     <ng-container
