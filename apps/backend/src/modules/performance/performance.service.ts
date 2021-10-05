@@ -22,7 +22,7 @@ export class PerformanceService extends ModuleService {
     super();
   }
 
-  async createPerformance(performanceId: string, body: DtoCreateTicket,) {
+  async createTicket(performanceId: string, body: DtoCreateTicket,) {
     const performance = await getCheck(Performance.findOne({ _id: performanceId }, { relations: ['host'] }));
       //const body: DtoCreateTicket = req.body;
 

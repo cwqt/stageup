@@ -449,7 +449,7 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
     ),
     controller: async req => {
-      return this.performanceService.createPerformance(req.params.pid, req.body);
+      return this.performanceService.createTicket(req.params.pid, req.body);
     }
   };
 

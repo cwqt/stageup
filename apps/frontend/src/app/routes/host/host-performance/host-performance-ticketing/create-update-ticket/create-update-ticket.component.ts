@@ -11,6 +11,7 @@ import {
   IHost,
   ITicket,
   ITicketStub,
+  TicketLimit,
   TicketType
 } from '@core/interfaces';
 import { i18n, timeless, timestamp } from '@core/helpers';
@@ -170,6 +171,10 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
 
             // Convert back into pounds from pence
             fields['amount'] = data.amount / 100;
+            if (data.quantity === TicketLimit.Unlimited) {
+              fields['quantity'] = '';
+              fields['unlimited'] = true;
+            }           
             fields['visibility.value'] = !data.is_visible;
 
             // Set the pegs up
@@ -211,9 +216,9 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           }
 
           if (f.value.unlimited) {
-            f.controls.quantity.disable({ emitEvent: false, onlySelf: true })
+            f.controls.quantity.disable({ emitEvent: false, onlySelf: true });
           } else {
-            f.controls.quantity.enable({ emitEvent: false, onlySelf: true })
+            f.controls.quantity.enable({ emitEvent: false, onlySelf: true });
           }
         }
       }
@@ -239,7 +244,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       currency: CurrencyCode.GBP,
       amount: v.type == TicketType.Free ? 0 : v.amount * 100, // TODO: support more than pence
       type: v.type,
-      quantity: v.unlimited ? -1 : v.quantity,
+      quantity: v.unlimited ? TicketLimit.Unlimited : v.quantity,
       // fees: v.fees,
       start_datetime: Math.floor(v.start_datetime.getTime() / 1000),
       end_datetime: Math.floor(v.end_datetime.getTime() / 1000),

@@ -6,6 +6,10 @@ export enum TicketType {
   Donation = 'dono'
 }
 
+export enum TicketLimit {
+  Unlimited = -1,
+}
+
 // Temporarily removed, will likely be re-added in future
 // export enum TicketFees {
 //   PassOntoPurchaser = 'pass_onto_purchaser',
