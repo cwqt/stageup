@@ -6,10 +6,13 @@ import {
   ModuleService,
   Invoice,
   Performance,
-  POSTGRES_PROVIDER
+  POSTGRES_PROVIDER,
+  AssetGroup,
+  Ticket,
+  transact
 } from '@core/api';
 import { timestamp } from '@core/helpers';
-import { HTTP, ILocale, IRemovalReason, PerformanceStatus, PerformanceType, RemovalType } from '@core/interfaces';
+import { DtoCreateTicket, HTTP, ILocale, IRemovalReason, PerformanceStatus, PerformanceType, RemovalType, TicketType } from '@core/interfaces';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 
@@ -19,6 +22,31 @@ export class PerformanceService extends ModuleService {
     super();
   }
 
+  async createPerformance(performanceId: string, body: DtoCreateTicket,) {
+    const performance = await getCheck(Performance.findOne({ _id: performanceId }, { relations: ['host'] }));
+      //const body: DtoCreateTicket = req.body;
+
+      // Must first have a Connected Stripe Account to create paid/dono tickets
+      if (!performance.host.stripe_account_id && body.type != TicketType.Free)
+        throw new ErrorHandler(HTTP.Unauthorised, '@@host.requires_stripe_connected');
+
+      const ticket = await transact(async txc => {
+        const ticket = new Ticket(body);
+        const claim = await ticket.setup(performance, txc);
+
+        // IMPORTANT for now we will assign all signed assets to this claim
+        const group = await AssetGroup.findOne({ owner__id: performanceId }, { relations: ['assets'] });
+        await claim.assign(
+          group.assets.filter(asset => asset.signing_key__id != null),
+          txc
+        );
+
+        return txc.save(ticket);
+      });
+
+      return ticket.toFull();
+  }
+ 
   async softDeletePerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
     const perf = await getCheck(Performance.findOne({ _id: performanceId }));
     const currentDate = timestamp(new Date());

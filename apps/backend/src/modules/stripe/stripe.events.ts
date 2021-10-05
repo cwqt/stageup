@@ -131,7 +131,9 @@ export class StripeEvents extends ModuleEvents {
 
         const invoice = await this.pg.transaction(async txc => {
           // Create a new invoice for the user which provisions an Access Token for the performance
-          ticket.quantity_remaining -= 1;
+          if (ticket.quantity_remaining > 0) {
+            ticket.quantity_remaining -= 1;
+          }
           const invoice = new Invoice(
             user,
             intent.amount,

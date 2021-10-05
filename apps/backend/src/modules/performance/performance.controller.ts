@@ -449,28 +449,7 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
     ),
     controller: async req => {
-      const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['host'] }));
-      const body: DtoCreateTicket = req.body;
-
-      // Must first have a Connected Stripe Account to create paid/dono tickets
-      if (!performance.host.stripe_account_id && body.type != TicketType.Free)
-        throw new ErrorHandler(HTTP.Unauthorised, '@@host.requires_stripe_connected');
-
-      const ticket = await transact(async txc => {
-        const ticket = new Ticket(body);
-        const claim = await ticket.setup(performance, txc);
-
-        // IMPORTANT for now we will assign all signed assets to this claim
-        const group = await AssetGroup.findOne({ owner__id: req.params.pid }, { relations: ['assets'] });
-        await claim.assign(
-          group.assets.filter(asset => asset.signing_key__id != null),
-          txc
-        );
-
-        return txc.save(ticket);
-      });
-
-      return ticket.toFull();
+      return this.performanceService.createPerformance(req.params.pid, req.body);
     }
   };
 

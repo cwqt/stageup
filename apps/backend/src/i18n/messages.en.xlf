@@ -111,10 +111,6 @@
       <source>Total Rows</source>
       <target state="final">Total Rows</target>
     </trans-unit>				
-		<trans-unit id="host.audience_csv.name" datatype="html">
-      <source>Full Name</source>
-      <target state="final">Full Name</target>
-    </trans-unit>				
 		<trans-unit id="host.audience_csv.username" datatype="html">
       <source>Username</source>
       <target state="final">Username</target>

@@ -19,7 +19,7 @@
   <ng-container matColumnDef="quantity">
     <th mat-header-cell *matHeaderCellDef i18n>Quantity</th>
     <td mat-cell *matCellDef="let ticket">
-      {{ ticket.quantity }}
+      {{ ticket.quantity === -1 ? "unlimited" : ticket.quantity}}
       <ui-chip *ngIf="ticket.is_quantity_visible == false" i18n>HIDDEN</ui-chip>
     </td>
   </ng-container>

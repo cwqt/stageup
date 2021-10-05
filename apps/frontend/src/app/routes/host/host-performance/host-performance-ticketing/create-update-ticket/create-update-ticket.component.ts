@@ -87,6 +87,11 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             return acc;
           }, {})
         }),
+        quantity: UiField.Number({
+          width: 6,
+          label: $localize`Quantity`,
+          validators: [{ type: 'required' }]
+        }),
         amount: UiField.Money({
           width: 6,
           label: $localize`Price`,
@@ -105,10 +110,8 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           disabled: false,
           validators: [{ type: 'maxlength', value: 100 }, { type: 'required' }]
         }),
-        quantity: UiField.Number({
-          width: 6,
-          label: $localize`Quantity`,
-          validators: [{ type: 'required' }]
+        unlimited: UiField.Checkbox({
+          label: $localize`Unlimitied tickets`
         }),
         // Temporarily removed for MVP. Will likely be re-added in the future
         // fees: UiField.Select({
@@ -206,6 +209,12 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           } else {
             f.controls.amount.enable({ emitEvent: false, onlySelf: true });
           }
+
+          if (f.value.unlimited) {
+            f.controls.quantity.disable({ emitEvent: false, onlySelf: true })
+          } else {
+            f.controls.quantity.enable({ emitEvent: false, onlySelf: true })
+          }
         }
       }
     });
@@ -230,7 +239,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       currency: CurrencyCode.GBP,
       amount: v.type == TicketType.Free ? 0 : v.amount * 100, // TODO: support more than pence
       type: v.type,
-      quantity: v.quantity,
+      quantity: v.unlimited ? -1 : v.quantity,
       // fees: v.fees,
       start_datetime: Math.floor(v.start_datetime.getTime() / 1000),
       end_datetime: Math.floor(v.end_datetime.getTime() / 1000),

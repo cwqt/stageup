@@ -12,7 +12,7 @@
         <ng-container *ngIf="ticket.quantity_remaining > 0" i18n>
           {{ ticket.quantity_remaining }} remaining
         </ng-container>
-
+        <ng-container *ngIf="ticket.quantity_remaining < 0" i18n>unlimited</ng-container>
         <ng-container *ngIf="ticket.quantity_remaining == 0" i18n>SOLD OUT</ng-container>
       </span>
     </div>
