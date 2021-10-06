@@ -1,5 +1,3 @@
-<app-host-performance-thumbnails [performance]="performance.data"></app-host-performance-thumbnails>
-<br />
 <app-update-performance [cacheable]="performance"></app-update-performance>
 
 <ui-hr></ui-hr>
@@ -7,10 +5,7 @@
 <div class="flex items-center justify-between">
   <div class="mr-4">
     <b i18n>Schedule</b>
-    <p i18n>
-      Update the start and end date for your event.<br />
-      
-    </p>
+    <p i18n>Update the start and end date for your event.<br /></p>
   </div>
   <ui-form class="flex-1" [form]="publicityPeriodForm"></ui-form>
 </div>
@@ -18,15 +13,31 @@
 <div class="flex items-center justify-between">
   <div class="mr-4">
     <b i18n>Visibility</b>
-    <p i18n>
-      <ng-container *ngIf="host.is_onboarded == false">
+      <!-- Host needs to be onboarded before going public -->
+      <p *ngIf="!host.is_onboarded" i18n>
         You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made
         Public<br />
+      </p>
+      <ng-container *ngIf="host.is_onboarded">
+        <!-- Performance needs a trailer or 2 thumbnails to be made public -->
+        <p *ngIf="!minimumAssetsMet" i18n>
+          A performance needs to have a trailer <b>or</b> a minimum of two images in order to make it public. Head to
+          the <a [routerLink]="'/dashboard/performances/' + performance.data.data._id + '/media'">media</a> section to
+          start uploading now!
+          <br />
+        </p>
+        <ng-container *ngIf="minimumAssetsMet">
+          <!-- VoD performances can only be made public after the video has been processed from mux -->
+          <p *ngIf="vod && !vod.location" i18n>
+            VoD Asset is still processing. Once complete you can set this performance to public.
+            <br />
+          </p>
+          <p *ngIf="performanceMeetsAllPublicityRequirements" i18n> Set whether a performance is visible across the platform </p>
+          <br />
+        </ng-container>
       </ng-container>
-      Set whether a performance is visible across the platform
-    </p>
   </div>
-  <ui-form [form]="visibilityForm"></ui-form>
+  <ui-form *ngIf="performanceMeetsAllPublicityRequirements" [form]="visibilityForm"></ui-form>
 </div>
 
 <ng-container *ngIf="stream">

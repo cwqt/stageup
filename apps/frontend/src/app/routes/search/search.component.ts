@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
-import { IEnvelopedData, IHostStub, IPerformanceStub } from '@core/interfaces';
+import { AssetType, IEnvelopedData, IHostStub, IPerformanceStub } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '../../app.interfaces';
 import { AppService } from '../../services/app.service';
 import { SearchService } from '../../services/search.service';
@@ -89,5 +89,13 @@ export class SearchComponent implements OnInit {
 
   openDialogHost(hostname) {
     this.appService.navigateTo(`/@${hostname}`);
+  }
+
+  // Loads thumbnail if exists, else the primary thumbnail asset, else a place-holder image
+  getSrc(performance: IPerformanceStub) {
+    const thumbnail = performance.assets.find(
+      a => a.type == AssetType.Image && a.tags.includes('thumbnail') && a.tags.includes('primary')
+    );
+    return performance.thumbnail || thumbnail?.location || '/assets/performance-placeholder.jpeg';
   }
 }

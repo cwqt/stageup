@@ -44,7 +44,7 @@
               <quill-view [content]="performance.description" format="json" theme="snow"></quill-view>
             </div>
 
-            <div class="w-1/3 ml-4 text-right" *ngIf="performance.tickets.length">
+            <div class="w-2/3 ml-4 text-right" *ngIf="performance.tickets.length">
               <h2 i18n>Tickets</h2>
               <p class="text-lg" *ngIf="!myself" i18n>
                 You must <a class="cursor-pointer" (click)="openRegister()">register</a> or
@@ -52,15 +52,59 @@
                 before being able to purchase this performance.
               </p>
 
-              <div *ngFor="let ticket of performance.tickets">
-                <!-- Only allow users to open purchase screen if they're logged in -->
-                <app-performance-ticket
-                  [disabled]="!myself"
-                  (click)="myself && openPurchaseTicketSection(ticket)"
-                  [ticket]="ticket"
+              <ng-container *ngIf="userHasBoughtPerformance">
+                <b i18n>You've already purchased tickets for '{{ performance.name }}'</b>
+                <p *ngIf="currentTimestamp < performance.publicity_period.start" class="mt-4" i18n>
+                  It will premiere <b>{{ prettyDuration(performance.publicity_period.start - currentTimestamp) }}</b>
+                  <!-- Display if performance is greater than 86400 seconds away (i.e. 24 hours)  -->
+                  <span *ngIf="performance.publicity_period.start - this.currentTimestamp > 86400">
+                    on {{ prettyDate(performance.publicity_period.start) }}</span
+                  >
+                </p>
+                <!-- Display if performance is live -->
+                <p
+                  *ngIf="
+                    performance.publicity_period.start < currentTimestamp &&
+                    currentTimestamp < performance.publicity_period.end
+                  "
+                  class="mt-4"
+                  i18n
                 >
-                </app-performance-ticket>
-              </div>
+                  This performance is now live!
+                </p>
+                <!-- Display if performance has finished -->
+                <p *ngIf="currentTimestamp > performance.publicity_period.end" class="mt-4" i18n>
+                  This performance has finished
+                </p>
+                <div>
+                  <!-- Display if performance is live in less than 10 minutes (i.e. 600 seconds) -->
+                  <ui-button
+                    kind="primary"
+                    class="flex-grow rounded-full overflow-hidden"
+                    *ngIf="
+                      performance.publicity_period.start - currentTimestamp < 600 &&
+                      currentTimestamp < performance.publicity_period.end
+                    "
+                    [routerLink]="'/performances/' + performance._id"
+                    i18n
+                    (click)="closeDialog()"
+                  >
+                    Watch Now
+                  </ui-button>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="!userHasBoughtPerformance">
+                <div *ngFor="let ticket of performance.tickets">
+                  <!-- Only allow users to open purchase screen if they're logged in -->
+                  <app-performance-ticket
+                    [disabled]="!myself"
+                    (click)="myself && openPurchaseTicketSection(ticket)"
+                    [ticket]="ticket"
+                  >
+                  </app-performance-ticket>
+                </div>
+              </ng-container>
             </div>
           </div>
         </mat-tab>

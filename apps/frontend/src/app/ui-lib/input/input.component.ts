@@ -289,4 +289,9 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   }
 
   richTextChanged(event: ContentChange) {}
+
+  // Helper function, since global 'typeof' is not available in angular template.
+  typeOf(value: string | ((inputValue: IUiFormField['type']) => string)): string {
+    return typeof value;
+  }
 }

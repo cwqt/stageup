@@ -10,13 +10,11 @@ import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.servi
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { DrawerService } from '../../../services/drawer.service';
 import { HelperService } from '../../../services/helper.service';
-import { HostPerformanceCustomiseComponent } from './host-performance-customise/host-performance-customise.component';
 import { HostPerformanceDetailsComponent } from './host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { SharePerformanceDialogComponent } from './share-performance-dialog/share-performance-dialog.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { timestamp, unix } from '@core/helpers';
-import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
+import { HostPerformanceMediaComponent } from './host-performance-media/host-performance-media.component';
+import { timestamp } from '@core/helpers';
 
 @Component({
   selector: 'app-host-performance',
@@ -30,7 +28,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
 
   onChildLoaded(
-    component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceCustomiseComponent
+    component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceMediaComponent
   ) {
     component.performanceId = this.performanceId;
     component.performanceHostInfo = this.performanceHostInfo;

@@ -4,6 +4,7 @@ import {
   EVENT_BUS_PROVIDER,
   getCheck,
   ModuleService,
+  Invoice,
   Performance,
   POSTGRES_PROVIDER
 } from '@core/api';
@@ -82,5 +83,14 @@ export class PerformanceService extends ModuleService {
       },
       locale
     );
+  }
+
+  async readUserInvoice(performanceId: string, userId: string) {
+    return await this.ORM.createQueryBuilder(Invoice, 'invoice')
+      .where('invoice.user__id = :user_id', { user_id: userId })
+      .leftJoinAndSelect('invoice.ticket', 'ticket')
+      .leftJoinAndSelect('ticket.performance', 'performance')
+      .andWhere('performance._id = :pid', { pid: performanceId })
+      .getOne();
   }
 }

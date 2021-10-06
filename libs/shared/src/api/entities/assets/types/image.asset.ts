@@ -20,7 +20,7 @@ export class ImageAsset extends Asset<AssetType.Image> implements AssetMethods<A
   ) {
     const res = await provider.upload(options.file);
     this.asset_identifier = res.asset_identifier;
-    this.location = this.getLocation(options);
+    this.location = res.location;
     return res;
   }
 

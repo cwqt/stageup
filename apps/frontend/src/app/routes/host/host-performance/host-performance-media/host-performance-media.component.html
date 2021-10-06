@@ -1,0 +1,31 @@
+<h2 class="mb-0" i18n>Media</h2>
+<ui-hr></ui-hr>
+<!-- Upload Event Video (only if the event is a VOD) -->
+<div *ngIf="vod" class="mt-5">
+  <h3 i18n>Event video</h3>
+  <p i18n>Upload your event's video.</p>
+  <div class="my-8 w-full max-w-2xl">
+    <app-upload-video
+      *ngIf="VoDAssetCreator"
+      [initialSource]="vod?.location"
+      [createAssetResHandler]="VoDAssetCreator"
+    ></app-upload-video>
+  </div>
+  <ui-hr></ui-hr>
+</div>
+<!-- Upload Thumbnails -->
+<div class="mt-5">
+  <h3 i18n>Thumbnail</h3>
+  <p i18n>Select or upload a picture that shows what's in your video</p>
+</div>
+<app-host-performance-thumbnails [performance]="performance.data"></app-host-performance-thumbnails>
+<ui-hr></ui-hr>
+<!-- Upload Trailer -->
+<div class="mt-5">
+  <h3 i18n>Trailer</h3>
+  <p i18n>Add an introductory video or a trailer for your event</p>
+  <div class="my-8 w-full max-w-2xl">
+    <app-upload-video [initialSource]="trailer?.location" [createAssetResHandler]="trailerAssetCreator.bind(this)">
+    </app-upload-video>
+  </div>
+</div>

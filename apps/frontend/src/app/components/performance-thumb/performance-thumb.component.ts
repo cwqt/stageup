@@ -26,7 +26,9 @@ export class PerformanceThumbComponent implements OnInit {
     this.myself = this.myselfService.$myself.value;
 
     // See if there's a thumbnail on this performance to set the cover image
-    this.thumbnail = this.performance.assets.find(a => a.type == AssetType.Image && a.tags.includes('thumbnail'));
+    this.thumbnail = this.performance.assets.find(
+      a => a.type == AssetType.Image && a.tags.includes('thumbnail') && a.tags.includes('primary')
+    );
   }
 
   setLikeValue(value: boolean) {
