@@ -231,7 +231,7 @@ export class PerformanceController extends ModuleController {
           platform_marketing_opt_status: platformMarketingStatus
             ? (platformMarketingStatus.opt_status as PlatformConsentOpt)
             : null,
-          has_bought_ticket_for: invoice ? true : false
+          has_bought_ticket_for: false
         }
       };
 
