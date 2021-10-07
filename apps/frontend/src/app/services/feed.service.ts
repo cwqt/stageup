@@ -8,14 +8,15 @@ import { UserService } from './user.service';
   providedIn: 'root'
 })
 export class FeedService {
-  constructor(private userService: UserService, private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   getFeed(
     paging?: { [index in keyof IFeed]?: PaginationOptions }
   ): Promise<IEnvelopedData<IFeedPerformanceStub[] | IHostStub[]>> {
-    let data = this.http.get<IEnvelopedData<IFeedPerformanceStub[]>>(`/api/myself/feed${querize(paging)}`).toPromise();
-    console.log(data);
-
+    let data = this.http
+      .get<IEnvelopedData<IFeedPerformanceStub[]>>(`/api/myself/feed${querize(paging)}`)
+      .toPromise()
+      .then(v => console.log(v));
     return this.http.get<IEnvelopedData<IFeedPerformanceStub[]>>(`/api/myself/feed${querize(paging)}`).toPromise();
   }
 }
