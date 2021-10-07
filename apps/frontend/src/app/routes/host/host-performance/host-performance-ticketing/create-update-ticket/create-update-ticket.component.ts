@@ -93,7 +93,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           hint: inputValue => {
             // Strict check not equal to null, since 0% is a valid commission rate
             const commissionRate =
-              this.host.commission_rate !== null ? this.host.commission_rate : CommissionRate.Platform;
+              typeof this.host.commission_rate == 'number' ? this.host.commission_rate : CommissionRate.Platform;
             const lineOne = `Your Revenue: ${i18n.money(
               calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * (1 - commissionRate)),
               CurrencyCode.GBP
