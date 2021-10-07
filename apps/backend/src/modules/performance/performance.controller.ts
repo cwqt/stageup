@@ -449,7 +449,7 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
     ),
     controller: async req => {
-      return this.performanceService.createTicket(req.params.pid, req.body);
+      return (await this.performanceService.createTicket(req.params.pid, req.body)).toFull();
     }
   };
 
@@ -524,8 +524,8 @@ export class PerformanceController extends ModuleController {
         ])
       );
 
-      // Persist remaining quantity
-      newTicket.quantity_remaining = ticket.quantity_remaining;
+      // Updating the remaining quantity according to the new quantity from the request body
+      newTicket.quantity_remaining = req.body.quantity - (ticket.quantity - ticket.quantity_remaining);
 
       // Set relationship by _id rather than getting performance object
       newTicket.performance = req.params.pid as any;

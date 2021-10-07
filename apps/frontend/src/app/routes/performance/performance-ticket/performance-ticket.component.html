@@ -9,11 +9,18 @@
       <span>{{ ticket.name }}</span>
       <span class="opacity-50">
         <!-- Hidden ticket quantities returned as null, unless remaining == 0, for sold out indicator -->
-        <ng-container *ngIf="ticket.quantity_remaining > 0" i18n>
-          {{ ticket.quantity_remaining }} remaining
+        <ng-container
+          *ngIf="ticket.quantity === ticketLimitUnlimited; then unlimited; else limited">
         </ng-container>
-        <ng-container *ngIf="ticket.quantity_remaining < 0" i18n>unlimited</ng-container>
-        <ng-container *ngIf="ticket.quantity_remaining == 0" i18n>SOLD OUT</ng-container>
+        <ng-template #limited>
+          <ng-container *ngIf="ticket.quantity_remaining > 0" i18n>
+            {{ ticket.quantity_remaining }} remaining
+          </ng-container>        
+          <ng-container *ngIf="ticket.quantity_remaining == 0" i18n>SOLD OUT</ng-container>
+        </ng-template>
+        <ng-template #unlimited>
+          <ng-container i18n>unlimited</ng-container>
+        </ng-template>
       </span>
     </div>
   </ui-button>

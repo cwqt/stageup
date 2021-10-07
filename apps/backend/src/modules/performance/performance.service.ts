@@ -22,7 +22,7 @@ export class PerformanceService extends ModuleService {
     super();
   }
 
-  async createTicket(performanceId: string, body: DtoCreateTicket,) {
+  async createTicket(performanceId: string, body: DtoCreateTicket): Promise<Ticket> {
     const performance = await getCheck(Performance.findOne({ _id: performanceId }, { relations: ['host'] }));
       //const body: DtoCreateTicket = req.body;
 
@@ -44,7 +44,7 @@ export class PerformanceService extends ModuleService {
         return txc.save(ticket);
       });
 
-      return ticket.toFull();
+      return ticket;
   }
  
   async softDeletePerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
