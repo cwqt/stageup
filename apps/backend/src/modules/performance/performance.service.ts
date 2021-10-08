@@ -24,8 +24,6 @@ export class PerformanceService extends ModuleService {
 
   async createTicket(performanceId: string, body: DtoCreateTicket): Promise<Ticket> {
     const performance = await getCheck(Performance.findOne({ _id: performanceId }, { relations: ['host'] }));
-      //const body: DtoCreateTicket = req.body;
-
       // Must first have a Connected Stripe Account to create paid/dono tickets
       if (!performance.host.stripe_account_id && body.type != TicketType.Free)
         throw new ErrorHandler(HTTP.Unauthorised, '@@host.requires_stripe_connected');
