@@ -191,13 +191,14 @@ export class MyselfController extends ModuleController {
         // ORDER BY COUNT(*) DESC`);
 
         const mostPurchasedPerformances = await this.ORM.createQueryBuilder(Invoice, 'i')
-          .select(['i._id', 't._id', 'p._id', 'COUNT(p._id) as tiecketsSold'])
+          .select(['i._id', 't._id', 'p._id', 'COUNT(p._id) as ticketsSold'])
           .innerJoin('i.ticket', 't')
           .innerJoin('t.performance', 'p')
           .where('i.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
           .groupBy('i._id')
           .addGroupBy('t._id')
           .addGroupBy('p._id')
+          .orderBy('COUNT(*)', 'DESC')
           .getMany();
 
         console.log(mostPurchasedPerformances);
