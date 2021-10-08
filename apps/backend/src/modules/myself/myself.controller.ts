@@ -182,25 +182,25 @@ export class MyselfController extends ModuleController {
       //user
       if ((fetchAll || req.query['trending']) && req.session.user) {
         //Working raw sql query, as could not get count and group by to work in the ORM...
-        //   const mostPurchasedPerformances: { _id: NUUID; ticketssold: number }[] = await getManager()
-        //     .query(`SELECT public.performance._id, COUNT(public.performance.name) AS ticketsSold
-        // FROM public.invoice
-        // INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
-        // INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
-        // WHERE public.invoice.purchased_at >= ${timestamp(startOfWeek(new Date()))}
-        // GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance._id
-        // ORDER BY COUNT(*) DESC`);
+        const mostPurchasedPerformances: Array<{ performance_id: NUUID; tickets_sold: number }> = await getManager()
+          .query(`SELECT public.performance._id, COUNT(public.performance.name) AS tickets_sold
+        FROM public.invoice
+        INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
+        INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
+        WHERE public.invoice.purchased_at >= ${timestamp(startOfWeek(new Date()))}
+        GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance._id
+        ORDER BY COUNT(*) DESC`);
 
-        const mostPurchasedPerformances = await this.ORM.createQueryBuilder(Invoice, 'i')
-          .select(['i._id', 't._id', 'p._id', 'COUNT(p._id) as ticketsSold'])
-          .innerJoin('i.ticket', 't')
-          .innerJoin('t.performance', 'p')
-          .where('i.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
-          .groupBy('i._id')
-          .addGroupBy('t._id')
-          .addGroupBy('p._id')
-          .orderBy('COUNT(*)', 'DESC')
-          .getMany();
+        // const mostPurchasedPerformances = await this.ORM.createQueryBuilder(Invoice, 'i')
+        //   .select(['i._id', 't._id', 'p._id', 'COUNT(p.name) as ticketsSold'])
+        //   .innerJoin('i.ticket', 't')
+        //   .innerJoin('t.performance', 'p')
+        //   .where('i.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
+        //   .groupBy('i._id')
+        //   .addGroupBy('t._id')
+        //   .addGroupBy('p._id')
+        //   .orderBy('COUNT(*)', 'DESC')
+        //   .getMany();
 
         console.log(mostPurchasedPerformances);
 
