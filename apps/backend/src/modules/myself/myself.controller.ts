@@ -23,7 +23,7 @@ import {
   UserHostMarketingConsent,
   Validators
 } from '@core/api';
-import { timestamp } from '@core/helpers';
+import { timestamp, unix } from '@core/helpers';
 import {
   ConsentableType,
   ConsentOpt,
@@ -44,6 +44,7 @@ import {
   IUserHostMarketingConsent,
   IUserInvoice,
   IUserInvoiceStub,
+  NUUID,
   PaymentStatus,
   pick,
   PlatformConsentOpt,
@@ -55,6 +56,7 @@ import Stripe from 'stripe';
 import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection, getManager } from 'typeorm';
+import startOfWeek from 'date-fns/startOfWeek';
 
 @Service()
 export class MyselfController extends ModuleController {
@@ -178,15 +180,26 @@ export class MyselfController extends ModuleController {
       }
 
       if ((fetchAll || req.query['trending']) && req.session.user) {
-        feed.trending = await getManager().query(`SELECT public.performance.name, COUNT(public.performance.name) 
-        FROM public.invoice 
-        INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
-        INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
-        GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance.name
-        ORDER BY COUNT(*) DESC`);
+        const mostPurchasedPerformances: { _id: NUUID; ticketssold: number }[] = await getManager()
+          .query(`SELECT public.performance._id, COUNT(public.performance.name) AS ticketsSold 
+      FROM public.invoice 
+      INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
+      INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
+      WHERE public.invoice.purchased_at >= ${timestamp(startOfWeek(new Date()))}
+      GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance._id
+      ORDER BY COUNT(*) DESC`);
 
-        console.log(feed.trending);
-        console.log(feed);
+        feed.trending = await this.ORM.createQueryBuilder(Performance, 'p')
+          .where('p._id IN (:...performanceArray)', {
+            performanceArray: mostPurchasedPerformances.map(e => e._id)
+          })
+          .innerJoinAndSelect('p.host', 'host')
+          .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+          .paginate({
+            serialiser: p => p.toClientStub(),
+            page: req.query.follows ? parseInt((req.query['follows'] as any).page) : 0,
+            per_page: req.query.follows ? parseInt((req.query['follows'] as any).per_page) : 4
+          });
       }
 
       return feed;

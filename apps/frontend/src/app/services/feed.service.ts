@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { querize } from '@core/helpers';
 import { IEnvelopedData, IFeed, IHostStub, IFeedPerformanceStub, PaginationOptions } from '@core/interfaces';
-import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
