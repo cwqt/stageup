@@ -180,14 +180,27 @@ export class MyselfController extends ModuleController {
       }
 
       if ((fetchAll || req.query['trending']) && req.session.user) {
-        const mostPurchasedPerformances: { _id: NUUID; ticketssold: number }[] = await getManager()
-          .query(`SELECT public.performance._id, COUNT(public.performance.name) AS ticketsSold 
-      FROM public.invoice 
-      INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
-      INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
-      WHERE public.invoice.purchased_at >= ${timestamp(startOfWeek(new Date()))}
-      GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance._id
-      ORDER BY COUNT(*) DESC`);
+        //Working raw sql query, as could not get count and group by to work in the ORM...
+        //   const mostPurchasedPerformances: { _id: NUUID; ticketssold: number }[] = await getManager()
+        //     .query(`SELECT public.performance._id, COUNT(public.performance.name) AS ticketsSold
+        // FROM public.invoice
+        // INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
+        // INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
+        // WHERE public.invoice.purchased_at >= ${timestamp(startOfWeek(new Date()))}
+        // GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance._id
+        // ORDER BY COUNT(*) DESC`);
+
+        const mostPurchasedPerformances = await this.ORM.createQueryBuilder(Invoice, 'i')
+          .select(['i._id', 't._id', 'p._id', 'COUNT(p._id) as tiecketsSold'])
+          .innerJoin('i.ticket', 't')
+          .innerJoin('t.performance', 'p')
+          .where('i.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
+          .groupBy('i._id')
+          .addGroupBy('t._id')
+          .addGroupBy('p._id')
+          .getMany();
+
+        console.log(mostPurchasedPerformances);
 
         feed.trending = await this.ORM.createQueryBuilder(Performance, 'p')
           .where('p._id IN (:...performanceArray)', {
