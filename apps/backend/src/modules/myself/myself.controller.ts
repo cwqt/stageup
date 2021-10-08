@@ -182,14 +182,19 @@ export class MyselfController extends ModuleController {
       //user
       if ((fetchAll || req.query['trending']) && req.session.user) {
         //Working raw sql query, as could not get count and group by to work in the ORM...
-        const mostPurchasedPerformances: Array<{ performance_id: NUUID; tickets_sold: number }> = await getManager()
-          .query(`SELECT public.performance._id, COUNT(public.performance.name) AS tickets_sold
+        const mostPurchasedPerformances: Array<{
+          performance_id: NUUID;
+          tickets_sold: number;
+        }> = await getManager().query(
+          `SELECT public.performance._id, COUNT(public.performance.name) AS tickets_sold
         FROM public.invoice
         INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
         INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
-        WHERE public.invoice.purchased_at >= ${timestamp(startOfWeek(new Date()))}
+        WHERE public.invoice.purchased_at >= : startOfWeek 
         GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance._id
-        ORDER BY COUNT(*) DESC`);
+        ORDER BY COUNT(*) DESC`,
+          [{ startOfWeek: timestamp(startOfWeek(new Date())) }]
+        );
 
         // const mostPurchasedPerformances = await this.ORM.createQueryBuilder(Invoice, 'i')
         //   .select(['i._id', 't._id', 'p._id', 'COUNT(p.name) as ticketsSold'])
@@ -206,7 +211,7 @@ export class MyselfController extends ModuleController {
 
         feed.trending = await this.ORM.createQueryBuilder(Performance, 'p')
           .where('p._id IN (:...performanceArray)', {
-            performanceArray: mostPurchasedPerformances.map(e => e._id)
+            performanceArray: mostPurchasedPerformances.map(e => e.performance_id)
           })
           .innerJoinAndSelect('p.host', 'host')
           .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
