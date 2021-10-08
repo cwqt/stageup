@@ -178,7 +178,8 @@ export class MyselfController extends ModuleController {
             });
         }
       }
-
+      //TODO: Add this query to a job that runs weekly as this is an expensive operation to compute every time the feed loads. It's also constant for every
+      //user
       if ((fetchAll || req.query['trending']) && req.session.user) {
         //Working raw sql query, as could not get count and group by to work in the ORM...
         //   const mostPurchasedPerformances: { _id: NUUID; ticketssold: number }[] = await getManager()
