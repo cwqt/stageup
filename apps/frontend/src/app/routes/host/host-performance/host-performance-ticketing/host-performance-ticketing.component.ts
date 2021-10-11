@@ -10,7 +10,7 @@ import {
   IPerformanceHostInfo,
   ITicketStub,
   NUUID,
-  TicketLimit
+  TICKETS_QTY_UNLIMITED
 } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
@@ -45,7 +45,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
     highest: 'red',
     allow_any: 'cool-grey'
   };
-  ticketLimitUnlimited = TicketLimit.Unlimited;
+  ticketLimitUnlimited = TICKETS_QTY_UNLIMITED;
 
   constructor(
     private dialog: MatDialog,

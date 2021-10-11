@@ -25,7 +25,6 @@ import {
   RefundResponseReason,
   PlatformConsentOpt,
   TokenProvisioner,
-  TicketLimit
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import { Inject, Service } from 'typedi';

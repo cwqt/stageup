@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { timestamp } from '@core/helpers';
-import { ITicketStub, TicketLimit, TicketType } from '@core/interfaces';
+import { ITicketStub, TICKETS_QTY_UNLIMITED, TicketType } from '@core/interfaces';
 import { ChipComponent } from '../../../ui-lib/chip/chip.component';
 
 @Component({
@@ -16,7 +16,7 @@ export class PerformanceTicketComponent implements OnInit {
     [TicketType.Donation]: 'blue',
     [TicketType.Free]: 'green'
   };
-  ticketLimitUnlimited = TicketLimit.Unlimited;
+  ticketLimitUnlimited = TICKETS_QTY_UNLIMITED;
 
   constructor() {}
 

@@ -1,13 +1,11 @@
 import { CurrencyCode } from '../common/currency.interface';
 
+export const TICKETS_QTY_UNLIMITED: number = -1
+
 export enum TicketType {
   Paid = 'paid',
   Free = 'free',
   Donation = 'dono'
-}
-
-export enum TicketLimit {
-  Unlimited = -1,
 }
 
 // Temporarily removed, will likely be re-added in future
