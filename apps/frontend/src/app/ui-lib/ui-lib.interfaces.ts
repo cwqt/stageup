@@ -7,7 +7,8 @@ export enum ThemeKind {
   Secondary = 'secondary',
   Accent = 'accent',
   Warning = 'warning',
-  Danger = 'danger'
+  Danger = 'danger',
+  ClearDark = 'clear-dark'
 }
 
 export enum ThemeDimension {

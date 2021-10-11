@@ -11,6 +11,7 @@ import {
   HostAnalytics,
   HostInvitation,
   IControllerEndpoint,
+  ImageAsset,
   Invoice,
   LiveStreamAsset,
   Middleware,
@@ -22,16 +23,21 @@ import {
   PerformanceAnalytics,
   POSTGRES_PROVIDER,
   STRIPE_PROVIDER,
+  transact,
   User,
   UserHostInfo,
   UserHostMarketingConsent,
   Validators
 } from '@core/api';
-import { timestamp } from '@core/helpers';
+import { timestamp, enumToValues, findAssets } from '@core/helpers';
 import {
+  ACCEPTED_IMAGE_MIME_TYPES,
   Analytics,
   AnalyticsTimePeriod,
   AnalyticsTimePeriods,
+  AssetDto,
+  AssetOwnerType,
+  AssetTags,
   AssetType,
   ConsentableType,
   ConsentOpt,
@@ -72,7 +78,19 @@ import {
   Visibility
 } from '@core/interfaces';
 import Stripe from 'stripe';
-import { array, assign, boolean, coerce, enums, nullable, object, string, StructError, record } from 'superstruct';
+import {
+  array,
+  assign,
+  boolean,
+  coerce,
+  enums,
+  nullable,
+  object,
+  string,
+  StructError,
+  record,
+  optional
+} from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
@@ -1080,6 +1098,49 @@ export class HostController extends ModuleController {
         host_id: h._id,
         audience_ids: req.body.selected_users
       });
+    }
+  };
+
+  updateHostAssets: IControllerEndpoint<AssetDto | void> = {
+    validators: {
+      query: object({
+        replaces: optional(Validators.Fields.nuuid),
+        type: enums(enumToValues(AssetType) as AssetType[])
+      })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    middleware: Middleware.file(2048, ACCEPTED_IMAGE_MIME_TYPES).single('file'),
+    controller: async req => {
+      const host = await getCheck(Host.findOne({ where: { _id: req.params.hid } }));
+
+      // Delete whatever file this is supposed to be replacing
+      if (req.query.replaces) {
+        const asset = findAssets(host.asset_group.assets, AssetType.Image)[0] as ImageAsset;
+        await asset?.delete(this.blobs);
+      } else {
+        // Only allow up to 5 thumbnails at any one time
+        if (findAssets(host.asset_group.assets, AssetType.Image).length === 5)
+          throw new ErrorHandler(HTTP.Forbidden, '@@error.too_many_thumbnails');
+      }
+
+      // Check that there is a file...
+      if (!req.file) return;
+
+      const asset = await transact(async txc => {
+        const asset = new ImageAsset(host.asset_group, ['thumbnail']);
+        await asset.setup(
+          this.blobs,
+          { file: req.file, s3_url: Env.AWS.S3_URL },
+          {
+            asset_owner_type: AssetOwnerType.Host,
+            asset_owner_id: host._id
+          },
+          txc
+        );
+        return await txc.save(asset);
+      });
+
+      return asset.toDto();
     }
   };
 }

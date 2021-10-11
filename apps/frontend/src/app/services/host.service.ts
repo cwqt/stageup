@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  AssetType,
   DtoUserMarketingInfo,
   ExportFileType,
   HostPermission,
@@ -337,5 +338,10 @@ export class HostService {
     return this.http
       .post<void>(`/api/hosts/${hostId}/marketing/audience/export/${type}`, { selected_users: selectedUsers })
       .toPromise();
+  }
+
+  // router.put <void> ("/hosts/:hid/assets", Hosts.updateHostAssets());
+  updateHostAssets(hostId: string, fd: FormData, type: AssetType, replaces?: string): Promise<void> {
+    return this.http.put<void>(`/api/hosts/${hostId}/assets${querize({ type, replaces })}`, fd).toPromise();
   }
 }

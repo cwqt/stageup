@@ -9,6 +9,7 @@ import {
   Environment,
   FilterQuery,
   IAsset,
+  IAssetStub,
   ILocale,
   NUUID,
   ParsedRichText,
@@ -139,7 +140,7 @@ export const getDonoAmount = (donoPeg: DonoPeg, currency: CurrencyCode, allowAny
  * @param tags array of string tags to include in the filter
  * @returns array of assets
  */
-export const findAssets = (assets: IAsset[], type: AssetType, tags?: string[]) => {
+export const findAssets = (assets: IAsset[] | IAssetStub[], type: AssetType, tags?: string[]) => {
   return assets.filter(asset => asset.type == type && (tags ? tags.every(tag => asset.tags.includes(tag)) : true));
 };
 

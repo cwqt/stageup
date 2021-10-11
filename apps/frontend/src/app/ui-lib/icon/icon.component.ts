@@ -19,7 +19,7 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class IconComponent implements OnInit {
   @ViewChild('icon') private icon: ElementRef;
-  @Input() size: 's' | 'm' | 'l' = 'm';
+  @Input() size: 's' | 'm' | 'l' | number = 'm';
   dimensionMap = {
     s: 16,
     m: 24,
@@ -46,7 +46,7 @@ export class IconComponent implements OnInit {
     this.glyph = this.icon.nativeElement.textContent;
     this.icon.nativeElement.textContent = '';
 
-    const dimension = this.dimensionMap[this.size];
+    const dimension = typeof this.size == 'number' ? this.size : this.dimensionMap[this.size];
     this.renderer.setStyle(this.icon.nativeElement, 'max-width', `${dimension}px`);
     this.renderer.setStyle(this.icon.nativeElement, 'max-height', `${dimension}px`);
     this.renderer.setStyle(this.icon.nativeElement, 'font-size', `${dimension}px`);

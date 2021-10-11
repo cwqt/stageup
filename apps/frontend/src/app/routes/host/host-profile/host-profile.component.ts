@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild, ViewChildren, QueryList } from '@a
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
-import { 
+import {
   IHost,
   IEnvelopedData,
   IUserFollow,
@@ -48,7 +48,7 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
   myselfSubscription: Subscription;
 
   public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[]>> } = {
-    upcoming: createICacheable([], { loading_page: false }),
+    upcoming: createICacheable([], { loading_page: false })
   };
 
   constructor(
@@ -60,17 +60,12 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
     private appService: AppService,
     public route: ActivatedRoute,
     private helperService: HelperService,
-    public dialog: MatDialog,    
+    public dialog: MatDialog
   ) {
     super(logger, toastService, breakpointObserver);
 
     // setting fetchData separately as this is not accessible on super()
-    super.fetchData = this.fetchFeed.bind(
-      null,
-      this.hostService,
-      this.carouselData,
-      this.host,
-    );
+    super.fetchData = this.fetchFeed.bind(null, this.hostService, this.carouselData, this.host);
   }
 
   async ngOnInit() {
@@ -101,15 +96,12 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
 
     try {
       this.carouselData.upcoming.loading = true;
-      const hostFeed = await this.hostService.readHostFeed(
-        this.host.data.data._id,
-        {
-          upcoming: {
-            page: 0,
-            per_page: 4
-          },
-        },
-      );
+      const hostFeed = await this.hostService.readHostFeed(this.host.data.data._id, {
+        upcoming: {
+          page: 0,
+          per_page: 4
+        }
+      });
       this.carouselData.upcoming.data = hostFeed['upcoming'];
     } catch (error) {
       this.toastService.emit($localize`Error occurred fetching feed`, ThemeKind.Danger);
@@ -148,14 +140,14 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
     host: ICacheable<IEnvelopedData<IHost, IUserFollow>>,
     carouselIndex: CarouselIdx
   ): Promise<IEnv<IPerformanceStub[]>> {
-    return (await hostService.readHostFeed(
-      host.data.data._id,
-      {
-          [carouselIndex]: {
-              page: carouselData[carouselIndex].data.__paging_data.next_page,
-              per_page: carouselData[carouselIndex].data.__paging_data.per_page
-          }
-      }))[carouselIndex];
+    return (
+      await hostService.readHostFeed(host.data.data._id, {
+        [carouselIndex]: {
+          page: carouselData[carouselIndex].data.__paging_data.next_page,
+          per_page: carouselData[carouselIndex].data.__paging_data.per_page
+        }
+      })
+    )[carouselIndex];
   }
 
   openChangeAvatarDialog() {
