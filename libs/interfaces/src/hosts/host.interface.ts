@@ -1,3 +1,4 @@
+import { IAssetStub } from './../assets/asset.interface';
 import { Except } from 'type-fest';
 import { Idless, NUUID } from '../common/fp.interface';
 import { IPerformanceStub } from '../performances/performance.interface';
@@ -20,6 +21,7 @@ export interface IHostStub {
   avatar?: string;
   banner?: string;
   stripe_account_id: string;
+  assets?: IAssetStub[];
 }
 
 export interface IHost extends IHostStub {

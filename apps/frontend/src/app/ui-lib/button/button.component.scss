@@ -112,6 +112,18 @@
   }
 }
 
+.ui-button--clear-dark {
+  background-color: black;
+  color: white;
+  opacity: 0.6;
+  &:hover {
+    opacity: 1;
+  }
+  ::ng-deep .mat-spinner circle {
+    stroke: $clr-base !important;
+  }
+}
+
 .ripple {
   background-color: rgba($color: #000000, $alpha: 0.1);
   width: 1rem;

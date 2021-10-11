@@ -114,6 +114,9 @@ export class Seeder {
 
     host.onboarding_process = await new Onboarding(host, host.owner).save();
 
+    const group = await new AssetGroup(host._id).save();
+    host.asset_group = group;
+
     host.is_onboarded = true;
     host.stripe_account_id = 'acct_1Iimp3FMVjDWWJf3';
     host.avatar = hostData.avatar;

@@ -23,6 +23,7 @@ import {
   ILocale
 } from '@core/interfaces';
 
+import { AssetGroup } from './../assets/asset-group.entity';
 import { User } from '../users/user.entity';
 import { Performance } from '../performances/performance.entity';
 import { UserHostInfo } from './user-host-info.entity';
@@ -65,6 +66,10 @@ export class Host extends BaseEntity implements IHostPrivate {
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
   @Column({ nullable: true, type: 'float' }) commission_rate: number;
 
+  @OneToOne(() => AssetGroup, { eager: true, onDelete: 'CASCADE', cascade: true })
+  @JoinColumn()
+  asset_group: AssetGroup;
+
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {
     super();
     this.username = data.username;
@@ -90,6 +95,11 @@ export class Host extends BaseEntity implements IHostPrivate {
   async setup(creator: User, txc: EntityManager) {
     this.owner = creator;
     this.onboarding_process = await txc.save(new Onboarding(this, creator));
+
+    const group = new AssetGroup(this._id);
+    await txc.save(group);
+    this.asset_group = group;
+    await txc.save(this);
 
     return this;
   }
@@ -128,7 +138,8 @@ export class Host extends BaseEntity implements IHostPrivate {
       avatar: this.avatar,
       banner: this.banner,
       bio: this.bio,
-      stripe_account_id: this.stripe_account_id
+      stripe_account_id: this.stripe_account_id,
+      assets: this.asset_group?.assets.map(a => a.toStub())
     };
   }
 

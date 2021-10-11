@@ -1,0 +1,51 @@
+<div class="overflow-hidden">
+  <carousel
+    #carousel
+    [margin]="0"
+    [height]="500"
+    [transitionDuration]="800"
+    [loading]="loading"
+    [transitionTimingFunction]="'ease'"
+    [arrowsTheme]="'dark'"
+    [dots]="true"
+    [cellsToShow]="1"
+    [loop]="false"
+    [dotTheme]="'platform'"
+  >
+    <!-- Loading spinner -->
+    <ng-container *ngIf="loading">
+      <div class="h-full flex items-center justify-center">
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!loading">
+      <!-- ---- Images ---- -->
+      <div class="carousel-cell relative overflow-hidden" *ngFor="let asset of host?.assets">
+        <ng-container *ngIf="asset">
+          <img class="object-cover w-full" [src]="asset.location" />
+          <ui-button
+            *ngIf="isHostView"
+            (click)="changeImage(asset)"
+            class="absolute top-4 right-4"
+            icon="edit"
+            kind="{{ clearDark }}"
+          >
+            <span i18n>Edit</span>
+          </ui-button>
+        </ng-container>
+      </div>
+      <!-- ---- Upload new image. Displayed at end of carousel if the current user is the host of the page. ---- -->
+      <div
+        *ngIf="isHostView"
+        class="carousel-cell relative bg-gray-200 flex flex-col items-center justify-center p-10 pointer-default"
+      >
+        <h3 class="text-gray-600" i18n>Add images to showcase your brand</h3>
+        <ui-icon class="text-black" [size]="150">image</ui-icon>
+        <ui-button (click)="changeImage()" class="absolute top-4 right-4" icon="edit" kind="{{ clearDark }}">
+          <span i18n>Add</span>
+        </ui-button>
+      </div>
+    </ng-container>
+  </carousel>
+</div>

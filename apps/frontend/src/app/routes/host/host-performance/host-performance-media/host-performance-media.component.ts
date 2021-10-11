@@ -1,3 +1,4 @@
+import { findAssets } from '@core/helpers';
 import { Component, OnInit } from '@angular/core';
 import { AssetType, DtoPerformance, IAssetStub, ICreateAssetRes, IHost, IPerformanceHostInfo } from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
@@ -24,7 +25,7 @@ export class HostPerformanceMediaComponent implements OnInit {
 
   ngOnInit(): void {
     // A performance is VOD if the primary assets is of type AssetType.Video
-    this.vod = this.performance.data.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('primary'));
+    this.vod = findAssets(this.performance.data.data.assets, AssetType.Video, ['primary'])[0];
 
     this.VoDAssetCreator = async () =>
       this.performanceService.readVideoAssetSignedUrl(
@@ -32,7 +33,7 @@ export class HostPerformanceMediaComponent implements OnInit {
         this.performance.data.data.assets.find(a => a.type == AssetType.Video)._id
       );
 
-    this.trailer = this.performance.data.data.assets.find(a => a.type == AssetType.Video && a.tags.includes('trailer'));
+    this.trailer = findAssets(this.performance.data.data.assets, AssetType.Video, ['trailer'])[0];
   }
 
   trailerAssetCreator() {

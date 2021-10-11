@@ -161,6 +161,7 @@ import { HostMarketingComponent } from './routes/host/host-marketing/host-market
 import { HostAudienceListComponent } from './routes/host/host-marketing/host-audience-list/host-audience-list.component';
 import { PerformanceCancelDialogComponent } from './routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
+import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -290,7 +291,8 @@ import { HostPerformanceMediaComponent } from './routes/host/host-performance/ho
     GdprDocumentUpload,
     HostPerformanceMediaComponent,
     HostMarketingComponent,
-    HostAudienceListComponent
+    HostAudienceListComponent,
+    HostProfileAssetComponent
   ],
   imports: [
     AngularMaterialModule,

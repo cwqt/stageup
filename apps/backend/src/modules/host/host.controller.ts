@@ -11,6 +11,7 @@ import {
   HostAnalytics,
   HostInvitation,
   IControllerEndpoint,
+  ImageAsset,
   Invoice,
   LiveStreamAsset,
   Middleware,
@@ -22,16 +23,21 @@ import {
   PerformanceAnalytics,
   POSTGRES_PROVIDER,
   STRIPE_PROVIDER,
+  transact,
   User,
   UserHostInfo,
   UserHostMarketingConsent,
   Validators
 } from '@core/api';
-import { timestamp } from '@core/helpers';
+import { timestamp, enumToValues, findAssets } from '@core/helpers';
 import {
+  ACCEPTED_IMAGE_MIME_TYPES,
   Analytics,
   AnalyticsTimePeriod,
   AnalyticsTimePeriods,
+  AssetDto,
+  AssetOwnerType,
+  AssetTags,
   AssetType,
   ConsentableType,
   ConsentOpt,
@@ -84,7 +90,8 @@ import {
   StructError,
   record,
   size,
-  number
+  number,
+  optional
 } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
@@ -1109,6 +1116,49 @@ export class HostController extends ModuleController {
 
       host.commission_rate = req.body.new_rate;
       await host.save();
+    }
+  };
+
+  updateHostAssets: IControllerEndpoint<AssetDto | void> = {
+    validators: {
+      query: object({
+        replaces: optional(Validators.Fields.nuuid),
+        type: enums(enumToValues(AssetType) as AssetType[])
+      })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    middleware: Middleware.file(2048, ACCEPTED_IMAGE_MIME_TYPES).single('file'),
+    controller: async req => {
+      const host = await getCheck(Host.findOne({ where: { _id: req.params.hid } }));
+
+      // Delete whatever file this is supposed to be replacing
+      if (req.query.replaces) {
+        const asset = findAssets(host.asset_group.assets, AssetType.Image)[0] as ImageAsset;
+        await asset?.delete(this.blobs);
+      } else {
+        // Only allow up to 5 thumbnails at any one time
+        if (findAssets(host.asset_group.assets, AssetType.Image).length === 5)
+          throw new ErrorHandler(HTTP.Forbidden, '@@error.too_many_thumbnails');
+      }
+
+      // Check that there is a file...
+      if (!req.file) return;
+
+      const asset = await transact(async txc => {
+        const asset = new ImageAsset(host.asset_group, ['thumbnail']);
+        await asset.setup(
+          this.blobs,
+          { file: req.file, s3_url: Env.AWS.S3_URL },
+          {
+            asset_owner_type: AssetOwnerType.Host,
+            asset_owner_id: host._id
+          },
+          txc
+        );
+        return await txc.save(asset);
+      });
+
+      return asset.toDto();
     }
   };
 }

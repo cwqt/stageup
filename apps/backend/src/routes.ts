@@ -149,7 +149,7 @@ router.get      <IE<DtoPerfAnalytics[]>>("/hosts/:hid/analytics/performances",  
 router.get      <DtoUserMarketingInfo>  ("/hosts/:hid/marketing/audience",             Hosts.readHostMarketingConsents);
 router.post     <void>                  ("/hosts/:hid/marketing/audience/export/:type",Hosts.exportUserMarketing);
 router.put      <void>                  ("/hosts/:hid/commission-rate",                Hosts.updateCommissionRate);
-
+router.put      <void>                  ("/hosts/:hid/assets",                         Hosts.updateHostAssets);
 
 
 // PATRONAGE ----------------------------------------------------------------------------------------------------------
