@@ -48,7 +48,6 @@ import {
   ConsentOpt,
   DtoCreateAsset,
   DtoCreatePaymentIntent,
-  DtoCreateTicket,
   DtoPerformance,
   HostPermission,
   HTTP,
@@ -67,7 +66,6 @@ import {
   pick,
   PurchaseableType,
   PlatformConsentOpt,
-  TicketType,
   Visibility
 } from '@core/interfaces';
 import Mux from '@mux/mux-node';
