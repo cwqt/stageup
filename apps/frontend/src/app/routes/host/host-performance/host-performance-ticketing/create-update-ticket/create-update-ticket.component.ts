@@ -91,14 +91,17 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           width: 6,
           label: $localize`Price`,
           hint: inputValue => {
+            // Strict check not equal to null, since 0% is a valid commission rate
+            const commissionRate =
+              typeof this.host.commission_rate == 'number' ? this.host.commission_rate : CommissionRate.Platform;
             const lineOne = `Your Revenue: ${i18n.money(
-              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * (1 - CommissionRate.Platform)),
+              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * (1 - commissionRate)),
               CurrencyCode.GBP
             )}`;
             const lineTwo = ` StageUp Commission: ${i18n.money(
-              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * CommissionRate.Platform),
+              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * commissionRate),
               CurrencyCode.GBP
-            )} (${CommissionRate.Platform * 100}%)`;
+            )} (${commissionRate * 100}%)`;
             return lineOne + '\n' + lineTwo;
           },
           currency: CurrencyCode.GBP,

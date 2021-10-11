@@ -340,8 +340,16 @@ export class HostService {
       .toPromise();
   }
 
+<<<<<<< HEAD
+  // router.put <void> ("/hosts/:hid/commission-rate", Hosts.updateCommissionRate());
+  updateCommissionRate(hostId: string, newRate: number): Promise<void> {
+    return this.http
+      .put<void>(`/api/hosts/${hostId}/commission-rate`, { new_rate: newRate })
+      .toPromise();
+=======
   // router.put <void> ("/hosts/:hid/assets", Hosts.updateHostAssets());
   updateHostAssets(hostId: string, fd: FormData, type: AssetType, replaces?: string): Promise<void> {
     return this.http.put<void>(`/api/hosts/${hostId}/assets${querize({ type, replaces })}`, fd).toPromise();
+>>>>>>> dev
   }
 }

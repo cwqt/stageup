@@ -89,6 +89,8 @@ import {
   string,
   StructError,
   record,
+  size,
+  number,
   optional
 } from 'superstruct';
 import { Inject, Service } from 'typedi';
@@ -1098,6 +1100,22 @@ export class HostController extends ModuleController {
         host_id: h._id,
         audience_ids: req.body.selected_users
       });
+    }
+  };
+
+  updateCommissionRate: IControllerEndpoint<void> = {
+    validators: {
+      body: object({ new_rate: Validators.Fields.percentage }),
+      params: object({
+        hid: Validators.Fields.nuuid
+      })
+    },
+    authorisation: AuthStrat.isSiteAdmin,
+    controller: async req => {
+      const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+
+      host.commission_rate = req.body.new_rate;
+      await host.save();
     }
   };
 
