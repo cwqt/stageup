@@ -48,7 +48,6 @@ import {
   ConsentOpt,
   DtoCreateAsset,
   DtoCreatePaymentIntent,
-  DtoCreateTicket,
   DtoPerformance,
   HostPermission,
   HTTP,
@@ -67,7 +66,6 @@ import {
   pick,
   PurchaseableType,
   PlatformConsentOpt,
-  TicketType,
   Visibility
 } from '@core/interfaces';
 import Mux from '@mux/mux-node';
@@ -449,28 +447,7 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
     ),
     controller: async req => {
-      const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['host'] }));
-      const body: DtoCreateTicket = req.body;
-
-      // Must first have a Connected Stripe Account to create paid/dono tickets
-      if (!performance.host.stripe_account_id && body.type != TicketType.Free)
-        throw new ErrorHandler(HTTP.Unauthorised, '@@host.requires_stripe_connected');
-
-      const ticket = await transact(async txc => {
-        const ticket = new Ticket(body);
-        const claim = await ticket.setup(performance, txc);
-
-        // IMPORTANT for now we will assign all signed assets to this claim
-        const group = await AssetGroup.findOne({ owner__id: req.params.pid }, { relations: ['assets'] });
-        await claim.assign(
-          group.assets.filter(asset => asset.signing_key__id != null),
-          txc
-        );
-
-        return txc.save(ticket);
-      });
-
-      return ticket.toFull();
+      return (await this.performanceService.createTicket(req.params.pid, req.body)).toFull();
     }
   };
 
@@ -545,8 +522,8 @@ export class PerformanceController extends ModuleController {
         ])
       );
 
-      // Persist remaining quantity
-      newTicket.quantity_remaining = ticket.quantity_remaining;
+      // Updating the remaining quantity according to the new quantity from the request body
+      newTicket.quantity_remaining = req.body.quantity - (ticket.quantity - ticket.quantity_remaining);
 
       // Set relationship by _id rather than getting performance object
       newTicket.performance = req.params.pid as any;
