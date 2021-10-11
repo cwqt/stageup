@@ -24,7 +24,7 @@ import {
   PurchaseableType,
   RefundResponseReason,
   PlatformConsentOpt,
-  TokenProvisioner
+  TokenProvisioner,
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import { Inject, Service } from 'typedi';
@@ -131,7 +131,7 @@ export class StripeEvents extends ModuleEvents {
 
         const invoice = await this.pg.transaction(async txc => {
           // Create a new invoice for the user which provisions an Access Token for the performance
-          ticket.quantity_remaining -= 1;
+          ticket.quantity_remaining--;
           const invoice = new Invoice(
             user,
             intent.amount,

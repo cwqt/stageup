@@ -12,14 +12,14 @@
     <th mat-header-cell *matHeaderCellDef i18n>Name</th>
     <td mat-cell *matCellDef="let ticket">
       {{ ticket.name }}
-      <ui-chip *ngIf="!tickets.data.__client_data.includes(ticket._id)" i18n>HIDDEN</ui-chip>
+      <ui-chip *ngIf="!ticket.is_visible" i18n>HIDDEN</ui-chip>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="quantity">
     <th mat-header-cell *matHeaderCellDef i18n>Quantity</th>
     <td mat-cell *matCellDef="let ticket">
-      {{ ticket.quantity }}
+      {{ ticket.quantity === ticketLimitUnlimited ? "Unlimited" : ticket.quantity }}
       <ui-chip *ngIf="ticket.is_quantity_visible == false" i18n>HIDDEN</ui-chip>
     </td>
   </ng-container>
