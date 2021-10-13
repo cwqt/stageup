@@ -203,7 +203,7 @@ export class HostService {
   }
 
   changeAvatar(hostId: string, data: FormData | null): Promise<string> {
-    return this.http.put<string>(`api/hosts/${hostId}/avatar`, data).toPromise();
+    return this.http.put<string>(`/api/hosts/${hostId}/avatar`, data).toPromise();
   }
 
   // router.get <IHostStripeInfo> ("/hosts/:hid/stripe/info", Hosts.readStripeInfo());
@@ -213,7 +213,7 @@ export class HostService {
 
   //router.put  <IHostStub> ("/hosts/:hid/banner", Hosts.changeBanner());
   changeBanner(hostId: string, data: FormData | null): Promise<string> {
-    return this.http.put<string>(`api/hosts/${hostId}/banner`, data).toPromise();
+    return this.http.put<string>(`/api/hosts/${hostId}/banner`, data).toPromise();
   }
 
   // router.get <IE<IHostInvoiceStub[]>> ("/hosts/:hid/invoices", Hosts.readInvoices());
@@ -225,13 +225,13 @@ export class HostService {
 
   //router.get<IHostInvoice>("/hosts/:hid/invoices/:iid",Hosts.readInvoice());
   readInvoice(hostId: string, invoiceId: string): Promise<IHostInvoice> {
-    return this.http.get<IHostInvoice>(`api/hosts/${hostId}/invoices/${invoiceId}`).toPromise();
+    return this.http.get<IHostInvoice>(`/api/hosts/${hostId}/invoices/${invoiceId}`).toPromise();
   }
 
   //router.post<void>("/hosts/:hid/invoices/process-refunds", Hosts.processRefund());
   processRefunds(invoiceIds: string[], hostId: string, bulkRefund?: IBulkRefund): Promise<void> {
     return this.http
-      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, {
+      .post<void>(`/api/hosts/${hostId}/invoices/process-refunds`, {
         invoice_ids: invoiceIds,
         bulk_refund_reason: bulkRefund.bulk_refund_reason,
         bulk_refund_detail: bulkRefund.bulk_refund_detail

@@ -1148,7 +1148,7 @@ export class HostController extends ModuleController {
         const asset = new ImageAsset(host.asset_group, ['thumbnail']);
         await asset.setup(
           this.blobs,
-          { file: req.file, s3_url: Env.AWS.S3_URL },
+          { file: req.file },
           {
             asset_owner_type: AssetOwnerType.Host,
             asset_owner_id: host._id

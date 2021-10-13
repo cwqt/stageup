@@ -63,3 +63,11 @@ resource "google_sql_database_instance" "postgres" {
     }
   }
 }
+
+# Create a GCS Bucket.
+resource "google_storage_bucket" "asset-bucket" {
+  project       = var.gcp_project_id
+  name          = "storage-${terraform.workspace}"
+  location      = local.region
+  lifecycle { prevent_destroy = true }
+}

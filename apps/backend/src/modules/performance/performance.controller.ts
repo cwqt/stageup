@@ -775,7 +775,7 @@ export class PerformanceController extends ModuleController {
         const asset = new ImageAsset(performance.asset_group, [req.query.tag as AssetTag, 'thumbnail']);
         await asset.setup(
           this.blobs,
-          { file: req.file, s3_url: Env.AWS.S3_URL },
+          { file: req.file },
           {
             asset_owner_type: AssetOwnerType.Performance,
             asset_owner_id: performance._id

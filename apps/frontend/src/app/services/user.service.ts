@@ -6,7 +6,6 @@ import * as fd from 'form-data';
 import { IEnvelopedData, IUser, IHost, IFollowing, Primitive, IMyself, IUserStub, IPasswordReset, IUserPrivate } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 import { UserHostInfo } from '@core/api';
-import { VolumeId } from 'aws-sdk/clients/storagegateway';
 import { body } from 'express-validator';
 
 @Injectable({

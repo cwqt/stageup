@@ -15,7 +15,6 @@ export type AssetProvider = {
 export type AssetOptions = {
   [AssetType.Image]: {
     file: Express.Multer.File; // data of the image
-    s3_url: string;
   };
   [AssetType.Video]: CreateUploadParams;
   [AssetType.AnimatedGIF]: void;
@@ -41,6 +40,6 @@ export interface AssetMethods<T extends AssetType> {
     txc: EntityManager
   ) => Promise<AssetObject[T]>;
   delete: (provider: AssetProvider[T]) => Promise<void>;
-  getLocation: (options: AssetOptions[T]) => string;
+  getLocation: () => string;
   toDto: () => Required<AssetDto<T>>;
 }

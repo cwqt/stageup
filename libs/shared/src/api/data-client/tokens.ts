@@ -1,5 +1,4 @@
 import Mux from '@mux/mux-node';
-import { S3 } from 'aws-sdk';
 import { RedisStore } from 'connect-redis';
 import { Tunnel } from 'localtunnel';
 import { RedisClient } from 'redis';

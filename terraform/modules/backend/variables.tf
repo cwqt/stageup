@@ -43,12 +43,12 @@ variable "env" {
     STRIPE_CLIENT_ID         = string
     STRIPE_PUBLIC_KEY        = string
     BACKEND_PRIVATE_KEY      = string
-    AWS_S3_ACCESS_KEY_ID     = string
-    AWS_S3_ACCESS_SECRET_KEY = string
-    AWS_S3_BUCKET_NAME       = string
-    AWS_S3_REGION            = string
-    AWS_S3_URL               = string
     BACKEND_STORE_HOST       = string
     BACKEND_REDIS_HOST       = string
+
+    GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY   = string
+    GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL = string
+    GOOGLE_STORAGE_BUCKET_NAME           = string
+    GOOGLE_STORAGE_PUBLIC_URL            = string
   })
 }

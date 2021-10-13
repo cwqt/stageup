@@ -63,6 +63,7 @@ data "google_compute_network" "vpc" {
 data "google_sql_database_instance" "postgres" {
   name = "postgres-${var.core}"
 }
+
 # ------------------------------------------------------------------------
 
 # Create a subnet within provided variable environment VPC
@@ -178,11 +179,13 @@ module "backend" {
     STRIPE_CLIENT_ID         = module.secrets.STRIPE_CLIENT_ID
     STRIPE_PUBLIC_KEY        = module.secrets.STRIPE_PUBLIC_KEY
     BACKEND_PRIVATE_KEY      = module.secrets.BACKEND_PRIVATE_KEY
-    AWS_S3_ACCESS_KEY_ID     = module.secrets.AWS_S3_ACCESS_KEY_ID
-    AWS_S3_ACCESS_SECRET_KEY = module.secrets.AWS_S3_ACCESS_SECRET_KEY
-    AWS_S3_BUCKET_NAME       = module.secrets.AWS_S3_BUCKET_NAME
-    AWS_S3_REGION            = module.secrets.AWS_S3_REGION
-    AWS_S3_URL               = module.secrets.AWS_S3_URL
+
+
+    GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY = module.secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY
+    GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL = module.secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL
+    GOOGLE_STORAGE_BUCKET_NAME = "storage-${var.core}"
+    #https://storage.cloud.google.com/su-test-bucket/Modular-Monolith-Integration-Styles-Messaging-in-memory-768x364.jpeg
+    GOOGLE_STORAGE_PUBLIC_URL = "https://storage.cloud.google.com"
   }
 }
 
