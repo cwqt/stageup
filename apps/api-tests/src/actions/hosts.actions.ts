@@ -15,10 +15,17 @@ import {
   IMyself,
   IPerformanceUserInfo,
   IHostInvoice,
-  IInvoice
+  IInvoice,
+  IHostBusinessDetails,
+  CountryCode,
+  BusinessType,
+  HostOnboardingState,
+  PersonTitle
 } from '@core/interfaces';
 import { api } from '../environment';
 import fd from 'form-data';
+import { hostname } from 'os';
+import { Stories } from '../stories';
 
 export default {
   // Host CRUD --------------------------------------------------------------------------------------------------------------
@@ -26,6 +33,73 @@ export default {
   createHost: async (data: { username: string; name: string; email_address: string }): Promise<IHost> => {
     const res = await api.post<IHost>(`/hosts`, data, env.getOptions());
     return res.data;
+  },
+
+  createOnBoardedHost: async (data: { username: string; name: string; email_address: string }): Promise<IHost> => {
+    const host = await Stories.actions.hosts.createHost({
+      username: 'somecoolhost',
+      name: 'Some Cool Host',
+      email_address: 'host@cass.si'
+    });
+
+    await Stories.actions.hosts.readOnboardingProcessStatus(host);
+
+    await Stories.actions.hosts.updateOnboardingProcessStep<IHostBusinessDetails>(
+      host,
+      HostOnboardingStep.ProofOfBusiness,
+      {
+        business_address: {
+          city: 'Cardiff',
+          country: CountryCode.GB,
+          postal_code: 'NE62 5DE',
+          line1: '32 Marquee Court'
+        },
+        hmrc_company_number: 11940210,
+        business_contact_number: '+44 323 223 4234',
+        business_type: BusinessType.Company
+      }
+    );
+
+    await Stories.actions.hosts.updateOnboardingProcessStep(
+      host,
+      HostOnboardingStep.OwnerDetails,
+      {
+        title: PersonTitle.Dr,
+        first_name: 'Drake',
+        last_name: 'Drakeford'
+      }
+    );
+
+    await Stories.actions.hosts.updateOnboardingProcessStep(
+      host,
+      HostOnboardingStep.SocialPresence,
+      {
+        site_url: 'https://linkedin.com/stageupuk',
+        linkedin_url: 'https://linkedin.com/eventi',
+        facebook_url: 'https://facebook.com/eventi',
+        instagram_url: 'https://instagram.com/eventi'
+      }
+    );
+
+    await Stories.actions.hosts.submitOnboardingProcess(host);
+
+    await Stories.actions.common.switchActor(UserType.SiteAdmin);
+    await Stories.actions.admin.reviewOnboardingProcess(host, {
+      [HostOnboardingStep.OwnerDetails]: {
+        state: HostOnboardingState.Verified,
+        issues: {}
+      },
+      [HostOnboardingStep.SocialPresence]: {
+        state: HostOnboardingState.Verified,
+        issues: {}
+      },
+      [HostOnboardingStep.ProofOfBusiness]: {
+        state: HostOnboardingState.Verified,
+        issues: {}
+      }
+    });
+
+    return host;
   },
 
   // router.get<IHost>("/hosts/:hid",Hosts.readHost())
@@ -42,13 +116,13 @@ export default {
 
   // router.put<IHost> ("/hosts/:hid",Hosts.updateHost());
   updateHost: async (host: IHost) => {
-    const res = await api.post<IHost>(`/hosts/${host._id}`, env.getOptions());
+    const res = await api.post<IHost>(`/hosts/${host._id}`, null, env.getOptions());
     return res.data;
   },
 
   // router.delete <void>("/hosts/:hid",Hosts.deleteHost());
   deleteHost: async (host: IHost) => {
-    const res = await api.post<void>(`/hosts/${host._id}`, env.getOptions());
+    const res = await api.post<void>(`/hosts/${host._id}`, null, env.getOptions());
     return res.data;
   },
 
@@ -161,5 +235,12 @@ export default {
   readInvoice: async (host: IHost, invoice: IInvoice): Promise<IHostInvoice> => {
     const res = await api.get<IHostInvoice>(`/hosts/${host._id}/invoices/${invoice._id}`, env.getOptions());
     return null;
-  }
+  },
+
+  //router.post<string>("/hosts/:hid/stripe/connect", Hosts.connectStripe)
+  connectStripe: async (host: IHost) => {
+    const res = await api.post<string>(`/hosts/${host._id}/stripe/connect`, null, env.getOptions());
+    // return this.http.post<string>(`/api/hosts/${hostId}/stripe/connect`, null).toPromise();
+    return null;
+  },
 };

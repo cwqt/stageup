@@ -40,6 +40,7 @@ const Env: {
   EMAIL: Envify<ISendGridMailProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   isEnv: (env: Environment | Environment[]) => boolean;
+  RATE_LIMIT: number;
 } = {
   isEnv: isEnv(TRUE_ENV as Environment),
   IS_LOCAL: isLocal,
@@ -107,7 +108,8 @@ const Env: {
     SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL,
     BUCKET_NAME: process.env.GOOGLE_STORAGE_BUCKET_NAME,
     PUBLIC_URL: process.env.GOOGLE_STORAGE_PUBLIC_URL
-  }
+  },
+  RATE_LIMIT: Number(process.env.RATE_LIMIT),
 };
 
 export default Env;

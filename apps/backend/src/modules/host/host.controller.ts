@@ -486,16 +486,22 @@ export class HostController extends ModuleController {
   readOnboardingProcessStatus: IControllerEndpoint<IHostOnboarding> = {
     authorisation: AuthStrat.hasHostPermission(HostPermission.Owner),
     controller: async req => {
+      console.log('we get into the readOnboarding process contoller method');
+      console.log(req.params.hid);
       const onboarding = await getCheck(
         Onboarding.findOne({
           where: {
-            host: {
+            // host__id: req.params.hid 
+            host: 
+            {
               _id: req.params.hid
             }
           },
           relations: ['host', 'reviews']
         })
       );
+
+      console.log(onboarding);
 
       return onboarding.toFull();
     }

@@ -63,6 +63,12 @@ docker run --name su-redis -p 6379:6379 -d redis:6.0.12
 docker run --name su-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres:11
 ```
 
+And to create the test database (the development database available by default):
+
+```
+docker exec su-postgres psql -c 'create database testing;' -U postgres
+```
+
 If you then check in the Docker Desktop app, the containers, "su-redis" and "su-postgres" should now be running. 
 
 ## PGAdmin
