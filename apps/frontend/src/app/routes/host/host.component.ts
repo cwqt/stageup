@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { HostPermission, IHost, IMyself, IEnvelopedData, IUserFollow } from '@core/interfaces';
+import { HostPermission, IHost, IMyself, IEnvelopedData, IClientHostData, DtoReadHost } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { timeStamp } from 'console';
 import { Subject, Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { MyselfService } from '../../services/myself.service';
 })
 export class HostComponent implements OnInit {
   myself: IMyself;
-  host: ICacheable<IEnvelopedData<IHost, IUserFollow>> = createICacheable();
+  host: ICacheable<DtoReadHost> = createICacheable();
 
   hostPermission = HostPermission;
   $drawerIsOpen: Subject<boolean>;

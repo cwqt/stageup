@@ -145,7 +145,7 @@ import { HostPerformanceThumbnailsComponent } from './routes/host/host-performan
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
 import { PerformanceDeleteDialogComponent } from './routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { RatePerformanceComponent } from './components/rate-performance/rate-performance.component';
-import { LikePerformanceComponent } from './components/like-performance/like-performance.component';
+import { LikeComponent } from './components/like/like.component';
 import { RedirectComponent } from './components/redirect/redirect.component';
 import { FollowButtonComponent } from './components/follow-button/follow-button.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
@@ -275,7 +275,7 @@ import { HostProfileAssetComponent } from './routes/host/host-profile/host-profi
     SocialSharingComponent,
     PerformanceDeleteDialogComponent,
     RatePerformanceComponent,
-    LikePerformanceComponent,
+    LikeComponent,
     RedirectComponent,
     FollowButtonComponent,
     HostAnalyticsComponent,

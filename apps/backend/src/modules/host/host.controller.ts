@@ -13,6 +13,7 @@ import {
   IControllerEndpoint,
   ImageAsset,
   Invoice,
+  Like,
   LiveStreamAsset,
   Middleware,
   ModuleController,
@@ -70,12 +71,13 @@ import {
   IOnboardingStepMap,
   IPerformanceStub,
   IRefund,
-  IUserFollow,
+  IClientHostData,
   IUserHostInfo,
   LiveStreamState,
-  IFeedPerformanceStub,
+  Visibility,
+  LikeLocation,
   JobType,
-  Visibility
+  DtoReadHost
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import {
@@ -100,6 +102,7 @@ import IdFinderStrat from '../../common/authorisation/id-finder-strategies';
 import Env from '../../env';
 import { HostService } from './host.service';
 import { JobQueueService } from './../queue/queue.service';
+import { UserService } from '../user/user.service';
 
 @Service()
 export class HostController extends ModuleController {
@@ -110,7 +113,8 @@ export class HostController extends ModuleController {
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     private financeService: FinanceService,
     private hostService: HostService,
-    private queueService: JobQueueService
+    private queueService: JobQueueService,
+    private userService: UserService
   ) {
     super();
   }
@@ -153,7 +157,7 @@ export class HostController extends ModuleController {
     }
   };
 
-  readHost: IControllerEndpoint<IEnvelopedData<IHost, IUserFollow>> = {
+  readHost: IControllerEndpoint<DtoReadHost> = {
     authorisation: AuthStrat.none,
     controller: async req => {
       const host = await Host.findOne(
@@ -175,9 +179,16 @@ export class HostController extends ModuleController {
           .andWhere('follow.host__id = :hid', { hid: host._id })
           .getOne());
 
+      const existingLike =
+        req.session.user &&
+        (await this.ORM.createQueryBuilder(Like, 'like')
+          .where('like.user__id = :uid', { uid: req.session.user._id })
+          .andWhere('like.host__id = :hid', { hid: host._id })
+          .getOne());
+
       const envelope = {
         data: host.toFull(),
-        __client_data: { is_following: isFollowing ? true : false }
+        __client_data: { is_following: isFollowing ? true : false, is_liking: existingLike ? true : false }
       };
       return envelope;
     }
@@ -1051,6 +1062,19 @@ export class HostController extends ModuleController {
       }
 
       return { data: dtos, __paging_data: performances.__paging_data };
+    }
+  };
+
+  // Adds a like from database with the current users ID, the provided host ID and the location of where the user liked the host
+  toggleLike: IControllerEndpoint<void> = {
+    validators: { params: object({ hid: Validators.Fields.nuuid }) },
+    authorisation: AuthStrat.isLoggedIn,
+    controller: async req => {
+      this.userService.toggleLike({
+        user_id: req.session.user._id,
+        target_type: LikeLocation.HostProfile,
+        target_id: req.params.hid
+      });
     }
   };
 

@@ -1,14 +1,16 @@
-import { Component, Input, OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewChildren, QueryList, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import {
   IHost,
   IEnvelopedData,
-  IUserFollow,
+  IClientHostData,
   IEnvelopedData as IEnv,
   IPerformanceStub,
-  IHostFeed
+  IHostFeed,
+  LikeLocation,
+  DtoReadHost
 } from '@core/interfaces';
 import { createICacheable, ICacheable, cachize } from '../../../app.interfaces';
 import { AppService, RouteParam } from '../../../services/app.service';
@@ -39,13 +41,16 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   @ViewChildren(CarouselComponent) carousels: QueryList<CarouselComponent>;
   @Input() hostUsername?: string;
-  host: ICacheable<IEnvelopedData<IHost, IUserFollow>> = createICacheable();
+  @Output() onLike = new EventEmitter();
+
+  host: ICacheable<DtoReadHost> = createICacheable();
   isHostView: boolean;
   tabs: Array<{ label: string; route: string }>;
   hostSharingUrl: SocialSharingComponent['url'];
   currentRoutePath: string;
   userFollowing: boolean;
   myselfSubscription: Subscription;
+  userLiked: boolean;
 
   public carouselData: { [index in CarouselIdx]: ICacheable<IEnv<IPerformanceStub[]>> } = {
     upcoming: createICacheable([], { loading_page: false })
@@ -66,6 +71,10 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
 
     // setting fetchData separately as this is not accessible on super()
     super.fetchData = this.fetchFeed.bind(null, this.hostService, this.carouselData, this.host);
+  }
+
+  get hostId() {
+    return this.host.data.data?._id;
   }
 
   async ngOnInit() {
@@ -93,6 +102,7 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
     await cachize(this.hostService.readHostByUsername(this.hostUsername), this.host);
 
     this.userFollowing = this.host.data.__client_data.is_following;
+    this.userLiked = this.host.data.__client_data.is_liking;
 
     try {
       this.carouselData.upcoming.loading = true;
@@ -137,7 +147,7 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
   async fetchFeed(
     hostService: HostService,
     carouselData: ICacheable<IEnv<IPerformanceStub[]>>,
-    host: ICacheable<IEnvelopedData<IHost, IUserFollow>>,
+    host: ICacheable<DtoReadHost>,
     carouselIndex: CarouselIdx
   ): Promise<IEnv<IPerformanceStub[]>> {
     return (
@@ -192,6 +202,12 @@ export class HostProfileComponent extends CarouselBaseComponent<IPerformanceStub
 
   originalOrder() {
     return 0;
+  }
+
+  likeHost(value: boolean) {
+    this.userLiked = value;
+    this.hostService.toggleLike(this.host.data.data._id);
+    this.onLike.emit(value);
   }
 
   followEvent(): void {

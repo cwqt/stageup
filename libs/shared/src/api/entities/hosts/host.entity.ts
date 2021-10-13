@@ -32,7 +32,7 @@ import { timestamp, uuid } from '@core/helpers';
 import { ErrorHandler } from '../../errors';
 import { Invoice } from '../finance/invoice.entity';
 import { PatronTier } from './patron-tier.entity';
-import { PatronSubscription } from '@core/api';
+import { Like, PatronSubscription } from '@core/api';
 
 @Entity()
 @Check('0 <= "commission_rate" AND commission_rate <= 1') // Commission rate is a percentage
@@ -45,6 +45,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column() created_at: number;
   @Column() name: string;
   @Column() username: string;
+  @Column({ unsigned: true }) like_count: number;
   @Column({ nullable: true }) bio?: string;
   @Column({ nullable: true }) avatar: string;
   @Column({ nullable: true }) banner: string;
@@ -64,6 +65,7 @@ export class Host extends BaseEntity implements IHostPrivate {
 
   @OneToOne(() => User) @JoinColumn() owner: User;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
+  @OneToMany(() => Like, like => like.host, { onDelete: 'CASCADE', cascade: true }) likes: Like[];
   @Column({ nullable: true, type: 'float' }) commission_rate: number;
 
   @OneToOne(() => AssetGroup, { eager: true, onDelete: 'CASCADE', cascade: true })
@@ -89,6 +91,7 @@ export class Host extends BaseEntity implements IHostPrivate {
       pinterest_url: null,
       youtube_url: null
     };
+    this.like_count = 0;
     this.commission_rate = null;
   }
 

@@ -1,8 +1,17 @@
-import { Genre, IFeed, IHost, IHostStub, IMyself, IPerformanceStub, IUser, Visibility } from '@core/interfaces';
+import {
+  Genre,
+  IFeed,
+  IHost,
+  IHostStub,
+  IMyself,
+  IPerformanceStub,
+  IUser,
+  PerformanceType,
+  Visibility
+} from '@core/interfaces';
 import { Stories } from '../../stories';
 import fd from 'form-data';
 import { createReadStream } from 'fs';
-import { mock } from 'jest-mock-extended';
 
 describe('As a user, I want to be able to CRUD', () => {
   let user: IUser;
@@ -17,10 +26,10 @@ describe('As a user, I want to be able to CRUD', () => {
 
     let perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Test perf',
-      premiere_datetime: 1844172702,
+      publicity_period: { start: 161347834, end: 161347834 },
       description: 'Test description',
       genre: Genre.Dance,
-      type: 'vod'
+      type: PerformanceType.Vod
     });
 
     await Stories.actions.performances.updateVisibility(perf, Visibility.Public);

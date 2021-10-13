@@ -61,7 +61,7 @@ export class PerformanceEvents extends ModuleEvents {
 
   async sendPerformanceReminderEmails(ct: Contract<'performance.created'>) {
     const performance = await Performance.findOne({ _id: ct._id });
-    const premierDate = performance.premiere_datetime;
+    const premierDate = performance.publicity_period.start;
     if (!premierDate) return; // TODO: This will instead be based on publicity_period.start in the future (which will be a compulsory field)
     const oneDayPrior = premierDate - 86400 - timestamp(); // 86400 is the number of seconds in 24 hours
     const fifteenMinutesPrior = premierDate - 900 - timestamp(); // 900 is the number of seconds in 15 minutes
@@ -172,7 +172,7 @@ export class PerformanceEvents extends ModuleEvents {
         content: this.i18n.translate('@@email.performance.softDeleted_notify_host__content', locale, {
           host_name: performance.host.name,
           performance_name: performance.name,
-          performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
+          performance_premiere_date: moment.unix(performance.publicity_period.start).format('LLLL')
         }),
         from: Env.EMAIL_ADDRESS,
         to: performance.host.email_address,
@@ -187,7 +187,7 @@ export class PerformanceEvents extends ModuleEvents {
         content: this.i18n.translate('@@email.performance.cancelled_notify_host__content', locale, {
           host_name: performance.host.name,
           performance_name: performance.name,
-          performance_premiere_date: moment.unix(performance.premiere_datetime).format('LLLL')
+          performance_premiere_date: moment.unix(performance.publicity_period.start).format('LLLL')
         }),
         from: Env.EMAIL_ADDRESS,
         to: performance.host.email_address,

@@ -79,7 +79,7 @@
                   [userLiked]="performance.client_likes"
                   (click)="thumb.openBrochure()"
                   (onFollowEvent)="refreshFeed($event)"
-                  (onLikeEvent)="syncLikes($event)"
+                  (onLike)="syncLikes($event)"
                 >
                 </app-performance-thumb>
               </div>

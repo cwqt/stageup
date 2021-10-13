@@ -79,6 +79,7 @@ import { default as IdFinderStrat } from '../../common/authorisation/id-finder-s
 import Env from '../../env';
 import { PerformanceService } from './performance.service';
 import { GdprService } from '../gdpr/gdpr.service';
+import { UserService } from '../user/user.service';
 
 @Service()
 export class PerformanceController extends ModuleController {
@@ -90,7 +91,8 @@ export class PerformanceController extends ModuleController {
     @Inject(REDIS_PROVIDER) private redis: RedisClient,
     @Inject(BLOB_PROVIDER) private blobs: Blobs,
     private gdprService: GdprService,
-    private performanceService: PerformanceService
+    private performanceService: PerformanceService,
+    private userService: UserService
   ) {
     super();
   }
@@ -917,34 +919,11 @@ export class PerformanceController extends ModuleController {
     },
     authorisation: AuthStrat.isLoggedIn,
     controller: async req => {
-      // Check current user exists with the session id
-      const myself = await getCheck(User.findOne({ _id: req.session.user._id }));
-      // Check performance exists with the provided id
-      const performance = await getCheck(Performance.findOne({ _id: req.params.pid }));
-      // Check to make sure we don't add duplicate likes
-      const existingLike = await this.ORM.createQueryBuilder(Like, 'like')
-        .where('like.user__id = :uid', { uid: req.session.user._id })
-        .andWhere('like.performance__id = :pid', { pid: req.params.pid })
-        .getOne();
-      // If like exists, we delete. Else we add.
-      if (existingLike) {
-        // Delete the like and decrement the count in a single transaction
-        await transact(async txc => {
-          await txc.remove(existingLike);
-          // Decrement the like count. Check to ensure it doesn't go negative.
-          performance.like_count = performance.like_count - 1 < 0 ? 0 : performance.like_count - 1;
-          await txc.save(performance);
-        });
-      } else {
-        // Insert the like and increment the count in a single transaction
-        await transact(async txc => {
-          const like = new Like(myself, performance, req.body.location);
-          await txc.save(like);
-
-          performance.like_count++;
-          await txc.save(performance);
-        });
-      }
+      this.userService.toggleLike({
+        user_id: req.session.user._id,
+        target_type: req.body.location,
+        target_id: req.params.pid
+      });
     }
   };
 

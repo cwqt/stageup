@@ -23,7 +23,7 @@ import {
   IHostInvoiceStub,
   IRefund,
   IInvoice,
-  IUserFollow,
+  IClientHostData,
   DtoHostPatronageSubscription,
   IDeleteHostAssertion,
   IDeleteHostReason,
@@ -37,7 +37,11 @@ import {
   IUserMarketingInfo,
   IFeedPerformanceStub,
   IHostFeed,
-  PaginationOptions
+  PaginationOptions,
+  NUUID,
+  ILike,
+  LikeLocation,
+  DtoReadHost
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -105,8 +109,8 @@ export class HostService {
       .toPromise();
   }
 
-  readHost(hostId: string): Promise<IEnvelopedData<IHost, IUserFollow>> {
-    return this.http.get<IEnvelopedData<IHost, IUserFollow>>(`/api/hosts/${hostId}`).toPromise();
+  readHost(hostId: string): Promise<DtoReadHost> {
+    return this.http.get<DtoReadHost>(`/api/hosts/${hostId}`).toPromise();
   }
 
   // router.put <IHostPrivate> ("/hosts/:hid", Hosts.updateHost());
@@ -144,8 +148,8 @@ export class HostService {
   }
 
   // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
-  readHostByUsername(hostUsername: string): Promise<IEnvelopedData<IHost, IUserFollow>> {
-    return this.http.get<IEnvelopedData<IHost, IUserFollow>>(`/api/hosts/@${hostUsername}`).toPromise();
+  readHostByUsername(hostUsername: string): Promise<DtoReadHost> {
+    return this.http.get<DtoReadHost>(`/api/hosts/@${hostUsername}`).toPromise();
   }
 
   // router.get <IUserStub[]> ("/hosts/:hid/members", Hosts.readMembers());
@@ -317,6 +321,11 @@ export class HostService {
         `/api/hosts/${hostId}/analytics/performances${querize({ ...query, period })}`
       )
       .toPromise();
+  }
+
+  // router.post <void> ("/hosts/:hid/toggle-like", Hosts.toggleLike());
+  toggleLike(hostId: NUUID): Promise<void> {
+    return this.http.post<void>(`/api/hosts/${hostId}/toggle-like`, null).toPromise();
   }
 
   // router.get <DtoHostAnalytics>  ("/hosts/:hid/analytics", Hosts.readHostAnalytics());

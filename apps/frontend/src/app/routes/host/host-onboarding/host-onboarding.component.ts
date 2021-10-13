@@ -13,7 +13,8 @@ import {
   IOnboardingStepMap,
   BusinessType,
   IEnvelopedData,
-  IUserFollow
+  IClientHostData,
+  DtoReadHost
 } from '@core/interfaces';
 import { regexes, to } from '@core/helpers';
 import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
@@ -79,7 +80,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
   stepUiMap: { [index in HostOnboardingStep]?: IUiStep<any> };
 
-  hostEnvelope: IEnvelopedData<IHost, IUserFollow>;
+  hostEnvelope: DtoReadHost;
 
   constructor(private hostService: HostService) {}
 

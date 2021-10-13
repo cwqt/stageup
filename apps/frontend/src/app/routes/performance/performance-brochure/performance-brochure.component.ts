@@ -12,6 +12,7 @@ import {
   IMyself,
   IPaymentIntentClientSecret,
   ITicketStub,
+  LikeLocation,
   PurchaseableType
 } from '@core/interfaces';
 import { cachize, createICacheable, ICacheable } from '@frontend/app.interfaces';
@@ -40,7 +41,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
-  @Output() onLikeEvent = new EventEmitter();
+  @Output() onLike = new EventEmitter();
   @Output() onFollowEvent = new EventEmitter();
 
   performanceCacheable: ICacheable<DtoPerformance> = createICacheable();
@@ -255,7 +256,11 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     }
   }
 
+  async likePerformance() {
+    await this.performanceService.toggleLike(this.data.performance_id, LikeLocation.Brochure);
+  }
+
   likeEvent(value: boolean) {
-    this.onLikeEvent.emit(value);
+    this.onLike.emit(value);
   }
 }

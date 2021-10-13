@@ -13,7 +13,6 @@ import { PerformanceService } from '@frontend/services/performance.service';
 import { Cacheable } from '@frontend/app.interfaces';
 import { merge, Observable } from 'rxjs';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
-import { MyselfService } from '@frontend/services/myself.service';
 import { GdprService } from '@frontend/services/gdpr.service';
 
 @Component({
@@ -81,13 +80,13 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
         }),
         terms: UiField.Checkbox({
           label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally`,
-          validators: [{ type: 'required' }],
-          hint: $localize`Set the start and end date for your event`
+          validators: [{ type: 'required' }]
         })
       },
       resolvers: {
         output: async v => {
           this.acceptedStreamingTerms = v.terms;
+
           return this.hostService.createPerformance(this.hostService.hostId, {
             name: v.name,
             description: v.description,
@@ -96,7 +95,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
               start: timestamp(v.publicity_period.start),
               end: timestamp(v.publicity_period.end)
             },
-            type: this.type
+            type: this.type === 'live' ? PerformanceType.Live : PerformanceType.Vod
           });
         }
       },

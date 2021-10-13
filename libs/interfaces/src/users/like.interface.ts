@@ -4,12 +4,12 @@ import { NUUID } from '../common/fp.interface';
 export enum LikeLocation {
   Thumb = 'thumbnail',
   Performance = 'video',
-  Brochure = 'brochure'
+  Brochure = 'brochure',
+  HostProfile = 'host-profile'
 }
 
 export interface ILike {
-  like_date: number;
-  user__id: NUUID;
-  performance__id: NUUID;
-  like_location: LikeLocation;
+  user_id: NUUID;
+  target_id: NUUID;
+  target_type: LikeLocation;
 }

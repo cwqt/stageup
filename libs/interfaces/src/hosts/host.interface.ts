@@ -1,10 +1,12 @@
 import { IAssetStub } from './../assets/asset.interface';
 import { Except } from 'type-fest';
+import { IEnvelopedData } from '../common/envelope.interface';
 import { Idless, NUUID } from '../common/fp.interface';
 import { IPerformanceStub } from '../performances/performance.interface';
 import { IAddress } from '../users/address.interface';
 
 export type DtoCreateHost = Pick<IHostPrivate, 'email_address' | 'username' | 'name'>;
+export type DtoReadHost = IEnvelopedData<IHost, IClientHostData>;
 
 export enum BusinessType {
   Individual = 'individual',
@@ -37,8 +39,9 @@ export interface IHostPrivate extends IHost {
 }
 
 // True if the current user is following the particular host
-export interface IUserFollow {
+export interface IClientHostData {
   is_following: boolean;
+  is_liking: boolean;
 }
 
 export type DtoUpdateHost = Except<
