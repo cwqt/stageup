@@ -179,12 +179,12 @@ export class MyselfController extends ModuleController {
             });
         }
       }
-      //TODO: Add this query to a job that runs weekly as this is an expensive operation to compute every time the feed loads. It's also constant for every
-      //user
+
       if (fetchAll || req.query['trending']) {
         feed.trending = await this.ORM.createQueryBuilder(Performance, 'performance')
           .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
           .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
+          .where('invoice.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
           .innerJoinAndSelect('performance.host', 'host')
           .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
           .addSelect('COUNT(*)', 'count')
@@ -194,6 +194,7 @@ export class MyselfController extends ModuleController {
           .addGroupBy('host._id')
           .addGroupBy('likes._id')
           .orderBy('count', 'DESC')
+          .cache('trending_performances', 604800000) // Cache for 1 week
           .paginate({
             serialiser: p => p.toClientStub(),
             page: req.query.trending ? parseInt((req.query['trending'] as any).page) : 0,
