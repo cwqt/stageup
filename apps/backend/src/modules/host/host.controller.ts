@@ -166,7 +166,8 @@ export class HostController extends ModuleController {
           relations: {
             members_info: {
               user: true
-            }
+            },
+            asset_group: true,
           }
         }
       );
@@ -1153,7 +1154,7 @@ export class HostController extends ModuleController {
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     middleware: Middleware.file(2048, ACCEPTED_IMAGE_MIME_TYPES).single('file'),
     controller: async req => {
-      const host = await getCheck(Host.findOne({ where: { _id: req.params.hid } }));
+      const host = await getCheck(Host.findOne({ where: { _id: req.params.hid }, relations: ['asset_group'] }));
 
       // Delete whatever file this is supposed to be replacing
       if (req.query.replaces) {
