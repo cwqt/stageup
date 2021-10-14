@@ -194,7 +194,7 @@ export class MyselfController extends ModuleController {
           .addGroupBy('host._id')
           .addGroupBy('likes._id')
           .orderBy('count', 'DESC')
-          .cache('trending_performances', 604800000) // Cache for 1 week
+          .cache(604800000) // Cache for 1 week
           .paginate({
             serialiser: p => p.toClientStub(),
             page: req.query.trending ? parseInt((req.query['trending'] as any).page) : 0,
