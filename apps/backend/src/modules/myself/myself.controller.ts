@@ -18,6 +18,7 @@ import {
   Refund,
   StripeProvider,
   STRIPE_PROVIDER,
+  Ticket,
   User,
   UserHostInfo,
   UserHostMarketingConsent,
@@ -180,45 +181,23 @@ export class MyselfController extends ModuleController {
       }
       //TODO: Add this query to a job that runs weekly as this is an expensive operation to compute every time the feed loads. It's also constant for every
       //user
-      if ((fetchAll || req.query['trending']) && req.session.user) {
-        //Working raw sql query, as could not get count and group by to work in the ORM...
-        const mostPurchasedPerformances: Array<{
-          performance_id: NUUID;
-          tickets_sold: number;
-        }> = await getManager().query(
-          `SELECT public.performance._id, COUNT(public.performance.name) AS tickets_sold
-        FROM public.invoice
-        INNER JOIN public.ticket ON public.invoice.ticket__id = public.ticket._id
-        INNER JOIN public.performance ON public.ticket.performance__id = public.performance._id
-        WHERE public.invoice.purchased_at >= : startOfWeek 
-        GROUP BY public.invoice.ticket__id, public.ticket.name, public.performance._id
-        ORDER BY COUNT(*) DESC`,
-          [{ startOfWeek: timestamp(startOfWeek(new Date())) }]
-        );
-
-        // const mostPurchasedPerformances = await this.ORM.createQueryBuilder(Invoice, 'i')
-        //   .select(['i._id', 't._id', 'p._id', 'COUNT(p.name) as ticketsSold'])
-        //   .innerJoin('i.ticket', 't')
-        //   .innerJoin('t.performance', 'p')
-        //   .where('i.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
-        //   .groupBy('i._id')
-        //   .addGroupBy('t._id')
-        //   .addGroupBy('p._id')
-        //   .orderBy('COUNT(*)', 'DESC')
-        //   .getMany();
-
-        console.log(mostPurchasedPerformances);
-
-        feed.trending = await this.ORM.createQueryBuilder(Performance, 'p')
-          .where('p._id IN (:...performanceArray)', {
-            performanceArray: mostPurchasedPerformances.map(e => e.performance_id)
-          })
-          .innerJoinAndSelect('p.host', 'host')
-          .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+      if (fetchAll || req.query['trending']) {
+        feed.trending = await this.ORM.createQueryBuilder(Performance, 'performance')
+          .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
+          .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
+          .innerJoinAndSelect('performance.host', 'host')
+          .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+          .addSelect('COUNT(*)', 'count')
+          .groupBy('performance._id')
+          .addGroupBy('performance__asset_group._id')
+          .addGroupBy('performance__asset_group__assets._id')
+          .addGroupBy('host._id')
+          .addGroupBy('likes._id')
+          .orderBy('count', 'DESC')
           .paginate({
             serialiser: p => p.toClientStub(),
-            page: req.query.follows ? parseInt((req.query['follows'] as any).page) : 0,
-            per_page: req.query.follows ? parseInt((req.query['follows'] as any).per_page) : 4
+            page: req.query.trending ? parseInt((req.query['trending'] as any).page) : 0,
+            per_page: req.query.trending ? parseInt((req.query['trending'] as any).per_page) : 4
           });
       }
 
