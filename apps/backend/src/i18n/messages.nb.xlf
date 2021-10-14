@@ -111,10 +111,6 @@
       <source>Total Rows</source>
       <target state="needs-translation">Totalt antall rader</target>
     </trans-unit>				
-		<trans-unit id="host.audience_csv.name" datatype="html">
-      <source>Full Name</source>
-      <target state="needs-translation">Fullt navn</target>
-    </trans-unit>				
 		<trans-unit id="host.audience_csv.username" datatype="html">
       <source>Username</source>
       <target state="needs-translation">Brukernavn</target>

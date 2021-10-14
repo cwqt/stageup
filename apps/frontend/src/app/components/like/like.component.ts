@@ -1,23 +1,21 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { LikeLocation } from '@core/interfaces';
-
+import { HostService } from '@frontend/services/host.service';
+//Generic like component, can be used to like both hosts and performances
 @Component({
-  selector: 'app-like-performance',
-  templateUrl: './like-performance.component.html',
-  styleUrls: ['./like-performance.component.scss']
+  selector: 'app-like',
+  templateUrl: './like.component.html',
+  styleUrls: ['./like.component.scss']
 })
-export class LikePerformanceComponent implements OnInit {
-  @Input() userLiked: boolean; // If the current user has liked this performance
-  @Input() performanceId: string; // ID of performance
+export class LikeComponent implements OnInit {
+  @Input() userLiked: boolean; // If the current user has liked this likeable entity
   @Input() location: LikeLocation; // Location of the like button ('brochure', 'thumbnail', or 'video')
   @Input() likeCount?: number; // Total number of likes (from all locations). This input is optional.
-
-  @Output() onLikeEvent = new EventEmitter();
-
+  @Output() onLike = new EventEmitter();
   countToDisplay: string | number; // Formatted number to display (possibly string since it might include 'K' at the end).
 
-  constructor(private performanceService: PerformanceService) {}
+  constructor() {}
 
   ngOnInit(): void {
     // If like count is provided, format it for large numbers (e.g. 1.1K)
@@ -26,10 +24,9 @@ export class LikePerformanceComponent implements OnInit {
 
   // Add or remove a like from the database and the counter
   async likeEvent() {
-    await this.performanceService.toggleLike(this.performanceId, this.location);
     this.userLiked ? this.updateCount(-1) : this.updateCount(1);
     this.userLiked = !this.userLiked;
-    this.onLikeEvent.emit(this.userLiked);
+    this.onLike.emit(this.userLiked);
   }
 
   // Updates count for the user interface. If no count provided it simply returns.

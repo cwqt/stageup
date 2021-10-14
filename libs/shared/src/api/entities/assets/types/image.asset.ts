@@ -24,8 +24,8 @@ export class ImageAsset extends Asset<AssetType.Image> implements AssetMethods<A
     return res;
   }
 
-  getLocation(options: AssetOptions[AssetType.Image]) {
-    return `${options.s3_url}/${this.asset_identifier}`;
+  getLocation() {
+    return this.location;
   }
 
   async delete(provider: AssetProvider[AssetType.Image]) {

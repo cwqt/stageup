@@ -1,4 +1,10 @@
-<h2 i18n>Feed</h2>
-<ui-hr></ui-hr>
+<!-- FOR NOW COMMENTING THIS OUT. WE WILL SOON BE REPLACING THESE TABS WITH A SINGLE HOST PROFILE PAGE -->
+<!-- <h2 i18n>Feed</h2>
+<ui-hr></ui-hr> -->
+<!-- <p class="mb-0" i18n>No posts</p> -->
 
-<p class="mb-0" i18n>No posts</p>
+<app-host-profile-asset-carousel
+  *ngIf="host?.assets.length > 1 || isHostView"
+  [isHostView]="isHostView"
+  [host]="host"
+></app-host-profile-asset-carousel>

@@ -7,7 +7,8 @@ import {
   OneToOne,
   JoinColumn,
   BeforeInsert,
-  PrimaryColumn
+  PrimaryColumn,
+  Check
 } from 'typeorm';
 
 import {
@@ -22,6 +23,7 @@ import {
   ILocale
 } from '@core/interfaces';
 
+import { AssetGroup } from './../assets/asset-group.entity';
 import { User } from '../users/user.entity';
 import { Performance } from '../performances/performance.entity';
 import { UserHostInfo } from './user-host-info.entity';
@@ -30,9 +32,10 @@ import { timestamp, uuid } from '@core/helpers';
 import { ErrorHandler } from '../../errors';
 import { Invoice } from '../finance/invoice.entity';
 import { PatronTier } from './patron-tier.entity';
-import { PatronSubscription } from '@core/api';
+import { Like, PatronSubscription } from '@core/api';
 
 @Entity()
+@Check('0 <= "commission_rate" AND commission_rate <= 1') // Commission rate is a percentage
 export class Host extends BaseEntity implements IHostPrivate {
   @PrimaryColumn() _id: string;
   @BeforeInsert() private beforeInsert() {
@@ -42,6 +45,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column() created_at: number;
   @Column() name: string;
   @Column() username: string;
+  @Column({ unsigned: true }) like_count: number;
   @Column({ nullable: true }) bio?: string;
   @Column({ nullable: true }) avatar: string;
   @Column({ nullable: true }) banner: string;
@@ -61,6 +65,12 @@ export class Host extends BaseEntity implements IHostPrivate {
 
   @OneToOne(() => User) @JoinColumn() owner: User;
   @OneToOne(() => Onboarding, hop => hop.host) onboarding_process: Onboarding;
+  @OneToMany(() => Like, like => like.host, { onDelete: 'CASCADE', cascade: true }) likes: Like[];
+  @Column({ nullable: true, type: 'float' }) commission_rate: number;
+
+  @OneToOne(() => AssetGroup, { eager: true, onDelete: 'CASCADE', cascade: true })
+  @JoinColumn()
+  asset_group: AssetGroup;
 
   constructor(data: Pick<IHostPrivate, 'name' | 'username' | 'email_address'>) {
     super();
@@ -81,11 +91,18 @@ export class Host extends BaseEntity implements IHostPrivate {
       pinterest_url: null,
       youtube_url: null
     };
+    this.like_count = 0;
+    this.commission_rate = null;
   }
 
   async setup(creator: User, txc: EntityManager) {
     this.owner = creator;
     this.onboarding_process = await txc.save(new Onboarding(this, creator));
+
+    const group = new AssetGroup(this._id);
+    await txc.save(group);
+    this.asset_group = group;
+    await txc.save(this);
 
     return this;
   }
@@ -124,7 +141,8 @@ export class Host extends BaseEntity implements IHostPrivate {
       avatar: this.avatar,
       banner: this.banner,
       bio: this.bio,
-      stripe_account_id: this.stripe_account_id
+      stripe_account_id: this.stripe_account_id,
+      assets: this.asset_group?.assets.map(a => a.toStub())
     };
   }
 
@@ -133,7 +151,8 @@ export class Host extends BaseEntity implements IHostPrivate {
       ...this.toStub(),
       created_at: this.created_at,
       is_onboarded: this.is_onboarded,
-      social_info: this.social_info
+      social_info: this.social_info,
+      commission_rate: this.commission_rate
     };
   }
 

@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { IHost } from '@core/interfaces';
 
@@ -7,11 +8,16 @@ import { IHost } from '@core/interfaces';
   styleUrls: ['./host-profile-feed.component.scss']
 })
 export class HostProfileFeedComponent implements OnInit {
-  host:IHost;//injected from parent
+  host: IHost; //injected from parent
 
-  constructor() { }
+  constructor(public route: ActivatedRoute) {}
 
-  ngOnInit(): void {
+  // TODO: Probably worth having more robust check, even with server side validation
+  // since regular users may end on this page (e.g. if a host shares their profile)
+  // In addition, will we need to account for hosts having the same username?
+  get isHostView(): boolean {
+    return this.route.snapshot.data['is_host_view'];
   }
 
+  ngOnInit(): void {}
 }

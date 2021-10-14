@@ -4,6 +4,7 @@ import {
   BLOB_PROVIDER,
   EMAIL_PROVIDER,
   EVENT_BUS_PROVIDER,
+  GCPBlobProvider,
   HTTP_TUNNEL_PROVIDER,
   MuxProvider,
   MUX_PROVIDER,
@@ -14,7 +15,6 @@ import {
   RedisProvider,
   REDIS_PROVIDER,
   RxmqEventBus,
-  S3BlobProvider,
   SSEHubManagerProvider,
   SSE_HUB_PROVIDER,
   StoreProvider,
@@ -32,8 +32,8 @@ import { SUPPORTED_LOCALES } from './locales';
 import path from 'path';
 
 // Hold this off until the logger is instatiated, hacky :/
-export const instantiateProviders = () =>
-  new Map<Token<any>, Provider>([
+export const instantiateProviders = () => {
+  const map = new Map<Token<any>, Provider>([
     [
       I18N_PROVIDER,
       new XLFi18nProvider({
@@ -101,12 +101,11 @@ export const instantiateProviders = () =>
     ],
     [
       BLOB_PROVIDER,
-      new S3BlobProvider({
-        s3_access_key_id: Env.AWS.S3_ACCESS_KEY_ID,
-        s3_access_secret_key: Env.AWS.S3_ACCESS_SECRET_KEY,
-        s3_bucket_name: Env.AWS.S3_BUCKET_NAME,
-        s3_url: Env.AWS.S3_URL,
-        s3_region: Env.AWS.S3_REGION
+      new GCPBlobProvider({
+        bucket_name: Env.GOOGLE_STORAGE.BUCKET_NAME,
+        public_url: Env.GOOGLE_STORAGE.PUBLIC_URL,
+        service_account_email: Env.GOOGLE_STORAGE.SERVICE_ACCOUNT_EMAIL,
+        service_account_key: Env.GOOGLE_STORAGE.SERVICE_ACCOUNT_KEY
       })
     ],
     [EVENT_BUS_PROVIDER, new RxmqEventBus({})],
@@ -128,3 +127,11 @@ export const instantiateProviders = () =>
       })
     ]
   ]);
+
+  // Remove any undefined entries from the map
+  for (const [token, provider] of map.entries()) {
+    if (!provider) map.delete(token);
+  }
+
+  return map;
+};

@@ -63,6 +63,7 @@ export namespace fields {
   export const postcode = define<string>('postcode', value => validator.isPostalCode(value as string, 'GB'));
   export const country = define<CountryCode>('iso3166', value => validator.isISO31661Alpha2(value as string));
   export const currency = enums<CurrencyCode>(CURRENCY_CODES as CurrencyCode[]);
+  export const percentage = size(number(), 0, 1);
   export const richtext = string();
   export const genre = enums(enumToValues(Genre) as Genre[]);
   export const personTitle = enums<PersonTitle>(enumToValues(PersonTitle));

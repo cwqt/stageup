@@ -7,11 +7,9 @@ import { IHost } from '@core/interfaces';
   styleUrls: ['./host-profile-about.component.scss']
 })
 export class HostProfileAboutComponent implements OnInit {
-  host:IHost;//injected from parent
+  host: IHost; //injected from parent
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

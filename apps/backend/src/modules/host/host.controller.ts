@@ -11,7 +11,9 @@ import {
   HostAnalytics,
   HostInvitation,
   IControllerEndpoint,
+  ImageAsset,
   Invoice,
+  Like,
   LiveStreamAsset,
   Middleware,
   ModuleController,
@@ -22,16 +24,21 @@ import {
   PerformanceAnalytics,
   POSTGRES_PROVIDER,
   STRIPE_PROVIDER,
+  transact,
   User,
   UserHostInfo,
   UserHostMarketingConsent,
   Validators
 } from '@core/api';
-import { timestamp } from '@core/helpers';
+import { timestamp, enumToValues, findAssets } from '@core/helpers';
 import {
+  ACCEPTED_IMAGE_MIME_TYPES,
   Analytics,
   AnalyticsTimePeriod,
   AnalyticsTimePeriods,
+  AssetDto,
+  AssetOwnerType,
+  AssetTags,
   AssetType,
   ConsentableType,
   ConsentOpt,
@@ -64,15 +71,30 @@ import {
   IOnboardingStepMap,
   IPerformanceStub,
   IRefund,
-  IUserFollow,
+  IClientHostData,
   IUserHostInfo,
   LiveStreamState,
-  IFeedPerformanceStub,
+  Visibility,
+  LikeLocation,
   JobType,
-  Visibility
+  DtoReadHost
 } from '@core/interfaces';
 import Stripe from 'stripe';
-import { array, assign, boolean, coerce, enums, nullable, object, string, StructError, record } from 'superstruct';
+import {
+  array,
+  assign,
+  boolean,
+  coerce,
+  enums,
+  nullable,
+  object,
+  string,
+  StructError,
+  record,
+  size,
+  number,
+  optional
+} from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
@@ -80,6 +102,7 @@ import IdFinderStrat from '../../common/authorisation/id-finder-strategies';
 import Env from '../../env';
 import { HostService } from './host.service';
 import { JobQueueService } from './../queue/queue.service';
+import { UserService } from '../user/user.service';
 
 @Service()
 export class HostController extends ModuleController {
@@ -90,7 +113,8 @@ export class HostController extends ModuleController {
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     private financeService: FinanceService,
     private hostService: HostService,
-    private queueService: JobQueueService
+    private queueService: JobQueueService,
+    private userService: UserService
   ) {
     super();
   }
@@ -133,7 +157,7 @@ export class HostController extends ModuleController {
     }
   };
 
-  readHost: IControllerEndpoint<IEnvelopedData<IHost, IUserFollow>> = {
+  readHost: IControllerEndpoint<DtoReadHost> = {
     authorisation: AuthStrat.none,
     controller: async req => {
       const host = await Host.findOne(
@@ -155,9 +179,16 @@ export class HostController extends ModuleController {
           .andWhere('follow.host__id = :hid', { hid: host._id })
           .getOne());
 
+      const existingLike =
+        req.session.user &&
+        (await this.ORM.createQueryBuilder(Like, 'like')
+          .where('like.user__id = :uid', { uid: req.session.user._id })
+          .andWhere('like.host__id = :hid', { hid: host._id })
+          .getOne());
+
       const envelope = {
         data: host.toFull(),
-        __client_data: { is_following: isFollowing ? true : false }
+        __client_data: { is_following: isFollowing ? true : false, is_liking: existingLike ? true : false }
       };
       return envelope;
     }
@@ -1034,6 +1065,19 @@ export class HostController extends ModuleController {
     }
   };
 
+  // Adds a like from database with the current users ID, the provided host ID and the location of where the user liked the host
+  toggleLike: IControllerEndpoint<void> = {
+    validators: { params: object({ hid: Validators.Fields.nuuid }) },
+    authorisation: AuthStrat.isLoggedIn,
+    controller: async req => {
+      this.userService.toggleLike({
+        user_id: req.session.user._id,
+        target_type: LikeLocation.HostProfile,
+        target_id: req.params.hid
+      });
+    }
+  };
+
   readHostMarketingConsents: IControllerEndpoint<DtoUserMarketingInfo> = {
     authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
     controller: async req => {
@@ -1080,6 +1124,65 @@ export class HostController extends ModuleController {
         host_id: h._id,
         audience_ids: req.body.selected_users
       });
+    }
+  };
+
+  updateCommissionRate: IControllerEndpoint<void> = {
+    validators: {
+      body: object({ new_rate: Validators.Fields.percentage }),
+      params: object({
+        hid: Validators.Fields.nuuid
+      })
+    },
+    authorisation: AuthStrat.isSiteAdmin,
+    controller: async req => {
+      const host = await getCheck(Host.findOne({ _id: req.params.hid }));
+
+      host.commission_rate = req.body.new_rate;
+      await host.save();
+    }
+  };
+
+  updateHostAssets: IControllerEndpoint<AssetDto | void> = {
+    validators: {
+      query: object({
+        replaces: optional(Validators.Fields.nuuid),
+        type: enums(enumToValues(AssetType) as AssetType[])
+      })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    middleware: Middleware.file(2048, ACCEPTED_IMAGE_MIME_TYPES).single('file'),
+    controller: async req => {
+      const host = await getCheck(Host.findOne({ where: { _id: req.params.hid } }));
+
+      // Delete whatever file this is supposed to be replacing
+      if (req.query.replaces) {
+        const asset = findAssets(host.asset_group.assets, AssetType.Image)[0] as ImageAsset;
+        await asset?.delete(this.blobs);
+      } else {
+        // Only allow up to 5 thumbnails at any one time
+        if (findAssets(host.asset_group.assets, AssetType.Image).length === 5)
+          throw new ErrorHandler(HTTP.Forbidden, '@@error.too_many_thumbnails');
+      }
+
+      // Check that there is a file...
+      if (!req.file) return;
+
+      const asset = await transact(async txc => {
+        const asset = new ImageAsset(host.asset_group, ['thumbnail']);
+        await asset.setup(
+          this.blobs,
+          { file: req.file },
+          {
+            asset_owner_type: AssetOwnerType.Host,
+            asset_owner_id: host._id
+          },
+          txc
+        );
+        return await txc.save(asset);
+      });
+
+      return asset.toDto();
     }
   };
 }

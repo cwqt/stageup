@@ -155,7 +155,7 @@ export class FeedComponent extends CarouselBaseComponent<IPerformanceStub | IHos
       }))
     );
     // Event listeners for like and follow events inside the MatDialog
-    const likeSubscription = dialogRef.componentInstance.onLikeEvent.subscribe(data => {
+    const likeSubscription = dialogRef.componentInstance.onLike.subscribe(data => {
       this.syncLikes({ performance: performanceId, value: data });
     });
     const followSubscription = dialogRef.componentInstance.onFollowEvent.subscribe(data => {

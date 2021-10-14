@@ -1,8 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, NgControl, ValidatorFn, Validators } from '@angular/forms';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
-import { IErrorResponse, ParsedRichText, Primitive, RichText, Y } from '@core/interfaces';
-import { CurrencyCode } from 'aws-sdk/clients/devicefarm';
+import { IErrorResponse, ParsedRichText, Primitive, RichText, Y, CurrencyCode } from '@core/interfaces';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { createICacheable, ICacheable } from '../../app.interfaces';
 

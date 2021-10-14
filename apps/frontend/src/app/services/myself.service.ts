@@ -9,8 +9,6 @@ import {
   IEnvelopedData,
   IFollowing,
   IHost,
-  IHostStub,
-  ILike,
   ILocale,
   IMyself,
   IOptOutReason,

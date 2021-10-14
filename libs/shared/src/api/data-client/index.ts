@@ -2,7 +2,6 @@ import { timestamp } from '@core/helpers';
 import Container, { Token } from 'typedi';
 import { Logger } from './providers/logging.provider';
 import { LOGGING_PROVIDER } from './tokens';
-
 /**
  * DataClient: Object with methods for maintaining all providers
  * Provider: Class instance that maintains connection to a database/external service
