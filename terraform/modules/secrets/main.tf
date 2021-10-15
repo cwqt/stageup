@@ -114,51 +114,23 @@ output "BACKEND_PRIVATE_KEY" {
 }
 
 # ===================================================================================
-# S3
-# S3 WILL USE THE SAME KEYS AS FEAT/STAGE SINCE IS GOING TO BE REPLACED BY GCP STORAGE
+# GOOGLE CLOUD STORAGE
 # ===================================================================================
-data "google_secret_manager_secret_version" "AWS_S3_ACCESS_KEY_ID" {
+data "google_secret_manager_secret_version" "GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY" {
   provider = google-beta
-  secret   = "AWS_S3_ACCESS_KEY_ID"
+  secret   = "${local.prefix[var.core]}GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY"
 }
-output "AWS_S3_ACCESS_KEY_ID" {
-  value     = data.google_secret_manager_secret_version.AWS_S3_ACCESS_KEY_ID.secret_data
+output "GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY" {
+  value     = jsondecode(data.google_secret_manager_secret_version.GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY.secret_data).private_key
   sensitive = true
 }
 
-data "google_secret_manager_secret_version" "AWS_S3_ACCESS_SECRET_KEY" {
+data "google_secret_manager_secret_version" "GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL" {
   provider = google-beta
-  secret   = "AWS_S3_ACCESS_SECRET_KEY"
+  secret   = "${local.prefix[var.core]}GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY"
 }
-output "AWS_S3_ACCESS_SECRET_KEY" {
-  value     = data.google_secret_manager_secret_version.AWS_S3_ACCESS_SECRET_KEY.secret_data
-  sensitive = true
-}
-
-data "google_secret_manager_secret_version" "AWS_S3_BUCKET_NAME" {
-  provider = google-beta
-  secret   = "AWS_S3_BUCKET_NAME"
-}
-output "AWS_S3_BUCKET_NAME" {
-  value     = data.google_secret_manager_secret_version.AWS_S3_BUCKET_NAME.secret_data
-  sensitive = true
-}
-
-data "google_secret_manager_secret_version" "AWS_S3_REGION" {
-  provider = google-beta
-  secret   = "AWS_S3_REGION"
-}
-output "AWS_S3_REGION" {
-  value     = data.google_secret_manager_secret_version.AWS_S3_REGION.secret_data
-  sensitive = true
-}
-
-data "google_secret_manager_secret_version" "AWS_S3_URL" {
-  provider = google-beta
-  secret   = "AWS_S3_URL"
-}
-output "AWS_S3_URL" {
-  value     = data.google_secret_manager_secret_version.AWS_S3_URL.secret_data
+output "GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL" {
+  value     = jsondecode(data.google_secret_manager_secret_version.GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY.secret_data).client_email
   sensitive = true
 }
 

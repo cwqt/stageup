@@ -22,7 +22,9 @@ import {
   IAssetStub,
   AssetDto,
   IRemovalReason,
-  DtoRemovePerformance
+  DtoRemovePerformance,
+  ILike,
+  LikeLocation
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
@@ -154,9 +156,9 @@ export class PerformanceService {
     return this.http.delete<void>(`/api/performances/${performanceId}/rate`).toPromise();
   }
   // router.post <void> ("/performances/:pid/toggle-like", Perfs.toggleLike());
-  toggleLike(performanceId: NUUID, location: string): Promise<void> {
+  toggleLike(performanceId: NUUID, likeTarget: LikeLocation): Promise<void> {
     return this.http
-      .post<void>(`/api/performances/${performanceId}/toggle-like`, { location })
+      .post<void>(`/api/performances/${performanceId}/toggle-like`, { location: likeTarget })
       .toPromise();
   }
 

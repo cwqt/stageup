@@ -2,6 +2,7 @@
 const TRUE_ENV = process.env['NODE' + '_ENV'];
 /* eslint @typescript-eslint/no-var-requires: "off" */
 require('dotenv-flow').config({ node_env: TRUE_ENV, silent: true });
+process.env.GOOGLE_APPLICATION_CREDENTIALS = ''; // Prevent dotenv from loading core.service_account.json
 
 import { isEnv } from '@core/helpers';
 import { Environment } from '@core/interfaces';
@@ -10,11 +11,11 @@ import {
   ISendGridMailProviderConfig,
   IPostgresProviderConfig,
   IRedisProviderConfig,
-  IAWS3ProviderConfig,
   IStoreProviderConfig,
   ILocalTunnelProviderConfig,
   IStripeProviderConfig,
-  REDIS_PROVIDER,
+  IGCPBlobProviderConfig,
+  REDIS_PROVIDER
 } from '@core/api';
 import { ISocialAuth } from '@core/interfaces';
 
@@ -33,7 +34,7 @@ const Env: {
   UWU_MODE: boolean;
   PG: Envify<IPostgresProviderConfig>;
   MUX: Envify<IMuxProviderConfig>;
-  AWS: Envify<IAWS3ProviderConfig>;
+  GOOGLE_STORAGE: Envify<IGCPBlobProviderConfig>;
   REDIS: Envify<IRedisProviderConfig>;
   STORE: Envify<IStoreProviderConfig>;
   STRIPE: Envify<IStripeProviderConfig>;
@@ -103,12 +104,11 @@ const Env: {
     WEBHOOK_SIGNATURE: process.env.STRIPE_WEBHOOK_SIGNATURE,
     CLIENT_ID: process.env.STRIPE_CLIENT_ID
   },
-  AWS: {
-    S3_ACCESS_KEY_ID: process.env.AWS_S3_ACCESS_KEY_ID,
-    S3_ACCESS_SECRET_KEY: process.env.AWS_S3_ACCESS_SECRET_KEY,
-    S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
-    S3_URL: process.env.AWS_S3_URL,
-    S3_REGION: process.env.AWS_S3_REGION
+  GOOGLE_STORAGE: {
+    SERVICE_ACCOUNT_KEY: process.env.GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY,
+    SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL,
+    BUCKET_NAME: process.env.GOOGLE_STORAGE_BUCKET_NAME,
+    PUBLIC_URL: process.env.GOOGLE_STORAGE_PUBLIC_URL
   },
   SOCIAL_AUTH: {
     GOOGLE: process.env.GOOGLE_AUTH_APP_ID,

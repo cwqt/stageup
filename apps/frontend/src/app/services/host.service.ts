@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  AssetType,
   DtoUserMarketingInfo,
   ExportFileType,
   HostPermission,
@@ -22,7 +23,7 @@ import {
   IHostInvoiceStub,
   IRefund,
   IInvoice,
-  IUserFollow,
+  IClientHostData,
   DtoHostPatronageSubscription,
   IDeleteHostAssertion,
   IDeleteHostReason,
@@ -36,7 +37,11 @@ import {
   IUserMarketingInfo,
   IFeedPerformanceStub,
   IHostFeed,
-  PaginationOptions
+  PaginationOptions,
+  NUUID,
+  ILike,
+  LikeLocation,
+  DtoReadHost
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -104,8 +109,8 @@ export class HostService {
       .toPromise();
   }
 
-  readHost(hostId: string): Promise<IEnvelopedData<IHost, IUserFollow>> {
-    return this.http.get<IEnvelopedData<IHost, IUserFollow>>(`/api/hosts/${hostId}`).toPromise();
+  readHost(hostId: string): Promise<DtoReadHost> {
+    return this.http.get<DtoReadHost>(`/api/hosts/${hostId}`).toPromise();
   }
 
   // router.put <IHostPrivate> ("/hosts/:hid", Hosts.updateHost());
@@ -143,8 +148,8 @@ export class HostService {
   }
 
   // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
-  readHostByUsername(hostUsername: string): Promise<IEnvelopedData<IHost, IUserFollow>> {
-    return this.http.get<IEnvelopedData<IHost, IUserFollow>>(`/api/hosts/@${hostUsername}`).toPromise();
+  readHostByUsername(hostUsername: string): Promise<DtoReadHost> {
+    return this.http.get<DtoReadHost>(`/api/hosts/@${hostUsername}`).toPromise();
   }
 
   // router.get <IUserStub[]> ("/hosts/:hid/members", Hosts.readMembers());
@@ -202,7 +207,7 @@ export class HostService {
   }
 
   changeAvatar(hostId: string, data: FormData | null): Promise<string> {
-    return this.http.put<string>(`api/hosts/${hostId}/avatar`, data).toPromise();
+    return this.http.put<string>(`/api/hosts/${hostId}/avatar`, data).toPromise();
   }
 
   // router.get <IHostStripeInfo> ("/hosts/:hid/stripe/info", Hosts.readStripeInfo());
@@ -212,7 +217,7 @@ export class HostService {
 
   //router.put  <IHostStub> ("/hosts/:hid/banner", Hosts.changeBanner());
   changeBanner(hostId: string, data: FormData | null): Promise<string> {
-    return this.http.put<string>(`api/hosts/${hostId}/banner`, data).toPromise();
+    return this.http.put<string>(`/api/hosts/${hostId}/banner`, data).toPromise();
   }
 
   // router.get <IE<IHostInvoiceStub[]>> ("/hosts/:hid/invoices", Hosts.readInvoices());
@@ -224,13 +229,13 @@ export class HostService {
 
   //router.get<IHostInvoice>("/hosts/:hid/invoices/:iid",Hosts.readInvoice());
   readInvoice(hostId: string, invoiceId: string): Promise<IHostInvoice> {
-    return this.http.get<IHostInvoice>(`api/hosts/${hostId}/invoices/${invoiceId}`).toPromise();
+    return this.http.get<IHostInvoice>(`/api/hosts/${hostId}/invoices/${invoiceId}`).toPromise();
   }
 
   //router.post<void>("/hosts/:hid/invoices/process-refunds", Hosts.processRefund());
   processRefunds(invoiceIds: string[], hostId: string, bulkRefund?: IBulkRefund): Promise<void> {
     return this.http
-      .post<void>(`api/hosts/${hostId}/invoices/process-refunds`, {
+      .post<void>(`/api/hosts/${hostId}/invoices/process-refunds`, {
         invoice_ids: invoiceIds,
         bulk_refund_reason: bulkRefund.bulk_refund_reason,
         bulk_refund_detail: bulkRefund.bulk_refund_detail
@@ -318,6 +323,11 @@ export class HostService {
       .toPromise();
   }
 
+  // router.post <void> ("/hosts/:hid/toggle-like", Hosts.toggleLike());
+  toggleLike(hostId: NUUID): Promise<void> {
+    return this.http.post<void>(`/api/hosts/${hostId}/toggle-like`, null).toPromise();
+  }
+
   // router.get <DtoHostAnalytics>  ("/hosts/:hid/analytics", Hosts.readHostAnalytics());
   readHostAnalytics(hostId: string, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> {
     return this.http.get<DtoHostAnalytics>(`/api/hosts/${hostId}/analytics?period=${period}`).toPromise();
@@ -337,5 +347,16 @@ export class HostService {
     return this.http
       .post<void>(`/api/hosts/${hostId}/marketing/audience/export/${type}`, { selected_users: selectedUsers })
       .toPromise();
+  }
+
+  // router.put <void> ("/hosts/:hid/commission-rate", Hosts.updateCommissionRate());
+  updateCommissionRate(hostId: string, newRate: number): Promise<void> {
+    return this.http
+      .put<void>(`/api/hosts/${hostId}/commission-rate`, { new_rate: newRate })
+      .toPromise();
+  }
+  // router.put <void> ("/hosts/:hid/assets", Hosts.updateHostAssets());
+  updateHostAssets(hostId: string, fd: FormData, type: AssetType, replaces?: string): Promise<void> {
+    return this.http.put<void>(`/api/hosts/${hostId}/assets${querize({ type, replaces })}`, fd).toPromise();
   }
 }

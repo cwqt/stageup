@@ -35,7 +35,12 @@ export {
 export { i18n, XLFi18nProvider, XLFi18nProviderConfig } from './data-client/providers/i18n.provider';
 export { Logger, ILoggerConfiguration, WinstonLogger } from './data-client/providers/logging.provider';
 export { MuxProvider, IMuxProviderConfig } from './data-client/providers/mux.provider';
-export { S3BlobProvider, IAWS3ProviderConfig, BlobUploadResponse, Blobs } from './data-client/providers/blob.provider';
+export {
+  GCPBlobProvider,
+  IGCPBlobProviderConfig,
+  BlobUploadResponse,
+  Blobs
+} from './data-client/providers/blob.provider';
 export { LocalTunnelProvider, ILocalTunnelProviderConfig } from './data-client/providers/localtunnel.provider';
 export { PostgresProvider, IPostgresProviderConfig } from './data-client/providers/postgres.provider';
 export { Mail, SendGridMailProvider, ISendGridMailProviderConfig } from './data-client/providers/email.provider';

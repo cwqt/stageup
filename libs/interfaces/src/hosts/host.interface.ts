@@ -1,9 +1,12 @@
+import { IAssetStub } from './../assets/asset.interface';
 import { Except } from 'type-fest';
+import { IEnvelopedData } from '../common/envelope.interface';
 import { Idless, NUUID } from '../common/fp.interface';
 import { IPerformanceStub } from '../performances/performance.interface';
 import { IAddress } from '../users/address.interface';
 
 export type DtoCreateHost = Pick<IHostPrivate, 'email_address' | 'username' | 'name'>;
+export type DtoReadHost = IEnvelopedData<IHost, IClientHostData>;
 
 export enum BusinessType {
   Individual = 'individual',
@@ -20,12 +23,14 @@ export interface IHostStub {
   avatar?: string;
   banner?: string;
   stripe_account_id: string;
+  assets?: IAssetStub[];
 }
 
 export interface IHost extends IHostStub {
   social_info: ISocialInfo;
   created_at: number;
   is_onboarded: boolean;
+  commission_rate: number;
 }
 
 export interface IHostPrivate extends IHost {
@@ -34,13 +39,14 @@ export interface IHostPrivate extends IHost {
 }
 
 // True if the current user is following the particular host
-export interface IUserFollow {
+export interface IClientHostData {
   is_following: boolean;
+  is_liking: boolean;
 }
 
 export type DtoUpdateHost = Except<
   IHostPrivate,
-  '_id' | 'banner' | 'avatar' | 'created_at' | 'is_onboarded' | 'stripe_account_id'
+  '_id' | 'banner' | 'avatar' | 'created_at' | 'is_onboarded' | 'stripe_account_id' | 'commission_rate'
 >;
 
 export interface IHostBusinessDetails {

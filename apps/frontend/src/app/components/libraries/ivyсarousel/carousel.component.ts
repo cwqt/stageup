@@ -131,6 +131,7 @@ export class CarouselComponent implements OnDestroy {
   @Input() arrows: boolean = true;
   @Input() arrowsOutside: boolean;
   @Input() arrowsTheme: 'light' | 'dark' = 'light';
+  @Input() dotTheme: 'default' | 'platform' = 'default';
 
   @Input()
   set images(images: Images & any) {

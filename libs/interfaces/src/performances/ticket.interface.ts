@@ -1,5 +1,7 @@
 import { CurrencyCode } from '../common/currency.interface';
 
+export const TICKETS_QTY_UNLIMITED: number = -1
+
 export enum TicketType {
   Paid = 'paid',
   Free = 'free',

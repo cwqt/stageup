@@ -12,9 +12,19 @@ import {
   Host,
   POSTGRES_PROVIDER,
   UserHostMarketingConsent,
-  UserStageUpMarketingConsent
+  UserStageUpMarketingConsent,
+  Like,
+  Performance
 } from '@core/api';
-import { DtoCreateUser, Environment, IAddress, ConsentOpt, PlatformConsentOpt } from '@core/interfaces';
+import {
+  DtoCreateUser,
+  Environment,
+  IAddress,
+  ConsentOpt,
+  PlatformConsentOpt,
+  ILike,
+  LikeLocation
+} from '@core/interfaces';
 import jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
 import { ModuleService } from '@core/api';
@@ -159,5 +169,51 @@ export class UserService extends ModuleService {
     }
   }
 
+  //Checks to make sure we don't add duplicate likes
+  async getLike(likeData: ILike): Promise<Like> {
+    const qbWhere: { [location in LikeLocation]?: string } = {
+      [LikeLocation.HostProfile]: 'like.host__id = :tid',
+      [LikeLocation.Performance]: 'like.performance__id = :tid',
+      [LikeLocation.Thumb]: 'like.performance__id = :tid',
+      [LikeLocation.Brochure]: 'like.performance__id = :tid'
+    };
+
+    return await this.ORM.createQueryBuilder(Like, 'like')
+      .where('like.user__id = :uid', { uid: likeData.user_id })
+      .where(qbWhere[likeData.target_type], { tid: likeData.target_id })
+      .getOne();
+  }
+
+  async toggleLike(likeData: ILike): Promise<void> {
+    // Check current user exists with the session id
+    const myself = await getCheck(User.findOne({ _id: likeData.user_id }));
+
+    const existingLike = await this.getLike(likeData);
+
+    const target =
+      likeData.target_type === LikeLocation.HostProfile
+        ? await getCheck(Host.findOne({ _id: likeData.target_id }))
+        : await getCheck(Performance.findOne({ _id: likeData.target_id }));
+
+    // If like exists, we delete. Else we add.
+    if (existingLike) {
+      // Delete the like and decrement the count in a single transaction
+      await transact(async txc => {
+        await txc.remove(existingLike);
+
+        // Decrement the like count. Check to ensure it doesn't go negative.
+        target.like_count = target.like_count - 1 < 0 ? 0 : target.like_count - 1;
+        await txc.save(target);
+      });
+    } else {
+      // Insert the like and increment the count in a single transaction
+      await transact(async txc => {
+        const like = new Like(myself, likeData.target_type, target);
+        await txc.save(like);
+        target.like_count++;
+        await txc.save(target);
+      });
+    }
+  }
   // async readUserFollows(): Promise<IEnvelopedData<IFollowing[]>> {}
 }

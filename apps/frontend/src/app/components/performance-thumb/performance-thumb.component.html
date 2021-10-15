@@ -14,12 +14,11 @@
       </span>
     --></div>
     <div (click)="$event.stopPropagation()" *ngIf="myself" class="absolute top-2 right-2 rounded p-1 like-background">
-      <app-like-performance
+      <app-like 
         [userLiked]="userLiked"
         [location]="'thumbnail'"
-        [performanceId]="performance._id"
-        (onLikeEvent)="setLikeValue($event)"
-      ></app-like-performance>
+        (onLike) = likePerformance($event)
+      ></app-like>
     </div>
     <img
       class="w-full h-full object-cover"

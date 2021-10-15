@@ -23,11 +23,20 @@
   </div>
 
   <div class="carousel-dots" *ngIf="dots">
-    <div
-      class="carousel-dot"
-      [class.carousel-dot-active]="i === activeDotIndex"
-      *ngFor="let dot of dotsArr; index as i"
-    ></div>
+    <ng-container *ngIf="dotTheme == 'default'">
+      <div
+        class="carousel-dot"
+        [class.carousel-dot-active]="i === activeDotIndex"
+        *ngFor="let dot of dotsArr; index as i"
+      ></div>
+    </ng-container>
+    <ng-container *ngIf="dotTheme == 'platform'">
+      <div
+        class="carousel-dot-platform"
+        [class.carousel-dot-platform-active]="i === activeDotIndex"
+        *ngFor="let dot of dotsArr; index as i"
+      ></div>
+    </ng-container>
   </div>
 </div>
 

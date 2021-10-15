@@ -11,6 +11,7 @@ import {
   IHost,
   ITicket,
   ITicketStub,
+  TICKETS_QTY_UNLIMITED,
   TicketType
 } from '@core/interfaces';
 import { i18n, timeless, timestamp } from '@core/helpers';
@@ -87,28 +88,34 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             return acc;
           }, {})
         }),
+        quantity: UiField.Number({
+          width: 6,
+          label: $localize`Quantity`,
+          validators: [{ type: 'required' }]
+        }),
         amount: UiField.Money({
           width: 6,
           label: $localize`Price`,
           hint: inputValue => {
+            // Strict check not equal to null, since 0% is a valid commission rate
+            const commissionRate =
+              typeof this.host.commission_rate == 'number' ? this.host.commission_rate : CommissionRate.Platform;
             const lineOne = `Your Revenue: ${i18n.money(
-              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * (1 - CommissionRate.Platform)),
+              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * (1 - commissionRate)),
               CurrencyCode.GBP
             )}`;
             const lineTwo = ` StageUp Commission: ${i18n.money(
-              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * CommissionRate.Platform),
+              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * commissionRate),
               CurrencyCode.GBP
-            )} (${CommissionRate.Platform * 100}%)`;
+            )} (${commissionRate * 100}%)`;
             return lineOne + '\n' + lineTwo;
           },
           currency: CurrencyCode.GBP,
           disabled: false,
           validators: [{ type: 'maxlength', value: 100 }, { type: 'required' }]
         }),
-        quantity: UiField.Number({
-          width: 6,
-          label: $localize`Quantity`,
-          validators: [{ type: 'required' }]
+        unlimited: UiField.Checkbox({
+          label: $localize`Unlimitied tickets`
         }),
         // Temporarily removed for MVP. Will likely be re-added in the future
         // fees: UiField.Select({
@@ -167,6 +174,10 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
 
             // Convert back into pounds from pence
             fields['amount'] = data.amount / 100;
+            if (data.quantity === TICKETS_QTY_UNLIMITED) {
+              fields['quantity'] = '';
+              fields['unlimited'] = true;
+            }           
             fields['visibility.value'] = !data.is_visible;
 
             // Set the pegs up
@@ -206,6 +217,12 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           } else {
             f.controls.amount.enable({ emitEvent: false, onlySelf: true });
           }
+
+          if (f.value.unlimited) {
+            f.controls.quantity.disable({ emitEvent: false, onlySelf: true });
+          } else {
+            f.controls.quantity.enable({ emitEvent: false, onlySelf: true });
+          }
         }
       }
     });
@@ -230,7 +247,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       currency: CurrencyCode.GBP,
       amount: v.type == TicketType.Free ? 0 : v.amount * 100, // TODO: support more than pence
       type: v.type,
-      quantity: v.quantity,
+      quantity: v.unlimited ? TICKETS_QTY_UNLIMITED : v.quantity,
       // fees: v.fees,
       start_datetime: Math.floor(v.start_datetime.getTime() / 1000),
       end_datetime: Math.floor(v.end_datetime.getTime() / 1000),

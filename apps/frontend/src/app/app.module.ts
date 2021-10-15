@@ -152,7 +152,7 @@ import { HostPerformanceThumbnailsComponent } from './routes/host/host-performan
 import { SocialSharingComponent } from './components/social-sharing/social-sharing.component';
 import { PerformanceDeleteDialogComponent } from './routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { RatePerformanceComponent } from './components/rate-performance/rate-performance.component';
-import { LikePerformanceComponent } from './components/like-performance/like-performance.component';
+import { LikeComponent } from './components/like/like.component';
 import { RedirectComponent } from './components/redirect/redirect.component';
 import { FollowButtonComponent } from './components/follow-button/follow-button.component';
 import { HostAnalyticsComponent } from './routes/host/host-analytics/host-analytics.component';
@@ -168,6 +168,7 @@ import { HostMarketingComponent } from './routes/host/host-marketing/host-market
 import { HostAudienceListComponent } from './routes/host/host-marketing/host-audience-list/host-audience-list.component';
 import { PerformanceCancelDialogComponent } from './routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
+import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = (appService: AppService) => {
@@ -298,7 +299,7 @@ const getSigninProviders = (appService: AppService) => {
     SocialSharingComponent,
     PerformanceDeleteDialogComponent,
     RatePerformanceComponent,
-    LikePerformanceComponent,
+    LikeComponent,
     RedirectComponent,
     FollowButtonComponent,
     HostAnalyticsComponent,
@@ -314,7 +315,8 @@ const getSigninProviders = (appService: AppService) => {
     GdprDocumentUpload,
     HostPerformanceMediaComponent,
     HostMarketingComponent,
-    HostAudienceListComponent
+    HostAudienceListComponent,
+    HostProfileAssetComponent
   ],
   imports: [
     AngularMaterialModule,

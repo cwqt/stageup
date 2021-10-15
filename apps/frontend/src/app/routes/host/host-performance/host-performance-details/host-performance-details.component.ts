@@ -45,9 +45,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.stream = this.performance.data.data.assets.find(asset => asset.type == AssetType.LiveStream);
-    this.vod = this.performance.data.data.assets.find(
-      asset => asset.type == AssetType.Video && asset.tags.includes('primary')
-    );
+    this.vod = findAssets(this.performance.data.data.assets, AssetType.Video, ['primary'])[0];
 
     this.minimumAssetsMet = this.performanceHasMinimumAssets();
 
