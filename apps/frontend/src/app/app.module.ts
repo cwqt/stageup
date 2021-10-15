@@ -25,8 +25,7 @@ import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/c
 import { AppService } from '@frontend/services/app.service';
 
 // https://www.npmjs.com/package/angularx-social-login
-import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
-import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
 
 // https://github.com/scttcper/ngx-chartjs
 import { ChartjsModule } from '@ctrl/ngx-chartjs';
