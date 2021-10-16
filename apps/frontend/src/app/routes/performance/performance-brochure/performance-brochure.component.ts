@@ -25,6 +25,8 @@ import { PerformanceService } from '@frontend/services/performance.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
+import { PerformanceBrochureBannerComponent } from './performance-brochure-banner/performance-brochure-banner.component';
+import { PerformanceBrochureTabsComponent } from './performance-brochure-tabs/performance-brochure-tabs.component';
 
 const moment = require('moment');
 
@@ -34,9 +36,8 @@ const moment = require('moment');
   styleUrls: ['./performance-brochure.component.scss']
 })
 export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
-  @ViewChild('tabs') tabs: MatTabGroup;
-  @ViewChild('paymentMethod') paymentMethod: PaymentMethodComponent;
-  @ViewChild('trailer') trailerPlayer?: PlayerComponent;
+  @ViewChild('banner') performanceBrochureBanner: PerformanceBrochureBannerComponent;
+  @ViewChild('tabs') performanceBrochureTabs: PerformanceBrochureTabsComponent;
 
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
@@ -54,7 +55,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   donoPegSelectForm: UiForm;
   donoPegCacheable: ICacheable<null> = createICacheable();
   selectedDonoPeg: DonoPeg;
-  performanceTrailer: IAssetStub<AssetType.Video>;
+  // performanceTrailer: IAssetStub<AssetType.Video>;
 
   brochureSharingUrl: SocialSharingComponent['url'];
   userFollowing: boolean;
@@ -68,12 +69,14 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   showHostMarketingForm: boolean;
   showPlatformMarketingForm: boolean;
 
-  performanceStartDate: string;
-  timeUntilPerformance: string;
+  // performanceStartDate: string;
+  // timeUntilPerformance: string;
 
   currentTimestamp = timestamp();
 
   get performance() {
+    // console.log('this is the data/performance');
+    // console.log(this.performanceCacheable.data?.data);
     return this.performanceCacheable.data?.data;
   }
 
@@ -95,7 +98,7 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     this.myself = this.myselfService.$myself.getValue()?.user;
     await cachize(this.performanceService.readPerformance(this.data.performance_id), this.performanceCacheable).then(
       d => {
-        this.performanceTrailer = findAssets(d.data.assets, AssetType.Video, ['trailer'])[0];
+        // this.performanceTrailer = findAssets(d.data.assets, AssetType.Video, ['trailer'])[0];
         this.userFollowing = d.__client_data?.is_following;
         this.userLiked = d.__client_data?.is_liking;
         return d;
@@ -137,98 +140,6 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
       !this.myself.is_hiding_host_marketing_prompts;
     this.showPlatformMarketingForm =
       this.performanceCacheable.data.__client_data.platform_marketing_opt_status === null;
-  }
-
-  prettyDuration(duration: number): string {
-    return moment.duration(duration, 'second').humanize(true);
-  }
-
-  prettyDate(timestamp: number): string {
-    return i18n.date(unix(timestamp), this.myself.locale);
-  }
-
-  openPerformanceDescriptionSection() {
-    this.selectedTicket = null;
-    this.paymentIntentSecret.data = null;
-    this.paymentIntentSecret.error = null;
-    this.tabs.selectedIndex = 0;
-  }
-
-  openPurchaseTicketSection(selectedTicket: ITicketStub) {
-    this.selectedTicket = selectedTicket;
-
-    if (this.selectedTicket.type == 'dono') {
-      this.donoPegSelectForm = new UiForm({
-        fields: {
-          pegs: UiField.Radio({
-            label: $localize`Select a donation amount`,
-            values: new Map(
-              selectedTicket.dono_pegs.map(peg => [
-                peg,
-                {
-                  label:
-                    peg == 'allow_any'
-                      ? $localize`Enter an amount`
-                      : i18n.money(getDonoAmount(peg, selectedTicket.currency), selectedTicket.currency)
-                }
-              ])
-            )
-          })
-        },
-        resolvers: {
-          output: async v => v
-        },
-        handlers: {
-          changes: async v => this.updatePayButtonWithDono(v)
-        }
-      });
-
-      if (selectedTicket.dono_pegs.includes('allow_any')) {
-        this.donoPegSelectForm.fields.allow_any_amount = UiField.Number({
-          label: $localize`Enter custom amount:`,
-          hide: v => v.value.pegs !== 'allow_any',
-          initial: 0
-        });
-      }
-    } else {
-      this.donoPegSelectForm = null;
-    }
-
-    this.tabs.selectedIndex = 1;
-  }
-
-  confirmTicketPayment() {
-    this.paymentMethod.confirmPayment(
-      this.performanceService.createTicketPaymentIntent.bind(this.performanceService),
-      {
-        payment_method_id: this.paymentMethod.selectionModel.selected[0]._id,
-        purchaseable_type: PurchaseableType.Ticket,
-        purchaseable_id: this.selectedTicket._id,
-        options: {
-          selected_dono_peg: this.donoPegSelectForm?.group?.value?.pegs,
-          allow_any_amount: this.donoPegSelectForm?.group?.value?.allow_any_amount,
-          // If the user was shown the form then the the opt-out is true or false. If they weren't shown the form then the opt-out is 'null'.
-          hard_host_marketing_opt_out: this.showHostMarketingForm
-            ? this.hostMarketingOptForm.group.value.does_opt_out
-            : null,
-          stageup_marketing_opt_in: this.stageupMarketingOptForm.group.value.does_opt_in
-        }
-      },
-      this.performance.host.stripe_account_id
-    );
-  }
-
-  handleCardPaymentSuccess(paymentIntent: PaymentIntent) {
-    this.stripePaymentIntent = paymentIntent;
-    this.openPurchaseConfirmationSection();
-  }
-
-  openPurchaseConfirmationSection() {
-    this.tabs.selectedIndex = 2;
-  }
-
-  handleCardPaymentFailure(error: StripeError) {
-    console.error(error);
   }
 
   closeDialog() {

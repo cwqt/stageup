@@ -1,0 +1,14 @@
+<div *ngIf="performance" class="flex-1 relative">
+    <app-player #player *ngIf="performanceTrailer" (onPlayerReady)="player.load(performanceTrailer)"> </app-player>
+    
+    <img
+      *ngIf="!performanceTrailer"
+      class="object-cover h-96 w-full"
+      [src]="performance.thumbnail || thumbnail?.location || '/assets/performance-placeholder.jpeg'"
+    />
+    <app-social-sharing
+      class="absolute right-4 bottom-4"
+      [url]="brochureSharingUrl"
+    ></app-social-sharing>
+    <!-- (onLinkClick)="closeDialog()" -->
+</div>
