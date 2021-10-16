@@ -112,7 +112,7 @@ import { HostPerformanceDetailsComponent } from './routes/host/host-performance/
 import { PerformanceBrochureComponent } from './routes/performance/performance-brochure/performance-brochure.component';
 import { PerformanceBrochureBannerComponent } from './routes/performance/performance-brochure/performance-brochure-banner/performance-brochure-banner.component';
 import { PerformanceBrochureTabsComponent } from './routes/performance/performance-brochure/performance-brochure-tabs/performance-brochure-tabs.component';
-// import { PerformanceShowComponent } from './routes/performance/performance-show/performance-show.component';
+import { PerformanceShowComponent } from './routes/performance/performance-show/performance-show.component';
 import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { PerformanceThumbComponent } from './components/performance-thumb/performance-thumb.component';
@@ -223,7 +223,7 @@ import { HostProfileAssetComponent } from './routes/host/host-profile/host-profi
     PerformanceBrochureComponent,
     PerformanceBrochureBannerComponent,
     PerformanceBrochureTabsComponent,
-    // PerformanceShowComponent,
+    PerformanceShowComponent,
     UserThumbComponent,
     HostProfileComponent,
     HostMembersComponent,

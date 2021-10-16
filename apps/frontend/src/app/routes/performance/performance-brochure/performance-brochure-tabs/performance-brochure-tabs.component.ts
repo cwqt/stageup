@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
 import { MatTabGroup } from '@angular/material/tabs';
 import { createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { BASE_AMOUNT_MAP, DonoPeg, DtoPerformance, IMyself, IPaymentIntentClientSecret, ITicketStub, LikeLocation, PurchaseableType } from '@core/interfaces';
 import { PerformanceService } from '@frontend/services/performance.service';
-import { findAssets, getDonoAmount, i18n, timestamp, unix } from '@core/helpers';
+import { getDonoAmount, i18n, timestamp, unix } from '@core/helpers';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { AppService } from '@frontend/services/app.service';
