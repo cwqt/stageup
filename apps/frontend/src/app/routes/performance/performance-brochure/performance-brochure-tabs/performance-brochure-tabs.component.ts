@@ -57,7 +57,6 @@ export class PerformanceBrochureTabsComponent implements OnInit {
   }
 
   get performance() {
-    console.log(this.performanceCacheable.data?.data);
     return this.performanceCacheable.data?.data;
   }
 
@@ -183,11 +182,6 @@ export class PerformanceBrochureTabsComponent implements OnInit {
   }
 
   confirmTicketPayment() {
-    console.log('the thing which causes the error');
-    console.log(this.stageupMarketingOptForm.group.value.does_opt_in);
-    console.log(this.stageupMarketingOptForm);
-
-
     this.paymentMethod.confirmPayment(
       this.performanceService.createTicketPaymentIntent.bind(this.performanceService),
       {
