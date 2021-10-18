@@ -8,5 +8,6 @@
     [performance]="performanceCacheable"
     (leave)="closeDialog()"
     (onLike)="likeEvent($event)"
+    (onFollowEvent)="onFollowEvent.emit('follows')"
   ></performance-brochure-tabs>
 </ui-dialog>

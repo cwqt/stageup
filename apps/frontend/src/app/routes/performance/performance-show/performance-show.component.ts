@@ -52,15 +52,11 @@ export class PerformanceShowComponent implements OnInit {
     );
   }
 
-  closeDialog() {
-    // this.dialog.closeAll();
+  leave() {
+    this.appService.navigateTo(`/performances/${this.performance._id}`);
   }
 
   async likePerformance() {
-    // await this.performanceService.toggleLike(this.data.performance_id, LikeLocation.Brochure);
-  }
-
-  likeEvent(value: boolean) {
-    // this.onLike.emit(value);
+    await this.performanceService.toggleLike(this.performance._id, LikeLocation.Brochure);
   }
 }

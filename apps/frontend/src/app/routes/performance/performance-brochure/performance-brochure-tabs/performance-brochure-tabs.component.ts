@@ -24,6 +24,7 @@ export class PerformanceBrochureTabsComponent implements OnInit {
   @Input('performance') performanceCacheable: ICacheable<DtoPerformance>
   @Output() onLike = new EventEmitter();
   @Output() leave = new EventEmitter();
+  @Output() onFollowEvent = new EventEmitter();
 
   _userFollowing: boolean;
   _userLiked: boolean;
@@ -236,19 +237,12 @@ export class PerformanceBrochureTabsComponent implements OnInit {
     }
   }
 
-  likeEvent(value: boolean) {
+  async likeEvent(value: boolean) {
+    await this.likePerformance();
     this.onLike.emit(value);
-  }
-
-  onFollowEvent() {
-
   }
 
   async likePerformance() {
     await this.performanceService.toggleLike(this.performance._id, LikeLocation.Brochure);
-  }
-
-  leaveEvent() {
-    this.leave.emit();
   }
 }

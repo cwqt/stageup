@@ -2,13 +2,13 @@
   <div body>
     <performance-brochure-banner
       #banner [performance]="performanceCacheable"
-      (leave)="closeDialog()"
+      (leave)="leave()"
     ></performance-brochure-banner>
     <performance-brochure-tabs
       #tabs
       [performance]="performanceCacheable"
-      (leave)="closeDialog()"
-      (onLike)="likeEvent($event)"
+      (leave)="leave()"
+      (onLike)="likePerformance()"
     ></performance-brochure-tabs>
   </div>
 </app-page>

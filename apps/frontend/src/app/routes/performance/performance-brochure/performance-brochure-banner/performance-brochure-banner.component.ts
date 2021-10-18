@@ -16,24 +16,39 @@ export class PerformanceBrochureBannerComponent implements OnInit {
   @Input('performance') performanceCacheable: ICacheable<DtoPerformance>
   @Output() leave = new EventEmitter();
 
-  brochureSharingUrl: SocialSharingComponent['url'];
-  performanceTrailer: IAssetStub<AssetType.Video>;  
-  thumbnail: IAssetStub<AssetType.Image>;
+  _brochureSharingUrl: SocialSharingComponent['url'];
+  _performanceTrailer: IAssetStub<AssetType.Video>;  
+  _thumbnail: IAssetStub<AssetType.Image>;
 
   constructor(
     private appService: AppService,
   ) {}
 
-  async ngOnInit() {
-    if(this.performance) {
-      this.brochureSharingUrl = `${this.appService.environment.frontend_url}/?performances/show/${this.performance._id}`;
-      this.thumbnail = findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])[0];
-      this.performanceTrailer = findAssets(this.performance.assets, AssetType.Video, ['trailer'])[0];
-    }    
-  }
+  async ngOnInit() {}
 
   get performance() {
     return this.performanceCacheable.data?.data;
+  }
+
+  get brochureSharingUrl () {
+    if (!this._brochureSharingUrl) {
+      this._brochureSharingUrl = `${this.appService.environment.frontend_url}/performances/show/${this.performance._id}`;
+    }
+    return this._brochureSharingUrl;
+  }
+
+  get thumbnail() {
+    if (!this._thumbnail) {
+      this._thumbnail = findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])[0];
+    }
+    return this._thumbnail;
+  }
+
+  get performanceTrailer() {
+    if (!this._performanceTrailer) {
+      this._performanceTrailer = findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])[0];
+    }
+    return this._performanceTrailer;
   }
 
   leaveEvent() {

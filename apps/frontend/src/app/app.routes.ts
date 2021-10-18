@@ -175,14 +175,14 @@ const LOGGED_IN_ROUTES: Routes = [
           component: RedirectComponent
         },
         {
-          path: `performances/show/:${RP.PerformanceId}`,
-          component: PerformanceShowComponent
-        },
-        {
           path: '',
           component: AppWrapperComponent,
           children: [
             { path: 'client', redirectTo: '/' },
+            {
+              path: `performances/show/:${RP.PerformanceId}`,
+              component: PerformanceShowComponent
+            },
             {
               path: '',
               component: FeedComponent,

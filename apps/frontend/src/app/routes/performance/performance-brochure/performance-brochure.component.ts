@@ -48,10 +48,6 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
     this.dialog.closeAll();
   }
 
-  async likePerformance() {
-    await this.performanceService.toggleLike(this.data.performance_id, LikeLocation.Brochure);
-  }
-
   likeEvent(value: boolean) {
     this.onLike.emit(value);
   }

@@ -20,8 +20,8 @@
               <app-follow-button
                 [userFollowing]="userFollowing"
                 [hostId]="performance.host._id"
+                (onFollowEvent)="onFollowEvent.emit('follows')"
               ></app-follow-button>
-              <!-- (onFollowEvent)="onFollowEvent.emit('follows')" -->
             </div>
             <ui-hr></ui-hr>
             <quill-view [content]="performance.description" format="json" theme="snow"></quill-view>
@@ -70,7 +70,7 @@
                   "
                   [routerLink]="'/performances/' + performance._id"
                   i18n
-                  (click)="leaveEvent()"
+                  (click)="leave.emit()"
                 >
                   
                   Watch Now
@@ -201,8 +201,8 @@
                 *ngIf="performance.stream.state == 'video.live_stream.active'"
                 >Watch Now</ui-button
               > -->
-              <ui-button size="m" kind="primary" (click)="leaveEvent()" class="mr-2" i18n>Watch Later</ui-button>
-              <ui-button size="m" kind="secondary" (click)="leaveEvent()" i18n>Close</ui-button>
+              <ui-button size="m" kind="primary" (click)="leave.emit()" class="mr-2" i18n>Watch Later</ui-button>
+              <ui-button size="m" kind="secondary" (click)="leave.emit()" i18n>Done</ui-button>
             </div>
           </ng-container>
 
