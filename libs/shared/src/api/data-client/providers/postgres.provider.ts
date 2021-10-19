@@ -12,7 +12,6 @@ export interface IPostgresProviderConfig {
   database: string;
   synchronize?: boolean;
   extra?: any;
-  cachePort?: number;
 }
 
 @Service()
@@ -40,13 +39,14 @@ export class PostgresProvider implements Provider<Connection> {
       logging: false, // print all sql queries
       namingStrategy: new SnakeNamingStrategy(),
       extra: this.config.extra || {},
-      cache: {
-        type: 'redis',
-        options: {
-          host: this.config.host,
-          port: this.config.cachePort
-        }
-      }
+      // cache: {
+      //   type: 'redis',
+      //   options: {
+      //     host: this.config.host,
+      //     port: this.config.cachePort
+      //   }
+      // }
+      cache: true
     };
 
     this.connection = await createConnection(config);
