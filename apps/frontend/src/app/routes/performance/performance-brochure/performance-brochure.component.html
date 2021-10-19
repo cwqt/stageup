@@ -1,13 +1,12 @@
 <ui-dialog [noPadding]="true" [loading]="performanceCacheable.loading">
-  <performance-brochure-banner
+  <app-performance-brochure-banner
     #banner [performance]="performanceCacheable"
-    (leave)="closeDialog()"
-  ></performance-brochure-banner>
-  <performance-brochure-tabs
+  ></app-performance-brochure-banner>
+  <app-performance-brochure-tabs
     #tabs
     [performance]="performanceCacheable"
     (leave)="closeDialog()"
     (onLike)="likeEvent($event)"
     (onFollowEvent)="onFollowEvent.emit('follows')"
-  ></performance-brochure-tabs>
+  ></app-performance-brochure-tabs>
 </ui-dialog>

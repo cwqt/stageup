@@ -14,7 +14,7 @@ import { MyselfService } from '@frontend/services/myself.service';
 const moment = require('moment');
 
 @Component({
-    selector: 'performance-brochure-tabs',
+    selector: 'app-performance-brochure-tabs',
     templateUrl: './performance-brochure-tabs.component.html',
     styleUrls: ['./performance-brochure-tabs.component.scss']
 })

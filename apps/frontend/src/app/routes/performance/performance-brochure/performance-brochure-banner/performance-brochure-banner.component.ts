@@ -7,14 +7,13 @@ import { SocialSharingComponent } from '@frontend/components/social-sharing/soci
 import { AppService } from '@frontend/services/app.service';
 
 @Component({
-  selector: 'performance-brochure-banner',
+  selector: 'app-performance-brochure-banner',
   templateUrl: './performance-brochure-banner.component.html',
   styleUrls: ['./performance-brochure-banner.component.scss']
 })
 export class PerformanceBrochureBannerComponent implements OnInit {
   @ViewChild('trailer') trailerPlayer?: PlayerComponent;
   @Input('performance') performanceCacheable: ICacheable<DtoPerformance>
-  @Output() leave = new EventEmitter();
 
   _brochureSharingUrl: SocialSharingComponent['url'];
   _performanceTrailer: IAssetStub<AssetType.Video>;  
@@ -49,9 +48,5 @@ export class PerformanceBrochureBannerComponent implements OnInit {
       this._performanceTrailer = findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])[0];
     }
     return this._performanceTrailer;
-  }
-
-  leaveEvent() {
-    this.leave.emit();
   }
 }

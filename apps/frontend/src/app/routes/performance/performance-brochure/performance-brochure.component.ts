@@ -33,7 +33,6 @@ export class PerformanceBrochureComponent implements OnInit, IUiDialogOptions {
   }
 
   constructor(
-    @Inject(LOCALE_ID) public locale: string,
     private performanceService: PerformanceService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<PerformanceBrochureComponent>,
