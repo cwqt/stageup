@@ -62,7 +62,7 @@ export const instantiateProviders = () => {
           database: Env.PG.DATABASE,
           // IMPORTANT Re-sync in test, dev & staging - prod use migrations
           // need to write migrations first!!
-          synchronize: true //!Env.isEnv(Environment.Production),
+          synchronize: true //!Env.isEnv(Environment.Production)
         },
         { ...PG_MODELS, Configuration }
       )
