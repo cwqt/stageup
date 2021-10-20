@@ -15,6 +15,8 @@ import {
   Performance,
   PostgresProvider,
   POSTGRES_PROVIDER,
+  REDIS_PROVIDER,
+  RedisProvider,
   Refund,
   StripeProvider,
   STRIPE_PROVIDER,
@@ -58,6 +60,7 @@ import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection, getManager } from 'typeorm';
 import startOfWeek from 'date-fns/startOfWeek';
+import { RedisClient } from 'redis';
 
 @Service()
 export class MyselfController extends ModuleController {
@@ -66,7 +69,8 @@ export class MyselfController extends ModuleController {
     private gdprService: GdprService,
     @Inject(POSTGRES_PROVIDER) private ORM: Connection,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
-    @Inject(STRIPE_PROVIDER) private stripe: Stripe
+    @Inject(STRIPE_PROVIDER) private stripe: Stripe,
+    @Inject(REDIS_PROVIDER) private redis: RedisProvider
   ) {
     super();
   }
@@ -181,25 +185,27 @@ export class MyselfController extends ModuleController {
       }
 
       if (fetchAll || req.query['trending']) {
-        feed.trending = await this.ORM.createQueryBuilder(Performance, 'performance')
-          .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
-          .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
-          .where('invoice.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
-          .innerJoinAndSelect('performance.host', 'host')
-          .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
-          .addSelect('COUNT(*)', 'count')
-          .groupBy('performance._id')
-          .addGroupBy('performance__asset_group._id')
-          .addGroupBy('performance__asset_group__assets._id')
-          .addGroupBy('host._id')
-          .addGroupBy('likes._id')
-          .orderBy('count', 'DESC')
-          .cache(604800000) // Cache for 1 week
-          .paginate({
-            serialiser: p => p.toClientStub(),
-            page: req.query.trending ? parseInt((req.query['trending'] as any).page) : 0,
-            per_page: req.query.trending ? parseInt((req.query['trending'] as any).per_page) : 4
-          });
+        console.log('this.redis', this.redis);
+        const test = await this.redis.getFromCache('trending_performances');
+        console.log(test);
+        // feed.trending = await this.ORM.createQueryBuilder(Performance, 'performance')
+        //   .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
+        //   .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
+        //   .where('invoice.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
+        //   .innerJoinAndSelect('performance.host', 'host')
+        //   .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+        //   .addSelect('COUNT(*)', 'count')
+        //   .groupBy('performance._id')
+        //   .addGroupBy('performance__asset_group._id')
+        //   .addGroupBy('performance__asset_group__assets._id')
+        //   .addGroupBy('host._id')
+        //   .addGroupBy('likes._id')
+        //   .orderBy('count', 'DESC')
+        //   .paginate({
+        //     serialiser: p => p.toClientStub(),
+        //     page: req.query.trending ? parseInt((req.query['trending'] as any).page) : 0,
+        //     per_page: req.query.trending ? parseInt((req.query['trending'] as any).per_page) : 4
+        //   });
       }
 
       return feed;

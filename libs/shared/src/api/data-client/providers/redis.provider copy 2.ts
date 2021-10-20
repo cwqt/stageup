@@ -7,16 +7,15 @@ export interface IRedisProviderConfig {
   port: number;
 }
 
-export interface AppRedis {
+export interface CacheFunctions {
   getFromCache: (cacheId: string) => Promise<any>;
-  setInCache: (cacheId: string, data: any, expiration: number) => Promise<void>;
+  setInCache: (id: string) => Promise<void>;
 }
 
 @Service()
-export class RedisProvider implements Provider<AppRedis> {
+export class RedisProvider implements Provider<RedisClient> {
   name = 'Redis';
-  connection: AppRedis;
-  client: RedisClient;
+  connection: RedisClient;
   config: IRedisProviderConfig;
 
   constructor(config: IRedisProviderConfig) {
@@ -24,22 +23,20 @@ export class RedisProvider implements Provider<AppRedis> {
   }
 
   async connect() {
-    this.client = createClient({
+    this.connection = createClient({
       host: this.config.host,
       port: this.config.port
     });
 
-    new Promise<RedisClient>((resolve, reject) => {
-      this.client.on('connect', () => resolve(this.client));
-      this.client.on('error', reject);
+    return new Promise<RedisClient>((resolve, reject) => {
+      this.connection.on('connect', () => resolve(this.connection));
+      this.connection.on('error', reject);
     });
-
-    return this;
   }
 
   public async getFromCache(cacheId: string) {
     try {
-      this.client.get(cacheId, async (error, data) => {
+      this.connection.get(cacheId, async (error, data) => {
         if (error) throw error;
         if (data) {
           return JSON.parse(data);
@@ -54,7 +51,7 @@ export class RedisProvider implements Provider<AppRedis> {
 
   public async setInCache(cacheId: string, data: any, expiration: number): Promise<void> {
     try {
-      this.client.setex(cacheId, expiration, JSON.stringify(data));
+      this.connection.setex(cacheId, expiration, JSON.stringify(data));
     } catch (error) {
       console.log(error);
     }
@@ -64,13 +61,13 @@ export class RedisProvider implements Provider<AppRedis> {
   // // Checks the cache for data stored with the cacheId. If not, it uses the serviceMethod to get the data and store it.
   // public async getFromCache(cacheId: string, serviceMethod: any, expiration?: number): Promise<any> {
   //   try {
-  //     this.client.get(cacheId, async (error, data) => {
+  //     this.connection.get(cacheId, async (error, data) => {
   //       if (error) throw error;
   //       if (data) {
   //         return data;
   //       } else {
   //         const data = await serviceMethod();
-  //         this.client.setex(cacheId, expiration, JSON.stringify(data));
+  //         this.connection.setex(cacheId, expiration, JSON.stringify(data));
   //         return data;
   //         // res.status(200).send({
   //         //     data: data.data,
@@ -84,10 +81,10 @@ export class RedisProvider implements Provider<AppRedis> {
   // }
 
   async disconnect() {
-    return this.client.end();
+    return this.connection.end();
   }
 
   async drop() {
-    await new Promise(resolve => this.client.flushdb(resolve));
+    await new Promise(resolve => this.connection.flushdb(resolve));
   }
 }

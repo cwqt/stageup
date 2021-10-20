@@ -29,12 +29,10 @@ export class RedisProvider implements Provider<AppRedis> {
       port: this.config.port
     });
 
-    new Promise<RedisClient>((resolve, reject) => {
-      this.client.on('connect', () => resolve(this.client));
+    return new Promise<AppRedis>((resolve, reject) => {
+      this.client.on('connect', () => resolve(this.connection));
       this.client.on('error', reject);
     });
-
-    return this;
   }
 
   public async getFromCache(cacheId: string) {
