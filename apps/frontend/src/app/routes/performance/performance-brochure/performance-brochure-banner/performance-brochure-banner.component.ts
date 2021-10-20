@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, LOCALE_ID, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnInit, Output, ViewChild } from '@angular/core';
 import { findAssets } from '@core/helpers';
 import { AssetType, DtoPerformance, IAssetStub } from '@core/interfaces';
 import { ICacheable } from '@frontend/app.interfaces';
@@ -21,6 +21,7 @@ export class PerformanceBrochureBannerComponent implements OnInit {
 
   constructor(
     private appService: AppService,
+    @Inject(LOCALE_ID) public locale: string
   ) {}
 
   async ngOnInit() {}
@@ -30,8 +31,12 @@ export class PerformanceBrochureBannerComponent implements OnInit {
   }
 
   get brochureSharingUrl () {
+    console.log('getting brochure sharing url');
+    console.log('locale');
+    console.log(this.locale);
     if (!this._brochureSharingUrl) {
-      this._brochureSharingUrl = `${this.appService.environment.frontend_url}/performances/show/${this.performance._id}`;
+      const loc: string = this.locale ? `/${this.locale}` : '';
+      this._brochureSharingUrl = `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`;
     }
     return this._brochureSharingUrl;
   }
