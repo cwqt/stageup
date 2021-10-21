@@ -7,15 +7,16 @@ export interface IRedisProviderConfig {
   port: number;
 }
 
-export interface AppRedis {
-  getFromCache: (cacheId: string) => Promise<any>;
-  setInCache: (cacheId: string, data: any, expiration: number) => Promise<void>;
+export interface AppCache {
+  get: (cacheId: string) => Promise<any>;
+  set: (cacheId: string, data: any, expiration: number) => Promise<void>;
+  delete: (cacheId: string) => Promise<void>;
 }
 
 @Service()
-export class RedisProvider implements Provider<AppRedis> {
+export class RedisProvider implements Provider<AppCache> {
   name = 'Redis';
-  connection: AppRedis;
+  connection: AppCache;
   client: RedisClient;
   config: IRedisProviderConfig;
 
@@ -29,30 +30,36 @@ export class RedisProvider implements Provider<AppRedis> {
       port: this.config.port
     });
 
-    new Promise<RedisClient>((resolve, reject) => {
-      this.client.on('connect', () => resolve(this.client));
-      this.client.on('error', reject);
-    });
+    // return new Promise<AppCache>((resolve, reject) => {
+    //   this.client.on('connect', () => resolve(this.connection));
+    //   this.client.on('error', reject);
+    // });
 
     return this;
   }
 
-  public async getFromCache(cacheId: string) {
-    try {
-      this.client.get(cacheId, async (error, data) => {
-        if (error) throw error;
-        if (data) {
-          return JSON.parse(data);
-        } else {
-          return null;
+  public async get(cacheId: string) {
+    return new Promise((resolve, reject) => {
+      this.client.get(cacheId, (error, data) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        if (data == null) {
+          resolve(null);
+          return;
+        }
+
+        try {
+          resolve(JSON.parse(data));
+        } catch (ex) {
+          resolve(data);
         }
       });
-    } catch (error) {
-      console.log(error);
-    }
+    });
   }
 
-  public async setInCache(cacheId: string, data: any, expiration: number): Promise<void> {
+  public async set(cacheId: string, data: any, expiration: number): Promise<void> {
     try {
       this.client.setex(cacheId, expiration, JSON.stringify(data));
     } catch (error) {
@@ -60,28 +67,13 @@ export class RedisProvider implements Provider<AppRedis> {
     }
   }
 
-  // // TODO: Set databaseMethod to function type
-  // // Checks the cache for data stored with the cacheId. If not, it uses the serviceMethod to get the data and store it.
-  // public async getFromCache(cacheId: string, serviceMethod: any, expiration?: number): Promise<any> {
-  //   try {
-  //     this.client.get(cacheId, async (error, data) => {
-  //       if (error) throw error;
-  //       if (data) {
-  //         return data;
-  //       } else {
-  //         const data = await serviceMethod();
-  //         this.client.setex(cacheId, expiration, JSON.stringify(data));
-  //         return data;
-  //         // res.status(200).send({
-  //         //     data: data.data,
-  //         //     message: "cache miss"
-  //         // });
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  public async delete(cacheId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.client.del(cacheId, () => {
+        resolve(null);
+      });
+    });
+  }
 
   async disconnect() {
     return this.client.end();
