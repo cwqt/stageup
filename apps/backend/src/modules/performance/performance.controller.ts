@@ -141,7 +141,6 @@ export class PerformanceController extends ModuleController {
             },
             txc
           );
-
           performance.asset_group.assets.push(asset);
           await txc.save(asset);
         }
