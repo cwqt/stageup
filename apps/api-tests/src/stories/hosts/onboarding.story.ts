@@ -155,10 +155,6 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       const status = await Stories.actions.hosts.readOnboardingSteps(host);
       expect(status[HostOnboardingStep.ProofOfBusiness].state).toEqual(HostOnboardingState.HasIssues);
     });
-
-    // it('Should enact the onboarding request to send out the issues', async () => {
-    //   await Stories.actions.admin.enactOnboardingProcess(host);
-    // });
   });
 
   describe('As a Client, I want to resolve issues with my onboarding process & then re-submit for verification', () => {
@@ -179,15 +175,11 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       await Stories.actions.hosts.updateOnboardingProcessStep(host, HostOnboardingStep.ProofOfBusiness, {
         business_address: {
           city: 'Cardiff',
-          // iso_country_code: 'GBR',
-          country: 'GB',
-          //postcode: 'NE62 5DE',
+          country: 'GB', 
           postal_code: 'NE62 5DE',
-          // street_name: 'Marquee Court',
-          // street_number: 32
           line1: '32 Marquee Court'
         },
-        business_contact_number: '+44 323 223 4234', //'+447625143141',
+        business_contact_number: '+44 323 223 4234',
         // hmrc_company_number: 11940213,
         business_type: BusinessType.GovernmentEntity
       });
@@ -205,8 +197,6 @@ describe('As Client, I want to register a Host & be onboarded', () => {
           issues: {}
         }
       });
-
-      // await Stories.actions.admin.enactOnboardingProcess(host);
     });
   });
 });

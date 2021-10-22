@@ -125,9 +125,6 @@ export class AdminController extends ModuleController {
         await Promise.all([txc.save(host), txc.save(onboarding)]);
       });
 
-      console.log('at the end');
-      console.log(onboarding.state);
-
       // Listeners should then send e-mails depending on the current state of the onboarding process
       await this.bus.publish('onboarding.reviewed', { onboarding_id: onboarding._id }, req.locale);
     }

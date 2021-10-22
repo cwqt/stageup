@@ -64,7 +64,7 @@ const applications: {
     cmd: {
       execute: env => `npx nx test api-tests --watch`
     },
-    environments: ['development', 'testing', 'staging', 'production']
+    environments: ['development', 'staging', 'production']
   }
 };
 

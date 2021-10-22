@@ -97,7 +97,7 @@ export class UtilityController extends ModuleController {
   dropAllData: IControllerEndpoint<void> = {
     authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
     controller: async req => {
-      //await DataClient.drop(this.pg);
+      // await DataClient.drop(providers);
       await this.pg.dropDatabase();
       await this.pg.synchronize();
     }
