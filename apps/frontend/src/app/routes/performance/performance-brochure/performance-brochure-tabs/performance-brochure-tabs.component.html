@@ -30,8 +30,8 @@
           <div class="w-2/3 ml-4 text-right" *ngIf="performance.tickets.length">
             <h2 i18n>Tickets</h2>
             <p class="text-lg" *ngIf="!myself" i18n>
-              You must <a class="cursor-pointer" (click)="openRegister()">register</a> or
-              <a class="cursor-pointer" (click)="openLogin()">log in</a>
+              You must <a class="cursor-pointer" (click)="openAuth('/register')">register</a> or
+              <a class="cursor-pointer" (click)="openAuth('/login')">log in</a>
               before being able to purchase this performance.
             </p>
 

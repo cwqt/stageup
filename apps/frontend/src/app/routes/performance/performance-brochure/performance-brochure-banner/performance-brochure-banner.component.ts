@@ -31,9 +31,6 @@ export class PerformanceBrochureBannerComponent implements OnInit {
   }
 
   get brochureSharingUrl () {
-    console.log('getting brochure sharing url');
-    console.log('locale');
-    console.log(this.locale);
     if (!this._brochureSharingUrl) {
       const loc: string = this.locale ? `/${this.locale}` : '';
       this._brochureSharingUrl = `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`;

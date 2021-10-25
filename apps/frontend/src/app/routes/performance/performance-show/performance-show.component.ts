@@ -39,21 +39,21 @@ export class PerformanceShowComponent implements OnInit, OnDestroy {
     await this.appService.componentInitialising(this.route);
     await this.performanceCacheable.request(
       this.performanceService.readPerformance(this.appService.getParam(RouteParam.PerformanceId))
-    ).then(() => {
-      this.meta.updateTag({property: 'og:title', content: this.performance.host.name});
-      this.meta.updateTag({property: 'og:description', content: this.performance.name});
-      let asset: string = '';
-      if (findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])) {
-        asset = findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])[0].location;
-      } else if (findAssets(this.performance.assets, AssetType.Image, ['primary'])) {
-        asset = findAssets(this.performance.assets, AssetType.Image, ['primary'])[0].location;
-      } else if (findAssets(this.performance.assets, AssetType.Image, ['secondary'])) {
-        asset = findAssets(this.performance.assets, AssetType.Image, ['secondary'])[0].location;
-      }
-      this.meta.updateTag({
-        property: 'og:image',
-        content: asset
-      });
+    );
+
+    this.meta.updateTag({property: 'og:title', content: this.performance.host.name});
+    this.meta.updateTag({property: 'og:description', content: this.performance.name});
+    let asset: string = '';
+    if (findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])) {
+      asset = findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])[0].location;
+    } else if (findAssets(this.performance.assets, AssetType.Image, ['primary'])) {
+      asset = findAssets(this.performance.assets, AssetType.Image, ['primary'])[0].location;
+    } else if (findAssets(this.performance.assets, AssetType.Image, ['secondary'])) {
+      asset = findAssets(this.performance.assets, AssetType.Image, ['secondary'])[0].location;
+    }
+    this.meta.updateTag({
+      property: 'og:image',
+      content: asset
     });
   }
 

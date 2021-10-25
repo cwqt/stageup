@@ -216,12 +216,8 @@ export class PerformanceBrochureTabsComponent implements OnInit {
     console.error(error);
   }
 
-  openRegister() {
-    this.appService.navigateTo(`/register`);
-  }
-
-  openLogin() {
-    this.appService.navigateTo(`/login`);
+  openAuth(path: string) {
+    this.appService.navigateTo(path);
   }
 
   updatePayButtonWithDono(event: FormGroup) {
