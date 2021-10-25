@@ -35,7 +35,7 @@ export default {
     return res.data;
   },
 
-  createOnBoardedHost: async (data: { username: string; name: string; email_address: string }): Promise<IHost> => {
+  createOnboardedHost: async (data: { username: string; name: string; email_address: string }): Promise<IHost> => {
     const host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
@@ -122,7 +122,7 @@ export default {
 
   // router.delete <void>("/hosts/:hid",Hosts.deleteHost());
   deleteHost: async (host: IHost) => {
-    const res = await api.post<void>(`/hosts/${host._id}`, null, env.getOptions());
+    const res = await api.delete<void>(`/hosts/${host._id}`, env.getOptions());
     return res.data;
   },
 

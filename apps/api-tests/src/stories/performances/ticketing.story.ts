@@ -15,7 +15,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
     owner = await Stories.actions.users.createUser(UserType.Owner);
     await Stories.actions.common.switchActor(UserType.Owner);
 
-    host = await Stories.actions.hosts.createOnBoardedHost({
+    host = await Stories.actions.hosts.createOnboardedHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
       email_address: 'host@cass.si'

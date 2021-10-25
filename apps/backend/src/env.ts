@@ -109,7 +109,7 @@ const Env: {
     BUCKET_NAME: process.env.GOOGLE_STORAGE_BUCKET_NAME,
     PUBLIC_URL: process.env.GOOGLE_STORAGE_PUBLIC_URL
   },
-  RATE_LIMIT: Number(process.env.RATE_LIMIT),
+  RATE_LIMIT: parseInt(process.env.RATE_LIMIT),
 };
 
 export default Env;
