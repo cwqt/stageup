@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ParamMap, Data, ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
@@ -43,7 +43,8 @@ export class AppService {
     private http: HttpClient,
     private authenticationService: AuthenticationService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    @Inject(LOCALE_ID) public locale: string
   ) {
     this.$environment = new BehaviorSubject(undefined);
 
@@ -131,6 +132,10 @@ export class AppService {
 
   // router.navigate doesn't support "target='_blank'". Uses window.open with queryParams to enable this.
   navigateToNewTab(baseUrl: string, extras?: NavigationExtras): void {
+    // appending the locale to the url just happens because of nginx in deployed environments
+    if (this.environment.is_deployed) {
+      baseUrl = `/${this.locale}${baseUrl}`;
+    }
     const url = this.router.serializeUrl(this.router.createUrlTree([baseUrl], { queryParams: extras?.queryParams }));
     window.open(url, '_blank');
   }

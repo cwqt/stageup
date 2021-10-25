@@ -43,6 +43,7 @@ import { SettingsComponent } from './routes/settings/settings.component';
 import { RouteParam as RP } from './services/app.service';
 import { TestbedComponent } from './ui-lib/testbed/testbed.component';
 import { LoggedInGuard } from './_helpers/logged-in.guard';
+import { PerformanceShowComponent } from './routes/performance/performance-show/performance-show.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -178,6 +179,10 @@ const LOGGED_IN_ROUTES: Routes = [
           component: AppWrapperComponent,
           children: [
             { path: 'client', redirectTo: '/' },
+            {
+              path: `performances/show/:${RP.PerformanceId}`,
+              component: PerformanceShowComponent
+            },
             {
               path: '',
               component: FeedComponent,

@@ -1,0 +1,13 @@
+<app-page>
+  <div body>
+    <app-performance-brochure-banner
+      #banner [performance]="performanceCacheable"
+    ></app-performance-brochure-banner>
+    <app-performance-brochure-tabs
+      #tabs
+      [performance]="performanceCacheable"
+      (leave)="leave()"
+      (onLike)="likePerformance()"
+    ></app-performance-brochure-tabs>
+  </div>
+</app-page>
