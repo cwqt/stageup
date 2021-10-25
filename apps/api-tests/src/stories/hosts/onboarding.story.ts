@@ -180,7 +180,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
           line1: '32 Marquee Court'
         },
         business_contact_number: '+44 323 223 4234',
-        // hmrc_company_number: 11940213,
+        hmrc_company_number: 11940213,
         business_type: BusinessType.GovernmentEntity
       });
 

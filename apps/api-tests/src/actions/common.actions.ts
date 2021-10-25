@@ -28,7 +28,7 @@ export default {
   /**
    * @description Drop data from all databases
    */
-  drop: async () => {    
+  drop: async () => {
     return api.post('/utils/drop');
   },
 

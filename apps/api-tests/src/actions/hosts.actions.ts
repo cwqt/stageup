@@ -240,7 +240,6 @@ export default {
   //router.post<string>("/hosts/:hid/stripe/connect", Hosts.connectStripe)
   connectStripe: async (host: IHost) => {
     const res = await api.post<string>(`/hosts/${host._id}/stripe/connect`, null, env.getOptions());
-    // return this.http.post<string>(`/api/hosts/${hostId}/stripe/connect`, null).toPromise();
     return null;
   },
 };
