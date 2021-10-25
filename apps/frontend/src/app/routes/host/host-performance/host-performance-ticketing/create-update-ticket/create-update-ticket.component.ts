@@ -115,7 +115,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           validators: [{ type: 'maxlength', value: 100 }, { type: 'required' }]
         }),
         unlimited: UiField.Checkbox({
-          label: $localize`Unlimitied tickets`
+          label: $localize`Unlimited tickets`
         }),
         // Temporarily removed for MVP. Will likely be re-added in the future
         // fees: UiField.Select({
