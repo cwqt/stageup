@@ -209,7 +209,13 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="table._displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: table._displayedColumns"></tr>
+
+        <tr
+          [ngClass]="{ 'hover-shadow': table.config.clickable?.shadow }"
+          (click)="table.config.clickable?.function(row)"
+          mat-row
+          *matRowDef="let row; columns: table._displayedColumns"
+        ></tr>
 
         <!-- Row shown when there is no data / loading -->
         <tr class="mat-row" *matNoDataRow>
@@ -235,6 +241,7 @@
     <mat-paginator
       *ngIf="table.config.pagination"
       [showFirstLastButtons]="table.config.pagination.show_first_last"
+      [hidePageSize]="table.config.pagination.hide_page_size"
       [length]="table.cache.data?.__paging_data?.total || 0"
       (page)="table.selection?.clear()"
       [pageSizeOptions]="table.config.pagination.page_sizes"

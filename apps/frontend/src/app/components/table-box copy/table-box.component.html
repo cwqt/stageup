@@ -1,0 +1,13 @@
+<h4 class="mb-4 text-black" i18n>Upcoming Events</h4>
+
+<div class="bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
+  <!-- <mat-spinner class="ml-5" [diameter]="50" *ngIf="table.cache.loading"></mat-spinner> -->
+  <div class="flex justify-end">
+    <ui-button (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n> Create Event </ui-button>
+  </div>
+
+  <ui-table [table]="table"></ui-table>
+  <div class="absolute bottom-8 left-4">
+    <a [routerLink]="['/dashboard/performances']" i18n>Go to events page</a>
+  </div>
+</div>

@@ -29,6 +29,11 @@ export interface IUiTable<Input = any, Transformed = Input> {
     initial_page_size?: number;
     page_sizes?: number[];
     show_first_last?: boolean;
+    hide_page_size?: boolean;
+  };
+  clickable?: {
+    shadow?: boolean;
+    function: (v: any) => void; // TODO: sort out type
   };
 }
 

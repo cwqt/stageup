@@ -160,3 +160,8 @@ popper-content {
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
 }
+
+.hover-shadow:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}

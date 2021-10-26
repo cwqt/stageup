@@ -1,37 +1,33 @@
-import { CreatePerformanceComponent } from './../host-performances/create-performance/create-performance.component';
-import { IHost } from '@core/interfaces';
-
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from '@frontend/services/host.service';
 import { IPerformanceStub, AssetType } from '@core/interfaces';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
+import { CreatePerformanceComponent } from './../../routes/host/host-performances/create-performance/create-performance.component';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@frontend/services/helper.service';
 import { Component, OnInit, LOCALE_ID, Inject } from '@angular/core';
 import { i18n, unix, findAssets } from '@core/helpers';
 
 @Component({
-  selector: 'app-host-dashboard',
-  templateUrl: './host-dashboard.component.html',
-  styleUrls: ['./host-dashboard.component.scss']
+  selector: 'app-table-box',
+  templateUrl: './table-box.component.html',
+  styleUrls: ['./table-box.component.scss']
 })
-export class HostDashboardComponent implements OnInit {
-  host: IHost;
+export class TableBoxComponent implements OnInit {
+  hostId = 't5tdvtnXO9q';
   table: UiTable<IPerformanceStub>;
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
-    private hostService: HostService,
     private helperService: HelperService,
+    private hostService: HostService,
     private dialog: MatDialog,
     private appService: AppService
   ) {}
 
   ngOnInit(): void {
-    this.host = this.hostService.currentHostValue;
-
     this.table = new UiTable<IPerformanceStub>({
-      resolver: query => this.hostService.readHostPerformances(this.host._id, query),
+      resolver: query => this.hostService.readHostPerformances(this.hostId, query),
       columns: [
         {
           label: $localize`Event`,
@@ -71,7 +67,7 @@ export class HostDashboardComponent implements OnInit {
 
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
-      this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.host._id }, width: '600px' })
+      this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' })
     );
   }
 }

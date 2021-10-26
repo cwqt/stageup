@@ -230,12 +230,14 @@ export const i18n = {
    * @description Format a date nicely using Intl
    * @param date
    * @param locale ILocale or LOCALE_ID injection token
+   * @param timeStyle 'short' or 'long' - defaults to 'short'
+   * @param dateStyle 'short' or 'long' - defaults to 'long'
    * @returns
    */
-  date: (date: Date, locale: ILocale | string): string => {
+  date: (date: Date, locale: ILocale | string, timeStyle = 'short', dateStyle = 'full'): string => {
     return new Intl.DateTimeFormat(typeof locale == 'string' ? locale : `${locale.language}-${locale.region}`, {
-      timeStyle: 'short',
-      dateStyle: 'full'
+      timeStyle,
+      dateStyle
     } as any).format(date);
   }
 };
