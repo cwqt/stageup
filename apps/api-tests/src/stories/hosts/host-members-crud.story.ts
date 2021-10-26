@@ -1,18 +1,8 @@
-import {
-  HostPermission,
-  HTTP,
-  IEnvelopedData,
-  IErrorResponse,
-  IHost,
-  IMUXAsset,
-  IMyself,
-  IUser,
-  IUserHostInfo,
-  IUserStub
-} from '@core/interfaces';
+import { HostPermission, HTTP, IEnvelopedData, IErrorResponse, IHost, IMyself, IUser, IUserHostInfo, IUserStub } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { HostInvitation } from '@core/api';
 
 describe('As a user-host, I want to be able to do Member CRUD', () => {
   let host: IHost;
@@ -31,25 +21,31 @@ describe('As a user-host, I want to be able to do Member CRUD', () => {
     // Create user, add to host & assert they were added to the DB
     member = await Stories.actions.users.createUser(UserType.Member);
     await Stories.actions.hosts.addMember(host, member);
-    await Stories.actions.misc.acceptHostInvite(member);
-    members = await Stories.actions.hosts.readMembers(host);
 
+    members = await Stories.actions.hosts.readMembers(host);
     expect(members.data.find(uhi => uhi.user._id === member._id)).toBeDefined();
+  });
+
+  it('Should accept host invite', async () => {
+    const hostInvitationId = await Stories.actions.utils.getHostInvitationId(member, host);
+    await Stories.actions.common.switchActor(UserType.Member);
+    await Stories.actions.hosts.handleHostInvite(host, hostInvitationId);
   });
 
   it('Should update a member permission (promote)', async () => {
     // Update member, read host, find member & assert their perms are what we set
+    await Stories.actions.common.switchActor(UserType.SiteAdmin);
     await Stories.actions.hosts.updateMember(host, member, { value: HostPermission.Editor });
-    host = await Stories.actions.hosts.readHost(host);
-    let memberCheck = host.members_info.find(user => user.user._id === member._id);
+    members = await Stories.actions.hosts.readMembers(host);
+    let memberCheck = members.data.find(user => user.user._id === member._id);
     expect(memberCheck.permissions).toBe(HostPermission.Editor);
   });
 
   it('Should update a member permission (demote)', async () => {
     // Update member, read host, find member & assert their perms are what we set
     await Stories.actions.hosts.updateMember(host, member, { value: HostPermission.Member });
-    host = await Stories.actions.hosts.readHost(host);
-    let memberCheck = host.members_info.find(user => user.user._id === member._id);
+    members = await Stories.actions.hosts.readMembers(host);
+    let memberCheck = members.data.find(user => user.user._id === member._id);
     expect(memberCheck.permissions).toBe(HostPermission.Member);
   });
 
@@ -89,7 +85,7 @@ describe('As a user-host, I want to be able to do Member CRUD', () => {
   it('Should remove a member of host', async () => {
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
     await Stories.actions.hosts.removeMember(host, member);
-    host = await Stories.actions.hosts.readHost(host);
-    expect(host.members_info.find(user => user.user._id === member._id)).toBeUndefined();
+    members = await Stories.actions.hosts.readMembers(host);
+    expect(members.data.find(user => user.user._id === member._id)).toBeUndefined();
   });
 });

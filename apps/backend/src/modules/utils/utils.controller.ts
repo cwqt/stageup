@@ -191,4 +191,14 @@ export class UtilityController extends ModuleController {
       return passwordReset.otp;
     }
   };
+
+  getHostInvitationId: IControllerEndpoint<string> = {
+    authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+    controller: async req => {
+      const invitee = await User.findOne(req.params.iid);
+      const host = await Host.findOne(req.params.hid);
+      const hostInvitation = await HostInvitation.findOne({invitee: invitee, host: host});      
+      return hostInvitation._id;
+    }
+  };
 }

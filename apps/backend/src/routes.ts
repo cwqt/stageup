@@ -118,7 +118,8 @@ router.get      <IE<IFollowing[]>>          ("/users/:uid/following",           
 const Hosts = Container.get(HostController)
 router.post     <IHost>                     ("/hosts",                                     Hosts.createHost);
 router.get      <IE<IHost, IClientHostData>>("/hosts/:hid",                                Hosts.readHost)
-router.delete   <IDelHostAssert | void>     ("/hosts/:hid",                                Hosts.deleteHost);
+// This deletion uses the post method because Axios doesn't support passing a body for delete requests
+router.post     <IDelHostAssert | void>     ("/hosts/:hid",                                Hosts.deleteHost);
 router.put      <IHostPrivate>              ("/hosts/:hid",                                Hosts.updateHost);
 router.get      <IHostPrivate>              ("/hosts/:hid/details",                        Hosts.readDetails);
 router.get      <IE<IPerfS[]>>              ("/hosts/:hid/performances",                   Hosts.readHostPerformances);
@@ -235,7 +236,8 @@ router.post     <void>                      ("/utils/logs",                     
 router.get      <string>                    ("/utils/ping",                               Utils.ping);
 router.get      <any>                       ("/utils/seed",                               Utils.seed);
 router.post     <void>                      ("/utils/drop",                               Utils.dropAllData);
-router.get      <string>                    ("/utils/password-otp/:uid",                   Utils.readForgottenPasswordOTP);
+router.get      <string>                    ("/utils/password-otp/:uid",                  Utils.readForgottenPasswordOTP);
+router.get      <string>                    ("/utils/host-invite/:iid/:hid",              Utils.getHostInvitationId);
 router.get      <any>                       ("/utils/stats",                              Utils.stats);
 router.get      <void>                      ("/utils/send-test-email",                    Utils.sendTestEmail);
 router.get      <void>                      ("/utils/assets",                             Utils.readAssets);

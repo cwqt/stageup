@@ -1081,7 +1081,7 @@ export class HostController extends ModuleController {
     validators: { params: object({ hid: Validators.Fields.nuuid }) },
     authorisation: AuthStrat.isLoggedIn,
     controller: async req => {
-      this.userService.toggleLike({
+      await this.userService.toggleLike({
         user_id: req.session.user._id,
         target_type: LikeLocation.HostProfile,
         target_id: req.params.hid

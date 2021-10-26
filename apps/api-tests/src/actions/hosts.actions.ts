@@ -20,7 +20,16 @@ import {
   CountryCode,
   BusinessType,
   HostOnboardingState,
-  PersonTitle
+  PersonTitle,
+  DtoReadHost,
+  IHostPrivate,
+  DtoUpdateHost,
+  IHostFeed,
+  IHostStripeInfo,
+  IFollower,
+  DtoUserMarketingInfo,
+  DtoHostAnalytics,
+  AnalyticsTimePeriod
 } from '@core/interfaces';
 import { api } from '../environment';
 import fd from 'form-data';
@@ -94,45 +103,51 @@ export default {
     return host;
   },
 
-  // router.get<IHost>("/hosts/:hid",Hosts.readHost())
-  readHost: async (host: IHostStub, hostId?: string): Promise<IHost> => {
-    const res = await api.get<IHost>(`/hosts/${hostId || host._id}`, env.getOptions());
+  // router.get<DtoReadHost>("/hosts/:hid",Hosts.readHost())
+  readHost: async (host: IHostStub, hostId?: string): Promise<DtoReadHost> => {
+    const res = await api.get<DtoReadHost>(`/hosts/${hostId || host._id}`, env.getOptions());
     return res.data;
   },
 
-  // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());
-  readHostByUsername: async (host: IHostStub, hostUsername?: string): Promise<IHost> => {
-    const res = await api.get<IHost>(`/hosts/@${hostUsername || host.username}`, env.getOptions());
+  // router.get <DtoReadHost> ("/hosts/@:username", Hosts.readHostByUsername());
+  readHostByUsername: async (host: IHostStub, hostUsername?: string): Promise<DtoReadHost> => {
+    const res = await api.get<DtoReadHost>(`/hosts/@${hostUsername || host.username}`, env.getOptions());
+    return res.data;
+  },
+
+  // router.get<IHostPrivate>("/hosts/:hid/details",Hosts.readDetails);
+  readHostDetails: async (host: IHost): Promise<IHostPrivate> => {
+    const res = await api.get<IHostPrivate>(`/hosts/${host._id}/details`, env.getOptions());
     return res.data;
   },
 
   // router.put<IHost> ("/hosts/:hid",Hosts.updateHost());
-  updateHost: async (host: IHost) => {
-    const res = await api.post<IHost>(`/hosts/${host._id}`, null, env.getOptions());
+  updateHost: async (host: IHost, body: DtoUpdateHost): Promise<IHostPrivate> => {
+    const res = await api.put<IHostPrivate>(`/hosts/${host._id}`, body, env.getOptions());
     return res.data;
   },
 
   // router.delete <void>("/hosts/:hid",Hosts.deleteHost());
   deleteHost: async (host: IHost) => {
-    const res = await api.delete<void>(`/hosts/${host._id}`, env.getOptions());
+    const res = await api.post<void>(`/hosts/${host._id}?assert_only=true`, {can_delete: true}, env.getOptions());
     return res.data;
   },
 
-  //router.put<IHostS>("/hosts/:hid/avatar", Hosts.changeAvatar());
-  changeAvatar: async (host: IHost, data: fd): Promise<IHostStub> => {
+  //router.put<string>("/hosts/:hid/avatar", Hosts.changeAvatar());
+  changeAvatar: async (host: IHost, data: fd): Promise<string> => {
     const options = env.getOptions();
     options.headers['Content-Type'] = data.getHeaders()['content-type'];
 
-    const res = await api.put<IHostStub>(`/hosts/${host._id}/avatar`, data, options);
+    const res = await api.put<string>(`/hosts/${host._id}/avatar`, data, options);
     return res.data;
   },
 
-  //router.put<IHostS>("/hosts/:hid/banner", Hosts.changeBanner());
-  changeBanner: async (host: IHost, data: fd): Promise<IHostStub> => {
+  //router.put<string>("/hosts/:hid/banner", Hosts.changeBanner());
+  changeBanner: async (host: IHost, data: fd): Promise<string> => {
     const options = env.getOptions();
     options.headers['Content-Type'] = data.getHeaders()['content-type'];
 
-    const res = await api.put<IHostStub>(`/hosts/${host._id}/banner`, data, options);
+    const res = await api.put<string>(`/hosts/${host._id}/banner`, data, options);
     return res.data;
   },
 
@@ -233,5 +248,68 @@ export default {
   connectStripe: async (host: IHost) => {
     const res = await api.post<string>(`/hosts/${host._id}/stripe/connect`, null, env.getOptions());
     return null;
+  },
+
+  // router.redirect("/hosts/:hid/invites/:iid", Hosts.handleHostInvite);
+  handleHostInvite: async (host: IHost, inviteId: string) => {
+    try {
+      await api.get(`/hosts/${host._id}/invites/${inviteId}`, env.getOptions());
+    } catch(error) {
+      // Expect a redirect error as the front-end is not running during tests
+      // If the error is different, throw the error
+      if (!error.message.includes('connect ECONNREFUSED')) {
+        throw(error);
+      }      
+    }
+  },
+
+  // router.get<IHostFeed>("/hosts/:hid/feed", Hosts.readHostFeed);
+  readHostFeed: async (host: IHost) => {
+    const res = await api.get<IHostFeed>(
+      `/hosts/${host._id}/feed?upcoming[page]=0&upcoming[per_page]=4`,
+      env.getOptions()
+    );
+    return res;
+  },
+
+  // router.put<void>("/hosts/:hid/assets", Hosts.updateHostAssets);
+  updateHostAssets: async (host: IHost, data: fd) => {
+    const options = env.getOptions();
+    options.headers['Content-Type'] = data.getHeaders()['content-type'];
+    await api.put<void>(`/hosts/${host._id}/assets?type=image`, data, options);
+  },
+
+  // router.put<void>("/hosts/:hid/commission-rate", Hosts.updateCommissionRate);
+  updateCommissionRate: async (host:IHost, new_rate: number) => {
+    await api.put<void>(`/hosts/${host._id}/commission-rate`, {new_rate: new_rate}, env.getOptions());
+  },
+
+  // router.get<IHostStripeInfo>("/hosts/:hid/stripe/info", Hosts.readStripeInfo);
+  readStripeInfo: async (host:IHost) => {
+    const res = await api.get<IHostStripeInfo>(`/hosts/${host._id}/stripe/info`, env.getOptions());
+    return res;
+  },
+
+  // router.get<IE<IFollower[]>>("/hosts/:hid/followers", Hosts.readHostFollowers);
+  readHostFollowers: async (host: IHost): Promise<IFollower[]> => {
+    const res = await api.get<IEnvelopedData<IFollower[]>>(`/hosts/${host._id}/followers`, env.getOptions());
+    return res.data.data;
+  },
+
+  // router.post<void>("/hosts/:hid/toggle-like", Hosts.toggleLike);
+  toggleLike: async (host :IHost) => {
+    await api.post<void>(`/hosts/${host._id}/toggle-like`, {}, env.getOptions());
+  },
+
+  // router.get<DtoUserMarketingInfo>("/hosts/:hid/marketing/audience", Hosts.readHostMarketingConsents);
+  readHostMarketingConsents: async (host: IHost): Promise<DtoUserMarketingInfo> => {
+    const res = await api.get<DtoUserMarketingInfo>(`/hosts/${host._id}/marketing/audience`, env.getOptions());
+    return res.data;
+  },
+
+  // router.get<DtoHostAnalytics>("/hosts/:hid/analytics", Hosts.readHostAnalytics);
+  readHostAnalytics: async (host: IHost, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> => {
+    const res = await api.get<DtoHostAnalytics>(`/hosts/${host._id}/analytics?period=${period}`, env.getOptions());
+    return res.data;
   }
 };
