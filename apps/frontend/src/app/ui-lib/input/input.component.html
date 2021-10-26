@@ -178,7 +178,11 @@
   </mat-form-field>
 
   <!-- Select with search -->
-  <mat-form-field *ngIf="data.type == 'select'" appearance="fill" [class.form-field--no-label]="!data.options.label">
+  <mat-form-field
+    *ngIf="data.type == 'select'"
+    appearance="{{ data.options.appearance || 'fill' }}"
+    [class.form-field--no-label]="!data.options.label"
+  >
     <mat-label *ngIf="data.options.label">{{ data.options.label }}</mat-label>
     <mat-select
       #singleSelect

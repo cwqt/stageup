@@ -39,7 +39,7 @@ type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnaly
 };
 
 @Component({
-  selector: 'app-host-analytics',
+  selector: 'frontend-host-analytics',
   templateUrl: './host-analytics.component.html',
   styleUrls: ['./host-analytics.component.scss']
 })
@@ -100,8 +100,7 @@ export class HostAnalyticsComponent implements OnInit {
       fields: {
         period: UiField.Select({
           initial: 'MONTHLY',
-          values: new Map(Object.entries(this.periodMap).map(([key, value]) => [key, { label: value }])),
-          appearance: 'outline'
+          values: new Map(Object.entries(this.periodMap).map(([key, value]) => [key, { label: value }]))
         })
       },
       handlers: {
@@ -117,6 +116,113 @@ export class HostAnalyticsComponent implements OnInit {
 
     // Get the host analytics on component init
     this.readHostAnalytics();
+
+    // Setup table for performance analytics, will fetch data when instantiated
+    this.performanceAnalyticsTable = new UiTable<PerformanceAnalyticsRowData>({
+      actions: [],
+      resolver: async q => {
+        // Get all the performances weekly collected analytics data
+        const res = await this.hostService.readPerformancesAnalytics(
+          this.hostService.currentHostValue._id,
+          this.periodForm.group.value.period,
+          q
+        );
+
+        return {
+          __client_data: res.__client_data,
+          __paging_data: res.__paging_data,
+          data: res.data.map(dto => {
+            const half = Math.ceil(dto.chunks.length / 2);
+            const [latest, previous] = [dto.chunks.slice(0, half), dto.chunks.slice(half, dto.chunks.length)];
+
+            return {
+              ...dto,
+              snapshot: {
+                latest_period: Analytics.entities.performance.aggregators.chunks(latest),
+                previous_period: Analytics.entities.performance.aggregators.chunks(previous)
+              }
+            };
+          })
+        };
+      },
+      pagination: {},
+      columns: [
+        {
+          label: $localize`Performance`,
+          accessor: v => v.name,
+          image: v =>
+            v.assets.find(a => a.type == AssetType.Image && a.tags.includes('secondary'))?.location ||
+            '/assets/performance-placeholder.jpeg'
+        },
+        {
+          label: $localize`Premiere Date`,
+          accessor: v => i18n.date(unix(v.publicity_period.start), this.locale)
+        },
+        {
+          label: $localize`Tickets sold`,
+          accessor: v => v.snapshot.latest_period.metrics.total_ticket_sales.toLocaleString()
+        },
+        {
+          label: $localize`Revenue`,
+          accessor: v => i18n.money(v.snapshot.latest_period.metrics.total_revenue, CurrencyCode.GBP)
+        },
+        {
+          label: $localize`Performance Views`,
+          accessor: v => `${v.snapshot.latest_period.metrics.performance_views.toLocaleString()}`
+        },
+        {
+          label: $localize`Trailer Views`,
+          accessor: v => v.snapshot.latest_period.metrics.trailer_views.toLocaleString()
+        }
+      ]
+    });
+
+    // Refresh the performance snapshot every time the data is fetched
+    this.performanceAnalyticsTable.resolutionSuccess.subscribe(rows => {
+      const properties = Object.keys(this.snapshot.performances.header_items) as (keyof IPerformanceAnalyticsMetrics)[];
+
+      // Clear graphs of old data
+      const headers = this.headers.filter(header => header.ref == 'performances'); // only perf related charts
+      headers?.forEach(headers => headers.clearGraph());
+
+      const allPerformanceChunks = rows
+        .flatMap(dto => dto.chunks)
+        .sort((a, b) => (a.period_ended_at < b.period_ended_at ? 1 : -1));
+
+      const metricAggregateByPeriod = {
+        latest_period: Analytics.entities.performance.aggregators.metrics(
+          rows.map(row => row.snapshot.latest_period.metrics)
+        ),
+        previous_period: Analytics.entities.performance.aggregators.metrics(
+          rows.map(row => row.snapshot.previous_period.metrics)
+        )
+      };
+
+      properties.forEach(property => {
+        const { latest_period: latest, previous_period: previous } = metricAggregateByPeriod;
+
+        this.snapshot.performances.header_items[property].difference = this.formatPercentageDifference(
+          latest[property],
+          previous[property]
+        );
+
+        // Pretty format the aggregate value for the header item using the analytics formatters
+        this.snapshot.performances.header_items[property].aggregation = Analytics.entities.performance.formatters[
+          property
+        ](latest[property], {
+          locale: this.locale,
+          currency: CurrencyCode.GBP
+        });
+
+        // Populate this properties' graph with data across all chunks from all performances
+        allPerformanceChunks.forEach(chunk => {
+          this.snapshot.performances.header_items[property].graph.data.datasets[0].data.push(chunk.metrics[property]);
+          this.snapshot.performances.header_items[property].graph.data.labels.push(unix(chunk.period_ended_at));
+        });
+      });
+
+      headers?.forEach(header => header.chart.chartInstance.update());
+    });
   }
 
   async readHostAnalytics() {

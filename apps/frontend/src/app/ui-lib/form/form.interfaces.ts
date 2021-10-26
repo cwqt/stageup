@@ -330,6 +330,7 @@ export type IUiFieldTypeOptions = {
   select: {
     initial?: Primitive;
     values: Map<Primitive, { label: string; disabled?: boolean }>;
+    appearance?: string;
     multi_select?: boolean;
     has_search?: boolean;
     placeholder?: string;
