@@ -87,7 +87,7 @@ export default {
   // router.get <ITicketStub[]> ("/performances/:pid/tickets", Perfs.getTickets());
   getTickets: async (performance: IPerformance): Promise<ITicketStub[]> => {
     const res = await api.get(`/performances/${performance._id}/tickets`, env.getOptions());
-    return res.data;
+    return res.data.data;
   },
 
   // router.delete <void> ("/performances/:pid/tickets/:tid", Perfs.deleteTicket());

@@ -1,4 +1,4 @@
-import { IHost, IPerformance, IUser } from '@core/interfaces';
+import { IHost, IPerformance, IUser, PerformanceType } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { CurrencyCode, Genre } from '@core/interfaces';
@@ -23,8 +23,9 @@ describe('As a user-host, I want to review all my performances', () => {
       perf = await Stories.actions.performances.createPerformance(host, {
           name: 'Shakespeare',
           description: 'To be or not to be',
-          genre: Genre.BourgeoisTragedy,
-          premiere_date: null
+          genre: Genre.Classical,
+          type: PerformanceType.Vod,
+          publicity_period: { start: 161347834, end: 161347834 }
         });        
         
       let performancesList = await Stories.actions.hosts.readHostPerformances(host);

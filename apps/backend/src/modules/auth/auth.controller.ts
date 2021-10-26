@@ -21,7 +21,7 @@ export class AuthController extends ModuleController {
         hash: string()
       })
     },
-    middleware: Middleware.rateLimit(3600, 10, this.redis),
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis),
     authorisation: AuthStrat.none,
     controller: async req => {
       const isVerified = this.authService.verifyUserEmailAddress(req.query.email as string, req.query.hash as string);
