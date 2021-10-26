@@ -12,12 +12,12 @@ export class CachedUser {
 }
 
 import commonActions from './actions/common.actions';
-import miscActions from './actions/misc.actions';
 import usersActions from './actions/users.actions';
 import hostsActions from './actions/hosts.actions';
 import adminActions from './actions/admin.actions';
 import performanceActions from './actions/performances.actions';
 import searchActions from './actions/search.actions';
+import utilsActions from './actions/utils.actions';
 
 export const Stories = {
   log: true,
@@ -25,12 +25,12 @@ export const Stories = {
   cachedUsers: {} as { [index in UserType]?: CachedUser },
   actions: {
     common: commonActions,
-    misc: miscActions,
     users: usersActions,
     hosts: hostsActions,
     admin: adminActions,
     performances: performanceActions,
-    search: searchActions
+    search: searchActions,
+    utils: utilsActions
   },
 
   setActiveUser: async (user: CachedUser) => {
