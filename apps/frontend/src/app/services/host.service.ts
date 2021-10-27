@@ -152,9 +152,16 @@ export class HostService {
     return this.http.get<DtoReadHost>(`/api/hosts/@${hostUsername}`).toPromise();
   }
 
+  // // router.get <IUserStub[]> ("/hosts/:hid/members", Hosts.readMembers());
+  // readMembers(hostId: string): Promise<IEnvelopedData<IUserHostInfo[]>> {
+  //   return this.http.get<IEnvelopedData<IUserHostInfo[], null>>(`/api/hosts/${hostId}/members`).toPromise();
+  // }
+
   // router.get <IUserStub[]> ("/hosts/:hid/members", Hosts.readMembers());
-  readMembers(hostId: string): Promise<IEnvelopedData<IUserHostInfo[]>> {
-    return this.http.get<IEnvelopedData<IUserHostInfo[], null>>(`/api/hosts/${hostId}/members`).toPromise();
+  readMembers(hostId: string, query: IQueryParams): Promise<IEnvelopedData<IUserHostInfo[]>> {
+    return this.http
+      .get<IEnvelopedData<IUserHostInfo[], null>>(`/api/hosts/${hostId}/members${querize(query)}`)
+      .toPromise();
   }
 
   addMember(hostId: string, addition: IHostMemberChangeRequest): Promise<IUserHostInfo> {

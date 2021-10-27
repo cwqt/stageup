@@ -1,5 +1,9 @@
+import { HostPermissionPipe } from './../../../_pipes/host-permission.pipe';
+import { MatTableDataSource } from '@angular/material/table';
+import { ICacheable, createICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { HostAddMemberComponent } from './../host-members/host-add-member/host-add-member.component';
 import { CreatePerformanceComponent } from './../host-performances/create-performance/create-performance.component';
-import { IHost } from '@core/interfaces';
+import { IHost, IEnvelopedData, IUserHostInfo, HostPermission } from '@core/interfaces';
 
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from '@frontend/services/host.service';
@@ -17,7 +21,16 @@ import { i18n, unix, findAssets } from '@core/helpers';
 })
 export class HostDashboardComponent implements OnInit {
   host: IHost;
-  table: UiTable<IPerformanceStub>;
+
+  // Events
+  eventTable: UiTable<IPerformanceStub>;
+  eventData: IPerformanceStub[];
+  // Members
+  memberTable: UiTable<IUserHostInfo>;
+  hostMembers: ICacheable<IEnvelopedData<IUserHostInfo[]>> = createICacheable([]);
+  hostMembersDataSrc: MatTableDataSource<IUserHostInfo>;
+  displayedColumns: string[] = ['user', 'permissions', 'joined_at', 'actions'];
+  valueSelected: HostPermission;
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
@@ -30,8 +43,12 @@ export class HostDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.host = this.hostService.currentHostValue;
 
-    this.table = new UiTable<IPerformanceStub>({
-      resolver: query => this.hostService.readHostPerformances(this.host._id, query),
+    this.eventTable = new UiTable<IPerformanceStub>({
+      resolver: async query => {
+        const envelope = await this.hostService.readHostPerformances(this.host._id, query);
+        this.eventData = envelope.data;
+        return envelope;
+      },
       columns: [
         {
           label: $localize`Event`,
@@ -64,14 +81,55 @@ export class HostDashboardComponent implements OnInit {
       },
       clickable: {
         shadow: true,
-        function: performance => this.appService.navigateTo(`/dashboard/performances/${performance.__data._id}`)
-      }
+        click_function: performance => this.appService.navigateTo(`/dashboard/performances/${performance.__data._id}`)
+      },
+      uniform_row_height: true
     });
+
+    // -----------------------------------------------------------------
+    this.hostMembersDataSrc = new MatTableDataSource<IUserHostInfo>([]);
+    this.hostMembers.loading = true;
+
+    const hostPermissionPipe = new HostPermissionPipe();
+
+    this.memberTable = new UiTable<IUserHostInfo>({
+      resolver: query => this.hostService.readMembers(this.host._id, query),
+      columns: [
+        {
+          label: $localize`Name`,
+          accessor: member => member.user.username
+        },
+        {
+          label: $localize`Permission`,
+          accessor: member => hostPermissionPipe.transform(member.permissions)
+        }
+      ],
+      actions: [],
+      pagination: {
+        page_sizes: [3],
+        initial_page_size: 3,
+        hide_page_size: true,
+        show_first_last: true
+      },
+      uniform_row_height: true
+    });
+
+    // console.log('eventTable', this.eventTable);
+    // console.log('memberTable', this.memberTable);
   }
 
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
       this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.host._id }, width: '600px' })
     );
+  }
+
+  openAddMemberDialog() {
+    this.helperService.showDialog(this.dialog.open(HostAddMemberComponent), (newMembers: IUserHostInfo[]) => {
+      this.memberTable.refresh();
+      // this.hostMembers.data.data = [...this.hostMembers.data.data, ...newMembers];
+      // this.hostMembersDataSrc.data = this.hostMembers.data.data;
+      // this.hostMembersDataSrc.paginator.length += newMembers.length;
+    });
   }
 }

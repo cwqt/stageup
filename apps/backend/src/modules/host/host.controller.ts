@@ -167,7 +167,7 @@ export class HostController extends ModuleController {
             members_info: {
               user: true
             },
-            asset_group: true,
+            asset_group: true
           }
         }
       );

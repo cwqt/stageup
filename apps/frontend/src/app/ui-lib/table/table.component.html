@@ -211,8 +211,12 @@
         <tr mat-header-row *matHeaderRowDef="table._displayedColumns"></tr>
 
         <tr
-          [ngClass]="{ 'hover-shadow': table.config.clickable?.shadow }"
-          (click)="table.config.clickable?.function(row)"
+          [ngClass]="{
+            'hover-shadow': table.config.clickable?.shadow,
+            'set-uniform-height': table.config.uniform_row_height
+          }"
+          class="row-height"
+          (click)="table.config.clickable?.click_function(row)"
           mat-row
           *matRowDef="let row; columns: table._displayedColumns"
         ></tr>

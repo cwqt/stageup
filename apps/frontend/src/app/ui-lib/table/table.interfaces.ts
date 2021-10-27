@@ -33,8 +33,9 @@ export interface IUiTable<Input = any, Transformed = Input> {
   };
   clickable?: {
     shadow?: boolean;
-    function: (v: any) => void; // TODO: sort out type
+    click_function: (v: any) => void; // TODO: sort out type
   };
+  uniform_row_height?: boolean; // if true, the height will be set to 65px (helping to maintain consistency if multiple tables)
 }
 
 export interface IUiTableColumn<K> {

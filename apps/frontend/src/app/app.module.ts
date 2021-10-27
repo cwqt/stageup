@@ -165,7 +165,6 @@ import { HostAudienceListComponent } from './routes/host/host-marketing/host-aud
 import { PerformanceCancelDialogComponent } from './routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
-import { TableBoxComponent } from './components/table-box/table-box.component';
 
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
@@ -299,8 +298,7 @@ import { TableBoxComponent } from './components/table-box/table-box.component';
     HostPerformanceMediaComponent,
     HostMarketingComponent,
     HostAudienceListComponent,
-    HostProfileAssetComponent,
-    TableBoxComponent
+    HostProfileAssetComponent
   ],
   imports: [
     AngularMaterialModule,
