@@ -72,7 +72,7 @@ export class HostAudienceListComponent implements OnInit {
         },
         {
           label: $localize`Status`,
-          accessor: user => { return OptStatus[user.opt_status] },
+          accessor: user => OptStatus[user.opt_status],
           sort: { field: 'opt_status' },
           filter: {
             type: FilterCode.String,

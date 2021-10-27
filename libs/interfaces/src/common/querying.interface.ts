@@ -1,3 +1,4 @@
+import { ConsentOpt } from '..';
 import { Primitive } from './fp.interface';
 
 // Describes a method of querying/sorting data
@@ -110,8 +111,8 @@ export enum DateFilterOperator {
 // where args are UNIX timestamps
 export type DateFilter = FilterQuery<FilterCode.Date, DateFilterOperator, [number, number?]>;
 
-export enum OptStatus {
-  'hard-out' = 'Opted-Out',
-  'hard-in' = 'Opted-In',
-  'soft-in' = 'Opted-In',
+export const OptStatus: { [index in ConsentOpt]: string } = {
+  'hard-out': 'Opted-Out',
+  'hard-in': 'Opted-In',
+  'soft-in': 'Opted-In'
 }

@@ -38,7 +38,7 @@ export interface IUserHostInfo {
   prefers_dashboard_landing: boolean; // where the host member would prefer landing page to be
 }
 
-export type IUserMarketingInfo = { _id: string; name: string; username: string; email_address: string, opt_status: string }
+export type IUserMarketingInfo = Pick<IUserPrivate,"_id" | "name" | "username" | "email_address"> & { opt_status: ConsentOpt};
 
 export type DtoUserMarketingInfo = IEnvelopedData<IUserMarketingInfo[], { last_updated: number }>;
 
