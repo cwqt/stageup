@@ -57,7 +57,7 @@ STRIPE_PRIVATE_KEY="pk_test_{CODE}" #sk_test
 STRIPE_PUBLIC_KEY="sk_test_{CODE}" #pk_test
 ```
 
-Then, go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks). Then, under _'Endpoints receiving events from Connect application'_, click _'Add endpoint'._ Within _'Endpoint URL'_, write "https://stageup-{YOUR_NAME}.loca.lt/stripe/hooks", then under *'Events to send'_ click _'receive all events'_, then click _'Add enpoint'\_.
+Then, go to [https://dashboard.stripe.com/webhooks](https://dashboard.stripe.com/webhooks). Then, under _'Endpoints receiving events from Connect application'_, click _'Add endpoint'._ Within _'Endpoint URL'_, write "https://stageup-{YOUR_NAME}.loca.lt/stripe/hooks", then under _'Events to send'_ click _'receive all events'_, then click _'Add enpoint'_.
 
 Copy the 'Signing secret' from your webhook and add it to your .env:
 
