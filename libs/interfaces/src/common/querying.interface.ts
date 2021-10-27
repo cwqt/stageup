@@ -109,3 +109,8 @@ export enum DateFilterOperator {
 
 // where args are UNIX timestamps
 export type DateFilter = FilterQuery<FilterCode.Date, DateFilterOperator, [number, number?]>;
+
+export enum OptStatus {
+  'hard-out' = 'Opted-Out',
+  'soft-in' = 'Opted-In',
+}

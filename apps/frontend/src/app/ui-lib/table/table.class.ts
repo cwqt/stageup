@@ -21,6 +21,7 @@ export class UiTable<Input = any, Transformed = any> {
   _displayedColumns: string[];
   _footerMessage: ReturnType<IUiTable<Input>['selection']['footer_message']>;
   _activeFilters: { [column: string]: FilterQuery } = {};
+  _sortDirection: string;
 
   ui: {
     table: MatTable<Transformed>;
@@ -125,6 +126,7 @@ export class UiTable<Input = any, Transformed = any> {
           query.sort = {
             [field]: this.ui.sort.direction.toLocaleUpperCase() as SortDirection
           };
+          this._sortDirection = this.ui.sort.direction.toLocaleUpperCase()
         }
 
         // And then all the active filters...
@@ -224,4 +226,5 @@ export class UiTable<Input = any, Transformed = any> {
     this.cache.data.__paging_data.total -= 1;
     this.ui.table.renderRows();
   }
+
 }

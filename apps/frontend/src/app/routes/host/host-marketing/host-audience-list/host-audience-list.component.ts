@@ -1,7 +1,7 @@
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { ExportFileType, FilterCode, DtoUserMarketingInfo, IUserMarketingInfo } from '@core/interfaces';
+import { ExportFileType, FilterCode, IUserMarketingInfo, OptStatus } from '@core/interfaces';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { Component, OnInit } from '@angular/core';
 
@@ -53,16 +53,38 @@ export class HostAudienceListComponent implements OnInit {
       },
       columns: [
         {
-          label: $localize`User`,
-          accessor: user => user.name || user.username
-        },
-        {
           label: $localize`Email Address`,
           accessor: user => user.email_address,
           sort: { field: 'email_address' },
           filter: {
             type: FilterCode.String,
             field: 'email_address'
+          }
+        },
+        {
+          label: $localize`Name `,
+          accessor: user => user.name || user.username,
+          sort: { field: 'name' },
+          filter: {
+            type: FilterCode.String,
+            field: 'name'
+          }
+        },
+        {
+          label: $localize`Status`,
+          accessor: user => { return OptStatus[user.opt_status] },
+          sort: { field: 'opt_status' },
+          filter: {
+            type: FilterCode.String,
+            field: 'opt_status'
+          },
+          chip_selector: v => {
+            switch (v.opt_status) {
+              case 'hard-out':
+                return 'red';
+              case 'soft-in':
+                return 'green';
+            }
           }
         }
       ],

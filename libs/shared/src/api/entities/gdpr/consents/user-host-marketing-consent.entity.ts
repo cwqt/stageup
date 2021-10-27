@@ -42,13 +42,14 @@ export class UserHostMarketingConsent extends Consent<'host_marketing'> implemen
     };
   }
 
-  // The host will only need access to the users name/username and email and date for marketing purposes
+  // The host will only need access to the users name/username and email and opt_status for marketing purposes
   toUserMarketingInfo(): Required<IUserMarketingInfo> {
     return {
       _id: this.user._id,
       email_address: this.user.email_address,
       name: this.user.name,
-      username: this.user.username
+      username: this.user.username,
+      opt_status: this.opt_status
     };
   }
 
