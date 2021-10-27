@@ -103,7 +103,7 @@
               >
                 <ui-icon size="l">share</ui-icon>
               </ui-button>
-              <popper-content #shareMenu (click)="$event.stopPropagation()">
+              <popper-content #shareMenu class="share-menu" (click)="$event.stopPropagation()">
                 <app-social-sharing [url]="hostSharingUrl"></app-social-sharing>
               </popper-content>
             </div>
