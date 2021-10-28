@@ -3,15 +3,23 @@
     <!-- Banner  -->
     <div class="host-profile-header bg-white rounded shadow-sm">
       <div class="banner-picture__container relative overflow-hidden rounded">
-        <img class="object-cover w-full" [src]="host.data.data.banner || '/assets/banner-placeholder.png'" />
+        <div
+        *ngIf="!host.data.data.banner"
+        class="carousel-cell relative bg-gray-200 flex flex-col items-center justify-center p-10 pointer-default"
+      >
+        <ui-icon class="text-gray-600" [size]="120">image</ui-icon>
+
+      </div>
+        <img *ngIf="host.data.data.banner" class="object-cover w-full" [src]="host.data.data.banner || '/assets/host-profile-banner-placeholder.png'" />
         <ui-button
           *ngIf="isHostView"
           (click)="openChangeBannerDialog()"
           class="absolute top-2 left-2"
           icon="paint-brush--alt"
-          kind="accent"
+          kind="clear-dark"
         >
-          <span i18n>Change banner</span>
+          <span *ngIf="host.data.data.banner" i18n>Change banner</span>
+          <span *ngIf="!host.data.data.banner" i18n>Add</span>
         </ui-button>
       </div>
 
@@ -26,7 +34,7 @@
           (click)="openChangeAvatarDialog()"
           icon="paint-brush--alt"
           class="z-10 absolute top-2 left-2"
-          kind="accent"
+          kind="clear-dark"
         >
           <span i18n>Edit</span>
         </ui-button>
