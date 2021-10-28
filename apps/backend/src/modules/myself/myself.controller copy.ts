@@ -188,20 +188,25 @@ export class MyselfController extends ModuleController {
       if (fetchAll || req.query['trending']) {
         // Attempt to fetch from cache
         let trending = await this.redis.get('trending_performances');
-
         if (!trending) {
           // If cache miss, get the 20 most bought performances and store in cache
           trending = await this.ORM.createQueryBuilder(Performance, 'performance')
             .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
             .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
+            .where('invoice.purchased_at >= :startOfWeek', { startOfWeek: timestamp(startOfWeek(new Date())) })
+            .innerJoinAndSelect('performance.host', 'host')
+            .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
             .addSelect('COUNT(*)', 'count')
             .groupBy('performance._id')
             .addGroupBy('performance__asset_group._id')
             .addGroupBy('performance__asset_group__assets._id')
+            .addGroupBy('host._id')
+            .addGroupBy('likes._id')
             .orderBy('count', 'DESC')
             .limit(20) // Trending to only show the top 20 of the week
-            .getMany();
-          // Cache the result for a week
+            .paginate({
+              serialiser: p => p.toClientStub()
+            });
           await this.redis.set('trending_performances', trending, 604800);
         }
         // Paginate the data to send back to the client
@@ -209,23 +214,13 @@ export class MyselfController extends ModuleController {
         const per_page = req.query.trending ? parseInt((req.query['trending'] as any).per_page) : 4;
         const startIndex = current_page * per_page;
         const endIndex = current_page * per_page + per_page;
-        const performanceSlice = trending.slice(startIndex, endIndex);
-
-        // Attach the client 'likes' (since the cached query will not contain this data)
-        const performanceWithLikes = await this.ORM.createQueryBuilder(Performance, 'performance')
-          .where('performance._id IN (:...perfs)', { perfs: performanceSlice.map(perf => perf._id) })
-          .innerJoinAndSelect('performance.host', 'host')
-          .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
-          .paginate({
-            serialiser: p => p.toClientStub()
-          });
 
         feed.trending = {
-          data: performanceWithLikes.data,
+          data: trending.data.slice(startIndex, endIndex),
           __client_data: null,
           __paging_data: {
             per_page,
-            total: trending.length,
+            total: trending.data.length,
             current_page,
             prev_page: current_page - 1 < 0 ? null : current_page - 1,
             next_page: current_page + 1
