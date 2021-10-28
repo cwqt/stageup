@@ -61,8 +61,8 @@
               [class.filter--is-active]="table._activeFilters[column.key]"
             >
               <ng-container *ngTemplateOutlet="header"></ng-container>
-              <ui-icon mat-header-cell size="m" *ngIf="table._sortDirection !='DESC'">sort--ascending</ui-icon>
-              <ui-icon mat-header-cell size="m" *ngIf="table._sortDirection =='DESC'">sort--descending</ui-icon>
+              <ui-icon class="sort-icon" mat-header-cell size="m" *ngIf="table._sortDirection !='DESC'">sort--ascending</ui-icon>
+              <ui-icon class="sort-icon" mat-header-cell size="m" *ngIf="table._sortDirection =='DESC'">sort--descending</ui-icon>
             </th>
           </ng-container>
           <ng-container *ngIf="!column.value.sort">
@@ -84,7 +84,7 @@
                 [popperPositionFixed]="true"
                 [popperPreventOverflow]="false"
                 [popperPlacement]="'bottom'"
-                size="s"
+                size="m"
                 class="ml-2 rounded-full overflow-hidden filter"
                 [class.filter--is-active]="table._activeFilters[column.key]"
               >

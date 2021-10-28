@@ -186,5 +186,18 @@ popper-content {
 }
 
 ui-icon{
-  color: gray;
+  color: #B7B7B7;
+  font-size: 26px;
+}
+
+ui-icon:hover{
+  color: gray
+}
+
+ui-button{
+  padding: 0 4px;
+}
+
+.sort-icon{
+  font-size: 26px;
 }

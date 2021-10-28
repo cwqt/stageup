@@ -84,6 +84,8 @@ export class HostAudienceListComponent implements OnInit {
                 return 'red';
               case 'soft-in':
                 return 'green';
+              case 'hard-in':
+                return 'green';
             }
           }
         }
