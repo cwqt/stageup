@@ -64,30 +64,30 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           values: new Map([
             [TicketType.Paid, { label: $localize`Paid`, disabled: !this.host.stripe_account_id }],
             [TicketType.Free, { label: $localize`Free` }],
-            [TicketType.Donation, { label: $localize`Donation`, disabled: !this.host.stripe_account_id }]
+            // [TicketType.Donation, { label: $localize`Donation`, disabled: !this.host.stripe_account_id }]
           ])
         }),
         name: UiField.Text({
           label: $localize`Ticket title`,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 64 }]
         }),
-        dono_pegs: UiField.Container({
-          header_level: 0,
-          label: $localize`Select Donation Amounts:`,
-          hide: fg => fg.getRawValue()['type'] !== TicketType.Donation,
-          fields: Object.entries(DONO_PEG_WEIGHT_MAPPING).reduce((acc, curr) => {
-            const [peg, weight] = curr;
-            acc[peg] = UiField.Checkbox({
-              width: 4,
-              label:
-                peg == 'allow_any'
-                  ? $localize`Allow Any`
-                  : i18n.money(calculateAmountFromCurrency(CurrencyCode.GBP, weight), CurrencyCode.GBP)
-            });
+        // dono_pegs: UiField.Container({
+        //   header_level: 0,
+        //   label: $localize`Select Donation Amounts:`,
+        //   hide: fg => fg.getRawValue()['type'] !== TicketType.Donation,
+        //   fields: Object.entries(DONO_PEG_WEIGHT_MAPPING).reduce((acc, curr) => {
+        //     const [peg, weight] = curr;
+        //     acc[peg] = UiField.Checkbox({
+        //       width: 4,
+        //       label:
+        //         peg == 'allow_any'
+        //           ? $localize`Allow Any`
+        //           : i18n.money(calculateAmountFromCurrency(CurrencyCode.GBP, weight), CurrencyCode.GBP)
+        //     });
 
-            return acc;
-          }, {})
-        }),
+        //     return acc;
+        //   }, {})
+        // }),
         quantity: UiField.Number({
           width: 6,
           label: $localize`Quantity`,
@@ -177,7 +177,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             if (data.quantity === TICKETS_QTY_UNLIMITED) {
               fields['quantity'] = '';
               fields['unlimited'] = true;
-            }           
+            }
             fields['visibility.value'] = !data.is_visible;
 
             // Set the pegs up
@@ -212,7 +212,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         },
         failure: async () => {},
         changes: async f => {
-          if (f.value.type == TicketType.Free || f.value.type == TicketType.Donation) {
+          if (f.value.type == TicketType.Free) {
             f.controls.amount.disable({ emitEvent: false, onlySelf: true });
           } else {
             f.controls.amount.enable({ emitEvent: false, onlySelf: true });
