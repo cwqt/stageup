@@ -25,7 +25,12 @@ import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/c
 import { AppService } from '@frontend/services/app.service';
 
 // https://www.npmjs.com/package/angularx-social-login
-import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
+import {
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  SocialAuthServiceConfig,
+  SocialLoginModule
+} from 'angularx-social-login';
 
 // https://github.com/scttcper/ngx-chartjs
 import { ChartjsModule } from '@ctrl/ngx-chartjs';
@@ -170,20 +175,19 @@ import { HostPerformanceMediaComponent } from './routes/host/host-performance/ho
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
-const getSigninProviders = (appService: AppService) => {
-  return appService.getEnvironment().then(env => {
-    const providers = [
-      {
-        id: GoogleLoginProvider.PROVIDER_ID,
-        provider: new GoogleLoginProvider(env.google_auth_app_id)
-      },
-      {
-        id: FacebookLoginProvider.PROVIDER_ID,
-        provider: new FacebookLoginProvider(env.facebook_auth_app_id)
-      }
-    ];
-    return { autoLogin: true, providers } as SocialAuthServiceConfig;
-  });
+const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
+  const env = await appService.getEnvironment();
+  const providers = [
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider(env.google_auth_app_id)
+    },
+    {
+      id: FacebookLoginProvider.PROVIDER_ID,
+      provider: new FacebookLoginProvider(env.facebook_auth_app_id)
+    }
+  ];
+  return { autoLogin: true, providers };
 };
 
 // ---------------------------------------------------------------------------------------------------------------------

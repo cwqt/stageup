@@ -1,4 +1,4 @@
-import { DtoSocialLogin, IUser, IUserStub, IUserPrivate, IMyself, ILocale, ConsentOpts, ConsentOpt } from '@core/interfaces';
+import { DtoSocialLogin, IUser, IUserStub, IUserPrivate, IMyself, ILocale, ConsentOpts, ConsentOpt, LoginMethod, IPersonInfo } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import bcrypt from 'bcrypt';
 import {
@@ -49,7 +49,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
   @OneToMany(() => PatronSubscription, sub => sub.user) patron_subscriptions: PatronSubscription[];
 
-  @Column('simple-array', { default: [] }) sign_in_types: (DtoSocialLogin['provider'] | 'EMAIL')[];
+  @Column('simple-array', { default: [] }) sign_in_types: LoginMethod[];
 
   @Column({ nullable: true }) private salt: string;
   @Column({ nullable: true }) private pw_hash: string;
@@ -76,11 +76,11 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     this.sign_in_types = [data.provider ? data.provider : 'EMAIL'];
   }
 
-  async setup(txc: EntityManager): Promise<User> {
+  async setup(txc: EntityManager, personalDetails?: IPersonInfo): Promise<User> {
     this.personal_details = new Person({
-      first_name: null,
-      last_name: null,
-      title: null
+      first_name: personalDetails?.first_name || null,
+      last_name: personalDetails?.last_name || null,
+      title: personalDetails?.title || null
     });
 
     await this.personal_details.addContactInfo(

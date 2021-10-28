@@ -7,6 +7,8 @@ export type DtoCreateUser = Pick<IUserPrivate, 'username' | 'email_address'> & {
 export type DtoUpdateUser = Pick<IUserPrivate, 'email_address' | 'name' | 'bio'>;
 export type DtoSocialLogin = Pick<SocialUser, 'email' | 'name' | 'firstName' | 'lastName' | 'photoUrl' | 'provider' | 'id'>;
 
+export type LoginMethod = DtoSocialLogin['provider'] | 'EMAIL';
+
 export interface IUserStub {
   _id: string;
   name: string;

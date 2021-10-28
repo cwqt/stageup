@@ -46,7 +46,7 @@ export class AuthenticationService {
 
   socialSignIn(data: DtoSocialLogin): Promise<IUser> {
     return this.http
-      .post<IUser>('/api/users/login/social', data, { withCredentials: true })
+      .post<IUser>('/api/users/login/using-social-media', data, { withCredentials: true })
       .pipe(
         tap(user => {
           this.setMyself();
