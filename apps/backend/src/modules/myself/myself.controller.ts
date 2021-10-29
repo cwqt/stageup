@@ -1,8 +1,8 @@
-import { AppCache } from './../../../../../libs/shared/src/api/data-client/providers/redis.provider';
 import AuthStrat from '@backend/common/authorisation';
 import { ErrorHandler } from '@backend/common/error';
 import { SUPPORTED_LOCALES } from '@backend/common/locales';
 import {
+  AppCache,
   EventBus,
   EVENT_BUS_PROVIDER,
   Follow,
@@ -61,7 +61,6 @@ import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection, getManager } from 'typeorm';
 import startOfWeek from 'date-fns/startOfWeek';
-import { RedisClient } from 'redis';
 
 @Service()
 export class MyselfController extends ModuleController {
@@ -194,6 +193,9 @@ export class MyselfController extends ModuleController {
           trending = await this.ORM.createQueryBuilder(Performance, 'performance')
             .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
             .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
+            // .where('invoice.purchased_at >= :startOfWeek', {
+            //   startOfWeek: timestamp() - 604800
+            // })
             .addSelect('COUNT(*)', 'count')
             .groupBy('performance._id')
             .addGroupBy('performance__asset_group._id')
@@ -207,7 +209,7 @@ export class MyselfController extends ModuleController {
         const current_page = req.query.trending ? parseInt((req.query['trending'] as any).page) : 0;
         const per_page = req.query.trending ? parseInt((req.query['trending'] as any).per_page) : 4;
         const startIndex = current_page * per_page;
-        const endIndex = current_page * per_page + per_page;
+        const endIndex = Math.min(current_page * per_page + per_page);
         const performanceSlice = trending.slice(startIndex, endIndex);
 
         // Attach the client 'likes' (since the cached query will not contain this data)
