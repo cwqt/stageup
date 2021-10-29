@@ -190,7 +190,7 @@ export class MyselfController extends ModuleController {
         let trending = await this.redis.get('trending_performances');
 
         if (!trending) {
-          // If cache miss, get the 20 most bought performances and store in cache
+          // If cache miss, get the 20 most bought performances and store in cache for a week
           trending = await this.ORM.createQueryBuilder(Performance, 'performance')
             .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
             .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
@@ -201,7 +201,6 @@ export class MyselfController extends ModuleController {
             .orderBy('count', 'DESC')
             .limit(20) // Trending to only show the top 20 of the week
             .getMany();
-          // Cache the result for a week
           await this.redis.set('trending_performances', trending, 604800);
         }
         // Paginate the data to send back to the client

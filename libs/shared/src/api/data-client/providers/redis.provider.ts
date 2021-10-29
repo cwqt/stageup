@@ -30,10 +30,10 @@ export class RedisProvider implements Provider<AppCache> {
       port: this.config.port
     });
 
-    new Promise<AppCache>((resolve, reject) => {
-      this.client.on('connect', () => resolve(this.connection));
-      this.client.on('error', reject);
-    });
+    // new Promise<AppCache>((resolve, reject) => {
+    //   this.client.on('connect', () => resolve(this.connection));
+    //   this.client.on('error', reject);
+    // });
 
     return this;
   }
