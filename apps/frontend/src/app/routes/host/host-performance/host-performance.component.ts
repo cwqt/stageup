@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DtoPerformance, IHost, IPerformanceHostInfo, PerformanceStatus, PerformanceType } from '@core/interfaces';
 import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
@@ -13,8 +13,10 @@ import { HelperService } from '../../../services/helper.service';
 import { HostPerformanceDetailsComponent } from './host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { SharePerformanceDialogComponent } from './share-performance-dialog/share-performance-dialog.component';
-import { HostPerformanceMediaComponent } from './host-performance-media/host-performance-media.component';
 import { timestamp } from '@core/helpers';
+import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
+import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { HostPerformanceMediaComponent } from './host-performance-media/host-performance-media.component';
 
 @Component({
   selector: 'app-host-performance',
@@ -50,12 +52,17 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     return this.performance.data?.data;
   }
 
+  get isPerformanceCancelled(): boolean {
+    return this.performance?.data?.data?.status === PerformanceStatus.Cancelled;
+  }
+
   constructor(
     private performanceService: PerformanceService,
     private appService: AppService,
     private route: ActivatedRoute,
     private helperService: HelperService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   async ngOnInit() {
@@ -88,6 +95,34 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   cancelPerformance() {
     this.dialog.open(PerformanceCancelDialogComponent, {
       data: this.performance.data.data
+    });
+  }
+
+  async restorePerformance() {
+    // Set performance status and publicity period in DB
+    await this.performanceService.restorePerformance(this.performanceId);
+    // Also set the changes on the front end so we don't have to re-render
+    this.performance.data.data.status = PerformanceStatus.PendingSchedule;
+
+    this.helperService.showConfirmationDialog(this.dialog, {
+      title: $localize`The schedule for this performance has been reset. Please set a new one.`,
+      buttons: [
+        new UiDialogButton({
+          label: $localize`Later`,
+          kind: ThemeKind.Secondary,
+          callback: ref => {
+            ref.close();
+            this.router.navigate(['dashboard/performances']);
+          }
+        }),
+        new UiDialogButton({
+          label: $localize`Ok`,
+          kind: ThemeKind.Primary,
+          callback: ref => {
+            ref.close();
+          }
+        })
+      ]
     });
   }
 

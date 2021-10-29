@@ -67,7 +67,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     this.tickets = [];
 
     // Defaults
-    this.status = PerformanceStatus.PendingSchedule;
+    this.status = data.publicity_period.start ? PerformanceStatus.Scheduled : PerformanceStatus.PendingSchedule;
     this.created_at = timestamp(new Date());
     this.views = 0;
     this.like_count = 0;
@@ -99,7 +99,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       created_at: this.created_at,
       thumbnail: this.thumbnail,
       publicity_period: this.publicity_period,
-      assets: this.asset_group.assets.map(a => a.toStub()),
+      assets: this.asset_group?.assets.map(a => a.toStub()),
       status: this.status,
       performance_type: this.performance_type,
       visibility: this.visibility
@@ -118,7 +118,8 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       ...this.toStub(),
       visibility: this.visibility,
       genre: this.genre,
-      tickets: this.tickets?.map(t => t.toStub()) || [],
+      // Filter out any old/cancelled tickets
+      tickets: this.tickets?.filter(t => !t.is_cancelled).map(t => t.toStub()) || [],
       publicity_period: this.publicity_period,
       performance_type: this.performance_type
     };

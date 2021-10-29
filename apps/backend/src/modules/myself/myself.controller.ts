@@ -45,6 +45,7 @@ import {
   IUserInvoice,
   IUserInvoiceStub,
   PaymentStatus,
+  PerformanceStatus,
   pick,
   PlatformConsentOpt,
   Visibility
@@ -121,12 +122,16 @@ export class MyselfController extends ModuleController {
         follows: null
       };
 
+      // Do not include cancelled, deleted or pending schedule performances in the feeds
+      const hiddenStates = [PerformanceStatus.Cancelled, PerformanceStatus.Deleted, PerformanceStatus.PendingSchedule];
+
       // None of the req.query paging options are present, so fetch the first page of every carousel
       const fetchAll = Object.keys(req.query).every(k => !Object.keys(feed).includes(k));
 
       if (fetchAll || req.query['upcoming'])
         feed.upcoming = await this.ORM.createQueryBuilder(Performance, 'p')
           .where('p.premiere_datetime > :currentTime', { currentTime: timestamp() })
+          .andWhere('p.status NOT IN (:...statusArray)', { statusArray: hiddenStates })
           .andWhere('p.visibility = :state', { state: Visibility.Public })
           .innerJoinAndSelect('p.host', 'host')
           .orderBy('p.premiere_datetime')
@@ -139,7 +144,8 @@ export class MyselfController extends ModuleController {
 
       if (fetchAll || req.query['everything'])
         feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
-          .andWhere('p.visibility = :state', { state: Visibility.Public })
+          .where('p.visibility = :state', { state: Visibility.Public })
+          .andWhere('p.status NOT IN (:...statusArray)', { statusArray: hiddenStates })
           .innerJoinAndSelect('p.host', 'host')
           .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
           .paginate({
@@ -166,6 +172,7 @@ export class MyselfController extends ModuleController {
         if (hostIds && hostIds.length > 0) {
           feed.follows = await this.ORM.createQueryBuilder(Performance, 'p')
             .where('p.host IN (:...hostArray)', { hostArray: hostIds })
+            .andWhere('p.status NOT IN (:...statusArray)', { statusArray: hiddenStates })
             .andWhere('p.visibility = :state', { state: Visibility.Public })
             .innerJoinAndSelect('p.host', 'host')
             .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
