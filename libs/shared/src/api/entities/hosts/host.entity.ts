@@ -68,7 +68,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @OneToMany(() => Like, like => like.host, { onDelete: 'CASCADE', cascade: true }) likes: Like[];
   @Column({ nullable: true, type: 'float' }) commission_rate: number;
 
-  @OneToOne(() => AssetGroup, { eager: true, onDelete: 'CASCADE', cascade: true })
+  @OneToOne(() => AssetGroup, { onDelete: 'CASCADE', cascade: true })
   @JoinColumn()
   asset_group: AssetGroup;
 

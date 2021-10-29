@@ -1,4 +1,4 @@
-import { ErrCode, HostPermission, HTTP, IEnvelopedData, IErrorResponse, IHost, IMUXAsset, IMyself, IUser, IUserHostInfo, IUserStub } from '@core/interfaces';
+import { HostPermission, HTTP, IEnvelopedData, IErrorResponse, IHost, IMUXAsset, IMyself, IUser, IUserHostInfo, IUserStub } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import axios, { AxiosError, AxiosResponse } from 'axios';

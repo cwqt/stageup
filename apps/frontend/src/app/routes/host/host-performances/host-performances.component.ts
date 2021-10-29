@@ -51,10 +51,6 @@ export class HostPerformancesComponent implements OnInit {
           accessor: p => i18n.date(unix(p.publicity_period.end), this.locale)
         },
         {
-          label: $localize`Description`,
-          accessor: p => richtext.read(p.description)
-        },
-        {
           label: $localize`Visibility`,
           accessor: p => visibilityPipe.transform(p.visibility)
         },

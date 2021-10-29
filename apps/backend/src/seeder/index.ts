@@ -13,7 +13,7 @@ import {
   User,
   UserHostInfo
 } from '@core/api';
-import { sample } from '@core/helpers';
+import { sample, richtext } from '@core/helpers';
 import {
   BusinessType,
   CountryCode,
@@ -64,7 +64,15 @@ export class Seeder {
           // has Theatre performances etc.
           performance => performance.hostusername == hostData.username
         );
-        const performances = await Promise.all(hostPerformances.map(p => this.createPerformance(host, p)));
+        const performances = await Promise.all(
+          hostPerformances.map(p => {
+            // Convert the descriptions into richtext format before passing to 'createPerformance'
+            const textObject = richtext.create(p.description);
+            textObject.ops[0].insert = textObject.ops[0].insert[0];
+            p.description = richtext.stringify(textObject.ops);
+            return this.createPerformance(host, p);
+          })
+        );
 
         // For each performance created, make some tickets
         for await (let performance of performances) {

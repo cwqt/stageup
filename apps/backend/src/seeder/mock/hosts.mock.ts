@@ -188,7 +188,7 @@ export default to<
     username: 'ArtsConnection',
     avatar:
       'https://scontent-man2-1.xx.fbcdn.net/v/t1.18169-9/425569_10150604301272917_915168081_n.jpg?_nc_cat=110&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=4lGVU0HiI7gAX8CgJYO&tn=vJE2wuorLQhE0ltm&_nc_ht=scontent-man2-1.xx&oh=fc9b0e51269cbb1fe7a797ba472a25c9&oe=60D0347B',
-    banner: 'https://artsconnection.org.uk/artscon/wp-content/uploads/2011/10/sign.jpg',
+    banner: 'https://artsconnection.org/wp-content/uploads/2020/01/100313_ArtsConnectionLogo-TagTRANS.png',
     email_address: 'company@stageup.uk',
     name: 'Arts Connection - Cyswllt Celf'
   },

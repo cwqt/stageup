@@ -43,10 +43,7 @@ export class SocialSharingComponent implements OnInit {
       linkedin: () =>
         this.appService.navigateToNewTab(`/redirect`, {
           queryParams: {
-            redirect_to: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURI(this.url).replace(
-              'http',
-              'https'
-            )}`,
+            redirect_to: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURI(this.url)}`,
             social_type: ShareLocations.Linkedin
           }
         })
