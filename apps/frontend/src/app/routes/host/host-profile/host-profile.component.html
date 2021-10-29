@@ -5,11 +5,9 @@
       <div class="banner-picture__container relative overflow-hidden rounded">
         <div
         *ngIf="!host.data.data.banner"
-        class="carousel-cell relative bg-gray-200 flex flex-col items-center justify-center p-10 pointer-default"
-      >
-        <ui-icon class="text-gray-600" [size]="120">image</ui-icon>
-
-      </div>
+        class="carousel-cell relative bg-gray-200 flex flex-col items-center justify-center p-10 pointer-default">
+          <ui-icon class="opacity-40" [size]="120">image</ui-icon>
+        </div>
         <img *ngIf="host.data.data.banner" class="object-cover w-full" [src]="host.data.data.banner || '/assets/host-profile-banner-placeholder.png'" />
         <ui-button
           *ngIf="isHostView"
