@@ -61,6 +61,7 @@ import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection, getManager } from 'typeorm';
 import startOfWeek from 'date-fns/startOfWeek';
+import moment from 'moment';
 
 @Service()
 export class MyselfController extends ModuleController {
@@ -193,9 +194,9 @@ export class MyselfController extends ModuleController {
           trending = await this.ORM.createQueryBuilder(Performance, 'performance')
             .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
             .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
-            // .where('invoice.purchased_at >= :startOfWeek', {
-            //   startOfWeek: timestamp() - 604800
-            // })
+            .where('invoice.purchased_at >= :startOfWeek', {
+              startOfWeek: moment().subtract(7, 'days').unix()
+            })
             .addSelect('COUNT(*)', 'count')
             .groupBy('performance._id')
             .addGroupBy('performance__asset_group._id')
@@ -205,35 +206,36 @@ export class MyselfController extends ModuleController {
             .getMany();
           await this.redis.set('trending_performances', trending, 604800);
         }
-        // Paginate the data to send back to the client
-        const current_page = req.query.trending ? parseInt((req.query['trending'] as any).page) : 0;
-        const per_page = req.query.trending ? parseInt((req.query['trending'] as any).per_page) : 4;
-        const startIndex = current_page * per_page;
-        const endIndex = Math.min(current_page * per_page + per_page);
-        const performanceSlice = trending.slice(startIndex, endIndex);
+        if (trending.length > 0) {
+          // Paginate the data to send back to the client
+          const current_page = req.query.trending ? parseInt((req.query['trending'] as any).page) : 0;
+          const per_page = req.query.trending ? parseInt((req.query['trending'] as any).per_page) : 4;
+          const startIndex = current_page * per_page;
+          const endIndex = Math.min(current_page * per_page + per_page);
+          const performanceSlice = trending.slice(startIndex, endIndex);
 
-        // Attach the client 'likes' (since the cached query will not contain this data)
-        const performanceWithLikes = await this.ORM.createQueryBuilder(Performance, 'performance')
-          .where('performance._id IN (:...perfs)', { perfs: performanceSlice.map(perf => perf._id) })
-          .innerJoinAndSelect('performance.host', 'host')
-          .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
-          .paginate({
-            serialiser: p => p.toClientStub()
-          });
+          // Attach the client 'likes' (since the cached query will not contain this data)
+          const performanceWithLikes = await this.ORM.createQueryBuilder(Performance, 'performance')
+            .where('performance._id IN (:...perfs)', { perfs: performanceSlice.map(perf => perf._id) })
+            .innerJoinAndSelect('performance.host', 'host')
+            .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+            .paginate({
+              serialiser: p => p.toClientStub()
+            });
 
-        feed.trending = {
-          data: performanceWithLikes.data,
-          __client_data: null,
-          __paging_data: {
-            per_page,
-            total: trending.length,
-            current_page,
-            prev_page: current_page - 1 < 0 ? null : current_page - 1,
-            next_page: current_page + 1
-          }
-        };
+          feed.trending = {
+            data: performanceWithLikes.data,
+            __client_data: null,
+            __paging_data: {
+              per_page,
+              total: trending.length,
+              current_page,
+              prev_page: current_page - 1 < 0 ? null : current_page - 1,
+              next_page: current_page + 1
+            }
+          };
+        }
       }
-
       return feed;
     }
   };
