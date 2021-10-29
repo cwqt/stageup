@@ -929,7 +929,7 @@ export class PerformanceController extends ModuleController {
 
   registerView: IControllerEndpoint<void> = {
     authorisation: AuthStrat.none,
-    middleware: Middleware.rateLimit(60, 10, this.redis),
+    middleware: Middleware.rateLimit(60, Env.RATE_LIMIT, this.redis),
     controller: async req => {
       const { pid: performanceId, aid: assetId } = req.params;
       const performance = await getCheck(Performance.findOne({ _id: performanceId }));

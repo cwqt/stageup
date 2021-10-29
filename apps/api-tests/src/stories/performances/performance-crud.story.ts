@@ -1,4 +1,4 @@
-import { ErrCode, HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode, Genre, Visibility } from '@core/interfaces';
+import { HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode, Genre, Visibility, PerformanceType } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { AxiosError } from 'axios';
@@ -22,8 +22,9 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Shakespeare',
       description: 'To be or not to be',
-      genre: Genre.BourgeoisTragedy,
-      premiere_date: null
+      genre: Genre.Dance,
+      type: PerformanceType.Vod,
+      publicity_period: { start: 161347834, end: 161347834 }
     });
 
     expect(perf).not.toBeNull();

@@ -121,6 +121,9 @@ import { ChangeImageComponent } from './components/dialogs/change-image/change-i
 import { HostPerformanceTicketingComponent } from './routes/host/host-performance/host-performance-ticketing/host-performance-ticketing.component';
 import { HostPerformanceDetailsComponent } from './routes/host/host-performance/host-performance-details/host-performance-details.component';
 import { PerformanceBrochureComponent } from './routes/performance/performance-brochure/performance-brochure.component';
+import { PerformanceBrochureBannerComponent } from './routes/performance/performance-brochure/performance-brochure-banner/performance-brochure-banner.component';
+import { PerformanceBrochureTabsComponent } from './routes/performance/performance-brochure/performance-brochure-tabs/performance-brochure-tabs.component';
+import { PerformanceShowComponent } from './routes/performance/performance-show/performance-show.component';
 import { PerformanceTicketComponent } from './routes/performance/performance-ticket/performance-ticket.component';
 import { MyStuffComponent } from './routes/my-stuff/my-stuff.component';
 import { PerformanceThumbComponent } from './components/performance-thumb/performance-thumb.component';
@@ -245,6 +248,9 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     RefundReasonPipe,
     OnboardingViewIssueMakerComponent,
     PerformanceBrochureComponent,
+    PerformanceBrochureBannerComponent,
+    PerformanceBrochureTabsComponent,
+    PerformanceShowComponent,
     UserThumbComponent,
     HostProfileComponent,
     HostMembersComponent,

@@ -222,8 +222,8 @@ export class MyselfController extends ModuleController {
           performance_name: { subject: 'performance.name' }
         })
         .innerJoinAndSelect('performance.host', 'host')
-        .innerJoinAndSelect('performance.asset_group', 'group')
-        .innerJoinAndSelect('group.assets', 'assets')
+        .leftJoinAndSelect('performance.asset_group', 'group')
+        .leftJoinAndSelect('group.assets', 'assets')
         .withDeleted() // ticket/performance can be soft removed
         .paginate({ serialiser: i => i.ticket.performance.toStub() });
     }

@@ -83,7 +83,7 @@ export class AdminController extends ModuleController {
         onboarding.reviews.push(review);
 
         // Check if every step is set to valid, if not set state to HasIssues & return early
-        if (Object.values(onboarding.steps).every(o => o.state !== HostOnboardingState.Verified)) {
+        if (!Object.values(onboarding.steps).every(o => o.state === HostOnboardingState.Verified)) {
           onboarding.state = HostOnboardingState.HasIssues;
           return await txc.save(onboarding);
         }

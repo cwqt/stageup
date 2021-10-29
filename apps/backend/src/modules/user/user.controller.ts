@@ -61,7 +61,7 @@ export class UserController extends ModuleController {
 
   loginUser: IControllerEndpoint<IUser> = {
     validators: { body: Validators.Objects.DtoLogin },
-    middleware: Middleware.rateLimit(3600, 10, this.redis),
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis),
     authorisation: AuthStrat.none,
     controller: async req => {
       const emailAddress = req.body.email_address;

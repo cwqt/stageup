@@ -1,4 +1,4 @@
-import { Genre, IFeed, IUser, Visibility } from '@core/interfaces';
+import { Genre, IFeed, IUser, PerformanceType, Visibility } from '@core/interfaces';
 import { Stories } from '../../stories';
 
 describe('Pull in the feed...', () => {
@@ -14,10 +14,10 @@ describe('Pull in the feed...', () => {
 
     let perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Test perf',
-      premiere_datetime: 1844172702,
       description: 'Test description',
       genre: Genre.Dance,
-      type: 'vod'
+      type: PerformanceType.Vod,
+      publicity_period: { start: 161347834, end: 161347834 }
     });
 
     await Stories.actions.performances.updateVisibility(perf, Visibility.Public);

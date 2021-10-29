@@ -9,8 +9,10 @@ import {
 } from '@core/interfaces';
 import faker from 'faker';
 import { SeederHostName } from './hosts.mock';
+import moment from 'moment';
 
 export type SeedMockPerformance = DtoCreatePerformance & { hostusername: SeederHostName; thumbnail?: string };
+
 
 const ticketFactory = (): DtoCreateTicket => ({
   name: sample(['My Cool Ticket', 'Early Access', 'VIP Special', 'Super Star', 'Patron ticket']),
@@ -20,7 +22,7 @@ const ticketFactory = (): DtoCreateTicket => ({
   currency: CurrencyCode.GBP,
   amount: 1000,
   start_datetime: timestamp(),
-  end_datetime: timestamp() + 10000,
+  end_datetime: moment().add(7, 'days').unix(),
   // fees: TicketFees.Absorb,
   is_visible: true,
   dono_pegs: []

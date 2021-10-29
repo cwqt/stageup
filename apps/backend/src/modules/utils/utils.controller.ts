@@ -100,6 +100,8 @@ export class UtilityController extends ModuleController {
     authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
     controller: async req => {
       // await DataClient.drop(providers);
+      await this.pg.dropDatabase();
+      await this.pg.synchronize();
     }
   };
 

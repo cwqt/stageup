@@ -42,6 +42,7 @@ const Env: {
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
   SOCIAL_AUTH: Envify<ISocialAuth>;
   isEnv: (env: Environment | Environment[]) => boolean;
+  RATE_LIMIT: number;
 } = {
   isEnv: isEnv(TRUE_ENV as Environment),
   IS_LOCAL: isLocal,
@@ -113,7 +114,8 @@ const Env: {
   SOCIAL_AUTH: {
     GOOGLE: process.env.GOOGLE_AUTH_APP_ID,
     FACEBOOK: process.env.FACEBOOK_AUTH_APP_ID
-  }
+  },
+  RATE_LIMIT: parseInt(process.env.RATE_LIMIT)
 };
 
 export default Env;

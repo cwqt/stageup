@@ -20,10 +20,4 @@ export default {
     const res = await api.post(`/admin/onboardings/${host._id}/review`, review, environment.getOptions());
     return res.data;
   },
-
-  // router.post <void> ("/admin/onboardings/:hid/enact", Admin.enactOnboardingProcess());
-  enactOnboardingProcess: async (host: IHostStub): Promise<void> => {
-    const res = await api.post(`/admin/onboardings/${host._id}/enact`, null, environment.getOptions());
-    return res.data;
-  }
 };
