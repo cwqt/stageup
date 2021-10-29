@@ -38,7 +38,7 @@ export class HostMembersComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.hostMembersDataSrc.paginator = this.paginator;
-    cachize(this.hostService.readMembers(this.hostService.hostId), this.hostMembers).then(d => {
+    cachize(this.hostService.readMembers(this.hostService.hostId, null), this.hostMembers).then(d => {
       this.hostMembersDataSrc.data = d.data;
       this.hostMembersDataSrc.paginator.length = d.__paging_data.total;
     });

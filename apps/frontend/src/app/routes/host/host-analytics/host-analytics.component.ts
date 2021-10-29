@@ -106,7 +106,7 @@ export class HostAnalyticsComponent implements OnInit {
       },
       handlers: {
         changes: async v => {
-          this.performanceAnalyticsTable.refresh();
+          this.performanceAnalyticsTable?.refresh();
           this.readHostAnalytics();
         }
       },
@@ -123,6 +123,7 @@ export class HostAnalyticsComponent implements OnInit {
     const dto = await this.hostAnalytics.request(
       this.hostService.readHostAnalytics(this.hostService.currentHostValue._id, this.periodForm.group.value.period)
     );
+    console.log('dto', dto)
 
     // Every time data is refetched, must refresh the chart - in the same way performances are done with its resolutionSuccess
     const properties = Object.keys(this.snapshot.host.header_items) as (keyof IHostAnalyticsMetrics)[];

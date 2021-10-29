@@ -113,9 +113,6 @@ export class HostDashboardComponent implements OnInit {
       },
       uniform_row_height: true
     });
-
-    // console.log('eventTable', this.eventTable);
-    // console.log('memberTable', this.memberTable);
   }
 
   openCreatePerformanceDialog() {
@@ -127,9 +124,6 @@ export class HostDashboardComponent implements OnInit {
   openAddMemberDialog() {
     this.helperService.showDialog(this.dialog.open(HostAddMemberComponent), (newMembers: IUserHostInfo[]) => {
       this.memberTable.refresh();
-      // this.hostMembers.data.data = [...this.hostMembers.data.data, ...newMembers];
-      // this.hostMembersDataSrc.data = this.hostMembers.data.data;
-      // this.hostMembersDataSrc.paginator.length += newMembers.length;
     });
   }
 }
