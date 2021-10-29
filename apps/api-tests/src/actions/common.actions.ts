@@ -29,7 +29,7 @@ export default {
    * @description Drop data from all databases
    */
   drop: async () => {
-    return api.post('/drop');
+    return api.post('/utils/drop');
   },
 
   timeout: (ms: number) => {

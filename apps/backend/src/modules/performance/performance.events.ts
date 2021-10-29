@@ -118,6 +118,13 @@ export class PerformanceEvents extends ModuleEvents {
       .where('ticket.performance__id = :performance_id', { performance_id: ct.performance_id })
       .getMany();
 
+    // 'cancel' the tickets
+    await this.ORM.createQueryBuilder(Ticket, 'ticket')
+      .update()
+      .set({ is_cancelled: true })
+      .where('ticket.performance__id = :performance_id', { performance_id: ct.performance_id })
+      .execute();
+
     //Create an array of ticket ids
     const ticketIds: string[] = tickets.map(t => t._id);
 
@@ -131,10 +138,13 @@ export class PerformanceEvents extends ModuleEvents {
         .addSelect('user._id')
         .getMany();
 
+      // Return if no invoices to refund
+      if (invoices.length == 0) return;
+
       //Get array of invoice ids
       const invoiceIds: string[] = invoices.map(invoice => invoice._id);
 
-      //Then refund those invoices
+      // Refund existing invoices
       this.financeService.processRefunds(
         {
           host_id: performance.host._id,

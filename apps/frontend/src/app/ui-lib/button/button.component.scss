@@ -56,6 +56,11 @@
   }
 }
 
+:host(.disabled) ::ng-deep{
+  // Disable click event.
+  pointer-events: none;
+}
+
 .ui-button--primary {
   background-color: $clr-primary;
   color: white;

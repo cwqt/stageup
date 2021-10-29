@@ -298,7 +298,7 @@ import { HostProfileAssetComponent } from './routes/host/host-profile/host-profi
     HostPerformanceMediaComponent,
     HostMarketingComponent,
     HostAudienceListComponent,
-    HostProfileAssetComponent
+    HostProfileAssetComponent,
   ],
   imports: [
     AngularMaterialModule,
