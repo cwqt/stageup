@@ -54,7 +54,6 @@ export class UserController extends ModuleController {
     @Inject(REDIS_PROVIDER) private redis: RedisClient,
     @Inject(BLOB_PROVIDER) private blobs: Blobs,
     private userService: UserService,
-
   ) {
     super();
   }
@@ -92,7 +91,7 @@ export class UserController extends ModuleController {
 
   socialSignInUser: IControllerEndpoint<IUser> = {
     validators: { body: partial(Validators.Objects.DtoSocialLogin) },
-    middleware: Middleware.rateLimit(3600, 10, this.redis),
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis),
     authorisation: AuthStrat.none,
     controller: async req => {
       // Check user exists
