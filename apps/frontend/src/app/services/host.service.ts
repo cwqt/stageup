@@ -330,6 +330,18 @@ export class HostService {
       .toPromise();
   }
 
+  // router.get <DtoPerfAnalytics[]>("/hosts/:hid/analytics/performances", Hosts.readAllPerformancesAnalytics());
+  readAllPerformancesAnalytics(
+    hostId: string,
+    period: AnalyticsTimePeriod = 'WEEKLY'
+  ): Promise<DtoPerformanceAnalytics[]> {
+    return this.http
+      .get<DtoPerformanceAnalytics[]>(
+        `/api/hosts/${hostId}/analytics/performances/all${querize({ period })}`
+      )
+      .toPromise();
+  }
+
   // router.post <void> ("/hosts/:hid/toggle-like", Hosts.toggleLike());
   toggleLike(hostId: NUUID): Promise<void> {
     return this.http.post<void>(`/api/hosts/${hostId}/toggle-like`, null).toPromise();

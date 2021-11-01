@@ -2,8 +2,12 @@
   <div body>
     <h1 i18n>Analytics</h1>
     <ui-hr> </ui-hr>
+    <p i18n>
+      <b>{{ selectedPeriod | titlecase }}</b> snapshot of all your performances
+    </p>
+    <host-analytics-graphs [snapshot]="snapshot"></host-analytics-graphs>
 
-    <div class="bg-white p-4 rounded shadow-sm mb-4 w-full">
+    <!-- <div class="bg-white p-4 rounded shadow-sm mb-4 w-full">
       <div class="flex justify-between items-center">
         <p i18n>
           <b>{{ selectedPeriod | titlecase }}</b> snapshot of all your performances
@@ -23,7 +27,7 @@
           </app-host-analytics-header-item>
         </ng-container>
       </div>
-    </div>
+    </div> -->
 
     <div class="bg-white p-4 rounded shadow-sm mb-4 w-full">
       <h2 i18n>Performances</h2>

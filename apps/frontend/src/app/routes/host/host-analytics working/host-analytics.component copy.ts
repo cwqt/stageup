@@ -70,14 +70,14 @@ export class HostAnalyticsComponent implements OnInit {
       // is a single entity
       period_aggregate: {},
       header_items: {
-        performances_created: this.createHeaderItem($localize`Performances created`)
+        performances_created: this.createHeaderItem($localize`Total Events`)
       }
     },
     performances: {
       // is an aggregate over many entities
       period_aggregate: {},
       header_items: {
-        total_revenue: this.createHeaderItem($localize`Revenue`),
+        total_revenue: this.createHeaderItem($localize`Ticket Revenue`),
         total_ticket_sales: this.createHeaderItem($localize`Ticket sales`),
         trailer_views: this.createHeaderItem($localize`Trailer views`)
       }
@@ -100,12 +100,13 @@ export class HostAnalyticsComponent implements OnInit {
       fields: {
         period: UiField.Select({
           initial: 'MONTHLY',
-          values: new Map(Object.entries(this.periodMap).map(([key, value]) => [key, { label: value }]))
+          values: new Map(Object.entries(this.periodMap).map(([key, value]) => [key, { label: value }])),
+          appearance: 'outline'
         })
       },
       handlers: {
         changes: async v => {
-          this.performanceAnalyticsTable.refresh();
+          this.performanceAnalyticsTable?.refresh();
           this.readHostAnalytics();
         }
       },
@@ -122,7 +123,6 @@ export class HostAnalyticsComponent implements OnInit {
     const dto = await this.hostAnalytics.request(
       this.hostService.readHostAnalytics(this.hostService.currentHostValue._id, this.periodForm.group.value.period)
     );
-
     // Every time data is refetched, must refresh the chart - in the same way performances are done with its resolutionSuccess
     const properties = Object.keys(this.snapshot.host.header_items) as (keyof IHostAnalyticsMetrics)[];
 

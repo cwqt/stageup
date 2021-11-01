@@ -1,7 +1,7 @@
-<div class="bg-white rounded overflow-hidden shadow relative">
+<div class="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden relative">
   <div class="p-4 absolute z-10">
-    <h2>{{ item.title }}</h2>
-    <h3 *ngIf="item.aggregation && item.difference">{{ item.aggregation }} ({{ item.difference }})</h3>
+    <h2 *ngIf="item.aggregation && item.difference">{{ item.aggregation }} ({{ item.difference }})</h2>
+    <h4>{{ item.title }}</h4>
   </div>
 
   <ngx-chartjs

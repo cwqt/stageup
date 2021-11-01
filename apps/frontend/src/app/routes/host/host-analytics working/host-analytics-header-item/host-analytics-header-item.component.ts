@@ -26,7 +26,10 @@ export class HostAnalyticsHeaderItemComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('this.item.title', this.item.title)
+    console.log('this.item.graph.data', this.item.graph.data)
+  }
 
   clearGraph() {
     this.item.graph.data.datasets[0].data = [];

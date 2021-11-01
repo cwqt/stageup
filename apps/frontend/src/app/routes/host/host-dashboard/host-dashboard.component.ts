@@ -28,9 +28,6 @@ export class HostDashboardComponent implements OnInit {
   // Members
   memberTable: UiTable<IUserHostInfo>;
   hostMembers: ICacheable<IEnvelopedData<IUserHostInfo[]>> = createICacheable([]);
-  hostMembersDataSrc: MatTableDataSource<IUserHostInfo>;
-  displayedColumns: string[] = ['user', 'permissions', 'joined_at', 'actions'];
-  valueSelected: HostPermission;
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
@@ -86,12 +83,7 @@ export class HostDashboardComponent implements OnInit {
       uniform_row_height: true
     });
 
-    // -----------------------------------------------------------------
-    this.hostMembersDataSrc = new MatTableDataSource<IUserHostInfo>([]);
-    this.hostMembers.loading = true;
-
     const hostPermissionPipe = new HostPermissionPipe();
-
     this.memberTable = new UiTable<IUserHostInfo>({
       resolver: query => this.hostService.readMembers(this.host._id, query),
       columns: [

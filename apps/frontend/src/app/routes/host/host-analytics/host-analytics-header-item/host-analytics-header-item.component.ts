@@ -9,7 +9,7 @@ export interface IHeaderItem {
     options: ChartOptions;
   };
   aggregation?: string | number;
-  difference?: string; // e.g. 10%
+  difference?: number; // Percentage diggerence as a decimal (e.g. 1.2 => +120%)
 }
 
 @Component({
@@ -26,7 +26,10 @@ export class HostAnalyticsHeaderItemComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('--------------------');
+    console.log(this.item);
+  }
 
   clearGraph() {
     this.item.graph.data.datasets[0].data = [];
