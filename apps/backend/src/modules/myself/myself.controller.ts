@@ -2,6 +2,7 @@ import AuthStrat from '@backend/common/authorisation';
 import { ErrorHandler } from '@backend/common/error';
 import { SUPPORTED_LOCALES } from '@backend/common/locales';
 import {
+  AppCache,
   EventBus,
   EVENT_BUS_PROVIDER,
   Follow,
@@ -15,15 +16,18 @@ import {
   Performance,
   PostgresProvider,
   POSTGRES_PROVIDER,
+  REDIS_PROVIDER,
+  RedisProvider,
   Refund,
   StripeProvider,
   STRIPE_PROVIDER,
+  Ticket,
   User,
   UserHostInfo,
   UserHostMarketingConsent,
   Validators
 } from '@core/api';
-import { timestamp } from '@core/helpers';
+import { timestamp, unix } from '@core/helpers';
 import {
   ConsentableType,
   ConsentOpt,
@@ -44,6 +48,7 @@ import {
   IUserHostMarketingConsent,
   IUserInvoice,
   IUserInvoiceStub,
+  NUUID,
   PaymentStatus,
   PerformanceStatus,
   pick,
@@ -55,7 +60,9 @@ import { GdprService } from '../gdpr/gdpr.service';
 import Stripe from 'stripe';
 import { boolean, enums, object, record, string, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
-import { Connection } from 'typeorm';
+import { Connection, getManager } from 'typeorm';
+import startOfWeek from 'date-fns/startOfWeek';
+import moment from 'moment';
 
 @Service()
 export class MyselfController extends ModuleController {
@@ -64,7 +71,8 @@ export class MyselfController extends ModuleController {
     private gdprService: GdprService,
     @Inject(POSTGRES_PROVIDER) private ORM: Connection,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
-    @Inject(STRIPE_PROVIDER) private stripe: Stripe
+    @Inject(STRIPE_PROVIDER) private stripe: Stripe,
+    @Inject(REDIS_PROVIDER) private redis: AppCache
   ) {
     super();
   }
@@ -109,7 +117,7 @@ export class MyselfController extends ModuleController {
   readFeed: IControllerEndpoint<IFeed> = {
     validators: {
       query: record(
-        enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts']),
+        enums<keyof IFeed>(['upcoming', 'everything', 'follows', 'hosts', 'trending']),
         Validators.Objects.PaginationOptions(10)
       )
     },
@@ -184,6 +192,57 @@ export class MyselfController extends ModuleController {
         }
       }
 
+      if (fetchAll || req.query['trending']) {
+        // Attempt to fetch from cache
+        let trending = await this.redis.get('trending_performances');
+
+        if (!trending) {
+          // If cache miss, get the 20 most bought performances and store in cache for a week
+          trending = await this.ORM.createQueryBuilder(Performance, 'performance')
+            .innerJoin(Ticket, 'ticket', 'ticket.performance = performance._id')
+            .innerJoin(Invoice, 'invoice', 'invoice.ticket = ticket._id')
+            .where('invoice.purchased_at >= :startOfWeek', {
+              startOfWeek: moment().subtract(7, 'days').unix()
+            })
+            .addSelect('COUNT(*)', 'count')
+            .groupBy('performance._id')
+            .addGroupBy('performance__asset_group._id')
+            .addGroupBy('performance__asset_group__assets._id')
+            .orderBy('count', 'DESC')
+            .limit(20) // Trending to only show the top 20 of the week
+            .getMany();
+          await this.redis.set('trending_performances', trending, 604800);
+        }
+        if (trending.length > 0) {
+          // Paginate the data to send back to the client
+          const current_page = req.query.trending ? parseInt((req.query['trending'] as any).page) : 0;
+          const per_page = req.query.trending ? parseInt((req.query['trending'] as any).per_page) : 4;
+          const startIndex = current_page * per_page;
+          const endIndex = Math.min(current_page * per_page + per_page);
+          const performanceSlice = trending.slice(startIndex, endIndex);
+
+          // Attach the client 'likes' (since the cached query will not contain this data)
+          const performanceWithLikes = await this.ORM.createQueryBuilder(Performance, 'performance')
+            .where('performance._id IN (:...perfs)', { perfs: performanceSlice.map(perf => perf._id) })
+            .innerJoinAndSelect('performance.host', 'host')
+            .leftJoinAndSelect('performance.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+            .paginate({
+              serialiser: p => p.toClientStub()
+            });
+
+          feed.trending = {
+            data: performanceWithLikes.data,
+            __client_data: null,
+            __paging_data: {
+              per_page,
+              total: trending.length,
+              current_page,
+              prev_page: current_page - 1 < 0 ? null : current_page - 1,
+              next_page: current_page + 1
+            }
+          };
+        }
+      }
       return feed;
     }
   };

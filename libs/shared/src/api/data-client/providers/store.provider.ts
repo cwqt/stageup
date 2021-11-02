@@ -1,3 +1,4 @@
+import { AppCache, RedisProvider } from './redis.provider';
 import connectRedis, { RedisStore } from 'connect-redis';
 import session from 'express-session';
 import { Service, Token } from 'typedi';
@@ -20,8 +21,9 @@ export class StoreProvider implements Provider<RedisStore> {
   }
 
   async connect(map: ProviderMap) {
+    const redisProvider = map.get(this.config.redis_token) as RedisProvider;
     this.connection = new (connectRedis(session))({
-      client: map.get(this.config.redis_token).connection,
+      client: redisProvider.client,
       host: this.config.host,
       port: this.config.port,
       ttl: this.config.ttl
