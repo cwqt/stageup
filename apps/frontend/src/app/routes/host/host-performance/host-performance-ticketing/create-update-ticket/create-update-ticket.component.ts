@@ -91,7 +91,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         quantity: UiField.Number({
           width: 6,
           label: $localize`Quantity`,
-          validators: [{ type: "custom", value: ({ value }) => value !== 0 }]
+          validators: [{ type: 'required' }, { type: "custom", value: ({ value }) => value !== 0 }]
         }),
         amount: UiField.Money({
           width: 6,
@@ -191,14 +191,14 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         output: async v =>
           this.data.operation == 'create'
             ? this.performanceService.createTicket(
-                this.appService.getParam(RouteParam.PerformanceId),
-                this.formOutputTransformer(v)
-              )
+              this.appService.getParam(RouteParam.PerformanceId),
+              this.formOutputTransformer(v)
+            )
             : this.performanceService.updateTicket(
-                this.appService.getParam(RouteParam.PerformanceId),
-                this.data.ticketId,
-                this.formOutputTransformer(v)
-              )
+              this.appService.getParam(RouteParam.PerformanceId),
+              this.data.ticketId,
+              this.formOutputTransformer(v)
+            )
       },
       handlers: {
         success: async ticket => {
@@ -210,7 +210,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           this.submit.emit(ticket);
           this.ref.close(ticket);
         },
-        failure: async () => {},
+        failure: async () => { },
         changes: async f => {
           if (f.value.type == TicketType.Free) {
             f.controls.amount.disable({ emitEvent: false, onlySelf: true });
