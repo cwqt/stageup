@@ -10,6 +10,8 @@
 
     <ui-hr></ui-hr>
 
+    <ui-table [table]="memberTable"></ui-table>
+
     <div class="bg-white rounded shadow-sm overflow-hidden">
       <table mat-table [dataSource]="hostMembersDataSrc" class="w-full">
         <ng-container matColumnDef="user">

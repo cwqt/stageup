@@ -1,12 +1,12 @@
 import { ChartDataset } from 'chart.js';
-import { DtoPerformanceAnalytics } from './../../../../../../../../libs/interfaces/src/analytics/performance-analytics.interface';
 import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
-import { i18n, unix } from '@core/helpers';
+import { unix } from '@core/helpers';
 import {
   Analytics,
   AnalyticsTimePeriod,
   CurrencyCode,
   DtoHostAnalytics,
+  DtoPerformanceAnalytics,
   IHostAnalyticsMetrics,
   IPerformanceAnalyticsMetrics
 } from '@core/interfaces';

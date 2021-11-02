@@ -1,3 +1,5 @@
+import { HostPermissionPipe } from './../../../_pipes/host-permission.pipe';
+import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { AfterViewInit, Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,6 +10,7 @@ import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
 import { HostAddMemberComponent } from './host-add-member/host-add-member.component';
 import { HostMemberPermissionsDialogComponent } from './host-member-permissions-dialog/host-member-permissions-dialog.component';
+import { FromUnixPipe } from 'ngx-moment';
 
 @Component({
   selector: 'app-host-members',
@@ -24,16 +27,47 @@ export class HostMembersComponent implements OnInit, AfterViewInit {
   valueSelected: HostPermission;
   hostId: string;
 
-  constructor(
-    private hostService: HostService,
-    private helperService: HelperService,
-    private dialog: MatDialog
-  ) {}
+  // Members
+  memberTable: UiTable<IUserHostInfo>;
+
+  constructor(private hostService: HostService, private helperService: HelperService, private dialog: MatDialog) {}
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
     this.hostMembersDataSrc = new MatTableDataSource<IUserHostInfo>([]);
     this.hostMembers.loading = true;
+
+    const hostPermissionPipe = new HostPermissionPipe();
+    const fromUnixPipe = new FromUnixPipe();
+    this.memberTable = new UiTable<IUserHostInfo>({
+      resolver: query => this.hostService.readMembers(this.hostId, query),
+      columns: [
+        {
+          label: $localize`User`,
+          accessor: member => member.user.username,
+          image: member => member.user.avatar || '/assets/avatar-placeholder.png'
+        },
+        {
+          label: $localize`Permissions`,
+          accessor: member => hostPermissionPipe.transform(member.permissions)
+        },
+        {
+          label: $localize`Joined`,
+          accessor: member => fromUnixPipe.transform(member.joined_at)
+        }
+      ],
+      actions: [
+        {
+          label: '',
+          click: p => console.log(p),
+          icon: 'delete'
+        }
+      ],
+      pagination: {
+        page_sizes: [10, 15, 25],
+        initial_page_size: 10
+      }
+    });
   }
 
   ngAfterViewInit() {

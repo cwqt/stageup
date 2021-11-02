@@ -1034,7 +1034,7 @@ export class HostController extends ModuleController {
     validators: {
       query: assign(
         object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) }),
-        optional(Validators.Objects.PaginationOptions(10))
+        Validators.Objects.PaginationOptions(10)
       )
     },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
@@ -1044,7 +1044,7 @@ export class HostController extends ModuleController {
         .innerJoinAndSelect('performance.host', 'host')
         .where('host._id = :id', { id: req.params.hid })
         .orderBy('performance.created_at', 'DESC')
-        .paginate({ serialiser: o => o }); 
+        .paginate({ serialiser: o => o.toStub() });
 
       const dtos: DtoPerformanceAnalytics[] = [];
       for await (let performance of performances.data) {
@@ -1062,24 +1062,21 @@ export class HostController extends ModuleController {
         });
       }
 
-      console.log('DATA', { data: dtos, __paging_data: performances.__paging_data })
-
       return { data: dtos, __paging_data: performances.__paging_data };
     }
   };
 
   readAllPerformancesAnalytics: IControllerEndpoint<DtoPerformanceAnalytics[]> = {
     validators: {
-      query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) }),
+      query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
     },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
-      // Get paginated list of performances, will then append analytics onto the stubs for DtoPerformanceAnalytics type
       const performances = await this.ORM.createQueryBuilder(Performance, 'performance')
         .innerJoinAndSelect('performance.host', 'host')
         .where('host._id = :id', { id: req.params.hid })
         .orderBy('performance.created_at', 'DESC')
-        .getMany(); 
+        .getMany();
 
       const dtos: DtoPerformanceAnalytics[] = [];
       for await (let performance of performances) {
@@ -1097,7 +1094,7 @@ export class HostController extends ModuleController {
         });
       }
 
-      return dtos
+      return dtos;
     }
   };
 
