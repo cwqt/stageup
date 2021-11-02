@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ChartjsComponent } from '@ctrl/ngx-chartjs';
 import { ChartData, ChartOptions } from 'chart.js';
 
@@ -26,10 +26,7 @@ export class HostAnalyticsHeaderItemComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log('--------------------');
-    console.log(this.item);
-  }
+  ngOnInit(): void {}
 
   clearGraph() {
     this.item.graph.data.datasets[0].data = [];

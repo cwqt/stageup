@@ -1,3 +1,4 @@
+import { ChartDataset } from 'chart.js';
 import { DtoPerformanceAnalytics } from './../../../../../../../../libs/interfaces/src/analytics/performance-analytics.interface';
 import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
 import { i18n, unix } from '@core/helpers';
@@ -104,17 +105,8 @@ export class HostAnalyticsGraphsComponent implements OnInit {
     this.readPerformanceAnalytics();
   }
 
-  formatPercentageDifference(a: number, b: number): number {
-    // Calculate the difference between now & before for this property
-    // const diff = Math.floor(100 * Math.abs((a - b) / ((a + b) / 2)));
+  getPercentageDifference(a: number, b: number): number {
     return Math.floor(a - b) / ((a + b) / 2);
-
-    // console.log('diff', diff);
-    // const test = isNaN(diff) ? 0 : diff;
-    // return a >= b ? -1 * test : test;
-
-    // Format as a +ve or -ve % for the header item
-    // return `${a >= b ? '' : '-'}${isNaN(diff) ? 0 : diff}%`;
   }
 
   // Give empty skeleton for setup
@@ -149,10 +141,16 @@ export class HostAnalyticsGraphsComponent implements OnInit {
 
     properties.forEach(property => {
       // Set difference percentage
-      this.snapshot.host.header_items[property].difference = this.formatPercentageDifference(
+      this.snapshot.host.header_items[property].difference = this.getPercentageDifference(
         latest[property],
         previous[property]
       );
+
+      this.setChartColor(
+        this.snapshot.host.header_items[property].difference,
+        this.snapshot.host.header_items[property].graph.data.datasets[0]
+      );
+
       // Pretty format the aggregate value for the header item using the analytics formatters
       this.snapshot.host.header_items[property].aggregation = Analytics.entities.host.formatters[property](
         latest[property],
@@ -167,7 +165,7 @@ export class HostAnalyticsGraphsComponent implements OnInit {
         this.snapshot.host.header_items[property].graph.data.labels.push(unix(chunk.period_ended_at));
       });
     });
-    headers?.forEach(header => header.chart.chartInstance.update());
+    headers?.forEach(header => header.chart?.chartInstance.update());
   }
 
   async readPerformanceAnalytics(): Promise<void> {
@@ -211,9 +209,14 @@ export class HostAnalyticsGraphsComponent implements OnInit {
     properties.forEach(property => {
       const { latest_period: latest, previous_period: previous } = metricAggregateByPeriod;
 
-      this.snapshot.performances.header_items[property].difference = this.formatPercentageDifference(
+      this.snapshot.performances.header_items[property].difference = this.getPercentageDifference(
         latest[property],
         previous[property]
+      );
+
+      this.setChartColor(
+        this.snapshot.performances.header_items[property].difference,
+        this.snapshot.performances.header_items[property].graph.data.datasets[0]
       );
 
       // Pretty format the aggregate value for the header item using the analytics formatters
@@ -230,6 +233,12 @@ export class HostAnalyticsGraphsComponent implements OnInit {
         this.snapshot.performances.header_items[property].graph.data.labels.push(unix(chunk.period_ended_at));
       });
     });
-    headers?.forEach(header => header.chart.chartInstance.update());
+    headers?.forEach(header => header.chart?.chartInstance.update());
+  }
+
+  setChartColor(difference: number, graph: ChartDataset): void {
+    const graphColor = difference < 0 ? '#E97B86' : difference > 0 ? '#96d0a3' : '#30a2b8';
+    graph.borderColor = graphColor;
+    graph.backgroundColor = graphColor;
   }
 }
