@@ -112,7 +112,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           },
           currency: CurrencyCode.GBP,
           disabled: false,
-          validators: [{ type: 'maxlength', value: 100 }, { type: "custom", value: ({ value }) => value !== 0 }]
+          validators: [{ type: 'required' }, { type: 'maxlength', value: 100 }, { type: "custom", value: ({ value }) => value !== 0 }]
         }),
         unlimited: UiField.Checkbox({
           label: $localize`Unlimited tickets`
