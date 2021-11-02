@@ -91,7 +91,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         quantity: UiField.Number({
           width: 6,
           label: $localize`Quantity`,
-          validators: [{ type: 'required' }]
+          validators: [{ type: "custom", value: ({ value }) => value !== 0 }]
         }),
         amount: UiField.Money({
           width: 6,
@@ -112,7 +112,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           },
           currency: CurrencyCode.GBP,
           disabled: false,
-          validators: [{ type: 'maxlength', value: 100 }, { type: 'required' }]
+          validators: [{ type: 'maxlength', value: 100 }, { type: "custom", value: ({ value }) => value !== 0 }]
         }),
         unlimited: UiField.Checkbox({
           label: $localize`Unlimited tickets`
