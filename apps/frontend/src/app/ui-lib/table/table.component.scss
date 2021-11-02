@@ -5,7 +5,7 @@
 .ui-table {
   position: relative;
   min-height: 200px;
-  width: 100%;
+  width: 80%;
   background-color: white;
 
   .loading-shade {
@@ -198,6 +198,18 @@ ui-button{
   padding: 0 4px;
 }
 
+ui-chip{
+  margin: 0 auto;
+}
+
 .sort-icon{
   font-size: 26px;
+}
+
+.is-chip{
+  width: 2rem;
+}
+
+.table-action-button{
+  margin-right: 22%;
 }

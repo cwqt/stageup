@@ -15,6 +15,7 @@
       [popperPositionFixed]="true"
       [popperPreventOverflow]="false"
       [popperPlacement]="'bottom'"
+      class="table-action-button"
     >
       <span i18n="@@table_actions">Actions</span> &nbsp; <ui-icon>caret--down</ui-icon>
     </ui-button>
@@ -59,6 +60,7 @@
               *matHeaderCellDef
               mat-sort-header
               [class.filter--is-active]="table._activeFilters[column.key]"
+              [class.is-chip]="column.value.isChip"
             >
               <ng-container *ngTemplateOutlet="header"></ng-container>
               <ui-icon class="sort-icon" mat-header-cell size="m" *ngIf="table._sortDirection !='DESC'">sort--ascending</ui-icon>

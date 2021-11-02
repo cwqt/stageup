@@ -40,6 +40,7 @@ export interface IUiTableColumn<K> {
   filter?: IUiTableColumnFilter;
   chip_selector?: (v: K) => ChipComponent['kind'];
   click_handler?: (v: K) => void;
+  isChip?: boolean;
 }
 
 export interface IUiTableColumnFilter {
