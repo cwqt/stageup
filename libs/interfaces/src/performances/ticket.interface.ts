@@ -68,10 +68,10 @@ export type DtoCreateTicket = Required<
     | 'type'
     | 'quantity'
     // | 'fees'
-    | 'start_datetime'
-    | 'end_datetime'
+    // | 'start_datetime'
+    // | 'end_datetime'
     | 'is_visible'
-    | 'dono_pegs'
+    // | 'dono_pegs'
     | 'is_quantity_visible'
   >
 >;
