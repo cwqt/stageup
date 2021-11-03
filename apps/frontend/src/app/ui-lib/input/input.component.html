@@ -181,6 +181,7 @@
   <mat-form-field
     *ngIf="data.type == 'select'"
     appearance="{{ data.options.appearance || 'fill' }}"
+    [ngClass]="{ 'select-outline': data.options.appearance == 'outline' }"
     [class.form-field--no-label]="!data.options.label"
   >
     <mat-label *ngIf="data.options.label">{{ data.options.label }}</mat-label>

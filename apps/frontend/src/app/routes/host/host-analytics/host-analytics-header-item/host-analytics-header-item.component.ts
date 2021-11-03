@@ -32,4 +32,9 @@ export class HostAnalyticsHeaderItemComponent implements OnInit {
     this.item.graph.data.datasets[0].data = [];
     this.item.graph.data.labels = [];
   }
+
+  // There is no data yet for this host, if the aggregation and the difference are both equal to 0.
+  get noDataYet(): boolean {
+    return !this.item.difference && (this.item.aggregation == '0' || this.item.aggregation == '£0.00');
+  }
 }

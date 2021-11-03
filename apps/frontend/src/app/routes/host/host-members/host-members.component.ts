@@ -1,41 +1,28 @@
 import { HostPermissionPipe } from './../../../_pipes/host-permission.pipe';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
-import { AfterViewInit, Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { IEnvelopedData, IUserHostInfo, HostPermission } from '@core/interfaces';
-import { cachize, createICacheable, ICacheable } from '../../../app.interfaces';
+import { IUserHostInfo } from '@core/interfaces';
 import { HelperService } from '../../../services/helper.service';
 import { HostService } from '../../../services/host.service';
 import { HostAddMemberComponent } from './host-add-member/host-add-member.component';
 import { HostMemberPermissionsDialogComponent } from './host-member-permissions-dialog/host-member-permissions-dialog.component';
 import { FromUnixPipe } from 'ngx-moment';
+import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-host-members',
   templateUrl: './host-members.component.html',
   styleUrls: ['./host-members.component.scss']
 })
-export class HostMembersComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @Input() permission: IUserHostInfo['permissions'];
-
-  hostMembers: ICacheable<IEnvelopedData<IUserHostInfo[]>> = createICacheable([]);
-  hostMembersDataSrc: MatTableDataSource<IUserHostInfo>;
-  displayedColumns: string[] = ['user', 'permissions', 'joined_at', 'actions'];
-  valueSelected: HostPermission;
+export class HostMembersComponent implements OnInit {
   hostId: string;
-
-  // Members
   memberTable: UiTable<IUserHostInfo>;
 
   constructor(private hostService: HostService, private helperService: HelperService, private dialog: MatDialog) {}
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
-    this.hostMembersDataSrc = new MatTableDataSource<IUserHostInfo>([]);
-    this.hostMembers.loading = true;
 
     const hostPermissionPipe = new HostPermissionPipe();
     const fromUnixPipe = new FromUnixPipe();
@@ -44,23 +31,32 @@ export class HostMembersComponent implements OnInit, AfterViewInit {
       columns: [
         {
           label: $localize`User`,
-          accessor: member => member.user.username,
-          image: member => member.user.avatar || '/assets/avatar-placeholder.png'
+          accessor: uhi => uhi.user.username,
+          image: uhi => uhi.user.avatar || '/assets/avatar-placeholder.png'
         },
         {
           label: $localize`Permissions`,
-          accessor: member => hostPermissionPipe.transform(member.permissions)
+          accessor: uhi => hostPermissionPipe.transform(uhi.permissions)
         },
         {
           label: $localize`Joined`,
-          accessor: member => fromUnixPipe.transform(member.joined_at)
+          accessor: uhi => fromUnixPipe.transform(uhi.joined_at)
         }
       ],
       actions: [
         {
-          label: '',
-          click: p => console.log(p),
-          icon: 'delete'
+          click: uhi => this.openMemberPermissionsDialog(uhi),
+          icon: 'edit',
+          hidden: uhi => {
+            return (
+              uhi.permissions == 'host_owner' || uhi.permissions == 'host_pending' || uhi.permissions == 'host_expired'
+            );
+          }
+        },
+        {
+          click: uhi => console.log(uhi),
+          icon: 'delete',
+          kind: ThemeKind.Danger
         }
       ],
       pagination: {
@@ -70,29 +66,17 @@ export class HostMembersComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    this.hostMembersDataSrc.paginator = this.paginator;
-    cachize(this.hostService.readMembers(this.hostService.hostId, null), this.hostMembers).then(d => {
-      this.hostMembersDataSrc.data = d.data;
-      this.hostMembersDataSrc.paginator.length = d.__paging_data.total;
-    });
-  }
-
   openAddMembersModal() {
-    this.helperService.showDialog(this.dialog.open(HostAddMemberComponent), (newMembers: IUserHostInfo[]) => {
-      this.hostMembers.data.data = [...this.hostMembers.data.data, ...newMembers];
-      this.hostMembersDataSrc.data = this.hostMembers.data.data;
-      this.hostMembersDataSrc.paginator.length += newMembers.length;
+    this.helperService.showDialog(this.dialog.open(HostAddMemberComponent), () => {
+      this.memberTable.refresh();
     });
   }
 
-  openMemberPermissionsDialog(userId: string) {
-    const uhi = this.hostMembers.data.data.find(u => u.user._id == userId);
-
+  openMemberPermissionsDialog(uhi: IUserHostInfo) {
     this.helperService.showDialog(
-      this.dialog.open(HostMemberPermissionsDialogComponent, { data: { uhi: uhi, hostId: this.hostId } }),
-      (permission: HostPermission) => {
-        uhi.permissions = permission;
+      this.dialog.open(HostMemberPermissionsDialogComponent, { data: { uhi, hostId: this.hostId } }),
+      () => {
+        this.memberTable.refresh();
       }
     );
   }

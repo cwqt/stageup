@@ -65,6 +65,7 @@ export interface IUiTableAction<K> {
   kind?: ThemeKind;
   icon?: string;
   disabled?: (v: K) => boolean;
+  hidden?: (v: K) => boolean; // same as disabled, but the button is removed completely
   dropdown?: Array<{
     icon?: string;
     label: string;
