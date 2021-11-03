@@ -1072,29 +1072,33 @@ export class HostController extends ModuleController {
     },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
-      const performances = await this.ORM.createQueryBuilder(Performance, 'performance')
-        .innerJoinAndSelect('performance.host', 'host')
-        .where('host._id = :id', { id: req.params.hid })
-        .orderBy('performance.created_at', 'DESC')
-        .getMany();
+      return await this.hostService.readAllPerformancesAnalytics(
+        req.params.hid,
+        req.query.period as AnalyticsTimePeriod
+      );
+      // const performances = await this.ORM.createQueryBuilder(Performance, 'performance')
+      //   .innerJoinAndSelect('performance.host', 'host')
+      //   .where('host._id = :id', { id: req.params.hid })
+      //   .orderBy('performance.created_at', 'DESC')
+      //   .getMany();
 
-      const dtos: DtoPerformanceAnalytics[] = [];
-      for await (let performance of performances) {
-        // Get weekly aggregations sorted by period_end (when collected)
-        const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
-          .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
-          .orderBy('analytics.period_ended_at', 'DESC')
-          // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
-          .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
-          .getMany();
+      // const dtos: DtoPerformanceAnalytics[] = [];
+      // for await (let performance of performances) {
+      //   // Get weekly aggregations sorted by period_end (when collected)
+      //   const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
+      //     .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
+      //     .orderBy('analytics.period_ended_at', 'DESC')
+      //     // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
+      //     .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
+      //     .getMany();
 
-        dtos.push({
-          ...performance,
-          chunks: chunks.map(chunk => chunk.toDto())
-        });
-      }
+      //   dtos.push({
+      //     ...performance,
+      //     chunks: chunks.map(chunk => chunk.toDto())
+      //   });
+      // }
 
-      return dtos;
+      // return dtos;
     }
   };
 
