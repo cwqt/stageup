@@ -1,7 +1,7 @@
 <ng-container *ngIf="table">
   <div class="flex justify-between items-center pt-1">
     <h2 *ngIf="table.config.title">{{ table.config.title }}</h2>
-    <p *ngIf="lastUpdated" class="block text-gray-500 mb-3" i18n>
+    <p *ngIf="lastUpdated" class="block opacity-50 mb-3" i18n>
       Updated as of {{ lastUpdated  }}
     </p>
     <ui-button
@@ -19,7 +19,8 @@
     >
       <span i18n="@@table_actions">Actions</span> &nbsp; <ui-icon>caret--down</ui-icon>
     </ui-button>
-  </div>
+  </div> 
+    <br/>
 
   <div class="ui-table" *ngIf="true">
     <div class="loading-shade" *ngIf="table.loading | async">
@@ -240,7 +241,7 @@
   <div class="ui-table--paginator">
     <mat-paginator
       *ngIf="table.config.pagination"
-      [showFirstLastButtons]="table.config.pagination.show_first_last"
+      [showFirstLastButtons]="true"
       [length]="table.cache.data?.__paging_data?.total || 0"
       (page)="table.selection?.clear()"
       [pageSizeOptions]="table.config.pagination.page_sizes"

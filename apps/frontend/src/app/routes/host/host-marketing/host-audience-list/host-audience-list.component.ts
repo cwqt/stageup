@@ -53,7 +53,7 @@ export class HostAudienceListComponent implements OnInit {
       },
       columns: [
         {
-          label: $localize`Email Address`,
+          label: $localize`Email`,
           accessor: user => user.email_address,
           sort: { field: 'email_address' },
           filter: {
