@@ -1,3 +1,10 @@
+<div >
+  <xng-breadcrumb [separator]="iconTemplate"></xng-breadcrumb>
+  <ng-template #iconTemplate>
+    <mat-icon>chevron_right</mat-icon>
+  </ng-template>
+</div>
+
 <div class="flex items-stretch h-full w-full" *ngIf="host.data">
   <div *ngIf="myself.host_info.permissions == hostPermission.Pending">
     <h1 i18n>Pending acceptance of invitation</h1>

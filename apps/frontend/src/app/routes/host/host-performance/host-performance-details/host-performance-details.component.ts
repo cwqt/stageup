@@ -5,6 +5,7 @@ import { DtoPerformance, IAssetStub, IHost, AssetType, IPerformanceHostInfo, Vis
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { IUiFormField, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 @Component({
   selector: 'app-host-performance-details',
@@ -41,7 +42,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
   visibilityForm: UiForm;
   publicityPeriodForm: UiForm;
 
-  constructor(private performanceService: PerformanceService, private clipboard: Clipboard) {}
+  constructor(private performanceService: PerformanceService, private clipboard: Clipboard, private breadcrumbService: BreadcrumbService,) { }
 
   ngOnInit(): void {
     this.stream = this.performance.data.data.assets.find(asset => asset.type == AssetType.LiveStream);
@@ -100,6 +101,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
         changes: async () => this.visibilityForm.submit()
       }
     });
+    this.breadcrumbService.set('dashboard/performances/:id', this.performanceData.name);
   }
 
   readStreamingKey() {

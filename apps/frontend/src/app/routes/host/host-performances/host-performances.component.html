@@ -1,16 +1,4 @@
-<app-page>
-  <div body>
-    <div class="flex flex-row items-center mb-5">
-      <h1 class="mb-0" i18n>Performances</h1>
-      <mat-spinner class="ml-5" [diameter]="50" *ngIf="table.cache.loading"></mat-spinner>
+<ng-container>
+  <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
+</ng-container>
 
-      <ui-button class="ml-auto" (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>
-        Create Performance
-      </ui-button>
-    </div>
-
-    <ui-hr></ui-hr>
-
-    <ui-table [table]="table"></ui-table>
-  </div>
-</app-page>

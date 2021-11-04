@@ -44,6 +44,7 @@ import { RouteParam as RP } from './services/app.service';
 import { TestbedComponent } from './ui-lib/testbed/testbed.component';
 import { LoggedInGuard } from './_helpers/logged-in.guard';
 import { PerformanceShowComponent } from './routes/performance/performance-show/performance-show.component';
+import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -93,28 +94,34 @@ const LOGGED_IN_ROUTES: Routes = [
     component: HostComponent,
     children: [
       { path: '', component: HostDashboardComponent },
-      { path: 'onboarding', component: HostOnboardingComponent },
-      { path: 'settings', component: HostSettingsComponent },
+      { path: 'onboarding', component: HostOnboardingComponent, data: { breadcrumb: 'Onboarding' } },
+      { path: 'settings', component: HostSettingsComponent, data: { breadcrumb: 'Settings' } },
       {
         path: 'payments',
-        component: HostPaymentsComponent
+        component: HostPaymentsComponent,
+        data: { breadcrumb: 'Payments' }
       },
-      { path: 'team', component: HostMembersComponent },
-      { path: 'performances', component: HostPerformancesComponent },
-      { path: 'analytics', component: HostAnalyticsComponent },
-      { path: 'marketing', component: HostMarketingComponent },
+      { path: 'team', component: HostMembersComponent, data: { breadcrumb: 'Team' } },
       {
-        path: `performances/:${RP.PerformanceId}`,
-        component: HostPerformanceComponent,
+        path: 'performances', component: HostPerformancesComponent, data: { breadcrumb: 'Events' },
         children: [
-          { path: '', component: HostPerformanceDetailsComponent },
-          { path: 'ticketing', component: HostPerformanceTicketingComponent },
-          { path: 'media', component: HostPerformanceMediaComponent },
+          { path: '', component: HostListPerformancesComponent },
+          {
+            path: `:${RP.PerformanceId}`,
+            component: HostPerformanceComponent,
+            children: [
+              { path: '', component: HostPerformanceDetailsComponent, data: { breadcrumb: 'Details' }, },
+              { path: 'ticketing', component: HostPerformanceTicketingComponent, data: { breadcrumb: 'Ticketing' } },
+              { path: 'media', component: HostPerformanceMediaComponent, data: { breadcrumb: 'Media' } },
 
-          // { path: "analytics", HostPerformanceDetailsComponent },
-          { path: '**', component: NotFoundComponent }
-        ]
+              // { path: "analytics", HostPerformanceDetailsComponent },
+              { path: '**', component: NotFoundComponent }
+            ]
+          },
+        ],
       },
+      { path: 'analytics', component: HostAnalyticsComponent, data: { breadcrumb: 'Analytics' } },
+      { path: 'marketing', component: HostMarketingComponent, data: { breadcrumb: 'Marketing' }, },
       {
         matcher: hostMatcher,
         component: HostProfileComponent,
