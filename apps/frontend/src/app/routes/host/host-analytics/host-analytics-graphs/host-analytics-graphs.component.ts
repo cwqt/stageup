@@ -106,8 +106,6 @@ export class HostAnalyticsGraphsComponent implements OnInit {
   }
 
   getPercentageDifference(a: number, b: number): number {
-    // Return null in edge case where 'previous' number is non-existent/zero (i.e. when starting to collect the data)
-    // return b ? Math.floor(a - b) / b : null;
     return Math.floor(a - b) / b;
   }
 

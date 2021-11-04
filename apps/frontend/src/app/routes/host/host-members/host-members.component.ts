@@ -1,10 +1,10 @@
-import { HostPermissionPipe } from './../../../_pipes/host-permission.pipe';
+import { HostPermissionPipe } from '@frontend/_pipes/host-permission.pipe';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IUserHostInfo } from '@core/interfaces';
-import { HelperService } from '../../../services/helper.service';
-import { HostService } from '../../../services/host.service';
+import { HelperService } from '@frontend/services/helper.service';
+import { HostService } from '@frontend/services/host.service';
 import { HostAddMemberComponent } from './host-add-member/host-add-member.component';
 import { HostMemberPermissionsDialogComponent } from './host-member-permissions-dialog/host-member-permissions-dialog.component';
 import { FromUnixPipe } from 'ngx-moment';

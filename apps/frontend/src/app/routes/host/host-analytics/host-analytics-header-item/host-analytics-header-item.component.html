@@ -14,7 +14,7 @@
         <ui-icon class="red" [size]="40" *ngIf="item.difference < 0">caret--down</ui-icon>
         <ui-icon class="blue" [size]="40" *ngIf="item.difference == 0">subtract</ui-icon>
       </div>
-      <!-- If aggregation == 0 (i.e. the first bit of data) we display 0% -->
+      <!-- If we have no data, we display 0% -->
       <div *ngIf="noDataYet" class="flex">
         <h2 class="blue">0%</h2>
         <ui-icon class="blue" [size]="40">subtract</ui-icon>

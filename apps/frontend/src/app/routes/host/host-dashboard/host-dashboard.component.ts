@@ -1,9 +1,8 @@
-import { HostPermissionPipe } from './../../../_pipes/host-permission.pipe';
-import { MatTableDataSource } from '@angular/material/table';
+import { HostPermissionPipe } from '@frontend/_pipes/host-permission.pipe';
 import { ICacheable, createICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostAddMemberComponent } from './../host-members/host-add-member/host-add-member.component';
 import { CreatePerformanceComponent } from './../host-performances/create-performance/create-performance.component';
-import { IHost, IEnvelopedData, IUserHostInfo, HostPermission } from '@core/interfaces';
+import { IHost, IEnvelopedData, IUserHostInfo } from '@core/interfaces';
 
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from '@frontend/services/host.service';
