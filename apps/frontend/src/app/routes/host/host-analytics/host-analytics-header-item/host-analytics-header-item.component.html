@@ -6,7 +6,7 @@
         <h4 class="whitespace-nowrap">{{ item.title }}</h4>
       </div>
       <!-- Display the change since the last period -->
-      <div *ngIf="item.difference" class="flex">
+      <div *ngIf="item.difference && differenceIsFinite" class="flex">
         <h2 [ngClass]="{ green: item.difference > 0, red: item.difference < 0, blue: item.difference == 0 }">
           {{ item.difference * 100 | number: '1.0-0' }}%
         </h2>

@@ -25,15 +25,6 @@ export class HostService extends ModuleService {
     return latestConsent.saved_at;
   }
 
-  async readAllPerformancesAnalytics(hostId: string, period: AnalyticsTimePeriod): Promise<any> {
-    const hostPerformances = await this.readAllHostPerformances(hostId);
-
-    return await this.readAnalyticsFromPerformanceArray(
-      hostPerformances.map(performance => performance.toStub()),
-      period
-    );
-  }
-
   async readAllHostPerformances(hostId: string): Promise<Performance[]> {
     return await this.ORM.createQueryBuilder(Performance, 'performance')
       .innerJoin('performance.host', 'host')

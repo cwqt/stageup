@@ -26,9 +26,7 @@ export class HostAnalyticsHeaderItemComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log('this.item', this.item);
-  }
+  ngOnInit(): void {}
 
   clearGraph() {
     this.item.graph.data.datasets[0].data = [];
@@ -38,5 +36,9 @@ export class HostAnalyticsHeaderItemComponent implements OnInit {
   // There is no data yet for this host, if the aggregation and the difference are both equal to 0.
   get noDataYet(): boolean {
     return !this.item.difference && (this.item.aggregation == '0' || this.item.aggregation == '£0.00');
+  }
+
+  get differenceIsFinite(): boolean {
+    return Number.isFinite(this.item.difference);
   }
 }

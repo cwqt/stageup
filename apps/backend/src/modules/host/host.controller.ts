@@ -1030,6 +1030,7 @@ export class HostController extends ModuleController {
     }
   };
 
+  // Returns a paginated query of performance analytics
   readPerformancesAnalytics: IControllerEndpoint<IEnvelopedData<DtoPerformanceAnalytics[]>> = {
     validators: {
       query: assign(
@@ -1046,59 +1047,28 @@ export class HostController extends ModuleController {
         .orderBy('performance.created_at', 'DESC')
         .paginate({ serialiser: o => o.toStub() });
 
-      const dtos: DtoPerformanceAnalytics[] = [];
-      for await (let performance of performances.data) {
-        // Get weekly aggregations sorted by period_end (when collected)
-        const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
-          .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
-          .orderBy('analytics.period_ended_at', 'DESC')
-          // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
-          .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
-          .getMany();
-
-        dtos.push({
-          ...performance,
-          chunks: chunks.map(chunk => chunk.toDto())
-        });
-      }
+      const dtos = await this.hostService.readAnalyticsFromPerformanceArray(
+        performances.data,
+        req.query.period as AnalyticsTimePeriod
+      );
 
       return { data: dtos, __paging_data: performances.__paging_data };
     }
   };
 
+  // Returns a full query of performance analytics (i.e. all performances in the provided time period)
   readAllPerformancesAnalytics: IControllerEndpoint<DtoPerformanceAnalytics[]> = {
     validators: {
       query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
     },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
-      return await this.hostService.readAllPerformancesAnalytics(
-        req.params.hid,
+      const hostPerformances = await this.hostService.readAllHostPerformances(req.params.hid);
+
+      return await this.hostService.readAnalyticsFromPerformanceArray(
+        hostPerformances.map(performance => performance.toStub()),
         req.query.period as AnalyticsTimePeriod
       );
-      // const performances = await this.ORM.createQueryBuilder(Performance, 'performance')
-      //   .innerJoinAndSelect('performance.host', 'host')
-      //   .where('host._id = :id', { id: req.params.hid })
-      //   .orderBy('performance.created_at', 'DESC')
-      //   .getMany();
-
-      // const dtos: DtoPerformanceAnalytics[] = [];
-      // for await (let performance of performances) {
-      //   // Get weekly aggregations sorted by period_end (when collected)
-      //   const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
-      //     .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
-      //     .orderBy('analytics.period_ended_at', 'DESC')
-      //     // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
-      //     .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
-      //     .getMany();
-
-      //   dtos.push({
-      //     ...performance,
-      //     chunks: chunks.map(chunk => chunk.toDto())
-      //   });
-      // }
-
-      // return dtos;
     }
   };
 

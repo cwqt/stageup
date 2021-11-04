@@ -114,7 +114,7 @@ export class HostDashboardComponent implements OnInit {
   }
 
   openAddMemberDialog() {
-    this.helperService.showDialog(this.dialog.open(HostAddMemberComponent), (newMembers: IUserHostInfo[]) => {
+    this.helperService.showDialog(this.dialog.open(HostAddMemberComponent), () => {
       this.memberTable.refresh();
     });
   }

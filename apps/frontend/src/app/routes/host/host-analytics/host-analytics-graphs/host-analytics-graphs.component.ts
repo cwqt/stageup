@@ -106,7 +106,8 @@ export class HostAnalyticsGraphsComponent implements OnInit {
   }
 
   getPercentageDifference(a: number, b: number): number {
-    // return Math.floor(a - b) / ((a + b) / 2);
+    // Return null in edge case where 'previous' number is non-existent/zero (i.e. when starting to collect the data)
+    // return b ? Math.floor(a - b) / b : null;
     return Math.floor(a - b) / b;
   }
 
@@ -132,25 +133,26 @@ export class HostAnalyticsGraphsComponent implements OnInit {
     const headers = this.headers.filter(header => header.ref == 'host'); // only host related charts
     headers?.forEach(headers => headers.clearGraph());
 
-    dto.chunks = dto.chunks.sort((a, b) => a.period_ended_at - b.period_ended_at);
-    console.log('dto.chunks', dto.chunks);
-    // Get the two periods as aggregated sums for each period
-    const half = Math.ceil(dto.chunks.length / 2);
-    const [previous, latest] = [
-      Analytics.entities.host.aggregators.metrics(dto.chunks.slice(0, half).map(dto => dto.metrics)),
-      Analytics.entities.host.aggregators.metrics(dto.chunks.slice(half, dto.chunks.length).map(dto => dto.metrics))
+    // Get the index of separation between the current and previous periods
+    const periodCutOff = Analytics.offsets[this.periodForm.group.value.period];
+
+    // Chunks are already in reverse chronological order. The first slice is the current period, the second slice is the previous period
+    const [latest, previous] = [
+      Analytics.entities.host.aggregators.metrics(dto.chunks.slice(0, periodCutOff).map(dto => dto.metrics)),
+      Analytics.entities.host.aggregators.metrics(
+        dto.chunks.slice(periodCutOff, dto.chunks.length).map(dto => dto.metrics)
+      )
     ];
+
+    // Sort in chronological order to display in the graph
+    dto.chunks = dto.chunks.sort((a, b) => a.period_ended_at - b.period_ended_at);
 
     properties.forEach(property => {
       // Set difference percentage
-      console.log('----------HOST-----------');
-      console.log('CURRENT', latest[property]);
-      console.log('PREVIOUS', previous[property]);
       this.snapshot.host.header_items[property].difference = this.getPercentageDifference(
         latest[property],
         previous[property]
       );
-      console.log('DIFFERENCE', this.snapshot.host.header_items[property].difference);
 
       this.setChartColor(
         this.snapshot.host.header_items[property].difference,
@@ -183,7 +185,8 @@ export class HostAnalyticsGraphsComponent implements OnInit {
     );
 
     const performancePeriods = dto.map(dto => {
-      const half = Math.ceil(dto.chunks.length / 2);
+      const half = Analytics.offsets[this.periodForm.group.value.period];
+
       const [latest, previous] = [dto.chunks.slice(0, half), dto.chunks.slice(half, dto.chunks.length)];
       return {
         ...dto,
