@@ -74,7 +74,6 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
           label: $localize`Schedule`,
           separator: 'above',
           hint: $localize`Set the start and end date for your event`,
-          initial: { start: new Date(), end: new Date() },
           is_date_range: true,
           actions: true
         }),
@@ -92,8 +91,8 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             description: v.description,
             genre: v.genre,
             publicity_period: {
-              start: timestamp(v.publicity_period.start),
-              end: timestamp(v.publicity_period.end)
+              start: v.publicity_period ? timestamp(v.publicity_period.start) : null, //Specifying schedule at this stage optional, hence null
+              end: v.publicity_period ? timestamp(v.publicity_period.end) : null
             },
             type: this.type === 'live' ? PerformanceType.Live : PerformanceType.Vod
           });

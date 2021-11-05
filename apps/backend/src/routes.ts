@@ -100,6 +100,7 @@ const Users = Container.get(UserController)
 router.post     <IMyself["user"]>           ("/users",                                     Users.createUser);
 router.post     <void>                      ("/users/logout",                              Users.logoutUser);
 router.post     <IUser>                     ("/users/login",                               Users.loginUser);
+router.post     <IUser>                     ("/users/login/using-social-media",            Users.socialSignInUser);
 router.post     <void>                      ("/users/forgot-password",                     Users.forgotPassword);
 router.put      <void>                      ("/users/reset-password",                      Users.resetForgottenPassword);
 router.get      <IUser>                     ("/users/:uid",                                Users.readUser);
@@ -171,6 +172,7 @@ router.put      <void>                      ("/performances/:pid",              
 router.put      <void>                      ("/performances/:pid/cancel",                  Perfs.cancelPerformance);
 router.put      <IPerf>                     ("/performances/:pid",                         Perfs.updatePerformance);
 router.put      <IPerformance>              ("/performances/:pid/publicity-period",        Perfs.updatePublicityPeriod);
+router.put      <void>                      ("/performances/:pid/restore",                 Perfs.restorePerformance);
 router.post     <AssetDto | void>           ("/performances/:pid/thumbnails",              Perfs.changeThumbnails);
 router.post     <ICreateAssetRes | void>    ("/performances/:pid/assets",                  Perfs.createAsset);
 router.delete   <void>                      ("/performances/:pid/assets/:aid",             Perfs.deleteAsset);

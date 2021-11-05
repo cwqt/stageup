@@ -59,6 +59,7 @@ performance:
   cannot_delete_after_occurrence: Performance cannot be deleted after it has occured
   cannot_cancel_live: Performance cannot be cancelled while currently live
   cannot_cancel_after_occurrence: Performance cannot be cancelled after it has occured
+  cannot_restore_active_performance: Only cancelled performances can be restored
 
 # Payment Status --------------------------------------------------------------------------------------
 payment_status:

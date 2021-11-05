@@ -44,7 +44,7 @@ export {
 export { LocalTunnelProvider, ILocalTunnelProviderConfig } from './data-client/providers/localtunnel.provider';
 export { PostgresProvider, IPostgresProviderConfig } from './data-client/providers/postgres.provider';
 export { Mail, SendGridMailProvider, ISendGridMailProviderConfig } from './data-client/providers/email.provider';
-export { RedisProvider, IRedisProviderConfig } from './data-client/providers/redis.provider';
+export { AppCache, RedisProvider, IRedisProviderConfig } from './data-client/providers/redis.provider';
 export { StoreProvider, IStoreProviderConfig } from './data-client/providers/store.provider';
 export { StripeProvider, IStripeProviderConfig } from './data-client/providers/stripe.provider';
 export { SSEHubManagerProvider, SSE } from './data-client/providers/sse.provider';

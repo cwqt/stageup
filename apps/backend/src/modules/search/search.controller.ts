@@ -1,5 +1,5 @@
 import { Host, IControllerEndpoint, Performance, PostgresProvider, POSTGRES_PROVIDER } from '@core/api';
-import { ISearchResponse } from '@core/interfaces';
+import { ISearchResponse, PerformanceStatus } from '@core/interfaces';
 import { Inject, Service } from 'typedi';
 import { ModuleController } from '@core/api';
 
@@ -37,6 +37,7 @@ export class SearchController extends ModuleController {
           .where('LOWER(p.name) LIKE :name', {
             name: req.query.query ? `%${req.query.query as string}%` : '%'
           })
+          .andWhere('p.status != :status', { status: PerformanceStatus.Deleted })
           .paginate({ serialiser: h => h.toStub() });
 
       return {

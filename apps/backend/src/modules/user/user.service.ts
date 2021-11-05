@@ -26,7 +26,8 @@ import {
   PlatformConsentOpt,
   ILike,
   LikeLocation,
-  ILocale
+  ILocale,
+  IPersonInfo
 } from '@core/interfaces';
 import jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
@@ -46,7 +47,7 @@ export class UserService extends ModuleService {
     super();
   }
 
-  async createUser(data: DtoCreateUser): Promise<User> {
+  async createUser(data: DtoCreateUser, loginMethod: string = 'EMAIL', personalDetails?: IPersonInfo): Promise<User> {
     // Create a Stripe Customer, for purposes of managing cards on our Multi-Party platform
     // https://stripe.com/docs/connect/cloning-saved-payment-methods#storing-customers
     const customer = await this.stripe.customers.create({
@@ -55,20 +56,21 @@ export class UserService extends ModuleService {
 
     // Save the user through a transaction (creates ContactInfo & Person)
     return transact(async txc => {
-      const u = await new User({
+      const user = await new User({
         username: data.username,
         email_address: data.email_address,
         password: data.password,
-        stripe_customer_id: customer.id
-      }).setup(txc);
+        stripe_customer_id: customer.id,
+        provider: loginMethod
+      }).setup(txc, personalDetails);
 
       // First user to be created will be an admin
-      u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) === 0;
+      user.is_admin = (await txc.createQueryBuilder(User, 'user').getCount()) === 0;
 
       // Verify user if in dev/testing
-      u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
+      user.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
 
-      return await txc.save(u);
+      return await txc.save(user);
     });
   }
 

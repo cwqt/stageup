@@ -12,6 +12,7 @@ import {
   DtoLogin,
   DtoResetPassword,
   DtoUpdateUser,
+  DtoSocialLogin,
   IAddress,
   Idless,
   IDocumentRequest,
@@ -64,6 +65,16 @@ export namespace objects {
   export const DtoLogin: Describe<DtoLogin> = object({
     email_address: fields.email,
     password: string()
+  });
+
+  export const DtoSocialLogin: Describe<DtoSocialLogin> = object({
+    provider: string(),
+    id: string(),
+    email: fields.email,
+    name: string(),
+    photoUrl: string(),
+    firstName: string(),
+    lastName: string()
   });
 
   export const DtoCreateUser: Describe<DtoCreateUser> = object({
@@ -227,7 +238,6 @@ export namespace objects {
     email_address: fields.email,
     username: fields.username,
     name: fields.name,
-    vat_number: fields.vatNumber,
     business_details: IHostBusinessDetails,
     social_info: ISocialInfo
   });

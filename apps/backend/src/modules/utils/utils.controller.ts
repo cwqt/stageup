@@ -80,7 +80,9 @@ export class UtilityController extends ModuleController {
       frontend_url: Env.FRONTEND.URL,
       stripe_public_key: Env.STRIPE.PUBLIC_KEY,
       environment: Env.ENVIRONMENT,
-      mux_env_key: Env.MUX.DATA_ENV_KEY
+      mux_env_key: Env.MUX.DATA_ENV_KEY,
+      google_auth_app_id: Env.SOCIAL_AUTH.GOOGLE,
+      facebook_auth_app_id: Env.SOCIAL_AUTH.FACEBOOK
     })
   };
 

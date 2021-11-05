@@ -105,6 +105,28 @@ Add this file into the root directory of this backend app (apps/backend). It's a
 GOOGLE_APPLICATION_CREDENTIALS="./service_account.json"
 ```
 
+### Social Media Sign-In
+
+Currently we have two ways for users to register/login, aside from email. That is through Facebook or through Google. These use an app ID to identify the service implementing the login.
+
+For Google, you can get this key from the Google Cloud Platform.
+
+- Login to our projects GCP (see above about contacting a SysAdmin for an account).
+- Nagivate to **"APIs and services" -> "Credentials"**.
+- Copy the Client ID from **"OAuth - Dev"** and add it to the .env:
+
+```
+GOOGLE_AUTH_APP_ID=""
+```
+
+Unfortunately, at present GCP OAuth 2 doesn't support **wildcards** as 'Authorised JavaScript origins'. This means that we cannot specify https://su-XXX.stageup.uk as a valid URI and the google login will not work in branch deploys.
+
+For Facebook, ask the SysAdmin to add you to StageUp's [https://developers.facebook.com/](Facebook for Developers) account. For development purposes, there is an existing test app called **"StageUp - Dev"**. Copy the `Test App ID` and add it to your .env:
+
+```
+FACEBOOK_AUTH_APP_ID=""
+```
+
 ### GCP Storage
 
 We use GCP Storage for storing our assets (such as performance images, host images, profile images etc.). See above about asking a SysAdmin for setting up your GCP account.

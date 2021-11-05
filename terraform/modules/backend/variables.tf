@@ -50,5 +50,8 @@ variable "env" {
     GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL = string
     GOOGLE_STORAGE_BUCKET_NAME           = string
     GOOGLE_STORAGE_PUBLIC_URL            = string
+
+    GOOGLE_AUTH_APP_ID   = string
+    FACEBOOK_AUTH_APP_ID = string
   })
 }

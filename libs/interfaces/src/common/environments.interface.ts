@@ -15,4 +15,6 @@ export interface IDynamicFrontendEnvironment {
   stripe_public_key: string;
   environment: Environment;
   mux_env_key: string;
+  google_auth_app_id: string;
+  facebook_auth_app_id: string;
 }
