@@ -94,8 +94,8 @@ const LOGGED_IN_ROUTES: Routes = [
     component: HostComponent,
     children: [
       { path: '', component: HostDashboardComponent },
-      { path: 'onboarding', component: HostOnboardingComponent, data: { breadcrumb: 'Onboarding' } },
-      { path: 'settings', component: HostSettingsComponent, data: { breadcrumb: 'Settings' } },
+      { path: 'onboarding', component: HostOnboardingComponent, data: { breadcrumb: $localize`Onboarding` } },
+      { path: 'settings', component: HostSettingsComponent, data: { breadcrumb: $localize`Settings` } },
       {
         path: 'payments',
         component: HostPaymentsComponent,
