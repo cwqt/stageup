@@ -11,6 +11,7 @@ import {
   IControllerEndpoint,
   LiveStreamAsset,
   ModuleController,
+  PasswordReset,
   POSTGRES_PROVIDER,
   Provider,
   STRIPE_PROVIDER,
@@ -179,6 +180,15 @@ export class UtilityController extends ModuleController {
     authorisation: AuthStrat.none,
     controller: async req => {
       const assets = await Asset.find({});
+    }
+  };
+
+  readForgottenPasswordOTP: IControllerEndpoint<string> = {
+    authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+    controller: async req => {
+      const user = await User.findOne(req.params.uid);
+      const passwordReset = await PasswordReset.findOne({user: user});
+      return passwordReset.otp;
     }
   };
 }

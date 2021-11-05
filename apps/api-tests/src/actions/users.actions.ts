@@ -1,18 +1,9 @@
-import { Stories, CachedUser } from '../stories';
-import { environment as env, UserType } from '../environment';
-import { IMyself, IUser, IAddress, IUserStub, Primitive, IUserHostInfo, IRefundRequest, IFeed } from '@core/interfaces';
-import { api } from '../environment';
-import userAddressesActions from './user-addresses.actions';
+import { IAddress, Idless, IEnvelopedData, IHost, IMyself, IUser, IUserHostInfo, Primitive } from '@core/interfaces';
 import fd from 'form-data';
+import { api, environment as env, UserType } from '../environment';
+import { CachedUser, Stories } from '../stories';
 
 export default {
-  ...userAddressesActions,
-
-  getMyself: async (): Promise<IMyself> => {
-    const res = await api.get<IMyself>(`/myself`, env.getOptions());
-    return res.data;
-  },
-
   createUser: async (user: UserType, force: boolean = false): Promise<IMyself['user']> => {
     if (force || !Stories.cachedUsers[user]) {
       const res = await api.post<IMyself['user']>(`/users`, env.userCreationData[user], env.getOptions());
@@ -21,15 +12,6 @@ export default {
     } else {
       return Stories.cachedUsers[user]?.user!;
     }
-  },
-
-  //router.post <IAddress> ("/users/uid/addresses", Users.createAddress());
-  createAddress: async (
-    user: IUser,
-    data: { city: string; iso_country_code: string; postcode: string; street_name: string; street_number: number }
-  ): Promise<IAddress> => {
-    const res = await api.post<IAddress>(`/users/${user._id}/addresses`, data, env.getOptions());
-    return res.data;
   },
 
   login: async (user: UserType): Promise<CachedUser> => {
@@ -58,12 +40,12 @@ export default {
     Stories.activeUser = null;
   },
 
-  //router.put<IUserS>("/hosts/:uid/avatar", Users.changeAvatar());
-  changeAvatar: async (user: IUser, data: fd): Promise<IUserStub> => {
+  //router.put<string>("/users/:uid/avatar", Users.changeAvatar());
+  changeAvatar: async (user: IUser, data: fd): Promise<string> => {
     const options = env.getOptions();
     options.headers['Content-Type'] = data.getHeaders()['content-type'];
 
-    const res = await api.put<IUserStub>(`/users/${user._id}/avatar`, data, options);
+    const res = await api.put<string>(`/users/${user._id}/avatar`, data, options);
     return res.data;
   },
 
@@ -73,23 +55,48 @@ export default {
     return res.data;
   },
 
-  // router.put <IMyself["host_info"]>  ("/myself/landing-page", Users.updatePreferredLandingPage());
-  updatePreferredLandingPage: async (
-    data: Pick<IUserHostInfo, 'prefers_dashboard_landing'>
-  ): Promise<IMyself['host_info']> => {
-    const res = await api.put<IMyself['host_info']>(`/myself/landing-page`, data, env.getOptions());
+  //router.post <IAddress> ("/users/uid/addresses", Users.createAddress());
+  createAddress: async (user: IUser, data: Idless<IAddress>): Promise<IAddress> => {
+    const res = await api.post<IAddress>(`/users/${user._id}/addresses`, data, env.getOptions());
     return res.data;
   },
 
-  //router.get<IFeed>("/myself/feed",Myself.readFeed());
-  readFeed: async (): Promise<IFeed> => {
-    const res = await api.get<IFeed>(`/myself/feed`, env.getOptions());
+  //router.get <IAddress[]> ("/users/:uid/addresses", Users.readAddresses());
+  readAddresses: async (user: IUser): Promise<IAddress[]> => {
+    const res = await api.get<IAddress[]>(`/users/${user._id}/addresses`, env.getOptions());
     return res.data;
   },
 
-  deleteUser: async (user: IUser) => {},
+  //router.delete <void> ("/users/:uid/addresses/:aid", Users.deleteAddress());
+  deleteAddress: async (user: IUser, address: IAddress): Promise<void> => {
+    const res = await api.delete(`/users/${user._id}/addresses/${address._id}`, env.getOptions());
+    return res.data;
+  },
 
-  requestInvoiceRefund: async (refundReq: IRefundRequest) => {
-    await api.post<void>(`/myself/invoices/request-refund`, refundReq, env.getOptions());
+  //router.delete<void>(`/users/:uid`, Users.deleteUser());
+  deleteUser: async (user: IUser) => {
+    await api.delete<void>(`/users/${user._id}`, env.getOptions());
+  },
+
+  //router.get<IUser>(`/users/:uid`, Users.readUser());
+  readUser: async(user: IUser): Promise<IUser> => {
+    const res = await api.get<IUser>(`/users/${user._id}`, env.getOptions());
+    return res.data;
+  },
+
+  //router.get<IEnvelopedData<IHost, IUserHostInfo>>(`/users/:uid/host`, Users.readUserHost());
+  readUserHost: async (user: IUser): Promise<IEnvelopedData<IHost, IUserHostInfo>> => {
+    const res = await api.get<IEnvelopedData<IHost, IUserHostInfo>>(`/users/${user._id}/host`, env.getOptions());
+    return res.data;
+  },
+
+  //router.post<void>(`/users/forgot-password`, Users.forgotPassword());
+  forgotPassword: async (email: string): Promise<void> => {
+    await api.post<void>('/users/forgot-password', {email_address: email}, env.getOptions());
+  },
+
+  //router.put<void>(`/users/reset-password`, Users.resetForgottenPassword());
+  resetForgottenPassword: async (otp: string, new_password: string): Promise<void> => {
+    await api.put<void>(`/users/reset-password?otp=${otp}`, { new_password: new_password}, env.getOptions());
   }
 };

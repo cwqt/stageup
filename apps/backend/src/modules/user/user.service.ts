@@ -1,4 +1,4 @@
-import { Connection } from 'typeorm';
+import { Connection, EntityManager } from 'typeorm';
 import {
   Address,
   getCheck,
@@ -14,7 +14,9 @@ import {
   UserHostMarketingConsent,
   UserStageUpMarketingConsent,
   Like,
-  Performance
+  Performance,
+  EventBus,
+  EVENT_BUS_PROVIDER
 } from '@core/api';
 import {
   DtoCreateUser,
@@ -24,6 +26,7 @@ import {
   PlatformConsentOpt,
   ILike,
   LikeLocation,
+  ILocale,
   IPersonInfo
 } from '@core/interfaces';
 import jwt from 'jsonwebtoken';
@@ -36,7 +39,11 @@ import Stripe from 'stripe';
 // IMPORTANT when fully implemented remove Partial<>
 @Service()
 export class UserService extends ModuleService {
-  constructor(@Inject(STRIPE_PROVIDER) private stripe: Stripe, @Inject(POSTGRES_PROVIDER) private ORM: Connection) {
+  constructor(
+    @Inject(STRIPE_PROVIDER) private stripe: Stripe,
+    @Inject(POSTGRES_PROVIDER) private ORM: Connection,
+    @Inject(EVENT_BUS_PROVIDER) private bus: EventBus
+  ) {
     super();
   }
 
@@ -71,18 +78,6 @@ export class UserService extends ModuleService {
     return User.findOne(query);
   }
 
-  // async updateUser(): Promise<IMyself['user']> {}
-
-  async deleteUser(): Promise<void> {}
-
-  // async readHost(): Promise<{ host: Host; userInfo: UserHostInfo }> {}
-
-  // async changeAvatar(): Promise<string> {}
-
-  async resetPassword(): Promise<void> {}
-
-  // async readAddresses(): Promise<Address[]> {}
-
   async createAddress(userId: string, data: Required<IAddress>): Promise<Address> {
     return transact(async txc => {
       const user = await getCheck(User.findOne({ _id: userId }, { relations: ['personal_details'] }));
@@ -94,31 +89,25 @@ export class UserService extends ModuleService {
     });
   }
 
-  async updateAddress(addressId: string): Promise<Address> {
-    const address = await Address.findOne({ _id: addressId });
-    // TODO: Update method in address model
-    return address;
-  }
-
   async deleteAddress(addressId: string): Promise<void> {
     await Address.delete({ _id: addressId });
   }
 
-  async forgotPassword(): Promise<void> {}
-
-  async createPasswordReset(emailAddress: string): Promise<{ user: User; token: string; reset: PasswordReset }> {
+  async createPasswordReset(emailAddress: string, locale: ILocale): Promise<void> {
     const user = await getCheck(User.findOne({ email_address: emailAddress }));
-    const token = jwt.sign({ email_address: emailAddress }, Env.PRIVATE_KEY, { expiresIn: '24h' });
+      const token = jwt.sign({ email_address: emailAddress }, Env.PRIVATE_KEY, { expiresIn: '24h' });
 
-    const reset = new PasswordReset({
-      otp: token,
-      email_address: emailAddress,
-      user__id: user._id
-    });
+      await transact(async (txc: EntityManager) => {
+        const passwordReset = new PasswordReset({
+          otp: token,
+          email_address: emailAddress,
+          user: user
+        });
 
-    await reset.save();
+        await txc.save(passwordReset);
+      });
 
-    return { user, token, reset };
+      this.bus.publish('user.password_reset_requested', { user_id: user._id, otp: token }, locale);
   }
 
   async setUserHostMarketingOptStatus(userId: string, hostId: string, optStatus: ConsentOpt) {
@@ -217,5 +206,4 @@ export class UserService extends ModuleService {
       });
     }
   }
-  // async readUserFollows(): Promise<IEnvelopedData<IFollowing[]>> {}
 }
