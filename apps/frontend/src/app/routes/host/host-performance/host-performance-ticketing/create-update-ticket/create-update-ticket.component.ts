@@ -12,7 +12,8 @@ import {
   ITicket,
   ITicketStub,
   TICKETS_QTY_UNLIMITED,
-  TicketType
+  TicketType,
+  BASE_AMOUNT_MAP
 } from '@core/interfaces';
 import { i18n, timeless, timestamp } from '@core/helpers';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
@@ -112,7 +113,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           },
           currency: CurrencyCode.GBP,
           disabled: false,
-          validators: [{ type: 'required' }, { type: 'maxlength', value: 100 }, { type: "custom", value: ({ value }) => value !== 0 }]
+          validators: [{ type: 'required' }, { type: 'maxlength', value: BASE_AMOUNT_MAP[CurrencyCode.GBP]*100 }, { type: "custom", value: ({ value }) => value !== 0 }]
         }),
         unlimited: UiField.Checkbox({
           label: $localize`Unlimited tickets`
@@ -126,18 +127,18 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         //     [TicketFees.PassOntoPurchaser, { label: $localize`Pass onto Purchaser` }]
         //   ])
         // }),
-        // start_datetime: UiField.Datetime({
-        //   width: 6,
-        //   label: $localize`Sales start`,
-        //   min_date: new Date(timestamp() * 1000),
-        //   validators: [{ type: 'required' }]
-        // }),
-        // end_datetime: UiField.Datetime({
-        //   width: 6,
-        //   label: $localize`Sales end`,
-        //   min_date: new Date(timestamp() * 1000),
-        //   validators: [{ type: 'required' }]
-        // }),
+        start_datetime: UiField.Datetime({
+          width: 6,
+          label: $localize`Sales start`,
+          min_date: new Date(timestamp() * 1000),
+          validators: [{ type: 'required' }]
+        }),
+        end_datetime: UiField.Datetime({
+          width: 6,
+          label: $localize`Sales end`,
+          min_date: new Date(timestamp() * 1000),
+          validators: [{ type: 'required' }]
+        }),
         visibility: UiField.Container({
           label: $localize`Ticket Visibility`,
           header_level: 0,
@@ -158,19 +159,19 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             );
 
             // flatten will make fields for this --> dono.0, dono.1, which we don't want
-            // if (data.type !== 'dono') delete data.dono_pegs;
+            if (data.type !== 'dono') delete data.dono_pegs;
 
             const fields = flatten(data);
 
-            // const startDate = timeless(new Date(data.start_datetime * 1000));
-            // const startTime = data.start_datetime - startDate.getTime() / 1000;
-            // fields['start_datetime.date'] = startDate;
-            // fields['start_datetime.time'] = startTime;
+            const startDate = timeless(new Date(data.start_datetime * 1000));
+            const startTime = data.start_datetime - startDate.getTime() / 1000;
+            fields['start_datetime.date'] = startDate;
+            fields['start_datetime.time'] = startTime;
 
-            // const endDate = timeless(new Date(data.end_datetime * 1000));
-            // const endTime = data.end_datetime - endDate.getTime() / 1000;
-            // fields['end_datetime.date'] = endDate;
-            // fields['end_datetime.time'] = endTime;
+            const endDate = timeless(new Date(data.end_datetime * 1000));
+            const endTime = data.end_datetime - endDate.getTime() / 1000;
+            fields['end_datetime.date'] = endDate;
+            fields['end_datetime.time'] = endTime;
 
             // Convert back into pounds from pence
             fields['amount'] = data.amount / 100;
@@ -181,7 +182,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
             fields['visibility.value'] = !data.is_visible;
 
             // Set the pegs up
-            // if (data.type == 'dono') data.dono_pegs.forEach(peg => (fields[`dono_pegs.${peg}`] = true));
+            if (data.type == 'dono') data.dono_pegs.forEach(peg => (fields[`dono_pegs.${peg}`] = true));
 
             return {
               fields: fields
@@ -249,12 +250,12 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       type: v.type,
       quantity: v.unlimited ? TICKETS_QTY_UNLIMITED : v.quantity,
       // fees: v.fees,
-      // start_datetime: Math.floor(v.start_datetime.getTime() / 1000),
-      // end_datetime: Math.floor(v.end_datetime.getTime() / 1000),
+      start_datetime: Math.floor(v.start_datetime.getTime() / 1000),
+      end_datetime: Math.floor(v.end_datetime.getTime() / 1000),
       is_visible: !v.visibility.value,
       is_quantity_visible: true,
       // filter array into only selected DonoPegs
-      // dono_pegs: Object.keys(v.dono_pegs)
+      //dono_pegs: Object.keys(v.dono_pegs)
       //   .filter(peg => v.dono_pegs[peg] == true)
       //   .map(peg => peg as DonoPeg)
     };
