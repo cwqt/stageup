@@ -40,7 +40,7 @@ export interface IUiTableColumn<K> {
   filter?: IUiTableColumnFilter;
   chip_selector?: (v: K) => ChipComponent['kind'];
   click_handler?: (v: K) => void;
-  isChip?: boolean;
+  is_chip?: boolean;
 }
 
 export interface IUiTableColumnFilter {
@@ -79,3 +79,5 @@ export type IUiTransformedRowMeta<Input> = {
   __data: Input;
   [index: string]: any;
 };
+
+export type IUiTableSortDirection = 'ASC' | 'DESC'

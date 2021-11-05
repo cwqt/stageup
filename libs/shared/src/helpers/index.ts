@@ -3,6 +3,7 @@ import {
   BASE_AMOUNT_MAP,
   BulkRefundReason,
   CardBrand,
+  ConsentOpt,
   CurrencyCode,
   DonoPeg,
   DONO_PEG_WEIGHT_MAPPING,
@@ -18,6 +19,7 @@ import {
   RichText
 } from '@core/interfaces';
 import locale from 'express-locale';
+import { OptStatus } from 'libs/interfaces/src/gdpr/consent.interface';
 import { nanoid } from 'nanoid';
 import QueryString from 'qs';
 
@@ -276,6 +278,14 @@ export const pipes = {
     };
 
     return pretty[reason];
+  },
+  optStatus: (status: ConsentOpt): string => {
+    const pretty: { [index in ConsentOpt]: string} ={
+      'hard-in': 'Opted-In',
+      'soft-in': 'Opted-In',
+      'hard-out': 'Opted-Out'
+    };
+    return pretty[status];
   }
 };
 

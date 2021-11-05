@@ -9,7 +9,7 @@ import { FilterQuery, IEnvelopedData } from '@core/interfaces';
 import { createICacheable, ICacheable } from '@frontend/app.interfaces';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { IUiTable, IUiTransformedRowMeta } from './table.interfaces';
+import { IUiTable, IUiTableSortDirection, IUiTransformedRowMeta } from './table.interfaces';
 
 export class UiTable<Input = any, Transformed = any> {
   private $loading: BehaviorSubject<boolean>;
@@ -21,7 +21,7 @@ export class UiTable<Input = any, Transformed = any> {
   _displayedColumns: string[];
   _footerMessage: ReturnType<IUiTable<Input>['selection']['footer_message']>;
   _activeFilters: { [column: string]: FilterQuery } = {};
-  _sortDirection: string;
+  _sortDirection: IUiTableSortDirection;
 
   ui: {
     table: MatTable<Transformed>;
@@ -126,7 +126,7 @@ export class UiTable<Input = any, Transformed = any> {
           query.sort = {
             [field]: this.ui.sort.direction.toLocaleUpperCase() as SortDirection
           };
-          this._sortDirection = this.ui.sort.direction.toLocaleUpperCase()
+          this._sortDirection = this.ui.sort.direction.toLocaleUpperCase() as IUiTableSortDirection;
         }
 
         // And then all the active filters...

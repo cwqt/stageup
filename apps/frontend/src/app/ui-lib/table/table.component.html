@@ -61,7 +61,7 @@
               *matHeaderCellDef
               mat-sort-header
               [class.filter--is-active]="table._activeFilters[column.key]"
-              [class.is-chip]="column.value.isChip"
+              [class.is-chip]="column.value.is_chip"
             >
               <ng-container *ngTemplateOutlet="header"></ng-container>
               <ui-icon class="sort-icon" mat-header-cell size="m" *ngIf="table._sortDirection !='DESC'">sort--ascending</ui-icon>

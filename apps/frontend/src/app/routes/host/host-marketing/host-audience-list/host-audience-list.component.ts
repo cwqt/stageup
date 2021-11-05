@@ -4,6 +4,7 @@ import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ExportFileType, FilterCode, IUserMarketingInfo, OptStatus } from '@core/interfaces';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { Component, OnInit } from '@angular/core';
+import { pipes } from '@core/helpers';
 
 @Component({
   selector: 'app-host-audience-list',
@@ -72,13 +73,13 @@ export class HostAudienceListComponent implements OnInit {
         },
         {
           label: $localize`Status`,
-          accessor: user => OptStatus[user.opt_status],
+          accessor: user => pipes.optStatus(user.opt_status),
           sort: { field: 'opt_status' },
           filter: {
             type: FilterCode.String,
             field: 'opt_status'
           },
-          isChip: true,
+          is_chip: true,
           chip_selector: v => {
             switch (v.opt_status) {
               case 'hard-out':
@@ -93,20 +94,5 @@ export class HostAudienceListComponent implements OnInit {
       ],
       actions: []
     });
-  }
-
-  async exportTable(): Promise<void> {
-    try {
-      await this.hostService.exportUserMarketing(this.hostService.hostId, null, 'csv' as ExportFileType);
-      this.toastService.emit(
-        $localize`Exported CSV!\n An e-mail with your attachments will arrive at the e-mail listed on this company account shortly`,
-        ThemeKind.Primary,
-        { duration: 1e9 }
-      );
-    } catch (error) {
-      this.toastService.emit($localize`An error occured while exporting to CSV`, ThemeKind.Danger, {
-        duration: 5000
-      });
-    }
   }
 }

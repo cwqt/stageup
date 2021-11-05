@@ -63,3 +63,9 @@ export interface IOptOutReason {
   reason?: OptOutOptions;
   message?: string;
 }
+
+export enum OptStatus {
+  HardOut = 'hard-out',
+  HardIn = 'hard-in',
+  SoftIn = 'soft-in'
+}
