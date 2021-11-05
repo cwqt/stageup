@@ -17,6 +17,7 @@ export * from './users/feed.interface';
 export * from './users/password-reset.interface';
 export * from './users/follow.interface';
 export * from './users/like.interface';
+export * from './users/auth.interface';
 
 // Hosts -----------------------------------------------------------------
 export * from './hosts/host.interface';

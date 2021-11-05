@@ -17,6 +17,7 @@ import {
   IGCPBlobProviderConfig,
   REDIS_PROVIDER
 } from '@core/api';
+import { ISocialAuth } from '@core/interfaces';
 
 type Envify<T> = { [index in keyof T as Uppercase<string & index>]: T[index] } & { [index: string]: any };
 
@@ -39,6 +40,7 @@ const Env: {
   STRIPE: Envify<IStripeProviderConfig>;
   EMAIL: Envify<ISendGridMailProviderConfig>;
   LOCALTUNNEL: Envify<ILocalTunnelProviderConfig>;
+  SOCIAL_AUTH: Envify<ISocialAuth>;
   isEnv: (env: Environment | Environment[]) => boolean;
   RATE_LIMIT: number;
 } = {
@@ -109,7 +111,11 @@ const Env: {
     BUCKET_NAME: process.env.GOOGLE_STORAGE_BUCKET_NAME,
     PUBLIC_URL: process.env.GOOGLE_STORAGE_PUBLIC_URL
   },
-  RATE_LIMIT: parseInt(process.env.RATE_LIMIT),
+  SOCIAL_AUTH: {
+    GOOGLE: process.env.GOOGLE_AUTH_APP_ID,
+    FACEBOOK: process.env.FACEBOOK_AUTH_APP_ID
+  },
+  RATE_LIMIT: parseInt(process.env.RATE_LIMIT)
 };
 
 export default Env;

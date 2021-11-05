@@ -4,10 +4,13 @@
     <ui-button kind="accent" (click)="openRegister()" i18n>Register?</ui-button>
   </div>
 
-  <div class="grid grid-cols-3 gap-2 social-login mt-4">
-    <ui-button class="facebook w-full"><img class="w-8 h-8" src="assets/facebook.png" /></ui-button>
-    <ui-button class="google w-full"><img class="w-8 h-8" src="assets/google.png" /></ui-button>
-    <ui-button kind="secondary" class="apple w-full"><img class="w-8 h-8" src="assets/apple.png" /></ui-button>
+  <div class="grid grid-cols-2 gap-2 social-login mt-4">
+    <ui-button class="facebook w-full" (click)="loginWithFacebook()"
+      ><img class="w-8 h-8" src="assets/facebook.png"
+    /></ui-button>
+    <ui-button class="google w-full" (click)="loginWithGoogle()"
+      ><img class="w-8 h-8" src="assets/google.png"
+    /></ui-button>
   </div>
 
   <div class="relative py-4">
