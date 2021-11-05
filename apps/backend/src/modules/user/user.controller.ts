@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@backend/common/error';
 import {
   Address,
+  AppCache,
   BLOB_PROVIDER,
   EventBus,
   EVENT_BUS_PROVIDER,
@@ -48,7 +49,7 @@ export class UserController extends ModuleController {
     @Inject(POSTGRES_PROVIDER) private pg: Connection,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
-    @Inject(REDIS_PROVIDER) private redis: RedisClient,
+    @Inject(REDIS_PROVIDER) private redis: AppCache,
     @Inject(BLOB_PROVIDER) private blobs: Blobs
   ) {
     super();
@@ -56,7 +57,7 @@ export class UserController extends ModuleController {
 
   loginUser: IControllerEndpoint<IUser> = {
     validators: { body: Validators.Objects.DtoLogin },
-    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis),
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis.client),
     authorisation: AuthStrat.none,
     controller: async req => {
       const emailAddress = req.body.email_address;
