@@ -101,7 +101,7 @@ const LOGGED_IN_ROUTES: Routes = [
         component: HostPaymentsComponent,
         data: { breadcrumb: $localize`Payments` }
       },
-      { path: 'team', component: HostMembersComponent, data: { breadcrumb: 'Team' } },
+      { path: 'team', component: HostMembersComponent, data: { breadcrumb: $localize`Team` } },
       {
         path: 'performances', component: HostPerformancesComponent, data: { breadcrumb: 'Events' },
         children: [
