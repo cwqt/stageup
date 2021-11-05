@@ -42,7 +42,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     expect(host).not.toBeNull();
@@ -175,7 +175,7 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       await Stories.actions.hosts.updateOnboardingProcessStep(host, HostOnboardingStep.ProofOfBusiness, {
         business_address: {
           city: 'Cardiff',
-          country: 'GB', 
+          country: 'GB',
           postal_code: 'NE62 5DE',
           line1: '32 Marquee Court'
         },

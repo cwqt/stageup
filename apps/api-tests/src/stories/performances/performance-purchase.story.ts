@@ -19,7 +19,7 @@ describe('Logger', () => {
 //     host = await Stories.actions.hosts.createHost({
 //       username: 'somecoolhost',
 //       name: 'Some Cool Host',
-//       email_address: 'host@cass.si',
+//       email_address: 'host+test@stageup.uk',
 //     });
 
 //     perf = await Stories.actions.performances.createPerformance({

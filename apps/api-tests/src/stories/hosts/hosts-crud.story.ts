@@ -1,7 +1,7 @@
 import { IHost } from '@core/interfaces';
 import { Stories } from '../../stories';
-import { createReadStream } from "fs";
-import fd from "form-data";
+import { createReadStream } from 'fs';
+import fd from 'form-data';
 
 describe('As a user-host, I want to be able to do Host CRUD', () => {
   let host: IHost;
@@ -11,7 +11,7 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     // TODO: assert host pulls in relationship of member
@@ -30,6 +30,6 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
     form.append('file', createReadStream(filePath));
 
     const h = await Stories.actions.hosts.changeAvatar(host, form);
-    expect(typeof h.avatar).toEqual("string");
-  })
+    expect(typeof h.avatar).toEqual('string');
+  });
 });
