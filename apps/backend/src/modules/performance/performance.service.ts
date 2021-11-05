@@ -12,7 +12,16 @@ import {
   transact
 } from '@core/api';
 import { timestamp } from '@core/helpers';
-import { DtoCreateTicket, HTTP, ILocale, IRemovalReason, PerformanceStatus, PerformanceType, RemovalType, TicketType } from '@core/interfaces';
+import {
+  DtoCreateTicket,
+  HTTP,
+  ILocale,
+  IRemovalReason,
+  PerformanceStatus,
+  PerformanceType,
+  RemovalType,
+  TicketType
+} from '@core/interfaces';
 import { Inject, Service } from 'typedi';
 import { Connection } from 'typeorm';
 
@@ -24,27 +33,27 @@ export class PerformanceService extends ModuleService {
 
   async createTicket(performanceId: string, body: DtoCreateTicket): Promise<Ticket> {
     const performance = await getCheck(Performance.findOne({ _id: performanceId }, { relations: ['host'] }));
-      // Must first have a Connected Stripe Account to create paid/dono tickets
-      if (!performance.host.stripe_account_id && body.type != TicketType.Free)
-        throw new ErrorHandler(HTTP.Unauthorised, '@@host.requires_stripe_connected');
+    // Must first have a Connected Stripe Account to create paid/dono tickets
+    if (!performance.host.stripe_account_id && body.type != TicketType.Free)
+      throw new ErrorHandler(HTTP.Unauthorised, '@@host.requires_stripe_connected');
 
-      const ticket = await transact(async txc => {
-        const ticket = new Ticket(body);
-        const claim = await ticket.setup(performance, txc);
+    const ticket = await transact(async txc => {
+      const ticket = new Ticket(body);
+      const claim = await ticket.setup(performance, txc);
 
-        // IMPORTANT for now we will assign all signed assets to this claim
-        const group = await AssetGroup.findOne({ owner__id: performanceId }, { relations: ['assets'] });
-        await claim.assign(
-          group.assets.filter(asset => asset.signing_key__id != null),
-          txc
-        );
+      // IMPORTANT for now we will assign all signed assets to this claim
+      const group = await AssetGroup.findOne({ owner__id: performanceId }, { relations: ['assets'] });
+      await claim.assign(
+        group.assets.filter(asset => asset.signing_key__id != null),
+        txc
+      );
 
-        return txc.save(ticket);
-      });
+      return txc.save(ticket);
+    });
 
-      return ticket;
+    return ticket;
   }
- 
+
   async softDeletePerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
     const perf = await getCheck(Performance.findOne({ _id: performanceId }));
     const currentDate = timestamp(new Date());
@@ -80,25 +89,27 @@ export class PerformanceService extends ModuleService {
   }
 
   async cancelPerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
-    const perf = await getCheck(Performance.findOne({ _id: performanceId }));
+    const performance = await getCheck(Performance.findOne({ _id: performanceId }));
     const currentDate = timestamp(new Date());
     const inPremierPeriod: boolean =
-      currentDate >= perf.publicity_period.start && currentDate <= perf.publicity_period.end;
+      currentDate >= performance.publicity_period.start && currentDate <= performance.publicity_period.end;
 
-    //If perf is live as a live show
-    if (perf.status === PerformanceStatus.Live)
+    //If performance is live as a live show
+    if (performance.status === PerformanceStatus.Live)
       throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_cancel_live`);
 
-    //If perf is live in VOD terms (within its publicity period)
-    if (perf.performance_type === PerformanceType.Vod && inPremierPeriod)
+    //If performance is live in VOD terms (within its publicity period)
+    if (performance.performance_type === PerformanceType.Vod && inPremierPeriod)
       throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_cancel_live`);
 
-    if (perf.status === PerformanceStatus.Complete)
+    if (performance.status === PerformanceStatus.Complete)
       throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_cancel_after_occurrence`);
 
-    perf.status = PerformanceStatus.Cancelled;
-    perf.removal_reason = removalReason;
-    await perf.save();
+    performance.status = PerformanceStatus.Cancelled;
+    performance.removal_reason = removalReason;
+    performance.publicity_period.start = null;
+    performance.publicity_period.end = null;
+    await performance.save();
 
     return await this.bus.publish(
       'performance.removed',
@@ -109,6 +120,16 @@ export class PerformanceService extends ModuleService {
       },
       locale
     );
+  }
+
+  async restorePerformance(performanceId: string) {
+    const performance = await getCheck(Performance.findOne({ _id: performanceId }));
+
+    if (performance.status !== PerformanceStatus.Cancelled)
+      throw new ErrorHandler(HTTP.Forbidden, `@@performance.cannot_restore_active_performance`);
+
+    performance.status = PerformanceStatus.PendingSchedule;
+    await performance.save();
   }
 
   async readUserInvoice(performanceId: string, userId: string) {

@@ -61,16 +61,19 @@ export class HostSettingsComponent implements OnInit {
         hmrc_company_number: UiField.Number({
           label: $localize`HMRC Company Number`,
           disabled: true,
-          width: 6,
           validators: [
             { type: 'minlength', value: 8 },
             { type: 'maxlength', value: 8 }
           ]
         }),
+        is_vat_registered: UiField.Checkbox({
+          label: $localize`Are you registered for VAT?`,
+          initial: false
+        }),
         vat_number: UiField.Text({
           label: $localize`VAT Number`,
           hint: $localize`This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789`,
-          width: 6,
+          hide: f => !f.value.is_vat_registered,
           validators: [
             {
               type: 'pattern',
@@ -177,6 +180,7 @@ export class HostSettingsComponent implements OnInit {
               email_address: host.email_address,
               hmrc_company_number: host.business_details?.hmrc_company_number,
               vat_number: host.business_details?.vat_number,
+              is_vat_registered: host.business_details?.vat_number ? true : false,
               business_type: host.business_details.business_type,
               business_address: host.business_details?.business_address,
               social_info: host.social_info
@@ -184,7 +188,6 @@ export class HostSettingsComponent implements OnInit {
           };
         },
         output: async v => {
-          console.log(v);
           const res = await this.hostService.updateHost(this.host._id, {
             name: v.name,
             email_address: v.email_address,

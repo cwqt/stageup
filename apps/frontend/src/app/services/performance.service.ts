@@ -38,8 +38,8 @@ export class PerformanceService {
 
   constructor(private http: HttpClient) {}
 
-  readPerformance(performanceId: string): Promise<DtoPerformance> {
-    return this.http.get<DtoPerformance>(`/api/performances/${performanceId}`).toPromise();
+  readPerformance(performanceId: string, includeDeleted?: boolean): Promise<DtoPerformance> {
+    return this.http.get<DtoPerformance>(`/api/performances/${performanceId}${querize({include_deleted: includeDeleted})}`).toPromise();
   }
 
   readPerfomances(query: IQueryParams): Promise<IEnvelopedData<IPerformanceStub[]>> {
@@ -109,6 +109,10 @@ export class PerformanceService {
 
   cancelPerformance(performanceId: string, data: DtoRemovePerformance) {
     return this.http.put(`/api/performances/${performanceId}/cancel`, data).toPromise();
+  }
+
+  restorePerformance(performanceId: string): Promise<void> {
+    return this.http.put<void>(`/api/performances/${performanceId}/restore`, null).toPromise();
   }
 
   // router.post <ICreateAssetRes|void> ("/performances/:pid/assets", Perfs.createAsset());

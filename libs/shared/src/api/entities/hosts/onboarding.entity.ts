@@ -89,7 +89,7 @@ export class Onboarding extends BaseEntity implements IHostOnboardingProcess {
       state: this.state,
       last_submitted: this.last_submitted,
       last_modified: this.last_modified,
-      last_modified_by: this.last_modified_by.toStub(),
+      last_modified_by: this.last_modified_by?.toStub(),
       last_reviewed: lastReview?.reviewed_at,
       last_reviewed_by: lastReview?.reviewed_by.toStub(),
       created_at: this.created_at,

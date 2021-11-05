@@ -116,20 +116,24 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                   [BusinessType.Individual, { label: $localize`Individual` }],
                   [BusinessType.NonProfit, { label: $localize`Non-profit` }]
                 ]),
-                validators: [{ type: 'required' }],
-                width: 6
+                validators: [{ type: 'required' }]
+              }),
+              is_vat_registered: UiField.Checkbox({
+                label: $localize`Are you registered for VAT?`,
+                initial: false,
+                validators: [{ type: 'required' }]
               }),
               vat_number: UiField.Text({
                 label: $localize`VAT Number`,
                 hint: $localize`This is 9 or 12 numbers, sometimes with ‘GB’ at the start, like 123456789 or GB123456789`,
+                hide: f => !f.value.is_vat_registered,
                 validators: [
                   {
                     type: 'pattern',
                     value: regexes.vat,
                     message: () => $localize`Number must be 9 or 12 digits with or without GB at the start`
                   }
-                ],
-                width: 6
+                ]
               }),
               business_address: UiField.Container({
                 label: $localize`Business Address`,
@@ -174,8 +178,10 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
               })
             },
             resolvers: {
-              output: async v =>
-                this.handleStepCompletion(
+              output: async v => {
+                // Just a frontend form field - we do not need to send this data to the backend
+                delete v.is_vat_registered;
+                return this.handleStepCompletion(
                   {
                     ...v,
                     business_contact_number: parsePhoneNumberFromString(
@@ -183,8 +189,13 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                     ).formatInternational()
                   },
                   HostOnboardingStep.ProofOfBusiness
-                ),
-              input: async () => this.prefetchStepData(HostOnboardingStep.ProofOfBusiness)
+                );
+              },
+              input: async () => {
+                const form = await this.prefetchStepData(HostOnboardingStep.ProofOfBusiness);
+                form.fields.is_vat_registered = form.fields.vat_number ? true : false;
+                return form;
+              }
             }
           },
           this.stepCacheables[HostOnboardingStep.ProofOfBusiness]

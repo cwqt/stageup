@@ -325,7 +325,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostPerformanceMediaComponent,
     HostMarketingComponent,
     HostAudienceListComponent,
-    HostProfileAssetComponent
+    HostProfileAssetComponent,
   ],
   imports: [
     AngularMaterialModule,

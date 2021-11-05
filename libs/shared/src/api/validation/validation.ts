@@ -18,7 +18,7 @@ export const formatError = (error: StructError): IFormErrorField[] => {
 export const validationMiddleware = (validators: { [index in RequestLocation]?: Struct }): RequestHandler => {
   return async (req, res, next) => {
     let errors: IFormErrorField[] = [];
-
+    
     await Promise.allSettled(
       Object.entries(validators).map(async ([key, value]) => {
         try {
