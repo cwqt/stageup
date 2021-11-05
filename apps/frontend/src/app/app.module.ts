@@ -167,6 +167,8 @@ import { PerformanceCancelDialogComponent } from './routes/performance/performan
 import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
+import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
+
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
   declarations: [
@@ -301,6 +303,7 @@ import { HostListPerformancesComponent } from './routes/host/host-performances/l
     HostAudienceListComponent,
     HostProfileAssetComponent,
     HostListPerformancesComponent,
+    BreadcrumbComponent
   ],
   imports: [
     AngularMaterialModule,

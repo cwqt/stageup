@@ -101,7 +101,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
         changes: async () => this.visibilityForm.submit()
       }
     });
-    this.breadcrumbService.set('dashboard/performances/:id', this.performanceData.name);
+    this.breadcrumbService.set('dashboard/performances/:id', this.performanceData.name.length > 15 ? `${this.performanceData.name.substring(0, 15)}...` : this.performanceData.name);
   }
 
   readStreamingKey() {
