@@ -9,6 +9,7 @@
       *ngFor="let item of entity.value.header_items | keyvalue"
       [ref]="entity.key"
       [item]="item.value"
+      [type]="item.key"
       [loading]="entity.value.loading"
     >
     </app-host-analytics-header-item>

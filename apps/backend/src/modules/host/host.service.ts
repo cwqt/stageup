@@ -26,7 +26,7 @@ export class HostService extends ModuleService {
   }
 
   async readAllHostPerformances(hostId: string): Promise<Performance[]> {
-    return await this.ORM.createQueryBuilder(Performance, 'performance')
+    return this.ORM.createQueryBuilder(Performance, 'performance')
       .innerJoin('performance.host', 'host')
       .where('host._id = :id', { id: hostId })
       .getMany();

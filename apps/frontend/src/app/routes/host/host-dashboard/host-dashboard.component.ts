@@ -49,9 +49,8 @@ export class HostDashboardComponent implements OnInit {
         {
           label: $localize`Event`,
           image: p => {
-            let primaryAsset: string;
-            // Check if the performance has assets before calling findAssets
-            if (p.assets) primaryAsset = findAssets(p.assets, AssetType.Image, ['thumbnail', 'primary'])[0]?.location;
+            const primaryAsset =
+              p.assets && findAssets(p.assets, AssetType.Image, ['thumbnail', 'primary'])[0]?.location;
             return p.thumbnail || primaryAsset || '/assets/performance-placeholder.jpeg';
           },
           accessor: p => p.name

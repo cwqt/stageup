@@ -47,13 +47,10 @@ export class HostMembersComponent implements OnInit {
         {
           click: uhi => this.openMemberPermissionsDialog(uhi),
           icon: 'edit',
-          hidden: uhi => {
-            return (
-              uhi.permissions == 'host_owner' || uhi.permissions == 'host_pending' || uhi.permissions == 'host_expired'
-            );
-          }
+          hidden: uhi => ['host_owner', 'host_pending', 'host_expired'].includes(uhi.permissions)
         },
         {
+          // TODO: add handler
           click: uhi => console.log(uhi),
           icon: 'delete',
           kind: ThemeKind.Danger

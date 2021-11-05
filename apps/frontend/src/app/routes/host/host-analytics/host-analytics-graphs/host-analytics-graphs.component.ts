@@ -117,7 +117,7 @@ export class HostAnalyticsGraphsComponent implements OnInit {
         data: { labels: [], datasets: [{ data: [], ...chartData }] },
         options: chartOptions
       },
-      aggregation: ''
+      aggregation: 0
     };
   }
 
@@ -158,13 +158,7 @@ export class HostAnalyticsGraphsComponent implements OnInit {
       );
 
       // Pretty format the aggregate value for the header item using the analytics formatters
-      this.snapshot.host.header_items[property].aggregation = Analytics.entities.host.formatters[property](
-        latest[property],
-        {
-          locale: this.locale,
-          currency: CurrencyCode.GBP
-        }
-      );
+      this.snapshot.host.header_items[property].aggregation = latest[property];
       // Populate charts with data for this property
       dto.chunks.forEach(chunk => {
         this.snapshot.host.header_items[property].graph.data.datasets[0].data.push(chunk.metrics[property]);
@@ -226,13 +220,16 @@ export class HostAnalyticsGraphsComponent implements OnInit {
         this.snapshot.performances.header_items[property].graph.data.datasets[0]
       );
 
+      console.log('latest[property]', latest[property]);
+      console.log('property', property);
       // Pretty format the aggregate value for the header item using the analytics formatters
-      this.snapshot.performances.header_items[property].aggregation = Analytics.entities.performance.formatters[
-        property
-      ](latest[property], {
-        locale: this.locale,
-        currency: CurrencyCode.GBP
-      });
+      // this.snapshot.performances.header_items[property].aggregation = Analytics.entities.performance.formatters[
+      //   property
+      // ](latest[property], {
+      //   locale: this.locale,
+      //   currency: CurrencyCode.GBP
+      // });
+      this.snapshot.performances.header_items[property].aggregation = latest[property];
 
       // Populate this properties' graph with data across all chunks from all performances
       allPerformanceChunks.forEach(chunk => {
