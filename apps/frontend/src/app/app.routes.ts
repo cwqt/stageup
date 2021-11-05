@@ -120,8 +120,8 @@ const LOGGED_IN_ROUTES: Routes = [
           },
         ],
       },
-      { path: 'analytics', component: HostAnalyticsComponent, data: { breadcrumb: 'Analytics' } },
-      { path: 'marketing', component: HostMarketingComponent, data: { breadcrumb: 'Marketing' }, },
+      { path: 'analytics', component: HostAnalyticsComponent, data: { breadcrumb: $localize`Analytics` } },
+      { path: 'marketing', component: HostMarketingComponent, data: { breadcrumb: $localize`Marketing` }, },
       {
         matcher: hostMatcher,
         component: HostProfileComponent,
