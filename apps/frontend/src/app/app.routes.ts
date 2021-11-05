@@ -99,7 +99,7 @@ const LOGGED_IN_ROUTES: Routes = [
       {
         path: 'payments',
         component: HostPaymentsComponent,
-        data: { breadcrumb: 'Payments' }
+        data: { breadcrumb: $localize`Payments` }
       },
       { path: 'team', component: HostMembersComponent, data: { breadcrumb: 'Team' } },
       {
