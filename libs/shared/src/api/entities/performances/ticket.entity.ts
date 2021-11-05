@@ -56,7 +56,7 @@ export class Ticket extends BaseEntity implements ITicket {
     this.is_visible = ticket.is_visible;
     this.is_cancelled = false;
     this.version = 0;
-    this.dono_pegs = ticket.dono_pegs || [];
+    // this.dono_pegs = ticket.dono_pegs || [];
     this.is_quantity_visible = ticket.is_quantity_visible;
   }
 
