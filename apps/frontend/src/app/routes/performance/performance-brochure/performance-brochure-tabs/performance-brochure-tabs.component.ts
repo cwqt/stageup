@@ -2,7 +2,17 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { PaymentMethodComponent } from '@frontend/components/payment-method/payment-method.component';
 import { MatTabGroup } from '@angular/material/tabs';
 import { createICacheable, ICacheable } from '@frontend/app.interfaces';
-import { BASE_AMOUNT_MAP, DonoPeg, DtoPerformance, IMyself, IPaymentIntentClientSecret, ITicketStub, LikeLocation, PurchaseableType } from '@core/interfaces';
+import {
+  BASE_AMOUNT_MAP,
+  DonoPeg,
+  DtoPerformance,
+  IMyself,
+  IPaymentIntentClientSecret,
+  ITicketStub,
+  LikeLocation,
+  PurchaseableType,
+  VATRate
+} from '@core/interfaces';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { getDonoAmount, i18n, timestamp, unix } from '@core/helpers';
 import { PaymentIntent, StripeError } from '@stripe/stripe-js';
@@ -14,14 +24,14 @@ import { MyselfService } from '@frontend/services/myself.service';
 const moment = require('moment');
 
 @Component({
-    selector: 'app-performance-brochure-tabs',
-    templateUrl: './performance-brochure-tabs.component.html',
-    styleUrls: ['./performance-brochure-tabs.component.scss']
+  selector: 'app-performance-brochure-tabs',
+  templateUrl: './performance-brochure-tabs.component.html',
+  styleUrls: ['./performance-brochure-tabs.component.scss']
 })
 export class PerformanceBrochureTabsComponent implements OnInit {
   @ViewChild('tabs') tabs: MatTabGroup;
   @ViewChild('paymentMethod') paymentMethod: PaymentMethodComponent;
-  @Input('performance') performanceCacheable: ICacheable<DtoPerformance>
+  @Input('performance') performanceCacheable: ICacheable<DtoPerformance>;
   @Output() onLike = new EventEmitter();
   @Output() leave = new EventEmitter();
   @Output() onFollowEvent = new EventEmitter();
@@ -55,6 +65,10 @@ export class PerformanceBrochureTabsComponent implements OnInit {
 
   ngOnInit() {
     this.myself = this.myselfService.$myself.getValue()?.user;
+  }
+
+  get vat(): number {
+    return VATRate;
   }
 
   get performance() {
@@ -110,8 +124,8 @@ export class PerformanceBrochureTabsComponent implements OnInit {
   get showHostMarketingForm() {
     if (!this._showHostMarketingForm) {
       this._showHostMarketingForm =
-      this.performanceCacheable.data.__client_data.host_marketing_opt_status === null &&
-      !this.myself.is_hiding_host_marketing_prompts;
+        this.performanceCacheable.data.__client_data.host_marketing_opt_status === null &&
+        !this.myself.is_hiding_host_marketing_prompts;
     }
     return this._showHostMarketingForm;
   }
@@ -119,9 +133,9 @@ export class PerformanceBrochureTabsComponent implements OnInit {
   get showPlatformMarketingForm() {
     if (!this._showPlatformMarketingForm) {
       this._showPlatformMarketingForm =
-      this.performanceCacheable.data.__client_data.platform_marketing_opt_status === null;
+        this.performanceCacheable.data.__client_data.platform_marketing_opt_status === null;
     }
-    return this._showPlatformMarketingForm
+    return this._showPlatformMarketingForm;
   }
 
   prettyDuration(duration: number): string {

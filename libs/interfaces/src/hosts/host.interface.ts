@@ -24,6 +24,7 @@ export interface IHostStub {
   banner?: string;
   stripe_account_id: string;
   assets?: IAssetStub[];
+  is_vat_registered?: boolean;
 }
 
 export interface IHost extends IHostStub {

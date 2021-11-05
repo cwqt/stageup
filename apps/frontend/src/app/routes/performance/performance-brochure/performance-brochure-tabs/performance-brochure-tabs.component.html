@@ -72,7 +72,6 @@
                   i18n
                   (click)="leave.emit()"
                 >
-                  
                   Watch Now
                 </ui-button>
               </div>
@@ -108,14 +107,30 @@
             >
           </div>
 
+          <!-- Show breakdown of cost if the host is VAT registered -->
+          <div *ngIf="performance.host.is_vat_registered && selectedTicket.type == 'paid'" class="text-gray-500">
+            <h3>Order Summary</h3>
+            <div class="grid grid-cols-2 mt-6">
+              <!-- Adjust if in the future users can purchases multiple tickets at a time -->
+              <p i18n>1 x General Admission</p>
+              <p i18n>{{ selectedTicket.amount * (1 - vat) | currencyPipe: selectedTicket.currency }}</p>
+              <p class="mb-0" i18n>VAT</p>
+              <p class="mb-0" i18n>
+                {{ selectedTicket.amount * vat | currencyPipe: selectedTicket.currency }} ({{ vat * 100 }}%)
+              </p>
+              <ui-hr class="col-span-2 py-0"></ui-hr>
+              <p i18n>Total</p>
+              <p i18n>{{ selectedTicket.amount | currencyPipe: selectedTicket.currency }}</p>
+            </div>
+          </div>
+
           <small class="block text-gray-500 my-2 p-2 bg-gray-200" i18n>
             By clicking "Pay", I accept the
             <a class="whitespace-nowrap" [routerLink]="['/documents/terms-and-conditions']" target="_blank"
               >terms and conditions</a
             >
             and have read the
-            <a class="whitespace-nowrap" [routerLink]="['/documents/privacy-policy']" target="_blank"
-              >privacy policy</a
+            <a class="whitespace-nowrap" [routerLink]="['/documents/privacy-policy']" target="_blank">privacy policy</a
             >. I agree that StageUp <b>may share my information</b> with the {{ performance.host.name }}.
           </small>
 
@@ -186,8 +201,8 @@
 
             <p i18n>
               <b>@{{ performance.host.username }}</b> is due to premiere this stream at
-              {{ performance.publicity_period.start | amFromUnix | amDateFormat: 'LLL' }}, you'll be notified by
-              e-mail before it begins.
+              {{ performance.publicity_period.start | amFromUnix | amDateFormat: 'LLL' }}, you'll be notified by e-mail
+              before it begins.
             </p>
             <p i18n>
               Purchase confirmation will arrive at <b>{{ myself.email_address }}</b> shortly.

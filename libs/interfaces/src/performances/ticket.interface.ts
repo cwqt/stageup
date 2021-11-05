@@ -1,6 +1,6 @@
 import { CurrencyCode } from '../common/currency.interface';
 
-export const TICKETS_QTY_UNLIMITED: number = -1
+export const TICKETS_QTY_UNLIMITED: number = -1;
 
 export enum TicketType {
   Paid = 'paid',
@@ -50,6 +50,7 @@ export interface ITicketStub {
   dono_pegs: DonoPeg[];
   is_visible: boolean;
   is_quantity_visible: boolean;
+  is_cancelled: boolean;
 }
 
 export interface ITicket extends ITicketStub {

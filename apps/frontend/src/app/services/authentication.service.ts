@@ -6,7 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggedInGuard } from '../_helpers/logged-in.guard';
 import { MyselfService } from './myself.service';
-import { DtoLogin, IUser } from '@core/interfaces';
+import { DtoLogin, DtoSocialLogin, IUser } from '@core/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -38,17 +38,32 @@ export class AuthenticationService {
       .post<IUser>('/api/users/login', data, { withCredentials: true })
       .pipe(
         tap(user => {
-          // Remove last logged in user stored
-          this.myselfService.store(null);
-          this.myselfService.getMyself().then(() => {
-            this.$loggedIn.next(true);
-            // override set cookie consent, because of legimate interest
-            // https://alacrityfoundationteam31.atlassian.net/browse/SU-465
-            this.myselfService.setCookiesConsent(true);
-          });
+          this.setMyself();
         })
       )
       .toPromise();
+  }
+
+  socialSignIn(data: DtoSocialLogin): Promise<IUser> {
+    return this.http
+      .post<IUser>('/api/users/login/using-social-media', data, { withCredentials: true })
+      .pipe(
+        tap(user => {
+          this.setMyself();
+        })
+      )
+      .toPromise();
+  }
+
+  setMyself(): void {
+    // Remove last logged in user stored
+    this.myselfService.store(null);
+    this.myselfService.getMyself().then(() => {
+      this.$loggedIn.next(true);
+      // override set cookie consent, because of legimate interest
+      // https://alacrityfoundationteam31.atlassian.net/browse/SU-465
+      this.myselfService.setCookiesConsent(true);
+    });
   }
 
   logout() {

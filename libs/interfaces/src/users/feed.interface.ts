@@ -9,4 +9,5 @@ export interface IFeed {
   // promoted: IEnvelopedData<IFeedPerformanceStub[]>
   hosts: IEnvelopedData<IHostStub[]>;
   follows?: IEnvelopedData<IFeedPerformanceStub[]>;
+  trending?: IEnvelopedData<IFeedPerformanceStub[]>;
 }

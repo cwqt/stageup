@@ -21,6 +21,17 @@ import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
 
+// Service ----------------------------------------------------------------------------------------------------------------
+import { AppService } from '@frontend/services/app.service';
+
+// https://www.npmjs.com/package/angularx-social-login
+import {
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  SocialAuthServiceConfig,
+  SocialLoginModule
+} from 'angularx-social-login';
+
 // https://github.com/scttcper/ngx-chartjs
 import { ChartjsModule } from '@ctrl/ngx-chartjs';
 import {
@@ -166,6 +177,22 @@ import { PerformanceCancelDialogComponent } from './routes/performance/performan
 import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 
+// Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
+const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
+  const env = await appService.getEnvironment();
+  const providers = [
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider(env.google_auth_app_id)
+    },
+    {
+      id: FacebookLoginProvider.PROVIDER_ID,
+      provider: new FacebookLoginProvider(env.facebook_auth_app_id)
+    }
+  ];
+  return { autoLogin: true, providers };
+};
+
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
   declarations: [
@@ -298,7 +325,7 @@ import { HostProfileAssetComponent } from './routes/host/host-profile/host-profi
     HostPerformanceMediaComponent,
     HostMarketingComponent,
     HostAudienceListComponent,
-    HostProfileAssetComponent
+    HostProfileAssetComponent,
   ],
   imports: [
     AngularMaterialModule,
@@ -327,9 +354,18 @@ import { HostProfileAssetComponent } from './routes/host/host-profile/host-profi
       colorScheme: ['purple', 'teal', 'gray', 'gray', 'red', 'red', 'red'],
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR
-    })
+    }),
+    SocialLoginModule
   ],
-  providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
+  providers: [
+    CookieService,
+    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+    {
+      provide: 'SocialAuthServiceConfig',
+      useFactory: getSigninProviders,
+      deps: [AppService]
+    }
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

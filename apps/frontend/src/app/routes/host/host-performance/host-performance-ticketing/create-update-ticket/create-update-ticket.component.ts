@@ -13,7 +13,8 @@ import {
   ITicketStub,
   TICKETS_QTY_UNLIMITED,
   TicketType,
-  BASE_AMOUNT_MAP
+  BASE_AMOUNT_MAP,
+  VATRate
 } from '@core/interfaces';
 import { i18n, timeless, timestamp } from '@core/helpers';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
@@ -97,20 +98,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         amount: UiField.Money({
           width: 6,
           label: $localize`Price`,
-          hint: inputValue => {
-            // Strict check not equal to null, since 0% is a valid commission rate
-            const commissionRate =
-              typeof this.host.commission_rate == 'number' ? this.host.commission_rate : CommissionRate.Platform;
-            const lineOne = `Your Revenue: ${i18n.money(
-              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * (1 - commissionRate)),
-              CurrencyCode.GBP
-            )}`;
-            const lineTwo = ` StageUp Commission: ${i18n.money(
-              calculateAmountFromCurrency(CurrencyCode.GBP, inputValue * commissionRate),
-              CurrencyCode.GBP
-            )} (${commissionRate * 100}%)`;
-            return lineOne + '\n' + lineTwo;
-          },
+          hint: inputValue => this.getPriceHint(inputValue),
           currency: CurrencyCode.GBP,
           disabled: false,
           validators: [{ type: 'required' }, { type: 'maxlength', value: BASE_AMOUNT_MAP[CurrencyCode.GBP]*100 }, { type: "custom", value: ({ value }) => value !== 0 }]
@@ -259,5 +247,25 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       //   .filter(peg => v.dono_pegs[peg] == true)
       //   .map(peg => peg as DonoPeg)
     };
+  }
+
+  getPriceHint(value: number): string {
+    // Strict check not equal to null, since 0% is a valid commission rate
+    const commissionRate =
+      typeof this.host.commission_rate == 'number' ? this.host.commission_rate : CommissionRate.Platform;
+    const lineOne = `Your Revenue: ${i18n.money(
+      calculateAmountFromCurrency(CurrencyCode.GBP, value * (1 - commissionRate)),
+      CurrencyCode.GBP
+    )}`;
+    const lineTwo = ` StageUp Commission: ${i18n.money(
+      calculateAmountFromCurrency(CurrencyCode.GBP, value * commissionRate),
+      CurrencyCode.GBP
+    )} (${commissionRate * 100}%)`;
+    const lineThree = ` VAT: ${i18n.money(
+      calculateAmountFromCurrency(CurrencyCode.GBP, value * VATRate),
+      CurrencyCode.GBP
+    )} (${VATRate * 100}%)`;
+
+    return this.host.is_vat_registered ? lineOne + '\n' + lineTwo + '\n' + lineThree : lineOne + '\n' + lineTwo;
   }
 }

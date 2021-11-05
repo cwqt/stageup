@@ -20,6 +20,8 @@ export class FinanceService extends ModuleService {
   }
 
   public async processRefunds(refundData: IProcessRefund, locale: ILocale) {
+    // Typeorm 'In' query throws error if the array is empty. Better to handle this ourselves
+    if (refundData.invoice_ids.length == 0) throw new ErrorHandler(HTTP.BadRequest, '@@refunds.no_invoices_found');
     const invoices = await Invoice.find({
       where: {
         _id: In(refundData.invoice_ids),
