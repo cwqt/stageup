@@ -20,7 +20,7 @@ describe('As a user, I want to be able to paginate result of a search', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'somecoolhost',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     for (let i = 0; i < PAGES; i++) {

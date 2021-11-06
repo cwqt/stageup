@@ -16,7 +16,7 @@ describe('As a user-host, I want to update a performace details', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     perf = await Stories.actions.performances.createPerformance(host, {
@@ -29,7 +29,7 @@ describe('As a user-host, I want to update a performace details', () => {
 
     const updatePerf = await Stories.actions.performances.updatePerformance(perf, {
       name: 'Othello',
-      description: 'For she had eyes and chose me.',
+      description: 'For she had eyes and chose me.'
     });
 
     expect(updatePerf.name).toBe('Othello');

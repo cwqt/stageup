@@ -1,5 +1,15 @@
 import { timestamp } from '@core/helpers';
-import { CurrencyCode, Genre, IHost, IPerformance, ITicket, ITicketStub, IUser, PerformanceType, TicketType } from '@core/interfaces';
+import {
+  CurrencyCode,
+  Genre,
+  IHost,
+  IPerformance,
+  ITicket,
+  ITicketStub,
+  IUser,
+  PerformanceType,
+  TicketType
+} from '@core/interfaces';
 import { UserType } from '../../environment';
 import { Stories } from '../../stories';
 
@@ -18,7 +28,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
     host = await Stories.actions.hosts.createOnboardedHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
   });
 
@@ -55,7 +65,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
   });
 
   // TODO: fix the test below
-  
+
   // it('Should allow a admin to update a ticket', async () => {
   //   await Stories.actions.common.switchActor(UserType.SiteAdmin);
   //   ticket = await Stories.actions.performances.updateTicket(perf, ticket, {

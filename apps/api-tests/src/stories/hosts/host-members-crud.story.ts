@@ -1,11 +1,22 @@
-import { HostPermission, HTTP, IEnvelopedData, IErrorResponse, IHost, IMUXAsset, IMyself, IUser, IUserHostInfo, IUserStub } from '@core/interfaces';
+import {
+  HostPermission,
+  HTTP,
+  IEnvelopedData,
+  IErrorResponse,
+  IHost,
+  IMUXAsset,
+  IMyself,
+  IUser,
+  IUserHostInfo,
+  IUserStub
+} from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 describe('As a user-host, I want to be able to do Member CRUD', () => {
   let host: IHost;
-  let member: IMyself["user"];
+  let member: IMyself['user'];
   let members: IEnvelopedData<IUserHostInfo[]>;
   let createdUser: IUser;
 
@@ -14,7 +25,7 @@ describe('As a user-host, I want to be able to do Member CRUD', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     // Create user, add to host & assert they were added to the DB
