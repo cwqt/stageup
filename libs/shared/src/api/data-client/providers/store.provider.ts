@@ -1,4 +1,4 @@
-import { AppCache, RedisProvider } from './redis.provider';
+import { RedisProvider } from './redis.provider';
 import connectRedis, { RedisStore } from 'connect-redis';
 import session from 'express-session';
 import { Service, Token } from 'typedi';

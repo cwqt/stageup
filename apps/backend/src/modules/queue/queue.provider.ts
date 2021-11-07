@@ -7,9 +7,7 @@ import {
   MUX_PROVIDER,
   PostgresProvider,
   POSTGRES_PROVIDER,
-  Provider,
-  RedisProvider,
-  REDIS_PROVIDER
+  Provider
 } from '@core/api';
 import { to } from '@core/helpers';
 import { JobData, JobType, JobTypes } from '@core/interfaces';

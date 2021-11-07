@@ -15,7 +15,7 @@ import {
   ILocalTunnelProviderConfig,
   IStripeProviderConfig,
   IGCPBlobProviderConfig,
-  REDIS_PROVIDER
+  CACHE_PROVIDER
 } from '@core/api';
 
 type Envify<T> = { [index in keyof T as Uppercase<string & index>]: T[index] } & { [index: string]: any };
@@ -91,7 +91,7 @@ const Env: {
     HOST: process.env.BACKEND_STORE_HOST,
     PORT: 6379,
     TTL: 86400,
-    REDIS_TOKEN: REDIS_PROVIDER
+    REDIS_TOKEN: CACHE_PROVIDER
   },
   EMAIL: {
     API_KEY: process.env.SENDGRID_API_KEY,
@@ -109,7 +109,7 @@ const Env: {
     BUCKET_NAME: process.env.GOOGLE_STORAGE_BUCKET_NAME,
     PUBLIC_URL: process.env.GOOGLE_STORAGE_PUBLIC_URL
   },
-  RATE_LIMIT: parseInt(process.env.RATE_LIMIT),
+  RATE_LIMIT: parseInt(process.env.RATE_LIMIT)
 };
 
 export default Env;

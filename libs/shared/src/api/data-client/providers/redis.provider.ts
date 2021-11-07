@@ -11,6 +11,7 @@ export interface AppCache {
   get: (cacheId: string) => Promise<any>;
   set: (cacheId: string, data: any, expiration: number) => Promise<void>;
   delete: (cacheId: string) => Promise<void>;
+  client: RedisClient;
 }
 
 @Service()

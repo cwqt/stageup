@@ -1,4 +1,4 @@
-import { IControllerEndpoint, Middleware, RedisProvider, REDIS_PROVIDER, User, Validators } from '@core/api';
+import { AppCache, IControllerEndpoint, Middleware, CACHE_PROVIDER, User, Validators } from '@core/api';
 import { object, string } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { ModuleController } from '@core/api';
@@ -6,11 +6,10 @@ import { ModuleController } from '@core/api';
 import AuthStrat from '../../common/authorisation';
 import Env from '../../env';
 import { AuthService } from './auth.service';
-import { RedisClient } from 'redis';
 
 @Service()
 export class AuthController extends ModuleController {
-  constructor(private authService: AuthService, @Inject(REDIS_PROVIDER) private redis: RedisClient) {
+  constructor(private authService: AuthService, @Inject(CACHE_PROVIDER) private cache: AppCache) {
     super();
   }
 
@@ -21,7 +20,7 @@ export class AuthController extends ModuleController {
         hash: string()
       })
     },
-    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis),
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.cache.client),
     authorisation: AuthStrat.none,
     controller: async req => {
       const isVerified = this.authService.verifyUserEmailAddress(req.query.email as string, req.query.hash as string);

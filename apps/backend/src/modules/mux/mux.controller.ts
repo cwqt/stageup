@@ -5,9 +5,7 @@ import {
   Logger,
   LOGGING_PROVIDER,
   MuxProvider,
-  MUX_PROVIDER,
-  RedisProvider,
-  REDIS_PROVIDER
+  MUX_PROVIDER
 } from '@core/api';
 import { IMUXHookResponse, LiveStreamState, VideoAssetState } from '@core/interfaces';
 import { Webhooks } from '@mux/mux-node';

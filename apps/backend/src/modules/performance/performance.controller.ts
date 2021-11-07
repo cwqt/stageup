@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@backend/common/error';
 import {
   AccessToken,
+  AppCache,
   Asset,
   AssetGroup,
   AssetView,
@@ -24,7 +25,7 @@ import {
   POSTGRES_PROVIDER,
   Provider,
   Rating,
-  REDIS_PROVIDER,
+  CACHE_PROVIDER,
   SignableAssetType,
   SigningKey,
   STRIPE_PROVIDER,
@@ -88,7 +89,7 @@ export class PerformanceController extends ModuleController {
     @Inject(MUX_PROVIDER) private mux: Mux,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
-    @Inject(REDIS_PROVIDER) private redis: RedisClient,
+    @Inject(CACHE_PROVIDER) private cache: AppCache,
     @Inject(BLOB_PROVIDER) private blobs: Blobs,
     private gdprService: GdprService,
     private performanceService: PerformanceService,
@@ -929,7 +930,7 @@ export class PerformanceController extends ModuleController {
 
   registerView: IControllerEndpoint<void> = {
     authorisation: AuthStrat.none,
-    middleware: Middleware.rateLimit(60, Env.RATE_LIMIT, this.redis),
+    middleware: Middleware.rateLimit(60, Env.RATE_LIMIT, this.cache.client),
     controller: async req => {
       const { pid: performanceId, aid: assetId } = req.params;
       const performance = await getCheck(Performance.findOne({ _id: performanceId }));

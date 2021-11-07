@@ -13,7 +13,7 @@ import {
   POSTGRES_PROVIDER,
   Provider,
   RedisProvider,
-  REDIS_PROVIDER,
+  CACHE_PROVIDER,
   RxmqEventBus,
   SSEHubManagerProvider,
   SSE_HUB_PROVIDER,
@@ -68,7 +68,7 @@ export const instantiateProviders = () => {
       )
     ],
     [
-      REDIS_PROVIDER,
+      CACHE_PROVIDER,
       new RedisProvider({
         host: Env.REDIS.HOST,
         port: Env.REDIS.PORT
@@ -80,7 +80,7 @@ export const instantiateProviders = () => {
         host: Env.STORE.HOST,
         port: Env.STORE.PORT,
         ttl: Env.STORE.TTL,
-        redis_token: REDIS_PROVIDER
+        redis_token: CACHE_PROVIDER
       })
     ],
     [

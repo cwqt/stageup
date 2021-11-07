@@ -16,8 +16,7 @@ import {
   Performance,
   PostgresProvider,
   POSTGRES_PROVIDER,
-  REDIS_PROVIDER,
-  RedisProvider,
+  CACHE_PROVIDER,
   Refund,
   StripeProvider,
   STRIPE_PROVIDER,
@@ -71,7 +70,7 @@ export class MyselfController extends ModuleController {
     @Inject(POSTGRES_PROVIDER) private ORM: Connection,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
-    @Inject(REDIS_PROVIDER) private redis: AppCache
+    @Inject(CACHE_PROVIDER) private cache: AppCache
   ) {
     super();
   }
@@ -187,7 +186,7 @@ export class MyselfController extends ModuleController {
 
       if (fetchAll || req.query['trending']) {
         // Attempt to fetch from cache
-        let trending = await this.redis.get('trending_performances');
+        let trending = await this.cache.get('trending_performances');
 
         if (!trending) {
           // If cache miss, get the 20 most bought performances and store in cache for a week
@@ -204,7 +203,7 @@ export class MyselfController extends ModuleController {
             .orderBy('count', 'DESC')
             .limit(20) // Trending to only show the top 20 of the week
             .getMany();
-          await this.redis.set('trending_performances', trending, 604800);
+          await this.cache.set('trending_performances', trending, 604800);
         }
         if (trending.length > 0) {
           // Paginate the data to send back to the client

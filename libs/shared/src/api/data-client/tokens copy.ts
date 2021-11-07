@@ -1,3 +1,4 @@
+import { AppCache } from './providers/redis.provider';
 import Mux from '@mux/mux-node';
 import { RedisStore } from 'connect-redis';
 import { Tunnel } from 'localtunnel';
@@ -18,7 +19,7 @@ export const HTTP_TUNNEL_PROVIDER = new Token<Tunnel>('HTTP_TUNNEL_PROVIDER');
 export const LOGGING_PROVIDER = new Token<Logger>('LOGGING_PROVIDER');
 export const MUX_PROVIDER = new Token<Mux>('MUX_PROVIDER');
 export const POSTGRES_PROVIDER = new Token<Connection>('POSTGRES_PROVIDER');
-export const REDIS_PROVIDER = new Token<RedisClient>('REDIS_PROVIDER');
+export const CACHE_PROVIDER = new Token<AppCache>('CACHE_PROVIDER');
 export const SSE_HUB_PROVIDER = new Token<SSE>('SSE_HUB_PROVIDER');
 export const STORE_PROVIDER = new Token<RedisStore>('STORE_PROVIDER');
 export const STRIPE_PROVIDER = new Token<Stripe>('STRIPE_PROVIDER');
