@@ -5,7 +5,7 @@
     <div *ngIf="eventData?.length == 0" class="clear-both my-6 relative">
       <img [src]="'/assets/welcome-banner.svg'" class="w-full h-72 rounded" alt="" />
       <div class="flex flex-col items-center justify-center absolute inset-0">
-        <h2>Let's build your first event on <span class="host-name">StageUp</span></h2>
+        <h3 class="opacity-100">Let's build your first event on <span class="host-name">StageUp</span></h3>
         <ui-button (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>Create Event</ui-button>
       </div>
     </div>

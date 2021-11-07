@@ -37,7 +37,7 @@ export class HostAnalyticsHeaderItemComponent implements OnInit {
 
   // There is no data yet for this host, if the aggregation and the difference are both equal to 0.
   get noDataYet(): boolean {
-    return !this.item.difference && this.item.aggregation == 0;
+    return !this.item.difference && !this.item.aggregation;
   }
 
   get differenceIsFinite(): boolean {
@@ -45,7 +45,11 @@ export class HostAnalyticsHeaderItemComponent implements OnInit {
   }
 
   get formattedAggregation(): string {
-    return Analytics.entities.performance.formatters[this.type](this.item.aggregation, {
+    const formatter =
+      this.ref == 'performances'
+        ? Analytics.entities.performance.formatters[this.type]
+        : Analytics.entities.host.formatters[this.type];
+    return formatter(this.item.aggregation, {
       locale: this.locale,
       currency: CurrencyCode.GBP
     });

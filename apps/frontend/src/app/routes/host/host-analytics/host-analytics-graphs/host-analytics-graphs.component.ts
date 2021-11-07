@@ -219,16 +219,6 @@ export class HostAnalyticsGraphsComponent implements OnInit {
         this.snapshot.performances.header_items[property].difference,
         this.snapshot.performances.header_items[property].graph.data.datasets[0]
       );
-
-      console.log('latest[property]', latest[property]);
-      console.log('property', property);
-      // Pretty format the aggregate value for the header item using the analytics formatters
-      // this.snapshot.performances.header_items[property].aggregation = Analytics.entities.performance.formatters[
-      //   property
-      // ](latest[property], {
-      //   locale: this.locale,
-      //   currency: CurrencyCode.GBP
-      // });
       this.snapshot.performances.header_items[property].aggregation = latest[property];
 
       // Populate this properties' graph with data across all chunks from all performances

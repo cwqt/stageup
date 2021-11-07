@@ -2,7 +2,7 @@
   <ui-form [form]="periodForm"></ui-form>
 </div>
 
-<div class="flex space-x-4 w-full overflow-x-scroll">
+<div class="grid grid-cols-4 gap-2 w-full overflow-x-scroll">
   <ng-container *ngFor="let entity of snapshot | keyvalue">
     <app-host-analytics-header-item
       class="m-1"
