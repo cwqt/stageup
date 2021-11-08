@@ -40,7 +40,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column({ nullable: true }) premiere_datetime?: number;
   @Column('enum', { enum: PerformanceType, nullable: true }) performance_type: PerformanceType;
   @Column({ unsigned: true, default: 0 }) rating_count: number;
-  @Column('float', {default: 0}) rating_total: number;
+  @Column('float', {default: 0 }) rating_total: number;
   @Column('jsonb', { nullable: true }) description?: RichText;
   @Column('varchar', { nullable: true }) thumbnail: string;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
