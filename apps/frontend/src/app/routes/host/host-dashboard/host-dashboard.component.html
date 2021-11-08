@@ -23,7 +23,7 @@
             <ui-button (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>Create Event</ui-button>
           </div>
 
-          <ui-table [table]="eventTable"></ui-table>
+          <ui-table class="min-table-height" [table]="eventTable"></ui-table>
           <p class="my-12 text-center" *ngIf="eventData?.length == 0" i18n>Your scheduled events will appear here</p>
           <div class="absolute bottom-8 left-4">
             <a [routerLink]="['/dashboard/performances']" i18n>Go to events page</a>
@@ -38,8 +38,7 @@
           <div class="flex justify-end">
             <ui-button (click)="openAddMemberDialog()" kind="primary" icon="add" i18n>Add Member</ui-button>
           </div>
-
-          <ui-table [table]="memberTable"></ui-table>
+          <ui-table class="min-table-height" [table]="memberTable"></ui-table>
           <div class="absolute bottom-8 left-4">
             <a [routerLink]="['/dashboard/team']" i18n>Go to team page</a>
           </div>

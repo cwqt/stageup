@@ -3,3 +3,15 @@
 .host-name {
   color: $clr-primary;
 }
+
+// CSS to be passed down to the ui-table components
+
+// Height of a 3 row table. Ensures paginator is displayed at bottom of container regardless of the number of rows
+.min-table-height ::ng-deep .ui-table {
+  min-height: 255px;
+}
+
+// Set the second column width to be the same as the button
+::ng-deep .mat-column-1 {
+  width: 160px !important;
+}

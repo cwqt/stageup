@@ -58,11 +58,18 @@ export class HostDashboardComponent implements OnInit {
         {
           label: $localize`Schedule`,
           accessor: p => {
-            return `${i18n.date(unix(p.publicity_period.start), this.locale, 'short', 'short')} - ${i18n.date(
+            const options = {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              hour12: false
+            } as any; // Typescript Intl.DateTimeFormat missing certain properties. See https://github.com/microsoft/TypeScript/issues/35865 and https://github.com/microsoft/TypeScript/issues/38266
+            return `${i18n.date(unix(p.publicity_period.start), this.locale, options)} - ${i18n.date(
               unix(p.publicity_period.end),
               this.locale,
-              'short',
-              'short'
+              options
             )}`;
           }
         }
