@@ -2,70 +2,9 @@
   <div body>
     <mat-spinner *ngIf="performance.loading"></mat-spinner>
     <ng-container *ngIf="performance.data">
-      <h1 class="float-left" i18n>Event Details</h1>
-      <div class="flex align-middle">
-        <h1 class="flex-1 mb-0">{{ performanceData.name }}</h1>
-        <div class="ml-auto my-auto flex items-center">
-          <ui-button (click)="gotoPerformance()" kind="secondary" class="mr-2" icon="launch" i18n>Preview</ui-button>
-
-          <div
-            class="flex items-center cursor-pointer z-40"
-            [popper]="managePerformanceDropdown"
-            [popperShowOnStart]="false"
-            [popperHideOnClickOutside]="true"
-            [popperHideOnScroll]="true"
-            [popperApplyClass]="'user-dropdown-menu'"
-            popperTrigger="click"
-            popperPlacement="bottom"
-          >
-            <ui-icon size="l">overflow-menu--vertical</ui-icon>
-          </div>
-
-          <!--
-            Need to revisit this at some point, see provisionPerformanceAccessTokens in
-            host.controller.ts & SU-883
-            https://alacrityfoundationteam31.atlassian.net/browse/SU-883
-          <ui-button (click)="openSharePerformanceDialog()" kind="primary">
-            <ui-icon>share</ui-icon>
-          </ui-button>
-          -->
-        </div>
-      </div>
-      <ui-hr></ui-hr>
-
       <div class="bg-white p-4 rounded shadow-sm">
         <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
       </div>
     </ng-container>
   </div>
 </app-page>
-
-<popper-content #managePerformanceDropdown class="flex flex-col">
-  <div class="flex flex-col">
-    <ng-container *ngIf="!isPerformanceCancelled; else showRestoreButton">
-      <ui-button
-        class="border-0"
-        i18n-matTooltip
-        matTooltip="Cannot delete a live performance"
-        [matTooltipDisabled]="!isPerformanceLive"
-        [disabled]="isPerformanceLive"
-        (click)="deletePerformance()"
-        i18n
-        >Delete Performance</ui-button
-      >
-      <ui-button
-        class="border-0"
-        i18n-matTooltip
-        matTooltip="Cannot cancel a live performance"
-        [matTooltipDisabled]="!isPerformanceLive"
-        [disabled]="isPerformanceLive"
-        (click)="cancelPerformance()"
-        i18n
-        >Cancel Performance</ui-button
-      >
-    </ng-container>
-    <ng-template #showRestoreButton>
-      <ui-button class="border-0" (click)="restorePerformance()" i18n>Restore Performance</ui-button>
-    </ng-template>
-  </div>
-</popper-content>
