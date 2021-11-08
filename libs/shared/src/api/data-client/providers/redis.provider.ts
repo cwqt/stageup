@@ -11,8 +11,10 @@ export interface AppCache {
   get: (cacheId: string) => Promise<any>;
   set: (cacheId: string, data: any, expiration: number) => Promise<void>;
   delete: (cacheId: string) => Promise<void>;
+  client: RedisClient;
 }
 
+// TODO: Refactor this so that it can be reusable regardless of which library is used for the cache (i.e. interface should have no knowledge of redis)
 @Service()
 export class RedisProvider implements Provider<AppCache> {
   name = 'Redis';

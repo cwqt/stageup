@@ -2,6 +2,7 @@ import { UserService } from './user.service';
 import { ErrorHandler } from '@backend/common/error';
 import {
   Address,
+  AppCache,
   BLOB_PROVIDER,
   ContactInfo,
   EventBus,
@@ -52,7 +53,7 @@ export class UserController extends ModuleController {
     @Inject(POSTGRES_PROVIDER) private pg: Connection,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
-    @Inject(REDIS_PROVIDER) private redis: RedisClient,
+    @Inject(REDIS_PROVIDER) private redis: AppCache,
     @Inject(BLOB_PROVIDER) private blobs: Blobs,
     private userService: UserService
   ) {
@@ -61,7 +62,7 @@ export class UserController extends ModuleController {
 
   loginUser: IControllerEndpoint<IUser> = {
     validators: { body: Validators.Objects.DtoLogin },
-    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis),
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis.client),
     authorisation: AuthStrat.none,
     controller: async req => {
       const emailAddress = req.body.email_address;
@@ -92,7 +93,7 @@ export class UserController extends ModuleController {
 
   socialSignInUser: IControllerEndpoint<IUser> = {
     validators: { body: partial(Validators.Objects.DtoSocialLogin) },
-    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis),
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis.client),
     authorisation: AuthStrat.none,
     controller: async req => {
       // Check user exists
@@ -106,13 +107,17 @@ export class UserController extends ModuleController {
           first_name: req.body.firstName,
           last_name: req.body.lastName,
           title: null
-        }
+        };
 
-        user = await this.userService.createUser({
-          username: username,
-          email_address: req.body.email,
-          password: null
-        }, req.body.provider, personalDetails)
+        user = await this.userService.createUser(
+          {
+            username: username,
+            email_address: req.body.email,
+            password: null
+          },
+          req.body.provider,
+          personalDetails
+        );
 
         // Add name to the database (if available from the social media platform)
         if (req.body.name) {
@@ -152,7 +157,6 @@ export class UserController extends ModuleController {
     validators: { body: Validators.Objects.DtoCreateUser },
     authorisation: AuthStrat.none,
     controller: async req => {
-
       const user = await this.userService.createUser(req.body, 'EMAIL');
 
       this.bus.publish(

@@ -1,4 +1,5 @@
 import {
+  AppCache,
   EventBus,
   EVENT_BUS_PROVIDER,
   getCheck,
@@ -27,7 +28,7 @@ export class MuxService extends ModuleService {
     @Inject(LOGGING_PROVIDER) private log: Logger,
     @Inject(MUX_PROVIDER) private mux: Mux,
     @Inject(POSTGRES_PROVIDER) private pg: Connection,
-    @Inject(REDIS_PROVIDER) private redis: RedisClient
+    @Inject(REDIS_PROVIDER) private redis: AppCache
   ) {
     super();
   }
@@ -36,7 +37,7 @@ export class MuxService extends ModuleService {
     return new Promise((resolve, reject) => {
       const hookId = `mux:${MD5(data.data)}`;
 
-      this.redis
+      this.redis.client
         .multi() // Atomicity
         .hmset(hookId, {
           hookId: data.id,
@@ -53,7 +54,7 @@ export class MuxService extends ModuleService {
 
   async checkPreviouslyHandledHook(data: IMUXHookResponse): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      this.redis.hmget(`mux:${MD5(data.data)}`, 'hookId', (error, reply) => {
+      this.redis.client.hmget(`mux:${MD5(data.data)}`, 'hookId', (error, reply) => {
         if (error) return reject(error);
         if (reply[0]) return resolve(true);
         return resolve(false);
