@@ -1,11 +1,13 @@
 <app-page>
   <div body>
-    <h1 class="float-left">Welcome, <span class="host-name">Rubicon Dance</span></h1>
+    <h1 class="float-left" i18n>
+      Welcome, <span class="host-name">{{ host.name }}</span>
+    </h1>
     <!-- ---------------- Build event section ---------------- -->
     <div *ngIf="eventData?.length == 0" class="clear-both my-6 relative">
       <img [src]="'/assets/welcome-banner.svg'" class="w-full h-72 rounded" alt="" />
       <div class="flex flex-col items-center justify-center absolute inset-0">
-        <h3 class="opacity-100">Let's build your first event on <span class="host-name">StageUp</span></h3>
+        <h3 class="opacity-100" i18n>Let's build your first event on <span class="host-name">StageUp</span></h3>
         <ui-button (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>Create Event</ui-button>
       </div>
     </div>
@@ -22,7 +24,7 @@
           </div>
 
           <ui-table [table]="eventTable"></ui-table>
-          <p class="my-12 text-center" *ngIf="eventData?.length == 0">Your scheduled events will appear here</p>
+          <p class="my-12 text-center" *ngIf="eventData?.length == 0" i18n>Your scheduled events will appear here</p>
           <div class="absolute bottom-8 left-4">
             <a [routerLink]="['/dashboard/performances']" i18n>Go to events page</a>
           </div>
