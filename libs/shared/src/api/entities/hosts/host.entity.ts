@@ -45,7 +45,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column() created_at: number;
   @Column() name: string;
   @Column() username: string;
-  @Column({ unsigned: true }) like_count: number;
+  @Column({ unsigned: true, default: 0 }) like_count: number;
   @Column({ nullable: true }) bio?: string;
   @Column({ nullable: true }) avatar: string;
   @Column({ nullable: true }) banner: string;
