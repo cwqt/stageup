@@ -36,10 +36,10 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column() created_at: number;
   @Column() name: string;
   @Column() views: number;
-  @Column({ unsigned: true }) like_count: number;
+  @Column({ unsigned: true, default: 0 }) like_count: number;
   @Column({ nullable: true }) premiere_datetime?: number;
   @Column('enum', { enum: PerformanceType, nullable: true }) performance_type: PerformanceType;
-  @Column({ unsigned: true }) rating_count: number;
+  @Column({ unsigned: true, default: 0 }) rating_count: number;
   @Column('float') rating_total: number;
   @Column('jsonb', { nullable: true }) description?: RichText;
   @Column('varchar', { nullable: true }) thumbnail: string;
