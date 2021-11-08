@@ -63,7 +63,7 @@ export class HostPerformancesComponent implements OnInit {
           label: $localize`Status`,
           accessor: p => statusPipe.transform(p.status),
           chip_selector: p => {
-            const colours: { [index in PerformanceStatus]: ChipComponent['kind'] } = {
+            const colors: { [index in PerformanceStatus]: ChipComponent['kind'] } = {
               [PerformanceStatus.Complete]: 'purple',
               [PerformanceStatus.Cancelled]: 'magenta',
               [PerformanceStatus.Deleted]: 'gray',
@@ -72,7 +72,7 @@ export class HostPerformancesComponent implements OnInit {
               [PerformanceStatus.Scheduled]: 'green'
             };
 
-            return colours[p.status];
+            return colors[p.status];
           }
         }
       ],
