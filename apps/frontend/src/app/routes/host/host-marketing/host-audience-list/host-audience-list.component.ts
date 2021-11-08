@@ -79,7 +79,6 @@ export class HostAudienceListComponent implements OnInit {
             type: FilterCode.String,
             field: 'opt_status'
           },
-          is_chip: true,
           chip_selector: v => {
             switch (v.opt_status) {
               case 'hard-out':
