@@ -29,7 +29,7 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
 
   it('Should read host details', async () => {
     const hostPrivateDetails = await Stories.actions.hosts.readHostDetails(host);
-    expect(hostPrivateDetails.email_address).toEqual('host@cass.si');
+    expect(hostPrivateDetails.email_address).toEqual('host+test@stageup.uk');
   });
 
   it('Should upload a host banner to Google cloud and check for a returned object URL', async () => {

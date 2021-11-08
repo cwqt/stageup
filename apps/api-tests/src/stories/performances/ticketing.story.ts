@@ -58,7 +58,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
       end_datetime: timestamp() + 1000,
       is_visible: true,
       is_quantity_visible: true,
-      dono_pegs: []
+      // dono_pegs: []
     });
 
     expect(ticket._id).toBeTruthy();
@@ -92,7 +92,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
       start_datetime: timestamp(),
       end_datetime: timestamp() + 1000,
       is_visible: true,
-      dono_pegs: [],
+      // dono_pegs: [],
       is_quantity_visible: true
     });
 
@@ -109,25 +109,25 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
     expect(tickets).toHaveLength(1);
   });
 
-  it('Should create a donation ticket on a performance', async () => {
-    ticket = await Stories.actions.performances.createTicket(perf, {
-      name: 'Test Dono ticket',
-      amount: 10,
-      type: TicketType.Donation,
-      currency: CurrencyCode.GBP,
-      quantity: 100,
-      start_datetime: timestamp(),
-      end_datetime: timestamp() + 1000,
-      is_visible: true,
-      is_quantity_visible: true,
-      dono_pegs: ['lowest', 'medium', 'allow_any']
-    });
+  // it('Should create a donation ticket on a performance', async () => {
+  //   ticket = await Stories.actions.performances.createTicket(perf, {
+  //     name: 'Test Dono ticket',
+  //     amount: 10,
+  //     type: TicketType.Donation,
+  //     currency: CurrencyCode.GBP,
+  //     quantity: 100,
+  //     start_datetime: timestamp(),
+  //     end_datetime: timestamp() + 1000,
+  //     is_visible: true,
+  //     is_quantity_visible: true,
+  //     // dono_pegs: ['lowest', 'medium', 'allow_any']
+  //   });
 
-    expect(ticket.dono_pegs.includes('lowest')).toBeTruthy();
-    expect(ticket.dono_pegs.includes('medium')).toBeTruthy();
-    expect(ticket.dono_pegs.includes('highest')).toBeFalsy();
-    expect(ticket.dono_pegs.includes('allow_any')).toBeTruthy();
-  });
+  //   expect(ticket.dono_pegs.includes('lowest')).toBeTruthy();
+  //   expect(ticket.dono_pegs.includes('medium')).toBeTruthy();
+  //   expect(ticket.dono_pegs.includes('highest')).toBeFalsy();
+  //   expect(ticket.dono_pegs.includes('allow_any')).toBeTruthy();
+  // });
 
   // TODO: the test below had been changed, now you have to upload photos to be able to toggle a performance to be visible
 

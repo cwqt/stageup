@@ -1,8 +1,7 @@
-import { HostPermission, HTTP, IEnvelopedData, IErrorResponse, IHost, IMyself, IUser, IUserHostInfo, IUserStub } from '@core/interfaces';
+import { HostPermission, HTTP, IEnvelopedData, IErrorResponse, IHost, IMyself, IUser, IUserHostInfo,  } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { HostInvitation } from '@core/api';
+import axios, { AxiosError } from 'axios';
 
 describe('As a user-host, I want to be able to do Member CRUD', () => {
   let host: IHost;
