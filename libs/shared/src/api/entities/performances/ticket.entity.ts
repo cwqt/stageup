@@ -36,7 +36,7 @@ export class Ticket extends BaseEntity implements ITicket {
   @Column('enum', { enum: CurrencyCode }) currency: CurrencyCode;
   @Column('enum', { enum: TicketType }) type: TicketType;
   // @Column('enum', { enum: TicketFees }) fees: TicketFees;
-  @Column('varchar', { array: true ,default: []}) dono_pegs: DonoPeg[];
+  @Column('varchar', { array: true, default: []}) dono_pegs: DonoPeg[];
 
   @DeleteDateColumn({ type: 'timestamptz' }) deleted_at?: Date; // soft delete
   @ManyToOne(() => Performance, perf => perf.tickets) performance: Performance;
