@@ -363,17 +363,12 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     }),
     SocialLoginModule
   ],
-  providers: [
-    CookieService,
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
-    {
-      provide: 'SocialAuthServiceConfig',
-      useFactory: getSigninProviders,
-      deps: [AppService]
-    }
-  ],
-  providers: [CookieService, BreadcrumbService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
+  providers: [CookieService, BreadcrumbService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }, {
+    provide: 'SocialAuthServiceConfig',
+    useFactory: getSigninProviders,
+    deps: [AppService]
+  }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule {}
+export class AppModule { }
