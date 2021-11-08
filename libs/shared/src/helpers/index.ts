@@ -4,6 +4,7 @@ import {
   BulkRefundReason,
   CardBrand,
   CurrencyCode,
+  IDateTimeFormatOptions,
   DonoPeg,
   DONO_PEG_WEIGHT_MAPPING,
   Environment,
@@ -233,17 +234,16 @@ export const i18n = {
    * @param options optional object to specify format. Defaults to {timeStyle: 'short', dateStyle: 'full'} if none provided
    * @returns
    */
-  date: (
-    date: Date,
-    locale: ILocale | string,
-    options: Intl.DateTimeFormatOptions = {
-      timeStyle: 'short',
-      dateStyle: 'full'
-    }
-  ): string => {
+  date: (date: Date, locale: ILocale | string, options?: IDateTimeFormatOptions): string => {
+    const formatOptions = options
+      ? options
+      : ({
+          timeStyle: 'short',
+          dateStyle: 'full'
+        } as IDateTimeFormatOptions); // Typescript Intl.DateTimeFormat missing certain properties. See https://github.com/microsoft/TypeScript/issues/35865 and https://github.com/microsoft/TypeScript/issues/38266
     return new Intl.DateTimeFormat(
       typeof locale == 'string' ? locale : `${locale.language}-${locale.region}`,
-      options as any
+      formatOptions
     ).format(date);
   }
 };

@@ -6,7 +6,7 @@ import { IHost, IEnvelopedData, IUserHostInfo } from '@core/interfaces';
 
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { HostService } from '@frontend/services/host.service';
-import { IPerformanceStub, AssetType } from '@core/interfaces';
+import { IDateTimeFormatOptions, IPerformanceStub, AssetType } from '@core/interfaces';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@frontend/services/helper.service';
@@ -65,7 +65,7 @@ export class HostDashboardComponent implements OnInit {
               hour: 'numeric',
               minute: 'numeric',
               hour12: false
-            } as any; // Typescript Intl.DateTimeFormat missing certain properties. See https://github.com/microsoft/TypeScript/issues/35865 and https://github.com/microsoft/TypeScript/issues/38266
+            } as IDateTimeFormatOptions; // Typescript Intl.DateTimeFormat missing certain properties. See https://github.com/microsoft/TypeScript/issues/35865 and https://github.com/microsoft/TypeScript/issues/38266
             return `${i18n.date(unix(p.publicity_period.start), this.locale, options)} - ${i18n.date(
               unix(p.publicity_period.end),
               this.locale,
