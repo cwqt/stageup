@@ -39,7 +39,7 @@ export default {
     const host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     await Stories.actions.hosts.readOnboardingProcessStatus(host);
@@ -60,26 +60,18 @@ export default {
       }
     );
 
-    await Stories.actions.hosts.updateOnboardingProcessStep(
-      host,
-      HostOnboardingStep.OwnerDetails,
-      {
-        title: PersonTitle.Dr,
-        first_name: 'Drake',
-        last_name: 'Drakeford'
-      }
-    );
+    await Stories.actions.hosts.updateOnboardingProcessStep(host, HostOnboardingStep.OwnerDetails, {
+      title: PersonTitle.Dr,
+      first_name: 'Drake',
+      last_name: 'Drakeford'
+    });
 
-    await Stories.actions.hosts.updateOnboardingProcessStep(
-      host,
-      HostOnboardingStep.SocialPresence,
-      {
-        site_url: 'https://linkedin.com/stageupuk',
-        linkedin_url: 'https://linkedin.com/eventi',
-        facebook_url: 'https://facebook.com/eventi',
-        instagram_url: 'https://instagram.com/eventi'
-      }
-    );
+    await Stories.actions.hosts.updateOnboardingProcessStep(host, HostOnboardingStep.SocialPresence, {
+      site_url: 'https://linkedin.com/stageupuk',
+      linkedin_url: 'https://linkedin.com/eventi',
+      facebook_url: 'https://facebook.com/eventi',
+      instagram_url: 'https://instagram.com/eventi'
+    });
 
     await Stories.actions.hosts.submitOnboardingProcess(host);
 
@@ -241,5 +233,5 @@ export default {
   connectStripe: async (host: IHost) => {
     const res = await api.post<string>(`/hosts/${host._id}/stripe/connect`, null, env.getOptions());
     return null;
-  },
+  }
 };

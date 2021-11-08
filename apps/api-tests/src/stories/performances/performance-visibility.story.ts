@@ -1,4 +1,15 @@
-import { ErrCode, HTTP, IHost, IPerformance, IUser, CurrencyCode, Genre, Visibility, IMyself, PerformanceType } from '@core/interfaces';
+import {
+  ErrCode,
+  HTTP,
+  IHost,
+  IPerformance,
+  IUser,
+  CurrencyCode,
+  Genre,
+  Visibility,
+  IMyself,
+  PerformanceType
+} from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 
@@ -18,7 +29,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     perf = await Stories.actions.performances.createPerformance(host, {

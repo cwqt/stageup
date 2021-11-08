@@ -29,4 +29,15 @@ describe('Pull in the feed...', () => {
     expect(feed.upcoming.data[0].name).toBe('Test perf');
     expect(feed.hosts.data[0].name).toBe('host name');
   });
+
+  it('Should update host members preferred landing page', async () => {
+    // by default is true
+    let myself = await Stories.actions.users.getMyself();
+    expect(myself.host_info.prefers_dashboard_landing).toEqual(true);
+
+    // set to false
+    await Stories.actions.users.updatePreferredLandingPage({ prefers_dashboard_landing: false });
+    myself = await Stories.actions.users.getMyself();
+    expect(myself.host_info.prefers_dashboard_landing).toEqual(false);
+  });
 });

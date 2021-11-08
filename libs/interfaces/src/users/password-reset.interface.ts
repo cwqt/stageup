@@ -1,7 +1,9 @@
+import { User } from '@core/api';
+
 export interface IPasswordReset {
   otp: string;
   email_address: string;
-  user__id: string;
+  user: User;
 }
 
 export interface DtoResetPassword {

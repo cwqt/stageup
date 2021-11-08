@@ -33,7 +33,10 @@ export class UserEvents extends ModuleEvents {
 
     this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.user.password_reset_requested__subject', ct.__meta.locale),
-      content: this.i18n.translate('@@email.user.password_reset_requested__content', ct.__meta.locale),
+      content: this.i18n.translate('@@email.user.password_reset_requested__content', ct.__meta.locale, {
+        user_name: user.name,
+        password_reset_url: `${Env.FRONTEND.URL}/users/reset-password?otp=${ct.otp}`
+      }),
       from: Env.EMAIL_ADDRESS,
       to: user.email_address,
       attachments: []

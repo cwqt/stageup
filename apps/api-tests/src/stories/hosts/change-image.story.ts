@@ -1,7 +1,7 @@
 import { IHost } from '@core/interfaces';
 import { Stories } from '../../stories';
-import { createReadStream } from "fs";
-import fd from "form-data";
+import { createReadStream } from 'fs';
+import fd from 'form-data';
 
 describe('As a user-host, I want to be able to update the host profile banner', () => {
   let host: IHost;
@@ -11,8 +11,8 @@ describe('As a user-host, I want to be able to update the host profile banner', 
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
-    });    
+      email_address: 'host+test@stageup.uk'
+    });
   });
 
   it('Should read the host by id & username', async () => {
@@ -26,13 +26,12 @@ describe('As a user-host, I want to be able to update the host profile banner', 
     form.append('file', createReadStream(filePath));
 
     const h = await Stories.actions.hosts.changeBanner(host, form);
-    expect(typeof h.banner).toEqual("string");
-  })
+    expect(typeof h.banner).toEqual('string');
+  });
 
   it('Should delete a host banner', async () => {
     const form = new fd(null);
     const h = await Stories.actions.hosts.changeBanner(host, form);
     expect(typeof h.banner).toBeNull;
-  })
-
+  });
 });

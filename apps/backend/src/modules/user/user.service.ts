@@ -1,4 +1,4 @@
-import { Connection } from 'typeorm';
+import { Connection, EntityManager } from 'typeorm';
 import {
   Address,
   getCheck,
@@ -14,7 +14,9 @@ import {
   UserHostMarketingConsent,
   UserStageUpMarketingConsent,
   Like,
-  Performance
+  Performance,
+  EventBus,
+  EVENT_BUS_PROVIDER
 } from '@core/api';
 import {
   DtoCreateUser,
@@ -23,7 +25,9 @@ import {
   ConsentOpt,
   PlatformConsentOpt,
   ILike,
-  LikeLocation
+  LikeLocation,
+  ILocale,
+  IPersonInfo
 } from '@core/interfaces';
 import jwt from 'jsonwebtoken';
 import { Inject, Service } from 'typedi';
@@ -35,11 +39,15 @@ import Stripe from 'stripe';
 // IMPORTANT when fully implemented remove Partial<>
 @Service()
 export class UserService extends ModuleService {
-  constructor(@Inject(STRIPE_PROVIDER) private stripe: Stripe, @Inject(POSTGRES_PROVIDER) private ORM: Connection) {
+  constructor(
+    @Inject(STRIPE_PROVIDER) private stripe: Stripe,
+    @Inject(POSTGRES_PROVIDER) private ORM: Connection,
+    @Inject(EVENT_BUS_PROVIDER) private bus: EventBus
+  ) {
     super();
   }
 
-  async createUser(data: DtoCreateUser): Promise<User> {
+  async createUser(data: DtoCreateUser, loginMethod: string = 'EMAIL', personalDetails?: IPersonInfo): Promise<User> {
     // Create a Stripe Customer, for purposes of managing cards on our Multi-Party platform
     // https://stripe.com/docs/connect/cloning-saved-payment-methods#storing-customers
     const customer = await this.stripe.customers.create({
@@ -48,38 +56,27 @@ export class UserService extends ModuleService {
 
     // Save the user through a transaction (creates ContactInfo & Person)
     return transact(async txc => {
-      const u = await new User({
+      const user = await new User({
         username: data.username,
         email_address: data.email_address,
         password: data.password,
-        stripe_customer_id: customer.id
-      }).setup(txc);
+        stripe_customer_id: customer.id,
+        provider: loginMethod
+      }).setup(txc, personalDetails);
 
       // First user to be created will be an admin
-      u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) === 0;
+      user.is_admin = (await txc.createQueryBuilder(User, 'user').getCount()) === 0;
 
       // Verify user if in dev/testing
-      u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
+      user.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
 
-      return await txc.save(u);
+      return await txc.save(user);
     });
   }
 
   async readUser(query: Partial<{ email_address: string; _id: string; username: string }>): Promise<User> {
     return User.findOne(query);
   }
-
-  // async updateUser(): Promise<IMyself['user']> {}
-
-  async deleteUser(): Promise<void> {}
-
-  // async readHost(): Promise<{ host: Host; userInfo: UserHostInfo }> {}
-
-  // async changeAvatar(): Promise<string> {}
-
-  async resetPassword(): Promise<void> {}
-
-  // async readAddresses(): Promise<Address[]> {}
 
   async createAddress(userId: string, data: Required<IAddress>): Promise<Address> {
     return transact(async txc => {
@@ -92,31 +89,25 @@ export class UserService extends ModuleService {
     });
   }
 
-  async updateAddress(addressId: string): Promise<Address> {
-    const address = await Address.findOne({ _id: addressId });
-    // TODO: Update method in address model
-    return address;
-  }
-
   async deleteAddress(addressId: string): Promise<void> {
     await Address.delete({ _id: addressId });
   }
 
-  async forgotPassword(): Promise<void> {}
-
-  async createPasswordReset(emailAddress: string): Promise<{ user: User; token: string; reset: PasswordReset }> {
+  async createPasswordReset(emailAddress: string, locale: ILocale): Promise<void> {
     const user = await getCheck(User.findOne({ email_address: emailAddress }));
-    const token = jwt.sign({ email_address: emailAddress }, Env.PRIVATE_KEY, { expiresIn: '24h' });
+      const token = jwt.sign({ email_address: emailAddress }, Env.PRIVATE_KEY, { expiresIn: '24h' });
 
-    const reset = new PasswordReset({
-      otp: token,
-      email_address: emailAddress,
-      user__id: user._id
-    });
+      await transact(async (txc: EntityManager) => {
+        const passwordReset = new PasswordReset({
+          otp: token,
+          email_address: emailAddress,
+          user: user
+        });
 
-    await reset.save();
+        await txc.save(passwordReset);
+      });
 
-    return { user, token, reset };
+      this.bus.publish('user.password_reset_requested', { user_id: user._id, otp: token }, locale);
   }
 
   async setUserHostMarketingOptStatus(userId: string, hostId: string, optStatus: ConsentOpt) {
@@ -215,5 +206,4 @@ export class UserService extends ModuleService {
       });
     }
   }
-  // async readUserFollows(): Promise<IEnvelopedData<IFollowing[]>> {}
 }

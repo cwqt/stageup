@@ -100,6 +100,7 @@ const Users = Container.get(UserController)
 router.post     <IMyself["user"]>           ("/users",                                     Users.createUser);
 router.post     <void>                      ("/users/logout",                              Users.logoutUser);
 router.post     <IUser>                     ("/users/login",                               Users.loginUser);
+router.post     <IUser>                     ("/users/login/using-social-media",            Users.socialSignInUser);
 router.post     <void>                      ("/users/forgot-password",                     Users.forgotPassword);
 router.put      <void>                      ("/users/reset-password",                      Users.resetForgottenPassword);
 router.get      <IUser>                     ("/users/:uid",                                Users.readUser);
@@ -109,7 +110,7 @@ router.get      <IE<IHost, IUHInfo>>        ("/users/:uid/host",                
 router.put      <string>                    ("/users/:uid/avatar",                         Users.changeAvatar);
 router.get      <IAddress[]>                ("/users/:uid/addresses",                      Users.readAddresses);
 router.post     <IAddress>                  ("/users/:uid/addresses",                      Users.createAddress);
-router.put      <IAddress>                  ("/users/:uid/addresses/:aid",                 Users.updateAddress);
+// router.put   <IAddress>                  ("/users/:uid/addresses/:aid",                 Users.updateAddress);
 router.delete   <void>                      ("/users/:uid/addresses/:aid",                 Users.deleteAddress);
 router.get      <IE<IFollowing[]>>          ("/users/:uid/following",                      Users.readUserFollows);
 
@@ -229,14 +230,15 @@ router.put      <void>                      ("/gdpr/:hid/:pid/set-stream-complia
 // UTILS ---------------------------------------------------------------------------------------------------------------
 const Utils = Container.get(UtilityController);
 const Queue = Container.get(JobQueueController);
-router.get      <IDynamicFeEnv>             ("/utils/frontend-environment",               Utils.readFrontendEnvironment)
+router.get      <IDynamicFeEnv>             ("/utils/frontend-environment",               Utils.readFrontendEnvironment);
 router.post     <void>                      ("/utils/logs",                               Utils.logFrontendMessage);
 router.get      <string>                    ("/utils/ping",                               Utils.ping);
 router.get      <any>                       ("/utils/seed",                               Utils.seed);
 router.post     <void>                      ("/utils/drop",                               Utils.dropAllData);
+router.get      <string>                    ("/utils/password-otp/:uid",                   Utils.readForgottenPasswordOTP);
 router.get      <any>                       ("/utils/stats",                              Utils.stats);
 router.get      <void>                      ("/utils/send-test-email",                    Utils.sendTestEmail);
 router.get      <void>                      ("/utils/assets",                             Utils.readAssets);
-router.get      <void>                      ("/utils/assets/:aid/stream-state",           Utils.setPerformanceStreamState)
+router.get      <void>                      ("/utils/assets/:aid/stream-state",           Utils.setPerformanceStreamState);
 router.use                                  ("/utils/queue-ui",                           Queue.jobQueueUi.handler);
 }

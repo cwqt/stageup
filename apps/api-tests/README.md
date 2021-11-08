@@ -29,6 +29,6 @@ RATE LIMIT = 9999
 The backend needs to run in testing mode, which means when one starts the
 application with `npm run start` should choose `backend` and `testing` mode. This will ensure the test database is used.
 
-The tests themselves can be run by starting the application with `npm run start`, then choosing the option `api-tests` and finally continuing in `development` mode (!).
+The tests themselves can be run by starting the application with `npm run start`, then choosing the option `api-tests` and finally continuing in `testing` mode.
 
 Further instructions to be found in the command line tool after it starts running.
