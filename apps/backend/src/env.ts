@@ -83,7 +83,7 @@ const Env: {
     PASSWORD: process.env.POSTGRES_PASSWORD,
     HOST: process.env.POSTGRES_HOST,
     DATABASE: process.env.POSTGRES_DB,
-    PORT: 5400
+    PORT: 5432
   },
   REDIS: {
     HOST: process.env.BACKEND_REDIS_HOST,
