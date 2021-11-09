@@ -118,8 +118,7 @@ router.get      <IE<IFollowing[]>>          ("/users/:uid/following",           
 const Hosts = Container.get(HostController)
 router.post     <IHost>                     ("/hosts",                                     Hosts.createHost);
 router.get      <IE<IHost, IClientHostData>>("/hosts/:hid",                                Hosts.readHost)
-// This deletion uses the post method because Axios doesn't support passing a body for delete requests
-router.post     <IDelHostAssert | void>     ("/hosts/:hid",                                Hosts.deleteHost);
+router.delete   <IDelHostAssert | void>     ("/hosts/:hid",                                Hosts.deleteHost);
 router.put      <IHostPrivate>              ("/hosts/:hid",                                Hosts.updateHost);
 router.get      <IHostPrivate>              ("/hosts/:hid/details",                        Hosts.readDetails);
 router.get      <IE<IPerfS[]>>              ("/hosts/:hid/performances",                   Hosts.readHostPerformances);

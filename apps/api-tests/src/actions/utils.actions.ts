@@ -12,5 +12,17 @@ export default {
   getHostInvitationId: async (invitee: IUser, host: IHost): Promise<string> => {
     const res = await api.get<string>(`/utils/host-invite/${invitee._id}/${host._id}`, env.getOptions());
     return res.data;
+  },
+
+  ignoreECONNREFUSED: async (f: Function) => {
+    try {
+      return await f();
+    } catch(error) {
+      // Expect a redirect error as the front-end is not running during tests
+      // If the error is different, throw the error
+      if (!error.message.includes('connect ECONNREFUSED')) {
+        throw(error);
+      }      
+    }
   }
 }

@@ -1,7 +1,7 @@
 // TODO: update this once the provision logic is in use again
 
-describe('Logger', () => {
-  test.todo('please pass');
+describe.skip('Logger', () => {
+  test.todo('update this once the provision logic is in use again');
 });
 
 // import { CurrencyCode, Genre, IHost, IMyself, IPerformance, IUser } from '@core/interfaces';

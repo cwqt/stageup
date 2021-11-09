@@ -129,7 +129,8 @@ export default {
 
   // router.delete <void>("/hosts/:hid",Hosts.deleteHost());
   deleteHost: async (host: IHost) => {
-    const res = await api.post<void>(`/hosts/${host._id}?assert_only=true`, {can_delete: true}, env.getOptions());
+    const res = await api.delete<void>(
+      `/hosts/${host._id}?assert_only=true&reason[]=not_want_issue_digital_perfs&explanation=abc`, env.getOptions());
     return res.data;
   },
 
@@ -252,15 +253,7 @@ export default {
 
   // router.redirect("/hosts/:hid/invites/:iid", Hosts.handleHostInvite);
   handleHostInvite: async (host: IHost, inviteId: string) => {
-    try {
-      await api.get(`/hosts/${host._id}/invites/${inviteId}`, env.getOptions());
-    } catch(error) {
-      // Expect a redirect error as the front-end is not running during tests
-      // If the error is different, throw the error
-      if (!error.message.includes('connect ECONNREFUSED')) {
-        throw(error);
-      }      
-    }
+    await Stories.actions.utils.ignoreECONNREFUSED(api.get.bind(null, `/hosts/${host._id}/invites/${inviteId}`, env.getOptions()));
   },
 
   // router.get<IHostFeed>("/hosts/:hid/feed", Hosts.readHostFeed);
@@ -280,8 +273,8 @@ export default {
   },
 
   // router.put<void>("/hosts/:hid/commission-rate", Hosts.updateCommissionRate);
-  updateCommissionRate: async (host:IHost, new_rate: number) => {
-    await api.put<void>(`/hosts/${host._id}/commission-rate`, {new_rate: new_rate}, env.getOptions());
+  updateCommissionRate: async (host:IHost, newRate: number) => {
+    await api.put<void>(`/hosts/${host._id}/commission-rate`, {new_rate: newRate}, env.getOptions());
   },
 
   // router.get<IHostStripeInfo>("/hosts/:hid/stripe/info", Hosts.readStripeInfo);
