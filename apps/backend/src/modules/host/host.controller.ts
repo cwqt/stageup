@@ -77,7 +77,8 @@ import {
   Visibility,
   LikeLocation,
   JobType,
-  DtoReadHost
+  DtoReadHost,
+  DtoPerformanceIDAnalytics
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import {
@@ -1048,16 +1049,24 @@ export class HostController extends ModuleController {
         .paginate({ serialiser: o => o.toStub() });
 
       const dtos = await this.hostService.readAnalyticsFromPerformanceArray(
-        performances.data,
+        performances.data.map(performance => performance._id),
         req.query.period as AnalyticsTimePeriod
       );
 
-      return { data: dtos, __paging_data: performances.__paging_data };
+      return {
+        data: dtos.map(dto => {
+          return {
+            ...performances.data.find(performance => performance._id == dto.performanceId),
+            chunks: dto.chunks
+          };
+        }),
+        __paging_data: performances.__paging_data
+      };
     }
   };
 
   // Returns a full query of performance analytics (i.e. all performances in the provided time period)
-  readAllPerformancesAnalytics: IControllerEndpoint<DtoPerformanceAnalytics[]> = {
+  readAllPerformancesAnalytics: IControllerEndpoint<DtoPerformanceIDAnalytics[]> = {
     validators: {
       query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
     },
@@ -1066,7 +1075,7 @@ export class HostController extends ModuleController {
       const hostPerformances = await this.hostService.readAllHostPerformances(req.params.hid);
 
       return await this.hostService.readAnalyticsFromPerformanceArray(
-        hostPerformances.map(performance => performance.toStub()),
+        hostPerformances.map(performance => performance._id),
         req.query.period as AnalyticsTimePeriod
       );
     }

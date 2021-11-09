@@ -59,18 +59,16 @@ export class HostDashboardComponent implements OnInit {
           label: $localize`Schedule`,
           accessor: p => {
             const options = {
+              minute: 'numeric',
+              hour: 'numeric',
               day: 'numeric',
               month: 'short',
               year: 'numeric',
-              hour: 'numeric',
-              minute: 'numeric',
-              hour12: false
+              hourCycle: 'h23'
             } as IDateTimeFormatOptions; // Typescript Intl.DateTimeFormat missing certain properties. See https://github.com/microsoft/TypeScript/issues/35865 and https://github.com/microsoft/TypeScript/issues/38266
-            return `${i18n.date(unix(p.publicity_period.start), this.locale, options)} - ${i18n.date(
-              unix(p.publicity_period.end),
-              this.locale,
-              options
-            )}`;
+            return `${this.prettyDate(
+              i18n.date(unix(p.publicity_period.start), this.locale, options)
+            )} - ${this.prettyDate(i18n.date(unix(p.publicity_period.end), this.locale, options))}`;
           }
         }
       ],
@@ -122,5 +120,13 @@ export class HostDashboardComponent implements OnInit {
     this.helperService.showDialog(this.dialog.open(HostAddMemberComponent), () => {
       this.memberTable.refresh();
     });
+  }
+
+  // Change 'Nov 11, 2021, 16:00' to '11 Nov, 2021, 16:00' . Only to be applied to dates with 'locale == en'
+  prettyDate(dateString: string): string {
+    // :0 one liner (there is probably a better way to do this)
+    return this.locale == 'en'
+      ? [dateString.split(',')[0].split(' ').reverse().join(' '), dateString.split(',').slice(1)].join(',')
+      : dateString;
   }
 }
