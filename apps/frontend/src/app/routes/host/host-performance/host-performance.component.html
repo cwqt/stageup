@@ -2,9 +2,7 @@
   <div body>
     <mat-spinner *ngIf="performance.loading"></mat-spinner>
     <ng-container *ngIf="performance.data">
-      <div class="bg-white p-4 rounded shadow-sm">
-        <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
-      </div>
+      <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
     </ng-container>
   </div>
 </app-page>

@@ -38,31 +38,10 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     component.host = this.host;
   }
 
-  get isPerformanceLive(): boolean {
-    const currentDate = timestamp(new Date());
-    const inPremierPeriod: boolean =
-      currentDate >= this.performance?.data?.data?.publicity_period.start &&
-      currentDate <= this.performance?.data?.data?.publicity_period.end;
-
-    if (this.performance?.data?.data?.performance_type === PerformanceType.Vod && inPremierPeriod) return true;
-    else return this.performance?.data?.data?.status === PerformanceStatus.Live;
-  }
-
-  get performanceData() {
-    return this.performance.data?.data;
-  }
-
-  get isPerformanceCancelled(): boolean {
-    return this.performance?.data?.data?.status === PerformanceStatus.Cancelled;
-  }
-
   constructor(
     private performanceService: PerformanceService,
     private appService: AppService,
-    private route: ActivatedRoute,
-    private helperService: HelperService,
-    private dialog: MatDialog,
-    private router: Router
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
@@ -71,59 +50,6 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
 
     this.performanceService.$activeHostPerformanceId.next(this.performanceId);
     cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
-  }
-
-  openSharePerformanceDialog() {
-    this.helperService.showDialog(
-      this.dialog.open(SharePerformanceDialogComponent, {
-        data: { host: this.host, performance: this.performanceData }
-      }),
-      () => {}
-    );
-  }
-
-  gotoPerformance() {
-    this.appService.navigateTo(`/performances/${this.performanceData._id}`);
-  }
-
-  deletePerformance() {
-    this.dialog.open(PerformanceDeleteDialogComponent, {
-      data: this.performance.data.data
-    });
-  }
-
-  cancelPerformance() {
-    this.dialog.open(PerformanceCancelDialogComponent, {
-      data: this.performance.data.data
-    });
-  }
-
-  async restorePerformance() {
-    // Set performance status and publicity period in DB
-    await this.performanceService.restorePerformance(this.performanceId);
-    // Also set the changes on the front end so we don't have to re-render
-    this.performance.data.data.status = PerformanceStatus.PendingSchedule;
-
-    this.helperService.showConfirmationDialog(this.dialog, {
-      title: $localize`The schedule for this performance has been reset. Please set a new one.`,
-      buttons: [
-        new UiDialogButton({
-          label: $localize`Later`,
-          kind: ThemeKind.Secondary,
-          callback: ref => {
-            ref.close();
-            this.router.navigate(['dashboard/performances']);
-          }
-        }),
-        new UiDialogButton({
-          label: $localize`Ok`,
-          kind: ThemeKind.Primary,
-          callback: ref => {
-            ref.close();
-          }
-        })
-      ]
-    });
   }
 
   ngOnDestroy() {

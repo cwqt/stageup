@@ -1,0 +1,82 @@
+<!-- Float right should move to right of breadcrumb navigation. TODO: check works as expected after breadcrumb story has been merged -->
+<ui-button class="float-right" icon="launch">Preview Event</ui-button>
+<div class="flex items-center my-4 mt-20 clear-both">
+  <h1 class="mb-0" i18n>Event Details</h1>
+  <ui-chip class="chip ml-4" [kind]="'primary'">Recorded</ui-chip>
+</div>
+
+<app-update-performance [cacheable]="performance"></app-update-performance>
+
+<ui-hr></ui-hr>
+
+<div class="flex items-center justify-between">
+  <div class="mr-4">
+    <b i18n>Schedule</b>
+    <p i18n>Update the start and end date for your event.<br /></p>
+  </div>
+  <ui-form class="flex-1" [form]="publicityPeriodForm"></ui-form>
+</div>
+
+<div class="flex items-center justify-between">
+  <div class="mr-4">
+    <b i18n>Visibility</b>
+    <!-- Host needs to be onboarded before going public -->
+    <p *ngIf="!host.is_onboarded" i18n>
+      You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made
+      Public<br />
+    </p>
+    <ng-container *ngIf="host.is_onboarded">
+      <!-- Performance needs a trailer or 2 thumbnails to be made public -->
+      <p *ngIf="!minimumAssetsMet" i18n>
+        A performance needs to have a trailer <b>or</b> a minimum of two images in order to make it public. Head to the
+        <a [routerLink]="'/dashboard/performances/' + performance.data.data._id + '/media'">media</a> section to start
+        uploading now!
+        <br />
+      </p>
+      <ng-container *ngIf="minimumAssetsMet">
+        <!-- VoD performances can only be made public after the video has been processed from mux -->
+        <p *ngIf="vod && !vod.location" i18n>
+          VoD Asset is still processing. Once complete you can set this performance to public.
+          <br />
+        </p>
+        <p *ngIf="performanceMeetsAllPublicityRequirements" i18n>
+          Set whether a performance is visible across the platform
+        </p>
+        <br />
+      </ng-container>
+    </ng-container>
+  </div>
+  <ui-form *ngIf="performanceMeetsAllPublicityRequirements" [form]="visibilityForm"></ui-form>
+</div>
+
+<ng-container *ngIf="stream">
+  <h2 i18n>Stream Key</h2>
+  <ui-hr></ui-hr>
+  <p i18n>Use this key in your streaming application to broadcast your performance.</p>
+
+  <ui-button
+    (click)="readStreamingKey()"
+    *ngIf="!phiData"
+    [loading]="performanceHostInfo.loading"
+    [disabled]="performanceHostInfo.loading"
+    i18n
+  >
+    Show Key
+  </ui-button>
+
+  <div *ngIf="phiData" class="p-4 flex align-middle select-all bg-gray-50 rounded">
+    <pre class="inline h-6 my-auto">{{ phiData.stream_key }}</pre>
+    <ui-button class="ml-auto" (click)="copyStreamKeyToClipboard()">{{ copyMessage }}</ui-button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="vod">
+  <h2>VoD</h2>
+  <ui-hr></ui-hr>
+  <ng-container *ngIf="vod.location; else noLocation">
+    <p i18n>VoD asset is processed and viewable.</p>
+  </ng-container>
+  <ng-template #noLocation>
+    <p i18n>VoD Asset is still processing...</p>
+  </ng-template>
+</ng-container>
