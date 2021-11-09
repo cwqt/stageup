@@ -1,4 +1,4 @@
-import { IHost, IPerformance, IUser, CurrencyCode, Genre } from '@core/interfaces';
+import { IHost, IPerformance, IUser, CurrencyCode, Genre, PerformanceType } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 
@@ -17,14 +17,15 @@ describe('As a user, I want to be able to search for hosts/performances', () => 
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'somecoolhost',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     perf = await Stories.actions.performances.createPerformance(host, {
       name: 'Shakespeare',
       description: 'To be or not to be',
-      genre: Genre.BourgeoisTragedy,
-      premiere_date: null
+      genre: Genre.Classical,
+      type: PerformanceType.Vod,
+      publicity_period: { start: 161347834, end: 161347834 }
     });
   });
 

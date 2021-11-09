@@ -38,7 +38,8 @@ export class PostgresProvider implements Provider<Connection> {
       synchronize: this.config.synchronize,
       logging: false, // print all sql queries
       namingStrategy: new SnakeNamingStrategy(),
-      extra: this.config.extra || {}
+      extra: this.config.extra || {},
+      cache: true
     };
 
     this.connection = await createConnection(config);

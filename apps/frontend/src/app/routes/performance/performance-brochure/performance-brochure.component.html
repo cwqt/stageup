@@ -1,7 +1,5 @@
 <ui-dialog [noPadding]="true" [loading]="performanceCacheable.loading">
-  <app-performance-brochure-banner
-    #banner [performance]="performanceCacheable"
-  ></app-performance-brochure-banner>
+  <app-performance-brochure-banner #banner [performance]="performanceCacheable"></app-performance-brochure-banner>
   <app-performance-brochure-tabs
     #tabs
     [performance]="performanceCacheable"

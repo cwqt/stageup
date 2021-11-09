@@ -17,6 +17,9 @@ export enum CommissionRate {
   Platform = 0.1
 }
 
+// UK VAT rate is 20%
+export const VATRate = 0.2;
+
 export interface IPaymentMethodStub {
   _id: NUUID;
   last4: string; // of cc details

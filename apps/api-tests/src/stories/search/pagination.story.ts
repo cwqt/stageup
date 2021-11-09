@@ -1,4 +1,4 @@
-import { IHost, IPerformance, IUser, CurrencyCode, Genre } from '@core/interfaces';
+import { IHost, IPerformance, IUser, CurrencyCode, Genre, PerformanceType } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { timeout } from '@core/helpers';
@@ -20,15 +20,16 @@ describe('As a user, I want to be able to paginate result of a search', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'somecoolhost',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     for (let i = 0; i < PAGES; i++) {
       const perf = await Stories.actions.performances.createPerformance(host, {
         name: `Shakespeare${i}`,
         description: 'To be or not to be',
-        genre: Genre.BourgeoisTragedy,
-        premiere_date: null
+        genre: Genre.Classical,
+        type: PerformanceType.Vod,
+        publicity_period: { start: 161347834, end: 161347834 }
       });
 
       performances.push(perf);
@@ -42,7 +43,7 @@ describe('As a user, I want to be able to paginate result of a search', () => {
       const paging = results.performances.__paging_data;
       const data = results.performances.data;
 
-      expect(paging.current_page).toEqual(i);
+      expect(Number(paging.current_page)).toEqual(i);
 
       expect(data.length).toEqual(1); // page_size of 1
       expect(paging.total).toEqual(performances.length);
@@ -54,8 +55,8 @@ describe('As a user, I want to be able to paginate result of a search', () => {
         // 5th, last page
         expect(paging.next_page).toBeNull;
       } else {
-        expect(paging.prev_page).toEqual(i - 1);
-        expect(paging.next_page).toEqual(i + 1);
+        expect(Number(paging.prev_page)).toEqual(i - 1);
+        expect(Number(paging.next_page)).toEqual(i + 1);
       }
     }
   });

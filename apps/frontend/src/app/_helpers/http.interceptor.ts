@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -10,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
-  constructor(private toastService: ToastService, private cookieService: CookieService, private logger: NGXLogger) {}
+  constructor(private toastService: ToastService, private cookieService: CookieService, private logger: NGXLogger, private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Attach cookie to request
@@ -36,6 +37,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         );
 
         this.logger.error(error);
+        // Show 404 page if the error is of type 404
+        if(body.status == 404) this.router.navigateByUrl('/404', { skipLocationChange: true });
         return throwError(error);
       })
     );

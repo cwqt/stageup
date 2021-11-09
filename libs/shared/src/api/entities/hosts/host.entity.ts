@@ -142,7 +142,8 @@ export class Host extends BaseEntity implements IHostPrivate {
       banner: this.banner,
       bio: this.bio,
       stripe_account_id: this.stripe_account_id,
-      assets: this.asset_group?.assets.map(a => a.toStub())
+      assets: this.asset_group?.assets.map(a => a.toStub()),
+      is_vat_registered: this.business_details?.vat_number ? true : false
     };
   }
 

@@ -11,6 +11,7 @@ import {
   IControllerEndpoint,
   LiveStreamAsset,
   ModuleController,
+  PasswordReset,
   POSTGRES_PROVIDER,
   Provider,
   STRIPE_PROVIDER,
@@ -79,7 +80,9 @@ export class UtilityController extends ModuleController {
       frontend_url: Env.FRONTEND.URL,
       stripe_public_key: Env.STRIPE.PUBLIC_KEY,
       environment: Env.ENVIRONMENT,
-      mux_env_key: Env.MUX.DATA_ENV_KEY
+      mux_env_key: Env.MUX.DATA_ENV_KEY,
+      google_auth_app_id: Env.SOCIAL_AUTH.GOOGLE,
+      facebook_auth_app_id: Env.SOCIAL_AUTH.FACEBOOK
     })
   };
 
@@ -98,6 +101,8 @@ export class UtilityController extends ModuleController {
     authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
     controller: async req => {
       // await DataClient.drop(providers);
+      await this.pg.dropDatabase();
+      await this.pg.synchronize();
     }
   };
 
@@ -175,6 +180,15 @@ export class UtilityController extends ModuleController {
     authorisation: AuthStrat.none,
     controller: async req => {
       const assets = await Asset.find({});
+    }
+  };
+
+  readForgottenPasswordOTP: IControllerEndpoint<string> = {
+    authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+    controller: async req => {
+      const user = await User.findOne(req.params.uid);
+      const passwordReset = await PasswordReset.findOne({user: user});
+      return passwordReset.otp;
     }
   };
 }

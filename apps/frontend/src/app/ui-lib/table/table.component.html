@@ -182,6 +182,7 @@
                     [popperPositionFixed]="true"
                     [popperPreventOverflow]="false"
                     [popperPlacement]="'bottom'"
+                    [disabled]="action.disabled(element.__data)"
                     [kind]="action.kind || 'accent'"
                     (click)="action.click(element.__data)"
                   >

@@ -71,6 +71,22 @@ Finally, go to [https://dashboard.stripe.com/settings/connect](https://dashboard
 STRIPE_CLIENT_ID="acct_{ID}"
 ```
 
+### Sendgrid
+
+We use Sendgrid to send emails. You'll need your own account, so to go to Sendgrid and complete the registration process.
+
+Once you're logged in, go to [https://app.sendgrid.com/settings/api_keys](https://app.sendgrid.com/settings/api_keys) and create an API key called "Development Key". Give your key "Full API Permissions" and click 'Create & View'. Copy the api key code and add it to your .env:
+
+```
+SENDGRID_API_KEY="" # SG.xx
+```
+
+You'll also need to authenticate an email address to use, ask the SysAdmin to do this for you. Once it's been done, you'll receive an email to authenticate your email address. Then add the email to the .env:
+
+```
+EMAIL_ADDRESS=""
+```
+
 ### Google Cloud Platform (GCP)
 
 Most of StageUp's cloud infrastructure is set up on GCP.
@@ -89,20 +105,26 @@ Add this file into the root directory of this backend app (apps/backend). It's a
 GOOGLE_APPLICATION_CREDENTIALS="./service_account.json"
 ```
 
-### Sendgrid
+### Social Media Sign-In
 
-We use Sendgrid to send emails. You'll need your own account, so to go to Sendgrid and complete the registration process.
+Currently we have two ways for users to register/login, aside from email. That is through Facebook or through Google. These use an app ID to identify the service implementing the login.
 
-Once you're logged in, go to [https://app.sendgrid.com/settings/api_keys](https://app.sendgrid.com/settings/api_keys) and create an API key called "Development Key". Give your key "Full API Permissions" and click 'Create & View'. Copy the api key code and add it to your .env:
+For Google, you can get this key from the Google Cloud Platform.
 
-```
-SENDGRID_API_KEY="" # SG.xx
-```
-
-You'll also need to authenticate an email address to use, ask the SysAdmin to do this for you. Once it's been done, you'll receive an email to authenticate your email address. Then add the email to the .env:
+- Login to our projects GCP (see above about contacting a SysAdmin for an account).
+- Nagivate to **"APIs and services" -> "Credentials"**.
+- Copy the Client ID from **"OAuth - Dev"** and add it to the .env:
 
 ```
-EMAIL_ADDRESS=""
+GOOGLE_AUTH_APP_ID=""
+```
+
+Unfortunately, at present GCP OAuth 2 doesn't support **wildcards** as 'Authorised JavaScript origins'. This means that we cannot specify https://su-XXX.stageup.uk as a valid URI and the google login will not work in branch deploys.
+
+For Facebook, ask the SysAdmin to add you to StageUp's [https://developers.facebook.com/](Facebook for Developers) account. For development purposes, there is an existing test app called **"StageUp - Dev"**. Copy the `Test App ID` and add it to your .env:
+
+```
+FACEBOOK_AUTH_APP_ID=""
 ```
 
 ### GCP Storage

@@ -479,6 +479,16 @@ export class HostController extends ModuleController {
 
       await this.ORM.transaction(async txc => {
         await userHostInfo.host.removeMember(userHostInfo.user, txc);
+
+        const hostInvitation = await getCheck(
+            HostInvitation.findOne({
+            where: {
+              invitee: { _id: req.params.uid },
+              host: { _id: req.params.hid }
+            }
+          })
+        );
+        hostInvitation.remove();
       });
     }
   };

@@ -1,7 +1,10 @@
+import { UserService } from './user.service';
 import { ErrorHandler } from '@backend/common/error';
 import {
   Address,
+  AppCache,
   BLOB_PROVIDER,
+  ContactInfo,
   EventBus,
   EVENT_BUS_PROVIDER,
   Follow,
@@ -11,6 +14,7 @@ import {
   Middleware,
   ModuleController,
   PasswordReset,
+  Person,
   POSTGRES_PROVIDER,
   REDIS_PROVIDER,
   STRIPE_PROVIDER,
@@ -34,13 +38,14 @@ import {
 import { Blobs } from 'libs/shared/src/api/data-client/providers/blob.provider';
 import { RedisClient } from 'redis';
 import Stripe from 'stripe';
-import { object, string } from 'superstruct';
+import { object, partial, string } from 'superstruct';
 import { Inject, Service } from 'typedi';
 import { Connection, EntityManager } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
 import Env from '../../env';
 
 import jwt = require('jsonwebtoken');
+import { UserService } from './user.service';
 
 @Service()
 export class UserController extends ModuleController {
@@ -48,40 +53,103 @@ export class UserController extends ModuleController {
     @Inject(POSTGRES_PROVIDER) private pg: Connection,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
-    @Inject(REDIS_PROVIDER) private redis: RedisClient,
-    @Inject(BLOB_PROVIDER) private blobs: Blobs
+    @Inject(REDIS_PROVIDER) private redis: AppCache,
+    @Inject(BLOB_PROVIDER) private blobs: Blobs,
+    private userService: UserService
   ) {
     super();
   }
 
   loginUser: IControllerEndpoint<IUser> = {
     validators: { body: Validators.Objects.DtoLogin },
-    middleware: Middleware.rateLimit(3600, 10, this.redis),
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis.client),
     authorisation: AuthStrat.none,
     controller: async req => {
       const emailAddress = req.body.email_address;
       const password = req.body.password;
 
-      const u = await User.findOne({ email_address: emailAddress });
+      const user = await User.findOne({ email_address: emailAddress });
       // Check user exists
-      if (!u)
+      if (!user)
         throw new ErrorHandler(HTTP.NotFound, '@@error.not_found', [
           { path: 'email_address', code: '@@user.not_found' }
         ]);
 
       // & then verify the password is correct
-      if (!(await u.verifyPassword(password)))
+      if (!(await user.verifyPassword(password)))
         throw new ErrorHandler(HTTP.Unauthorised, '@@error.incorrect', [
           { path: 'password', code: '@@login.password_incorrect' }
         ]);
 
       // Generate a session token
       req.session.user = {
-        _id: u._id,
-        is_admin: u.is_admin || false
+        _id: user._id,
+        is_admin: user.is_admin || false
       };
 
-      return u.toFull();
+      return user.toFull();
+    }
+  };
+
+  socialSignInUser: IControllerEndpoint<IUser> = {
+    validators: { body: partial(Validators.Objects.DtoSocialLogin) },
+    middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis.client),
+    authorisation: AuthStrat.none,
+    controller: async req => {
+      // Check user exists
+      let user = await User.findOne({ email_address: req.body.email });
+
+      // If no user we can create one
+      if (!user) {
+        const username = req.body.email.split('@')[0];
+
+        const personalDetails = {
+          first_name: req.body.firstName,
+          last_name: req.body.lastName,
+          title: null
+        };
+
+        user = await this.userService.createUser(
+          {
+            username: username,
+            email_address: req.body.email,
+            password: null
+          },
+          req.body.provider,
+          personalDetails
+        );
+
+        // Add name to the database (if available from the social media platform)
+        if (req.body.name) {
+          user.name = req.body.name;
+          await user.save();
+        }
+
+        this.bus.publish(
+          'user.registered',
+          {
+            _id: user._id,
+            name: user.name,
+            username: user.username,
+            email_address: user.email_address
+          },
+          req.locale
+        );
+      } else {
+        // User exists, we can check if they have previously signed in using this method
+        if (!user.sign_in_types.includes(req.body.provider)) {
+          // If not we can add it to the array of providers
+          user.sign_in_types.push(req.body.provider);
+          await user.save();
+        }
+      }
+      // Generate a session token
+      req.session.user = {
+        _id: user._id,
+        is_admin: user.is_admin || false
+      };
+
+      return user.toFull();
     }
   };
 
@@ -89,30 +157,7 @@ export class UserController extends ModuleController {
     validators: { body: Validators.Objects.DtoCreateUser },
     authorisation: AuthStrat.none,
     controller: async req => {
-      // Create a Stripe Customer, for purposes of managing cards on our Multi-Party platform
-      // https://stripe.com/docs/connect/cloning-saved-payment-methods#storing-customers
-      const customer = await this.stripe.customers.create({
-        email: req.body.email_address
-      });
-
-      // Save the user through a transaction (creates ContactInfo & Person)
-      const user = await transact(async (txc: EntityManager) => {
-        const u = await new User({
-          username: req.body.username,
-          email_address: req.body.email_address,
-          password: req.body.password,
-          stripe_customer_id: customer.id
-        }).setup(txc);
-
-        // First user to be created will be an admin
-        u.is_admin = (await txc.createQueryBuilder(User, 'u').getCount()) === 0;
-
-        // Verify user if in dev/testing
-        u.is_verified = !Env.isEnv([Environment.Production, Environment.Staging]);
-
-        await txc.save(u);
-        return u;
-      });
+      const user = await this.userService.createUser(req.body, 'EMAIL');
 
       this.bus.publish(
         'user.registered',
@@ -130,7 +175,7 @@ export class UserController extends ModuleController {
   };
 
   logoutUser: IControllerEndpoint<void> = {
-    authorisation: AuthStrat.none,
+    authorisation: AuthStrat.isLoggedIn,
     controller: async req => {
       req.session.destroy(error => {
         if (error) {
@@ -140,17 +185,8 @@ export class UserController extends ModuleController {
     }
   };
 
-  readUserByUsername: IControllerEndpoint<IUser> = {
-    validators: { params: object({ username: Validators.Fields.username }) },
-    authorisation: AuthStrat.none,
-    controller: async req => {
-      const u = await getCheck(User.findOne({ username: req.params.username }));
-      return u.toFull();
-    }
-  };
-
   readUser: IControllerEndpoint<IUser> = {
-    authorisation: AuthStrat.none,
+    authorisation: AuthStrat.isLoggedIn,
     controller: async req => {
       const u = await getCheck(
         User.findOne(req.params.uid[0] == '@' ? { username: req.params.uid.slice(1) } : { _id: req.params.uid })
@@ -160,7 +196,7 @@ export class UserController extends ModuleController {
   };
 
   updateUser: IControllerEndpoint<IMyself['user']> = {
-    authorisation: AuthStrat.none,
+    authorisation: AuthStrat.isOurself,
     validators: { body: Validators.Objects.DtoUpdateUser },
     controller: async req => {
       let u = await getCheck(User.findOne({ _id: req.params.uid }));
@@ -170,7 +206,7 @@ export class UserController extends ModuleController {
   };
 
   deleteUser: IControllerEndpoint<void> = {
-    authorisation: AuthStrat.none,
+    authorisation: AuthStrat.isOurself,
     controller: async req => {
       const u = await getCheck(User.findOne({ _id: req.params.uid }));
       await u.remove();
@@ -178,7 +214,7 @@ export class UserController extends ModuleController {
   };
 
   readUserHost: IControllerEndpoint<IEnvelopedData<IHost, IUserHostInfo>> = {
-    authorisation: AuthStrat.none,
+    authorisation: AuthStrat.isLoggedIn,
     controller: async req => {
       const host = await getCheck(
         Host.findOne({
@@ -201,7 +237,7 @@ export class UserController extends ModuleController {
   };
 
   changeAvatar: IControllerEndpoint<string> = {
-    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    authorisation: AuthStrat.isOurself,
     middleware: Middleware.file(2048, ['image/jpg', 'image/jpeg', 'image/png']).single('file'),
     controller: async req => {
       const user = await getCheck(
@@ -220,7 +256,7 @@ export class UserController extends ModuleController {
 
   resetPassword: IControllerEndpoint<void> = {
     validators: { body: Validators.Objects.DtoResetPassword },
-    authorisation: AuthStrat.none,
+    authorisation: AuthStrat.isOurself,
     controller: async req => {
       const oldPassword = req.body.old_password;
       const newPassword = req.body.new_password;
@@ -266,15 +302,6 @@ export class UserController extends ModuleController {
     }
   };
 
-  updateAddress: IControllerEndpoint<IAddress> = {
-    authorisation: AuthStrat.isOurself,
-    controller: async req => {
-      const address = await Address.findOne({ _id: req.params.aid });
-      // TODO: Update method in address model
-      return address.toFull();
-    }
-  };
-
   deleteAddress: IControllerEndpoint<void> = {
     authorisation: AuthStrat.isOurself,
     controller: async req => {
@@ -292,16 +319,7 @@ export class UserController extends ModuleController {
     authorisation: AuthStrat.none,
     controller: async req => {
       const emailAddress = req.body.email_address;
-      const user = await getCheck(User.findOne({ email_address: emailAddress }));
-      const token = jwt.sign({ email_address: emailAddress }, Env.PRIVATE_KEY, { expiresIn: '24h' });
-
-      await PasswordReset.insert({
-        otp: token,
-        email_address: emailAddress,
-        user__id: user._id
-      });
-
-      this.bus.publish('user.password_reset_requested', { user_id: user._id, otp: token }, req.locale);
+      await this.userService.createPasswordReset(emailAddress, req.locale);
     }
   };
 

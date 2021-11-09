@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@backend/common/error';
 import {
   AccessToken,
+  AppCache,
   Asset,
   AssetGroup,
   AssetView,
@@ -66,14 +67,16 @@ import {
   pick,
   PurchaseableType,
   PlatformConsentOpt,
-  Visibility
+  TicketType,
+  Visibility,
+  PerformanceStatus
 } from '@core/interfaces';
 import Mux from '@mux/mux-node';
 import { RedisClient } from 'redis';
 import Stripe from 'stripe';
 import { array, boolean, enums, object, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
-import { Connection, In } from 'typeorm';
+import { Connection, In, Not } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
 import { default as IdFinderStrat } from '../../common/authorisation/id-finder-strategies';
 import Env from '../../env';
@@ -88,7 +91,7 @@ export class PerformanceController extends ModuleController {
     @Inject(MUX_PROVIDER) private mux: Mux,
     @Inject(STRIPE_PROVIDER) private stripe: Stripe,
     @Inject(EVENT_BUS_PROVIDER) private bus: EventBus,
-    @Inject(REDIS_PROVIDER) private redis: RedisClient,
+    @Inject(REDIS_PROVIDER) private redis: AppCache,
     @Inject(BLOB_PROVIDER) private blobs: Blobs,
     private gdprService: GdprService,
     private performanceService: PerformanceService,
@@ -169,11 +172,12 @@ export class PerformanceController extends ModuleController {
   readPerformance: IControllerEndpoint<DtoPerformance> = {
     authorisation: AuthStrat.none,
     controller: async req => {
+      const whereQuery = { _id: req.params.pid };
+      // If 'include_deleted' is not passed as a query param we will filter out any deleted performances
+      if (!req.query.include_deleted) whereQuery['status'] = Not(PerformanceStatus.Deleted);
       const performance = await getCheck(
         Performance.findOne({
-          where: {
-            _id: req.params.pid
-          },
+          where: whereQuery,
           relations: {
             host: true,
             tickets: true,
@@ -442,6 +446,16 @@ export class PerformanceController extends ModuleController {
     }
   };
 
+  restorePerformance: IControllerEndpoint<void> = {
+    authorisation: AuthStrat.runner(
+      { hid: IdFinderStrat.findHostIdFromPerformanceId },
+      AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
+    ),
+    controller: async req => {
+      await this.performanceService.restorePerformance(req.params.pid);
+    }
+  };
+
   createTicket: IControllerEndpoint<ITicket> = {
     validators: { body: Validators.Objects.DtoCreateTicket },
     authorisation: AuthStrat.runner(
@@ -465,6 +479,7 @@ export class PerformanceController extends ModuleController {
         },
         where: {
           deleted_at: null,
+          is_cancelled: false,
           performance: {
             _id: req.params.pid
           }
@@ -830,10 +845,12 @@ export class PerformanceController extends ModuleController {
       // https://alacrityfoundationteam31.atlassian.net/browse/SU-901
       // The schedule for a performance should never be set before the dates set for selling tickets.
       // It could either coincide with the ticket schedule or start after the ticket period is over.
-      if (performance.tickets.some(ticket => ticket.start_datetime < period.start))
+      if (performance.tickets.some(ticket => !ticket.is_cancelled && ticket.start_datetime < period.start))
         throw new ErrorHandler(HTTP.BadRequest, '@@error.publicity_period_outside_ticket_period');
 
       performance.publicity_period = req.body;
+
+      performance.status = PerformanceStatus.Scheduled;
       await performance.save();
       await this.bus.publish('performance.publicity_period_changed', { performance_id: performance._id }, req.locale);
 
@@ -929,7 +946,7 @@ export class PerformanceController extends ModuleController {
 
   registerView: IControllerEndpoint<void> = {
     authorisation: AuthStrat.none,
-    middleware: Middleware.rateLimit(60, 10, this.redis),
+    middleware: Middleware.rateLimit(60, Env.RATE_LIMIT, this.redis.client),
     controller: async req => {
       const { pid: performanceId, aid: assetId } = req.params;
       const performance = await getCheck(Performance.findOne({ _id: performanceId }));

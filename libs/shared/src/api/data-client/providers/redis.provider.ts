@@ -7,10 +7,19 @@ export interface IRedisProviderConfig {
   port: number;
 }
 
+export interface AppCache {
+  get: (cacheId: string) => Promise<any>;
+  set: (cacheId: string, data: any, expiration: number) => Promise<void>;
+  delete: (cacheId: string) => Promise<void>;
+  client: RedisClient;
+}
+
+// TODO: Refactor this so that it can be reusable regardless of which library is used for the cache (i.e. interface should have no knowledge of redis)
 @Service()
-export class RedisProvider implements Provider<RedisClient> {
+export class RedisProvider implements Provider<AppCache> {
   name = 'Redis';
-  connection: RedisClient;
+  connection: AppCache;
+  client: RedisClient;
   config: IRedisProviderConfig;
 
   constructor(config: IRedisProviderConfig) {
@@ -18,22 +27,61 @@ export class RedisProvider implements Provider<RedisClient> {
   }
 
   async connect() {
-    this.connection = createClient({
+    this.client = createClient({
       host: this.config.host,
       port: this.config.port
     });
 
-    return new Promise<RedisClient>((resolve, reject) => {
-      this.connection.on('connect', () => resolve(this.connection));
-      this.connection.on('error', reject);
+    // new Promise<AppCache>((resolve, reject) => {
+    //   this.client.on('connect', () => resolve(this.connection));
+    //   this.client.on('error', reject);
+    // });
+
+    return this;
+  }
+
+  public async get(cacheId: string) {
+    return new Promise((resolve, reject) => {
+      this.client.get(cacheId, (error, data) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        if (data == null) {
+          resolve(null);
+          return;
+        }
+
+        try {
+          resolve(JSON.parse(data));
+        } catch (ex) {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  public async set(cacheId: string, data: any, expiration: number): Promise<void> {
+    try {
+      this.client.setex(cacheId, expiration, JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  public async delete(cacheId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.client.del(cacheId, () => {
+        resolve(null);
+      });
     });
   }
 
   async disconnect() {
-    return this.connection.end();
+    return this.client.end();
   }
 
   async drop() {
-    await new Promise(resolve => this.connection.flushdb(resolve));
+    await new Promise(resolve => this.client.flushdb(resolve));
   }
 }

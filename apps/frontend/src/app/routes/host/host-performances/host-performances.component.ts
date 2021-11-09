@@ -80,7 +80,7 @@ export class HostPerformancesComponent implements OnInit {
           label: $localize`Edit`,
           click: p => this.appService.navigateTo(`/dashboard/performances/${p._id}`),
           icon: 'maximize',
-          disabled: p => (p.status == PerformanceStatus.Deleted ? true : false)
+          disabled: p => p.status == PerformanceStatus.Deleted
         }
       ],
       pagination: {}

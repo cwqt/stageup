@@ -28,6 +28,7 @@ export class Ticket extends BaseEntity implements ITicket {
   @Column() version: number;
   @Column() quantity: number;
   @Column() quantity_remaining: number;
+  @Column({ default: false }) is_cancelled: boolean;
   @Column() is_visible: boolean;
   @Column() is_quantity_visible: boolean;
   @Column() start_datetime: number;
@@ -53,8 +54,9 @@ export class Ticket extends BaseEntity implements ITicket {
     this.start_datetime = ticket.start_datetime;
     this.end_datetime = ticket.end_datetime;
     this.is_visible = ticket.is_visible;
+    this.is_cancelled = false;
     this.version = 0;
-    this.dono_pegs = ticket.dono_pegs || [];
+    // this.dono_pegs = ticket.dono_pegs || [];
     this.is_quantity_visible = ticket.is_quantity_visible;
   }
 
@@ -77,6 +79,7 @@ export class Ticket extends BaseEntity implements ITicket {
       type: this.type,
       dono_pegs: this.dono_pegs,
       is_visible: this.is_visible,
+      is_cancelled: this.is_cancelled,
       is_quantity_visible: this.is_quantity_visible,
       quantity_remaining:
         // hide ticket quantities other than those that are sold out
