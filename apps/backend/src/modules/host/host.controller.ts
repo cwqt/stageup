@@ -1095,7 +1095,6 @@ export class HostController extends ModuleController {
       await getCheck(Host.findOne({ _id: req.params.hid }));
       const res = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
         .where('consent.host__id = :host_id', { host_id: req.params.hid })
-        .andWhere('consent.opt_status != :opt_status', { opt_status: 'hard-out' as ConsentOpt })
         .innerJoinAndSelect('consent.user', 'user')
         .orderBy('consent.saved_at', 'DESC') // so we get most recently updated entries at the top
         .filter({
