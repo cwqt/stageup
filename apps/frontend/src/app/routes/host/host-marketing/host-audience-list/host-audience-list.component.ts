@@ -1,10 +1,11 @@
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { ExportFileType, FilterCode, IUserMarketingInfo, OptStatus } from '@core/interfaces';
+import { ExportFileType, FilterCode, IUserMarketingInfo } from '@core/interfaces';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { Component, OnInit } from '@angular/core';
 import { pipes } from '@core/helpers';
+import { OptStatusPipe } from '@frontend/_pipes/opt-status.pipe';
 
 @Component({
   selector: 'app-host-audience-list',
@@ -14,9 +15,10 @@ import { pipes } from '@core/helpers';
 export class HostAudienceListComponent implements OnInit {
   table: UiTable<IUserMarketingInfo>;
   lastUpdated: number;
-  constructor(private hostService: HostService, private toastService: ToastService) {}
+  constructor(private hostService: HostService, private toastService: ToastService) { }
 
   ngOnInit(): void {
+    const optStatusPipe = new OptStatusPipe();
     this.table = new UiTable<IUserMarketingInfo>({
       resolver: async query => {
         const res = await this.hostService.readHostMarketingConsents(this.hostService.currentHostValue._id, query);
@@ -73,7 +75,7 @@ export class HostAudienceListComponent implements OnInit {
         },
         {
           label: $localize`Status`,
-          accessor: user => pipes.optStatus(user.opt_status),
+          accessor: user => optStatusPipe.transform(user.opt_status),
           sort: { field: 'opt_status' },
           filter: {
             type: FilterCode.String,

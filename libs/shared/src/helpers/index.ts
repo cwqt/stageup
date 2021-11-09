@@ -279,14 +279,6 @@ export const pipes = {
 
     return pretty[reason];
   },
-  optStatus: (status: ConsentOpt): string => {
-    const pretty: { [index in ConsentOpt]: string} ={
-      'hard-in': 'Opted-In',
-      'soft-in': 'Opted-In',
-      'hard-out': 'Opted-Out'
-    };
-    return pretty[status];
-  }
 };
 
 /**
