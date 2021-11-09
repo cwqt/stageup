@@ -116,7 +116,6 @@ popper-content {
 
 .ui-table--actions {
   display: flex;
-  flex-flow: column;
   ui-button {
     margin: 0;
     ::ng-deep button {
@@ -159,4 +158,13 @@ popper-content {
   line-height: 24px;
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+.hover-shadow:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.set-uniform-height {
+  height: 65px !important;
 }

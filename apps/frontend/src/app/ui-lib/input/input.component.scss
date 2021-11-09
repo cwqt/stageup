@@ -436,3 +436,16 @@ ui-icon {
     }
   }
 }
+
+// select field when 'outline' is set for appearance
+.select-outline {
+  ::ng-deep {
+    .mat-select-arrow-wrapper {
+      padding-top: 8px !important;
+    }
+    .mat-form-field-infix {
+      padding-top: 5px !important;
+      padding-bottom: 12px !important;
+    }
+  }
+}

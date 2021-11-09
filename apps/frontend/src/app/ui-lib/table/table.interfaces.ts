@@ -29,7 +29,13 @@ export interface IUiTable<Input = any, Transformed = Input> {
     initial_page_size?: number;
     page_sizes?: number[];
     show_first_last?: boolean;
+    hide_page_size?: boolean;
   };
+  clickable?: {
+    shadow?: boolean;
+    click_function: (v: any) => void; // TODO: sort out type
+  };
+  uniform_row_height?: boolean; // if true, the height will be set to 65px (helping to maintain consistency if multiple tables)
 }
 
 export interface IUiTableColumn<K> {
@@ -59,6 +65,7 @@ export interface IUiTableAction<K> {
   kind?: ThemeKind;
   icon?: string;
   disabled?: (v: K) => boolean;
+  hidden?: (v: K) => boolean; // same as disabled, but the button is removed completely
   dropdown?: Array<{
     icon?: string;
     label: string;

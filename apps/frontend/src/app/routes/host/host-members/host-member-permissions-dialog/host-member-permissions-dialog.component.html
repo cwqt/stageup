@@ -1,7 +1,7 @@
 <ui-dialog [buttons]="buttons" title="Update member">
   <p>
     <span i18n>Change current user permission from</span>:
-    <b>{{ form.fields.permission.options.values.get(data.uhi.permissions).label }}</b>
+    <b>{{ form.fields.permission.options.values.get(data.uhi.permissions)?.label }}</b>
   </p>
 
   <ui-form [form]="form"></ui-form>

@@ -77,7 +77,8 @@ import {
   Visibility,
   LikeLocation,
   JobType,
-  DtoReadHost
+  DtoReadHost,
+  DtoPerformanceIDAnalytics
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import {
@@ -167,7 +168,7 @@ export class HostController extends ModuleController {
             members_info: {
               user: true
             },
-            asset_group: true,
+            asset_group: true
           }
         }
       );
@@ -1040,6 +1041,7 @@ export class HostController extends ModuleController {
     }
   };
 
+  // Returns a paginated query of performance analytics
   readPerformancesAnalytics: IControllerEndpoint<IEnvelopedData<DtoPerformanceAnalytics[]>> = {
     validators: {
       query: assign(
@@ -1056,23 +1058,36 @@ export class HostController extends ModuleController {
         .orderBy('performance.created_at', 'DESC')
         .paginate({ serialiser: o => o.toStub() });
 
-      const dtos: DtoPerformanceAnalytics[] = [];
-      for await (let performance of performances.data) {
-        // Get weekly aggregations sorted by period_end (when collected)
-        const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
-          .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
-          .orderBy('analytics.period_ended_at', 'DESC')
-          // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
-          .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
-          .getMany();
+      const dtos = await this.hostService.readAnalyticsFromPerformanceArray(
+        performances.data.map(performance => performance._id),
+        req.query.period as AnalyticsTimePeriod
+      );
 
-        dtos.push({
-          ...performance,
-          chunks: chunks.map(chunk => chunk.toDto())
-        });
-      }
+      return {
+        data: dtos.map(dto => {
+          return {
+            ...performances.data.find(performance => performance._id == dto.performanceId),
+            chunks: dto.chunks
+          };
+        }),
+        __paging_data: performances.__paging_data
+      };
+    }
+  };
 
-      return { data: dtos, __paging_data: performances.__paging_data };
+  // Returns a full query of performance analytics (i.e. all performances in the provided time period)
+  readAllPerformancesAnalytics: IControllerEndpoint<DtoPerformanceIDAnalytics[]> = {
+    validators: {
+      query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    controller: async req => {
+      const hostPerformances = await this.hostService.readAllHostPerformances(req.params.hid);
+
+      return await this.hostService.readAnalyticsFromPerformanceArray(
+        hostPerformances.map(performance => performance._id),
+        req.query.period as AnalyticsTimePeriod
+      );
     }
   };
 
