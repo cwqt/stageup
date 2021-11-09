@@ -55,6 +55,10 @@ export class HostPerformanceDetailsComponent implements OnInit {
     return this.host.is_onboarded && this.minimumAssetsMet && (this.vod?.location || !this.vod);
   }
 
+  get performanceType(): string {
+    return this.performance?.data?.data?.performance_type === PerformanceType.Vod ? 'Recorded' : 'Livestream';
+  }
+
   get isPerformanceLive(): boolean {
     const currentDate = timestamp(new Date());
     const inPremierPeriod: boolean =
@@ -158,12 +162,6 @@ export class HostPerformanceDetailsComponent implements OnInit {
     const trailer = findAssets(this.performance.data.data.assets, AssetType.Video, ['trailer']);
     const thumbnails = findAssets(this.performance.data.data.assets, AssetType.Image, ['thumbnail']);
     return trailer.length > 0 || thumbnails?.length > 1;
-  }
-
-  deletePerformance() {
-    this.dialog.open(PerformanceDeleteDialogComponent, {
-      data: this.performance.data.data
-    });
   }
 
   cancelPerformance() {

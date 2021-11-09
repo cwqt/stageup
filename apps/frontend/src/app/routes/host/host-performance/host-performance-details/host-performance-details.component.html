@@ -2,13 +2,13 @@
 <ui-button class="float-right" icon="launch">Preview Event</ui-button>
 <div class="flex items-center mt-4 mb-8 mt-20 clear-both">
   <h1 class="mb-0" i18n>Event Details</h1>
-  <ui-chip class="chip ml-4" [kind]="'primary'">Recorded</ui-chip>
+  <ui-chip class="chip ml-4" [kind]="'primary'">{{ performanceType }}</ui-chip>
 </div>
 
 <div class="relative">
   <mat-tab-group>
     <mat-tab i18n-label label="General">
-      <app-host-performance-details-general></app-host-performance-details-general>
+      <app-host-performance-details-general [cacheable]="performance"></app-host-performance-details-general>
     </mat-tab>
     <mat-tab i18n-label label="Release">
       <app-host-performance-details-release></app-host-performance-details-release>
@@ -16,7 +16,7 @@
     <mat-tab i18n-label label="Links">
       <app-host-performance-details-links></app-host-performance-details-links>
     </mat-tab>
-    <mat-tab i18n-label label="Keys">
+    <mat-tab *ngIf="performanceType == 'Livestream'" i18n-label label="Keys">
       <app-host-performance-details-keys></app-host-performance-details-keys>
     </mat-tab>
   </mat-tab-group>
@@ -37,32 +37,9 @@
   </div>
 </div>
 
-<!-- <div
-  class="flex items-center cursor-pointer z-40"
-  [popper]="managePerformanceDropdown"
-  [popperShowOnStart]="false"
-  [popperHideOnClickOutside]="true"
-  [popperHideOnScroll]="true"
-  [popperApplyClass]="'user-dropdown-menu'"
-  popperTrigger="click"
-  popperPlacement="bottom"
->
-  <ui-icon size="l">overflow-menu--vertical</ui-icon>
-</div> -->
-
 <popper-content #managePerformanceDropdown class="flex flex-col">
   <div class="flex flex-col">
     <ng-container *ngIf="!isPerformanceCancelled; else showRestoreButton">
-      <ui-button
-        class="border-0"
-        i18n-matTooltip
-        matTooltip="Cannot delete a live performance"
-        [matTooltipDisabled]="!isPerformanceLive"
-        [disabled]="isPerformanceLive"
-        (click)="deletePerformance()"
-        i18n
-        >Delete Performance</ui-button
-      >
       <ui-button
         class="border-0"
         i18n-matTooltip

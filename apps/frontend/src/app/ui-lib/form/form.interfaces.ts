@@ -284,6 +284,7 @@ export interface IUiFieldOptions {
   hide_footer?: boolean;
   separator?: 'above' | 'below';
   maps_to?: string;
+  appearance?: 'outline' | 'fill';
 }
 
 export type IUiFieldTypeReturn<K = { [index: string]: IUiFormField['type'] }> = {
