@@ -25,7 +25,7 @@ const ticketFactory = (): DtoCreateTicket => ({
   end_datetime: moment().add(7, 'days').unix(),
   // fees: TicketFees.Absorb,
   is_visible: true,
-  dono_pegs: []
+  // dono_pegs: []
 });
 
 export const allTickets: DtoCreateTicket[] = [];
