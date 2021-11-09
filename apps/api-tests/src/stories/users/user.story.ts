@@ -84,26 +84,15 @@ describe('Test all the user controller methods', () => {
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
     await Stories.actions.hosts.addMember(host, user);
 
-    console.log('good so far');
-
     await Stories.actions.common.switchActor(UserType.Client);
     const hostInfo = await Stories.actions.users.readUserHost(user);
-
-    console.log('after reading');
 
     expect(hostInfo.data.username).toEqual(host.username);
     expect(hostInfo.data.name).toEqual(host.name);
 
-    console.log('after expectations');
-
     // Delete the membership to be able to delete the user later
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
-
-    console.log('after switching actor again');
-
     await Stories.actions.hosts.removeMember(host, user);
-
-    console.log('after removal');
 
     await Stories.actions.common.switchActor(UserType.Client);
   });
