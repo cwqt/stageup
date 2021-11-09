@@ -1,7 +1,24 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { findAssets, timestamp, unix } from '@core/helpers';
-import { DtoPerformance, IAssetStub, IHost, AssetType, IPerformanceHostInfo, Visibility } from '@core/interfaces';
+import {
+  DtoPerformance,
+  IAssetStub,
+  IHost,
+  AssetType,
+  IPerformanceHostInfo,
+  Visibility,
+  PerformanceType,
+  PerformanceStatus
+} from '@core/interfaces';
+import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
+import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
+import { AppService } from '@frontend/services/app.service';
+import { HelperService } from '@frontend/services/helper.service';
+import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
+import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { IUiFormField, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
@@ -38,10 +55,32 @@ export class HostPerformanceDetailsComponent implements OnInit {
     return this.host.is_onboarded && this.minimumAssetsMet && (this.vod?.location || !this.vod);
   }
 
+  get isPerformanceLive(): boolean {
+    const currentDate = timestamp(new Date());
+    const inPremierPeriod: boolean =
+      currentDate >= this.performance?.data?.data?.publicity_period.start &&
+      currentDate <= this.performance?.data?.data?.publicity_period.end;
+
+    if (this.performance?.data?.data?.performance_type === PerformanceType.Vod && inPremierPeriod) return true;
+    else return this.performance?.data?.data?.status === PerformanceStatus.Live;
+  }
+
+  get isPerformanceCancelled(): boolean {
+    return this.performance?.data?.data?.status === PerformanceStatus.Cancelled;
+  }
+
   visibilityForm: UiForm;
   publicityPeriodForm: UiForm;
 
-  constructor(private performanceService: PerformanceService, private clipboard: Clipboard) {}
+  constructor(
+    private appService: AppService,
+    private route: ActivatedRoute,
+    private helperService: HelperService,
+    private dialog: MatDialog,
+    private router: Router,
+    private performanceService: PerformanceService,
+    private clipboard: Clipboard
+  ) {}
 
   ngOnInit(): void {
     this.stream = this.performance.data.data.assets.find(asset => asset.type == AssetType.LiveStream);
@@ -119,5 +158,49 @@ export class HostPerformanceDetailsComponent implements OnInit {
     const trailer = findAssets(this.performance.data.data.assets, AssetType.Video, ['trailer']);
     const thumbnails = findAssets(this.performance.data.data.assets, AssetType.Image, ['thumbnail']);
     return trailer.length > 0 || thumbnails?.length > 1;
+  }
+
+  deletePerformance() {
+    this.dialog.open(PerformanceDeleteDialogComponent, {
+      data: this.performance.data.data
+    });
+  }
+
+  cancelPerformance() {
+    this.dialog.open(PerformanceCancelDialogComponent, {
+      data: this.performance.data.data
+    });
+  }
+
+  async restorePerformance() {
+    // Set performance status and publicity period in DB
+    await this.performanceService.restorePerformance(this.performanceId);
+    // Also set the changes on the front end so we don't have to re-render
+    this.performance.data.data.status = PerformanceStatus.PendingSchedule;
+
+    this.helperService.showConfirmationDialog(this.dialog, {
+      title: $localize`The schedule for this performance has been reset. Please set a new one.`,
+      buttons: [
+        new UiDialogButton({
+          label: $localize`Later`,
+          kind: ThemeKind.Secondary,
+          callback: ref => {
+            ref.close();
+            this.router.navigate(['dashboard/performances']);
+          }
+        }),
+        new UiDialogButton({
+          label: $localize`Ok`,
+          kind: ThemeKind.Primary,
+          callback: ref => {
+            ref.close();
+          }
+        })
+      ]
+    });
+  }
+
+  test() {
+    console.log('test');
   }
 }

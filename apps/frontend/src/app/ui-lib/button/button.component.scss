@@ -56,16 +56,16 @@
   }
 }
 
-:host(.disabled) ::ng-deep{
+:host(.disabled) ::ng-deep {
   // Disable click event.
   pointer-events: none;
 }
 
 .ui-button--primary {
-  background-color: $clr-primary;
+  background-color: $clr-primary-lt;
   color: white;
   &:hover {
-    background-color: $clr-primary-dk;
+    background-color: $clr-primary;
   }
   ::ng-deep .mat-spinner circle {
     stroke: $clr-base !important;
