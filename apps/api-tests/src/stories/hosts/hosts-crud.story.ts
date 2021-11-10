@@ -43,7 +43,7 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
     expect(bannerUrl.includes('.jpg')).toBe(true);
   });
 
-  it('Should upload a profile picture to AWS S3 and check for a returned object URL', async () => {
+  it('Should upload a profile picture to Google Cloud Storage and check for a returned object URL', async () => {
     const filePath = require('path').join(__dirname, `./../../../assets/cat.jpg`);
     const form = new fd();
     form.append('file', createReadStream(filePath));

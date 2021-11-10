@@ -43,7 +43,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
       description: 'To be or not to be',
       genre: Genre.Dance,
       type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
     });
   });
 
@@ -55,7 +55,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
       currency: CurrencyCode.GBP,
       quantity: 100,
       start_datetime: timestamp(),
-      end_datetime: timestamp() + 1000,
+      end_datetime: timestamp() + 10000000,
       is_visible: true,
       is_quantity_visible: true,
       // dono_pegs: []

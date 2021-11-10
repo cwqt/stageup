@@ -1,3 +1,4 @@
+import { timestamp } from '@core/helpers';
 import {
   Genre,
   IHost,
@@ -28,7 +29,7 @@ describe('Test all the gdpr controller methods', () => {
       description: 'To be or not to be',
       genre: Genre.Dance,
       type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
     });
   });
 

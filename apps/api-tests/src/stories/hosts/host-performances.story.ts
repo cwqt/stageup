@@ -27,7 +27,7 @@ describe('As a user-host, I want to review all my performances', () => {
         description: 'To be or not to be',
         genre: Genre.Classical,
         type: PerformanceType.Vod,
-        publicity_period: { start: 1667360800, end: 1667300555 }
+        publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       });        
       
     let performancesList = await Stories.actions.hosts.readHostPerformances(host);

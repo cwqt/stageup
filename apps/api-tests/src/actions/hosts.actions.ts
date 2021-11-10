@@ -29,12 +29,15 @@ import {
   IFollower,
   DtoUserMarketingInfo,
   DtoHostAnalytics,
-  AnalyticsTimePeriod
+  AnalyticsTimePeriod,
+  DeleteHostReason
 } from '@core/interfaces';
 import { api } from '../environment';
 import fd from 'form-data';
 import { hostname } from 'os';
 import { Stories } from '../stories';
+import { enumToValues, querize } from '@core/helpers';
+import { array } from 'superstruct';
 
 export default {
   // Host CRUD --------------------------------------------------------------------------------------------------------------
@@ -128,10 +131,19 @@ export default {
   },
 
   // router.delete <void>("/hosts/:hid",Hosts.deleteHost());
-  deleteHost: async (host: IHost) => {
-    const res = await api.delete<void>(
-      `/hosts/${host._id}?assert_only=true&reason[]=not_want_issue_digital_perfs&explanation=abc`, env.getOptions());
-    return res.data;
+  deleteHost: async (host: IHost): Promise<void> => {
+    const query: {
+      assert_only: boolean,
+      reason: DeleteHostReason[],
+      explanation: string
+    } = {
+      assert_only: true,
+      reason: [DeleteHostReason.DidNotWantToOfferDigitalPerfs, DeleteHostReason.DissatisfactoryUX],
+      explanation: 'abc'
+    };
+    console.log(querize(query));
+    await api.delete<void>(
+      `/hosts/${host._id}${querize(query)}`, env.getOptions());
   },
 
   //router.put<string>("/hosts/:hid/avatar", Hosts.changeAvatar());
@@ -154,19 +166,19 @@ export default {
 
   // Host Onboarding --------------------------------------------------------------------------------------------------------------
   // router.get <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.readOnboardingProcessStep());
-  readOnboardingProcessStep: async <T>(host: IHostStub, step: HostOnboardingStep) => {
+  readOnboardingProcessStep: async <T>(host: IHostStub, step: HostOnboardingStep): Promise<IOnboardingStep<T>> => {
     const res = await api.get<IOnboardingStep<T>>(`/hosts/${host._id}/onboarding/${step}`, env.getOptions());
     return res.data;
   },
 
   // router.put <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.updateOnboardingProcessStep());
-  updateOnboardingProcessStep: async <T>(host: IHostStub, step: HostOnboardingStep, data: T) => {
-    const res = await api.put(`/hosts/${host._id}/onboarding/${step}`, data, env.getOptions());
+  updateOnboardingProcessStep: async <T>(host: IHostStub, step: HostOnboardingStep, data: T): Promise<IOnboardingStep<any>> => {
+    const res = await api.put<IOnboardingStep<any>>(`/hosts/${host._id}/onboarding/${step}`, data, env.getOptions());
     return res.data;
   },
 
   // router.get<IHostOnboarding> ("/hosts/:hid/onboarding/status", Hosts.readOnboardingProcessStatus());
-  readOnboardingProcessStatus: async (host: IHostStub | IHost) => {
+  readOnboardingProcessStatus: async (host: IHostStub | IHost): Promise<IHostOnboarding> => {
     const res = await api.get<IHostOnboarding>(`/hosts/${host._id}/onboarding/status`, env.getOptions());
     return res.data;
   },
@@ -178,20 +190,19 @@ export default {
   },
 
   // router.post<void> ("/hosts/:hid/onboarding/submit", Hosts.submitOnboardingProcess());
-  submitOnboardingProcess: async (host: IHost | IHost) => {
-    const res = await api.post<void>(`/hosts/${host._id}/onboarding/submit`, null, env.getOptions());
-    return res.data;
+  submitOnboardingProcess: async (host: IHost | IHost): Promise<void> => {
+    await api.post<void>(`/hosts/${host._id}/onboarding/submit`, null, env.getOptions());
   },
 
   // Host member CRUD --------------------------------------------------------------------------------------------------------------
   // router.get <IUserStub[]>("/hosts/:hid/members", Hosts.readMembers());
-  readMembers: async (host: IHost) => {
+  readMembers: async (host: IHost): Promise<IEnvelopedData<IUserHostInfo[]>> => {
     const res = await api.get<IEnvelopedData<IUserHostInfo[]>>(`/hosts/${host._id}/members`, env.getOptions());
     return res.data;
   },
 
   // router.post<IHost>("/hosts/:hid/members",Hosts.addMember());
-  addMember: async (host: IHost, user: IMyself['user']) => {
+  addMember: async (host: IHost, user: IMyself['user']): Promise<IUserHostInfo> => {
     const res = await api.post<IUserHostInfo>(
       `/hosts/${host._id}/members`,
       { value: user.email_address },
@@ -201,15 +212,13 @@ export default {
   },
 
   // router.delete <void> ("/hosts/:hid/members/:mid",Hosts.removeMember());
-  removeMember: async (host: IHost, user: IUser) => {
-    const res = await api.delete<void>(`/hosts/${host._id}/members/${user._id}`, env.getOptions());
-    return res.data;
+  removeMember: async (host: IHost, user: IUser): Promise<void> => {
+    await api.delete<void>(`/hosts/${host._id}/members/${user._id}`, env.getOptions());
   },
 
   // router.put<void>("/hosts/:hid/members/:mid",Hosts.updateMember());
-  updateMember: async (host: IHost, user: IUser, update: IHostMemberChangeRequest) => {
-    const res = await api.put<void>(`/hosts/${host._id}/members/${user._id}`, update, env.getOptions());
-    return res.data;
+  updateMember: async (host: IHost, user: IUser, update: IHostMemberChangeRequest): Promise<void> => {
+    await api.put<void>(`/hosts/${host._id}/members/${user._id}`, update, env.getOptions());
   },
 
   // router.get <IE<IPerf[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
@@ -246,41 +255,41 @@ export default {
   },
 
   //router.post<string>("/hosts/:hid/stripe/connect", Hosts.connectStripe)
-  connectStripe: async (host: IHost) => {
+  connectStripe: async (host: IHost): Promise<string> => {
     const res = await api.post<string>(`/hosts/${host._id}/stripe/connect`, null, env.getOptions());
-    return null;
+    return res.data;
   },
 
   // router.redirect("/hosts/:hid/invites/:iid", Hosts.handleHostInvite);
-  handleHostInvite: async (host: IHost, inviteId: string) => {
+  handleHostInvite: async (host: IHost, inviteId: string): Promise<void> => {
     await Stories.actions.utils.ignoreECONNREFUSED(api.get.bind(null, `/hosts/${host._id}/invites/${inviteId}`, env.getOptions()));
   },
 
   // router.get<IHostFeed>("/hosts/:hid/feed", Hosts.readHostFeed);
-  readHostFeed: async (host: IHost) => {
+  readHostFeed: async (host: IHost): Promise<IHostFeed> => {
     const res = await api.get<IHostFeed>(
       `/hosts/${host._id}/feed?upcoming[page]=0&upcoming[per_page]=4`,
       env.getOptions()
     );
-    return res;
+    return res.data;
   },
 
   // router.put<void>("/hosts/:hid/assets", Hosts.updateHostAssets);
-  updateHostAssets: async (host: IHost, data: fd) => {
+  updateHostAssets: async (host: IHost, data: fd): Promise<void> => {
     const options = env.getOptions();
     options.headers['Content-Type'] = data.getHeaders()['content-type'];
     await api.put<void>(`/hosts/${host._id}/assets?type=image`, data, options);
   },
 
   // router.put<void>("/hosts/:hid/commission-rate", Hosts.updateCommissionRate);
-  updateCommissionRate: async (host:IHost, newRate: number) => {
+  updateCommissionRate: async (host:IHost, newRate: number): Promise<void> => {
     await api.put<void>(`/hosts/${host._id}/commission-rate`, {new_rate: newRate}, env.getOptions());
   },
 
   // router.get<IHostStripeInfo>("/hosts/:hid/stripe/info", Hosts.readStripeInfo);
-  readStripeInfo: async (host:IHost) => {
+  readStripeInfo: async (host:IHost): Promise<IHostStripeInfo> => {
     const res = await api.get<IHostStripeInfo>(`/hosts/${host._id}/stripe/info`, env.getOptions());
-    return res;
+    return res.data;
   },
 
   // router.get<IE<IFollower[]>>("/hosts/:hid/followers", Hosts.readHostFollowers);
@@ -290,7 +299,7 @@ export default {
   },
 
   // router.post<void>("/hosts/:hid/toggle-like", Hosts.toggleLike);
-  toggleLike: async (host :IHost) => {
+  toggleLike: async (host: IHost): Promise<void> => {
     await api.post<void>(`/hosts/${host._id}/toggle-like`, {}, env.getOptions());
   },
 

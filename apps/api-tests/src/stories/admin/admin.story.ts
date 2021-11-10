@@ -1,17 +1,11 @@
 import { BusinessType, CountryCode, HostOnboardingState, HostOnboardingStep, IHost, IHostBusinessDetails, PersonTitle } from "@core/interfaces";
-import { UserType } from "../../environment";
 import { Stories } from "../../stories";
 
 describe('Test all the admin controller methods', () => {
-  // let user: IUser & {email_address: string};
-  // let owner: IUser & {email_address: string};
-  // let admin: IUser;
   let host: IHost;
-  // let address: IAddress;
 
   beforeAll(async () => {
     await Stories.actions.common.setup();
-    // Stories.actions.common.switchActor(UserType.Admin);
 
     // Submit and onboarding process
     host = await Stories.actions.hosts.createHost({

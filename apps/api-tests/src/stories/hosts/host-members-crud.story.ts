@@ -36,7 +36,7 @@ describe('As a user-host, I want to be able to do Member CRUD', () => {
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
     await Stories.actions.hosts.updateMember(host, member, { value: HostPermission.Editor });
     members = await Stories.actions.hosts.readMembers(host);
-    let memberCheck = members.data.find(user => user.user._id === member._id);
+    const memberCheck = members.data.find(user => user.user._id === member._id);
     expect(memberCheck.permissions).toBe(HostPermission.Editor);
   });
 
@@ -44,7 +44,7 @@ describe('As a user-host, I want to be able to do Member CRUD', () => {
     // Update member, read host, find member & assert their perms are what we set
     await Stories.actions.hosts.updateMember(host, member, { value: HostPermission.Member });
     members = await Stories.actions.hosts.readMembers(host);
-    let memberCheck = members.data.find(user => user.user._id === member._id);
+    const memberCheck = members.data.find(user => user.user._id === member._id);
     expect(memberCheck.permissions).toBe(HostPermission.Member);
   });
 
