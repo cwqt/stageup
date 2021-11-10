@@ -24,7 +24,7 @@ export class AuthController extends ModuleController {
     middleware: Middleware.rateLimit(3600, Env.RATE_LIMIT, this.redis.client),
     authorisation: AuthStrat.none,
     controller: async req => {
-      const isVerified = this.authService.verifyUserEmailAddress(req.query.email as string, req.query.hash as string);
+      const isVerified = await this.authService.verifyUserEmailAddress(req.query.email as string, req.query.hash as string);
 
       // Return redirect address
       return `${Env.FRONTEND.URL}/${req.locale.language}/verified?state=${isVerified}`;

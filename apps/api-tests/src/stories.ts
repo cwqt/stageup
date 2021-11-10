@@ -17,7 +17,10 @@ import hostsActions from './actions/hosts.actions';
 import adminActions from './actions/admin.actions';
 import performanceActions from './actions/performances.actions';
 import searchActions from './actions/search.actions';
+import myselfActions from './actions/myself.actions';
+import gdprActions from './actions/gdpr.actions';
 import utilsActions from './actions/utils.actions';
+import authActions from './actions/auth.actions';
 
 export const Stories = {
   log: true,
@@ -30,7 +33,10 @@ export const Stories = {
     admin: adminActions,
     performances: performanceActions,
     search: searchActions,
-    utils: utilsActions
+    utils: utilsActions,
+    myself: myselfActions,
+    gdpr: gdprActions,
+    auth: authActions
   },
 
   setActiveUser: async (user: CachedUser) => {

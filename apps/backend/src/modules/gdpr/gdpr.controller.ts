@@ -68,7 +68,7 @@ export class GdprController extends ModuleController {
       // Simultaneously create new consent and uploads document
       await this.ORM.transaction(async txc => {
         const document = existingDocument // if document exists we supersede it. Else we create new
-          ? existingDocument.superscede(req.body.summary)
+          ? existingDocument.supersede(req.body.summary)
           : new Consentable(<ConsentableType>req.params.type, req.body.summary);
         // Then we upload the file and update the document location/identifier
         await document.upload(req.file, this.blobs);
