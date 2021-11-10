@@ -27,7 +27,8 @@ export class HostPerformanceDetailsGeneralComponent implements OnInit {
         name: UiField.Text({
           label: $localize`Event Title`,
           initial: this.performance.name,
-          validators: [{ type: 'required' }, { type: 'maxlength', value: 80 }]
+          validators: [{ type: 'required' }, { type: 'maxlength', value: 80 }],
+          appearance: 'outline'
         }),
         shortDescription: UiField.Richtext({
           label: $localize`Short Description`,
