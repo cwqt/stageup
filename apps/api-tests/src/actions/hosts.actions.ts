@@ -141,7 +141,6 @@ export default {
       reason: [DeleteHostReason.DidNotWantToOfferDigitalPerfs, DeleteHostReason.DissatisfactoryUX],
       explanation: 'abc'
     };
-    console.log(querize(query));
     await api.delete<void>(
       `/hosts/${host._id}${querize(query)}`, env.getOptions());
   },
