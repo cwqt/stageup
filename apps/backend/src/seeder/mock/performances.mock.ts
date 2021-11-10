@@ -486,17 +486,17 @@ export default to<Array<SeedMockPerformance>>([
     hostusername: 'CUC',
     thumbnail: 'http://www.ucheldre.org/upload/jkaufmannwiencopy.jpg'
   },
-  {
-    name: `Tempted`,
-    publicity_period: { start: 1667260800, end: 1668538800 },
-    description: `"Tempted is a forum theatre production that discusses sexual exploitation of young people – reflecting young people’s concerns and status. Produced in collaboration with Dyfed-Powys Police and crime commissioner. Tempted is currently nominated for two Arts & Business Cymru awards.
+  // {
+  //   name: `Tempted`,
+  //   publicity_period: { start: 1667260800, end: 1668538800 },
+  //   description: `"Tempted is a forum theatre production that discusses sexual exploitation of young people – reflecting young people’s concerns and status. Produced in collaboration with Dyfed-Powys Police and crime commissioner. Tempted is currently nominated for two Arts & Business Cymru awards.
 
-    “…fast paced, energetic and thoroughly engaging. A sensitive performance, based a very serious and current issue with teenagers… Our pupils (and staff) talked about this performance for the rest of the day! Please come back next year!” – Athro / Teacher"`,
-    genre: Genre.Theatre,
-    type: PerformanceType.Live,
-    hostusername: 'CwmniTheatr',
-    thumbnail: 'https://pbs.twimg.com/media/EEkoEWOWkAA29nI?format=jpg&name=4096x4096'
-  },
+  //   “…fast paced, energetic and thoroughly engaging. A sensitive performance, based a very serious and current issue with teenagers… Our pupils (and staff) talked about this performance for the rest of the day! Please come back next year!” – Athro / Teacher"`,
+  //   genre: Genre.Theatre,
+  //   type: PerformanceType.Live,
+  //   hostusername: 'CwmniTheatr',
+  //   thumbnail: 'https://pbs.twimg.com/media/EEkoEWOWkAA29nI?format=jpg&name=4096x4096'
+  // },
   {
     name: `Faust + Greta`,
     publicity_period: { start: 1667260800, end: 1668538800 },
@@ -681,7 +681,7 @@ export default to<Array<SeedMockPerformance>>([
     type: PerformanceType.Live,
     hostusername: 'TGC',
     thumbnail:
-      'https://lh3.googleusercontent.com/proxy/2IG016hUBLeSLDgg6w7OzNmle1mHybVugE702fAbXA9sCpGrOzXox9Ya7DBFhI2oyOVQM0rHZ0_xZaJZ5SCughdGIiLPavcEmsBy8Z88wKbFk8vy-eLLJLv-r4coWt8'
+      'https://dadov.rs/wp-content/uploads/2020/09/Greta-iz-Fausta.jpg'
   },
   {
     name: `Llygoden yr Eira`,
@@ -792,6 +792,6 @@ export default to<Array<SeedMockPerformance>>([
     type: PerformanceType.Live,
     hostusername: 'SJSS',
     thumbnail:
-      'https://www.sjss.org.uk/sites/www.sjss.org.uk/files/styles/imager_js_scale_1280/public/25.06.21_-_southbank_sinfonia_rush_hour_7_bradley.marcus-1320x900_-_web_3.jpg'
+      'https://www.sjss.org.uk/sites/all/themes/sjss_theme/imgs/site-logo.png'
   }
 ]);
