@@ -1,10 +1,9 @@
 import { ChartDataset } from 'chart.js';
 import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
-import { timestamp, unix } from '@core/helpers';
+import { unix, unixPeriod } from '@core/helpers';
 import {
   Analytics,
   AnalyticsTimePeriod,
-  CurrencyCode,
   DtoHostAnalytics,
   DtoPerformanceAnalytics,
   IHostAnalyticsMetrics,
@@ -18,7 +17,6 @@ import {
   IHeaderItem
 } from '../host-analytics-header-item/host-analytics-header-item.component';
 import { chartData, chartOptions } from '../host-analytics-header-item/host-analytics.chartjs';
-import moment from 'moment';
 
 type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnalyticsMetrics> = {
   period_aggregate: { [index in keyof Metrics]?: Metrics[index] };
@@ -222,7 +220,7 @@ export class HostAnalyticsGraphsComponent implements OnInit {
       );
       this.snapshot.performances.header_items[property].aggregation = latest[property];
 
-      const oneWeek = 604800; // seconds
+      const oneWeek = unixPeriod('week');
       // The most recent data point (which we can use to base all other aggregation periods off)
       let currentPeriodEnd = allPerformanceChunks[allPerformanceChunks.length - 1].period_ended_at;
       let currentPeriodStart = currentPeriodEnd - oneWeek;

@@ -21,12 +21,25 @@ import {
 import locale from 'express-locale';
 import { nanoid } from 'nanoid';
 import QueryString from 'qs';
+import moment from 'moment';
 
 /**
  * @description Returns the UNIX timestamp of date in seconds
  * @param date
  */
 export const timestamp = (date?: Date): number => Math.floor((date || new Date()).getTime() / 1000);
+
+/**
+ * @description Returns the UNIX timestamp of period of time
+ * @param period 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year'
+ * @param numberOf number of minutes/hours/days/weeks/months/years that you want to calculate
+ */
+export const unixPeriod = (
+  period: 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year',
+  numberOf: number = 1
+): number => {
+  return moment(0).add(numberOf, period).unix();
+};
 
 /**
  * @description Delay async execution for a duration
