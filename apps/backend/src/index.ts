@@ -82,6 +82,7 @@ import { Seeder } from './seeder';
       const connection = Container.get(POSTGRES_PROVIDER)
       await connection.dropDatabase(); 
       await connection.synchronize();
+      
       // seeder will wipe config momentarily, but stored in memory & will be saved again
       const seeder = new Seeder(Container.get(STRIPE_PROVIDER));
       await seeder.run();
