@@ -38,7 +38,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() is_verified: boolean;
   @Column() is_new_user: boolean;
   @Column() is_admin: boolean;
-  @Column() is_hiding_host_marketing_prompts: boolean;
+  @Column({ default: false }) is_hiding_host_marketing_prompts: boolean;
   @Column({ unique: true }) email_address: string;
   @Column() stripe_customer_id: string; // cus_xxx
   @Column('jsonb', { default: { language: 'en', region: 'GB' } }) locale: ILocale;
