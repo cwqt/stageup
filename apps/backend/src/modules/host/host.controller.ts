@@ -1054,12 +1054,7 @@ export class HostController extends ModuleController {
       );
 
       return {
-        data: dtos.map(dto => {
-          return {
-            ...performances.data.find(performance => performance._id == dto.performanceId),
-            chunks: dto.chunks
-          };
-        }),
+        data: performances.data.map(performance => ({ ...performance, chunks: dtos[performance._id] })),
         __paging_data: performances.__paging_data
       };
     }
@@ -1072,12 +1067,18 @@ export class HostController extends ModuleController {
     },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
+      // Get list of host performances
       const hostPerformances = await this.hostService.readAllHostPerformances(req.params.hid);
+      // Map to array of IDs
+      const performanceIds = hostPerformances.map(performance => performance._id);
 
-      return await this.hostService.readAnalyticsFromPerformanceArray(
-        hostPerformances.map(performance => performance._id),
+      // Fetch the analytics relating to the performance (returned as a map)
+      const performanceAnalyticsMap = await this.hostService.readAnalyticsFromPerformanceArray(
+        performanceIds,
         req.query.period as AnalyticsTimePeriod
       );
+      // Return as DtoPerformanceIDAnalytics array
+      return performanceIds.map(performanceId => ({ performanceId, chunks: performanceAnalyticsMap[performanceId] }));
     }
   };
 

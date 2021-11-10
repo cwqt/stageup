@@ -19,6 +19,7 @@ import Env from './env';
 import { modules } from './modules';
 import routes from './routes';
 import { Seeder } from './seeder';
+import { getConnection } from 'typeorm';
 
 ø(
   {
