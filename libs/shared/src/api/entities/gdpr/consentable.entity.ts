@@ -66,7 +66,7 @@ export class Consentable<T extends ConsentableType> extends ConsentableEntity im
     return this;
   }
 
-  superscede(changesText: RichText): Consentable<T> {
+  supersede(changesText: RichText): Consentable<T> {
     const newConsent = new Consentable<T>(this.type, changesText);
     newConsent.version = this.version + 1;
     newConsent.preceeded_by = this;

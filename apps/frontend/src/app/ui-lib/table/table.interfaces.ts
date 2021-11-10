@@ -78,3 +78,5 @@ export type IUiTransformedRowMeta<Input> = {
   __data: Input;
   [index: string]: any;
 };
+
+export type IUiTableSortDirection = 'ASC' | 'DESC'

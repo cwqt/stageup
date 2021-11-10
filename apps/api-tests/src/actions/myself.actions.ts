@@ -1,4 +1,4 @@
-import { IFeed, IMyself, IRefundRequest, IUserHostInfo } from "@core/interfaces";
+import { ConsentOpt, ConsentOpts, IFeed, IFollowing, IHost, IMyself, IOptOutReason, IRefundRequest, IUserHostInfo } from "@core/interfaces";
 import { api, environment as env } from '../environment';
 
 export default {
@@ -25,4 +25,19 @@ export default {
   requestInvoiceRefund: async (refundReq: IRefundRequest) => {
     await api.post<void>(`/myself/invoices/request-refund`, refundReq, env.getOptions());
   },
+
+  // router.post<IFollowing>("/myself/follow-host/:hid", Myself.addFollow);
+  addFollow: async (host: IHost): Promise<IFollowing> => {
+    const res = await api.post<IFollowing>(`/myself/follow-host/${host._id}`, {}, env.getOptions());
+    return res.data;
+  },
+
+  // router.put<void>("/myself/opt-ins/host-marketing/:hid", Myself.updateHostOptInStatus);
+  updateHostOptInStatus: async (host: IHost, newStatus: ConsentOpt, optOutReason?: IOptOutReason) => {
+    await api.put<void>(
+      `/myself/opt-ins/host-marketing/${host._id}`,
+      { new_status: newStatus, opt_out_reason: optOutReason},
+      env.getOptions()
+    );
+  }
 }

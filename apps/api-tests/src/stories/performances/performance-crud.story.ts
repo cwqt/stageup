@@ -12,6 +12,7 @@ import {
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { AxiosError } from 'axios';
+import { timestamp } from '@core/helpers';
 
 describe('As a user, I want to be able to do performance CRUD', () => {
   let host: IHost;
@@ -34,7 +35,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       description: 'To be or not to be',
       genre: Genre.Dance,
       type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
     });
 
     expect(perf).not.toBeNull();

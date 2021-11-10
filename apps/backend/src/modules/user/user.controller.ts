@@ -43,9 +43,7 @@ import { Inject, Service } from 'typedi';
 import { Connection, EntityManager } from 'typeorm';
 import AuthStrat from '../../common/authorisation';
 import Env from '../../env';
-
 import jwt = require('jsonwebtoken');
-import { UserService } from './user.service';
 
 @Service()
 export class UserController extends ModuleController {

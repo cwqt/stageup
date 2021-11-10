@@ -179,6 +179,7 @@ import { HostPerformanceMediaComponent } from './routes/host/host-performance/ho
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
 import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
+import { OptStatusPipe } from './_pipes/opt-status.pipe';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -330,7 +331,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostAudienceListComponent,
     HostProfileAssetComponent,
     HostListPerformancesComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    OptStatusPipe
   ],
   imports: [
     AngularMaterialModule,
