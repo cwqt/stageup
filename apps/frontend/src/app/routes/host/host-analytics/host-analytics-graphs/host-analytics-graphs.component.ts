@@ -1,6 +1,6 @@
 import { ChartDataset } from 'chart.js';
 import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
-import { unix, unixPeriod } from '@core/helpers';
+import { unix, periodInSeconds } from '@core/helpers';
 import {
   Analytics,
   AnalyticsTimePeriod,
@@ -220,7 +220,7 @@ export class HostAnalyticsGraphsComponent implements OnInit {
       );
       this.snapshot.performances.header_items[property].aggregation = latest[property];
 
-      const oneWeek = unixPeriod('week');
+      const oneWeek = periodInSeconds('week');
       // The most recent data point (which we can use to base all other aggregation periods off)
       let currentPeriodEnd = allPerformanceChunks[allPerformanceChunks.length - 1].period_ended_at;
       let currentPeriodStart = currentPeriodEnd - oneWeek;

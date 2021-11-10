@@ -30,11 +30,11 @@ import moment from 'moment';
 export const timestamp = (date?: Date): number => Math.floor((date || new Date()).getTime() / 1000);
 
 /**
- * @description Returns the UNIX timestamp of period of time
+ * @description Returns the number of seconds in a given period
  * @param period 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year'
  * @param numberOf number of minutes/hours/days/weeks/months/years that you want to calculate
  */
-export const unixPeriod = (
+export const periodInSeconds = (
   period: 'minute' | 'hour' | 'day' | 'week' | 'month' | 'year',
   numberOf: number = 1
 ): number => {
