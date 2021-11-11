@@ -36,36 +36,31 @@
 
       <div class="flex flex-col ml-8" *ngIf="activeHostPerformanceId">
         <ui-button
+        [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/overview'"
+        routerLinkActive="active-link">
+          <span i18n>Overview</span>
+        </ui-button>
+        <ui-button
         [routerLink]="'/dashboard/events/' + activeHostPerformanceId"
         routerLinkActive="active-link"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        <span i18n>Overview</span>
-      </ui-button>
-        <ui-button
-          [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/details'"
-          routerLinkActive="active-link"
-        >
+        [routerLinkActiveOptions]="{ exact: true }">
           <span i18n>Details</span>
         </ui-button>
         <ui-button
           [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/media'"
-          routerLinkActive="active-link"
-        >
+          routerLinkActive="active-link">
           <span i18n>Media</span>
         </ui-button>
         <ui-button
           [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/ticketing'"
-          routerLinkActive="active-link"
-        >
+          routerLinkActive="active-link">
           <span i18n>Ticketing</span>
         </ui-button>
         <ui-button
           [disabled]="true"
           class="pointer-events-none"
           [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/analytics'"
-          routerLinkActive="active-link"
-        >
+          routerLinkActive="active-link">
           <span i18n>Analytics</span>
         </ui-button>
       </div>

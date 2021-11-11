@@ -3,8 +3,8 @@
     <mat-spinner *ngIf="performance.loading"></mat-spinner>
     <ng-container *ngIf="performance.data">
       <div class="flex align-middle">
-        <h1 class="flex-1 mb-0">{{ performanceData.name }}</h1>
-        <div class="ml-auto my-auto flex items-center">
+        <h1 class="float-left">{{ performanceData.name }}</h1>
+        <div class="flex items-center event-preview-button">
           <ui-button (click)="gotoPerformance()" kind="secondary" class="mr-2" icon="launch" i18n>Preview</ui-button>
           
           <div

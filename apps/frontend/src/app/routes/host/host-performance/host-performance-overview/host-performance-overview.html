@@ -1,0 +1,50 @@
+<app-page>
+    <div body>
+      <h1 class="float-left" i18n>
+        Welcome, <span class="host-name">{{ host.name }}</span>
+      </h1>
+      <!-- ---------------- Build event section ----------------
+      <div *ngIf="eventData?.length == 0" class="clear-both my-6 relative">
+        <img [src]="'/assets/welcome-banner.svg'" class="w-full h-72 rounded" alt="" />
+        <div class="flex flex-col items-center justify-center absolute inset-0">
+          <h3 class="opacity-100" i18n>Let's build your first event on <span class="host-name">StageUp</span></h3>
+          <ui-button (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>Create Event</ui-button>
+        </div>
+      </div>
+      <!-- ---------------- Analytics section ---------------- -->
+      <app-host-analytics-graphs> </app-host-analytics-graphs>
+      <div class="grid grid-cols-2 gap-x-4 mt-12">
+        <!-- ---------------- Events section ---------------- -->
+        <div class="flex flex-col">
+          <h4 class="mb-4 text-black" i18n>Upcoming Events</h4>
+          <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
+            <mat-spinner class="ml-5" [diameter]="50" *ngIf="eventTable.cache.loading"></mat-spinner>
+            <div class="flex justify-end">
+              <ui-button (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>Create Event</ui-button>
+            </div>
+  
+            <ui-table class="min-table-height" [table]="eventTable"></ui-table>
+            <p class="my-12 text-center" *ngIf="eventData?.length == 0" i18n>Your scheduled events will appear here</p>
+            <div class="absolute bottom-8 left-4">
+              <a [routerLink]="['/dashboard/events']" i18n>Go to events page</a>
+            </div>
+          </div>
+        </div>
+        <!-- ---------------- Members section ---------------- -->
+        <div class="flex flex-col">
+          <h4 class="mb-4 text-black" i18n>My Team</h4>
+          <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
+            <mat-spinner class="ml-5" [diameter]="50" *ngIf="memberTable.cache.loading"></mat-spinner>
+            <div class="flex justify-end">
+              <ui-button (click)="openAddMemberDialog()" kind="primary" icon="add" i18n>Add Member</ui-button>
+            </div>
+            <ui-table class="min-table-height" [table]="memberTable"></ui-table>
+            <div class="absolute bottom-8 left-4">
+              <a [routerLink]="['/dashboard/team']" i18n>Go to team page</a>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </app-page>
+  

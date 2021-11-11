@@ -110,8 +110,8 @@ const LOGGED_IN_ROUTES: Routes = [
             path: `:${RP.PerformanceId}`,
             component: HostPerformanceComponent,
             children: [
-              { path: '', component: HostPerformanceDetailsComponent },
-              { path: 'details', component: HostPerformanceDetailsComponent, data: { breadcrumb: $localize`Details` }, },
+              { path: '', component: HostPerformanceDetailsComponent, data: { breadcrumb: $localize`Details` } },
+              { path: 'overview', component: HostPerformanceDetailsComponent, data: { breadcrumb: $localize`Overview` } },
               { path: 'ticketing', component: HostPerformanceTicketingComponent, data: { breadcrumb: $localize`Ticketing` } },
               { path: 'media', component: HostPerformanceMediaComponent, data: { breadcrumb: $localize`Media` } },
 
@@ -267,4 +267,4 @@ const LOGGED_IN_ROUTES: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
