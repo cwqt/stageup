@@ -4,17 +4,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { findAssets, timestamp, unix } from '@core/helpers';
 import {
+  AssetType,
   DtoPerformance,
   IAssetStub,
   IHost,
-  AssetType,
+  IPerformanceDetails,
   IPerformanceHostInfo,
-  Visibility,
   PerformanceType,
-  PerformanceStatus
+  PerformanceStatus,
+  Visibility
 } from '@core/interfaces';
 import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
-import { PerformanceDeleteDialogComponent } from '@frontend/routes/performance/performance-delete-dialog/performance-delete-dialog.component';
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
@@ -23,6 +23,7 @@ import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { IUiFormField, UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 
+// Container component for all of the tabs (details, release, links, keys)
 @Component({
   selector: 'app-host-performance-details',
   templateUrl: './host-performance-details.component.html',
@@ -35,7 +36,6 @@ export class HostPerformanceDetailsComponent implements OnInit {
   performance: ICacheable<DtoPerformance>;
   host: IHost;
 
-  // TODO: temporary until multi-asset
   stream: IAssetStub<AssetType.LiveStream>;
   vod: IAssetStub<AssetType.Video>;
 
@@ -43,6 +43,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
 
   copyMessage: string = $localize`Copy`;
   visibilityInput: IUiFormField<'select'>;
+
+  performanceDetails: IPerformanceDetails; // TODO: Add type - will need to set all fields as optional data since the host can save at any point when entering the performance details
 
   get performanceData() {
     return this.performance.data?.data;
@@ -87,6 +89,13 @@ export class HostPerformanceDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.performanceDetails = {
+      description: this.performanceData.description,
+      genre: this.performanceData.genre,
+      name: this.performanceData.name,
+      publicity_period: this.performanceData.publicity_period
+    };
+    console.log('this.performanceDetails', this.performanceDetails);
     this.stream = this.performance.data.data.assets.find(asset => asset.type == AssetType.LiveStream);
     this.vod = findAssets(this.performance.data.data.assets, AssetType.Video, ['primary'])[0];
 
@@ -198,7 +207,12 @@ export class HostPerformanceDetailsComponent implements OnInit {
     });
   }
 
+  // Todo: add longDescription and shortDescription instead of just 'description'
+  updatePerformanceDetailsData(formData: IPerformanceDetails): void {
+    this.performanceDetails = { ...this.performanceDetails, ...formData };
+  }
+
   test() {
-    console.log('test');
+    console.log('this.performanceDetails', this.performanceDetails);
   }
 }

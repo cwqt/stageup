@@ -8,16 +8,28 @@
 <div class="relative">
   <mat-tab-group>
     <mat-tab i18n-label label="General">
-      <app-host-performance-details-general [cacheable]="performance"></app-host-performance-details-general>
+      <app-host-performance-details-general
+        (onFormDataChange)="updatePerformanceDetailsData($event)"
+        [cacheable]="performance"
+      ></app-host-performance-details-general>
     </mat-tab>
     <mat-tab i18n-label label="Release">
-      <app-host-performance-details-release></app-host-performance-details-release>
+      <app-host-performance-details-release
+        (onFormDataChange)="updatePerformanceDetailsData($event)"
+        [cacheable]="performance"
+      ></app-host-performance-details-release>
     </mat-tab>
     <mat-tab i18n-label label="Links">
-      <app-host-performance-details-links></app-host-performance-details-links>
+      <app-host-performance-details-links
+        (onFormDataChange)="updatePerformanceDetailsData($event)"
+        [cacheable]="performance"
+      ></app-host-performance-details-links>
     </mat-tab>
     <mat-tab *ngIf="performanceType == 'Livestream'" i18n-label label="Keys">
-      <app-host-performance-details-keys></app-host-performance-details-keys>
+      <app-host-performance-details-keys
+        (onFormDataChange)="updatePerformanceDetailsData($event)"
+        [cacheable]="performance"
+      ></app-host-performance-details-keys>
     </mat-tab>
   </mat-tab-group>
   <div class="absolute right-0 top-0 flex z-50">

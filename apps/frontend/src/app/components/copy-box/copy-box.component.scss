@@ -1,0 +1,14 @@
+.copy-box {
+  width: 300px;
+}
+
+::ng-deep .mat-form-field-infix {
+  margin-top: 0 !important;
+  padding-top: 0.5rem !important;
+}
+
+button {
+  background-color: pink;
+  border-left: 1px solid grey;
+  box-sizing: border-box;
+}

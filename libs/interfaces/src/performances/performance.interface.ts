@@ -90,6 +90,9 @@ export interface IPerformance extends IPerformanceStub {
   assets: IAssetStub[];
 }
 
+// TODO: Add 'ticket visibility schedule', 'access duration', 'event showings', 'short description' and 'long description'
+export type IPerformanceDetails = Pick<IPerformance, 'name' | 'description' | 'genre' | 'publicity_period'>;
+
 // Interface for additional client information regarding the performance.
 export interface IClientPerformanceData {
   is_following: boolean;

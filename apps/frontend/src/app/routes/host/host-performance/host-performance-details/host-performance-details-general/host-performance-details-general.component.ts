@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { DtoPerformance, GenreMap, IPerformance } from '@core/interfaces';
-import { createICacheable, ICacheable } from '@frontend/app.interfaces';
-import { PerformanceService } from '@frontend/services/performance.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DtoPerformance, Genre, GenreMap } from '@core/interfaces';
+import { ICacheable } from '@frontend/app.interfaces';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
+import { GenrePipe } from '@frontend/_pipes/genre.pipe';
 
 @Component({
   selector: 'app-host-performance-details-general',
@@ -11,17 +11,20 @@ import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 })
 export class HostPerformanceDetailsGeneralComponent implements OnInit {
   @Input() cacheable: ICacheable<DtoPerformance>;
-  performanceDetailsForm: UiForm<IPerformance>;
-  performanceUpdateCacheable: ICacheable<IPerformance>;
+  @Output() onFormDataChange = new EventEmitter();
+  performanceDetailsForm: UiForm<void>; // This form does not handle submit but instead passes data to parent component
+  // performanceUpdateCacheable: ICacheable<IPerformance>;
 
   get performance() {
     return this.cacheable.data.data;
   }
 
-  constructor(private performanceService: PerformanceService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    this.performanceUpdateCacheable = createICacheable(this.performance);
+    const genrePipe = new GenrePipe();
+    // this.performanceUpdateCacheable = createICacheable(this.performance);
+
     this.performanceDetailsForm = new UiForm({
       fields: {
         name: UiField.Text({
@@ -30,12 +33,12 @@ export class HostPerformanceDetailsGeneralComponent implements OnInit {
           validators: [{ type: 'required' }, { type: 'maxlength', value: 80 }],
           appearance: 'outline'
         }),
-        shortDescription: UiField.Richtext({
+        short_description: UiField.Richtext({
           label: $localize`Short Description`,
           initial: this.performance.description,
           validators: [{ type: 'maxlength', value: 160 }]
         }),
-        longDescription: UiField.Richtext({
+        long_description: UiField.Richtext({
           label: $localize`Long Description`,
           initial: this.performance.description,
           validators: [{ type: 'maxlength', value: 1000 }]
@@ -43,20 +46,17 @@ export class HostPerformanceDetailsGeneralComponent implements OnInit {
         genre: UiField.Select({
           label: $localize`Genre`,
           values: new Map(
-            // TODO: Localize genres
-            Object.entries(GenreMap).map(([key, value]) => {
-              return [key, { label: value as string }];
+            Object.entries(GenreMap).map(([key]) => {
+              return [key, { label: genrePipe.transform(key as Genre) }];
             })
           )
         })
       },
       resolvers: {
-        output: async v => this.performanceService.updatePerformance(this.performance._id, v)
+        output: async () => {}
       },
       handlers: {
-        success: async (v, f) => {
-          this.cacheable.data.data = { ...this.performance, name: f.value.name, description: f.value.description };
-        }
+        changes: async formData => this.onFormDataChange.emit(formData.value)
       }
     });
   }

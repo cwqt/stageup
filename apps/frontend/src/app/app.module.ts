@@ -55,6 +55,7 @@ import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
 import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
+import { GenrePipe } from './_pipes/genre.pipe';
 import { OptOutReasonPipe } from './_pipes/opt-out-reason.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
@@ -180,6 +181,7 @@ import { HostPerformanceDetailsGeneralComponent } from './routes/host/host-perfo
 import { HostPerformanceDetailsReleaseComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-release/host-performance-details-release.component';
 import { HostPerformanceDetailsLinksComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-links/host-performance-details-links.component';
 import { HostPerformanceDetailsKeysComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-keys/host-performance-details-keys.component';
+import { CopyBoxComponent } from './components/copy-box/copy-box.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -235,6 +237,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     TimesPipe,
     VisibilityPipe,
     GdprDocumentTypePipe,
+    GenrePipe,
     OnboardingStatePipe,
     OptOutReasonPipe,
     DeleteHostReasonPipe,
@@ -333,7 +336,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostPerformanceDetailsGeneralComponent,
     HostPerformanceDetailsReleaseComponent,
     HostPerformanceDetailsLinksComponent,
-    HostPerformanceDetailsKeysComponent
+    HostPerformanceDetailsKeysComponent,
+    CopyBoxComponent
   ],
   imports: [
     AngularMaterialModule,
