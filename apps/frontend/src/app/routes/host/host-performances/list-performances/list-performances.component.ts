@@ -1,9 +1,9 @@
 import { Component, LOCALE_ID, OnInit, Inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
-import { CreatePerformanceComponent } from './create-performance/create-performance.component';
+import { CreatePerformanceComponent } from '../create-performance/create-performance.component';
 import { AppService } from 'apps/frontend/src/app/services/app.service';
-import { IHost, IPerformanceStub, PerformanceStatus } from '@core/interfaces';
+import { IPerformanceStub, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { i18n, richtext, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
@@ -12,14 +12,13 @@ import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe'
 import { VisibilityPipe } from '@frontend/_pipes/visibility.pipe';
 import { DatePipe } from '@angular/common';
 @Component({
-  selector: 'app-host-performances',
-  templateUrl: './host-performances.component.html',
-  styleUrls: ['./host-performances.component.scss']
+  selector: 'app-host-list-performances',
+  templateUrl: './list-performances.component.html',
+  styleUrls: ['./list-performances.component.scss']
 })
-export class HostPerformancesComponent implements OnInit {
+export class HostListPerformancesComponent implements OnInit {
   hostId: string;
   table: UiTable<IPerformanceStub>;
-  host: IHost;
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
@@ -27,7 +26,7 @@ export class HostPerformancesComponent implements OnInit {
     private helperService: HelperService,
     private dialog: MatDialog,
     private appService: AppService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
@@ -96,8 +95,25 @@ export class HostPerformancesComponent implements OnInit {
     return richtext.read(text);
   }
 
-  // Inject IHost into child components i.e host-performance
-  onChildLoaded(component) {
-    component.host = this.host;
-  }
+  // deletePerformance(performance: IPerformanceStub) {
+  //   this.helperService.showConfirmationDialog(this.dialog, {
+  //     title: $localize`Delete '${performance.name}'`,
+  //     description: $localize`Are you sure you want to delete this performance?`,
+  //     buttons: [
+  //       new UiDialogButton({
+  //         label: $localize`Cancel`,
+  //         kind: ThemeKind.Secondary,
+  //         callback: r => r.close()
+  //       }),
+  //       new UiDialogButton({
+  //         label: $localize`Delete`,
+  //         kind: ThemeKind.Primary,
+  //         callback: r => {
+  //           this.performanceService.deletePerformance(performance._id);
+  //           r.close();
+  //         }
+  //       })
+  //     ]
+  //   });
+  // }
 }
