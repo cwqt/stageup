@@ -27,15 +27,16 @@ import { UiTable } from './table.class';
 })
 export class TableComponent<T> implements OnInit, AfterViewInit {
   @Input() table: UiTable<T>;
+  @Input() lastUpdated: number;
 
   @ViewChild(MatTable) tableRef: MatTable<T>;
   @ViewChild(MatPaginator) paginatorRef?: MatPaginator;
   @ViewChild(MatSort) sortRef: MatSort;
   @ViewChildren(PopperContent) poppers: QueryList<PopperContent>;
 
-  constructor() {}
+  constructor() { }
 
-  async ngOnInit() {}
+  async ngOnInit() { }
 
   async ngAfterViewInit() {
     if (this.paginatorRef) {

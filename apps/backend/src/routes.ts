@@ -236,7 +236,8 @@ router.post     <void>                      ("/utils/logs",                     
 router.get      <string>                    ("/utils/ping",                               Utils.ping);
 router.get      <any>                       ("/utils/seed",                               Utils.seed);
 router.post     <void>                      ("/utils/drop",                               Utils.dropAllData);
-router.get      <string>                    ("/utils/password-otp/:uid",                   Utils.readForgottenPasswordOTP);
+router.get      <string>                    ("/utils/password-otp/:uid",                  Utils.readForgottenPasswordOTP);
+router.get      <string>                    ("/utils/host-invite/:iid/:hid",              Utils.getHostInvitationId);
 router.get      <any>                       ("/utils/stats",                              Utils.stats);
 router.get      <void>                      ("/utils/send-test-email",                    Utils.sendTestEmail);
 router.get      <void>                      ("/utils/assets",                             Utils.readAssets);

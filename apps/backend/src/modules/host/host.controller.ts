@@ -78,7 +78,8 @@ import {
   LikeLocation,
   JobType,
   DtoReadHost,
-  DtoPerformanceIDAnalytics
+  DtoPerformanceIDAnalytics,
+  DeleteHostReason
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import {
@@ -251,7 +252,14 @@ export class HostController extends ModuleController {
 
   deleteHost: IControllerEndpoint<IDeleteHostAssertion | void> = {
     // We can choose to assert only - i.e. check that it's possible to delete
-    validators: { query: object({ assert_only: coerce(boolean(), string(), v => v == 'true') }) },
+    validators: { 
+      query: object(
+        { 
+          assert_only: coerce(boolean(), string(), v => v == 'true'),
+          explanation: optional(string()),
+          reason: array(enums<DeleteHostReason>(enumToValues(DeleteHostReason)))
+        })
+    },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Owner),
     controller: async req => {
       const host = await getCheck(
@@ -283,6 +291,12 @@ export class HostController extends ModuleController {
         };
       } else {
         // Expecting a DtoDeleteHostReason with the req.body, so validate it
+        // Using req.body to simplify type conversion
+        req.body = {
+          reasons: req.query.reasons,
+          explanation: req.query.explanation
+        }
+
         const [error] = Validators.Objects.IDeleteHostReason.validate(req.body);
         if (error) throw new ErrorHandler(HTTP.BadRequest, '@@validation.invalid', Validators.formatError(error));
 
@@ -1096,7 +1110,7 @@ export class HostController extends ModuleController {
     validators: { params: object({ hid: Validators.Fields.nuuid }) },
     authorisation: AuthStrat.isLoggedIn,
     controller: async req => {
-      this.userService.toggleLike({
+      await this.userService.toggleLike({
         user_id: req.session.user._id,
         target_type: LikeLocation.HostProfile,
         target_id: req.params.hid
@@ -1110,7 +1124,6 @@ export class HostController extends ModuleController {
       await getCheck(Host.findOne({ _id: req.params.hid }));
       const res = await this.ORM.createQueryBuilder(UserHostMarketingConsent, 'consent')
         .where('consent.host__id = :host_id', { host_id: req.params.hid })
-        .andWhere('consent.opt_status != :opt_status', { opt_status: 'hard-out' as ConsentOpt })
         .innerJoinAndSelect('consent.user', 'user')
         .orderBy('consent.saved_at', 'DESC') // so we get most recently updated entries at the top
         .filter({

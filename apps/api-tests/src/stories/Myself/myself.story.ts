@@ -1,3 +1,4 @@
+import { timestamp } from '@core/helpers';
 import { Genre, IFeed, IUser, PerformanceType, Visibility } from '@core/interfaces';
 import { Stories } from '../../stories';
 
@@ -17,7 +18,7 @@ describe('Pull in the feed...', () => {
       description: 'Test description',
       genre: Genre.Dance,
       type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
     });
 
     await Stories.actions.performances.updateVisibility(perf, Visibility.Public);

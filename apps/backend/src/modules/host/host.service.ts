@@ -24,7 +24,7 @@ export class HostService extends ModuleService {
       .where('consent.host__id = :host_id', { host_id: hostId })
       .orderBy('consent.saved_at', 'DESC') // so we get most recently updated entries at the top
       .getOne();
-    return latestConsent.saved_at;
+    return latestConsent?.saved_at;
   }
 
   async readAllHostPerformances(hostId: string): Promise<Performance[]> {

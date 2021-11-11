@@ -199,4 +199,36 @@ describe('As Client, I want to register a Host & be onboarded', () => {
       });
     });
   });
+
+  describe('As a host owner I would like to update my host profile after the onboarding process', () => {
+    it('Should update the host', async () => {
+      const privateHost = await Stories.actions.hosts.updateHost(host, {
+        email_address: 'updatedhost@cass.si',
+        username: 'somecoolhost',
+        name: 'Some Cool Host',
+        business_details: {
+          business_address: {
+            city: 'Cardiff',
+            country: CountryCode.GB,
+            postal_code: 'NE62 5DE',
+            line1: 'Marquee Court'
+          },
+          business_contact_number: '+44 323 223 4234',
+          hmrc_company_number: 11940210,
+          business_type: BusinessType.GovernmentEntity
+        },
+        social_info: {
+          site_url: 'https://linkedin.com/stageupuk',
+          linkedin_url: 'https://linkedin.com/eventi',
+          facebook_url: 'https://facebook.com/eventi',
+          instagram_url: 'https://instagram.com/eventi',
+          twitter_url: 'https://twitter.com/eventi',
+          youtube_url: 'https://youtube.com/eventi',
+          pinterest_url: 'https://pinterest.com/eventi'
+        }
+      });
+
+      expect(privateHost.email_address).toEqual('updatedhost@cass.si');
+    });
+  });
 });

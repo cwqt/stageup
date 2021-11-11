@@ -7,6 +7,7 @@ import { cachize, createICacheable, ICacheable } from '../../app.interfaces';
 import { AppService } from '../../services/app.service';
 import { DrawerService } from '../../services/drawer.service';
 import { MyselfService } from '../../services/myself.service';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 @Component({
   selector: 'app-host',
@@ -24,7 +25,8 @@ export class HostComponent implements OnInit {
     private myselfService: MyselfService,
     private hostService: HostService,
     private appService: AppService,
-    private drawerService: DrawerService
+    private drawerService: DrawerService,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +40,7 @@ export class HostComponent implements OnInit {
 
     cachize(this.hostService.readHost(this.myself.host._id), this.host);
     this.$drawerIsOpen = this.drawerService.$drawerOpenInstant;
+    this.breadcrumbService.set('dashboard', this.myself.host.name);
   }
 
   // Inject IHost into child components

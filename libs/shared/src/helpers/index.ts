@@ -16,9 +16,8 @@ import {
   ParsedRichText,
   Primitive,
   RefundRequestReason,
-  RichText
+  RichText,
 } from '@core/interfaces';
-import locale from 'express-locale';
 import { nanoid } from 'nanoid';
 import QueryString from 'qs';
 
@@ -112,10 +111,10 @@ export interface IQueryParams {
 export const querize = (query: IQueryParams) =>
   query
     ? QueryString.stringify(query, {
-        arrayFormat: 'comma',
-        addQueryPrefix: true,
-        encode: false
-      })
+      arrayFormat: 'comma',
+      addQueryPrefix: true,
+      encode: false
+    })
     : '';
 
 /**
@@ -284,7 +283,7 @@ export const pipes = {
     };
 
     return pretty[reason];
-  }
+  },
 };
 
 /**

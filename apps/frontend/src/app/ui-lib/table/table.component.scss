@@ -168,3 +168,55 @@ popper-content {
 .set-uniform-height {
   height: 65px !important;
 }
+.mat-header-cell{
+  font-size: 18px;
+  font-weight: 600;
+  color: black;
+}
+
+::ng-deep .mat-sort-header-arrow[style] {
+
+  // Hide default arrow stem
+  .mat-sort-header-stem {
+    display: none;
+  }
+  .mat-sort-header-indicator {
+    opacity: 1;
+    color: black;
+    font-weight: bold;
+
+    // Hide default arrow as its composed of left, right and middle
+    .mat-sort-header-pointer-left, .mat-sort-header-pointer-right, .mat-sort-header-pointer-middle  {
+      display: none;
+    }
+  }
+}
+
+ui-icon{
+  color: #B7B7B7;
+  font-size: 26px;
+}
+
+ui-icon:hover{
+  color: gray
+}
+
+ui-button{
+  padding: 0 4px;
+}
+
+.sort-icon{
+  font-size: 26px;
+}
+
+.is-chip{
+  width: 2rem;
+}
+
+.mat-column-__select{
+  width: 4rem
+}
+
+.table-action-button{
+  min-width: 180px
+}

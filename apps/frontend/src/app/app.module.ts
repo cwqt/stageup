@@ -20,6 +20,7 @@ import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
+import { BreadcrumbModule, BreadcrumbService } from 'xng-breadcrumb';
 
 // Service ----------------------------------------------------------------------------------------------------------------
 import { AppService } from '@frontend/services/app.service';
@@ -177,6 +178,9 @@ import { PerformanceCancelDialogComponent } from './routes/performance/performan
 import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-analytics-graphs/host-analytics-graphs.component';
+import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
+import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
+import { OptStatusPipe } from './_pipes/opt-status.pipe';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -328,6 +332,9 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostAudienceListComponent,
     HostProfileAssetComponent,
     HostAnalyticsGraphsComponent,
+    HostListPerformancesComponent,
+    BreadcrumbComponent,
+    OptStatusPipe
   ],
   imports: [
     AngularMaterialModule,
@@ -350,6 +357,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     PlyrModule,
     IvyCarouselModule,
     ChartjsModule,
+    BreadcrumbModule,
     QuillModule.forRoot(),
     LoggerModule.forRoot({
       serverLoggingUrl: '/api/utils/logs',
@@ -359,15 +367,11 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     }),
     SocialLoginModule
   ],
-  providers: [
-    CookieService,
-    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
-    {
-      provide: 'SocialAuthServiceConfig',
-      useFactory: getSigninProviders,
-      deps: [AppService]
-    }
-  ],
+  providers: [CookieService, BreadcrumbService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }, {
+    provide: 'SocialAuthServiceConfig',
+    useFactory: getSigninProviders,
+    deps: [AppService]
+  }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

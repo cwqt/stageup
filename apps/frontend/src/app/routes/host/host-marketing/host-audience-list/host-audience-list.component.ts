@@ -1,9 +1,11 @@
 import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { ToastService } from '@frontend/services/toast.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { ExportFileType, FilterCode, DtoUserMarketingInfo, IUserMarketingInfo } from '@core/interfaces';
+import { ExportFileType, FilterCode, IUserMarketingInfo } from '@core/interfaces';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { Component, OnInit } from '@angular/core';
+import { pipes } from '@core/helpers';
+import { OptStatusPipe } from '@frontend/_pipes/opt-status.pipe';
 
 @Component({
   selector: 'app-host-audience-list',
@@ -13,9 +15,10 @@ import { Component, OnInit } from '@angular/core';
 export class HostAudienceListComponent implements OnInit {
   table: UiTable<IUserMarketingInfo>;
   lastUpdated: number;
-  constructor(private hostService: HostService, private toastService: ToastService) {}
+  constructor(private hostService: HostService, private toastService: ToastService) { }
 
   ngOnInit(): void {
+    const optStatusPipe = new OptStatusPipe();
     this.table = new UiTable<IUserMarketingInfo>({
       resolver: async query => {
         const res = await this.hostService.readHostMarketingConsents(this.hostService.currentHostValue._id, query);
@@ -53,35 +56,44 @@ export class HostAudienceListComponent implements OnInit {
       },
       columns: [
         {
-          label: $localize`User`,
-          accessor: user => user.name || user.username
-        },
-        {
-          label: $localize`Email Address`,
+          label: $localize`Email`,
           accessor: user => user.email_address,
           sort: { field: 'email_address' },
           filter: {
             type: FilterCode.String,
             field: 'email_address'
           }
+        },
+        {
+          label: $localize`Name `,
+          accessor: user => user.name || user.username,
+          sort: { field: 'name' },
+          filter: {
+            type: FilterCode.String,
+            field: 'name'
+          }
+        },
+        {
+          label: $localize`Status`,
+          accessor: user => optStatusPipe.transform(user.opt_status),
+          sort: { field: 'opt_status' },
+          filter: {
+            type: FilterCode.String,
+            field: 'opt_status'
+          },
+          chip_selector: v => {
+            switch (v.opt_status) {
+              case 'hard-out':
+                return 'red';
+              case 'soft-in':
+                return 'green';
+              case 'hard-in':
+                return 'green';
+            }
+          }
         }
       ],
       actions: []
     });
-  }
-
-  async exportTable(): Promise<void> {
-    try {
-      await this.hostService.exportUserMarketing(this.hostService.hostId, null, 'csv' as ExportFileType);
-      this.toastService.emit(
-        $localize`Exported CSV!\n An e-mail with your attachments will arrive at the e-mail listed on this company account shortly`,
-        ThemeKind.Primary,
-        { duration: 1e9 }
-      );
-    } catch (error) {
-      this.toastService.emit($localize`An error occured while exporting to CSV`, ThemeKind.Danger, {
-        duration: 5000
-      });
-    }
   }
 }
