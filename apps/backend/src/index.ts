@@ -79,9 +79,9 @@ import { Seeder } from './seeder';
 
     // Run the seeder in staging, for branch & staging deploys
     if (Env.isEnv([Environment.Staging, Environment.Development]) && configuration.is_seeded == false) {
-      const connection = Container.get(POSTGRES_PROVIDER)
-      await connection.dropDatabase(); 
-      await connection.synchronize();
+      // const connection = Container.get(POSTGRES_PROVIDER)
+      // await connection.dropDatabase(); 
+      // await connection.synchronize();
       
       // seeder will wipe config momentarily, but stored in memory & will be saved again
       const seeder = new Seeder(Container.get(STRIPE_PROVIDER));
