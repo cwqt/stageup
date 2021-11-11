@@ -74,7 +74,8 @@ export abstract class Asset<T extends AssetType = any> extends BaseEntity implem
       _id: this._id,
       type: this.type,
       location: this.location,
-      tags: this.tags
+      tags: this.tags,
+      meta: this.meta
     };
   }
 }

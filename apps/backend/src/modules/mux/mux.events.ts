@@ -5,11 +5,11 @@ import {
   Logger,
   LOGGING_PROVIDER,
   ModuleEvents,
-  MuxProvider,
   MUX_PROVIDER,
   Performance,
   VideoAsset,
-  Contract
+  Contract,
+  LiveStreamAsset
 } from '@core/api';
 import { timeout } from '@core/helpers';
 import {
@@ -57,17 +57,21 @@ export class MuxEvents extends ModuleEvents<`mux.${HandledMuxEvents}`, true> {
 
   async videoAssetReady(ct: Contract<'mux.video.asset.ready'>) {
     const passthrough: IMuxPassthrough = JSON.parse(ct.data.passthrough);
-    const asset = await getCheck(VideoAsset.findOne({ _id: passthrough.asset_id }));
+    const asset = await VideoAsset.findOne({ _id: passthrough.asset_id }) || await LiveStreamAsset.findOne({ _id: passthrough.asset_id });
+    
+    // Both live stream and vod videos trigger this event, live streams don't have a location though
+    // Once the live stream is over it is converted into a video asset 
+    if(asset.constructor.name === 'VideoAsset') {
+      // Now we have a playback Id & can set the source location on the asset
+      const assetInfo = await this.mux.Video.Assets.get(asset.asset_identifier);
 
-    // Now we have a playback Id & can set the source location on the asset
-    const assetInfo = await this.mux.Video.Assets.get(asset.asset_identifier);
-
-    asset.meta.playback_id = assetInfo.playback_ids.find(
-      p => p.policy == (asset.signing_key__id ? 'signed' : 'public')
-    ).id;
-
-    asset.location = asset.getLocation();
-    await asset.save();
+      asset.meta.playback_id = assetInfo.playback_ids.find(
+        p => p.policy == (asset.signing_key__id ? 'signed' : 'public')
+      ).id;
+  
+      asset.location = asset.getLocation();
+      await asset.save();
+    }    
 
     // delete the last trailer video associated with this group, only one trailer / performances
     const group = await AssetGroup.findOne({ _id: passthrough.asset_group_id });
@@ -101,7 +105,7 @@ export class MuxEvents extends ModuleEvents<`mux.${HandledMuxEvents}`, true> {
   }
 
   async streamIdle(data: IMUXHookResponse<LiveStream>) {
-    await this.muxService.setLiveStreamAssetState(JSON.parse(data.data.passthrough), LiveStreamState.Idle);
+    await this.muxService.setLiveStreamAssetState(JSON.parse(data.data.passthrough).asset_id, LiveStreamState.Idle);
   }
 
   async streamActive(data: IMUXHookResponse<LiveStream>) {

@@ -43,20 +43,14 @@ export class AsyncRouter {
     this.endpoint<T>(this.router.delete)(path, endpoint);
   };
 
-  raw = <T>(path: string, endpoint: IControllerEndpoint<T>) => {
-    this.endpoint<T>(this.router.get, HTTP.OK, endpoint.handler)(path, endpoint);
-  };
-
-  redirect = (path: string, endpoint: IControllerEndpoint<string>) => {
-    this.endpoint<string>(this.router.get, HTTP.Moved, (res: Response, data: string) => {
-      res.status(HTTP.Moved).redirect(data);
-    })(path, endpoint);
+  redirect = (path: string, endpoint: Exclude<IControllerEndpoint<string>, "handler">) => {
+    this.endpoint<string>(this.router.get)(path,
+      {...endpoint, handler: (res: Response, data: string) => res.status(HTTP.Moved).redirect(data) });
   };
 
   private endpoint = <T>(
     method: IRouterMatcher<AsyncRouterInstance>,
     responseCode?: HTTP,
-    lambda?: (res: Response, data: T) => void
   ) => {
     return (path: string, endpoint: IControllerEndpoint<T>) => {
       method(
@@ -67,7 +61,12 @@ export class AsyncRouter {
         async (req: Request, res: Response, next: NextFunction) => {
           try {
             const returnValue = await endpoint.controller(req);
-            lambda ? lambda(res, returnValue) : res.status(responseCode || HTTP.OK).json(returnValue);
+
+            // no more `lambda`
+            endpoint.handler
+              ? endpoint.handler(res, returnValue)
+              : res.status(responseCode || HTTP.OK).json(returnValue);
+
           } catch (error) {
             handleError(req, res, next, error as ErrorHandler | Error);
           }

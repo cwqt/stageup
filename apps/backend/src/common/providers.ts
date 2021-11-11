@@ -48,7 +48,8 @@ export const instantiateProviders = () => {
         access_token: Env.MUX.ACCESS_TOKEN,
         secret_key: Env.MUX.SECRET_KEY,
         webhook_signature: Env.MUX.WEBHOOK_SIGNATURE,
-        data_env_key: Env.MUX.DATA_ENV_KEY
+        data_env_key: Env.MUX.DATA_ENV_KEY,
+        mux_live_stream_test_mode: Env.MUX.MUX_LIVE_STREAM_TEST_MODE
       })
     ],
     [

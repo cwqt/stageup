@@ -59,7 +59,9 @@ export class PerformanceComponent implements OnInit {
       this.performanceSharingUrl = `${this.appService.environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
 
       // Look for VoD or LiveStream asset marked as 'primary'
-      this.primaryAsset = this.performance.assets.find(asset => asset.tags.includes('primary'));
+      this.primaryAsset = this.performance.assets.find(
+        asset => (asset.tags.includes('primary') && (asset.type == 'video' || asset.type == 'live-stream'))
+      );
 
       if (this.primaryAsset)
         await this.primarySignedToken.request(

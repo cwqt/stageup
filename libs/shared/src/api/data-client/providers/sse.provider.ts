@@ -8,7 +8,7 @@ import { LOGGING_PROVIDER } from '../tokens';
 import { Logger } from './logging.provider';
 
 export interface SSE {
-  create: (id: string) => void;
+  create: (id: string) => Hub;
   destroy: (id: string) => void;
   emit: <T>(id: string, event: SseEvent<T>) => void;
   get: (id: string) => Hub;

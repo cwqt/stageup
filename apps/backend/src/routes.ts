@@ -67,6 +67,7 @@ import { AuthController } from './modules/auth/auth.controller';
 import { GdprController } from './modules/gdpr/gdpr.controller';
 import { UtilityController } from './modules/utils/utils.controller';
 import { JobQueueController } from './modules/queue/queue.controller';
+import sse from '@toverux/expresse';
 
 export default  (router:AsyncRouter) => {
 // MYSELF -------------------------------------------------------------------------------------------------------------
@@ -196,6 +197,7 @@ router.post     <void>                      ("/performances/:pid/toggle-like",  
 
 // SSE ----------------------------------------------------------------------------------------------------------------
 const SSE = Container.get(SSEController);
+router.use                                  ("/sse/assets/:aid",                          sse());
 router.get                                  ("/sse/assets/:aid",                          SSE.performanceStateEvents);
 
 // SEARCH ---------------------------------------------------------------------------------------------------------------

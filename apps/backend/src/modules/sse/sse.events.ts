@@ -31,6 +31,8 @@ export class SSEEvents extends ModuleEvents {
       this.log.debug(`No clients on this instance for pid ${ct.asset_id}`);
     }
 
+    console.log(`Event: stream state changed - ${ct.state}`);
+
     // Submit the event to all connected clients on the hub
     this.sse.emit(ct.asset_id, { type: SseEventType.StreamStateChanged, data: ct.state });
 

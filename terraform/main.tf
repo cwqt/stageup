@@ -168,6 +168,7 @@ module "backend" {
     FRONTEND_ENDPOINT  = "/" # managed by load balancer / nginx
     FRONTEND_PORT      = 8080
     BACKEND_PORT       = 8080
+    MUX_LIVE_STREAM_TEST_MODE   = "false"
     # secrets -------------------------------------------------------------------------
     # TODO: support different workspaces different secret keys
     MUX_SECRET_KEY                       = module.secrets.MUX_SECRET_KEY
