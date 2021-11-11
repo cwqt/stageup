@@ -81,7 +81,7 @@ export class HostDashboardComponent implements OnInit {
       },
       clickable: {
         shadow: true,
-        click_function: performance => this.appService.navigateTo(`/dashboard/performances/${performance.__data._id}`)
+        click_function: performance => this.appService.navigateTo(`/dashboard/events/${performance.__data._id}`)
       },
       uniform_row_height: true
     });

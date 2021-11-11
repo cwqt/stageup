@@ -29,27 +29,33 @@
         <span i18n>Dashboard</span>
       </ui-button>
 
-      <ui-button routerLink="/dashboard/performances" routerLinkActive="active-link">
+      <ui-button routerLink="/dashboard/events" routerLinkActive="active-link">
         <ui-icon>playlist</ui-icon>
         <span i18n>Performances</span>
       </ui-button>
 
       <div class="flex flex-col ml-8" *ngIf="activeHostPerformanceId">
         <ui-button
-          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId"
+        [routerLink]="'/dashboard/events/' + activeHostPerformanceId"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <span i18n>Overview</span>
+      </ui-button>
+        <ui-button
+          [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/details'"
           routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: true }"
         >
           <span i18n>Details</span>
         </ui-button>
         <ui-button
-          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/media'"
+          [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/media'"
           routerLinkActive="active-link"
         >
           <span i18n>Media</span>
         </ui-button>
         <ui-button
-          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/ticketing'"
+          [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/ticketing'"
           routerLinkActive="active-link"
         >
           <span i18n>Ticketing</span>
@@ -57,7 +63,7 @@
         <ui-button
           [disabled]="true"
           class="pointer-events-none"
-          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/analytics'"
+          [routerLink]="'/dashboard/events/' + activeHostPerformanceId + '/analytics'"
           routerLinkActive="active-link"
         >
           <span i18n>Analytics</span>

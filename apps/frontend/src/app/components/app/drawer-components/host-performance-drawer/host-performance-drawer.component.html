@@ -18,22 +18,22 @@
 
     <div class="flex flex-col mt-16 sidebar-main-buttons">
       <ui-button size="l" kind="accent" [routerLinkActiveOptions]="{exact: true}"
-        [routerLink]="'/dashboard/performances/'+performance._id" routerLinkActive="active">
+        [routerLink]="'/dashboard/events/'+performance._id" routerLinkActive="active">
         <p>Details</p>
       </ui-button>
 
-      <ui-button size="l" kind="accent" [routerLink]="'/dashboard/performances/'+performance._id+'/ticketing'"
+      <ui-button size="l" kind="accent" [routerLink]="'/dashboard/events/'+performance._id+'/ticketing'"
         routerLinkActive="active">
         <p>Ticketing</p>
       </ui-button>
 
-      <ui-button size="l" kind="accent" [routerLink]="'/dashboard/performances/'+performance._id+'/customise'"
+      <ui-button size="l" kind="accent" [routerLink]="'/dashboard/events/'+performance._id+'/customise'"
         routerLinkActive="active">
         <p>Customization</p>
       </ui-button>
 
       <ui-button disabled="true" size="l" kind="accent"
-        [routerLink]="'/dashboard/performances/'+performance._id+'/analytics'" routerLinkActive="active">
+        [routerLink]="'/dashboard/events/'+performance._id+'/analytics'" routerLinkActive="active">
         <p>Analytics</p>
       </ui-button>
     </div>

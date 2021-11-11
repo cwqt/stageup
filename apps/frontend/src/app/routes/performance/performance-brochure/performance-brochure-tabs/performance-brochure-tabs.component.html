@@ -68,7 +68,7 @@
                     performance.publicity_period.start - currentTimestamp < 600 &&
                     currentTimestamp < performance.publicity_period.end
                   "
-                  [routerLink]="'/performances/' + performance._id"
+                  [routerLink]="'/events/' + performance._id"
                   i18n
                   (click)="leave.emit()"
                 >

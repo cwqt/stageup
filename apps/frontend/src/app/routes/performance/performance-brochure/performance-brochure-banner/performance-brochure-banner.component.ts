@@ -33,7 +33,7 @@ export class PerformanceBrochureBannerComponent implements OnInit {
   get brochureSharingUrl () {
     if (!this._brochureSharingUrl) {
       const loc: string = this.locale ? `/${this.locale}` : '';
-      this._brochureSharingUrl = `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`;
+      this._brochureSharingUrl = `${this.appService.environment.frontend_url}${loc}/events/show/${this.performance._id}`;
     }
     return this._brochureSharingUrl;
   }

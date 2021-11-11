@@ -100,14 +100,15 @@ const LOGGED_IN_ROUTES: Routes = [
         component: HostPaymentsComponent
       },
       { path: 'team', component: HostMembersComponent },
-      { path: 'performances', component: HostPerformancesComponent },
+      { path: 'events', component: HostPerformancesComponent },
       { path: 'analytics', component: HostAnalyticsComponent },
       { path: 'marketing', component: HostMarketingComponent },
       {
-        path: `performances/:${RP.PerformanceId}`,
+        path: `events/:${RP.PerformanceId}`,
         component: HostPerformanceComponent,
         children: [
           { path: '', component: HostPerformanceDetailsComponent },
+          { path: 'details', component: HostPerformanceDetailsComponent },
           { path: 'ticketing', component: HostPerformanceTicketingComponent },
           { path: 'media', component: HostPerformanceMediaComponent },
 

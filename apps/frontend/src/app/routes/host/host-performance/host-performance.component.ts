@@ -83,7 +83,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   }
 
   gotoPerformance() {
-    this.appService.navigateTo(`/performances/${this.performanceData._id}`);
+    this.appService.navigateTo(`/events/${this.performanceData._id}`);
   }
 
   deletePerformance() {
@@ -112,7 +112,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
           kind: ThemeKind.Secondary,
           callback: ref => {
             ref.close();
-            this.router.navigate(['dashboard/performances']);
+            this.router.navigate(['dashboard/events']);
           }
         }),
         new UiDialogButton({

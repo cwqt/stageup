@@ -78,7 +78,7 @@ export class HostPerformancesComponent implements OnInit {
       actions: [
         {
           label: $localize`Edit`,
-          click: p => this.appService.navigateTo(`/dashboard/performances/${p._id}`),
+          click: p => this.appService.navigateTo(`/dashboard/events/${p._id}`),
           icon: 'maximize',
           disabled: p => p.status == PerformanceStatus.Deleted
         }

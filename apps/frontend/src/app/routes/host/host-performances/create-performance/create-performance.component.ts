@@ -110,7 +110,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
             this.stepper.next();
           } else {
             // live
-            this.appService.navigateTo(`/dashboard/performances/${v._id}`);
+            this.appService.navigateTo(`/dashboard/events/${v._id}`);
             this.ref.close(v);
           }
           this.gdprService.updateStreamCompliance(
@@ -142,7 +142,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
 
   handleVoDUploadChange(event: UploadEvent) {
     if (event == 'success') {
-      this.appService.navigateTo(`/dashboard/performances/${this.performance._id}`);
+      this.appService.navigateTo(`/dashboard/events/${this.performance._id}`);
       this.ref.close(this.performance);
     }
   }
