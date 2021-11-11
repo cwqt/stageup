@@ -2,23 +2,26 @@
   <div body>
     <mat-spinner *ngIf="performance.loading"></mat-spinner>
     <ng-container *ngIf="performance.data">
-      <div class="flex align-middle">
+      <div class="flex align-middle space-x-4">
         <h1 class="float-left">{{ performanceData.name }}</h1>
-        <div class="flex items-center event-preview-button">
-          <ui-button (click)="gotoPerformance()" kind="secondary" class="mr-2" icon="launch" i18n>Preview</ui-button>
+        <div class="justify-en pt-1">
+          <ui-chip kind="deep-blush">{{performanceData.performance_type | performanceTypePipe }}</ui-chip>
+        </div>
+      </div>
+      <div class="flex items-center event-preview-button">
+        <ui-button (click)="gotoPerformance()" kind="secondary" class="mr-2" icon="launch" i18n>Preview</ui-button>
           
-          <div
-            class="flex items-center cursor-pointer z-40"
-            [popper]="managePerformanceDropdown"
-            [popperShowOnStart]="false"
-            [popperHideOnClickOutside]="true"
-            [popperHideOnScroll]="true"
-            [popperApplyClass]="'user-dropdown-menu'"
-            popperTrigger="click"
-            popperPlacement="bottom"
-          >
+        <div
+          class="flex items-center cursor-pointer z-40"
+          [popper]="managePerformanceDropdown"
+          [popperShowOnStart]="false"
+          [popperHideOnClickOutside]="true"
+          [popperHideOnScroll]="true"
+          [popperApplyClass]="'user-dropdown-menu'"
+          popperTrigger="click"
+          popperPlacement="bottom">
           <ui-icon size="l">overflow-menu--vertical</ui-icon>
-          </div>
+        </div>
 
 
           <!--
@@ -29,8 +32,7 @@
             <ui-icon>share</ui-icon>
           </ui-button>
           -->
-        </div>
-      </div>
+      </div>     
       <ui-hr></ui-hr>
 
       <div class="bg-white p-4 rounded shadow-sm">
