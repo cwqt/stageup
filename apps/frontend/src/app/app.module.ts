@@ -71,6 +71,7 @@ import { VisibilityPipe } from './_pipes/visibility.pipe';
 import { TimesPipe } from './_pipes/times.pipe';
 import { TimeUntilPipe } from './_pipes/time-until.pipe';
 import { PerformanceTypePipe } from './_pipes/performance-type.pipe';
+import { OptStatusPipe } from './_pipes/opt-status.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -181,7 +182,7 @@ import { HostProfileAssetComponent } from './routes/host/host-profile/host-profi
 import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-analytics-graphs/host-analytics-graphs.component';
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
 import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
-import { OptStatusPipe } from './_pipes/opt-status.pipe';
+import { HostPerformanceOverviewComponent } from './routes/host/host-performance/host-performance-overview/host-performance-overview.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -253,6 +254,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     TicketTypePipe,
     RefundReasonPipe,
     PerformanceTypePipe,
+    OptStatusPipe,
     OnboardingViewIssueMakerComponent,
     PerformanceBrochureComponent,
     PerformanceBrochureBannerComponent,
@@ -336,7 +338,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostAnalyticsGraphsComponent,
     HostListPerformancesComponent,
     BreadcrumbComponent,
-    OptStatusPipe
+    HostPerformanceOverviewComponent
   ],
   imports: [
     AngularMaterialModule,

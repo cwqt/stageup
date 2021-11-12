@@ -45,6 +45,7 @@ import { TestbedComponent } from './ui-lib/testbed/testbed.component';
 import { LoggedInGuard } from './_helpers/logged-in.guard';
 import { PerformanceShowComponent } from './routes/performance/performance-show/performance-show.component';
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
+import { HostPerformanceOverviewComponent } from './routes/host/host-performance/host-performance-overview/host-performance-overview.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -111,7 +112,7 @@ const LOGGED_IN_ROUTES: Routes = [
             component: HostPerformanceComponent,
             children: [
               { path: '', component: HostPerformanceDetailsComponent, data: { breadcrumb: $localize`Details` } },
-              { path: 'overview', component: HostPerformanceDetailsComponent, data: { breadcrumb: $localize`Overview` } },
+              { path: 'overview', component: HostPerformanceOverviewComponent, data: { breadcrumb: $localize`Overview` } },
               { path: 'ticketing', component: HostPerformanceTicketingComponent, data: { breadcrumb: $localize`Ticketing` } },
               { path: 'media', component: HostPerformanceMediaComponent, data: { breadcrumb: $localize`Media` } },
 
@@ -267,4 +268,4 @@ const LOGGED_IN_ROUTES: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

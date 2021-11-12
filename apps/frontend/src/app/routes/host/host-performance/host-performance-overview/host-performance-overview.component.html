@@ -1,0 +1,12 @@
+<app-page>
+    <div body>
+      <div *ngIf="numberOfHostEvents == 1" class="clear-both relative">
+        <img [src]="'/assets/event-welcome-banner.svg'" class="w-full rounded" alt="" />
+        <div class="flex flex-col pl-40 mt-10  absolute inset-0">
+          <h3 class="text-white opacity-100" i18n>Congratulations, you've created your first event.</h3>
+          <ui-button  kind="clear-outline" icon="calendar" i18n>Set Schedule</ui-button>
+        </div>
+      </div>
+    </div>
+  </app-page>
+  
