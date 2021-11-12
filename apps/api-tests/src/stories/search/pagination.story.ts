@@ -1,7 +1,7 @@
 import { IHost, IPerformance, IUser, CurrencyCode, Genre, PerformanceType } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
-import { timeout } from '@core/helpers';
+import { timeout, timestamp } from '@core/helpers';
 
 jest.setTimeout(30000); // 30 sec timeout to create 5 performancess
 
@@ -20,7 +20,7 @@ describe('As a user, I want to be able to paginate result of a search', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'somecoolhost',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     for (let i = 0; i < PAGES; i++) {
@@ -29,7 +29,7 @@ describe('As a user, I want to be able to paginate result of a search', () => {
         description: 'To be or not to be',
         genre: Genre.Classical,
         type: PerformanceType.Vod,
-        publicity_period: { start: 161347834, end: 161347834 }
+        publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       });
 
       performances.push(perf);

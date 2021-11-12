@@ -169,21 +169,21 @@ module "backend" {
     BACKEND_PORT       = 8080
     # secrets -------------------------------------------------------------------------
     # TODO: support different workspaces different secret keys
-    MUX_SECRET_KEY           = module.secrets.MUX_SECRET_KEY
-    MUX_ACCESS_TOKEN         = module.secrets.MUX_ACCESS_TOKEN
-    MUX_WEBHOOK_SIGNATURE    = module.secrets.MUX_WEBHOOK_SIGNATURE
-    MUX_DATA_ENV_KEY         = module.secrets.MUX_DATA_ENV_KEY
-    SENDGRID_API_KEY         = module.secrets.SENDGRID_API_KEY
-    STRIPE_PRIVATE_KEY       = module.secrets.STRIPE_PRIVATE_KEY
-    STRIPE_WEBHOOK_SIGNATURE = stripe_webhook_endpoint.stripe_webhook.secret
-    STRIPE_CLIENT_ID         = module.secrets.STRIPE_CLIENT_ID
-    STRIPE_PUBLIC_KEY        = module.secrets.STRIPE_PUBLIC_KEY
-    BACKEND_PRIVATE_KEY      = module.secrets.BACKEND_PRIVATE_KEY
-
-
-    GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY = module.secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY
+    MUX_SECRET_KEY                       = module.secrets.MUX_SECRET_KEY
+    MUX_ACCESS_TOKEN                     = module.secrets.MUX_ACCESS_TOKEN
+    MUX_WEBHOOK_SIGNATURE                = module.secrets.MUX_WEBHOOK_SIGNATURE
+    MUX_DATA_ENV_KEY                     = module.secrets.MUX_DATA_ENV_KEY
+    SENDGRID_API_KEY                     = module.secrets.SENDGRID_API_KEY
+    STRIPE_PRIVATE_KEY                   = module.secrets.STRIPE_PRIVATE_KEY
+    STRIPE_WEBHOOK_SIGNATURE             = stripe_webhook_endpoint.stripe_webhook.secret
+    STRIPE_CLIENT_ID                     = module.secrets.STRIPE_CLIENT_ID
+    STRIPE_PUBLIC_KEY                    = module.secrets.STRIPE_PUBLIC_KEY
+    BACKEND_PRIVATE_KEY                  = module.secrets.BACKEND_PRIVATE_KEY
+    GOOGLE_AUTH_APP_ID                   = module.secrets.GOOGLE_AUTH_APP_ID
+    FACEBOOK_AUTH_APP_ID                 = module.secrets.FACEBOOK_AUTH_APP_ID
+    GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY   = module.secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT_KEY
     GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL = module.secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL
-    GOOGLE_STORAGE_BUCKET_NAME = "storage-${var.core}"
+    GOOGLE_STORAGE_BUCKET_NAME           = "storage-${var.core}"
     #https://storage.cloud.google.com/su-test-bucket/Modular-Monolith-Integration-Styles-Messaging-in-memory-768x364.jpeg
     GOOGLE_STORAGE_PUBLIC_URL = "https://storage.cloud.google.com"
   }

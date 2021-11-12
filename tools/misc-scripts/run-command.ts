@@ -62,9 +62,9 @@ const applications: {
   },
   ['api-tests']: {
     cmd: {
-      execute: env => `npx nx test api-tests --watch`
+      execute: env => `cross-env NODE_ENV=${env} npx nx test api-tests --watch`
     },
-    environments: ['development', 'staging', 'production']
+    environments: ['testing', 'development', 'staging', 'production']
   }
 };
 

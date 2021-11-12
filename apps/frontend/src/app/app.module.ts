@@ -20,6 +20,18 @@ import { PlyrModule } from 'ngx-plyr';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { QuillModule } from 'ngx-quill';
 import { IvyCarouselModule } from '@frontend/components/libraries/ivyсarousel/carousel.module';
+import { BreadcrumbModule, BreadcrumbService } from 'xng-breadcrumb';
+
+// Service ----------------------------------------------------------------------------------------------------------------
+import { AppService } from '@frontend/services/app.service';
+
+// https://www.npmjs.com/package/angularx-social-login
+import {
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  SocialAuthServiceConfig,
+  SocialLoginModule
+} from 'angularx-social-login';
 
 // https://github.com/scttcper/ngx-chartjs
 import { ChartjsModule } from '@ctrl/ngx-chartjs';
@@ -167,6 +179,26 @@ import { HostPerformanceMediaComponent } from './routes/host/host-performance/ho
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-analytics-graphs/host-analytics-graphs.component';
 
+import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
+import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
+import { OptStatusPipe } from './_pipes/opt-status.pipe';
+
+// Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
+const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
+  const env = await appService.getEnvironment();
+  const providers = [
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider(env.google_auth_app_id)
+    },
+    {
+      id: FacebookLoginProvider.PROVIDER_ID,
+      provider: new FacebookLoginProvider(env.facebook_auth_app_id)
+    }
+  ];
+  return { autoLogin: true, providers };
+};
+
 // ---------------------------------------------------------------------------------------------------------------------
 @NgModule({
   declarations: [
@@ -301,6 +333,9 @@ import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-
     HostAudienceListComponent,
     HostProfileAssetComponent,
     HostAnalyticsGraphsComponent,
+    HostListPerformancesComponent,
+    BreadcrumbComponent,
+    OptStatusPipe
   ],
   imports: [
     AngularMaterialModule,
@@ -323,15 +358,26 @@ import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-
     PlyrModule,
     IvyCarouselModule,
     ChartjsModule,
+    BreadcrumbModule,
     QuillModule.forRoot(),
     LoggerModule.forRoot({
       serverLoggingUrl: '/api/utils/logs',
       colorScheme: ['purple', 'teal', 'gray', 'gray', 'red', 'red', 'red'],
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR
-    })
+    }),
+    SocialLoginModule
   ],
-  providers: [CookieService, { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }],
+  providers: [
+    CookieService,
+    BreadcrumbService,
+    { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
+    {
+      provide: 'SocialAuthServiceConfig',
+      useFactory: getSigninProviders,
+      deps: [AppService]
+    }
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

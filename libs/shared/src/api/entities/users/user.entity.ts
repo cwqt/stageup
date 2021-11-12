@@ -1,4 +1,4 @@
-import { IUser, IUserStub, IUserPrivate, IMyself, ILocale, ConsentOpts, ConsentOpt } from '@core/interfaces';
+import { DtoSocialLogin, IUser, IUserStub, IUserPrivate, IMyself, ILocale, ConsentOpts, ConsentOpt, LoginMethod, IPersonInfo } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import bcrypt from 'bcrypt';
 import {
@@ -38,7 +38,7 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @Column() is_verified: boolean;
   @Column() is_new_user: boolean;
   @Column() is_admin: boolean;
-  @Column() is_hiding_host_marketing_prompts: boolean;
+  @Column({ default: false }) is_hiding_host_marketing_prompts: boolean;
   @Column({ unique: true }) email_address: string;
   @Column() stripe_customer_id: string; // cus_xxx
   @Column('jsonb', { default: { language: 'en', region: 'GB' } }) locale: ILocale;
@@ -49,10 +49,18 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
   @OneToOne(() => Person, { cascade: ['remove'] }) @JoinColumn() personal_details: Person; // Lazy
   @OneToMany(() => PatronSubscription, sub => sub.user) patron_subscriptions: PatronSubscription[];
 
-  @Column() private salt: string;
-  @Column() private pw_hash: string;
+  @Column('simple-array', { default: [] }) sign_in_types: LoginMethod[];
 
-  constructor(data: { email_address: string; username: string; password: string; stripe_customer_id: string }) {
+  @Column({ nullable: true }) private salt: string;
+  @Column({ nullable: true }) private pw_hash: string;
+
+  constructor(data: {
+    email_address: string;
+    username: string;
+    password?: string;
+    stripe_customer_id: string;
+    provider?: string;
+  }) {
     super();
     this.username = data.username;
     this.email_address = data.email_address;
@@ -62,14 +70,17 @@ export class User extends BaseEntity implements Except<IUserPrivate, 'salt' | 'p
     this.is_new_user = false; // TODO: change to true
     this.is_verified = false;
     this.is_hiding_host_marketing_prompts = false;
-    this.setPassword(data.password);
+    // Users logging in with google/facebook/twitter etc will not have a password
+    if (data.password) this.setPassword(data.password);
+    // An array of sign in types (e.g. ['GOOGLE', 'FACEBOOK', 'EMAIL'])
+    this.sign_in_types = [data.provider ? data.provider : 'EMAIL'];
   }
 
-  async setup(txc: EntityManager): Promise<User> {
+  async setup(txc: EntityManager, personalDetails?: IPersonInfo): Promise<User> {
     this.personal_details = new Person({
-      first_name: null,
-      last_name: null,
-      title: null
+      first_name: personalDetails?.first_name || null,
+      last_name: personalDetails?.last_name || null,
+      title: personalDetails?.title || null
     });
 
     await this.personal_details.addContactInfo(

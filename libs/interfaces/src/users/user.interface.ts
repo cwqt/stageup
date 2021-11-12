@@ -1,9 +1,13 @@
+import { SocialUser } from 'angularx-social-login';
 import { HostPermission, IEnvelopedData, IHost, ILocale, IPersonInfo, ConsentOpt } from '@core/interfaces';
 import { IFollowing } from './follow.interface';
 
 export type DtoLogin = Pick<IUserPrivate, 'email_address'> & { password: string };
 export type DtoCreateUser = Pick<IUserPrivate, 'username' | 'email_address'> & { password: string };
 export type DtoUpdateUser = Pick<IUserPrivate, 'email_address' | 'name' | 'bio'>;
+export type DtoSocialLogin = Pick<SocialUser, 'email' | 'name' | 'firstName' | 'lastName' | 'photoUrl' | 'provider' | 'id'>;
+
+export type LoginMethod = DtoSocialLogin['provider'] | 'EMAIL';
 
 export interface IUserStub {
   _id: string;
@@ -38,7 +42,7 @@ export interface IUserHostInfo {
   prefers_dashboard_landing: boolean; // where the host member would prefer landing page to be
 }
 
-export type IUserMarketingInfo = Pick<IUserPrivate, '_id' | 'name' | 'username' | 'email_address'>;
+export type IUserMarketingInfo = Pick<IUserPrivate, "_id" | "name" | "username" | "email_address"> & { opt_status: ConsentOpt};
 
 export type DtoUserMarketingInfo = IEnvelopedData<IUserMarketingInfo[], { last_updated: number }>;
 

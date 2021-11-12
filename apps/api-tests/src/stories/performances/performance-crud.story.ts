@@ -1,7 +1,18 @@
-import { HTTP, IErrorResponse, IHost, IPerformance, IUser, CurrencyCode, Genre, Visibility, PerformanceType } from '@core/interfaces';
+import {
+  HTTP,
+  IErrorResponse,
+  IHost,
+  IPerformance,
+  IUser,
+  CurrencyCode,
+  Genre,
+  Visibility,
+  PerformanceType
+} from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { AxiosError } from 'axios';
+import { timestamp } from '@core/helpers';
 
 describe('As a user, I want to be able to do performance CRUD', () => {
   let host: IHost;
@@ -16,7 +27,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     perf = await Stories.actions.performances.createPerformance(host, {
@@ -24,7 +35,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       description: 'To be or not to be',
       genre: Genre.Dance,
       type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
     });
 
     expect(perf).not.toBeNull();
@@ -32,17 +43,17 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     expect(perf.description).toBe('To be or not to be');
   });
 
-  it("Should read a performance", async () => {
+  it('Should read a performance', async () => {
     let p = await Stories.actions.performances.readPerformance(perf);
     expect(p).not.toBeNull();
     //assert relationship pulled in
     expect(p.data.host.username).toEqual(host.username);
-  })
+  });
 
   it('Should update a performance', async () => {
     const updatePerf = await Stories.actions.performances.updatePerformance(perf, {
       name: 'Othello',
-      description: 'For she had eyes and chose me.',
+      description: 'For she had eyes and chose me.'
     });
 
     expect(updatePerf.name).toBe('Othello');

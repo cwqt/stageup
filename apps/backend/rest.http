@@ -163,7 +163,7 @@ GET http://{{host}}/hosts/{{hostId}}/performances HTTP/1.1
 
 POST http://{{host}}/hosts/{{hostId}}/performances/{{performanceId}}/provision HTTP/1.1
 {
-  "email_addresses":["other@cass.si"]
+  "email_addresses":["other+test@stageup.uk"]
 }
 
 

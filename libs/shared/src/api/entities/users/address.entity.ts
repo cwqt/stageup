@@ -15,7 +15,7 @@ export class Address extends BaseEntity implements IAddress {
   @Column() line1: string;
   @Column() line2?: string;
   @Column() postal_code: string;
-  @Column() state?: string;
+  @Column({ nullable: true }) state?: string;
 
   @ManyToOne(() => ContactInfo, ci => ci.addresses) contact_info: ContactInfo;
 

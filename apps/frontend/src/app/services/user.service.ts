@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import * as fd from 'form-data';
-import { IEnvelopedData, IUser, IHost, IFollowing, Primitive, IMyself, IUserStub, IPasswordReset, IUserPrivate } from '@core/interfaces';
+import { IEnvelopedData, IUser, IHost, IFollowing, Primitive, IMyself, IUserStub, IUserPrivate } from '@core/interfaces';
 import { MyselfService } from './myself.service';
 import { UserHostInfo } from '@core/api';
 import { body } from 'express-validator';

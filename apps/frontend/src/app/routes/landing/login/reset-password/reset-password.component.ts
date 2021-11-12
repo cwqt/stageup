@@ -58,7 +58,7 @@ export class ResetPasswordComponent implements OnInit, IUiDialogOptions {
             {
               type: 'custom',
               message: e => 'Passwords do not match',
-              value: (t, c) => c['password'].value == t.value
+              value: (t, c) => c.value['password'] == t.value
             }
           ]
         })

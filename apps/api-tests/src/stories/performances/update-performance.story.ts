@@ -2,6 +2,7 @@ import { IHost, IPerformance, IUser, PerformanceType } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { CurrencyCode, Genre } from '@core/interfaces';
+import { timestamp } from '@core/helpers';
 
 describe('As a user-host, I want to update a performace details', () => {
   let perf: IPerformance;
@@ -16,7 +17,7 @@ describe('As a user-host, I want to update a performace details', () => {
     host = await Stories.actions.hosts.createHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
-      email_address: 'host@cass.si'
+      email_address: 'host+test@stageup.uk'
     });
 
     perf = await Stories.actions.performances.createPerformance(host, {
@@ -24,12 +25,12 @@ describe('As a user-host, I want to update a performace details', () => {
       description: 'To be or not to be',
       genre: Genre.Classical,
       type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
     });
 
     const updatePerf = await Stories.actions.performances.updatePerformance(perf, {
       name: 'Othello',
-      description: 'For she had eyes and chose me.',
+      description: 'For she had eyes and chose me.'
     });
 
     expect(updatePerf.name).toBe('Othello');

@@ -7,7 +7,8 @@ import {
   WinstonLogger,
   Event,
   ø,
-  LOGGING_PROVIDER
+  LOGGING_PROVIDER,
+  POSTGRES_PROVIDER
 } from '@core/api';
 import { Environment } from '@core/interfaces';
 import session from 'express-session';
@@ -79,6 +80,9 @@ import { getConnection } from 'typeorm';
 
     // Run the seeder in staging, for branch & staging deploys
     if (Env.isEnv([Environment.Staging, Environment.Development]) && configuration.is_seeded == false) {
+      const connection = Container.get(POSTGRES_PROVIDER)
+      await connection.dropDatabase(); 
+      await connection.synchronize();
       // seeder will wipe config momentarily, but stored in memory & will be saved again
       const seeder = new Seeder(Container.get(STRIPE_PROVIDER));
       await seeder.run();

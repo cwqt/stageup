@@ -25,7 +25,7 @@ export class DialogEntryComponent implements OnInit, OnDestroy {
   openDialog(dialog: any, config?: MatDialogConfig) {
     // Pass route along into dialog because they're opened outside the component tree
     // https://github.com/angular/components/issues/13803
-    const ref = this.dialog.open(dialog, { ...(config || {}), data: { ...(config.data || {}), route: this.route } });
+    const ref = this.dialog.open(dialog, { ...(config || {}), data: { ...(config?.data || {}), route: this.route } });
     this._subAfterClosed = ref.afterClosed().subscribe(() => {
       this.appService.navigateTo('../');
     });

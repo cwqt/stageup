@@ -5,13 +5,14 @@ import {
   Entity,
   EntityManager,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryColumn
 } from 'typeorm';
-import { IPasswordReset } from '@core/interfaces';
 import { uuid } from '@core/helpers';
 import { User } from './user.entity';
+import { IPasswordReset } from '@core/interfaces';
 
 @Entity()
 export class PasswordReset extends BaseEntity implements IPasswordReset {
@@ -22,22 +23,12 @@ export class PasswordReset extends BaseEntity implements IPasswordReset {
 
   @Column() otp: string;
   @Column() email_address: string;
-  @Column() user__id: string;
-
-  @OneToMany(() => User, user => user._id) user: User;
+  @ManyToOne(() => User, user => user._id, {onDelete: 'CASCADE'}) user: User;
 
   constructor(data: Required<IPasswordReset>) {
     super();
     this.otp = data.otp;
     this.email_address = data.email_address;
-    this.user__id = data.user__id;
-  }
-
-  toReset(): Required<IPasswordReset> {
-    return {
-      otp: this.otp,
-      email_address: this.email_address,
-      user__id: this.user._id
-    };
+    this.user = data.user;
   }
 }

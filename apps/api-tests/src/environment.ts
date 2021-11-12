@@ -1,3 +1,9 @@
+// https://stackoverflow.com/a/59805161/8526764
+const TRUE_ENV = process.env['NODE' + '_ENV'];
+/* eslint @typescript-eslint/no-var-requires: "off" */
+require('dotenv-flow').config({ node_env: TRUE_ENV, silent: true });
+process.env.GOOGLE_APPLICATION_CREDENTIALS = ''; // Prevent dotenv from loading core.service_account.json
+
 require('dotenv').config();
 import Axios from 'axios';
 import { HostPermission, IUserPrivate } from '@core/interfaces';

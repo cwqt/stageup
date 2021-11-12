@@ -1,3 +1,4 @@
+import { ConsentOpt } from '..';
 import { Primitive } from './fp.interface';
 
 // Describes a method of querying/sorting data

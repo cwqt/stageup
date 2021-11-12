@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { CreatePerformanceComponent } from './create-performance/create-performance.component';
 import { AppService } from 'apps/frontend/src/app/services/app.service';
-import { IPerformanceStub, PerformanceStatus } from '@core/interfaces';
+import { IHost, IPerformanceStub, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { i18n, richtext, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
@@ -19,8 +19,7 @@ import { DatePipe } from '@angular/common';
 export class HostPerformancesComponent implements OnInit {
   hostId: string;
   table: UiTable<IPerformanceStub>;
-
-  // displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
+  host: IHost;
 
   constructor(
     @Inject(LOCALE_ID) public locale: string,
@@ -62,7 +61,7 @@ export class HostPerformancesComponent implements OnInit {
           label: $localize`Status`,
           accessor: p => statusPipe.transform(p.status),
           chip_selector: p => {
-            const colours: { [index in PerformanceStatus]: ChipComponent['kind'] } = {
+            const colors: { [index in PerformanceStatus]: ChipComponent['kind'] } = {
               [PerformanceStatus.Complete]: 'purple',
               [PerformanceStatus.Cancelled]: 'magenta',
               [PerformanceStatus.Deleted]: 'gray',
@@ -71,7 +70,7 @@ export class HostPerformancesComponent implements OnInit {
               [PerformanceStatus.Scheduled]: 'green'
             };
 
-            return colours[p.status];
+            return colors[p.status];
           }
         }
       ],
@@ -87,8 +86,6 @@ export class HostPerformancesComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {}
-
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
       this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' })
@@ -99,25 +96,8 @@ export class HostPerformancesComponent implements OnInit {
     return richtext.read(text);
   }
 
-  // deletePerformance(performance: IPerformanceStub) {
-  //   this.helperService.showConfirmationDialog(this.dialog, {
-  //     title: $localize`Delete '${performance.name}'`,
-  //     description: $localize`Are you sure you want to delete this performance?`,
-  //     buttons: [
-  //       new UiDialogButton({
-  //         label: $localize`Cancel`,
-  //         kind: ThemeKind.Secondary,
-  //         callback: r => r.close()
-  //       }),
-  //       new UiDialogButton({
-  //         label: $localize`Delete`,
-  //         kind: ThemeKind.Primary,
-  //         callback: r => {
-  //           this.performanceService.deletePerformance(performance._id);
-  //           r.close();
-  //         }
-  //       })
-  //     ]
-  //   });
-  // }
+  // Inject IHost into child components i.e host-performance
+  onChildLoaded(component) {
+    component.host = this.host;
+  }
 }
