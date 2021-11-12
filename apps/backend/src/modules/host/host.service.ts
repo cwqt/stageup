@@ -33,11 +33,12 @@ export class HostService extends ModuleService {
       .getMany();
   }
 
+  // 'string' used instead of IPerformance['_id'] since "An index signature parameter type cannot be a type alias."
   async readAnalyticsFromPerformanceArray(
     performanceIds: Array<IPerformance['_id']>,
     period: AnalyticsTimePeriod
-  ): Promise<{ [performanceId: IPerformance['_id']]: IAnalyticsChunk<IPerformanceAnalyticsMetrics>[] }> {
-    const map: { [performanceId: IPerformance['_id']]: IAnalyticsChunk<IPerformanceAnalyticsMetrics>[] } = {};
+  ): Promise<{ [performanceId: string]: IAnalyticsChunk<IPerformanceAnalyticsMetrics>[] }> {
+    const map: { [performanceId: string]: IAnalyticsChunk<IPerformanceAnalyticsMetrics>[] } = {};
 
     for await (let id of performanceIds) {
       // Get weekly aggregations sorted by period_end (when collected)

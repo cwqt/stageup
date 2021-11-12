@@ -43,6 +43,7 @@ import {
   IFollowing,
   IClientHostData,
   DtoPerformanceAnalytics as DtoPerfAnalytics,
+  DtoPerformanceIDAnalytics as DtoPerfIDAnalytics,
   DtoHostAnalytics,
   ConsentableType as CT,
   IConsentable,
@@ -147,7 +148,7 @@ router.get      <IE<HPatronSub[]>>          ("/hosts/:hid/patronage/subscribers"
 router.get      <IE<IFollower[]>>           ("/hosts/:hid/followers",                      Hosts.readHostFollowers);
 router.get      <DtoHostAnalytics>          ("/hosts/:hid/analytics",                      Hosts.readHostAnalytics);
 router.get      <IE<DtoPerfAnalytics[]>>    ("/hosts/:hid/analytics/performances",         Hosts.readPerformancesAnalytics);
-router.get      <DtoPerfAnalytics[]>        ("/hosts/:hid/analytics/performances/all",     Hosts.readAllPerformancesAnalytics);
+router.get      <DtoPerfIDAnalytics[]>      ("/hosts/:hid/analytics/performances/all",     Hosts.readAllPerformancesAnalytics);
 router.get      <DtoUserMarketingInfo>      ("/hosts/:hid/marketing/audience",             Hosts.readHostMarketingConsents);
 router.post     <void>                      ("/hosts/:hid/marketing/audience/export/:type",Hosts.exportUserMarketing);
 router.post     <void>                      ("/hosts/:hid/toggle-like",                    Hosts.toggleLike);
