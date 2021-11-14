@@ -1,2 +1,12 @@
-<!-- <ui-input [data]="linkField" [(ngModel)]="test"></ui-input> -->
-<app-copy-box></app-copy-box>
+<h4 i18n>Event Page</h4>
+<div class="flex">
+  <div class="box-width">
+    <app-copy-box [textToBeCopied]="text"></app-copy-box>
+  </div>
+  <!-- <ui-button class="ml-3 mt-2" icon="share"></ui-button> -->
+  <div>
+    <button class="ml-3" matRipple>
+      <ui-icon size="l">share</ui-icon>
+    </button>
+  </div>
+</div>

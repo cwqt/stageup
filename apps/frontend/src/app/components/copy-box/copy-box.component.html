@@ -1,8 +1,14 @@
-<div class="copy-box">
-  <mat-form-field class="mat-form-field-no-padding" appearance="outline">
-    <input matInput value="Hello world" disabled="true" />
-    <button matSuffix>
-      <ui-icon>copy</ui-icon>
-    </button>
-  </mat-form-field>
-</div>
+<mat-form-field class="mat-form-field-no-padding" appearance="outline">
+  <input matInput [value]="textToBeCopied" disabled="true" />
+  <button
+    matRipple
+    i18n-title
+    title="Copy to clipboard"
+    matSuffix
+    (cdkCopyToClipboardCopied)="showSuccessMessage()"
+    [cdkCopyToClipboard]="textToBeCopied"
+  >
+    <ui-icon *ngIf="!copied">copy</ui-icon>
+    <ui-icon *ngIf="copied">checkmark</ui-icon>
+  </button>
+</mat-form-field>

@@ -1,14 +1,25 @@
-.copy-box {
-  width: 300px;
+// The suffix button
+button {
+  overflow: hidden !important;
+  margin-right: -12px !important;
+  padding: 13px;
+  background-color: #f8eaed;
+  border: 1px solid rgb(219, 218, 218);
+  border-radius: 0 5px 5px 0;
 }
 
+// Fix padding (since labels are hidden for this element)
 ::ng-deep .mat-form-field-infix {
   margin-top: 0 !important;
   padding-top: 0.5rem !important;
 }
 
-button {
-  background-color: pink;
-  border-left: 1px solid grey;
-  box-sizing: border-box;
+::ng-deep .mat-form-field-wrapper {
+  overflow: hidden;
+  padding-bottom: 0 !important;
+}
+
+// Font colour of the field
+::ng-deep .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after, .mat-input-element:disabled {
+  color: #5a6268!important;
 }

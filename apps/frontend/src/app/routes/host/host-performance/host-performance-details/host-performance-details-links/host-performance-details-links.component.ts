@@ -11,8 +11,7 @@ import { IUiFormField, UiField } from '@frontend/ui-lib/form/form.interfaces';
 })
 export class HostPerformanceDetailsLinksComponent implements OnInit {
   @Input() cacheable: ICacheable<DtoPerformance>;
-  linkField: IUiFormField<'text'>;
-  test = '';
+  text: string;
 
   get performance() {
     return this.cacheable.data.data;
@@ -23,12 +22,6 @@ export class HostPerformanceDetailsLinksComponent implements OnInit {
   ngOnInit(): void {
     const loc = this.locale ? `/${this.locale}` : '';
 
-    this.test = `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`;
-    this.linkField = UiField.Text({
-      initial: `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`,
-      label: $localize`Test`,
-      disabled: true
-      // disabled: true
-    });
+    this.text = `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`;
   }
 }

@@ -88,16 +88,18 @@ export class HostPerformanceDetailsComponent implements OnInit {
     private clipboard: Clipboard
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.performanceDetails = {
       description: this.performanceData.description,
       genre: this.performanceData.genre,
       name: this.performanceData.name,
       publicity_period: this.performanceData.publicity_period
     };
-    console.log('this.performanceDetails', this.performanceDetails);
     this.stream = this.performance.data.data.assets.find(asset => asset.type == AssetType.LiveStream);
     this.vod = findAssets(this.performance.data.data.assets, AssetType.Video, ['primary'])[0];
+
+    // Get the userHostInfo (with stream_key) for the live performance
+    await cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);
 
     this.minimumAssetsMet = this.performanceHasMinimumAssets();
 

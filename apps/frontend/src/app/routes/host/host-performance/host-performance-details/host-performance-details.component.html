@@ -9,26 +9,31 @@
   <mat-tab-group>
     <mat-tab i18n-label label="General">
       <app-host-performance-details-general
+        class="mt-8 max-w-5xl"
         (onFormDataChange)="updatePerformanceDetailsData($event)"
         [cacheable]="performance"
       ></app-host-performance-details-general>
     </mat-tab>
     <mat-tab i18n-label label="Release">
       <app-host-performance-details-release
+        class="mt-8 max-w-5xl"
         (onFormDataChange)="updatePerformanceDetailsData($event)"
         [cacheable]="performance"
       ></app-host-performance-details-release>
     </mat-tab>
     <mat-tab i18n-label label="Links">
       <app-host-performance-details-links
+        class="mt-8 max-w-5xl"
         (onFormDataChange)="updatePerformanceDetailsData($event)"
         [cacheable]="performance"
       ></app-host-performance-details-links>
     </mat-tab>
-    <mat-tab *ngIf="performanceType == 'Livestream'" i18n-label label="Keys">
+    <mat-tab *ngIf="performanceType == 'Livestream' && performanceHostInfo.data?.stream_key" i18n-label label="Keys">
       <app-host-performance-details-keys
+        class="mt-8 max-w-5xl"
         (onFormDataChange)="updatePerformanceDetailsData($event)"
         [cacheable]="performance"
+        [streamKey]="performanceHostInfo.data?.stream_key"
       ></app-host-performance-details-keys>
     </mat-tab>
   </mat-tab-group>

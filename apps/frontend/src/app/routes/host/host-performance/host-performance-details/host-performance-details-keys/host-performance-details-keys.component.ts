@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { findAssets } from '@core/helpers';
+import { Component, Input, OnInit } from '@angular/core';
+import { AssetType, DtoPerformance } from '@core/interfaces';
+import { ICacheable } from '@frontend/app.interfaces';
 
 @Component({
   selector: 'app-host-performance-details-keys',
@@ -6,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./host-performance-details-keys.component.scss']
 })
 export class HostPerformanceDetailsKeysComponent implements OnInit {
+  @Input() streamKey: string;
+
   constructor() {}
 
   ngOnInit(): void {}
