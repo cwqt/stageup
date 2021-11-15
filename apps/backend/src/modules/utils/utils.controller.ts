@@ -22,6 +22,7 @@ import {
   User,
   UserHostInfo
 } from '@core/api';
+import { timestamp } from '@core/helpers';
 import {
   Environment,
   HostInviteState,
@@ -217,30 +218,38 @@ export class UtilityController extends ModuleController {
     authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
     controller: async req => {
       const performance = await Performance.findOne(req.params.pid)
+     
+      const analytics = new PerformanceAnalytics(performance);
       // For now, add analytics with some dummy data so that we can test the READING of analytics.
       // TODO: Make more realistic insertion that better resembles the current system (inside a job, and using actual values on things like ticket sales etc.)
-      new PerformanceAnalytics(performance),
-        {
+      analytics.collection_started_at = timestamp();
+      analytics.period_ended_at = timestamp();
+      analytics.period_started_at = analytics.period_ended_at - 604800; // one week
+      analytics.collection_ended_at = timestamp();
+      analytics.metrics = {
           total_ticket_sales: 50,
           total_revenue: 500,
           trailer_views: 100,
-          performance_views: 42
+          performance_views: 42,
+          average_watch_percentage: 0
         }
+      await analytics.save()
     }
   };
 
   addHostAnalytics: IControllerEndpoint<void> = {
     authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
     controller: async req => {
+      const host = await Host.findOne(req.params.hid);
+      const analytics = new HostAnalytics(host);
       // For now, add analytics with some dummy data so that we can test the READING of analytics.
       // TODO: Make more realistic insertion that better resembles the current system
-      const host = await Host.findOne(req.params.hid);
-
-      new HostAnalytics(host),
-        {
-          performances_created: 10
-        }
-      
+      analytics.collection_started_at = timestamp();
+      analytics.period_ended_at = timestamp();
+      analytics.period_started_at = analytics.period_ended_at - 604800; // one week
+      analytics.collection_ended_at = timestamp();
+      analytics.metrics = { performances_created: 10 }
+      await analytics.save()
     }
   }
 }

@@ -116,8 +116,13 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
 
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
     const hostAnalytics = await Stories.actions.hosts.readHostAnalytics(host, 'YEARLY');
-
-    console.log('hostAnalytics', hostAnalytics)
+    expect(typeof hostAnalytics).toBe('object')
+    expect(hostAnalytics.name).toEqual(host.name);
+    expect(hostAnalytics.chunks.length).toBe(1);
+    expect(hostAnalytics.chunks[0]).toHaveProperty('period_ended_at');
+    expect(hostAnalytics.chunks[0]).toHaveProperty('metrics');
+    expect(hostAnalytics.chunks[0].metrics).toHaveProperty('performances_created');
+    expect(hostAnalytics.chunks[0].metrics.performances_created).toBe(10);
   })
 
   it('Should delete host', async () => {
