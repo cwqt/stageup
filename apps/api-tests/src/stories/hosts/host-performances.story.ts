@@ -4,6 +4,7 @@ import { UserType } from '../../environment';
 import { CurrencyCode, Genre } from '@core/interfaces';
 import { date } from 'superstruct';
 import { timestamp } from '@core/helpers';
+import moment from 'moment';
 
 //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
 describe('As a user-host, I want to review all my performances', () => {
@@ -52,10 +53,10 @@ describe('As a user-host, I want to review all my performances', () => {
     await Stories.actions.utils.addPerformanceAnalytics(perf);
 
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
-    const performanceAnalytics = await Stories.actions.hosts.readAllPerformancesAnalytics(host._id, 'YEARLY');
-    expect(performanceAnalytics.length).toBe(1);
+    let performanceAnalytics = await Stories.actions.hosts.readAllPerformancesAnalytics(host._id, 'YEARLY');
+    expect(performanceAnalytics.length).toBe(1); // Just one performance
     expect(performanceAnalytics[0].performanceId).toEqual(perf._id);
-    expect(performanceAnalytics[0].chunks.length).toBe(1);
+    expect(performanceAnalytics[0].chunks.length).toBe(20); // 20 chunks
     expect(performanceAnalytics[0].chunks[0]).toHaveProperty('period_ended_at');
     expect(performanceAnalytics[0].chunks[0]).toHaveProperty('metrics');
     expect(performanceAnalytics[0].chunks[0].metrics).toHaveProperty('total_ticket_sales');
@@ -64,6 +65,14 @@ describe('As a user-host, I want to review all my performances', () => {
     expect(performanceAnalytics[0].chunks[0].metrics.trailer_views).toBe(100);
     expect(performanceAnalytics[0].chunks[0].metrics.performance_views).toBe(42);
     expect(performanceAnalytics[0].chunks[0].metrics.average_watch_percentage).toBe(0);
+
+    // Test different periods (each period will have the number of weeks * 2 number of chunks)
+    performanceAnalytics = await Stories.actions.hosts.readAllPerformancesAnalytics(host._id, 'WEEKLY');
+    expect(performanceAnalytics[0].chunks.length).toBe(2);
+    performanceAnalytics = await Stories.actions.hosts.readAllPerformancesAnalytics(host._id, 'MONTHLY');
+    expect(performanceAnalytics[0].chunks.length).toBe(8);
+    performanceAnalytics = await Stories.actions.hosts.readAllPerformancesAnalytics(host._id, 'QUARTERLY');
+    expect(performanceAnalytics[0].chunks.length).toBe(20);
   })
 
 

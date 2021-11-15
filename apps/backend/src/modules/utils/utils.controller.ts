@@ -219,21 +219,29 @@ export class UtilityController extends ModuleController {
     controller: async req => {
       const performance = await Performance.findOne(req.params.pid)
      
-      const analytics = new PerformanceAnalytics(performance);
-      // For now, add analytics with some dummy data so that we can test the READING of analytics.
-      // TODO: Make more realistic insertion that better resembles the current system (inside a job, and using actual values on things like ticket sales etc.)
-      analytics.collection_started_at = timestamp();
-      analytics.period_ended_at = timestamp();
-      analytics.period_started_at = analytics.period_ended_at - 604800; // one week
-      analytics.collection_ended_at = timestamp();
-      analytics.metrics = {
-          total_ticket_sales: 50,
-          total_revenue: 500,
-          trailer_views: 100,
-          performance_views: 42,
-          average_watch_percentage: 0
-        }
-      await analytics.save()
+      let now = timestamp();
+      // Add 20 analytics chunks for this performance, each a week apart
+      for (let i = 0; i < 20; i++){
+        const analytics = new PerformanceAnalytics(performance);
+        // For now, add analytics with some dummy data so that we can test the READING of analytics.
+        // TODO: Make more realistic insertion that better resembles the current system (inside a job, and using actual values on things like ticket sales etc.)
+        analytics.collection_started_at = timestamp();
+        analytics.period_ended_at = now;
+        analytics.period_started_at = analytics.period_ended_at - 604800; // one week
+        analytics.metrics = {
+            total_ticket_sales: 50,
+            total_revenue: 500,
+            trailer_views: 100,
+            performance_views: 42,
+            average_watch_percentage: 0
+          }
+        analytics.collection_ended_at = timestamp();
+  
+        await analytics.save()
+
+        now = analytics.period_started_at;
+      }
+     
     }
   };
 
@@ -247,8 +255,9 @@ export class UtilityController extends ModuleController {
       analytics.collection_started_at = timestamp();
       analytics.period_ended_at = timestamp();
       analytics.period_started_at = analytics.period_ended_at - 604800; // one week
-      analytics.collection_ended_at = timestamp();
       analytics.metrics = { performances_created: 10 }
+      analytics.collection_ended_at = timestamp();
+
       await analytics.save()
     }
   }
