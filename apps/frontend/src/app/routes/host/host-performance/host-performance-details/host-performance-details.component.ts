@@ -8,7 +8,7 @@ import {
   DtoPerformance,
   IAssetStub,
   IHost,
-  IPerformanceDetails,
+  DtoPerformanceDetails,
   IPerformanceHostInfo,
   PerformanceType,
   PerformanceStatus,
@@ -44,7 +44,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
   copyMessage: string = $localize`Copy`;
   visibilityInput: IUiFormField<'select'>;
 
-  performanceDetails: IPerformanceDetails; // TODO: Add type - will need to set all fields as optional data since the host can save at any point when entering the performance details
+  performanceDetails: DtoPerformanceDetails; // TODO: Add type - will need to set all fields as optional data since the host can save at any point when entering the performance details
+  hostHasConsented: boolean = false;
 
   get performanceData() {
     return this.performance.data?.data;
@@ -90,7 +91,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.performanceDetails = {
-      description: this.performanceData.description,
+      short_description: this.performanceData.short_description,
+      long_description: this.performanceData.long_description,
       genre: this.performanceData.genre,
       name: this.performanceData.name,
       publicity_period: this.performanceData.publicity_period
@@ -99,7 +101,9 @@ export class HostPerformanceDetailsComponent implements OnInit {
     this.vod = findAssets(this.performance.data.data.assets, AssetType.Video, ['primary'])[0];
 
     // Get the userHostInfo (with stream_key) for the live performance
-    await cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);
+    // Note, the seeded performance 'The Ghost Stories of E R Benson' is live but does not have a key
+    if (this.performanceType == 'Livestream')
+      await cachize(this.performanceService.readPerformanceHostInfo(this.performanceId), this.performanceHostInfo);
 
     this.minimumAssetsMet = this.performanceHasMinimumAssets();
 
@@ -210,11 +214,25 @@ export class HostPerformanceDetailsComponent implements OnInit {
   }
 
   // Todo: add longDescription and shortDescription instead of just 'description'
-  updatePerformanceDetailsData(formData: IPerformanceDetails): void {
+  updatePerformanceDetailsData(formData: DtoPerformanceDetails & { terms: boolean }): void {
+    this.hostHasConsented = formData.terms;
+    delete formData.terms;
     this.performanceDetails = { ...this.performanceDetails, ...formData };
   }
 
-  test() {
-    console.log('this.performanceDetails', this.performanceDetails);
+  async savePerformanceDetails() {
+    // Frontend validation
+    if (!this.performanceDetails.name || this.performanceDetails.name.length == 0 || !this.hostHasConsented) {
+      // TODO: Display form errors
+      console.log('Error');
+    } else {
+      // Submit to backend
+      await this.performanceService.updatePerformance(this.performanceData._id, this.performanceDetails);
+      console.log('this.performanceDetails', this.performanceDetails);
+    }
+  }
+
+  goToPerformance(): void {
+    this.appService.navigateTo(`/performances/${this.performanceData._id}`);
   }
 }

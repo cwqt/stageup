@@ -1,6 +1,7 @@
 import { Like } from './../users/like.entity';
 import { timestamp, uuid } from '@core/helpers';
 import {
+  DtoCreatePerformance,
   Genre,
   IPerformance,
   IPerformanceStub,
@@ -9,8 +10,7 @@ import {
   RichText,
   Visibility,
   IRemovalReason,
-  PerformanceType,
-  DtoPerformanceDetails
+  PerformanceType
 } from '@core/interfaces';
 import { Except } from 'type-fest';
 import {
@@ -34,15 +34,14 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @PrimaryColumn() _id: string;
 
   @Column() created_at: number;
-  @Column({ nullable: true }) name: string;
+  @Column() name: string;
   @Column() views: number;
   @Column({ unsigned: true, default: 0 }) like_count: number;
   @Column({ nullable: true }) premiere_datetime?: number;
   @Column('enum', { enum: PerformanceType, nullable: true }) performance_type: PerformanceType;
   @Column({ unsigned: true, default: 0 }) rating_count: number;
   @Column('float') rating_total: number;
-  @Column('jsonb', { nullable: true }) short_description?: RichText;
-  @Column('jsonb', { nullable: true }) long_description?: RichText;
+  @Column('jsonb', { nullable: true }) description?: RichText;
   @Column('varchar', { nullable: true }) thumbnail: string;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
@@ -59,20 +58,24 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @ManyToOne(() => Host, host => host.performances) host: Host;
   @OneToMany(() => Like, like => like.performance, { onDelete: 'CASCADE', cascade: true }) likes: Like[];
 
-  constructor(type: PerformanceType, host: Host) {
+  constructor(data: DtoCreatePerformance, host: Host) {
     super();
-    // Defaults
     this._id = uuid();
+    this.name = data.name;
+    this.description = data.description;
+    this.genre = data.genre;
     this.tickets = [];
-    this.status = PerformanceStatus.PendingSchedule;
+
+    // Defaults
+    this.status = data.publicity_period.start ? PerformanceStatus.Scheduled : PerformanceStatus.PendingSchedule;
     this.created_at = timestamp(new Date());
     this.views = 0;
     this.like_count = 0;
     this.rating_count = 0;
     this.rating_total = 0;
     this.host = host;
-    this.publicity_period = { start: null, end: null };
-    this.performance_type = type;
+    this.publicity_period = { start: data.publicity_period.start, end: data.publicity_period.end };
+    this.performance_type = data.type;
   }
 
   async setup(txc: EntityManager): Promise<Performance> {
@@ -92,8 +95,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       rating_total: this.rating_total,
       views: this.views,
       like_count: this.like_count,
-      short_description: this.short_description,
-      long_description: this.long_description,
+      description: this.description,
       created_at: this.created_at,
       thumbnail: this.thumbnail,
       publicity_period: this.publicity_period,
@@ -123,7 +125,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     };
   }
 
-  async update(updates: Partial<DtoPerformanceDetails>): Promise<Performance> {
+  async update(updates: Partial<Pick<IPerformance, 'name' | 'description'>>): Promise<Performance> {
     Object.entries(updates).forEach(([k, v]: [string, any]) => {
       (this as any)[k] = v ?? (this as any)[k];
     });

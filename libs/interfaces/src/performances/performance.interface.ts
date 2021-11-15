@@ -65,7 +65,8 @@ export interface IPerformanceStub {
   _id: NUUID;
   host: IHostStub; // who created the performance
   name: string; // title of performance
-  description?: RichText; // description of performance
+  short_description?: RichText; // description of performance
+  long_description?: RichText; // description of performance
   rating_count: number; // Total scores accumulated
   rating_total: number; // Number of ratings
   views: number; // total user view count
@@ -91,7 +92,10 @@ export interface IPerformance extends IPerformanceStub {
 }
 
 // TODO: Add 'ticket visibility schedule', 'access duration', 'event showings', 'short description' and 'long description'
-export type IPerformanceDetails = Pick<IPerformance, 'name' | 'description' | 'genre' | 'publicity_period'>;
+export type DtoPerformanceDetails = Pick<
+  IPerformance,
+  'name' | 'short_description' | 'long_description' | 'genre' | 'publicity_period'
+>;
 
 // Interface for additional client information regarding the performance.
 export interface IClientPerformanceData {
@@ -107,12 +111,6 @@ export type DtoPerformance = IEnvelopedData<
   Except<IPerformance, 'assets'> & { assets: AssetDto[] },
   IClientPerformanceData
 >;
-
-// data transfer object
-export type DtoCreatePerformance = Pick<
-  Required<IPerformance>,
-  'name' | 'publicity_period' | 'description' | 'genre'
-> & { type: PerformanceType };
 
 // private to host
 export interface IPerformanceHostInfo {

@@ -6,7 +6,6 @@ import {
   DtoCreateHost,
   DtoCreatePatronTier,
   DtoCreatePaymentIntent,
-  DtoCreatePerformance,
   DtoCreateTicket,
   DtoCreateUser,
   DtoLogin,
@@ -38,7 +37,8 @@ import {
   BulkRefundReason,
   IProcessRefunds,
   DonoPegs,
-  PerformanceType
+  PerformanceType,
+  DtoPerformanceDetails
 } from '@core/interfaces';
 import {
   any,
@@ -94,15 +94,17 @@ export namespace objects {
     old_password: fields.password
   });
 
-  export const DtoCreatePerformance: Describe<DtoCreatePerformance> = object({
-    name: size(string(), 8, 64),
-    publicity_period: object({
-      start: fields.timestamp,
-      end: fields.timestamp
-    }),
-    description: optional(fields.richtext),
-    genre: fields.genre,
-    type: enums<PerformanceType>(enumToValues(PerformanceType))
+  export const DtoPerformanceDetails: Describe<DtoPerformanceDetails> = object({
+    name: size(string(), 1, 100), // only required field is 'name'
+    publicity_period: optional(
+      object({
+        start: fields.timestamp,
+        end: fields.timestamp
+      })
+    ),
+    short_description: optional(fields.richtext),
+    long_description: optional(fields.richtext),
+    genre: optional(fields.genre)
   });
 
   export const DtoCreateHost: Describe<DtoCreateHost> = object({

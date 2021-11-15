@@ -69,7 +69,8 @@ import {
   PlatformConsentOpt,
   TicketType,
   Visibility,
-  PerformanceStatus
+  PerformanceStatus,
+  PerformanceType
 } from '@core/interfaces';
 import Mux from '@mux/mux-node';
 import { RedisClient } from 'redis';
@@ -102,13 +103,13 @@ export class PerformanceController extends ModuleController {
 
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance: IControllerEndpoint<IPerformance> = {
-    // validators: { body: Validators.Objects.DtoCreatePerformance },
+    validators: { body: object({ type: enums(enumToValues(PerformanceType) as PerformanceType[]) }) },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
       const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
       return await transact(async txc => {
-        const performance = await new Performance(req.body, host).save();
+        const performance = await new Performance(req.body.type, host).save();
         await performance.setup(txc);
 
         // Temporary single asset per performance; either vod or stream, at-least
@@ -289,17 +290,16 @@ export class PerformanceController extends ModuleController {
   };
 
   updatePerformance: IControllerEndpoint<IPerformance> = {
+    validators: {
+      body: Validators.Objects.DtoPerformanceDetails
+    },
     authorisation: AuthStrat.runner(
       { hid: IdFinderStrat.findHostIdFromPerformanceId },
       AuthStrat.hasHostPermission(HostPermission.Editor, map => map.hid)
     ),
     controller: async req => {
       const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] }));
-      await perf.update({
-        name: req.body.name,
-        description: req.body.description
-      });
-
+      await perf.update(req.body);
       return perf.toFull();
     }
   };

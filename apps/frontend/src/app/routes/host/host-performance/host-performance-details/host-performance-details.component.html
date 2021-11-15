@@ -1,5 +1,5 @@
 <!-- Float right should move to right of breadcrumb navigation. TODO: check works as expected after breadcrumb story has been merged -->
-<ui-button class="float-right" icon="launch">Preview Event</ui-button>
+<ui-button class="float-right" (click)="goToPerformance()" icon="launch">Preview Event</ui-button>
 <div class="flex items-center mt-4 mb-8 mt-20 clear-both">
   <h1 class="mb-0" i18n>Event Details</h1>
   <ui-chip class="chip ml-4" [kind]="'primary'">{{ performanceType }}</ui-chip>
@@ -38,7 +38,7 @@
     </mat-tab>
   </mat-tab-group>
   <div class="absolute right-0 top-0 flex z-50">
-    <ui-button (click)="test()" kind="primary" i18n> Save </ui-button>
+    <ui-button (click)="savePerformanceDetails()" kind="primary" i18n> Save </ui-button>
     <div
       class="flex items-center cursor-pointer z-40"
       [popper]="managePerformanceDropdown"

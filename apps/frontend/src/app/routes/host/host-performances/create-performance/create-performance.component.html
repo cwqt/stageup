@@ -1,38 +1,6 @@
 <ui-dialog i18n-title title="Create Performance" [loading]="loading | async">
-  <mat-horizontal-stepper #stepper [class.hidden]="stepper.selectedIndex == 0">
-    <mat-step i18n-label label="Select Type">
-      <ng-container [ngTemplateOutlet]="selectType"></ng-container>
-    </mat-step>
-    <mat-step i18n-label label="Enter Details">
-      <ui-form [form]="form"></ui-form>
-      <div class="flex">
-        <ui-button
-          [loading]="form.loading | async"
-          [disabled]="form.group.valid == false"
-          kind="primary"
-          class="ml-auto"
-          (click)="form.submit()"
-        >
-          <span *ngIf="type == 'vod'" i18n>Continue to Upload</span>
-          <span *ngIf="type == 'live'" i18n>Create</span>
-        </ui-button>
-      </div>
-    </mat-step>
-    <mat-step *ngIf="type == 'vod'" i18n-label label="Upload">
-      <app-upload-video
-        *ngIf="VoDAssetCreator"
-        [createAssetResHandler]="VoDAssetCreator"
-        (uploadChange)="handleVoDUploadChange($event)"
-      ></app-upload-video>
-    </mat-step>
-  </mat-horizontal-stepper>
-
-  <ng-container [ngTemplateOutlet]="selectType" *ngIf="stepper.selectedIndex == 0"></ng-container>
-
-  <ng-template #selectType>
-    <div class="flex items-center justify-center space-x-6">
-      <ui-button icon="video" size="l" kind="primary" (click)="setType('live')" i18n>Go Live</ui-button>
-      <ui-button icon="upload" size="l" kind="primary" (click)="setType('vod')" i18n>On Demand</ui-button>
-    </div>
-  </ng-template>
+  <div class="flex items-center justify-center space-x-6">
+    <ui-button icon="video" size="l" kind="primary" (click)="setType('live')" i18n>Go Live</ui-button>
+    <ui-button icon="upload" size="l" kind="primary" (click)="setType('vod')" i18n>On Demand</ui-button>
+  </div>
 </ui-dialog>

@@ -35,12 +35,12 @@ export class HostPerformanceDetailsGeneralComponent implements OnInit {
         }),
         short_description: UiField.Richtext({
           label: $localize`Short Description`,
-          initial: this.performance.description,
+          initial: this.performance.short_description,
           validators: [{ type: 'maxlength', value: 260 }]
         }),
         long_description: UiField.Richtext({
           label: $localize`Long Description`,
-          initial: this.performance.description,
+          initial: this.performance.long_description,
           validators: [{ type: 'maxlength', value: 1000 }]
         }),
         genre: UiField.Select({
@@ -50,6 +50,10 @@ export class HostPerformanceDetailsGeneralComponent implements OnInit {
               return [key, { label: genrePipe.transform(key as Genre) }];
             })
           )
+        }),
+        terms: UiField.Checkbox({
+          label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally`,
+          validators: [{ type: 'required' }]
         })
       },
       resolvers: {

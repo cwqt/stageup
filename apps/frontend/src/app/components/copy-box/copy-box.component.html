@@ -1,14 +1,18 @@
-<mat-form-field class="mat-form-field-no-padding" appearance="outline">
-  <input matInput [value]="textToBeCopied" disabled="true" />
-  <button
-    matRipple
-    i18n-title
-    title="Copy to clipboard"
-    matSuffix
-    (cdkCopyToClipboardCopied)="showSuccessMessage()"
-    [cdkCopyToClipboard]="textToBeCopied"
-  >
-    <ui-icon *ngIf="!copied">copy</ui-icon>
-    <ui-icon *ngIf="copied">checkmark</ui-icon>
-  </button>
-</mat-form-field>
+<div class="relative rounded border border-gray-200">
+  <div class="flex items-center p-3 pr-16 overflow-scroll no-scrollbar text-gray-600 cursor-default">
+    {{ textToBeCopied }}
+  </div>
+  <div class="absolute inset-y-0 right-0 overflow-hidden border-l border-gray-200">
+    <button
+      matRipple
+      i18n-title
+      title="Copy to clipboard"
+      (cdkCopyToClipboardCopied)="showSuccessMessage()"
+      [cdkCopyToClipboard]="textToBeCopied"
+      class="p-3 px-4"
+    >
+      <ui-icon *ngIf="!copied">copy</ui-icon>
+      <ui-icon *ngIf="copied">checkmark</ui-icon>
+    </button>
+  </div>
+</div>

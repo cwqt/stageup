@@ -66,10 +66,10 @@ export class Seeder {
         );
         const performances = await Promise.all(
           hostPerformances.map(p => {
-            // Convert the descriptions into richtext format before passing to 'createPerformance'
-            const textObject = richtext.create(p.description);
+            // Convert the short descriptions into richtext format before passing to 'createPerformance'
+            const textObject = richtext.create(p.short_description);
             textObject.ops[0].insert = textObject.ops[0].insert[0];
-            p.description = richtext.stringify(textObject.ops);
+            p.short_description = richtext.stringify(textObject.ops);
             return this.createPerformance(host, p);
           })
         );

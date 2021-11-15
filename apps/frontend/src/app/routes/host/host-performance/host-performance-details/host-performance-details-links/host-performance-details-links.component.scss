@@ -4,11 +4,17 @@
   width: 400px;
 }
 
-button {
-  padding: 9px;
-  margin-top: 4px;
-  background-color: #f8eaed;
-  color: $clr-primary-lt;
-  border: 1px solid rgb(219, 218, 218);
-  border-radius: 5px;
+ui-button {
+  z-index: 1;
+}
+
+app-social-sharing {
+  transform: translateX(-50px);
+  opacity: 0;
+  transition: 0.3s ease all;
+}
+
+.share-links:hover app-social-sharing {
+  opacity: 1;
+  transform: translateX(0);
 }

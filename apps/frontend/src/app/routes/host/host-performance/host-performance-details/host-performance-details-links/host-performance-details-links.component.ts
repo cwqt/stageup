@@ -1,8 +1,8 @@
+import { SocialSharingComponent } from '@frontend/components/social-sharing/social-sharing.component';
 import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
 import { DtoPerformance } from '@core/interfaces';
 import { ICacheable } from '@frontend/app.interfaces';
 import { AppService } from '@frontend/services/app.service';
-import { IUiFormField, UiField } from '@frontend/ui-lib/form/form.interfaces';
 
 @Component({
   selector: 'app-host-performance-details-links',
@@ -11,7 +11,7 @@ import { IUiFormField, UiField } from '@frontend/ui-lib/form/form.interfaces';
 })
 export class HostPerformanceDetailsLinksComponent implements OnInit {
   @Input() cacheable: ICacheable<DtoPerformance>;
-  text: string;
+  performanceSharingUrl: SocialSharingComponent['url'];
 
   get performance() {
     return this.cacheable.data.data;
@@ -22,6 +22,6 @@ export class HostPerformanceDetailsLinksComponent implements OnInit {
   ngOnInit(): void {
     const loc = this.locale ? `/${this.locale}` : '';
 
-    this.text = `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`;
+    this.performanceSharingUrl = `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`;
   }
 }
