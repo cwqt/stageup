@@ -30,7 +30,8 @@ import {
   DtoUserMarketingInfo,
   DtoHostAnalytics,
   AnalyticsTimePeriod,
-  DeleteHostReason
+  DeleteHostReason,
+  DtoPerformanceAnalytics
 } from '@core/interfaces';
 import { api } from '../environment';
 import fd from 'form-data';
@@ -312,5 +313,16 @@ export default {
   readHostAnalytics: async (host: IHost, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> => {
     const res = await api.get<DtoHostAnalytics>(`/hosts/${host._id}/analytics?period=${period}`, env.getOptions());
     return res.data;
+  },
+
+
+
+  // router.get <DtoPerfAnalytics[]>("/hosts/:hid/analytics/performances", Hosts.readAllPerformancesAnalytics());
+  readAllPerformancesAnalytics: async(
+    hostId: string,
+    period: AnalyticsTimePeriod = 'WEEKLY'
+  ): Promise<DtoPerformanceAnalytics[]> => {
+    const res = await api.get<DtoPerformanceAnalytics[]>(`/hosts/${hostId}/analytics/performances/all${querize({ period })}`, env.getOptions());
+    return res.data
   }
 };

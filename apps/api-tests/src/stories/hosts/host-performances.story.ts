@@ -47,6 +47,21 @@ describe('As a user-host, I want to review all my performances', () => {
     expect(hostPerformances.description).toEqual(perf.description);
   });
 
+   // TODO: extend the test below with usable analytics data
+   it('Should read performance analytics', async () => {
+    await Stories.actions.utils.addPerformanceAnalytics(perf);
+
+    await Stories.actions.common.switchActor(UserType.Admin);
+    const performanceAnalytics = await Stories.actions.hosts.readAllPerformancesAnalytics(perf._id, 'YEARLY');
+    console.log('performanceAnalytics', performanceAnalytics)
+    // expect(performanceAnalytics.length).toBe(1);
+    // expect(performanceAnalytics.chunks.length).toBe(1);
+    // expect(performanceAnalytics.chunks[0]).toHaveProperty('period_ended_at');
+    // expect(performanceAnalytics.chunks[0]).toHaveProperty('metrics');
+    // expect(performanceAnalytics.chunks[0].metrics).toHaveProperty('performances_created');
+    // expect(performanceAnalytics.chunks[0].metrics.performances_created).toBe(10);
+  })
+
   // TODO: Once the showings logic is implemented fix the issue of premiere_date is not set
   // Or do what the proper fix will be then
 

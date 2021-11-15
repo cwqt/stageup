@@ -110,11 +110,11 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
   });
 
   // TODO: extend the test below with usable analytics data
-  
   it('Should read host analytics', async () => {
     await Stories.actions.utils.addHostAnalytics(host);
 
-    await Stories.actions.common.switchActor(UserType.SiteAdmin);
+    // await Stories.actions.common.switchActor(UserType.SiteAdmin);
+    await Stories.actions.common.switchActor(UserType.Admin);
     const hostAnalytics = await Stories.actions.hosts.readHostAnalytics(host, 'YEARLY');
     expect(typeof hostAnalytics).toBe('object')
     expect(hostAnalytics.name).toEqual(host.name);
