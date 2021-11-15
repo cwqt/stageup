@@ -7,11 +7,14 @@ import {
   EVENT_BUS_PROVIDER,
   getCheck,
   Host,
+  HostAnalytics,
   HostInvitation,
   IControllerEndpoint,
   LiveStreamAsset,
   ModuleController,
   PasswordReset,
+  Performance,
+  PerformanceAnalytics,
   POSTGRES_PROVIDER,
   Provider,
   STRIPE_PROVIDER,
@@ -209,4 +212,35 @@ export class UtilityController extends ModuleController {
       return hostInvitation._id;
     }
   };
+
+  addPerformanceAnalytics: IControllerEndpoint<void> = {
+    authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+    controller: async req => {
+      const performance = await Performance.findOne(req.params.pid)
+      // For now, add analytics with some dummy data so that we can test the READING of analytics.
+      // TODO: Make more realistic insertion that better resembles the current system (inside a job, and using actual values on things like ticket sales etc.)
+      new PerformanceAnalytics(performance),
+        {
+          total_ticket_sales: 50,
+          total_revenue: 500,
+          trailer_views: 100,
+          performance_views: 42
+        }
+    }
+  };
+
+  addHostAnalytics: IControllerEndpoint<void> = {
+    authorisation: AuthStrat.not(AuthStrat.isEnv(Environment.Production)),
+    controller: async req => {
+      // For now, add analytics with some dummy data so that we can test the READING of analytics.
+      // TODO: Make more realistic insertion that better resembles the current system
+      const host = await Host.findOne(req.params.hid);
+
+      new HostAnalytics(host),
+        {
+          performances_created: 10
+        }
+      
+    }
+  }
 }
