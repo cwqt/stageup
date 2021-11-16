@@ -148,6 +148,7 @@ router.get      <IE<IFollower[]>>           ("/hosts/:hid/followers",           
 router.get      <DtoHostAnalytics>          ("/hosts/:hid/analytics",                      Hosts.readHostAnalytics);
 router.get      <IE<DtoPerfAnalytics[]>>    ("/hosts/:hid/analytics/performances",         Hosts.readPerformancesAnalytics);
 router.get      <DtoPerfAnalytics[]>        ("/hosts/:hid/analytics/performances/all",     Hosts.readAllPerformancesAnalytics);
+router.get      <DtoPerfAnalytics[]>        ("/hosts/:hid/analytics/performances/:pid",    Hosts.readPerformanceAnalytics);
 router.get      <DtoUserMarketingInfo>      ("/hosts/:hid/marketing/audience",             Hosts.readHostMarketingConsents);
 router.post     <void>                      ("/hosts/:hid/marketing/audience/export/:type",Hosts.exportUserMarketing);
 router.post     <void>                      ("/hosts/:hid/toggle-like",                    Hosts.toggleLike);

@@ -183,6 +183,7 @@ import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
 import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
 import { HostPerformanceOverviewComponent } from './routes/host/host-performance/host-performance-overview/host-performance-overview.component';
+import {HostEventAnalyticsGraphsComponent} from './routes/host/host-analytics/host-event-analytics-graphs/host-event-analytics-graphs.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -338,7 +339,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostAnalyticsGraphsComponent,
     HostListPerformancesComponent,
     BreadcrumbComponent,
-    HostPerformanceOverviewComponent
+    HostPerformanceOverviewComponent,
+    HostEventAnalyticsGraphsComponent
   ],
   imports: [
     AngularMaterialModule,

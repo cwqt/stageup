@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { PerformanceStatus } from '@core/interfaces';
 
 @Pipe({
-  name: 'performance-status'
+  name: 'performanceStatusPipe'
 })
 export class PerformanceStatusPipe implements PipeTransform {
   transform(value: PerformanceStatus): any {

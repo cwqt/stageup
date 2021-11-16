@@ -1105,6 +1105,21 @@ export class HostController extends ModuleController {
     }
   };
 
+  // Returns a full query of a performance analytics 
+  readPerformanceAnalytics: IControllerEndpoint<DtoPerformanceIDAnalytics[]> = {
+    validators: {
+      query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    controller: async req => {
+      const performance = await this.hostService.readHostPerformance(req.params.hid, req.params.pid);
+      return await this.hostService.readAnalyticsFromPerformanceArray(
+        [performance._id],
+        req.query.period as AnalyticsTimePeriod
+      );
+    }
+  };
+
   // Adds a like from database with the current users ID, the provided host ID and the location of where the user liked the host
   toggleLike: IControllerEndpoint<void> = {
     validators: { params: object({ hid: Validators.Fields.nuuid }) },
