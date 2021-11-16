@@ -74,7 +74,7 @@ const LOGGED_IN_ROUTES: Routes = [
     component: MyStuffComponent
   },
   {
-    path: `performances/:${RP.PerformanceId}`,
+    path: `events/:${RP.PerformanceId}`,
     component: PerformanceComponent
   },
   { path: `verified`, component: VerifiedComponent },
@@ -189,7 +189,7 @@ const LOGGED_IN_ROUTES: Routes = [
           children: [
             { path: 'client', redirectTo: '/' },
             {
-              path: `performances/show/:${RP.PerformanceId}`,
+              path: `events/show/:${RP.PerformanceId}`,
               component: PerformanceShowComponent
             },
             {

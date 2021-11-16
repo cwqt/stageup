@@ -29,7 +29,7 @@ export class HostPerformanceOverviewComponent implements OnInit {
     const envelope = await this.hostService.readHostPerformances(this.host._id, null);
     this.numberOfHostEvents = envelope.data.length;
     this.isPendingSchedule = this.performance.data.data.status == PerformanceStatus.PendingSchedule ? true: false;
-    this.eventURL = `${this.appService.environment.frontend_url}/${this.locale}/events/${this.performance.data.data._id}`
+    this.eventURL = `${this.appService.environment.frontend_url}/events/show/${this.performance.data.data._id}`
 
     // Format date "dd mm yyyy"
     of(formatDate((this.performance.data.data.publicity_period.start * 1000), this.dateFormat, this.locale)).subscribe(v => {
