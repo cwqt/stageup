@@ -41,7 +41,7 @@ export class HostPerformanceDetailsReleaseComponent implements OnInit {
         output: async () => {}
       },
       handlers: {
-        changes: async formData => this.onFormDataChange.emit(formData.value)
+        changes: async formData => this.onFormDataChange.emit(formData)
       }
     });
   }

@@ -13,7 +13,6 @@ export class HostPerformanceDetailsGeneralComponent implements OnInit {
   @Input() cacheable: ICacheable<DtoPerformance>;
   @Output() onFormDataChange = new EventEmitter();
   performanceDetailsForm: UiForm<void>; // This form does not handle submit but instead passes data to parent component
-  // performanceUpdateCacheable: ICacheable<IPerformance>;
 
   get performance() {
     return this.cacheable.data.data;
@@ -23,7 +22,6 @@ export class HostPerformanceDetailsGeneralComponent implements OnInit {
 
   ngOnInit(): void {
     const genrePipe = new GenrePipe();
-    // this.performanceUpdateCacheable = createICacheable(this.performance);
 
     this.performanceDetailsForm = new UiForm({
       fields: {
@@ -60,8 +58,11 @@ export class HostPerformanceDetailsGeneralComponent implements OnInit {
         output: async () => {}
       },
       handlers: {
-        changes: async formData => this.onFormDataChange.emit(formData.value)
+        changes: async formData => {
+          this.onFormDataChange.emit(formData);
+        }
       }
     });
+    console.log('lol', this.performanceDetailsForm.group);
   }
 }

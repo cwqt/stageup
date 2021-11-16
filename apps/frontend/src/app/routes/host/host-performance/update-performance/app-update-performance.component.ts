@@ -30,9 +30,9 @@ export class UpdatePerformanceComponent {
           initial: this.performance.name,
           validators: [{ type: 'required' }, { type: 'maxlength', value: 64 }]
         }),
-        description: UiField.Richtext({
+        short_description: UiField.Richtext({
           label: $localize`Description`,
-          initial: this.performance.description,
+          initial: this.performance.short_description,
           validators: [{ type: 'maxlength', value: 512 }]
         })
       },
@@ -41,7 +41,7 @@ export class UpdatePerformanceComponent {
       },
       handlers: {
         success: async (v, f) => {
-          this.cacheable.data.data = { ...this.performance, name: f.value.name, description: f.value.description };
+          this.cacheable.data.data = { ...this.performance, name: f.value.name, short_description: f.value.short_description };
         }
       }
     });

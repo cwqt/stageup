@@ -1,15 +1,19 @@
 import { HostService } from '@frontend/services/host.service';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PerformanceType } from '@core/interfaces';
 import { AppService } from 'apps/frontend/src/app/services/app.service';
+import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-create-performance',
   templateUrl: './create-performance.component.html',
   styleUrls: ['./create-performance.component.scss']
 })
-export class CreatePerformanceComponent implements OnInit {
+export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
+  @Output() submit = new EventEmitter();
+  @Output() cancel = new EventEmitter();
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { host_id: string },
     private ref: MatDialogRef<CreatePerformanceComponent>,

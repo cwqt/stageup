@@ -59,9 +59,9 @@ export class PerformanceService {
       .toPromise();
   }
 
-  //router.put <IPerf> ("/performances/:pid", Perfs.updatePerformance())
+  //router.put <IPerf> ("/performances/:pid/update", Perfs.updatePerformance())
   updatePerformance(performanceId: string, data: DtoPerformanceDetails): Promise<IPerformance> {
-    return this.http.put<IPerformance>(`/api/performances/${performanceId}`, data).toPromise();
+    return this.http.put<IPerformance>(`/api/performances/${performanceId}/update`, data).toPromise();
   }
 
   // router.post <ITicket> ("/performances/:pid/tickets", Perfs.createTicket());

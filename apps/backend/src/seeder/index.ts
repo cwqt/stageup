@@ -20,6 +20,7 @@ import {
   DtoCreateHost,
   HostPermission,
   IHostBusinessDetails,
+  PerformanceStatus,
   PersonTitle,
   Visibility
 } from '@core/interfaces';
@@ -92,7 +93,13 @@ export class Seeder {
   }
 
   private async createPerformance(host: Host, mock: SeedMockPerformance) {
-    const performance = new Performance(mock, host);
+    const performance = new Performance(mock.type, host);
+
+    performance.name = mock.name;
+    performance.short_description = mock.short_description;
+    performance.publicity_period = mock.publicity_period;
+    performance.genre = mock.genre;
+    performance.status = PerformanceStatus.Scheduled;
     performance.thumbnail = mock.thumbnail;
     performance.visibility = Visibility.Public;
 

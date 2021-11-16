@@ -40,15 +40,15 @@ export class HostPerformancesComponent implements OnInit {
       columns: [
         {
           label: $localize`Name`,
-          accessor: p => p.name
+          accessor: p => p.name || '-'
         },
         {
           label: $localize`Performance Schedule Start`,
-          accessor: p => i18n.date(unix(p.publicity_period.start), this.locale)
+          accessor: p => (p.publicity_period.start ? i18n.date(unix(p.publicity_period.start), this.locale) : '-')
         },
         {
           label: $localize`Performance Schedule End`,
-          accessor: p => i18n.date(unix(p.publicity_period.end), this.locale)
+          accessor: p => (p.publicity_period.end ? i18n.date(unix(p.publicity_period.end), this.locale) : '-')
         },
         {
           label: $localize`Visibility`,

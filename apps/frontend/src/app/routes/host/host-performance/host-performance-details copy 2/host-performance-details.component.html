@@ -8,10 +8,18 @@
 <div class="relative">
   <mat-tab-group #tabs>
     <mat-tab i18n-label label="General">
-      <ui-form class="mt-8 max-w-5xl" *ngIf="performanceGeneralForm" [form]="performanceGeneralForm"></ui-form>
+      <app-host-performance-details-general
+        class="mt-8 max-w-5xl"
+        (onFormDataChange)="updatePerformanceDetailsData($event)"
+        [cacheable]="performance"
+      ></app-host-performance-details-general>
     </mat-tab>
     <mat-tab i18n-label label="Release">
-      <ui-form class="mt-8 max-w-5xl" *ngIf="performanceReleaseForm" [form]="performanceReleaseForm"></ui-form>
+      <app-host-performance-details-release
+        class="mt-8 max-w-5xl"
+        (onFormDataChange)="updatePerformanceDetailsData($event)"
+        [cacheable]="performance"
+      ></app-host-performance-details-release>
     </mat-tab>
     <mat-tab i18n-label label="Links">
       <app-host-performance-details-links

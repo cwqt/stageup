@@ -1,7 +1,7 @@
 import { sample, timestamp, to } from '@core/helpers';
 import {
   CurrencyCode,
-  DtoCreatePerformance,
+  DtoPerformanceDetails,
   DtoCreateTicket,
   Genre,
   PerformanceType,
@@ -11,7 +11,7 @@ import faker from 'faker';
 import { SeederHostName } from './hosts.mock';
 import moment from 'moment';
 
-export type SeedMockPerformance = DtoCreatePerformance & { hostusername: SeederHostName; thumbnail?: string };
+export type SeedMockPerformance = DtoPerformanceDetails & { hostusername: SeederHostName; thumbnail?: string; type: PerformanceType };
 
 const ticketFactory = (): DtoCreateTicket => ({
   name: sample(['My Cool Ticket', 'Early Access', 'VIP Special', 'Super Star', 'Patron ticket']),

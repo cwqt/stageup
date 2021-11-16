@@ -297,10 +297,17 @@ export class PerformanceController extends ModuleController {
       { hid: IdFinderStrat.findHostIdFromPerformanceId },
       AuthStrat.hasHostPermission(HostPermission.Editor, map => map.hid)
     ),
+    // authorisation: AuthStrat.none,
     controller: async req => {
-      const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] }));
-      await perf.update(req.body);
-      return perf.toFull();
+      const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: { host: true } }));
+
+      // The act of saving the performance is only possible if the host has checked the consent box
+      // Will only be triggered the first time the host saves
+      const consent = await this.gdprService.readHostUploadConsent(performance.host, performance);
+      if (!consent) await this.gdprService.addHostUploadConsent(performance.host, performance);
+
+      await performance.update(req.body);
+      return performance.toFull();
     }
   };
 

@@ -106,15 +106,15 @@ $animation-duration: 0.2s;
 }
 
 .form-field__control {
-  background: #f6f6f6;
+  background: white;
   overflow: hidden;
   position: relative;
   width: 100%;
-  padding: 0 12px 8px;
-  padding-top: 24px;
+  padding: 12px;
+  border: 1px solid #d8d8da;
+  border-radius: 5px;
 
   &::before {
-    border-bottom: 1px solid #999;
     bottom: 0;
     content: '';
     display: block;
@@ -381,7 +381,7 @@ ui-icon {
     .ql-container,
     .ql-toolbar {
       border: 0 !important;
-      background-color: #f6f6f6 !important;
+      background-color: white !important;
     }
     .ql-toolbar {
       margin-left: -8px !important;
@@ -435,4 +435,8 @@ ui-icon {
       padding-top: 0 !important;
     }
   }
+}
+
+input::placeholder {
+  color: rgba(0, 0, 0, 0.7);
 }
