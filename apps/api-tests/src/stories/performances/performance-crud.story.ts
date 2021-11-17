@@ -29,17 +29,25 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       email_address: 'host+test@stageup.uk'
     });
 
-    perf = await Stories.actions.performances.createPerformance(host, {
-      name: 'Shakespeare',
-      description: 'To be or not to be',
-      genre: Genre.Dance,
-      type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
-    });
-
+    perf = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Vod);
     expect(perf).not.toBeNull();
+    expect(perf.performance_type).toBe(PerformanceType.Vod);
+    expect(perf.visibility).toBe(Visibility.Private);
+
+    const performanceDetails = {
+      name: 'Shakespeare',
+      short_description: 'To be or not to be',
+      long_description: 'That is the question',
+      genre: Genre.Classical,
+      publicity_period: { start: 161347834, end: 161347834 },
+      visibility: Visibility.Public
+    };
+    perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
+
     expect(perf.name).toBe('Shakespeare');
-    expect(perf.description).toBe('To be or not to be');
+    expect(perf.short_description).toBe('To be or not to be');
+    expect(perf.long_description).toBe('That is the question');
+    expect(perf.visibility).toBe(Visibility.Public);
   });
 
   it('Should read a performance', async () => {
@@ -50,13 +58,17 @@ describe('As a user, I want to be able to do performance CRUD', () => {
   });
 
   it('Should update a performance', async () => {
-    const updatePerf = await Stories.actions.performances.updatePerformance(perf, {
+    const updatePerf = await Stories.actions.performances.updatePerformance(perf._id, {
       name: 'Othello',
-      description: 'For she had eyes and chose me.'
+      short_description: 'For she had eyes and chose me.',
+      long_description: "Where's that snake? Bring the villain forward.",
+      genre: Genre.Classical,
+      publicity_period: { start: 161347834, end: 161347834 },
+      visibility: Visibility.Private
     });
 
     expect(updatePerf.name).toBe('Othello');
-    expect(updatePerf.description).toBe('For she had eyes and chose me.');
+    expect(updatePerf.short_description).toBe('For she had eyes and chose me.');
   });
 
   it('Should delete a performance', async () => {

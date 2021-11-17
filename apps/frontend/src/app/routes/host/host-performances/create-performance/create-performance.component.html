@@ -1,6 +1,16 @@
-<ui-dialog i18n-title title="Create Performance" [loading]="loading | async">
-  <div class="flex items-center justify-center space-x-6">
-    <ui-button icon="video" size="l" kind="primary" (click)="setType('live')" i18n>Go Live</ui-button>
-    <ui-button icon="upload" size="l" kind="primary" (click)="setType('vod')" i18n>On Demand</ui-button>
+<ui-dialog i18n-title title="Create Performance" [loading]="loading">
+  <div class="grid grid-cols-2 pt-4 pb-8">
+    <div class="flex flex-col justify-between items-center">
+      <div class="h-full flex items-center mb-6">
+        <img class="test" src="/assets/live-streaming.svg" i18n-alt alt="Live streaming icon" />
+      </div>
+      <ui-button size="m" kind="primary" (click)="selectType('live')" i18n>Livestream</ui-button>
+    </div>
+    <div class="flex flex-col justify-between items-center">
+      <div class="h-full flex items-center mb-6">
+        <img class="test" src="/assets/vod.svg" i18n-alt alt="Video on demand icon" />
+      </div>
+      <ui-button size="m" kind="primary" (click)="selectType('vod')" i18n>Upload</ui-button>
+    </div>
   </div>
 </ui-dialog>

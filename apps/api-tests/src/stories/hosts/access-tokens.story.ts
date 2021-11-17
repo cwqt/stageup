@@ -1,4 +1,13 @@
-import { CurrencyCode, Genre, IHost, IMyself, IPerformance, IUser } from '@core/interfaces';
+import {
+  CurrencyCode,
+  Genre,
+  IHost,
+  IMyself,
+  IPerformance,
+  IUser,
+  PerformanceType,
+  Visibility
+} from '@core/interfaces';
 import { UserType } from '../../environment';
 import { Stories } from '../../stories';
 
@@ -17,7 +26,8 @@ describe('As a Host Admin I want to provision performance access tokens', () => 
       email_address: 'host+test@stageup.uk'
     });
 
-    performance = await Stories.actions.performances.createPerformance(host);
+    performance = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Live);
+    performance = await Stories.actions.performances.updatePerformance(performance._id);
   });
 
   it('Should create some test users', async () => {

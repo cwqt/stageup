@@ -13,6 +13,7 @@ import { IUiDialogOptions } from '@frontend/ui-lib/ui-lib.interfaces';
 export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
+  loading: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { host_id: string },
@@ -21,12 +22,14 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     private appService: AppService
   ) {}
 
-  async setType(type: 'live' | 'vod') {
+  async selectType(type: 'live' | 'vod') {
+    this.loading = true;
     const performance = await this.hostService.createPerformance(
       this.hostService.hostId,
       type === 'live' ? PerformanceType.Live : PerformanceType.Vod
     );
     this.ref.close();
+    this.loading = false;
     this.appService.navigateTo(`/dashboard/performances/${performance._id}`);
   }
 

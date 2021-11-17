@@ -11,9 +11,18 @@
       <ui-form class="mt-8 max-w-5xl" *ngIf="performanceGeneralForm" [form]="performanceGeneralForm"></ui-form>
     </mat-tab>
     <mat-tab i18n-label label="Release">
-      <ui-form class="mt-8 max-w-5xl" *ngIf="performanceReleaseForm" [form]="performanceReleaseForm"></ui-form>
+      <div class="mt-8 max-w-5xl">
+        <ui-form *ngIf="performanceReleaseForm" [form]="performanceReleaseForm"></ui-form>
+        <div class="mt-3">
+          <app-host-performance-details-visibility
+            [performance]="performanceData"
+            [host]="host"
+            (switchEmitter)="updateVisibility($event)"
+          ></app-host-performance-details-visibility>
+        </div>
+      </div>
     </mat-tab>
-    <mat-tab i18n-label label="Links">
+    <mat-tab i18n-label label="Links" *ngIf="hostHasPreviouslySaved">
       <app-host-performance-details-links
         class="mt-8 max-w-5xl"
         [cacheable]="performance"
@@ -30,14 +39,14 @@
   <div class="absolute right-0 top-0 flex z-50">
     <ui-button (click)="savePerformanceDetails()" kind="primary" i18n> Save </ui-button>
     <div
-      class="flex items-center cursor-pointer z-40"
+      class="flex items-center cursor-pointer"
       [popper]="managePerformanceDropdown"
       [popperShowOnStart]="false"
       [popperHideOnClickOutside]="true"
       [popperHideOnScroll]="true"
       [popperApplyClass]="'user-dropdown-menu'"
       popperTrigger="click"
-      popperPlacement="bottom"
+      popperPlacement="top"
     >
       <ui-icon class="text-gray-500" [size]="42">overflow-menu--vertical</ui-icon>
     </div>

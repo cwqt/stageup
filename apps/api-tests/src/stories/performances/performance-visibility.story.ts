@@ -1,5 +1,4 @@
 import {
-  ErrCode,
   HTTP,
   IHost,
   IPerformance,
@@ -32,13 +31,16 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       email_address: 'host+test@stageup.uk'
     });
 
-    perf = await Stories.actions.performances.createPerformance(host, {
+    perf = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Vod);
+    const performanceDetails = {
       name: 'Shakespeare',
-      description: 'To be or not to be',
-      genre: Genre.Dance,
-      type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
-    });
+      short_description: 'To be or not to be',
+      long_description: 'That is the question',
+      genre: Genre.Classical,
+      publicity_period: { start: 161347834, end: 161347834 },
+      visibility: Visibility.Public
+    };
+    perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
 
     editor = await Stories.actions.users.createUser(UserType.Editor);
   });

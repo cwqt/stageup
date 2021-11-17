@@ -1,24 +1,3 @@
-.hidden {
-  display: none;
-}
-
-mat-horizontal-stepper {
-  ::ng-deep {
-    .mat-horizontal-stepper-header-container {
-      margin-bottom: 20px;
-    }
-
-    mat-step-header {
-      height: auto !important;
-      &:first-child {
-        padding-left: 0;
-      }
-      &:last-child {
-        padding-right: 0;
-      }
-    }
-    .mat-horizontal-content-container {
-      padding: 0;
-    }
-  }
+.test {
+  width: 128px;
 }

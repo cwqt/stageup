@@ -94,7 +94,6 @@ import { PerformanceWatchComponent } from './routes/performance-watch/performanc
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
 import { HostComponent } from './routes/host/host.component';
 import { CreatePerformanceComponent } from './routes/host/host-performances/create-performance/create-performance.component';
-import { UpdatePerformanceComponent } from './routes/host/host-performance/update-performance/app-update-performance.component';
 import { PlayerComponent } from './components/player/player.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
@@ -179,6 +178,7 @@ import { HostPerformanceMediaComponent } from './routes/host/host-performance/ho
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
 import { HostPerformanceDetailsLinksComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-links/host-performance-details-links.component';
 import { HostPerformanceDetailsKeysComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-keys/host-performance-details-keys.component';
+import { HostPerformanceDetailsVisibilityComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-visibility/host-performance-details-visibility.component';
 import { CopyBoxComponent } from './components/copy-box/copy-box.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
@@ -225,7 +225,6 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     CreatePerformanceComponent,
     DocumentViewComponent,
     HostPerformanceThumbnailsComponent,
-    UpdatePerformanceComponent,
     PlayerComponent,
     ProfileSettingsComponent,
     SearchComponent,
@@ -333,7 +332,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostProfileAssetComponent,
     HostPerformanceDetailsLinksComponent,
     HostPerformanceDetailsKeysComponent,
-    CopyBoxComponent
+    CopyBoxComponent,
+    HostPerformanceDetailsVisibilityComponent
   ],
   imports: [
     AngularMaterialModule,

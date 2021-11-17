@@ -12,13 +12,16 @@ describe('Pull in the feed...', () => {
       email_address: 'host@name.com'
     });
 
-    let perf = await Stories.actions.performances.createPerformance(host, {
+    let perf = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Vod);
+    const performanceDetails = {
       name: 'Test perf',
-      description: 'Test description',
+      short_description: 'Test description',
+      long_description: 'Long test description',
       genre: Genre.Dance,
-      type: PerformanceType.Vod,
-      publicity_period: { start: 161347834, end: 161347834 }
-    });
+      publicity_period: { start: 161347834, end: 161347834 },
+      visibility: Visibility.Public
+    };
+    perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
 
     await Stories.actions.performances.updateVisibility(perf, Visibility.Public);
   });

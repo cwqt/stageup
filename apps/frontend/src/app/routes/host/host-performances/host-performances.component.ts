@@ -91,7 +91,7 @@ export class HostPerformancesComponent implements OnInit {
 
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
-      this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' })
+      this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '500px' })
     );
   }
 

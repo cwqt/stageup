@@ -10,7 +10,9 @@ import {
   PerformanceType,
   PerformanceStatus,
   GenreMap,
-  Genre
+  Genre,
+  IHost,
+  Visibility
 } from '@core/interfaces';
 import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { AppService } from '@frontend/services/app.service';
@@ -31,14 +33,14 @@ import { ToastService } from '@frontend/services/toast.service';
 })
 export class HostPerformanceDetailsComponent implements OnInit {
   // Injected from parent router outlet
+  host: IHost;
+  performanceId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
   performance: ICacheable<DtoPerformance>;
   performanceDetails: DtoPerformanceDetails; // TODO: Add type - will need to set all fields as optional data since the host can save at any point when entering the performance details
-  hostHasConsented: boolean = false;
   performanceGeneralForm: UiForm<void>; // The forms do not handle submit but instead merge with data from other table to submit
   performanceReleaseForm: UiForm<void>;
   @ViewChild('tabs', { static: false }) tabs: MatTabGroup;
-  test: any;
 
   get performanceData() {
     return this.performance.data?.data;
@@ -61,6 +63,10 @@ export class HostPerformanceDetailsComponent implements OnInit {
     return this.performance?.data?.data?.status === PerformanceStatus.Cancelled;
   }
 
+  get hostHasPreviouslySaved(): boolean {
+    return this.performanceData.name ? true : false;
+  }
+
   constructor(
     private appService: AppService,
     private helperService: HelperService,
@@ -77,7 +83,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
       long_description: this.performanceData.long_description,
       genre: this.performanceData.genre,
       name: this.performanceData.name,
-      publicity_period: this.performanceData.publicity_period
+      publicity_period: this.performanceData.publicity_period,
+      visibility: this.performanceData.visibility
     };
 
     const genrePipe = new GenrePipe();
@@ -101,6 +108,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
         }),
         genre: UiField.Select({
           label: $localize`Genre`,
+          initial: this.performanceData.genre,
           values: new Map(
             Object.entries(GenreMap).map(([key]) => {
               return [key, { label: genrePipe.transform(key as Genre) }];
@@ -111,7 +119,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
         terms: UiField.Checkbox({
           // If the host has previously saved then they must have provided consent
           // More efficient than doing another server call (but perhaps less robust?)
-          initial: this.performanceData.name ? true : false,
+          initial: this.hostHasPreviouslySaved,
           label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally.`,
           validators: [{ type: 'required' }]
         })
@@ -146,6 +154,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
         changes: async () => {}
       }
     });
+
     // Get the userHostInfo (with stream_key) for the live performance
     // Note, the seeded performance 'The Ghost Stories of E R Benson' is live but does not have a key
     if (this.performanceType == 'Livestream') this.readStreamKey();
@@ -223,6 +232,11 @@ export class HostPerformanceDetailsComponent implements OnInit {
       // Save
       await this.performanceService.updatePerformance(this.performanceData._id, this.performanceDetails);
     }
+  }
+
+  updateVisibility(visible: boolean) {
+    this.performanceDetails.visibility = visible ? Visibility.Public : Visibility.Private;
+    console.log(this.performanceDetails);
   }
 
   goToPerformance(): void {

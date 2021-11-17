@@ -94,7 +94,7 @@ export interface IPerformance extends IPerformanceStub {
 // TODO: Add 'ticket visibility schedule', 'access duration', 'event showings', 'short description' and 'long description'
 export type DtoPerformanceDetails = Pick<
   IPerformance,
-  'name' | 'short_description' | 'long_description' | 'genre' | 'publicity_period'
+  'name' | 'short_description' | 'long_description' | 'genre' | 'publicity_period' | 'visibility'
 >;
 
 // Interface for additional client information regarding the performance.

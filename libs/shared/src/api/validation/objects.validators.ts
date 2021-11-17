@@ -38,7 +38,8 @@ import {
   IProcessRefunds,
   DonoPegs,
   PerformanceType,
-  DtoPerformanceDetails
+  DtoPerformanceDetails,
+  Visibility
 } from '@core/interfaces';
 import {
   any,
@@ -104,7 +105,8 @@ export namespace objects {
     ),
     short_description: optional(fields.richtext),
     long_description: optional(fields.richtext),
-    genre: optional(fields.genre)
+    genre: optional(fields.genre),
+    visibility: enums(Object.values(Visibility))
   });
 
   export const DtoCreateHost: Describe<DtoCreateHost> = object({

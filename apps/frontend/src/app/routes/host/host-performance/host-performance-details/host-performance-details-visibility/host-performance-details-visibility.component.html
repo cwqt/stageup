@@ -1,0 +1,31 @@
+<div class="flex items-center justify-between">
+  <div class="mr-4">
+    <h4 i18n>Visibility</h4>
+    <!-- Host needs to be onboarded before going public -->
+    <p *ngIf="!host.is_onboarded" i18n>
+      You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made
+      Public<br />
+    </p>
+    <ng-container *ngIf="host.is_onboarded">
+      <!-- Performance needs a trailer or 2 thumbnails to be made public -->
+      <p *ngIf="!minimumAssetsMet" i18n>
+        A performance needs to have a trailer <b>or</b> a minimum of two images in order to make it public. Head to the
+        <a [routerLink]="'/dashboard/performances/' + performance._id + '/media'">media</a> section to start uploading
+        now!
+        <br />
+      </p>
+      <ng-container *ngIf="minimumAssetsMet">
+        <!-- VoD performances can only be made public after the video has been processed from mux -->
+        <p *ngIf="vodAsset && !vodAsset.location" i18n>
+          VoD Asset is still processing. Once complete you can set this performance to public.
+          <br />
+        </p>
+        <p *ngIf="performanceMeetsAllPublicityRequirements" i18n>
+          Set whether a performance is visible across the platform
+        </p>
+        <br />
+      </ng-container>
+    </ng-container>
+  </div>
+  <ui-form *ngIf="performanceMeetsAllPublicityRequirements" [form]="visibilityForm"></ui-form>
+</div>

@@ -11,7 +11,7 @@
     [class.form-field--has-icon]="data.options.icon"
     *ngIf="data.type == 'number' || data.type == 'text' || data.type == 'password' || data.type == 'phone'"
   >
-    <h4 *ngIf="data.options.label">{{ data.options.label }}</h4>
+    <h4 *ngIf="data.options.label">{{ data.options.label }} <span *ngIf="required" class="red">*</span></h4>
     <ui-icon *ngIf="data.options.icon" class="" size="l">{{ data.options.icon }}</ui-icon>
     <div class="form-field__control">
       <input
@@ -66,7 +66,7 @@
     [class.form-field--is-errored]="showError"
     *ngIf="data.type == 'textarea'"
   >
-    <h4 *ngIf="data.options.label">{{ data.options.label }}</h4>
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <div class="form-field__control">
       <textarea
         #textarea
@@ -103,7 +103,7 @@
     [class.form-field--is-disabled]="control.disabled"
     *ngIf="data.type == 'money'"
   >
-    <h4 *ngIf="data.options.label">{{ data.options.label }}</h4>
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <div class="form-field__control">
       <input
         mask="separator.2"
@@ -134,7 +134,7 @@
     [class.form-field--is-errored]="showError"
     [class.form-field--is-disabled]="control.disabled"
   >
-    <h4>{{ data.options.label }}</h4>
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <div class="form-field__control">
       <quill-editor
         #quill
@@ -171,7 +171,7 @@
 
   <!-- Select with search -->
   <div *ngIf="data.type == 'select'">
-    <h4>{{ data.options.label }}</h4>
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <mat-form-field appearance="outline" [class.form-field--no-label]="!data.options.label">
       <mat-label i18n>{{ data.options.placeholder || 'Select an option' }}</mat-label>
       <mat-select
@@ -207,7 +207,7 @@
 
   <!-- Date picker, single -->
   <div *ngIf="data.type == 'date' && !data.options?.is_date_range">
-    <h4>{{ data.options.label }}</h4>
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <mat-form-field class="form-field__date" appearance="outline">
       <mat-label i18n>Choose a date</mat-label>
       <input
@@ -225,7 +225,7 @@
 
   <!-- Date picker, range -->
   <div *ngIf="data.type == 'date' && data.options?.is_date_range">
-    <h4>{{ data.options.label }}</h4>
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <mat-form-field class="form-field__date" appearance="outline">
       <mat-label i18n>Date range</mat-label>
       <mat-date-range-input
@@ -263,7 +263,7 @@
 
   <!-- Time picker -->
   <mat-form-field *ngIf="data.type == 'time'" appearance="outline">
-    <mat-label>{{ data.options.label }}</mat-label>
+    <mat-label *ngIf="data.options.label">{{ data.options.label }}</mat-label>
     <mat-select
       #singleSelect
       (blur)="onTouchedCallback()"
@@ -279,7 +279,7 @@
 
   <!-- Datetime picker -->
   <div *ngIf="data.type == 'datetime'" appearance="outline">
-    <span class="mb-3 inline-block">{{ data.options.label }}</span>
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <mat-form-field class="form-field__datetime">
       <input
         matInput

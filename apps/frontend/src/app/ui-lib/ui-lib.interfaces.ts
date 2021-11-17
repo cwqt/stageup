@@ -9,7 +9,7 @@ export enum ThemeKind {
   Warning = 'warning',
   Danger = 'danger',
   ClearDark = 'clear-dark',
-  Pink = 'pink'
+  PrimaryLight = 'primary-light'
 }
 
 export enum ThemeDimension {

@@ -1,37 +1,38 @@
 import {
-  DtoCreatePerformance,
   DtoCreateTicket,
   DtoPerformance,
+  DtoPerformanceDetails,
   Genre,
   IEnvelopedData,
-  IHost,
-  IHostStub,
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
-  IPerformanceUserInfo,
   ITicket,
   ITicketStub,
   NUUID,
   PerformanceType,
   Visibility
 } from '@core/interfaces';
-import { timestamp } from '@core/helpers';
 import { Except } from 'type-fest';
 import { api, environment as env } from '../environment';
 
 export default {
-  // router.post<IPerf>("/performances",Perfs.createPerformance());
-  createPerformance: async (host: IHost | IHostStub, data?: DtoCreatePerformance): Promise<IPerformance> => {
-    data = data || {
+  // router.post<IPerf>("/hosts/:hid/performances",Perfs.createPerformance());
+  createPerformance: async (hostId: string, type: PerformanceType): Promise<IPerformance> => {
+    const res = await api.post(`/hosts/${hostId}/performances`, { type }, env.getOptions());
+    return res.data;
+  },
+
+  //router.put <IPerf> ("/performances/:pid/update", Perfs.updatePerformance())
+  updatePerformance: async (performanceId: string, data?: DtoPerformanceDetails): Promise<IPerformance> => {
+    const performanceDetails = data || {
       name: 'performance name',
       publicity_period: { start: 161347834, end: 161347834 },
       genre: Genre.Contemporary,
-      description: 'some performance',
-      type: PerformanceType.Vod
+      short_description: 'some performance',
+      visibility: Visibility.Public
     };
-
-    const res = await api.post(`/hosts/${host._id}/performances`, data, env.getOptions());
+    const res = await api.put(`/api/performances/${performanceId}/update`, performanceDetails, env.getOptions());
     return res.data;
   },
 
@@ -50,15 +51,6 @@ export default {
   // router.get<IPHInfo>("/performances/:pid/host-info", Perfs.readPerformanceHostInfo());
   readPerformanceHostInfo: async (performance: IPerformance): Promise<IPerformanceHostInfo> => {
     const res = await api.get(`/performances/${performance._id}/host-info`, env.getOptions());
-    return res.data;
-  },
-
-  // router.put<IPerf>("/performance/:pid",Perfs.updatePerformance());
-  updatePerformance: async (
-    performance: IPerformance,
-    data: Partial<{ name: string; description: string; amount: number }>
-  ): Promise<IPerformance> => {
-    const res = await api.put(`/performances/${performance._id}`, data, env.getOptions());
     return res.data;
   },
 
