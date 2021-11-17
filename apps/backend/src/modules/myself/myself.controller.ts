@@ -156,10 +156,11 @@ export class MyselfController extends ModuleController {
           .andWhere('p.status NOT IN (:...statusArray)', { statusArray: hiddenStates })
           .innerJoinAndSelect('p.host', 'host')
           .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })
+          .orderBy('p.created_at', 'DESC')
           .paginate({
             serialiser: p => p.toClientStub(),
             page: req.query.everything ? parseInt((req.query['everything'] as any).page) : 0,
-            per_page: req.query.everything ? parseInt((req.query['everything'] as any).per_page) : 4
+            per_page: req.query.everything ? parseInt((req.query['everything'] as any).per_page) : 10
           });
 
       if (fetchAll || req.query['hosts'])
