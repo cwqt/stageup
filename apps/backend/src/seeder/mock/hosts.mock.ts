@@ -57,7 +57,8 @@ export type SeederHostName =
   | 'Trac'
   | 'TyCerdd'
   | 'BCG'
-  | 'SJSS';
+  | 'SJSS'
+  | 'RWCMD';
 
 export default to<
   Array<Except<DtoCreateHost, 'username'> & { avatar: string; banner: string; username: SeederHostName }>
@@ -70,6 +71,14 @@ export default to<
   //   email_address: 'rd@stageup.uk',
   //   name: 'Rubicon Dance'
   // },
+  {
+    username: 'RWCMD',
+    avatar:
+      'https://res.cloudinary.com/dknooppbu/image/upload/v1637152407/SU/rwcmd.png',
+    banner: 'https://res.cloudinary.com/dknooppbu/image/upload/v1637152343/SU/Royal-Welsh-College-of-Music-and-Drama-1102x715.jpg',
+    email_address: 'rwcmd@stageup.uk',
+    name: 'Royal Welsh College of Music and Drama'
+  },
   {
     username: 'RSCompany',
     avatar:
