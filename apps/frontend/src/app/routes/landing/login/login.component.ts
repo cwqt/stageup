@@ -115,9 +115,8 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
   handlePostSignIn(): void {
     this.myselfService.getMyself().then(myself => {
       // If the user has set a preferred language, we want to prefix the URL with that when they login
-      const localeRedirect = myself.user.locale ? `/${myself.user.locale.language}` : '';
       this.appService.navigateTo(
-        myself.host_info?.prefers_dashboard_landing ? `${localeRedirect}/dashboard` : `${localeRedirect}/`
+        myself.host_info?.prefers_dashboard_landing ? `/dashboard` : `/`
       );
       this.dialog.closeAll();
     });
