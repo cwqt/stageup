@@ -62,9 +62,9 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     const updatePerf = await Stories.actions.performances.updatePerformance(perf._id, {
       name: 'Othello',
       short_description: 'For she had eyes and chose me.',
-      long_description: "Where's that snake? Bring the villain forward.",
-      genre: Genre.Classical,
-      publicity_period: { start: 161347834, end: 161347834 },
+      long_description: 'Where is that snake? Bring the villain forward.',
+      genre: Genre.Dance,
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       visibility: Visibility.Private
     });
 

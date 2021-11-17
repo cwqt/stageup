@@ -33,7 +33,7 @@ export default {
       short_description: 'some performance',
       visibility: Visibility.Public
     };
-    const res = await api.put(`/api/performances/${performanceId}/update`, performanceDetails, env.getOptions());
+    const res = await api.put(`/performances/${performanceId}/update`, performanceDetails, env.getOptions());
     return res.data;
   },
 

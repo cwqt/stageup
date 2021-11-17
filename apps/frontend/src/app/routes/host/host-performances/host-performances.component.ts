@@ -67,7 +67,8 @@ export class HostPerformancesComponent implements OnInit {
               [PerformanceStatus.Deleted]: 'gray',
               [PerformanceStatus.Live]: 'red',
               [PerformanceStatus.PendingSchedule]: 'blue',
-              [PerformanceStatus.Scheduled]: 'green'
+              [PerformanceStatus.Scheduled]: 'green',
+              [PerformanceStatus.Draft]: 'cool-grey'
             };
 
             return colors[p.status];

@@ -29,7 +29,8 @@ export enum PerformanceStatus {
   Scheduled = 'scheduled',
   Deleted = 'deleted',
   Cancelled = 'cancelled',
-  PendingSchedule = 'pending_schedule'
+  PendingSchedule = 'pending_schedule',
+  Draft = 'draft'
 }
 
 export enum PerformanceType {

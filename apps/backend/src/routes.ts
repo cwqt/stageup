@@ -171,7 +171,6 @@ router.get      <DtoPerformance>            ("/performances/:pid",              
 router.put      <void>                      ("/performances/:pid",                         Perfs.softDeletePerformance);
 router.put      <void>                      ("/performances/:pid/cancel",                  Perfs.cancelPerformance);
 router.put      <IPerf>                     ("/performances/:pid/update",                  Perfs.updatePerformance);
-router.put      <IPerformance>              ("/performances/:pid/publicity-period",        Perfs.updatePublicityPeriod);
 router.put      <void>                      ("/performances/:pid/restore",                 Perfs.restorePerformance);
 router.post     <AssetDto | void>           ("/performances/:pid/thumbnails",              Perfs.changeThumbnails);
 router.post     <ICreateAssetRes | void>    ("/performances/:pid/assets",                  Perfs.createAsset);

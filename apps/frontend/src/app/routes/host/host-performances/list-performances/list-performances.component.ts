@@ -26,7 +26,7 @@ export class HostListPerformancesComponent implements OnInit {
     private helperService: HelperService,
     private dialog: MatDialog,
     private appService: AppService
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
@@ -66,7 +66,8 @@ export class HostListPerformancesComponent implements OnInit {
               [PerformanceStatus.Deleted]: 'gray',
               [PerformanceStatus.Live]: 'red',
               [PerformanceStatus.PendingSchedule]: 'blue',
-              [PerformanceStatus.Scheduled]: 'green'
+              [PerformanceStatus.Scheduled]: 'green',
+              [PerformanceStatus.Draft]: 'cool-grey'
             };
 
             return colors[p.status];

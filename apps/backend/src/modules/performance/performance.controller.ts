@@ -306,7 +306,22 @@ export class PerformanceController extends ModuleController {
       const consent = await this.gdprService.readHostUploadConsent(performance.host, performance);
       if (!consent) await this.gdprService.addHostUploadConsent(performance.host, performance);
 
-      await performance.update(req.body);
+      const performanceDetails = req.body;
+
+      // Set the performance status IF the publicity period has changed
+      if (
+        req.body.publicity_period.start !== performance.publicity_period.start ||
+        req.body.publicity_period.end !== performance.publicity_period.end
+      ) {
+        // TODO: In the near future the status of the performance will no longer relate to the publicity period, but instead the 'showings times'.
+        // The publicity period will instead relate to the period of time it is visible on the site. However, left like this for now until updated.
+        performanceDetails['status'] =
+          req.body.publicity_period.start && req.body.publicity_period.end
+            ? PerformanceStatus.Scheduled
+            : PerformanceStatus.PendingSchedule;
+      }
+
+      await performance.update(performanceDetails);
       return performance.toFull();
     }
   };
@@ -839,31 +854,33 @@ export class PerformanceController extends ModuleController {
     }
   };
 
-  updatePublicityPeriod: IControllerEndpoint<IPerformance> = {
-    validators: { body: object({ start: Validators.Fields.timestamp, end: Validators.Fields.timestamp }) },
-    authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
-    controller: async req => {
-      const performance = await getCheck(
-        Performance.findOne({ where: { _id: req.params.pid }, relations: { tickets: true } })
-      );
+  // Commented for now so that the logic can be used when 'Showing times' is implemented.
 
-      const period: IPerformance['publicity_period'] = req.body;
+  // updatePublicityPeriod: IControllerEndpoint<IPerformance> = {
+  //   validators: { body: object({ start: Validators.Fields.timestamp, end: Validators.Fields.timestamp }) },
+  //   authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
+  //   controller: async req => {
+  //     const performance = await getCheck(
+  //       Performance.findOne({ where: { _id: req.params.pid }, relations: { tickets: true } })
+  //     );
 
-      // https://alacrityfoundationteam31.atlassian.net/browse/SU-901
-      // The schedule for a performance should never be set before the dates set for selling tickets.
-      // It could either coincide with the ticket schedule or start after the ticket period is over.
-      if (performance.tickets.some(ticket => !ticket.is_cancelled && ticket.start_datetime < period.start))
-        throw new ErrorHandler(HTTP.BadRequest, '@@error.publicity_period_outside_ticket_period');
+  //     const period: IPerformance['publicity_period'] = req.body;
 
-      performance.publicity_period = req.body;
+  //     // https://alacrityfoundationteam31.atlassian.net/browse/SU-901
+  //     // The schedule for a performance should never be set before the dates set for selling tickets.
+  //     // It could either coincide with the ticket schedule or start after the ticket period is over.
+  //     if (performance.tickets.some(ticket => !ticket.is_cancelled && ticket.start_datetime < period.start))
+  //       throw new ErrorHandler(HTTP.BadRequest, '@@error.publicity_period_outside_ticket_period');
 
-      performance.status = PerformanceStatus.Scheduled;
-      await performance.save();
-      await this.bus.publish('performance.publicity_period_changed', { performance_id: performance._id }, req.locale);
+  //     performance.publicity_period = req.body;
 
-      return performance.toFull();
-    }
-  };
+  //     performance.status = PerformanceStatus.Scheduled;
+  //     await performance.save();
+  //     await this.bus.publish('performance.publicity_period_changed', { performance_id: performance._id }, req.locale);
+
+  //     return performance.toFull();
+  //   }
+  // };
 
   setRating: IControllerEndpoint<void> = {
     validators: {

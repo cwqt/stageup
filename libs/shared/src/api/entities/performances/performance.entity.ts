@@ -46,7 +46,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('varchar', { nullable: true }) thumbnail: string;
   @Column('enum', { enum: Visibility, default: Visibility.Private }) visibility: Visibility;
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
-  @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.PendingSchedule }) status: PerformanceStatus;
+  @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.Draft }) status: PerformanceStatus;
   @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
 
   @DeleteDateColumn() deletedAt?: Date;
@@ -64,7 +64,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
     // Defaults
     this._id = uuid();
     this.tickets = [];
-    this.status = PerformanceStatus.PendingSchedule;
+    this.status = PerformanceStatus.Draft;
     this.created_at = timestamp(new Date());
     this.views = 0;
     this.like_count = 0;

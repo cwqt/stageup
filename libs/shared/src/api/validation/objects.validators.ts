@@ -97,15 +97,15 @@ export namespace objects {
 
   export const DtoPerformanceDetails: Describe<DtoPerformanceDetails> = object({
     name: size(string(), 1, 100), // only required field is 'name'
-    publicity_period: optional(
+    publicity_period: nullable(
       object({
         start: fields.timestamp,
         end: fields.timestamp
       })
     ),
-    short_description: optional(fields.richtext),
-    long_description: optional(fields.richtext),
-    genre: optional(fields.genre),
+    short_description: nullable(fields.richtext),
+    long_description: nullable(fields.richtext),
+    genre: nullable(fields.genre),
     visibility: enums(Object.values(Visibility))
   });
 
