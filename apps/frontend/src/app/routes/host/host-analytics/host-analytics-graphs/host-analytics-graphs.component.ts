@@ -31,6 +31,9 @@ type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnaly
 export class HostAnalyticsGraphsComponent implements OnInit {
   @ViewChildren(HostAnalyticsHeaderItemComponent) headers: QueryList<HostAnalyticsHeaderItemComponent>;
   @Output() periodEmitter = new EventEmitter();
+  // Host data response - single entity
+  hostAnalytics = new Cacheable<DtoHostAnalytics>();
+  performanceAnalytics = new Cacheable<DtoPerformanceAnalytics[]>();
 
   constructor(@Inject(LOCALE_ID) public locale: string, private hostService: HostService) {}
 
@@ -73,10 +76,6 @@ export class HostAnalyticsGraphsComponent implements OnInit {
   get headerItems() {
     return Object.values(this.snapshot).reduce((acc, curr) => ((acc = acc.concat(curr.header_items)), acc), []);
   }
-
-  // Host data response - single entity
-  hostAnalytics = new Cacheable<DtoHostAnalytics>();
-  performanceAnalytics = new Cacheable<DtoPerformanceAnalytics[]>();
 
   ngOnInit(): void {
     this.periodForm = new UiForm({
@@ -222,7 +221,7 @@ export class HostAnalyticsGraphsComponent implements OnInit {
 
       const oneWeek = periodInSeconds('week');
       // The most recent data point (which we can use to base all other aggregation periods off)
-      let currentPeriodEnd = allPerformanceChunks[allPerformanceChunks.length - 1].period_ended_at;
+      let currentPeriodEnd = allPerformanceChunks[allPerformanceChunks.length - 1]?.period_ended_at;
       let currentPeriodStart = currentPeriodEnd - oneWeek;
       // Aggregate all data into one week periods going backwards, based off the most recent data point
       // Each graph will have aggregation periods that equal the number of weeks +1 (e.g. 'Weekly' periods will have 2 data points - i.e. a straight line)

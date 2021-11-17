@@ -1045,7 +1045,6 @@ export class HostController extends ModuleController {
         .orderBy('host_analytics.period_ended_at', 'DESC')
         .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
         .getMany();
-      console.log('CHUNKS', chunks)
 
       // Only a single host, this one!
       return {

@@ -18,25 +18,25 @@ describe('As a user-host, I want to review all my performances', () => {
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
 
     host = await Stories.actions.hosts.createOnboardedHost({
-        username: 'somecoolhost',
-        name: 'Some Cool Host',
-        email_address: 'host+test@stageup.uk'
-      });
-      
+      username: 'somecoolhost',
+      name: 'Some Cool Host',
+      email_address: 'host+test@stageup.uk'
+    });
+
     perf = await Stories.actions.performances.createPerformance(host, {
-        name: 'Shakespeare',
-        description: 'To be or not to be',
-        genre: Genre.Classical,
-        type: PerformanceType.Vod,
-        publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
-      });        
-      
+      name: 'Shakespeare',
+      description: 'To be or not to be',
+      genre: Genre.Classical,
+      type: PerformanceType.Vod,
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 }
+    });
+
     let performancesList = await Stories.actions.hosts.readHostPerformances(host);
     const hostPerformances = performancesList.data[0];
 
     expect(host).not.toBeNull();
     expect(host.username).toBe('somecoolhost');
-    expect(host.name).toBe('Some Cool Host');        
+    expect(host.name).toBe('Some Cool Host');
 
     expect(perf).not.toBeNull();
     expect(perf.name).toBe('Shakespeare');
@@ -48,8 +48,8 @@ describe('As a user-host, I want to review all my performances', () => {
     expect(hostPerformances.description).toEqual(perf.description);
   });
 
-   // TODO: extend the test below with usable analytics data
-   it('Should read performance analytics', async () => {
+  // TODO: extend the test below with usable analytics data
+  it('Should read performance analytics', async () => {
     await Stories.actions.utils.addPerformanceAnalytics(perf);
 
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
@@ -73,8 +73,7 @@ describe('As a user-host, I want to review all my performances', () => {
     expect(performanceAnalytics[0].chunks.length).toBe(8);
     performanceAnalytics = await Stories.actions.hosts.readAllPerformancesAnalytics(host._id, 'QUARTERLY');
     expect(performanceAnalytics[0].chunks.length).toBe(20);
-  })
-
+  });
 
   // TODO: Once the showings logic is implemented fix the issue of premiere_date is not set
   // Or do what the proper fix will be then
@@ -91,7 +90,5 @@ describe('As a user-host, I want to review all my performances', () => {
     const stripeInfo = await Stories.actions.hosts.readStripeInfo(host);
   });
 
-  it('Should read invoices', async () => {
-    
-  });
+  it('Should read invoices', async () => {});
 });
