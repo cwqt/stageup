@@ -242,6 +242,7 @@ export namespace objects {
     email_address: fields.email,
     username: fields.username,
     name: fields.name,
+    vat_number: optional(fields.vatNumber),
     business_details: IHostBusinessDetails,
     social_info: ISocialInfo
   });

@@ -152,7 +152,7 @@ export class MyselfController extends ModuleController {
 
       if (fetchAll || req.query['everything'])
         feed.everything = await this.ORM.createQueryBuilder(Performance, 'p')
-          .where('p.visibility = :state', { state: Visibility.Public })
+          // .where('p.visibility = :state', { state: Visibility.Public })
           .andWhere('p.status NOT IN (:...statusArray)', { statusArray: hiddenStates })
           .innerJoinAndSelect('p.host', 'host')
           .leftJoinAndSelect('p.likes', 'likes', 'likes.user__id = :uid', { uid: req.session.user?._id })

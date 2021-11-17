@@ -24,6 +24,7 @@ import { PerformanceService } from 'apps/frontend/src/app/services/performance.s
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
 import { GenrePipe } from '@frontend/_pipes/genre.pipe';
 import { ToastService } from '@frontend/services/toast.service';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 // Container component for all of the tabs (details, release, links, keys)
 @Component({
@@ -73,7 +74,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private performanceService: PerformanceService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -196,6 +198,12 @@ export class HostPerformanceDetailsComponent implements OnInit {
         })
       ]
     });
+    this.breadcrumbService.set(
+      'dashboard/performances/:id',
+      this.performanceData.name.length > 15
+        ? `${this.performanceData.name.substring(0, 15)}...`
+        : this.performanceData.name
+    );
   }
 
   async savePerformanceDetails() {

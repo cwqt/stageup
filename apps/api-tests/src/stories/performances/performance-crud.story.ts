@@ -12,6 +12,7 @@ import {
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { AxiosError } from 'axios';
+import { timestamp } from '@core/helpers';
 
 describe('As a user, I want to be able to do performance CRUD', () => {
   let host: IHost;
@@ -38,8 +39,8 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       name: 'Shakespeare',
       short_description: 'To be or not to be',
       long_description: 'That is the question',
-      genre: Genre.Classical,
-      publicity_period: { start: 161347834, end: 161347834 },
+      genre: Genre.Dance,
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       visibility: Visibility.Public
     };
     perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);

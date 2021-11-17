@@ -25,7 +25,7 @@ export type SeederHostName =
   | 'CUC'
   | 'Chapter'
   | 'CMW'
-  | 'CwmniTheatr'
+  // | 'CwmniTheatr'
   | 'CFW'
   | 'DiB'
   | 'DisabilityArtsCymru'
@@ -71,20 +71,20 @@ export default to<
   //   name: 'Rubicon Dance'
   // },
   {
-    username: 'TorchTheatre',
-    avatar:
-      'https://media-exp3.licdn.com/dms/image/C510BAQHF0mlUi2SeWA/company-logo_200_200/0/1519886097924?e=2159024400&v=beta&t=xUhgzEof9MyFCeS4Sn7zk9EUsHieAV5Jo4PGJmdattM',
-    banner: 'https://www.torchtheatre.co.uk/media/405964/torch-theatre-header-01.jpg',
-    email_address: 'company@stageup.uk',
-    name: `Torch Theatre`
-  },
-  {
     username: 'RSCompany',
     avatar:
       'data:image/png;base64,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',
     banner: 'https://www.burohappold.com/wp-content/uploads/2017/03/RST_01s_RSC-and-Peter-Cook.jpg',
     email_address: 'rsc@stageup.uk',
     name: 'Royal Shakespeare Company'
+  },
+  {
+    username: 'TorchTheatre',
+    avatar:
+      'https://media-exp3.licdn.com/dms/image/C510BAQHF0mlUi2SeWA/company-logo_200_200/0/1519886097924?e=2159024400&v=beta&t=xUhgzEof9MyFCeS4Sn7zk9EUsHieAV5Jo4PGJmdattM',
+    banner: 'https://www.torchtheatre.co.uk/media/405964/torch-theatre-header-01.jpg',
+    email_address: 'company@stageup.uk',
+    name: `Torch Theatre`
   },
   {
     username: 'OldVic',
@@ -180,7 +180,7 @@ export default to<
     username: 'ACGofalCelf',
     avatar: 'https://wwamh.org.uk/media/2021/05/Arts-Care-Gofal-Celf-Blog.jpg',
     banner:
-      'https://lh3.googleusercontent.com/proxy/UCeIT9d8x-S-xyy_D9hlr7o-KntekazpWtnBjhgaVRHpKGKjyjrTMf8DeWvxrdPbX-gy3rDEd9A8GllIkUOs5YeLi-ee',
+      'https://wwamh.org.uk/media/2021/05/Arts-Care-Gofal-Celf-Blog.jpg',
     email_address: 'company@stageup.uk',
     name: 'Arts Care Gofal Celf'
   },
@@ -211,7 +211,7 @@ export default to<
   {
     username: 'BlackwoodMI',
     avatar:
-      'https://scontent-man2-1.xx.fbcdn.net/v/t31.18172-8/12095141_10153727442573680_2338717650292681529_o.jpg?_nc_cat=109&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=DizE8tpvi9AAX_5qROW&_nc_ht=scontent-man2-1.xx&oh=df1f3b8e577430f98aa5302a3280a193&oe=60F0A908',
+      'https://dgm-cover.azureedge.net/1080/tnkx.jpg',
     banner: 'https://dgm-cover.azureedge.net/1080/tnkx.jpg',
     email_address: 'company@stageup.uk',
     name: `Blackwood Miners' Institute`
@@ -245,14 +245,14 @@ export default to<
     email_address: 'company@stageup.uk',
     name: 'Community Music Wales'
   },
-  {
-    username: 'CwmniTheatr',
-    avatar: 'https://aradgoch.cymru/wp-content/uploads/2019/06/arad_goch_logo.png',
-    banner:
-      'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/67791140_2400175166938519_2682979204097638400_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=e3f864&_nc_ohc=B9GFhgqgzhQAX9ZADPw&_nc_ht=scontent-man2-1.xx&oh=dfb8607bf61a7037e324dd484d1916d8&oe=60CFEEA8',
-    email_address: 'company@stageup.uk',
-    name: 'CwmniTheatr'
-  },
+  // {
+  //   username: 'CwmniTheatr',
+  //   avatar: 'https://aradgoch.cymru/wp-content/uploads/2019/06/arad_goch_logo.png',
+  //   banner:
+  //     'https://scontent-man2-1.xx.fbcdn.net/v/t1.6435-9/67791140_2400175166938519_2682979204097638400_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=e3f864&_nc_ohc=B9GFhgqgzhQAX9ZADPw&_nc_ht=scontent-man2-1.xx&oh=dfb8607bf61a7037e324dd484d1916d8&oe=60CFEEA8',
+  //   email_address: 'company@stageup.uk',
+  //   name: 'CwmniTheatr'
+  // },
   {
     username: 'CFW',
     avatar: 'https://img.endole.co.uk/?t=c987254eb1d2f414444e44cf5595d83e&l=',

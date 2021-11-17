@@ -296,9 +296,8 @@ export class HostService {
     assertOnly: boolean = false
   ): Promise<IDeleteHostAssertion | void> {
     return this.http
-      .request<IDeleteHostAssertion | void>('delete', `/api/hosts/${hostId}?assert_only=${assertOnly}`, {
-        body: reason
-      })
+      .request<IDeleteHostAssertion | void>('delete',`/api/hosts/${hostId}${querize(
+        {reason: reason.reasons, explanation: reason.explanation, assert_only: assertOnly})}`)
       .toPromise();
   }
 

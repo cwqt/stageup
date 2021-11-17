@@ -2,6 +2,8 @@ import { IHost, IPerformance, IUser, PerformanceType, Visibility } from '@core/i
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { CurrencyCode, Genre } from '@core/interfaces';
+import { date } from 'superstruct';
+import { timestamp } from '@core/helpers';
 
 //router.get <IE<IPerformance[], null>> ("/hosts/:hid/performances", Hosts.readHostPerformances());
 describe('As a user-host, I want to review all my performances', () => {
@@ -14,7 +16,7 @@ describe('As a user-host, I want to review all my performances', () => {
     client = await Stories.actions.users.createUser(UserType.Client);
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
 
-    host = await Stories.actions.hosts.createHost({
+    host = await Stories.actions.hosts.createOnboardedHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
       email_address: 'host+test@stageup.uk'
@@ -26,7 +28,7 @@ describe('As a user-host, I want to review all my performances', () => {
       short_description: 'To be or not to be',
       long_description: 'That is the question',
       genre: Genre.Classical,
-      publicity_period: { start: 161347834, end: 161347834 },
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       visibility: Visibility.Public
     };
     perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
@@ -48,4 +50,21 @@ describe('As a user-host, I want to review all my performances', () => {
     expect(hostPerformances.short_description).toEqual(perf.short_description);
     expect(hostPerformances.long_description).toEqual(perf.long_description);
   });
+
+  // TODO: Once the showings logic is implemented fix the issue of premiere_date is not set
+  // Or do what the proper fix will be then
+
+  // it('Should read host feed', async () => {
+  //   await Stories.actions.performances.updateVisibility(perf, Visibility.Public);
+
+  //   const feed = await Stories.actions.hosts.readHostFeed(host);
+  //   console.log(feed.data.upcoming.data);
+  // });
+
+  it('Should connect to stripe', async () => {
+    const link = await Stories.actions.hosts.connectStripe(host);
+    const stripeInfo = await Stories.actions.hosts.readStripeInfo(host);
+  });
+
+  it('Should read invoices', async () => {});
 });

@@ -1,3 +1,4 @@
+import { timestamp } from '@core/helpers';
 import { Genre, IFeed, IUser, PerformanceType, Visibility } from '@core/interfaces';
 import { Stories } from '../../stories';
 
@@ -18,7 +19,7 @@ describe('Pull in the feed...', () => {
       short_description: 'Test description',
       long_description: 'Long test description',
       genre: Genre.Dance,
-      publicity_period: { start: 161347834, end: 161347834 },
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       visibility: Visibility.Public
     };
     perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);

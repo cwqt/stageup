@@ -8,7 +8,7 @@ export default {
   /**
    * @description Drops all existing data, creates the admin user & switches to acting as them
    */
-  setup: async (): Promise<IUser> => {
+  setup: async (): Promise<IUser & {email_address: string}> => {
     await Stories.actions.common.drop();
     Stories.cachedUsers = {}; //clear user cache
     const admin = await Stories.actions.users.createUser(UserType.SiteAdmin);

@@ -1,11 +1,5 @@
-<h2 i18n>Your Audience</h2>
-<ui-hr></ui-hr>
 <div class="flex flex-row justify-between">
-  <p i18n>A list of audience members who have opted-in to receive marketing emails from your organisation</p>
-  <ui-button kind="primary" (click)="exportTable()" i18n> Export all as CSV </ui-button>
+  <p i18n class="opacity-50">List of audience members who have opted-in to receive marketing emails from your organisation.</p>
 </div>
-<p *ngIf="lastUpdated" class="block text-gray-500 mb-3" i18n>
-  Updated as of {{ lastUpdated | amFromUnix | amDateFormat: 'LLL' }}
-</p>
-
-<ui-table [table]="table"></ui-table>
+<br>
+<ui-table [table]="table" [lastUpdated]="lastUpdated | amFromUnix | amDateFormat: 'LLL'"></ui-table>

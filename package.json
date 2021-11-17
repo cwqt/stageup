@@ -1,6 +1,6 @@
 {
   "name": "stageup-core",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "scripts": {
     "release": "shipjs prepare",
@@ -147,6 +147,7 @@
     "validator": "^13.5.2",
     "winston": "^3.3.3",
     "ws": "^7.4.3",
+    "xng-breadcrumb": "^6.7.0",
     "zone.js": "^0.10.2"
   },
   "devDependencies": {

@@ -27,7 +27,7 @@ export default {
   updatePerformance: async (performanceId: string, data?: DtoPerformanceDetails): Promise<IPerformance> => {
     const performanceDetails = data || {
       name: 'performance name',
-      publicity_period: { start: 161347834, end: 161347834 },
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       genre: Genre.Contemporary,
       short_description: 'some performance',
       visibility: Visibility.Public
