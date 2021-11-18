@@ -28,8 +28,8 @@ export class AppWrapperComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     // On first-time landing if not logged in, display confirmation dialog if at root
-    if (!this.myselfService.$myself.getValue() && this.route.snapshot['_routerState'].url == '/')
-      this.openConfirmationDialog();
+    // if (!this.myselfService.$myself.getValue() && this.route.snapshot['_routerState'].url == '/')
+    //   this.openConfirmationDialog();
 
     this.myselfService.$myself.subscribe(m => {
       this.myself = m;
