@@ -81,12 +81,13 @@ export class GdprController extends ModuleController {
   updateStreamCompliance: IControllerEndpoint<void> = {
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
-      const host = await Host.findOne({ _id: req.params.hid });
-      const perf = await Performance.findOne({ _id: req.params.pid });
-
       if (!req.body.is_compliant) {
         throw new ErrorHandler(HTTP.Forbidden, '@@error.stream_compliance_not_accepted');
       }
+
+      const host = await Host.findOne({ _id: req.params.hid });
+      const perf = await Performance.findOne({ _id: req.params.pid });
+
       await this.gdprService.addHostUploadConsent(host, perf);
     }
   };

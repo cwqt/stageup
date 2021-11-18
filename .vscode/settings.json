@@ -49,7 +49,5 @@
       "host": "stageup.uk"
     }
   },
-  "slackpresence.enabled": false,
-  "xd.globalEditor": false,
-  "xd.lastPackage": "/Users/georgewebberley/Documents/George/Programming/work/stageup/StageUp-Design-System"
+  "slackpresence.enabled": false
 }

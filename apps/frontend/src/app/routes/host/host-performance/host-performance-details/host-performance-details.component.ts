@@ -38,8 +38,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
   performanceId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
   performance: ICacheable<DtoPerformance>;
-  performanceDetails: DtoPerformanceDetails; // TODO: Add type - will need to set all fields as optional data since the host can save at any point when entering the performance details
-  performanceGeneralForm: UiForm<void>; // The forms do not handle submit but instead merge with data from other table to submit
+  performanceDetails: DtoPerformanceDetails;
+  performanceGeneralForm: UiForm<void>; // The forms do not handle submit but instead merge with data from other form to submit
   performanceReleaseForm: UiForm<void>;
   @ViewChild('tabs', { static: false }) tabs: MatTabGroup;
 
@@ -63,12 +63,9 @@ export class HostPerformanceDetailsComponent implements OnInit {
   get performanceIsCancelled(): boolean {
     return this.performance?.data?.data?.status === PerformanceStatus.Cancelled;
   }
+
   get performanceIsDraft(): boolean {
     return this.performance?.data?.data?.status === PerformanceStatus.Draft;
-  }
-
-  get hostHasPreviouslySaved(): boolean {
-    return this.performanceData.name ? true : false;
   }
 
   constructor(
@@ -82,7 +79,6 @@ export class HostPerformanceDetailsComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    // Combination of both forms data
     this.performanceDetails = {
       short_description: this.performanceData.short_description,
       long_description: this.performanceData.long_description,
@@ -122,9 +118,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
           placeholder: $localize`Select a genre`
         }),
         terms: UiField.Checkbox({
-          // If the host has previously saved then they must have provided consent
-          // More efficient than doing another server call (but perhaps less robust?)
-          initial: this.hostHasPreviouslySaved,
+          // Consent will only be false if the performance is still a draft
+          initial: !this.performanceIsDraft,
           label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally.`,
           validators: [{ type: 'required' }]
         })

@@ -9,7 +9,6 @@
   (click)="onClick($event); animateRipple($event)"
 >
   <mat-spinner *ngIf="loading" [diameter]="size == 's' ? 15 : 20"></mat-spinner>
-  <!-- Remove margin-right if there is no content (i.e. only an icon) -->
   <ui-icon *ngIf="icon && !loading" class="ui-button__icon">{{ icon }}</ui-icon>
   <ng-content></ng-content>
   <div class="ripples">

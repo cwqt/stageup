@@ -306,23 +306,23 @@ export class PerformanceController extends ModuleController {
       const consent = await this.gdprService.readHostUploadConsent(performance.host, performance);
       if (!consent) await this.gdprService.addHostUploadConsent(performance.host, performance);
 
-      const performanceDetails = req.body;
+      const newDetails = req.body;
 
       // Set the performance status IF the publicity period has changed or if it was previously a 'draft'
       if (
-        req.body.publicity_period.start !== performance.publicity_period.start ||
-        req.body.publicity_period.end !== performance.publicity_period.end ||
+        newDetails.publicity_period.start !== performance.publicity_period.start ||
+        newDetails.publicity_period.end !== performance.publicity_period.end ||
         performance.status == PerformanceStatus.Draft
       ) {
         // TODO: In the near future the status of the performance will no longer relate to the publicity period, but instead the 'showings times'.
         // The publicity period will instead relate to the period of time it is visible on the site. However, left like this for now until updated.
-        performanceDetails['status'] =
+        newDetails['status'] =
           req.body.publicity_period.start && req.body.publicity_period.end
             ? PerformanceStatus.Scheduled
             : PerformanceStatus.PendingSchedule;
       }
 
-      await performance.update(performanceDetails);
+      await performance.update(newDetails);
       return performance.toFull();
     }
   };
