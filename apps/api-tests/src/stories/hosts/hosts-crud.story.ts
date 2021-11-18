@@ -39,7 +39,7 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
 
     const bannerUrl = await Stories.actions.hosts.changeBanner(host, form);
     expect(typeof bannerUrl).toEqual("string");
-    expect(bannerUrl.includes('https://storage.cloud.google.com/')).toBe(true);
+    expect(bannerUrl.includes('https://storage.googleapis.com/')).toBe(true);
     expect(bannerUrl.includes('.jpg')).toBe(true);
   });
 
@@ -50,7 +50,7 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
 
     const avatarUrl = await Stories.actions.hosts.changeAvatar(host, form);
     expect(typeof avatarUrl).toEqual("string");
-    expect(avatarUrl.includes('https://storage.cloud.google.com/')).toBe(true);
+    expect(avatarUrl.includes('https://storage.googleapis.com/')).toBe(true);
     expect(avatarUrl.includes('.jpg')).toBe(true);
   });
 
