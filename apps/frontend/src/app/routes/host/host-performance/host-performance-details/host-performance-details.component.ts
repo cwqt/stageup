@@ -51,7 +51,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
     return this.performance?.data?.data?.performance_type === PerformanceType.Vod ? 'Recorded' : 'Livestream';
   }
 
-  get isPerformanceLive(): boolean {
+  get performanceIsLive(): boolean {
     const currentDate = timestamp(new Date());
     const inPremierPeriod: boolean =
       currentDate >= this.performance?.data?.data?.publicity_period.start &&
@@ -60,8 +60,11 @@ export class HostPerformanceDetailsComponent implements OnInit {
     else return this.performance?.data?.data?.status === PerformanceStatus.Live;
   }
 
-  get isPerformanceCancelled(): boolean {
+  get performanceIsCancelled(): boolean {
     return this.performance?.data?.data?.status === PerformanceStatus.Cancelled;
+  }
+  get performanceIsDraft(): boolean {
+    return this.performance?.data?.data?.status === PerformanceStatus.Draft;
   }
 
   get hostHasPreviouslySaved(): boolean {
@@ -160,6 +163,9 @@ export class HostPerformanceDetailsComponent implements OnInit {
     // Get the userHostInfo (with stream_key) for the live performance
     // Note, the seeded performance 'The Ghost Stories of E R Benson' is live but does not have a key
     if (this.performanceType == 'Livestream') this.readStreamKey();
+
+    const name = this.performanceData.name ? this.performanceData.name : 'New Event';
+    this.breadcrumbService.set('dashboard/performances/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
   }
 
   async readStreamKey(): Promise<void> {
@@ -198,12 +204,6 @@ export class HostPerformanceDetailsComponent implements OnInit {
         })
       ]
     });
-    this.breadcrumbService.set(
-      'dashboard/performances/:id',
-      this.performanceData.name.length > 15
-        ? `${this.performanceData.name.substring(0, 15)}...`
-        : this.performanceData.name
-    );
   }
 
   async savePerformanceDetails() {
@@ -230,21 +230,23 @@ export class HostPerformanceDetailsComponent implements OnInit {
       };
       // Convert publicity period to unix
       this.performanceDetails.publicity_period = {
-        start: this.performanceReleaseForm.group.value.publicity_period
+        start: this.performanceReleaseForm.group.value.publicity_period.start
           ? timestamp(this.performanceReleaseForm.group.value.publicity_period.start)
           : null,
-        end: this.performanceReleaseForm.group.value.publicity_period
+        end: this.performanceReleaseForm.group.value.publicity_period.end
           ? timestamp(this.performanceReleaseForm.group.value.publicity_period.end)
           : null
       };
       // Save
       await this.performanceService.updatePerformance(this.performanceData._id, this.performanceDetails);
+      this.toastService.emit($localize`Event saved successfully!`, ThemeKind.Accent, {
+        duration: 4000
+      });
     }
   }
 
   updateVisibility(visible: boolean) {
     this.performanceDetails.visibility = visible ? Visibility.Public : Visibility.Private;
-    console.log(this.performanceDetails);
   }
 
   goToPerformance(): void {

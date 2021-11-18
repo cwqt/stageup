@@ -97,12 +97,10 @@ export namespace objects {
 
   export const DtoPerformanceDetails: Describe<DtoPerformanceDetails> = object({
     name: size(string(), 1, 100), // only required field is 'name'
-    publicity_period: nullable(
-      object({
-        start: fields.timestamp,
-        end: fields.timestamp
-      })
-    ),
+    publicity_period: object({
+      start: nullable(fields.timestamp),
+      end: nullable(fields.timestamp)
+    }),
     short_description: nullable(fields.richtext),
     long_description: nullable(fields.richtext),
     genre: nullable(fields.genre),

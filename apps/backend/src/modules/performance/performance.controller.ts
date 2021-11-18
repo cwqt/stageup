@@ -308,10 +308,11 @@ export class PerformanceController extends ModuleController {
 
       const performanceDetails = req.body;
 
-      // Set the performance status IF the publicity period has changed
+      // Set the performance status IF the publicity period has changed or if it was previously a 'draft'
       if (
         req.body.publicity_period.start !== performance.publicity_period.start ||
-        req.body.publicity_period.end !== performance.publicity_period.end
+        req.body.publicity_period.end !== performance.publicity_period.end ||
+        performance.status == PerformanceStatus.Draft
       ) {
         // TODO: In the near future the status of the performance will no longer relate to the publicity period, but instead the 'showings times'.
         // The publicity period will instead relate to the period of time it is visible on the site. However, left like this for now until updated.

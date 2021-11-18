@@ -30,7 +30,7 @@ export enum PerformanceStatus {
   Deleted = 'deleted',
   Cancelled = 'cancelled',
   PendingSchedule = 'pending_schedule',
-  Draft = 'draft'
+  Draft = 'draft' // The performance has been created but essential fields (such as title and consent) have not been completed
 }
 
 export enum PerformanceType {

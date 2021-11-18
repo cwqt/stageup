@@ -1,5 +1,7 @@
 <!-- Float right should move to right of breadcrumb navigation. TODO: check works as expected after breadcrumb story has been merged -->
-<ui-button class="float-right" (click)="goToPerformance()" icon="launch">Preview Event</ui-button>
+<ui-button class="float-right -mt-12" (click)="goToPerformance()" [disabled]="performanceIsDraft" icon="launch"
+  >Preview Event</ui-button
+>
 <div class="flex items-center mt-4 mb-8 mt-20 clear-both">
   <h1 class="mb-0" i18n>Event Details</h1>
   <ui-chip class="chip ml-4" [kind]="'primary'">{{ performanceType }}</ui-chip>
@@ -22,13 +24,15 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab i18n-label label="Links" *ngIf="hostHasPreviouslySaved">
+    <!-- Links tab, only to be shown if the performance is not a draft -->
+    <mat-tab i18n-label label="Links" *ngIf="!performanceIsDraft">
       <app-host-performance-details-links
         class="mt-8 max-w-5xl"
         [cacheable]="performance"
       ></app-host-performance-details-links>
     </mat-tab>
-    <mat-tab *ngIf="performanceType == 'Livestream' && performanceHostInfo.data?.stream_key" i18n-label label="Keys">
+    <!-- Keys tab, only to be shown if the performance is a livestream and if not a draft -->
+    <mat-tab *ngIf="performanceType == 'Livestream' && !performanceIsDraft" i18n-label label="Keys">
       <app-host-performance-details-keys
         class="mt-8 max-w-5xl"
         [cacheable]="performance"
@@ -55,13 +59,13 @@
 
 <popper-content #managePerformanceDropdown class="flex flex-col">
   <div class="flex flex-col">
-    <ng-container *ngIf="!isPerformanceCancelled; else showRestoreButton">
+    <ng-container *ngIf="!performanceIsCancelled; else showRestoreButton">
       <ui-button
         class="border-0"
         i18n-matTooltip
         matTooltip="Cannot cancel a live performance"
-        [matTooltipDisabled]="!isPerformanceLive"
-        [disabled]="isPerformanceLive"
+        [matTooltipDisabled]="!performanceIsLive"
+        [disabled]="performanceIsLive"
         (click)="cancelPerformance()"
         i18n
         >Cancel Performance</ui-button
