@@ -17,10 +17,12 @@ export class HostPerformanceOverviewComponent implements OnInit {
   performance: ICacheable<DtoPerformance>;
   isPendingSchedule: boolean = true;
   numberOfHostEvents: number;
-  eventURL: string; // change type 
-  scheduledStart: string; // change type
-  scheduledEnd: string; // change type
-  dateFormat = "dd MMM yyyy"; // add change type
+
+  // TODO: revisit these types 
+  eventURL: string;
+  scheduledStart: string;
+  scheduledEnd: string;
+  dateFormat = "dd MMM yyyy";
 
   constructor(@Inject(LOCALE_ID) public locale: string, private appService: AppService, private hostService: HostService) {}
 

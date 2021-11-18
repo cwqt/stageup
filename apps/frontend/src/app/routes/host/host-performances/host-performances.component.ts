@@ -21,8 +21,6 @@ export class HostPerformancesComponent implements OnInit {
   table: UiTable<IPerformanceStub>;
   host: IHost;
 
-  // displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
-
   constructor(
     @Inject(LOCALE_ID) public locale: string,
     private hostService: HostService,
@@ -88,8 +86,6 @@ export class HostPerformancesComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {}
-
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
       this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' })
@@ -99,28 +95,6 @@ export class HostPerformancesComponent implements OnInit {
   parse(text: string) {
     return richtext.read(text);
   }
-
-  // deletePerformance(performance: IPerformanceStub) {
-  //   this.helperService.showConfirmationDialog(this.dialog, {
-  //     title: $localize`Delete '${performance.name}'`,
-  //     description: $localize`Are you sure you want to delete this performance?`,
-  //     buttons: [
-  //       new UiDialogButton({
-  //         label: $localize`Cancel`,
-  //         kind: ThemeKind.Secondary,
-  //         callback: r => r.close()
-  //       }),
-  //       new UiDialogButton({
-  //         label: $localize`Delete`,
-  //         kind: ThemeKind.Primary,
-  //         callback: r => {
-  //           this.performanceService.deletePerformance(performance._id);
-  //           r.close();
-  //         }
-  //       })
-  //     ]
-  //   });
-  // }
 
   // Inject IHost into child components i.e host-performance
   onChildLoaded(component) {

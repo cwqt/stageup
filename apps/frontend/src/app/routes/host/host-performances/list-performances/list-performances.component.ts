@@ -20,8 +20,6 @@ export class HostListPerformancesComponent implements OnInit {
   hostId: string;
   table: UiTable<IPerformanceStub>;
 
-  // displayedColumns: string[] = ['name', 'desc', 'creation', 'performance_page'];
-
   constructor(
     @Inject(LOCALE_ID) public locale: string,
     private hostService: HostService,
@@ -86,8 +84,6 @@ export class HostListPerformancesComponent implements OnInit {
       pagination: {}
     });
   }
-
-  ngAfterViewInit() { }
 
   openCreatePerformanceDialog() {
     this.helperService.showDialog(

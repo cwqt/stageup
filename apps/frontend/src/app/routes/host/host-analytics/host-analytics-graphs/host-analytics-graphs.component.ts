@@ -1,10 +1,9 @@
 import { ChartDataset } from 'chart.js';
 import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
-import { unix } from '@core/helpers';
+import { unix, periodInSeconds } from '@core/helpers';
 import {
   Analytics,
   AnalyticsTimePeriod,
-  CurrencyCode,
   DtoHostAnalytics,
   DtoPerformanceAnalytics,
   IHostAnalyticsMetrics,
@@ -32,6 +31,9 @@ type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnaly
 export class HostAnalyticsGraphsComponent implements OnInit {
   @ViewChildren(HostAnalyticsHeaderItemComponent) headers: QueryList<HostAnalyticsHeaderItemComponent>;
   @Output() periodEmitter = new EventEmitter();
+  // Host data response - single entity
+  hostAnalytics = new Cacheable<DtoHostAnalytics>();
+  performanceAnalytics = new Cacheable<DtoPerformanceAnalytics[]>();
 
   constructor(@Inject(LOCALE_ID) public locale: string, private hostService: HostService) {}
 
@@ -74,10 +76,6 @@ export class HostAnalyticsGraphsComponent implements OnInit {
   get headerItems() {
     return Object.values(this.snapshot).reduce((acc, curr) => ((acc = acc.concat(curr.header_items)), acc), []);
   }
-
-  // Host data response - single entity
-  hostAnalytics = new Cacheable<DtoHostAnalytics>();
-  performanceAnalytics = new Cacheable<DtoPerformanceAnalytics[]>();
 
   ngOnInit(): void {
     this.periodForm = new UiForm({
@@ -177,9 +175,9 @@ export class HostAnalyticsGraphsComponent implements OnInit {
     );
 
     const performancePeriods = dto.map(dto => {
-      const half = Analytics.offsets[this.periodForm.group.value.period];
+      const periodCutOff = Analytics.offsets[this.periodForm.group.value.period];
 
-      const [latest, previous] = [dto.chunks.slice(0, half), dto.chunks.slice(half, dto.chunks.length)];
+      const [latest, previous] = [dto.chunks.slice(0, periodCutOff), dto.chunks.slice(periodCutOff, dto.chunks.length)];
       return {
         ...dto,
         snapshot: {
@@ -221,11 +219,28 @@ export class HostAnalyticsGraphsComponent implements OnInit {
       );
       this.snapshot.performances.header_items[property].aggregation = latest[property];
 
-      // Populate this properties' graph with data across all chunks from all performances
-      allPerformanceChunks.forEach(chunk => {
-        this.snapshot.performances.header_items[property].graph.data.datasets[0].data.push(chunk.metrics[property]);
-        this.snapshot.performances.header_items[property].graph.data.labels.push(unix(chunk.period_ended_at));
-      });
+      const oneWeek = periodInSeconds('week');
+      // The most recent data point (which we can use to base all other aggregation periods off)
+      let currentPeriodEnd = allPerformanceChunks[allPerformanceChunks.length - 1]?.period_ended_at;
+      let currentPeriodStart = currentPeriodEnd - oneWeek;
+      // Aggregate all data into one week periods going backwards, based off the most recent data point
+      // Each graph will have aggregation periods that equal the number of weeks +1 (e.g. 'Weekly' periods will have 2 data points - i.e. a straight line)
+      for (let i = 0; i < Analytics.offsets[this.periodForm.group.value.period] + 1; i++) {
+        // Identify performances within this time period
+        const thisPeriodData = allPerformanceChunks.filter(
+          performance =>
+            performance.period_ended_at > currentPeriodStart && performance.period_ended_at <= currentPeriodEnd
+        );
+        // Aggregate the data for all performances in this period
+        const aggregation = thisPeriodData.reduce((prev, current) => {
+          return prev + current.metrics[property];
+        }, 0);
+        // And add to he graph data
+        this.snapshot.performances.header_items[property].graph.data.datasets[0].data.unshift(aggregation);
+        this.snapshot.performances.header_items[property].graph.data.labels.unshift(unix(currentPeriodEnd));
+        currentPeriodEnd = currentPeriodStart;
+        currentPeriodStart = currentPeriodStart - oneWeek;
+      }
     });
     headers?.forEach(header => header.chart?.chartInstance.update());
   }

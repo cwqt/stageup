@@ -1,11 +1,10 @@
 import {
   AnalyticsTimePeriod,
-  DtoPerformanceAnalytics,
   IUserConsent,
   Analytics,
-  IPerformanceStub,
   IPerformance,
-  DtoPerformanceIDAnalytics
+  IAnalyticsChunk,
+  IPerformanceAnalyticsMetrics
 } from '@core/interfaces';
 import { Inject, Service } from 'typedi';
 import { ModuleService, PerformanceAnalytics } from '@core/api';
@@ -45,23 +44,20 @@ export class HostService extends ModuleService {
   async readAnalyticsFromPerformanceArray(
     performanceIds: Array<IPerformance['_id']>,
     period: AnalyticsTimePeriod
-  ): Promise<Array<DtoPerformanceIDAnalytics>> {
-    const dtos: DtoPerformanceIDAnalytics[] = [];
-    for await (let performanceId of performanceIds) {
+  ): Promise<{ [performanceId: string]: IAnalyticsChunk<IPerformanceAnalyticsMetrics>[] }> {
+    const map: { [performanceId: string]: IAnalyticsChunk<IPerformanceAnalyticsMetrics>[] } = {};
+
+    for await (let id of performanceIds) {
       // Get weekly aggregations sorted by period_end (when collected)
       const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
-        .where('analytics.performance__id = :performanceId', { performanceId })
+        .where('analytics.performance__id = :performanceId', { performanceId: id })
         .orderBy('analytics.period_ended_at', 'DESC')
         // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
         .limit(Analytics.offsets[period] * 2)
         .getMany();
-
-      dtos.push({
-        performanceId,
-        chunks: chunks.map(chunk => chunk.toDto())
-      });
+      map[id] = chunks.map(chunk => chunk.toDto());
     }
 
-    return dtos;
+    return map;
   }
 }

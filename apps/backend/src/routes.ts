@@ -43,6 +43,7 @@ import {
   IFollowing,
   IClientHostData,
   DtoPerformanceAnalytics as DtoPerfAnalytics,
+  DtoPerformanceIDAnalytics as DtoPerfIDAnalytics,
   DtoHostAnalytics,
   ConsentableType as CT,
   IConsentable,
@@ -243,5 +244,7 @@ router.get      <any>                       ("/utils/stats",                    
 router.get      <void>                      ("/utils/send-test-email",                    Utils.sendTestEmail);
 router.get      <void>                      ("/utils/assets",                             Utils.readAssets);
 router.get      <void>                      ("/utils/assets/:aid/stream-state",           Utils.setPerformanceStreamState);
+router.post     <void>                      ("/utils/hosts/:hid/analytics",               Utils.addHostAnalytics);
+router.post     <void>                      ("/utils/performances/:pid/analytics",        Utils.addPerformanceAnalytics);
 router.use                                  ("/utils/queue-ui",                           Queue.jobQueueUi.handler);
 }
