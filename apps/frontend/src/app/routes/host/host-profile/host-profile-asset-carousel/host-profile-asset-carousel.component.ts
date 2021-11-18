@@ -57,10 +57,10 @@ export class HostProfileAssetComponent implements OnInit {
         setTimeout(() => {
           // Need to allow 1 full cycle for the carousel component to detect the change and refresh
           this.loading = false;
-        }, 250);
+        }, 0);
       },
       () => {
-        this.loading = false;
+        this.loading = true;
       }
     );
   }
