@@ -15,6 +15,10 @@ export type IPerformanceAnalyticsMetrics = {
 export type DtoPerformanceAnalytics = IPerformanceStub & {
   chunks: Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>;
 };
+export type DtoPerformanceIDAnalytics = {
+  performanceId: IPerformanceStub['_id'];
+  chunks: Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>;
+};
 
 /**
  * @description Aggregate multiple aggregations into one larger one over a longer timespan

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
 popper-content .ngxp__container {
   background: white;
@@ -26,4 +27,33 @@ body {
 
 b {
   font-weight: bold;
+}
+h1 {
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 48px;
+}
+h2 {
+  font-size: 28px;
+  line-height: 42px;
+}
+h3 {
+  font-size: 24px;
+  line-height: 36px;
+}
+h4 {
+  font-size: 20px;
+  line-height: 30px;
+}
+a {
+  color: #17a2b8;
+}
+
+p {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+h1, h2, h3, h4, a, p {
+  font-family: 'Roboto', sans-serif !important;
 }

@@ -9,3 +9,8 @@ export interface ILocale {
   language: string;
   region: string;
 }
+
+export interface IDateTimeFormatOptions extends Intl.DateTimeFormatOptions {
+  timeStyle?: 'short' | 'medium' | 'long' | 'full';
+  dateStyle?: 'short' | 'medium' | 'long' | 'full';
+}

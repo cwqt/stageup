@@ -78,6 +78,7 @@ import {
   LikeLocation,
   JobType,
   DtoReadHost,
+  DtoPerformanceIDAnalytics,
   DeleteHostReason
 } from '@core/interfaces';
 import Stripe from 'stripe';
@@ -168,7 +169,7 @@ export class HostController extends ModuleController {
             members_info: {
               user: true
             },
-            asset_group: true,
+            asset_group: true
           }
         }
       );
@@ -251,13 +252,12 @@ export class HostController extends ModuleController {
 
   deleteHost: IControllerEndpoint<IDeleteHostAssertion | void> = {
     // We can choose to assert only - i.e. check that it's possible to delete
-    validators: { 
-      query: object(
-        { 
-          assert_only: coerce(boolean(), string(), v => v == 'true'),
-          explanation: optional(string()),
-          reason: array(enums<DeleteHostReason>(enumToValues(DeleteHostReason)))
-        })
+    validators: {
+      query: object({
+        assert_only: coerce(boolean(), string(), v => v == 'true'),
+        explanation: optional(string()),
+        reason: array(enums<DeleteHostReason>(enumToValues(DeleteHostReason)))
+      })
     },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Owner),
     controller: async req => {
@@ -294,7 +294,7 @@ export class HostController extends ModuleController {
         req.body = {
           reasons: req.query.reasons,
           explanation: req.query.explanation
-        }
+        };
 
         const [error] = Validators.Objects.IDeleteHostReason.validate(req.body);
         if (error) throw new ErrorHandler(HTTP.BadRequest, '@@validation.invalid', Validators.formatError(error));
@@ -495,7 +495,7 @@ export class HostController extends ModuleController {
         await userHostInfo.host.removeMember(userHostInfo.user, txc);
 
         const hostInvitation = await getCheck(
-            HostInvitation.findOne({
+          HostInvitation.findOne({
             where: {
               invitee: { _id: req.params.uid },
               host: { _id: req.params.hid }
@@ -1054,6 +1054,7 @@ export class HostController extends ModuleController {
     }
   };
 
+  // Returns a paginated query of performance analytics
   readPerformancesAnalytics: IControllerEndpoint<IEnvelopedData<DtoPerformanceAnalytics[]>> = {
     validators: {
       query: assign(
@@ -1070,23 +1071,37 @@ export class HostController extends ModuleController {
         .orderBy('performance.created_at', 'DESC')
         .paginate({ serialiser: o => o.toStub() });
 
-      const dtos: DtoPerformanceAnalytics[] = [];
-      for await (let performance of performances.data) {
-        // Get weekly aggregations sorted by period_end (when collected)
-        const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
-          .where('analytics.performance__id = :performanceId', { performanceId: performance._id })
-          .orderBy('analytics.period_ended_at', 'DESC')
-          // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
-          .limit(Analytics.offsets[req.query.period as AnalyticsTimePeriod] * 2)
-          .getMany();
+      const dtos = await this.hostService.readAnalyticsFromPerformanceArray(
+        performances.data.map(performance => performance._id),
+        req.query.period as AnalyticsTimePeriod
+      );
 
-        dtos.push({
-          ...performance,
-          chunks: chunks.map(chunk => chunk.toDto())
-        });
-      }
+      return {
+        data: performances.data.map(performance => ({ ...performance, chunks: dtos[performance._id] })),
+        __paging_data: performances.__paging_data
+      };
+    }
+  };
 
-      return { data: dtos, __paging_data: performances.__paging_data };
+  // Returns a full query of performance analytics (i.e. all performances in the provided time period)
+  readAllPerformancesAnalytics: IControllerEndpoint<DtoPerformanceIDAnalytics[]> = {
+    validators: {
+      query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    controller: async req => {
+      // Get list of host performances
+      const hostPerformances = await this.hostService.readAllHostPerformances(req.params.hid);
+      // Map to array of IDs
+      const performanceIds = hostPerformances.map(performance => performance._id);
+
+      // Fetch the analytics relating to the performance (returned as a map)
+      const performanceAnalyticsMap = await this.hostService.readAnalyticsFromPerformanceArray(
+        performanceIds,
+        req.query.period as AnalyticsTimePeriod
+      );
+      // Return as DtoPerformanceIDAnalytics array
+      return performanceIds.map(performanceId => ({ performanceId, chunks: performanceAnalyticsMap[performanceId] }));
     }
   };
 

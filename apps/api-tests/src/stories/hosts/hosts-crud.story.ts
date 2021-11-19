@@ -1,12 +1,12 @@
 import { IHost, IUser } from '@core/interfaces';
 import { Stories } from '../../stories';
-import { createReadStream } from "fs";
-import fd from "form-data";
+import { createReadStream } from 'fs';
+import fd from 'form-data';
 import { UserType } from '../../environment';
 
 describe('As a user-host, I want to be able to do Host CRUD', () => {
   let host: IHost;
-  let client: IUser & {email_address: string};
+  let client: IUser & { email_address: string };
 
   beforeAll(async () => {
     await Stories.actions.common.setup();
@@ -38,8 +38,8 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
     form.append('file', createReadStream(filePath));
 
     const bannerUrl = await Stories.actions.hosts.changeBanner(host, form);
-    expect(typeof bannerUrl).toEqual("string");
-    expect(bannerUrl.includes('https://storage.googleapis.com/')).toBe(true);
+    expect(typeof bannerUrl).toEqual('string');
+    expect(bannerUrl.includes('https://storage.cloud.google.com/')).toBe(true);
     expect(bannerUrl.includes('.jpg')).toBe(true);
   });
 
@@ -49,8 +49,8 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
     form.append('file', createReadStream(filePath));
 
     const avatarUrl = await Stories.actions.hosts.changeAvatar(host, form);
-    expect(typeof avatarUrl).toEqual("string");
-    expect(avatarUrl.includes('https://storage.googleapis.com/')).toBe(true);
+    expect(typeof avatarUrl).toEqual('string');
+    expect(avatarUrl.includes('https://storage.cloud.google.com/')).toBe(true);
     expect(avatarUrl.includes('.jpg')).toBe(true);
   });
 
@@ -80,13 +80,13 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
 
     await Stories.actions.common.switchActor(UserType.SiteAdmin);
     const followers = await Stories.actions.hosts.readHostFollowers(host);
-    
+
     expect(followers[0].user__id).toEqual(client._id);
   });
 
   it('Should toggle like', async () => {
     await Stories.actions.common.switchActor(UserType.Client);
-    
+
     // Like
     await Stories.actions.hosts.toggleLike(host);
     let readHost = await Stories.actions.hosts.readHost(host);
@@ -110,10 +110,20 @@ describe('As a user-host, I want to be able to do Host CRUD', () => {
   });
 
   // TODO: extend the test below with usable analytics data
-  
   it('Should read host analytics', async () => {
+    await Stories.actions.utils.addHostAnalytics(host);
+
+    // await Stories.actions.common.switchActor(UserType.SiteAdmin);
+    await Stories.actions.common.switchActor(UserType.SiteAdmin);
     const hostAnalytics = await Stories.actions.hosts.readHostAnalytics(host, 'YEARLY');
-  })
+    expect(typeof hostAnalytics).toBe('object');
+    expect(hostAnalytics.name).toEqual(host.name);
+    expect(hostAnalytics.chunks.length).toBe(1);
+    expect(hostAnalytics.chunks[0]).toHaveProperty('period_ended_at');
+    expect(hostAnalytics.chunks[0]).toHaveProperty('metrics');
+    expect(hostAnalytics.chunks[0].metrics).toHaveProperty('performances_created');
+    expect(hostAnalytics.chunks[0].metrics.performances_created).toBe(10);
+  });
 
   it('Should delete host', async () => {
     await Stories.actions.hosts.deleteHost(host);

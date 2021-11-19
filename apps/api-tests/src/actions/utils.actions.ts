@@ -1,4 +1,4 @@
-import { IHost, IUser } from '@core/interfaces';
+import { IHost, IPerformance, IUser } from '@core/interfaces';
 import { api, environment as env } from '../environment';
 
 export default {
@@ -24,5 +24,15 @@ export default {
         throw(error);
       }      
     }
-  }
+  },
+
+  // router.post<void>("utils/hosts/:hid/analytics", Utils.addHostAnalytics);
+  addHostAnalytics: async (host: IHost): Promise<void> => {
+    await api.post<void>(`utils/hosts/${host._id}/analytics`, null, env.getOptions());
+  },
+
+  // router.post<void>("utils/performances/:pid/analytics", Utils.addPerformanceAnalytics);
+  addPerformanceAnalytics: async (performance: IPerformance): Promise<void> => {
+    await api.post<void>(`utils/performances/${performance._id}/analytics`, null, env.getOptions());
+  },
 }
