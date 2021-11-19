@@ -1,16 +1,32 @@
-<div class="bg-white rounded overflow-hidden shadow relative">
-  <div class="p-4 absolute z-10">
-    <h2>{{ item.title }}</h2>
-    <h3 *ngIf="item.aggregation && item.difference">{{ item.aggregation }} ({{ item.difference }})</h3>
+<div class="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden relative h-full">
+  <div class="grid grid-cols-2 h-full">
+    <div class="p-3 flex flex-col">
+      <h2 class="mb-0">{{ formattedAggregation }}</h2>
+      <p class="whitespace-nowrap">{{ item.title }}</p>
+      <div class="h-full flex items-end">
+        <!-- Display the change since the last period -->
+        <div *ngIf="item.difference && differenceIsFinite" class="flex">
+          <h3 [ngClass]="{ green: item.difference > 0, red: item.difference < 0, blue: item.difference == 0 }">
+            {{ item.difference * 100 | number: '1.0-0' }}%
+          </h3>
+          <ui-icon class="green" [size]="40" *ngIf="item.difference > 0">caret--up</ui-icon>
+          <ui-icon class="red" [size]="40" *ngIf="item.difference < 0">caret--down</ui-icon>
+          <ui-icon class="blue" [size]="40" *ngIf="item.difference == 0">subtract</ui-icon>
+        </div>
+        <!-- If we have no data, we display 0% -->
+        <div *ngIf="noDataYet" class="flex">
+          <h3 class="blue">0%</h3>
+          <ui-icon class="blue" [size]="40">subtract</ui-icon>
+        </div>
+      </div>
+    </div>
+    <div class="p-3 flex flex-col justify-end fade-mask">
+      <!-- If data, we display the chart -->
+      <ngx-chartjs type="line" *ngIf="!noDataYet" [data]="item.graph.data" [options]="item.graph.options"></ngx-chartjs>
+      <!-- If no data, we display a blank 'fake' chart -->
+      <div class="no-graph" *ngIf="noDataYet"></div>
+    </div>
   </div>
-
-  <ngx-chartjs
-    class="opacity-25 pt-12"
-    type="line"
-    [data]="item.graph.data"
-    [options]="item.graph.options"
-  ></ngx-chartjs>
-
   <div
     *ngIf="loading"
     class="overlay absolute top-0 left-0 bottom-0 right-0 w-full h-full z-10 bg-white bg-opacity-50 flex items-center justify-center"

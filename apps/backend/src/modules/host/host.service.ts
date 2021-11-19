@@ -1,8 +1,16 @@
-import { ConsentableType, IUserConsent, ConsentType } from '@core/interfaces';
+import {
+  AnalyticsTimePeriod,
+  IUserConsent,
+  Analytics,
+  IPerformance,
+  IAnalyticsChunk,
+  IPerformanceAnalyticsMetrics
+} from '@core/interfaces';
 import { Inject, Service } from 'typedi';
-import { ModuleService } from '@core/api';
+import { ModuleService, PerformanceAnalytics } from '@core/api';
 import { Connection } from 'typeorm';
 import { POSTGRES_PROVIDER, UserHostMarketingConsent } from '@core/api';
+import { Performance } from '@core/api';
 
 @Service()
 export class HostService extends ModuleService {
@@ -16,5 +24,33 @@ export class HostService extends ModuleService {
       .orderBy('consent.saved_at', 'DESC') // so we get most recently updated entries at the top
       .getOne();
     return latestConsent?.saved_at;
+  }
+
+  async readAllHostPerformances(hostId: string): Promise<Performance[]> {
+    return this.ORM.createQueryBuilder(Performance, 'performance')
+      .innerJoin('performance.host', 'host')
+      .where('host._id = :id', { id: hostId })
+      .getMany();
+  }
+
+  // 'string' used instead of IPerformance['_id'] since "An index signature parameter type cannot be a type alias."
+  async readAnalyticsFromPerformanceArray(
+    performanceIds: Array<IPerformance['_id']>,
+    period: AnalyticsTimePeriod
+  ): Promise<{ [performanceId: string]: IAnalyticsChunk<IPerformanceAnalyticsMetrics>[] }> {
+    const map: { [performanceId: string]: IAnalyticsChunk<IPerformanceAnalyticsMetrics>[] } = {};
+
+    for await (let id of performanceIds) {
+      // Get weekly aggregations sorted by period_end (when collected)
+      const chunks = await this.ORM.createQueryBuilder(PerformanceAnalytics, 'analytics')
+        .where('analytics.performance__id = :performanceId', { performanceId: id })
+        .orderBy('analytics.period_ended_at', 'DESC')
+        // Get twice the selected period, so we can do a comparison of latest & previous periods for trends
+        .limit(Analytics.offsets[period] * 2)
+        .getMany();
+      map[id] = chunks.map(chunk => chunk.toDto());
+    }
+
+    return map;
   }
 }

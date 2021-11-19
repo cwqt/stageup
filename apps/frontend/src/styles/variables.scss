@@ -29,7 +29,8 @@ $clr-secondary-ltr: lighten($clr-secondary, 10%);
 $clr-secondary-dk: darken($clr-secondary, 5%);
 $clr-secondary-dkr: darken($clr-secondary, 10%);
 
-$clr-red: #ffd7d9;
+$clr-red: #e97b86;
+$clr-red-lt: #ffd7d9;
 $clr-red-drk: #a2191f;
 
 $clr-magenta: #ffd6e8;
@@ -38,7 +39,8 @@ $clr-magenta-drk: #9f1853;
 $clr-purple: #e8daff;
 $clr-purple-drk: #6929c4;
 
-$clr-blue: #d0e2ff;
+$clr-blue: #30a2b8;
+$clr-blue-lt: #d0e2ff;
 $clr-blue-drk: #0043ce;
 
 $clr-cyan: #bae6ff;
@@ -47,7 +49,7 @@ $clr-cyan-drk: #00539a;
 $clr-teal: #9ef0f0;
 $clr-teal-drk: #005d5d;
 
-$clr-green: #a7f0ba;
+$clr-green: #96d0a3; // Updated to most recent wireframes. Not currently used elsewhere in the site
 $clr-green-drk: #0e6027;
 $clr-gray: #e0e0e0;
 $clr-gray-drk: #525252;

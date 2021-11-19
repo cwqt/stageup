@@ -30,7 +30,8 @@ import {
   DtoUserMarketingInfo,
   DtoHostAnalytics,
   AnalyticsTimePeriod,
-  DeleteHostReason
+  DeleteHostReason,
+  DtoPerformanceIDAnalytics
 } from '@core/interfaces';
 import { api } from '../environment';
 import fd from 'form-data';
@@ -133,16 +134,15 @@ export default {
   // router.delete <void>("/hosts/:hid",Hosts.deleteHost());
   deleteHost: async (host: IHost): Promise<void> => {
     const query: {
-      assert_only: boolean,
-      reason: DeleteHostReason[],
-      explanation: string
+      assert_only: boolean;
+      reason: DeleteHostReason[];
+      explanation: string;
     } = {
       assert_only: true,
       reason: [DeleteHostReason.DidNotWantToOfferDigitalPerfs, DeleteHostReason.DissatisfactoryUX],
       explanation: 'abc'
     };
-    await api.delete<void>(
-      `/hosts/${host._id}${querize(query)}`, env.getOptions());
+    await api.delete<void>(`/hosts/${host._id}${querize(query)}`, env.getOptions());
   },
 
   //router.put<string>("/hosts/:hid/avatar", Hosts.changeAvatar());
@@ -171,7 +171,11 @@ export default {
   },
 
   // router.put <IOnboardingStep<any>> ("/hosts/:hid/onboarding/:step", Hosts.updateOnboardingProcessStep());
-  updateOnboardingProcessStep: async <T>(host: IHostStub, step: HostOnboardingStep, data: T): Promise<IOnboardingStep<any>> => {
+  updateOnboardingProcessStep: async <T>(
+    host: IHostStub,
+    step: HostOnboardingStep,
+    data: T
+  ): Promise<IOnboardingStep<any>> => {
     const res = await api.put<IOnboardingStep<any>>(`/hosts/${host._id}/onboarding/${step}`, data, env.getOptions());
     return res.data;
   },
@@ -261,7 +265,9 @@ export default {
 
   // router.redirect("/hosts/:hid/invites/:iid", Hosts.handleHostInvite);
   handleHostInvite: async (host: IHost, inviteId: string): Promise<void> => {
-    await Stories.actions.utils.ignoreECONNREFUSED(api.get.bind(null, `/hosts/${host._id}/invites/${inviteId}`, env.getOptions()));
+    await Stories.actions.utils.ignoreECONNREFUSED(
+      api.get.bind(null, `/hosts/${host._id}/invites/${inviteId}`, env.getOptions())
+    );
   },
 
   // router.get<IHostFeed>("/hosts/:hid/feed", Hosts.readHostFeed);
@@ -281,12 +287,12 @@ export default {
   },
 
   // router.put<void>("/hosts/:hid/commission-rate", Hosts.updateCommissionRate);
-  updateCommissionRate: async (host:IHost, newRate: number): Promise<void> => {
-    await api.put<void>(`/hosts/${host._id}/commission-rate`, {new_rate: newRate}, env.getOptions());
+  updateCommissionRate: async (host: IHost, newRate: number): Promise<void> => {
+    await api.put<void>(`/hosts/${host._id}/commission-rate`, { new_rate: newRate }, env.getOptions());
   },
 
   // router.get<IHostStripeInfo>("/hosts/:hid/stripe/info", Hosts.readStripeInfo);
-  readStripeInfo: async (host:IHost): Promise<IHostStripeInfo> => {
+  readStripeInfo: async (host: IHost): Promise<IHostStripeInfo> => {
     const res = await api.get<IHostStripeInfo>(`/hosts/${host._id}/stripe/info`, env.getOptions());
     return res.data;
   },
@@ -311,6 +317,18 @@ export default {
   // router.get<DtoHostAnalytics>("/hosts/:hid/analytics", Hosts.readHostAnalytics);
   readHostAnalytics: async (host: IHost, period: AnalyticsTimePeriod = 'WEEKLY'): Promise<DtoHostAnalytics> => {
     const res = await api.get<DtoHostAnalytics>(`/hosts/${host._id}/analytics?period=${period}`, env.getOptions());
+    return res.data;
+  },
+
+  // router.get <DtoPerfAnalytics[]>("/hosts/:hid/analytics/performances/all", Hosts.readAllPerformancesAnalytics());
+  readAllPerformancesAnalytics: async (
+    hostId: string,
+    period: AnalyticsTimePeriod = 'WEEKLY'
+  ): Promise<DtoPerformanceIDAnalytics[]> => {
+    const res = await api.get<DtoPerformanceIDAnalytics[]>(
+      `/hosts/${hostId}/analytics/performances/all${querize({ period })}`,
+      env.getOptions()
+    );
     return res.data;
   }
 };

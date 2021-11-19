@@ -116,7 +116,6 @@ popper-content {
 
 .ui-table--actions {
   display: flex;
-  flex-flow: column;
   ui-button {
     margin: 0;
     ::ng-deep button {
@@ -161,14 +160,21 @@ popper-content {
   margin-bottom: 0.5rem;
 }
 
-.mat-header-cell{
+.hover-shadow:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.set-uniform-height {
+  height: 65px !important;
+}
+.mat-header-cell {
   font-size: 18px;
   font-weight: 600;
   color: black;
 }
 
 ::ng-deep .mat-sort-header-arrow[style] {
-
   // Hide default arrow stem
   .mat-sort-header-stem {
     display: none;
@@ -179,37 +185,39 @@ popper-content {
     font-weight: bold;
 
     // Hide default arrow as its composed of left, right and middle
-    .mat-sort-header-pointer-left, .mat-sort-header-pointer-right, .mat-sort-header-pointer-middle  {
+    .mat-sort-header-pointer-left,
+    .mat-sort-header-pointer-right,
+    .mat-sort-header-pointer-middle {
       display: none;
     }
   }
 }
 
-ui-icon{
-  color: #B7B7B7;
+ui-icon {
+  color: #b7b7b7;
   font-size: 26px;
 }
 
-ui-icon:hover{
-  color: gray
+ui-icon:hover {
+  color: gray;
 }
 
-ui-button{
+ui-button {
   padding: 0 4px;
 }
 
-.sort-icon{
+.sort-icon {
   font-size: 26px;
 }
 
-.is-chip{
+.is-chip {
   width: 2rem;
 }
 
-.mat-column-__select{
-  width: 4rem
+.mat-column-__select {
+  width: 4rem;
 }
 
-.table-action-button{
-  min-width: 180px
+.table-action-button {
+  min-width: 180px;
 }
