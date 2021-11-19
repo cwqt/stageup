@@ -1,5 +1,6 @@
+import { Observable } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { timestamp, unix } from '@core/helpers';
@@ -25,6 +26,7 @@ import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfac
 import { GenrePipe } from '@frontend/_pipes/genre.pipe';
 import { ToastService } from '@frontend/services/toast.service';
 import { BreadcrumbService } from 'xng-breadcrumb';
+import * as lodash from 'lodash';
 
 // Container component for all of the tabs (details, release, links, keys)
 @Component({
@@ -42,6 +44,8 @@ export class HostPerformanceDetailsComponent implements OnInit {
   performanceGeneralForm: UiForm<void>; // The forms do not handle submit but instead merge with data from other form to submit
   performanceReleaseForm: UiForm<void>;
   @ViewChild('tabs', { static: false }) tabs: MatTabGroup;
+
+  visibilityFormTouched = false;
 
   get performanceData() {
     return this.performance.data?.data;
@@ -224,14 +228,7 @@ export class HostPerformanceDetailsComponent implements OnInit {
         ...excludedTerms
       };
       // Convert publicity period to unix
-      this.performanceDetails.publicity_period = {
-        start: this.performanceReleaseForm.group.value.publicity_period.start
-          ? timestamp(this.performanceReleaseForm.group.value.publicity_period.start)
-          : null,
-        end: this.performanceReleaseForm.group.value.publicity_period.end
-          ? timestamp(this.performanceReleaseForm.group.value.publicity_period.end)
-          : null
-      };
+      this.performanceDetails.publicity_period = this.getFormPublicityPeriod();
       // Save
       await this.performanceService.updatePerformance(this.performanceData._id, this.performanceDetails);
       this.toastService.emit($localize`Event saved successfully!`, ThemeKind.Accent, {
@@ -242,9 +239,67 @@ export class HostPerformanceDetailsComponent implements OnInit {
 
   updateVisibility(visible: boolean) {
     this.performanceDetails.visibility = visible ? Visibility.Public : Visibility.Private;
+    this.visibilityFormTouched = true;
   }
 
   goToPerformance(): void {
     this.appService.navigateTo(`/performances/${this.performanceData._id}`);
+  }
+
+  getFormPublicityPeriod(): { start: number; end: number } {
+    return {
+      start: this.performanceReleaseForm.group.value.publicity_period.start
+        ? timestamp(this.performanceReleaseForm.group.value.publicity_period.start)
+        : null,
+      end: this.performanceReleaseForm.group.value.publicity_period.end
+        ? timestamp(this.performanceReleaseForm.group.value.publicity_period.end)
+        : null
+    };
+  }
+
+  canDeactivate(test): Observable<boolean> | boolean {
+    console.log('hello');
+    this.test();
+    return false;
+  }
+
+  test() {
+    const { terms, ...excludedTerms } = this.performanceGeneralForm.group.value;
+    // i.e. the 'unsaved' form data
+    const newFormData = {
+      ...this.performanceReleaseForm.group.value,
+      ...excludedTerms
+    };
+    newFormData.publicity_period = this.getFormPublicityPeriod();
+
+    // i.e. the existing 'saved' data
+    const oldFormData = { ...this.performanceDetails };
+    if (!this.visibilityFormTouched) delete oldFormData.visibility;
+
+    // Check if the 'unsaved' data is equal to 'saved'
+    const userHasSaved = lodash.isEqual(newFormData, oldFormData);
+    if (!userHasSaved) {
+      // TODO: OPEN DIALOG
+      this.helperService.showConfirmationDialog(this.dialog, {
+        title: $localize`There are unsaved changes on this page. Do you wish to save them?`,
+        buttons: [
+          new UiDialogButton({
+            label: $localize`No`,
+            kind: ThemeKind.Secondary,
+            callback: ref => {
+              ref.close();
+            }
+          }),
+          new UiDialogButton({
+            label: $localize`Save`,
+            kind: ThemeKind.Primary,
+            callback: ref => {
+              this.savePerformanceDetails();
+              ref.close();
+            }
+          })
+        ]
+      });
+    }
   }
 }

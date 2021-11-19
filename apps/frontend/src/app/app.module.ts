@@ -1,3 +1,4 @@
+import { UnsavedChangesGuard } from './_helpers/UnsavedChanges.guard';
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -376,6 +377,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
   providers: [
     CookieService,
     BreadcrumbService,
+    UnsavedChangesGuard,
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
     {
       provide: 'SocialAuthServiceConfig',
