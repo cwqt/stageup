@@ -62,14 +62,14 @@ export type SeederHostName =
 export default to<
   Array<Except<DtoCreateHost, 'username'> & { avatar: string; banner: string; username: SeederHostName }>
 >([
-  // {
-  //   username: 'RDance',
-  //   avatar: 'https://pbs.twimg.com/profile_images/1377222510786322436/WxktRD67_400x400.jpg',
-  //   banner:
-  //     'https://cavc.imgix.net/-/media/subject-areas/art-design-and-multimedia/dance/289_sian_trenberth_photography_da19-08.ashx?h=800&la=en&mw=1200&w=1200&auto=format&fit=crop&crop=faces&hash=B8E5927885876212E00A39A53BC4F6DE97CD4EE0',
-  //   email_address: 'rd@stageup.uk',
-  //   name: 'Rubicon Dance'
-  // },
+  {
+    username: 'RDance',
+    avatar: 'https://pbs.twimg.com/profile_images/1377222510786322436/WxktRD67_400x400.jpg',
+    banner:
+      'https://cavc.imgix.net/-/media/subject-areas/art-design-and-multimedia/dance/289_sian_trenberth_photography_da19-08.ashx?h=800&la=en&mw=1200&w=1200&auto=format&fit=crop&crop=faces&hash=B8E5927885876212E00A39A53BC4F6DE97CD4EE0',
+    email_address: 'rd@stageup.uk',
+    name: 'Rubicon Dance'
+  },
   {
     username: 'RSCompany',
     avatar:
