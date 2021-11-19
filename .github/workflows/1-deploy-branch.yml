@@ -39,7 +39,6 @@ jobs:
           echo "Branch: ${BRANCH_NAME}"
           echo "Commit body: ${{ steps.ctx.outputs.body }}"
 
-
   # entry-point for whole workflow, if this skips then the rest do also
   do_deploy:
     needs: [ctx]
