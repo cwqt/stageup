@@ -330,5 +330,18 @@ export default {
       env.getOptions()
     );
     return res.data;
+  },
+
+   // router.get <DtoPerfAnalytics[]>("/hosts/:hid/analytics/performances/all", Hosts.readPerformanceAnalytics());
+  readPerformanceAnalytics: async (
+    hostId: string,
+    performanceId: string,
+    period: AnalyticsTimePeriod = 'WEEKLY'
+  ): Promise<DtoPerformanceIDAnalytics[]> => {
+    const res = await api.get<DtoPerformanceIDAnalytics[]>(
+      `/hosts/${hostId}/analytics/performances/${performanceId}${querize({ period })}`,
+      env.getOptions()
+    );
+    return res.data;
   }
 };
