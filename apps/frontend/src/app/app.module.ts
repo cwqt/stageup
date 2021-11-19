@@ -182,6 +182,8 @@ import { HostPerformanceDetailsLinksComponent } from './routes/host/host-perform
 import { HostPerformanceDetailsKeysComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-keys/host-performance-details-keys.component';
 import { HostPerformanceDetailsVisibilityComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-visibility/host-performance-details-visibility.component';
 import { CopyBoxComponent } from './components/copy-box/copy-box.component';
+import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-analytics-graphs/host-analytics-graphs.component';
+
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
 import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
 import { OptStatusPipe } from './_pipes/opt-status.pipe';
@@ -339,6 +341,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostPerformanceDetailsKeysComponent,
     CopyBoxComponent,
     HostPerformanceDetailsVisibilityComponent,
+    HostAnalyticsGraphsComponent,
     HostListPerformancesComponent,
     BreadcrumbComponent,
     OptStatusPipe

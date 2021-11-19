@@ -4,27 +4,11 @@
     <h1 i18n>Analytics</h1>
     <ui-hr> </ui-hr>
 
-    <div class="bg-white p-4 rounded shadow-sm mb-4 w-full">
-      <div class="flex justify-between items-center">
-        <p i18n>
-          <b>{{ selectedPeriod | titlecase }}</b> snapshot of all your performances
-        </p>
-        <ui-form [form]="periodForm"></ui-form>
-      </div>
+    <p class="float-left" i18n>
+      <b>{{ selectedPeriod | titlecase }}</b> snapshot of all your performances
+    </p>
 
-      <div class="flex space-x-4 w-full overflow-x-scroll">
-        <ng-container *ngFor="let entity of snapshot | keyvalue">
-          <app-host-analytics-header-item
-            class="m-1"
-            *ngFor="let item of entity.value.header_items | keyvalue"
-            [ref]="entity.key"
-            [item]="item.value"
-            [loading]="entity.value.loading"
-          >
-          </app-host-analytics-header-item>
-        </ng-container>
-      </div>
-    </div>
+    <app-host-analytics-graphs (periodEmitter)="refreshTable($event)"> </app-host-analytics-graphs>
 
     <div class="bg-white p-4 rounded shadow-sm mb-4 w-full">
       <h2 i18n>Performances</h2>
