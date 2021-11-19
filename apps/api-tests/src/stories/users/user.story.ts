@@ -76,7 +76,7 @@ describe('Test all the user controller methods', () => {
     const pictureUrl = await Stories.actions.users.changeAvatar(user, form);
 
     expect(typeof pictureUrl).toEqual('string');
-    expect(pictureUrl.includes('https://storage.cloud.google.com/')).toBe(true);
+    expect(pictureUrl.includes('https://storage.googleapis.com/')).toBe(true);
     expect(pictureUrl.includes('.jpg')).toBe(true);
   });
 

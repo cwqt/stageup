@@ -185,7 +185,7 @@ module "backend" {
     GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL = module.secrets.GOOGLE_STORAGE_SERVICE_ACCOUNT_EMAIL
     GOOGLE_STORAGE_BUCKET_NAME           = "storage-${var.core}"
     #https://storage.cloud.google.com/su-test-bucket/Modular-Monolith-Integration-Styles-Messaging-in-memory-768x364.jpeg
-    GOOGLE_STORAGE_PUBLIC_URL = "https://storage.cloud.google.com"
+    GOOGLE_STORAGE_PUBLIC_URL = "https://storage.googleapis.com"
   }
 }
 
