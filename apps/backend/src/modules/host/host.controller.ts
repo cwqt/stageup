@@ -1113,10 +1113,12 @@ export class HostController extends ModuleController {
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
       const performance = await this.hostService.readHostPerformance(req.params.hid, req.params.pid);
-      return await this.hostService.readAnalyticsFromPerformanceArray(
+      const performanceAnalyticsMap = await this.hostService.readAnalyticsFromPerformanceArray(
         [performance._id],
         req.query.period as AnalyticsTimePeriod
       );
+
+      return [{ performanceId: performance._id, chunks: performanceAnalyticsMap[performance._id] }]
     }
   };
 

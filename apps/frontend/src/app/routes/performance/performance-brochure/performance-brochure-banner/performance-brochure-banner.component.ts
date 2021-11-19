@@ -47,7 +47,7 @@ export class PerformanceBrochureBannerComponent implements OnInit {
 
   get performanceTrailer() {
     if (!this._performanceTrailer) {
-      this._performanceTrailer = findAssets(this.performance.assets, AssetType.Image, ['thumbnail', 'primary'])[0];
+      this._performanceTrailer = findAssets(this.performance.assets, AssetType.Video, ['trailer'])[0];
     }
     return this._performanceTrailer;
   }
