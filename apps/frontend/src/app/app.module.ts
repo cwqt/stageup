@@ -1,4 +1,4 @@
-import { UnsavedChangesGuard } from './_helpers/UnsavedChanges.guard';
+import { UnsavedChangesGuard } from './_helpers/unsaved-changes.guard';
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -187,6 +187,7 @@ import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
 import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
 import { OptStatusPipe } from './_pipes/opt-status.pipe';
+import { UnsavedChangesDialogComponent } from './components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -344,7 +345,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostAnalyticsGraphsComponent,
     HostListPerformancesComponent,
     BreadcrumbComponent,
-    OptStatusPipe
+    OptStatusPipe,
+    UnsavedChangesDialogComponent
   ],
   imports: [
     AngularMaterialModule,

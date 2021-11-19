@@ -1,6 +1,7 @@
-import { Observable } from 'rxjs';
+import { ComponentCanDeactivate } from '../../../../_helpers/unsaved-changes.guard';
+import { Observable, Subject, of } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { timestamp, unix } from '@core/helpers';
@@ -27,6 +28,7 @@ import { GenrePipe } from '@frontend/_pipes/genre.pipe';
 import { ToastService } from '@frontend/services/toast.service';
 import { BreadcrumbService } from 'xng-breadcrumb';
 import * as lodash from 'lodash';
+import { UnsavedChangesDialogComponent } from '@frontend/components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
 
 // Container component for all of the tabs (details, release, links, keys)
 @Component({
@@ -34,7 +36,7 @@ import * as lodash from 'lodash';
   templateUrl: './host-performance-details.component.html',
   styleUrls: ['./host-performance-details.component.scss']
 })
-export class HostPerformanceDetailsComponent implements OnInit {
+export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeactivate {
   // Injected from parent router outlet
   host: IHost;
   performanceId: string;
@@ -257,13 +259,32 @@ export class HostPerformanceDetailsComponent implements OnInit {
     };
   }
 
-  canDeactivate(test): Observable<boolean> | boolean {
-    console.log('hello');
-    this.test();
-    return false;
+  // TODO: fix host listener so that we can also detect when moving away from the site. Works with javascript 'confirm' dialogs but not for the custom modal
+  // @HostListener('window:beforeunload')
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    // Setup observable so we can wait for the user response before navigating
+    const navigateAway = new Subject<boolean>();
+    if (this.areUnsavedChanges()) {
+      this.helperService.showDialog(
+        this.dialog.open(UnsavedChangesDialogComponent),
+        () => {
+          this.savePerformanceDetails();
+          // Regardless of response, we still navigate away
+          navigateAway.next(true);
+        },
+        () => {
+          navigateAway.next(true);
+        }
+      );
+      // Wait for dialog response before navigating away (unless cancelled)
+      return navigateAway;
+    } else {
+      // If no unsaved changes, we can simply navigate away
+      return true;
+    }
   }
 
-  test() {
+  areUnsavedChanges(): boolean {
     const { terms, ...excludedTerms } = this.performanceGeneralForm.group.value;
     // i.e. the 'unsaved' form data
     const newFormData = {
@@ -277,29 +298,6 @@ export class HostPerformanceDetailsComponent implements OnInit {
     if (!this.visibilityFormTouched) delete oldFormData.visibility;
 
     // Check if the 'unsaved' data is equal to 'saved'
-    const userHasSaved = lodash.isEqual(newFormData, oldFormData);
-    if (!userHasSaved) {
-      // TODO: OPEN DIALOG
-      this.helperService.showConfirmationDialog(this.dialog, {
-        title: $localize`There are unsaved changes on this page. Do you wish to save them?`,
-        buttons: [
-          new UiDialogButton({
-            label: $localize`No`,
-            kind: ThemeKind.Secondary,
-            callback: ref => {
-              ref.close();
-            }
-          }),
-          new UiDialogButton({
-            label: $localize`Save`,
-            kind: ThemeKind.Primary,
-            callback: ref => {
-              this.savePerformanceDetails();
-              ref.close();
-            }
-          })
-        ]
-      });
-    }
+    return !lodash.isEqual(newFormData, oldFormData);
   }
 }
