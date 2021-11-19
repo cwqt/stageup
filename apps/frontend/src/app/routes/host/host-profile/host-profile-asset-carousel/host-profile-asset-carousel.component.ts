@@ -44,7 +44,7 @@ export class HostProfileAssetComponent implements OnInit {
       }),
       () => {
         // If just new asset, we add onto the end of the array
-        if (newAsset && !oldAsset) this.host.assets.push(newAsset);
+        if (newAsset && !oldAsset) this.setHostAssets(newAsset);
         // If just new asset (i.e. user is deleting image), we filter from the array
         else if (oldAsset && !newAsset) {
           this.host.assets = this.host.assets.filter(asset => asset != oldAsset);
@@ -63,5 +63,12 @@ export class HostProfileAssetComponent implements OnInit {
         this.loading = true;
       }
     );
+  }
+
+  // TODO: remove this (debugging)
+  setHostAssets(newAsset){
+    const currentAssets = this.host.assets
+    currentAssets.push(newAsset)
+    this.host.assets = currentAssets;
   }
 }
