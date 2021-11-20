@@ -35,7 +35,7 @@ export class FeedComponent extends CarouselBaseComponent<IPerformanceStub | IHos
   prettyKeys: { [index in CarouselIdx]: string } = {
     hosts: $localize`Performing Arts Companies`,
     upcoming: $localize`Upcoming`,
-    everything: $localize`Everything`,
+    everything: $localize`Recently Added`,
     follows: $localize`My Follows`,
     trending: $localize`Trending`
   };

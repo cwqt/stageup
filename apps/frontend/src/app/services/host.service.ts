@@ -170,6 +170,7 @@ export class HostService {
       .toPromise();
   }
 
+  // router.get   <IHostFeed> ("/hosts/:hid/feed", Hosts.readHostFeed());
   readHostFeed(
     hostId: string,
     paging: { [index in keyof IHostFeed]?: PaginationOptions }

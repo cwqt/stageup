@@ -4,11 +4,16 @@
     <div class="host-profile-header bg-white rounded shadow-sm">
       <div class="banner-picture__container relative overflow-hidden rounded">
         <div
-        *ngIf="!host.data.data.banner"
-        class="carousel-cell relative bg-gray-200 flex flex-col items-center justify-center p-10 pointer-default">
+          *ngIf="!host.data.data.banner"
+          class="carousel-cell relative bg-gray-200 flex flex-col items-center justify-center p-10 pointer-default"
+        >
           <ui-icon class="opacity-40" [size]="120">image</ui-icon>
         </div>
-        <img *ngIf="host.data.data.banner" class="object-cover w-full" [src]="host.data.data.banner || '/assets/host-profile-banner-placeholder.png'" />
+        <img
+          *ngIf="host.data.data.banner"
+          class="object-cover w-full"
+          [src]="host.data.data.banner || '/assets/host-profile-banner-placeholder.png'"
+        />
         <ui-button
           *ngIf="isHostView"
           (click)="openChangeBannerDialog()"
@@ -42,18 +47,18 @@
       <div class="ml-8 pl-64 mt-14 p-4 pb-0 relative">
         <div>
           <h1 class="text-7xl mb-2">{{ host.data.data.name }}</h1>
-          
+
           <div class="flex relative align-middle justify-between mb-2">
             <p class="flex-grow mr-2 mb-0 flex items-center">
               <span class="text-lg opacity-75 mr-4">@{{ host.data.data.username }}</span>
             </p>
-            
+
             <div class="flex md:absolute left-32">
               <app-like
-                  [userLiked]="userLiked"
-                  [location]="'host-profile'"
-                  [hostId]="hostId"
-                  (onLike) = likeHost($event)
+                [userLiked]="userLiked"
+                [location]="'host-profile'"
+                [hostId]="hostId"
+                (onLike)="likeHost($event)"
               ></app-like>
               <ui-icon
                 class="cursor-pointer mr-4 hover:text-red-700"
@@ -136,7 +141,7 @@
       <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
     </div>
 
-    <div *ngIf="carouselData.upcoming.data?.data?.length > 0" class="carousel-container relative">
+    <div *ngIf="carouselData.upcoming.data?.data?.length" class="carousel-container relative">
       <h2 i18n>Scheduled events</h2>
 
       <ui-hr></ui-hr>
