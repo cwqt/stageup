@@ -207,19 +207,21 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     });
   }
 
-  async savePerformanceDetails() {
+  async savePerformanceDetails(): Promise<boolean> {
     // Frontend validation (carried out manually due to nature of the split form)
     if (!this.performanceGeneralForm.group.value.name) {
       // Show validation errors and switch to the first tab
       this.performanceGeneralForm.group.controls.name.markAsTouched();
       this.tabs.selectedIndex = 0;
       this.toastService.emit($localize`You must enter an event title`, ThemeKind.Danger, { duration: 4000 });
+      return false;
     } else if (!this.performanceGeneralForm.group.value.terms) {
       this.performanceGeneralForm.group.controls.terms.markAsTouched();
       this.tabs.selectedIndex = 0;
       this.toastService.emit($localize`Please confirm you agree to the terms and conditions`, ThemeKind.Danger, {
         duration: 4000
       });
+      return false;
     } else {
       // If we have reached here, the host has ticked the consent checkbox so we don't need to send this data
       const { terms, ...excludedTerms } = this.performanceGeneralForm.group.value;
@@ -236,6 +238,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
       this.toastService.emit($localize`Event saved successfully!`, ThemeKind.Accent, {
         duration: 4000
       });
+      return true;
     }
   }
 
@@ -267,10 +270,9 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     if (this.areUnsavedChanges()) {
       this.helperService.showDialog(
         this.dialog.open(UnsavedChangesDialogComponent),
-        () => {
-          this.savePerformanceDetails();
-          // Regardless of response, we still navigate away
-          navigateAway.next(true);
+        async () => {
+          // If saving fails, to remain on the page and display error (instead of navigating away and losing changes)
+          navigateAway.next(await this.savePerformanceDetails());
         },
         () => {
           navigateAway.next(true);
