@@ -41,7 +41,6 @@ export class ButtonComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    document.documentElement.style.setProperty('$kind', this.kind);
     this.ripples = [];
   }
 
