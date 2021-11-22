@@ -89,6 +89,7 @@
 
   <br />
   <h1>Buttons</h1>
+  <h4>Fill</h4>
 
   <div class="flex items-center space-x-4 mb-4">
     <ui-button size="s" kind="primary">Primary</ui-button>
@@ -96,6 +97,8 @@
     <ui-button size="s" kind="accent">Accent</ui-button>
     <ui-button size="s" kind="warning">Warning</ui-button>
     <ui-button size="s" kind="danger">Danger</ui-button>
+    <ui-button size="s" kind="clear-dark">Clear Dark</ui-button>
+    <ui-button size="s" kind="primary-light">Primary Light</ui-button>
     <ui-button size="s" [disabled]="true">Disabled</ui-button>
   </div>
 
@@ -105,6 +108,8 @@
     <ui-button size="m" [loading]="true" kind="accent">Accent</ui-button>
     <ui-button size="m" icon="settings" kind="warning">Warning</ui-button>
     <ui-button size="m" icon="favorite" kind="danger">Danger</ui-button>
+    <ui-button size="m" kind="clear-dark">Clear Dark</ui-button>
+    <ui-button size="m" kind="primary-light">Primary Light</ui-button>
     <ui-button size="m" [loading]="true" [disabled]="true">Disabled</ui-button>
   </div>
 
@@ -114,7 +119,44 @@
     <ui-button size="l" [loading]="true" kind="accent">Accent</ui-button>
     <ui-button size="l" icon="settings" kind="warning">Warning</ui-button>
     <ui-button size="l" icon="settings" kind="danger">Danger</ui-button>
+    <ui-button size="l" icon="account" kind="clear-dark">Clear Dark</ui-button>
+    <ui-button size="l" icon="favorite" kind="primary-light">Primary Light</ui-button>
     <ui-button size="l" [loading]="true" [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <h4>Outline</h4>
+
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button appearance="outline" size="s" kind="primary">Primary</ui-button>
+    <ui-button appearance="outline" size="s" kind="secondary">Secondary</ui-button>
+    <ui-button appearance="outline" size="s" kind="accent">Accent</ui-button>
+    <ui-button appearance="outline" size="s" kind="warning">Warning</ui-button>
+    <ui-button appearance="outline" size="s" kind="danger">Danger</ui-button>
+    <ui-button appearance="outline" size="s" kind="clear-dark">Clear Dark</ui-button>
+    <ui-button appearance="outline" size="s" kind="primary-light">Primary Light</ui-button>
+    <ui-button appearance="outline" size="s" [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button appearance="outline" size="m" [loading]="true" kind="primary">Primary</ui-button>
+    <ui-button appearance="outline" size="m" kind="secondary">Secondary</ui-button>
+    <ui-button appearance="outline" size="m" [loading]="true" kind="accent">Accent</ui-button>
+    <ui-button appearance="outline" size="m" icon="settings" kind="warning">Warning</ui-button>
+    <ui-button appearance="outline" size="m" icon="favorite" kind="danger">Danger</ui-button>
+    <ui-button appearance="outline" size="m" kind="clear-dark">Clear Dark</ui-button>
+    <ui-button appearance="outline" size="m" kind="primary-light">Primary Light</ui-button>
+    <ui-button appearance="outline" size="m" [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button appearance="outline" size="l" [loading]="true" kind="primary">Primary</ui-button>
+    <ui-button appearance="outline" size="l" icon="settings" kind="secondary">Secondary</ui-button>
+    <ui-button appearance="outline" size="l" [loading]="true" kind="accent">Accent</ui-button>
+    <ui-button appearance="outline" size="l" icon="settings" kind="warning">Warning</ui-button>
+    <ui-button appearance="outline" size="l" icon="settings" kind="danger">Danger</ui-button>
+    <ui-button appearance="outline" size="l" icon="account" kind="clear-dark">Clear Dark</ui-button>
+    <ui-button appearance="outline" size="l" icon="favorite" kind="primary-light">Primary Light</ui-button>
+    <ui-button appearance="outline" size="l" [loading]="true" [disabled]="true">Disabled</ui-button>
   </div>
 
   <ui-hr></ui-hr>

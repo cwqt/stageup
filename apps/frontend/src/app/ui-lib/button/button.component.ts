@@ -28,6 +28,7 @@ export class ButtonComponent implements OnInit {
   @Input() transparent?: boolean = false;
   @Input() icon?: string;
   @Input() type?: 'submit';
+  @Input() appearance?: 'fill' | 'outline' = 'fill';
 
   @Input() centerRipple?: boolean;
 
@@ -40,6 +41,7 @@ export class ButtonComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    document.documentElement.style.setProperty('$kind', this.kind);
     this.ripples = [];
   }
 

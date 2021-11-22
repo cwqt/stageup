@@ -82,8 +82,8 @@ export class HostAnalyticsGraphsComponent implements OnInit {
       fields: {
         period: UiField.Select({
           initial: 'MONTHLY',
-          values: new Map(Object.entries(this.periodMap).map(([key, value]) => [key, { label: value }])),
-          appearance: 'outline'
+          values: new Map(Object.entries(this.periodMap).map(([key, value]) => [key, { label: value }]))
+          // appearance: 'outline'
         })
       },
       handlers: {

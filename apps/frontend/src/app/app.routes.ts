@@ -1,3 +1,4 @@
+import { HostPerformanceSettingsComponent } from './routes/host/host-performance/host-performance-settings/host-performance-settings.component';
 import { UnsavedChangesGuard } from './_helpers/unsaved-changes.guard';
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -125,6 +126,7 @@ const LOGGED_IN_ROUTES: Routes = [
                 data: { breadcrumb: $localize`Ticketing` }
               },
               { path: 'media', component: HostPerformanceMediaComponent, data: { breadcrumb: $localize`Media` } },
+              { path: 'settings', component: HostPerformanceSettingsComponent, data: { breadcrumb: $localize`Settings` } },
 
               // { path: "analytics", HostPerformanceDetailsComponent },
               { path: '**', component: NotFoundComponent }

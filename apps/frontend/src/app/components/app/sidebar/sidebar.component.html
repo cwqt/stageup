@@ -62,6 +62,12 @@
         >
           <span i18n>Analytics</span>
         </ui-button>
+        <ui-button
+          [routerLink]="'/dashboard/performances/' + activeHostPerformanceId + '/settings'"
+          routerLinkActive="active-link"
+        >
+          <span i18n>Settings</span>
+        </ui-button>
       </div>
 
       <ui-button

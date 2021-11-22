@@ -172,8 +172,8 @@
   <!-- Select with search -->
   <div *ngIf="data.type == 'select'">
     <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
-    <mat-form-field appearance="outline" [class.form-field--no-label]="!data.options.label">
-      <mat-label i18n>{{ data.options.placeholder || 'Select an option' }}</mat-label>
+    <mat-form-field appearance="outline" [class.form-field--no-label]="!data.options.placeholder">
+      <mat-label i18n *ngIf="data.options.placeholder">{{ data.options.placeholder }}</mat-label>
       <mat-select
         #singleSelect
         [disabled]="control.disabled"
