@@ -70,7 +70,7 @@ data "google_sql_database_instance" "postgres" {
 resource "google_compute_subnetwork" "subnet" {
   provider      = google-beta
   name          = "subnet-${local.name}"
-  ip_cidr_range = var.cidr_range
+  ip_cidr_range = replace(var.cidr_range, "\"", "")
   region        = local.region
   network       = data.google_compute_network.vpc.id
 }
