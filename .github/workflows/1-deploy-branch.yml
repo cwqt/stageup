@@ -199,6 +199,12 @@ jobs:
           method: 'POST'
           timeout: 10000 # serverless cold starts can take a while
 
+      # - uses: mad9000/actions-find-and-replace-string@2
+      #   with:
+      #       source: ${{ steps.cidr-range-post.outputs.response }}
+      #       find: '"'
+      #       replace: ''
+
       # infra a go-go
       - name: Create infrastructure
         working-directory: terraform
