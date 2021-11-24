@@ -58,6 +58,13 @@ jobs:
           escapeData: 'true'
           timeout: 10000 # serverless cold starts can take a while
 
+      - uses: mad9000/actions-find-and-replace-string@2
+        id: cidr-range
+        with:
+            source: ${{ steps.cidr-range-get.outputs.response }}
+            find: '"'
+            replace: ''
+
       # now that lifecycle.prevent_destroy items removed, can go ahead and delete things
       - name: Tear down ephemeral infrastructure
         working-directory: terraform
@@ -67,7 +74,7 @@ jobs:
           -var 'gcp_project_id=core-314910'
           -var 'sql_password=helloworld'
           -var 'stripe_api_token=${{ secrets.STRIPE_TEST_SECRET_KEY }}'
-          -var 'cidr_range=${{ steps.cidr-range-get.outputs.response }}'
+          -var 'cidr_range=${{ steps.cidr-range.outputs.value }}'
           -auto-approve
 
       # tf workspace isn't needed anymore, switch to default because must not
