@@ -200,12 +200,19 @@ jobs:
           escapeData: 'true'
           timeout: 10000 # serverless cold starts can take a while
 
-      - uses: mad9000/actions-find-and-replace-string@2
+      # - uses: mad9000/actions-find-and-replace-string@2
+      #   id: cidr-range
+      #   with:
+      #       source: ${{ steps.cidr-range-post.outputs.response }}
+      #       find: '"'
+      #       replace: ''
+
+      - uses: frabert/replace-string-action@v2.0
         id: cidr-range
         with:
-            source: ${{ steps.cidr-range-post.outputs.response }}
-            find: '"'
-            replace: ''
+          pattern: '"'
+          string: ${{ steps.cidr-range-post.outputs.response }}
+          replace-with: ''
 
       # infra a go-go
       - name: Create infrastructure
@@ -217,7 +224,7 @@ jobs:
           -var 'gcp_project_id=core-314910'
           -var 'sql_password=helloworld'
           -var 'stripe_api_token=${{ secrets.STRIPE_TEST_SECRET_KEY }}'
-          -var 'cidr_range=${{ steps.cidr-range.outputs.value }}'
+          -var 'cidr_range=${{ steps.cidr-range.outputs.replaced }}'
           -input=false
           -auto-approve
 
