@@ -55,6 +55,7 @@ jobs:
           # forward it to nginx/api which will proxy the request to the backend
           url: "https://webhooks.stageup.uk/cidr_range?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api&api_key=${{ secrets.SU_WEBHOOKS_API_KEY }}"
           method: 'GET'
+          escapeData: 'true'
           timeout: 10000 # serverless cold starts can take a while
 
       # now that lifecycle.prevent_destroy items removed, can go ahead and delete things
