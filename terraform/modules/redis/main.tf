@@ -45,7 +45,7 @@ resource "google_compute_router_nat" "nat" {
 
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
   subnetwork {
-    name                    = var.subnet.id
+    name                    = var.subnetlink
     source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
   }
 
@@ -83,7 +83,7 @@ resource "google_compute_instance" "default" {
   metadata_startup_script = templatefile("${path.module}/run_redis.tpl", {})
   network_interface {
     network    = var.network
-    subnetwork = var.subnet
+    subnetwork = var.subnetname
   }
   scheduling {
     on_host_maintenance = "MIGRATE"

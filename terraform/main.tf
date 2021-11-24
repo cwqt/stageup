@@ -102,7 +102,8 @@ module "redis" {
   name    = local.name
   region  = local.region
   network = data.google_compute_network.vpc.name
-  subnet  = google_compute_subnetwork.subnet.name
+  subnetname  = google_compute_subnetwork.subnet.name
+  subenetlink = google_compute_subnetwork.subnet.self_link
 }
 
 # allow the cloud run backend to connect to the db
