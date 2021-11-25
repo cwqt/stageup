@@ -162,6 +162,7 @@
           [loading]="carouselData.upcoming.meta.loading_page"
           [id]="'upcoming'"
           [cellsToShow]="currentCellsToShow"
+          [cellsToScroll]="currentCellsToShow == 1 ? 1 : currentCellsToShow - 1"
           [loop]="false"
         >
           <div

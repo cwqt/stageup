@@ -25,6 +25,7 @@
         [margin]="10"
         [height]="256"
         [cellsToShow]="currentCellsToShow == 1 ? 1 : currentCellsToShow + 2"
+        [cellsToScroll]="currentCellsToShow == 1 ? 1 : currentCellsToShow - 1"
         [loop]="false"
       >
         <div
@@ -66,6 +67,7 @@
             [loading]="carousel.value.meta.loading_page"
             [id]="carousel.key"
             [cellsToShow]="currentCellsToShow"
+            [cellsToScroll]="currentCellsToShow == 1 ? 1 : currentCellsToShow - 1"
             [loop]="false"
           >
             <ng-container *ngIf="carousel.key !== 'hosts'">
