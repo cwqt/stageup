@@ -55,6 +55,10 @@ export default {
       email_address: 'host+test@stageup.uk'
     });
 
+    return await Stories.actions.hosts.onboardHost(host);
+  },
+
+  onboardHost: async (host: IHost): Promise<IHost> => {
     await Stories.actions.hosts.readOnboardingProcessStatus(host);
 
     await Stories.actions.hosts.updateOnboardingProcessStep<IHostBusinessDetails>(

@@ -77,7 +77,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       }
 
       // Onboard the host using the testing method for the next test
-      host = await Stories.actions.misc.verifyHost(host);
+      host = await Stories.actions.hosts.onboardHost(host);
     });
 
     it('Should allow an Admin to update a performance to be Public now they are onboarded', async () => {
