@@ -39,7 +39,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       long_description: 'That is the question',
       genre: Genre.Dance,
       publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
-      visibility: Visibility.Public
+      visibility: Visibility.Private
     };
     perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
 
@@ -51,16 +51,17 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       await Stories.actions.performances.readPerformance(perf);
     });
 
-    it('Should NOT allow a user to view a private perfrormance', async () => {
-      await Stories.actions.common.switchActor(UserType.Editor);
-      try {
-        await Stories.actions.performances.readPerformance(perf);
-        throw Error('Should not have thrown this');
-      } catch (error) {
-        expect(error.response.status).toEqual(HTTP.NotFound);
-      }
-      await Stories.actions.common.switchActor(UserType.Owner);
-    });
+    // readPerformance is currently used by hosts to read a performance and therefore is not dependent on visbility
+    // it('Should NOT allow a user to view a private perfrormance', async () => {
+    //   await Stories.actions.common.switchActor(UserType.Editor);
+    //   try {
+    //     await Stories.actions.performances.readPerformance(perf);
+    //     throw Error('Should not have thrown this');
+    //   } catch (error) {
+    //     expect(error.response.status).toEqual(HTTP.NotFound);
+    //   }
+    //   await Stories.actions.common.switchActor(UserType.Owner);
+    // });
   });
 
   describe('Should test performance visibility', () => {
@@ -96,7 +97,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
         throw Error('Should not have thrown this');
       } catch (error) {
         expect(error.response.status).toEqual(HTTP.Unauthorised);
-        expect(error.response.data.message).toEqual('@@error.missing_permissions');
+        expect(error.response.data.code).toEqual('@@error.missing_permissions');
       }
     });
   });
