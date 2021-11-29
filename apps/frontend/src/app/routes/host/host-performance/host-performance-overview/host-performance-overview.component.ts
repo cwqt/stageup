@@ -15,7 +15,6 @@ export class HostPerformanceOverviewComponent implements OnInit {
 
   host: IHost;
   performance: ICacheable<DtoPerformance>;
-  isPendingSchedule: boolean = true;
   numberOfHostEvents: number;
 
   // TODO: revisit these types 
@@ -30,7 +29,6 @@ export class HostPerformanceOverviewComponent implements OnInit {
 
     const envelope = await this.hostService.readHostPerformances(this.host._id, null);
     this.numberOfHostEvents = envelope.data.length;
-    this.isPendingSchedule = this.performance.data.data.status == PerformanceStatus.PendingSchedule ? true: false;
     this.eventURL = `${this.appService.environment.frontend_url}/events/show/${this.performance.data.data._id}`
 
     // Format date "dd mm yyyy"
@@ -41,5 +39,9 @@ export class HostPerformanceOverviewComponent implements OnInit {
     of(formatDate((this.performance.data.data.publicity_period.end * 1000), this.dateFormat, this.locale)).subscribe(v => {
       this.scheduledEnd = v;
     });
+  }
+
+  get isPendingSchedule(): boolean {
+    return this.performance.data.data.status == PerformanceStatus.PendingSchedule;
   }
 }
