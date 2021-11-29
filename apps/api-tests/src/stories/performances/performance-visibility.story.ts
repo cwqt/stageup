@@ -52,6 +52,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     });
 
     // readPerformance is currently used by hosts to read a performance and therefore is not dependent on visbility
+    // TODO: It may be worth making a separate endpoint for hosts and users with readPerformance (i.e. for users it will contain information relating to likes, follows etc. whereas for hosts it will contain the general details and is still visibile even when private)
     // it('Should NOT allow a user to view a private perfrormance', async () => {
     //   await Stories.actions.common.switchActor(UserType.Editor);
     //   try {
