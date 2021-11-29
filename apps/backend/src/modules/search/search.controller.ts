@@ -30,7 +30,7 @@ export class SearchController extends ModuleController {
           })
           .paginate({ serialiser: p => p.toStub() });
 
-      const hiddenStates = [PerformanceStatus.Deleted, PerformanceStatus.Draft];
+      const hiddenStates = [PerformanceStatus.Deleted, PerformanceStatus.Draft, PerformanceStatus.PendingSchedule];
       const searchPerformances = () =>
         this.ORM.createQueryBuilder(Performance, 'p')
           .innerJoinAndSelect('p.host', 'host')
