@@ -87,7 +87,9 @@ describe('As a user, I want to be able to do performance CRUD', () => {
 
     it('Should NOT allow an Editor to update a performance to now be Private', async () => {
       await Stories.actions.hosts.addMember(host, editor);
-      await Stories.actions.misc.acceptHostInvite(editor);
+      const hostInvitationId = await Stories.actions.utils.getHostInvitationId(editor, host);
+      await Stories.actions.common.switchActor(UserType.Member);
+      await Stories.actions.hosts.handleHostInvite(host, hostInvitationId);
       await Stories.actions.common.switchActor(UserType.Editor);
 
       try {
