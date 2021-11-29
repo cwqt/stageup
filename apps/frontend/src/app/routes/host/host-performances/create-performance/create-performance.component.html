@@ -1,4 +1,4 @@
-<ui-dialog i18n-title title="Create Performance" [loading]="loading | async">
+<ui-dialog i18n-title title="Create Event" [loading]="loading | async">
   <mat-horizontal-stepper #stepper [class.hidden]="stepper.selectedIndex == 0">
     <mat-step i18n-label label="Select Type">
       <ng-container [ngTemplateOutlet]="selectType"></ng-container>

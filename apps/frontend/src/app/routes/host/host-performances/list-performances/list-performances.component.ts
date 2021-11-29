@@ -41,11 +41,11 @@ export class HostListPerformancesComponent implements OnInit {
           accessor: p => p.name
         },
         {
-          label: $localize`Performance Schedule Start`,
+          label: $localize`Event Schedule Start`,
           accessor: p => i18n.date(unix(p.publicity_period.start), this.locale)
         },
         {
-          label: $localize`Performance Schedule End`,
+          label: $localize`Event Schedule End`,
           accessor: p => i18n.date(unix(p.publicity_period.end), this.locale)
         },
         {
