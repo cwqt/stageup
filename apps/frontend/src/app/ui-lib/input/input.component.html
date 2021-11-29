@@ -151,7 +151,6 @@
       </quill-editor>
     </div>
   </div>
-
   <!-- Checkboxes -->
   <mat-form-field
     *ngIf="data.type == 'checkbox'"
@@ -162,9 +161,10 @@
     [class.checkbox]="data.type == 'checkbox'"
   >
     <mat-label *ngIf="data.options.label && data.type != 'checkbox'">{{ data.options.label }}</mat-label>
-    <mat-checkbox [disabled]="control.disabled" matInput *ngIf="data.type == 'checkbox'" [(ngModel)]="value">{{
-      data.options.label
-    }}</mat-checkbox>
+    <mat-checkbox [disabled]="control.disabled" matInput *ngIf="data.type == 'checkbox'" [(ngModel)]="value">
+      <!-- innerHTML here allows us to also pass in HTML as the text/label for checkboxes (so that we can include things such as links) -->
+      <span *ngIf="data.options.label" [innerHTML]="data.options.label"></span
+    ></mat-checkbox>
     <!-- stop formcontrolname throwing errors -->
     <input matInput placeholder="Input" style="display: none" />
   </mat-form-field>
