@@ -14,6 +14,7 @@ import {
     IHeaderItem
 } from '../host-analytics-header-item/host-analytics-header-item.component';
 import { HostAnalyticsGraphsComponent } from '../host-analytics-graphs/host-analytics-graphs.component';
+import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 
 type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnalyticsMetrics> = {
     period_aggregate: { [index in keyof Metrics]?: Metrics[index] };
@@ -25,7 +26,7 @@ type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnaly
     templateUrl: './host-event-analytics-graphs.component.html',
     styleUrls: ['./host-event-analytics-graphs.component.scss']
 })
-export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsComponent implements OnInit {
+export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsComponent {
     @ViewChildren(HostAnalyticsHeaderItemComponent) headers: QueryList<HostAnalyticsHeaderItemComponent>;
     @Output() periodEmitter = new EventEmitter();
     @Input() eventId: string;
@@ -35,6 +36,32 @@ export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsCompon
 
     constructor(@Inject(LOCALE_ID) public locale: string, public hostService: HostService) {
         super(locale, hostService)
+    }
+
+    ngOnInit(): void {
+        this.periodForm = new UiForm({
+            fields: {
+                period: UiField.Select({
+                    initial: 'MONTHLY',
+                    values: new Map(Object.entries(this.periodMap).map(([key, value]) => [key, { label: value }])),
+                    appearance: 'outline'
+                })
+            },
+            handlers: {
+                changes: async v => {
+                    this.periodEmitter.emit(v.value.period);
+                    this.readHostAnalytics();
+                    this.readSinglePerformanceAnalytics();
+                }
+            },
+            resolvers: {
+                output: async v => v.period
+            }
+        });
+
+        // Get the host analytics and performance analytics on component init
+        this.readHostAnalytics();
+        this.readSinglePerformanceAnalytics();
     }
 
     // For header items, snapshot of aggregate over period
@@ -60,54 +87,7 @@ export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsCompon
         return Object.values(this.snapshot).reduce((acc, curr) => ((acc = acc.concat(curr.header_items)), acc), []);
     }
 
-    async readHostAnalytics() {
-        const dto = await this.hostAnalytics.request(
-            this.hostService.readHostAnalytics(this.hostService.currentHostValue._id, this.periodForm.group.value.period)
-        );
-        // Every time data is refetched, must refresh the chart - in the same way performances are done with its resolutionSuccess
-        const properties = Object.keys(this.snapshot.host.header_items) as (keyof IHostAnalyticsMetrics)[];
-        // Clear all host graphs of data
-        const headers = this.headers.filter(header => header.ref == 'host'); // only host related charts
-        headers?.forEach(headers => headers.clearGraph());
-
-        // Get the index of separation between the current and previous periods
-        const periodCutOff = Analytics.offsets[this.periodForm.group.value.period];
-
-        // Chunks are already in reverse chronological order. The first slice is the current period, the second slice is the previous period
-        const [latest, previous] = [
-            Analytics.entities.host.aggregators.metrics(dto.chunks.slice(0, periodCutOff).map(dto => dto.metrics)),
-            Analytics.entities.host.aggregators.metrics(
-                dto.chunks.slice(periodCutOff, dto.chunks.length).map(dto => dto.metrics)
-            )
-        ];
-
-        // Sort in chronological order to display in the graph
-        dto.chunks = dto.chunks.sort((a, b) => a.period_ended_at - b.period_ended_at);
-
-        properties.forEach(property => {
-            // Set difference percentage
-            this.snapshot.host.header_items[property].difference = this.getPercentageDifference(
-                latest[property],
-                previous[property]
-            );
-
-            this.setChartColor(
-                this.snapshot.host.header_items[property].difference,
-                this.snapshot.host.header_items[property].graph.data.datasets[0]
-            );
-
-            // Pretty format the aggregate value for the header item using the analytics formatters
-            this.snapshot.host.header_items[property].aggregation = latest[property];
-            // Populate charts with data for this property
-            dto.chunks.forEach(chunk => {
-                this.snapshot.host.header_items[property].graph.data.datasets[0].data.push(chunk.metrics[property]);
-                this.snapshot.host.header_items[property].graph.data.labels.push(unix(chunk.period_ended_at));
-            });
-        });
-        headers?.forEach(header => header.chart?.chartInstance.update());
-    }
-
-    async readPerformanceAnalytics(): Promise<void> {
+    async readSinglePerformanceAnalytics(): Promise<void> {
         const dto = await this.performanceAnalytics.request(this.hostService.readPerformanceAnalytics(
             this.hostService.currentHostValue._id, this.eventId, this.periodForm.group.value.period))
 
