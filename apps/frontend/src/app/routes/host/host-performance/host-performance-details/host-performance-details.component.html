@@ -3,7 +3,7 @@
 >
 <div class="flex items-center mt-4 mb-8 mt-20 clear-both">
   <h1 class="mb-0" i18n>Event Details</h1>
-  <ui-chip class="chip ml-4" [kind]="'primary'">{{ performanceType }}</ui-chip>
+  <ui-chip class="chip ml-4 capitalize" [kind]="'primary'">{{ performanceType }}</ui-chip>
 </div>
 
 <div class="relative">
@@ -31,7 +31,7 @@
       ></app-host-performance-details-links>
     </mat-tab>
     <!-- Keys tab, only to be shown if the performance is a livestream and if not a draft -->
-    <mat-tab *ngIf="performanceType == 'Livestream' && !performanceIsDraft" i18n-label label="Keys">
+    <mat-tab *ngIf="performanceType == 'livestream' && !performanceIsDraft" i18n-label label="Keys">
       <app-host-performance-details-keys
         class="mt-8 max-w-6xl"
         [cacheable]="performance"

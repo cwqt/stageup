@@ -17,11 +17,9 @@ export class HostPerformanceDetailsLinksComponent implements OnInit {
     return this.cacheable.data.data;
   }
 
-  constructor(private appService: AppService, @Inject(LOCALE_ID) public locale: string) {}
+  constructor(private appService: AppService) {}
 
   ngOnInit(): void {
-    const loc = this.locale ? `/${this.locale}` : '';
-
-    this.performanceSharingUrl = `${this.appService.environment.frontend_url}${loc}/performances/show/${this.performance._id}`;
+    this.performanceSharingUrl = `${this.appService.frontendUrl}/performances/show/${this.performance._id}`;
   }
 }

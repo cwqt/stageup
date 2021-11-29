@@ -38,7 +38,7 @@ export class SearchController extends ModuleController {
           .where('LOWER(p.name) LIKE :name', {
             name: req.query.query ? `%${req.query.query as string}%` : '%'
           })
-          .andWhere('p.status NOT IN (:...statusArray)', { statusArray: hiddenStates })
+          .andWhere('p.status NOT IN (:...states)', { states: hiddenStates })
           .paginate({ serialiser: h => h.toStub() });
 
       return {

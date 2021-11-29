@@ -55,16 +55,16 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     return this.performance.data?.data;
   }
 
-  get performanceType(): string {
-    return this.performance?.data?.data?.performance_type === PerformanceType.Vod ? 'Recorded' : 'Livestream';
+  get performanceType(): 'recorded' | 'livestream' {
+    return this.performance?.data?.data?.performance_type === PerformanceType.Vod ? 'recorded' : 'livestream';
   }
 
   get performanceIsLive(): boolean {
     const currentDate = timestamp(new Date());
-    const inPremierPeriod: boolean =
+    const inPremierePeriod: boolean =
       currentDate >= this.performance?.data?.data?.publicity_period.start &&
       currentDate <= this.performance?.data?.data?.publicity_period.end;
-    if (this.performance?.data?.data?.performance_type === PerformanceType.Vod && inPremierPeriod) return true;
+    if (this.performance?.data?.data?.performance_type === PerformanceType.Vod && inPremierePeriod) return true;
     else return this.performance?.data?.data?.status === PerformanceStatus.Live;
   }
 
@@ -164,7 +164,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
 
     // Get the userHostInfo (with stream_key) for the live performance
     // Note, the seeded performance 'The Ghost Stories of E R Benson' is live but does not have a key
-    if (this.performanceType == 'Livestream') this.readStreamKey();
+    if (this.performanceType == 'livestream') this.readStreamKey();
 
     const name = this.performanceData.name ? this.performanceData.name : 'New Event';
     this.breadcrumbService.set('dashboard/performances/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
