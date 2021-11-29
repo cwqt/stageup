@@ -28,7 +28,6 @@ type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnaly
 })
 export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsComponent {
     @ViewChildren(HostAnalyticsHeaderItemComponent) headers: QueryList<HostAnalyticsHeaderItemComponent>;
-    @Output() periodEmitter = new EventEmitter();
     @Input() eventId: string;
     // Host data response - single entity
     hostAnalytics = new Cacheable<DtoHostAnalytics>();

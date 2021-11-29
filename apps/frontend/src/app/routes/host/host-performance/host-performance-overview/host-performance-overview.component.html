@@ -1,11 +1,12 @@
 <div body>
+  <!-- TODO: replace with copy-box reusable component -->
   <!-- copy and share event link -->
   <div *ngIf="numberOfHostEvents > 1" class="flex flex-row space-x-2 mb-2">
     <div class="bg-white w-72 h-9.5 border-solid border-2 rounded">
       <input
         class="w-60 pt-2 px-4 bg-transparent full outline-none text-blue-400"
         type="text"
-        placeholder="coopy event URL"
+        placeholder="copy event URL"
         [value]="eventURL"
         #eventLink
       />
@@ -42,7 +43,7 @@
     <div *ngIf="isPendingSchedule" class="flex flex-col pl-40 mt-10 absolute inset-0">
       <h3 class="text-white opacity-100" i18n>Congratulations, your created your first event.</h3>
       <ui-button
-        [routerLink]="'/dashboard/events/'+performance.data.data._id"
+        [routerLink]="'/dashboard/events/' + performance.data.data._id"
         kind="clear-outline"
         icon="calendar"
         i18n
@@ -50,18 +51,19 @@
       >
     </div>
 
+    <!-- TODO: replace with copy-box reusable component -->
     <!-- copy and share event link -->
     <div *ngIf="!isPendingSchedule" class="flex flex-col pl-40 mt-10 absolute inset-0">
       <h3 class="text-white opacity-100" i18n>
         Congratulations, your first event is ready. Share it with your audience.
       </h3>
-      <p class="text-white mb-1" for="">Share your event's link</p>
+      <p class="text-white mb-1" i18n>Share your event's link</p>
       <div class="flex flex-row space-x-1">
         <div class="bg-white rounded-md w-72 h-9.5">
           <input
             class="w-60 p-2 px-4 bg-transparent full outline-none text-blue-400"
             type="text"
-            placeholder="coopy event UL"
+            placeholder="copy event UL"
             [value]="eventURL"
             #eventLink
           />
@@ -103,18 +105,26 @@
     <div class="flex flex-col">
       <h4 class="m-4 text-black font-bold" i18n>Event Visibility Schedule</h4>
       <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
-        <ui-button *ngIf="isPendingSchedule" [routerLink]="'/dashboard/events/'+performance.data.data._id" class="mx-16 my-12" kind="primary" icon="calendar" i18n
+        <ui-button
+          *ngIf="isPendingSchedule"
+          [routerLink]="'/dashboard/events/' + performance.data.data._id"
+          class="mx-16 my-12"
+          kind="primary"
+          icon="calendar"
+          i18n
           >Set Schedule</ui-button
         >
         <div *ngIf="!isPendingSchedule" class="grid grid-cols-2 gap-4">
           <div class="flex-col rounded-lg p-2 date-chip text-white">
-            <h4>Start</h4>
-            <h4>{{ scheduledStart }}</h4>
+            <h4 i18n>Start</h4>
+            <h4>
+              {{ locale == 'en' ? scheduledStart : (performance.data.data.publicity_period.start | date: locale) }}
+            </h4>
             <p>{{ performance.data.data.publicity_period.start | date: 'shortTime':locale }}</p>
           </div>
           <div class="flex-col rounded-lg p-2 date-chip text-white opacity-100">
-            <h4>End</h4>
-            <h4>{{ scheduledEnd }}</h4>
+            <h4 i18n>End</h4>
+            <h4>{{ locale == 'en' ? scheduledEnd : (performance.data.data.publicity_period.end | date: locale) }}</h4>
             <p>{{ performance.data.data.publicity_period.end | date: 'shortTime':locale }}</p>
           </div>
         </div>
