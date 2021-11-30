@@ -1,12 +1,13 @@
 carousel {
-  // fill width of entire page minus 2 * side margins & thin sidebar
-  width: calc(100vw - (5rem + 60px));
+  width: 100%;
+  overflow: hidden;
   .carousel-cell:hover {
     z-index: 10;
   }
 }
 
 .carousel-container {
+  width: 100%;
   min-height: 256px;
   &:not(:first-child) {
     margin-top: 40px;
