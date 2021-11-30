@@ -464,10 +464,6 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
     ),
     controller: async req => {
-      console.log('-----------------------------------------------');
-      console.log('-----------------------------------------------');
-      console.log('-----------------------------------------------');
-      console.log('cancel performance');
       this.performanceService.cancelPerformance(req.params.pid, req.body.removal_reason, req.locale);
     }
   };
@@ -478,10 +474,6 @@ export class PerformanceController extends ModuleController {
       AuthStrat.hasHostPermission(HostPermission.Admin, m => m.hid)
     ),
     controller: async req => {
-      console.log('-----------------------------------------------');
-      console.log('-----------------------------------------------');
-      console.log('-----------------------------------------------');
-      console.log('restore performance');
       await this.performanceService.restorePerformance(req.params.pid);
     }
   };
