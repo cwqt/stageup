@@ -3,6 +3,7 @@ import {
   DtoCreateTicket,
   DtoPerformance,
   DtoPerformanceDetails,
+  DtoRemovePerformance,
   Genre,
   IEnvelopedData,
   IPerformance,
@@ -58,6 +59,18 @@ export default {
   // router.delete <void>("/performance/:pid",Perfs.deletePerformance());
   deletePerformance: async (performance: IPerformance): Promise<void> => {
     const res = await api.delete(`/performances/${performance._id}`, env.getOptions());
+    return res.data;
+  },
+
+  // router.put<void>("/performance/:pid/cancel",Perfs.cancelPerformance());
+  cancelPerformance: async (performanceId: string, data: DtoRemovePerformance): Promise<void> => {
+    const res = await api.put(`/performances/${performanceId}/cancel`, data, env.getOptions());
+    return res.data;
+  },
+
+  // router.put<void>("/performance/:pid/restore",Perfs.restorePerformance());
+  restorePerformance: async (performanceId: string): Promise<void> => {
+    const res = await api.put(`/performances/${performanceId}/restore`, env.getOptions());
     return res.data;
   },
 
