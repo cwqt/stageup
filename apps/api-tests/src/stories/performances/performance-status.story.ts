@@ -27,8 +27,6 @@ describe('As a user, I want to be able to manage the status of my performance', 
     owner = await Stories.actions.users.createUser(UserType.Owner);
     await Stories.actions.common.switchActor(UserType.Owner);
 
-    // owner = await Stories.actions.users.createUser(UserType.Owner);
-
     host = await Stories.actions.hosts.createOnboardedHost({
       username: 'somecoolhost',
       name: 'Some Cool Host',
