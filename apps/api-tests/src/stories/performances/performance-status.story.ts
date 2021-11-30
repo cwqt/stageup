@@ -9,7 +9,8 @@ import {
   RemovalType,
   RemovalReason,
   DtoPerformance,
-  DtoPerformanceDetails
+  DtoPerformanceDetails,
+  HTTP
 } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
@@ -89,12 +90,16 @@ describe('As a user, I want to be able to manage the status of my performance', 
         removal_type: RemovalType.Cancel
       };
 
-      await Stories.actions.performances.cancelPerformance(perf._id, cancellationReason);
+      const response = await Stories.actions.performances.cancelPerformance(perf._id, cancellationReason);
+    });
 
-      // Check it is hidden from the feed
+    it('Should not display cancelled performance in the feed', async () => {
+      // Cancelled performances should NOT be shown in the feed.
       const feed = await Stories.actions.myself.readFeed();
       expect(feed.everything.data.length).toBe(0);
+    });
 
+    it('Should have a status of "Cancelled"', async () => {
       // Check performance status is 'cancelled'
       performance = await Stories.actions.performances.readPerformance(perf);
       expect(performance.data.status).toBe(PerformanceStatus.Cancelled);
@@ -104,6 +109,48 @@ describe('As a user, I want to be able to manage the status of my performance', 
       await Stories.actions.performances.restorePerformance(perf._id);
       performance = await Stories.actions.performances.readPerformance(perf);
       expect(performance.data.status).toBe(PerformanceStatus.PendingSchedule);
+      expect(performance.data.publicity_period.start).toBe(null);
+    });
+  });
+
+  describe('As a user, I want to delete a performance', () => {
+    let performance: DtoPerformance;
+    it('Should cancel a performance', async () => {
+      const deletionReason = {
+        removal_reason: {
+          removal_reason: RemovalReason.Covid19,
+          further_info: 'Had to cancel due to covid restrictions'
+        },
+        removal_type: RemovalType.SoftDelete
+      };
+
+      const response = await Stories.actions.performances.deletePerformance(perf, deletionReason);
+    });
+
+    it('Should not display cancelled performance in the feed', async () => {
+      // Cancelled performances should NOT be shown in the feed.
+      const feed = await Stories.actions.myself.readFeed();
+      expect(feed.everything.data.length).toBe(0);
+    });
+
+    it('Should fail to read "Deleted" performance', async () => {
+      try {
+        performance = await Stories.actions.performances.readPerformance(perf);
+        throw Error('Should not have thrown this');
+      } catch (error) {
+        expect(error.response.status).toEqual(HTTP.NotFound);
+        expect(error.response.data.code).toEqual('@@error.not_found');
+      }
+    });
+
+    it('Should fail to restore "Deleted" performance', async () => {
+      try {
+        await Stories.actions.performances.restorePerformance(perf._id);
+        throw Error('Should not have thrown this');
+      } catch (error) {
+        expect(error.response.status).toEqual(HTTP.NotFound);
+        expect(error.response.data.code).toEqual('@@error.not_found');
+      }
     });
   });
 });

@@ -56,9 +56,9 @@ export default {
     return res.data;
   },
 
-  // router.delete <void>("/performances/:pid",Perfs.deletePerformance());
-  deletePerformance: async (performance: IPerformance): Promise<void> => {
-    const res = await api.delete(`/performances/${performance._id}`, env.getOptions());
+  // router.put <void>("/performances/:pid",Perfs.softDeletePerformance());
+  deletePerformance: async (performance: IPerformance, data: DtoRemovePerformance): Promise<void> => {
+    const res = await api.put(`/performances/${performance._id}`, data, env.getOptions());
     return res.data;
   },
 

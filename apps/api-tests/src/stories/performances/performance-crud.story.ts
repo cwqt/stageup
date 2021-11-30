@@ -72,14 +72,15 @@ describe('As a user, I want to be able to do performance CRUD', () => {
     expect(updatePerf.short_description).toBe('For she had eyes and chose me.');
   });
 
-  it('Should delete a performance', async () => {
-    await Stories.actions.performances.deletePerformance(perf);
-    try {
-      // this should definitely throw a 404 because of the prior delete
-      const p = await Stories.actions.performances.readPerformance(perf);
-      expect(p).toBeNull();
-    } catch (error) {
-      expect((error as AxiosError<IErrorResponse>).response?.status).toBe(HTTP.NotFound);
-    }
-  });
+  // Test for this is now inside 'perforrmance-status.story'
+  // it('Should delete a performance', async () => {
+  //   await Stories.actions.performances.deletePerformance(perf);
+  //   try {
+  //     // this should definitely throw a 404 because of the prior delete
+  //     const p = await Stories.actions.performances.readPerformance(perf);
+  //     expect(p).toBeNull();
+  //   } catch (error) {
+  //     expect((error as AxiosError<IErrorResponse>).response?.status).toBe(HTTP.NotFound);
+  //   }
+  // });
 });
