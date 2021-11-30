@@ -133,7 +133,7 @@ describe('As a user, I want to be able to manage the status of my performance', 
       expect(feed.everything.data.length).toBe(0);
     });
 
-    it('Should fail to read "Deleted" performance', async () => {
+    it('Should fail to read deleted performance', async () => {
       try {
         performance = await Stories.actions.performances.readPerformance(perf);
         throw Error('Should not have thrown this');
@@ -143,7 +143,7 @@ describe('As a user, I want to be able to manage the status of my performance', 
       }
     });
 
-    it('Should fail to restore "Deleted" performance', async () => {
+    it('Should fail to restore deleted performance', async () => {
       try {
         await Stories.actions.performances.restorePerformance(perf._id);
         throw Error('Should not have thrown this');
