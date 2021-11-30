@@ -1,7 +1,7 @@
 import { ComponentCanDeactivate } from '../../../../_helpers/unsaved-changes.guard';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { timestamp, unix } from '@core/helpers';
@@ -47,22 +47,24 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
   performanceReleaseForm: UiForm<void>;
   @ViewChild('tabs', { static: false }) tabs: MatTabGroup;
 
+  @ViewChild('checkboxText', { static: false }) checkboxText: ElementRef;
+
   visibilityFormTouched = false;
 
   get performanceData() {
     return this.performance.data?.data;
   }
 
-  get performanceType(): string {
-    return this.performance?.data?.data?.performance_type === PerformanceType.Vod ? 'Recorded' : 'Livestream';
+  get performanceType(): 'recorded' | 'livestream' {
+    return this.performance?.data?.data?.performance_type === PerformanceType.Vod ? 'recorded' : 'livestream';
   }
 
   get performanceIsLive(): boolean {
     const currentDate = timestamp(new Date());
-    const inPremierPeriod: boolean =
+    const inPremierePeriod: boolean =
       currentDate >= this.performance?.data?.data?.publicity_period.start &&
       currentDate <= this.performance?.data?.data?.publicity_period.end;
-    if (this.performance?.data?.data?.performance_type === PerformanceType.Vod && inPremierPeriod) return true;
+    if (this.performance?.data?.data?.performance_type === PerformanceType.Vod && inPremierePeriod) return true;
     else return this.performance?.data?.data?.status === PerformanceStatus.Live;
   }
 
@@ -126,7 +128,6 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
         terms: UiField.Checkbox({
           // Consent will only be false if the performance is still a draft
           initial: !this.performanceIsDraft,
-          label: $localize`I'm in compliance with the licenses required to stream this production. I have read the uploaders terms and conditions to stream a production legally.`,
           validators: [{ type: 'required' }]
         })
       },
@@ -163,10 +164,17 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
 
     // Get the userHostInfo (with stream_key) for the live performance
     // Note, the seeded performance 'The Ghost Stories of E R Benson' is live but does not have a key
-    if (this.performanceType == 'Livestream') this.readStreamKey();
+    if (this.performanceType == 'livestream') this.readStreamKey();
 
     const name = this.performanceData.name ? this.performanceData.name : 'New Event';
     this.breadcrumbService.set('dashboard/performances/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
+
+    // Set the checkbox label to display HTML rather than plain string
+    // This needs to be done after a full cycle so that the ViewChild element isn't null
+    setTimeout(
+      () => (this.performanceGeneralForm.fields.terms.options.label = this.checkboxText.nativeElement.innerHTML),
+      0
+    );
   }
 
   async readStreamKey(): Promise<void> {

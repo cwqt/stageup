@@ -297,7 +297,6 @@ export class PerformanceController extends ModuleController {
       { hid: IdFinderStrat.findHostIdFromPerformanceId },
       AuthStrat.hasHostPermission(HostPermission.Editor, map => map.hid)
     ),
-    // authorisation: AuthStrat.none,
     controller: async req => {
       const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: { host: true } }));
 
@@ -306,23 +305,23 @@ export class PerformanceController extends ModuleController {
       const consent = await this.gdprService.readHostUploadConsent(performance.host, performance);
       if (!consent) await this.gdprService.addHostUploadConsent(performance.host, performance);
 
-      const newDetails = req.body;
+      const { publicity_period: newPublicityPeriod } = req.body;
 
       // Set the performance status IF the publicity period has changed or if it was previously a 'draft'
       if (
-        newDetails.publicity_period.start !== performance.publicity_period.start ||
-        newDetails.publicity_period.end !== performance.publicity_period.end ||
+        newPublicityPeriod.start !== performance.publicity_period.start ||
+        newPublicityPeriod.end !== performance.publicity_period.end ||
         performance.status == PerformanceStatus.Draft
       ) {
         // TODO: In the near future the status of the performance will no longer relate to the publicity period, but instead the 'showings times'.
         // The publicity period will instead relate to the period of time it is visible on the site. However, left like this for now until updated.
-        newDetails['status'] =
-          req.body.publicity_period.start && req.body.publicity_period.end
+        req.body['status'] =
+          newPublicityPeriod.start && newPublicityPeriod.end
             ? PerformanceStatus.Scheduled
             : PerformanceStatus.PendingSchedule;
       }
 
-      await performance.update(newDetails);
+      await performance.update(req.body);
       return performance.toFull();
     }
   };

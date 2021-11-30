@@ -14,6 +14,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
   loading: boolean;
+  PerformanceType = PerformanceType;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { host_id: string },
@@ -22,12 +23,9 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     private appService: AppService
   ) {}
 
-  async selectType(type: 'live' | 'vod') {
+  async selectType(type: PerformanceType) {
     this.loading = true;
-    const performance = await this.hostService.createPerformance(
-      this.hostService.hostId,
-      type === 'live' ? PerformanceType.Live : PerformanceType.Vod
-    );
+    const performance = await this.hostService.createPerformance(this.hostService.hostId, type);
     this.ref.close();
     this.loading = false;
     this.appService.navigateTo(`/dashboard/performances/${performance._id}`);

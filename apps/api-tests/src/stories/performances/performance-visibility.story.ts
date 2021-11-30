@@ -39,7 +39,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       long_description: 'That is the question',
       genre: Genre.Dance,
       publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
-      visibility: Visibility.Public
+      visibility: Visibility.Private
     };
     perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
 
@@ -51,16 +51,18 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       await Stories.actions.performances.readPerformance(perf);
     });
 
-    it('Should NOT allow a user to view a private perfrormance', async () => {
-      await Stories.actions.common.switchActor(UserType.Editor);
-      try {
-        await Stories.actions.performances.readPerformance(perf);
-        throw Error('Should not have thrown this');
-      } catch (error) {
-        expect(error.response.status).toEqual(HTTP.NotFound);
-      }
-      await Stories.actions.common.switchActor(UserType.Owner);
-    });
+    // readPerformance is currently used by hosts to read a performance and therefore is not dependent on visbility
+    // TODO: It may be worth making a separate endpoint for hosts and users with readPerformance (i.e. for users it will contain information relating to likes, follows etc. whereas for hosts it will contain the general details and is still visibile even when private)
+    // it('Should NOT allow a user to view a private perfrormance', async () => {
+    //   await Stories.actions.common.switchActor(UserType.Editor);
+    //   try {
+    //     await Stories.actions.performances.readPerformance(perf);
+    //     throw Error('Should not have thrown this');
+    //   } catch (error) {
+    //     expect(error.response.status).toEqual(HTTP.NotFound);
+    //   }
+    //   await Stories.actions.common.switchActor(UserType.Owner);
+    // });
   });
 
   describe('Should test performance visibility', () => {
@@ -77,7 +79,7 @@ describe('As a user, I want to be able to do performance CRUD', () => {
       }
 
       // Onboard the host using the testing method for the next test
-      host = await Stories.actions.misc.verifyHost(host);
+      host = await Stories.actions.hosts.onboardHost(host);
     });
 
     it('Should allow an Admin to update a performance to be Public now they are onboarded', async () => {
@@ -87,15 +89,16 @@ describe('As a user, I want to be able to do performance CRUD', () => {
 
     it('Should NOT allow an Editor to update a performance to now be Private', async () => {
       await Stories.actions.hosts.addMember(host, editor);
-      await Stories.actions.misc.acceptHostInvite(editor);
+      const hostInvitationId = await Stories.actions.utils.getHostInvitationId(editor, host);
       await Stories.actions.common.switchActor(UserType.Editor);
+      await Stories.actions.hosts.handleHostInvite(host, hostInvitationId);
 
       try {
         perf = await Stories.actions.performances.updateVisibility(perf, Visibility.Private);
         throw Error('Should not have thrown this');
       } catch (error) {
         expect(error.response.status).toEqual(HTTP.Unauthorised);
-        expect(error.response.data.message).toEqual('@@error.missing_permissions');
+        expect(error.response.data.code).toEqual('@@error.missing_permissions');
       }
     });
   });

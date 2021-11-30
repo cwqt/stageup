@@ -37,9 +37,15 @@ export class GdprService extends ModuleService {
   }
 
   async readHostUploadConsent(host: Host, performance: Performance): Promise<UploadersConsent> {
-    return this.ORM.createQueryBuilder(UploadersConsent, 'consent')
-      .where('consent.host__id = :hid', { hid: host._id })
-      .andWhere('consent.performance__id = :pid', { pid: performance._id })
-      .getOne();
+    return UploadersConsent.findOne({
+      where: {
+        host: {
+          _id: host._id
+        },
+        performance: {
+          _id: performance._id
+        }
+      }
+    });
   }
 }
