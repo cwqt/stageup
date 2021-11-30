@@ -39,7 +39,7 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
         select_reason: UiField.Select({
           values: this.data.reasons,
           validators: [{ type: 'required' }],
-          placeholder: this.data.placeholder
+          placeholder: $localize`Select an option`
         }),
         further_info: UiField.Textarea({
           placeholder: 'Another reason?',
