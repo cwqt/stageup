@@ -195,9 +195,9 @@ jobs:
         continue-on-error: true # want this to fail so we can check for duplicates later
         with:
           # forward it to nginx/api which will proxy the request to the backend
-          url: "https://webhooks.stageup.uk/cidr_range?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api&api_key=${{ secrets.SU_WEBHOOKS_API_KEY }}"
+          url: "https://webhooks.stageup.uk/cidr_range?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api"
           method: 'POST'
-          escapeData: 'true'
+          customHeaders: '{"api_key": ${{ secrets.SU_WEBHOOKS_API_KEY }} }'
           timeout: 10000 # serverless cold starts can take a while
 
       # infra a go-go
@@ -220,8 +220,9 @@ jobs:
         continue-on-error: true # want this to fail so we can check for duplicates later
         with:
           # forward it to nginx/api which will proxy the request to the backend
-          url: "https://webhooks.stageup.uk/endpoints?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api&api_key=${{ secrets.SU_WEBHOOKS_API_KEY }}"
+          url: "https://webhooks.stageup.uk/endpoints?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api"
           method: 'POST'
+          customHeaders: '{"api_key": ${{ secrets.SU_WEBHOOKS_API_KEY }} }'
           timeout: 10000 # serverless cold starts can take a while
 
       - name: Check for duplicate URL response
