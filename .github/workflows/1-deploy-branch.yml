@@ -189,18 +189,6 @@ jobs:
           terraform workspace select ${{ needs.ctx.outputs.branch }} || terraform workspace new ${{ needs.ctx.outputs.branch }}
           terraform workspace show
 
-      - name: Echo the header content
-        run: |
-          echo '{"api_key": ${{ secrets.SU_WEBHOOKS_API_KEY }}}'
-
-      - name: Echo the header content in another way
-        run: |
-          echo "{""api_key"": ${{ secrets.SU_WEBHOOKS_API_KEY }}}"
-
-      - name: Echo the header content in a third way
-        run: |
-          echo {"api_key": ${{ secrets.SU_WEBHOOKS_API_KEY }}}
-
        # get a free CIDR range for the feature branch
       - uses: fjogeleit/http-request-action@master
         id: cidr-range-post
