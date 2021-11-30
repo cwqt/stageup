@@ -38,7 +38,8 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
       fields: {
         select_reason: UiField.Select({
           values: this.data.reasons,
-          validators: [{ type: 'required' }]
+          validators: [{ type: 'required' }],
+          placeholder: this.data.placeholder
         }),
         further_info: UiField.Textarea({
           placeholder: 'Another reason?',

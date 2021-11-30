@@ -48,6 +48,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
             this.dialog.open(SelectReasonDialogComponent, {
               data: {
                 dialog_title: $localize`Why do you want to delete the performance?`,
+                placeholder: $localize`Select an option`,
                 reasons: new Map([
                   [RemovalReason.TechnicalIssues, { label: $localize`Technical Issues` }],
                   [
