@@ -56,21 +56,21 @@ export default {
     return res.data;
   },
 
-  // router.delete <void>("/performance/:pid",Perfs.deletePerformance());
+  // router.delete <void>("/performances/:pid",Perfs.deletePerformance());
   deletePerformance: async (performance: IPerformance): Promise<void> => {
     const res = await api.delete(`/performances/${performance._id}`, env.getOptions());
     return res.data;
   },
 
-  // router.put<void>("/performance/:pid/cancel",Perfs.cancelPerformance());
+  // router.put<void>("/performances/:pid/cancel",Perfs.cancelPerformance());
   cancelPerformance: async (performanceId: string, data: DtoRemovePerformance): Promise<void> => {
     const res = await api.put(`/performances/${performanceId}/cancel`, data, env.getOptions());
     return res.data;
   },
 
-  // router.put<void>("/performance/:pid/restore",Perfs.restorePerformance());
+  // router.put<void>("/performances/:pid/restore",Perfs.restorePerformance());
   restorePerformance: async (performanceId: string): Promise<void> => {
-    const res = await api.put(`/performances/${performanceId}/restore`, env.getOptions());
+    const res = await api.put(`/performances/${performanceId}/restore`, null, env.getOptions());
     return res.data;
   },
 
