@@ -79,7 +79,9 @@ import {
   JobType,
   DtoReadHost,
   DtoPerformanceIDAnalytics,
-  DeleteHostReason
+  DeleteHostReason,
+  IAnalyticsChunk,
+  IPerformanceAnalyticsMetrics
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import {
@@ -1106,7 +1108,7 @@ export class HostController extends ModuleController {
   };
 
   // Returns a full query of a performance analytics 
-  readPerformanceAnalytics: IControllerEndpoint<DtoPerformanceIDAnalytics[]> = {
+  readPerformanceAnalytics: IControllerEndpoint<Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>> = {
     validators: {
       query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
     },
@@ -1118,7 +1120,7 @@ export class HostController extends ModuleController {
         req.query.period as AnalyticsTimePeriod
       );
 
-      return [{ performanceId: req.params.pid, chunks: performanceAnalyticsMap[req.params.pid] }]
+      return performanceAnalyticsMap[req.params.pid]
     }
   };
 

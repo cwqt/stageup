@@ -4,8 +4,7 @@ import { unix } from '@core/helpers';
 import {
     Analytics,
     AnalyticsTimePeriod,
-    DtoHostAnalytics,
-    DtoPerformanceAnalytics,
+    IAnalyticsChunk,
     IHostAnalyticsMetrics,
     IPerformanceAnalyticsMetrics
 } from '@core/interfaces';
@@ -32,9 +31,8 @@ type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnaly
 export class HostEventAnalyticsGraphsComponent implements OnInit {
     @ViewChildren(HostAnalyticsHeaderItemComponent) headers: QueryList<HostAnalyticsHeaderItemComponent>;
     @Input() eventId: string;
-    // Host data response - single entity
-    hostAnalytics = new Cacheable<DtoHostAnalytics>();
-    performanceAnalytics = new Cacheable<DtoPerformanceAnalytics[]>();
+ 
+    performanceAnalytics = new Cacheable<Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>>();
 
     constructor(@Inject(LOCALE_ID) public locale: string, private hostService: HostService) { }
 
@@ -107,40 +105,24 @@ export class HostEventAnalyticsGraphsComponent implements OnInit {
     async readSinglePerformanceAnalytics(): Promise<void> {
         const dto = await this.performanceAnalytics.request(this.hostService.readPerformanceAnalytics(
             this.hostService.currentHostValue._id, this.eventId, this.periodForm.group.value.period))
+        const half = Analytics.offsets[this.periodForm.group.value.period];
+        const [latest, previous] = [
+            Analytics.entities.performance.aggregators.metrics(dto.slice(0, half).map(dto => dto.metrics)),
+            Analytics.entities.performance.aggregators.metrics(
+                dto.slice(half, dto.length).map(dto => dto.metrics)
+            )
+        ];
 
-        const performancePeriods = dto.map(dto => {
-            const half = Analytics.offsets[this.periodForm.group.value.period];
+        // Sort in chronological order to display in the graph
+        dto.sort((a, b) => a.period_ended_at - b.period_ended_at);
 
-            const [latest, previous] = [dto.chunks.slice(0, half), dto.chunks.slice(half, dto.chunks.length)];
-            return {
-                ...dto,
-                snapshot: {
-                    latest_period: Analytics.entities.performance.aggregators.chunks(latest),
-                    previous_period: Analytics.entities.performance.aggregators.chunks(previous)
-                }
-            };
-        });
 
         const properties = Object.keys(this.snapshot.performances.header_items) as (keyof IPerformanceAnalyticsMetrics)[];
         // Clear graphs of old data
         const headers = this.headers.filter(header => header.ref == 'performances'); // only perf related charts
         headers?.forEach(headers => headers.clearGraph());
 
-        const allPerformanceChunks = performancePeriods
-            .flatMap(dto => dto.chunks)
-            .sort((a, b) => a.period_ended_at - b.period_ended_at);
-
-        const metricAggregateByPeriod = {
-            latest_period: Analytics.entities.performance.aggregators.metrics(
-                performancePeriods.map(row => row.snapshot.latest_period.metrics)
-            ),
-            previous_period: Analytics.entities.performance.aggregators.metrics(
-                performancePeriods.map(row => row.snapshot.previous_period.metrics)
-            )
-        };
-
         properties.forEach(property => {
-            const { latest_period: latest, previous_period: previous } = metricAggregateByPeriod;
 
             this.snapshot.performances.header_items[property].difference = this.getPercentageDifference(
                 latest[property],
@@ -154,7 +136,7 @@ export class HostEventAnalyticsGraphsComponent implements OnInit {
             this.snapshot.performances.header_items[property].aggregation = latest[property];
 
             // Populate this properties' graph with data across all chunks from all performances
-            allPerformanceChunks.forEach(chunk => {
+            dto.forEach(chunk => {
                 this.snapshot.performances.header_items[property].graph.data.datasets[0].data.push(chunk.metrics[property]);
                 this.snapshot.performances.header_items[property].graph.data.labels.push(unix(chunk.period_ended_at));
             });

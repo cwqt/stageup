@@ -41,7 +41,9 @@ import {
   NUUID,
   ILike,
   LikeLocation,
-  DtoReadHost
+  DtoReadHost,
+  IAnalyticsChunk,
+  IPerformanceAnalyticsMetrics
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -337,9 +339,9 @@ export class HostService {
     hostId: string,
     performanceId: string,
     period: AnalyticsTimePeriod = 'WEEKLY'
-  ): Promise<DtoPerformanceAnalytics[]> {
+  ): Promise<Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>> {
     return this.http
-      .get<DtoPerformanceAnalytics[]>(`/api/hosts/${hostId}/analytics/performances/${performanceId}${querize({ period })}`)
+      .get<Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>>(`/api/hosts/${hostId}/analytics/performances/${performanceId}${querize({ period })}`)
       .toPromise();
   }
 
