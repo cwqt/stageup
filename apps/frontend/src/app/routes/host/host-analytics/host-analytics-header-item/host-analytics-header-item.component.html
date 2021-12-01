@@ -15,8 +15,8 @@
         </div>
         <!-- If we have no data, we display 0% -->
         <div *ngIf="noDataYet" class="flex">
-          <h3 class="blue">0%</h3>
-          <ui-icon class="blue" [size]="40">subtract</ui-icon>
+          <!-- <h3 class="blue">0%</h3>
+          <ui-icon class="blue" [size]="40">subtract</ui-icon> -->
         </div>
       </div>
     </div>
@@ -24,8 +24,9 @@
       <!-- If data, we display the chart -->
       <ngx-chartjs type="line" *ngIf="!noDataYet" [data]="item.graph.data" [options]="item.graph.options"></ngx-chartjs>
       <!-- If no data, we display a blank 'fake' chart -->
-      <div class="no-graph" *ngIf="noDataYet"></div>
     </div>
+    <div class="p-3 no-graph flex flex-col fade-mask" *ngIf="noDataYet"></div>
+    <div class="p-3 no-graph flex flex-col fade-mask" *ngIf="noDataYet"></div>
   </div>
   <div
     *ngIf="loading"
