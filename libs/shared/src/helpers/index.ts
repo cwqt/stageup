@@ -1,5 +1,4 @@
-import { ThemeStyle, ThemeAppearance } from './../../../../apps/frontend/src/app/ui-lib/ui-lib.interfaces';
-import { ThemeDimension, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { ThemeDimension, ThemeKind, ThemeStyle, ThemeAppearance } from '@frontend/ui-lib/ui-lib.interfaces';
 import {
   AssetType,
   BASE_AMOUNT_MAP,
