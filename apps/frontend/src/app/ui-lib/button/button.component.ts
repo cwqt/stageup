@@ -71,9 +71,4 @@ export class ButtonComponent implements OnInit {
       this.ripples.splice(rippleIdx, 1);
     }, 2000);
   }
-
-  extractStyle(){
-    console.log('hello')
-
-  }
 }
