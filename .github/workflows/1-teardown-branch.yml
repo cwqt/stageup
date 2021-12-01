@@ -56,7 +56,7 @@ jobs:
           url: "https://webhooks.stageup.uk/cidr-range?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api"
           method: 'GET'
           customHeaders: '{"api_key": "${{ secrets.SU_WEBHOOKS_API_KEY }}"}'
-          timeout: 30000 # serverless cold starts can take a while
+          timeout: 60000 # serverless cold starts can take a while
 
       # now that lifecycle.prevent_destroy items removed, can go ahead and delete things
       - name: Tear down ephemeral infrastructure
@@ -87,7 +87,7 @@ jobs:
           method: 'DELETE'
           customHeaders: '{"api_key": "${{ secrets.SU_WEBHOOKS_API_KEY }}"}'
           ignoreStatusCodes: true # will fire this on every PR run
-          timeout: 30000 # serverless cold starts can take a while
+          timeout: 60000 # serverless cold starts can take a while
 
       - uses: fjogeleit/http-request-action@master
         id: cidr-range-delete
@@ -97,7 +97,7 @@ jobs:
           url: "https://webhooks.stageup.uk/cidr-range?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api"
           customHeaders: '{"api_key": "${{ secrets.SU_WEBHOOKS_API_KEY }}"}'
           method: 'DELETE'
-          timeout: 30000 # serverless cold starts can take a while
+          timeout: 60000 # serverless cold starts can take a while
 
       # update deployment log to show PR has been torn down
       - name: Find past deployment comment
