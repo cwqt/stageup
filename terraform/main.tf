@@ -70,7 +70,7 @@ data "google_sql_database_instance" "postgres" {
 resource "google_compute_subnetwork" "subnet" {
   provider      = google-beta
   name          = "subnet-${local.name}"
-  ip_cidr_range = "10.2.0.0/28"
+  ip_cidr_range = replace(var.cidr_range, "\"", "")
   region        = local.region
   network       = data.google_compute_network.vpc.id
 }
@@ -102,7 +102,8 @@ module "redis" {
   name    = local.name
   region  = local.region
   network = data.google_compute_network.vpc.name
-  subnet  = google_compute_subnetwork.subnet.name
+  subnetname  = google_compute_subnetwork.subnet.name
+  subnetlink = google_compute_subnetwork.subnet.self_link
 }
 
 # allow the cloud run backend to connect to the db

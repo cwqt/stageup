@@ -98,6 +98,7 @@ jobs:
           -var 'gcp_project_id=core-314910'
           -var 'sql_password=helloworld'
           -var 'stripe_api_token=${{ secrets.STRIPE_PROD_SECRET_KEY }}'
+          -var 'cidr_range="10.2.0.0/28"'
           -input=false
           -auto-approve
 
