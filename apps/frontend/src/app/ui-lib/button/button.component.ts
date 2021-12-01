@@ -28,7 +28,7 @@ export class ButtonComponent implements OnInit {
   @Input() transparent?: boolean = false;
   @Input() icon?: string;
   @Input() type?: 'submit';
-  @Input() buttonStyle?: ThemeStyle = 'accent-m-fill';
+  @Input() variant?: ThemeStyle = 'accent-m-fill';
 
   @Input() centerRipple?: boolean;
 
@@ -38,15 +38,15 @@ export class ButtonComponent implements OnInit {
   dimensionClassMap = dimensionClassMap;
   ripples: Ripple[];
 
-  size2?: ThemeDimension = ThemeDimension.Medium;
-  kind2?: ThemeKind = ThemeKind.Accent;
-  appearance2?: ThemeAppearance = ThemeAppearance.Fill;
+  size?: ThemeDimension = ThemeDimension.Medium;
+  kind?: ThemeKind = ThemeKind.Accent;
+  appearance?: ThemeAppearance = ThemeAppearance.Fill;
 
 
   constructor() {}
 
   ngOnInit(): void {
-    Object.assign(this, extractStyle(this.buttonStyle));
+    Object.assign(this, extractStyle(this.variant));
     this.ripples = [];
   }
 

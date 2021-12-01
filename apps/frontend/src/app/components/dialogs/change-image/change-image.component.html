@@ -23,14 +23,14 @@
     <input accept=".jpg,.jpeg,.png,.gif" hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file" />
     <ui-button
       icon="attachment"
-      [buttonStyle]="fileTypeError ? 'warning' : 'primary'"
+      [variant]="fileTypeError ? 'warning' : 'primary'"
       (click)="fileInput.click()"
       class="select-file p-4 pb-0"
     >
       {{ buttonText }}
     </ui-button>
 
-    <ui-button icon="attachment" buttonStyle="secondary" (click)="deleteAsset($event)" class="p-4 pb-0">
+    <ui-button icon="attachment" variant="secondary" (click)="deleteAsset($event)" class="p-4 pb-0">
       {{ removeButtonText }}
     </ui-button>
   </div>

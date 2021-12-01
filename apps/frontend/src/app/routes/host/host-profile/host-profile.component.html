@@ -19,7 +19,7 @@
           (click)="openChangeBannerDialog()"
           class="absolute top-2 left-2"
           icon="paint-brush--alt"
-          buttonStyle="cleardark"
+          variant="cleardark"
         >
           <span *ngIf="host.data.data.banner" i18n>Change banner</span>
           <span *ngIf="!host.data.data.banner" i18n>Add</span>
@@ -37,7 +37,7 @@
           (click)="openChangeAvatarDialog()"
           icon="paint-brush--alt"
           class="z-10 absolute top-2 left-2"
-          buttonStyle="cleardark"
+          variant="cleardark"
         >
           <span i18n>Edit</span>
         </ui-button>
@@ -109,7 +109,7 @@
                 [popperPositionFixed]="true"
                 [popperPreventOverflow]="false"
                 [popperPlacement]="'bottom'"
-                buttonStyle="s"
+                variant="s"
                 class="border-0"
               >
                 <ui-icon size="l">share</ui-icon>

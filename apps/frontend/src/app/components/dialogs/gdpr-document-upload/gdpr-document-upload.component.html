@@ -7,7 +7,7 @@
         <ui-button
           [loading]="form.loading | async"
           [disabled]="form.group.valid == false"
-          buttonStyle="primary"
+          variant="primary"
           class="ml-auto"
           (click)="form.submit()"
         >
@@ -19,7 +19,7 @@
     <mat-step i18n-label label="Select File">
       <div class="flex items-center">
         <input hidden accept=".pdf" (change)="onFileSelected()" #fileSelector type="file" id="file" />
-        <ui-button icon="attachment" buttonStyle="primary" (click)="fileSelector.click()" i18n>
+        <ui-button icon="attachment" variant="primary" (click)="fileSelector.click()" i18n>
           {{ selectedFile ? 'Change' : 'Select Document' }}
         </ui-button>
         <span class="ml-3" *ngIf="selectedFile">{{ selectedFile.name }}</span>

@@ -1,6 +1,6 @@
 <div class="relative">
   <div class="flex items-center" [class.mb-2]="smaller">
-    <ui-button (click)="cancelAdd.emit()" [transparent]="true" [buttonStyle]="smaller ? 's' : 'm'"
+    <ui-button (click)="cancelAdd.emit()" [transparent]="true" [variant]="smaller ? 's' : 'm'"
       ><ui-icon>arrow--left</ui-icon></ui-button
     >
     <h3 class="mb-0" *ngIf="!smaller" i18n>Add new Card</h3>
@@ -14,7 +14,7 @@
 
   <div class="flex items-center">
     <ui-button
-      buttonStyle="primary-l"
+      variant="primary-l"
       icon="add"
       [disabled]="!(entireFormIsValid | async)"
       [loading]="createdPaymentMethod.loading"
