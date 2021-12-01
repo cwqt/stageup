@@ -1,7 +1,9 @@
+import { ChartDataset } from 'chart.js';
 import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Output, Input, EventEmitter } from '@angular/core';
 import { unix } from '@core/helpers';
 import {
     Analytics,
+    AnalyticsTimePeriod,
     DtoHostAnalytics,
     DtoPerformanceAnalytics,
     IHostAnalyticsMetrics,
@@ -15,6 +17,7 @@ import {
 } from '../host-analytics-header-item/host-analytics-header-item.component';
 import { HostAnalyticsGraphsComponent } from '../host-analytics-graphs/host-analytics-graphs.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
+import { chartData, chartOptions } from '../host-analytics-header-item/host-analytics.chartjs';
 
 type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnalyticsMetrics> = {
     period_aggregate: { [index in keyof Metrics]?: Metrics[index] };
@@ -26,16 +29,23 @@ type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnaly
     templateUrl: './host-event-analytics-graphs.component.html',
     styleUrls: ['./host-event-analytics-graphs.component.scss']
 })
-export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsComponent {
+export class HostEventAnalyticsGraphsComponent implements OnInit {
     @ViewChildren(HostAnalyticsHeaderItemComponent) headers: QueryList<HostAnalyticsHeaderItemComponent>;
     @Input() eventId: string;
     // Host data response - single entity
     hostAnalytics = new Cacheable<DtoHostAnalytics>();
     performanceAnalytics = new Cacheable<DtoPerformanceAnalytics[]>();
 
-    constructor(@Inject(LOCALE_ID) public locale: string, public hostService: HostService) {
-        super(locale, hostService)
-    }
+    constructor(@Inject(LOCALE_ID) public locale: string, private hostService: HostService) { }
+
+    // For analytics period selector
+    periodForm: UiForm<AnalyticsTimePeriod>;
+    periodMap: { [index in AnalyticsTimePeriod]: string } = {
+        WEEKLY: $localize`Weekly`,
+        MONTHLY: $localize`Monthly`,
+        QUARTERLY: $localize`Quarterly`,
+        YEARLY: $localize`Yearly`
+    };
 
     ngOnInit(): void {
         this.periodForm = new UiForm({
@@ -48,8 +58,6 @@ export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsCompon
             },
             handlers: {
                 changes: async v => {
-                    this.periodEmitter.emit(v.value.period);
-                    this.readHostAnalytics();
                     this.readSinglePerformanceAnalytics();
                 }
             },
@@ -59,19 +67,13 @@ export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsCompon
         });
 
         // Get the host analytics and performance analytics on component init
-        this.readHostAnalytics();
         this.readSinglePerformanceAnalytics();
     }
 
     // For header items, snapshot of aggregate over period
     snapshot: {
-        host: AnalyticsSnapshot<IHostAnalyticsMetrics>;
         performances: AnalyticsSnapshot<IPerformanceAnalyticsMetrics>;
     } = {
-            host: {
-                period_aggregate: {},
-                header_items: {}
-            },
             performances: {
                 period_aggregate: {},
                 header_items: {
@@ -84,6 +86,22 @@ export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsCompon
 
     get headerItems() {
         return Object.values(this.snapshot).reduce((acc, curr) => ((acc = acc.concat(curr.header_items)), acc), []);
+    }
+
+    getPercentageDifference(a: number, b: number): number {
+        return Math.floor(a - b) / b;
+    }
+
+    // Give empty skeleton for setup
+    createHeaderItem(title: string): IHeaderItem {
+        return {
+            title: title,
+            graph: {
+                data: { labels: [], datasets: [{ data: [], ...chartData }] },
+                options: chartOptions
+            },
+            aggregation: 0
+        };
     }
 
     async readSinglePerformanceAnalytics(): Promise<void> {
@@ -142,5 +160,11 @@ export class HostEventAnalyticsGraphsComponent extends HostAnalyticsGraphsCompon
             });
         });
         headers?.forEach(header => header.chart?.chartInstance.update());
+    }
+
+    setChartColor(difference: number, graph: ChartDataset): void {
+        const graphColor = difference < 0 ? '#E97B86' : difference > 0 ? '#96d0a3' : '#30a2b8';
+        graph.borderColor = graphColor;
+        graph.backgroundColor = graphColor;
     }
 }

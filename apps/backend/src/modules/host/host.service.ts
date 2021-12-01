@@ -33,14 +33,6 @@ export class HostService extends ModuleService {
       .getMany();
   }
 
-  async readHostPerformance(hostId: string, performanceId: IPerformance['_id']): Promise<Performance> {
-    return this.ORM.createQueryBuilder(Performance, 'performance')
-      .innerJoin('performance.host', 'host')
-      .where('performance.__id = :performanceId', { performanceId })
-      .where('host._id = :id', { id: hostId })
-      .getOne();
-  }
-
   async readAnalyticsFromPerformanceArray(
     performanceIds: Array<IPerformance['_id']>,
     period: AnalyticsTimePeriod

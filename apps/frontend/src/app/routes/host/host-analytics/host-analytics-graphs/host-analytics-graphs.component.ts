@@ -35,7 +35,7 @@ export class HostAnalyticsGraphsComponent implements OnInit {
   hostAnalytics = new Cacheable<DtoHostAnalytics>();
   performanceAnalytics = new Cacheable<DtoPerformanceAnalytics[]>();
 
-  constructor(@Inject(LOCALE_ID) public locale: string, public hostService: HostService) {}
+  constructor(@Inject(LOCALE_ID) public locale: string, private hostService: HostService) {}
 
   // For analytics period selector
   periodForm: UiForm<AnalyticsTimePeriod>;
