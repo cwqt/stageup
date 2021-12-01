@@ -52,7 +52,7 @@
 
   <h1>Toasts</h1>
   <div class="flex space-x-2">
-    <ui-button *ngFor="let toast of toasts | keyvalue" (click)="openToast(toast.key)" [kind]="toast.key">{{
+    <ui-button *ngFor="let toast of toasts | keyvalue" (click)="openToast(toast.key)" [buttonStyle]="toast.key">{{
       toast.value
     }}</ui-button>
   </div>
@@ -103,7 +103,7 @@
   </div>
 
   <div class="flex items-center space-x-4 mb-4">
-    <ui-button buttonStyle="primary-m" [loading]="true" kind="primary">Primary</ui-button>
+    <ui-button buttonStyle="primary-m" [loading]="true">Primary</ui-button>
     <ui-button buttonStyle="secondary-m">Secondary</ui-button>
     <ui-button buttonStyle="accent-m" [loading]="true">Accent</ui-button>
     <ui-button buttonStyle="warning-m" icon="settings">Warning</ui-button>
