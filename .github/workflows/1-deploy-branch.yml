@@ -198,7 +198,7 @@ jobs:
           url: "https://webhooks.stageup.uk/cidr_range?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api"
           method: 'POST'
           customHeaders: '{"api_key": "${{ secrets.SU_WEBHOOKS_API_KEY }}"}'
-          timeout: 10000 # serverless cold starts can take a while
+          timeout: 30000 # serverless cold starts can take a while
 
       # infra a go-go
       - name: Create infrastructure
@@ -223,7 +223,7 @@ jobs:
           url: "https://webhooks.stageup.uk/endpoints?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api"
           method: 'POST'
           customHeaders: '{"api_key": "${{ secrets.SU_WEBHOOKS_API_KEY }}"}'
-          timeout: 10000 # serverless cold starts can take a while
+          timeout: 30000 # serverless cold starts can take a while
 
       - name: Check for duplicate URL response
         # will be some other error - not duplicate
