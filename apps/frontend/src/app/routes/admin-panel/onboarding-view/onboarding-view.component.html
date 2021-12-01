@@ -7,7 +7,7 @@
       <li *ngFor="let field of step.value; let idx = index" class="mb-2" [class.is-admin]="adminView">
         <div class="flex items-center">
           <ui-button
-            size="s"
+            buttonStyle="s"
             *ngIf="adminView"
             (click)="addFieldIssue(step.key, idx)"
             [disabled]="field.valid || isActiveIssueMaker(step.key, idx)"
@@ -39,8 +39,7 @@
 
   <div class="flex align-center items-center" *ngIf="adminView">
     <ui-button
-      kind="primary"
-      size="l"
+      buttonStyle="primary-l"
       [disabled]="getUncheckedCount() > 0"
       [loading]="reviewOnboarding.loading"
       (click)="reviewOnboardingProcess()"

@@ -182,7 +182,7 @@
   }
 }
 
-.ui-button--clear-dark--fill {
+.ui-button--cleardark--fill {
   background-color: black;
   color: white;
   opacity: 0.6;
@@ -194,7 +194,7 @@
   }
 }
 
-.ui-button--clear-dark--outline {
+.ui-button--cleardark--outline {
   color: black;
   background-color: transparent;
   border: 1px solid black;
@@ -207,7 +207,7 @@
   }
 }
 
-.ui-button--primary-light--fill {
+.ui-button--primarylight--fill {
   background-color: #f8eaed;
   color: $clr-primary;
   &:hover {
@@ -218,7 +218,7 @@
   }
 }
 
-.ui-button--primary-light--outline {
+.ui-button--primarylight--outline {
   color: #f8eaed;
   background-color: transparent;
   border: 1px solid #f8eaed;

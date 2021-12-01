@@ -46,7 +46,7 @@
 
           <ui-form [form]="stepUiMap[selectedStep].form"></ui-form>
           <ui-button
-            kind="primary"
+            buttonStyle="primary"
             (click)="stepUiMap[selectedStep].form.submit()"
             [disabled]="!stepUiMap[selectedStep].form.group.valid"
             [loading]="stepUiMap[selectedStep].form.loading | async"
@@ -82,7 +82,7 @@
   <app-onboarding-view [adminView]="false" [hostId]="onboarding.data.host._id"></app-onboarding-view>
 
   <div class="mt-5" *ngIf="currentState == states.AwaitingChanges || currentState == states.HasIssues">
-    <ui-button kind="primary" size="l" (click)="submitForVerification()" [loading]="onboarding.loading">
+    <ui-button buttonStyle="primary-l" (click)="submitForVerification()" [loading]="onboarding.loading">
       <span i18n>Submit for Verification</span>
     </ui-button>
   </div>

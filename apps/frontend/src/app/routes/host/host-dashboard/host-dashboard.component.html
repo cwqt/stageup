@@ -8,7 +8,7 @@
       <img [src]="'/assets/welcome-banner.svg'" class="w-full h-72 rounded" alt="" />
       <div class="flex flex-col items-center justify-center absolute inset-0">
         <h3 class="opacity-100" i18n>Let's build your first event on <span class="host-name">StageUp</span></h3>
-        <ui-button (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>Create Event</ui-button>
+        <ui-button (click)="openCreatePerformanceDialog()" buttonStyle="primary" icon="add" i18n>Create Event</ui-button>
       </div>
     </div>
     <!-- ---------------- Analytics section ---------------- -->
@@ -20,7 +20,7 @@
         <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
           <mat-spinner class="ml-5" [diameter]="50" *ngIf="eventTable.cache.loading"></mat-spinner>
           <div class="flex justify-end">
-            <ui-button (click)="openCreatePerformanceDialog()" kind="primary" icon="add" i18n>Create Event</ui-button>
+            <ui-button (click)="openCreatePerformanceDialog()" buttonStyle="primary" icon="add" i18n>Create Event</ui-button>
           </div>
 
           <ui-table class="min-table-height" [table]="eventTable"></ui-table>
@@ -36,7 +36,7 @@
         <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
           <mat-spinner class="ml-5" [diameter]="50" *ngIf="memberTable.cache.loading"></mat-spinner>
           <div class="flex justify-end">
-            <ui-button (click)="openAddMemberDialog()" kind="primary" icon="add" i18n>Add Member</ui-button>
+            <ui-button (click)="openAddMemberDialog()" buttonStyle="primary" icon="add" i18n>Add Member</ui-button>
           </div>
           <ui-table class="min-table-height" [table]="memberTable"></ui-table>
           <div class="absolute bottom-8 left-4">

@@ -62,7 +62,7 @@
               <div>
                 <!-- Display if performance is live in less than 10 minutes (i.e. 600 seconds) -->
                 <ui-button
-                  kind="primary"
+                  buttonStyle="primary"
                   class="flex-grow rounded-full overflow-hidden"
                   *ngIf="
                     performance.publicity_period.start - currentTimestamp < 600 &&
@@ -166,8 +166,7 @@
               (selectedTicket.type == 'dono' && !selectedDonoPeg)
             "
             class="ml-auto"
-            kind="primary"
-            size="l"
+            buttonStyle="primary-l"
             icon="purchase"
           >
             <span *ngIf="selectedTicket.type == 'paid'">
@@ -216,8 +215,8 @@
                 *ngIf="performance.stream.state == 'video.live_stream.active'"
                 >Watch Now</ui-button
               > -->
-              <ui-button size="m" kind="primary" (click)="leave.emit()" class="mr-2" i18n>Watch Later</ui-button>
-              <ui-button size="m" kind="secondary" (click)="leave.emit()" i18n>Done</ui-button>
+              <ui-button buttonStyle="primary-m" (click)="leave.emit()" class="mr-2" i18n>Watch Later</ui-button>
+              <ui-button buttonStyle="secondary-m" (click)="leave.emit()" i18n>Done</ui-button>
             </div>
           </ng-container>
 

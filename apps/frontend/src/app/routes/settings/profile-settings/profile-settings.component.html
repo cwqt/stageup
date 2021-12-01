@@ -7,14 +7,14 @@
       <div class="mx-4">
         <div class="profile-picture__container">
           <img [src]="myself?.user.avatar" alt="" />
-          <ui-button (click)="openChangeAvatarDialog()" kind="accent" icon="image" i18n>Edit</ui-button>
+          <ui-button (click)="openChangeAvatarDialog()" buttonStyle="accent" icon="image" i18n>Edit</ui-button>
         </div>
       </div>
 
       <div *ngIf="profileDetailsForm" class="ml-4 flex-1">
         <ui-form [form]="profileDetailsForm"></ui-form>
         <ui-button
-          kind="primary"
+          buttonStyle="primary"
           (click)="profileDetailsForm.submit()"
           [disabled]="!profileDetailsForm.group.valid"
           [loading]="profileDetailsForm.loading | async"
@@ -74,6 +74,6 @@
       Permanently remove your Personal Account and all of its contents from the StageUp platform. This action is not
       reversible, so please continue with caution.
     </p>
-    <ui-button kind="danger" class="ml-auto" i18n>Delete Account</ui-button>
+    <ui-button buttonStyle="danger" class="ml-auto" i18n>Delete Account</ui-button>
   </ui-admonition>
 </div>

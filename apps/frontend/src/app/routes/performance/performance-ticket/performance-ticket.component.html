@@ -1,5 +1,5 @@
 <div>
-  <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" size="l">
+  <ui-button [disabled]="ticket.quantity_remaining == 0 || disabled" buttonStyle="l">
     <div class="flex">
       <ui-chip [kind]="ticketChipColor[ticket.type]">{{ ticket.type | ticketTypePipe | uppercase }}</ui-chip>
 

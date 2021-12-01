@@ -15,5 +15,5 @@
   <ui-input #input class="flex-1" [data]="inputOptions" [(ngModel)]="currentIssueText" (keyup.enter)="addIssue()">
   </ui-input>
 
-  <ui-button kind="primary" icon="add" size="s" [disabled]="currentIssueText == ''" (click)="addIssue()"></ui-button>
+  <ui-button buttonStyle="primary-s" icon="add" [disabled]="currentIssueText == ''" (click)="addIssue()"></ui-button>
 </div>

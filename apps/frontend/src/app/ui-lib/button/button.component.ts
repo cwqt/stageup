@@ -1,4 +1,6 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ThemeStyle, ThemeAppearance } from './../ui-lib.interfaces';
+import { extractStyle } from './../../../../../../libs/shared/src/helpers/index';
+import { animate, transition, trigger } from '@angular/animations';
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { dimensionClassMap, ThemeDimension, ThemeKind } from '../ui-lib.interfaces';
 interface Ripple {
@@ -20,15 +22,13 @@ interface Ripple {
 })
 export class ButtonComponent implements OnInit {
   @Output() click = new EventEmitter();
-  @Input() kind?: ThemeKind = ThemeKind.Accent;
-  @Input() size?: ThemeDimension = ThemeDimension.Medium;
   @Input() tooltip?: string;
   @Input() disabled?: boolean = false;
   @Input() loading?: boolean = false;
   @Input() transparent?: boolean = false;
   @Input() icon?: string;
   @Input() type?: 'submit';
-  @Input() appearance?: 'fill' | 'outline' = 'fill';
+  @Input() buttonStyle?: ThemeStyle = 'accent-m-fill';
 
   @Input() centerRipple?: boolean;
 
@@ -38,9 +38,15 @@ export class ButtonComponent implements OnInit {
   dimensionClassMap = dimensionClassMap;
   ripples: Ripple[];
 
+  size2?: ThemeDimension = ThemeDimension.Medium;
+  kind2?: ThemeKind = ThemeKind.Accent;
+  appearance2?: ThemeAppearance = ThemeAppearance.Fill;
+
+
   constructor() {}
 
   ngOnInit(): void {
+    Object.assign(this, extractStyle(this.buttonStyle));
     this.ripples = [];
   }
 
@@ -64,5 +70,10 @@ export class ButtonComponent implements OnInit {
     setTimeout(() => {
       this.ripples.splice(rippleIdx, 1);
     }, 2000);
+  }
+
+  extractStyle(){
+    console.log('hello')
+
   }
 }

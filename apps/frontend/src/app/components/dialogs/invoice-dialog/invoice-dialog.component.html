@@ -6,8 +6,8 @@
     <ui-hr></ui-hr>
 
     <div class="flex items-center absolute top-0 right-0">
-      <ui-button kind="secondary" size="m" class="mr-2" i18n>Email Receipt</ui-button>
-      <ui-button kind="secondary" size="m" i18n>Print Receipt</ui-button>
+      <ui-button buttonStyle="secondary-m" class="mr-2" i18n>Email Receipt</ui-button>
+      <ui-button buttonStyle="secondary-m" i18n>Print Receipt</ui-button>
     </div>
   </div>
 
@@ -60,7 +60,7 @@
     <div class="relative">
       <ng-container *ngIf="!isHostInvoice">
         <ng-container *ngIf="invoice.data?.status !== refundRequested">
-          <ui-button class="absolute bottom-0 right-0" kind="primary" size="m" (click)="requestRefund()" i18n
+          <ui-button class="absolute bottom-0 right-0" buttonStyle="primary-m" (click)="requestRefund()" i18n
             >Request Refund</ui-button
           >
         </ng-container>

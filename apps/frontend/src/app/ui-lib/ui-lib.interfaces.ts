@@ -8,8 +8,8 @@ export enum ThemeKind {
   Accent = 'accent',
   Warning = 'warning',
   Danger = 'danger',
-  ClearDark = 'clear-dark',
-  PrimaryLight = 'primary-light'
+  ClearDark = 'cleardark',
+  PrimaryLight = 'primarylight'
 }
 
 export enum ThemeDimension {
@@ -29,3 +29,18 @@ export interface IUiDialogOptions {
   cancel: EventEmitter<any>;
   buttons?: UiDialogButton[];
 }
+
+export enum ThemeAppearance {
+  Fill = 'fill',
+  Outline = 'outline',
+}
+
+// e.g. 'primary-m-outline', 'secondary', 'l-fill' etc.
+export type ThemeStyle =
+  | `${ThemeKind}-${ThemeDimension}`
+  | `${ThemeKind}-${ThemeAppearance}`
+  | `${ThemeKind}-${ThemeDimension}-${ThemeAppearance}`
+  | `${ThemeDimension}-${ThemeAppearance}`
+  | ThemeKind
+  | ThemeDimension
+  | ThemeAppearance;
