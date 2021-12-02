@@ -23,13 +23,16 @@ describe('As a user-host, I want to review all my performances', () => {
       email_address: 'host+test@stageup.uk'
     });
 
-    perf = await Stories.actions.performances.createPerformance(host, {
+    perf = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Vod);
+    const performanceDetails = {
       name: 'Shakespeare',
-      description: 'To be or not to be',
+      short_description: 'To be or not to be',
+      long_description: 'That is the question',
       genre: Genre.Classical,
-      type: PerformanceType.Vod,
-      publicity_period: { start: timestamp(), end: timestamp() + 10000000 }
-    });
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
+      visibility: Visibility.Public
+    };
+    perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
 
     let performancesList = await Stories.actions.hosts.readHostPerformances(host);
     const hostPerformances = performancesList.data[0];
@@ -40,12 +43,13 @@ describe('As a user-host, I want to review all my performances', () => {
 
     expect(perf).not.toBeNull();
     expect(perf.name).toBe('Shakespeare');
-    expect(perf.description).toBe('To be or not to be');
+    expect(perf.short_description).toBe('To be or not to be');
 
     expect(performancesList).not.toBeNull();
     expect(performancesList.data[0].host._id).toEqual(host._id);
     expect(hostPerformances.name).toEqual(perf.name);
-    expect(hostPerformances.description).toEqual(perf.description);
+    expect(hostPerformances.short_description).toEqual(perf.short_description);
+    expect(hostPerformances.long_description).toEqual(perf.long_description);
   });
 
   // TODO: extend the test below with usable analytics data

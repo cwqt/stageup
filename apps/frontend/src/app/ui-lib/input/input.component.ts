@@ -34,7 +34,6 @@ export class InputComponent<T extends IUiFieldType> implements ControlValueAcces
   // Interface inputs
   focused: boolean;
   required: boolean;
-  optionalTransUnit = $localize`(optional)`;
 
   // Meta related stuff here
   meta: { [index in IUiFieldType]?: any } = {

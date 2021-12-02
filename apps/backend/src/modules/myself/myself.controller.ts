@@ -131,7 +131,12 @@ export class MyselfController extends ModuleController {
       };
 
       // Do not include cancelled, deleted or pending schedule performances in the feeds
-      const hiddenStates = [PerformanceStatus.Cancelled, PerformanceStatus.Deleted, PerformanceStatus.PendingSchedule];
+      const hiddenStates = [
+        PerformanceStatus.Cancelled,
+        PerformanceStatus.Deleted,
+        PerformanceStatus.PendingSchedule,
+        PerformanceStatus.Draft
+      ];
 
       // None of the req.query paging options are present, so fetch the first page of every carousel
       const fetchAll = Object.keys(req.query).every(k => !Object.keys(feed).includes(k));

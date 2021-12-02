@@ -1,4 +1,4 @@
-import { IHost, IPerformance, IUser, CurrencyCode, Genre, PerformanceType } from '@core/interfaces';
+import { IHost, IPerformance, IUser, CurrencyCode, Genre, PerformanceType, Visibility } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { timestamp } from '@core/helpers';
@@ -21,13 +21,16 @@ describe('As a user, I want to be able to search for hosts/performances', () => 
       email_address: 'host+test@stageup.uk'
     });
 
-    perf = await Stories.actions.performances.createPerformance(host, {
+    perf = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Vod);
+    const performanceDetails = {
       name: 'Shakespeare',
-      description: 'To be or not to be',
-      genre: Genre.Classical,
-      type: PerformanceType.Vod,
+      short_description: 'To be or not to be',
+      long_description: 'That is the question',
+      genre: Genre.Dance,
       publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
-    });
+      visibility: Visibility.Public
+    };
+    perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
   });
 
   it('Should search for host', async () => {

@@ -24,7 +24,8 @@ import {
   IRemovalReason,
   DtoRemovePerformance,
   ILike,
-  LikeLocation
+  LikeLocation,
+  DtoPerformanceDetails
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { Except } from 'type-fest';
@@ -39,7 +40,9 @@ export class PerformanceService {
   constructor(private http: HttpClient) {}
 
   readPerformance(performanceId: string, includeDeleted?: boolean): Promise<DtoPerformance> {
-    return this.http.get<DtoPerformance>(`/api/performances/${performanceId}${querize({include_deleted: includeDeleted})}`).toPromise();
+    return this.http
+      .get<DtoPerformance>(`/api/performances/${performanceId}${querize({ include_deleted: includeDeleted })}`)
+      .toPromise();
   }
 
   readPerfomances(query: IQueryParams): Promise<IEnvelopedData<IPerformanceStub[]>> {
@@ -56,9 +59,9 @@ export class PerformanceService {
       .toPromise();
   }
 
-  //router.put <IPerf> ("/performances/:pid", Perfs.updatePerformance())
-  updatePerformance(performanceId: string, data: { name: string; description: string }): Promise<IPerformance> {
-    return this.http.put<IPerformance>(`/api/performances/${performanceId}`, data).toPromise();
+  //router.put <IPerf> ("/performances/:pid/update", Perfs.updatePerformance())
+  updatePerformance(performanceId: string, data: DtoPerformanceDetails): Promise<IPerformance> {
+    return this.http.put<IPerformance>(`/api/performances/${performanceId}/update`, data).toPromise();
   }
 
   // router.post <ITicket> ("/performances/:pid/tickets", Perfs.createTicket());
@@ -136,16 +139,8 @@ export class PerformanceService {
   // router.post <AssetDto> ("/performances/:pid/thumbnails", Perfs.changeThumbnails());
   changeThumbnails(performanceId: string, fd: FormData, tag: AssetTag, replaces?: string): Promise<AssetDto | void> {
     return this.http
-      .post<AssetDto | void>(
-        `/api/performances/${performanceId}/thumbnails/${querize({tag, replaces})}`,
-        fd
-      )
+      .post<AssetDto | void>(`/api/performances/${performanceId}/thumbnails/${querize({ tag, replaces })}`, fd)
       .toPromise();
-  }
-
-  // router.put <IPerformance> ("/performances/:pid/publicity-period", Perfs.updatePublicityPeriod());
-  updatePublicityPeriod(performanceId: string, period: IPerformance['publicity_period']): Promise<IPerformance> {
-    return this.http.put<IPerformance>(`/api/performances/${performanceId}/publicity-period`, period).toPromise();
   }
 
   // router.post <void> ("/performances/:pid/rate", Perfs.setRating());

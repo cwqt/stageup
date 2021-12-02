@@ -1,15 +1,9 @@
 import { timestamp } from '@core/helpers';
-import {
-  Genre,
-  IHost,
-  IUser,
-  IPerformance,
-  PerformanceType
-} from '@core/interfaces';
+import { Genre, IHost, IUser, IPerformance, PerformanceType, Visibility } from '@core/interfaces';
 import fd from 'form-data';
-import { createReadStream } from "fs";
+import { createReadStream } from 'fs';
 import { UserType } from '../../environment';
-import { Stories } from "../../stories";
+import { Stories } from '../../stories';
 
 describe('Test all the gdpr controller methods', () => {
   let host: IHost;
@@ -24,13 +18,17 @@ describe('Test all the gdpr controller methods', () => {
       email_address: 'host@cass.si'
     });
 
-    performance = await Stories.actions.performances.createPerformance(host, {
+    performance = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Vod);
+
+    const performanceDetails = {
       name: 'Shakespeare',
-      description: 'To be or not to be',
+      short_description: 'To be or not to be',
+      long_description: 'That is the question',
       genre: Genre.Dance,
-      type: PerformanceType.Vod,
       publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
-    });
+      visibility: Visibility.Public
+    };
+    performance = await Stories.actions.performances.updatePerformance(performance._id, performanceDetails);
   });
 
   it('Should upload a document', async () => {
@@ -39,11 +37,11 @@ describe('Test all the gdpr controller methods', () => {
     const form1 = new fd();
     form1.append('file', createReadStream(filePath));
     await Stories.actions.gdpr.uploadDocument('cookies', form1);
-  
+
     const form2 = new fd();
     form2.append('file', createReadStream(filePath));
     await Stories.actions.gdpr.uploadDocument('general_toc', form2);
-  
+
     const form3 = new fd();
     form3.append('file', createReadStream(filePath));
     await Stories.actions.gdpr.uploadDocument('privacy_policy', form3);
@@ -60,11 +58,7 @@ describe('Test all the gdpr controller methods', () => {
   });
 
   it('Should update stream compliance', async () => {
-    await Stories.actions.gdpr.updateStreamCompliance(
-      true,
-      host._id,
-      performance._id
-    );
+    await Stories.actions.gdpr.updateStreamCompliance(true, host._id, performance._id);
 
     // TODO: read this back somehow
   });
