@@ -7,7 +7,8 @@ import {
   IPerformance,
   RemovalType,
   RemovalReason,
-  IPasswordConfirmationResponse
+  IPasswordConfirmationResponse,
+  PerformanceStatus
 } from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { AppService } from '@frontend/services/app.service';
@@ -71,31 +72,40 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 hide_further_info: currentSelection => currentSelection != RemovalReason.Other
               }
             }),
-            async deletePerfReason => {
-              this.helperService.showDialog(
-                this.dialog.open(ConfirmPasswordDialogComponent),
-                async (res: IPasswordConfirmationResponse) => {
-                  if (res.is_valid) {
-                    try {
-                      await this.performanceService.deletePerformance(this.performance._id, {
-                        removal_reason: deletePerfReason,
-                        removal_type: RemovalType.SoftDelete
-                      });
-
-                      this.toastService.emit(
-                        $localize`${this.performance.name} Deleted! We have initiated refunds for all purchased tickets`
-                      );
-                      this.appService.navigateTo('/dashboard/performances');
-                      this.ref.close();
-                    } catch (error) {
-                      this.toastService.emit(error.message, ThemeKind.Danger);
+            deletePerfReason => {
+              // If performance is draft status, no need to show password confirmation
+              if (this.performance.status == PerformanceStatus.Draft) {
+                this.deletePerformance(deletePerfReason);
+              } else {
+                this.helperService.showDialog(
+                  this.dialog.open(ConfirmPasswordDialogComponent),
+                  (res: IPasswordConfirmationResponse) => {
+                    if (res.is_valid) {
+                      this.deletePerformance(deletePerfReason);
                     }
                   }
-                }
-              );
+                );
+              }
             }
           )
       })
     ];
+  }
+
+  async deletePerformance(reason: IRemovalReason): Promise<void> {
+    try {
+      await this.performanceService.deletePerformance(this.performance._id, {
+        removal_reason: reason,
+        removal_type: RemovalType.SoftDelete
+      });
+
+      this.toastService.emit(
+        $localize`${this.performance.name} Deleted! We have initiated refunds for all purchased tickets`
+      );
+      this.appService.navigateTo('/dashboard/performances');
+      this.ref.close();
+    } catch (error) {
+      this.toastService.emit(error.message, ThemeKind.Danger);
+    }
   }
 }
