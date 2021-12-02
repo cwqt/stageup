@@ -42,7 +42,7 @@ http {
     # anything beyond /api/... gets sent to node
     location /api/ {
       # wait 5 mins before giving up
-      proxy_read_timeout 300s;
+      proxy_read_timeout 4h;
       # trailing slash is important! will re-write /api to /
       proxy_pass https://${API_HOST}/;
     }
@@ -57,26 +57,26 @@ http {
 
     # Everything under the Angular app is always redirected to Angular in the correct language
     location ~ ^/(en|nb|cy) {
-      proxy_read_timeout 300s;
+      # proxy_read_timeout 300s;
       try_files $uri /$1/index.html?$args;
     }
 
     location ~ /index.html|.*\.json$ {
-      proxy_read_timeout 300s;
+      # proxy_read_timeout 300s;
       expires -1;
       add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
       include /etc/nginx/security-headers.conf;
     }
 
     location ~ .*\.css$|.*\.js$ {
-      proxy_read_timeout 300s;
+      # proxy_read_timeout 300s;
       add_header Cache-Control 'max-age=31449600'; # one year
       include /etc/nginx/security-headers.conf;
     }
 
     error_page 500 502 503 504 /50x.html;
     location = /50x.html {
-      proxy_read_timeout 300s;
+      # proxy_read_timeout 300s;
       root /usr/share/nginx/html;
     }
   }
