@@ -57,6 +57,7 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
           });
           this.ref.close();
         },
+
         failure: async err => {
           this.ref.close(null);
         }
