@@ -204,7 +204,7 @@ module "frontend" {
   port                = 80
   # this timeout needs to be this long to enable SSE to work properly
   # 14400s = 4h which should be sufficient in case of a long stream as well
-  timeout_seconds     = 14400
+  timeout             = 14400
   max_instances       = var.core == "prod" ? 2 : 1
   min_instances       = 1
   map_domains         = [local.load_balancer_host]
