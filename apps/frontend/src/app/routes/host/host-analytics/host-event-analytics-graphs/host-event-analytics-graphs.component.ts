@@ -1,5 +1,5 @@
 import { ChartDataset } from 'chart.js';
-import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Output, Input, EventEmitter } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Input} from '@angular/core';
 import { unix } from '@core/helpers';
 import {
     Analytics,
@@ -14,7 +14,6 @@ import {
     HostAnalyticsHeaderItemComponent,
     IHeaderItem
 } from '../host-analytics-header-item/host-analytics-header-item.component';
-import { HostAnalyticsGraphsComponent } from '../host-analytics-graphs/host-analytics-graphs.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { chartData, chartOptions } from '../host-analytics-header-item/host-analytics.chartjs';
 
@@ -143,7 +142,7 @@ export class HostEventAnalyticsGraphsComponent implements OnInit {
         });
         headers?.forEach(header => header.chart?.chartInstance.update());
     }
-
+    
     setChartColor(difference: number, graph: ChartDataset): void {
         const graphColor = difference < 0 ? '#E97B86' : difference > 0 ? '#96d0a3' : '#30a2b8';
         graph.borderColor = graphColor;
