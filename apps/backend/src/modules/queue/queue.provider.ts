@@ -25,6 +25,7 @@ import HostInvoicePDFWorker from './workers/host-invoice-pdf.worker';
 import HostAudienceCSVWorker from './workers/host-audience-csv.worker';
 import SendEmailWorker from './workers/send-email.worker';
 import SendReminderEmailsWorker from './workers/send-reminder-emails.worker';
+import PingSSEWorker from './workers/ping-sse.worker';
 // import ScheduleReleaseWorker from './workers/schedule-release.worker';
 
 export type Queues = { [index in JobType]: IQueue<index> };
@@ -58,7 +59,8 @@ export class JobQueueProvider implements Provider<Queues> {
     ['host_invoice_pdf']: HostInvoicePDFWorker,
     ['host_audience_csv']: HostAudienceCSVWorker,
     ['collect_performance_analytics']: CollectPerformanceAnalytics,
-    ['collect_host_analytics']: CollectHostAnalytics
+    ['collect_host_analytics']: CollectHostAnalytics,
+    ['ping_sse']: PingSSEWorker
   };
 
   constructor(config: IJobQueueProviderConfig) {
