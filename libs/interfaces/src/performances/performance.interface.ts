@@ -29,7 +29,8 @@ export enum PerformanceStatus {
   Scheduled = 'scheduled',
   Deleted = 'deleted',
   Cancelled = 'cancelled',
-  PendingSchedule = 'pending_schedule'
+  PendingSchedule = 'pending_schedule',
+  Draft = 'draft' // The performance has been created but essential fields (such as title and consent) have not been completed
 }
 
 export enum PerformanceType {
@@ -65,7 +66,8 @@ export interface IPerformanceStub {
   _id: NUUID;
   host: IHostStub; // who created the performance
   name: string; // title of performance
-  description?: RichText; // description of performance
+  short_description?: RichText; // description of performance
+  long_description?: RichText; // description of performance
   rating_count: number; // Total scores accumulated
   rating_total: number; // Number of ratings
   views: number; // total user view count
@@ -90,6 +92,12 @@ export interface IPerformance extends IPerformanceStub {
   assets: IAssetStub[];
 }
 
+// TODO: Add 'ticket visibility schedule', 'access duration', 'event showings', 'short description' and 'long description'
+export type DtoPerformanceDetails = Pick<
+  IPerformance,
+  'name' | 'short_description' | 'long_description' | 'genre' | 'publicity_period' | 'visibility'
+>;
+
 // Interface for additional client information regarding the performance.
 export interface IClientPerformanceData {
   is_following: boolean;
@@ -104,12 +112,6 @@ export type DtoPerformance = IEnvelopedData<
   Except<IPerformance, 'assets'> & { assets: AssetDto[] },
   IClientPerformanceData
 >;
-
-// data transfer object
-export type DtoCreatePerformance = Pick<
-  Required<IPerformance>,
-  'name' | 'publicity_period' | 'description' | 'genre'
-> & { type: PerformanceType };
 
 // private to host
 export interface IPerformanceHostInfo {

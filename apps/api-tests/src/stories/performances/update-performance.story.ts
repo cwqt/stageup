@@ -1,4 +1,4 @@
-import { IHost, IPerformance, IUser, PerformanceType } from '@core/interfaces';
+import { IHost, IPerformance, IUser, PerformanceType, Visibility } from '@core/interfaces';
 import { Stories } from '../../stories';
 import { UserType } from '../../environment';
 import { CurrencyCode, Genre } from '@core/interfaces';
@@ -20,20 +20,27 @@ describe('As a user-host, I want to update a performace details', () => {
       email_address: 'host+test@stageup.uk'
     });
 
-    perf = await Stories.actions.performances.createPerformance(host, {
+    perf = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Vod);
+    const performanceDetails = {
       name: 'Shakespeare',
-      description: 'To be or not to be',
-      genre: Genre.Classical,
-      type: PerformanceType.Vod,
+      short_description: 'To be or not to be',
+      long_description: 'That is the question',
+      genre: Genre.Dance,
       publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
-    });
+      visibility: Visibility.Public
+    };
+    perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
 
-    const updatePerf = await Stories.actions.performances.updatePerformance(perf, {
+    const updatePerf = await Stories.actions.performances.updatePerformance(perf._id, {
       name: 'Othello',
-      description: 'For she had eyes and chose me.'
+      short_description: 'For she had eyes and chose me.',
+      long_description: 'That is the question',
+      genre: Genre.Dance,
+      publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
+      visibility: Visibility.Public
     });
 
     expect(updatePerf.name).toBe('Othello');
-    expect(updatePerf.description).toBe('For she had eyes and chose me.');
+    expect(updatePerf.short_description).toBe('For she had eyes and chose me.');
   });
 });

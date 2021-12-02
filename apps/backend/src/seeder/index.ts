@@ -20,6 +20,7 @@ import {
   DtoCreateHost,
   HostPermission,
   IHostBusinessDetails,
+  PerformanceStatus,
   PersonTitle,
   Visibility
 } from '@core/interfaces';
@@ -66,10 +67,10 @@ export class Seeder {
         );
         const performances = await Promise.all(
           hostPerformances.map(p => {
-            // Convert the descriptions into richtext format before passing to 'createPerformance'
-            const textObject = richtext.create(p.description);
+            // Convert the short descriptions into richtext format before passing to 'createPerformance'
+            const textObject = richtext.create(p.short_description);
             textObject.ops[0].insert = textObject.ops[0].insert[0];
-            p.description = richtext.stringify(textObject.ops);
+            p.short_description = richtext.stringify(textObject.ops);
             return this.createPerformance(host, p);
           })
         );
@@ -92,7 +93,13 @@ export class Seeder {
   }
 
   private async createPerformance(host: Host, mock: SeedMockPerformance) {
-    const performance = new Performance(mock, host);
+    const performance = new Performance(mock.type, host);
+
+    performance.name = mock.name;
+    performance.short_description = mock.short_description;
+    performance.publicity_period = mock.publicity_period;
+    performance.genre = mock.genre;
+    performance.status = PerformanceStatus.Scheduled;
     performance.thumbnail = mock.thumbnail;
     performance.visibility = Visibility.Public;
 

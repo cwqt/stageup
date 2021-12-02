@@ -1,3 +1,4 @@
+import { UnsavedChangesGuard } from './_helpers/unsaved-changes.guard';
 // Modules ----------------------------------------------------------------------------------------------------------------
 import { UiLibModule } from './ui-lib/ui-lib.module';
 import { AngularMaterialModule } from './angular-material.module';
@@ -56,6 +57,7 @@ import { ObjectLengthPipe } from './_pipes/object-length.pipe';
 import { ShortDomainPipe } from './_pipes/short-domain.pipe';
 import { OnboardingStepPipe } from './_pipes/onboarding-step.pipe';
 import { GdprDocumentTypePipe } from './_pipes/gdpr-document-type.pipe';
+import { GenrePipe } from './_pipes/genre.pipe';
 import { OptOutReasonPipe } from './_pipes/opt-out-reason.pipe';
 import { HostPermissionPipe } from './_pipes/host-permission.pipe';
 import { CurrencyCodePipe } from './_pipes/currency-code.pipe';
@@ -94,7 +96,6 @@ import { PerformanceWatchComponent } from './routes/performance-watch/performanc
 import { HostPerformancesComponent } from './routes/host/host-performances/host-performances.component';
 import { HostComponent } from './routes/host/host.component';
 import { CreatePerformanceComponent } from './routes/host/host-performances/create-performance/create-performance.component';
-import { UpdatePerformanceComponent } from './routes/host/host-performance/update-performance/app-update-performance.component';
 import { PlayerComponent } from './components/player/player.component';
 import { ProfileSettingsComponent } from './routes/settings/profile-settings/profile-settings.component';
 import { BillingSettingsComponent } from './routes/settings/billing-settings/billing-settings.component';
@@ -177,11 +178,16 @@ import { HostAudienceListComponent } from './routes/host/host-marketing/host-aud
 import { PerformanceCancelDialogComponent } from './routes/performance/performance-cancel-dialog/performance-cancel-dialog.component';
 import { HostPerformanceMediaComponent } from './routes/host/host-performance/host-performance-media/host-performance-media.component';
 import { HostProfileAssetComponent } from './routes/host/host-profile/host-profile-asset-carousel/host-profile-asset-carousel.component';
+import { HostPerformanceDetailsLinksComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-links/host-performance-details-links.component';
+import { HostPerformanceDetailsKeysComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-keys/host-performance-details-keys.component';
+import { HostPerformanceDetailsVisibilityComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-visibility/host-performance-details-visibility.component';
+import { CopyBoxComponent } from './components/copy-box/copy-box.component';
 import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-analytics-graphs/host-analytics-graphs.component';
 
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
 import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
 import { OptStatusPipe } from './_pipes/opt-status.pipe';
+import { UnsavedChangesDialogComponent } from './components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -227,7 +233,6 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     CreatePerformanceComponent,
     DocumentViewComponent,
     HostPerformanceThumbnailsComponent,
-    UpdatePerformanceComponent,
     PlayerComponent,
     ProfileSettingsComponent,
     SearchComponent,
@@ -237,6 +242,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     TimesPipe,
     VisibilityPipe,
     GdprDocumentTypePipe,
+    GenrePipe,
     OnboardingStatePipe,
     OptOutReasonPipe,
     DeleteHostReasonPipe,
@@ -332,10 +338,15 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostMarketingComponent,
     HostAudienceListComponent,
     HostProfileAssetComponent,
+    HostPerformanceDetailsLinksComponent,
+    HostPerformanceDetailsKeysComponent,
+    CopyBoxComponent,
+    HostPerformanceDetailsVisibilityComponent,
     HostAnalyticsGraphsComponent,
     HostListPerformancesComponent,
     BreadcrumbComponent,
-    OptStatusPipe
+    OptStatusPipe,
+    UnsavedChangesDialogComponent
   ],
   imports: [
     AngularMaterialModule,
@@ -371,6 +382,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
   providers: [
     CookieService,
     BreadcrumbService,
+    UnsavedChangesGuard,
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },
     {
       provide: 'SocialAuthServiceConfig',

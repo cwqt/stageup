@@ -11,14 +11,12 @@
     [class.form-field--has-icon]="data.options.icon"
     *ngIf="data.type == 'number' || data.type == 'text' || data.type == 'password' || data.type == 'phone'"
   >
+    <h4 *ngIf="data.options.label">{{ data.options.label }} <span *ngIf="required" class="red">*</span></h4>
     <ui-icon *ngIf="data.options.icon" class="" size="l">{{ data.options.icon }}</ui-icon>
     <div class="form-field__control">
-      <label *ngIf="data.options.label" class="form-field__label"
-        >{{ data.options.label }}
-        <span *ngIf="focused || value != undefined">{{ required ? '' : optionalTransUnit }}</span>
-      </label>
       <input
         #input
+        class="text-input"
         [(ngModel)]="value"
         (blur)="onTouchedCallback()"
         (focus)="onFocusCallback()"
@@ -68,11 +66,8 @@
     [class.form-field--is-errored]="showError"
     *ngIf="data.type == 'textarea'"
   >
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <div class="form-field__control">
-      <label *ngIf="data.options.label" class="form-field__label"
-        >{{ data.options.label }}
-        <span *ngIf="focused || value != undefined">{{ required ? '' : optionalTransUnit }}</span>
-      </label>
       <textarea
         #textarea
         [rows]="data.options.rows"
@@ -108,11 +103,8 @@
     [class.form-field--is-disabled]="control.disabled"
     *ngIf="data.type == 'money'"
   >
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <div class="form-field__control">
-      <label *ngIf="data.options.label" class="form-field__label"
-        >{{ data.options.label }}
-        <span *ngIf="focused || value != undefined">{{ required ? '' : optionalTransUnit }}</span>
-      </label>
       <input
         mask="separator.2"
         [prefix]="data.options.mask.prefix"
@@ -142,7 +134,7 @@
     [class.form-field--is-errored]="showError"
     [class.form-field--is-disabled]="control.disabled"
   >
-    <span>{{ data.options.label }} {{ required ? '' : optionalTransUnit }}</span>
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
     <div class="form-field__control">
       <quill-editor
         #quill
@@ -159,7 +151,6 @@
       </quill-editor>
     </div>
   </div>
-
   <!-- Checkboxes -->
   <mat-form-field
     *ngIf="data.type == 'checkbox'"
@@ -170,108 +161,109 @@
     [class.checkbox]="data.type == 'checkbox'"
   >
     <mat-label *ngIf="data.options.label && data.type != 'checkbox'">{{ data.options.label }}</mat-label>
-    <mat-checkbox [disabled]="control.disabled" matInput *ngIf="data.type == 'checkbox'" [(ngModel)]="value">{{
-      data.options.label
-    }}</mat-checkbox>
+    <mat-checkbox [disabled]="control.disabled" matInput *ngIf="data.type == 'checkbox'" [(ngModel)]="value">
+      <!-- innerHTML here allows us to also pass in HTML as the text/label for checkboxes (so that we can include things such as links) -->
+      <span *ngIf="data.options.label" [innerHTML]="data.options.label"></span
+    ></mat-checkbox>
     <!-- stop formcontrolname throwing errors -->
     <input matInput placeholder="Input" style="display: none" />
   </mat-form-field>
 
   <!-- Select with search -->
-  <mat-form-field
-    *ngIf="data.type == 'select'"
-    appearance="{{ data.options.appearance || 'fill' }}"
-    [ngClass]="{ 'select-outline': data.options.appearance == 'outline' }"
-    [class.form-field--no-label]="!data.options.label"
-  >
-    <mat-label *ngIf="data.options.label">{{ data.options.label }}</mat-label>
-    <mat-select
-      #singleSelect
-      [disabled]="control.disabled"
-      (blur)="onTouchedCallback()"
-      (focus)="onFocusCallback()"
-      [(ngModel)]="value"
-      disableOptionCentering
-    >
-      <mat-option *ngIf="data.options.has_search">
-        <ngx-mat-select-search
-          ngModel
-          (ngModelChange)="filterSelectionItems($event)"
-          i18n-placeholderLabel="@@input_select_placeholder"
-          placeholderLabel="Search"
-          i18n-noEntrinoEntriesFoundLabel="@@input_select_no_entries"
-          noEntriesFoundLabel="No results"
-        >
-        </ngx-mat-select-search>
-      </mat-option>
-      <mat-option
-        *ngFor="let item of filteredSelectionItems | async | keyvalue: originalOrder"
-        [value]="item.key"
-        [disabled]="item.value.disabled"
-        (click)="emitSelectionChange(item.key)"
+  <div *ngIf="data.type == 'select'">
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
+    <mat-form-field appearance="outline" [class.form-field--no-label]="!data.options.label">
+      <mat-label i18n>{{ data.options.placeholder || 'Select an option' }}</mat-label>
+      <mat-select
+        #singleSelect
+        [disabled]="control.disabled"
+        (blur)="onTouchedCallback()"
+        (focus)="onFocusCallback()"
+        [(ngModel)]="value"
+        disableOptionCentering
       >
-        {{ item.value.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+        <mat-option *ngIf="data.options.has_search">
+          <ngx-mat-select-search
+            ngModel
+            (ngModelChange)="filterSelectionItems($event)"
+            i18n-placeholderLabel="@@input_select_placeholder"
+            placeholderLabel="Search"
+            i18n-noEntrinoEntriesFoundLabel="@@input_select_no_entries"
+            noEntriesFoundLabel="No results"
+          >
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option
+          *ngFor="let item of filteredSelectionItems | async | keyvalue: originalOrder"
+          [value]="item.key"
+          [disabled]="item.value.disabled"
+          (click)="emitSelectionChange(item.key)"
+        >
+          {{ item.value.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
   <!-- Date picker, single -->
-  <mat-form-field
-    class="form-field__date"
-    appearance="fill"
-    *ngIf="data.type == 'date' && !data.options?.is_date_range"
-  >
-    <mat-label i18n>Choose a date</mat-label>
-    <input
-      matInput
-      [(ngModel)]="value"
-      [matDatepicker]="picker"
-      (click)="picker.open()"
-      [min]="data.options.min_date"
-      [max]="data.options.max_date"
-    />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+  <div *ngIf="data.type == 'date' && !data.options?.is_date_range">
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
+    <mat-form-field class="form-field__date" appearance="outline">
+      <mat-label i18n>Choose a date</mat-label>
+      <input
+        matInput
+        [(ngModel)]="value"
+        [matDatepicker]="picker"
+        (click)="picker.open()"
+        [min]="data.options.min_date"
+        [max]="data.options.max_date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
 
   <!-- Date picker, range -->
-  <mat-form-field class="form-field__date" appearance="fill" *ngIf="data.type == 'date' && data.options?.is_date_range">
-    <mat-label i18n>Enter a date range</mat-label>
-    <mat-date-range-input
-      [rangePicker]="picker"
-      #pickerInput
-      [min]="data.options?.min_date"
-      [max]="data.options?.max_date"
-      (click)="picker.open()"
-      (dateChange)="handleStartDateRangeChange($event)"
-    >
-      <input
-        [value]="value && value['start']"
-        matStartDate
-        i18n-placeholder
-        placeholder="Start date"
+  <div *ngIf="data.type == 'date' && data.options?.is_date_range">
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
+    <mat-form-field class="form-field__date" appearance="outline">
+      <mat-label i18n>Date range</mat-label>
+      <mat-date-range-input
+        [rangePicker]="picker"
+        #pickerInput
+        [min]="data.options?.min_date"
+        [max]="data.options?.max_date"
+        (click)="picker.open()"
         (dateChange)="handleStartDateRangeChange($event)"
-      />
-      <input
-        [value]="value && value['end']"
-        matEndDate
-        i18n-placeholder
-        placeholder="End date"
-        (dateChange)="handleEndDateRangeChange($event)"
-      />
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker>
-      <mat-date-range-picker-actions *ngIf="data.options?.actions">
-        <button mat-button matDateRangePickerCancel i18n>Cancel</button>
-        <button mat-raised-button color="primary" matDateRangePickerApply i18n>Apply</button>
-      </mat-date-range-picker-actions>
-    </mat-date-range-picker>
-  </mat-form-field>
+      >
+        <input
+          [value]="value && value['start']"
+          matStartDate
+          i18n-placeholder
+          placeholder="Start date"
+          (dateChange)="handleStartDateRangeChange($event)"
+        />
+        <input
+          [value]="value && value['end']"
+          matEndDate
+          i18n-placeholder
+          placeholder="End date"
+          (dateChange)="handleEndDateRangeChange($event)"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker>
+        <mat-date-range-picker-actions *ngIf="data.options?.actions">
+          <button mat-button matDateRangePickerCancel i18n>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply i18n>Apply</button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+    </mat-form-field>
+  </div>
 
   <!-- Time picker -->
-  <mat-form-field *ngIf="data.type == 'time'" appearance="fill">
-    <mat-label>{{ data.options.label }}</mat-label>
+  <mat-form-field *ngIf="data.type == 'time'" appearance="outline">
+    <mat-label *ngIf="data.options.label">{{ data.options.label }}</mat-label>
     <mat-select
       #singleSelect
       (blur)="onTouchedCallback()"
@@ -286,20 +278,23 @@
   </mat-form-field>
 
   <!-- Datetime picker -->
-  <mat-form-field class="form-field__datetime" *ngIf="data.type == 'datetime'" appearance="fill">
-    <input
-      matInput
-      [ngxMatDatetimePicker]="picker"
-      [(ngModel)]="value"
-      placeholder="Choose a date"
-      [min]="data.options.min_date"
-      [max]="data.options.max_date"
-    />
-    <mat-label i18n>Enter a date range</mat-label>
+  <div *ngIf="data.type == 'datetime'" appearance="outline">
+    <h4 *ngIf="data.options.label">{{ data.options.label }}<span *ngIf="required" class="red">*</span></h4>
+    <mat-form-field class="form-field__datetime">
+      <input
+        matInput
+        [ngxMatDatetimePicker]="picker"
+        [(ngModel)]="value"
+        placeholder="Choose a date"
+        [min]="data.options.min_date"
+        [max]="data.options.max_date"
+      />
+      <mat-label i18n>Date range</mat-label>
 
-    <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
-    <ngx-mat-datetime-picker #picker> </ngx-mat-datetime-picker>
-  </mat-form-field>
+      <mat-datepicker-toggle matSuffix [for]="picker"> </mat-datepicker-toggle>
+      <ngx-mat-datetime-picker #picker> </ngx-mat-datetime-picker>
+    </mat-form-field>
+  </div>
 
   <!-- Radio select -->
   <mat-form-field class="form-field__radio" *ngIf="data.type == 'radio'" appearance="none">

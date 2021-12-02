@@ -1,0 +1,20 @@
+@import 'apps/frontend/src/styles/variables';
+
+.box-width {
+  width: 400px;
+}
+
+ui-button {
+  z-index: 1;
+}
+
+app-social-sharing {
+  transform: translateX(-50px);
+  opacity: 0;
+  transition: 0.3s ease all;
+}
+
+.share-links:hover app-social-sharing {
+  opacity: 1;
+  transform: translateX(0);
+}

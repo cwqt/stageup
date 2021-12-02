@@ -45,7 +45,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   @Column() created_at: number;
   @Column() name: string;
   @Column() username: string;
-  @Column({ unsigned: true , default: 0 }) like_count: number;
+  @Column({ unsigned: true, default: 0 }) like_count: number;
   @Column({ nullable: true }) bio?: string;
   @Column({ nullable: true }) avatar: string;
   @Column({ nullable: true }) banner: string;
@@ -120,7 +120,7 @@ export class Host extends BaseEntity implements IHostPrivate {
   async removeMember(user: User, txc: EntityManager) {
     const uhi = await txc.findOne(UserHostInfo, {
       relations: ['host', 'user'],
-      where: { 
+      where: {
         host: { _id: this._id },
         user: { _id: user._id }
       }

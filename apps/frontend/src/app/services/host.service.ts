@@ -12,7 +12,6 @@ import {
   IFollower,
   IPerformanceStub,
   IPerformance,
-  DtoCreatePerformance,
   IHostMemberChangeRequest,
   IEnvelopedData,
   IHostStripeInfo,
@@ -41,7 +40,8 @@ import {
   NUUID,
   ILike,
   LikeLocation,
-  DtoReadHost
+  DtoReadHost,
+  PerformanceType
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -143,8 +143,10 @@ export class HostService {
   }
 
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
-  createPerformance(hostId: string, data: DtoCreatePerformance): Promise<IPerformance> {
-    return this.http.post<IPerformance>(`/api/hosts/${hostId}/performances`, data).toPromise();
+  createPerformance(hostId: string, type: PerformanceType): Promise<IPerformance> {
+    return this.http
+      .post<IPerformance>(`/api/hosts/${hostId}/performances`, { type })
+      .toPromise();
   }
 
   // router.get <IHost> ("/hosts/@:username", Hosts.readHostByUsername());

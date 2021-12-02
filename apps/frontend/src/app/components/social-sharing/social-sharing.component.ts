@@ -1,3 +1,4 @@
+import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ShareLocations } from '@core/interfaces';
 import { AppService } from '@frontend/services/app.service';
@@ -10,6 +11,7 @@ import { AppService } from '@frontend/services/app.service';
 export class SocialSharingComponent implements OnInit {
   @Input() url: string;
   @Output() onLinkClick = new EventEmitter();
+  @Input() kind?: ThemeKind.Accent | ThemeKind.Primary = ThemeKind.Accent;
 
   icons: { [index in ShareLocations]: string } = {
     facebook: 'logo--facebook',

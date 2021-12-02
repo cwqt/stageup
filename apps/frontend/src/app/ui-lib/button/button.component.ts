@@ -31,6 +31,8 @@ export class ButtonComponent implements OnInit {
 
   @Input() centerRipple?: boolean;
 
+  @Input() height?: string; // Can pass specific height value
+
   @ViewChild('button') button: ElementRef;
   dimensionClassMap = dimensionClassMap;
   ripples: Ripple[];

@@ -39,15 +39,15 @@ export class HostPerformancesComponent implements OnInit {
       columns: [
         {
           label: $localize`Name`,
-          accessor: p => p.name
+          accessor: p => p.name || '-'
         },
         {
           label: $localize`Performance Schedule Start`,
-          accessor: p => i18n.date(unix(p.publicity_period.start), this.locale)
+          accessor: p => (p.publicity_period.start ? i18n.date(unix(p.publicity_period.start), this.locale) : '-')
         },
         {
           label: $localize`Performance Schedule End`,
-          accessor: p => i18n.date(unix(p.publicity_period.end), this.locale)
+          accessor: p => (p.publicity_period.end ? i18n.date(unix(p.publicity_period.end), this.locale) : '-')
         },
         {
           label: $localize`Visibility`,
@@ -67,7 +67,8 @@ export class HostPerformancesComponent implements OnInit {
               [PerformanceStatus.Deleted]: 'gray',
               [PerformanceStatus.Live]: 'red',
               [PerformanceStatus.PendingSchedule]: 'blue',
-              [PerformanceStatus.Scheduled]: 'green'
+              [PerformanceStatus.Scheduled]: 'green',
+              [PerformanceStatus.Draft]: 'cool-grey'
             };
 
             return colors[p.status];
@@ -88,7 +89,7 @@ export class HostPerformancesComponent implements OnInit {
 
   openCreatePerformanceDialog() {
     this.helperService.showDialog(
-      this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '600px' })
+      this.dialog.open(CreatePerformanceComponent, { data: { host_id: this.hostId }, width: '500px' })
     );
   }
 

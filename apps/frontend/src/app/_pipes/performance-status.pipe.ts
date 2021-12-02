@@ -12,7 +12,8 @@ export class PerformanceStatusPipe implements PipeTransform {
       [PerformanceStatus.Deleted]: $localize`Deleted`,
       [PerformanceStatus.Live]: $localize`Live`,
       [PerformanceStatus.PendingSchedule]: $localize`Pending Schedule`,
-      [PerformanceStatus.Scheduled]: $localize`Scheduled`
+      [PerformanceStatus.Scheduled]: $localize`Scheduled`,
+      [PerformanceStatus.Draft]: $localize`Draft`
     };
 
     return pretty[value];
