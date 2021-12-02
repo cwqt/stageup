@@ -32,7 +32,7 @@ export class SseService {
       source.onerror = (event: MessageEvent) => {
         console.log('error!')
         console.log(event);
-        return this.zone.run(() => observer.error(event));
+        // return this.zone.run(() => observer.error(event));
       }
     });
   }
