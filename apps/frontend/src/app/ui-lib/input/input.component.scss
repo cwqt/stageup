@@ -321,6 +321,19 @@ mat-tree-node {
   }
 }
 
+// Removes border thickening on hover in select input fields
+::ng-deep .mat-form-field-outline-start {
+  border: 1px solid rgba(128, 128, 128, 0.3) !important;
+  border-right: hidden !important;
+}
+::ng-deep .mat-form-field-outline-end {
+  border: 1px solid rgba(128, 128, 128, 0.3) !important;
+  border-left: hidden !important;
+}
+::ng-deep .mat-form-field-outline-gap {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.3) !important;
+}
+
 .additional-selection {
   &::before {
     content: ' ';

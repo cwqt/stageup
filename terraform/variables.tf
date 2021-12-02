@@ -23,3 +23,8 @@ variable "stripe_api_token" {
   type        = string
   description = "Stripe API token"
 }
+
+variable "cidr_range" {
+  type        = string
+  description = "CIDR range"
+}

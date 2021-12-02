@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   BusinessType,
@@ -39,7 +39,8 @@ export class HostSettingsComponent implements OnInit {
     private myselfService: MyselfService,
     private hostService: HostService,
     private toastService: ToastService,
-    private appService: AppService
+    private appService: AppService,
+    @Inject(LOCALE_ID) public locale: string
   ) {}
 
   ngOnInit(): void {
@@ -111,7 +112,7 @@ export class HostSettingsComponent implements OnInit {
               label: $localize`Country`,
               has_search: true,
               values: Object.keys(CountryCode).reduce((acc, curr) => {
-                acc.set(curr, { label: iso3166.getName(CountryCode[curr], navigator.language) });
+                acc.set(curr, { label: iso3166.getName(CountryCode[curr], this.locale) });
                 return acc;
               }, new Map()),
               validators: [{ type: 'required' }]

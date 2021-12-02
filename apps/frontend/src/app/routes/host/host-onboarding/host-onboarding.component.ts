@@ -1,6 +1,6 @@
 import { StepperSelectionEvent, STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import {
   HostOnboardingState,
@@ -82,7 +82,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
 
   hostEnvelope: DtoReadHost;
 
-  constructor(private hostService: HostService) {}
+  constructor(private hostService: HostService, @Inject(LOCALE_ID) public locale: string) {}
 
   async ngOnInit() {
     this.hostEnvelope = await this.hostService.readHost(this.hostService.currentHostValue._id);
@@ -150,7 +150,7 @@ export class HostOnboardingComponent implements OnInit, AfterViewInit {
                     label: $localize`Country`,
                     has_search: true,
                     values: Object.keys(CountryCode).reduce((acc, curr) => {
-                      acc.set(curr, { label: iso3166.getName(CountryCode[curr], navigator.language) });
+                      acc.set(curr, { label: iso3166.getName(CountryCode[curr], this.locale) });
                       return acc;
                     }, new Map()),
                     validators: [{ type: 'required' }]

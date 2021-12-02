@@ -26,6 +26,13 @@
   }
 }
 
+carousel {
+  width: 100%;
+  .carousel-cell:hover {
+    z-index: 10;
+  }
+}
+
 .carousel-container {
   min-height: 256px;  
   margin-top: 30px;

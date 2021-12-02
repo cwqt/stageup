@@ -32,7 +32,7 @@ export interface IUiDialogOptions {
 
 export enum ThemeAppearance {
   Fill = 'fill',
-  Outline = 'outline',
+  Outline = 'outline'
 }
 
 // e.g. 'primary-m-outline', 'secondary', 'l-fill' etc.

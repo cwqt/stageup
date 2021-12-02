@@ -126,7 +126,11 @@ const LOGGED_IN_ROUTES: Routes = [
                 data: { breadcrumb: $localize`Ticketing` }
               },
               { path: 'media', component: HostPerformanceMediaComponent, data: { breadcrumb: $localize`Media` } },
-              { path: 'settings', component: HostPerformanceSettingsComponent, data: { breadcrumb: $localize`Settings` } },
+              {
+                path: 'settings',
+                component: HostPerformanceSettingsComponent,
+                data: { breadcrumb: $localize`Settings` }
+              },
 
               // { path: "analytics", HostPerformanceDetailsComponent },
               { path: '**', component: NotFoundComponent }
