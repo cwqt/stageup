@@ -53,8 +53,9 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
       new UiDialogButton({
         label: $localize`Delete Performance`,
         kind: ThemeKind.Primary,
-        callback: () =>
-          this.helperService.showDialog(
+        callback: () => {
+          this.ref.close();
+          return this.helperService.showDialog(
             this.dialog.open(SelectReasonDialogComponent, {
               data: {
                 dialog_title: $localize`Why do you want to delete the performance?`,
@@ -87,7 +88,8 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 );
               }
             }
-          )
+          );
+        }
       })
     ];
   }
