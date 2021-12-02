@@ -18,7 +18,7 @@ export class SSEController extends ModuleController {
     middleware: this.sse.middleware(req => req.params.aid),
     // Handler keeps connection alive - up until the client destroys the connection or we end it
     controller: async req => {
-      this.bus.publish('live_stream.hub_created', { asset_id: req.params.aid }, req.locale);
+      // this.bus.publish('live_stream.hub_created', { asset_id: req.params.aid }, req.locale);
     },
     handler: (res: ISseResponse) => {
       return res.sse.data({ type: SseEventType.Connected });
