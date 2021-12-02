@@ -37,8 +37,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         );
 
         this.logger.error(error);
-        // Show 404 page if the error is of type 404
-        if(body.status == 404) this.router.navigateByUrl('/404', { skipLocationChange: true });
         return throwError(error);
       })
     );

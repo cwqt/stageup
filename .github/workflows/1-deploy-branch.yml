@@ -189,6 +189,17 @@ jobs:
           terraform workspace select ${{ needs.ctx.outputs.branch }} || terraform workspace new ${{ needs.ctx.outputs.branch }}
           terraform workspace show
 
+       # get a free CIDR range for the feature branch
+      - uses: fjogeleit/http-request-action@master
+        id: cidr-range-post
+        continue-on-error: true # want this to fail so we can check for duplicates later
+        with:
+          # forward it to nginx/api which will proxy the request to the backend
+          url: "https://webhooks.stageup.uk/cidr-range?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api"
+          method: 'POST'
+          customHeaders: '{"api_key": "${{ secrets.SU_WEBHOOKS_API_KEY }}"}'
+          timeout: 60000 # serverless cold starts can take a while
+
       # infra a go-go
       - name: Create infrastructure
         working-directory: terraform
@@ -199,6 +210,7 @@ jobs:
           -var 'gcp_project_id=core-314910'
           -var 'sql_password=helloworld'
           -var 'stripe_api_token=${{ secrets.STRIPE_TEST_SECRET_KEY }}'
+          -var 'cidr_range=${{ steps.cidr-range-post.outputs.response }}'
           -input=false
           -auto-approve
 
@@ -208,9 +220,10 @@ jobs:
         continue-on-error: true # want this to fail so we can check for duplicates later
         with:
           # forward it to nginx/api which will proxy the request to the backend
-          url: "https://webhooks.stageup.uk/endpoints?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api&api_key=${{ secrets.SU_WEBHOOKS_API_KEY }}"
+          url: "https://webhooks.stageup.uk/endpoints?url=https://${{ needs.ctx.outputs.branch }}.stageup.uk/api"
           method: 'POST'
-          timeout: 10000 # serverless cold starts can take a while
+          customHeaders: '{"api_key": "${{ secrets.SU_WEBHOOKS_API_KEY }}"}'
+          timeout: 60000 # serverless cold starts can take a while
 
       - name: Check for duplicate URL response
         # will be some other error - not duplicate

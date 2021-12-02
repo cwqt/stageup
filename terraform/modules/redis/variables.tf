@@ -8,9 +8,14 @@ variable "network" {
   description = "vpc.self_link or vpc.name"
 }
 
-variable "subnet" {
+variable "subnetname" {
   type        = string
-  description = "subnet.self_link or subnet.name"
+  description = "subnet.name"
+}
+
+variable "subnetlink" {
+  type        = string
+  description = "subnet.self_link"
 }
 
 variable "region" {
