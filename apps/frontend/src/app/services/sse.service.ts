@@ -20,7 +20,7 @@ export class SseService {
 
       source.onerror = (event: MessageEvent) => {
         console.log('SSE error message!');
-        // Do anything else, throwing an error in the observable would stop the Observable work
+        // Do nothing else, throwing an error in the observable would stop the Observable work
         // But even after an error there might be state changes we would like to detect
       }
     });

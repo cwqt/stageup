@@ -153,6 +153,8 @@ module "backend" {
   region        = local.region
   image         = "eu.gcr.io/${var.gcp_project_id}/core-backend:${local.name}-latest"
   vpc_connector = google_vpc_access_connector.vpc_connector.name
+    # this timeout needs to be this long to enable SSE to work properly
+  timeout       = 1200
 
   env = {
     NODE_ENV           = local.NODE_ENV
@@ -168,7 +170,7 @@ module "backend" {
     FRONTEND_ENDPOINT  = "/" # managed by load balancer / nginx
     FRONTEND_PORT      = 8080
     BACKEND_PORT       = 8080
-    MUX_LIVE_STREAM_TEST_MODE   = "false"
+    LIVE_STREAM_TEST   = "false"
     # secrets -------------------------------------------------------------------------
     # TODO: support different workspaces different secret keys
     MUX_SECRET_KEY                       = module.secrets.MUX_SECRET_KEY
@@ -203,9 +205,7 @@ module "frontend" {
   allow_public_access = true
   port                = 80
   # this timeout needs to be this long to enable SSE to work properly
-  # 14400s = 4h which should be sufficient in case of a long stream as well
-  # Apparently the highest value you can define is 3600
-  timeout             = 3600
+  timeout             = 1200
   max_instances       = var.core == "prod" ? 2 : 1
   min_instances       = 1
   map_domains         = [local.load_balancer_host]
