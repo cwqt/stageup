@@ -8,7 +8,8 @@ import {
   ITicketStub,
   IUser,
   PerformanceType,
-  TicketType
+  TicketType,
+  Visibility
 } from '@core/interfaces';
 import { UserType } from '../../environment';
 import { Stories } from '../../stories';
@@ -38,13 +39,16 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
   });
 
   it('Should create a performance', async () => {
-    perf = await Stories.actions.performances.createPerformance(host, {
+    perf = await Stories.actions.performances.createPerformance(host._id, PerformanceType.Vod);
+    const performanceDetails = {
       name: 'Shakespeare',
-      description: 'To be or not to be',
+      short_description: 'To be or not to be',
+      long_description: 'That is the question',
       genre: Genre.Dance,
-      type: PerformanceType.Vod,
       publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
-    });
+      visibility: Visibility.Public
+    };
+    perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);
   });
 
   it('Should create a paid ticket on a performance', async () => {
@@ -57,7 +61,7 @@ describe('As a user-host, I want to CRUD performance tickets', () => {
       start_datetime: timestamp(),
       end_datetime: timestamp() + 10000000,
       is_visible: true,
-      is_quantity_visible: true,
+      is_quantity_visible: true
       // dono_pegs: []
     });
 

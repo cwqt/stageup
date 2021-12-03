@@ -13,16 +13,13 @@ import { AppService } from '@frontend/services/app.service';
 })
 export class PerformanceBrochureBannerComponent implements OnInit {
   @ViewChild('trailer') trailerPlayer?: PlayerComponent;
-  @Input('performance') performanceCacheable: ICacheable<DtoPerformance>
+  @Input('performance') performanceCacheable: ICacheable<DtoPerformance>;
 
   _brochureSharingUrl: SocialSharingComponent['url'];
-  _performanceTrailer: IAssetStub<AssetType.Video>;  
+  _performanceTrailer: IAssetStub<AssetType.Video>;
   _thumbnail: IAssetStub<AssetType.Image>;
 
-  constructor(
-    private appService: AppService,
-    @Inject(LOCALE_ID) public locale: string
-  ) {}
+  constructor(private appService: AppService, @Inject(LOCALE_ID) public locale: string) {}
 
   async ngOnInit() {}
 
@@ -30,10 +27,9 @@ export class PerformanceBrochureBannerComponent implements OnInit {
     return this.performanceCacheable.data?.data;
   }
 
-  get brochureSharingUrl () {
+  get brochureSharingUrl() {
     if (!this._brochureSharingUrl) {
-      const loc: string = this.locale ? `/${this.locale}` : '';
-      this._brochureSharingUrl = `${this.appService.environment.frontend_url}${loc}/events/show/${this.performance._id}`;
+      this._brochureSharingUrl = `${this.appService.frontendUrl}/performances/show/${this.performance._id}`;
     }
     return this._brochureSharingUrl;
   }

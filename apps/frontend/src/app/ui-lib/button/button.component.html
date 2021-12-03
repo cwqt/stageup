@@ -5,6 +5,7 @@
   [disabled]="disabled"
   [class.ui-button--transparent]="transparent"
   [ngClass]="['ui-button--' + size, 'ui-button--' + kind]"
+  [style]="{ height: height }"
   (click)="onClick($event); animateRipple($event)"
 >
   <mat-spinner *ngIf="loading" [diameter]="size == 's' ? 15 : 20"></mat-spinner>

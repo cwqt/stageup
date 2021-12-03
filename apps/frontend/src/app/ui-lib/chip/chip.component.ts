@@ -7,6 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ChipComponent implements OnInit {
   @Input() kind:
+    | 'primary'
     | 'red'
     | 'magenta'
     | 'purple'

@@ -1,5 +1,7 @@
-<div class="app-social-sharing flex flex-row bg-white rounded shadow overflow-hidden">
+<div class="app-social-sharing flex flex-row bg-white rounded overflow-hidden">
   <div *ngFor="let social of socials" class="p-2 hover:bg-gray-100 cursor-pointer transition duration-200">
-    <ui-icon size="l" (click)="callbacks[social](); onLinkClick.emit()">{{ icons[social] }}</ui-icon>
+    <ui-icon [ngClass]="['icon--' + kind]" size="l" (click)="callbacks[social](); onLinkClick.emit()">{{
+      icons[social]
+    }}</ui-icon>
   </div>
 </div>

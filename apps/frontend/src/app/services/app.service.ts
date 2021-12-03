@@ -39,6 +39,10 @@ export class AppService {
   // true means it was - false means just route params altered - query param changes are ignored
   $routeAltered: Subject<RouteChange> = new Subject();
 
+  get frontendUrl(): string {
+    return this.locale ? `${this.environment.frontend_url}/${this.locale}` : this.environment.frontend_url;
+  }
+
   constructor(
     private http: HttpClient,
     private authenticationService: AuthenticationService,

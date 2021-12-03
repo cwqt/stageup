@@ -1,73 +1,83 @@
-<app-update-performance [cacheable]="performance"></app-update-performance>
-
-<ui-hr></ui-hr>
-
-<div class="flex items-center justify-between">
-  <div class="mr-4">
-    <b i18n>Schedule</b>
-    <p i18n>Update the start and end date for your event.<br /></p>
-  </div>
-  <ui-form class="flex-1" [form]="publicityPeriodForm"></ui-form>
+<ui-button class="float-right -mt-12" (click)="goToPerformance()" [disabled]="performanceIsDraft" icon="launch" i18n
+  >Preview Event</ui-button
+>
+<div class="flex items-center mt-4 mb-8 mt-20 clear-both">
+  <h1 class="mb-0" i18n>Event Details</h1>
+  <ui-chip class="chip ml-4 capitalize" [kind]="'primary'">{{ performanceType }}</ui-chip>
 </div>
 
-<div class="flex items-center justify-between">
-  <div class="mr-4">
-    <b i18n>Visibility</b>
-      <!-- Host needs to be onboarded before going public -->
-      <p *ngIf="!host.is_onboarded" i18n>
-        You must first finish the <a routerLink="/dashboard">onboarding process</a> before any content can be made
-        Public<br />
-      </p>
-      <ng-container *ngIf="host.is_onboarded">
-        <!-- Performance needs a trailer or 2 thumbnails to be made public -->
-        <p *ngIf="!minimumAssetsMet" i18n>
-          A performance needs to have a trailer <b>or</b> a minimum of two images in order to make it public. Head to
-          the <a [routerLink]="'/dashboard/events/' + performance.data.data._id + '/media'">media</a> section to
-          start uploading now!
-          <br />
-        </p>
-        <ng-container *ngIf="minimumAssetsMet">
-          <!-- VoD performances can only be made public after the video has been processed from mux -->
-          <p *ngIf="vod && !vod.location" i18n>
-            VoD Asset is still processing. Once complete you can set this performance to public.
-            <br />
-          </p>
-          <p *ngIf="performanceMeetsAllPublicityRequirements" i18n> Set whether a performance is visible across the platform </p>
-          <br />
-        </ng-container>
-      </ng-container>
+<div class="relative">
+  <mat-tab-group #tabs>
+    <mat-tab i18n-label label="General">
+      <ui-form class="mt-8 max-w-6xl" *ngIf="performanceGeneralForm" [form]="performanceGeneralForm"></ui-form>
+    </mat-tab>
+    <mat-tab i18n-label label="Release">
+      <div class="mt-8 max-w-6xl">
+        <ui-form *ngIf="performanceReleaseForm" [form]="performanceReleaseForm"></ui-form>
+        <div class="mt-3">
+          <app-host-performance-details-visibility
+            [performance]="performanceData"
+            [host]="host"
+            (switchEmitter)="updateVisibility($event)"
+          ></app-host-performance-details-visibility>
+        </div>
+      </div>
+    </mat-tab>
+    <!-- Links tab, only to be shown if the performance is not a draft -->
+    <mat-tab i18n-label label="Links" *ngIf="!performanceIsDraft">
+      <app-host-performance-details-links
+        class="mt-8 max-w-6xl"
+        [cacheable]="performance"
+      ></app-host-performance-details-links>
+    </mat-tab>
+    <!-- Keys tab, only to be shown if the performance is a livestream and if not a draft -->
+    <mat-tab *ngIf="performanceType == 'livestream' && !performanceIsDraft" i18n-label label="Keys">
+      <app-host-performance-details-keys
+        class="mt-8 max-w-6xl"
+        [cacheable]="performance"
+        [streamKey]="performanceHostInfo.data?.stream_key"
+      ></app-host-performance-details-keys>
+    </mat-tab>
+  </mat-tab-group>
+  <div class="absolute right-0 top-0 flex z-50">
+    <ui-button (click)="savePerformanceDetails()" kind="primary" i18n> Save </ui-button>
+    <div
+      class="flex items-center cursor-pointer"
+      [popper]="managePerformanceDropdown"
+      [popperShowOnStart]="false"
+      [popperHideOnClickOutside]="true"
+      [popperHideOnScroll]="true"
+      [popperApplyClass]="'user-dropdown-menu'"
+      popperTrigger="click"
+      popperPlacement="top"
+    >
+      <ui-icon class="text-gray-500" [size]="42">overflow-menu--vertical</ui-icon>
+    </div>
   </div>
-  <ui-form *ngIf="performanceMeetsAllPublicityRequirements" [form]="visibilityForm"></ui-form>
 </div>
 
-<ng-container *ngIf="stream">
-  <h2 i18n>Stream Key</h2>
-  <ui-hr></ui-hr>
-  <p i18n>Use this key in your streaming application to broadcast your performance.</p>
+<p class="hidden" #checkboxText>
+  I'm in compliance with the licenses required to stream this production. I have read the uploaders
+  <a [routerLink]="['/documents/terms-and-conditions']" target="_blank">terms and conditions</a>
+  to stream a production legally.
+</p>
 
-  <ui-button
-    (click)="readStreamingKey()"
-    *ngIf="!phiData"
-    [loading]="performanceHostInfo.loading"
-    [disabled]="performanceHostInfo.loading"
-    i18n
-  >
-    Show Key
-  </ui-button>
-
-  <div *ngIf="phiData" class="p-4 flex align-middle select-all bg-gray-50 rounded">
-    <pre class="inline h-6 my-auto">{{ phiData.stream_key }}</pre>
-    <ui-button class="ml-auto" (click)="copyStreamKeyToClipboard()">{{ copyMessage }}</ui-button>
+<popper-content #managePerformanceDropdown class="flex flex-col">
+  <div class="flex flex-col">
+    <ng-container *ngIf="!performanceIsCancelled; else showRestoreButton">
+      <ui-button
+        class="border-0"
+        i18n-matTooltip
+        matTooltip="Cannot cancel a live performance"
+        [matTooltipDisabled]="!performanceIsLive"
+        [disabled]="performanceIsLive"
+        (click)="cancelPerformance()"
+        i18n
+        >Cancel Performance</ui-button
+      >
+    </ng-container>
+    <ng-template #showRestoreButton>
+      <ui-button class="border-0" (click)="restorePerformance()" i18n>Restore Performance</ui-button>
+    </ng-template>
   </div>
-</ng-container>
-
-<ng-container *ngIf="vod">
-  <h2>VoD</h2>
-  <ui-hr></ui-hr>
-  <ng-container *ngIf="vod.location; else noLocation">
-    <p i18n>VoD asset is processed and viewable.</p>
-  </ng-container>
-  <ng-template #noLocation>
-    <p i18n>VoD Asset is still processing...</p>
-  </ng-template>
-</ng-container>
+</popper-content>

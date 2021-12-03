@@ -1,3 +1,4 @@
+import { UnsavedChangesGuard } from './_helpers/unsaved-changes.guard';
 import { AdminGdprDocumentsComponent } from './routes/admin-panel/admin-gdpr-documents/admin-gdpr-documents.component';
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
 import { NgModule } from '@angular/core';
@@ -104,26 +105,40 @@ const LOGGED_IN_ROUTES: Routes = [
       },
       { path: 'team', component: HostMembersComponent, data: { breadcrumb: $localize`Team` } },
       {
-        path: 'events', component: HostPerformancesComponent, data: { breadcrumb: $localize`Events` },
+        path: 'events',
+        component: HostPerformancesComponent,
+        data: { breadcrumb: $localize`Events` },
         children: [
           { path: '', component: HostListPerformancesComponent },
           {
             path: `:${RP.PerformanceId}`,
             component: HostPerformanceComponent,
             children: [
-              { path: '', component: HostPerformanceDetailsComponent, data: { breadcrumb: $localize`Details` } },
-              { path: 'overview', component: HostPerformanceOverviewComponent, data: { breadcrumb: $localize`Overview` } },
-              { path: 'ticketing', component: HostPerformanceTicketingComponent, data: { breadcrumb: $localize`Ticketing` } },
+              {
+                path: '',
+                component: HostPerformanceDetailsComponent,
+                data: { breadcrumb: $localize`Details` },
+                canDeactivate: [UnsavedChangesGuard]
+              },
+              { path: 'overview',
+                component: HostPerformanceOverviewComponent,
+                data: { breadcrumb: $localize`Overview` }
+              },
+              {
+                path: 'ticketing',
+                component: HostPerformanceTicketingComponent,
+                data: { breadcrumb: $localize`Ticketing` }
+              },
               { path: 'media', component: HostPerformanceMediaComponent, data: { breadcrumb: $localize`Media` } },
 
               // { path: "analytics", HostPerformanceDetailsComponent },
               { path: '**', component: NotFoundComponent }
             ]
-          },
-        ],
+          }
+        ]
       },
       { path: 'analytics', component: HostAnalyticsComponent, data: { breadcrumb: $localize`Analytics` } },
-      { path: 'marketing', component: HostMarketingComponent, data: { breadcrumb: $localize`Marketing` }, },
+      { path: 'marketing', component: HostMarketingComponent, data: { breadcrumb: $localize`Marketing` } },
       {
         matcher: hostMatcher,
         component: HostProfileComponent,

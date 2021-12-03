@@ -24,16 +24,21 @@
       width: 50px;
     }
 
-    app-header-bar {
-      display: block;
-      height: auto;
-      width: 100%;
-      z-index: 99;
-      position: relative;
-    }
+    .content-container {
+      padding-left: 35px;
+      padding-right: 35px;
 
-    .router-outlet {
-      overflow: visible !important;
+      app-header-bar {
+        display: block;
+        height: auto;
+        width: 100%;
+        z-index: 99;
+        position: relative;
+      }
+
+      .router-outlet {
+        overflow: visible !important;
+      }
     }
   }
 }

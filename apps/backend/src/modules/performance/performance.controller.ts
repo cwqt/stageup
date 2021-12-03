@@ -69,7 +69,8 @@ import {
   PlatformConsentOpt,
   TicketType,
   Visibility,
-  PerformanceStatus
+  PerformanceStatus,
+  PerformanceType
 } from '@core/interfaces';
 import Mux from '@mux/mux-node';
 import { RedisClient } from 'redis';
@@ -102,13 +103,13 @@ export class PerformanceController extends ModuleController {
 
   // router.post <IPerf> ("/hosts/:hid/performances", Perfs.createPerformance());
   createPerformance: IControllerEndpoint<IPerformance> = {
-    // validators: { body: Validators.Objects.DtoCreatePerformance },
+    validators: { body: object({ type: enums(enumToValues(PerformanceType) as PerformanceType[]) }) },
     authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
     controller: async req => {
       const host = await getCheck(Host.findOne({ _id: req.params.hid }));
 
       return await transact(async txc => {
-        const performance = await new Performance(req.body, host).save();
+        const performance = await new Performance(req.body.type, host).save();
         await performance.setup(txc);
 
         // Temporary single asset per performance; either vod or stream, at-least
@@ -289,18 +290,39 @@ export class PerformanceController extends ModuleController {
   };
 
   updatePerformance: IControllerEndpoint<IPerformance> = {
+    validators: {
+      body: Validators.Objects.DtoPerformanceDetails
+    },
     authorisation: AuthStrat.runner(
       { hid: IdFinderStrat.findHostIdFromPerformanceId },
       AuthStrat.hasHostPermission(HostPermission.Editor, map => map.hid)
     ),
     controller: async req => {
-      const perf = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: ['asset_group'] }));
-      await perf.update({
-        name: req.body.name,
-        description: req.body.description
-      });
+      const performance = await getCheck(Performance.findOne({ _id: req.params.pid }, { relations: { host: true } }));
 
-      return perf.toFull();
+      // The act of saving the performance is only possible if the host has checked the consent box
+      // Will only be triggered the first time the host saves
+      const consent = await this.gdprService.readHostUploadConsent(performance.host, performance);
+      if (!consent) await this.gdprService.addHostUploadConsent(performance.host, performance);
+
+      const { publicity_period: newPublicityPeriod } = req.body;
+
+      // Set the performance status IF the publicity period has changed or if it was previously a 'draft'
+      if (
+        newPublicityPeriod.start !== performance.publicity_period.start ||
+        newPublicityPeriod.end !== performance.publicity_period.end ||
+        performance.status == PerformanceStatus.Draft
+      ) {
+        // TODO: In the near future the status of the performance will no longer relate to the publicity period, but instead the 'showings times'.
+        // The publicity period will instead relate to the period of time it is visible on the site. However, left like this for now until updated.
+        req.body['status'] =
+          newPublicityPeriod.start && newPublicityPeriod.end
+            ? PerformanceStatus.Scheduled
+            : PerformanceStatus.PendingSchedule;
+      }
+
+      await performance.update(req.body);
+      return performance.toFull();
     }
   };
 
@@ -832,31 +854,33 @@ export class PerformanceController extends ModuleController {
     }
   };
 
-  updatePublicityPeriod: IControllerEndpoint<IPerformance> = {
-    validators: { body: object({ start: Validators.Fields.timestamp, end: Validators.Fields.timestamp }) },
-    authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
-    controller: async req => {
-      const performance = await getCheck(
-        Performance.findOne({ where: { _id: req.params.pid }, relations: { tickets: true } })
-      );
+  // Commented for now so that the logic can be used when 'Showing times' is implemented.
 
-      const period: IPerformance['publicity_period'] = req.body;
+  // updatePublicityPeriod: IControllerEndpoint<IPerformance> = {
+  //   validators: { body: object({ start: Validators.Fields.timestamp, end: Validators.Fields.timestamp }) },
+  //   authorisation: AuthStrat.hasHostPermission(HostPermission.Editor),
+  //   controller: async req => {
+  //     const performance = await getCheck(
+  //       Performance.findOne({ where: { _id: req.params.pid }, relations: { tickets: true } })
+  //     );
 
-      // https://alacrityfoundationteam31.atlassian.net/browse/SU-901
-      // The schedule for a performance should never be set before the dates set for selling tickets.
-      // It could either coincide with the ticket schedule or start after the ticket period is over.
-      if (performance.tickets.some(ticket => !ticket.is_cancelled && ticket.start_datetime < period.start))
-        throw new ErrorHandler(HTTP.BadRequest, '@@error.publicity_period_outside_ticket_period');
+  //     const period: IPerformance['publicity_period'] = req.body;
 
-      performance.publicity_period = req.body;
+  //     // https://alacrityfoundationteam31.atlassian.net/browse/SU-901
+  //     // The schedule for a performance should never be set before the dates set for selling tickets.
+  //     // It could either coincide with the ticket schedule or start after the ticket period is over.
+  //     if (performance.tickets.some(ticket => !ticket.is_cancelled && ticket.start_datetime < period.start))
+  //       throw new ErrorHandler(HTTP.BadRequest, '@@error.publicity_period_outside_ticket_period');
 
-      performance.status = PerformanceStatus.Scheduled;
-      await performance.save();
-      await this.bus.publish('performance.publicity_period_changed', { performance_id: performance._id }, req.locale);
+  //     performance.publicity_period = req.body;
 
-      return performance.toFull();
-    }
-  };
+  //     performance.status = PerformanceStatus.Scheduled;
+  //     await performance.save();
+  //     await this.bus.publish('performance.publicity_period_changed', { performance_id: performance._id }, req.locale);
+
+  //     return performance.toFull();
+  //   }
+  // };
 
   setRating: IControllerEndpoint<void> = {
     validators: {

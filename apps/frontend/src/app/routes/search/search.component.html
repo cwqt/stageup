@@ -36,8 +36,8 @@
         <div class="w-2/3 p-4 flex flex-col">
           <h1 class="text-gray-900 font-bold text-2xl">{{ results?.name }}</h1>
           <quill-view
-            *ngIf="results?.description"
-            [content]="results.description"
+            *ngIf="results?.short_description"
+            [content]="results.short_description"
             format="object"
             theme="snow"
           ></quill-view>

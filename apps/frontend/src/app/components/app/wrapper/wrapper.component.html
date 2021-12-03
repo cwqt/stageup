@@ -6,10 +6,12 @@
       <path d="M 0 4 L 0 0 L 4 0 C 1 0 0 1 0 4" fill="#07192c" />
     </svg>
 
-    <app-header-bar class="container mx-auto px-4 py-2 mt-4" [myself]="myself"></app-header-bar>
+    <div class="content-container">
+      <app-header-bar class="container py-2 mt-4" [myself]="myself"></app-header-bar>
 
-    <!-- Pages should use app-page -->
-    <router-outlet></router-outlet>
+      <!-- Pages should use app-page -->
+      <router-outlet></router-outlet>
+    </div>
 
     <app-footer></app-footer>
   </div>

@@ -38,15 +38,15 @@ export class HostListPerformancesComponent implements OnInit {
       columns: [
         {
           label: $localize`Name`,
-          accessor: p => p.name
+          accessor: p => p.name || '-'
         },
         {
           label: $localize`Event Schedule Start`,
-          accessor: p => i18n.date(unix(p.publicity_period.start), this.locale)
+          accessor: p => (p.publicity_period.start ? i18n.date(unix(p.publicity_period.start), this.locale) : '-')
         },
         {
           label: $localize`Event Schedule End`,
-          accessor: p => i18n.date(unix(p.publicity_period.end), this.locale)
+          accessor: p => (p.publicity_period.end ? i18n.date(unix(p.publicity_period.end), this.locale) : '-')
         },
         {
           label: $localize`Visibility`,
@@ -66,7 +66,8 @@ export class HostListPerformancesComponent implements OnInit {
               [PerformanceStatus.Deleted]: 'gray',
               [PerformanceStatus.Live]: 'red',
               [PerformanceStatus.PendingSchedule]: 'blue',
-              [PerformanceStatus.Scheduled]: 'green'
+              [PerformanceStatus.Scheduled]: 'green',
+              [PerformanceStatus.Draft]: 'cool-grey'
             };
 
             return colors[p.status];

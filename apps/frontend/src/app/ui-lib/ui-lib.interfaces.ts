@@ -9,7 +9,8 @@ export enum ThemeKind {
   Warning = 'warning',
   Danger = 'danger',
   ClearDark = 'clear-dark',
-  ClearOutline = 'clear-outline' //TODO: resolve and use the optional input for outline or fill when merging
+  ClearOutline = 'clear-outline', //TODO: resolve and use the optional input for outline or fill when merging
+  PrimaryLight = 'primary-light'
 }
 
 export enum ThemeDimension {
