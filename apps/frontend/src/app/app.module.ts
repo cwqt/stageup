@@ -113,9 +113,7 @@ import { HostMemberPermissionsDialogComponent } from './routes/host/host-members
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostPerformanceDrawerComponent } from './components/app/drawer-components/host-performance-drawer/host-performance-drawer.component';
 import { SharePerformanceDialogComponent } from './routes/host/host-performance/share-performance-dialog/share-performance-dialog.component';
-import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
-import { UserTypeClarificationComponent } from './routes/landing/user-type-clarification/user-type-clarification.component';
 import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
@@ -269,11 +267,9 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostAddMemberComponent,
     HostMemberPermissionsDialogComponent,
     HostPerformanceComponent,
-    UserTypeClarificationComponent,
     HostPerformanceDrawerComponent,
     ChangeImageComponent,
     SharePerformanceDialogComponent,
-    HostLandingComponent,
     HostPaymentsComponent,
     DialogEntryComponent,
     UserRegisterComponent,

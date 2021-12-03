@@ -30,7 +30,6 @@ import { HostProfilePatronageComponent } from './routes/host/host-profile/host-p
 import { HostProfileComponent } from './routes/host/host-profile/host-profile.component';
 import { HostSettingsComponent } from './routes/host/host-settings/host-settings.component';
 import { HostComponent } from './routes/host/host.component';
-import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { ForgotPasswordComponent } from './routes/landing/login/forgot-password/forgot-password.component';
 import { LoginComponent } from './routes/landing/login/login.component';
 import { ResetPasswordComponent } from './routes/landing/login/reset-password/reset-password.component';
@@ -178,17 +177,6 @@ const LOGGED_IN_ROUTES: Routes = [
     RouterModule.forRoot(
       [
         { path: `ui`, component: TestbedComponent },
-        {
-          path: 'host',
-          component: HostLandingComponent,
-          children: [
-            {
-              path: 'register',
-              component: DialogEntryComponent,
-              data: { open_dialog: RegisterDialogComponent, config: { data: { type: 'business' }, width: '600px' } }
-            }
-          ]
-        },
         {
           path: `redirect`,
           component: RedirectComponent
