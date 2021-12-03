@@ -22,13 +22,11 @@ export class SSEHubManagerProvider implements Provider<SSE> {
   connection;
   config = {};
   log: Logger;
-  //bus: EventBus;
   private hubs: { [index: string]: Hub };
 
   constructor() {
     this.hubs = {};
     this.log = Container.get(LOGGING_PROVIDER);
-    //this.bus = Container.get(EVENT_BUS_PROVIDER)
   }
 
   async connect() {
@@ -63,12 +61,8 @@ export class SSEHubManagerProvider implements Provider<SSE> {
   middleware(id: (req: Request) => string, options: Partial<ISseMiddlewareOptions> = {}): RequestHandler {
     return function middleware(req: Request, res: ISseResponse, next: NextFunction): void {
       const identifier = id(req);
-      let isNewHub = false;
 
-      if (!this.get(identifier)) {
-        this.create(identifier);
-        isNewHub = true;
-      }
+      if (!this.get(identifier)) this.create(identifier);
 
       const hub = this.get(identifier);
 
@@ -78,8 +72,6 @@ export class SSEHubManagerProvider implements Provider<SSE> {
       // Unregister the user from the hub when its connection gets closed (close=client, finish=server)
       res.once('close', () => hub.unregister(res.sse));
       res.once('finish', () => hub.unregister(res.sse));
-
-      // if(isNewHub) 
 
       next();
     }.bind(this); // ctx bind to class

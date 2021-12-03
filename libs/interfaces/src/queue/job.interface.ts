@@ -1,7 +1,7 @@
 import { JobsOptions } from 'bullmq';
 import { Attachment } from 'nodemailer/lib/mailer';
 
-import { IAsset, IHost, IHostPrivate, IInvoice, ILocale, IPerformance, IUserMarketingInfo } from '@core/interfaces';
+import { IHost, IHostPrivate, IInvoice, ILocale, IPerformance, IUserMarketingInfo } from '@core/interfaces';
 
 export const JobTypes = [
   'send_email',
@@ -10,8 +10,7 @@ export const JobTypes = [
   'host_invoice_pdf',
   'host_audience_csv',
   'collect_performance_analytics',
-  'collect_host_analytics',
-  'ping_sse'
+  'collect_host_analytics'
 ] as const;
 
 export type JobType = typeof JobTypes[number];
@@ -20,9 +19,6 @@ export const EmailReminderTypes = ['24_HOURS', '15_MINUTES'] as const;
 export type EmailReminderType = typeof EmailReminderTypes[number];
 
 export type JobData = {
-  ['ping_sse']: {
-    asset_id: IAsset['_id'];
-  };
   ['collect_performance_analytics']: {
     performance_id: IPerformance['_id'];
   };
