@@ -18,6 +18,7 @@ http {
 
   access_log /var/log/nginx/access.log main;
   sendfile on;
+  keepalive_timeout 65;
 
   map $http_accept_language $accept_language {
     ~*^en en;
