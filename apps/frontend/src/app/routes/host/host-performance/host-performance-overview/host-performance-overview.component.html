@@ -1,6 +1,6 @@
 <div body>
   <!-- copy and share event link -->
-  <div class="flex">
+  <div *ngIf="numberOfHostEvents > 1" class="flex">
     <div class="bg-white rounded-md w-72 h-9.5">
       <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
     </div>
