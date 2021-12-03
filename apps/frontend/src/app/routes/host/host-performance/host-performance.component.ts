@@ -42,6 +42,14 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
   }
 
+  get performanceData() {
+    return this.performance.data?.data;
+  }
+
+  gotoPerformance() {
+    this.appService.navigateTo(`/events/${this.performanceId}`);
+  }
+
   ngOnDestroy() {
     this.performanceService.$activeHostPerformanceId.next(null);
   }

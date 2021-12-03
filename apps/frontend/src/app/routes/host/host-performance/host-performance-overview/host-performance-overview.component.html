@@ -1,42 +1,9 @@
 <div body>
-  <!-- TODO: replace with copy-box reusable component -->
   <!-- copy and share event link -->
-  <div *ngIf="numberOfHostEvents > 1" class="flex flex-row space-x-2 mb-2">
-    <div class="bg-white w-72 h-9.5 border-solid border-2 rounded">
-      <input
-        class="w-60 pt-2 px-4 bg-transparent full outline-none text-blue-400"
-        type="text"
-        placeholder="copy event URL"
-        [value]="eventURL"
-        #eventLink
-      />
-
-      <button class="p-2.5 float-right cursor-pointer" [cdkCopyToClipboard]="eventURL">
-        <img [src]="'/assets/content-copy.svg'" class="w-5" alt="" />
-      </button>
-    </div>
-
-    <ui-button
-      id="shareButton"
-      [popper]="shareMenu"
-      [popperTrigger]="'click'"
-      [popperPositionFixed]="true"
-      [popperPreventOverflow]="false"
-      [popperPlacement]="'bottom'"
-      [transparent]="true"
-      size="s"
-      class="pt-0.5 border-none w-9 h-9.5 rounded-none"
-    >
-      <ui-icon size="l" class="text-pink-500">share</ui-icon>
-    </ui-button>
-
-    <popper-content #shareMenu class="share-menu" (click)="$event.stopPropagation()">
-      <app-social-sharing [url]="eventURL"></app-social-sharing>
-    </popper-content>
-  </div>
+  <app-copy-box *ngIf="numberOfHostEvents > 1" [textToBeCopied]="eventURL"></app-copy-box>
 
   <!-- welcome banner -->
-  <div *ngIf="numberOfHostEvents == 1" class="clear-both relative">
+  <div *ngIf="numberOfHostEvents == 1" class="clear-both relative mb-1">
     <img [src]="'/assets/event-welcome-banner.svg'" class="w-full rounded" alt="" />
 
     <!-- set schedule -->
@@ -53,39 +20,22 @@
 
     <!-- TODO: replace with copy-box reusable component -->
     <!-- copy and share event link -->
-    <div *ngIf="!isPendingSchedule" class="flex flex-col pl-40 mt-10 absolute inset-0">
+
+    <div *ngIf="!isPendingSchedule" class="flex flex-col pl-48 mt-10 absolute inset-0">
       <h3 class="text-white opacity-100" i18n>
         Congratulations, your first event is ready. Share it with your audience.
       </h3>
       <p class="text-white mb-1" i18n>Share your event's link</p>
-      <div class="flex flex-row space-x-1">
+      <div class="flex">
         <div class="bg-white rounded-md w-72 h-9.5">
-          <input
-            class="w-60 p-2 px-4 bg-transparent full outline-none text-blue-400"
-            type="text"
-            placeholder="copy event UL"
-            [value]="eventURL"
-            #eventLink
-          />
-
-          <button class="p-2 float-right cursor-pointer" [cdkCopyToClipboard]="eventURL">
-            <img [src]="'/assets/content-copy.svg'" class="w-5" alt="" />
-          </button>
+          <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
         </div>
-        <ui-button
-          id="shareButton"
-          [popper]="shareMenu"
-          [popperTrigger]="'click'"
-          [popperPositionFixed]="true"
-          [popperPreventOverflow]="false"
-          [popperPlacement]="'bottom'"
-          [transparent]="true"
-          size="s"
-          class="pt-0.5 border-none w-9 h-9.5 rounded-md bg-white"
-        >
-          <ui-icon size="m" class="text-pink-500">share</ui-icon>
-        </ui-button>
+        <div class="flex ml-3 share-links">
+          <ui-button height="50px" kind="primary-light"><ui-icon>share</ui-icon></ui-button>
+          <app-social-sharing kind="primary" [url]="eventURL"></app-social-sharing>
+        </div>
       </div>
+
       <popper-content #shareMenu class="share-menu" (click)="$event.stopPropagation()">
         <app-social-sharing [url]="eventURL"></app-social-sharing>
       </popper-content>

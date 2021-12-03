@@ -256,7 +256,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
   }
 
   goToPerformance(): void {
-    this.appService.navigateTo(`/performances/${this.performanceData._id}`);
+    this.appService.navigateTo(`/events/${this.performanceData._id}`);
   }
 
   getFormPublicityPeriod(): { start: number; end: number } {
