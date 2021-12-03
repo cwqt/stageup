@@ -1,8 +1,8 @@
-<div class="flex justify-end items-center">
+<div class="flex justify-end items-center mt-5">
   <ui-form [form]="periodForm"></ui-form>
 </div>
 
-<div class="grid gap-3 grid-cols-3 w-full overflow-x-scroll">
+<div class="grid gap-3 grid-cols-3 w-full">
   <ng-container *ngFor="let entity of snapshot | keyvalue">
     <app-host-analytics-header-item
       class="m-1"
