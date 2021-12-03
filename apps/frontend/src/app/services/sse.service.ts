@@ -15,24 +15,13 @@ export class SseService {
       // onmessage only fires for messages of event "message", i.e. no type
       // https://stackoverflow.com/a/9936764
       source.onmessage = (event: MessageEvent) => {
-        console.log('message!');
-        console.log(event);
         this.zone.run(() => { observer.next(JSON.parse(event.data) as SseEvent<T>)});
-      }
-
-      source.addEventListener(
-        'message',
-        (event: MessageEvent) => {
-          console.log('event!');
-          console.log(event);
-          return this.zone.run(() => { observer.next(JSON.parse(event.data) as SseEvent<T>)});
-        }
-      );
+      };
 
       source.onerror = (event: MessageEvent) => {
-        console.log('error!')
-        console.log(event);
-        // return this.zone.run(() => observer.error(event));
+        console.log('SSE error message!');
+        // Do anything else, throwing an error in the observable would stop the Observable work
+        // But even after an error there might be state changes we would like to detect
       }
     });
   }
