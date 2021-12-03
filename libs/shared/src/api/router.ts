@@ -62,7 +62,6 @@ export class AsyncRouter {
           try {
             const returnValue = await endpoint.controller(req);
 
-            // no more `lambda`
             endpoint.handler
               ? endpoint.handler(res, returnValue)
               : res.status(responseCode || HTTP.OK).json(returnValue);

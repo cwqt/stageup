@@ -76,7 +76,7 @@ export class PlayerComponent implements OnInit {
         // StageUp internal user ID
         viewer_user_id: this.myselfService.$myself.value?.user?._id || 'not-logged-in'
       }
-    });  
+    });
 
     return this.player;
   }

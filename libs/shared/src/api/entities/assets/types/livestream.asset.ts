@@ -27,7 +27,7 @@ export class LiveStreamAsset extends Asset<AssetType.LiveStream> implements Asse
       passthrough: JSON.stringify(super.createPassthroughData(owner)), // Passed through in webhook handlers
       reduced_latency: true, // https://mux.com/blog/reduced-latency-for-mux-live-streaming-now-available/
       simulcast_targets: [], // For 3rd party re-streaming
-      test: Env.MUX.MUX_LIVE_STREAM_TEST_MODE // No cost during testing/dev
+      test: Env.MUX.LIVE_STREAM_TEST_MODE // No cost during testing/dev
     });
 
     this.asset_identifier = stream.id;

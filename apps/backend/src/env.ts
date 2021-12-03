@@ -77,7 +77,7 @@ const Env: {
     SECRET_KEY: process.env.MUX_SECRET_KEY,
     WEBHOOK_SIGNATURE: process.env.MUX_WEBHOOK_SIGNATURE,
     DATA_ENV_KEY: process.env.MUX_DATA_ENV_KEY,
-    MUX_LIVE_STREAM_TEST_MODE: process.env.MUX_LIVE_STREAM_TEST_MODE === 'true'
+    LIVE_STREAM_TEST_MODE: process.env.LIVE_STREAM_TEST === 'true'
   },
   PG: {
     USERNAME: process.env.POSTGRES_USER,
