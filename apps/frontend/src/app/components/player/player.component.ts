@@ -43,16 +43,8 @@ export class PlayerComponent implements OnInit {
   }
 
   load(asset?: IAssetStub, token?: ISignedToken) {
-    console.log('in the load method');
     this.asset = asset;
     this.token = token;
-
-    console.log(`token:`);
-    console.log(this.token);
-    console.log('asset');
-    console.log(this.asset);
-    console.log('the result of the src:');
-    console.log(this.token ? `${this.asset.location}?token=${this.token.signed_token}` : this.asset.location);
 
     // this.setPoster();
     this.streamSources = [
@@ -65,41 +57,26 @@ export class PlayerComponent implements OnInit {
       }
     ];
 
-    console.log('after Stream source');
-
     const video = this.hlsjsDriver.load(this.streamSources[0].src);
-
-    console.log('after video is set');
-
-    console.log('logging mux');
-    console.log(mux);
 
     // Setup the MUX video monitor for capturing data stats (views)
     // https://docs.mux.com/guides/data/monitor-hls-js#2-initialize-mux-data
-    try {
-      mux.monitor(video, {
-        // debug: true,
-        hlsjs: this.hlsjsDriver.hls,
-        Hls: Hls,
-        data: {
-          env_key: this.appService.environment.mux_env_key,
-          player_init_time: Date.now(),
-          player_name: 'player',
-  
-          // https://docs.mux.com/guides/data/make-your-data-actionable-with-metadata#high-priority-configurable-metadata
-          // StageUp internal video ID
-          video_id: asset._id,
-          // StageUp internal user ID
-          viewer_user_id: this.myselfService.$myself.value?.user?._id || 'not-logged-in'
-        }
-      });
-      console.log(`the environment key is this: ${this.appService.environment.mux_env_key}`);
-    } catch (error) {
-      console.log('The error is with the mux monitor function');
-      console.log(error);
-      console.log(`the environment key is this: ${this.appService.environment.mux_env_key}`);
-    }
-    
+    mux.monitor(video, {
+      // debug: true,
+      hlsjs: this.hlsjsDriver.hls,
+      Hls: Hls,
+      data: {
+        env_key: this.appService.environment.mux_env_key,
+        player_init_time: Date.now(),
+        player_name: 'player',
+
+        // https://docs.mux.com/guides/data/make-your-data-actionable-with-metadata#high-priority-configurable-metadata
+        // StageUp internal video ID
+        video_id: asset._id,
+        // StageUp internal user ID
+        viewer_user_id: this.myselfService.$myself.value?.user?._id || 'not-logged-in'
+      }
+    });  
 
     return this.player;
   }
