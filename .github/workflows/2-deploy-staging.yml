@@ -137,7 +137,7 @@ jobs:
   slack:
     name: Post state on slack
     needs: [ctx, deploy]
-    if: always() # run regardless of deploy state
+    if: needs.ctx.outputs.short_sha != "" && always() # run regardless of deploy state
     runs-on: ubuntu-latest
     steps:
       - uses: cwqt/needs-result-lookup@v1.0.3
