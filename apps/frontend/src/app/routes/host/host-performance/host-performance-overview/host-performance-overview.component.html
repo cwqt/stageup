@@ -1,6 +1,14 @@
 <div body>
   <!-- copy and share event link -->
-  <app-copy-box *ngIf="numberOfHostEvents > 1" [textToBeCopied]="eventURL"></app-copy-box>
+  <div class="flex">
+    <div class="bg-white rounded-md w-72 h-9.5">
+      <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
+    </div>
+    <div class="flex ml-3 share-links">
+      <ui-button height="50px" kind="primary-light"><ui-icon>share</ui-icon></ui-button>
+      <app-social-sharing kind="primary" [url]="eventURL"></app-social-sharing>
+    </div>
+  </div>
 
   <!-- welcome banner -->
   <div *ngIf="numberOfHostEvents == 1" class="clear-both relative mb-1">

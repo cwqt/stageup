@@ -201,7 +201,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
           kind: ThemeKind.Secondary,
           callback: ref => {
             ref.close();
-            this.router.navigate(['dashboard/performances']);
+            this.router.navigate(['dashboard/events']);
           }
         }),
         new UiDialogButton({
