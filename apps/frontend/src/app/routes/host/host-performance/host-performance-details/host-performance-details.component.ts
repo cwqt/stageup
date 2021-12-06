@@ -255,10 +255,6 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     this.visibilityFormTouched = true;
   }
 
-  goToPerformance(): void {
-    this.appService.navigateTo(`/performances/${this.performanceData._id}`);
-  }
-
   getFormPublicityPeriod(): { start: number; end: number } {
     return {
       start: this.performanceReleaseForm.group.value.publicity_period.start

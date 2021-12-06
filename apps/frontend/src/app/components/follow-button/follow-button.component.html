@@ -2,7 +2,7 @@
   (click)="followEvent()"
   class="flex-grow rounded-full overflow-hidden"
   icon="{{ !userFollowing ? 'add' : '' }}"
-  kind="primary"
+  variant="primary"
 >
   <span i18n *ngIf="!userFollowing">Follow</span>
   <span i18n *ngIf="userFollowing">Unfollow</span>

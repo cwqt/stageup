@@ -12,7 +12,7 @@
           (click)="hostDetailsForm.submit()"
           [disabled]="!hostDetailsForm.group.valid"
           [loading]="hostDetailsForm.loading | async"
-          kind="primary"
+          variant="primary"
           i18n
           >Update</ui-button
         >
@@ -28,8 +28,7 @@
           </p>
           <ui-button
             [disabled]="myself.host_info.permissions == 'host_owner'"
-            kind="danger"
-            size="l"
+            variant="danger-l"
             class="mb-4"
             (click)="openLeaveHostConfirmationDialog()"
             i18n
