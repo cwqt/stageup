@@ -44,4 +44,8 @@ export class HostPerformanceOverviewComponent implements OnInit {
   get isPendingSchedule(): boolean {
     return this.performance.data.data.status == PerformanceStatus.PendingSchedule;
   }
+
+  navigateToSetSchedule() {
+    this.appService.navigateTo('/dashboard/events/' + this.performance.data.data._id)
+  }
 }

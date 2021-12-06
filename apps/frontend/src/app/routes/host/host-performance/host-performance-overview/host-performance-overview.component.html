@@ -17,16 +17,14 @@
     <!-- set schedule -->
     <div *ngIf="isPendingSchedule" class="flex flex-col pl-40 mt-10 absolute inset-0">
       <h3 class="text-white opacity-100" i18n>Congratulations, your created your first event.</h3>
-      <ui-button
-        [routerLink]="'/dashboard/events/' + performance.data.data._id"
-        kind="clear-outline"
-        icon="calendar"
+      <ui-button 
+        (click)="navigateToSetSchedule()"
+        kind="clear-outline" 
+        icon="calendar" 
         i18n
-        >Set Schedule</ui-button
-      >
+        >Set Schedule</ui-button>
     </div>
 
-    <!-- TODO: replace with copy-box reusable component -->
     <!-- copy and share event link -->
 
     <div *ngIf="!isPendingSchedule" class="flex flex-col pl-48 mt-10 absolute inset-0">
@@ -65,7 +63,7 @@
       <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
         <ui-button
           *ngIf="isPendingSchedule"
-          [routerLink]="'/dashboard/events/' + performance.data.data._id"
+          (click)="navigateToSetSchedule()"
           class="mx-16 my-12"
           kind="primary"
           icon="calendar"

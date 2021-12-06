@@ -138,9 +138,6 @@
     background-color: white;
     color: black
   }
-  .ripple {
-    background-color: rgba($color: #fff, $alpha: 0.2) !important;
-  }
   ::ng-deep .mat-spinner circle {
     stroke: $clr-base !important;
   }
