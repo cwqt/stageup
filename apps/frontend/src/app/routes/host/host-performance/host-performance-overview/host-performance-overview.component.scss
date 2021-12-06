@@ -2,10 +2,14 @@
     .chip{
         border-radius: 4px !important;
     }
-}
 
-.date-chip{
-    background-color: #E47290;
+    .share-links:hover ui-button button{
+        margin-right: 0.5rem
+    }
+
+    .share-links:hover ui-button button ui-icon{
+        color: #E47290;
+    }
 }
 
 .date-chip h4{
@@ -16,9 +20,6 @@
     opacity: 1;
     transform: translateX(0);
 }
-.share-links:hover ui-button{
-    opacity: 0;
-}
 
 ui-button {
     z-index: 1;
@@ -28,4 +29,8 @@ app-social-sharing {
     transform: translateX(-50px);
     opacity: 0;
     transition: 0.3s ease all;
+}
+
+h3{
+    font-size: 20px
 }

@@ -1,17 +1,19 @@
 import { Component, LOCALE_ID, OnInit, Inject } from '@angular/core';
 import { DtoPerformance, IHost, PerformanceStatus } from '@core/interfaces';
+import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { of } from 'rxjs';
 import { formatDate } from "@angular/common";
-import { ICacheable } from '@frontend/app.interfaces';
 import { AppService } from '@frontend/services/app.service';
 import { HostService } from '@frontend/services/host.service';
-
+import { PerformanceService } from '@frontend/services/performance.service';
 @Component({
   selector: 'app-host-performance-overview',
   templateUrl: './host-performance-overview.component.html',
   styleUrls: ['./host-performance-overview.component.scss']
 })
 export class HostPerformanceOverviewComponent implements OnInit {
+
+  constructor(@Inject(LOCALE_ID) public locale: string, private appService: AppService, private hostService: HostService, private performanceService: PerformanceService) {}
 
   host: IHost;
   performance: ICacheable<DtoPerformance>;
@@ -23,10 +25,20 @@ export class HostPerformanceOverviewComponent implements OnInit {
   scheduledEnd: string;
   dateFormat = "dd MMM yyyy";
 
-  constructor(@Inject(LOCALE_ID) public locale: string, private appService: AppService, private hostService: HostService) {}
+  get isPendingSchedule(): boolean {
+    return this.performance.data.data.status == PerformanceStatus.PendingSchedule;
+  }
+
+  get performanceData() {
+    return this.performance.data?.data;
+  }
+
+  get timezone(){
+    return new Date(this.performance.data.data.publicity_period.start).toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2]
+  }
 
   async ngOnInit() {
-
+    await cachize(this.performanceService.readPerformance(this.performance.data.data._id), this.performance);
     const envelope = await this.hostService.readHostPerformances(this.host._id, null);
     this.numberOfHostEvents = envelope.data.length;
     this.eventURL = `${this.appService.environment.frontend_url}/events/show/${this.performance.data.data._id}`
@@ -41,11 +53,8 @@ export class HostPerformanceOverviewComponent implements OnInit {
     });
   }
 
-  get isPendingSchedule(): boolean {
-    return this.performance.data.data.status == PerformanceStatus.PendingSchedule;
-  }
-
   navigateToSetSchedule() {
     this.appService.navigateTo('/dashboard/events/' + this.performance.data.data._id)
   }
+
 }

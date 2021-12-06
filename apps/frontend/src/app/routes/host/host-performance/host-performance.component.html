@@ -2,29 +2,9 @@
   <div body>
     <mat-spinner *ngIf="performance.loading"></mat-spinner>
     <ng-container *ngIf="performance.data">
-      <div class="flex align-middle space-x-4">
-        <h1 class="float-left">{{ performanceData.name }}</h1>
-        <div class="justify-en pt-1">
-          <ui-chip kind="deep-blush">{{performanceData.performance_type | performanceTypePipe }}</ui-chip>
-        </div>
-      </div>
-      <div class="flex items-center event-preview-button">
-        <ui-button (click)="gotoPerformance()" kind="accent" class="mr-2" icon="launch" i18n>Preview</ui-button> 
-
-
-        <!--
-            Need to revisit this at some point, see provisionPerformanceAccessTokens in
-            host.controller.ts & SU-883
-            https://alacrityfoundationteam31.atlassian.net/browse/SU-883
-          <ui-button (click)="openSharePerformanceDialog()" kind="primary">
-            <ui-icon>share</ui-icon>
-          </ui-button>
-          -->
-      </div>     
-
-      <div class="bg-white rounded shadow-sm">
-        <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
-      </div>
+      <ui-button class="float-right -mt-12" (click)="gotoPerformance()" icon="launch"
+        ><span i18n>Preview Event</span></ui-button>
+      <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
     </ng-container>
   </div>
 </app-page>

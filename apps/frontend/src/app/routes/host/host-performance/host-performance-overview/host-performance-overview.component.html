@@ -1,7 +1,14 @@
 <div body>
+  <div class="flex align-middle space-x-4">
+    <h1 class="float-left">{{ performanceData.name }}</h1>
+    <div class="justify-en pt-1">
+      <ui-chip kind="deep-blush">{{ performanceData.performance_type | performanceTypePipe }}</ui-chip>
+    </div>
+  </div>
+
   <!-- copy and share event link -->
   <div *ngIf="numberOfHostEvents > 1" class="flex">
-    <div class="bg-white rounded-md w-72 h-9.5">
+    <div class="bg-white rounded-md w-96 h-9">
       <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
     </div>
     <div class="flex ml-3 share-links">
@@ -17,21 +24,18 @@
     <!-- set schedule -->
     <div *ngIf="isPendingSchedule" class="flex flex-col pl-40 mt-10 absolute inset-0">
       <h3 class="text-white opacity-100" i18n>Congratulations, your created your first event.</h3>
-      <ui-button 
-        (click)="navigateToSetSchedule()"
-        kind="clear-outline" 
-        icon="calendar" 
-        i18n
-        >Set Schedule</ui-button>
+      <ui-button class="mt-8" (click)="navigateToSetSchedule()" kind="clear-outline" icon="calendar" i18n
+        >Set Schedule</ui-button
+      >
     </div>
 
     <!-- copy and share event link -->
 
-    <div *ngIf="!isPendingSchedule" class="flex flex-col pl-48 mt-10 absolute inset-0">
-      <h3 class="text-white opacity-100" i18n>
+    <div *ngIf="!isPendingSchedule" class="flex flex-col pl-48 mt-8 absolute inset-0">
+      <h4 class="text-white opacity-100" i18n>
         Congratulations, your first event is ready. Share it with your audience.
-      </h3>
-      <p class="text-white mb-1" i18n>Share your event's link</p>
+      </h4>
+      <h4 class="text-white mb-1" i18n>Share your event's link</h4>
       <div class="flex">
         <div class="bg-white rounded-md w-72 h-9.5">
           <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
@@ -51,45 +55,55 @@
   <app-host-event-analytics-graphs [eventId]="performance.data.data._id"></app-host-event-analytics-graphs>
 
   <!-- schedule, visibility and status -->
-  <div class="grid gap-2 grid-cols-3 w-full overflow-x-scroll mt-2">
+  <div class="grid gap-2 grid-cols-3 w-full mt-2">
     <div class="flex flex-col">
-      <h4 class="m-4 text-black font-bold" i18n>Visibility</h4>
+      <h4 class="m-4 text-black font-medium" i18n>Visibility</h4>
       <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative text-center">
-        <h3 class="my-12 text-blue-400">{{ performance.data.data.visibility | visibility }}</h3>
+        <h3 class="my-12" style="color: '#17A2B8'">{{ performance.data.data.visibility | visibility }}</h3>
       </div>
     </div>
     <div class="flex flex-col">
-      <h4 class="m-4 text-black font-bold" i18n>Event Visibility Schedule</h4>
-      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
-        <ui-button
+      <h4 class="m-4 text-black font-medium" i18n>Event Visibility Schedule</h4>
+      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-2 text-center clear-both relative">
+        <img
           *ngIf="isPendingSchedule"
-          (click)="navigateToSetSchedule()"
-          class="mx-16 my-12"
-          kind="primary"
-          icon="calendar"
-          i18n
-          >Set Schedule</ui-button
-        >
-        <div *ngIf="!isPendingSchedule" class="grid grid-cols-2 gap-4">
-          <div class="flex-col rounded-lg p-2 date-chip text-white">
-            <h4 i18n>Start</h4>
+          [src]="'/assets/welcome-banner.svg'"
+          class="object-cover h-full rounded"
+          alt=""
+        />
+        <div *ngIf="isPendingSchedule" class="absolute inset-0 h-full p-8">
+          <ui-button (click)="navigateToSetSchedule()" class="mx-auto mt-8" kind="primary" icon="calendar" i18n
+            >Set Schedule</ui-button
+          >
+        </div>
+
+        <div *ngIf="!isPendingSchedule" class="flex py-8 justify-center">
+          <div class="flex-col rounded-lg p-2 date-chip">
             <h4>
               {{ locale == 'en' ? scheduledStart : (performance.data.data.publicity_period.start | date: locale) }}
             </h4>
-            <p>{{ performance.data.data.publicity_period.start | date: 'shortTime':locale }}</p>
+            <p style="color: '#17A2B8'">
+              {{ performance.data.data.publicity_period.start | date: 'shortTime':locale }}
+              ({{ timezone }})
+            </p>
           </div>
-          <div class="flex-col rounded-lg p-2 date-chip text-white opacity-100">
-            <h4 i18n>End</h4>
+          <div class="flex-col py-4">
+            <p>:</p>
+          </div>
+
+          <div class="flex-col rounded-lg p-2 date-chip opacity-100">
             <h4>{{ locale == 'en' ? scheduledEnd : (performance.data.data.publicity_period.end | date: locale) }}</h4>
-            <p>{{ performance.data.data.publicity_period.end | date: 'shortTime':locale }}</p>
+            <p style="color: '#17A2B8'">
+              {{ performance.data.data.publicity_period.end | date: 'shortTime':locale }} ({{ timezone }})
+            </p>
           </div>
         </div>
       </div>
     </div>
     <div class="flex flex-col">
-      <h4 class="m-4 text-black font-bold" i18n>Event Status</h4>
+      <h4 class="m-4 text-black font-medium" i18n>Event Status</h4>
       <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative text-center">
-        <h3 class="my-12 text-blue-400">
+        <h3 class="my-12" style="color: '#17A2B8'">
           {{ performance.data.data.status ? (performance.data.data.status | performanceStatusPipe) : '-' }}
         </h3>
       </div>
