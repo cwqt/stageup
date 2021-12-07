@@ -38,6 +38,7 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
       fields: {
         select_reason: UiField.Select({
           values: this.data.reasons,
+          placeholder: $localize`Select an option`,
           validators: [{ type: 'required' }]
         }),
         further_info: UiField.Textarea({
@@ -56,6 +57,7 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
           });
           this.ref.close();
         },
+
         failure: async err => {
           this.ref.close(null);
         }

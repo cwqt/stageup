@@ -104,7 +104,7 @@
       <h4 class="m-4 text-black font-medium" i18n>Event Status</h4>
       <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative text-center">
         <h3 class="my-12" style="color: '#17A2B8'">
-          {{ performance.data.data.status ? (performance.data.data.status | performanceStatusPipe) : '-' }}
+          {{ performance.data.data.status ? performanceStatus : '-' }}
         </h3>
       </div>
     </div>

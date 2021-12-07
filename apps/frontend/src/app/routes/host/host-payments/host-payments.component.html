@@ -27,8 +27,7 @@
         <ng-container *ngIf="host.stripe_account_id == null && stripeInfo.data.is_stripe_connected == false">
           <ui-button
             class="stripe-button"
-            kind="secondary"
-            size="l"
+            variant="secondary-l"
             (click)="openConnectStripe()"
             [disabled]="connect.loading"
             [loading]="connect.loading"

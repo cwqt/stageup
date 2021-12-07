@@ -63,6 +63,12 @@
           routerLinkActive="active-link">
           <span i18n>Analytics</span>
         </ui-button>
+        <ui-button
+          [routerLink]="'/dashboard/events' + activeHostPerformanceId + '/settings'"
+          routerLinkActive="active-link"
+        >
+          <span i18n>Settings</span>
+        </ui-button>
       </div>
 
       <ui-button
@@ -104,7 +110,7 @@
     <!-- Admin menu -->
     <ng-container *ngIf="myself?.user.is_admin" routerLinkActive="active-link" #adminMenu="routerLinkActive">
       <h4 i18n>Admin</h4>
-      <ui-button routerLink="/admin" kind="accent" routerLinkActive="active-link">
+      <ui-button routerLink="/admin" variant="accent" routerLinkActive="active-link">
         <ui-icon>virtual-private-cloud</ui-icon>
         <span i18n>Admin Panel</span>
       </ui-button>

@@ -4,7 +4,7 @@
   tabindex="0"
   [disabled]="disabled"
   [class.ui-button--transparent]="transparent"
-  [ngClass]="['ui-button--' + size, 'ui-button--' + kind]"
+  [ngClass]="['ui-button--' + size, 'ui-button--' + kind + '--' + appearance]"
   [style]="{ height: height }"
   (click)="onClick($event); animateRipple($event)"
 >

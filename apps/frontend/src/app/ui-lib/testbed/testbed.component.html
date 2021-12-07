@@ -52,7 +52,7 @@
 
   <h1>Toasts</h1>
   <div class="flex space-x-2">
-    <ui-button *ngFor="let toast of toasts | keyvalue" (click)="openToast(toast.key)" [kind]="toast.key">{{
+    <ui-button *ngFor="let toast of toasts | keyvalue" (click)="openToast(toast.key)" [variant]="toast.key">{{
       toast.value
     }}</ui-button>
   </div>
@@ -89,32 +89,74 @@
 
   <br />
   <h1>Buttons</h1>
+  <h4>Fill</h4>
 
   <div class="flex items-center space-x-4 mb-4">
-    <ui-button size="s" kind="primary">Primary</ui-button>
-    <ui-button size="s" kind="secondary">Secondary</ui-button>
-    <ui-button size="s" kind="accent">Accent</ui-button>
-    <ui-button size="s" kind="warning">Warning</ui-button>
-    <ui-button size="s" kind="danger">Danger</ui-button>
-    <ui-button size="s" [disabled]="true">Disabled</ui-button>
+    <ui-button variant="primary-s">Primary</ui-button>
+    <ui-button variant="secondary-s">Secondary</ui-button>
+    <ui-button variant="accent-s">Accent</ui-button>
+    <ui-button variant="warning-s">Warning</ui-button>
+    <ui-button variant="danger-s">Danger</ui-button>
+    <ui-button variant="cleardark-s">Clear Dark</ui-button>
+    <ui-button variant="primarylight-s">Primary Light</ui-button>
+    <ui-button variant="s" [disabled]="true">Disabled</ui-button>
   </div>
 
   <div class="flex items-center space-x-4 mb-4">
-    <ui-button size="m" [loading]="true" kind="primary">Primary</ui-button>
-    <ui-button size="m" kind="secondary">Secondary</ui-button>
-    <ui-button size="m" [loading]="true" kind="accent">Accent</ui-button>
-    <ui-button size="m" icon="settings" kind="warning">Warning</ui-button>
-    <ui-button size="m" icon="favorite" kind="danger">Danger</ui-button>
-    <ui-button size="m" [loading]="true" [disabled]="true">Disabled</ui-button>
+    <ui-button variant="primary-m" [loading]="true">Primary</ui-button>
+    <ui-button variant="secondary-m">Secondary</ui-button>
+    <ui-button variant="accent-m" [loading]="true">Accent</ui-button>
+    <ui-button variant="warning-m" icon="settings">Warning</ui-button>
+    <ui-button variant="danger-m" icon="favorite">Danger</ui-button>
+    <ui-button variant="cleardark-m">Clear Dark</ui-button>
+    <ui-button variant="primarylight-m">Primary Light</ui-button>
+    <ui-button variant="m" [loading]="true" [disabled]="true">Disabled</ui-button>
   </div>
 
   <div class="flex items-center space-x-4 mb-4">
-    <ui-button size="l" [loading]="true" kind="primary">Primary</ui-button>
-    <ui-button size="l" icon="settings" kind="secondary">Secondary</ui-button>
-    <ui-button size="l" [loading]="true" kind="accent">Accent</ui-button>
-    <ui-button size="l" icon="settings" kind="warning">Warning</ui-button>
-    <ui-button size="l" icon="settings" kind="danger">Danger</ui-button>
-    <ui-button size="l" [loading]="true" [disabled]="true">Disabled</ui-button>
+    <ui-button variant="primary-l" [loading]="true">Primary</ui-button>
+    <ui-button variant="secondary-l" icon="settings" >Secondary</ui-button>
+    <ui-button variant="accent-l" [loading]="true" >Accent</ui-button>
+    <ui-button variant="warning-l" icon="settings">Warning</ui-button>
+    <ui-button variant="danger-l" icon="settings">Danger</ui-button>
+    <ui-button variant="cleardark-l" icon="account">Clear Dark</ui-button>
+    <ui-button variant="primarylight-l" icon="favorite">Primary Light</ui-button>
+    <ui-button variant="l" [loading]="true" [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <h4>Outline</h4>
+
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button variant="primary-s-outline">Primary</ui-button>
+    <ui-button variant="secondary-s-outline">Secondary</ui-button>
+    <ui-button variant="accent-s-outline">Accent</ui-button>
+    <ui-button variant="warning-s-outline">Warning</ui-button>
+    <ui-button variant="danger-s-outline">Danger</ui-button>
+    <ui-button variant="cleardark-s-outline">Clear Dark</ui-button>
+    <ui-button variant="primarylight-s-outline">Primary Light</ui-button>
+    <ui-button variant="s-outline" [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button variant="primary-m-outline" [loading]="true" >Primary</ui-button>
+    <ui-button variant="secondary-m-outline" >Secondary</ui-button>
+    <ui-button variant="accent-m-outline" [loading]="true" >Accent</ui-button>
+    <ui-button variant="warning-m-outline" icon="settings" >Warning</ui-button>
+    <ui-button variant="danger-m-outline" icon="favorite" >Danger</ui-button>
+    <ui-button variant="cleardark-m-outline" >Clear Dark</ui-button>
+    <ui-button variant="primarylight-m-outline">Primary Light</ui-button>
+    <ui-button variant="m-outline" [disabled]="true">Disabled</ui-button>
+  </div>
+
+  <div class="flex items-center space-x-4 mb-4">
+    <ui-button variant="primary-l-outline" [loading]="true" >Primary</ui-button>
+    <ui-button variant="secondary-l-outline" icon="settings" >Secondary</ui-button>
+    <ui-button variant="accent-l-outline" [loading]="true" >Accent</ui-button>
+    <ui-button variant="warning-l-outline" icon="settings" >Warning</ui-button>
+    <ui-button variant="danger-l-outline" icon="settings" >Danger</ui-button>
+    <ui-button variant="cleardark-l-outline" icon="account" >Clear Dark</ui-button>
+    <ui-button variant="primarylight-l-outline" icon="favorite" >Primary Light</ui-button>
+    <ui-button variant="l-outline" [loading]="true" [disabled]="true">Disabled</ui-button>
   </div>
 
   <ui-hr></ui-hr>

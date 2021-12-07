@@ -3,7 +3,7 @@
     <h2 *ngIf="table.config.title">{{ table.config.title }}</h2>
     <p *ngIf="lastUpdated" class="block opacity-50 mb-3" i18n>Updated as of {{ lastUpdated }}</p>
     <ui-button
-      kind="accent"
+      variant="accent"
       *ngIf="table.selection"
       [disabled]="table.selection.selected.length == 0"
       [popper]="actionsMenu"
@@ -89,7 +89,7 @@
                 [popperPositionFixed]="true"
                 [popperPreventOverflow]="false"
                 [popperPlacement]="'bottom'"
-                size="m"
+                variant="m"
                 class="ml-2 rounded-full overflow-hidden filter"
                 [class.filter--is-active]="table._activeFilters[column.key]"
               >
@@ -187,7 +187,7 @@
                         [popperPreventOverflow]="false"
                         [popperPlacement]="'bottom'"
                         [disabled]="action.disabled && action.disabled(element.__data)"
-                        [kind]="action.kind || 'accent'"
+                        [variant]="action.kind || 'accent'"
                         (click)="action.click(element.__data)"
                       >
                         <ui-icon *ngIf="action.icon" [ngClass]="{ 'mr-2': action.label }">{{ action.icon }}</ui-icon>

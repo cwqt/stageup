@@ -27,9 +27,9 @@ export class TestbedComponent implements OnInit {
     [ThemeKind.Primary]: 'Primary Toast',
     [ThemeKind.Secondary]: 'Secondary Toast',
     [ThemeKind.Warning]: 'Warning Toast',
-    [ThemeKind.ClearDark]: 'Clear-dark Toast',
     [ThemeKind.ClearOutline]: 'Clear-outline Toast',
-    [ThemeKind.PrimaryLight]: 'Primary-light Toast'
+    [ThemeKind.ClearDark]: 'Cleardark Toast',
+    [ThemeKind.PrimaryLight]: 'Primarylight Toast'
   };
 
   constructor(private toastService: ToastService) {}

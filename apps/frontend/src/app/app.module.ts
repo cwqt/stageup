@@ -115,9 +115,7 @@ import { HostMemberPermissionsDialogComponent } from './routes/host/host-members
 import { HostPerformanceComponent } from './routes/host/host-performance/host-performance.component';
 import { HostPerformanceDrawerComponent } from './components/app/drawer-components/host-performance-drawer/host-performance-drawer.component';
 import { SharePerformanceDialogComponent } from './routes/host/host-performance/share-performance-dialog/share-performance-dialog.component';
-import { HostLandingComponent } from './routes/landing/host-landing/host-landing.component';
 import { HostDashboardComponent } from './routes/host/host-dashboard/host-dashboard.component';
-import { UserTypeClarificationComponent } from './routes/landing/user-type-clarification/user-type-clarification.component';
 import { HostPaymentsComponent } from './routes/host/host-payments/host-payments.component';
 import { DialogEntryComponent } from './components/dialogs/dialog-entry/dialog-entry.component';
 import { RegisterDialogComponent } from './routes/landing/register-dialog/register-dialog.component';
@@ -190,6 +188,7 @@ import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.comp
 import { HostPerformanceOverviewComponent } from './routes/host/host-performance/host-performance-overview/host-performance-overview.component';
 import {HostEventAnalyticsGraphsComponent} from './routes/host/host-analytics/host-event-analytics-graphs/host-event-analytics-graphs.component';
 import { UnsavedChangesDialogComponent } from './components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import { HostPerformanceSettingsComponent } from './routes/host/host-performance/host-performance-settings/host-performance-settings.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -273,11 +272,9 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostAddMemberComponent,
     HostMemberPermissionsDialogComponent,
     HostPerformanceComponent,
-    UserTypeClarificationComponent,
     HostPerformanceDrawerComponent,
     ChangeImageComponent,
     SharePerformanceDialogComponent,
-    HostLandingComponent,
     HostPaymentsComponent,
     DialogEntryComponent,
     UserRegisterComponent,
@@ -352,7 +349,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostPerformanceOverviewComponent,
     HostEventAnalyticsGraphsComponent,
     OptStatusPipe,
-    UnsavedChangesDialogComponent
+    UnsavedChangesDialogComponent,
+    HostPerformanceSettingsComponent
   ],
   imports: [
     AngularMaterialModule,

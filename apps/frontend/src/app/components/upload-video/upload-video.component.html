@@ -13,7 +13,7 @@
 <div class="justify-items-center mt-2">
   <ng-container *ngIf="!selectedVideo">
     <input accept="video/*" hidden (change)="onVideoSelected()" #fileSelector type="file" id="file" />
-    <ui-button icon="attachment" kind="primary" (click)="fileSelector.click()" class="select-file mb-2" i18n>
+    <ui-button icon="attachment" variant="primary" (click)="fileSelector.click()" class="select-file mb-2" i18n>
       Select Video
     </ui-button>
   </ng-container>
@@ -26,7 +26,7 @@
       [disabled]="uploadAsset.loading"
       icon="cloud--upload"
       class="mr-2"
-      kind="primary"
+      variant="primary"
     >
       <span *ngIf="uploadAsset.loading">
         <span i18n>Uploading...</span>
@@ -36,7 +36,7 @@
       <span *ngIf="!uploadAsset.loading" i18n>Upload</span>
     </ui-button>
 
-    <ui-button *ngIf="selectedVideo" (click)="clearSelection()" [disabled]="uploadAsset.loading" kind="secondary" i18n>
+    <ui-button *ngIf="selectedVideo" (click)="clearSelection()" [disabled]="uploadAsset.loading" variant="secondary" i18n>
       Clear
     </ui-button>
   </div>

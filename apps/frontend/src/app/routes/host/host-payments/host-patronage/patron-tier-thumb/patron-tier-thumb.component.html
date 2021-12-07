@@ -25,9 +25,9 @@
   <quill-view [content]="tier.description" format="object" theme="snow"></quill-view>
 
   <div class="flex items-center justify-between m-2 space-x-2 mt-auto">
-    <ui-button kind="primary" *ngIf="!isHostPatronTier" (click)="openBecomePatronDialog()" i18n>Select</ui-button>
-    <ui-button kind="secondary" *ngIf="isHostPatronTier" (click)="openEditPatronTierDialog()" i18n>Edit</ui-button>
-    <ui-button kind="danger" *ngIf="isHostPatronTier" (click)="openDeleteTierConfirmationDialog()" i18n
+    <ui-button variant="primary" *ngIf="!isHostPatronTier" (click)="openBecomePatronDialog()" i18n>Select</ui-button>
+    <ui-button variant="secondary" *ngIf="isHostPatronTier" (click)="openEditPatronTierDialog()" i18n>Edit</ui-button>
+    <ui-button variant="danger" *ngIf="isHostPatronTier" (click)="openDeleteTierConfirmationDialog()" i18n
       >Delete</ui-button
     >
   </div>

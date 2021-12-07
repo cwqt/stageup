@@ -1,3 +1,4 @@
+import { HostPerformanceSettingsComponent } from './host-performance-settings/host-performance-settings.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DtoPerformance, IHost, IPerformanceHostInfo, PerformanceStatus, PerformanceType } from '@core/interfaces';
@@ -19,8 +20,16 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   performance: ICacheable<DtoPerformance> = createICacheable();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
 
+  get performanceIsDraft(): boolean {
+    return this.performance?.data?.data?.status === PerformanceStatus.Draft;
+  }
+
   onChildLoaded(
-    component: HostPerformanceDetailsComponent | HostPerformanceTicketingComponent | HostPerformanceMediaComponent
+    component:
+      | HostPerformanceDetailsComponent
+      | HostPerformanceTicketingComponent
+      | HostPerformanceMediaComponent
+      | HostPerformanceSettingsComponent
   ) {
     component.performanceId = this.performanceId;
     component.performanceHostInfo = this.performanceHostInfo;
@@ -42,7 +51,7 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
   }
 
-  gotoPerformance() {
+  goToPerformance() {
     this.appService.navigateTo(`/events/${this.performanceId}`);
   }
 

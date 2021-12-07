@@ -6,6 +6,7 @@ import { formatDate } from "@angular/common";
 import { AppService } from '@frontend/services/app.service';
 import { HostService } from '@frontend/services/host.service';
 import { PerformanceService } from '@frontend/services/performance.service';
+import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
 @Component({
   selector: 'app-host-performance-overview',
   templateUrl: './host-performance-overview.component.html',
@@ -24,6 +25,7 @@ export class HostPerformanceOverviewComponent implements OnInit {
   scheduledStart: string;
   scheduledEnd: string;
   dateFormat = "dd MMM yyyy";
+  eventStatus: PerformanceStatus;
 
   get isPendingSchedule(): boolean {
     return this.performance.data.data.status == PerformanceStatus.PendingSchedule;
@@ -33,8 +35,13 @@ export class HostPerformanceOverviewComponent implements OnInit {
     return this.performance.data?.data;
   }
 
-  get timezone(){
+  get timezone() {
     return new Date(this.performance.data.data.publicity_period.start).toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2]
+  }
+
+  get performanceStatus() {
+    const statusPipe = new PerformanceStatusPipe();
+    return statusPipe.transform(this.performanceData.status)
   }
 
   async ngOnInit() {

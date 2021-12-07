@@ -50,7 +50,6 @@ export class HostEventAnalyticsGraphsComponent implements OnInit {
                 period: UiField.Select({
                     initial: 'MONTHLY',
                     values: new Map(Object.entries(this.periodMap).map(([key, value]) => [key, { label: value }])),
-                    appearance: 'outline'
                 })
             },
             handlers: {
@@ -102,8 +101,7 @@ export class HostEventAnalyticsGraphsComponent implements OnInit {
     }
 
     async readSinglePerformanceAnalytics(): Promise<void> {
-        const dto = await this.performanceAnalytics.request(this.hostService.readPerformanceAnalytics(
-            this.hostService.currentHostValue._id, this.eventId, this.periodForm.group.value.period))
+        const dto = await this.performanceAnalytics.request(this.hostService.readPerformanceAnalytics(this.hostService.currentHostValue._id, this.eventId, this.periodForm.group.value.period))
         const half = Analytics.offsets[this.periodForm.group.value.period];
         const [latest, previous] = [
             Analytics.entities.performance.aggregators.metrics(dto.slice(0, half).map(dto => dto.metrics)),

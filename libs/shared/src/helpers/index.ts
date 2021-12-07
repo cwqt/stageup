@@ -1,3 +1,4 @@
+import { ThemeDimension, ThemeKind, ThemeStyle, ThemeAppearance } from '@frontend/ui-lib/ui-lib.interfaces';
 import {
   AssetType,
   BASE_AMOUNT_MAP,
@@ -305,4 +306,27 @@ export const pipes = {
 export const regexes = {
   url: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})\/?/g,
   vat: /(GB)?(\d{12}|\d{9})/g
+};
+
+
+/**
+ * @description extracts a style object from a CSS class
+ * @param style type 'ThemeStyle' (a combination of ThemeKind, ThemeDimension and ThemeAppearance) e.g. 'primary-s-outline', 'm-fill' or 'l'
+ * @returns style object { kind: ThemeKind, size: ThemeDimension, appearance: ThemeAppearance }. Defaults to { kind: 'accent', size: 'm', appearance: 'fill' }
+ */
+export const extractStyle = (
+  style: ThemeStyle
+): { kind: ThemeKind; size: ThemeDimension; appearance: ThemeAppearance } => {
+  const styles = style.split("-");
+  return {
+    kind:
+      styles.find((style) => enumToValues(ThemeKind).includes(style)) as ThemeKind ||
+      ThemeKind.Accent,
+    size:
+      styles.find((style) => enumToValues(ThemeDimension).includes(style)) as ThemeDimension ||
+      ThemeDimension.Medium,
+    appearance:
+      styles.find((style) => enumToValues(ThemeAppearance).includes(style)) as ThemeAppearance||
+      ThemeAppearance.Fill,
+  };
 };

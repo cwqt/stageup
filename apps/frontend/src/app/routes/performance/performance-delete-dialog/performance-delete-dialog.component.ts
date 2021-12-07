@@ -1,6 +1,15 @@
+import { ConfirmPasswordDialogComponent } from '@frontend/components/dialogs/confirm-password-dialog/confirm-password-dialog.component';
 import { ChangeDetectorRef, Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IRemovalReason, DtoPerformance, IPerformance, RemovalType, RemovalReason } from '@core/interfaces';
+import {
+  IRemovalReason,
+  DtoPerformance,
+  IPerformance,
+  RemovalType,
+  RemovalReason,
+  IPasswordConfirmationResponse,
+  PerformanceStatus
+} from '@core/interfaces';
 import { SelectReasonDialogComponent } from '@frontend/components/dialogs/select-reason-dialog/select-reason-dialog.component';
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
@@ -8,6 +17,7 @@ import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { cachize } from '@frontend/app.interfaces';
 
 @Component({
   selector: 'app-performance-delete-dialog',
@@ -28,7 +38,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
     private dialog: MatDialog,
     private appService: AppService,
     @Inject(MAT_DIALOG_DATA) public performance: IPerformance
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.buttons = [
@@ -43,8 +53,9 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
       new UiDialogButton({
         label: $localize`Delete Performance`,
         kind: ThemeKind.Primary,
-        callback: () =>
-          this.helperService.showDialog(
+        callback: () => {
+          this.ref.close();
+          return this.helperService.showDialog(
             this.dialog.open(SelectReasonDialogComponent, {
               data: {
                 dialog_title: $localize`Why do you want to delete the performance?`,
@@ -62,25 +73,41 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
                 hide_further_info: currentSelection => currentSelection != RemovalReason.Other
               }
             }),
-            async deletePerfReason => {
-              await this.performanceService
-                .deletePerformance(this.performance._id, {
-                  removal_reason: deletePerfReason,
-                  removal_type: RemovalType.SoftDelete
-                })
-                .then(() => {
-                  this.toastService.emit(
-                    $localize`${this.performance.name} Deleted! We have initiated refunds for all purchased tickets`
-                  );
-                })
-                .then(() => {
-                  this.appService.navigateTo('/dashboard/events');
-                  this.ref.close();
-                })
-                .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));
+            deletePerfReason => {
+              // If performance is draft status, no need to show password confirmation
+              if (this.performance.status == PerformanceStatus.Draft) {
+                this.deletePerformance(deletePerfReason);
+              } else {
+                this.helperService.showDialog(
+                  this.dialog.open(ConfirmPasswordDialogComponent),
+                  (res: IPasswordConfirmationResponse) => {
+                    if (res.is_valid) {
+                      this.deletePerformance(deletePerfReason);
+                    }
+                  }
+                );
+              }
             }
-          )
+          );
+        }
       })
     ];
+  }
+
+  async deletePerformance(reason: IRemovalReason): Promise<void> {
+    try {
+      await this.performanceService.deletePerformance(this.performance._id, {
+        removal_reason: reason,
+        removal_type: RemovalType.SoftDelete
+      });
+
+      this.toastService.emit(
+        $localize`${this.performance.name} Deleted! We have initiated refunds for all purchased tickets`
+      );
+      this.appService.navigateTo('/dashboard/events');
+      this.ref.close();
+    } catch (error) {
+      this.toastService.emit(error.message, ThemeKind.Danger);
+    }
   }
 }
