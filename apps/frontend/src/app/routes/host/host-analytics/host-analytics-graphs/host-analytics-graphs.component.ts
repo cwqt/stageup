@@ -1,4 +1,3 @@
-import { ChartDataset } from 'chart.js';
 import { Component, Inject, LOCALE_ID, OnInit, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
 import { unix, periodInSeconds } from '@core/helpers';
 import {
@@ -16,7 +15,7 @@ import {
   HostAnalyticsHeaderItemComponent,
   IHeaderItem
 } from '../host-analytics-header-item/host-analytics-header-item.component';
-import { chartData, chartOptions } from '../host-analytics-header-item/host-analytics.chartjs';
+import { AbstractHostAnalytics } from './host-analytics-graphs.abstract';
 
 type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnalyticsMetrics> = {
   period_aggregate: { [index in keyof Metrics]?: Metrics[index] };
@@ -28,14 +27,14 @@ type AnalyticsSnapshot<Metrics extends IHostAnalyticsMetrics | IPerformanceAnaly
   templateUrl: './host-analytics-graphs.component.html',
   styleUrls: ['./host-analytics-graphs.component.scss']
 })
-export class HostAnalyticsGraphsComponent implements OnInit {
+export class HostAnalyticsGraphsComponent extends AbstractHostAnalytics implements OnInit {
   @ViewChildren(HostAnalyticsHeaderItemComponent) headers: QueryList<HostAnalyticsHeaderItemComponent>;
   @Output() periodEmitter = new EventEmitter();
   // Host data response - single entity
   hostAnalytics = new Cacheable<DtoHostAnalytics>();
   performanceAnalytics = new Cacheable<DtoPerformanceAnalytics[]>();
 
-  constructor(@Inject(LOCALE_ID) public locale: string, private hostService: HostService) {}
+  constructor(@Inject(LOCALE_ID) public locale: string, private hostService: HostService) { super() }
 
   // For analytics period selector
   periodForm: UiForm<AnalyticsTimePeriod>;
@@ -100,22 +99,6 @@ export class HostAnalyticsGraphsComponent implements OnInit {
     // Get the host analytics and performance analytics on component init
     this.readHostAnalytics();
     this.readPerformanceAnalytics();
-  }
-
-  getPercentageDifference(a: number, b: number): number {
-    return Math.floor(a - b) / b;
-  }
-
-  // Give empty skeleton for setup
-  createHeaderItem(title: string): IHeaderItem {
-    return {
-      title: title,
-      graph: {
-        data: { labels: [], datasets: [{ data: [], ...chartData }] },
-        options: chartOptions
-      },
-      aggregation: 0
-    };
   }
 
   async readHostAnalytics() {
@@ -242,11 +225,5 @@ export class HostAnalyticsGraphsComponent implements OnInit {
       }
     });
     headers?.forEach(header => header.chart?.chartInstance.update());
-  }
-
-  setChartColor(difference: number, graph: ChartDataset): void {
-    const graphColor = difference < 0 ? '#E97B86' : difference > 0 ? '#96d0a3' : '#30a2b8';
-    graph.borderColor = graphColor;
-    graph.backgroundColor = graphColor;
   }
 }
