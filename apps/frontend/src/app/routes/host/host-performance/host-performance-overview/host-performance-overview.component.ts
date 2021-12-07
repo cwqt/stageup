@@ -36,7 +36,7 @@ export class HostPerformanceOverviewComponent implements OnInit {
   }
 
   get timezone() {
-    return new Date(this.performance.data.data.publicity_period.start).toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2]
+    return new Date(this.performance.data.data.publicity_period.start * 1000).toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2]
   }
 
   get performanceStatus() {

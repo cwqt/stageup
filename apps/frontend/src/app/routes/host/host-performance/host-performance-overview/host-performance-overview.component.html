@@ -58,8 +58,8 @@
   <div class="grid gap-4 grid-cols-3 w-full mt-2">
     <div class="flex flex-col">
       <h4 class="m-4 text-black font-medium" i18n>Visibility</h4>
-      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl m-1 p-4 relative text-center">
-        <h3 class="my-12 dashboard-label">{{ performance.data.data.visibility | visibility }}</h3>
+      <div class="flex-col bg-white border-2 border-gray-200 rounded-2xl m-1 p-4 relative text-center">
+        <h3 class="my-12 text-cyan">{{ performance.data.data.visibility | visibility }}</h3>
       </div>
     </div>
     <div class="flex flex-col">
@@ -78,22 +78,22 @@
         </div>
 
         <div *ngIf="!isPendingSchedule" class="flex py-8 justify-center">
-          <div class="flex-col rounded-lg p-2 date-chip">
+          <div class="flex-col rounded-lg p-2.5 date-chip">
             <h4>
               {{ locale == 'en' ? scheduledStart : (performance.data.data.publicity_period.start | date: locale) }}
             </h4>
-            <p class="dashboard-label">
+            <div class="text-cyan">
               {{ performance.data.data.publicity_period.start | date: 'shortTime':locale }}
               ({{ timezone }})
-            </p>
+            </div>
           </div>
-          <div class="flex-col py-4">
+          <div class="flex-col py-6">
             <p>:</p>
           </div>
 
-          <div class="flex-col rounded-lg p-2 date-chip opacity-100">
+          <div class="flex-col rounded-lg p-2.5 date-chip opacity-100">
             <h4>{{ locale == 'en' ? scheduledEnd : (performance.data.data.publicity_period.end | date: locale) }}</h4>
-            <p class="dashboard-label">
+            <p class="text-cyan">
               {{ performance.data.data.publicity_period.end | date: 'shortTime':locale }} ({{ timezone }})
             </p>
           </div>
@@ -102,8 +102,8 @@
     </div>
     <div class="flex flex-col">
       <h4 class="m-4 text-black font-medium" i18n>Event Status</h4>
-      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative text-center">
-        <h3 class="my-12 dashboard-label">
+      <div class="m-1 flex-col bg-white border-2 border-gray-200 rounded-2xl p-4 relative text-center">
+        <h3 class="my-12 text-cyan">
           {{ performance.data.data.status ? performanceStatus : '-' }}
         </h3>
       </div>
