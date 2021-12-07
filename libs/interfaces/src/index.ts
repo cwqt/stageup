@@ -32,6 +32,7 @@ export * from './performances/performance.interface';
 export * from './performances/genres.interface';
 export * from './performances/review.interface';
 export * from './performances/ticket.interface';
+export * from './performances/showing.interface';
 
 // Finance ----------------------------------------------------------------
 export * from './finance/invoice.interface';

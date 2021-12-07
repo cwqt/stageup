@@ -23,6 +23,7 @@ export { AccessToken } from './performances/access-token.entity';
 export { Performance } from './performances/performance.entity';
 export { Ticket } from './performances/ticket.entity';
 export { Rating } from './performances/rating.entity';
+export { Showing } from './performances/showing.entity';
 
 // Assets ----------------------------------------------------------------
 export { Asset } from './assets/asset.entity';
