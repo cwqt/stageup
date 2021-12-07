@@ -1,3 +1,4 @@
+import { BreadcrumbService } from 'xng-breadcrumb';
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Title } from '@angular/platform-browser';
@@ -36,7 +37,8 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private permissionsService: NgxPermissionsService,
     private logger: NGXLogger,
-    private router: Router
+    private router: Router,
+    private breadcrumbService: BreadcrumbService // Needed to prevent breadcrumb from disappearing on page refreshes
   ) {}
 
   async ngOnInit() {

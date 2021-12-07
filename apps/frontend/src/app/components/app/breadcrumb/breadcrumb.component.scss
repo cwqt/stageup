@@ -1,4 +1,9 @@
-::ng-deep .xng-breadcrumb-trail{
-    font-weight: 700;
-    color: #E47290 !important;
+::ng-deep .xng-breadcrumb-trail {
+  font-weight: 700;
+  color: #e47290 !important;
+}
+
+.breadcrumb-container {
+  margin-bottom: 24px;
+  height: 20px;
 }

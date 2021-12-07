@@ -31,7 +31,8 @@ b {
 h1 {
   font-size: 32px;
   font-weight: bold;
-  line-height: 48px;
+  // line-height: 48px;
+  margin-bottom: 32px;
 }
 h2 {
   font-size: 28px;
@@ -54,6 +55,11 @@ p {
   line-height: 24px;
 }
 
-h1, h2, h3, h4, a, p {
+h1,
+h2,
+h3,
+h4,
+a,
+p {
   font-family: 'Roboto', sans-serif !important;
 }
