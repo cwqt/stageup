@@ -194,20 +194,6 @@
   }
 }
 
-.ui-button--clear-outline {
-  background-color: none;
-  color: white;
-  border: 1px white solid;
-  border-radius: 0.3rem;
-  &:hover {
-    background-color: white;
-    color: black
-  }
-  ::ng-deep .mat-spinner circle {
-    stroke: $clr-base !important;
-  }
-}
-
 .ui-button--cleardark--outline {
   color: black;
   background-color: transparent;
@@ -238,6 +224,7 @@
   border: 1px solid #f8eaed;
   &:hover {
     background-color: white;
+    color: $clr-primary;
   }
   ::ng-deep .mat-spinner circle {
     stroke: $clr-base !important;

@@ -12,7 +12,7 @@
       <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
     </div>
     <div class="flex ml-3 share-links">
-      <ui-button height="50px" kind="primary-light"><ui-icon>share</ui-icon></ui-button>
+      <ui-button height="50px" variant="primarylight"><ui-icon>share</ui-icon></ui-button>
       <app-social-sharing kind="primary" [url]="eventURL"></app-social-sharing>
     </div>
   </div>
@@ -22,9 +22,9 @@
     <img [src]="'/assets/event-welcome-banner.svg'" class="w-full rounded" alt="" />
 
     <!-- set schedule -->
-    <div *ngIf="isPendingSchedule" class="flex flex-col pl-40 mt-10 absolute inset-0">
+    <div *ngIf="isPendingSchedule" class="flex flex-col pl-48 mt-10 absolute inset-0">
       <h3 class="text-white opacity-100" i18n>Congratulations, your created your first event.</h3>
-      <ui-button class="mt-8" (click)="navigateToSetSchedule()" kind="clear-outline" icon="calendar" i18n
+      <ui-button class="mt-8" (click)="navigateToSetSchedule()" variant="primarylight-outline" icon="calendar" i18n
         >Set Schedule</ui-button
       >
     </div>
@@ -41,8 +41,8 @@
           <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
         </div>
         <div class="flex ml-3 share-links">
-          <ui-button height="50px" kind="primary-light"><ui-icon>share</ui-icon></ui-button>
-          <app-social-sharing kind="primary" [url]="eventURL"></app-social-sharing>
+          <ui-button height="50px" variant="primarylight--outline"><ui-icon>share</ui-icon></ui-button>
+          <app-social-sharing variant="primary" [url]="eventURL"></app-social-sharing>
         </div>
       </div>
 
@@ -55,24 +55,24 @@
   <app-host-event-analytics-graphs [eventId]="performance.data.data._id"></app-host-event-analytics-graphs>
 
   <!-- schedule, visibility and status -->
-  <div class="grid gap-2 grid-cols-3 w-full mt-2">
+  <div class="grid gap-4 grid-cols-3 w-full mt-2">
     <div class="flex flex-col">
       <h4 class="m-4 text-black font-medium" i18n>Visibility</h4>
-      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative text-center">
-        <h3 class="my-12" style="color: '#17A2B8'">{{ performance.data.data.visibility | visibility }}</h3>
+      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl m-1 p-4 relative text-center">
+        <h3 class="my-12 dashboard-label">{{ performance.data.data.visibility | visibility }}</h3>
       </div>
     </div>
     <div class="flex flex-col">
       <h4 class="m-4 text-black font-medium" i18n>Event Visibility Schedule</h4>
-      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-2 text-center clear-both relative">
+      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl m-1 text-center clear-both relative">
         <img
           *ngIf="isPendingSchedule"
           [src]="'/assets/welcome-banner.svg'"
-          class="object-cover h-full rounded"
+          class="object-cover h-full rounded-2xl"
           alt=""
         />
         <div *ngIf="isPendingSchedule" class="absolute inset-0 h-full p-8">
-          <ui-button (click)="navigateToSetSchedule()" class="mx-auto mt-8" kind="primary" icon="calendar" i18n
+          <ui-button (click)="navigateToSetSchedule()" class="mx-auto mt-8" variant="primary--fill" icon="calendar" i18n
             >Set Schedule</ui-button
           >
         </div>
@@ -82,7 +82,7 @@
             <h4>
               {{ locale == 'en' ? scheduledStart : (performance.data.data.publicity_period.start | date: locale) }}
             </h4>
-            <p style="color: '#17A2B8'">
+            <p class="dashboard-label">
               {{ performance.data.data.publicity_period.start | date: 'shortTime':locale }}
               ({{ timezone }})
             </p>
@@ -93,7 +93,7 @@
 
           <div class="flex-col rounded-lg p-2 date-chip opacity-100">
             <h4>{{ locale == 'en' ? scheduledEnd : (performance.data.data.publicity_period.end | date: locale) }}</h4>
-            <p style="color: '#17A2B8'">
+            <p class="dashboard-label">
               {{ performance.data.data.publicity_period.end | date: 'shortTime':locale }} ({{ timezone }})
             </p>
           </div>
@@ -103,7 +103,7 @@
     <div class="flex flex-col">
       <h4 class="m-4 text-black font-medium" i18n>Event Status</h4>
       <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative text-center">
-        <h3 class="my-12" style="color: '#17A2B8'">
+        <h3 class="my-12 dashboard-label">
           {{ performance.data.data.status ? performanceStatus : '-' }}
         </h3>
       </div>

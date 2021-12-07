@@ -8,7 +8,6 @@ export enum ThemeKind {
   Accent = 'accent',
   Warning = 'warning',
   Danger = 'danger',
-  ClearOutline = 'clear-outline', //TODO: resolve and use the optional input for outline or fill when merging
   ClearDark = 'cleardark',
   PrimaryLight = 'primarylight'
 }
