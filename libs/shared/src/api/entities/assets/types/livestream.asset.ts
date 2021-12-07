@@ -5,12 +5,14 @@ import { AssetTag, AssetType, IMuxPassthroughOwnerInfo, LiveStreamState } from '
 import { ChildEntity, EntityManager } from 'typeorm';
 import { AssetMethods, AssetOptions, AssetProvider } from '.';
 import { LiveStream } from '@mux/mux-node';
-import Env from '@backend/env';
 
 @ChildEntity(AssetType.LiveStream)
 export class LiveStreamAsset extends Asset<AssetType.LiveStream> implements AssetMethods<AssetType.LiveStream> {
-  constructor(group: AssetGroup, tags?: AssetTag[]) {
+  private test: boolean;
+  
+  constructor(group: AssetGroup, test: boolean, tags?: AssetTag[]) {
     super(AssetType.LiveStream, group, tags);
+    this.test = test;
   }
 
   async setup(
@@ -27,7 +29,7 @@ export class LiveStreamAsset extends Asset<AssetType.LiveStream> implements Asse
       passthrough: JSON.stringify(super.createPassthroughData(owner)), // Passed through in webhook handlers
       reduced_latency: true, // https://mux.com/blog/reduced-latency-for-mux-live-streaming-now-available/
       simulcast_targets: [], // For 3rd party re-streaming
-      test: Env.MUX.LIVE_STREAM_TEST_MODE // No cost during testing/dev
+      test: this.test // No cost during testing/dev
     });
 
     this.asset_identifier = stream.id;

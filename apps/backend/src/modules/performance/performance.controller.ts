@@ -134,7 +134,7 @@ export class PerformanceController extends ModuleController {
         }
 
         if (req.body.type == 'live') {
-          const asset = new LiveStreamAsset(performance.asset_group, ['primary']);
+          const asset = new LiveStreamAsset(performance.asset_group, Env.MUX.LIVE_STREAM_TEST_MODE, ['primary']);
           await asset.setup(
             this.mux,
             null,

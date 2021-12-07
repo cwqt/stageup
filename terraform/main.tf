@@ -157,20 +157,20 @@ module "backend" {
   timeout       = 1200
 
   env = {
-    NODE_ENV           = local.NODE_ENV
-    EMAIL_ADDRESS      = "development@stageup.uk"
-    LOAD_BALANCER_URL  = "https://${local.load_balancer_host}"
-    BACKEND_STORE_HOST = module.redis.ip_address
-    BACKEND_REDIS_HOST = module.redis.ip_address
-    POSTGRES_USER      = "admin-${local.name}"
-    POSTGRES_PASSWORD  = var.sql_password
-    POSTGRES_DB        = local.postgres_name
-    POSTGRES_HOST      = data.google_sql_database_instance.postgres.private_ip_address
-    BACKEND_ENDPOINT   = "/" # managed by load balancer / nginx
-    FRONTEND_ENDPOINT  = "/" # managed by load balancer / nginx
-    FRONTEND_PORT      = 8080
-    BACKEND_PORT       = 8080
-    LIVE_STREAM_TEST   = "false"
+    NODE_ENV                    = local.NODE_ENV
+    EMAIL_ADDRESS               = "development@stageup.uk"
+    LOAD_BALANCER_URL           = "https://${local.load_balancer_host}"
+    BACKEND_STORE_HOST          = module.redis.ip_address
+    BACKEND_REDIS_HOST          = module.redis.ip_address
+    POSTGRES_USER               = "admin-${local.name}"
+    POSTGRES_PASSWORD           = var.sql_password
+    POSTGRES_DB                 = local.postgres_name
+    POSTGRES_HOST               = data.google_sql_database_instance.postgres.private_ip_address
+    BACKEND_ENDPOINT            = "/" # managed by load balancer / nginx
+    FRONTEND_ENDPOINT           = "/" # managed by load balancer / nginx
+    FRONTEND_PORT               = 8080
+    BACKEND_PORT                = 8080
+    MUX_LIVE_STREAM_TEST_MODE   = "false"
     # secrets -------------------------------------------------------------------------
     # TODO: support different workspaces different secret keys
     MUX_SECRET_KEY                       = module.secrets.MUX_SECRET_KEY
