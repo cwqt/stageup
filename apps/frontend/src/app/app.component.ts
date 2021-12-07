@@ -7,7 +7,7 @@ import { ToastService } from './services/toast.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { AppService } from './services/app.service';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-import { Environment, UserPermission } from '@core/interfaces';
+import { Environment, HTTP, UserPermission } from '@core/interfaces';
 import { NGXLogger } from 'ngx-logger';
 import { filter } from 'rxjs/operators';
 import { LOCALE_ID, Inject } from '@angular/core';
@@ -95,31 +95,47 @@ export class AppComponent implements OnInit {
         if (this.appService.getQueryParam('invite_accepted')) this.appService.navigateTo(`/dashboard`);
       }
 
-      // Subscribe to login state & re-set permissions state on changes
-      this.authService.$loggedIn.subscribe(isLoggedIn => {
-        let permissions: string[] = [];
-        if (isLoggedIn) {
-          const myself = this.myselfService.$myself.value;
-          // Set permissions for logged in users
-          if (myself.user.is_admin) permissions.push(UserPermission.SiteAdmin);
-          permissions.push(UserPermission.User);
-
-          if (myself.host_info) permissions.push(myself.host_info.permissions);
-        } else {
-          permissions = [UserPermission.None];
-        }
-
-        this.permissionsService.loadPermissions(permissions);
-      });
-
+      this.subscribeToLoginState();
       this.loading = false;
-
       setTimeout(() => {
         this.showCurtain = false;
       }, 500);
     } catch (error) {
-      if (typeof error == 'string') this.loadError = error;
-      else this.loadError = error.message;
+      // This error will occur when reloading the server (i.e. there is descrepency between the server 'session' data and the client 'local storage' data)
+      // In these cases, instead of just showing the curtain, instead navigate to '/' and allow user to re-login
+      // TODO: Session data is stored in RedisStore and should be persisted during production updates - however we should check this in production
+      if (error.status == HTTP.Unauthorised) {
+        this.myselfService.store(null, true);
+        this.authService.$loggedIn.next(false);
+        this.subscribeToLoginState();
+        this.loading = false;
+        setTimeout(() => {
+          this.showCurtain = false;
+        }, 500);
+        this.appService.navigateTo(`/`);
+      } else {
+        if (typeof error == 'string') this.loadError = error;
+        else this.loadError = error.message;
+      }
     }
+  }
+
+  subscribeToLoginState(): void {
+    // Subscribe to login state & re-set permissions state on changes
+    this.authService.$loggedIn.subscribe(isLoggedIn => {
+      let permissions: string[] = [];
+      if (isLoggedIn) {
+        const myself = this.myselfService.$myself.value;
+        // Set permissions for logged in users
+        if (myself.user.is_admin) permissions.push(UserPermission.SiteAdmin);
+        permissions.push(UserPermission.User);
+
+        if (myself.host_info) permissions.push(myself.host_info.permissions);
+      } else {
+        permissions = [UserPermission.None];
+      }
+
+      this.permissionsService.loadPermissions(permissions);
+    });
   }
 }
