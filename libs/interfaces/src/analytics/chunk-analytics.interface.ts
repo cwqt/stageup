@@ -124,4 +124,4 @@ export const Analytics: {
   }
 };
 
-export type PerfromanceAnalyticsType = IAnalyticsChunk<IPerformanceAnalyticsMetrics>[]
+export type PerformanceAnalyticsChunks = IAnalyticsChunk<IPerformanceAnalyticsMetrics>[]
