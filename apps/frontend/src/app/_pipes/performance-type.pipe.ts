@@ -7,7 +7,7 @@ import { PerformanceType} from '@core/interfaces';
 export class PerformanceTypePipe implements PipeTransform {
   transform(value: PerformanceType): any {
     const pretty: { [index in PerformanceType]: string } = {
-      [PerformanceType.Live]: $localize`Livestream `,
+      [PerformanceType.Live]: $localize`Livestream`,
       [PerformanceType.Vod]: $localize`Recorded`,
     };
 
