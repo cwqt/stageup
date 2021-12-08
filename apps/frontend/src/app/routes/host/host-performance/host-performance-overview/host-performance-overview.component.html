@@ -78,6 +78,7 @@
 
         <div *ngIf="!isPendingSchedule" class="flex py-8 justify-center">
           <div class="flex-col rounded-lg p-2.5 date-chip">
+            <!-- display english local dates in 'dd Month yyyy' -->
             <h4>
               {{ locale == 'en' ? scheduledStart : (performance.data.data.publicity_period.start | date: locale) }}
             </h4>
