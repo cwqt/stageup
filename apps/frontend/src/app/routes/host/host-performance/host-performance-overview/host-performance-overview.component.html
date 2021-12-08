@@ -8,11 +8,11 @@
 
   <!-- copy and share event link -->
   <div *ngIf="numberOfHostEvents > 1" class="flex">
-    <div class="bg-white rounded-md w-96 h-9">
+    <div class="bg-white rounded-md copy-box">
       <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
     </div>
     <div class="flex ml-3 share-links">
-      <ui-button height="50px" variant="primarylight"><ui-icon>share</ui-icon></ui-button>
+      <ui-button height="48px" variant="primarylight"><ui-icon>share</ui-icon></ui-button>
       <app-social-sharing kind="primary" [url]="eventURL"></app-social-sharing>
     </div>
   </div>
@@ -30,18 +30,17 @@
     </div>
 
     <!-- copy and share event link -->
-
     <div *ngIf="!isPendingSchedule" class="flex flex-col pl-48 mt-8 absolute inset-0">
       <h4 class="text-white opacity-100" i18n>
         Congratulations, your first event is ready. Share it with your audience.
       </h4>
       <h4 class="text-white mb-1" i18n>Share your event's link</h4>
       <div class="flex">
-        <div class="bg-white rounded-md w-72 h-9.5">
+        <div class="bg-white rounded-md copy-box">
           <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
         </div>
         <div class="flex ml-3 share-links">
-          <ui-button height="50px" variant="primarylight--outline"><ui-icon>share</ui-icon></ui-button>
+          <ui-button height="48px" variant="primarylight--fill"><ui-icon>share</ui-icon></ui-button>
           <app-social-sharing variant="primary" [url]="eventURL"></app-social-sharing>
         </div>
       </div>
