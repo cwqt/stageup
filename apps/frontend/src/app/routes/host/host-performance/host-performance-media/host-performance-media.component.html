@@ -1,31 +1,56 @@
-<h2 class="mb-0" i18n>Media</h2>
-<ui-hr></ui-hr>
-<!-- Upload Event Video (only if the event is a VOD) -->
-<div *ngIf="vod" class="mt-5">
-  <h3 i18n>Event video</h3>
-  <p i18n>Upload your event's video.</p>
-  <div class="my-8 w-full max-w-2xl">
-    <app-upload-video
-      *ngIf="VoDAssetCreator"
-      [initialSource]="vod?.location"
-      [createAssetResHandler]="VoDAssetCreator"
-    ></app-upload-video>
-  </div>
-  <ui-hr></ui-hr>
+<div class="flex items-center mb-8">
+  <h1 class="mb-0" i18n>Event Media</h1>
+  <ui-chip class="chip ml-4 capitalize" [kind]="'primary'">{{ performanceType }}</ui-chip>
 </div>
-<!-- Upload Thumbnails -->
-<div class="mt-5">
-  <h3 i18n>Thumbnail</h3>
-  <p i18n>Select or upload a picture that shows what's in your video</p>
-</div>
-<app-host-performance-thumbnails [performance]="performance.data"></app-host-performance-thumbnails>
-<ui-hr></ui-hr>
-<!-- Upload Trailer -->
-<div class="mt-5">
-  <h3 i18n>Trailer</h3>
-  <p i18n>Add an introductory video or a trailer for your event</p>
-  <div class="my-8 w-full max-w-2xl">
-    <app-upload-video [initialSource]="trailer?.location" [createAssetResHandler]="trailerAssetCreator.bind(this)">
-    </app-upload-video>
+
+<div class="relative">
+  <mat-tab-group #tabs>
+    <mat-tab *ngIf="performanceType == 'recorded'" i18n-label label="Main">
+      <div class="mt-8 max-w-6xl">
+        <h3 i18n>Event video</h3>
+        <p i18n>Upload your event's video.</p>
+        <div class="my-8 w-full max-w-2xl">
+          <app-upload-video
+            *ngIf="VoDAssetCreator"
+            [initialSource]="vod?.location"
+            [createAssetResHandler]="VoDAssetCreator"
+          ></app-upload-video>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab i18n-label label="Images">
+      <!-- Upload Thumbnails -->
+      <div class="mt-8 max-w-6xl"></div>
+      <app-host-performance-media-images [performance]="performance.data"></app-host-performance-media-images>
+    </mat-tab>
+    <mat-tab i18n-label label="Trailer">
+      <!-- Upload Trailer -->
+      <div class="mt-8 max-w-6xl">
+        <h3 i18n>Trailer</h3>
+        <p i18n>Add an introductory video or a trailer for your event</p>
+        <div class="my-8 w-full max-w-2xl">
+          <app-upload-video
+            [initialSource]="trailer?.location"
+            [createAssetResHandler]="trailerAssetCreator.bind(this)"
+          >
+          </app-upload-video>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <div class="absolute right-0 top-0 flex z-50">
+    <ui-button (click)="savePerformanceDetails()" variant="primary" i18n> Save </ui-button>
+    <div
+      class="flex items-center cursor-pointer"
+      [popper]="managePerformanceDropdown"
+      [popperShowOnStart]="false"
+      [popperHideOnClickOutside]="true"
+      [popperHideOnScroll]="true"
+      [popperApplyClass]="'user-dropdown-menu'"
+      popperTrigger="click"
+      popperPlacement="top"
+    >
+      <ui-icon class="text-gray-500" [size]="42">overflow-menu--vertical</ui-icon>
+    </div>
   </div>
 </div>

@@ -187,6 +187,9 @@ import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.comp
 import { OptStatusPipe } from './_pipes/opt-status.pipe';
 import { UnsavedChangesDialogComponent } from './components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { HostPerformanceSettingsComponent } from './routes/host/host-performance/host-performance-settings/host-performance-settings.component';
+import { HostPerformanceMediaTrailerComponent } from './routes/host/host-performance/host-performance-media/host-performance-media-trailer/host-performance-media-trailer.component';
+import { HostPerformanceMediaImagesComponent } from './routes/host/host-performance/host-performance-media/host-performance-media-images/host-performance-media-images.component';
+import { HostPerformanceMediaVideoComponent } from './routes/host/host-performance/host-performance-media/host-performance-media-video/host-performance-media-video.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -344,7 +347,10 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     BreadcrumbComponent,
     OptStatusPipe,
     UnsavedChangesDialogComponent,
-    HostPerformanceSettingsComponent
+    HostPerformanceSettingsComponent,
+    HostPerformanceMediaTrailerComponent,
+    HostPerformanceMediaImagesComponent,
+    HostPerformanceMediaVideoComponent
   ],
   imports: [
     AngularMaterialModule,

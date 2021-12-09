@@ -1,6 +1,15 @@
+import { BreadcrumbService } from 'xng-breadcrumb';
 import { findAssets } from '@core/helpers';
 import { Component, OnInit } from '@angular/core';
-import { AssetType, DtoPerformance, IAssetStub, ICreateAssetRes, IHost, IPerformanceHostInfo } from '@core/interfaces';
+import {
+  AssetType,
+  DtoPerformance,
+  IAssetStub,
+  ICreateAssetRes,
+  IHost,
+  IPerformanceHostInfo,
+  PerformanceType
+} from '@core/interfaces';
 import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
@@ -19,9 +28,13 @@ export class HostPerformanceMediaComponent implements OnInit {
   trailer: IAssetStub<AssetType.Video>;
   vod: IAssetStub<AssetType.Video>;
 
+  get performanceType(): 'recorded' | 'livestream' {
+    return this.performance?.data?.data?.performance_type === PerformanceType.Vod ? 'recorded' : 'livestream';
+  }
+
   VoDAssetCreator: () => Promise<ICreateAssetRes>;
 
-  constructor(private performanceService: PerformanceService) {}
+  constructor(private performanceService: PerformanceService, private breadcrumbService: BreadcrumbService) {}
 
   ngOnInit(): void {
     // A performance is VOD if the primary assets is of type AssetType.Video
@@ -34,6 +47,12 @@ export class HostPerformanceMediaComponent implements OnInit {
       );
 
     this.trailer = findAssets(this.performance.data.data.assets, AssetType.Video, ['trailer'])[0];
+    this.breadcrumbService.set(
+      'dashboard/performances/:id',
+      this.performance.data.data.name.length > 15
+        ? `${this.performance.data.data.name.substring(0, 15)}...`
+        : this.performance.data.data.name
+    );
   }
 
   trailerAssetCreator() {
