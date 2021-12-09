@@ -1,0 +1,4 @@
+// Set the second column width to be the same as the button
+::ng-deep .mat-column-0 {
+  width: 250px !important;
+}
