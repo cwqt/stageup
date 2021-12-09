@@ -92,7 +92,7 @@ export class PerformanceEvents extends ModuleEvents {
           sender_email_address: Env.EMAIL_ADDRESS,
           type: '15_MINUTES',
           premier_date: premierDate,
-          url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/performances/${ct._id}`
+          url: `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/events/${ct._id}`
         },
         {
           // delay: 1000 * 3 * 60 // used for testing (sends in 3 minutes)
@@ -260,7 +260,7 @@ export class PerformanceEvents extends ModuleEvents {
       timestamp() < invoice.ticket.performance.publicity_period.end;
 
     const link = performanceIsAvailable
-      ? `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/performances/${invoice.ticket.performance._id}/watch`
+      ? `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/events/${invoice.ticket.performance._id}/watch`
       : `${Env.FRONTEND.URL}/${ct.__meta.locale.language}/my-stuff`;
 
     if (performanceIsAvailable) {
