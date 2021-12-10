@@ -22,16 +22,16 @@
     <img [src]="'/assets/event-welcome-banner.svg'" class="w-full rounded" alt="" />
 
     <!-- set schedule -->
-    <div *ngIf="isPendingSchedule" class="flex flex-col pl-48 mt-10 absolute inset-0">
+    <div *ngIf="isPendingSchedule" class="flex flex-col pl-48 mt-10 mb-10 absolute inset-0">
       <h3 class="text-white opacity-100 banner-header mb-5" i18n>Congratulations, your created your first event!</h3>
-      <ui-button class="mt-8" (click)="navigateToSetSchedule()" variant="primarylight-outline" icon="calendar" i18n
+      <ui-button class="mt-2.5" (click)="navigateToSetSchedule()" variant="primarylight-outline" icon="calendar" i18n
         >Set Schedule</ui-button
       >
     </div>
 
     <!-- copy and share event link -->
-    <div *ngIf="!isPendingSchedule" class="flex flex-col pl-48 mt-9 absolute inset-0">
-      <h3 class="text-white opacity-100 banner-header" i18n>
+    <div *ngIf="!isPendingSchedule" class="flex flex-col pl-48 mt-10 mb-10 absolute inset-0">
+      <h3 class="text-white opacity-100 banner-header mb-2" i18n>
         Congratulations, your first event is ready. Share it with your audience.
       </h3>
       <h4 class="text-white mb-1" i18n>Share your event's link</h4>
