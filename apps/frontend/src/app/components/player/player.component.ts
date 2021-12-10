@@ -8,6 +8,7 @@ import mux from 'mux-embed';
 import { environment } from 'apps/frontend/src/environments/environment';
 import { MyselfService } from '@frontend/services/myself.service';
 import { AppService } from '@frontend/services/app.service';
+import { ThemeDimension } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-player',
@@ -15,6 +16,7 @@ import { AppService } from '@frontend/services/app.service';
   styleUrls: ['./player.component.scss']
 })
 export class PlayerComponent implements OnInit {
+  @Input() size: Omit<ThemeDimension, ThemeDimension.Medium> = ThemeDimension.Large;
   @ViewChild(PlyrComponent) plyr: PlyrComponent;
 
   @Output() onPlayerReady: EventEmitter<PlayerComponent> = new EventEmitter();
@@ -26,14 +28,34 @@ export class PlayerComponent implements OnInit {
   asset?: IAssetStub;
   token?: ISignedToken;
 
+  // removed the download button
+  controls = [
+    'play-large',
+    'restart',
+    'rewind',
+    'play',
+    'fast-forward',
+    'progress',
+    'current-time',
+    'duration',
+    'mute',
+    'volume',
+    'captions',
+    'settings',
+    'pip',
+    'airplay',
+    'fullscreen'
+  ];
+
   player: Plyr;
   poster: string;
   hlsjsDriver: HlsjsPlyrDriver;
   streamSources: Plyr.Source[] = [];
   options: Plyr.Options = {
     disableContextMenu: true,
-    ratio: '16:9',
-    captions: { active: true, update: true, language: 'en' }
+    ratio: this.size == ThemeDimension.Large ? '16:9' : '4:3',
+    captions: { active: true, update: true, language: 'en' },
+    controls: this.controls
   };
 
   constructor(private myselfService: MyselfService, private appService: AppService) {}

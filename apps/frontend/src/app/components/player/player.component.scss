@@ -1,3 +1,5 @@
+@import 'apps/frontend/src/styles/variables';
+
 video {
   object-fit: fill;
   width: 100% !important;
@@ -7,4 +9,9 @@ video {
 // disable progress bar
 .is--live-stream::ng-deep .plyr__progress {
   display: none;
+}
+
+// TODO: allow variable colors from variables.scss
+.player {
+  --plyr-color-main: #e64a73;
 }

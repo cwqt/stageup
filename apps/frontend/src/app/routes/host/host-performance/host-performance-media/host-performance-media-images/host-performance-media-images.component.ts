@@ -14,7 +14,7 @@ import { AssetDto, AssetType, DtoPerformance } from '@core/interfaces';
 export class HostPerformanceMediaImagesComponent implements OnInit {
   @Input() performance: DtoPerformance;
 
-  THUMBNAIL_LIMIT: number = 5;
+  THUMBNAIL_LIMIT: number = 5; // Primary + secondary images
 
   primaryThumbnail: AssetDto;
   secondaryThumbnails: AssetDto[];

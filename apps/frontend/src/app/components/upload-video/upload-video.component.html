@@ -2,30 +2,40 @@
   [hidden]="selectedVideo || !initialSource || uploadComplete"
   #livePlayer
   (onPlayerReady)="onPlayerReady($event)"
-  class="mb-4 max-h-full w-full"
+  size="s"
 >
 </app-player>
 
 <div [hidden]="!selectedVideo && !uploadComplete">
-  <video #localPlayer class="mb-4 max-h-full w-full" controls></video>
+  <video #localPlayer controls></video>
 </div>
 
 <div class="justify-items-center mt-2">
   <ng-container *ngIf="!selectedVideo">
     <input accept="video/*" hidden (change)="onVideoSelected()" #fileSelector type="file" id="file" />
-    <ui-button icon="attachment" variant="primary" (click)="fileSelector.click()" class="select-file mb-2" i18n>
-      Select Video
+    <ui-button icon="upload" variant="primary" (click)="fileSelector.click()" class="select-file mb-2">
+      {{ buttonText }}
     </ui-button>
   </ng-container>
 
-  <div class="flex items-center space-x-2">
+  <div class="flex items-center">
+    <ui-button
+      *ngIf="selectedVideo"
+      (click)="clearSelection()"
+      [disabled]="uploadAsset.loading"
+      variant="primary-outline"
+      class="mr-app"
+      i18n
+    >
+      Cancel
+    </ui-button>
+
     <ui-button
       *ngIf="selectedVideo"
       (click)="uploadVideo()"
       [loading]="uploadAsset.loading"
       [disabled]="uploadAsset.loading"
-      icon="cloud--upload"
-      class="mr-2"
+      icon="upload"
       variant="primary"
     >
       <span *ngIf="uploadAsset.loading">
@@ -34,10 +44,6 @@
       </span>
 
       <span *ngIf="!uploadAsset.loading" i18n>Upload</span>
-    </ui-button>
-
-    <ui-button *ngIf="selectedVideo" (click)="clearSelection()" [disabled]="uploadAsset.loading" variant="secondary" i18n>
-      Clear
     </ui-button>
   </div>
 

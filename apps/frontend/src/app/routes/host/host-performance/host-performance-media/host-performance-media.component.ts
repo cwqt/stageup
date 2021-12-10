@@ -24,6 +24,7 @@ export class HostPerformanceMediaComponent implements OnInit {
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
   performance: ICacheable<DtoPerformance>;
   host: IHost;
+  trailerButton = $localize`Upload Trailer`;
 
   trailer: IAssetStub<AssetType.Video>;
   vod: IAssetStub<AssetType.Video>;
@@ -43,7 +44,7 @@ export class HostPerformanceMediaComponent implements OnInit {
     this.VoDAssetCreator = async () =>
       this.performanceService.readVideoAssetSignedUrl(
         this.performance.data.data._id,
-        this.performance.data.data.assets.find(a => a.type == AssetType.Video)._id
+        this.performance.data.data.assets.find(a => a.type == AssetType.Video)?._id
       );
 
     this.trailer = findAssets(this.performance.data.data.assets, AssetType.Video, ['trailer'])[0];

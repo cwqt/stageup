@@ -17,6 +17,7 @@ const CHUNK_SIZE = 2048; // upload in 2mb chunks
 export class UploadVideoComponent implements OnInit {
   @Input() initialSource: string; // url for initial value
   @Input() createAssetResHandler: () => Promise<ICreateAssetRes>;
+  @Input() buttonText: string = $localize`Select Video`;
   @Output() uploadChange: EventEmitter<UploadEvent> = new EventEmitter();
 
   @ViewChild('fileSelector') fileSelector: ElementRef;

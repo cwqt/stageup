@@ -1,7 +1,9 @@
-.required {
-  color: red;
+.thumbnail-image {
+  width: 320px;
+  min-width: 320px;
+  height: 240px;
 }
 
-.thumbnail-image {
-  max-width: 20rem;
+.bg-grey {
+  background-color: #c4c4c4;
 }

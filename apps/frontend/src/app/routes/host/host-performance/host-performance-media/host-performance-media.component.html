@@ -7,9 +7,8 @@
   <mat-tab-group #tabs>
     <mat-tab *ngIf="performanceType == 'recorded'" i18n-label label="Main">
       <div class="mt-8 max-w-6xl">
-        <h3 i18n>Event video</h3>
-        <p i18n>Upload your event's video.</p>
-        <div class="my-8 w-full max-w-2xl">
+        <h3 i18n>Upload event video<span class="text-red-500">*</span></h3>
+        <div class="mt-5">
           <app-upload-video
             *ngIf="VoDAssetCreator"
             [initialSource]="vod?.location"
@@ -26,19 +25,18 @@
     <mat-tab i18n-label label="Trailer">
       <!-- Upload Trailer -->
       <div class="mt-8 max-w-6xl">
-        <h3 i18n>Trailer</h3>
-        <p i18n>Add an introductory video or a trailer for your event</p>
-        <div class="my-8 w-full max-w-2xl">
-          <app-upload-video
-            [initialSource]="trailer?.location"
-            [createAssetResHandler]="trailerAssetCreator.bind(this)"
-          >
-          </app-upload-video>
-        </div>
+        <h3 i18n>Upload Trailer</h3>
+        <p i18n>Add an introductory video or a trailer for your event.</p>
+        <app-upload-video
+          [initialSource]="trailer?.location"
+          [createAssetResHandler]="trailerAssetCreator.bind(this)"
+          [buttonText]="trailerButton"
+        >
+        </app-upload-video>
       </div>
     </mat-tab>
   </mat-tab-group>
-  <div class="absolute right-0 top-0 flex z-50">
+  <!-- <div class="absolute right-0 top-0 flex z-50">
     <ui-button (click)="savePerformanceDetails()" variant="primary" i18n> Save </ui-button>
     <div
       class="flex items-center cursor-pointer"
@@ -52,5 +50,5 @@
     >
       <ui-icon class="text-gray-500" [size]="42">overflow-menu--vertical</ui-icon>
     </div>
-  </div>
+  </div> -->
 </div>
