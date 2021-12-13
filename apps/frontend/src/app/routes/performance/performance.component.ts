@@ -1,5 +1,6 @@
 import { Component, Inject, LOCALE_ID, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { findAssets } from '@core/helpers';
 import {
   DtoAccessToken,
   DtoPerformance,
@@ -58,10 +59,11 @@ export class PerformanceComponent implements OnInit {
       this.rating = this.performanceCacheable.data.__client_data.rating;
       this.performanceSharingUrl = `${this.appService.environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
 
-      // Look for VoD or LiveStream asset marked as 'primary'
-      this.primaryAsset = this.performance.assets.find(
-        asset => (asset.tags.includes('primary') && (asset.type == 'video' || asset.type == 'live-stream'))
-      );
+      this.primaryAsset = findAssets(
+        this.performance.assets,
+        [AssetType.Video, AssetType.LiveStream],
+        ['primary']
+      )[0];
 
       if (this.primaryAsset)
         await this.primarySignedToken.request(
