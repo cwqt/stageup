@@ -1,7 +1,8 @@
+import { Cacheable } from '@frontend/app.interfaces';
 import { ComponentCanDeactivate } from '../../../../_helpers/unsaved-changes.guard';
 import { Observable, Subject } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { timestamp, unix } from '@core/helpers';
@@ -29,6 +30,7 @@ import { ToastService } from '@frontend/services/toast.service';
 import { BreadcrumbService } from 'xng-breadcrumb';
 import * as lodash from 'lodash';
 import { UnsavedChangesDialogComponent } from '@frontend/components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import { IHostPerformanceComponent } from '../host-performance.component';
 
 // Container component for all of the tabs (details, release, links, keys)
 @Component({
@@ -36,20 +38,21 @@ import { UnsavedChangesDialogComponent } from '@frontend/components/dialogs/unsa
   templateUrl: './host-performance-details.component.html',
   styleUrls: ['./host-performance-details.component.scss']
 })
-export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeactivate {
+export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeactivate, IHostPerformanceComponent {
   // Injected from parent router outlet
   host: IHost;
   performanceId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
-  performance: ICacheable<DtoPerformance>;
+  performance: Cacheable<DtoPerformance>;
   performanceDetails: DtoPerformanceDetails;
   performanceGeneralForm: UiForm<void>; // The forms do not handle submit but instead merge with data from other form to submit
   performanceReleaseForm: UiForm<void>;
   @ViewChild('tabs', { static: false }) tabs: MatTabGroup;
-
   @ViewChild('checkboxText', { static: false }) checkboxText: ElementRef;
 
   visibilityFormTouched = false;
+
+  @Output() reloadPerformance = new EventEmitter();
 
   get performanceData() {
     return this.performance.data?.data;
@@ -246,6 +249,11 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
       this.toastService.emit($localize`Event saved successfully!`, ThemeKind.Accent, {
         duration: 4000
       });
+      // Reload the performance after saving so frontend changes are updated (e.g. the tabs)
+      await this.performance.request(this.performanceService.readPerformance(this.performanceId));
+      // Re-set the breadcumb to the new title
+      this.breadcrumbService.set('dashboard/performances/:id', this.performanceDetails.name);
+
       return true;
     }
   }

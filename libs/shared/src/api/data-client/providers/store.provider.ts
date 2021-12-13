@@ -11,6 +11,7 @@ export interface IStoreProviderConfig {
 }
 
 @Service()
+// TODO: Check persistence with server restarts/updates in prod. An easy way to check this is if user's are logged out after a server restart.
 export class StoreProvider implements Provider<RedisStore> {
   name = 'Store';
   connection: RedisStore;

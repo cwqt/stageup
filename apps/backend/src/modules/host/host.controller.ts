@@ -81,7 +81,8 @@ import {
   DtoPerformanceIDAnalytics,
   DeleteHostReason,
   IAnalyticsChunk,
-  IPerformanceAnalyticsMetrics
+  IPerformanceAnalyticsMetrics,
+  PerformanceStatus
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import {
@@ -677,12 +678,17 @@ export class HostController extends ModuleController {
   readHostPerformances: IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> = {
     authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
     controller: async req => {
-      return await this.ORM.createQueryBuilder(Performance, 'performance')
+      const returnOnlyScheduled = req.query.only_scheduled == 'true';
+
+      let qb = this.ORM.createQueryBuilder(Performance, 'performance')
         .innerJoinAndSelect('performance.host', 'host')
-        .where('host._id = :id', { id: req.params.hid })
-        .orderBy('performance.created_at', 'DESC')
-        .withDeleted() //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
-        .paginate({ serialiser: o => o.toStub() });
+        .where('host._id = :id', { id: req.params.hid });
+
+      if (returnOnlyScheduled)
+        qb = qb.andWhere('performance.status = :status', { status: PerformanceStatus.Scheduled });
+      else qb = qb.withDeleted(); //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
+
+      return await qb.orderBy('performance.created_at', 'DESC').paginate({ serialiser: o => o.toStub() });
     }
   };
 
