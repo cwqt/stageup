@@ -52,7 +52,7 @@ export class UserRegisterComponent implements OnInit, IUiDialogOptions, OnDestro
         }),
         email_address: UiField.Text({
           label: $localize`E-mail address`,
-          validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 32 }]
+          validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 256 }]
         }),
         password: UiField.Password({
           label: $localize`Password`,

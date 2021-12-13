@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
       fields: {
         email_address: UiField.Text({
           label: $localize`E-mail address`,
-          validators: [{ type: 'required' }, { type: 'email' }]
+          validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 256 }]
         }),
         password: UiField.Password({
           label: $localize`Password`,
@@ -115,9 +115,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
   handlePostSignIn(): void {
     this.myselfService.getMyself().then(myself => {
       // If the user has set a preferred language, we want to prefix the URL with that when they login
-      this.appService.navigateTo(
-        myself.host_info?.prefers_dashboard_landing ? `/dashboard` : `/`
-      );
+      this.appService.navigateTo(myself.host_info?.prefers_dashboard_landing ? `/dashboard` : `/`);
       this.dialog.closeAll();
     });
   }
