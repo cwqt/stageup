@@ -63,3 +63,24 @@ a,
 p {
   font-family: 'Roboto', sans-serif !important;
 }
+
+// Default set of classes to be used when wanting to set margins between components/elements
+.mr-app {
+  margin-right: 16px;
+}
+
+.ml-app {
+  margin-right: 16px;
+}
+
+.mt-app {
+  margin-right: 32px;
+}
+
+.mb-app {
+  margin-right: 32px;
+}
+
+.m-app {
+  margin: 32px 16px 32px 16px;
+}

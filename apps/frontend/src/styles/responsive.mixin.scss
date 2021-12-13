@@ -3,6 +3,9 @@ Breakpoints in preparation of implementing responsiveness
 
 Usage:
 
+************************
+@import 'apps/frontend/src/styles/responsive.mixin';
+
 .my-class {
   background-color: red;
   @include screen(2xl) {
@@ -21,6 +24,7 @@ Usage:
     background-color: indigo;
   }
 }
+************************
 */
 
 $breakpoints: (
