@@ -70,17 +70,33 @@ p {
 }
 
 .ml-app {
-  margin-right: 16px;
+  margin-left: 16px;
 }
 
 .mt-app {
-  margin-right: 32px;
+  margin-top: 32px;
 }
 
 .mb-app {
-  margin-right: 32px;
+  margin-bottom: 32px;
 }
 
 .m-app {
   margin: 32px 16px 32px 16px;
+}
+
+.pr-app {
+  padding-right: 16px;
+}
+.pl-app {
+  padding-left: 16px;
+}
+.pt-app {
+  padding-top: 8px;
+}
+.pb-app {
+  padding-bottom: 8px;
+}
+.p-app {
+  padding: 8px 16px 8px 16px;
 }

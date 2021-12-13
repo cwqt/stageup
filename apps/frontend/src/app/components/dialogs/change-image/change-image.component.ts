@@ -33,7 +33,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   buttons: IUiDialogOptions['buttons'] = [
     new UiDialogButton({
       label: $localize`Cancel`,
-      kind: ThemeKind.Secondary,
+      kind: `${ThemeKind.Primary}-outline`,
       callback: () => this.cancel.emit()
     }),
     new UiDialogButton({

@@ -33,7 +33,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
     this.buttons = [
       new UiDialogButton({
         label: $localize`Close`,
-        kind: ThemeKind.Secondary,
+        kind: `${ThemeKind.Primary}-outline`,
         callback: () => {
           this.cancel.emit();
           this.ref.close();

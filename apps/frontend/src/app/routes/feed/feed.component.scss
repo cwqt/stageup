@@ -1,9 +1,14 @@
 carousel {
   width: 100%;
-  overflow: hidden;
   .carousel-cell:hover {
     z-index: 10;
   }
+}
+
+.carousel-overflow {
+  overflow: hidden;
+  padding: 1.5rem 0.5rem;
+  margin: -1.5rem -0.5rem;
 }
 
 .carousel-container {

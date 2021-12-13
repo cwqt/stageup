@@ -1,4 +1,11 @@
-<div class="ui-dialog" [class.ui-dialog--small]="small">
+<div class="ui-dialog p-app" [class.ui-dialog--small]="small">
+  <ui-icon
+    *ngIf="cancel && cancel.emit"
+    (click)="cancel.emit()"
+    class="absolute top-2 right-2 cursor-pointer opacity-60"
+    size="l"
+    >close</ui-icon
+  >
   <div class="ui-dialog--spinner" *ngIf="loading">
     <mat-spinner></mat-spinner>
   </div>
@@ -10,7 +17,7 @@
     </ng-container>
 
     <ng-content></ng-content>
-  </div>
 
-  <ui-dialog-buttons [small]="small" [dialogRef]="dialogRef" [buttons]="buttons"></ui-dialog-buttons>
+    <ui-dialog-buttons [small]="small" [dialogRef]="dialogRef" [buttons]="buttons"></ui-dialog-buttons>
+  </div>
 </div>

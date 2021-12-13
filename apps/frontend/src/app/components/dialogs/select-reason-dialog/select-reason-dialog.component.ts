@@ -24,7 +24,11 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
 
   ngOnInit(): void {
     this.buttons = [
-      new UiDialogButton({ kind: ThemeKind.Secondary, label: $localize`Cancel`, callback: () => this.cancel.emit() }),
+      new UiDialogButton({
+        kind: `${ThemeKind.Primary}-outline`,
+        label: $localize`Cancel`,
+        callback: () => this.cancel.emit()
+      }),
       new UiDialogButton({
         kind: ThemeKind.Primary,
         label: $localize`Confirm`,
