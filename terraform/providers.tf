@@ -12,9 +12,6 @@ terraform {
       source  = "franckverrot/stripe"
       version = "1.8.0"
     }
-    postgresql = {
-      source = "terraform-providers/postgresql"
-    }
   }
 }
 
