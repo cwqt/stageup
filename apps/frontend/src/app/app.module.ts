@@ -72,6 +72,7 @@ import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
 import { VisibilityPipe } from './_pipes/visibility.pipe';
 import { TimesPipe } from './_pipes/times.pipe';
 import { TimeUntilPipe } from './_pipes/time-until.pipe';
+import { TextTruncatePipe } from './_pipes/text-truncate.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
 import { AdminOnboardingListComponent } from './routes/admin-panel/admin-onboarding-list/admin-onboarding-list.component';
@@ -257,6 +258,7 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     CurrencyCodePipe,
     TicketTypePipe,
     RefundReasonPipe,
+    TextTruncatePipe,
     OnboardingViewIssueMakerComponent,
     PerformanceBrochureComponent,
     PerformanceBrochureBannerComponent,

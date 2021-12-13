@@ -1,19 +1,20 @@
 import { findAssets } from '@core/helpers';
 import { Component, OnInit } from '@angular/core';
 import { AssetType, DtoPerformance, IAssetStub, ICreateAssetRes, IHost, IPerformanceHostInfo } from '@core/interfaces';
-import { ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { Cacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { UploadEvent } from '@frontend/components/upload-video/upload-video.component';
+import { IHostPerformanceComponent } from '../host-performance.component';
 
 @Component({
   selector: 'frontend-host-performance-media',
   templateUrl: './host-performance-media.component.html',
   styleUrls: ['./host-performance-media.component.scss']
 })
-export class HostPerformanceMediaComponent implements OnInit {
+export class HostPerformanceMediaComponent implements OnInit, IHostPerformanceComponent {
   performanceId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
-  performance: ICacheable<DtoPerformance>;
+  performance: Cacheable<DtoPerformance>;
   host: IHost;
 
   trailer: IAssetStub<AssetType.Video>;
