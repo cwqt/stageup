@@ -33,7 +33,6 @@ export class HostService extends ModuleService {
       .getMany();
   }
 
-  // 'string' used instead of IPerformance['_id'] since "An index signature parameter type cannot be a type alias."
   async readAnalyticsFromPerformanceArray(
     performanceIds: Array<IPerformance['_id']>,
     period: AnalyticsTimePeriod

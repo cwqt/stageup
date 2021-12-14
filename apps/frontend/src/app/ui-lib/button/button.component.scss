@@ -224,6 +224,7 @@
   border: 1px solid #f8eaed;
   &:hover {
     background-color: white;
+    color: $clr-primary;
   }
   ::ng-deep .mat-spinner circle {
     stroke: $clr-base !important;

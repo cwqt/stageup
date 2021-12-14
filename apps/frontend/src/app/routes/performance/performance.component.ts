@@ -56,7 +56,7 @@ export class PerformanceComponent implements OnInit {
 
     if (this.performance) {
       this.rating = this.performanceCacheable.data.__client_data.rating;
-      this.performanceSharingUrl = `${this.appService.environment.frontend_url}/${this.locale}/performances/${this.performance._id}`;
+      this.performanceSharingUrl = `${this.appService.environment.frontend_url}/${this.locale}/events/${this.performance._id}`;
 
       // Look for VoD or LiveStream asset marked as 'primary'
       this.primaryAsset = this.performance.assets.find(asset => asset.tags.includes('primary'));

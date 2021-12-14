@@ -61,8 +61,8 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     this.performance.request(this.performanceService.readPerformance(this.performanceId));
   }
 
-  goToPerformance(): void {
-    this.appService.navigateTo(`/performances/${this.performance?.data?.data?._id}`);
+  goToPerformance() {
+    this.appService.navigateTo(`/events/${this.performanceId}`);
   }
 
   ngOnDestroy() {

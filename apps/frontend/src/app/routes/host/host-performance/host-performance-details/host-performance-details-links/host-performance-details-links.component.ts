@@ -20,6 +20,6 @@ export class HostPerformanceDetailsLinksComponent implements OnInit {
   constructor(private appService: AppService) {}
 
   ngOnInit(): void {
-    this.performanceSharingUrl = `${this.appService.frontendUrl}/performances/show/${this.performance._id}`;
+    this.performanceSharingUrl = `${this.appService.frontendUrl}/events/show/${this.performance._id}`;
   }
 }

@@ -72,6 +72,8 @@ import { PerformanceStatusPipe } from './_pipes/performance-status.pipe';
 import { VisibilityPipe } from './_pipes/visibility.pipe';
 import { TimesPipe } from './_pipes/times.pipe';
 import { TimeUntilPipe } from './_pipes/time-until.pipe';
+import { PerformanceTypePipe } from './_pipes/performance-type.pipe';
+import { OptStatusPipe } from './_pipes/opt-status.pipe';
 import { TextTruncatePipe } from './_pipes/text-truncate.pipe';
 
 // Components ----------------------------------------------------------------------------------------------------------------
@@ -182,10 +184,10 @@ import { HostPerformanceDetailsKeysComponent } from './routes/host/host-performa
 import { HostPerformanceDetailsVisibilityComponent } from './routes/host/host-performance/host-performance-details/host-performance-details-visibility/host-performance-details-visibility.component';
 import { CopyBoxComponent } from './components/copy-box/copy-box.component';
 import { HostAnalyticsGraphsComponent } from './routes/host/host-analytics/host-analytics-graphs/host-analytics-graphs.component';
-
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
 import { BreadcrumbComponent } from './components/app/breadcrumb/breadcrumb.component';
-import { OptStatusPipe } from './_pipes/opt-status.pipe';
+import { HostPerformanceOverviewComponent } from './routes/host/host-performance/host-performance-overview/host-performance-overview.component';
+import {HostEventAnalyticsGraphsComponent} from './routes/host/host-analytics/host-event-analytics-graphs/host-event-analytics-graphs.component';
 import { UnsavedChangesDialogComponent } from './components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { HostPerformanceSettingsComponent } from './routes/host/host-performance/host-performance-settings/host-performance-settings.component';
 
@@ -258,6 +260,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     CurrencyCodePipe,
     TicketTypePipe,
     RefundReasonPipe,
+    PerformanceTypePipe,
+    OptStatusPipe,
     TextTruncatePipe,
     OnboardingViewIssueMakerComponent,
     PerformanceBrochureComponent,
@@ -344,6 +348,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostAnalyticsGraphsComponent,
     HostListPerformancesComponent,
     BreadcrumbComponent,
+    HostPerformanceOverviewComponent,
+    HostEventAnalyticsGraphsComponent,
     OptStatusPipe,
     UnsavedChangesDialogComponent,
     HostPerformanceSettingsComponent

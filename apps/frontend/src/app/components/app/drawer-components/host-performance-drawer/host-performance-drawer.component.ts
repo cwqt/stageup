@@ -29,6 +29,6 @@ export class HostPerformanceDrawerComponent implements OnInit {
   }
 
   gotoPerformancesList() {
-    this.appService.navigateTo(`/dashboard/performances`);
+    this.appService.navigateTo(`/dashboard/events`);
   }
 }

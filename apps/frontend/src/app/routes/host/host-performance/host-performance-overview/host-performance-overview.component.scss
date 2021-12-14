@@ -1,0 +1,54 @@
+::ng-deep {
+  .chip {
+    border-radius: 4px !important;
+  }
+
+  .share-links:hover ui-button button {
+    margin-right: 0.5rem;
+  }
+
+  .share-links:hover ui-button button ui-icon {
+    color: #e47290;
+  }
+
+  app-copy-box div {
+    height: 100%;
+  }
+
+  app-social-sharing ui-icon {
+    color: #e47290 !important;
+  }
+}
+
+.date-chip h4 {
+  opacity: 1;
+}
+
+.share-links:hover app-social-sharing {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+ui-button {
+  z-index: 1;
+}
+
+app-social-sharing {
+  transform: translateX(-50px);
+  opacity: 0;
+  transition: 0.3s ease all;
+  color: #e47290;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+.copy-box {
+  width: 500px;
+  height: 48px;
+}
+
+.banner-header {
+  font-size: 24px;
+}

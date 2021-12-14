@@ -87,7 +87,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     private performanceService: PerformanceService,
     private toastService: ToastService,
     private breadcrumbService: BreadcrumbService
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     this.performanceDetails = {
@@ -135,10 +135,10 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
         })
       },
       resolvers: {
-        output: async () => {}
+        output: async () => { }
       },
       handlers: {
-        changes: async () => {}
+        changes: async () => { }
       }
     });
 
@@ -158,10 +158,10 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
         })
       },
       resolvers: {
-        output: async () => {}
+        output: async () => { }
       },
       handlers: {
-        changes: async () => {}
+        changes: async () => { }
       }
     });
 
@@ -170,7 +170,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     if (this.performanceType == 'livestream') this.readStreamKey();
 
     const name = this.performanceData.name ? this.performanceData.name : 'New Event';
-    this.breadcrumbService.set('dashboard/performances/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
+    this.breadcrumbService.set('dashboard/events/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
 
     // Set the checkbox label to display HTML rather than plain string
     // This needs to be done after a full cycle so that the ViewChild element isn't null
@@ -204,7 +204,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
           kind: ThemeKind.Secondary,
           callback: ref => {
             ref.close();
-            this.router.navigate(['dashboard/performances']);
+            this.router.navigate(['dashboard/events']);
           }
         }),
         new UiDialogButton({
