@@ -180,7 +180,7 @@ mat-vertical-stepper {
     @include ui-toast-maker($clr-warning, #fff, #333333);
   }
   &--danger {
-    @include ui-toast-maker(lighten($clr-red-drk, 20%), lighten($clr-red-drk, 10%), #fff);
+    @include ui-toast-maker(lighten($clr-danger-dk, 20%), lighten($clr-danger-dk, 10%), #fff);
   }
 }
 

@@ -8,7 +8,7 @@ export enum ThemeKind {
   Accent = 'accent',
   Warning = 'warning',
   Danger = 'danger',
-  ClearDark = 'cleardark',
+  Dark = 'dark',
   PrimaryLight = 'primarylight'
 }
 

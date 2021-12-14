@@ -27,7 +27,7 @@ export class TestbedComponent implements OnInit {
     [ThemeKind.Primary]: 'Primary Toast',
     [ThemeKind.Secondary]: 'Secondary Toast',
     [ThemeKind.Warning]: 'Warning Toast',
-    [ThemeKind.ClearDark]: 'Cleardark Toast',
+    [ThemeKind.Dark]: 'Dark Toast',
     [ThemeKind.PrimaryLight]: 'Primarylight Toast'
   };
 
