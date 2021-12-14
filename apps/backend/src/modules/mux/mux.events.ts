@@ -58,7 +58,7 @@ export class MuxEvents extends ModuleEvents<`mux.${HandledMuxEvents}`, true> {
 
   async videoAssetReady(ct: Contract<'mux.video.asset.ready'>) {
     const passthrough: IMuxPassthrough = JSON.parse(ct.data.passthrough);    
-    let asset: IAsset;
+    let asset: VideoAsset | LiveStreamAsset;
     
     // First we look for the video assets and then for live-stream assets
     try {

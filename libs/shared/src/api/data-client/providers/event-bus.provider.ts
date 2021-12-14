@@ -51,27 +51,27 @@ export class RxmqEventBus implements Provider<EventBus> {
   }
 
   async subscribe<T extends Event>(event: T, handler: (contract: Contract<T>) => void): Promise<RxSubscription> {
-    const higherFunctionObject = {f: handler};
+    const withCatch =
+      (f: (ct: Contract<T>) => void) =>
+      ((ct: Contract<T>): void => {
+        const p = new Promise((resolve, reject) => {
+          f(ct);
+        });
+        p.catch(error => console.log(error));
+      });
 
-    const wrapper = {
-      f: {},
-      withCatch: async function(contract: Contract<T>): Promise<void> {
-        // TODO: log the errors better, make devs aware of them
-        await this.f(contract).catch(error => console.log(error));
-      }
-    };
-
-    const withCatch = wrapper.withCatch.bind(higherFunctionObject);
-    
-    return this.channel
-      .subject(event)
-      .pipe(
-        tap((ct: Contract<T>) => {
-          this.log.debug(`Recieved (${ct.__meta.uuid}) from ${event}`);
-          return ct;
-        })
-      )
-      .subscribe(withCatch, err => console.error(err));
+  return this.channel
+    .subject(event)
+    .pipe(
+      tap((ct: Contract<T>) => {
+        this.log.debug(`Recieved (${ct.__meta.uuid}) from ${event}`);
+        return ct;
+      })
+    )
+    .subscribe(
+      withCatch(handler),
+      err => console.error(err)
+    );
   }
 
   async disconnect() {}
