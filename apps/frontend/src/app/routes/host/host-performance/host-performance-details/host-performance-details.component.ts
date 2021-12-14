@@ -314,8 +314,4 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     // Check if the 'unsaved' data is equal to 'saved'
     return !lodash.isEqual(newFormData, oldFormData);
   }
-
-  test() {
-    this.toastService.emit('Some random message', ThemeKind.PrimaryLight);
-  }
 }

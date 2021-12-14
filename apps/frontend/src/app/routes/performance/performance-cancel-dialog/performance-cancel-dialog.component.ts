@@ -12,7 +12,7 @@ import { IUiDialogOptions, ThemeKind, ThemeAppearance, ThemeStyle } from '@front
 @Component({
   selector: 'app-performance-cancel-dialog',
   templateUrl: './performance-cancel-dialog.component.html',
-  styleUrls: ['./performance-cancel-dialog.component.css']
+  styleUrls: ['./performance-cancel-dialog.component.scss']
 })
 export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOptions {
   submit: EventEmitter<string> = new EventEmitter();
