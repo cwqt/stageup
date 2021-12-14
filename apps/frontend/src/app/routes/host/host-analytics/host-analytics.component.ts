@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { i18n, unix } from '@core/helpers';
+import { i18n, truncate, unix } from '@core/helpers';
 import {
   Analytics,
   AnalyticsPeriodDifference,
@@ -70,7 +70,7 @@ export class HostAnalyticsComponent implements OnInit {
       columns: [
         {
           label: $localize`Performance`,
-          accessor: v => v.name,
+          accessor: v => truncate(v.name, 35),
           image: v =>
             v.assets?.find(a => a.type == AssetType.Image && a.tags.includes('secondary'))?.location ||
             '/assets/performance-placeholder.jpeg'
