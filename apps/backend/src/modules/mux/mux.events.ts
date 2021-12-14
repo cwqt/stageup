@@ -15,6 +15,7 @@ import { timeout } from '@core/helpers';
 import {
   AssetOwnerType,
   AssetType,
+  IAsset,
   IMUXHookResponse,
   IMuxPassthrough,
   LiveStreamState,
@@ -56,9 +57,16 @@ export class MuxEvents extends ModuleEvents<`mux.${HandledMuxEvents}`, true> {
   }
 
   async videoAssetReady(ct: Contract<'mux.video.asset.ready'>) {
-    const passthrough: IMuxPassthrough = JSON.parse(ct.data.passthrough);
-    const asset = await VideoAsset.findOne({ _id: passthrough.asset_id }) || await LiveStreamAsset.findOne({ _id: passthrough.asset_id });
+    const passthrough: IMuxPassthrough = JSON.parse(ct.data.passthrough);    
+    let asset: IAsset;
     
+    // First we look for the video assets and then for live-stream assets
+    try {
+      asset = await getCheck(VideoAsset.findOne({ _id: passthrough.asset_id }));
+    } catch {
+      asset = await getCheck(LiveStreamAsset.findOne({ _id: passthrough.asset_id }));
+    }
+
     // Both live stream and vod videos trigger this event, live streams don't have a location though
     // Once the live stream is over it is converted into a video asset 
     if(asset.constructor.name === 'VideoAsset') {
