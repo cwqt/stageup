@@ -87,7 +87,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     private performanceService: PerformanceService,
     private toastService: ToastService,
     private breadcrumbService: BreadcrumbService
-  ) { }
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.performanceDetails = {
@@ -136,10 +136,10 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
         })
       },
       resolvers: {
-        output: async () => { }
+        output: async () => {}
       },
       handlers: {
-        changes: async () => { }
+        changes: async () => {}
       }
     });
 
@@ -159,10 +159,10 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
         })
       },
       resolvers: {
-        output: async () => { }
+        output: async () => {}
       },
       handlers: {
-        changes: async () => { }
+        changes: async () => {}
       }
     });
 
@@ -311,6 +311,9 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     // i.e. the existing 'saved' data
     const oldFormData = { ...this.performanceDetails };
     if (!this.visibilityFormTouched) delete oldFormData.visibility;
+
+    // TODO: When 'ticket_publicity_period' is implemented we can delete this line
+    delete oldFormData.ticket_publicity_period;
 
     // Check if the 'unsaved' data is equal to 'saved'
     return !lodash.isEqual(newFormData, oldFormData);

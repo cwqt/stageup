@@ -1,3 +1,5 @@
+@import 'apps/frontend/src/styles/variables';
+
 ::ng-deep {
   .chip {
     border-radius: 4px !important;
@@ -8,7 +10,7 @@
   }
 
   .share-links:hover ui-button button ui-icon {
-    color: #e47290;
+    color: $clr-primary;
   }
 
   app-copy-box div {
@@ -16,7 +18,7 @@
   }
 
   app-social-sharing ui-icon {
-    color: #e47290 !important;
+    color: $clr-primary !important;
   }
 }
 
@@ -37,7 +39,7 @@ app-social-sharing {
   transform: translateX(-50px);
   opacity: 0;
   transition: 0.3s ease all;
-  color: #e47290;
+  color: $clr-primary;
 }
 
 h3 {
@@ -51,4 +53,16 @@ h3 {
 
 .banner-header {
   font-size: 24px;
+}
+
+// Button needs specific style (due to it being on a 'primary' colour background
+.set-schedule {
+  ::ng-deep button {
+    color: $clr-white;
+    border: 1px solid $clr-white;
+    &:hover {
+      color: $clr-primary;
+      background-color: $clr-white;
+    }
+  }
 }
