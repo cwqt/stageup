@@ -33,7 +33,7 @@ export class ForgotPasswordComponent implements OnInit, IUiDialogOptions {
       fields: {
         email: UiField.Text({
           label: 'email',
-          validators: [{ type: 'required' }, { type: 'email' }]
+          validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 32 }]
         })
       },
       resolvers: {
