@@ -50,7 +50,7 @@ import {
   IHostFeed,
   PlatformConsentOpt,
   DtoUserMarketingInfo,
-  PerformanceAnalyticsChunks
+  PerformanceAnalyticsChunks,
   IShowing
 } from '@core/interfaces';
 
