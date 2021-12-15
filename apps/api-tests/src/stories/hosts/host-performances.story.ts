@@ -30,6 +30,7 @@ describe('As a user-host, I want to review all my performances', () => {
       long_description: 'That is the question',
       genre: Genre.Classical,
       publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
+      ticket_publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       visibility: Visibility.Public
     };
     perf = await Stories.actions.performances.updatePerformance(perf._id, performanceDetails);

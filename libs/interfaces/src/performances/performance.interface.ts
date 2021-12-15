@@ -78,6 +78,7 @@ export interface IPerformanceStub {
   status: PerformanceStatus;
   performance_type: PerformanceType;
   publicity_period: { start: number; end: number }; // unix timestamps
+  ticket_publicity_period: { start: number; end: number };
   visibility: Visibility;
 }
 
@@ -95,7 +96,13 @@ export interface IPerformance extends IPerformanceStub {
 // TODO: Add 'ticket visibility schedule', 'access duration', 'event showings', 'short description' and 'long description'
 export type DtoPerformanceDetails = Pick<
   IPerformance,
-  'name' | 'short_description' | 'long_description' | 'genre' | 'publicity_period' | 'visibility'
+  'name'
+  | 'short_description'
+  | 'long_description'
+  | 'genre'
+  | 'publicity_period'
+  | 'ticket_publicity_period'
+  | 'visibility'
 >;
 
 // Interface for additional client information regarding the performance.

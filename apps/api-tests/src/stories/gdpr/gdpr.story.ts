@@ -26,6 +26,7 @@ describe('Test all the gdpr controller methods', () => {
       long_description: 'That is the question',
       genre: Genre.Dance,
       publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
+      ticket_publicity_period: { start: timestamp(), end: timestamp() + 10000000 },
       visibility: Visibility.Public
     };
     performance = await Stories.actions.performances.updatePerformance(performance._id, performanceDetails);

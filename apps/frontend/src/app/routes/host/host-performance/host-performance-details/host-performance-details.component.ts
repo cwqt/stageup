@@ -96,6 +96,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
       genre: this.performanceData.genre,
       name: this.performanceData.name,
       publicity_period: this.performanceData.publicity_period,
+      ticket_publicity_period: { start: null, end: null },
       visibility: this.performanceData.visibility
     };
 
