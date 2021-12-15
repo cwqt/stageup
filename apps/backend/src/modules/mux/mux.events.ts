@@ -68,8 +68,8 @@ export class MuxEvents extends ModuleEvents<`mux.${HandledMuxEvents}`, true> {
     }
 
     // Both live stream and vod videos trigger this event, live streams don't have a location though
-    // Once the live stream is over it is converted into a video asset 
-    if(asset.constructor.name === 'VideoAsset') {
+    // Once the live stream is over it is converted into a video asset
+    if(asset instanceof VideoAsset) {
       // Now we have a playback Id & can set the source location on the asset
       const assetInfo = await this.mux.Video.Assets.get(asset.asset_identifier);
 
