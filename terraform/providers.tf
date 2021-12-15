@@ -12,6 +12,14 @@ terraform {
       source  = "franckverrot/stripe"
       version = "1.8.0"
     }
+    hashicorp = {
+      source  = "hashicorp/random"
+      version = "3.1.0"
+    }
+    postgresql = {
+      source  = "cyrilgdn/postgresql"
+      version = "1.13.0"
+    }
   }
 }
 
