@@ -1,3 +1,4 @@
+<app-breadcrumb></app-breadcrumb>
 <app-page>
   <div body>
     <h1 class="float-left" i18n>
@@ -25,8 +26,10 @@
             >
           </div>
 
-          <ui-table class="min-table-height" [table]="eventTable"></ui-table>
-          <p class="my-12 text-center" *ngIf="eventData?.length == 0" i18n>Your scheduled events will appear here</p>
+          <ui-table class="min-table-height" *ngIf="eventData?.length != 0" [table]="eventTable"></ui-table>
+          <div class="flex justify-center items-center h-5/6">
+            <p *ngIf="eventData?.length == 0" i18n>Your scheduled events will appear here</p>
+          </div>
           <div class="absolute bottom-8 left-4">
             <a [routerLink]="['/dashboard/performances']" i18n>Go to events page</a>
           </div>

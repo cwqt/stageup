@@ -65,12 +65,12 @@
 
 .ui-button--primary--fill {
   background-color: $clr-primary;
-  color: white;
+  color: $clr-white;
   &:hover {
     background-color: $clr-primary-dk;
   }
   ::ng-deep .mat-spinner circle {
-    stroke: $clr-dark-lt !important;
+    stroke: $clr-white !important;
   }
 }
 
@@ -79,8 +79,9 @@
   background-color: transparent;
   border: 1px solid $clr-primary;
   &:hover {
-    color: $clr-primary;
-    border: 1px solid $clr-primary;
+    color: $clr-white;
+    background-color: $clr-primary-dk;
+    border: 1px solid $clr-primary-dk;
   }
   ::ng-deep .mat-spinner circle {
     stroke: $clr-primary !important;
@@ -119,7 +120,7 @@
   color: #000000;
   border: 1px solid #dedede;
   &:hover {
-    background-color: $clr-dark-lt;
+    background-color: $clr-light-dk;
   }
 }
 
@@ -161,7 +162,7 @@
 
 .ui-button--danger--fill {
   background-color: $clr-danger;
-  color: white;
+  color: $clr-white;
   &:hover {
     background-color: $clr-danger-dk;
   }

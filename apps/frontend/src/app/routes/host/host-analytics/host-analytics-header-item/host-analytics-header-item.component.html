@@ -1,6 +1,6 @@
 <div class="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden relative h-full">
-  <div class="grid grid-cols-2 h-full">
-    <div class="p-3 flex flex-col">
+  <div class="grid grid-cols-2 h-full p-app">
+    <div class="flex flex-col">
       <h2 class="mb-0">{{ formattedAggregation }}</h2>
       <p class="whitespace-nowrap">{{ item.title }}</p>
       <div class="h-full flex items-end">
@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div class="p-3 flex flex-col justify-end fade-mask">
+    <div class="flex flex-col justify-end fade-mask pl-1">
       <!-- If data, we display the chart -->
       <ngx-chartjs type="line" *ngIf="!noDataYet" [data]="item.graph.data" [options]="item.graph.options"></ngx-chartjs>
       <!-- If no data, we display a blank 'fake' chart -->

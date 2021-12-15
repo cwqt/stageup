@@ -48,6 +48,10 @@ h4 {
 }
 a {
   color: #17a2b8;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 p {
@@ -86,17 +90,17 @@ p {
 }
 
 .pr-app {
-  padding-right: 48px;
+  padding-right: 16px;
 }
 .pl-app {
-  padding-left: 48px;
+  padding-left: 16px;
 }
 .pt-app {
-  padding-top: 32px;
+  padding-top: 16px;
 }
 .pb-app {
-  padding-bottom: 32px;
+  padding-bottom: 16px;
 }
 .p-app {
-  padding: 32px 48px 32px 48px;
+  padding: 16px;
 }

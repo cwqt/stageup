@@ -18,7 +18,7 @@
       <!-- ---------------- Events section ---------------- -->
       <div class="flex flex-col">
         <h4 class="mb-4 text-black" i18n>Upcoming Events</h4>
-        <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
+        <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-app relative">
           <mat-spinner class="ml-5" [diameter]="50" *ngIf="eventTable.cache.loading"></mat-spinner>
           <div class="flex justify-end">
             <ui-button (click)="openCreatePerformanceDialog()" variant="primary" icon="add" i18n
@@ -38,7 +38,7 @@
       <!-- ---------------- Members section ---------------- -->
       <div class="flex flex-col">
         <h4 class="mb-4 text-black" i18n>My Team</h4>
-        <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 relative">
+        <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-app relative">
           <mat-spinner class="ml-5" [diameter]="50" *ngIf="memberTable.cache.loading"></mat-spinner>
           <div class="flex justify-end">
             <ui-button (click)="openAddMemberDialog()" variant="primary" icon="add" i18n>Add Member</ui-button>

@@ -69,7 +69,7 @@
           margin-right: 10px;
         }
         &:hover {
-          color: $clr-primary;
+          color: $clr-primary-dk;
           ui-icon,
           span {
             color: white;
@@ -81,12 +81,12 @@
       }
       &.active-link {
         opacity: 1;
-        background-color: transparentize($color: $clr-primary, $amount: 0.8);
+        background-color: transparentize($color: $clr-primary-dk, $amount: 0.8);
         ::ng-deep button {
-          color: $clr-primary !important;
+          color: $clr-primary-dk !important;
           span,
           ui-icon {
-            color: $clr-primary;
+            color: $clr-primary-dk;
           }
         }
       }
