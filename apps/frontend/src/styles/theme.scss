@@ -14,7 +14,7 @@ $my-custom-theme: mat-light-theme($my-custom-primary, $my-custom-accent, $my-cus
 .mat-raised-button.mat-primary,
 .mat-fab.mat-primary,
 .mat-mini-fab.mat-primary {
-  background-color: #ef4571 !important;
+  background-color: $clr-primary !important;
   color: white !important;
 }
 

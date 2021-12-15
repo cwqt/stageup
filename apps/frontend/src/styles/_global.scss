@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+@import 'apps/frontend/src/styles/variables';
 
 popper-content .ngxp__container {
   background: white;
@@ -47,7 +48,7 @@ h4 {
   line-height: 30px;
 }
 a {
-  color: #17a2b8;
+  color: $clr-info;
   text-decoration: none;
   &:hover {
     text-decoration: underline;
@@ -86,7 +87,7 @@ p {
 }
 
 .m-app {
-  margin: 32px 16px 32px 16px;
+  margin: 32px 16px;
 }
 
 .pr-app {
