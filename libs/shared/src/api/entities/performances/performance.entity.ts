@@ -28,6 +28,7 @@ import {
 import { AssetGroup } from '../assets/asset-group.entity';
 import { Host } from '../hosts/host.entity';
 import { Ticket } from './ticket.entity';
+import { Showing } from './showing.entity';
 
 @Entity()
 export class Performance extends BaseEntity implements Except<IPerformance, 'assets'> {
@@ -48,6 +49,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @Column('enum', { enum: Genre, nullable: true }) genre: Genre;
   @Column('enum', { enum: PerformanceStatus, default: PerformanceStatus.Draft }) status: PerformanceStatus;
   @Column('jsonb', { default: { start: null, end: null } }) publicity_period: { start: number; end: number };
+  @Column('jsonb', { default: { start: null, end: null } }) ticket_publicity_period: { start: number; end: number };
 
   @DeleteDateColumn() deletedAt?: Date;
   @Column('jsonb', { nullable: true }) removal_reason: IRemovalReason;
@@ -58,6 +60,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
   @OneToMany(() => Ticket, ticket => ticket.performance, { onDelete: 'CASCADE', cascade: true }) tickets: Ticket[];
   @ManyToOne(() => Host, host => host.performances) host: Host;
   @OneToMany(() => Like, like => like.performance, { onDelete: 'CASCADE', cascade: true }) likes: Like[];
+  @OneToMany(() => Showing, showing => showing.performance, { onDelete: 'CASCADE', cascade: true }) showings: Showing[];
 
   constructor(type: PerformanceType, host: Host) {
     super();
@@ -98,6 +101,7 @@ export class Performance extends BaseEntity implements Except<IPerformance, 'ass
       created_at: this.created_at,
       thumbnail: this.thumbnail,
       publicity_period: this.publicity_period,
+      ticket_publicity_period: this.ticket_publicity_period,
       assets: this.asset_group?.assets.map(a => a.toStub()),
       status: this.status,
       performance_type: this.performance_type,

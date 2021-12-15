@@ -79,7 +79,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
                   );
                 })
                 .then(() => {
-                  this.appService.navigateTo('/dashboard/performances');
+                  this.appService.navigateTo('/dashboard/events');
                   this.ref.close();
                 })
                 .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));

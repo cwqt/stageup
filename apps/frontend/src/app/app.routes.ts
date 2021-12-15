@@ -46,6 +46,7 @@ import { TestbedComponent } from './ui-lib/testbed/testbed.component';
 import { LoggedInGuard } from './_helpers/logged-in.guard';
 import { PerformanceShowComponent } from './routes/performance/performance-show/performance-show.component';
 import { HostListPerformancesComponent } from './routes/host/host-performances/list-performances/list-performances.component';
+import { HostPerformanceOverviewComponent } from './routes/host/host-performance/host-performance-overview/host-performance-overview.component';
 
 // Custom matcher to match a wildcard for host pages - http://url/@hostId
 const hostMatcher: UrlMatcher = (segments: UrlSegment[]) => {
@@ -74,7 +75,7 @@ const LOGGED_IN_ROUTES: Routes = [
     component: MyStuffComponent
   },
   {
-    path: `performances/:${RP.PerformanceId}`,
+    path: `events/:${RP.PerformanceId}`,
     component: PerformanceComponent
   },
   { path: `verified`, component: VerifiedComponent },
@@ -104,7 +105,7 @@ const LOGGED_IN_ROUTES: Routes = [
       },
       { path: 'team', component: HostMembersComponent, data: { breadcrumb: $localize`Team` } },
       {
-        path: 'performances',
+        path: 'events',
         component: HostPerformancesComponent,
         data: { breadcrumb: $localize`Events` },
         children: [
@@ -118,6 +119,10 @@ const LOGGED_IN_ROUTES: Routes = [
                 component: HostPerformanceDetailsComponent,
                 data: { breadcrumb: $localize`Details` },
                 canDeactivate: [UnsavedChangesGuard]
+              },
+              { path: 'overview',
+                component: HostPerformanceOverviewComponent,
+                data: { breadcrumb: $localize`Overview` }
               },
               {
                 path: 'ticketing',
@@ -193,7 +198,7 @@ const LOGGED_IN_ROUTES: Routes = [
           children: [
             { path: 'client', redirectTo: '/' },
             {
-              path: `performances/show/:${RP.PerformanceId}`,
+              path: `events/show/:${RP.PerformanceId}`,
               component: PerformanceShowComponent
             },
             {

@@ -7,6 +7,8 @@ import {
   DtoCreatePatronTier,
   DtoCreatePaymentIntent,
   DtoCreateTicket,
+  DtoCreateShowing,
+  DtoCreateMultipleTickets,
   DtoCreateUser,
   DtoLogin,
   DtoResetPassword,
@@ -101,6 +103,10 @@ export namespace objects {
       start: nullable(fields.timestamp),
       end: nullable(fields.timestamp)
     }),
+    ticket_publicity_period: object({
+      start: nullable(fields.timestamp),
+      end: nullable(fields.timestamp)
+    }),
     short_description: nullable(fields.richtext),
     long_description: nullable(fields.richtext),
     genre: nullable(fields.genre),
@@ -136,6 +142,11 @@ export namespace objects {
         enums<DonoPeg>(['lowest', 'low', 'medium', 'high', 'highest', 'allow_any'])
       )
     )
+  });
+
+  export const DtoCreateMultipleTickets: Describe<DtoCreateMultipleTickets> = object({
+    showing_ids: array(fields.nuuid),
+    ticket: DtoCreateTicket
   });
 
   export const IAddress: Describe<Required<Idless<IAddress>>> = object({
@@ -260,5 +271,10 @@ export namespace objects {
   export const IDocumentRequest: Describe<IDocumentRequest<ConsentableType>> = object({
     type: enums<ConsentableType>(ConsentableTypes),
     version: union([number(), literal('latest')])
+  });
+
+  export const DtoCreateShowing: Describe<DtoCreateShowing> = object({
+    start_datetime: number(),
+    end_datetime: number()
   });
 }

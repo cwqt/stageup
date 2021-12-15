@@ -13,18 +13,15 @@
           <ui-icon class="red" [size]="40" *ngIf="item.difference < 0">caret--down</ui-icon>
           <ui-icon class="blue" [size]="40" *ngIf="item.difference == 0">subtract</ui-icon>
         </div>
-        <!-- If we have no data, we display 0% -->
-        <div *ngIf="noDataYet" class="flex">
-          <h3 class="blue">0%</h3>
-          <ui-icon class="blue" [size]="40">subtract</ui-icon>
-        </div>
       </div>
     </div>
     <div class="flex flex-col justify-end fade-mask pl-1">
       <!-- If data, we display the chart -->
       <ngx-chartjs type="line" *ngIf="!noDataYet" [data]="item.graph.data" [options]="item.graph.options"></ngx-chartjs>
-      <!-- If no data, we display a blank 'fake' chart -->
-      <div class="no-graph" *ngIf="noDataYet"></div>
+    </div>
+    <!-- If no data, we display a blank 'fake' chart -->
+    <div class="p-3 flex col-start-1 col-end-4">
+      <div class="p-3 m-auto no-graph flex flex-col fade-mask" *ngIf="noDataYet"></div>
     </div>
   </div>
   <div

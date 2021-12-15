@@ -18,6 +18,7 @@ export class ChipComponent implements OnInit {
     | 'gray'
     | 'cool-grey'
     | 'orange'
+    | 'deep-blush'
     | 'warm-grey' = 'cool-grey';
 
   constructor() {}

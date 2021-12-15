@@ -1,5 +1,5 @@
 import Container from 'typedi';
-import { AsyncRouter, Performance } from '@core/api';
+import { AsyncRouter } from '@core/api';
 import {
   IHost,
   IUser,
@@ -37,7 +37,6 @@ import {
   IRefund,
   IHostPrivate,
   AssetDto,
-  IPerformance,
   ILocale,
   IFollower,
   IFollowing,
@@ -50,7 +49,9 @@ import {
   IDynamicFrontendEnvironment as IDynamicFeEnv,
   IHostFeed,
   PlatformConsentOpt,
-  DtoUserMarketingInfo
+  DtoUserMarketingInfo,
+  PerformanceAnalyticsChunks
+  IShowing
 } from '@core/interfaces';
 
 
@@ -149,6 +150,7 @@ router.get      <IE<IFollower[]>>           ("/hosts/:hid/followers",           
 router.get      <DtoHostAnalytics>          ("/hosts/:hid/analytics",                      Hosts.readHostAnalytics);
 router.get      <IE<DtoPerfAnalytics[]>>    ("/hosts/:hid/analytics/performances",         Hosts.readPerformancesAnalytics);
 router.get      <DtoPerfIDAnalytics[]>      ("/hosts/:hid/analytics/performances/all",     Hosts.readAllPerformancesAnalytics);
+router.get      <PerformanceAnalyticsChunks>("/hosts/:hid/analytics/performances/:pid",    Hosts.readPerformanceAnalytics);
 router.get      <DtoUserMarketingInfo>      ("/hosts/:hid/marketing/audience",             Hosts.readHostMarketingConsents);
 router.post     <void>                      ("/hosts/:hid/marketing/audience/export/:type",Hosts.exportUserMarketing);
 router.post     <void>                      ("/hosts/:hid/toggle-like",                    Hosts.toggleLike);
@@ -184,6 +186,7 @@ router.get      <IPHInfo>                   ("/performances/:pid/host-info",    
 router.put      <IPerf>                     ("/performances/:pid/visibility",              Perfs.updateVisibility);
 router.get      <IE<ITcktS[], NUUID[]>>     ("/performances/:pid/tickets",                 Perfs.readTickets);
 router.post     <ITicket>                   ("/performances/:pid/tickets",                 Perfs.createTicket);
+router.post     <ITicket[]>                 ("/performances/:pid/multiple-tickets",        Perfs.createMultipleTickets);
 router.put      <void>                      ("/performances/:pid/tickets/qty-visibility",  Perfs.bulkUpdateTicketQtyVisibility);
 router.get      <ITicket>                   ("/performances/:pid/tickets/:tid",            Perfs.readTicket);
 router.put      <ITicket>                   ("/performances/:pid/tickets/:tid",            Perfs.updateTicket);
@@ -192,6 +195,8 @@ router.post     <IPaymentICS>               ("/tickets/:tid/payment-intent",    
 router.post     <void>                      ("/performances/:pid/rate",                    Perfs.setRating);
 router.delete   <void>                      ("/performances/:pid/rate",                    Perfs.deleteRating);
 router.post     <void>                      ("/performances/:pid/toggle-like",             Perfs.toggleLike);
+router.post     <IShowing>                  ("/performances/:pid/showings",                Perfs.createShowing);
+router.get      <IShowing[]>                ("/performances/:pid/showings",                Perfs.readShowings);
 
 // SSE ----------------------------------------------------------------------------------------------------------------
 const SSE = Container.get(SSEController);

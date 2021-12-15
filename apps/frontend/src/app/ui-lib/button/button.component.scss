@@ -226,6 +226,7 @@
   border: 1px solid $clr-primary-lt;
   &:hover {
     background-color: $clr-white;
+    color: $clr-primary;
   }
   ::ng-deep .mat-spinner circle {
     stroke: $clr-dark-lt !important;

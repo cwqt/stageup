@@ -80,6 +80,8 @@ import {
   DtoReadHost,
   DtoPerformanceIDAnalytics,
   DeleteHostReason,
+  IAnalyticsChunk,
+  IPerformanceAnalyticsMetrics,
   PerformanceStatus
 } from '@core/interfaces';
 import Stripe from 'stripe';
@@ -1108,6 +1110,23 @@ export class HostController extends ModuleController {
       );
       // Return as DtoPerformanceIDAnalytics array
       return performanceIds.map(performanceId => ({ performanceId, chunks: performanceAnalyticsMap[performanceId] }));
+    }
+  };
+
+  // Returns a full query of a performance analytics 
+  readPerformanceAnalytics: IControllerEndpoint<Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>> = {
+    validators: {
+      query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    controller: async req => {
+      await getCheck(Performance.findOne({ _id: req.params.pid }));
+      const performanceAnalyticsMap = await this.hostService.readAnalyticsFromPerformanceArray(
+        [req.params.pid],
+        req.query.period as AnalyticsTimePeriod
+      );
+
+      return performanceAnalyticsMap[req.params.pid]
     }
   };
 

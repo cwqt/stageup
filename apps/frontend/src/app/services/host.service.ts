@@ -41,6 +41,8 @@ import {
   ILike,
   LikeLocation,
   DtoReadHost,
+  IAnalyticsChunk,
+  IPerformanceAnalyticsMetrics,
   PerformanceType
 } from '@core/interfaces';
 import { BehaviorSubject } from 'rxjs';
@@ -332,6 +334,17 @@ export class HostService {
   ): Promise<DtoPerformanceAnalytics[]> {
     return this.http
       .get<DtoPerformanceAnalytics[]>(`/api/hosts/${hostId}/analytics/performances/all${querize({ period })}`)
+      .toPromise();
+  }
+
+  // router.get <DtoPerfAnalytics[]>("/hosts/:hid/analytics/performances/:pid", Hosts.readPerformanceAnalytics());
+  readPerformanceAnalytics(
+    hostId: string,
+    performanceId: string,
+    period: AnalyticsTimePeriod = 'WEEKLY'
+  ): Promise<Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>> {
+    return this.http
+      .get<Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>>(`/api/hosts/${hostId}/analytics/performances/${performanceId}${querize({ period })}`)
       .toPromise();
   }
 
