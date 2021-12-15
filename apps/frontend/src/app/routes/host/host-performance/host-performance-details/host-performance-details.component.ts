@@ -312,7 +312,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     const oldFormData = { ...this.performanceDetails };
     if (!this.visibilityFormTouched) delete oldFormData.visibility;
 
-    // TODO: When 'ticket_publicity_period' is implemented we can delete this line
+    // TODO: When 'ticket_publicity_period' is implemented (in the 'release' tab) we can delete this line
     delete oldFormData.ticket_publicity_period;
 
     // Check if the 'unsaved' data is equal to 'saved'
