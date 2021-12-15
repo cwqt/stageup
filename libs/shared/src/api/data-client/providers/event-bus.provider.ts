@@ -11,7 +11,7 @@ import { Logger } from './logging.provider';
 
 export interface EventBus {
   publish: (event: Event, contract: EventContract[Event], locale: ILocale) => Promise<void>;
-  subscribe: (event: Event, handler: (ct: EventContract[Event]) => void) => Promise<RxSubscription>;
+  subscribe: (event: Event, handler: (ct: EventContract[Event]) => Promise<void>) => Promise<RxSubscription>;
 }
 
 export interface IRxmqEventBusConfig {}
@@ -50,14 +50,11 @@ export class RxmqEventBus implements Provider<EventBus> {
     return this.channel.subject(event).next(contract);
   }
 
-  async subscribe<T extends Event>(event: T, handler: (contract: Contract<T>) => void): Promise<RxSubscription> {
+  async subscribe<T extends Event>(event: T, handler: (contract: Contract<T>) => Promise<void>): Promise<RxSubscription> {
     const withCatch =
-      (f: (ct: Contract<T>) => void) =>
+      (f: (ct: Contract<T>) => Promise<void>) =>
       ((ct: Contract<T>): void => {
-        const p = new Promise((resolve, reject) => {
-          f(ct);
-        });
-        p.catch(error => console.log(error));
+        f(ct).catch(error => console.log(error));
       });
 
   return this.channel
