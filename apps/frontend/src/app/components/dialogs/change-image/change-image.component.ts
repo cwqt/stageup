@@ -1,6 +1,12 @@
 import { Component, ElementRef, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { IUiDialogOptions, ThemeKind, ThemeAppearance, ThemeStyle } from '@frontend/ui-lib/ui-lib.interfaces';
+import {
+  IUiDialogOptions,
+  ThemeKind,
+  ThemeAppearance,
+  ThemeStyle,
+  SecondaryButton
+} from '@frontend/ui-lib/ui-lib.interfaces';
 import fd from 'form-data';
 import { ToastService } from '@frontend/services/toast.service';
 import { HostService } from '@frontend/services/host.service';
@@ -33,7 +39,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   buttons: IUiDialogOptions['buttons'] = [
     new UiDialogButton({
       label: $localize`Cancel`,
-      kind: `${ThemeKind.Primary}-${ThemeAppearance.Outline}` as ThemeStyle,
+      kind: SecondaryButton,
       callback: () => this.cancel.emit()
     }),
     new UiDialogButton({

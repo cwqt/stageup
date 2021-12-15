@@ -1,5 +1,6 @@
 <app-page>
   <div body>
+    <app-breadcrumb></app-breadcrumb>
     <mat-spinner *ngIf="performance.loading"></mat-spinner>
     <ng-container *ngIf="performance.data">
       <ui-button class="float-right -mt-16" (click)="goToPerformance()" [disabled]="performanceIsDraft" icon="launch"

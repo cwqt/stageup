@@ -7,7 +7,7 @@ import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-share-performance-dialog',
@@ -20,7 +20,7 @@ export class SharePerformanceDialogComponent implements OnInit, IUiDialogOptions
   buttons: IUiDialogOptions['buttons'] = [
     new UiDialogButton({
       label: $localize`Cancel`,
-      kind: ThemeKind.Secondary,
+      kind: SecondaryButton,
       callback: () => this.cancel.emit()
     }),
     new UiDialogButton({

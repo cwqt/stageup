@@ -21,7 +21,7 @@ import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/p
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
@@ -201,7 +201,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
       buttons: [
         new UiDialogButton({
           label: $localize`Later`,
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: ref => {
             ref.close();
             this.router.navigate(['dashboard/performances']);

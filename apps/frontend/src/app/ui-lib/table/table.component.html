@@ -1,6 +1,6 @@
 <ng-container *ngIf="table">
   <div class="flex justify-between items-center pt-1">
-    <h2 *ngIf="table.config.title">{{ table.config.title }}</h2>
+    <h3 *ngIf="table.config.title">{{ table.config.title }}</h3>
     <p *ngIf="lastUpdated" class="block opacity-50 mb-3" i18n>Updated as of {{ lastUpdated }}</p>
     <ui-button
       variant="accent"

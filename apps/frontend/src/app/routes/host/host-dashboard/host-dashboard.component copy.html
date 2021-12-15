@@ -1,9 +1,8 @@
-<app-breadcrumb></app-breadcrumb>
 <app-page>
   <div body>
-    <h1 class="float-left" i18n>
-      Welcome, <span class="host-name">{{ host.name }}</span>
-    </h1>
+    <app-breadcrumb></app-breadcrumb>
+
+    <h1 class="float-left" i18n>Welcome, <span class="host-name">{{ host.name }}</span></h1>
     <!-- ---------------- Build event section ---------------- -->
     <div *ngIf="eventData?.length == 0" class="clear-both my-6 relative">
       <img [src]="'/assets/welcome-banner.svg'" class="w-full h-72 rounded" alt="" />

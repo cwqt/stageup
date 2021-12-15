@@ -3,7 +3,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IRemovalReason, ISelectReasonData, Primitive } from '@core/interfaces';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
-import { IUiDialogOptions, ThemeKind, ThemeAppearance, ThemeStyle } from '@frontend/ui-lib/ui-lib.interfaces';
+import {
+  IUiDialogOptions,
+  ThemeKind,
+  ThemeAppearance,
+  ThemeStyle,
+  SecondaryButton
+} from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'frontend-select-reason-dialog',
@@ -25,7 +31,7 @@ export class SelectReasonDialogComponent implements OnInit, IUiDialogOptions {
   ngOnInit(): void {
     this.buttons = [
       new UiDialogButton({
-        kind: `${ThemeKind.Primary}-${ThemeAppearance.Outline}` as ThemeStyle,
+        kind: SecondaryButton,
         label: $localize`Cancel`,
         callback: () => this.cancel.emit()
       }),

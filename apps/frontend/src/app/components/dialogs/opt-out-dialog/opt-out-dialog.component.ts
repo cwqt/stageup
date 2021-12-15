@@ -3,7 +3,13 @@ import { OptOutReasonPipe } from '@frontend/_pipes/opt-out-reason.pipe';
 import { MyselfService } from '@frontend/services/myself.service';
 import { IHostStub, IUserStub } from '@core/interfaces';
 import { UiForm, UiField } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import {
+  IUiDialogOptions,
+  SecondaryButton,
+  ThemeAppearance,
+  ThemeKind,
+  ThemeStyle
+} from '@frontend/ui-lib/ui-lib.interfaces';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 
 import { Component, OnInit, EventEmitter, Output, Inject } from '@angular/core';
@@ -23,7 +29,7 @@ export class OptOutDialogComponent implements OnInit, IUiDialogOptions {
   buttons: IUiDialogOptions['buttons'] = [
     new UiDialogButton({
       label: $localize`Cancel`,
-      kind: ThemeKind.Secondary,
+      kind: SecondaryButton,
       callback: () => this.cancel.emit()
     }),
     new UiDialogButton({

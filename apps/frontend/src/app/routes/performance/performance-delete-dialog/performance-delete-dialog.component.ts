@@ -16,7 +16,7 @@ import { HelperService } from '@frontend/services/helper.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { cachize } from '@frontend/app.interfaces';
 
 @Component({
@@ -44,7 +44,7 @@ export class PerformanceDeleteDialogComponent implements OnInit, IUiDialogOption
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         callback: () => {
           this.cancel.emit();
           this.ref.close();

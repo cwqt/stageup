@@ -66,7 +66,7 @@ export class HostAnalyticsGraphsComponent implements OnInit {
       // is an aggregate over many entities
       period_aggregate: {},
       header_items: {
-        total_revenue: this.createHeaderItem($localize`Ticket Revenue`),
+        total_revenue: this.createHeaderItem($localize`Revenue`),
         total_ticket_sales: this.createHeaderItem($localize`Ticket sales`),
         trailer_views: this.createHeaderItem($localize`Trailer views`)
       }

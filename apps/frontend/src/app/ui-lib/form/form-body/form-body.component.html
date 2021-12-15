@@ -5,7 +5,7 @@
     [hidden]="field.value.options?.hide ? field.value.options?.hide(fg) : false"
     [ngSwitch]="field.value['type']"
   >
-    <div class="form-field-container" *ngSwitchCase="'container'">
+    <div class="form-field-container mb-app" *ngSwitchCase="'container'">
       <h1 *ngIf="field.value['options']?.header_level == 1">
         {{ field.value['options']['label'] }}
       </h1>

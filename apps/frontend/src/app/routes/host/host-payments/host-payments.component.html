@@ -1,6 +1,6 @@
-<app-breadcrumb></app-breadcrumb>
 <app-page>
   <div body>
+    <app-breadcrumb></app-breadcrumb>
     <div class="flex flex-row items-center">
       <h1 class="mb-0" i18n>Payments</h1>
       <mat-spinner class="ml-5" [diameter]="50" *ngIf="stripeInfo.loading"></mat-spinner>
@@ -12,9 +12,8 @@
       You cannot collect your Stripe account to StageUp before the onboarding process has been completed.
     </p>
 
-    <div class="bg-white p-4 rounded shadow-sm mb-4" *ngIf="host.is_onboarded">
-      <h2>Stripe</h2>
-      <ui-hr></ui-hr>
+    <div class="mb-app" *ngIf="host.is_onboarded">
+      <h3>Stripe</h3>
       <ng-container *ngIf="stripeInfo.data">
         <p *ngIf="connectSuccess == false" i18n>An error occured while connecting Stripe, try again?</p>
 
@@ -41,9 +40,7 @@
       </ng-container>
     </div>
 
-    <app-content-box>
-      <app-host-invoices></app-host-invoices>
-    </app-content-box>
+    <app-host-invoices></app-host-invoices>
 
     <!-- <app-content-box>
       <app-host-patronage></app-host-patronage>

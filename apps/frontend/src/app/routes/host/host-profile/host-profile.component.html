@@ -1,7 +1,7 @@
 <app-page>
   <div body *ngIf="host.data && !host.loading && host.data.data">
     <!-- Banner  -->
-    <div class="host-profile-header bg-white rounded shadow-sm">
+    <div class="host-profile-header">
       <div class="banner-picture__container relative overflow-hidden rounded">
         <div
           *ngIf="!host.data.data.banner"
@@ -137,7 +137,7 @@
       </div>
     </div>
 
-    <div class="bg-white mt-4 rounded p-4 shadow">
+    <div class="mt-app">
       <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
     </div>
 

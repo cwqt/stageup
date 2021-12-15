@@ -7,7 +7,7 @@ import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app
 import { PatronageService } from 'apps/frontend/src/app/services/patronage.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -40,7 +40,7 @@ export class BecomePatronDialogComponent implements OnInit, AfterViewInit, IUiDi
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         callback: () => this.cancel.emit()
       }),
       new UiDialogButton({

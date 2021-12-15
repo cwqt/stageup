@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { IUiFormField } from '../form/form.interfaces';
 import { UiDialogButton } from './dialog-buttons/dialog-buttons.component';
@@ -16,7 +16,6 @@ export class DialogComponent implements OnInit {
 
   @Input() small: boolean = true;
   @Input() noPadding: boolean = false;
-  @Input() cancel: EventEmitter<string>;
 
   constructor() {}
 

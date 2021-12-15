@@ -7,7 +7,13 @@ import { HelperService } from '@frontend/services/helper.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { IUiDialogOptions, ThemeKind, ThemeAppearance, ThemeStyle } from '@frontend/ui-lib/ui-lib.interfaces';
+import {
+  IUiDialogOptions,
+  ThemeKind,
+  ThemeAppearance,
+  ThemeStyle,
+  SecondaryButton
+} from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-performance-cancel-dialog',
@@ -33,7 +39,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
     this.buttons = [
       new UiDialogButton({
         label: $localize`Close`,
-        kind: `${ThemeKind.Primary}-${ThemeAppearance.Outline}` as ThemeStyle,
+        kind: SecondaryButton,
         callback: () => {
           this.cancel.emit();
           this.ref.close();

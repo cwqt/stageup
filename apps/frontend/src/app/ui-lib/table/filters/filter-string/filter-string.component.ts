@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { FilterCode, FilterQuery, StringFilter, StringFilterOperator } from '@core/interfaces';
 import { UiDialogButton } from '../../../dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '../../../form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from '../../../ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '../../../ui-lib.interfaces';
 import { IUITableFilter } from '../filter.interface';
 
 @Component({
@@ -64,7 +64,7 @@ export class FilterStringComponent implements OnInit, IUITableFilter, OnChanges 
       this.buttons.push(
         new UiDialogButton({
           label: $localize`Remove`,
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: () => {
             this.onChange.emit(null);
             this.form.group.reset();
