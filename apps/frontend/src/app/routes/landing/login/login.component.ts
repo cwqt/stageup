@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit, IUiDialogOptions {
       fields: {
         email_address: UiField.Text({
           label: $localize`E-mail address`,
-          validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 256 }]
+          validators: [{ type: 'required' }, { type: 'email' }]
         }),
         password: UiField.Password({
           label: $localize`Password`,

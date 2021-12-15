@@ -37,7 +37,7 @@ export class CreateHostComponent implements OnInit {
         }),
         email_address: UiField.Text({
           label: $localize`Contact e-mail address`,
-          validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 256 }]
+          validators: [{ type: 'required' }, { type: 'email' }]
         })
       },
       resolvers: {

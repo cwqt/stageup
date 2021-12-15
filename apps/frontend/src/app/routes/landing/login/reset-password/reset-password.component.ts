@@ -47,14 +47,13 @@ export class ResetPasswordComponent implements OnInit, IUiDialogOptions {
       fields: {
         password: UiField.Password({
           label: $localize`New password`,
-          validators: [{ type: 'required' }, { type: 'minlength', value: 8 }, { type: 'maxlength', value: 16 }]
+          validators: [{ type: 'required' }, { type: 'minlength', value: 8 }]
         }),
         password_match: UiField.Password({
           label: $localize`Confirm new password`,
           validators: [
             { type: 'required' },
             { type: 'minlength', value: 8 },
-            { type: 'maxlength', value: 16 },
             {
               type: 'custom',
               message: e => 'Passwords do not match',
