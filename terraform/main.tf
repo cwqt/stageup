@@ -128,6 +128,7 @@ module "secrets" {
 # with MUX it has to be done manually :(
 resource "stripe_webhook_endpoint" "stripe_webhook" {
   url = "https://${local.load_balancer_host}/api/stripe/hooks"
+  connect = true
 
   # take these from StripeHook enum in @core/interfaces
   enabled_events = [
