@@ -1,12 +1,6 @@
 import { Component, ElementRef, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import {
-  IUiDialogOptions,
-  ThemeKind,
-  ThemeAppearance,
-  ThemeStyle,
-  SecondaryButton
-} from '@frontend/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, ThemeKind, SecondaryButton } from '@frontend/ui-lib/ui-lib.interfaces';
 import fd from 'form-data';
 import { ToastService } from '@frontend/services/toast.service';
 import { HostService } from '@frontend/services/host.service';

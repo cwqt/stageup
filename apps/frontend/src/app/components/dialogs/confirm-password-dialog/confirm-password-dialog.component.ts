@@ -5,13 +5,7 @@ import { Cacheable } from '@frontend/app.interfaces';
 import { MyselfService } from '@frontend/services/myself.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
-import {
-  IUiDialogOptions,
-  SecondaryButton,
-  ThemeAppearance,
-  ThemeKind,
-  ThemeStyle
-} from '@frontend/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-confirm-password-dialog',

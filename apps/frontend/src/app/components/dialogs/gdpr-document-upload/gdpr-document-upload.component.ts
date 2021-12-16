@@ -4,13 +4,7 @@ import { GdprService } from 'apps/frontend/src/app/services/gdpr.service';
 import fd from 'form-data';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { UiForm, UiField } from '@frontend/ui-lib/form/form.interfaces';
-import {
-  IUiDialogOptions,
-  SecondaryButton,
-  ThemeAppearance,
-  ThemeKind,
-  ThemeStyle
-} from '@frontend/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { RichText, IConsentable, ConsentableType } from '@core/interfaces';

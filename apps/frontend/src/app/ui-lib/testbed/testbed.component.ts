@@ -1,4 +1,4 @@
-import { ToastKind } from './../../services/toast.service';
+import { ToastKind } from '@frontend/services/toast.service';
 import { Component, OnInit } from '@angular/core';
 import { enumToValues } from '@core/helpers';
 import { capitalize, PersonTitle } from '@core/interfaces';
