@@ -11,7 +11,6 @@ video {
   display: none;
 }
 
-// TODO: allow variable colors from variables.scss
 .player {
-  --plyr-color-main: #e64a73;
+  --plyr-color-main: #e64a73; // Won't allow colour variable to be passed for some reason
 }

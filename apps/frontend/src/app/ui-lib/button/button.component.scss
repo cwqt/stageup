@@ -190,8 +190,8 @@
   opacity: 0.6;
   &:hover {
     opacity: 1;
-    color: black;
-    background-color: white;
+    color: $clr-black;
+    background-color: $clr-white;
   }
   ::ng-deep .mat-spinner circle {
     stroke: $clr-dark-lt !important;
