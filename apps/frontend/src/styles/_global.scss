@@ -70,26 +70,32 @@ p {
 }
 
 // Default set of classes to be used when wanting to set margins between components/elements
+// MARGIN
 .mr-app {
   margin-right: 16px;
 }
-
 .ml-app {
   margin-left: 16px;
 }
-
 .mt-app {
   margin-top: 32px;
 }
-
 .mb-app {
   margin-bottom: 32px;
 }
-
+.my-app {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+.mx-app {
+  margin-right: 16px;
+  margin-left: 16px;
+}
 .m-app {
   margin: 32px 16px;
 }
 
+// PADDING
 .pr-app {
   padding-right: 16px;
 }
@@ -101,6 +107,14 @@ p {
 }
 .pb-app {
   padding-bottom: 16px;
+}
+.py-app {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.px-app {
+  padding-right: 16px;
+  padding-left: 16px;
 }
 .p-app {
   padding: 16px;
