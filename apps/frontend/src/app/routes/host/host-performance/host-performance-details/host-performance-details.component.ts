@@ -170,9 +170,6 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     // Note, the seeded performance 'The Ghost Stories of E R Benson' is live but does not have a key
     if (this.performanceType == 'livestream') this.readStreamKey();
 
-    const name = this.performanceData.name ? this.performanceData.name : 'New Event';
-    this.breadcrumbService.set('dashboard/events/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
-
     // Set the checkbox label to display HTML rather than plain string
     // This needs to be done after a full cycle so that the ViewChild element isn't null
     setTimeout(
@@ -253,7 +250,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
       // Reload the performance after saving so frontend changes are updated (e.g. the tabs)
       await this.performance.request(this.performanceService.readPerformance(this.performanceId));
       // Re-set the breadcumb to the new title
-      this.breadcrumbService.set('dashboard/performances/:id', this.performanceDetails.name);
+      this.breadcrumbService.set('dashboard/events/:id', this.performanceDetails.name);
 
       return true;
     }

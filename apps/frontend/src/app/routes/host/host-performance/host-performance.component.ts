@@ -10,6 +10,7 @@ import { PerformanceService } from 'apps/frontend/src/app/services/performance.s
 import { HostPerformanceDetailsComponent } from './host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { HostPerformanceMediaComponent } from './host-performance-media/host-performance-media.component';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 export interface IHostPerformanceComponent {
   host: IHost;
@@ -50,7 +51,8 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
   constructor(
     private performanceService: PerformanceService,
     private appService: AppService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   async ngOnInit() {
@@ -58,7 +60,10 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     this.performanceId = this.appService.getParam(RouteParam.PerformanceId);
 
     this.performanceService.$activeHostPerformanceId.next(this.performanceId);
-    this.performance.request(this.performanceService.readPerformance(this.performanceId));
+    await this.performance.request(this.performanceService.readPerformance(this.performanceId));
+
+    const name = this.performance.data.data.name ? this.performance.data.data.name : 'New Event';
+    this.breadcrumbService.set('dashboard/events/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
   }
 
   goToPerformance() {

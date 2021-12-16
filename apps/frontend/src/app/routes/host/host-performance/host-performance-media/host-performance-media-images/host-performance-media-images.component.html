@@ -17,7 +17,7 @@
       <span *ngIf="primaryThumbnail" i18n>Edit</span>
       <span *ngIf="!primaryThumbnail" i18n>Add</span>
     </ui-button>
-    <img class="w-full object-cover" *ngIf="primaryThumbnail" [src]="primaryThumbnail.location" alt="" />
+    <img class="object-cover" *ngIf="primaryThumbnail" [src]="primaryThumbnail.location" alt="" />
   </div>
 </div>
 
@@ -29,12 +29,11 @@
   <div
     *ngFor="let index of THUMBNAIL_LIMIT - 1 | times"
     class="relative flex items-center justify-center rounded-lg thumbnail-image overflow-hidden mr-app"
-    (click)="changeSecondaryThumbnail(index)"
     [ngClass]="{ 'bg-grey': !secondaryThumbnails[index] }"
   >
     <ui-icon *ngIf="!secondaryThumbnails[index]" [size]="50">image</ui-icon>
     <ui-button
-      (click)="changePrimaryThumbnail()"
+      (click)="changeSecondaryThumbnail(index)"
       class="absolute top-2 right-2"
       icon="paint-brush--alt"
       variant="cleardark"
