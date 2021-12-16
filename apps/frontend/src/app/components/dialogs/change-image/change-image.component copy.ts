@@ -17,6 +17,8 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
 
   @ViewChild('fileInput') inputElement: ElementRef;
 
+  buttonText: string;
+  removeButtonText: string;
   selectedImage: string;
   hasSelectedImage: boolean = false;
   errorMessage: string = '';
@@ -27,10 +29,6 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   private reader: FileReader = new FileReader();
 
   hostId: string;
-
-  get danger(): ThemeKind {
-    return ThemeKind.Danger;
-  }
 
   buttons: IUiDialogOptions['buttons'] = [
     new UiDialogButton({
@@ -59,6 +57,8 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    console.log('initialImage', this.data.initialImage);
+    console.log('selectedImage', this.selectedImage);
     this.hostId = this.hostService.currentHostValue._id;
     this.clearAvatar();
   }
@@ -69,6 +69,9 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
 
   public clearAvatar() {
     this.hasSelectedImage = false;
+    this.selectedImage = this.data.initialImage ? this.data.initialImage : '/assets/avatar-placeholder.png';
+    this.buttonText = $localize`Select image`;
+    this.removeButtonText = $localize`Remove image`;
     this.uploadButton.disabled = true;
   }
 
@@ -79,6 +82,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
       this.uploadButton.disabled = true;
       this.fileTypeError = true;
       this.hasSelectedImage = false;
+      this.buttonText = $localize`Invalid file`;
       this.errorMessage = $localize`File type ${inputElement.files[0].type} not allowed`;
     }
   }
@@ -95,6 +99,7 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
         this.fileTypeError = false;
         this.hasSelectedImage = true;
         this.errorMessage = '';
+        this.buttonText = inputElement.files[0].name;
         this.selectedImage = e.target.result;
       };
       this.reader.readAsDataURL(inputElement.files[0]);
@@ -143,6 +148,5 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
     // null body taken as delete
     this.data.fileHandler(null);
     this.submit.emit(event);
-    event.stopPropagation();
   }
 }

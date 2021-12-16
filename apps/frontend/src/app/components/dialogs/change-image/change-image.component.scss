@@ -1,0 +1,16 @@
+@import 'apps/frontend/src/styles/variables';
+
+.thumbnail-image {
+  width: 320px;
+  min-width: 320px;
+  height: 240px;
+}
+
+.bg-grey {
+  background-color: $clr-secondary-lt;
+}
+
+img {
+  min-height: 100%;
+  min-width: 100%;
+}

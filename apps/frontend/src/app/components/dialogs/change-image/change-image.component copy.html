@@ -1,0 +1,31 @@
+<ui-dialog [loading]="uploadButton.loading" [buttons]="buttons" i18n-title title="Select Media" class="text-center">
+  <div class="selected-image-container grid justify-items-center mb-10">
+    <div class="image-wrapper">
+      <img
+        class="h-72"
+        [src]="
+          selectedImage ? selectedImage : data.initialImage !== null ? data.initialImage : '/assets/placeholder.jpg'
+        "
+        id="avatar-preview"
+      />
+    </div>
+  </div>
+
+  <div class="justify-items-center">
+    <input accept=".jpg,.jpeg,.png,.gif" hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file" />
+    <ui-button
+      icon="attachment"
+      [variant]="fileTypeError ? 'warning' : 'primary'"
+      (click)="fileInput.click()"
+      class="select-file p-4 pb-0"
+    >
+      {{ buttonText }}
+    </ui-button>
+
+    <ui-button icon="attachment" variant="secondary" (click)="deleteAsset($event)" class="p-4 pb-0">
+      {{ removeButtonText }}
+    </ui-button>
+  </div>
+
+  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+</ui-dialog>

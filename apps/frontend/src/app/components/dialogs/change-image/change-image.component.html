@@ -1,33 +1,29 @@
-<ui-dialog [loading]="uploadButton.loading" [buttons]="buttons" i18n-title title="Select Media" class="text-center">
-  <div class="selected-image-container grid justify-items-center mb-10">
-    <div class="image-wrapper">
-      <img
-        class="h-72"
-        [src]="
-          selectedImage ? selectedImage : data.initialImage !== null ? data.initialImage : '/assets/placeholder.jpg'
-        "
-        id="avatar-preview"
-      />
-    </div>
-  </div>
+<ui-dialog [loading]="uploadButton.loading" [buttons]="buttons" i18n-title title="Select Media">
+  <!-- <img
+    class="h-72"
+    [src]="selectedImage ? selectedImage : data.initialImage !== null ? data.initialImage : '/assets/placeholder.jpg'"
+  /> -->
 
-  <h4 class="mb-10" i18n>Images must be in .jpeg or .png format and be under 2MB</h4>
-
-  <div class="justify-items-center">
-    <input accept=".jpg,.jpeg,.png,.gif" hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file" />
+  <div
+    class="relative flex items-center justify-center rounded-lg thumbnail-image overflow-hidden cursor-pointer mb-2"
+    [ngClass]="{ 'bg-grey': !selectedImage && !data.initialImage }"
+    (click)="fileInput.click()"
+  >
+    <ui-icon *ngIf="!selectedImage && !data.initialImage" [size]="50">image</ui-icon>
     <ui-button
-      icon="attachment"
-      [variant]="fileTypeError ? 'warning' : 'primary'"
-      (click)="fileInput.click()"
-      class="select-file p-4 pb-0"
+      *ngIf="data.initialImage"
+      (click)="deleteAsset($event)"
+      class="absolute top-2 right-2"
+      [variant]="danger"
     >
-      {{ buttonText }}
+      <ui-icon>delete</ui-icon>
     </ui-button>
-
-    <ui-button icon="attachment" variant="secondary" (click)="deleteAsset($event)" class="p-4 pb-0">
-      {{ removeButtonText }}
-    </ui-button>
+    <input accept=".jpg,.jpeg,.png,.gif" hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file" />
+    <img *ngIf="selectedImage || data.initialImage" class="object-cover" [src]="selectedImage || data.initialImage" />
   </div>
+  <small class="opacity-70" i18n
+    >Max upload size: 2MB <br />Minimum resolution: 600 x 400px <br />3:2 ratio <b>required</b>
+  </small>
 
   <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
 </ui-dialog>
