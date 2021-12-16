@@ -26,7 +26,7 @@ export class HostListPerformancesComponent implements OnInit {
     private helperService: HelperService,
     private dialog: MatDialog,
     private appService: AppService
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;

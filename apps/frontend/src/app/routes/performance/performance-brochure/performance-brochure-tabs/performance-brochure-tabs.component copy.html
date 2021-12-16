@@ -3,9 +3,9 @@
     <mat-tab-group #tabs class="w-full" dynamicHeight>
       <mat-tab>
         <div class="flex p-4">
-          <div class="w-full">
+          <div class="truncate pt-4 w-full">
             <div class="flex justify-between">
-              <h1 class="line-clamp--1">{{ performance.name }}</h1>
+              <h1 class="truncate pr-6">{{ performance.name }}</h1>
               <app-like
                 class="mt-4"
                 *ngIf="myself"
