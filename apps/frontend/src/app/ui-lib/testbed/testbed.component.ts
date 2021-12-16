@@ -1,3 +1,4 @@
+import { ToastKind } from './../../services/toast.service';
 import { Component, OnInit } from '@angular/core';
 import { enumToValues } from '@core/helpers';
 import { capitalize, PersonTitle } from '@core/interfaces';
@@ -21,14 +22,11 @@ export class TestbedComponent implements OnInit {
   form: UiForm;
   table: UiTable;
 
-  toasts: { [index in ThemeKind]: `${Capitalize<index>} Toast` } = {
+  toasts: { [index in ToastKind]: `${Capitalize<index>} Toast` } = {
     [ThemeKind.Accent]: 'Accent Toast',
     [ThemeKind.Danger]: 'Danger Toast',
     [ThemeKind.Primary]: 'Primary Toast',
-    [ThemeKind.Secondary]: 'Secondary Toast',
-    [ThemeKind.Warning]: 'Warning Toast',
-    [ThemeKind.ClearDark]: 'Cleardark Toast',
-    [ThemeKind.PrimaryLight]: 'Primarylight Toast'
+    [ThemeKind.Warning]: 'Warning Toast'
   };
 
   constructor(private toastService: ToastService) {}
@@ -143,7 +141,7 @@ export class TestbedComponent implements OnInit {
     });
   }
 
-  openToast(kind: ThemeKind) {
+  openToast(kind: ToastKind) {
     this.toastService.emit(`This is a ${this.toasts[kind]}`, kind, { duration: 1000 });
   }
 

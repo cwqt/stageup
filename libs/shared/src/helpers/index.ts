@@ -17,7 +17,7 @@ import {
   ParsedRichText,
   Primitive,
   RefundRequestReason,
-  RichText,
+  RichText
 } from '@core/interfaces';
 import { nanoid } from 'nanoid';
 import QueryString from 'qs';
@@ -125,10 +125,10 @@ export interface IQueryParams {
 export const querize = (query: IQueryParams) =>
   query
     ? QueryString.stringify(query, {
-      arrayFormat: 'comma',
-      addQueryPrefix: true,
-      encode: false
-    })
+        arrayFormat: 'comma',
+        addQueryPrefix: true,
+        encode: false
+      })
     : '';
 
 /**
@@ -173,6 +173,17 @@ export function intersect<T = Primitive>(a: T[], b: T[], inverse: boolean = fals
  * @returns
  */
 export const sample = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+/**
+ * @description Truncates text to set number of characters. Optional parameter can be passed as an ending (e.g. '…')
+ * @param text The text to be truncated
+ * @param limit Length of text to truncate to
+ * @param ending Optional parameter to specify the trailing characters (defaults to '…')
+ * @returns
+ */
+export const truncate = (text: string, limit: number, ending = '…'): string => {
+  return text.length > limit ? text.substr(0, limit) + ending : text;
+};
 
 /**
  * @description Return ordinal of a date. 1'st', 2'nd', 3'rd' etc.
@@ -297,7 +308,7 @@ export const pipes = {
     };
 
     return pretty[reason];
-  },
+  }
 };
 
 /**
@@ -308,7 +319,6 @@ export const regexes = {
   vat: /(GB)?(\d{12}|\d{9})/g
 };
 
-
 /**
  * @description extracts a style object from a CSS class
  * @param style type 'ThemeStyle' (a combination of ThemeKind, ThemeDimension and ThemeAppearance) e.g. 'primary-s-outline', 'm-fill' or 'l'
@@ -317,16 +327,12 @@ export const regexes = {
 export const extractStyle = (
   style: ThemeStyle
 ): { kind: ThemeKind; size: ThemeDimension; appearance: ThemeAppearance } => {
-  const styles = style.split("-");
+  const styles = style.split('-');
   return {
-    kind:
-      styles.find((style) => enumToValues(ThemeKind).includes(style)) as ThemeKind ||
-      ThemeKind.Accent,
+    kind: (styles.find(style => enumToValues(ThemeKind).includes(style)) as ThemeKind) || ThemeKind.Accent,
     size:
-      styles.find((style) => enumToValues(ThemeDimension).includes(style)) as ThemeDimension ||
-      ThemeDimension.Medium,
+      (styles.find(style => enumToValues(ThemeDimension).includes(style)) as ThemeDimension) || ThemeDimension.Medium,
     appearance:
-      styles.find((style) => enumToValues(ThemeAppearance).includes(style)) as ThemeAppearance||
-      ThemeAppearance.Fill,
+      (styles.find(style => enumToValues(ThemeAppearance).includes(style)) as ThemeAppearance) || ThemeAppearance.Fill
   };
 };

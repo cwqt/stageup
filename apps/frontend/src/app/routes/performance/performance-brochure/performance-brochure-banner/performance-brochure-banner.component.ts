@@ -29,7 +29,7 @@ export class PerformanceBrochureBannerComponent implements OnInit {
 
   get brochureSharingUrl() {
     if (!this._brochureSharingUrl) {
-      this._brochureSharingUrl = `${this.appService.frontendUrl}/performances/show/${this.performance._id}`;
+      this._brochureSharingUrl = `${this.appService.frontendUrl}/events/show/${this.performance._id}`;
     }
     return this._brochureSharingUrl;
   }

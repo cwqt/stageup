@@ -11,7 +11,7 @@ import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '@frontend/services/helper.service';
 import { Component, OnInit, LOCALE_ID, Inject } from '@angular/core';
-import { i18n, unix, findAssets } from '@core/helpers';
+import { i18n, unix, findAssets, truncate } from '@core/helpers';
 
 @Component({
   selector: 'app-host-dashboard',
@@ -41,7 +41,10 @@ export class HostDashboardComponent implements OnInit {
 
     this.eventTable = new UiTable<IPerformanceStub>({
       resolver: async query => {
+        // Only return performances that are not in draft, deleted or pending_schedule states
+        query['only_scheduled'] = true;
         const envelope = await this.hostService.readHostPerformances(this.host._id, query);
+
         this.eventData = envelope.data;
         return envelope;
       },
@@ -53,7 +56,7 @@ export class HostDashboardComponent implements OnInit {
               p.assets && findAssets(p.assets, AssetType.Image, ['thumbnail', 'primary'])[0]?.location;
             return p.thumbnail || primaryAsset || '/assets/performance-placeholder.jpeg';
           },
-          accessor: p => p.name
+          accessor: p => truncate(p.name, 35)
         },
         {
           label: $localize`Schedule`,
@@ -81,7 +84,7 @@ export class HostDashboardComponent implements OnInit {
       },
       clickable: {
         shadow: true,
-        click_function: performance => this.appService.navigateTo(`/dashboard/performances/${performance.__data._id}`)
+        click_function: performance => this.appService.navigateTo(`/dashboard/events/${performance.__data._id}`)
       },
       uniform_row_height: true
     });

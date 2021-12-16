@@ -14,7 +14,6 @@ import {
   Host,
   IControllerEndpoint,
   ImageAsset,
-  Invoice,
   Like,
   LiveStreamAsset,
   Middleware,
@@ -23,9 +22,9 @@ import {
   PaymentMethod,
   Performance,
   POSTGRES_PROVIDER,
-  Provider,
   Rating,
   REDIS_PROVIDER,
+  Showing,
   SignableAssetType,
   SigningKey,
   STRIPE_PROVIDER,
@@ -33,7 +32,6 @@ import {
   transact,
   User,
   UserHostMarketingConsent,
-  UserStageUpMarketingConsent,
   Validators,
   VideoAsset
 } from '@core/api';
@@ -67,13 +65,12 @@ import {
   pick,
   PurchaseableType,
   PlatformConsentOpt,
-  TicketType,
   Visibility,
   PerformanceStatus,
-  PerformanceType
+  PerformanceType,
+  ShowingCountLimit
 } from '@core/interfaces';
 import Mux from '@mux/mux-node';
-import { RedisClient } from 'redis';
 import Stripe from 'stripe';
 import { array, boolean, enums, object, optional } from 'superstruct';
 import { Inject, Service } from 'typedi';
@@ -489,27 +486,30 @@ export class PerformanceController extends ModuleController {
     }
   };
 
+  createMultipleTickets: IControllerEndpoint<ITicket[]> = {
+    authorisation: AuthStrat.runner(
+      { hid: IdFinderStrat.findHostIdFromPerformanceId },
+      AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
+    ),
+    validators: { body: Validators.Objects.DtoCreateMultipleTickets },
+    controller: async req => {
+      const tickets = await this.performanceService.createMultipleTickets(req.params.pid, req.body);
+      return tickets.map(t => t.toFull());
+    }
+  }
+
   readTickets: IControllerEndpoint<IEnvelopedData<ITicketStub[], NUUID[]>> = {
     authorisation: AuthStrat.runner(
       { hid: IdFinderStrat.findHostIdFromPerformanceId },
       AuthStrat.hasHostPermission(HostPermission.Editor, map => map.hid)
     ),
     controller: async req => {
-      const tickets = await Ticket.find({
-        relations: {
-          performance: true
-        },
-        where: {
-          deleted_at: null,
-          is_cancelled: false,
-          performance: {
-            _id: req.params.pid
-          }
-        },
-        select: {
-          performance: { _id: true }
-        }
-      });
+      let ticketsQuery = this.ORM.createQueryBuilder(Ticket, 'ticket')
+        .where('performance__id = :_id', { _id: req.params.pid})
+        .andWhere('ticket.deleted_at is NULL')
+        .andWhere('is_cancelled = FALSE')
+      if (req.query.sid) ticketsQuery = ticketsQuery.where('showing__id = :_id', { _id: req.query.sid});
+      const tickets = await (ticketsQuery.leftJoinAndSelect('ticket.performance', 'performance')).getMany();
 
       const currentTime = timestamp();
       return {
@@ -985,6 +985,58 @@ export class PerformanceController extends ModuleController {
       // increment counter
       performance.views += 1;
       await performance.save();
+    }
+  };
+
+  createShowing: IControllerEndpoint<Showing> = {
+    authorisation: AuthStrat.runner(
+      { hid: IdFinderStrat.findHostIdFromPerformanceId },
+      AuthStrat.hasHostPermission(HostPermission.Admin, map => map.hid)
+    ),
+    validators: { body: Validators.Objects.DtoCreateShowing },
+    controller: async req => {
+      const performance = await getCheck(Performance.findOne({ _id: req.params.pid }));
+
+      if (!performance.publicity_period.start
+        || !performance.publicity_period.end
+      )
+        throw new ErrorHandler(HTTP.BadRequest, '@@showing.missing_performance_publicity');
+
+      if (!performance.ticket_publicity_period.start
+        || !performance.ticket_publicity_period.end
+      )
+        throw new ErrorHandler(HTTP.BadRequest, '@@showing.missing_ticket_publicity');
+
+      if (req.body.start_datetime >= req.body.end_datetime)
+        throw new ErrorHandler(HTTP.BadRequest, '@@showing.invalid_duration');
+
+      if (performance.ticket_publicity_period.start > req.body.start_datetime
+        || performance.ticket_publicity_period.end < req.body.end_datetime
+      )
+        throw new ErrorHandler(HTTP.BadRequest, '@@showing.time_not_in_ticket_publicity');
+
+      const alreadyExistingShowings = performance.showings;
+
+      if (alreadyExistingShowings) {
+        if (alreadyExistingShowings.length >= ShowingCountLimit)
+        throw new ErrorHandler(HTTP.BadRequest, '@@showing.count_limit_exceeded');
+  
+        for(const showing of alreadyExistingShowings) {
+          if (req.body.start_datetime <= showing.end_datetime
+            && showing.start_datetime <= req.body.end_datetime
+          )
+            throw new ErrorHandler(HTTP.BadRequest, '@@showing.overlapping_showings');
+        }
+      }
+
+      return (await this.performanceService.createShowing(performance, req.body));
+    }
+  };
+
+  readShowings: IControllerEndpoint<Showing[]> = {
+    authorisation: AuthStrat.none,
+    controller: async req => {
+      return await this.performanceService.readShowings(req.params.pid);
     }
   };
 }

@@ -14,7 +14,7 @@ import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { HostService } from '@frontend/services/host.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import isPostalCode from 'validator/es/lib/isPostalCode';
 import iso3166 from 'i18n-iso-countries';
@@ -226,7 +226,7 @@ export class HostSettingsComponent implements OnInit {
       buttons: [
         new UiDialogButton({
           label: $localize`Cancel`,
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: r => r.close()
         }),
         new UiDialogButton({

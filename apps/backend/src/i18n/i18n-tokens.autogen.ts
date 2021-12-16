@@ -154,5 +154,12 @@ export type AUTOGEN_i18n_TOKEN_MAP = {
   ["@@validation.invalid_linkedin_url"]: never,
   ["@@validation.invalid_twitter_url"]: never,
   ["@@validation.invalid_pinterest_url"]: never,
-  ["@@validation.invalid_youtube_url"]: never
+  ["@@validation.invalid_youtube_url"]: never,
+  ["@@showing.missing_performance_publicity"]: never,
+  ["@@showing.missing_ticket_publicity"]: never,
+  ["@@showing.invalid_duration"]: never,
+  ["@@showing.time_not_in_ticket_publicity"]: never,
+  ["@@showing.overlapping_showings"]: never,
+  ["@@showing.count_limit_exceeded"]: never
+  
 }

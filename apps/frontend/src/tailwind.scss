@@ -5,19 +5,19 @@
 // Specific styles (such as font-sizes) can be found in `styles/_global.css`
 @layer base {
   h1 {
-    @apply mb-4 font-bold;
+    @apply font-bold;
   }
   h2 {
     @apply mb-4 font-bold;
   }
   h3 {
-    @apply mb-3 opacity-70;
+    @apply mb-3;
   }
   h4 {
-    @apply mb-3 opacity-70;
+    @apply mb-3;
   }
   h5 {
-    @apply mb-3 opacity-70;
+    @apply mb-3;
   }
   a {
     @apply underline;

@@ -2,6 +2,9 @@
   <ng-content select="[sticky]"></ng-content>
 </div>
 
-<div class="container pt-4">
-  <ng-content select="[body]"></ng-content>
+<!-- Container for the central page (excludes sidebar, header and footer) -->
+<div class="flex justify-center">
+  <div class="container pt-4">
+    <ng-content select="[body]"></ng-content>
+  </div>
 </div>

@@ -1,13 +1,22 @@
+import { Cacheable } from '@frontend/app.interfaces';
+import { Subscription } from 'rxjs';
 import { HostPerformanceSettingsComponent } from './host-performance-settings/host-performance-settings.component';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DtoPerformance, IHost, IPerformanceHostInfo, PerformanceStatus, PerformanceType } from '@core/interfaces';
-import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { AppService, RouteParam } from 'apps/frontend/src/app/services/app.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { HostPerformanceDetailsComponent } from './host-performance-details/host-performance-details.component';
 import { HostPerformanceTicketingComponent } from './host-performance-ticketing/host-performance-ticketing.component';
 import { HostPerformanceMediaComponent } from './host-performance-media/host-performance-media.component';
+
+export interface IHostPerformanceComponent {
+  host: IHost;
+  performanceId: string;
+  performanceHostInfo: ICacheable<IPerformanceHostInfo>;
+  performance: Cacheable<DtoPerformance>;
+}
 
 @Component({
   selector: 'app-host-performance',
@@ -17,8 +26,9 @@ import { HostPerformanceMediaComponent } from './host-performance-media/host-per
 export class HostPerformanceComponent implements OnInit, OnDestroy {
   host: IHost; // injected from parent router-outlet
   performanceId: string;
-  performance: ICacheable<DtoPerformance> = createICacheable();
+  performance = new Cacheable<DtoPerformance>();
   performanceHostInfo: ICacheable<IPerformanceHostInfo> = createICacheable(null, { is_visible: false });
+  reloadPerfomanceSubscription: Subscription;
 
   get performanceIsDraft(): boolean {
     return this.performance?.data?.data?.status === PerformanceStatus.Draft;
@@ -48,11 +58,11 @@ export class HostPerformanceComponent implements OnInit, OnDestroy {
     this.performanceId = this.appService.getParam(RouteParam.PerformanceId);
 
     this.performanceService.$activeHostPerformanceId.next(this.performanceId);
-    cachize(this.performanceService.readPerformance(this.performanceId), this.performance);
+    this.performance.request(this.performanceService.readPerformance(this.performanceId));
   }
 
-  goToPerformance(): void {
-    this.appService.navigateTo(`/performances/${this.performance?.data?.data?._id}`);
+  goToPerformance() {
+    this.appService.navigateTo(`/events/${this.performanceId}`);
   }
 
   ngOnDestroy() {

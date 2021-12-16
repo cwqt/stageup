@@ -27,7 +27,7 @@ export class HostPerformancesComponent implements OnInit {
     private helperService: HelperService,
     private dialog: MatDialog,
     private appService: AppService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
@@ -42,11 +42,11 @@ export class HostPerformancesComponent implements OnInit {
           accessor: p => p.name || '-'
         },
         {
-          label: $localize`Performance Schedule Start`,
+          label: $localize`Event Schedule Start`,
           accessor: p => (p.publicity_period.start ? i18n.date(unix(p.publicity_period.start), this.locale) : '-')
         },
         {
-          label: $localize`Performance Schedule End`,
+          label: $localize`Event Schedule End`,
           accessor: p => (p.publicity_period.end ? i18n.date(unix(p.publicity_period.end), this.locale) : '-')
         },
         {
@@ -78,7 +78,7 @@ export class HostPerformancesComponent implements OnInit {
       actions: [
         {
           label: $localize`Edit`,
-          click: p => this.appService.navigateTo(`/dashboard/performances/${p._id}`),
+          click: p => this.appService.navigateTo(`/dashboard/events/${p._id}`),
           icon: 'maximize',
           disabled: p => p.status == PerformanceStatus.Deleted
         }

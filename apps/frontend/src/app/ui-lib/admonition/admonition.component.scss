@@ -1,3 +1,5 @@
+@import 'apps/frontend/src/styles/variables';
+
 .admonition-wrapper {
   display: flex;
   flex-flow: column;
@@ -23,7 +25,7 @@
 }
 
 .admonition-wrapper.info {
-  border-left-color: #00b8d4;
+  border-left-color: $clr-info;
   .admonition-title {
     background-color: rgba(0, 184, 212, 0.1);
     ui-icon {
@@ -33,7 +35,7 @@
 }
 
 .admonition-wrapper.warning {
-  border-left-color: #ff9100;
+  border-left-color: $clr-warning-dk;
   .admonition-title {
     background-color: rgba(255, 145, 0, 0.1);
     ui-icon {
@@ -43,21 +45,21 @@
 }
 
 .admonition-wrapper.success {
-  border-left-color: #00c853;
+  border-left-color: $clr-success;
   .admonition-title {
     background-color: rgba(0, 200, 83, 0.1);
     ui-icon {
-      color: #00c853;
+      color: $clr-success;
     }
   }
 }
 
 .admonition-wrapper.bug {
-  border-left-color: #f50057;
+  border-left-color: $clr-danger;
   .admonition-title {
     background-color: rgba(245, 0, 87, 0.1);
     ui-icon {
-      color: #f50057;
+      color: $clr-danger;
     }
   }
 }

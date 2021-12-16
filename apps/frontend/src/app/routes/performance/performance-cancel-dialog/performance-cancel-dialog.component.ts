@@ -7,12 +7,18 @@ import { HelperService } from '@frontend/services/helper.service';
 import { PerformanceService } from '@frontend/services/performance.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import {
+  IUiDialogOptions,
+  ThemeKind,
+  ThemeAppearance,
+  ThemeStyle,
+  SecondaryButton
+} from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-performance-cancel-dialog',
   templateUrl: './performance-cancel-dialog.component.html',
-  styleUrls: ['./performance-cancel-dialog.component.css']
+  styleUrls: ['./performance-cancel-dialog.component.scss']
 })
 export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOptions {
   submit: EventEmitter<string> = new EventEmitter();
@@ -33,7 +39,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
     this.buttons = [
       new UiDialogButton({
         label: $localize`Close`,
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         callback: () => {
           this.cancel.emit();
           this.ref.close();
@@ -73,7 +79,7 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
                   );
                 })
                 .then(() => {
-                  this.appService.navigateTo('/dashboard/performances');
+                  this.appService.navigateTo('/dashboard/events');
                   this.ref.close();
                 })
                 .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));

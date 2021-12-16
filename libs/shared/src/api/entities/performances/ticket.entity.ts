@@ -16,6 +16,7 @@ import { Performance } from './performance.entity';
 import { Except } from 'type-fest';
 import { Claim } from '../assets/claim.entity';
 import { transact } from '../../typeorm-patches';
+import { Showing } from './showing.entity';
 @Entity()
 export class Ticket extends BaseEntity implements ITicket {
   @PrimaryColumn() _id: string;
@@ -40,6 +41,7 @@ export class Ticket extends BaseEntity implements ITicket {
 
   @DeleteDateColumn({ type: 'timestamptz' }) deleted_at?: Date; // soft delete
   @ManyToOne(() => Performance, perf => perf.tickets) performance: Performance;
+  @ManyToOne(() => Showing, showing => showing.tickets) showing: Showing;
   @OneToOne(() => Claim, { onDelete: 'CASCADE', cascade: true }) @JoinColumn() claim: Claim;
 
   constructor(ticket: DtoCreateTicket) {
@@ -60,9 +62,10 @@ export class Ticket extends BaseEntity implements ITicket {
     this.is_quantity_visible = ticket.is_quantity_visible;
   }
 
-  async setup(performance: Performance, txc?: EntityManager) {
+  async setup({performance, showing, txc}: {performance: Performance, showing?: Showing, txc?: EntityManager}) {
     return transact(async t => {
       this.performance = performance;
+      this.showing = showing;
       const claim = new Claim();
       this.claim = claim;
       return await t.save(claim);

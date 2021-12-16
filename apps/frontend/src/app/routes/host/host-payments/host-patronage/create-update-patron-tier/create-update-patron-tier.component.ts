@@ -13,7 +13,7 @@ import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-create-update-patron-tier',
@@ -88,7 +88,7 @@ export class CreateUpdatePatronTierComponent implements OnInit, IUiDialogOptions
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         disabled: false,
         callback: () => this.ref.close()
       }),

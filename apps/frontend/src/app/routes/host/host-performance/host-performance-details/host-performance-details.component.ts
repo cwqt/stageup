@@ -1,7 +1,8 @@
+import { Cacheable } from '@frontend/app.interfaces';
 import { ComponentCanDeactivate } from '../../../../_helpers/unsaved-changes.guard';
 import { Observable, Subject } from 'rxjs';
 import { MatTabGroup } from '@angular/material/tabs';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { timestamp, unix } from '@core/helpers';
@@ -20,7 +21,7 @@ import { PerformanceCancelDialogComponent } from '@frontend/routes/performance/p
 import { AppService } from '@frontend/services/app.service';
 import { HelperService } from '@frontend/services/helper.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { cachize, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
@@ -29,6 +30,7 @@ import { ToastService } from '@frontend/services/toast.service';
 import { BreadcrumbService } from 'xng-breadcrumb';
 import * as lodash from 'lodash';
 import { UnsavedChangesDialogComponent } from '@frontend/components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
+import { IHostPerformanceComponent } from '../host-performance.component';
 
 // Container component for all of the tabs (details, release, links, keys)
 @Component({
@@ -36,20 +38,21 @@ import { UnsavedChangesDialogComponent } from '@frontend/components/dialogs/unsa
   templateUrl: './host-performance-details.component.html',
   styleUrls: ['./host-performance-details.component.scss']
 })
-export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeactivate {
+export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeactivate, IHostPerformanceComponent {
   // Injected from parent router outlet
   host: IHost;
   performanceId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
-  performance: ICacheable<DtoPerformance>;
+  performance: Cacheable<DtoPerformance>;
   performanceDetails: DtoPerformanceDetails;
   performanceGeneralForm: UiForm<void>; // The forms do not handle submit but instead merge with data from other form to submit
   performanceReleaseForm: UiForm<void>;
   @ViewChild('tabs', { static: false }) tabs: MatTabGroup;
-
   @ViewChild('checkboxText', { static: false }) checkboxText: ElementRef;
 
   visibilityFormTouched = false;
+
+  @Output() reloadPerformance = new EventEmitter();
 
   get performanceData() {
     return this.performance.data?.data;
@@ -93,6 +96,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
       genre: this.performanceData.genre,
       name: this.performanceData.name,
       publicity_period: this.performanceData.publicity_period,
+      ticket_publicity_period: { start: null, end: null },
       visibility: this.performanceData.visibility
     };
 
@@ -167,7 +171,7 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     if (this.performanceType == 'livestream') this.readStreamKey();
 
     const name = this.performanceData.name ? this.performanceData.name : 'New Event';
-    this.breadcrumbService.set('dashboard/performances/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
+    this.breadcrumbService.set('dashboard/events/:id', name.length > 15 ? `${name.substring(0, 15)}...` : name);
 
     // Set the checkbox label to display HTML rather than plain string
     // This needs to be done after a full cycle so that the ViewChild element isn't null
@@ -198,10 +202,10 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
       buttons: [
         new UiDialogButton({
           label: $localize`Later`,
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: ref => {
             ref.close();
-            this.router.navigate(['dashboard/performances']);
+            this.router.navigate(['dashboard/events']);
           }
         }),
         new UiDialogButton({
@@ -246,6 +250,11 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
       this.toastService.emit($localize`Event saved successfully!`, ThemeKind.Accent, {
         duration: 4000
       });
+      // Reload the performance after saving so frontend changes are updated (e.g. the tabs)
+      await this.performance.request(this.performanceService.readPerformance(this.performanceId));
+      // Re-set the breadcumb to the new title
+      this.breadcrumbService.set('dashboard/performances/:id', this.performanceDetails.name);
+
       return true;
     }
   }
@@ -302,6 +311,9 @@ export class HostPerformanceDetailsComponent implements OnInit, ComponentCanDeac
     // i.e. the existing 'saved' data
     const oldFormData = { ...this.performanceDetails };
     if (!this.visibilityFormTouched) delete oldFormData.visibility;
+
+    // TODO: When 'ticket_publicity_period' is implemented (in the 'release' tab) we can delete this line
+    delete oldFormData.ticket_publicity_period;
 
     // Check if the 'unsaved' data is equal to 'saved'
     return !lodash.isEqual(newFormData, oldFormData);
