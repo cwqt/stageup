@@ -3,13 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IRemovalReason, ISelectReasonData, Primitive } from '@core/interfaces';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
-import {
-  IUiDialogOptions,
-  ThemeKind,
-  ThemeAppearance,
-  ThemeStyle,
-  SecondaryButton
-} from '@frontend/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, ThemeKind, SecondaryButton } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'frontend-select-reason-dialog',
