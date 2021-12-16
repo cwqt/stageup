@@ -128,6 +128,7 @@ module "secrets" {
 # with MUX it has to be done manually :(
 resource "stripe_webhook_endpoint" "stripe_webhook" {
   url = "https://${local.load_balancer_host}/api/stripe/hooks"
+  connect = true
 
   # take these from StripeHook enum in @core/interfaces
   enabled_events = [
@@ -153,8 +154,6 @@ module "backend" {
   region        = local.region
   image         = "eu.gcr.io/${var.gcp_project_id}/core-backend:${local.name}-latest"
   vpc_connector = google_vpc_access_connector.vpc_connector.name
-    # this timeout needs to be this long to enable SSE to work properly
-  timeout       = 1200
 
   env = {
     NODE_ENV                    = local.NODE_ENV
