@@ -2,6 +2,11 @@
   width: 100%;
 }
 
+td,
+th {
+  padding: 8px 20px 8px 0 !important;
+}
+
 .ui-table {
   position: relative;
   min-height: 200px;
@@ -166,12 +171,20 @@ popper-content {
 }
 
 .set-uniform-height {
-  height: 65px !important;
+  height: 81px !important;
 }
 .mat-header-cell {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 500;
   color: black;
+  // white-space: nowrap;
+}
+
+img {
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  min-height: 3rem;
 }
 
 ::ng-deep .mat-sort-header-arrow[style] {
@@ -206,8 +219,9 @@ ui-button {
   padding: 0 4px;
 }
 
-.sort-icon {
+.header-icon {
   font-size: 26px;
+  margin-left: 8px;
 }
 
 .is-chip {

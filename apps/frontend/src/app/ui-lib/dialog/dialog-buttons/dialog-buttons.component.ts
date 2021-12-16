@@ -1,3 +1,4 @@
+import { ThemeStyle } from '@frontend/ui-lib/ui-lib.interfaces';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -6,7 +7,7 @@ import { ThemeKind } from '../../ui-lib.interfaces';
 
 export class UiDialogButton {
   loading: boolean;
-  kind: ThemeKind;
+  kind: ThemeStyle;
   callback: (r?: MatDialogRef<any>) => any;
   disabled: boolean;
   label: string;
@@ -20,7 +21,7 @@ export class UiDialogButton {
   constructor(options: {
     label: string;
     callback: (r?: MatDialogRef<any>) => any;
-    kind?: ThemeKind;
+    kind?: ThemeStyle;
     loading?: boolean;
     disabled?: boolean;
     loadingLabel?: string;
@@ -36,8 +37,8 @@ export class UiDialogButton {
   /**
    * @description Attach the button to the UiForm to mirror disabled/loading state
    */
-  attach(form: UiForm, overrideInitialDisabledState?:boolean) {
-    if(!overrideInitialDisabledState) this.disabled = !form.group.valid;
+  attach(form: UiForm, overrideInitialDisabledState?: boolean) {
+    if (!overrideInitialDisabledState) this.disabled = !form.group.valid;
 
     this.subscriptions = {
       changes: form.group.valueChanges.subscribe(() => (this.disabled = !form.group.valid)),

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FilterCode, FilterQuery, NumberFilter, NumberFilterOperator } from '@core/interfaces';
 import { UiDialogButton } from '../../../dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '../../../form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from '../../../ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '../../../ui-lib.interfaces';
 
 @Component({
   selector: 'ui-filter-number',
@@ -88,7 +88,7 @@ export class FilterNumberComponent implements OnInit {
       this.buttons.push(
         new UiDialogButton({
           label: $localize`Remove`,
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: () => {
             this.onChange.emit(null);
             this.form.group.reset();

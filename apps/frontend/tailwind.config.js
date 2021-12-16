@@ -32,8 +32,13 @@ module.exports = production => ({
   theme: {
     backgroundColor: theme => ({
       ...theme('colors'),
-      'primary': '#ef4571',
-  })},
+      primary: '#ef4571'
+    }),
+    textColor:theme => ({
+      ...theme('colors'),
+      'cyan': '#17A2B8',
+    })
+  },
   variants: {},
   plugins: [require('tailwindcss-aspect-ratio')]
 });

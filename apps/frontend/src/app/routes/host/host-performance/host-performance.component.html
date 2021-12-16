@@ -1,8 +1,9 @@
 <app-page>
   <div body>
+    <app-breadcrumb></app-breadcrumb>
     <mat-spinner *ngIf="performance.loading"></mat-spinner>
     <ng-container *ngIf="performance.data">
-      <ui-button class="float-right -mt-12" (click)="goToPerformance()" [disabled]="performanceIsDraft" icon="launch"
+      <ui-button class="float-right -mt-16" (click)="goToPerformance()" [disabled]="performanceIsDraft" icon="launch"
         ><span i18n>Preview Event</span></ui-button
       >
       <router-outlet (activate)="onChildLoaded($event)"></router-outlet>

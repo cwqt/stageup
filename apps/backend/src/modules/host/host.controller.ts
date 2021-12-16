@@ -79,7 +79,10 @@ import {
   JobType,
   DtoReadHost,
   DtoPerformanceIDAnalytics,
-  DeleteHostReason
+  DeleteHostReason,
+  IAnalyticsChunk,
+  IPerformanceAnalyticsMetrics,
+  PerformanceStatus
 } from '@core/interfaces';
 import Stripe from 'stripe';
 import {
@@ -675,12 +678,17 @@ export class HostController extends ModuleController {
   readHostPerformances: IControllerEndpoint<IEnvelopedData<IPerformanceStub[], null>> = {
     authorisation: AuthStrat.hasHostPermission(HostPermission.Member),
     controller: async req => {
-      return await this.ORM.createQueryBuilder(Performance, 'performance')
+      const returnOnlyScheduled = req.query.only_scheduled == 'true';
+
+      let qb = this.ORM.createQueryBuilder(Performance, 'performance')
         .innerJoinAndSelect('performance.host', 'host')
-        .where('host._id = :id', { id: req.params.hid })
-        .orderBy('performance.created_at', 'DESC')
-        .withDeleted() //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
-        .paginate({ serialiser: o => o.toStub() });
+        .where('host._id = :id', { id: req.params.hid });
+
+      if (returnOnlyScheduled)
+        qb = qb.andWhere('performance.status = :status', { status: PerformanceStatus.Scheduled });
+      else qb = qb.withDeleted(); //Return deleted performances so they appear in the table but with PerformanceStatus.Deleted
+
+      return await qb.orderBy('performance.created_at', 'DESC').paginate({ serialiser: o => o.toStub() });
     }
   };
 
@@ -1102,6 +1110,23 @@ export class HostController extends ModuleController {
       );
       // Return as DtoPerformanceIDAnalytics array
       return performanceIds.map(performanceId => ({ performanceId, chunks: performanceAnalyticsMap[performanceId] }));
+    }
+  };
+
+  // Returns a full query of a performance analytics 
+  readPerformanceAnalytics: IControllerEndpoint<Array<IAnalyticsChunk<IPerformanceAnalyticsMetrics>>> = {
+    validators: {
+      query: object({ period: enums<AnalyticsTimePeriod>(AnalyticsTimePeriods) })
+    },
+    authorisation: AuthStrat.hasHostPermission(HostPermission.Admin),
+    controller: async req => {
+      await getCheck(Performance.findOne({ _id: req.params.pid }));
+      const performanceAnalyticsMap = await this.hostService.readAnalyticsFromPerformanceArray(
+        [req.params.pid],
+        req.query.period as AnalyticsTimePeriod
+      );
+
+      return performanceAnalyticsMap[req.params.pid]
     }
   };
 

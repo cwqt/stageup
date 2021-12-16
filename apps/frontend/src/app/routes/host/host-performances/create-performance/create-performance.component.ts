@@ -28,7 +28,7 @@ export class CreatePerformanceComponent implements OnInit, IUiDialogOptions {
     const performance = await this.hostService.createPerformance(this.hostService.hostId, type);
     this.ref.close();
     this.loading = false;
-    this.appService.navigateTo(`/dashboard/performances/${performance._id}`);
+    this.appService.navigateTo(`/dashboard/events/${performance._id}`);
   }
 
   ngOnInit(): void {}

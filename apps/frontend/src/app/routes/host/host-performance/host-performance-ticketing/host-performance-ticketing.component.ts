@@ -12,12 +12,13 @@ import {
   NUUID,
   TICKETS_QTY_UNLIMITED
 } from '@core/interfaces';
-import { cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
+import { Cacheable, cachize, createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { ChipComponent } from 'apps/frontend/src/app/ui-lib/chip/chip.component';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { SecondaryButton, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { IHostPerformanceComponent } from '../host-performance.component';
 import { CreateUpdateTicketComponent } from './create-update-ticket/create-update-ticket.component';
 
 @Component({
@@ -25,12 +26,12 @@ import { CreateUpdateTicketComponent } from './create-update-ticket/create-updat
   templateUrl: './host-performance-ticketing.component.html',
   styleUrls: ['./host-performance-ticketing.component.scss']
 })
-export class HostPerformanceTicketingComponent implements OnInit {
+export class HostPerformanceTicketingComponent implements OnInit, IHostPerformanceComponent {
   // Injected from parent router outlet
   performanceId: string;
   ticketId: string;
   performanceHostInfo: ICacheable<IPerformanceHostInfo>;
-  performance: ICacheable<DtoPerformance>;
+  performance: Cacheable<DtoPerformance>;
   host: IHost;
 
   tickets: ICacheable<IEnvelopedData<ITicketStub[], NUUID[]>> = createICacheable([]);
@@ -96,7 +97,7 @@ export class HostPerformanceTicketingComponent implements OnInit {
       buttons: [
         new UiDialogButton({
           label: 'Cancel',
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: r => r.close()
         }),
         new UiDialogButton({

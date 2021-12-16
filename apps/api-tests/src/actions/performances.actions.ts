@@ -1,5 +1,7 @@
 import { timestamp } from '@core/helpers';
 import {
+  DtoCreateMultipleTickets,
+  DtoCreateShowing,
   DtoCreateTicket,
   DtoPerformance,
   DtoPerformanceDetails,
@@ -9,6 +11,7 @@ import {
   IPerformance,
   IPerformanceHostInfo,
   IPerformanceStub,
+  IShowing,
   ITicket,
   ITicketStub,
   NUUID,
@@ -34,6 +37,7 @@ export default {
       short_description: 'some performance',
       visibility: Visibility.Public
     };
+
     const res = await api.put(`/performances/${performanceId}/update`, performanceDetails, env.getOptions());
     return res.data;
   },
@@ -90,6 +94,12 @@ export default {
     return res.data;
   },
 
+  // router.post<ITicket[]>("/performances/:pid/multiple-tickets", Perfs.createMultipleTickets);
+  createMultipleTickets: async (performance: IPerformance, tickets: DtoCreateMultipleTickets): Promise<ITicket[]> => {
+    const res = await api.post(`/performances/${performance._id}/multiple-tickets`, tickets, env.getOptions());
+    return res.data;
+  },
+
   // router.get <ITicketStub[]> ("/performances/:pid/tickets", Perfs.getTickets());
   getTickets: async (performance: IPerformance): Promise<ITicketStub[]> => {
     const res = await api.get(`/performances/${performance._id}/tickets`, env.getOptions());
@@ -105,6 +115,12 @@ export default {
   // router.get <IEnvelopedData<ITicketStub[], NUUID[]>> ("/performances/:pid/tickets", Perfs.readTickets());
   readTickets: async (performance: IPerformance): Promise<IEnvelopedData<ITicketStub[], NUUID[]>> => {
     const res = await api.get(`/performances/${performance._id}/tickets`, env.getOptions());
+    return res.data;
+  },
+
+    // router.get <IEnvelopedData<ITicketStub[], NUUID[]>> ("/performances/:pid/tickets", Perfs.readTickets());
+  readShowingTickets: async (performance: IPerformance, showing: IShowing): Promise<IEnvelopedData<ITicketStub[], NUUID[]>> => {
+    const res = await api.get(`/performances/${performance._id}/tickets?sid=${showing._id}`, env.getOptions());
     return res.data;
   },
 
@@ -137,6 +153,18 @@ export default {
       { is_quantity_visible: isQtyVisible },
       env.getOptions()
     );
+    return res.data;
+  },
+
+  // router.post<IShowing>("/performances/:pid/showing", Perfs.createShowing);
+  createShowing: async (performance: IPerformance, data: DtoCreateShowing): Promise<IShowing> => {
+    const res = await api.post(`/performances/${performance._id}/showings`, data, env.getOptions());
+    return res.data;
+  },
+
+  // router.get<IShowing[]>("/performances/:pid/showings", Perfs.readShowings);
+  readShowings: async (performance: IPerformance): Promise<IShowing[]> => {
+    const res = await api.get(`/performances/${performance._id}/showings`, env.getOptions());
     return res.data;
   }
 };

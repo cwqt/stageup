@@ -7,7 +7,7 @@ import { ToastService } from '@frontend/services/toast.service';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
 import { RefundReasonPipe } from '@frontend/_pipes/refund-reason.pipe';
 import { UiDialogButton } from '../../../ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { IUiDialogOptions, ThemeKind } from '../../../ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, ThemeKind, SecondaryButton } from '@frontend/ui-lib/ui-lib.interfaces';
 
 @Component({
   selector: 'app-refund-dialog',
@@ -66,7 +66,7 @@ export class RefundDialogComponent implements OnInit, IUiDialogOptions {
     this.buttons = [
       new UiDialogButton({
         label: 'Cancel',
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         callback: () => this.cancel.emit()
       }),
       new UiDialogButton({

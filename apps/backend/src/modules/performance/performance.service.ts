@@ -9,10 +9,13 @@ import {
   POSTGRES_PROVIDER,
   AssetGroup,
   Ticket,
-  transact
+  transact,
+  Showing
 } from '@core/api';
 import { timestamp } from '@core/helpers';
 import {
+  DtoCreateMultipleTickets,
+  DtoCreateShowing,
   DtoCreateTicket,
   HTTP,
   ILocale,
@@ -20,10 +23,11 @@ import {
   PerformanceStatus,
   PerformanceType,
   RemovalType,
+  ShowingCountLimit,
   TicketType
 } from '@core/interfaces';
 import { Inject, Service } from 'typedi';
-import { Connection } from 'typeorm';
+import { Connection, QueryBuilder } from 'typeorm';
 
 @Service()
 export class PerformanceService extends ModuleService {
@@ -39,7 +43,7 @@ export class PerformanceService extends ModuleService {
 
     const ticket = await transact(async txc => {
       const ticket = new Ticket(body);
-      const claim = await ticket.setup(performance, txc);
+      const claim = await ticket.setup({performance, txc});
 
       // IMPORTANT for now we will assign all signed assets to this claim
       const group = await AssetGroup.findOne({ owner__id: performanceId }, { relations: ['assets'] });
@@ -52,6 +56,29 @@ export class PerformanceService extends ModuleService {
     });
 
     return ticket;
+  }
+
+  async createMultipleTickets(performanceId: string, body: DtoCreateMultipleTickets): Promise<Ticket[]> {
+    const performance = await getCheck(Performance.findOne({ _id: performanceId }));
+    const tickets: Ticket[] = [];
+
+    for(const showingId of body.showing_ids) {
+      const showing = await getCheck(Showing.findOne({ _id: showingId }));
+
+      tickets.push(await transact(async txc => {
+        const ticket = new Ticket(body.ticket);
+        const claim = await ticket.setup({performance, txc, showing});
+        const group = await AssetGroup.findOne({ owner__id: performanceId }, { relations: ['assets'] });
+        await claim.assign(
+          group.assets.filter(asset => asset.signing_key__id != null),
+          txc
+        );
+
+        return await txc.save(ticket);
+      }));
+    }
+
+    return tickets;
   }
 
   async softDeletePerformance(performanceId: string, removalReason: IRemovalReason, locale: ILocale) {
@@ -139,5 +166,19 @@ export class PerformanceService extends ModuleService {
       .leftJoinAndSelect('ticket.performance', 'performance')
       .andWhere('performance._id = :pid', { pid: performanceId })
       .getOne();
+  }
+
+  async createShowing(performance: Performance, data: DtoCreateShowing): Promise<Showing> {
+    const showing = new Showing(data);
+    showing.performance = performance;
+    showing.save();
+
+    return showing;
+  }
+
+  async readShowings(performanceId: string): Promise<Showing[]> {
+    return await this.ORM.createQueryBuilder(Showing, 'showing')
+      .where('showing.performance__id = :performance_id', { performance_id: performanceId })
+      .getMany();
   }
 }

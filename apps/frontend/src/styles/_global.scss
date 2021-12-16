@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+@import 'apps/frontend/src/styles/variables';
 
 popper-content .ngxp__container {
   background: white;
@@ -31,7 +32,7 @@ b {
 h1 {
   font-size: 32px;
   font-weight: bold;
-  line-height: 48px;
+  margin-bottom: 32px;
 }
 h2 {
   font-size: 28px;
@@ -40,21 +41,23 @@ h2 {
 h3 {
   font-size: 24px;
   line-height: 36px;
-  opacity: 1;
+  font-weight: 500;
 }
 h4 {
   font-size: 20px;
   line-height: 30px;
-  opacity: 1;
 }
 a {
-  color: #17a2b8;
+  color: $clr-info;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 p {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 24px;
-  opacity: 0.7;
 }
 
 h1,
@@ -66,22 +69,75 @@ p {
   font-family: 'Roboto', sans-serif !important;
 }
 
+// Default set of classes to be used when wanting to set margins between components/elements
+// MARGIN
 .mr-app {
   margin-right: 16px;
 }
-
 .ml-app {
-  margin-right: 16px;
+  margin-left: 16px;
 }
-
 .mt-app {
-  margin-right: 32px;
+  margin-top: 32px;
 }
-
 .mb-app {
-  margin-right: 32px;
+  margin-bottom: 32px;
+}
+.my-app {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+.mx-app {
+  margin-right: 16px;
+  margin-left: 16px;
+}
+.m-app {
+  margin: 32px 16px;
 }
 
-.m-app {
-  margin: 32px 16px 32px 16px;
+// PADDING
+.pr-app {
+  padding-right: 16px;
+}
+.pl-app {
+  padding-left: 16px;
+}
+.pt-app {
+  padding-top: 16px;
+}
+.pb-app {
+  padding-bottom: 16px;
+}
+.py-app {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.px-app {
+  padding-right: 16px;
+  padding-left: 16px;
+}
+.p-app {
+  padding: 16px;
+}
+
+@mixin clamp($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp {
+  &--1 {
+    @include clamp(1);
+  }
+  &--2 {
+    @include clamp(2);
+  }
+  &--3 {
+    @include clamp(3);
+  }
+  &--4 {
+    @include clamp(4);
+  }
 }

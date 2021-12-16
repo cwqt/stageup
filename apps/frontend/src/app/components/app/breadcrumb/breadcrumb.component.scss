@@ -1,4 +1,11 @@
-::ng-deep .xng-breadcrumb-trail{
-    font-weight: 700;
-    color: #E47290 !important;
+@import 'apps/frontend/src/styles/variables';
+
+::ng-deep .xng-breadcrumb-trail {
+  font-weight: 700;
+  color: $clr-primary !important;
+}
+
+.breadcrumb-container {
+  margin-bottom: 24px;
+  height: 20px;
 }

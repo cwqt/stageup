@@ -1,0 +1,117 @@
+<div body>
+  <div class="flex align-middle space-x-4">
+    <h1 class="float-left">{{ performanceData.name }}</h1>
+    <div class="justify-en pt-1">
+      <ui-chip kind="deep-blush">{{ performanceData.performance_type | performanceTypePipe }}</ui-chip>
+    </div>
+  </div>
+
+  <!-- copy and share event link -->
+  <div *ngIf="numberOfHostEvents > 1" class="flex">
+    <div class="bg-white rounded-md copy-box">
+      <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
+    </div>
+    <div class="flex ml-3 share-links">
+      <ui-button height="48px" variant="primarylight"><ui-icon>share</ui-icon></ui-button>
+      <app-social-sharing kind="primary" [url]="eventURL"></app-social-sharing>
+    </div>
+  </div>
+
+  <!-- welcome banner -->
+  <div *ngIf="numberOfHostEvents == 1" class="clear-both relative mb-1">
+    <img [src]="'/assets/event-welcome-banner.svg'" class="w-full rounded" alt="" />
+
+    <!-- set schedule -->
+    <div *ngIf="isPendingSchedule" class="flex flex-col pl-48 mt-10 mb-10 absolute inset-0">
+      <h3 class="text-white opacity-100 banner-header mb-5" i18n>Congratulations, your created your first event!</h3>
+      <ui-button
+        class="set-schedule mt-2.5"
+        (click)="navigateToSetSchedule()"
+        variant="primarylight-outline"
+        icon="calendar"
+        i18n
+        >Set Schedule</ui-button
+      >
+    </div>
+
+    <!-- copy and share event link -->
+    <div *ngIf="!isPendingSchedule" class="flex flex-col pl-48 mt-10 mb-10 absolute inset-0">
+      <h3 class="text-white opacity-100 banner-header mb-2" i18n>
+        Congratulations, your first event is ready. Share it with your audience.
+      </h3>
+      <h4 class="text-white mb-1" i18n>Share your event's link</h4>
+      <div class="flex">
+        <div class="bg-white rounded-md copy-box">
+          <app-copy-box [textToBeCopied]="eventURL"></app-copy-box>
+        </div>
+        <div class="flex ml-3 share-links">
+          <ui-button height="48px" variant="primarylight--fill"><ui-icon>share</ui-icon></ui-button>
+          <app-social-sharing variant="primary" [url]="eventURL"></app-social-sharing>
+        </div>
+      </div>
+
+      <popper-content #shareMenu class="share-menu" (click)="$event.stopPropagation()">
+        <app-social-sharing [url]="eventURL"></app-social-sharing>
+      </popper-content>
+    </div>
+  </div>
+
+  <app-host-event-analytics-graphs [eventId]="performance.data.data._id"></app-host-event-analytics-graphs>
+
+  <!-- schedule, visibility and status -->
+  <div class="grid gap-4 grid-cols-3 w-full mt-2">
+    <div class="flex flex-col">
+      <h4 class="m-4 text-black font-medium" i18n>Visibility</h4>
+      <div class="flex-col bg-white border-2 border-gray-200 rounded-2xl m-1 p-4 relative text-center">
+        <h3 class="my-12 text-cyan">{{ performance.data.data.visibility | visibility }}</h3>
+      </div>
+    </div>
+    <div class="flex flex-col">
+      <h4 class="m-4 text-black font-medium" i18n>Event Visibility Schedule</h4>
+      <div class="flex-1 bg-white border-2 border-gray-200 rounded-2xl m-1 text-center clear-both relative">
+        <img
+          *ngIf="isPendingSchedule"
+          [src]="'/assets/welcome-banner.svg'"
+          class="object-cover h-full rounded-2xl"
+          alt=""
+        />
+        <div *ngIf="isPendingSchedule" class="absolute inset-0 h-full p-8">
+          <ui-button (click)="navigateToSetSchedule()" class="mx-auto mt-8" variant="primary--fill" icon="calendar" i18n
+            >Set Schedule</ui-button
+          >
+        </div>
+
+        <div *ngIf="!isPendingSchedule" class="flex py-8 justify-center">
+          <div class="flex-col rounded-lg p-2.5 date-chip">
+            <!-- display english local dates in 'dd Month yyyy' -->
+            <h4>
+              {{ locale == 'en' ? scheduledStart : (performance.data.data.publicity_period.start | date: locale) }}
+            </h4>
+            <div class="text-cyan">
+              {{ performance.data.data.publicity_period.start | date: 'shortTime':locale }}
+              ({{ timezone }})
+            </div>
+          </div>
+          <div class="flex-col py-6">
+            <p>:</p>
+          </div>
+
+          <div class="flex-col rounded-lg p-2.5 date-chip opacity-100">
+            <h4>{{ locale == 'en' ? scheduledEnd : (performance.data.data.publicity_period.end | date: locale) }}</h4>
+            <p class="text-cyan">
+              {{ performance.data.data.publicity_period.end | date: 'shortTime':locale }} ({{ timezone }})
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col">
+      <h4 class="m-4 text-black font-medium" i18n>Event Status</h4>
+      <div class="m-1 flex-col bg-white border-2 border-gray-200 rounded-2xl p-4 relative text-center">
+        <h3 class="my-12 text-cyan">
+          {{ performance.data.data.status ? performanceStatus : '-' }}
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>

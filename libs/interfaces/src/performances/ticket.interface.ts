@@ -1,3 +1,4 @@
+import { NUUID } from '..';
 import { CurrencyCode } from '../common/currency.interface';
 
 export const TICKETS_QTY_UNLIMITED: number = -1;
@@ -76,3 +77,8 @@ export type DtoCreateTicket = Required<
     | 'is_quantity_visible'
   >
 >;
+
+export type DtoCreateMultipleTickets = Required<{
+  ticket: DtoCreateTicket,
+  showing_ids: NUUID[]
+}>

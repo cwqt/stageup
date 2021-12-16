@@ -12,6 +12,6 @@
   </div>
 
   <ng-container *ngIf="myself.host_info.permissions < hostPermission.Pending && host.data">
-    <router-outlet (activate)="onOutletLoaded($event)"></router-outlet>
+    <router-outlet class="px-4" (activate)="onOutletLoaded($event)"></router-outlet>
   </ng-container>
 </div>

@@ -1,5 +1,9 @@
 @import 'apps/frontend/src/styles/variables';
 
+:host {
+  width: 100%;
+}
+
 .host-name {
   color: $clr-primary;
 }
@@ -13,5 +17,10 @@
 
 // Set the second column width to be the same as the button
 ::ng-deep .mat-column-1 {
-  width: 160px !important;
+  width: 170px !important;
+}
+
+.table-container {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
 }

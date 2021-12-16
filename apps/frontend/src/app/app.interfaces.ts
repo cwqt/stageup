@@ -35,7 +35,6 @@ function cachize<T, K = T>(
 ): Promise<T | K> {
   if (showLoading) c.loading = true;
   promise = transformer ? promise.then(d => transformer(d as T)) : promise;
-
   promise.then(d => (c.data = d)).catch(e => (c.error = e));
 
   if (showLoading) promise.finally(() => (c.loading = false));

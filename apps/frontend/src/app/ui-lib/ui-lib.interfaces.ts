@@ -8,7 +8,7 @@ export enum ThemeKind {
   Accent = 'accent',
   Warning = 'warning',
   Danger = 'danger',
-  ClearDark = 'cleardark',
+  Dark = 'dark',
   PrimaryLight = 'primarylight'
 }
 
@@ -44,3 +44,6 @@ export type ThemeStyle =
   | ThemeKind
   | ThemeDimension
   | ThemeAppearance;
+
+// Commonly used combination of themekind and themeappearance
+export const SecondaryButton = `${ThemeKind.Primary}-${ThemeAppearance.Outline}` as ThemeStyle;

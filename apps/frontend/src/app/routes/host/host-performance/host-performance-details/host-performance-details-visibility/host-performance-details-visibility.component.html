@@ -10,8 +10,7 @@
       <!-- Performance needs a trailer or 2 thumbnails to be made public -->
       <p *ngIf="!minimumAssetsMet" i18n>
         A performance needs to have a trailer <b>or</b> a minimum of two images in order to make it public. Head to the
-        <a [routerLink]="'/dashboard/performances/' + performance._id + '/media'">media</a> section to start uploading
-        now!
+        <a [routerLink]="'/dashboard/events/' + performance._id + '/media'">media</a> section to start uploading now!
         <br />
       </p>
       <ng-container *ngIf="minimumAssetsMet">

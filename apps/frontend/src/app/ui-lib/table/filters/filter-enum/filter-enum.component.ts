@@ -4,7 +4,7 @@ import { EnumFilter, EnumFilterOperator, FilterCode, FilterQuery, Primitive } fr
 import { IUiTableColumnFilter } from '../../table.interfaces';
 import { FormComponent } from '../../../form/form.component';
 import { createICacheable, ICacheable } from 'apps/frontend/src/app/app.interfaces';
-import { IUiDialogOptions, ThemeKind } from '../../../ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '../../../ui-lib.interfaces';
 import { IUiForm, UiField, UiForm } from '../../../form/form.interfaces';
 import { UiDialogButton } from '../../../dialog/dialog-buttons/dialog-buttons.component';
 import { SimpleConsoleLogger } from 'typeorm';
@@ -69,7 +69,7 @@ export class FilterEnumComponent implements OnInit, IUITableFilter {
       this.buttons.push(
         new UiDialogButton({
           label: $localize`Remove`,
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: () => {
             this.onChange.emit(null);
             this.form.group.reset();

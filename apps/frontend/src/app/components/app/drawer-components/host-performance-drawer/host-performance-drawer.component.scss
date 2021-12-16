@@ -1,4 +1,4 @@
-@import "apps/frontend/src/styles/variables";
+@import 'apps/frontend/src/styles/variables';
 
 :host {
   height: 100%;
@@ -22,7 +22,7 @@
     ::ng-deep button {
       background: white;
       &:hover {
-        background-color: lighten($clr-gray, 7%);
+        background-color: lighten($clr-secondary-lt, 7%);
       }
       width: 100%;
       height: 48px !important;
@@ -30,7 +30,7 @@
       border-radius: 0 !important;
       p {
         margin: 0;
-        margin-left: $space-lg;
+        margin-left: 20px;
       }
       span {
         display: flex;
@@ -43,11 +43,11 @@
     &.active {
       border-right: 2px solid $clr-primary !important;
       ::ng-deep button {
-        background-color: lighten($clr-gray, 10%) !important;
+        background-color: lighten($clr-secondary-lt, 10%) !important;
         span {
           opacity: 1;
           ui-icon {
-            color:  $clr-primary;
+            color: $clr-primary;
           }
         }
       }

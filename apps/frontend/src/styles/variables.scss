@@ -1,85 +1,52 @@
 /*
 import into component.scss via:
 @import "apps/frontend/src/styles/variables";
-
-colour palette:
-  lt: light, ltr: lighter
-  dk: dark, drk: darker
 */
-// base
-$clr-base: #fafafa;
-$clr-base-lt: #f7f7f7;
-$clr-base-dk: #959595;
 
-// neutrals
-$clr-ntrl-min: #fff;
-$clr-ntrl-max: #000;
+/*
+COLOURS
+*/
 
-// primary colour
-$clr-primary: #e64a73;
-$clr-primary-lt: #e47290;
-$clr-primary-ltr: lighten($clr-primary-lt, 10%);
-$clr-primary-dk: #c95559;
-$clr-primary-dkr: darken($clr-primary-dk, 10%);
+// Neutrals
+$clr-white: #ffffff;
+$clr-black: #000000;
 
-// secondary colour
-$clr-secondary: #282828;
-$clr-secondary-lt: lighten($clr-secondary, 5%);
-$clr-secondary-ltr: lighten($clr-secondary, 10%);
-$clr-secondary-dk: darken($clr-secondary, 5%);
-$clr-secondary-dkr: darken($clr-secondary, 10%);
+// primary
+$clr-primary: #e47290;
+$clr-primary-dk: #e64a73;
+$clr-primary-lt: #edb9c7;
+$clr-primary-xlt: #f8eaed;
 
-$clr-red: #e97b86;
-$clr-red-lt: #ffd7d9;
-$clr-red-drk: #a2191f;
-$clr-danger: #c63737;
+// secondary
+$clr-secondary: #5a6268;
+$clr-secondary-lt: #d3d3d3;
 
-$clr-magenta: #ffd6e8;
-$clr-magenta-drk: #9f1853;
+// success
+$clr-success: #61ba75;
+$clr-success-drk: #218838;
+$clr-success-lt: #74c686;
 
-$clr-purple: #e8daff;
-$clr-purple-drk: #6929c4;
+// danger
+$clr-danger: #dc3545;
+$clr-danger-dk: #c82333;
+$clr-danger-lt: #e97b86;
 
-$clr-blue: #30a2b8;
-$clr-blue-lt: #d0e2ff;
-$clr-blue-drk: #0043ce;
+// light
+$clr-light: #f8f9fa;
+$clr-light-dk: #e2e6ea;
+$clr-light-lt: #fafcfc;
 
-$clr-cyan: #bae6ff;
-$clr-cyan-drk: #00539a;
+// dark
+$clr-dark: #343a40;
+$clr-dark-dk: #23272b;
+$clr-dark-lt: #7a7e83;
 
-$clr-teal: #9ef0f0;
-$clr-teal-drk: #005d5d;
+// info
+$clr-info: #17a2b8;
+$clr-info-dk: #138496;
+$clr-info-lt: #67c3d0;
 
-$clr-green: #96d0a3; // Updated to most recent wireframes. Not currently used elsewhere in the site
-$clr-green-drk: #0e6027;
-$clr-gray: #e0e0e0;
-$clr-gray-drk: #525252;
-
-$clr-cool-grey: #dde1e6;
-$clr-cool-grey-drk: #4d5358;
-
-$clr-warm-grey: #e5e0df;
-$clr-warm-grey-drk: #565151;
-
-$clr-info: #00b8d4;
-$clr-info-drk: rgba(0, 184, 212, 0.1);
-
-$clr-warning: #ff9100;
-$clr-warning-drk: rgba(255, 145, 0, 0.1);
-
-$clr-success: #00c853;
-$clr-success-drk: rgba(0, 200, 83, 0.1);
-
-$clr-bug: #f50057;
-$clr-bug-drk: rgba(245, 0, 87, 0.1);
-
-$clr-example: #651fff;
-$clr-example-drk: rgba(101, 31, 255, 0.1);
-
-$clr-failure: #ff5252;
-$clr-failure-drk: rgba(255, 82, 82, 0.1);
-
-/* spacing units */
-$space-sm: 5px;
-$space: 10px;
-$space-lg: 20px;
+// warning
+$clr-warning: #edbc29;
+$clr-warning-dk: #e0a800;
+$clr-warning-lt: #ffe598;

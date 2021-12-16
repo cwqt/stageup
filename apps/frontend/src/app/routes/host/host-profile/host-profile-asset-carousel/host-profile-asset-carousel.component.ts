@@ -22,8 +22,8 @@ export class HostProfileAssetComponent implements OnInit {
 
   constructor(private helperService: HelperService, private dialog: MatDialog, private hostService: HostService) {}
 
-  get clearDark(): ThemeKind {
-    return ThemeKind.ClearDark;
+  get dark(): ThemeKind {
+    return ThemeKind.Dark;
   }
 
   async ngOnInit(): Promise<void> {}

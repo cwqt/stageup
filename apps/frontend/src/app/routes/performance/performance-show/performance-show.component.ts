@@ -58,7 +58,7 @@ export class PerformanceShowComponent implements OnInit, OnDestroy {
   }
 
   leave() {
-    this.appService.navigateTo(`/performances/${this.performance._id}`);
+    this.appService.navigateTo(`/events/${this.performance._id}`);
   }
 
   async likePerformance() {

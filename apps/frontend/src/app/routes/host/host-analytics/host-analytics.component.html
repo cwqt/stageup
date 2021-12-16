@@ -1,6 +1,6 @@
-<app-breadcrumb></app-breadcrumb>
 <app-page>
   <div body>
+    <app-breadcrumb></app-breadcrumb>
     <h1 i18n>Analytics</h1>
     <ui-hr> </ui-hr>
 
@@ -10,8 +10,8 @@
 
     <app-host-analytics-graphs (periodEmitter)="refreshTable($event)"> </app-host-analytics-graphs>
 
-    <div class="bg-white p-4 rounded shadow-sm mb-4 w-full">
-      <h2 i18n>Performances</h2>
+    <div class="mt-app w-full">
+      <h3 i18n>Performances</h3>
       <p i18n>Filter by columns for aggregated analytics</p>
       <ui-table [table]="performanceAnalyticsTable"></ui-table>
     </div>

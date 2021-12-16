@@ -1,6 +1,6 @@
 <ng-container *ngIf="table">
   <div class="flex justify-between items-center pt-1">
-    <h2 *ngIf="table.config.title">{{ table.config.title }}</h2>
+    <h3 *ngIf="table.config.title">{{ table.config.title }}</h3>
     <p *ngIf="lastUpdated" class="block opacity-50 mb-3" i18n>Updated as of {{ lastUpdated }}</p>
     <ui-button
       variant="accent"
@@ -62,10 +62,10 @@
               [class.is-chip]="column.value.chip_selector"
             >
               <ng-container *ngTemplateOutlet="header"></ng-container>
-              <ui-icon class="sort-icon" mat-header-cell size="m" *ngIf="table._sortDirection != 'DESC'"
+              <ui-icon class="header-icon" mat-header-cell size="m" *ngIf="table._sortDirection != 'DESC'"
                 >sort--ascending</ui-icon
               >
-              <ui-icon class="sort-icon" mat-header-cell size="m" *ngIf="table._sortDirection == 'DESC'"
+              <ui-icon class="header-icon" mat-header-cell size="m" *ngIf="table._sortDirection == 'DESC'"
                 >sort--descending</ui-icon
               >
             </th>
@@ -93,8 +93,8 @@
                 class="ml-2 rounded-full overflow-hidden filter"
                 [class.filter--is-active]="table._activeFilters[column.key]"
               >
-                <ui-icon size="m" *ngIf="!table._activeFilters[column.key]">filter</ui-icon>
-                <ui-icon size="m" *ngIf="table._activeFilters[column.key]">filter--edit</ui-icon>
+                <ui-icon class="header-icon" size="m" *ngIf="!table._activeFilters[column.key]">filter</ui-icon>
+                <ui-icon class="header-icon" size="m" *ngIf="table._activeFilters[column.key]">filter--edit</ui-icon>
               </ui-button>
 
               <popper-content #filterMenu (click)="$event.stopPropagation()">

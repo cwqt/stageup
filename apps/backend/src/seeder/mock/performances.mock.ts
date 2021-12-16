@@ -37,10 +37,14 @@ for (let i = 0; i < 20; i++) {
   allTickets.push(ticketFactory());
 }
 
+const startDateTime:number = timestamp();
+const endDateTime:number = moment().add(31, 'days').unix();
+
 export default to<Array<SeedMockPerformance>>([
   {
     name: 'OPERA GALA WITH CARLO RIZZI & WNO ORCHESTRA',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       'Join Maestro Carlo Rizzi, the WNO Orchestra and the exceptional young singers of the David Seligman Opera School in a dazzling evening of scenes and arias showcasing the College’s emerging operatic talent.',
     genre: Genre.Theatre,
@@ -51,7 +55,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'SACHAL VASANDANI & ROMAIN COLLIN',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       'US jazz vocalist, Sachal Vasandani, is an eminent vocal improviser with a tone that marks him as one of the most compelling artists on the scene today. In this special performance, Sachal collaborates with the Grammy-nominated French pianist, Romain Collin, who is well-known on the New York jazz scene for his innovative playing. Join this visionary duo as they make their AmserJazzTime debut and imaginatively rework well-loved music by Bob Dylan, Nick Drake, Lennon/McCartney, Harry Styles and more, alongside spellbinding originals from their recent acclaimed album ‘Midnight Shelter’. This is not one to be missed!',
     genre: Genre.Theatre,
@@ -62,7 +67,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Amserjazztime',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       'Our popular Friday night jazz club is back! Relax in our stunning Carne Foyer and kick start the weekend with incredible performances from the most exciting up and coming jazz artists.',
     genre: Genre.Theatre,
@@ -73,7 +79,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'STEINWAY INTERNATIONAL PIANO SERIES: ANGELA HEWITT',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       'Angela Hewitt is one of those rare pianists who makes you feel as if she’s playing for you personally – combining profound musicality with effortless communicative warmth. Today, she takes Mozart as her starting point, and few living pianists play this music better: a moment of classical perfection alongside the unbridled romance of Chopin and the blazing visions of Olivier Messiaen.',
     genre: Genre.Theatre,
@@ -84,7 +91,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'CWMWL TYSTION II / RIOT',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       "Welsh trumpeter Tomos Williams has assembled an extraordinary line-up of musicians to perform a new suite of music, including Orphy Robinson, Soweto Kinch, Welsh vocalist Eadyth and the topclass rhythm section of Aidan Thorne and Mark O'Connor. 'Cwmwl Tystion' derives from a poem by the great Welsh poet Waldo Williams, while the themes for each movement are drawn from various riots in Welsh history. Featuring live visuals from Simon Proffitt.",
     genre: Genre.Theatre,
@@ -95,7 +103,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Coriolanus directed by Angus Jackson',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: 'Sope Dirisu took on the title role in this hard-hitting modern-dress production of Coriolanus.',
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -106,7 +115,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Julius Caesar directed by Angus Jackson',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       'Andrew Woodall took the title role in this production of Julius Caesar from the 2017 Rome Season.',
     genre: Genre.Theatre,
@@ -118,7 +128,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Titus Andronicus directed by Blanche McIntyre',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       'David Troughton took on the title role in this gruesome and bloody performance of Titus Andronicus.',
     genre: Genre.Theatre,
@@ -130,7 +141,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Twelfth Night directed by Christopher Luscombe',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       'This sumptuous production of Twelfth Night featured Adrian Edmondson as the hapless Malvolio and Kara Tointon as his love interest Olivia.',
     genre: Genre.Theatre,
@@ -142,7 +154,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Troilus and Cressida directed by Gregory Doran',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       'Virtuoso percussionist Evelyn Glennie collaborated with Gregory Doran to create a futuristic vision of a world resounding with the rhythm of battle.',
     genre: Genre.Theatre,
@@ -154,7 +167,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'The Merry Wives of Windsor directed by Fiona Laird',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: "'The Only Way is Windsor' in Fiona Laird's modern take on this much-loved comedy.",
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -165,7 +179,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Macbeth directed by Polly Findlay',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description:
       "This production marked Christopher Eccleston's RSC debut and the return of Niamh Cusack to the Company.",
     genre: Genre.Theatre,
@@ -181,7 +196,8 @@ export default to<Array<SeedMockPerformance>>([
       'Kathryn Hunter took the title role of Timon in this production, switching the gender of the central character.',
     thumbnail:
       'https://cdn2.rsc.org.uk/sitefinity/images/productions/2018-shows/timon-of-athens/production-photos/timon-of-athens-production-photographs_-2018_2018_photo-by-simon-annand-_c_-rsc_269082.tmb-img-1824.jpg?sfvrsn=89bd0a21_1',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
     visibility: Visibility.Public,
@@ -193,7 +209,8 @@ export default to<Array<SeedMockPerformance>>([
       'This contemporary production played in the Royal Shakespeare Theatre, the Barbican in London, and on a 2019 national tour. The show featured Bally Gill and Karen Fishwick in the title roles, and used young people from the different regions visited to perform as the Chorus alongside the professional cast. In 2019, the tour visited Norwich, Newcastle, Bradford, Nottingham, Blackpool, Cardiff and Glasgow.',
     thumbnail:
       'https://cdn2.rsc.org.uk/sitefinity/images/productions/2018-shows/romeo-and-juliet/romeo-and-juliet-production-photos/romeo-and-juliet-production-photos_-2018-_2018_photo-by-topher-mcgrillis-_c_-rsc_249070.tmb-img-1824.jpg?sfvrsn=cc1a0121_1',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
     visibility: Visibility.Public,
@@ -205,7 +222,8 @@ export default to<Array<SeedMockPerformance>>([
       'A MAD WORLD OF MAD KINGS, TEETERING ON THE BRINK OF DISASTER. Richard the Lionheart is dead. His brother John is King of England. Threatened from all sides by Europe, the English noblemen and even his own family, King John will stop at nothing to keep hold of his crown. Shakespeare�s rarely performed tale of a nation in turmoil vibrates with modern resonance in this vivid new production by Director Eleanor Rhode in her debut at the RSC.',
     thumbnail:
       'https://cdn2.rsc.org.uk/sitefinity/images/productions/2019-shows/king-john/king-john-production-photos/king-john-production-photos_2019_295207.tmb-img-1824.jpg?sfvrsn=1466ec21_1',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
     visibility: Visibility.Public,
@@ -217,7 +235,8 @@ export default to<Array<SeedMockPerformance>>([
       'This playful production combined the worlds of theatre and nature to create the Forest of Arden.',
     thumbnail:
       'https://cdn2.rsc.org.uk/sitefinity/images/productions/2019-shows/as-you-like-it/production-photos/_as-you-like-it-production-photos_-2019_2019_photo-by-topher-mcgrillis-_c_-rsc_273366.tmb-img-1824.jpg?sfvrsn=7dd31021_1',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
     visibility: Visibility.Public,
@@ -229,7 +248,8 @@ export default to<Array<SeedMockPerformance>>([
       "Our Artistic Director, Gregory Doran found contemporary resonance in this 'problem play' through its links with the #MeToo movement.",
     thumbnail:
       'https://cdn2.rsc.org.uk/sitefinity/images/productions/2019-shows/measure-for-measure/production-photos/measure-for-measure-production-photos_-2019_2019_photo-by-helen-maybanks-_c_-rsc_286064.tmb-img-1824.jpg?sfvrsn=f561e021_1',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
     visibility: Visibility.Public,
@@ -241,7 +261,8 @@ export default to<Array<SeedMockPerformance>>([
       "This gender-swapped production turned Shakespeare's fierce, energetic comedy on its head to offer a fresh perspective on its portrayal of hierarchy and power.",
     thumbnail:
       'https://cdn2.rsc.org.uk/sitefinity/images/productions/2019-shows/the-taming-of-the-shrew/production-photos/the-taming-of-the-shew_-productions-photos_-2019_2019_photo-by-ikin-yum-_c_-rsc_274860.tmb-img-1824.jpg?sfvrsn=f6821221_1',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
     visibility: Visibility.Public,
@@ -249,7 +270,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Chicago (1996 revival)',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Chicago is an American musical with music by John Kander, lyrics by Fred Ebb, and book by Ebb and Bob Fosse. Set in Chicago in the jazz age, the musical is based on a 1926 play of the same name by reporter Maurine Dallas Watkins, about actual criminals and the crimes on which she reported. The story is a satire on corruption in the administration of criminal justice and the concept of the "celebrity criminal".`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -259,7 +281,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'The Lion King',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `The Lion King is a musical based on the 1994 Walt Disney Animation Studios\' animated feature film of the same name with music by Elton John, lyrics by Tim Rice, and book by Roger Allers and Irene Mecchi, along with additional music and lyrics by Lebo M, Mark Mancina, Jay Rifkin, Julie Taymor, and Hans Zimmer.[1] Directed by Taymor, the musical features actors in animal costumes as well as giant, hollow puppets. The show is produced by Disney Theatrical Productions`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -281,7 +304,8 @@ export default to<Array<SeedMockPerformance>>([
   // },
   {
     name: 'Wicked',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Wicked is a Broadway musical, with music and lyrics by Stephen Schwartz and book by Winnie Holzman. It is based on the 1995 Gregory Maguire novel Wicked: The Life and Times of the Wicked Witch of the West, itself a retelling of the classic 1900 novel, The Wonderful Wizard of Oz by L. Frank Baum and the 1939 Metro-Goldwyn-Mayer film The Wizard of Oz.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -292,7 +316,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Les Misérables',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Les Misérables (/leɪ ˌmɪzəˈrɑːb(lə)/; French pronunciation: ​[le mizeʁabl(ə)]), colloquially known as Les Mis or Les Miz (/leɪ ˈmɪz/), is a sung-through musical adaptation of Victor Hugo's 1862 novel of the same name, by Claude-Michel Schönberg (music), Alain Boublil and Jean-Marc Natel (original French lyrics), and Herbert Kretzmer (English lyrics). The original French musical premiered in Paris in 1980 with direction by Robert Hossein. Its English-language adaptation by producer Cameron Mackintosh has been running in London since October 1985, making it the longest-running musical in the West End and the second longest-running musical in the world after the original Off-Broadway run of The Fantasticks.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -302,7 +327,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'A Chorus Line',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `A Chorus Line is a musical with music by Marvin Hamlisch, lyrics by Edward Kleban, and a book by James Kirkwood Jr. and Nicholas Dante. Set on the bare stage of a Broadway theater, the musical is centered on seventeen Broadway dancers auditioning for spots on a chorus line. A Chorus Line provides a glimpse into the personalities of the performers and the choreographer, as they describe the events that have shaped their lives and their decisions to become dancers.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -313,7 +339,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Oh! Calcutta! (1976 revival)',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Oh! Calcutta! is an avant-garde theatrical revue created by British drama critic Kenneth Tynan. The show, consisting of sketches on sex-related topics, debuted Off-Broadway in 1969 and then in the West End in 1970. It ran in London for over 3,900 performances, and in New York initially for 1,314. Revivals enjoyed even longer runs, including a Broadway revival that ran for 5,959 performances, making the show the longest-running revue in Broadway history at the time.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -323,7 +350,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Mamma Mia!',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Mamma Mia! (promoted as Benny Andersson & Björn Ulvaeus' Mamma Mia!) is a jukebox musical written by British playwright Catherine Johnson, based on the songs of ABBA composed by Benny Andersson and Björn Ulvaeus, former members of the band. The title of the musical is taken from the group's 1975 chart-topper "Mamma Mia". Ulvaeus and Andersson, who composed the original music for ABBA, were involved in the development of the show from the beginning. Singer Anni-Frid Lyngstad was involved financially in the production and she was also present at many of the premieres around the world.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -334,7 +362,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Beauty and the Beast',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Beauty and the Beast is a musical with music by Alan Menken, lyrics by Howard Ashman and Tim Rice, and book by Linda Woolverton. Adapted from Walt Disney Pictures' Academy Award-winning 1991 animated musical film of the same name – which in turn had been based on the classic French fairy tale by Jeanne-Marie Leprince de Beaumont –[1] Beauty and the Beast tells the story of a cold-blooded prince who has been magically transformed into an unsightly creature as punishment for his selfish ways. To revert into his true human form, the Beast must first learn to love a bright, beautiful young woman whom he has imprisoned in his enchanted castle before it is too late.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -365,7 +394,8 @@ export default to<Array<SeedMockPerformance>>([
   // },
   {
     name: 'Miss Saigon',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Miss Saigon is a musical by Claude-Michel Schönberg and Alain Boublil, with lyrics by Boublil and Richard Maltby Jr. It is based on Giacomo Puccini's 1904 opera Madame Butterfly, and similarly tells the tragic tale of a doomed romance involving an Asian woman abandoned by her American lover. The setting of the plot is relocated to 1970s Saigon during the Vietnam War, and Madame Butterfly's story of marriage between an American lieutenant and a geisha is replaced by a romance between a United States Marine and a seventeen-year-old South Vietnamese bargirl.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -376,7 +406,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'The Book of Mormon',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `The Book of Mormon is a musical comedy with music, lyrics, and book by Trey Parker, Robert Lopez, and Matt Stone. First staged in 2011, the play is a satirical examination of the beliefs and practices of The Church of Jesus Christ of Latter-day Saints. The musical ultimately endorses the positive power of love and service.[1] Parker and Stone were best known for creating the animated comedy South Park; Lopez had co-written the music for the musical Avenue Q.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -386,7 +417,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: '42nd Street',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `42nd Street is a musical with a book by Michael Stewart and Mark Bramble, lyrics by Al Dubin and Johnny Mercer and music by Harry Warren. The 1980 Broadway production won the Tony Award for Best Musical and became a long-running hit. The show was produced in London in 1984 (winning the Olivier Award for Best Musical) and its 2001 Broadway revival won the Tony for Best Revival.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -397,7 +429,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Grease',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Grease is a 1971 musical by Jim Jacobs and Warren Casey with additional songs written by John Farrar. Named after the 1950s United States working-class youth subculture known as greasers, the musical is set in 1959 at fictional Rydell High School[1] (based on William Howard Taft School in Chicago, Illinois[2] and named after Bobby Rydell) and follows ten working-class teenagers as they navigate the complexities of peer pressure, politics, personal core values, and love. The score borrows heavily from the sounds of early rock and roll. In its original production in Chicago, Grease was a raunchy, raw, aggressive, vulgar show. Subsequent productions sanitized it and toned it down.[3] The show mentions social issues such as teenage pregnancy, peer pressure and gang violence; its themes include love, friendship, teenage rebellion, sexual exploration during adolescence, and, to some extent, class consciousness and class conflict. Jacobs described the show's basic plot as a subversion of common tropes of 1950s cinema, since the female lead, who in many 1950s films transformed the alpha male into a more sensitive and sympathetic character, is instead drawn into the man's influence and transforms into his fantasy.[4]`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -407,7 +440,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Fiddler on the Roof',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Fiddler on the Roof is a musical with music by Jerry Bock, lyrics by Sheldon Harnick, and book by Joseph Stein, set in the Pale of Settlement of Imperial Russia in or around 1905. It is based on Tevye and his Daughters (or Tevye the Dairyman) and other tales by Sholem Aleichem. The story centers on Tevye, a milkman in the village of Anatevka, who attempts to maintain his Jewish religious and cultural traditions as outside influences encroach upon his family's lives. He must cope with the strong-willed actions of his three older daughters who wish to marry for love; their choices of husbands are successively less palatable for Tevye. An edict of the Tsar eventually evicts the Jews from their village.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -417,7 +451,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Life With Father',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Life with Father is a 1939 play by Howard Lindsay and Russel Crouse, adapted from a humorous autobiographical book of stories compiled in 1935 by Clarence Day. The Broadway production ran for 3,224 performances over 401 weeks to become the longest-running non-musical play on Broadway, a record that it still holds.[1] The play was adapted into a 1947 feature film and a television series.`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -427,7 +462,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: 'Tobacco Road',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `Tobacco Road is a play by Jack Kirkland first performed in 1933, based on the 1932 novel of the same name by Erskine Caldwell. The play ran on Broadway for a total of 3,182 performances, surpassing Abie's Irish Rose to become the longest-running play in history at the time.[1][2] As of 2018, it was still the 19th longest-running Broadway show in history, as well as being the second-longest running non-musical ever on Broadway.[3]`,
     genre: Genre.Theatre,
     type: PerformanceType.Vod,
@@ -500,7 +536,8 @@ export default to<Array<SeedMockPerformance>>([
   // },
   {
     name: 'Giselle',
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `"Brand new touring production for 2020.
 
     Critics’ Circle Award winning company, Ballet Cymru, present an extraordinary new ballet based on the eternal story of Giselle, the young girl who falls in love with the wrong person and pays a terrible price.
@@ -520,7 +557,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `A Midsummer Night's Dream`,
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `"Nominated Best Dance Production 2013 at the Theatre Critics of Wales Awards.
 
     An outstanding adaptation of Shakespeare’s timeless play that features breathtaking choreography danced by some of the finest dancers around. This vibrant and dramatic production features Mendelssohn’s joyous music, choreography by the company’s Artistic Director Darius James and critically acclaimed costumes by Welsh Designer Yvonne Greenleaf.
@@ -555,7 +593,8 @@ export default to<Array<SeedMockPerformance>>([
   // },
   {
     name: `Island in the Stream`,
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `"The Music of Dolly Parton & Kenny Rogers
 
     Enjoy the songs of the Queen and King of country music - Dolly Parton and Kenny Rogers.
@@ -576,7 +615,8 @@ export default to<Array<SeedMockPerformance>>([
   },
   {
     name: `Dead Ringer for Love - Meatloaf & Cher`,
-    publicity_period: { start: 1667260800, end: 1668538800 },
+    publicity_period: { start: startDateTime, end: endDateTime },
+    ticket_publicity_period: { start: startDateTime, end: endDateTime },
     short_description: `"This high energy tribute to two of music’s most formidable stars is sure to make your ‘Rock ‘N’ Roll Dreams Come Through’ as we ‘Turn Back Time’ to bring you a celebration of the work of Meatloaf and Cher.
 
     Let a full live band take you on a journey spanning the careers of two of the eras most globally renowned stars. Combining the epic, operatic goth anthems of Meatloaf and the iconic show-stopping dance hits from the Goddess of Pop, Dead Ringer for Love will have you revelling in power ballads such as I’d Do Anything For Love (But I Won’t Do That) and Two Out of Three Ain’t Bad and dancing to feel-good sensations including If I Could Turn Back Time, Strong Enough and Bat Out of Hell."`,

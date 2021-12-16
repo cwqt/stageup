@@ -5,7 +5,7 @@ import { CreatePerformanceComponent } from '../create-performance/create-perform
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { IPerformanceStub, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { i18n, richtext, unix } from '@core/helpers';
+import { i18n, richtext, truncate, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
@@ -38,14 +38,14 @@ export class HostListPerformancesComponent implements OnInit {
       columns: [
         {
           label: $localize`Name`,
-          accessor: p => p.name || '-'
+          accessor: p => (p.name ? truncate(p.name, 45) : '-')
         },
         {
-          label: $localize`Performance Schedule Start`,
+          label: $localize`Event Schedule Start`,
           accessor: p => (p.publicity_period.start ? i18n.date(unix(p.publicity_period.start), this.locale) : '-')
         },
         {
-          label: $localize`Performance Schedule End`,
+          label: $localize`Event Schedule End`,
           accessor: p => (p.publicity_period.end ? i18n.date(unix(p.publicity_period.end), this.locale) : '-')
         },
         {
@@ -77,7 +77,7 @@ export class HostListPerformancesComponent implements OnInit {
       actions: [
         {
           label: $localize`Edit`,
-          click: p => this.appService.navigateTo(`/dashboard/performances/${p._id}`),
+          click: p => this.appService.navigateTo(`/dashboard/events/${p._id}`),
           icon: 'maximize',
           disabled: p => p.status == PerformanceStatus.Deleted
         }

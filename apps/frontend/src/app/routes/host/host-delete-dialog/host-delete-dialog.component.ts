@@ -19,7 +19,7 @@ import { MyselfService } from '@frontend/services/myself.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { IUiForm, IUiFormField, UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { DeleteHostReasonPipe } from '@frontend/_pipes/delete-host-reason.pipe';
 import { RefundReasonPipe } from '@frontend/_pipes/refund-reason.pipe';
 import { NGXLogger } from 'ngx-logger';
@@ -40,7 +40,7 @@ export class HostDeleteDialogComponent implements OnInit, IUiDialogOptions {
 
   assertCanDeleteHostReq = new Cacheable<IDeleteHostAssertion | void>();
   deleteConfirmationButtons: UiDialogButton[] = [
-    new UiDialogButton({ label: $localize`Cancel`, kind: ThemeKind.Secondary, callback: ref => ref.close() }),
+    new UiDialogButton({ label: $localize`Cancel`, kind: SecondaryButton, callback: ref => ref.close() }),
     new UiDialogButton({
       label: $localize`Yes, delete`,
       kind: ThemeKind.Danger,

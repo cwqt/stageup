@@ -1,12 +1,8 @@
-<app-player
-  [hidden]="selectedVideo || !initialSource || uploadComplete"
-  #livePlayer
-  (onPlayerReady)="onPlayerReady($event)"
-  size="s"
->
-</app-player>
+<div [hidden]="selectedVideo || !initialSource || uploadComplete" class="mb-app">
+  <app-player #livePlayer (onPlayerReady)="onPlayerReady($event)" size="s"> </app-player>
+</div>
 
-<div [hidden]="!selectedVideo && !uploadComplete">
+<div class="mb-app" [hidden]="!selectedVideo && !uploadComplete">
   <video #localPlayer controls></video>
 </div>
 

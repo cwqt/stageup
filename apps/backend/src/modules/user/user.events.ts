@@ -97,7 +97,7 @@ export class UserEvents extends ModuleEvents {
     const user = await User.findOne({ _id: ct.user_id }, { select: ['email_address', 'username', 'name'] });
     const performance = await Performance.findOne({ _id: ct.performance_id }, { select: ['name'] });
     const host = await Host.findOne({ _id: ct.host_id }, { select: ['username', 'name'] });
-    const performanceLink = `${Env.FRONTEND.URL}/${ct.__meta.locale}}/performances/${performance._id}/watch`;
+    const performanceLink = `${Env.FRONTEND.URL}/${ct.__meta.locale}}/events/${performance._id}/watch`;
 
     this.queueService.addJob('send_email', {
       subject: this.i18n.translate('@@email.user.invited_to_private_showing__subject', ct.__meta.locale),
