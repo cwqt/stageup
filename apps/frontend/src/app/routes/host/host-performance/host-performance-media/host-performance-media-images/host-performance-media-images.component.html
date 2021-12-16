@@ -8,12 +8,7 @@
     [ngClass]="{ 'bg-grey': !primaryThumbnail }"
   >
     <ui-icon *ngIf="!primaryThumbnail" [size]="50">image</ui-icon>
-    <ui-button
-      (click)="changePrimaryThumbnail()"
-      class="absolute top-2 right-2"
-      icon="paint-brush--alt"
-      variant="cleardark"
-    >
+    <ui-button (click)="changePrimaryThumbnail()" class="absolute top-2 right-2" icon="paint-brush--alt" variant="dark">
       <span *ngIf="primaryThumbnail" i18n>Edit</span>
       <span *ngIf="!primaryThumbnail" i18n>Add</span>
     </ui-button>
@@ -36,7 +31,7 @@
       (click)="changeSecondaryThumbnail(index)"
       class="absolute top-2 right-2"
       icon="paint-brush--alt"
-      variant="cleardark"
+      variant="dark"
     >
       <span *ngIf="secondaryThumbnails[index]" i18n>Edit</span>
       <span *ngIf="!secondaryThumbnails[index]" i18n>Add</span>
