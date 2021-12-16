@@ -42,8 +42,9 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
       new UiDialogButton({
         label: $localize`Cancel Performance`,
         kind: ThemeKind.Primary,
-        callback: () =>
-          this.helperService.showDialog(
+        callback: () => {
+          this.ref.close();
+          return this.helperService.showDialog(
             this.dialog.open(SelectReasonDialogComponent, {
               data: {
                 dialog_title: $localize`Why do you want to cancel the performance?`,
@@ -78,7 +79,8 @@ export class PerformanceCancelDialogComponent implements OnInit, IUiDialogOption
                 })
                 .catch(err => this.toastService.emit(err.message, ThemeKind.Danger));
             }
-          )
+          );
+        }
       })
     ];
   }

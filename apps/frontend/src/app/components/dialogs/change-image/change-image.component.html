@@ -1,12 +1,4 @@
-<ui-dialog
-  [loading]="uploadButton.loading"
-  [buttons]="buttons"
-  i18n-title
-  title="Select an image to upload"
-  class="text-center"
->
-  <h4 class="mb-10" i18n>Images must be in .jpeg or .png format and be under 2MB</h4>
-
+<ui-dialog [loading]="uploadButton.loading" [buttons]="buttons" i18n-title title="Select Media" class="text-center">
   <div class="selected-image-container grid justify-items-center mb-10">
     <div class="image-wrapper">
       <img
@@ -18,6 +10,8 @@
       />
     </div>
   </div>
+
+  <h4 class="mb-10" i18n>Images must be in .jpeg or .png format and be under 2MB</h4>
 
   <div class="justify-items-center">
     <input accept=".jpg,.jpeg,.png,.gif" hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file" />
