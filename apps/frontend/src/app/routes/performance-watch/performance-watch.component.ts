@@ -68,17 +68,18 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
       if (this.primaryAsset?.type == AssetType.LiveStream) {
         const stream = this.primaryAsset as AssetDto<AssetType.LiveStream>;
         // after the player has initialised we can perform actions on the initial state of the video
-        this.enactUponStreamState(stream.state);
+        this.enactUponStreamState(stream.meta.state);
 
         const currentTime = timestamp();
         const publicityPeriodStart = this.performance.publicity_period.start;
+
         if (
           // performance has already started
-          stream.state == LiveStreamState.Active ||
+          stream.meta.state == LiveStreamState.Active ||
           currentTime > publicityPeriodStart
         ) {
           // TODO: handle what should happen when a stream is completed
-          if (stream.state != LiveStreamState.Completed) {
+          if (stream.meta.state != LiveStreamState.Completed) {
             this.initialiseSSE();
           }
         } else {
@@ -111,7 +112,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
   }
 
   initialiseSSE() {
-    this.streamEvents = this.sse.getStreamEvents(this.performance._id).subscribe(event => {
+    this.streamEvents = this.sse.getStreamEvents(this.primaryAsset._id).subscribe(event => {
       this.enactUponStreamState(event.data);
     });
   }
@@ -142,7 +143,7 @@ export class PerformanceWatchComponent implements OnInit, OnDestroy {
   }
 
   streamIsState(stream: AssetDto<AssetType.LiveStream>, states: LiveStreamState[]) {
-    return states.some(s => stream.state == s);
+    return states.some(s => stream.meta.state == s);
   }
 
   ngOnDestroy() {

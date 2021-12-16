@@ -9,14 +9,10 @@ import {
   LOGGING_PROVIDER,
   ModuleEvents,
   PatronTier,
-  SSEHubManagerProvider,
-  SSE_HUB_PROVIDER,
-  StripeProvider,
   STRIPE_PROVIDER,
   transact,
   Contract,
   I18N_PROVIDER,
-  SSE,
   i18n
 } from '@core/api';
 import { richtext } from '@core/helpers';

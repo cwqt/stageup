@@ -39,8 +39,8 @@ http {
 
     # anything beyond /api/... gets sent to node
     location /api/ {
-      # wait 5 mins before giving up
-      proxy_read_timeout 5m;
+      # this is needed for Server Sent Events
+      proxy_read_timeout 24h;
       # trailing slash is important! will re-write /api to /
       proxy_pass https://${API_HOST}/;
     }

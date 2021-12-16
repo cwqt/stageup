@@ -64,6 +64,7 @@ export type IAssetStub<T extends keyof AssetMetaUnion = any> = {
   type: T;
   location: string;
   tags: AssetTag[];
+  meta? : AssetMetaUnion[T];
 };
 
 export const AssetTags = ['primary', 'secondary', 'trailer', 'thumbnail'];

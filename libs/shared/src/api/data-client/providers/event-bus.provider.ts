@@ -11,7 +11,7 @@ import { Logger } from './logging.provider';
 
 export interface EventBus {
   publish: (event: Event, contract: EventContract[Event], locale: ILocale) => Promise<void>;
-  subscribe: (event: Event, handler: (ct: EventContract[Event]) => void) => Promise<RxSubscription>;
+  subscribe: (event: Event, handler: (ct: EventContract[Event]) => Promise<void>) => Promise<RxSubscription>;
 }
 
 export interface IRxmqEventBusConfig {}
@@ -50,16 +50,25 @@ export class RxmqEventBus implements Provider<EventBus> {
     return this.channel.subject(event).next(contract);
   }
 
-  async subscribe<T extends Event>(event: T, handler: (contract: Contract<T>) => void): Promise<RxSubscription> {
-    return this.channel
-      .subject(event)
-      .pipe(
-        tap((ct: Contract<T>) => {
-          this.log.debug(`Recieved (${ct.__meta.uuid}) from ${event}`);
-          return ct;
-        })
-      )
-      .subscribe(handler, err => console.error(err));
+  async subscribe<T extends Event>(event: T, handler: (contract: Contract<T>) => Promise<void>): Promise<RxSubscription> {
+    const withCatch =
+      (f: (ct: Contract<T>) => Promise<void>) =>
+      ((ct: Contract<T>): void => {
+        f(ct).catch(error => console.log(error));
+      });
+
+  return this.channel
+    .subject(event)
+    .pipe(
+      tap((ct: Contract<T>) => {
+        this.log.debug(`Recieved (${ct.__meta.uuid}) from ${event}`);
+        return ct;
+      })
+    )
+    .subscribe(
+      withCatch(handler),
+      err => console.error(err)
+    );
   }
 
   async disconnect() {}

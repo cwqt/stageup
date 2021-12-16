@@ -153,21 +153,24 @@ module "backend" {
   region        = local.region
   image         = "eu.gcr.io/${var.gcp_project_id}/core-backend:${local.name}-latest"
   vpc_connector = google_vpc_access_connector.vpc_connector.name
+    # this timeout needs to be this long to enable SSE to work properly
+  timeout       = 1200
 
   env = {
-    NODE_ENV           = local.NODE_ENV
-    EMAIL_ADDRESS      = "development@stageup.uk"
-    LOAD_BALANCER_URL  = "https://${local.load_balancer_host}"
-    BACKEND_STORE_HOST = module.redis.ip_address
-    BACKEND_REDIS_HOST = module.redis.ip_address
-    POSTGRES_USER      = "admin-${local.name}"
-    POSTGRES_PASSWORD  = var.sql_password
-    POSTGRES_DB        = local.postgres_name
-    POSTGRES_HOST      = data.google_sql_database_instance.postgres.private_ip_address
-    BACKEND_ENDPOINT   = "/" # managed by load balancer / nginx
-    FRONTEND_ENDPOINT  = "/" # managed by load balancer / nginx
-    FRONTEND_PORT      = 8080
-    BACKEND_PORT       = 8080
+    NODE_ENV                    = local.NODE_ENV
+    EMAIL_ADDRESS               = "development@stageup.uk"
+    LOAD_BALANCER_URL           = "https://${local.load_balancer_host}"
+    BACKEND_STORE_HOST          = module.redis.ip_address
+    BACKEND_REDIS_HOST          = module.redis.ip_address
+    POSTGRES_USER               = "admin-${local.name}"
+    POSTGRES_PASSWORD           = var.sql_password
+    POSTGRES_DB                 = local.postgres_name
+    POSTGRES_HOST               = data.google_sql_database_instance.postgres.private_ip_address
+    BACKEND_ENDPOINT            = "/" # managed by load balancer / nginx
+    FRONTEND_ENDPOINT           = "/" # managed by load balancer / nginx
+    FRONTEND_PORT               = 8080
+    BACKEND_PORT                = 8080
+    MUX_LIVE_STREAM_TEST_MODE   = "false"
     # secrets -------------------------------------------------------------------------
     # TODO: support different workspaces different secret keys
     MUX_SECRET_KEY                       = module.secrets.MUX_SECRET_KEY
@@ -201,6 +204,8 @@ module "frontend" {
   location            = "europe-west1"
   allow_public_access = true
   port                = 80
+  # this timeout needs to be this long to enable SSE to work properly
+  timeout             = 1200
   max_instances       = var.core == "prod" ? 2 : 1
   min_instances       = 1
   map_domains         = [local.load_balancer_host]

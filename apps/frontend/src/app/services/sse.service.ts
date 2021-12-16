@@ -14,15 +14,20 @@ export class SseService {
     return new Observable<SseEvent<T>>(observer => {
       // onmessage only fires for messages of event "message", i.e. no type
       // https://stackoverflow.com/a/9936764
-      source.onmessage = (event: MessageEvent) =>
-        this.zone.run(() => observer.next(JSON.parse(event.data) as SseEvent<T>));
+      source.onmessage = (event: MessageEvent) => {
+        this.zone.run(() => { observer.next(JSON.parse(event.data) as SseEvent<T>)});
+      };
 
-      source.onerror = (event: MessageEvent) => this.zone.run(() => observer.error(event));
+      source.onerror = (event: MessageEvent) => {
+        console.log('SSE error message!');
+        // Do nothing else, throwing an error in the observable would stop the Observable work
+        // But even after an error there might be state changes we would like to detect
+      }
     });
   }
 
-  getStreamEvents(performanceId: string) {
-    this.streamEventsSource = new EventSource(`/api/sse/performances/${performanceId}`);
+  getStreamEvents(assetId: string) {
+    this.streamEventsSource = new EventSource(`/api/sse/assets/${assetId}`);
     return this.createEventObserver<LiveStreamState>(this.streamEventsSource);
   }
 

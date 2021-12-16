@@ -8,6 +8,7 @@ export interface IMuxProviderConfig {
   secret_key: string;
   webhook_signature: string;
   data_env_key: string;
+  live_stream_test_mode: boolean
 }
 
 @Service()

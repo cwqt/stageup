@@ -150,13 +150,20 @@ export const getDonoAmount = (donoPeg: DonoPeg, currency: CurrencyCode, allowAny
 /**
  * @description Filters a subset of assets from a list of provided assets
  * @param assets array of assets to filter
- * @param type the type of asset to include in the filter as AssetType
+ * @param types the type or types of asset to include in the filter as AssetType
  * @param tags array of string tags to include in the filter
  * @returns array of assets
  */
-export const findAssets = (assets: IAsset[] | IAssetStub[], type: AssetType, tags?: string[]) => {
-  return assets.filter(asset => asset.type == type && (tags ? tags.every(tag => asset.tags.includes(tag)) : true));
-};
+export const findAssets = (
+  assets: IAsset[] | IAssetStub[],
+  types: AssetType | AssetType[],
+  tags?: string[]
+): IAsset[] | IAssetStub[] =>
+  assets.filter(
+    (asset) =>
+      (Array.isArray(types) ? types : [types]).includes(asset.type) &&
+      (tags ? asset.tags.every((tag) => tags.includes(tag)) : true)
+  );
 
 /**
  * @description Find elements that exist in both a & b
