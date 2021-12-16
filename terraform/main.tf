@@ -155,7 +155,7 @@ module "backend" {
   image         = "eu.gcr.io/${var.gcp_project_id}/core-backend:${local.name}-latest"
   vpc_connector = google_vpc_access_connector.vpc_connector.name
     # this timeout needs to be this long to enable SSE to work properly
-  timeout       = 1200
+  timeout_seconds = 1200
 
   env = {
     NODE_ENV                    = local.NODE_ENV
@@ -206,7 +206,7 @@ module "frontend" {
   allow_public_access = true
   port                = 80
   # this timeout needs to be this long to enable SSE to work properly
-  timeout             = 1200
+  timeout_seconds     = 1200
   max_instances       = var.core == "prod" ? 2 : 1
   min_instances       = 1
   map_domains         = [local.load_balancer_host]
