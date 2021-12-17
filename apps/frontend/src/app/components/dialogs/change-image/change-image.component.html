@@ -1,9 +1,4 @@
 <ui-dialog [loading]="uploadButton.loading" [buttons]="buttons" i18n-title title="Select Media">
-  <!-- <img
-    class="h-72"
-    [src]="selectedImage ? selectedImage : data.initialImage !== null ? data.initialImage : '/assets/placeholder.jpg'"
-  /> -->
-
   <div
     class="relative flex items-center justify-center rounded-lg thumbnail-image overflow-hidden cursor-pointer mb-2"
     [ngClass]="{ 'bg-grey': !selectedImage && !data.initialImage }"
@@ -15,12 +10,7 @@
     <div class="overlay flex items-center justify-center absolute inset-0 opacity-0">
       <p class="text-white">Select image</p>
     </div>
-    <ui-button
-      *ngIf="data.initialImage"
-      (click)="deleteAsset($event)"
-      class="absolute top-2 right-2"
-      [variant]="danger"
-    >
+    <ui-button *ngIf="data.initialImage" (click)="deleteAsset($event)" class="absolute top-2 right-2" variant="danger">
       <ui-icon>delete</ui-icon>
     </ui-button>
   </div>

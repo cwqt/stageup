@@ -28,10 +28,6 @@ export class ChangeImageComponent implements OnInit, IUiDialogOptions {
 
   hostId: string;
 
-  get danger(): ThemeKind {
-    return ThemeKind.Danger;
-  }
-
   buttons: IUiDialogOptions['buttons'] = [
     new UiDialogButton({
       label: $localize`Cancel`,
