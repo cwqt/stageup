@@ -10,6 +10,11 @@
     (click)="fileInput.click()"
   >
     <ui-icon *ngIf="!selectedImage && !data.initialImage" [size]="50">image</ui-icon>
+    <input accept=".jpg,.jpeg,.png,.gif" hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file" />
+    <img *ngIf="selectedImage || data.initialImage" class="object-cover" [src]="selectedImage || data.initialImage" />
+    <div class="overlay flex items-center justify-center absolute inset-0 opacity-0">
+      <p class="text-white">Select image</p>
+    </div>
     <ui-button
       *ngIf="data.initialImage"
       (click)="deleteAsset($event)"
@@ -18,8 +23,6 @@
     >
       <ui-icon>delete</ui-icon>
     </ui-button>
-    <input accept=".jpg,.jpeg,.png,.gif" hidden (change)="onAvatarFileSelected()" #fileInput type="file" id="file" />
-    <img *ngIf="selectedImage || data.initialImage" class="object-cover" [src]="selectedImage || data.initialImage" />
   </div>
   <small class="opacity-70" i18n
     >Max upload size: 2MB <br />Minimum resolution: 600 x 400px <br />3:2 ratio <b>required</b>
