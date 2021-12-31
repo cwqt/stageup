@@ -59,3 +59,6 @@ terraform.rc
 # Firebase
 firebase-debug.log
 apps/webhooks/functions/lib
+
+# Ignore terraform dependency lock files
+*.terraform.lock.hcl
