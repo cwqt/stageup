@@ -1,12 +1,11 @@
-<app-breadcrumb></app-breadcrumb>
 <app-page>
   <div body>
+    <app-breadcrumb></app-breadcrumb>
     <h1 i18n>Settings</h1>
     <ui-hr></ui-hr>
     <ng-container *ngIf="myself.host">
-      <app-content-box *ngIf="myself.host.is_onboarded">
-        <h2 i18n>Account</h2>
-        <ui-hr></ui-hr>
+      <div *ngIf="myself.host.is_onboarded">
+        <h3 i18n>Account</h3>
         <ui-form [form]="hostDetailsForm"></ui-form>
         <ui-button
           (click)="hostDetailsForm.submit()"
@@ -16,11 +15,10 @@
           i18n
           >Update</ui-button
         >
-      </app-content-box>
+      </div>
 
-      <div class="bg-white p-4 rounded shadow-sm">
-        <h2 i18n>Leave Company</h2>
-        <ui-hr></ui-hr>
+      <div class="mt-app">
+        <h3 i18n>Leave Company</h3>
         <div>
           <p i18n>
             Withdraw membership from <b>{{ myself.host.name }}</b

@@ -1,3 +1,4 @@
+import { ToastComponent } from './../components/toast/toast.component';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { MatSnackBar, MatSnackBarConfig, MatSnackBarDismiss } from '@angular/material/snack-bar';
@@ -7,9 +8,11 @@ import { ThemeKind } from '../ui-lib/ui-lib.interfaces';
 export interface ToastQueueItem {
   message: string;
   beingDispatched: boolean;
-  kind: ThemeKind;
+  kind: ToastKind;
   configParams?: MatSnackBarConfig;
 }
+
+export type ToastKind = ThemeKind.Primary | ThemeKind.Accent | ThemeKind.Danger | ThemeKind.Warning;
 
 @Injectable({
   providedIn: 'root'
@@ -42,20 +45,24 @@ export class ToastService implements OnDestroy {
     this.ngDestroy.complete();
   }
 
-  public emit(message: string, kind: ThemeKind = ThemeKind.Primary, configParams?: MatSnackBarConfig) {
+  public emit(message: string, kind: ToastKind = ThemeKind.Primary, configParams?: MatSnackBarConfig) {
     this.toastQueue.next(this.toastQueue.value.concat([{ message, configParams, kind, beingDispatched: false }]));
   }
 
-  private showToast(message: string, kind:ThemeKind, configParams?: MatSnackBarConfig) {
+  private showToast(message: string, kind: ToastKind, configParams?: MatSnackBarConfig) {
     const duration = this.getDuration(configParams);
     this.removeDismissedToast(
       this.matSnackBar
-        .open(message, 'OK', {
+        .openFromComponent(ToastComponent, {
           duration,
           verticalPosition: 'bottom',
           horizontalPosition: 'right',
           politeness: 'assertive',
-          panelClass: `ui-toast--${kind}`
+          panelClass: `ui-toast--${kind}`,
+          data: {
+            message,
+            kind
+          }
         })
         .afterDismissed()
     );

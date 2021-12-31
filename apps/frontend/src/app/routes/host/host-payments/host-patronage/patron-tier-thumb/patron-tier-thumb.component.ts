@@ -4,7 +4,7 @@ import { IPatronTier, IHostPatronTier, IHostStub } from '@core/interfaces';
 import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { BecomePatronDialogComponent } from 'apps/frontend/src/app/routes/host/host-profile/host-profile-patronage/become-patron-dialog/become-patron-dialog.component';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { Cacheable } from '@frontend/app.interfaces';
 import { HostService } from '@frontend/services/host.service';
 import { ToastService } from '@frontend/services/toast.service';
@@ -75,7 +75,7 @@ export class PatronTierThumbComponent implements OnInit {
       } patrons`,
       loading: this.deleteTierRequest.$loading,
       buttons: [
-        new UiDialogButton({ label: $localize`Cancel`, kind: ThemeKind.Secondary, callback: ref => ref.close() }),
+        new UiDialogButton({ label: $localize`Cancel`, kind: SecondaryButton, callback: ref => ref.close() }),
         new UiDialogButton({
           label: $localize`Delete Patron Tier`,
           kind: ThemeKind.Danger,

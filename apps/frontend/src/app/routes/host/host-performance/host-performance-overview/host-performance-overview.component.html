@@ -24,7 +24,12 @@
     <!-- set schedule -->
     <div *ngIf="isPendingSchedule" class="flex flex-col pl-48 mt-10 mb-10 absolute inset-0">
       <h3 class="text-white opacity-100 banner-header mb-5" i18n>Congratulations, your created your first event!</h3>
-      <ui-button class="mt-2.5" (click)="navigateToSetSchedule()" variant="primarylight-outline" icon="calendar" i18n
+      <ui-button
+        class="set-schedule mt-2.5"
+        (click)="navigateToSetSchedule()"
+        variant="primarylight-outline"
+        icon="calendar"
+        i18n
         >Set Schedule</ui-button
       >
     </div>

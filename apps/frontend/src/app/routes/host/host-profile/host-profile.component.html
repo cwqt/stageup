@@ -1,7 +1,7 @@
 <app-page>
   <div body *ngIf="host.data && !host.loading && host.data.data">
     <!-- Banner  -->
-    <div class="host-profile-header bg-white rounded shadow-sm">
+    <div class="host-profile-header">
       <div class="banner-picture__container relative overflow-hidden rounded">
         <div
           *ngIf="!host.data.data.banner"
@@ -19,7 +19,7 @@
           (click)="openChangeBannerDialog()"
           class="absolute top-2 left-2"
           icon="paint-brush--alt"
-          variant="cleardark"
+          variant="dark"
         >
           <span *ngIf="host.data.data.banner" i18n>Change banner</span>
           <span *ngIf="!host.data.data.banner" i18n>Add</span>
@@ -37,7 +37,7 @@
           (click)="openChangeAvatarDialog()"
           icon="paint-brush--alt"
           class="z-10 absolute top-2 left-2"
-          variant="cleardark"
+          variant="dark"
         >
           <span i18n>Edit</span>
         </ui-button>
@@ -137,7 +137,7 @@
       </div>
     </div>
 
-    <div class="bg-white mt-4 rounded p-4 shadow">
+    <div class="mt-app">
       <router-outlet (activate)="onChildLoaded($event)"></router-outlet>
     </div>
 

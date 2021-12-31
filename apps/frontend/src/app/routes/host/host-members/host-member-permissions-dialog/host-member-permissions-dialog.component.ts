@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IUiDialogOptions, ThemeKind } from '../../../../ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { ToastService } from '../../../../services/toast.service';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
 import { IUserHostInfo, HostPermission } from '@core/interfaces';
@@ -78,7 +78,7 @@ export class HostMemberPermissionsDialogComponent implements OnInit, IUiDialogOp
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         callback: () => this.cancel.emit()
       }),
       new UiDialogButton({

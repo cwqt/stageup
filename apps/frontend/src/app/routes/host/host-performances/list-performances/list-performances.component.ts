@@ -5,7 +5,7 @@ import { CreatePerformanceComponent } from '../create-performance/create-perform
 import { AppService } from 'apps/frontend/src/app/services/app.service';
 import { IPerformanceStub, PerformanceStatus } from '@core/interfaces';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
-import { i18n, richtext, unix } from '@core/helpers';
+import { i18n, richtext, truncate, unix } from '@core/helpers';
 import { UiTable } from '@frontend/ui-lib/table/table.class';
 import { ChipComponent } from '@frontend/ui-lib/chip/chip.component';
 import { PerformanceStatusPipe } from '@frontend/_pipes/performance-status.pipe';
@@ -26,7 +26,7 @@ export class HostListPerformancesComponent implements OnInit {
     private helperService: HelperService,
     private dialog: MatDialog,
     private appService: AppService
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.hostId = this.hostService.currentHostValue._id;
@@ -38,7 +38,7 @@ export class HostListPerformancesComponent implements OnInit {
       columns: [
         {
           label: $localize`Name`,
-          accessor: p => p.name || '-'
+          accessor: p => (p.name ? truncate(p.name, 45) : '-')
         },
         {
           label: $localize`Event Schedule Start`,

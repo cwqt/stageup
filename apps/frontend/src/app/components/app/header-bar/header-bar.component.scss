@@ -16,6 +16,10 @@ popper-content ::ng-deep {
   }
 }
 
+:host {
+  margin-bottom: 16px;
+}
+
 .logo {
   outline: none;
   transition: 0.2s;

@@ -27,17 +27,17 @@ export class CreateHostComponent implements OnInit {
           validators: [
             { type: 'required' },
             { type: 'minlength', value: 6 },
-            { type: 'maxlength', value: 32 },
+            { type: 'maxlength', value: 64 },
             { type: 'pattern', value: /^[a-zA-Z0-9]*$/, message: () => $localize`Must be alphanumeric with no spaces` }
           ]
         }),
         name: UiField.Text({
           label: $localize`Company Name`,
-          validators: [{ type: 'required' }, { type: 'minlength', value: 6 }, { type: 'maxlength', value: 32 }]
+          validators: [{ type: 'required' }, { type: 'minlength', value: 6 }, { type: 'maxlength', value: 64 }]
         }),
         email_address: UiField.Text({
           label: $localize`Contact e-mail address`,
-          validators: [{ type: 'required' }, { type: 'email' }, { type: 'maxlength', value: 32 }]
+          validators: [{ type: 'required' }, { type: 'email' }]
         })
       },
       resolvers: {

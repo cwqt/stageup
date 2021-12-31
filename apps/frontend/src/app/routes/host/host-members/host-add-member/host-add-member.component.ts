@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { HostService } from 'apps/frontend/src/app/services/host.service';
@@ -22,7 +22,7 @@ export class HostAddMemberComponent implements OnInit, IUiDialogOptions {
   buttons = [
     new UiDialogButton({
       label: $localize`Cancel`,
-      kind: ThemeKind.Secondary,
+      kind: SecondaryButton,
       callback: () => this.cancel.emit()
     }),
     new UiDialogButton({

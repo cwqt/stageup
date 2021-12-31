@@ -14,6 +14,13 @@
   margin-bottom: 2%;
   display: flex;
   flex-flow: column;
+  padding: 32px 48px;
+
+  ui-icon {
+    &:hover {
+      opacity: 1;
+    }
+  }
 
   .ui-dialog--spinner {
     position: absolute;
@@ -35,15 +42,16 @@
     display: flex;
     flex-flow: column;
     flex: 1; // fill remaining width
-    padding: 1rem;
     &.no-padding {
       padding: 0;
     }
   }
 
-  &--small {
-    .ui-dialog--content {
-      padding: 0.5rem !important;
-    }
-  }
+  // We now have a single 'padding' for all components
+  // TODO: Check with Shreya she is happy with the appearance. Left until checked.
+  // &--small {
+  //   .ui-dialog--content {
+  //     padding: 0.5rem !important;
+  //   }
+  // }
 }

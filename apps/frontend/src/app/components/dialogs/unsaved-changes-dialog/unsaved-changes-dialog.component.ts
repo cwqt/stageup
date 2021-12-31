@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HelperService } from '@frontend/services/helper.service';
@@ -19,7 +19,7 @@ export class UnsavedChangesDialogComponent implements OnInit {
   ngOnInit(): void {
     this.buttons = [
       new UiDialogButton({
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         label: $localize`No`,
         callback: () => {
           this.cancel.emit();

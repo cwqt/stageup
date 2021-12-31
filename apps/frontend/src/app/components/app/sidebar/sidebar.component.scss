@@ -49,7 +49,7 @@
         height: 48px !important;
         border: 0px solid transparent;
         border-radius: 0 !important;
-        color: white;
+        color: $clr-white;
         transition: 0.2s;
         align-items: center;
         justify-content: flex-start;
@@ -69,10 +69,10 @@
           margin-right: 10px;
         }
         &:hover {
-          color: $clr-primary;
+          color: $clr-primary-dk;
           ui-icon,
           span {
-            color: white;
+            color: $clr-white;
           }
         }
       }
@@ -81,12 +81,12 @@
       }
       &.active-link {
         opacity: 1;
-        background-color: transparentize($color: $clr-primary, $amount: 0.8);
+        background-color: transparentize($color: $clr-primary-dk, $amount: 0.8);
         ::ng-deep button {
-          color: $clr-primary !important;
+          color: $clr-primary-dk !important;
           span,
           ui-icon {
-            color: $clr-primary;
+            color: $clr-primary-dk;
           }
         }
       }

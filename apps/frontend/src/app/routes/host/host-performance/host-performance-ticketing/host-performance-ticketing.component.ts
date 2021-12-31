@@ -17,7 +17,7 @@ import { HelperService } from 'apps/frontend/src/app/services/helper.service';
 import { PerformanceService } from 'apps/frontend/src/app/services/performance.service';
 import { ChipComponent } from 'apps/frontend/src/app/ui-lib/chip/chip.component';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
-import { ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { SecondaryButton, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 import { IHostPerformanceComponent } from '../host-performance.component';
 import { CreateUpdateTicketComponent } from './create-update-ticket/create-update-ticket.component';
 
@@ -97,7 +97,7 @@ export class HostPerformanceTicketingComponent implements OnInit, IHostPerforman
       buttons: [
         new UiDialogButton({
           label: 'Cancel',
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: r => r.close()
         }),
         new UiDialogButton({

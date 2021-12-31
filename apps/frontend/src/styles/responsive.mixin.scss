@@ -1,0 +1,48 @@
+/* 
+Breakpoints in preparation of implementing responsiveness 
+
+Usage:
+
+************************
+@import 'apps/frontend/src/styles/responsive.mixin';
+
+.my-class {
+  background-color: red;
+  @include screen(2xl) {
+    background-color: orange;
+  }
+  @include screen(xl) {
+    background-color: yellow;
+  }
+  @include screen(lg) {
+    background-color: green;
+  }
+  @include screen(md) {
+    background-color: blue;
+  }
+  @include screen(sm) {
+    background-color: indigo;
+  }
+}
+************************
+*/
+
+$breakpoints: (
+  sm: 640px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+  2xl: 1536px
+);
+
+@mixin screen($breakpoint) {
+  // Check valid breakpoint value passed
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (max-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    // Display warning if not
+    @warn "Invalid breakpoint `#{$breakpoint}`. Available values: #{map-keys($breakpoints)}.";
+  }
+}

@@ -16,7 +16,7 @@ import { HostService } from '@frontend/services/host.service';
 import { ToastService } from '@frontend/services/toast.service';
 import { UiDialogButton } from '@frontend/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { UiField, UiForm } from '@frontend/ui-lib/form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from '@frontend/ui-lib/ui-lib.interfaces';
 import { RefundReasonPipe } from '@frontend/_pipes/refund-reason.pipe';
 import { merge, Observable } from 'rxjs';
 import { ConfirmPasswordDialogComponent } from '../confirm-password-dialog/confirm-password-dialog.component';
@@ -103,7 +103,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
       buttons: [
         new UiDialogButton({
           label: $localize`Cancel`,
-          kind: ThemeKind.Secondary,
+          kind: SecondaryButton,
           callback: () => this.dialog.closeAll()
         }),
         new UiDialogButton({
@@ -140,7 +140,7 @@ export class ProcessRefundsDialogComponent implements OnInit, IUiDialogOptions {
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         callback: () => this.cancel.emit()
       }),
       new UiDialogButton({

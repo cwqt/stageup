@@ -1,17 +1,23 @@
+@import 'apps/frontend/src/styles/variables';
+
 .chip {
   display: inline-block;
   padding: 4px 8px;
   margin: 4px;
-  border-radius: 12px;
+  border-radius: 8px;
+}
+
+span {
+  font-size: 18px;
 }
 
 .chip-primary {
-  background-color: #e47290;
+  background-color: $clr-primary;
   color: white;
 }
 .chip-red {
   background-color: #ffd7d9;
-  color: #ED4974;
+  color: #ed4974;
 }
 .chip-magenta {
   background-color: #ffd6e8;

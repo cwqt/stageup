@@ -190,6 +190,7 @@ import { HostPerformanceOverviewComponent } from './routes/host/host-performance
 import {HostEventAnalyticsGraphsComponent} from './routes/host/host-analytics/host-event-analytics-graphs/host-event-analytics-graphs.component';
 import { UnsavedChangesDialogComponent } from './components/dialogs/unsaved-changes-dialog/unsaved-changes-dialog.component';
 import { HostPerformanceSettingsComponent } from './routes/host/host-performance/host-performance-settings/host-performance-settings.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 // Implements factory, so that dynamic environment variables can be loaded before initialising the login providers
 const getSigninProviders = async (appService: AppService): Promise<SocialAuthServiceConfig> => {
@@ -352,7 +353,8 @@ const getSigninProviders = async (appService: AppService): Promise<SocialAuthSer
     HostEventAnalyticsGraphsComponent,
     OptStatusPipe,
     UnsavedChangesDialogComponent,
-    HostPerformanceSettingsComponent
+    HostPerformanceSettingsComponent,
+    ToastComponent
   ],
   imports: [
     AngularMaterialModule,

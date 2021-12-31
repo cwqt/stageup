@@ -1,4 +1,3 @@
-import { TextTruncatePipe } from '@frontend/_pipes/text-truncate.pipe';
 import { HostPermissionPipe } from '@frontend/_pipes/host-permission.pipe';
 import { ICacheable, createICacheable } from 'apps/frontend/src/app/app.interfaces';
 import { HostAddMemberComponent } from './../host-members/host-add-member/host-add-member.component';

@@ -24,7 +24,7 @@ import { ToastService } from 'apps/frontend/src/app/services/toast.service';
 import { UiDialogButton } from 'apps/frontend/src/app/ui-lib/dialog/dialog-buttons/dialog-buttons.component';
 import { FormComponent } from 'apps/frontend/src/app/ui-lib/form/form.component';
 import { UiField, UiForm } from 'apps/frontend/src/app/ui-lib/form/form.interfaces';
-import { IUiDialogOptions, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
+import { IUiDialogOptions, SecondaryButton, ThemeKind } from 'apps/frontend/src/app/ui-lib/ui-lib.interfaces';
 import flatten from 'flat';
 
 @Component({
@@ -51,7 +51,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
     private toastService: ToastService,
     private performanceService: PerformanceService,
     private appService: AppService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.host = this.data.host;
@@ -65,7 +65,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           initial: this.host.stripe_account_id ? TicketType.Paid : TicketType.Free,
           values: new Map([
             [TicketType.Paid, { label: $localize`Paid`, disabled: !this.host.stripe_account_id }],
-            [TicketType.Free, { label: $localize`Free` }],
+            [TicketType.Free, { label: $localize`Free` }]
             // [TicketType.Donation, { label: $localize`Donation`, disabled: !this.host.stripe_account_id }]
           ])
         }),
@@ -93,7 +93,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         quantity: UiField.Number({
           width: 6,
           label: $localize`Quantity`,
-          validators: [{ type: 'required' }, { type: "custom", value: ({ value }) => value !== 0 }]
+          validators: [{ type: 'required' }, { type: 'custom', value: ({ value }) => value !== 0 }]
         }),
         amount: UiField.Money({
           width: 6,
@@ -101,7 +101,11 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           hint: inputValue => this.getPriceHint(inputValue),
           currency: CurrencyCode.GBP,
           disabled: false,
-          validators: [{ type: 'required' }, { type: 'maxlength', value: BASE_AMOUNT_MAP[CurrencyCode.GBP]*100 }, { type: "custom", value: ({ value }) => value !== 0 }]
+          validators: [
+            { type: 'required' },
+            { type: 'maxlength', value: BASE_AMOUNT_MAP[CurrencyCode.GBP] * 100 },
+            { type: 'custom', value: ({ value }) => value !== 0 }
+          ]
         }),
         unlimited: UiField.Checkbox({
           label: $localize`Unlimited tickets`
@@ -180,14 +184,14 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
         output: async v =>
           this.data.operation == 'create'
             ? this.performanceService.createTicket(
-              this.appService.getParam(RouteParam.PerformanceId),
-              this.formOutputTransformer(v)
-            )
+                this.appService.getParam(RouteParam.PerformanceId),
+                this.formOutputTransformer(v)
+              )
             : this.performanceService.updateTicket(
-              this.appService.getParam(RouteParam.PerformanceId),
-              this.data.ticketId,
-              this.formOutputTransformer(v)
-            )
+                this.appService.getParam(RouteParam.PerformanceId),
+                this.data.ticketId,
+                this.formOutputTransformer(v)
+              )
       },
       handlers: {
         success: async ticket => {
@@ -199,7 +203,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
           this.submit.emit(ticket);
           this.ref.close(ticket);
         },
-        failure: async () => { },
+        failure: async () => {},
         changes: async f => {
           if (f.value.type == TicketType.Free) {
             f.controls.amount.disable({ emitEvent: false, onlySelf: true });
@@ -219,7 +223,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
     this.buttons = [
       new UiDialogButton({
         label: $localize`Cancel`,
-        kind: ThemeKind.Secondary,
+        kind: SecondaryButton,
         callback: () => this.ref.close()
       }),
       new UiDialogButton({
@@ -241,7 +245,7 @@ export class CreateUpdateTicketComponent implements OnInit, IUiDialogOptions {
       start_datetime: Math.floor(v.start_datetime.getTime() / 1000),
       end_datetime: Math.floor(v.end_datetime.getTime() / 1000),
       is_visible: !v.visibility.value,
-      is_quantity_visible: true,
+      is_quantity_visible: true
       // filter array into only selected DonoPegs
       //dono_pegs: Object.keys(v.dono_pegs)
       //   .filter(peg => v.dono_pegs[peg] == true)
